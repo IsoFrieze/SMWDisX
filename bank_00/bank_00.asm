@@ -6955,7 +6955,7 @@ CODE_00C7DF:          LDA.B #$20                          ;; 00C7DF : A9 20     
                       BRA CODE_00C7F6                     ;; 00C7E7 : 80 0D       ;
                                                           ;;                      ;
 CODE_00C7E9:          TAY                                 ;; 00C7E9 : A8          ;
-                      LDA.W DATA_00C5E1-6,Y               ;; 00C7EA : B9 DA C5    ;
+                      LDA.W DATA_00C5E1-7,Y               ;; 00C7EA : B9 DA C5    ;
                       STA.W $13E0                         ;; 00C7ED : 8D E0 13    ;
                       STZ.W $148F                         ;; 00C7F0 : 9C 8F 14    ;
                       JSR CODE_00D7E4                     ;; 00C7F3 : 20 E4 D7    ;
