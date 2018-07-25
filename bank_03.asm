@@ -7,7 +7,7 @@ DATA_038007:          db $F0,$F8,$FC,$00,$04,$08,$10      ;; 038007             
 DATA_03800E:          db $A0,$D0,$C0,$D0                  ;; 03800E               ;
                                                           ;;                      ;
 Football:             JSL GenericSprGfxRt2                ;; ?QPWZ? : 22 B2 90 01 ;
-                      LDA $9D                             ;; 038016 : A5 9D       ;
+                      LDA.B $9D                           ;; 038016 : A5 9D       ;
                       BNE Return038086                    ;; 038018 : D0 6C       ;
                       JSR SubOffscreen0Bnk3               ;; 03801A : 20 5D B8    ;
                       JSL SprSpr_MarioSprRts              ;; 03801D : 22 3A 80 01 ;
@@ -20,14 +20,14 @@ CODE_03802D:          JSL UpdateSpritePos                 ;; 03802D : 22 2A 80 0
 CODE_038031:          LDA.W $1588,X                       ;; 038031 : BD 88 15    ; \ Branch if not touching object 
                       AND.B #$03                          ;; 038034 : 29 03       ;  | 
                       BEQ CODE_03803F                     ;; 038036 : F0 07       ; / 
-                      LDA $B6,X                           ;; 038038 : B5 B6       ;
+                      LDA.B $B6,X                         ;; 038038 : B5 B6       ;
                       EOR.B #$FF                          ;; 03803A : 49 FF       ;
                       INC A                               ;; 03803C : 1A          ;
-                      STA $B6,X                           ;; 03803D : 95 B6       ;
+                      STA.B $B6,X                         ;; 03803D : 95 B6       ;
 CODE_03803F:          LDA.W $1588,X                       ;; 03803F : BD 88 15    ;
                       AND.B #$08                          ;; 038042 : 29 08       ;
                       BEQ CODE_038048                     ;; 038044 : F0 02       ;
-                      STZ $AA,X                           ;; 038046 : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $AA,X                         ;; 038046 : 74 AA       ; Sprite Y Speed = 0 
 CODE_038048:          LDA.W $1588,X                       ;; 038048 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 03804B : 29 04       ;  | 
                       BEQ Return038086                    ;; 03804D : F0 37       ; / 
@@ -40,14 +40,14 @@ CODE_038048:          LDA.W $1588,X                       ;; 038048 : BD 88 15  
                       AND.B #$03                          ;; 038060 : 29 03       ;
                       TAY                                 ;; 038062 : A8          ;
                       LDA.W DATA_03800E,Y                 ;; 038063 : B9 0E 80    ;
-                      STA $AA,X                           ;; 038066 : 95 AA       ;
+                      STA.B $AA,X                         ;; 038066 : 95 AA       ;
                       LDY.W $15B8,X                       ;; 038068 : BC B8 15    ;
                       INY                                 ;; 03806B : C8          ;
                       INY                                 ;; 03806C : C8          ;
                       INY                                 ;; 03806D : C8          ;
                       LDA.W DATA_038007,Y                 ;; 03806E : B9 07 80    ;
                       CLC                                 ;; 038071 : 18          ;
-                      ADC $B6,X                           ;; 038072 : 75 B6       ;
+                      ADC.B $B6,X                         ;; 038072 : 75 B6       ;
                       BPL CODE_03807E                     ;; 038074 : 10 08       ;
                       CMP.B #$E0                          ;; 038076 : C9 E0       ;
                       BCS CODE_038084                     ;; 038078 : B0 0A       ;
@@ -57,7 +57,7 @@ CODE_038048:          LDA.W $1588,X                       ;; 038048 : BD 88 15  
 CODE_03807E:          CMP.B #$20                          ;; 03807E : C9 20       ;
                       BCC CODE_038084                     ;; 038080 : 90 02       ;
                       LDA.B #$20                          ;; 038082 : A9 20       ;
-CODE_038084:          STA $B6,X                           ;; 038084 : 95 B6       ;
+CODE_038084:          STA.B $B6,X                         ;; 038084 : 95 B6       ;
 Return038086:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 BigBooBoss:           JSL CODE_038398                     ;; ?QPWZ? : 22 98 83 03 ;
@@ -73,9 +73,9 @@ BigBooBoss:           JSL CODE_038398                     ;; ?QPWZ? : 22 98 83 0
                                                           ;;                      ;
 CODE_0380A2:          CMP.B #$08                          ;; 0380A2 : C9 08       ;
                       BNE Return0380D4                    ;; 0380A4 : D0 2E       ;
-                      LDA $9D                             ;; 0380A6 : A5 9D       ;
+                      LDA.B $9D                           ;; 0380A6 : A5 9D       ;
                       BNE Return0380D4                    ;; 0380A8 : D0 2A       ;
-                      LDA $C2,X                           ;; 0380AA : B5 C2       ;
+                      LDA.B $C2,X                         ;; 0380AA : B5 C2       ;
                       JSL ExecutePtr                      ;; 0380AC : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_0380BE                      ;; ?QPWZ? : BE 80       ;
@@ -94,7 +94,7 @@ CODE_0380BE:          LDA.B #$03                          ;; 0380BE : A9 03     
                       BNE Return0380D4                    ;; 0380CB : D0 07       ;
                       LDA.B #$08                          ;; 0380CD : A9 08       ;
                       STA.W $1540,X                       ;; 0380CF : 9D 40 15    ;
-                      INC $C2,X                           ;; 0380D2 : F6 C2       ;
+                      INC.B $C2,X                         ;; 0380D2 : F6 C2       ;
 Return0380D4:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0380D5:          LDA.W $1540,X                       ;; 0380D5 : BD 40 15    ;
@@ -109,7 +109,7 @@ CODE_0380D5:          LDA.W $1540,X                       ;; 0380D5 : BD 40 15  
                       STY.W $1DF9                         ;; 0380EB : 8C F9 1D    ; / 
 CODE_0380EE:          CMP.B #$07                          ;; 0380EE : C9 07       ;
                       BNE Return0380F9                    ;; 0380F0 : D0 07       ;
-                      INC $C2,X                           ;; 0380F2 : F6 C2       ;
+                      INC.B $C2,X                         ;; 0380F2 : F6 C2       ;
                       LDA.B #$40                          ;; 0380F4 : A9 40       ;
                       STA.W $1540,X                       ;; 0380F6 : 9D 40 15    ;
 Return0380F9:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -127,7 +127,7 @@ DATA_038102:          db $01,$02,$02,$01                  ;; 038102             
                                                           ;;                      ;
 CODE_038106:          LDA.W $1540,X                       ;; 038106 : BD 40 15    ;
                       BNE CODE_038112                     ;; 038109 : D0 07       ;
-                      STZ $C2,X                           ;; 03810B : 74 C2       ;
+                      STZ.B $C2,X                         ;; 03810B : 74 C2       ;
                       LDA.B #$40                          ;; 03810D : A9 40       ;
                       STA.W $1570,X                       ;; 03810F : 9D 70 15    ;
 CODE_038112:          LDA.B #$03                          ;; 038112 : A9 03       ;
@@ -151,9 +151,9 @@ CODE_038132:          CMP.B #$10                          ;; 038132 : C9 10     
                       EOR.B #$01                          ;; 03813A : 49 01       ;
                       STA.W $157C,X                       ;; 03813C : 9D 7C 15    ;
                       PLA                                 ;; 03813F : 68          ;
-CODE_038140:          LSR                                 ;; 038140 : 4A          ;
-                      LSR                                 ;; 038141 : 4A          ;
-                      LSR                                 ;; 038142 : 4A          ;
+CODE_038140:          LSR A                               ;; 038140 : 4A          ;
+                      LSR A                               ;; 038141 : 4A          ;
+                      LSR A                               ;; 038142 : 4A          ;
                       TAY                                 ;; 038143 : A8          ;
                       LDA.W DATA_038102,Y                 ;; 038144 : B9 02 81    ;
                       STA.W $1602,X                       ;; 038147 : 9D 02 16    ;
@@ -163,10 +163,10 @@ CODE_03814A:          LDA.B $14                           ;; 03814A : A5 14     
                       LDA.W $151C,X                       ;; 038150 : BD 1C 15    ;
                       AND.B #$01                          ;; 038153 : 29 01       ;
                       TAY                                 ;; 038155 : A8          ;
-                      LDA $B6,X                           ;; 038156 : B5 B6       ;
+                      LDA.B $B6,X                         ;; 038156 : B5 B6       ;
                       CLC                                 ;; 038158 : 18          ;
                       ADC.W DATA_0380FA,Y                 ;; 038159 : 79 FA 80    ;
-                      STA $B6,X                           ;; 03815C : 95 B6       ;
+                      STA.B $B6,X                         ;; 03815C : 95 B6       ;
                       CMP.W DATA_0380FC,Y                 ;; 03815E : D9 FC 80    ;
                       BNE CODE_038166                     ;; 038161 : D0 03       ;
                       INC.W $151C,X                       ;; 038163 : FE 1C 15    ;
@@ -176,10 +176,10 @@ CODE_038166:          LDA.B $14                           ;; 038166 : A5 14     
                       LDA.W $1528,X                       ;; 03816C : BD 28 15    ;
                       AND.B #$01                          ;; 03816F : 29 01       ;
                       TAY                                 ;; 038171 : A8          ;
-                      LDA $AA,X                           ;; 038172 : B5 AA       ;
+                      LDA.B $AA,X                         ;; 038172 : B5 AA       ;
                       CLC                                 ;; 038174 : 18          ;
                       ADC.W DATA_038100,Y                 ;; 038175 : 79 00 81    ;
-                      STA $AA,X                           ;; 038178 : 95 AA       ;
+                      STA.B $AA,X                         ;; 038178 : 95 AA       ;
                       CMP.W DATA_0380FE,Y                 ;; 03817A : D9 FE 80    ;
                       BNE CODE_038182                     ;; 03817D : D0 03       ;
                       INC.W $1528,X                       ;; 03817F : FE 28 15    ;
@@ -189,7 +189,7 @@ CODE_038182:          JSL UpdateXPosNoGvtyW               ;; 038182 : 22 22 80 0
                                                           ;;                      ;
 CODE_03818B:          LDA.W $1540,X                       ;; 03818B : BD 40 15    ;
                       BNE CODE_0381AE                     ;; 03818E : D0 1E       ;
-                      INC $C2,X                           ;; 038190 : F6 C2       ;
+                      INC.B $C2,X                         ;; 038190 : F6 C2       ;
                       LDA.B #$08                          ;; 038192 : A9 08       ;
                       STA.W $1540,X                       ;; 038194 : 9D 40 15    ;
                       JSL LoadSpriteTables                ;; 038197 : 22 8B F7 07 ;
@@ -198,7 +198,7 @@ CODE_03818B:          LDA.W $1540,X                       ;; 03818B : BD 40 15  
                       CMP.B #$03                          ;; 0381A1 : C9 03       ;
                       BNE Return0381AD                    ;; 0381A3 : D0 08       ;
                       LDA.B #$06                          ;; 0381A5 : A9 06       ;
-                      STA $C2,X                           ;; 0381A7 : 95 C2       ;
+                      STA.B $C2,X                         ;; 0381A7 : 95 C2       ;
                       JSL KillMostSprites                 ;; 0381A9 : 22 C8 A6 03 ;
 Return0381AD:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -215,16 +215,16 @@ CODE_0381BC:          LDA.W $1540,X                       ;; 0381BC : BD 40 15  
                       STA.W $1540,X                       ;; 0381C3 : 9D 40 15    ;
                       DEC.W $190B                         ;; 0381C6 : CE 0B 19    ;
                       BNE Return0381D2                    ;; 0381C9 : D0 07       ;
-                      INC $C2,X                           ;; 0381CB : F6 C2       ;
+                      INC.B $C2,X                         ;; 0381CB : F6 C2       ;
                       LDA.B #$C0                          ;; 0381CD : A9 C0       ;
                       STA.W $1540,X                       ;; 0381CF : 9D 40 15    ;
 Return0381D2:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0381D3:          LDA.B #$02                          ;; 0381D3 : A9 02       ; \ Sprite status = Killed 
                       STA.W $14C8,X                       ;; 0381D5 : 9D C8 14    ; / 
-                      STZ $B6,X                           ;; 0381D8 : 74 B6       ; Sprite X Speed = 0 
+                      STZ.B $B6,X                         ;; 0381D8 : 74 B6       ; Sprite X Speed = 0 
                       LDA.B #$D0                          ;; 0381DA : A9 D0       ;
-                      STA $AA,X                           ;; 0381DC : 95 AA       ;
+                      STA.B $AA,X                         ;; 0381DC : 95 AA       ;
                       LDA.B #$23                          ;; 0381DE : A9 23       ; \ Play sound effect 
                       STA.W $1DF9                         ;; 0381E0 : 8D F9 1D    ; / 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -247,20 +247,20 @@ CODE_0381F5:          PHX                                 ;; 0381F5 : DA        
                       JSL CheckForContact                 ;; 038200 : 22 2B B7 03 ;
                       BCC CODE_0381F1                     ;; 038204 : 90 EB       ;
                       LDA.B #$03                          ;; 038206 : A9 03       ;
-                      STA $C2,X                           ;; 038208 : 95 C2       ;
+                      STA.B $C2,X                         ;; 038208 : 95 C2       ;
                       LDA.B #$40                          ;; 03820A : A9 40       ;
                       STA.W $1540,X                       ;; 03820C : 9D 40 15    ;
                       PHX                                 ;; 03820F : DA          ;
                       TYX                                 ;; 038210 : BB          ;
                       STZ.W $14C8,X                       ;; 038211 : 9E C8 14    ;
-                      LDA $E4,X                           ;; 038214 : B5 E4       ;
-                      STA $9A                             ;; 038216 : 85 9A       ;
+                      LDA.B $E4,X                         ;; 038214 : B5 E4       ;
+                      STA.B $9A                           ;; 038216 : 85 9A       ;
                       LDA.W $14E0,X                       ;; 038218 : BD E0 14    ;
-                      STA $9B                             ;; 03821B : 85 9B       ;
-                      LDA $D8,X                           ;; 03821D : B5 D8       ;
-                      STA $98                             ;; 03821F : 85 98       ;
+                      STA.B $9B                           ;; 03821B : 85 9B       ;
+                      LDA.B $D8,X                         ;; 03821D : B5 D8       ;
+                      STA.B $98                           ;; 03821F : 85 98       ;
                       LDA.W $14D4,X                       ;; 038221 : BD D4 14    ;
-                      STA $99                             ;; 038224 : 85 99       ;
+                      STA.B $99                           ;; 038224 : 85 99       ;
                       PHB                                 ;; 038226 : 8B          ;
                       LDA.B #$02                          ;; 038227 : A9 02       ;
                       PHA                                 ;; 038229 : 48          ;
@@ -274,27 +274,27 @@ CODE_0381F5:          PHX                                 ;; 0381F5 : DA        
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_038239:          LDY.B #$24                          ;; 038239 : A0 24       ;
-                      STY $40                             ;; 03823B : 84 40       ;
+                      STY.B $40                           ;; 03823B : 84 40       ;
                       LDA.W $190B                         ;; 03823D : AD 0B 19    ;
                       CMP.B #$08                          ;; 038240 : C9 08       ;
                       DEC A                               ;; 038242 : 3A          ;
                       BCS CODE_03824A                     ;; 038243 : B0 05       ;
                       LDY.B #$34                          ;; 038245 : A0 34       ;
-                      STY $40                             ;; 038247 : 84 40       ;
+                      STY.B $40                           ;; 038247 : 84 40       ;
                       INC A                               ;; 038249 : 1A          ;
-CODE_03824A:          ASL                                 ;; 03824A : 0A          ;
-                      ASL                                 ;; 03824B : 0A          ;
-                      ASL                                 ;; 03824C : 0A          ;
-                      ASL                                 ;; 03824D : 0A          ;
+CODE_03824A:          ASL A                               ;; 03824A : 0A          ;
+                      ASL A                               ;; 03824B : 0A          ;
+                      ASL A                               ;; 03824C : 0A          ;
+                      ASL A                               ;; 03824D : 0A          ;
                       TAX                                 ;; 03824E : AA          ;
-                      STZ $00                             ;; 03824F : 64 00       ;
+                      STZ.B $00                           ;; 03824F : 64 00       ;
                       LDY.W $0681                         ;; 038251 : AC 81 06    ;
 CODE_038254:          LDA.L BooBossPals,X                 ;; 038254 : BF 82 B9 03 ;
                       STA.W $0684,Y                       ;; 038258 : 99 84 06    ;
                       INY                                 ;; 03825B : C8          ;
                       INX                                 ;; 03825C : E8          ;
-                      INC $00                             ;; 03825D : E6 00       ;
-                      LDA $00                             ;; 03825F : A5 00       ;
+                      INC.B $00                           ;; 03825D : E6 00       ;
+                      LDA.B $00                           ;; 03825F : A5 00       ;
                       CMP.B #$10                          ;; 038261 : C9 10       ;
                       BNE CODE_038254                     ;; 038263 : D0 EF       ;
                       LDX.W $0681                         ;; 038265 : AE 81 06    ;
@@ -354,19 +354,19 @@ CODE_038398:          PHB                                 ;; 038398 : 8B        
                       PLB                                 ;; 03839E : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_0383A0:          LDA $9E,X                           ;; 0383A0 : B5 9E       ;
+CODE_0383A0:          LDA.B $9E,X                         ;; 0383A0 : B5 9E       ;
                       CMP.B #$37                          ;; 0383A2 : C9 37       ;
                       BNE CODE_0383C2                     ;; 0383A4 : D0 1C       ;
                       LDA.B #$00                          ;; 0383A6 : A9 00       ;
-                      LDY $C2,X                           ;; 0383A8 : B4 C2       ;
+                      LDY.B $C2,X                         ;; 0383A8 : B4 C2       ;
                       BEQ CODE_0383BA                     ;; 0383AA : F0 0E       ;
                       LDA.B #$06                          ;; 0383AC : A9 06       ;
                       LDY.W $1558,X                       ;; 0383AE : BC 58 15    ;
                       BEQ CODE_0383BA                     ;; 0383B1 : F0 07       ;
                       TYA                                 ;; 0383B3 : 98          ;
                       AND.B #$04                          ;; 0383B4 : 29 04       ;
-                      LSR                                 ;; 0383B6 : 4A          ;
-                      LSR                                 ;; 0383B7 : 4A          ;
+                      LSR A                               ;; 0383B6 : 4A          ;
+                      LSR A                               ;; 0383B7 : 4A          ;
                       ADC.B #$02                          ;; 0383B8 : 69 02       ;
 CODE_0383BA:          STA.W $1602,X                       ;; 0383BA : 9D 02 16    ;
                       JSL GenericSprGfxRt2                ;; 0383BD : 22 B2 90 01 ;
@@ -374,30 +374,30 @@ CODE_0383BA:          STA.W $1602,X                       ;; 0383BA : 9D 02 16  
                                                           ;;                      ;
 CODE_0383C2:          JSR GetDrawInfoBnk3                 ;; 0383C2 : 20 60 B7    ;
                       LDA.W $1602,X                       ;; 0383C5 : BD 02 16    ;
-                      STA $06                             ;; 0383C8 : 85 06       ;
-                      ASL                                 ;; 0383CA : 0A          ;
-                      ASL                                 ;; 0383CB : 0A          ;
-                      STA $03                             ;; 0383CC : 85 03       ;
-                      ASL                                 ;; 0383CE : 0A          ;
-                      ASL                                 ;; 0383CF : 0A          ;
-                      ADC $03                             ;; 0383D0 : 65 03       ;
-                      STA $02                             ;; 0383D2 : 85 02       ;
+                      STA.B $06                           ;; 0383C8 : 85 06       ;
+                      ASL A                               ;; 0383CA : 0A          ;
+                      ASL A                               ;; 0383CB : 0A          ;
+                      STA.B $03                           ;; 0383CC : 85 03       ;
+                      ASL A                               ;; 0383CE : 0A          ;
+                      ASL A                               ;; 0383CF : 0A          ;
+                      ADC.B $03                           ;; 0383D0 : 65 03       ;
+                      STA.B $02                           ;; 0383D2 : 85 02       ;
                       LDA.W $157C,X                       ;; 0383D4 : BD 7C 15    ;
-                      STA $04                             ;; 0383D7 : 85 04       ;
+                      STA.B $04                           ;; 0383D7 : 85 04       ;
                       LDA.W $15F6,X                       ;; 0383D9 : BD F6 15    ;
-                      STA $05                             ;; 0383DC : 85 05       ;
+                      STA.B $05                           ;; 0383DC : 85 05       ;
                       LDX.B #$00                          ;; 0383DE : A2 00       ;
 CODE_0383E0:          PHX                                 ;; 0383E0 : DA          ;
-                      LDX $02                             ;; 0383E1 : A6 02       ;
+                      LDX.B $02                           ;; 0383E1 : A6 02       ;
                       LDA.W BigBooTiles,X                 ;; 0383E3 : BD F8 82    ;
                       STA.W $0302,Y                       ;; 0383E6 : 99 02 03    ;
-                      LDA $04                             ;; 0383E9 : A5 04       ;
-                      LSR                                 ;; 0383EB : 4A          ;
+                      LDA.B $04                           ;; 0383E9 : A5 04       ;
+                      LSR A                               ;; 0383EB : 4A          ;
                       LDA.W BigBooGfxProp,X               ;; 0383EC : BD 48 83    ;
-                      ORA $05                             ;; 0383EF : 05 05       ;
+                      ORA.B $05                           ;; 0383EF : 05 05       ;
                       BCS CODE_0383F5                     ;; 0383F1 : B0 02       ;
                       EOR.B #$40                          ;; 0383F3 : 49 40       ;
-CODE_0383F5:          ORA $64                             ;; 0383F5 : 05 64       ;
+CODE_0383F5:          ORA.B $64                           ;; 0383F5 : 05 64       ;
                       STA.W $0303,Y                       ;; 0383F7 : 99 03 03    ;
                       LDA.W BigBooDispX,X                 ;; 0383FA : BD 80 82    ;
                       BCS CODE_038405                     ;; 0383FD : B0 06       ;
@@ -406,18 +406,18 @@ CODE_0383F5:          ORA $64                             ;; 0383F5 : 05 64     
                       CLC                                 ;; 038402 : 18          ;
                       ADC.B #$28                          ;; 038403 : 69 28       ;
 CODE_038405:          CLC                                 ;; 038405 : 18          ;
-                      ADC $00                             ;; 038406 : 65 00       ;
+                      ADC.B $00                           ;; 038406 : 65 00       ;
                       STA.W $0300,Y                       ;; 038408 : 99 00 03    ;
                       PLX                                 ;; 03840B : FA          ;
                       PHX                                 ;; 03840C : DA          ;
-                      LDA $06                             ;; 03840D : A5 06       ;
+                      LDA.B $06                           ;; 03840D : A5 06       ;
                       CMP.B #$03                          ;; 03840F : C9 03       ;
                       BCC CODE_038418                     ;; 038411 : 90 05       ;
                       TXA                                 ;; 038413 : 8A          ;
                       CLC                                 ;; 038414 : 18          ;
                       ADC.B #$14                          ;; 038415 : 69 14       ;
                       TAX                                 ;; 038417 : AA          ;
-CODE_038418:          LDA $01                             ;; 038418 : A5 01       ;
+CODE_038418:          LDA.B $01                           ;; 038418 : A5 01       ;
                       CLC                                 ;; 03841A : 18          ;
                       ADC.W BigBooDispY,X                 ;; 03841B : 7D D0 82    ;
                       STA.W $0301,Y                       ;; 03841E : 99 01 03    ;
@@ -426,7 +426,7 @@ CODE_038418:          LDA $01                             ;; 038418 : A5 01     
                       INY                                 ;; 038423 : C8          ;
                       INY                                 ;; 038424 : C8          ;
                       INY                                 ;; 038425 : C8          ;
-                      INC $02                             ;; 038426 : E6 02       ;
+                      INC.B $02                           ;; 038426 : E6 02       ;
                       INX                                 ;; 038428 : E8          ;
                       CPX.B #$14                          ;; 038429 : E0 14       ;
                       BNE CODE_0383E0                     ;; 03842B : D0 B3       ;
@@ -448,26 +448,26 @@ CODE_03844B:          LDA.B #$13                          ;; 03844B : A9 13     
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 GreyFallingPlat:      JSR CODE_038492                     ;; ?QPWZ? : 20 92 84    ;
-                      LDA $9D                             ;; 038457 : A5 9D       ;
+                      LDA.B $9D                           ;; 038457 : A5 9D       ;
                       BNE Return038489                    ;; 038459 : D0 2E       ;
                       JSR SubOffscreen0Bnk3               ;; 03845B : 20 5D B8    ;
-                      LDA $AA,X                           ;; 03845E : B5 AA       ;
+                      LDA.B $AA,X                         ;; 03845E : B5 AA       ;
                       BEQ CODE_038476                     ;; 038460 : F0 14       ;
                       LDA.W $1540,X                       ;; 038462 : BD 40 15    ;
                       BNE CODE_038472                     ;; 038465 : D0 0B       ;
-                      LDA $AA,X                           ;; 038467 : B5 AA       ;
+                      LDA.B $AA,X                         ;; 038467 : B5 AA       ;
                       CMP.B #$40                          ;; 038469 : C9 40       ;
                       BPL CODE_038472                     ;; 03846B : 10 05       ;
                       CLC                                 ;; 03846D : 18          ;
                       ADC.B #$02                          ;; 03846E : 69 02       ;
-                      STA $AA,X                           ;; 038470 : 95 AA       ;
+                      STA.B $AA,X                         ;; 038470 : 95 AA       ;
 CODE_038472:          JSL UpdateYPosNoGvtyW               ;; 038472 : 22 1A 80 01 ;
 CODE_038476:          JSL InvisBlkMainRt                  ;; 038476 : 22 4F B4 01 ;
                       BCC Return038489                    ;; 03847A : 90 0D       ;
-                      LDA $AA,X                           ;; 03847C : B5 AA       ;
+                      LDA.B $AA,X                         ;; 03847C : B5 AA       ;
                       BNE Return038489                    ;; 03847E : D0 09       ;
                       LDA.B #$03                          ;; 038480 : A9 03       ;
-                      STA $AA,X                           ;; 038482 : 95 AA       ;
+                      STA.B $AA,X                         ;; 038482 : 95 AA       ;
                       LDA.B #$18                          ;; 038484 : A9 18       ;
                       STA.W $1540,X                       ;; 038486 : 9D 40 15    ;
 Return038489:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -480,16 +480,16 @@ FallingPlatTiles:     db $60,$61,$61,$62                  ;; ?QPWZ?             
 CODE_038492:          JSR GetDrawInfoBnk3                 ;; 038492 : 20 60 B7    ;
                       PHX                                 ;; 038495 : DA          ;
                       LDX.B #$03                          ;; 038496 : A2 03       ;
-CODE_038498:          LDA $00                             ;; 038498 : A5 00       ;
+CODE_038498:          LDA.B $00                           ;; 038498 : A5 00       ;
                       CLC                                 ;; 03849A : 18          ;
                       ADC.W FallingPlatDispX,X            ;; 03849B : 7D 8A 84    ;
                       STA.W $0300,Y                       ;; 03849E : 99 00 03    ;
-                      LDA $01                             ;; 0384A1 : A5 01       ;
+                      LDA.B $01                           ;; 0384A1 : A5 01       ;
                       STA.W $0301,Y                       ;; 0384A3 : 99 01 03    ;
                       LDA.W FallingPlatTiles,X            ;; 0384A6 : BD 8E 84    ;
                       STA.W $0302,Y                       ;; 0384A9 : 99 02 03    ;
                       LDA.B #$03                          ;; 0384AC : A9 03       ;
-                      ORA $64                             ;; 0384AE : 05 64       ;
+                      ORA.B $64                           ;; 0384AE : 05 64       ;
                       STA.W $0303,Y                       ;; 0384B0 : 99 03 03    ;
                       INY                                 ;; 0384B3 : C8          ;
                       INY                                 ;; 0384B4 : C8          ;
@@ -513,12 +513,12 @@ BlurpAccelY:          db $01,$FF                          ;; ?QPWZ?             
 Blurp:                JSL GenericSprGfxRt2                ;; ?QPWZ? : 22 B2 90 01 ;
                       LDY.W $15EA,X                       ;; 0384CE : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.W $0014                         ;; 0384D1 : AD 14 00    ;
-                      LSR                                 ;; 0384D4 : 4A          ;
-                      LSR                                 ;; 0384D5 : 4A          ;
-                      LSR                                 ;; 0384D6 : 4A          ;
+                      LSR A                               ;; 0384D4 : 4A          ;
+                      LSR A                               ;; 0384D5 : 4A          ;
+                      LSR A                               ;; 0384D6 : 4A          ;
                       CLC                                 ;; 0384D7 : 18          ;
                       ADC.W $15E9                         ;; 0384D8 : 6D E9 15    ;
-                      LSR                                 ;; 0384DB : 4A          ;
+                      LSR A                               ;; 0384DB : 4A          ;
                       LDA.B #$A2                          ;; 0384DC : A9 A2       ;
                       BCC CODE_0384E2                     ;; 0384DE : 90 02       ;
                       LDA.B #$EC                          ;; 0384E0 : A9 EC       ;
@@ -531,25 +531,25 @@ CODE_0384EC:          LDA.W $0303,Y                       ;; 0384EC : B9 03 03  
                       STA.W $0303,Y                       ;; 0384F1 : 99 03 03    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0384F5:          LDA $9D                             ;; 0384F5 : A5 9D       ;
+CODE_0384F5:          LDA.B $9D                           ;; 0384F5 : A5 9D       ;
                       BNE Return03852A                    ;; 0384F7 : D0 31       ;
                       JSR SubOffscreen0Bnk3               ;; 0384F9 : 20 5D B8    ;
                       LDA.B $14                           ;; 0384FC : A5 14       ;
                       AND.B #$03                          ;; 0384FE : 29 03       ;
                       BNE CODE_038516                     ;; 038500 : D0 14       ;
-                      LDA $C2,X                           ;; 038502 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 038502 : B5 C2       ;
                       AND.B #$01                          ;; 038504 : 29 01       ;
                       TAY                                 ;; 038506 : A8          ;
-                      LDA $AA,X                           ;; 038507 : B5 AA       ;
+                      LDA.B $AA,X                         ;; 038507 : B5 AA       ;
                       CLC                                 ;; 038509 : 18          ;
                       ADC.W BlurpAccelY,Y                 ;; 03850A : 79 C8 84    ;
-                      STA $AA,X                           ;; 03850D : 95 AA       ;
+                      STA.B $AA,X                         ;; 03850D : 95 AA       ;
                       CMP.W BlurpMaxSpeedY,Y              ;; 03850F : D9 C4 84    ;
                       BNE CODE_038516                     ;; 038512 : D0 02       ;
-                      INC $C2,X                           ;; 038514 : F6 C2       ;
+                      INC.B $C2,X                         ;; 038514 : F6 C2       ;
 CODE_038516:          LDY.W $157C,X                       ;; 038516 : BC 7C 15    ;
                       LDA.W BlurpSpeedX,Y                 ;; 038519 : B9 C6 84    ;
-                      STA $B6,X                           ;; 03851C : 95 B6       ;
+                      STA.B $B6,X                         ;; 03851C : 95 B6       ;
                       JSL UpdateXPosNoGvtyW               ;; 03851E : 22 22 80 01 ;
                       JSL UpdateYPosNoGvtyW               ;; 038522 : 22 1A 80 01 ;
                       JSL SprSpr_MarioSprRts              ;; 038526 : 22 3A 80 01 ;
@@ -561,7 +561,7 @@ PorcuPuffAccel:       db $01,$FF                          ;; ?QPWZ?             
 PorcuPuffMaxSpeed:    db $10,$F0                          ;; ?QPWZ?               ;
                                                           ;;                      ;
 PorcuPuffer:          JSR CODE_0385A3                     ;; ?QPWZ? : 20 A3 85    ;
-                      LDA $9D                             ;; 038532 : A5 9D       ;
+                      LDA.B $9D                           ;; 038532 : A5 9D       ;
                       BNE Return038586                    ;; 038534 : D0 50       ;
                       LDA.W $14C8,X                       ;; 038536 : BD C8 14    ;
                       CMP.B #$08                          ;; 038539 : C9 08       ;
@@ -574,30 +574,30 @@ PorcuPuffer:          JSR CODE_0385A3                     ;; ?QPWZ? : 20 A3 85  
                       LDA.B $14                           ;; 03854B : A5 14       ;
                       AND.B #$03                          ;; 03854D : 29 03       ;
                       BNE CODE_03855E                     ;; 03854F : D0 0D       ;
-                      LDA $B6,X                           ;; 038551 : B5 B6       ; \ Branch if at max speed 
+                      LDA.B $B6,X                         ;; 038551 : B5 B6       ; \ Branch if at max speed 
                       CMP.W PorcuPuffMaxSpeed,Y           ;; 038553 : D9 2D 85    ;  | 
                       BEQ CODE_03855E                     ;; 038556 : F0 06       ; / 
                       CLC                                 ;; 038558 : 18          ; \ Otherwise, accelerate 
                       ADC.W PorcuPuffAccel,Y              ;; 038559 : 79 2B 85    ;  | 
-                      STA $B6,X                           ;; 03855C : 95 B6       ; / 
-CODE_03855E:          LDA $B6,X                           ;; 03855E : B5 B6       ;
+                      STA.B $B6,X                         ;; 03855C : 95 B6       ; / 
+CODE_03855E:          LDA.B $B6,X                         ;; 03855E : B5 B6       ;
                       PHA                                 ;; 038560 : 48          ;
                       LDA.W $17BD                         ;; 038561 : AD BD 17    ;
-                      ASL                                 ;; 038564 : 0A          ;
-                      ASL                                 ;; 038565 : 0A          ;
-                      ASL                                 ;; 038566 : 0A          ;
+                      ASL A                               ;; 038564 : 0A          ;
+                      ASL A                               ;; 038565 : 0A          ;
+                      ASL A                               ;; 038566 : 0A          ;
                       CLC                                 ;; 038567 : 18          ;
-                      ADC $B6,X                           ;; 038568 : 75 B6       ;
-                      STA $B6,X                           ;; 03856A : 95 B6       ;
+                      ADC.B $B6,X                         ;; 038568 : 75 B6       ;
+                      STA.B $B6,X                         ;; 03856A : 95 B6       ;
                       JSL UpdateXPosNoGvtyW               ;; 03856C : 22 22 80 01 ;
                       PLA                                 ;; 038570 : 68          ;
-                      STA $B6,X                           ;; 038571 : 95 B6       ;
+                      STA.B $B6,X                         ;; 038571 : 95 B6       ;
                       JSL CODE_019138                     ;; 038573 : 22 38 91 01 ;
                       LDY.B #$04                          ;; 038577 : A0 04       ;
                       LDA.W $164A,X                       ;; 038579 : BD 4A 16    ;
                       BEQ CODE_038580                     ;; 03857C : F0 02       ;
                       LDY.B #$FC                          ;; 03857E : A0 FC       ;
-CODE_038580:          STY $AA,X                           ;; 038580 : 94 AA       ;
+CODE_038580:          STY.B $AA,X                         ;; 038580 : 94 AA       ;
                       JSL UpdateYPosNoGvtyW               ;; 038582 : 22 1A 80 01 ;
 Return038586:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -611,31 +611,31 @@ PocruPufferGfxProp:   db $0D,$0D,$0D,$0D,$4D,$4D,$4D,$4D  ;; ?QPWZ?             
 CODE_0385A3:          JSR GetDrawInfoBnk3                 ;; 0385A3 : 20 60 B7    ;
                       LDA.B $14                           ;; 0385A6 : A5 14       ;
                       AND.B #$04                          ;; 0385A8 : 29 04       ;
-                      STA $03                             ;; 0385AA : 85 03       ;
+                      STA.B $03                           ;; 0385AA : 85 03       ;
                       LDA.W $157C,X                       ;; 0385AC : BD 7C 15    ;
-                      STA $02                             ;; 0385AF : 85 02       ;
+                      STA.B $02                           ;; 0385AF : 85 02       ;
                       PHX                                 ;; 0385B1 : DA          ;
                       LDX.B #$03                          ;; 0385B2 : A2 03       ;
-CODE_0385B4:          LDA $01                             ;; 0385B4 : A5 01       ;
+CODE_0385B4:          LDA.B $01                           ;; 0385B4 : A5 01       ;
                       CLC                                 ;; 0385B6 : 18          ;
                       ADC.W PocruPufferDispY,X            ;; 0385B7 : 7D 8F 85    ;
                       STA.W $0301,Y                       ;; 0385BA : 99 01 03    ;
                       PHX                                 ;; 0385BD : DA          ;
-                      LDA $02                             ;; 0385BE : A5 02       ;
+                      LDA.B $02                           ;; 0385BE : A5 02       ;
                       BNE CODE_0385C6                     ;; 0385C0 : D0 04       ;
                       TXA                                 ;; 0385C2 : 8A          ;
                       ORA.B #$04                          ;; 0385C3 : 09 04       ;
                       TAX                                 ;; 0385C5 : AA          ;
-CODE_0385C6:          LDA $00                             ;; 0385C6 : A5 00       ;
+CODE_0385C6:          LDA.B $00                           ;; 0385C6 : A5 00       ;
                       CLC                                 ;; 0385C8 : 18          ;
                       ADC.W PocruPufferDispX,X            ;; 0385C9 : 7D 87 85    ;
                       STA.W $0300,Y                       ;; 0385CC : 99 00 03    ;
                       LDA.W PocruPufferGfxProp,X          ;; 0385CF : BD 9B 85    ;
-                      ORA $64                             ;; 0385D2 : 05 64       ;
+                      ORA.B $64                           ;; 0385D2 : 05 64       ;
                       STA.W $0303,Y                       ;; 0385D4 : 99 03 03    ;
                       PLA                                 ;; 0385D7 : 68          ;
                       PHA                                 ;; 0385D8 : 48          ;
-                      ORA $03                             ;; 0385D9 : 05 03       ;
+                      ORA.B $03                           ;; 0385D9 : 05 03       ;
                       TAX                                 ;; 0385DB : AA          ;
                       LDA.W PocruPufferTiles,X            ;; 0385DC : BD 93 85    ;
                       STA.W $0302,Y                       ;; 0385DF : 99 02 03    ;
@@ -656,7 +656,7 @@ CODE_0385C6:          LDA $00                             ;; 0385C6 : A5 00     
 FlyingBlockSpeedY:    db $08,$F8                          ;; ?QPWZ?               ;
                                                           ;;                      ;
 FlyingTurnBlocks:     JSR CODE_0386A8                     ;; ?QPWZ? : 20 A8 86    ;
-                      LDA $9D                             ;; 0385F9 : A5 9D       ;
+                      LDA.B $9D                           ;; 0385F9 : A5 9D       ;
                       BNE Return038675                    ;; 0385FB : D0 78       ;
                       LDA.W $1B9A                         ;; 0385FD : AD 9A 1B    ;
                       BEQ CODE_038629                     ;; 038600 : F0 27       ;
@@ -675,19 +675,19 @@ CODE_03861E:          LDA.W $157C,X                       ;; 03861E : BD 7C 15  
                       AND.B #$01                          ;; 038621 : 29 01       ;
                       TAY                                 ;; 038623 : A8          ;
                       LDA.W FlyingBlockSpeedY,Y           ;; 038624 : B9 F4 85    ;
-                      STA $AA,X                           ;; 038627 : 95 AA       ;
-CODE_038629:          LDA $AA,X                           ;; 038629 : B5 AA       ;
+                      STA.B $AA,X                         ;; 038627 : 95 AA       ;
+CODE_038629:          LDA.B $AA,X                         ;; 038629 : B5 AA       ;
                       PHA                                 ;; 03862B : 48          ;
                       LDY.W $151C,X                       ;; 03862C : BC 1C 15    ;
                       BNE CODE_038636                     ;; 03862F : D0 05       ;
                       EOR.B #$FF                          ;; 038631 : 49 FF       ;
                       INC A                               ;; 038633 : 1A          ;
-                      STA $AA,X                           ;; 038634 : 95 AA       ;
+                      STA.B $AA,X                         ;; 038634 : 95 AA       ;
 CODE_038636:          JSL UpdateYPosNoGvtyW               ;; 038636 : 22 1A 80 01 ;
                       PLA                                 ;; 03863A : 68          ;
-                      STA $AA,X                           ;; 03863B : 95 AA       ;
+                      STA.B $AA,X                         ;; 03863B : 95 AA       ;
                       LDA.W $1B9A                         ;; 03863D : AD 9A 1B    ;
-                      STA $B6,X                           ;; 038640 : 95 B6       ;
+                      STA.B $B6,X                         ;; 038640 : 95 B6       ;
                       JSL UpdateXPosNoGvtyW               ;; 038642 : 22 22 80 01 ;
                       STA.W $1528,X                       ;; 038646 : 9D 28 15    ;
                       JSL InvisBlkMainRt                  ;; 038649 : 22 4F B4 01 ;
@@ -730,23 +730,23 @@ ForestPlatTileSize:   db $02,$02,$02,$02,$02,$02,$02,$02  ;; ?QPWZ?             
 CODE_0386A8:          JSR GetDrawInfoBnk3                 ;; 0386A8 : 20 60 B7    ;
                       LDY.W $15EA,X                       ;; 0386AB : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B $14                           ;; 0386AE : A5 14       ;
-                      LSR                                 ;; 0386B0 : 4A          ;
+                      LSR A                               ;; 0386B0 : 4A          ;
                       AND.B #$04                          ;; 0386B1 : 29 04       ;
                       BEQ CODE_0386B6                     ;; 0386B3 : F0 01       ;
                       INC A                               ;; 0386B5 : 1A          ;
-CODE_0386B6:          STA $02                             ;; 0386B6 : 85 02       ;
+CODE_0386B6:          STA.B $02                           ;; 0386B6 : 85 02       ;
                       PHX                                 ;; 0386B8 : DA          ;
                       LDX.B #$04                          ;; 0386B9 : A2 04       ;
-CODE_0386BB:          STX $06                             ;; 0386BB : 86 06       ;
+CODE_0386BB:          STX.B $06                           ;; 0386BB : 86 06       ;
                       TXA                                 ;; 0386BD : 8A          ;
                       CLC                                 ;; 0386BE : 18          ;
-                      ADC $02                             ;; 0386BF : 65 02       ;
+                      ADC.B $02                           ;; 0386BF : 65 02       ;
                       TAX                                 ;; 0386C1 : AA          ;
-                      LDA $00                             ;; 0386C2 : A5 00       ;
+                      LDA.B $00                           ;; 0386C2 : A5 00       ;
                       CLC                                 ;; 0386C4 : 18          ;
                       ADC.W ForestPlatDispX,X             ;; 0386C5 : 7D 76 86    ;
                       STA.W $0300,Y                       ;; 0386C8 : 99 00 03    ;
-                      LDA $01                             ;; 0386CB : A5 01       ;
+                      LDA.B $01                           ;; 0386CB : A5 01       ;
                       CLC                                 ;; 0386CD : 18          ;
                       ADC.W ForestPlatDispY,X             ;; 0386CE : 7D 80 86    ;
                       STA.W $0301,Y                       ;; 0386D1 : 99 01 03    ;
@@ -756,8 +756,8 @@ CODE_0386BB:          STX $06                             ;; 0386BB : 86 06     
                       STA.W $0303,Y                       ;; 0386DD : 99 03 03    ;
                       PHY                                 ;; 0386E0 : 5A          ;
                       TYA                                 ;; 0386E1 : 98          ;
-                      LSR                                 ;; 0386E2 : 4A          ;
-                      LSR                                 ;; 0386E3 : 4A          ;
+                      LSR A                               ;; 0386E2 : 4A          ;
+                      LSR A                               ;; 0386E3 : 4A          ;
                       TAY                                 ;; 0386E4 : A8          ;
                       LDA.W ForestPlatTileSize,X          ;; 0386E5 : BD 9E 86    ;
                       STA.W $0460,Y                       ;; 0386E8 : 99 60 04    ;
@@ -766,7 +766,7 @@ CODE_0386BB:          STX $06                             ;; 0386BB : 86 06     
                       INY                                 ;; 0386ED : C8          ;
                       INY                                 ;; 0386EE : C8          ;
                       INY                                 ;; 0386EF : C8          ;
-                      LDX $06                             ;; 0386F0 : A6 06       ;
+                      LDX.B $06                           ;; 0386F0 : A6 06       ;
                       DEX                                 ;; 0386F2 : CA          ;
                       BPL CODE_0386BB                     ;; 0386F3 : 10 C6       ;
                       PLX                                 ;; 0386F5 : FA          ;
@@ -776,7 +776,7 @@ CODE_0386BB:          STX $06                             ;; 0386BB : 86 06     
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 GrayLavaPlatform:     JSR CODE_03873A                     ;; ?QPWZ? : 20 3A 87    ;
-                      LDA $9D                             ;; 038702 : A5 9D       ;
+                      LDA.B $9D                           ;; 038702 : A5 9D       ;
                       BNE Return038733                    ;; 038704 : D0 2D       ;
                       JSR SubOffscreen0Bnk3               ;; 038706 : 20 5D B8    ;
                       LDA.W $1540,X                       ;; 038709 : BD 40 15    ;
@@ -794,7 +794,7 @@ CODE_03871B:          JSL UpdateYPosNoGvtyW               ;; 03871B : 22 1A 80 0
                       LDA.W $1540,X                       ;; 038725 : BD 40 15    ;
                       BNE Return038733                    ;; 038728 : D0 09       ;
                       LDA.B #$06                          ;; 03872A : A9 06       ;
-                      STA $AA,X                           ;; 03872C : 95 AA       ;
+                      STA.B $AA,X                         ;; 03872C : 95 AA       ;
                       LDA.B #$40                          ;; 03872E : A9 40       ;
                       STA.W $1540,X                       ;; 038730 : 9D 40 15    ;
 Return038733:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -807,17 +807,17 @@ DATA_038737:          db $43,$03,$03                      ;; 038737             
 CODE_03873A:          JSR GetDrawInfoBnk3                 ;; 03873A : 20 60 B7    ;
                       PHX                                 ;; 03873D : DA          ;
                       LDX.B #$02                          ;; 03873E : A2 02       ;
-CODE_038740:          LDA $00                             ;; 038740 : A5 00       ;
+CODE_038740:          LDA.B $00                           ;; 038740 : A5 00       ;
                       STA.W $0300,Y                       ;; 038742 : 99 00 03    ;
                       CLC                                 ;; 038745 : 18          ;
                       ADC.B #$10                          ;; 038746 : 69 10       ;
-                      STA $00                             ;; 038748 : 85 00       ;
-                      LDA $01                             ;; 03874A : A5 01       ;
+                      STA.B $00                           ;; 038748 : 85 00       ;
+                      LDA.B $01                           ;; 03874A : A5 01       ;
                       STA.W $0301,Y                       ;; 03874C : 99 01 03    ;
                       LDA.W LavaPlatTiles,X               ;; 03874F : BD 34 87    ;
                       STA.W $0302,Y                       ;; 038752 : 99 02 03    ;
                       LDA.W DATA_038737,X                 ;; 038755 : BD 37 87    ;
-                      ORA $64                             ;; 038758 : 05 64       ;
+                      ORA.B $64                           ;; 038758 : 05 64       ;
                       STA.W $0303,Y                       ;; 03875A : 99 03 03    ;
                       INY                                 ;; 03875D : C8          ;
                       INY                                 ;; 03875E : C8          ;
@@ -841,8 +841,8 @@ MegaMole:             JSR MegaMoleGfxRt                   ;; ?QPWZ? : 20 3F 88  
                       JSR SubOffscreen3Bnk3               ;; 03877A : 20 4F B8    ; Handle off screen situation      
                       LDY.W $157C,X                       ;; 03877D : BC 7C 15    ; \ Set x speed based on direction 
                       LDA.W MegaMoleSpeed,Y               ;; 038780 : B9 6E 87    ;  |			       
-                      STA $B6,X                           ;; 038783 : 95 B6       ; /				       
-                      LDA $9D                             ;; 038785 : A5 9D       ; \ If sprites locked, return      
+                      STA.B $B6,X                         ;; 038783 : 95 B6       ; /				       
+                      LDA.B $9D                           ;; 038785 : A5 9D       ; \ If sprites locked, return      
                       BNE Return038733                    ;; 038787 : D0 AA       ; /                                
                       LDA.W $1588,X                       ;; 038789 : BD 88 15    ;
                       AND.B #$04                          ;; 03878C : 29 04       ;
@@ -852,7 +852,7 @@ MegaMole:             JSR MegaMoleGfxRt                   ;; ?QPWZ? : 20 3F 88  
                       LDA.W $1588,X                       ;; 038797 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 03879A : 29 04       ;  | 
                       BEQ MegaMoleInAir                   ;; 03879C : F0 05       ; / 
-                      STZ $AA,X                           ;; 03879E : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $AA,X                         ;; 03879E : 74 AA       ; Sprite Y Speed = 0 
                       PLA                                 ;; 0387A0 : 68          ;
                       BRA MegaMoleOnGround                ;; 0387A1 : 80 0F       ;
                                                           ;;                      ;
@@ -862,7 +862,7 @@ MegaMoleInAir:        PLA                                 ;; ?QPWZ? : 68        
                       STA.W $1540,X                       ;; 0387A8 : 9D 40 15    ;
 MegaMoleWasInAir:     LDA.W $1540,X                       ;; ?QPWZ? : BD 40 15    ;
                       BEQ MegaMoleOnGround                ;; 0387AE : F0 02       ;
-                      STZ $AA,X                           ;; 0387B0 : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $AA,X                         ;; 0387B0 : 74 AA       ; Sprite Y Speed = 0 
 MegaMoleOnGround:     LDY.W $15AC,X                       ;; ?QPWZ? : BC AC 15    ; \								   
                       LDA.W $1588,X                       ;; 0387B5 : BD 88 15    ; | If Mega Mole is in contact with an object...		   
                       AND.B #$03                          ;; 0387B8 : 29 03       ; |								   
@@ -881,36 +881,36 @@ CODE_0387CD:          CPY.B #$00                          ;; 0387CD : C0 00     
 CODE_0387D7:          JSL MarioSprInteract                ;; 0387D7 : 22 DC A7 01 ; Check for mario/Mega Mole contact 
                       BCC Return03882A                    ;; 0387DB : 90 4D       ; (Carry set = contact) 
                       JSR SubVertPosBnk3                  ;; 0387DD : 20 29 B8    ;
-                      LDA $0E                             ;; 0387E0 : A5 0E       ;
+                      LDA.B $0E                           ;; 0387E0 : A5 0E       ;
                       CMP.B #$D8                          ;; 0387E2 : C9 D8       ;
                       BPL MegaMoleContact                 ;; 0387E4 : 10 38       ;
-                      LDA $7D                             ;; 0387E6 : A5 7D       ;
+                      LDA.B $7D                           ;; 0387E6 : A5 7D       ;
                       BMI Return03882A                    ;; 0387E8 : 30 40       ;
                       LDA.B #$01                          ;; 0387EA : A9 01       ; \ Set "on sprite" flag				     
                       STA.W $1471                         ;; 0387EC : 8D 71 14    ; /							     
                       LDA.B #$06                          ;; 0387EF : A9 06       ; \ Set riding Mega Mole				     
                       STA.W $154C,X                       ;; 0387F1 : 9D 4C 15    ; / 						     
-                      STZ $7D                             ;; 0387F4 : 64 7D       ; Y speed = 0					     
+                      STZ.B $7D                           ;; 0387F4 : 64 7D       ; Y speed = 0					     
                       LDA.B #$D6                          ;; 0387F6 : A9 D6       ; \							     
                       LDY.W $187A                         ;; 0387F8 : AC 7A 18    ; | Mario's y position += C6 or D6 depending if on yoshi 
                       BEQ MegaMoleNoYoshi                 ;; 0387FB : F0 02       ; |							     
                       LDA.B #$C6                          ;; 0387FD : A9 C6       ; |							     
 MegaMoleNoYoshi:      CLC                                 ;; ?QPWZ? : 18          ; |							     
-                      ADC $D8,X                           ;; 038800 : 75 D8       ; |							     
-                      STA $96                             ;; 038802 : 85 96       ; |							     
+                      ADC.B $D8,X                         ;; 038800 : 75 D8       ; |							     
+                      STA.B $96                           ;; 038802 : 85 96       ; |							     
                       LDA.W $14D4,X                       ;; 038804 : BD D4 14    ; |							     
                       ADC.B #$FF                          ;; 038807 : 69 FF       ; |							     
-                      STA $97                             ;; 038809 : 85 97       ; /							     
+                      STA.B $97                           ;; 038809 : 85 97       ; /							     
                       LDY.B #$00                          ;; 03880B : A0 00       ; \ 						     
                       LDA.W $1491                         ;; 03880D : AD 91 14    ; | $1491 == 01 or FF, depending on direction	     
                       BPL CODE_038813                     ;; 038810 : 10 01       ; | Set mario's new x position			     
                       DEY                                 ;; 038812 : 88          ; |							     
 CODE_038813:          CLC                                 ;; 038813 : 18          ; |							     
-                      ADC $94                             ;; 038814 : 65 94       ; |							     
-                      STA $94                             ;; 038816 : 85 94       ; |							     
+                      ADC.B $94                           ;; 038814 : 65 94       ; |							     
+                      STA.B $94                           ;; 038816 : 85 94       ; |							     
                       TYA                                 ;; 038818 : 98          ; |							     
-                      ADC $95                             ;; 038819 : 65 95       ; |							     
-                      STA $95                             ;; 03881B : 85 95       ;  /							   
+                      ADC.B $95                           ;; 038819 : 65 95       ; |							     
+                      STA.B $95                           ;; 03881B : 85 95       ;  /							   
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 MegaMoleContact:      LDA.W $154C,X                       ;; ?QPWZ? : BD 4C 15    ; \ If riding Mega Mole...				     
@@ -927,47 +927,47 @@ MegaMoleTiles:        db $C6,$C8,$E6,$E8,$CA,$CC,$EA,$EC  ;; ?QPWZ?             
                                                           ;;                      ;
 MegaMoleGfxRt:        JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7    ;
                       LDA.W $151C,X                       ;; 038842 : BD 1C 15    ; \ $02 = direction						      
-                      STA $02                             ;; 038845 : 85 02       ; / 							      
+                      STA.B $02                           ;; 038845 : 85 02       ; / 							      
                       LDA.B $14                           ;; 038847 : A5 14       ; \ 							      
-                      LSR                                 ;; 038849 : 4A          ; |								      
-                      LSR                                 ;; 03884A : 4A          ; |								      
+                      LSR A                               ;; 038849 : 4A          ; |								      
+                      LSR A                               ;; 03884A : 4A          ; |								      
                       NOP                                 ;; 03884B : EA          ; |								      
                       CLC                                 ;; 03884C : 18          ; |								      
                       ADC.W $15E9                         ;; 03884D : 6D E9 15    ; |								      
                       AND.B #$01                          ;; 038850 : 29 01       ; |								      
-                      ASL                                 ;; 038852 : 0A          ; |								      
-                      ASL                                 ;; 038853 : 0A          ; |								      
-                      STA $03                             ;; 038854 : 85 03       ; | $03 = index to frame start (0 or 4)			      
+                      ASL A                               ;; 038852 : 0A          ; |								      
+                      ASL A                               ;; 038853 : 0A          ; |								      
+                      STA.B $03                           ;; 038854 : 85 03       ; | $03 = index to frame start (0 or 4)			      
                       PHX                                 ;; 038856 : DA          ; /								      
                       LDX.B #$03                          ;; 038857 : A2 03       ; Run loop 4 times, cuz 4 tiles per frame			      
 MegaMoleGfxLoopSt:    PHX                                 ;; ?QPWZ? : DA          ; Push, current tile					      
-                      LDA $02                             ;; 03885A : A5 02       ; \								      
+                      LDA.B $02                           ;; 03885A : A5 02       ; \								      
                       BNE MegaMoleFaceLeft                ;; 03885C : D0 04       ; | If facing right, index to frame end += 4		      
                       INX                                 ;; 03885E : E8          ; |								      
                       INX                                 ;; 03885F : E8          ; |								      
                       INX                                 ;; 038860 : E8          ; |								      
                       INX                                 ;; 038861 : E8          ; /								      
-MegaMoleFaceLeft:     LDA $00                             ;; ?QPWZ? : A5 00       ; \ Tile x position = sprite x location ($00) + tile displacement 
+MegaMoleFaceLeft:     LDA.B $00                           ;; ?QPWZ? : A5 00       ; \ Tile x position = sprite x location ($00) + tile displacement 
                       CLC                                 ;; 038864 : 18          ; |								      
                       ADC.W MegaMoleTileDispX,X           ;; 038865 : 7D 2B 88    ; |								      
                       STA.W $0300,Y                       ;; 038868 : 99 00 03    ; /								      
                       PLX                                 ;; 03886B : FA          ; \ Pull, X = index to frame end				      
-                      LDA $01                             ;; 03886C : A5 01       ; |								      
+                      LDA.B $01                           ;; 03886C : A5 01       ; |								      
                       CLC                                 ;; 03886E : 18          ; | Tile y position = sprite y location ($01) + tile displacement 
                       ADC.W MegaMoleTileDispY,X           ;; 03886F : 7D 33 88    ; |						    
                       STA.W $0301,Y                       ;; 038872 : 99 01 03    ; /						    
                       PHX                                 ;; 038875 : DA          ; \ Set current tile			    
                       TXA                                 ;; 038876 : 8A          ; | X = index of frame start + current tile	    
                       CLC                                 ;; 038877 : 18          ; |						    
-                      ADC $03                             ;; 038878 : 65 03       ; |						    
+                      ADC.B $03                           ;; 038878 : 65 03       ; |						    
                       TAX                                 ;; 03887A : AA          ; |						    
                       LDA.W MegaMoleTiles,X               ;; 03887B : BD 37 88    ; |						    
                       STA.W $0302,Y                       ;; 03887E : 99 02 03    ; /						    
                       LDA.B #$01                          ;; 038881 : A9 01       ; Tile properties xyppccct, format		    
-                      LDX $02                             ;; 038883 : A6 02       ; \ If direction == 0...			    
+                      LDX.B $02                           ;; 038883 : A6 02       ; \ If direction == 0...			    
                       BNE MegaMoleGfxNoFlip               ;; 038885 : D0 02       ; |						    
                       ORA.B #$40                          ;; 038887 : 09 40       ; /    ...flip tile				    
-MegaMoleGfxNoFlip:    ORA $64                             ;; ?QPWZ? : 05 64       ; Add in tile priority of level		    
+MegaMoleGfxNoFlip:    ORA.B $64                           ;; ?QPWZ? : 05 64       ; Add in tile priority of level		    
                       STA.W $0303,Y                       ;; 03888B : 99 03 03    ; Store tile properties			    
                       PLX                                 ;; 03888E : FA          ; \ Pull, current tile			    
                       INY                                 ;; 03888F : C8          ; | Increase index to sprite tile map ($300)... 
@@ -998,13 +998,13 @@ Swooper:              JSL GenericSprGfxRt2                ;; ?QPWZ? : 22 B2 90 0
                       BEQ CODE_0388C0                     ;; 0388BB : F0 03       ;
                       JMP CODE_0384EC                     ;; 0388BD : 4C EC 84    ;
                                                           ;;                      ;
-CODE_0388C0:          LDA $9D                             ;; 0388C0 : A5 9D       ;
+CODE_0388C0:          LDA.B $9D                           ;; 0388C0 : A5 9D       ;
                       BNE Return0388DF                    ;; 0388C2 : D0 1B       ;
                       JSR SubOffscreen0Bnk3               ;; 0388C4 : 20 5D B8    ;
                       JSL SprSpr_MarioSprRts              ;; 0388C7 : 22 3A 80 01 ;
                       JSL UpdateXPosNoGvtyW               ;; 0388CB : 22 22 80 01 ;
                       JSL UpdateYPosNoGvtyW               ;; 0388CF : 22 1A 80 01 ;
-                      LDA $C2,X                           ;; 0388D3 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 0388D3 : B5 C2       ;
                       JSL ExecutePtr                      ;; 0388D5 : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_0388E4                      ;; ?QPWZ? : E4 88       ;
@@ -1021,56 +1021,56 @@ DATA_0388E2:          db $01,$FF                          ;; 0388E2             
 CODE_0388E4:          LDA.W $15A0,X                       ;; 0388E4 : BD A0 15    ;
                       BNE Return038904                    ;; 0388E7 : D0 1B       ;
                       JSR SubHorzPosBnk3                  ;; 0388E9 : 20 17 B8    ;
-                      LDA $0F                             ;; 0388EC : A5 0F       ;
+                      LDA.B $0F                           ;; 0388EC : A5 0F       ;
                       CLC                                 ;; 0388EE : 18          ;
                       ADC.B #$50                          ;; 0388EF : 69 50       ;
                       CMP.B #$A0                          ;; 0388F1 : C9 A0       ;
                       BCS Return038904                    ;; 0388F3 : B0 0F       ;
-                      INC $C2,X                           ;; 0388F5 : F6 C2       ;
+                      INC.B $C2,X                         ;; 0388F5 : F6 C2       ;
                       TYA                                 ;; 0388F7 : 98          ;
                       STA.W $157C,X                       ;; 0388F8 : 9D 7C 15    ;
                       LDA.B #$20                          ;; 0388FB : A9 20       ;
-                      STA $AA,X                           ;; 0388FD : 95 AA       ;
+                      STA.B $AA,X                         ;; 0388FD : 95 AA       ;
                       LDA.B #$26                          ;; 0388FF : A9 26       ; \ Play sound effect 
                       STA.W $1DFC                         ;; 038901 : 8D FC 1D    ; / 
 Return038904:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_038905:          LDA $13                             ;; 038905 : A5 13       ;
+CODE_038905:          LDA.B $13                           ;; 038905 : A5 13       ;
                       AND.B #$03                          ;; 038907 : 29 03       ;
                       BNE CODE_038915                     ;; 038909 : D0 0A       ;
-                      LDA $AA,X                           ;; 03890B : B5 AA       ;
+                      LDA.B $AA,X                         ;; 03890B : B5 AA       ;
                       BEQ CODE_038915                     ;; 03890D : F0 06       ;
-                      DEC $AA,X                           ;; 03890F : D6 AA       ;
+                      DEC.B $AA,X                         ;; 03890F : D6 AA       ;
                       BNE CODE_038915                     ;; 038911 : D0 02       ;
-                      INC $C2,X                           ;; 038913 : F6 C2       ;
-CODE_038915:          LDA $13                             ;; 038915 : A5 13       ;
+                      INC.B $C2,X                         ;; 038913 : F6 C2       ;
+CODE_038915:          LDA.B $13                           ;; 038915 : A5 13       ;
                       AND.B #$03                          ;; 038917 : 29 03       ;
                       BNE CODE_03892B                     ;; 038919 : D0 10       ;
                       LDY.W $157C,X                       ;; 03891B : BC 7C 15    ;
-                      LDA $B6,X                           ;; 03891E : B5 B6       ;
+                      LDA.B $B6,X                         ;; 03891E : B5 B6       ;
                       CMP.W DATA_0388E0,Y                 ;; 038920 : D9 E0 88    ;
                       BEQ CODE_03892B                     ;; 038923 : F0 06       ;
                       CLC                                 ;; 038925 : 18          ;
                       ADC.W DATA_0388E2,Y                 ;; 038926 : 79 E2 88    ;
-                      STA $B6,X                           ;; 038929 : 95 B6       ;
+                      STA.B $B6,X                         ;; 038929 : 95 B6       ;
 CODE_03892B:          LDA.B $14                           ;; 03892B : A5 14       ;
                       AND.B #$04                          ;; 03892D : 29 04       ;
-                      LSR                                 ;; 03892F : 4A          ;
-                      LSR                                 ;; 038930 : 4A          ;
+                      LSR A                               ;; 03892F : 4A          ;
+                      LSR A                               ;; 038930 : 4A          ;
                       INC A                               ;; 038931 : 1A          ;
                       STA.W $1602,X                       ;; 038932 : 9D 02 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_038936:          LDA $13                             ;; 038936 : A5 13       ;
+CODE_038936:          LDA.B $13                           ;; 038936 : A5 13       ;
                       AND.B #$01                          ;; 038938 : 29 01       ;
                       BNE CODE_038952                     ;; 03893A : D0 16       ;
                       LDA.W $151C,X                       ;; 03893C : BD 1C 15    ;
                       AND.B #$01                          ;; 03893F : 29 01       ;
                       TAY                                 ;; 038941 : A8          ;
-                      LDA $AA,X                           ;; 038942 : B5 AA       ;
+                      LDA.B $AA,X                         ;; 038942 : B5 AA       ;
                       CLC                                 ;; 038944 : 18          ;
                       ADC.W BlurpAccelY,Y                 ;; 038945 : 79 C8 84    ;
-                      STA $AA,X                           ;; 038948 : 95 AA       ;
+                      STA.B $AA,X                         ;; 038948 : 95 AA       ;
                       CMP.W BlurpMaxSpeedY,Y              ;; 03894A : D9 C4 84    ;
                       BNE CODE_038952                     ;; 03894D : D0 03       ;
                       INC.W $151C,X                       ;; 03894F : FE 1C 15    ;
@@ -1082,7 +1082,7 @@ DATA_038954:          db $20,$E0                          ;; 038954             
 DATA_038956:          db $02,$FE                          ;; 038956               ;
                                                           ;;                      ;
 SlidingKoopa:         LDA.B #$00                          ;; ?QPWZ? : A9 00       ;
-                      LDY $B6,X                           ;; 03895A : B4 B6       ;
+                      LDY.B $B6,X                         ;; 03895A : B4 B6       ;
                       BEQ CODE_038964                     ;; 03895C : F0 06       ;
                       BPL CODE_038961                     ;; 03895E : 10 01       ;
                       INC A                               ;; 038960 : 1A          ;
@@ -1095,7 +1095,7 @@ CODE_038964:          JSL GenericSprGfxRt2                ;; 038964 : 22 B2 90 0
                       LDA.W $157C,X                       ;; 038972 : BD 7C 15    ;
                       PHA                                 ;; 038975 : 48          ;
                       LDA.B #$02                          ;; 038976 : A9 02       ;
-                      STA $9E,X                           ;; 038978 : 95 9E       ;
+                      STA.B $9E,X                         ;; 038978 : 95 9E       ;
                       JSL InitSpriteTables                ;; 03897A : 22 D2 F7 07 ;
                       PLA                                 ;; 03897E : 68          ;
                       STA.W $157C,X                       ;; 03897F : 9D 7C 15    ;
@@ -1109,7 +1109,7 @@ CODE_038989:          STA.W $0302,Y                       ;; 038989 : 99 02 03  
                       BNE Return0389FE                    ;; 038991 : D0 6B       ;
                       JSR SubOffscreen0Bnk3               ;; 038993 : 20 5D B8    ;
                       JSL SprSpr_MarioSprRts              ;; 038996 : 22 3A 80 01 ;
-                      LDA $9D                             ;; 03899A : A5 9D       ;
+                      LDA.B $9D                           ;; 03899A : A5 9D       ;
                       ORA.W $1540,X                       ;; 03899C : 1D 40 15    ;
                       ORA.W $1558,X                       ;; 03899F : 1D 58 15    ;
                       BNE Return0389FE                    ;; 0389A2 : D0 5A       ;
@@ -1119,57 +1119,57 @@ CODE_038989:          STA.W $0302,Y                       ;; 038989 : 99 02 03  
                       BEQ Return0389FE                    ;; 0389AD : F0 4F       ; / 
                       JSR CODE_0389FF                     ;; 0389AF : 20 FF 89    ;
                       LDY.B #$00                          ;; 0389B2 : A0 00       ;
-                      LDA $B6,X                           ;; 0389B4 : B5 B6       ;
+                      LDA.B $B6,X                         ;; 0389B4 : B5 B6       ;
                       BEQ CODE_0389CC                     ;; 0389B6 : F0 14       ;
                       BPL CODE_0389BD                     ;; 0389B8 : 10 03       ;
                       EOR.B #$FF                          ;; 0389BA : 49 FF       ;
                       INC A                               ;; 0389BC : 1A          ;
-CODE_0389BD:          STA $00                             ;; 0389BD : 85 00       ;
+CODE_0389BD:          STA.B $00                           ;; 0389BD : 85 00       ;
                       LDA.W $15B8,X                       ;; 0389BF : BD B8 15    ;
                       BEQ CODE_0389CC                     ;; 0389C2 : F0 08       ;
-                      LDY $00                             ;; 0389C4 : A4 00       ;
-                      EOR $B6,X                           ;; 0389C6 : 55 B6       ;
+                      LDY.B $00                           ;; 0389C4 : A4 00       ;
+                      EOR.B $B6,X                         ;; 0389C6 : 55 B6       ;
                       BPL CODE_0389CC                     ;; 0389C8 : 10 02       ;
                       LDY.B #$D0                          ;; 0389CA : A0 D0       ;
-CODE_0389CC:          STY $AA,X                           ;; 0389CC : 94 AA       ;
-                      LDA $13                             ;; 0389CE : A5 13       ;
+CODE_0389CC:          STY.B $AA,X                         ;; 0389CC : 94 AA       ;
+                      LDA.B $13                           ;; 0389CE : A5 13       ;
                       AND.B #$01                          ;; 0389D0 : 29 01       ;
                       BNE Return0389FE                    ;; 0389D2 : D0 2A       ;
                       LDA.W $15B8,X                       ;; 0389D4 : BD B8 15    ;
                       BNE CODE_0389EC                     ;; 0389D7 : D0 13       ;
-                      LDA $B6,X                           ;; 0389D9 : B5 B6       ;
+                      LDA.B $B6,X                         ;; 0389D9 : B5 B6       ;
                       BNE CODE_0389E3                     ;; 0389DB : D0 06       ;
                       LDA.B #$20                          ;; 0389DD : A9 20       ;
                       STA.W $1558,X                       ;; 0389DF : 9D 58 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0389E3:          BPL CODE_0389E9                     ;; 0389E3 : 10 04       ;
-                      INC $B6,X                           ;; 0389E5 : F6 B6       ;
-                      INC $B6,X                           ;; 0389E7 : F6 B6       ;
-CODE_0389E9:          DEC $B6,X                           ;; 0389E9 : D6 B6       ;
+                      INC.B $B6,X                         ;; 0389E5 : F6 B6       ;
+                      INC.B $B6,X                         ;; 0389E7 : F6 B6       ;
+CODE_0389E9:          DEC.B $B6,X                         ;; 0389E9 : D6 B6       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0389EC:          ASL                                 ;; 0389EC : 0A          ;
-                      ROL                                 ;; 0389ED : 2A          ;
+CODE_0389EC:          ASL A                               ;; 0389EC : 0A          ;
+                      ROL A                               ;; 0389ED : 2A          ;
                       AND.B #$01                          ;; 0389EE : 29 01       ;
                       TAY                                 ;; 0389F0 : A8          ;
-                      LDA $B6,X                           ;; 0389F1 : B5 B6       ;
+                      LDA.B $B6,X                         ;; 0389F1 : B5 B6       ;
                       CMP.W DATA_038954,Y                 ;; 0389F3 : D9 54 89    ;
                       BEQ Return0389FE                    ;; 0389F6 : F0 06       ;
                       CLC                                 ;; 0389F8 : 18          ;
                       ADC.W DATA_038956,Y                 ;; 0389F9 : 79 56 89    ;
-                      STA $B6,X                           ;; 0389FC : 95 B6       ;
+                      STA.B $B6,X                         ;; 0389FC : 95 B6       ;
 Return0389FE:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0389FF:          LDA $B6,X                           ;; 0389FF : B5 B6       ;
+CODE_0389FF:          LDA.B $B6,X                         ;; 0389FF : B5 B6       ;
                       BEQ Return038A20                    ;; 038A01 : F0 1D       ;
-                      LDA $13                             ;; 038A03 : A5 13       ;
+                      LDA.B $13                           ;; 038A03 : A5 13       ;
                       AND.B #$03                          ;; 038A05 : 29 03       ;
                       BNE Return038A20                    ;; 038A07 : D0 17       ;
                       LDA.B #$04                          ;; 038A09 : A9 04       ;
-                      STA $00                             ;; 038A0B : 85 00       ;
+                      STA.B $00                           ;; 038A0B : 85 00       ;
                       LDA.B #$0A                          ;; 038A0D : A9 0A       ;
-                      STA $01                             ;; 038A0F : 85 01       ;
+                      STA.B $01                           ;; 038A0F : 85 01       ;
                       JSR IsSprOffScreenBnk3              ;; 038A11 : 20 FB B8    ;
                       BNE Return038A20                    ;; 038A14 : D0 0A       ;
                       LDY.B #$03                          ;; 038A16 : A0 03       ;
@@ -1181,23 +1181,23 @@ Return038A20:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 CODE_038A21:          LDA.B #$03                          ;; 038A21 : A9 03       ;
                       STA.W $17C0,Y                       ;; 038A23 : 99 C0 17    ;
-                      LDA $E4,X                           ;; 038A26 : B5 E4       ;
+                      LDA.B $E4,X                         ;; 038A26 : B5 E4       ;
                       CLC                                 ;; 038A28 : 18          ;
-                      ADC $00                             ;; 038A29 : 65 00       ;
+                      ADC.B $00                           ;; 038A29 : 65 00       ;
                       STA.W $17C8,Y                       ;; 038A2B : 99 C8 17    ;
-                      LDA $D8,X                           ;; 038A2E : B5 D8       ;
+                      LDA.B $D8,X                         ;; 038A2E : B5 D8       ;
                       CLC                                 ;; 038A30 : 18          ;
-                      ADC $01                             ;; 038A31 : 65 01       ;
+                      ADC.B $01                           ;; 038A31 : 65 01       ;
                       STA.W $17C4,Y                       ;; 038A33 : 99 C4 17    ;
                       LDA.B #$13                          ;; 038A36 : A9 13       ;
                       STA.W $17CC,Y                       ;; 038A38 : 99 CC 17    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 BowserStatue:         JSR BowserStatueGfx                 ;; ?QPWZ? : 20 3D 8B    ;
-                      LDA $9D                             ;; 038A3F : A5 9D       ;
+                      LDA.B $9D                           ;; 038A3F : A5 9D       ;
                       BNE Return038A68                    ;; 038A41 : D0 25       ;
                       JSR SubOffscreen0Bnk3               ;; 038A43 : 20 5D B8    ;
-                      LDA $C2,X                           ;; 038A46 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 038A46 : B5 C2       ;
                       JSL ExecutePtr                      ;; 038A48 : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_038A57                      ;; ?QPWZ? : 57 8A       ;
@@ -1211,14 +1211,14 @@ CODE_038A57:          JSL InvisBlkMainRt                  ;; 038A57 : 22 4F B4 0
                       LDA.W $1588,X                       ;; 038A5F : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 038A62 : 29 04       ;  | 
                       BEQ Return038A68                    ;; 038A64 : F0 02       ; / 
-                      STZ $AA,X                           ;; 038A66 : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $AA,X                         ;; 038A66 : 74 AA       ; Sprite Y Speed = 0 
 Return038A68:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_038A69:          ASL.W $167A,X                       ;; 038A69 : 1E 7A 16    ;
                       LSR.W $167A,X                       ;; 038A6C : 5E 7A 16    ;
                       JSL MarioSprInteract                ;; 038A6F : 22 DC A7 01 ;
                       STZ.W $1602,X                       ;; 038A73 : 9E 02 16    ;
-                      LDA $AA,X                           ;; 038A76 : B5 AA       ;
+                      LDA.B $AA,X                         ;; 038A76 : B5 AA       ;
                       CMP.B #$10                          ;; 038A78 : C9 10       ;
                       BPL CODE_038A7F                     ;; 038A7A : 10 03       ;
                       INC.W $1602,X                       ;; 038A7C : FE 02 16    ;
@@ -1226,10 +1226,10 @@ CODE_038A7F:          JSL UpdateSpritePos                 ;; 038A7F : 22 2A 80 0
                       LDA.W $1588,X                       ;; 038A83 : BD 88 15    ; \ Branch if not touching object 
                       AND.B #$03                          ;; 038A86 : 29 03       ;  | 
                       BEQ CODE_038A99                     ;; 038A88 : F0 0F       ; / 
-                      LDA $B6,X                           ;; 038A8A : B5 B6       ;
+                      LDA.B $B6,X                         ;; 038A8A : B5 B6       ;
                       EOR.B #$FF                          ;; 038A8C : 49 FF       ;
                       INC A                               ;; 038A8E : 1A          ;
-                      STA $B6,X                           ;; 038A8F : 95 B6       ;
+                      STA.B $B6,X                         ;; 038A8F : 95 B6       ;
                       LDA.W $157C,X                       ;; 038A91 : BD 7C 15    ;
                       EOR.B #$01                          ;; 038A94 : 49 01       ;
                       STA.W $157C,X                       ;; 038A96 : 9D 7C 15    ;
@@ -1237,19 +1237,19 @@ CODE_038A99:          LDA.W $1588,X                       ;; 038A99 : BD 88 15  
                       AND.B #$04                          ;; 038A9C : 29 04       ;  | 
                       BEQ Return038AC6                    ;; 038A9E : F0 26       ; / 
                       LDA.B #$10                          ;; 038AA0 : A9 10       ;
-                      STA $AA,X                           ;; 038AA2 : 95 AA       ;
-                      STZ $B6,X                           ;; 038AA4 : 74 B6       ; Sprite X Speed = 0 
+                      STA.B $AA,X                         ;; 038AA2 : 95 AA       ;
+                      STZ.B $B6,X                         ;; 038AA4 : 74 B6       ; Sprite X Speed = 0 
                       LDA.W $1540,X                       ;; 038AA6 : BD 40 15    ;
                       BEQ CODE_038AC1                     ;; 038AA9 : F0 16       ;
                       DEC A                               ;; 038AAB : 3A          ;
                       BNE Return038AC6                    ;; 038AAC : D0 18       ;
                       LDA.B #$C0                          ;; 038AAE : A9 C0       ;
-                      STA $AA,X                           ;; 038AB0 : 95 AA       ;
+                      STA.B $AA,X                         ;; 038AB0 : 95 AA       ;
                       JSR SubHorzPosBnk3                  ;; 038AB2 : 20 17 B8    ;
                       TYA                                 ;; 038AB5 : 98          ;
                       STA.W $157C,X                       ;; 038AB6 : 9D 7C 15    ;
                       LDA.W BwsrStatueSpeed,Y             ;; 038AB9 : B9 BF 8A    ;
-                      STA $B6,X                           ;; 038ABC : 95 B6       ;
+                      STA.B $B6,X                         ;; 038ABC : 95 B6       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -1265,9 +1265,9 @@ BwserFireDispXLo:     db $10,$F0                          ;; ?QPWZ?             
 BwserFireDispXHi:     db $00,$FF                          ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_038ACB:          TXA                                 ;; 038ACB : 8A          ;
-                      ASL                                 ;; 038ACC : 0A          ;
-                      ASL                                 ;; 038ACD : 0A          ;
-                      ADC $13                             ;; 038ACE : 65 13       ;
+                      ASL A                               ;; 038ACC : 0A          ;
+                      ASL A                               ;; 038ACD : 0A          ;
+                      ADC.B $13                           ;; 038ACE : 65 13       ;
                       AND.B #$7F                          ;; 038AD0 : 29 7F       ;
                       BNE Return038B24                    ;; 038AD2 : D0 50       ;
                       JSL FindFreeSprSlot                 ;; 038AD4 : 22 E4 A9 02 ; \ Return if no free slots 
@@ -1278,24 +1278,24 @@ CODE_038ACB:          TXA                                 ;; 038ACB : 8A        
                       STA.W $14C8,Y                       ;; 038AE1 : 99 C8 14    ; / 
                       LDA.B #$B3                          ;; 038AE4 : A9 B3       ; \ Sprite = Bowser Statue Fireball 
                       STA.W $009E,Y                       ;; 038AE6 : 99 9E 00    ; / 
-                      LDA $E4,X                           ;; 038AE9 : B5 E4       ;
-                      STA $00                             ;; 038AEB : 85 00       ;
+                      LDA.B $E4,X                         ;; 038AE9 : B5 E4       ;
+                      STA.B $00                           ;; 038AEB : 85 00       ;
                       LDA.W $14E0,X                       ;; 038AED : BD E0 14    ;
-                      STA $01                             ;; 038AF0 : 85 01       ;
+                      STA.B $01                           ;; 038AF0 : 85 01       ;
                       PHX                                 ;; 038AF2 : DA          ;
                       LDA.W $157C,X                       ;; 038AF3 : BD 7C 15    ;
                       TAX                                 ;; 038AF6 : AA          ;
-                      LDA $00                             ;; 038AF7 : A5 00       ;
+                      LDA.B $00                           ;; 038AF7 : A5 00       ;
                       CLC                                 ;; 038AF9 : 18          ;
                       ADC.W BwserFireDispXLo,X            ;; 038AFA : 7D C7 8A    ;
                       STA.W $00E4,Y                       ;; 038AFD : 99 E4 00    ;
-                      LDA $01                             ;; 038B00 : A5 01       ;
+                      LDA.B $01                           ;; 038B00 : A5 01       ;
                       ADC.W BwserFireDispXHi,X            ;; 038B02 : 7D C9 8A    ;
                       STA.W $14E0,Y                       ;; 038B05 : 99 E0 14    ;
                       TYX                                 ;; 038B08 : BB          ; \ Reset sprite tables 
                       JSL InitSpriteTables                ;; 038B09 : 22 D2 F7 07 ;  | 
                       PLX                                 ;; 038B0D : FA          ; / 
-                      LDA $D8,X                           ;; 038B0E : B5 D8       ;
+                      LDA.B $D8,X                         ;; 038B0E : B5 D8       ;
                       SEC                                 ;; 038B10 : 38          ;
                       SBC.B #$02                          ;; 038B11 : E9 02       ;
                       STA.W $00D8,Y                       ;; 038B13 : 99 D8 00    ;
@@ -1319,37 +1319,37 @@ BwsrStatueGfxProp:    db $00,$00,$00,$40,$40,$40          ;; ?QPWZ?             
                                                           ;;                      ;
 BowserStatueGfx:      JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7    ;
                       LDA.W $1602,X                       ;; 038B40 : BD 02 16    ;
-                      STA $04                             ;; 038B43 : 85 04       ;
+                      STA.B $04                           ;; 038B43 : 85 04       ;
                       EOR.B #$01                          ;; 038B45 : 49 01       ;
                       DEC A                               ;; 038B47 : 3A          ;
-                      STA $03                             ;; 038B48 : 85 03       ;
+                      STA.B $03                           ;; 038B48 : 85 03       ;
                       LDA.W $15F6,X                       ;; 038B4A : BD F6 15    ;
-                      STA $05                             ;; 038B4D : 85 05       ;
+                      STA.B $05                           ;; 038B4D : 85 05       ;
                       LDA.W $157C,X                       ;; 038B4F : BD 7C 15    ;
-                      STA $02                             ;; 038B52 : 85 02       ;
+                      STA.B $02                           ;; 038B52 : 85 02       ;
                       PHX                                 ;; 038B54 : DA          ;
                       LDX.B #$02                          ;; 038B55 : A2 02       ;
 CODE_038B57:          PHX                                 ;; 038B57 : DA          ;
-                      LDA $02                             ;; 038B58 : A5 02       ;
+                      LDA.B $02                           ;; 038B58 : A5 02       ;
                       BNE CODE_038B5F                     ;; 038B5A : D0 03       ;
                       INX                                 ;; 038B5C : E8          ;
                       INX                                 ;; 038B5D : E8          ;
                       INX                                 ;; 038B5E : E8          ;
-CODE_038B5F:          LDA $00                             ;; 038B5F : A5 00       ;
+CODE_038B5F:          LDA.B $00                           ;; 038B5F : A5 00       ;
                       CLC                                 ;; 038B61 : 18          ;
                       ADC.W BwsrStatueDispX,X             ;; 038B62 : 7D 25 8B    ;
                       STA.W $0300,Y                       ;; 038B65 : 99 00 03    ;
                       LDA.W BwsrStatueGfxProp,X           ;; 038B68 : BD 37 8B    ;
-                      ORA $05                             ;; 038B6B : 05 05       ;
-                      ORA $64                             ;; 038B6D : 05 64       ;
+                      ORA.B $05                           ;; 038B6B : 05 05       ;
+                      ORA.B $64                           ;; 038B6D : 05 64       ;
                       STA.W $0303,Y                       ;; 038B6F : 99 03 03    ;
                       PLX                                 ;; 038B72 : FA          ;
-                      LDA $01                             ;; 038B73 : A5 01       ;
+                      LDA.B $01                           ;; 038B73 : A5 01       ;
                       CLC                                 ;; 038B75 : 18          ;
                       ADC.W BwsrStatueDispY,X             ;; 038B76 : 7D 2B 8B    ;
                       STA.W $0301,Y                       ;; 038B79 : 99 01 03    ;
                       PHX                                 ;; 038B7C : DA          ;
-                      LDA $04                             ;; 038B7D : A5 04       ;
+                      LDA.B $04                           ;; 038B7D : A5 04       ;
                       BEQ CODE_038B84                     ;; 038B7F : F0 03       ;
                       INX                                 ;; 038B81 : E8          ;
                       INX                                 ;; 038B82 : E8          ;
@@ -1359,8 +1359,8 @@ CODE_038B84:          LDA.W BwsrStatueTiles,X             ;; 038B84 : BD 2E 8B  
                       PLX                                 ;; 038B8A : FA          ;
                       PHY                                 ;; 038B8B : 5A          ;
                       TYA                                 ;; 038B8C : 98          ;
-                      LSR                                 ;; 038B8D : 4A          ;
-                      LSR                                 ;; 038B8E : 4A          ;
+                      LSR A                               ;; 038B8D : 4A          ;
+                      LSR A                               ;; 038B8E : 4A          ;
                       TAY                                 ;; 038B8F : A8          ;
                       LDA.W BwsrStatueTileSize,X          ;; 038B90 : BD 34 8B    ;
                       STA.W $0460,Y                       ;; 038B93 : 99 60 04    ;
@@ -1370,7 +1370,7 @@ CODE_038B84:          LDA.W BwsrStatueTiles,X             ;; 038B84 : BD 2E 8B  
                       INY                                 ;; 038B99 : C8          ;
                       INY                                 ;; 038B9A : C8          ;
                       DEX                                 ;; 038B9B : CA          ;
-                      CPX $03                             ;; 038B9C : E4 03       ;
+                      CPX.B $03                           ;; 038B9C : E4 03       ;
                       BNE CODE_038B57                     ;; 038B9E : D0 B7       ;
                       PLX                                 ;; 038BA0 : FA          ;
                       LDY.B #$FF                          ;; 038BA1 : A0 FF       ;
@@ -1400,42 +1400,42 @@ DATA_038C2A:          db $00,$F8,$00,$08                  ;; 038C2A             
 Return038C2E:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CarrotTopLift:        JSR CarrotTopLiftGfx                ;; ?QPWZ? : 20 24 8D    ;
-                      LDA $9D                             ;; 038C32 : A5 9D       ;
+                      LDA.B $9D                           ;; 038C32 : A5 9D       ;
                       BNE Return038C2E                    ;; 038C34 : D0 F8       ;
                       JSR SubOffscreen0Bnk3               ;; 038C36 : 20 5D B8    ;
                       LDA.W $1540,X                       ;; 038C39 : BD 40 15    ;
                       BNE CODE_038C45                     ;; 038C3C : D0 07       ;
-                      INC $C2,X                           ;; 038C3E : F6 C2       ;
+                      INC.B $C2,X                         ;; 038C3E : F6 C2       ;
                       LDA.B #$80                          ;; 038C40 : A9 80       ;
                       STA.W $1540,X                       ;; 038C42 : 9D 40 15    ;
-CODE_038C45:          LDA $C2,X                           ;; 038C45 : B5 C2       ;
+CODE_038C45:          LDA.B $C2,X                         ;; 038C45 : B5 C2       ;
                       AND.B #$03                          ;; 038C47 : 29 03       ;
                       TAY                                 ;; 038C49 : A8          ;
                       LDA.W DATA_038C2A,Y                 ;; 038C4A : B9 2A 8C    ;
-                      STA $B6,X                           ;; 038C4D : 95 B6       ;
-                      LDA $B6,X                           ;; 038C4F : B5 B6       ;
-                      LDY $9E,X                           ;; 038C51 : B4 9E       ;
+                      STA.B $B6,X                         ;; 038C4D : 95 B6       ;
+                      LDA.B $B6,X                         ;; 038C4F : B5 B6       ;
+                      LDY.B $9E,X                         ;; 038C51 : B4 9E       ;
                       CPY.B #$B8                          ;; 038C53 : C0 B8       ;
                       BEQ CODE_038C5A                     ;; 038C55 : F0 03       ;
                       EOR.B #$FF                          ;; 038C57 : 49 FF       ;
                       INC A                               ;; 038C59 : 1A          ;
-CODE_038C5A:          STA $AA,X                           ;; 038C5A : 95 AA       ;
+CODE_038C5A:          STA.B $AA,X                         ;; 038C5A : 95 AA       ;
                       JSL UpdateYPosNoGvtyW               ;; 038C5C : 22 1A 80 01 ;
-                      LDA $E4,X                           ;; 038C60 : B5 E4       ;
+                      LDA.B $E4,X                         ;; 038C60 : B5 E4       ;
                       STA.W $151C,X                       ;; 038C62 : 9D 1C 15    ;
                       JSL UpdateXPosNoGvtyW               ;; 038C65 : 22 22 80 01 ;
                       JSR CODE_038CE4                     ;; 038C69 : 20 E4 8C    ;
                       JSL GetSpriteClippingA              ;; 038C6C : 22 9F B6 03 ;
                       JSL CheckForContact                 ;; 038C70 : 22 2B B7 03 ;
                       BCC Return038CE3                    ;; 038C74 : 90 6D       ;
-                      LDA $7D                             ;; 038C76 : A5 7D       ;
+                      LDA.B $7D                           ;; 038C76 : A5 7D       ;
                       BMI Return038CE3                    ;; 038C78 : 30 69       ;
-                      LDA $94                             ;; 038C7A : A5 94       ;
+                      LDA.B $94                           ;; 038C7A : A5 94       ;
                       SEC                                 ;; 038C7C : 38          ;
                       SBC.W $151C,X                       ;; 038C7D : FD 1C 15    ;
                       CLC                                 ;; 038C80 : 18          ;
                       ADC.B #$1C                          ;; 038C81 : 69 1C       ;
-                      LDY $9E,X                           ;; 038C83 : B4 9E       ;
+                      LDY.B $9E,X                         ;; 038C83 : B4 9E       ;
                       CPY.B #$B8                          ;; 038C85 : C0 B8       ;
                       BNE CODE_038C8C                     ;; 038C87 : D0 03       ;
                       CLC                                 ;; 038C89 : 18          ;
@@ -1447,32 +1447,32 @@ CODE_038C8C:          TAY                                 ;; 038C8C : A8        
                       BCC CODE_038C98                     ;; 038C94 : 90 02       ;
                       LDA.B #$30                          ;; 038C96 : A9 30       ;
 CODE_038C98:          CLC                                 ;; 038C98 : 18          ;
-                      ADC $96                             ;; 038C99 : 65 96       ;
-                      STA $00                             ;; 038C9B : 85 00       ;
-                      LDA $D8,X                           ;; 038C9D : B5 D8       ;
+                      ADC.B $96                           ;; 038C99 : 65 96       ;
+                      STA.B $00                           ;; 038C9B : 85 00       ;
+                      LDA.B $D8,X                         ;; 038C9D : B5 D8       ;
                       CLC                                 ;; 038C9F : 18          ;
                       ADC.W DATA_038BAA,Y                 ;; 038CA0 : 79 AA 8B    ;
-                      CMP $00                             ;; 038CA3 : C5 00       ;
+                      CMP.B $00                           ;; 038CA3 : C5 00       ;
                       BPL Return038CE3                    ;; 038CA5 : 10 3C       ;
                       LDA.W $187A                         ;; 038CA7 : AD 7A 18    ;
                       CMP.B #$01                          ;; 038CAA : C9 01       ;
                       LDA.B #$1D                          ;; 038CAC : A9 1D       ;
                       BCC CODE_038CB2                     ;; 038CAE : 90 02       ;
                       LDA.B #$2D                          ;; 038CB0 : A9 2D       ;
-CODE_038CB2:          STA $00                             ;; 038CB2 : 85 00       ;
-                      LDA $D8,X                           ;; 038CB4 : B5 D8       ;
+CODE_038CB2:          STA.B $00                           ;; 038CB2 : 85 00       ;
+                      LDA.B $D8,X                         ;; 038CB4 : B5 D8       ;
                       CLC                                 ;; 038CB6 : 18          ;
                       ADC.W DATA_038BAA,Y                 ;; 038CB7 : 79 AA 8B    ;
                       PHP                                 ;; 038CBA : 08          ;
                       SEC                                 ;; 038CBB : 38          ;
-                      SBC $00                             ;; 038CBC : E5 00       ;
-                      STA $96                             ;; 038CBE : 85 96       ;
+                      SBC.B $00                           ;; 038CBC : E5 00       ;
+                      STA.B $96                           ;; 038CBE : 85 96       ;
                       LDA.W $14D4,X                       ;; 038CC0 : BD D4 14    ;
                       SBC.B #$00                          ;; 038CC3 : E9 00       ;
                       PLP                                 ;; 038CC5 : 28          ;
                       ADC.B #$00                          ;; 038CC6 : 69 00       ;
-                      STA $97                             ;; 038CC8 : 85 97       ;
-                      STZ $7D                             ;; 038CCA : 64 7D       ;
+                      STA.B $97                           ;; 038CC8 : 85 97       ;
+                      STZ.B $7D                           ;; 038CCA : 64 7D       ;
                       LDA.B #$01                          ;; 038CCC : A9 01       ;
                       STA.W $1471                         ;; 038CCE : 8D 71 14    ;
                       LDY.B #$00                          ;; 038CD1 : A0 00       ;
@@ -1480,33 +1480,33 @@ CODE_038CB2:          STA $00                             ;; 038CB2 : 85 00     
                       BPL CODE_038CD9                     ;; 038CD6 : 10 01       ;
                       DEY                                 ;; 038CD8 : 88          ;
 CODE_038CD9:          CLC                                 ;; 038CD9 : 18          ;
-                      ADC $94                             ;; 038CDA : 65 94       ;
-                      STA $94                             ;; 038CDC : 85 94       ;
+                      ADC.B $94                           ;; 038CDA : 65 94       ;
+                      STA.B $94                           ;; 038CDC : 85 94       ;
                       TYA                                 ;; 038CDE : 98          ;
-                      ADC $95                             ;; 038CDF : 65 95       ;
-                      STA $95                             ;; 038CE1 : 85 95       ;
+                      ADC.B $95                           ;; 038CDF : 65 95       ;
+                      STA.B $95                           ;; 038CE1 : 85 95       ;
 Return038CE3:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_038CE4:          LDA $94                             ;; 038CE4 : A5 94       ;
+CODE_038CE4:          LDA.B $94                           ;; 038CE4 : A5 94       ;
                       CLC                                 ;; 038CE6 : 18          ;
                       ADC.B #$04                          ;; 038CE7 : 69 04       ;
-                      STA $00                             ;; 038CE9 : 85 00       ;
-                      LDA $95                             ;; 038CEB : A5 95       ;
+                      STA.B $00                           ;; 038CE9 : 85 00       ;
+                      LDA.B $95                           ;; 038CEB : A5 95       ;
                       ADC.B #$00                          ;; 038CED : 69 00       ;
-                      STA $08                             ;; 038CEF : 85 08       ;
+                      STA.B $08                           ;; 038CEF : 85 08       ;
                       LDA.B #$08                          ;; 038CF1 : A9 08       ;
-                      STA $02                             ;; 038CF3 : 85 02       ;
-                      STA $03                             ;; 038CF5 : 85 03       ;
+                      STA.B $02                           ;; 038CF3 : 85 02       ;
+                      STA.B $03                           ;; 038CF5 : 85 03       ;
                       LDA.B #$20                          ;; 038CF7 : A9 20       ;
                       LDY.W $187A                         ;; 038CF9 : AC 7A 18    ;
                       BEQ CODE_038D00                     ;; 038CFC : F0 02       ;
                       LDA.B #$30                          ;; 038CFE : A9 30       ;
 CODE_038D00:          CLC                                 ;; 038D00 : 18          ;
-                      ADC $96                             ;; 038D01 : 65 96       ;
-                      STA $01                             ;; 038D03 : 85 01       ;
-                      LDA $97                             ;; 038D05 : A5 97       ;
+                      ADC.B $96                           ;; 038D01 : 65 96       ;
+                      STA.B $01                           ;; 038D03 : 85 01       ;
+                      LDA.B $97                           ;; 038D05 : A5 97       ;
                       ADC.B #$00                          ;; 038D07 : 69 00       ;
-                      STA $09                             ;; 038D09 : 85 09       ;
+                      STA.B $09                           ;; 038D09 : 85 09       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -1520,31 +1520,31 @@ DiagPlatGfxProp:      db $0B,$0B,$0B,$4B,$4B,$4B          ;; ?QPWZ?             
                                                           ;;                      ;
 CarrotTopLiftGfx:     JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7    ;
                       PHX                                 ;; 038D27 : DA          ;
-                      LDA $9E,X                           ;; 038D28 : B5 9E       ;
+                      LDA.B $9E,X                         ;; 038D28 : B5 9E       ;
                       CMP.B #$B8                          ;; 038D2A : C9 B8       ;
                       LDX.B #$02                          ;; 038D2C : A2 02       ;
-                      STX $02                             ;; 038D2E : 86 02       ;
+                      STX.B $02                           ;; 038D2E : 86 02       ;
                       BCC CODE_038D34                     ;; 038D30 : 90 02       ;
                       LDX.B #$05                          ;; 038D32 : A2 05       ;
-CODE_038D34:          LDA $00                             ;; 038D34 : A5 00       ;
+CODE_038D34:          LDA.B $00                           ;; 038D34 : A5 00       ;
                       CLC                                 ;; 038D36 : 18          ;
                       ADC.W DiagPlatDispX,X               ;; 038D37 : 7D 0C 8D    ;
                       STA.W $0300,Y                       ;; 038D3A : 99 00 03    ;
-                      LDA $01                             ;; 038D3D : A5 01       ;
+                      LDA.B $01                           ;; 038D3D : A5 01       ;
                       CLC                                 ;; 038D3F : 18          ;
                       ADC.W DiagPlatDispY,X               ;; 038D40 : 7D 12 8D    ;
                       STA.W $0301,Y                       ;; 038D43 : 99 01 03    ;
                       LDA.W DiagPlatTiles2,X              ;; 038D46 : BD 18 8D    ;
                       STA.W $0302,Y                       ;; 038D49 : 99 02 03    ;
                       LDA.W DiagPlatGfxProp,X             ;; 038D4C : BD 1E 8D    ;
-                      ORA $64                             ;; 038D4F : 05 64       ;
+                      ORA.B $64                           ;; 038D4F : 05 64       ;
                       STA.W $0303,Y                       ;; 038D51 : 99 03 03    ;
                       INY                                 ;; 038D54 : C8          ;
                       INY                                 ;; 038D55 : C8          ;
                       INY                                 ;; 038D56 : C8          ;
                       INY                                 ;; 038D57 : C8          ;
                       DEX                                 ;; 038D58 : CA          ;
-                      DEC $02                             ;; 038D59 : C6 02       ;
+                      DEC.B $02                           ;; 038D59 : C6 02       ;
                       BPL CODE_038D34                     ;; 038D5B : 10 D7       ;
                       PLX                                 ;; 038D5D : FA          ;
                       LDY.B #$02                          ;; 038D5E : A0 02       ;
@@ -1564,45 +1564,45 @@ InfoBox:              JSL InvisBlkMainRt                  ;; ?QPWZ? : 22 4F B4 0
                       LDA.B #$22                          ;; 038D7D : A9 22       ; \ Play sound effect 
                       STA.W $1DFC                         ;; 038D7F : 8D FC 1D    ; / 
                       STZ.W $1558,X                       ;; 038D82 : 9E 58 15    ;
-                      STZ $C2,X                           ;; 038D85 : 74 C2       ;
-                      LDA $E4,X                           ;; 038D87 : B5 E4       ;
-                      LSR                                 ;; 038D89 : 4A          ;
-                      LSR                                 ;; 038D8A : 4A          ;
-                      LSR                                 ;; 038D8B : 4A          ;
-                      LSR                                 ;; 038D8C : 4A          ;
+                      STZ.B $C2,X                         ;; 038D85 : 74 C2       ;
+                      LDA.B $E4,X                         ;; 038D87 : B5 E4       ;
+                      LSR A                               ;; 038D89 : 4A          ;
+                      LSR A                               ;; 038D8A : 4A          ;
+                      LSR A                               ;; 038D8B : 4A          ;
+                      LSR A                               ;; 038D8C : 4A          ;
                       AND.B #$01                          ;; 038D8D : 29 01       ;
                       INC A                               ;; 038D8F : 1A          ;
                       STA.W $1426                         ;; 038D90 : 8D 26 14    ;
 CODE_038D93:          LDA.W $1558,X                       ;; 038D93 : BD 58 15    ;
-                      LSR                                 ;; 038D96 : 4A          ;
+                      LSR A                               ;; 038D96 : 4A          ;
                       TAY                                 ;; 038D97 : A8          ;
-                      LDA $1C                             ;; 038D98 : A5 1C       ;
+                      LDA.B $1C                           ;; 038D98 : A5 1C       ;
                       PHA                                 ;; 038D9A : 48          ;
                       CLC                                 ;; 038D9B : 18          ;
                       ADC.W DATA_038D66,Y                 ;; 038D9C : 79 66 8D    ;
-                      STA $1C                             ;; 038D9F : 85 1C       ;
-                      LDA $1D                             ;; 038DA1 : A5 1D       ;
+                      STA.B $1C                           ;; 038D9F : 85 1C       ;
+                      LDA.B $1D                           ;; 038DA1 : A5 1D       ;
                       PHA                                 ;; 038DA3 : 48          ;
                       ADC.B #$00                          ;; 038DA4 : 69 00       ;
-                      STA $1D                             ;; 038DA6 : 85 1D       ;
+                      STA.B $1D                           ;; 038DA6 : 85 1D       ;
                       JSL GenericSprGfxRt2                ;; 038DA8 : 22 B2 90 01 ;
                       LDY.W $15EA,X                       ;; 038DAC : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B #$C0                          ;; 038DAF : A9 C0       ;
                       STA.W $0302,Y                       ;; 038DB1 : 99 02 03    ;
                       PLA                                 ;; 038DB4 : 68          ;
-                      STA $1D                             ;; 038DB5 : 85 1D       ;
+                      STA.B $1D                           ;; 038DB5 : 85 1D       ;
                       PLA                                 ;; 038DB7 : 68          ;
-                      STA $1C                             ;; 038DB8 : 85 1C       ;
+                      STA.B $1C                           ;; 038DB8 : 85 1C       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 TimedLift:            JSR TimedPlatformGfx                ;; ?QPWZ? : 20 12 8E    ;
-                      LDA $9D                             ;; 038DBE : A5 9D       ;
+                      LDA.B $9D                           ;; 038DBE : A5 9D       ;
                       BNE Return038DEF                    ;; 038DC0 : D0 2D       ;
                       JSR SubOffscreen0Bnk3               ;; 038DC2 : 20 5D B8    ;
-                      LDA $13                             ;; 038DC5 : A5 13       ;
+                      LDA.B $13                           ;; 038DC5 : A5 13       ;
                       AND.B #$00                          ;; 038DC7 : 29 00       ;
                       BNE CODE_038DD7                     ;; 038DC9 : D0 0C       ;
-                      LDA $C2,X                           ;; 038DCB : B5 C2       ;
+                      LDA.B $C2,X                         ;; 038DCB : B5 C2       ;
                       BEQ CODE_038DD7                     ;; 038DCD : F0 08       ;
                       LDA.W $1570,X                       ;; 038DCF : BD 70 15    ;
                       BEQ CODE_038DD7                     ;; 038DD2 : F0 03       ;
@@ -1614,8 +1614,8 @@ CODE_038DD7:          LDA.W $1570,X                       ;; 038DD7 : BD 70 15  
                       JSL InvisBlkMainRt                  ;; 038DE3 : 22 4F B4 01 ;
                       BCC Return038DEF                    ;; 038DE7 : 90 06       ;
                       LDA.B #$10                          ;; 038DE9 : A9 10       ;
-                      STA $B6,X                           ;; 038DEB : 95 B6       ;
-                      STA $C2,X                           ;; 038DED : 95 C2       ;
+                      STA.B $B6,X                         ;; 038DEB : 95 B6       ;
+                      STA.B $C2,X                         ;; 038DED : 95 C2       ;
 Return038DEF:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_038DF0:          JSL UpdateSpritePos                 ;; 038DF0 : 22 2A 80 01 ;
@@ -1641,40 +1641,40 @@ TimedPlatformGfx:     JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7  
                       LDA.W $1570,X                       ;; 038E15 : BD 70 15    ;
                       PHX                                 ;; 038E18 : DA          ;
                       PHA                                 ;; 038E19 : 48          ;
-                      LSR                                 ;; 038E1A : 4A          ;
-                      LSR                                 ;; 038E1B : 4A          ;
-                      LSR                                 ;; 038E1C : 4A          ;
-                      LSR                                 ;; 038E1D : 4A          ;
-                      LSR                                 ;; 038E1E : 4A          ;
-                      LSR                                 ;; 038E1F : 4A          ;
+                      LSR A                               ;; 038E1A : 4A          ;
+                      LSR A                               ;; 038E1B : 4A          ;
+                      LSR A                               ;; 038E1C : 4A          ;
+                      LSR A                               ;; 038E1D : 4A          ;
+                      LSR A                               ;; 038E1E : 4A          ;
+                      LSR A                               ;; 038E1F : 4A          ;
                       TAX                                 ;; 038E20 : AA          ;
                       LDA.W TimedPlatNumTiles,X           ;; 038E21 : BD 0E 8E    ;
-                      STA $02                             ;; 038E24 : 85 02       ;
+                      STA.B $02                           ;; 038E24 : 85 02       ;
                       LDX.B #$02                          ;; 038E26 : A2 02       ;
                       PLA                                 ;; 038E28 : 68          ;
                       CMP.B #$08                          ;; 038E29 : C9 08       ;
                       BCS CODE_038E2E                     ;; 038E2B : B0 01       ;
                       DEX                                 ;; 038E2D : CA          ;
-CODE_038E2E:          LDA $00                             ;; 038E2E : A5 00       ;
+CODE_038E2E:          LDA.B $00                           ;; 038E2E : A5 00       ;
                       CLC                                 ;; 038E30 : 18          ;
                       ADC.W TimedPlatDispX,X              ;; 038E31 : 7D FF 8D    ;
                       STA.W $0300,Y                       ;; 038E34 : 99 00 03    ;
-                      LDA $01                             ;; 038E37 : A5 01       ;
+                      LDA.B $01                           ;; 038E37 : A5 01       ;
                       CLC                                 ;; 038E39 : 18          ;
                       ADC.W TimedPlatDispY,X              ;; 038E3A : 7D 02 8E    ;
                       STA.W $0301,Y                       ;; 038E3D : 99 01 03    ;
                       LDA.W TimedPlatTiles,X              ;; 038E40 : BD 05 8E    ;
                       CPX.B #$02                          ;; 038E43 : E0 02       ;
                       BNE CODE_038E49                     ;; 038E45 : D0 02       ;
-                      LDA $02                             ;; 038E47 : A5 02       ;
+                      LDA.B $02                           ;; 038E47 : A5 02       ;
 CODE_038E49:          STA.W $0302,Y                       ;; 038E49 : 99 02 03    ;
                       LDA.W TimedPlatGfxProp,X            ;; 038E4C : BD 08 8E    ;
-                      ORA $64                             ;; 038E4F : 05 64       ;
+                      ORA.B $64                           ;; 038E4F : 05 64       ;
                       STA.W $0303,Y                       ;; 038E51 : 99 03 03    ;
                       PHY                                 ;; 038E54 : 5A          ;
                       TYA                                 ;; 038E55 : 98          ;
-                      LSR                                 ;; 038E56 : 4A          ;
-                      LSR                                 ;; 038E57 : 4A          ;
+                      LSR A                               ;; 038E56 : 4A          ;
+                      LSR A                               ;; 038E57 : 4A          ;
                       TAY                                 ;; 038E58 : A8          ;
                       LDA.W TimedPlatTileSize,X           ;; 038E59 : BD 0B 8E    ;
                       STA.W $0460,Y                       ;; 038E5C : 99 60 04    ;
@@ -1697,21 +1697,21 @@ GreyMoveBlkSpeed:     db $00,$F0,$00,$10                  ;; ?QPWZ?             
 GreyMoveBlkTiming:    db $40,$50,$40,$50                  ;; ?QPWZ?               ;
                                                           ;;                      ;
 GreyCastleBlock:      JSR CODE_038EB4                     ;; ?QPWZ? : 20 B4 8E    ;
-                      LDA $9D                             ;; 038E7C : A5 9D       ;
+                      LDA.B $9D                           ;; 038E7C : A5 9D       ;
                       BNE Return038EA7                    ;; 038E7E : D0 27       ;
                       LDA.W $1540,X                       ;; 038E80 : BD 40 15    ;
                       BNE CODE_038E92                     ;; 038E83 : D0 0D       ;
-                      INC $C2,X                           ;; 038E85 : F6 C2       ;
-                      LDA $C2,X                           ;; 038E87 : B5 C2       ;
+                      INC.B $C2,X                         ;; 038E85 : F6 C2       ;
+                      LDA.B $C2,X                         ;; 038E87 : B5 C2       ;
                       AND.B #$03                          ;; 038E89 : 29 03       ;
                       TAY                                 ;; 038E8B : A8          ;
                       LDA.W GreyMoveBlkTiming,Y           ;; 038E8C : B9 75 8E    ;
                       STA.W $1540,X                       ;; 038E8F : 9D 40 15    ;
-CODE_038E92:          LDA $C2,X                           ;; 038E92 : B5 C2       ;
+CODE_038E92:          LDA.B $C2,X                         ;; 038E92 : B5 C2       ;
                       AND.B #$03                          ;; 038E94 : 29 03       ;
                       TAY                                 ;; 038E96 : A8          ;
                       LDA.W GreyMoveBlkSpeed,Y            ;; 038E97 : B9 71 8E    ;
-                      STA $B6,X                           ;; 038E9A : 95 B6       ;
+                      STA.B $B6,X                         ;; 038E9A : 95 B6       ;
                       JSL UpdateXPosNoGvtyW               ;; 038E9C : 22 22 80 01 ;
                       STA.W $1528,X                       ;; 038EA0 : 9D 28 15    ;
                       JSL InvisBlkMainRt                  ;; 038EA3 : 22 4F B4 01 ;
@@ -1727,18 +1727,18 @@ GreyMoveBlkTiles:     db $CC,$CE,$EC,$EE                  ;; ?QPWZ?             
 CODE_038EB4:          JSR GetDrawInfoBnk3                 ;; 038EB4 : 20 60 B7    ;
                       PHX                                 ;; 038EB7 : DA          ;
                       LDX.B #$03                          ;; 038EB8 : A2 03       ;
-CODE_038EBA:          LDA $00                             ;; 038EBA : A5 00       ;
+CODE_038EBA:          LDA.B $00                           ;; 038EBA : A5 00       ;
                       CLC                                 ;; 038EBC : 18          ;
                       ADC.W GreyMoveBlkDispX,X            ;; 038EBD : 7D A8 8E    ;
                       STA.W $0300,Y                       ;; 038EC0 : 99 00 03    ;
-                      LDA $01                             ;; 038EC3 : A5 01       ;
+                      LDA.B $01                           ;; 038EC3 : A5 01       ;
                       CLC                                 ;; 038EC5 : 18          ;
                       ADC.W GreyMoveBlkDispY,X            ;; 038EC6 : 7D AC 8E    ;
                       STA.W $0301,Y                       ;; 038EC9 : 99 01 03    ;
                       LDA.W GreyMoveBlkTiles,X            ;; 038ECC : BD B0 8E    ;
                       STA.W $0302,Y                       ;; 038ECF : 99 02 03    ;
                       LDA.B #$03                          ;; 038ED2 : A9 03       ;
-                      ORA $64                             ;; 038ED4 : 05 64       ;
+                      ORA.B $64                           ;; 038ED4 : 05 64       ;
                       STA.W $0303,Y                       ;; 038ED6 : 99 03 03    ;
                       INY                                 ;; 038ED9 : C8          ;
                       INY                                 ;; 038EDA : C8          ;
@@ -1756,13 +1756,13 @@ CODE_038EBA:          LDA $00                             ;; 038EBA : A5 00     
 StatueFireSpeed:      db $10,$F0                          ;; ?QPWZ?               ;
                                                           ;;                      ;
 StatueFireball:       JSR StatueFireballGfx               ;; ?QPWZ? : 20 1B 8F    ;
-                      LDA $9D                             ;; 038EEF : A5 9D       ;
+                      LDA.B $9D                           ;; 038EEF : A5 9D       ;
                       BNE Return038F06                    ;; 038EF1 : D0 13       ;
                       JSR SubOffscreen0Bnk3               ;; 038EF3 : 20 5D B8    ;
                       JSL MarioSprInteract                ;; 038EF6 : 22 DC A7 01 ;
                       LDY.W $157C,X                       ;; 038EFA : BC 7C 15    ;
                       LDA.W StatueFireSpeed,Y             ;; 038EFD : B9 EA 8E    ;
-                      STA $B6,X                           ;; 038F00 : 95 B6       ;
+                      STA.B $B6,X                         ;; 038F00 : 95 B6       ;
                       JSL UpdateXPosNoGvtyW               ;; 038F02 : 22 22 80 01 ;
 Return038F06:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -1774,36 +1774,36 @@ StatueFireGfxProp:    db $09,$09,$09,$09,$89,$89,$89,$89  ;; ?QPWZ?             
                                                           ;;                      ;
 StatueFireballGfx:    JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7    ;
                       LDA.W $157C,X                       ;; 038F1E : BD 7C 15    ;
-                      ASL                                 ;; 038F21 : 0A          ;
-                      STA $02                             ;; 038F22 : 85 02       ;
+                      ASL A                               ;; 038F21 : 0A          ;
+                      STA.B $02                           ;; 038F22 : 85 02       ;
                       LDA.B $14                           ;; 038F24 : A5 14       ;
-                      LSR                                 ;; 038F26 : 4A          ;
+                      LSR A                               ;; 038F26 : 4A          ;
                       AND.B #$03                          ;; 038F27 : 29 03       ;
-                      ASL                                 ;; 038F29 : 0A          ;
-                      STA $03                             ;; 038F2A : 85 03       ;
+                      ASL A                               ;; 038F29 : 0A          ;
+                      STA.B $03                           ;; 038F2A : 85 03       ;
                       PHX                                 ;; 038F2C : DA          ;
                       LDX.B #$01                          ;; 038F2D : A2 01       ;
-CODE_038F2F:          LDA $01                             ;; 038F2F : A5 01       ;
+CODE_038F2F:          LDA.B $01                           ;; 038F2F : A5 01       ;
                       STA.W $0301,Y                       ;; 038F31 : 99 01 03    ;
                       PHX                                 ;; 038F34 : DA          ;
                       TXA                                 ;; 038F35 : 8A          ;
-                      ORA $02                             ;; 038F36 : 05 02       ;
+                      ORA.B $02                           ;; 038F36 : 05 02       ;
                       TAX                                 ;; 038F38 : AA          ;
-                      LDA $00                             ;; 038F39 : A5 00       ;
+                      LDA.B $00                           ;; 038F39 : A5 00       ;
                       CLC                                 ;; 038F3B : 18          ;
                       ADC.W StatueFireDispX,X             ;; 038F3C : 7D 07 8F    ;
                       STA.W $0300,Y                       ;; 038F3F : 99 00 03    ;
                       PLA                                 ;; 038F42 : 68          ;
                       PHA                                 ;; 038F43 : 48          ;
-                      ORA $03                             ;; 038F44 : 05 03       ;
+                      ORA.B $03                           ;; 038F44 : 05 03       ;
                       TAX                                 ;; 038F46 : AA          ;
                       LDA.W StatueFireTiles,X             ;; 038F47 : BD 0B 8F    ;
                       STA.W $0302,Y                       ;; 038F4A : 99 02 03    ;
                       LDA.W StatueFireGfxProp,X           ;; 038F4D : BD 13 8F    ;
-                      LDX $02                             ;; 038F50 : A6 02       ;
+                      LDX.B $02                           ;; 038F50 : A6 02       ;
                       BNE CODE_038F56                     ;; 038F52 : D0 02       ;
                       EOR.B #$40                          ;; 038F54 : 49 40       ;
-CODE_038F56:          ORA $64                             ;; 038F56 : 05 64       ;
+CODE_038F56:          ORA.B $64                           ;; 038F56 : 05 64       ;
                       STA.W $0303,Y                       ;; 038F58 : 99 03 03    ;
                       PLX                                 ;; 038F5B : FA          ;
                       INY                                 ;; 038F5C : C8          ;
@@ -1825,23 +1825,23 @@ ReflectingFireball:   JSR CODE_038FF2                     ;; ?QPWZ? : 20 F2 8F  
                       BRA CODE_038FA4                     ;; 038F78 : 80 2A       ;
                                                           ;;                      ;
 BooStream:            LDA.B #$00                          ;; ?QPWZ? : A9 00       ;
-                      LDY $B6,X                           ;; 038F7C : B4 B6       ;
+                      LDY.B $B6,X                         ;; 038F7C : B4 B6       ;
                       BPL CODE_038F81                     ;; 038F7E : 10 01       ;
                       INC A                               ;; 038F80 : 1A          ;
 CODE_038F81:          STA.W $157C,X                       ;; 038F81 : 9D 7C 15    ;
                       JSL GenericSprGfxRt2                ;; 038F84 : 22 B2 90 01 ;
                       LDY.W $15EA,X                       ;; 038F88 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B $14                           ;; 038F8B : A5 14       ;
-                      LSR                                 ;; 038F8D : 4A          ;
-                      LSR                                 ;; 038F8E : 4A          ;
-                      LSR                                 ;; 038F8F : 4A          ;
-                      LSR                                 ;; 038F90 : 4A          ;
+                      LSR A                               ;; 038F8D : 4A          ;
+                      LSR A                               ;; 038F8E : 4A          ;
+                      LSR A                               ;; 038F8F : 4A          ;
+                      LSR A                               ;; 038F90 : 4A          ;
                       AND.B #$01                          ;; 038F91 : 29 01       ;
-                      STA $00                             ;; 038F93 : 85 00       ;
+                      STA.B $00                           ;; 038F93 : 85 00       ;
                       TXA                                 ;; 038F95 : 8A          ;
                       AND.B #$03                          ;; 038F96 : 29 03       ;
-                      ASL                                 ;; 038F98 : 0A          ;
-                      ORA $00                             ;; 038F99 : 05 00       ;
+                      ASL A                               ;; 038F98 : 0A          ;
+                      ORA.B $00                           ;; 038F99 : 05 00       ;
                       PHX                                 ;; 038F9B : DA          ;
                       TAX                                 ;; 038F9C : AA          ;
                       LDA.W BooStreamFrntTiles,X          ;; 038F9D : BD 6D 8F    ;
@@ -1850,14 +1850,14 @@ CODE_038F81:          STA.W $157C,X                       ;; 038F81 : 9D 7C 15  
 CODE_038FA4:          LDA.W $14C8,X                       ;; 038FA4 : BD C8 14    ;
                       CMP.B #$08                          ;; 038FA7 : C9 08       ;
                       BNE Return038FF1                    ;; 038FA9 : D0 46       ;
-                      LDA $9D                             ;; 038FAB : A5 9D       ;
+                      LDA.B $9D                           ;; 038FAB : A5 9D       ;
                       BNE Return038FF1                    ;; 038FAD : D0 42       ;
                       TXA                                 ;; 038FAF : 8A          ;
                       EOR.B $14                           ;; 038FB0 : 45 14       ;
                       AND.B #$07                          ;; 038FB2 : 29 07       ;
                       ORA.W $186C,X                       ;; 038FB4 : 1D 6C 18    ;
                       BNE CODE_038FC2                     ;; 038FB7 : D0 09       ;
-                      LDA $9E,X                           ;; 038FB9 : B5 9E       ;
+                      LDA.B $9E,X                         ;; 038FB9 : B5 9E       ;
                       CMP.B #$B0                          ;; 038FBB : C9 B0       ;
                       BNE CODE_038FC2                     ;; 038FBD : D0 03       ;
                       JSR CODE_039020                     ;; 038FBF : 20 20 90    ;
@@ -1867,41 +1867,41 @@ CODE_038FC2:          JSL UpdateYPosNoGvtyW               ;; 038FC2 : 22 1A 80 0
                       LDA.W $1588,X                       ;; 038FCE : BD 88 15    ; \ Branch if not touching object 
                       AND.B #$03                          ;; 038FD1 : 29 03       ;  | 
                       BEQ CODE_038FDC                     ;; 038FD3 : F0 07       ; / 
-                      LDA $B6,X                           ;; 038FD5 : B5 B6       ;
+                      LDA.B $B6,X                         ;; 038FD5 : B5 B6       ;
                       EOR.B #$FF                          ;; 038FD7 : 49 FF       ;
                       INC A                               ;; 038FD9 : 1A          ;
-                      STA $B6,X                           ;; 038FDA : 95 B6       ;
+                      STA.B $B6,X                         ;; 038FDA : 95 B6       ;
 CODE_038FDC:          LDA.W $1588,X                       ;; 038FDC : BD 88 15    ;
                       AND.B #$0C                          ;; 038FDF : 29 0C       ;
                       BEQ CODE_038FEA                     ;; 038FE1 : F0 07       ;
-                      LDA $AA,X                           ;; 038FE3 : B5 AA       ;
+                      LDA.B $AA,X                         ;; 038FE3 : B5 AA       ;
                       EOR.B #$FF                          ;; 038FE5 : 49 FF       ;
                       INC A                               ;; 038FE7 : 1A          ;
-                      STA $AA,X                           ;; 038FE8 : 95 AA       ;
+                      STA.B $AA,X                         ;; 038FE8 : 95 AA       ;
 CODE_038FEA:          JSL MarioSprInteract                ;; 038FEA : 22 DC A7 01 ;
                       JSR SubOffscreen0Bnk3               ;; 038FEE : 20 5D B8    ;
 Return038FF1:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_038FF2:          JSL GenericSprGfxRt2                ;; 038FF2 : 22 B2 90 01 ;
                       LDA.B $14                           ;; 038FF6 : A5 14       ;
-                      LSR                                 ;; 038FF8 : 4A          ;
-                      LSR                                 ;; 038FF9 : 4A          ;
+                      LSR A                               ;; 038FF8 : 4A          ;
+                      LSR A                               ;; 038FF9 : 4A          ;
                       LDA.B #$04                          ;; 038FFA : A9 04       ;
                       BCC CODE_038FFF                     ;; 038FFC : 90 01       ;
-                      ASL                                 ;; 038FFE : 0A          ;
-CODE_038FFF:          LDY $B6,X                           ;; 038FFF : B4 B6       ;
+                      ASL A                               ;; 038FFE : 0A          ;
+CODE_038FFF:          LDY.B $B6,X                         ;; 038FFF : B4 B6       ;
                       BPL CODE_039005                     ;; 039001 : 10 02       ;
                       EOR.B #$40                          ;; 039003 : 49 40       ;
-CODE_039005:          LDY $AA,X                           ;; 039005 : B4 AA       ;
+CODE_039005:          LDY.B $AA,X                         ;; 039005 : B4 AA       ;
                       BMI CODE_03900B                     ;; 039007 : 30 02       ;
                       EOR.B #$80                          ;; 039009 : 49 80       ;
-CODE_03900B:          STA $00                             ;; 03900B : 85 00       ;
+CODE_03900B:          STA.B $00                           ;; 03900B : 85 00       ;
                       LDY.W $15EA,X                       ;; 03900D : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B #$AC                          ;; 039010 : A9 AC       ;
                       STA.W $0302,Y                       ;; 039012 : 99 02 03    ;
                       LDA.W $0303,Y                       ;; 039015 : B9 03 03    ;
                       AND.B #$31                          ;; 039018 : 29 31       ;
-                      ORA $00                             ;; 03901A : 05 00       ;
+                      ORA.B $00                           ;; 03901A : 05 00       ;
                       STA.W $0303,Y                       ;; 03901C : 99 03 03    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -1917,17 +1917,17 @@ CODE_039022:          LDA.W $17F0,Y                       ;; 039022 : B9 F0 17  
 ADDR_039034:          LDY.W $185D                         ;; 039034 : AC 5D 18    ;
 CODE_039037:          LDA.B #$0A                          ;; 039037 : A9 0A       ;
                       STA.W $17F0,Y                       ;; 039039 : 99 F0 17    ;
-                      LDA $E4,X                           ;; 03903C : B5 E4       ;
+                      LDA.B $E4,X                         ;; 03903C : B5 E4       ;
                       STA.W $1808,Y                       ;; 03903E : 99 08 18    ;
                       LDA.W $14E0,X                       ;; 039041 : BD E0 14    ;
                       STA.W $18EA,Y                       ;; 039044 : 99 EA 18    ;
-                      LDA $D8,X                           ;; 039047 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 039047 : B5 D8       ;
                       STA.W $17FC,Y                       ;; 039049 : 99 FC 17    ;
                       LDA.W $14D4,X                       ;; 03904C : BD D4 14    ;
                       STA.W $1814,Y                       ;; 03904F : 99 14 18    ;
                       LDA.B #$30                          ;; 039052 : A9 30       ;
                       STA.W $1850,Y                       ;; 039054 : 99 50 18    ;
-                      LDA $B6,X                           ;; 039057 : B5 B6       ;
+                      LDA.B $B6,X                         ;; 039057 : B5 B6       ;
                       STA.W $182C,Y                       ;; 039059 : 99 2C 18    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -1941,7 +1941,7 @@ FishinBooAccelY:      db $01,$FF                          ;; ?QPWZ?             
 FishinBooMaxSpeedY:   db $10,$F0                          ;; ?QPWZ?               ;
                                                           ;;                      ;
 FishinBoo:            JSR FishinBooGfx                    ;; ?QPWZ? : 20 80 91    ;
-                      LDA $9D                             ;; 039068 : A5 9D       ;
+                      LDA.B $9D                           ;; 039068 : A5 9D       ;
                       BNE Return0390EA                    ;; 03906A : D0 7E       ;
                       JSL MarioSprInteract                ;; 03906C : 22 DC A7 01 ;
                       JSR SubHorzPosBnk3                  ;; 039070 : 20 17 B8    ;
@@ -1954,11 +1954,11 @@ FishinBoo:            JSR FishinBooGfx                    ;; ?QPWZ? : 20 80 91  
                       TYA                                 ;; 039082 : 98          ;
                       STA.W $157C,X                       ;; 039083 : 9D 7C 15    ;
 CODE_039086:          TXA                                 ;; 039086 : 8A          ;
-                      ASL                                 ;; 039087 : 0A          ;
-                      ASL                                 ;; 039088 : 0A          ;
-                      ASL                                 ;; 039089 : 0A          ;
-                      ASL                                 ;; 03908A : 0A          ;
-                      ADC $13                             ;; 03908B : 65 13       ;
+                      ASL A                               ;; 039087 : 0A          ;
+                      ASL A                               ;; 039088 : 0A          ;
+                      ASL A                               ;; 039089 : 0A          ;
+                      ASL A                               ;; 03908A : 0A          ;
+                      ADC.B $13                           ;; 03908B : 65 13       ;
                       AND.B #$3F                          ;; 03908D : 29 3F       ;
                       ORA.W $15AC,X                       ;; 03908F : 1D AC 15    ;
                       BNE CODE_039099                     ;; 039092 : D0 05       ;
@@ -1969,39 +1969,39 @@ CODE_039099:          LDA.W $18BF                         ;; 039099 : AD BF 18  
                       TYA                                 ;; 03909E : 98          ;
                       EOR.B #$01                          ;; 03909F : 49 01       ;
                       TAY                                 ;; 0390A1 : A8          ;
-CODE_0390A2:          LDA $B6,X                           ;; 0390A2 : B5 B6       ; \ If not at max X speed, accelerate 
+CODE_0390A2:          LDA.B $B6,X                         ;; 0390A2 : B5 B6       ; \ If not at max X speed, accelerate 
                       CMP.W FishinBooMaxSpeedX,Y          ;; 0390A4 : D9 5F 90    ;  | 
                       BEQ CODE_0390AF                     ;; 0390A7 : F0 06       ;  | 
                       CLC                                 ;; 0390A9 : 18          ;  | 
                       ADC.W FishinBooAccelX,Y             ;; 0390AA : 79 5D 90    ;  | 
-                      STA $B6,X                           ;; 0390AD : 95 B6       ; / 
-CODE_0390AF:          LDA $13                             ;; 0390AF : A5 13       ;
+                      STA.B $B6,X                         ;; 0390AD : 95 B6       ; / 
+CODE_0390AF:          LDA.B $13                           ;; 0390AF : A5 13       ;
                       AND.B #$01                          ;; 0390B1 : 29 01       ;
                       BNE CODE_0390C9                     ;; 0390B3 : D0 14       ;
-                      LDA $C2,X                           ;; 0390B5 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 0390B5 : B5 C2       ;
                       AND.B #$01                          ;; 0390B7 : 29 01       ;
                       TAY                                 ;; 0390B9 : A8          ;
-                      LDA $AA,X                           ;; 0390BA : B5 AA       ;
+                      LDA.B $AA,X                         ;; 0390BA : B5 AA       ;
                       CLC                                 ;; 0390BC : 18          ;
                       ADC.W FishinBooAccelY,Y             ;; 0390BD : 79 61 90    ;
-                      STA $AA,X                           ;; 0390C0 : 95 AA       ;
+                      STA.B $AA,X                         ;; 0390C0 : 95 AA       ;
                       CMP.W FishinBooMaxSpeedY,Y          ;; 0390C2 : D9 63 90    ;
                       BNE CODE_0390C9                     ;; 0390C5 : D0 02       ;
-                      INC $C2,X                           ;; 0390C7 : F6 C2       ;
-CODE_0390C9:          LDA $B6,X                           ;; 0390C9 : B5 B6       ;
+                      INC.B $C2,X                         ;; 0390C7 : F6 C2       ;
+CODE_0390C9:          LDA.B $B6,X                         ;; 0390C9 : B5 B6       ;
                       PHA                                 ;; 0390CB : 48          ;
                       LDY.W $18BF                         ;; 0390CC : AC BF 18    ;
                       BNE CODE_0390DC                     ;; 0390CF : D0 0B       ;
                       LDA.W $17BD                         ;; 0390D1 : AD BD 17    ;
-                      ASL                                 ;; 0390D4 : 0A          ;
-                      ASL                                 ;; 0390D5 : 0A          ;
-                      ASL                                 ;; 0390D6 : 0A          ;
+                      ASL A                               ;; 0390D4 : 0A          ;
+                      ASL A                               ;; 0390D5 : 0A          ;
+                      ASL A                               ;; 0390D6 : 0A          ;
                       CLC                                 ;; 0390D7 : 18          ;
-                      ADC $B6,X                           ;; 0390D8 : 75 B6       ;
-                      STA $B6,X                           ;; 0390DA : 95 B6       ;
+                      ADC.B $B6,X                         ;; 0390D8 : 75 B6       ;
+                      STA.B $B6,X                         ;; 0390DA : 95 B6       ;
 CODE_0390DC:          JSL UpdateXPosNoGvtyW               ;; 0390DC : 22 22 80 01 ;
                       PLA                                 ;; 0390E0 : 68          ;
-                      STA $B6,X                           ;; 0390E1 : 95 B6       ;
+                      STA.B $B6,X                         ;; 0390E1 : 95 B6       ;
                       JSL UpdateYPosNoGvtyW               ;; 0390E3 : 22 1A 80 01 ;
                       JSR CODE_0390F3                     ;; 0390E7 : 20 F3 90    ;
 Return0390EA:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -2012,26 +2012,26 @@ DATA_0390EB:          db $1A,$14,$EE,$F8                  ;; 0390EB             
 DATA_0390EF:          db $00,$00,$FF,$FF                  ;; 0390EF               ;
                                                           ;;                      ;
 CODE_0390F3:          LDA.W $157C,X                       ;; 0390F3 : BD 7C 15    ;
-                      ASL                                 ;; 0390F6 : 0A          ;
+                      ASL A                               ;; 0390F6 : 0A          ;
                       ADC.W $1602,X                       ;; 0390F7 : 7D 02 16    ;
                       TAY                                 ;; 0390FA : A8          ;
-                      LDA $E4,X                           ;; 0390FB : B5 E4       ;
+                      LDA.B $E4,X                         ;; 0390FB : B5 E4       ;
                       CLC                                 ;; 0390FD : 18          ;
                       ADC.W DATA_0390EB,Y                 ;; 0390FE : 79 EB 90    ;
-                      STA $04                             ;; 039101 : 85 04       ;
+                      STA.B $04                           ;; 039101 : 85 04       ;
                       LDA.W $14E0,X                       ;; 039103 : BD E0 14    ;
                       ADC.W DATA_0390EF,Y                 ;; 039106 : 79 EF 90    ;
-                      STA $0A                             ;; 039109 : 85 0A       ;
+                      STA.B $0A                           ;; 039109 : 85 0A       ;
                       LDA.B #$04                          ;; 03910B : A9 04       ;
-                      STA $06                             ;; 03910D : 85 06       ;
-                      STA $07                             ;; 03910F : 85 07       ;
-                      LDA $D8,X                           ;; 039111 : B5 D8       ;
+                      STA.B $06                           ;; 03910D : 85 06       ;
+                      STA.B $07                           ;; 03910F : 85 07       ;
+                      LDA.B $D8,X                         ;; 039111 : B5 D8       ;
                       CLC                                 ;; 039113 : 18          ;
                       ADC.B #$47                          ;; 039114 : 69 47       ;
-                      STA $05                             ;; 039116 : 85 05       ;
+                      STA.B $05                           ;; 039116 : 85 05       ;
                       LDA.W $14D4,X                       ;; 039118 : BD D4 14    ;
                       ADC.B #$00                          ;; 03911B : 69 00       ;
-                      STA $0B                             ;; 03911D : 85 0B       ;
+                      STA.B $0B                           ;; 03911D : 85 0B       ;
                       JSL GetMarioClipping                ;; 03911F : 22 64 B6 03 ;
                       JSL CheckForContact                 ;; 039123 : 22 2B B7 03 ;
                       BCC Return03912D                    ;; 039127 : 90 04       ;
@@ -2061,53 +2061,53 @@ DATA_03917C:          db $00,$40,$C0,$80                  ;; 03917C             
                                                           ;;                      ;
 FishinBooGfx:         JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7    ;
                       LDA.W $1602,X                       ;; 039183 : BD 02 16    ;
-                      STA $04                             ;; 039186 : 85 04       ;
+                      STA.B $04                           ;; 039186 : 85 04       ;
                       LDA.W $157C,X                       ;; 039188 : BD 7C 15    ;
-                      STA $02                             ;; 03918B : 85 02       ;
+                      STA.B $02                           ;; 03918B : 85 02       ;
                       PHX                                 ;; 03918D : DA          ;
                       PHY                                 ;; 03918E : 5A          ;
                       LDX.B #$09                          ;; 03918F : A2 09       ;
-CODE_039191:          LDA $01                             ;; 039191 : A5 01       ;
+CODE_039191:          LDA.B $01                           ;; 039191 : A5 01       ;
                       CLC                                 ;; 039193 : 18          ;
                       ADC.W FishinBooDispY,X              ;; 039194 : 7D 56 91    ;
                       STA.W $0301,Y                       ;; 039197 : 99 01 03    ;
-                      STZ $03                             ;; 03919A : 64 03       ;
+                      STZ.B $03                           ;; 03919A : 64 03       ;
                       LDA.W FishinBooTiles1,X             ;; 03919C : BD 60 91    ;
                       CPX.B #$09                          ;; 03919F : E0 09       ;
                       BNE CODE_0391B4                     ;; 0391A1 : D0 11       ;
                       LDA.B $14                           ;; 0391A3 : A5 14       ;
-                      LSR                                 ;; 0391A5 : 4A          ;
-                      LSR                                 ;; 0391A6 : 4A          ;
+                      LSR A                               ;; 0391A5 : 4A          ;
+                      LSR A                               ;; 0391A6 : 4A          ;
                       PHX                                 ;; 0391A7 : DA          ;
                       AND.B #$03                          ;; 0391A8 : 29 03       ;
                       TAX                                 ;; 0391AA : AA          ;
                       LDA.W DATA_039178,X                 ;; 0391AB : BD 78 91    ;
-                      STA $03                             ;; 0391AE : 85 03       ;
+                      STA.B $03                           ;; 0391AE : 85 03       ;
                       LDA.W FishinBooTiles2,X             ;; 0391B0 : BD 74 91    ;
                       PLX                                 ;; 0391B3 : FA          ;
 CODE_0391B4:          STA.W $0302,Y                       ;; 0391B4 : 99 02 03    ;
-                      LDA $02                             ;; 0391B7 : A5 02       ;
+                      LDA.B $02                           ;; 0391B7 : A5 02       ;
                       CMP.B #$01                          ;; 0391B9 : C9 01       ;
                       LDA.W FishinBooGfxProp,X            ;; 0391BB : BD 6A 91    ;
-                      EOR $03                             ;; 0391BE : 45 03       ;
-                      ORA $64                             ;; 0391C0 : 05 64       ;
+                      EOR.B $03                           ;; 0391BE : 45 03       ;
+                      ORA.B $64                           ;; 0391C0 : 05 64       ;
                       BCS CODE_0391C6                     ;; 0391C2 : B0 02       ;
                       EOR.B #$40                          ;; 0391C4 : 49 40       ;
 CODE_0391C6:          STA.W $0303,Y                       ;; 0391C6 : 99 03 03    ;
                       PHX                                 ;; 0391C9 : DA          ;
-                      LDA $04                             ;; 0391CA : A5 04       ;
+                      LDA.B $04                           ;; 0391CA : A5 04       ;
                       BEQ CODE_0391D3                     ;; 0391CC : F0 05       ;
                       TXA                                 ;; 0391CE : 8A          ;
                       CLC                                 ;; 0391CF : 18          ;
                       ADC.B #$0A                          ;; 0391D0 : 69 0A       ;
                       TAX                                 ;; 0391D2 : AA          ;
-CODE_0391D3:          LDA $02                             ;; 0391D3 : A5 02       ;
+CODE_0391D3:          LDA.B $02                           ;; 0391D3 : A5 02       ;
                       BNE CODE_0391DC                     ;; 0391D5 : D0 05       ;
                       TXA                                 ;; 0391D7 : 8A          ;
                       CLC                                 ;; 0391D8 : 18          ;
                       ADC.B #$14                          ;; 0391D9 : 69 14       ;
                       TAX                                 ;; 0391DB : AA          ;
-CODE_0391DC:          LDA $00                             ;; 0391DC : A5 00       ;
+CODE_0391DC:          LDA.B $00                           ;; 0391DC : A5 00       ;
                       CLC                                 ;; 0391DE : 18          ;
                       ADC.W FishinBooDispX,X              ;; 0391DF : 7D 2E 91    ;
                       STA.W $0300,Y                       ;; 0391E2 : 99 00 03    ;
@@ -2119,9 +2119,9 @@ CODE_0391DC:          LDA $00                             ;; 0391DC : A5 00     
                       DEX                                 ;; 0391EA : CA          ;
                       BPL CODE_039191                     ;; 0391EB : 10 A4       ;
                       LDA.B $14                           ;; 0391ED : A5 14       ;
-                      LSR                                 ;; 0391EF : 4A          ;
-                      LSR                                 ;; 0391F0 : 4A          ;
-                      LSR                                 ;; 0391F1 : 4A          ;
+                      LSR A                               ;; 0391EF : 4A          ;
+                      LSR A                               ;; 0391F0 : 4A          ;
+                      LSR A                               ;; 0391F1 : 4A          ;
                       AND.B #$03                          ;; 0391F2 : 29 03       ;
                       TAX                                 ;; 0391F4 : AA          ;
                       PLY                                 ;; 0391F5 : 7A          ;
@@ -2147,30 +2147,30 @@ FallingSpike:         JSL GenericSprGfxRt2                ;; ?QPWZ? : 22 B2 90 0
                       STA.W $0301,Y                       ;; 039224 : 99 01 03    ;
                       LDA.W $1540,X                       ;; 039227 : BD 40 15    ;
                       BEQ CODE_039237                     ;; 03922A : F0 0B       ;
-                      LSR                                 ;; 03922C : 4A          ;
-                      LSR                                 ;; 03922D : 4A          ;
+                      LSR A                               ;; 03922C : 4A          ;
+                      LSR A                               ;; 03922D : 4A          ;
                       AND.B #$01                          ;; 03922E : 29 01       ;
                       CLC                                 ;; 039230 : 18          ;
                       ADC.W $0300,Y                       ;; 039231 : 79 00 03    ;
                       STA.W $0300,Y                       ;; 039234 : 99 00 03    ;
-CODE_039237:          LDA $9D                             ;; 039237 : A5 9D       ;
+CODE_039237:          LDA.B $9D                           ;; 039237 : A5 9D       ;
                       BNE CODE_03926C                     ;; 039239 : D0 31       ;
                       JSR SubOffscreen0Bnk3               ;; 03923B : 20 5D B8    ;
                       JSL UpdateSpritePos                 ;; 03923E : 22 2A 80 01 ;
-                      LDA $C2,X                           ;; 039242 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 039242 : B5 C2       ;
                       JSL ExecutePtr                      ;; 039244 : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_03924C                      ;; ?QPWZ? : 4C 92       ;
                       dw CODE_039262                      ;; ?QPWZ? : 62 92       ;
                                                           ;;                      ;
-CODE_03924C:          STZ $AA,X                           ;; 03924C : 74 AA       ; Sprite Y Speed = 0 
+CODE_03924C:          STZ.B $AA,X                         ;; 03924C : 74 AA       ; Sprite Y Speed = 0 
                       JSR SubHorzPosBnk3                  ;; 03924E : 20 17 B8    ;
-                      LDA $0F                             ;; 039251 : A5 0F       ;
+                      LDA.B $0F                           ;; 039251 : A5 0F       ;
                       CLC                                 ;; 039253 : 18          ;
                       ADC.B #$40                          ;; 039254 : 69 40       ;
                       CMP.B #$80                          ;; 039256 : C9 80       ;
                       BCS Return039261                    ;; 039258 : B0 07       ;
-                      INC $C2,X                           ;; 03925A : F6 C2       ;
+                      INC.B $C2,X                         ;; 03925A : F6 C2       ;
                       LDA.B #$40                          ;; 03925C : A9 40       ;
                       STA.W $1540,X                       ;; 03925E : 9D 40 15    ;
 Return039261:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -2180,7 +2180,7 @@ CODE_039262:          LDA.W $1540,X                       ;; 039262 : BD 40 15  
                       JSL MarioSprInteract                ;; 039267 : 22 DC A7 01 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_03926C:          STZ $AA,X                           ;; 03926C : 74 AA       ; Sprite Y Speed = 0 
+CODE_03926C:          STZ.B $AA,X                         ;; 03926C : 74 AA       ; Sprite Y Speed = 0 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -2208,19 +2208,19 @@ CreateEatBlock:       JSL GenericSprGfxRt2                ;; ?QPWZ? : 22 B2 90 0
                       LDA.W $1909                         ;; 0392A9 : AD 09 19    ;
                       CMP.B #$FF                          ;; 0392AC : C9 FF       ;
                       BEQ CODE_0392C0                     ;; 0392AE : F0 10       ;
-                      LDA $13                             ;; 0392B0 : A5 13       ;
+                      LDA.B $13                           ;; 0392B0 : A5 13       ;
                       AND.B #$03                          ;; 0392B2 : 29 03       ;
-                      ORA $9D                             ;; 0392B4 : 05 9D       ;
+                      ORA.B $9D                           ;; 0392B4 : 05 9D       ;
                       BNE CODE_0392BD                     ;; 0392B6 : D0 05       ;
                       LDA.B #$04                          ;; 0392B8 : A9 04       ; \ Play sound effect 
                       STA.W $1DFA                         ;; 0392BA : 8D FA 1D    ; / 
 CODE_0392BD:          LDY.W $157C,X                       ;; 0392BD : BC 7C 15    ;
-CODE_0392C0:          LDA $9D                             ;; 0392C0 : A5 9D       ;
+CODE_0392C0:          LDA.B $9D                           ;; 0392C0 : A5 9D       ;
                       BNE Return03932B                    ;; 0392C2 : D0 67       ;
                       LDA.W CrtEatBlkSpeedX,Y             ;; 0392C4 : B9 6F 92    ;
-                      STA $B6,X                           ;; 0392C7 : 95 B6       ;
+                      STA.B $B6,X                         ;; 0392C7 : 95 B6       ;
                       LDA.W CrtEatBlkSpeedY,Y             ;; 0392C9 : B9 74 92    ;
-                      STA $AA,X                           ;; 0392CC : 95 AA       ;
+                      STA.B $AA,X                         ;; 0392CC : 95 AA       ;
                       JSL UpdateYPosNoGvtyW               ;; 0392CE : 22 1A 80 01 ;
                       JSL UpdateXPosNoGvtyW               ;; 0392D2 : 22 22 80 01 ;
                       STZ.W $1528,X                       ;; 0392D6 : 9E 28 15    ;
@@ -2228,8 +2228,8 @@ CODE_0392C0:          LDA $9D                             ;; 0392C0 : A5 9D     
                       LDA.W $1909                         ;; 0392DD : AD 09 19    ;
                       CMP.B #$FF                          ;; 0392E0 : C9 FF       ;
                       BEQ Return03932B                    ;; 0392E2 : F0 47       ;
-                      LDA $D8,X                           ;; 0392E4 : B5 D8       ;
-                      ORA $E4,X                           ;; 0392E6 : 15 E4       ;
+                      LDA.B $D8,X                         ;; 0392E4 : B5 D8       ;
+                      ORA.B $E4,X                         ;; 0392E6 : 15 E4       ;
                       AND.B #$0F                          ;; 0392E8 : 29 0F       ;
                       BNE Return03932B                    ;; 0392EA : D0 3F       ;
                       LDA.W $151C,X                       ;; 0392EC : BD 1C 15    ;
@@ -2247,10 +2247,10 @@ CODE_0392F8:          LDY.W $0DB3                         ;; 0392F8 : AC B3 0D  
                       LDA.W CrtEatBlkData2,Y              ;; 03930B : B9 EF 93    ;
 CODE_03930E:          STA.W $1602,X                       ;; 03930E : 9D 02 16    ;
                       PHA                                 ;; 039311 : 48          ;
-                      LSR                                 ;; 039312 : 4A          ;
-                      LSR                                 ;; 039313 : 4A          ;
-                      LSR                                 ;; 039314 : 4A          ;
-                      LSR                                 ;; 039315 : 4A          ;
+                      LSR A                               ;; 039312 : 4A          ;
+                      LSR A                               ;; 039313 : 4A          ;
+                      LSR A                               ;; 039314 : 4A          ;
+                      LSR A                               ;; 039315 : 4A          ;
                       STA.W $1570,X                       ;; 039316 : 9D 70 15    ;
                       PLA                                 ;; 039319 : 68          ;
                       AND.B #$03                          ;; 03931A : 29 03       ;
@@ -2265,28 +2265,28 @@ Return03932B:         RTS                                 ;; ?QPWZ? : 60        
 CODE_03932C:          LDA.B #$02                          ;; 03932C : A9 02       ;
                       JSR GenTileFromSpr1                 ;; 03932E : 20 8B 93    ;
                       LDA.B #$01                          ;; 039331 : A9 01       ;
-                      STA $B6,X                           ;; 039333 : 95 B6       ;
-                      STA $AA,X                           ;; 039335 : 95 AA       ;
+                      STA.B $B6,X                         ;; 039333 : 95 B6       ;
+                      STA.B $AA,X                         ;; 039335 : 95 AA       ;
                       JSL CODE_019138                     ;; 039337 : 22 38 91 01 ;
                       LDA.W $1588,X                       ;; 03933B : BD 88 15    ;
                       PHA                                 ;; 03933E : 48          ;
                       LDA.B #$FF                          ;; 03933F : A9 FF       ;
-                      STA $B6,X                           ;; 039341 : 95 B6       ;
-                      STA $AA,X                           ;; 039343 : 95 AA       ;
-                      LDA $E4,X                           ;; 039345 : B5 E4       ;
+                      STA.B $B6,X                         ;; 039341 : 95 B6       ;
+                      STA.B $AA,X                         ;; 039343 : 95 AA       ;
+                      LDA.B $E4,X                         ;; 039345 : B5 E4       ;
                       PHA                                 ;; 039347 : 48          ;
                       SEC                                 ;; 039348 : 38          ;
                       SBC.B #$01                          ;; 039349 : E9 01       ;
-                      STA $E4,X                           ;; 03934B : 95 E4       ;
+                      STA.B $E4,X                         ;; 03934B : 95 E4       ;
                       LDA.W $14E0,X                       ;; 03934D : BD E0 14    ;
                       PHA                                 ;; 039350 : 48          ;
                       SBC.B #$00                          ;; 039351 : E9 00       ;
                       STA.W $14E0,X                       ;; 039353 : 9D E0 14    ;
-                      LDA $D8,X                           ;; 039356 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 039356 : B5 D8       ;
                       PHA                                 ;; 039358 : 48          ;
                       SEC                                 ;; 039359 : 38          ;
                       SBC.B #$01                          ;; 03935A : E9 01       ;
-                      STA $D8,X                           ;; 03935C : 95 D8       ;
+                      STA.B $D8,X                         ;; 03935C : 95 D8       ;
                       LDA.W $14D4,X                       ;; 03935E : BD D4 14    ;
                       PHA                                 ;; 039361 : 48          ;
                       SBC.B #$00                          ;; 039362 : E9 00       ;
@@ -2295,11 +2295,11 @@ CODE_03932C:          LDA.B #$02                          ;; 03932C : A9 02     
                       PLA                                 ;; 03936B : 68          ;
                       STA.W $14D4,X                       ;; 03936C : 9D D4 14    ;
                       PLA                                 ;; 03936F : 68          ;
-                      STA $D8,X                           ;; 039370 : 95 D8       ;
+                      STA.B $D8,X                         ;; 039370 : 95 D8       ;
                       PLA                                 ;; 039372 : 68          ;
                       STA.W $14E0,X                       ;; 039373 : 9D E0 14    ;
                       PLA                                 ;; 039376 : 68          ;
-                      STA $E4,X                           ;; 039377 : 95 E4       ;
+                      STA.B $E4,X                         ;; 039377 : 95 E4       ;
                       PLA                                 ;; 039379 : 68          ;
                       ORA.W $1588,X                       ;; 03937A : 1D 88 15    ;
                       BEQ CODE_039387                     ;; 03937D : F0 08       ;
@@ -2311,15 +2311,15 @@ CODE_03932C:          LDA.B #$02                          ;; 03932C : A9 02     
 CODE_039387:          STZ.W $14C8,X                       ;; 039387 : 9E C8 14    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-GenTileFromSpr1:      STA $9C                             ;; ?QPWZ? : 85 9C       ; $9C = tile to generate 
-                      LDA $E4,X                           ;; 03938D : B5 E4       ; \ $9A = Sprite X position 
-                      STA $9A                             ;; 03938F : 85 9A       ;  | for block creation 
+GenTileFromSpr1:      STA.B $9C                           ;; ?QPWZ? : 85 9C       ; $9C = tile to generate 
+                      LDA.B $E4,X                         ;; 03938D : B5 E4       ; \ $9A = Sprite X position 
+                      STA.B $9A                           ;; 03938F : 85 9A       ;  | for block creation 
                       LDA.W $14E0,X                       ;; 039391 : BD E0 14    ;  | 
-                      STA $9B                             ;; 039394 : 85 9B       ; / 
-                      LDA $D8,X                           ;; 039396 : B5 D8       ; \ $98 = Sprite Y position 
-                      STA $98                             ;; 039398 : 85 98       ;  | for block creation 
+                      STA.B $9B                           ;; 039394 : 85 9B       ; / 
+                      LDA.B $D8,X                         ;; 039396 : B5 D8       ; \ $98 = Sprite Y position 
+                      STA.B $98                           ;; 039398 : 85 98       ;  | for block creation 
                       LDA.W $14D4,X                       ;; 03939A : BD D4 14    ;  | 
-                      STA $99                             ;; 03939D : 85 99       ; / 
+                      STA.B $99                           ;; 03939D : 85 99       ; / 
                       JSL GenerateTile                    ;; 03939F : 22 B0 BE 00 ; Generate the tile 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -2344,11 +2344,11 @@ CrtEatBlkData2:       db $80,$13,$10,$13,$10,$13,$10,$13  ;; ?QPWZ?             
                       db $F0,$50,$82,$FF                  ;; ?QPWZ?               ;
                                                           ;;                      ;
 WoodenSpike:          JSR WoodSpikeGfx                    ;; ?QPWZ? : 20 CF 94    ;
-                      LDA $9D                             ;; 039426 : A5 9D       ;
+                      LDA.B $9D                           ;; 039426 : A5 9D       ;
                       BNE Return039440                    ;; 039428 : D0 16       ;
                       JSR SubOffscreen0Bnk3               ;; 03942A : 20 5D B8    ;
                       JSR CODE_039488                     ;; 03942D : 20 88 94    ;
-                      LDA $C2,X                           ;; 039430 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 039430 : B5 C2       ;
                       AND.B #$03                          ;; 039432 : 29 03       ;
                       JSL ExecutePtr                      ;; 039434 : 22 DF 86 00 ;
                                                           ;;                      ;
@@ -2382,7 +2382,7 @@ CODE_039458:          LDA.W $1540,X                       ;; 039458 : BD 40 15  
                                                           ;;                      ;
 CODE_039463:          LDA.B #$30                          ;; 039463 : A9 30       ;
 SetTimerNextState:    STA.W $1540,X                       ;; ?QPWZ? : 9D 40 15    ;
-                      INC $C2,X                           ;; 039468 : F6 C2       ; Goto next state 
+                      INC.B $C2,X                         ;; 039468 : F6 C2       ; Goto next state 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03946B:          LDA.W $1540,X                       ;; 03946B : BD 40 15    ; \ If stall timer us up, 
@@ -2396,7 +2396,7 @@ CODE_039475:          LDY.W $151C,X                       ;; 039475 : BC 1C 15  
                       BEQ CODE_03947D                     ;; 039478 : F0 03       ;
                       EOR.B #$FF                          ;; 03947A : 49 FF       ;
                       INC A                               ;; 03947C : 1A          ;
-CODE_03947D:          STA $AA,X                           ;; 03947D : 95 AA       ;
+CODE_03947D:          STA.B $AA,X                         ;; 03947D : 95 AA       ;
                       JSL UpdateYPosNoGvtyW               ;; 03947F : 22 1A 80 01 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -2408,7 +2408,7 @@ DATA_039486:          db $00,$FF                          ;; 039486             
 CODE_039488:          JSL MarioSprInteract                ;; 039488 : 22 DC A7 01 ;
                       BCC Return0394B0                    ;; 03948C : 90 22       ;
                       JSR SubHorzPosBnk3                  ;; 03948E : 20 17 B8    ;
-                      LDA $0F                             ;; 039491 : A5 0F       ;
+                      LDA.B $0F                           ;; 039491 : A5 0F       ;
                       CLC                                 ;; 039493 : 18          ;
                       ADC.B #$04                          ;; 039494 : 69 04       ;
                       CMP.B #$08                          ;; 039496 : C9 08       ;
@@ -2416,14 +2416,14 @@ CODE_039488:          JSL MarioSprInteract                ;; 039488 : 22 DC A7 0
                       JSL HurtMario                       ;; 03949A : 22 B7 F5 00 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_03949F:          LDA $94                             ;; 03949F : A5 94       ;
+CODE_03949F:          LDA.B $94                           ;; 03949F : A5 94       ;
                       CLC                                 ;; 0394A1 : 18          ;
                       ADC.W DATA_039484,Y                 ;; 0394A2 : 79 84 94    ;
-                      STA $94                             ;; 0394A5 : 85 94       ;
-                      LDA $95                             ;; 0394A7 : A5 95       ;
+                      STA.B $94                           ;; 0394A5 : 85 94       ;
+                      LDA.B $95                           ;; 0394A7 : A5 95       ;
                       ADC.W DATA_039486,Y                 ;; 0394A9 : 79 86 94    ;
-                      STA $95                             ;; 0394AC : 85 95       ;
-                      STZ $7B                             ;; 0394AE : 64 7B       ;
+                      STA.B $95                           ;; 0394AC : 85 95       ;
+                      STZ.B $7B                           ;; 0394AE : 64 7B       ;
 Return0394B0:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -2437,22 +2437,22 @@ WoodSpikeGfxProp:     db $81,$81,$81,$81,$81,$01,$01,$01  ;; ?QPWZ?             
                       db $01,$01                          ;; ?QPWZ?               ;
                                                           ;;                      ;
 WoodSpikeGfx:         JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7    ;
-                      STZ $02                             ;; 0394D2 : 64 02       ; \ Set $02 based on sprite number 
-                      LDA $9E,X                           ;; 0394D4 : B5 9E       ;  | 
+                      STZ.B $02                           ;; 0394D2 : 64 02       ; \ Set $02 based on sprite number 
+                      LDA.B $9E,X                         ;; 0394D4 : B5 9E       ;  | 
                       CMP.B #$AD                          ;; 0394D6 : C9 AD       ;  | 
                       BNE CODE_0394DE                     ;; 0394D8 : D0 04       ;  | 
                       LDA.B #$05                          ;; 0394DA : A9 05       ;  | 
-                      STA $02                             ;; 0394DC : 85 02       ; / 
+                      STA.B $02                           ;; 0394DC : 85 02       ; / 
 CODE_0394DE:          PHX                                 ;; 0394DE : DA          ;
                       LDX.B #$04                          ;; 0394DF : A2 04       ; Draw 4 tiles: 
 WoodSpikeGfxLoopSt:   PHX                                 ;; ?QPWZ? : DA          ;
                       TXA                                 ;; 0394E2 : 8A          ;
                       CLC                                 ;; 0394E3 : 18          ;
-                      ADC $02                             ;; 0394E4 : 65 02       ;
+                      ADC.B $02                           ;; 0394E4 : 65 02       ;
                       TAX                                 ;; 0394E6 : AA          ;
-                      LDA $00                             ;; 0394E7 : A5 00       ; \ Set X 
+                      LDA.B $00                           ;; 0394E7 : A5 00       ; \ Set X 
                       STA.W $0300,Y                       ;; 0394E9 : 99 00 03    ; / 
-                      LDA $01                             ;; 0394EC : A5 01       ; \ Set Y 
+                      LDA.B $01                           ;; 0394EC : A5 01       ; \ Set Y 
                       CLC                                 ;; 0394EE : 18          ;  | 
                       ADC.W WoodSpikeDispY,X              ;; 0394EF : 7D B1 94    ;  | 
                       STA.W $0301,Y                       ;; 0394F2 : 99 01 03    ; / 
@@ -2480,7 +2480,7 @@ RexMainRt:            JSR RexGfxRt                        ;; ?QPWZ? : 20 7E 96  
                       LDA.W $14C8,X                       ;; 03951A : BD C8 14    ; \ If Rex status != 8...						        
                       CMP.B #$08                          ;; 03951D : C9 08       ;  |   ... not (killed with spin jump [4] or star [2])		        
                       BNE RexReturn                       ;; 03951F : D0 12       ; /    ... return							        
-                      LDA $9D                             ;; 039521 : A5 9D       ; \ If sprites locked...						        
+                      LDA.B $9D                           ;; 039521 : A5 9D       ; \ If sprites locked...						        
                       BNE RexReturn                       ;; 039523 : D0 0E       ; /    ... return							        
                       LDA.W $1558,X                       ;; 039525 : BD 58 15    ; \ If Rex not defeated (timer to show remains > 0)...		        
                       BEQ RexAlive                        ;; 039528 : F0 0A       ; /    ... goto RexAlive						        
@@ -2493,30 +2493,30 @@ RexReturn:            RTS                                 ;; ?QPWZ? : 60        
 RexAlive:             JSR SubOffscreen0Bnk3               ;; ?QPWZ? : 20 5D B8    ; Only process Rex while on screen		    
                       INC.W $1570,X                       ;; 039537 : FE 70 15    ; Increment number of frames Rex has been on sc 
                       LDA.W $1570,X                       ;; 03953A : BD 70 15    ; \ Calculate which frame to show:		    
-                      LSR                                 ;; 03953D : 4A          ;  | 					    
-                      LSR                                 ;; 03953E : 4A          ;  | 					    
-                      LDY $C2,X                           ;; 03953F : B4 C2       ;  | Number of hits determines if smushed	    
+                      LSR A                               ;; 03953D : 4A          ;  | 					    
+                      LSR A                               ;; 03953E : 4A          ;  | 					    
+                      LDY.B $C2,X                         ;; 03953F : B4 C2       ;  | Number of hits determines if smushed	    
                       BEQ CODE_03954A                     ;; 039541 : F0 07       ;  |						    
                       AND.B #$01                          ;; 039543 : 29 01       ;  | Update every 8 cycles if smushed	    
                       CLC                                 ;; 039545 : 18          ;  |						    
                       ADC.B #$03                          ;; 039546 : 69 03       ;  | Show smushed frame			    
                       BRA CODE_03954D                     ;; 039548 : 80 03       ;  |						    
                                                           ;;                      ;
-CODE_03954A:          LSR                                 ;; 03954A : 4A          ;  | 					    
+CODE_03954A:          LSR A                               ;; 03954A : 4A          ;  | 					    
                       AND.B #$01                          ;; 03954B : 29 01       ;  | Update every 16 cycles if normal	    
 CODE_03954D:          STA.W $1602,X                       ;; 03954D : 9D 02 16    ; / Write frame to show			    
                       LDA.W $1588,X                       ;; 039550 : BD 88 15    ; \  If sprite is not on ground...		    
                       AND.B #$04                          ;; 039553 : 29 04       ;  |    ...(4 = on ground) ...		    
                       BEQ RexInAir                        ;; 039555 : F0 12       ; /     ...goto IN_AIR			    
                       LDA.B #$10                          ;; 039557 : A9 10       ; \  Y speed = 10				    
-                      STA $AA,X                           ;; 039559 : 95 AA       ; /						    
+                      STA.B $AA,X                         ;; 039559 : 95 AA       ; /						    
                       LDY.W $157C,X                       ;; 03955B : BC 7C 15    ; Load, y = Rex direction, as index for speed   
-                      LDA $C2,X                           ;; 03955E : B5 C2       ; \ If hits on Rex == 0...			    
+                      LDA.B $C2,X                         ;; 03955E : B5 C2       ; \ If hits on Rex == 0...			    
                       BEQ RexNoAdjustSpeed                ;; 039560 : F0 02       ; /    ...goto DONT_ADJUST_SPEED		    
                       INY                                 ;; 039562 : C8          ; \ Increment y twice...			    
                       INY                                 ;; 039563 : C8          ; /    ...in order to get speed for smushed Rex 
 RexNoAdjustSpeed:     LDA.W RexSpeed,Y                    ;; ?QPWZ? : B9 13 95    ; \ Load x speed from ROM...		    
-                      STA $B6,X                           ;; 039567 : 95 B6       ; /    ...and store it			    
+                      STA.B $B6,X                         ;; 039567 : 95 B6       ; /    ...and store it			    
 RexInAir:             LDA.W $1FE2,X                       ;; ?QPWZ? : BD E2 1F    ; \ If time to show half-smushed Rex > 0...	    
                       BNE RexHalfSmushed                  ;; 03956C : D0 04       ; /    ...goto HALF_SMUSHED			    
                       JSL UpdateSpritePos                 ;; 03956E : 22 2A 80 01 ; Update position based on speed values	    
@@ -2535,7 +2535,7 @@ CODE_039581:          JSL SprSprInteract                  ;; 039581 : 22 32 80 0
                       BNE NoRexContact                    ;; 039593 : D0 48       ; /    ... goto NO_CONTACT		        
                       LDA.B #$08                          ;; 039595 : A9 08       ; \ Rex invincibility timer = $08	        
                       STA.W $154C,X                       ;; 039597 : 9D 4C 15    ; /					        
-                      LDA $7D                             ;; 03959A : A5 7D       ; \  If mario's y speed < 10 ...	        
+                      LDA.B $7D                           ;; 03959A : A5 7D       ; \  If mario's y speed < 10 ...	        
                       CMP.B #$10                          ;; 03959C : C9 10       ;  |   ... Rex will hurt mario	        
                       BMI RexWins                         ;; 03959E : 30 2A       ; /    				        
                       JSR RexPoints                       ;; ?QPWZ? : 20 28 96    ; Give mario points			        
@@ -2544,8 +2544,8 @@ CODE_039581:          JSL SprSprInteract                  ;; 039581 : 22 32 80 0
                       LDA.W $140D                         ;; 0395AB : AD 0D 14    ; \  If mario is spin jumping...	        
                       ORA.W $187A                         ;; 0395AE : 0D 7A 18    ;  |    ... or on yoshi ...		        
                       BNE RexSpinKill                     ;; 0395B1 : D0 2B       ; /     ... goto SPIN_KILL		        
-                      INC $C2,X                           ;; 0395B3 : F6 C2       ; Increment Rex hit counter		        
-                      LDA $C2,X                           ;; 0395B5 : B5 C2       ; \  If Rex hit counter == 2	        
+                      INC.B $C2,X                         ;; 0395B3 : F6 C2       ; Increment Rex hit counter		        
+                      LDA.B $C2,X                         ;; 0395B5 : B5 C2       ; \  If Rex hit counter == 2	        
                       CMP.B #$02                          ;; 0395B7 : C9 02       ;  |   				        
                       BNE SmushRex                        ;; 0395B9 : D0 06       ;  |				        
                       LDA.B #$20                          ;; 0395BB : A9 20       ;  |    ... time to show defeated Rex = $20 
@@ -2578,10 +2578,10 @@ RexSpinKill:          LDA.B #$04                          ;; ?QPWZ? : A9 04     
 RexStarKill:          LDA.B #$02                          ;; ?QPWZ? : A9 02       ; \ Rex status = 2 (being killed by star)			   
                       STA.W $14C8,X                       ;; 0395F4 : 9D C8 14    ; /								   
                       LDA.B #$D0                          ;; 0395F7 : A9 D0       ; \ Set y speed						   
-                      STA $AA,X                           ;; 0395F9 : 95 AA       ; /								   
+                      STA.B $AA,X                         ;; 0395F9 : 95 AA       ; /								   
                       JSR SubHorzPosBnk3                  ;; 0395FB : 20 17 B8    ; Get new Rex direction					   
                       LDA.W RexKilledSpeed,Y              ;; 0395FE : B9 25 96    ; \ Set x speed based on Rex direction			   
-                      STA $B6,X                           ;; 039601 : 95 B6       ; /								   
+                      STA.B $B6,X                         ;; 039601 : 95 B6       ; /								   
                       INC.W $18D2                         ;; 039603 : EE D2 18    ; Increment number consecutive enemies killed		   
                       LDA.W $18D2                         ;; 039606 : AD D2 18    ; \								   
                       CMP.B #$08                          ;; 039609 : C9 08       ;  | If consecutive enemies stomped >= 8, reset to 8		   
@@ -2644,40 +2644,40 @@ RexGfxAlive:          LDA.W $1FE2,X                       ;; ?QPWZ? : BD E2 1F  
                       STA.W $1602,X                       ;; 03968F : 9D 02 16    ; /												  
 RexNotHalfSmushed:    JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7    ; Y = index to sprite tile map, $00 = sprite x, $01 = sprite y 
                       LDA.W $1602,X                       ;; 039695 : BD 02 16    ; \												  
-                      ASL                                 ;; 039698 : 0A          ;  | $03 = index to frame start (frame to show * 2 tile per frame)				  
-                      STA $03                             ;; 039699 : 85 03       ; /												  
+                      ASL A                               ;; 039698 : 0A          ;  | $03 = index to frame start (frame to show * 2 tile per frame)				  
+                      STA.B $03                           ;; 039699 : 85 03       ; /												  
                       LDA.W $157C,X                       ;; 03969B : BD 7C 15    ; \ $02 = sprite direction									  
-                      STA $02                             ;; 03969E : 85 02       ; /												  
+                      STA.B $02                           ;; 03969E : 85 02       ; /												  
                       PHX                                 ;; 0396A0 : DA          ; Push sprite index										  
                       LDX.B #$01                          ;; 0396A1 : A2 01       ; Loop counter = (number of tiles per frame) - 1						  
 RexGfxLoopStart:      PHX                                 ;; ?QPWZ? : DA          ; Push current tile number									  
                       TXA                                 ;; 0396A4 : 8A          ; \ X = index to horizontal displacement							  
-                      ORA $03                             ;; 0396A5 : 05 03       ; / get index of tile (index to first tile of frame + current tile number)			  
+                      ORA.B $03                           ;; 0396A5 : 05 03       ; / get index of tile (index to first tile of frame + current tile number)			  
                       PHA                                 ;; 0396A7 : 48          ; Push index of current tile								  
-                      LDX $02                             ;; 0396A8 : A6 02       ; \ If facing right...									  
+                      LDX.B $02                           ;; 0396A8 : A6 02       ; \ If facing right...									  
                       BNE RexFaceLeft                     ;; 0396AA : D0 03       ;  |												  
                       CLC                                 ;; 0396AC : 18          ;  |    											  
                       ADC.B #$0C                          ;; 0396AD : 69 0C       ; /    ...use row 2 of horizontal tile displacement table					  
 RexFaceLeft:          TAX                                 ;; ?QPWZ? : AA          ; \ 											  
-                      LDA $00                             ;; 0396B0 : A5 00       ;  | Tile x position = sprite x location ($00) + tile displacement				  
+                      LDA.B $00                           ;; 0396B0 : A5 00       ;  | Tile x position = sprite x location ($00) + tile displacement				  
                       CLC                                 ;; 0396B2 : 18          ;  |												  
                       ADC.W RexTileDispX,X                ;; 0396B3 : 7D 4C 96    ;  |												  
                       STA.W $0300,Y                       ;; 0396B6 : 99 00 03    ; /												  
                       PLX                                 ;; 0396B9 : FA          ; \ Pull, X = index to vertical displacement and tilemap					  
-                      LDA $01                             ;; 0396BA : A5 01       ;  | Tile y position = sprite y location ($01) + tile displacement				  
+                      LDA.B $01                           ;; 0396BA : A5 01       ;  | Tile y position = sprite y location ($01) + tile displacement				  
                       CLC                                 ;; 0396BC : 18          ;  |												  
                       ADC.W RexTileDispY,X                ;; 0396BD : 7D 64 96    ;  |												  
                       STA.W $0301,Y                       ;; 0396C0 : 99 01 03    ; /												  
                       LDA.W RexTiles,X                    ;; 0396C3 : BD 70 96    ; \ Store tile										  
                       STA.W $0302,Y                       ;; 0396C6 : 99 02 03    ; / 											  
-                      LDX $02                             ;; 0396C9 : A6 02       ; \												  
+                      LDX.B $02                           ;; 0396C9 : A6 02       ; \												  
                       LDA.W RexGfxProp,X                  ;; 0396CB : BD 7C 96    ;  | Get tile properties using sprite direction						  
-                      ORA $64                             ;; 0396CE : 05 64       ;  | Level properties 
+                      ORA.B $64                           ;; 0396CE : 05 64       ;  | Level properties 
                       STA.W $0303,Y                       ;; 0396D0 : 99 03 03    ; / Store tile properties									  
                       TYA                                 ;; 0396D3 : 98          ; \ Get index to sprite property map ($460)...						  
-                      LSR                                 ;; 0396D4 : 4A          ;  |    ...we use the sprite OAM index...							  
-                      LSR                                 ;; 0396D5 : 4A          ;  |    ...and divide by 4 because a 16x16 tile is 4 8x8 tiles				  
-                      LDX $03                             ;; 0396D6 : A6 03       ;  | If index of frame start is > 0A 							  
+                      LSR A                               ;; 0396D4 : 4A          ;  |    ...we use the sprite OAM index...							  
+                      LSR A                               ;; 0396D5 : 4A          ;  |    ...and divide by 4 because a 16x16 tile is 4 8x8 tiles				  
+                      LDX.B $03                           ;; 0396D6 : A6 03       ;  | If index of frame start is > 0A 							  
                       CPX.B #$0A                          ;; 0396D8 : E0 0A       ;  |												  
                       TAX                                 ;; 0396DA : AA          ;  | 
                       LDA.B #$00                          ;; 0396DB : A9 00       ;  |     ...show only an 8x8 tile			   
@@ -2698,17 +2698,17 @@ Rex8x8Tile:           STA.W $0460,X                       ;; ?QPWZ? : 9D 60 04  
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 Fishbone:             JSR FishboneGfx                     ;; ?QPWZ? : 20 8C 97    ;
-                      LDA $9D                             ;; 0396F9 : A5 9D       ;
+                      LDA.B $9D                           ;; 0396F9 : A5 9D       ;
                       BNE Return03972A                    ;; 0396FB : D0 2D       ;
                       JSR SubOffscreen0Bnk3               ;; 0396FD : 20 5D B8    ;
                       JSL MarioSprInteract                ;; 039700 : 22 DC A7 01 ;
                       JSL UpdateXPosNoGvtyW               ;; 039704 : 22 22 80 01 ;
                       TXA                                 ;; 039708 : 8A          ;
-                      ASL                                 ;; 039709 : 0A          ;
-                      ASL                                 ;; 03970A : 0A          ;
-                      ASL                                 ;; 03970B : 0A          ;
-                      ASL                                 ;; 03970C : 0A          ;
-                      ADC $13                             ;; 03970D : 65 13       ;
+                      ASL A                               ;; 039709 : 0A          ;
+                      ASL A                               ;; 03970A : 0A          ;
+                      ASL A                               ;; 03970B : 0A          ;
+                      ASL A                               ;; 03970C : 0A          ;
+                      ADC.B $13                           ;; 03970D : 65 13       ;
                       AND.B #$7F                          ;; 03970F : 29 7F       ;
                       BNE CODE_039720                     ;; 039711 : D0 0D       ;
                       JSL GetRand                         ;; 039713 : 22 F9 AC 01 ;
@@ -2716,7 +2716,7 @@ Fishbone:             JSR FishboneGfx                     ;; ?QPWZ? : 20 8C 97  
                       BNE CODE_039720                     ;; 039719 : D0 05       ;
                       LDA.B #$0C                          ;; 03971B : A9 0C       ;
                       STA.W $1558,X                       ;; 03971D : 9D 58 15    ;
-CODE_039720:          LDA $C2,X                           ;; 039720 : B5 C2       ;
+CODE_039720:          LDA.B $C2,X                         ;; 039720 : B5 C2       ;
                       JSL ExecutePtr                      ;; 039722 : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_03972F                      ;; ?QPWZ? : 2F 97       ;
@@ -2732,7 +2732,7 @@ FishboneAcceler:      db $01,$FF                          ;; ?QPWZ?             
 CODE_03972F:          INC.W $1570,X                       ;; 03972F : FE 70 15    ;
                       LDA.W $1570,X                       ;; 039732 : BD 70 15    ;
                       NOP                                 ;; 039735 : EA          ;
-                      LSR                                 ;; 039736 : 4A          ;
+                      LSR A                               ;; 039736 : 4A          ;
                       AND.B #$01                          ;; 039737 : 29 01       ;
                       STA.W $1602,X                       ;; 039739 : 9D 02 16    ;
                       LDA.W $1540,X                       ;; 03973C : BD 40 15    ;
@@ -2740,15 +2740,15 @@ CODE_03972F:          INC.W $1570,X                       ;; 03972F : FE 70 15  
                       AND.B #$01                          ;; 039741 : 29 01       ;
                       BNE Return039755                    ;; 039743 : D0 10       ;
                       LDY.W $157C,X                       ;; 039745 : BC 7C 15    ;
-                      LDA $B6,X                           ;; 039748 : B5 B6       ;
+                      LDA.B $B6,X                         ;; 039748 : B5 B6       ;
                       CMP.W FishboneMaxSpeed,Y            ;; 03974A : D9 2B 97    ;
                       BEQ Return039755                    ;; 03974D : F0 06       ;
                       CLC                                 ;; 03974F : 18          ;
                       ADC.W FishboneAcceler,Y             ;; 039750 : 79 2D 97    ;
-                      STA $B6,X                           ;; 039753 : 95 B6       ;
+                      STA.B $B6,X                         ;; 039753 : 95 B6       ;
 Return039755:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_039756:          INC $C2,X                           ;; 039756 : F6 C2       ;
+CODE_039756:          INC.B $C2,X                         ;; 039756 : F6 C2       ;
                       LDA.B #$30                          ;; 039758 : A9 30       ;
                       STA.W $1540,X                       ;; 03975A : 9D 40 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -2758,16 +2758,16 @@ CODE_03975E:          STZ.W $1602,X                       ;; 03975E : 9E 02 16  
                       BEQ CODE_039776                     ;; 039764 : F0 10       ;
                       AND.B #$03                          ;; 039766 : 29 03       ;
                       BNE Return039775                    ;; 039768 : D0 0B       ;
-                      LDA $B6,X                           ;; 03976A : B5 B6       ;
+                      LDA.B $B6,X                         ;; 03976A : B5 B6       ;
                       BEQ Return039775                    ;; 03976C : F0 07       ;
                       BPL CODE_039773                     ;; 03976E : 10 03       ;
-                      INC $B6,X                           ;; 039770 : F6 B6       ;
+                      INC.B $B6,X                         ;; 039770 : F6 B6       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_039773:          DEC $B6,X                           ;; 039773 : D6 B6       ;
+CODE_039773:          DEC.B $B6,X                         ;; 039773 : D6 B6       ;
 Return039775:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_039776:          STZ $C2,X                           ;; 039776 : 74 C2       ;
+CODE_039776:          STZ.B $C2,X                         ;; 039776 : 74 C2       ;
                       LDA.B #$30                          ;; 039778 : A9 30       ;
                       STA.W $1540,X                       ;; 03977A : 9D 40 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -2791,11 +2791,11 @@ FishboneGfx:          JSL GenericSprGfxRt2                ;; ?QPWZ? : 22 B2 90 0
 CODE_03979E:          STA.W $0302,Y                       ;; 03979E : 99 02 03    ;
                       JSR GetDrawInfoBnk3                 ;; 0397A1 : 20 60 B7    ;
                       LDA.W $157C,X                       ;; 0397A4 : BD 7C 15    ;
-                      ASL                                 ;; 0397A7 : 0A          ;
-                      STA $02                             ;; 0397A8 : 85 02       ;
+                      ASL A                               ;; 0397A7 : 0A          ;
+                      STA.B $02                           ;; 0397A8 : 85 02       ;
                       LDA.W $1602,X                       ;; 0397AA : BD 02 16    ;
-                      ASL                                 ;; 0397AD : 0A          ;
-                      STA $03                             ;; 0397AE : 85 03       ;
+                      ASL A                               ;; 0397AD : 0A          ;
+                      STA.B $03                           ;; 0397AE : 85 03       ;
                       LDA.W $15EA,X                       ;; 0397B0 : BD EA 15    ;
                       CLC                                 ;; 0397B3 : 18          ;
                       ADC.B #$04                          ;; 0397B4 : 69 04       ;
@@ -2803,24 +2803,24 @@ CODE_03979E:          STA.W $0302,Y                       ;; 03979E : 99 02 03  
                       TAY                                 ;; 0397B9 : A8          ;
                       PHX                                 ;; 0397BA : DA          ;
                       LDX.B #$01                          ;; 0397BB : A2 01       ;
-CODE_0397BD:          LDA $01                             ;; 0397BD : A5 01       ;
+CODE_0397BD:          LDA.B $01                           ;; 0397BD : A5 01       ;
                       CLC                                 ;; 0397BF : 18          ;
                       ADC.W FishboneDispY,X               ;; 0397C0 : 7D 82 97    ;
                       STA.W $0301,Y                       ;; 0397C3 : 99 01 03    ;
                       PHX                                 ;; 0397C6 : DA          ;
                       TXA                                 ;; 0397C7 : 8A          ;
-                      ORA $02                             ;; 0397C8 : 05 02       ;
+                      ORA.B $02                           ;; 0397C8 : 05 02       ;
                       TAX                                 ;; 0397CA : AA          ;
-                      LDA $00                             ;; 0397CB : A5 00       ;
+                      LDA.B $00                           ;; 0397CB : A5 00       ;
                       CLC                                 ;; 0397CD : 18          ;
                       ADC.W FishboneDispX,X               ;; 0397CE : 7D 7E 97    ;
                       STA.W $0300,Y                       ;; 0397D1 : 99 00 03    ;
                       LDA.W FishboneGfxProp,X             ;; 0397D4 : BD 84 97    ;
-                      ORA $64                             ;; 0397D7 : 05 64       ;
+                      ORA.B $64                           ;; 0397D7 : 05 64       ;
                       STA.W $0303,Y                       ;; 0397D9 : 99 03 03    ;
                       PLA                                 ;; 0397DC : 68          ;
                       PHA                                 ;; 0397DD : 48          ;
-                      ORA $03                             ;; 0397DE : 05 03       ;
+                      ORA.B $03                           ;; 0397DE : 05 03       ;
                       TAX                                 ;; 0397E0 : AA          ;
                       LDA.W FishboneTailTiles,X           ;; 0397E1 : BD 88 97    ;
                       STA.W $0302,Y                       ;; 0397E4 : 99 02 03    ;
@@ -2837,71 +2837,71 @@ CODE_0397BD:          LDA $01                             ;; 0397BD : A5 01     
                       JSL FinishOAMWrite                  ;; 0397F4 : 22 B3 B7 01 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0397F9:          STA $01                             ;; 0397F9 : 85 01       ;
+CODE_0397F9:          STA.B $01                           ;; 0397F9 : 85 01       ;
                       PHX                                 ;; 0397FB : DA          ;
                       PHY                                 ;; 0397FC : 5A          ;
                       JSR SubVertPosBnk3                  ;; 0397FD : 20 29 B8    ;
-                      STY $02                             ;; 039800 : 84 02       ;
-                      LDA $0E                             ;; 039802 : A5 0E       ;
+                      STY.B $02                           ;; 039800 : 84 02       ;
+                      LDA.B $0E                           ;; 039802 : A5 0E       ;
                       BPL CODE_03980B                     ;; 039804 : 10 05       ;
                       EOR.B #$FF                          ;; 039806 : 49 FF       ;
                       CLC                                 ;; 039808 : 18          ;
                       ADC.B #$01                          ;; 039809 : 69 01       ;
-CODE_03980B:          STA $0C                             ;; 03980B : 85 0C       ;
+CODE_03980B:          STA.B $0C                           ;; 03980B : 85 0C       ;
                       JSR SubHorzPosBnk3                  ;; 03980D : 20 17 B8    ;
-                      STY $03                             ;; 039810 : 84 03       ;
-                      LDA $0F                             ;; 039812 : A5 0F       ;
+                      STY.B $03                           ;; 039810 : 84 03       ;
+                      LDA.B $0F                           ;; 039812 : A5 0F       ;
                       BPL CODE_03981B                     ;; 039814 : 10 05       ;
                       EOR.B #$FF                          ;; 039816 : 49 FF       ;
                       CLC                                 ;; 039818 : 18          ;
                       ADC.B #$01                          ;; 039819 : 69 01       ;
-CODE_03981B:          STA $0D                             ;; 03981B : 85 0D       ;
+CODE_03981B:          STA.B $0D                           ;; 03981B : 85 0D       ;
                       LDY.B #$00                          ;; 03981D : A0 00       ;
-                      LDA $0D                             ;; 03981F : A5 0D       ;
-                      CMP $0C                             ;; 039821 : C5 0C       ;
+                      LDA.B $0D                           ;; 03981F : A5 0D       ;
+                      CMP.B $0C                           ;; 039821 : C5 0C       ;
                       BCS CODE_03982E                     ;; 039823 : B0 09       ;
                       INY                                 ;; 039825 : C8          ;
                       PHA                                 ;; 039826 : 48          ;
-                      LDA $0C                             ;; 039827 : A5 0C       ;
-                      STA $0D                             ;; 039829 : 85 0D       ;
+                      LDA.B $0C                           ;; 039827 : A5 0C       ;
+                      STA.B $0D                           ;; 039829 : 85 0D       ;
                       PLA                                 ;; 03982B : 68          ;
-                      STA $0C                             ;; 03982C : 85 0C       ;
+                      STA.B $0C                           ;; 03982C : 85 0C       ;
 CODE_03982E:          LDA.B #$00                          ;; 03982E : A9 00       ;
-                      STA $0B                             ;; 039830 : 85 0B       ;
-                      STA $00                             ;; 039832 : 85 00       ;
-                      LDX $01                             ;; 039834 : A6 01       ;
-CODE_039836:          LDA $0B                             ;; 039836 : A5 0B       ;
+                      STA.B $0B                           ;; 039830 : 85 0B       ;
+                      STA.B $00                           ;; 039832 : 85 00       ;
+                      LDX.B $01                           ;; 039834 : A6 01       ;
+CODE_039836:          LDA.B $0B                           ;; 039836 : A5 0B       ;
                       CLC                                 ;; 039838 : 18          ;
-                      ADC $0C                             ;; 039839 : 65 0C       ;
-                      CMP $0D                             ;; 03983B : C5 0D       ;
+                      ADC.B $0C                           ;; 039839 : 65 0C       ;
+                      CMP.B $0D                           ;; 03983B : C5 0D       ;
                       BCC CODE_039843                     ;; 03983D : 90 04       ;
-                      SBC $0D                             ;; 03983F : E5 0D       ;
-                      INC $00                             ;; 039841 : E6 00       ;
-CODE_039843:          STA $0B                             ;; 039843 : 85 0B       ;
+                      SBC.B $0D                           ;; 03983F : E5 0D       ;
+                      INC.B $00                           ;; 039841 : E6 00       ;
+CODE_039843:          STA.B $0B                           ;; 039843 : 85 0B       ;
                       DEX                                 ;; 039845 : CA          ;
                       BNE CODE_039836                     ;; 039846 : D0 EE       ;
                       TYA                                 ;; 039848 : 98          ;
                       BEQ CODE_039855                     ;; 039849 : F0 0A       ;
-                      LDA $00                             ;; 03984B : A5 00       ;
+                      LDA.B $00                           ;; 03984B : A5 00       ;
                       PHA                                 ;; 03984D : 48          ;
-                      LDA $01                             ;; 03984E : A5 01       ;
-                      STA $00                             ;; 039850 : 85 00       ;
+                      LDA.B $01                           ;; 03984E : A5 01       ;
+                      STA.B $00                           ;; 039850 : 85 00       ;
                       PLA                                 ;; 039852 : 68          ;
-                      STA $01                             ;; 039853 : 85 01       ;
-CODE_039855:          LDA $00                             ;; 039855 : A5 00       ;
-                      LDY $02                             ;; 039857 : A4 02       ;
+                      STA.B $01                           ;; 039853 : 85 01       ;
+CODE_039855:          LDA.B $00                           ;; 039855 : A5 00       ;
+                      LDY.B $02                           ;; 039857 : A4 02       ;
                       BEQ CODE_039862                     ;; 039859 : F0 07       ;
                       EOR.B #$FF                          ;; 03985B : 49 FF       ;
                       CLC                                 ;; 03985D : 18          ;
                       ADC.B #$01                          ;; 03985E : 69 01       ;
-                      STA $00                             ;; 039860 : 85 00       ;
-CODE_039862:          LDA $01                             ;; 039862 : A5 01       ;
-                      LDY $03                             ;; 039864 : A4 03       ;
+                      STA.B $00                           ;; 039860 : 85 00       ;
+CODE_039862:          LDA.B $01                           ;; 039862 : A5 01       ;
+                      LDY.B $03                           ;; 039864 : A4 03       ;
                       BEQ CODE_03986F                     ;; 039866 : F0 07       ;
                       EOR.B #$FF                          ;; 039868 : 49 FF       ;
                       CLC                                 ;; 03986A : 18          ;
                       ADC.B #$01                          ;; 03986B : 69 01       ;
-                      STA $01                             ;; 03986D : 85 01       ;
+                      STA.B $01                           ;; 03986D : 85 01       ;
 CODE_03986F:          PLY                                 ;; 03986F : 7A          ;
                       PLX                                 ;; 039870 : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -2909,7 +2909,7 @@ CODE_03986F:          PLY                                 ;; 03986F : 7A        
 ReznorInit:           CPX.B #$07                          ;; ?QPWZ? : E0 07       ;
                       BNE CODE_03987E                     ;; 039874 : D0 08       ;
                       LDA.B #$04                          ;; 039876 : A9 04       ;
-                      STA $C2,X                           ;; 039878 : 95 C2       ;
+                      STA.B $C2,X                         ;; 039878 : 95 C2       ;
                       JSL CODE_03DD7D                     ;; 03987A : 22 7D DD 03 ;
 CODE_03987E:          JSL GetRand                         ;; 03987E : 22 F9 AC 01 ;
                       STA.W $1570,X                       ;; 039882 : 9D 70 15    ;
@@ -2923,7 +2923,7 @@ ReznorStartPosHi:     db $00,$00,$01,$01                  ;; ?QPWZ?             
 ReboundSpeedX:        db $20,$E0                          ;; ?QPWZ?               ;
                                                           ;;                      ;
 Reznor:               INC.W $140F                         ;; ?QPWZ? : EE 0F 14    ;
-                      LDA $9D                             ;; 039893 : A5 9D       ;
+                      LDA.B $9D                           ;; 039893 : A5 9D       ;
                       BEQ ReznorNotLocked                 ;; 039895 : F0 03       ;
                       JMP DrawReznor                      ;; 039897 : 4C 7B 9A    ;
                                                           ;;                      ;
@@ -2932,25 +2932,25 @@ ReznorNotLocked:      CPX.B #$07                          ;; ?QPWZ? : E0 07     
                       PHX                                 ;; 03989E : DA          ;
                       JSL CODE_03D70C                     ;; 03989F : 22 0C D7 03 ; Break bridge when necessary 
                       LDA.B #$80                          ;; ?QPWZ? : A9 80       ; \ Set radius for Reznor sign rotation 
-                      STA $2A                             ;; 0398A5 : 85 2A       ;  | 
-                      STZ $2B                             ;; 0398A7 : 64 2B       ; / 
+                      STA.B $2A                           ;; 0398A5 : 85 2A       ;  | 
+                      STZ.B $2B                           ;; 0398A7 : 64 2B       ; / 
                       LDX.B #$00                          ;; 0398A9 : A2 00       ;
                       LDA.B #$C0                          ;; 0398AB : A9 C0       ; \ X position of Reznor sign 
-                      STA $E4                             ;; 0398AD : 85 E4       ;  | 
+                      STA.B $E4                           ;; 0398AD : 85 E4       ;  | 
                       STZ.W $14E0                         ;; 0398AF : 9C E0 14    ; / 
                       LDA.B #$B2                          ;; 0398B2 : A9 B2       ; \ Y position of Reznor sign 
-                      STA $D8                             ;; 0398B4 : 85 D8       ;  | 
+                      STA.B $D8                           ;; 0398B4 : 85 D8       ;  | 
                       STZ.W $14D4                         ;; 0398B6 : 9C D4 14    ; / 
                       LDA.B #$2C                          ;; 0398B9 : A9 2C       ;
                       STA.W $1BA2                         ;; 0398BB : 8D A2 1B    ;
                       JSL CODE_03DEDF                     ;; 0398BE : 22 DF DE 03 ; Applies position changes to Reznor sign 
                       PLX                                 ;; 0398C2 : FA          ; Pull, X = sprite index 
                       REP #$20                            ;; 0398C3 : C2 20       ; Accum (16 bit) 
-                      LDA $36                             ;; 0398C5 : A5 36       ; \ Rotate 1 frame around the circle (clockwise) 
+                      LDA.B $36                           ;; 0398C5 : A5 36       ; \ Rotate 1 frame around the circle (clockwise) 
                       CLC                                 ;; 0398C7 : 18          ;  | $37,36 = 0 to 1FF, denotes circle position 
                       ADC.W #$0001                        ;; 0398C8 : 69 01 00    ;  | 
                       AND.W #$01FF                        ;; 0398CB : 29 FF 01    ;  | 
-                      STA $36                             ;; 0398CE : 85 36       ; / 
+                      STA.B $36                           ;; 0398CE : 85 36       ; / 
                       SEP #$20                            ;; 0398D0 : E2 20       ; Accum (8 bit) 
                       CPX.B #$07                          ;; 0398D2 : E0 07       ;
                       BNE CODE_039910                     ;; 0398D4 : D0 3A       ;
@@ -2988,40 +2988,40 @@ CODE_039910:          LDA.W $14C8,X                       ;; 039910 : BD C8 14  
 CODE_03991A:          TXA                                 ;; 03991A : 8A          ; \ Load Y with Reznor number (0-3)				  
                       AND.B #$03                          ;; 03991B : 29 03       ;  |							  
                       TAY                                 ;; 03991D : A8          ; /								  
-                      LDA $36                             ;; 03991E : A5 36       ; \								  
+                      LDA.B $36                           ;; 03991E : A5 36       ; \								  
                       CLC                                 ;; 039920 : 18          ;  |							  
                       ADC.W ReznorStartPosLo,Y            ;; 039921 : 79 86 98    ;  |							  
-                      STA $00                             ;; 039924 : 85 00       ;  | $01,00 = 0-1FF, position Reznors on the circle		  
-                      LDA $37                             ;; 039926 : A5 37       ;  |							  
+                      STA.B $00                           ;; 039924 : 85 00       ;  | $01,00 = 0-1FF, position Reznors on the circle		  
+                      LDA.B $37                           ;; 039926 : A5 37       ;  |							  
                       ADC.W ReznorStartPosHi,Y            ;; 039928 : 79 8A 98    ;  |							  
                       AND.B #$01                          ;; 03992B : 29 01       ;  |							  
-                      STA $01                             ;; 03992D : 85 01       ; /								  
+                      STA.B $01                           ;; 03992D : 85 01       ; /								  
                       REP #$30                            ;; 03992F : C2 30       ; \   Index (16 bit) Accum (16 bit)  ; Index (16 bit) Accum (16 bit) 
-                      LDA $00                             ;; 039931 : A5 00       ;  | Make Reznors turn clockwise rather than counter clockwise 
+                      LDA.B $00                           ;; 039931 : A5 00       ;  | Make Reznors turn clockwise rather than counter clockwise 
                       EOR.W #$01FF                        ;; 039933 : 49 FF 01    ;  | ($01,00 = -1 * $01,00)					 							  
                       INC A                               ;; 039936 : 1A          ;  |							  
-                      STA $00                             ;; 039937 : 85 00       ; /                                                           
+                      STA.B $00                           ;; 039937 : 85 00       ; /                                                           
                       CLC                                 ;; 039939 : 18          ;
                       ADC.W #$0080                        ;; 03993A : 69 80 00    ;
                       AND.W #$01FF                        ;; 03993D : 29 FF 01    ;
-                      STA $02                             ;; 039940 : 85 02       ;
-                      LDA $00                             ;; 039942 : A5 00       ;
+                      STA.B $02                           ;; 039940 : 85 02       ;
+                      LDA.B $00                           ;; 039942 : A5 00       ;
                       AND.W #$00FF                        ;; 039944 : 29 FF 00    ;
-                      ASL                                 ;; 039947 : 0A          ;
+                      ASL A                               ;; 039947 : 0A          ;
                       TAX                                 ;; 039948 : AA          ;
                       LDA.L CircleCoords,X                ;; 039949 : BF DB F7 07 ;
-                      STA $04                             ;; 03994D : 85 04       ;
-                      LDA $02                             ;; 03994F : A5 02       ;
+                      STA.B $04                           ;; 03994D : 85 04       ;
+                      LDA.B $02                           ;; 03994F : A5 02       ;
                       AND.W #$00FF                        ;; 039951 : 29 FF 00    ;
-                      ASL                                 ;; 039954 : 0A          ;
+                      ASL A                               ;; 039954 : 0A          ;
                       TAX                                 ;; 039955 : AA          ;
                       LDA.L CircleCoords,X                ;; 039956 : BF DB F7 07 ;
-                      STA $06                             ;; 03995A : 85 06       ;
+                      STA.B $06                           ;; 03995A : 85 06       ;
                       SEP #$30                            ;; 03995C : E2 30       ; Index (8 bit) Accum (8 bit) 
-                      LDA $04                             ;; 03995E : A5 04       ;
+                      LDA.B $04                           ;; 03995E : A5 04       ;
                       STA.W $4202                         ;; 039960 : 8D 02 42    ; Multiplicand A
                       LDA.B #$38                          ;; 039963 : A9 38       ;
-                      LDY $05                             ;; 039965 : A4 05       ;
+                      LDY.B $05                           ;; 039965 : A4 05       ;
                       BNE CODE_039978                     ;; 039967 : D0 0F       ;
                       STA.W $4203                         ;; 039969 : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03996C : EA          ;
@@ -3031,15 +3031,15 @@ CODE_03991A:          TXA                                 ;; 03991A : 8A        
                       ASL.W $4216                         ;; 039970 : 0E 16 42    ; Product/Remainder Result (Low Byte)
                       LDA.W $4217                         ;; 039973 : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 039976 : 69 00       ;
-CODE_039978:          LSR $01                             ;; 039978 : 46 01       ;
+CODE_039978:          LSR.B $01                           ;; 039978 : 46 01       ;
                       BCC CODE_03997F                     ;; 03997A : 90 03       ;
                       EOR.B #$FF                          ;; 03997C : 49 FF       ;
                       INC A                               ;; 03997E : 1A          ;
-CODE_03997F:          STA $04                             ;; 03997F : 85 04       ;
-                      LDA $06                             ;; 039981 : A5 06       ;
+CODE_03997F:          STA.B $04                           ;; 03997F : 85 04       ;
+                      LDA.B $06                           ;; 039981 : A5 06       ;
                       STA.W $4202                         ;; 039983 : 8D 02 42    ; Multiplicand A
                       LDA.B #$38                          ;; 039986 : A9 38       ;
-                      LDY $07                             ;; 039988 : A4 07       ;
+                      LDY.B $07                           ;; 039988 : A4 07       ;
                       BNE CODE_03999B                     ;; 03998A : D0 0F       ;
                       STA.W $4203                         ;; 03998C : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03998F : EA          ;
@@ -3049,55 +3049,55 @@ CODE_03997F:          STA $04                             ;; 03997F : 85 04     
                       ASL.W $4216                         ;; 039993 : 0E 16 42    ; Product/Remainder Result (Low Byte)
                       LDA.W $4217                         ;; 039996 : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 039999 : 69 00       ;
-CODE_03999B:          LSR $03                             ;; 03999B : 46 03       ;
+CODE_03999B:          LSR.B $03                           ;; 03999B : 46 03       ;
                       BCC CODE_0399A2                     ;; 03999D : 90 03       ;
                       EOR.B #$FF                          ;; 03999F : 49 FF       ;
                       INC A                               ;; 0399A1 : 1A          ;
-CODE_0399A2:          STA $06                             ;; 0399A2 : 85 06       ;
+CODE_0399A2:          STA.B $06                           ;; 0399A2 : 85 06       ;
                       LDX.W $15E9                         ;; 0399A4 : AE E9 15    ; X = sprite index 
-                      LDA $E4,X                           ;; 0399A7 : B5 E4       ;
+                      LDA.B $E4,X                         ;; 0399A7 : B5 E4       ;
                       PHA                                 ;; 0399A9 : 48          ;
-                      STZ $00                             ;; 0399AA : 64 00       ;
-                      LDA $04                             ;; 0399AC : A5 04       ;
+                      STZ.B $00                           ;; 0399AA : 64 00       ;
+                      LDA.B $04                           ;; 0399AC : A5 04       ;
                       BPL CODE_0399B2                     ;; 0399AE : 10 02       ;
-                      DEC $00                             ;; 0399B0 : C6 00       ;
+                      DEC.B $00                           ;; 0399B0 : C6 00       ;
 CODE_0399B2:          CLC                                 ;; 0399B2 : 18          ;
-                      ADC $2A                             ;; 0399B3 : 65 2A       ;
+                      ADC.B $2A                           ;; 0399B3 : 65 2A       ;
                       PHP                                 ;; 0399B5 : 08          ;
                       CLC                                 ;; 0399B6 : 18          ;
                       ADC.B #$40                          ;; 0399B7 : 69 40       ;
-                      STA $E4,X                           ;; 0399B9 : 95 E4       ;
-                      LDA $2B                             ;; 0399BB : A5 2B       ;
+                      STA.B $E4,X                         ;; 0399B9 : 95 E4       ;
+                      LDA.B $2B                           ;; 0399BB : A5 2B       ;
                       ADC.B #$00                          ;; 0399BD : 69 00       ;
                       PLP                                 ;; 0399BF : 28          ;
-                      ADC $00                             ;; 0399C0 : 65 00       ;
+                      ADC.B $00                           ;; 0399C0 : 65 00       ;
                       STA.W $14E0,X                       ;; 0399C2 : 9D E0 14    ;
                       PLA                                 ;; 0399C5 : 68          ;
                       SEC                                 ;; 0399C6 : 38          ;
-                      SBC $E4,X                           ;; 0399C7 : F5 E4       ;
+                      SBC.B $E4,X                         ;; 0399C7 : F5 E4       ;
                       EOR.B #$FF                          ;; 0399C9 : 49 FF       ;
                       INC A                               ;; 0399CB : 1A          ;
                       STA.W $1528,X                       ;; 0399CC : 9D 28 15    ;
-                      STZ $01                             ;; 0399CF : 64 01       ;
-                      LDA $06                             ;; 0399D1 : A5 06       ;
+                      STZ.B $01                           ;; 0399CF : 64 01       ;
+                      LDA.B $06                           ;; 0399D1 : A5 06       ;
                       BPL CODE_0399D7                     ;; 0399D3 : 10 02       ;
-                      DEC $01                             ;; 0399D5 : C6 01       ;
+                      DEC.B $01                           ;; 0399D5 : C6 01       ;
 CODE_0399D7:          CLC                                 ;; 0399D7 : 18          ;
-                      ADC $2C                             ;; 0399D8 : 65 2C       ;
+                      ADC.B $2C                           ;; 0399D8 : 65 2C       ;
                       PHP                                 ;; 0399DA : 08          ;
                       ADC.B #$20                          ;; 0399DB : 69 20       ;
-                      STA $D8,X                           ;; 0399DD : 95 D8       ;
-                      LDA $2D                             ;; 0399DF : A5 2D       ;
+                      STA.B $D8,X                         ;; 0399DD : 95 D8       ;
+                      LDA.B $2D                           ;; 0399DF : A5 2D       ;
                       ADC.B #$00                          ;; 0399E1 : 69 00       ;
                       PLP                                 ;; 0399E3 : 28          ;
-                      ADC $01                             ;; 0399E4 : 65 01       ;
+                      ADC.B $01                           ;; 0399E4 : 65 01       ;
                       STA.W $14D4,X                       ;; 0399E6 : 9D D4 14    ;
                       LDA.W $151C,X                       ;; 0399E9 : BD 1C 15    ; \ If a Reznor is dead, make it's platform standable 
                       BEQ ReznorAlive                     ;; 0399EC : F0 07       ;  | 
                       JSL InvisBlkMainRt                  ;; 0399EE : 22 4F B4 01 ;  | 
                       JMP DrawReznor                      ;; 0399F2 : 4C 7B 9A    ; / 
                                                           ;;                      ;
-ReznorAlive:          LDA $13                             ;; ?QPWZ? : A5 13       ; \ Don't try to spit fire if turning 
+ReznorAlive:          LDA.B $13                           ;; ?QPWZ? : A5 13       ; \ Don't try to spit fire if turning 
                       AND.B #$00                          ;; 0399F7 : 29 00       ;  | 
                       ORA.W $15AC,X                       ;; 0399F9 : 1D AC 15    ;  | 
                       BNE NoSetRznrFireTime               ;; 0399FC : D0 12       ; / 
@@ -3109,10 +3109,10 @@ ReznorAlive:          LDA $13                             ;; ?QPWZ? : A5 13     
                       LDA.B #$40                          ;; 039A0B : A9 40       ; \ Set time to show firing graphic = 0A 
                       STA.W $1558,X                       ;; 039A0D : 9D 58 15    ; / 
 NoSetRznrFireTime:    TXA                                 ;; ?QPWZ? : 8A          ;
-                      ASL                                 ;; 039A11 : 0A          ;
-                      ASL                                 ;; 039A12 : 0A          ;
-                      ASL                                 ;; 039A13 : 0A          ;
-                      ASL                                 ;; 039A14 : 0A          ;
+                      ASL A                               ;; 039A11 : 0A          ;
+                      ASL A                               ;; 039A12 : 0A          ;
+                      ASL A                               ;; 039A13 : 0A          ;
+                      ASL A                               ;; 039A14 : 0A          ;
                       ADC.B $14                           ;; 039A15 : 65 14       ;
                       AND.B #$3F                          ;; 039A17 : 29 3F       ;
                       ORA.W $1558,X                       ;; 039A19 : 1D 58 15    ; Firing 
@@ -3134,28 +3134,28 @@ NoSetRenrTurnTime:    LDA.W $154C,X                       ;; ?QPWZ? : BD 4C 15  
                       BCC DrawReznor                      ;; 039A40 : 90 39       ; / If no contact, just draw Reznor				   
                       LDA.B #$08                          ;; 039A42 : A9 08       ; \ Disable interaction timer = 08				   
                       STA.W $154C,X                       ;; 039A44 : 9D 4C 15    ; / (eg. after hitting Reznor, or getting bounced by platform) 
-                      LDA $96                             ;; 039A47 : A5 96       ; \ Compare y positions to see if mario hit Reznor		   
+                      LDA.B $96                           ;; 039A47 : A5 96       ; \ Compare y positions to see if mario hit Reznor		   
                       SEC                                 ;; 039A49 : 38          ;  |							   
-                      SBC $D8,X                           ;; 039A4A : F5 D8       ;  |							   
+                      SBC.B $D8,X                         ;; 039A4A : F5 D8       ;  |							   
                       CMP.B #$ED                          ;; 039A4C : C9 ED       ;  |							   
                       BMI HitReznor                       ;; 039A4E : 30 27       ; /								   
                       CMP.B #$F2                          ;; 039A50 : C9 F2       ; \ See if mario hit side of the platform			   
                       BMI HitPlatSide                     ;; 039A52 : 30 19       ;  |							   
-                      LDA $7D                             ;; 039A54 : A5 7D       ;  |							   
+                      LDA.B $7D                           ;; 039A54 : A5 7D       ;  |							   
                       BPL HitPlatSide                     ;; 039A56 : 10 15       ; /								   
                       LDA.B #$29                          ;; ?QPWZ? : A9 29       ; ??Something about boosting mario on platform?? 
                       STA.W $1662,X                       ;; 039A5A : 9D 62 16    ;  								   
                       LDA.B #$0F                          ;; 039A5D : A9 0F       ; \ Time to bounce platform = 0F				   
                       STA.W $1564,X                       ;; 039A5F : 9D 64 15    ; /								   
                       LDA.B #$10                          ;; 039A62 : A9 10       ; \ Set mario's y speed to rebound down off platform	   
-                      STA $7D                             ;; 039A64 : 85 7D       ; /								   
+                      STA.B $7D                           ;; 039A64 : 85 7D       ; /								   
                       LDA.B #$01                          ;; 039A66 : A9 01       ; \ 
                       STA.W $1DF9                         ;; 039A68 : 8D F9 1D    ; / Play sound effect 
                       BRA DrawReznor                      ;; 039A6B : 80 0E       ;
                                                           ;;                      ;
 HitPlatSide:          JSR SubHorzPosBnk3                  ;; ?QPWZ? : 20 17 B8    ; \ Set mario to bounce back				   
                       LDA.W ReboundSpeedX,Y               ;; 039A70 : B9 8E 98    ;  | (hit side of platform?)				   
-                      STA $7B                             ;; 039A73 : 85 7B       ;  |							   
+                      STA.B $7B                           ;; 039A73 : 85 7B       ;  |							   
                       BRA DrawReznor                      ;; 039A75 : 80 04       ; /                                                            
                                                           ;;                      ;
 HitReznor:            JSL HurtMario                       ;; ?QPWZ? : 22 B7 F5 00 ; Hurt Mario 
@@ -3180,7 +3180,7 @@ ReznorFiring:         LDA.B #$01                          ;; ?QPWZ? : A9 01     
 ReznorNoFiring:       JSR ReznorGfxRt                     ;; ?QPWZ? : 20 75 9B    ; Draw Reznor                                               
                       PLA                                 ;; 039AA9 : 68          ;
                       STA.W $157C,X                       ;; 039AAA : 9D 7C 15    ;
-                      LDA $9D                             ;; 039AAD : A5 9D       ; \ If sprites locked, or mario already killed the Reznor on the platform, return		   
+                      LDA.B $9D                           ;; 039AAD : A5 9D       ; \ If sprites locked, or mario already killed the Reznor on the platform, return		   
                       ORA.W $151C,X                       ;; 039AAF : 1D 1C 15    ;  |											   
                       BNE Return039AF7                    ;; 039AB2 : D0 43       ; /												   
                       LDA.W $1564,X                       ;; 039AB4 : BD 64 15    ; \ If time to bounce platform != 0C, return						   
@@ -3196,11 +3196,11 @@ ReznorNoFiring:       JSR ReznorGfxRt                     ;; ?QPWZ? : 20 75 9B  
                       STA.W $14C8,Y                       ;; 039ACE : 99 C8 14    ; /												   
                       LDA.B #$A9                          ;; 039AD1 : A9 A9       ; \ Sprite to use for dead Reznor								   
                       STA.W $009E,Y                       ;; 039AD3 : 99 9E 00    ; /												   
-                      LDA $E4,X                           ;; 039AD6 : B5 E4       ; \ Transfer x position to dead Reznor							   
+                      LDA.B $E4,X                         ;; 039AD6 : B5 E4       ; \ Transfer x position to dead Reznor							   
                       STA.W $00E4,Y                       ;; 039AD8 : 99 E4 00    ;  |											   
                       LDA.W $14E0,X                       ;; 039ADB : BD E0 14    ;  |											   
                       STA.W $14E0,Y                       ;; 039ADE : 99 E0 14    ; /												   
-                      LDA $D8,X                           ;; 039AE1 : B5 D8       ; \ Transfer y position to dead Reznor							   
+                      LDA.B $D8,X                         ;; 039AE1 : B5 D8       ; \ Transfer y position to dead Reznor							   
                       STA.W $00D8,Y                       ;; 039AE3 : 99 D8 00    ;  |											   
                       LDA.W $14D4,X                       ;; 039AE6 : BD D4 14    ;  |											   
                       STA.W $14D4,Y                       ;; 039AE9 : 99 D4 14    ; /												   
@@ -3208,7 +3208,7 @@ ReznorNoFiring:       JSR ReznorGfxRt                     ;; ?QPWZ? : 20 75 9B  
                       TYX                                 ;; 039AED : BB          ;  | Before: X must have index of sprite being generated					   
                       JSL InitSpriteTables                ;; 039AEE : 22 D2 F7 07 ; /  Routine clears all old sprite values and loads in new values for the 6 main sprite tables 
                       LDA.B #$C0                          ;; 039AF2 : A9 C0       ; \ Set y speed for Reznor's bounce off the platform					   
-                      STA $AA,X                           ;; 039AF4 : 95 AA       ; /												   
+                      STA.B $AA,X                         ;; 039AF4 : 95 AA       ; /												   
                       PLX                                 ;; 039AF6 : FA          ; pull, X = sprite index                                                                       
 Return039AF7:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -3223,20 +3223,20 @@ FoundRznrFireSlot:    LDA.B #$10                          ;; ?QPWZ? : A9 10     
                       STA.W $1DF9                         ;; 039B05 : 8D F9 1D    ; / Play sound effect 
                       LDA.B #$02                          ;; 039B08 : A9 02       ; \ Extended sprite = Reznor fireball 
                       STA.W $170B,Y                       ;; 039B0A : 99 0B 17    ; / 
-                      LDA $E4,X                           ;; 039B0D : B5 E4       ;
+                      LDA.B $E4,X                         ;; 039B0D : B5 E4       ;
                       PHA                                 ;; 039B0F : 48          ;
                       SEC                                 ;; 039B10 : 38          ;
                       SBC.B #$08                          ;; 039B11 : E9 08       ;
                       STA.W $171F,Y                       ;; 039B13 : 99 1F 17    ;
-                      STA $E4,X                           ;; 039B16 : 95 E4       ;
+                      STA.B $E4,X                         ;; 039B16 : 95 E4       ;
                       LDA.W $14E0,X                       ;; 039B18 : BD E0 14    ;
                       SBC.B #$00                          ;; 039B1B : E9 00       ;
                       STA.W $1733,Y                       ;; 039B1D : 99 33 17    ;
-                      LDA $D8,X                           ;; 039B20 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 039B20 : B5 D8       ;
                       PHA                                 ;; 039B22 : 48          ;
                       SEC                                 ;; 039B23 : 38          ;
                       SBC.B #$14                          ;; 039B24 : E9 14       ;
-                      STA $D8,X                           ;; 039B26 : 95 D8       ;
+                      STA.B $D8,X                         ;; 039B26 : 95 D8       ;
                       STA.W $1715,Y                       ;; 039B28 : 99 15 17    ;
                       LDA.W $14D4,X                       ;; 039B2B : BD D4 14    ;
                       PHA                                 ;; 039B2E : 48          ;
@@ -3248,12 +3248,12 @@ FoundRznrFireSlot:    LDA.B #$10                          ;; ?QPWZ? : A9 10     
                       PLA                                 ;; 039B3C : 68          ;
                       STA.W $14D4,X                       ;; 039B3D : 9D D4 14    ;
                       PLA                                 ;; 039B40 : 68          ;
-                      STA $D8,X                           ;; 039B41 : 95 D8       ;
+                      STA.B $D8,X                         ;; 039B41 : 95 D8       ;
                       PLA                                 ;; 039B43 : 68          ;
-                      STA $E4,X                           ;; 039B44 : 95 E4       ;
-                      LDA $00                             ;; 039B46 : A5 00       ;
+                      STA.B $E4,X                         ;; 039B44 : 95 E4       ;
+                      LDA.B $00                           ;; 039B46 : A5 00       ;
                       STA.W $173D,Y                       ;; 039B48 : 99 3D 17    ;
-                      LDA $01                             ;; 039B4B : A5 01       ;
+                      LDA.B $01                           ;; 039B4B : A5 01       ;
                       STA.W $1747,Y                       ;; 039B4D : 99 47 17    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -3271,41 +3271,41 @@ ReznorGfxRt:          LDA.W $151C,X                       ;; ?QPWZ? : BD 1C 15  
                       BNE DrawReznorPlats                 ;; 039B78 : D0 65       ; /									  
                       JSR GetDrawInfoBnk3                 ;; 039B7A : 20 60 B7    ; after: Y = index to sprite tile map, $00 = sprite x, $01 = sprite y 
                       LDA.W $1602,X                       ;; 039B7D : BD 02 16    ; \ $03 = index to frame start (frame to show * 4 tiles per frame)	  
-                      ASL                                 ;; 039B80 : 0A          ;  | 								  
-                      ASL                                 ;; 039B81 : 0A          ;  |								  
-                      STA $03                             ;; 039B82 : 85 03       ; /									  
+                      ASL A                               ;; 039B80 : 0A          ;  | 								  
+                      ASL A                               ;; 039B81 : 0A          ;  |								  
+                      STA.B $03                           ;; 039B82 : 85 03       ; /									  
                       LDA.W $157C,X                       ;; 039B84 : BD 7C 15    ; \ $02 = direction index						  
-                      ASL                                 ;; 039B87 : 0A          ;  |								  
-                      ASL                                 ;; 039B88 : 0A          ;  |								  
-                      STA $02                             ;; 039B89 : 85 02       ; /                                                                   
+                      ASL A                               ;; 039B87 : 0A          ;  |								  
+                      ASL A                               ;; 039B88 : 0A          ;  |								  
+                      STA.B $02                           ;; 039B89 : 85 02       ; /                                                                   
                       PHX                                 ;; 039B8B : DA          ;
                       LDX.B #$03                          ;; 039B8C : A2 03       ;
 RznrGfxLoopStart:     PHX                                 ;; ?QPWZ? : DA          ;
-                      LDA $03                             ;; 039B8F : A5 03       ;
+                      LDA.B $03                           ;; 039B8F : A5 03       ;
                       CMP.B #$08                          ;; 039B91 : C9 08       ;
                       BCS CODE_039B99                     ;; 039B93 : B0 04       ;
                       TXA                                 ;; 039B95 : 8A          ;
-                      ORA $02                             ;; 039B96 : 05 02       ;
+                      ORA.B $02                           ;; 039B96 : 05 02       ;
                       TAX                                 ;; 039B98 : AA          ;
-CODE_039B99:          LDA $00                             ;; 039B99 : A5 00       ;
+CODE_039B99:          LDA.B $00                           ;; 039B99 : A5 00       ;
                       CLC                                 ;; 039B9B : 18          ;
                       ADC.W ReznorTileDispX,X             ;; 039B9C : 7D 51 9B    ;
                       STA.W $0300,Y                       ;; 039B9F : 99 00 03    ;
                       PLX                                 ;; 039BA2 : FA          ;
-                      LDA $01                             ;; 039BA3 : A5 01       ;
+                      LDA.B $01                           ;; 039BA3 : A5 01       ;
                       CLC                                 ;; 039BA5 : 18          ;
                       ADC.W ReznorTileDispY,X             ;; 039BA6 : 7D 59 9B    ;
                       STA.W $0301,Y                       ;; 039BA9 : 99 01 03    ;
                       PHX                                 ;; 039BAC : DA          ;
                       TXA                                 ;; 039BAD : 8A          ;
-                      ORA $03                             ;; 039BAE : 05 03       ;
+                      ORA.B $03                           ;; 039BAE : 05 03       ;
                       TAX                                 ;; 039BB0 : AA          ;
                       LDA.W ReznorTiles,X                 ;; 039BB1 : BD 5D 9B    ; \ set tile					  
                       STA.W $0302,Y                       ;; 039BB4 : 99 02 03    ; /							  
                       LDA.W ReznorPal,X                   ;; 039BB7 : BD 69 9B    ; \ set palette/properties				  
                       CPX.B #$08                          ;; 039BBA : E0 08       ;  | if turning, don't flip				  
                       BCS NoReznorGfxFlip                 ;; 039BBC : B0 06       ;  | 						  
-                      LDX $02                             ;; 039BBE : A6 02       ;  | if direction = 0, don't flip			  
+                      LDX.B $02                           ;; 039BBE : A6 02       ;  | if direction = 0, don't flip			  
                       BNE NoReznorGfxFlip                 ;; 039BC0 : D0 02       ;  |						  
                       EOR.B #$40                          ;; 039BC2 : 49 40       ;  |						  
 NoReznorGfxFlip:      STA.W $0303,Y                       ;; ?QPWZ? : 99 03 03    ; /							  
@@ -3335,20 +3335,20 @@ ReznorPlatGfxRt:      LDA.W $15EA,X                       ;; ?QPWZ? : BD EA 15  
                       STA.W $15EA,X                       ;; 039BF1 : 9D EA 15    ;
                       JSR GetDrawInfoBnk3                 ;; 039BF4 : 20 60 B7    ;
                       LDA.W $1564,X                       ;; 039BF7 : BD 64 15    ;
-                      LSR                                 ;; 039BFA : 4A          ;
+                      LSR A                               ;; 039BFA : 4A          ;
                       PHY                                 ;; 039BFB : 5A          ;
                       TAY                                 ;; 039BFC : A8          ;
                       LDA.W ReznorPlatDispY,Y             ;; 039BFD : B9 E3 9B    ;
-                      STA $02                             ;; 039C00 : 85 02       ;
+                      STA.B $02                           ;; 039C00 : 85 02       ;
                       PLY                                 ;; 039C02 : 7A          ;
-                      LDA $00                             ;; 039C03 : A5 00       ;
+                      LDA.B $00                           ;; 039C03 : A5 00       ;
                       STA.W $0304,Y                       ;; 039C05 : 99 04 03    ;
                       SEC                                 ;; 039C08 : 38          ;
                       SBC.B #$10                          ;; 039C09 : E9 10       ;
                       STA.W $0300,Y                       ;; 039C0B : 99 00 03    ;
-                      LDA $01                             ;; 039C0E : A5 01       ;
+                      LDA.B $01                           ;; 039C0E : A5 01       ;
                       SEC                                 ;; 039C10 : 38          ;
-                      SBC $02                             ;; 039C11 : E5 02       ;
+                      SBC.B $02                           ;; 039C11 : E5 02       ;
                       STA.W $0301,Y                       ;; 039C13 : 99 01 03    ;
                       STA.W $0305,Y                       ;; 039C16 : 99 05 03    ;
                       LDA.B #$4E                          ;; 039C19 : A9 4E       ; \ Tile of reznor platform...     
@@ -3363,7 +3363,7 @@ ReznorPlatGfxRt:      LDA.W $15EA,X                       ;; ?QPWZ? : BD EA 15  
                       JSL FinishOAMWrite                  ;; 039C2F : 22 B3 B7 01 ; / Don't draw if offscreen        
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-InvisBlk_DinosMain:   LDA $9E,X                           ;; ?QPWZ? : B5 9E       ; \ Branch if sprite isn't "Invisible solid block" 
+InvisBlk_DinosMain:   LDA.B $9E,X                         ;; ?QPWZ? : B5 9E       ; \ Branch if sprite isn't "Invisible solid block" 
                       CMP.B #$6D                          ;; 039C36 : C9 6D       ;  | 
                       BNE DinoMainRt                      ;; 039C38 : D0 05       ; / 
                       JSL InvisBlkMainRt                  ;; 039C3A : 22 4F B4 01 ; \ Call "Invisible solid block" routine 
@@ -3377,7 +3377,7 @@ DinoMainRt:           PHB                                 ;; ?QPWZ? : 8B        
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 DinoMainSubRt:        JSR DinoGfxRt                       ;; ?QPWZ? : 20 49 9E    ;
-                      LDA $9D                             ;; 039C4A : A5 9D       ;
+                      LDA.B $9D                           ;; 039C4A : A5 9D       ;
                       BNE Return039CA3                    ;; 039C4C : D0 55       ;
                       LDA.W $14C8,X                       ;; 039C4E : BD C8 14    ;
                       CMP.B #$08                          ;; 039C51 : C9 08       ;
@@ -3385,7 +3385,7 @@ DinoMainSubRt:        JSR DinoGfxRt                       ;; ?QPWZ? : 20 49 9E  
                       JSR SubOffscreen0Bnk3               ;; 039C55 : 20 5D B8    ;
                       JSL MarioSprInteract                ;; 039C58 : 22 DC A7 01 ;
                       JSL UpdateSpritePos                 ;; 039C5C : 22 2A 80 01 ;
-                      LDA $C2,X                           ;; 039C60 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 039C60 : B5 C2       ;
                       JSL ExecutePtr                      ;; 039C62 : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_039CA8                      ;; ?QPWZ? : A8 9C       ;
@@ -3397,9 +3397,9 @@ DATA_039C6E:          db $00,$FE,$02                      ;; 039C6E             
                                                           ;;                      ;
 DATA_039C71:          db $00,$FF,$00                      ;; 039C71               ;
                                                           ;;                      ;
-CODE_039C74:          LDA $AA,X                           ;; 039C74 : B5 AA       ;
+CODE_039C74:          LDA.B $AA,X                         ;; 039C74 : B5 AA       ;
                       BMI CODE_039C89                     ;; 039C76 : 30 11       ;
-                      STZ $C2,X                           ;; 039C78 : 74 C2       ;
+                      STZ.B $C2,X                         ;; 039C78 : 74 C2       ;
                       LDA.W $1588,X                       ;; 039C7A : BD 88 15    ; \ Branch if not touching object 
                       AND.B #$03                          ;; 039C7D : 29 03       ;  | 
                       BEQ CODE_039C89                     ;; 039C7F : F0 08       ; / 
@@ -3410,10 +3410,10 @@ CODE_039C89:          STZ.W $1602,X                       ;; 039C89 : 9E 02 16  
                       LDA.W $1588,X                       ;; 039C8C : BD 88 15    ;
                       AND.B #$03                          ;; 039C8F : 29 03       ;
                       TAY                                 ;; 039C91 : A8          ;
-                      LDA $E4,X                           ;; 039C92 : B5 E4       ;
+                      LDA.B $E4,X                         ;; 039C92 : B5 E4       ;
                       CLC                                 ;; 039C94 : 18          ;
                       ADC.W DATA_039C6E,Y                 ;; 039C95 : 79 6E 9C    ;
-                      STA $E4,X                           ;; 039C98 : 95 E4       ;
+                      STA.B $E4,X                         ;; 039C98 : 95 E4       ;
                       LDA.W $14E0,X                       ;; 039C9A : BD E0 14    ;
                       ADC.W DATA_039C71,Y                 ;; 039C9D : 79 71 9C    ;
                       STA.W $14E0,X                       ;; 039CA0 : 9D E0 14    ;
@@ -3427,7 +3427,7 @@ CODE_039CA8:          LDA.W $1588,X                       ;; 039CA8 : BD 88 15  
                       BEQ CODE_039C89                     ;; 039CAD : F0 DA       ; / 
                       LDA.W $1540,X                       ;; 039CAF : BD 40 15    ;
                       BNE CODE_039CC8                     ;; 039CB2 : D0 14       ;
-                      LDA $9E,X                           ;; 039CB4 : B5 9E       ;
+                      LDA.B $9E,X                         ;; 039CB4 : B5 9E       ;
                       CMP.B #$6E                          ;; 039CB6 : C9 6E       ;
                       BEQ CODE_039CC8                     ;; 039CB8 : F0 0E       ;
                       LDA.B #$FF                          ;; 039CBA : A9 FF       ; \ Set fire breathing timer 
@@ -3435,12 +3435,12 @@ CODE_039CA8:          LDA.W $1588,X                       ;; 039CA8 : BD 88 15  
                       JSL GetRand                         ;; 039CBF : 22 F9 AC 01 ;
                       AND.B #$01                          ;; 039CC3 : 29 01       ;
                       INC A                               ;; 039CC5 : 1A          ;
-                      STA $C2,X                           ;; 039CC6 : 95 C2       ;
+                      STA.B $C2,X                         ;; 039CC6 : 95 C2       ;
 CODE_039CC8:          TXA                                 ;; 039CC8 : 8A          ;
-                      ASL                                 ;; 039CC9 : 0A          ;
-                      ASL                                 ;; 039CCA : 0A          ;
-                      ASL                                 ;; 039CCB : 0A          ;
-                      ASL                                 ;; 039CCC : 0A          ;
+                      ASL A                               ;; 039CC9 : 0A          ;
+                      ASL A                               ;; 039CCA : 0A          ;
+                      ASL A                               ;; 039CCB : 0A          ;
+                      ASL A                               ;; 039CCC : 0A          ;
                       ADC.B $14                           ;; 039CCD : 65 14       ;
                       AND.B #$3F                          ;; 039CCF : 29 3F       ;
                       BNE CODE_039CDA                     ;; 039CD1 : D0 07       ;
@@ -3448,23 +3448,23 @@ CODE_039CC8:          TXA                                 ;; 039CC8 : 8A        
                       TYA                                 ;; 039CD6 : 98          ;  | 
                       STA.W $157C,X                       ;; 039CD7 : 9D 7C 15    ; / 
 CODE_039CDA:          LDA.B #$10                          ;; 039CDA : A9 10       ;
-                      STA $AA,X                           ;; 039CDC : 95 AA       ;
+                      STA.B $AA,X                         ;; 039CDC : 95 AA       ;
                       LDY.W $157C,X                       ;; 039CDE : BC 7C 15    ; \ Set x speed for rhino based on direction and sprite number 
-                      LDA $9E,X                           ;; 039CE1 : B5 9E       ;  | 
+                      LDA.B $9E,X                         ;; 039CE1 : B5 9E       ;  | 
                       CMP.B #$6E                          ;; 039CE3 : C9 6E       ;  | 
                       BEQ CODE_039CE9                     ;; 039CE5 : F0 02       ;  | 
                       INY                                 ;; 039CE7 : C8          ;  | 
                       INY                                 ;; 039CE8 : C8          ;  | 
 CODE_039CE9:          LDA.W DinoSpeed,Y                   ;; 039CE9 : B9 A4 9C    ;  | 
-                      STA $B6,X                           ;; 039CEC : 95 B6       ; / 
+                      STA.B $B6,X                         ;; 039CEC : 95 B6       ; / 
                       JSR DinoSetGfxFrame                 ;; 039CEE : 20 EF 9D    ;
                       LDA.W $1588,X                       ;; 039CF1 : BD 88 15    ; \ Branch if not touching object 
                       AND.B #$03                          ;; 039CF4 : 29 03       ;  | 
                       BEQ Return039D00                    ;; 039CF6 : F0 08       ; / 
                       LDA.B #$C0                          ;; 039CF8 : A9 C0       ;
-                      STA $AA,X                           ;; 039CFA : 95 AA       ;
+                      STA.B $AA,X                         ;; 039CFA : 95 AA       ;
                       LDA.B #$03                          ;; 039CFC : A9 03       ;
-                      STA $C2,X                           ;; 039CFE : 95 C2       ;
+                      STA.B $C2,X                         ;; 039CFE : 95 C2       ;
 Return039D00:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -3477,10 +3477,10 @@ DinoFlameTable:       db $41,$42,$42,$32,$22,$12,$02,$02  ;; ?QPWZ?             
                       db $03,$03,$03,$03,$03,$03,$03,$13  ;; ?QPWZ?               ;
                       db $23,$33,$43,$43,$43,$43,$41,$41  ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_039D41:          STZ $B6,X                           ;; 039D41 : 74 B6       ; Sprite X Speed = 0 
+CODE_039D41:          STZ.B $B6,X                         ;; 039D41 : 74 B6       ; Sprite X Speed = 0 
                       LDA.W $1540,X                       ;; 039D43 : BD 40 15    ;
                       BNE DinoFlameTimerSet               ;; 039D46 : D0 09       ;
-                      STZ $C2,X                           ;; 039D48 : 74 C2       ;
+                      STZ.B $C2,X                         ;; 039D48 : 74 C2       ;
                       LDA.B #$40                          ;; 039D4A : A9 40       ;
                       STA.W $1540,X                       ;; 039D4C : 9D 40 15    ;
                       LDA.B #$00                          ;; 039D4F : A9 00       ;
@@ -3488,10 +3488,10 @@ DinoFlameTimerSet:    CMP.B #$C0                          ;; ?QPWZ? : C9 C0     
                       BNE CODE_039D5A                     ;; 039D53 : D0 05       ;
                       LDY.B #$17                          ;; 039D55 : A0 17       ; \ Play sound effect 
                       STY.W $1DFC                         ;; 039D57 : 8C FC 1D    ; / 
-CODE_039D5A:          LSR                                 ;; 039D5A : 4A          ;
-                      LSR                                 ;; 039D5B : 4A          ;
-                      LSR                                 ;; 039D5C : 4A          ;
-                      LDY $C2,X                           ;; 039D5D : B4 C2       ;
+CODE_039D5A:          LSR A                               ;; 039D5A : 4A          ;
+                      LSR A                               ;; 039D5B : 4A          ;
+                      LSR A                               ;; 039D5C : 4A          ;
+                      LDY.B $C2,X                         ;; 039D5D : B4 C2       ;
                       CPY.B #$02                          ;; 039D5F : C0 02       ;
                       BNE CODE_039D66                     ;; 039D61 : D0 03       ;
                       CLC                                 ;; 039D63 : 18          ;
@@ -3502,17 +3502,17 @@ CODE_039D66:          TAY                                 ;; 039D66 : A8        
                       AND.B #$0F                          ;; 039D6B : 29 0F       ;
                       STA.W $1602,X                       ;; 039D6D : 9D 02 16    ;
                       PLA                                 ;; 039D70 : 68          ;
-                      LSR                                 ;; 039D71 : 4A          ;
-                      LSR                                 ;; 039D72 : 4A          ;
-                      LSR                                 ;; 039D73 : 4A          ;
-                      LSR                                 ;; 039D74 : 4A          ;
+                      LSR A                               ;; 039D71 : 4A          ;
+                      LSR A                               ;; 039D72 : 4A          ;
+                      LSR A                               ;; 039D73 : 4A          ;
+                      LSR A                               ;; 039D74 : 4A          ;
                       STA.W $151C,X                       ;; 039D75 : 9D 1C 15    ;
                       BNE Return039D9D                    ;; 039D78 : D0 23       ;
-                      LDA $9E,X                           ;; 039D7A : B5 9E       ;
+                      LDA.B $9E,X                         ;; 039D7A : B5 9E       ;
                       CMP.B #$6E                          ;; 039D7C : C9 6E       ;
                       BEQ Return039D9D                    ;; 039D7E : F0 1D       ;
                       TXA                                 ;; 039D80 : 8A          ;
-                      EOR $13                             ;; 039D81 : 45 13       ;
+                      EOR.B $13                           ;; 039D81 : 45 13       ;
                       AND.B #$03                          ;; 039D83 : 29 03       ;
                       BNE Return039D9D                    ;; 039D85 : D0 16       ;
                       JSR DinoFlameClipping               ;; 039D87 : 20 B6 9D    ;
@@ -3545,32 +3545,32 @@ DinoFlameClipping:    LDA.W $1602,X                       ;; ?QPWZ? : BD 02 16  
                       BNE CODE_039DC4                     ;; 039DC0 : D0 02       ;
                       INY                                 ;; 039DC2 : C8          ;
                       INY                                 ;; 039DC3 : C8          ;
-CODE_039DC4:          LDA $E4,X                           ;; 039DC4 : B5 E4       ;
+CODE_039DC4:          LDA.B $E4,X                         ;; 039DC4 : B5 E4       ;
                       CLC                                 ;; 039DC6 : 18          ;
                       ADC.W DinoFlame1,Y                  ;; 039DC7 : 79 9E 9D    ;
-                      STA $04                             ;; 039DCA : 85 04       ;
+                      STA.B $04                           ;; 039DCA : 85 04       ;
                       LDA.W $14E0,X                       ;; 039DCC : BD E0 14    ;
                       ADC.W DinoFlame2,Y                  ;; 039DCF : 79 A2 9D    ;
-                      STA $0A                             ;; 039DD2 : 85 0A       ;
+                      STA.B $0A                           ;; 039DD2 : 85 0A       ;
                       LDA.W DinoFlame3,Y                  ;; 039DD4 : B9 A6 9D    ;
-                      STA $06                             ;; 039DD7 : 85 06       ;
-                      LDA $D8,X                           ;; 039DD9 : B5 D8       ;
+                      STA.B $06                           ;; 039DD7 : 85 06       ;
+                      LDA.B $D8,X                         ;; 039DD9 : B5 D8       ;
                       CLC                                 ;; 039DDB : 18          ;
                       ADC.W DinoFlame4,Y                  ;; 039DDC : 79 AA 9D    ;
-                      STA $05                             ;; 039DDF : 85 05       ;
+                      STA.B $05                           ;; 039DDF : 85 05       ;
                       LDA.W $14D4,X                       ;; 039DE1 : BD D4 14    ;
                       ADC.W DinoFlame5,Y                  ;; 039DE4 : 79 AE 9D    ;
-                      STA $0B                             ;; 039DE7 : 85 0B       ;
+                      STA.B $0B                           ;; 039DE7 : 85 0B       ;
                       LDA.W DinoFlame6,Y                  ;; 039DE9 : B9 B2 9D    ;
-                      STA $07                             ;; 039DEC : 85 07       ;
+                      STA.B $07                           ;; 039DEC : 85 07       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 DinoSetGfxFrame:      INC.W $1570,X                       ;; ?QPWZ? : FE 70 15    ;
                       LDA.W $1570,X                       ;; 039DF2 : BD 70 15    ;
                       AND.B #$08                          ;; 039DF5 : 29 08       ;
-                      LSR                                 ;; 039DF7 : 4A          ;
-                      LSR                                 ;; 039DF8 : 4A          ;
-                      LSR                                 ;; 039DF9 : 4A          ;
+                      LSR A                               ;; 039DF7 : 4A          ;
+                      LSR A                               ;; 039DF8 : 4A          ;
+                      LSR A                               ;; 039DF9 : 4A          ;
                       STA.W $1602,X                       ;; 039DFA : 9D 02 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -3597,16 +3597,16 @@ DinoRhinoTiles:       db $C0,$C2,$E4,$E6,$C0,$C2,$E0,$E2  ;; ?QPWZ?             
                                                           ;;                      ;
 DinoGfxRt:            JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7    ;
                       LDA.W $157C,X                       ;; 039E4C : BD 7C 15    ;
-                      STA $02                             ;; 039E4F : 85 02       ;
+                      STA.B $02                           ;; 039E4F : 85 02       ;
                       LDA.W $1602,X                       ;; 039E51 : BD 02 16    ;
-                      STA $04                             ;; 039E54 : 85 04       ;
-                      LDA $9E,X                           ;; 039E56 : B5 9E       ;
+                      STA.B $04                           ;; 039E54 : 85 04       ;
+                      LDA.B $9E,X                         ;; 039E56 : B5 9E       ;
                       CMP.B #$6F                          ;; 039E58 : C9 6F       ;
                       BEQ CODE_039EA9                     ;; 039E5A : F0 4D       ;
                       PHX                                 ;; 039E5C : DA          ;
                       LDX.B #$03                          ;; 039E5D : A2 03       ;
-CODE_039E5F:          STX $0F                             ;; 039E5F : 86 0F       ;
-                      LDA $02                             ;; 039E61 : A5 02       ;
+CODE_039E5F:          STX.B $0F                           ;; 039E5F : 86 0F       ;
+                      LDA.B $02                           ;; 039E61 : A5 02       ;
                       CMP.B #$01                          ;; 039E63 : C9 01       ;
                       BCS CODE_039E6C                     ;; 039E65 : B0 05       ;
                       TXA                                 ;; 039E67 : 8A          ;
@@ -3617,18 +3617,18 @@ CODE_039E6C:          LDA.W DinoRhinoGfxProp,X            ;; 039E6C : BD 2D 9E  
                       STA.W $0303,Y                       ;; 039E6F : 99 03 03    ;
                       LDA.W DinoRhinoTileDispX,X          ;; 039E72 : BD 25 9E    ;
                       CLC                                 ;; 039E75 : 18          ;
-                      ADC $00                             ;; 039E76 : 65 00       ;
+                      ADC.B $00                           ;; 039E76 : 65 00       ;
                       STA.W $0300,Y                       ;; 039E78 : 99 00 03    ;
-                      LDA $04                             ;; 039E7B : A5 04       ;
+                      LDA.B $04                           ;; 039E7B : A5 04       ;
                       CMP.B #$01                          ;; 039E7D : C9 01       ;
-                      LDX $0F                             ;; 039E7F : A6 0F       ;
+                      LDX.B $0F                           ;; 039E7F : A6 0F       ;
                       LDA.W DinoRhinoTileDispY,X          ;; 039E81 : BD 35 9E    ;
-                      ADC $01                             ;; 039E84 : 65 01       ;
+                      ADC.B $01                           ;; 039E84 : 65 01       ;
                       STA.W $0301,Y                       ;; 039E86 : 99 01 03    ;
-                      LDA $04                             ;; 039E89 : A5 04       ;
-                      ASL                                 ;; 039E8B : 0A          ;
-                      ASL                                 ;; 039E8C : 0A          ;
-                      ADC $0F                             ;; 039E8D : 65 0F       ;
+                      LDA.B $04                           ;; 039E89 : A5 04       ;
+                      ASL A                               ;; 039E8B : 0A          ;
+                      ASL A                               ;; 039E8C : 0A          ;
+                      ADC.B $0F                           ;; 039E8D : 65 0F       ;
                       TAX                                 ;; 039E8F : AA          ;
                       LDA.W DinoRhinoTiles,X              ;; 039E90 : BD 39 9E    ;
                       STA.W $0302,Y                       ;; 039E93 : 99 02 03    ;
@@ -3636,7 +3636,7 @@ CODE_039E6C:          LDA.W DinoRhinoGfxProp,X            ;; 039E6C : BD 2D 9E  
                       INY                                 ;; 039E97 : C8          ;
                       INY                                 ;; 039E98 : C8          ;
                       INY                                 ;; 039E99 : C8          ;
-                      LDX $0F                             ;; 039E9A : A6 0F       ;
+                      LDX.B $0F                           ;; 039E9A : A6 0F       ;
                       DEX                                 ;; 039E9C : CA          ;
                       BPL CODE_039E5F                     ;; 039E9D : 10 C0       ;
                       PLX                                 ;; 039E9F : FA          ;
@@ -3646,25 +3646,25 @@ CODE_039E6C:          LDA.W DinoRhinoGfxProp,X            ;; 039E6C : BD 2D 9E  
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_039EA9:          LDA.W $151C,X                       ;; 039EA9 : BD 1C 15    ;
-                      STA $03                             ;; 039EAC : 85 03       ;
+                      STA.B $03                           ;; 039EAC : 85 03       ;
                       LDA.W $1602,X                       ;; 039EAE : BD 02 16    ;
-                      STA $04                             ;; 039EB1 : 85 04       ;
+                      STA.B $04                           ;; 039EB1 : 85 04       ;
                       PHX                                 ;; 039EB3 : DA          ;
                       LDA.B $14                           ;; 039EB4 : A5 14       ;
                       AND.B #$02                          ;; 039EB6 : 29 02       ;
-                      ASL                                 ;; 039EB8 : 0A          ;
-                      ASL                                 ;; 039EB9 : 0A          ;
-                      ASL                                 ;; 039EBA : 0A          ;
-                      ASL                                 ;; 039EBB : 0A          ;
-                      ASL                                 ;; 039EBC : 0A          ;
-                      LDX $04                             ;; 039EBD : A6 04       ;
+                      ASL A                               ;; 039EB8 : 0A          ;
+                      ASL A                               ;; 039EB9 : 0A          ;
+                      ASL A                               ;; 039EBA : 0A          ;
+                      ASL A                               ;; 039EBB : 0A          ;
+                      ASL A                               ;; 039EBC : 0A          ;
+                      LDX.B $04                           ;; 039EBD : A6 04       ;
                       CPX.B #$03                          ;; 039EBF : E0 03       ;
                       BEQ CODE_039EC4                     ;; 039EC1 : F0 01       ;
-                      ASL                                 ;; 039EC3 : 0A          ;
-CODE_039EC4:          STA $05                             ;; 039EC4 : 85 05       ;
+                      ASL A                               ;; 039EC3 : 0A          ;
+CODE_039EC4:          STA.B $05                           ;; 039EC4 : 85 05       ;
                       LDX.B #$04                          ;; 039EC6 : A2 04       ;
-CODE_039EC8:          STX $06                             ;; 039EC8 : 86 06       ;
-                      LDA $04                             ;; 039ECA : A5 04       ;
+CODE_039EC8:          STX.B $06                           ;; 039EC8 : 86 06       ;
+                      LDA.B $04                           ;; 039ECA : A5 04       ;
                       CMP.B #$03                          ;; 039ECC : C9 03       ;
                       BNE CODE_039ED5                     ;; 039ECE : D0 05       ;
                       TXA                                 ;; 039ED0 : 8A          ;
@@ -3673,44 +3673,44 @@ CODE_039EC8:          STX $06                             ;; 039EC8 : 86 06     
                       TAX                                 ;; 039ED4 : AA          ;
 CODE_039ED5:          PHX                                 ;; 039ED5 : DA          ;
                       LDA.W DinoTorchTileDispX,X          ;; 039ED6 : BD FE 9D    ;
-                      LDX $02                             ;; 039ED9 : A6 02       ;
+                      LDX.B $02                           ;; 039ED9 : A6 02       ;
                       BNE CODE_039EE0                     ;; 039EDB : D0 03       ;
                       EOR.B #$FF                          ;; 039EDD : 49 FF       ;
                       INC A                               ;; 039EDF : 1A          ;
 CODE_039EE0:          PLX                                 ;; 039EE0 : FA          ;
                       CLC                                 ;; 039EE1 : 18          ;
-                      ADC $00                             ;; 039EE2 : 65 00       ;
+                      ADC.B $00                           ;; 039EE2 : 65 00       ;
                       STA.W $0300,Y                       ;; 039EE4 : 99 00 03    ;
                       LDA.W DinoTorchTileDispY,X          ;; 039EE7 : BD 08 9E    ;
                       CLC                                 ;; 039EEA : 18          ;
-                      ADC $01                             ;; 039EEB : 65 01       ;
+                      ADC.B $01                           ;; 039EEB : 65 01       ;
                       STA.W $0301,Y                       ;; 039EED : 99 01 03    ;
-                      LDA $06                             ;; 039EF0 : A5 06       ;
+                      LDA.B $06                           ;; 039EF0 : A5 06       ;
                       CMP.B #$04                          ;; 039EF2 : C9 04       ;
                       BNE CODE_039EFD                     ;; 039EF4 : D0 07       ;
-                      LDX $04                             ;; 039EF6 : A6 04       ;
+                      LDX.B $04                           ;; 039EF6 : A6 04       ;
                       LDA.W DinoTorchTiles,X              ;; 039EF8 : BD 21 9E    ;
                       BRA CODE_039F00                     ;; 039EFB : 80 03       ;
                                                           ;;                      ;
 CODE_039EFD:          LDA.W DinoFlameTiles,X              ;; 039EFD : BD 12 9E    ;
 CODE_039F00:          STA.W $0302,Y                       ;; 039F00 : 99 02 03    ;
                       LDA.B #$00                          ;; 039F03 : A9 00       ;
-                      LDX $02                             ;; 039F05 : A6 02       ;
+                      LDX.B $02                           ;; 039F05 : A6 02       ;
                       BNE CODE_039F0B                     ;; 039F07 : D0 02       ;
                       ORA.B #$40                          ;; 039F09 : 09 40       ;
-CODE_039F0B:          LDX $06                             ;; 039F0B : A6 06       ;
+CODE_039F0B:          LDX.B $06                           ;; 039F0B : A6 06       ;
                       CPX.B #$04                          ;; 039F0D : E0 04       ;
                       BEQ CODE_039F13                     ;; 039F0F : F0 02       ;
-                      EOR $05                             ;; 039F11 : 45 05       ;
+                      EOR.B $05                           ;; 039F11 : 45 05       ;
 CODE_039F13:          ORA.W DinoTorchGfxProp,X            ;; 039F13 : 1D 1C 9E    ;
-                      ORA $64                             ;; 039F16 : 05 64       ;
+                      ORA.B $64                           ;; 039F16 : 05 64       ;
                       STA.W $0303,Y                       ;; 039F18 : 99 03 03    ;
                       INY                                 ;; 039F1B : C8          ;
                       INY                                 ;; 039F1C : C8          ;
                       INY                                 ;; 039F1D : C8          ;
                       INY                                 ;; 039F1E : C8          ;
                       DEX                                 ;; 039F1F : CA          ;
-                      CPX $03                             ;; 039F20 : E4 03       ;
+                      CPX.B $03                           ;; 039F20 : E4 03       ;
                       BPL CODE_039EC8                     ;; 039F22 : 10 A4       ;
                       PLX                                 ;; 039F24 : FA          ;
                       LDY.W $151C,X                       ;; 039F25 : BC 1C 15    ;
@@ -3725,11 +3725,11 @@ DinoTilesWritten:     db $04,$03,$02,$01,$00              ;; ?QPWZ?             
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 Blargg:               JSR CODE_03A062                     ;; ?QPWZ? : 20 62 A0    ;
-                      LDA $9D                             ;; 039F3B : A5 9D       ;
+                      LDA.B $9D                           ;; 039F3B : A5 9D       ;
                       BNE Return039F56                    ;; 039F3D : D0 17       ;
                       JSL MarioSprInteract                ;; 039F3F : 22 DC A7 01 ;
                       JSR SubOffscreen0Bnk3               ;; 039F43 : 20 5D B8    ;
-                      LDA $C2,X                           ;; 039F46 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 039F46 : B5 C2       ;
                       JSL ExecutePtr                      ;; 039F48 : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_039F57                      ;; ?QPWZ? : 57 9F       ;
@@ -3744,42 +3744,42 @@ CODE_039F57:          LDA.W $15A0,X                       ;; 039F57 : BD A0 15  
                       ORA.W $1540,X                       ;; 039F5A : 1D 40 15    ;
                       BNE Return039F8A                    ;; 039F5D : D0 2B       ;
                       JSR SubHorzPosBnk3                  ;; 039F5F : 20 17 B8    ;
-                      LDA $0F                             ;; 039F62 : A5 0F       ;
+                      LDA.B $0F                           ;; 039F62 : A5 0F       ;
                       CLC                                 ;; 039F64 : 18          ;
                       ADC.B #$70                          ;; 039F65 : 69 70       ;
                       CMP.B #$E0                          ;; 039F67 : C9 E0       ;
                       BCS Return039F8A                    ;; 039F69 : B0 1F       ;
                       LDA.B #$E3                          ;; 039F6B : A9 E3       ;
-                      STA $AA,X                           ;; 039F6D : 95 AA       ;
+                      STA.B $AA,X                         ;; 039F6D : 95 AA       ;
                       LDA.W $14E0,X                       ;; 039F6F : BD E0 14    ;
                       STA.W $151C,X                       ;; 039F72 : 9D 1C 15    ;
-                      LDA $E4,X                           ;; 039F75 : B5 E4       ;
+                      LDA.B $E4,X                         ;; 039F75 : B5 E4       ;
                       STA.W $1528,X                       ;; 039F77 : 9D 28 15    ;
                       LDA.W $14D4,X                       ;; 039F7A : BD D4 14    ;
                       STA.W $1534,X                       ;; 039F7D : 9D 34 15    ;
-                      LDA $D8,X                           ;; 039F80 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 039F80 : B5 D8       ;
                       STA.W $1594,X                       ;; 039F82 : 9D 94 15    ;
                       JSR CODE_039FC0                     ;; 039F85 : 20 C0 9F    ;
-                      INC $C2,X                           ;; 039F88 : F6 C2       ;
+                      INC.B $C2,X                         ;; 039F88 : F6 C2       ;
 Return039F8A:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_039F8B:          LDA $AA,X                           ;; 039F8B : B5 AA       ;
+CODE_039F8B:          LDA.B $AA,X                         ;; 039F8B : B5 AA       ;
                       CMP.B #$10                          ;; 039F8D : C9 10       ;
                       BMI CODE_039F9B                     ;; 039F8F : 30 0A       ;
                       LDA.B #$50                          ;; 039F91 : A9 50       ;
                       STA.W $1540,X                       ;; 039F93 : 9D 40 15    ;
-                      INC $C2,X                           ;; 039F96 : F6 C2       ;
-                      STZ $AA,X                           ;; 039F98 : 74 AA       ; Sprite Y Speed = 0 
+                      INC.B $C2,X                         ;; 039F96 : F6 C2       ;
+                      STZ.B $AA,X                         ;; 039F98 : 74 AA       ; Sprite Y Speed = 0 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_039F9B:          JSL UpdateYPosNoGvtyW               ;; 039F9B : 22 1A 80 01 ;
-                      INC $AA,X                           ;; 039F9F : F6 AA       ;
-                      INC $AA,X                           ;; 039FA1 : F6 AA       ;
+                      INC.B $AA,X                         ;; 039F9F : F6 AA       ;
+                      INC.B $AA,X                         ;; 039FA1 : F6 AA       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_039FA4:          LDA.W $1540,X                       ;; 039FA4 : BD 40 15    ;
                       BNE CODE_039FB1                     ;; 039FA7 : D0 08       ;
-                      INC $C2,X                           ;; 039FA9 : F6 C2       ;
+                      INC.B $C2,X                         ;; 039FA9 : F6 C2       ;
                       LDA.B #$0A                          ;; 039FAB : A9 0A       ;
                       STA.W $1540,X                       ;; 039FAD : 9D 40 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -3800,7 +3800,7 @@ Return039FC7:         RTS                                 ;; ?QPWZ? : 60        
 CODE_039FC8:          LDA.W $1540,X                       ;; 039FC8 : BD 40 15    ;
                       BEQ CODE_039FD6                     ;; 039FCB : F0 09       ;
                       LDA.B #$20                          ;; 039FCD : A9 20       ;
-                      STA $AA,X                           ;; 039FCF : 95 AA       ;
+                      STA.B $AA,X                         ;; 039FCF : 95 AA       ;
                       JSL UpdateYPosNoGvtyW               ;; 039FD1 : 22 1A 80 01 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -3808,11 +3808,11 @@ CODE_039FD6:          LDA.B #$20                          ;; 039FD6 : A9 20     
                       STA.W $1540,X                       ;; 039FD8 : 9D 40 15    ;
                       LDY.W $157C,X                       ;; 039FDB : BC 7C 15    ;
                       LDA.W DATA_039FED,Y                 ;; 039FDE : B9 ED 9F    ;
-                      STA $B6,X                           ;; 039FE1 : 95 B6       ;
+                      STA.B $B6,X                         ;; 039FE1 : 95 B6       ;
                       LDA.B #$E2                          ;; 039FE3 : A9 E2       ;
-                      STA $AA,X                           ;; 039FE5 : 95 AA       ;
+                      STA.B $AA,X                         ;; 039FE5 : 95 AA       ;
                       JSR CODE_03A045                     ;; 039FE7 : 20 45 A0    ;
-                      INC $C2,X                           ;; 039FEA : F6 C2       ;
+                      INC.B $C2,X                         ;; 039FEA : F6 C2       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -3828,26 +3828,26 @@ CODE_039FEF:          STZ.W $1602,X                       ;; 039FEF : 9E 02 16  
                       JSR CODE_03A045                     ;; 039FFF : 20 45 A0    ;
 CODE_03A002:          JSL UpdateXPosNoGvtyW               ;; 03A002 : 22 22 80 01 ;
                       JSL UpdateYPosNoGvtyW               ;; 03A006 : 22 1A 80 01 ;
-                      LDA $13                             ;; 03A00A : A5 13       ;
+                      LDA.B $13                           ;; 03A00A : A5 13       ;
                       AND.B #$00                          ;; 03A00C : 29 00       ;
                       BNE CODE_03A012                     ;; 03A00E : D0 02       ;
-                      INC $AA,X                           ;; 03A010 : F6 AA       ;
-CODE_03A012:          LDA $AA,X                           ;; 03A012 : B5 AA       ;
+                      INC.B $AA,X                         ;; 03A010 : F6 AA       ;
+CODE_03A012:          LDA.B $AA,X                         ;; 03A012 : B5 AA       ;
                       CMP.B #$20                          ;; 03A014 : C9 20       ;
                       BMI CODE_03A038                     ;; 03A016 : 30 20       ;
                       JSR CODE_03A045                     ;; 03A018 : 20 45 A0    ;
-                      STZ $C2,X                           ;; 03A01B : 74 C2       ;
+                      STZ.B $C2,X                         ;; 03A01B : 74 C2       ;
                       LDA.W $151C,X                       ;; 03A01D : BD 1C 15    ;
                       STA.W $14E0,X                       ;; 03A020 : 9D E0 14    ;
                       LDA.W $1528,X                       ;; 03A023 : BD 28 15    ;
-                      STA $E4,X                           ;; 03A026 : 95 E4       ;
+                      STA.B $E4,X                         ;; 03A026 : 95 E4       ;
                       LDA.W $1534,X                       ;; 03A028 : BD 34 15    ;
                       STA.W $14D4,X                       ;; 03A02B : 9D D4 14    ;
                       LDA.W $1594,X                       ;; 03A02E : BD 94 15    ;
-                      STA $D8,X                           ;; 03A031 : 95 D8       ;
+                      STA.B $D8,X                         ;; 03A031 : 95 D8       ;
                       LDA.B #$40                          ;; 03A033 : A9 40       ;
                       STA.W $1540,X                       ;; 03A035 : 9D 40 15    ;
-CODE_03A038:          LDA $AA,X                           ;; 03A038 : B5 AA       ;
+CODE_03A038:          LDA.B $AA,X                         ;; 03A038 : B5 AA       ;
                       CLC                                 ;; 03A03A : 18          ;
                       ADC.B #$06                          ;; 03A03B : 69 06       ;
                       CMP.B #$0C                          ;; 03A03D : C9 0C       ;
@@ -3855,11 +3855,11 @@ CODE_03A038:          LDA $AA,X                           ;; 03A038 : B5 AA     
                       INC.W $1602,X                       ;; 03A041 : FE 02 16    ;
 Return03A044:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_03A045:          LDA $D8,X                           ;; 03A045 : B5 D8       ;
+CODE_03A045:          LDA.B $D8,X                         ;; 03A045 : B5 D8       ;
                       PHA                                 ;; 03A047 : 48          ;
                       SEC                                 ;; 03A048 : 38          ;
                       SBC.B #$0C                          ;; 03A049 : E9 0C       ;
-                      STA $D8,X                           ;; 03A04B : 95 D8       ;
+                      STA.B $D8,X                         ;; 03A04B : 95 D8       ;
                       LDA.W $14D4,X                       ;; 03A04D : BD D4 14    ;
                       PHA                                 ;; 03A050 : 48          ;
                       SBC.B #$00                          ;; 03A051 : E9 00       ;
@@ -3868,11 +3868,11 @@ CODE_03A045:          LDA $D8,X                           ;; 03A045 : B5 D8     
                       PLA                                 ;; 03A05A : 68          ;
                       STA.W $14D4,X                       ;; 03A05B : 9D D4 14    ;
                       PLA                                 ;; 03A05E : 68          ;
-                      STA $D8,X                           ;; 03A05F : 95 D8       ;
+                      STA.B $D8,X                         ;; 03A05F : 95 D8       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03A062:          JSR GetDrawInfoBnk3                 ;; 03A062 : 20 60 B7    ;
-                      LDA $C2,X                           ;; 03A065 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 03A065 : B5 C2       ;
                       BEQ CODE_03A038                     ;; 03A067 : F0 CF       ;
                       CMP.B #$04                          ;; 03A069 : C9 04       ;
                       BEQ CODE_03A09D                     ;; 03A06B : F0 30       ;
@@ -3897,37 +3897,37 @@ BlarggTilemap:        db $A2,$A4,$C2,$C4,$A6,$A2,$A4,$E6  ;; ?QPWZ?             
 DATA_03A09B:          db $45,$05                          ;; 03A09B               ;
                                                           ;;                      ;
 CODE_03A09D:          LDA.W $1602,X                       ;; 03A09D : BD 02 16    ;
-                      ASL                                 ;; 03A0A0 : 0A          ;
-                      ASL                                 ;; 03A0A1 : 0A          ;
+                      ASL A                               ;; 03A0A0 : 0A          ;
+                      ASL A                               ;; 03A0A1 : 0A          ;
                       ADC.W $1602,X                       ;; 03A0A2 : 7D 02 16    ;
-                      STA $03                             ;; 03A0A5 : 85 03       ;
+                      STA.B $03                           ;; 03A0A5 : 85 03       ;
                       LDA.W $157C,X                       ;; 03A0A7 : BD 7C 15    ;
-                      STA $02                             ;; 03A0AA : 85 02       ;
+                      STA.B $02                           ;; 03A0AA : 85 02       ;
                       PHX                                 ;; 03A0AC : DA          ;
                       LDX.B #$04                          ;; 03A0AD : A2 04       ;
 CODE_03A0AF:          PHX                                 ;; 03A0AF : DA          ;
                       PHX                                 ;; 03A0B0 : DA          ;
-                      LDA $01                             ;; 03A0B1 : A5 01       ;
+                      LDA.B $01                           ;; 03A0B1 : A5 01       ;
                       CLC                                 ;; 03A0B3 : 18          ;
                       ADC.W DATA_03A08C,X                 ;; 03A0B4 : 7D 8C A0    ;
                       STA.W $0301,Y                       ;; 03A0B7 : 99 01 03    ;
-                      LDA $02                             ;; 03A0BA : A5 02       ;
+                      LDA.B $02                           ;; 03A0BA : A5 02       ;
                       BNE CODE_03A0C3                     ;; 03A0BC : D0 05       ;
                       TXA                                 ;; 03A0BE : 8A          ;
                       CLC                                 ;; 03A0BF : 18          ;
                       ADC.B #$05                          ;; 03A0C0 : 69 05       ;
                       TAX                                 ;; 03A0C2 : AA          ;
-CODE_03A0C3:          LDA $00                             ;; 03A0C3 : A5 00       ;
+CODE_03A0C3:          LDA.B $00                           ;; 03A0C3 : A5 00       ;
                       CLC                                 ;; 03A0C5 : 18          ;
                       ADC.W DATA_03A082,X                 ;; 03A0C6 : 7D 82 A0    ;
                       STA.W $0300,Y                       ;; 03A0C9 : 99 00 03    ;
                       PLA                                 ;; 03A0CC : 68          ;
                       CLC                                 ;; 03A0CD : 18          ;
-                      ADC $03                             ;; 03A0CE : 65 03       ;
+                      ADC.B $03                           ;; 03A0CE : 65 03       ;
                       TAX                                 ;; 03A0D0 : AA          ;
                       LDA.W BlarggTilemap,X               ;; 03A0D1 : BD 91 A0    ;
                       STA.W $0302,Y                       ;; 03A0D4 : 99 02 03    ;
-                      LDX $02                             ;; 03A0D7 : A6 02       ;
+                      LDX.B $02                           ;; 03A0D7 : A6 02       ;
                       LDA.W DATA_03A09B,X                 ;; 03A0D9 : BD 9B A0    ;
                       STA.W $0303,Y                       ;; 03A0DC : 99 03 03    ;
                       PLX                                 ;; 03A0DF : FA          ;
@@ -3946,24 +3946,24 @@ CODE_03A0C3:          LDA $00                             ;; 03A0C3 : A5 00     
 CODE_03A0F1:          JSL InitSpriteTables                ;; 03A0F1 : 22 D2 F7 07 ;
                       STZ.W $15A0,X                       ;; 03A0F5 : 9E A0 15    ;
                       LDA.B #$80                          ;; 03A0F8 : A9 80       ;
-                      STA $D8,X                           ;; 03A0FA : 95 D8       ;
+                      STA.B $D8,X                         ;; 03A0FA : 95 D8       ;
                       LDA.B #$FF                          ;; 03A0FC : A9 FF       ;
                       STA.W $14D4,X                       ;; 03A0FE : 9D D4 14    ;
                       LDA.B #$D0                          ;; 03A101 : A9 D0       ;
-                      STA $E4,X                           ;; 03A103 : 95 E4       ;
+                      STA.B $E4,X                         ;; 03A103 : 95 E4       ;
                       LDA.B #$00                          ;; 03A105 : A9 00       ;
                       STA.W $14E0,X                       ;; 03A107 : 9D E0 14    ;
                       LDA.B #$02                          ;; 03A10A : A9 02       ;
                       STA.W $187B,X                       ;; 03A10C : 9D 7B 18    ;
                       LDA.B #$03                          ;; 03A10F : A9 03       ;
-                      STA $C2,X                           ;; 03A111 : 95 C2       ;
+                      STA.B $C2,X                         ;; 03A111 : 95 C2       ;
                       JSL CODE_03DD7D                     ;; 03A113 : 22 7D DD 03 ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 Bnk3CallSprMain:      PHB                                 ;; ?QPWZ? : 8B          ;
                       PHK                                 ;; 03A119 : 4B          ;
                       PLB                                 ;; 03A11A : AB          ;
-                      LDA $9E,X                           ;; 03A11B : B5 9E       ;
+                      LDA.B $9E,X                         ;; 03A11B : B5 9E       ;
                       CMP.B #$C8                          ;; 03A11D : C9 C8       ;
                       BNE CODE_03A126                     ;; 03A11F : D0 05       ;
                       JSR LightSwitch                     ;; 03A121 : 20 F5 C1    ;
@@ -4098,7 +4098,7 @@ CODE_03A1DE:          CMP.B #$B3                          ;; 03A1DE : C9 B3     
                       PLB                                 ;; 03A1E5 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_03A1E7:          LDA $9E,X                           ;; 03A1E7 : B5 9E       ;
+CODE_03A1E7:          LDA.B $9E,X                         ;; 03A1E7 : B5 9E       ;
                       CMP.B #$B2                          ;; 03A1E9 : C9 B2       ;
                       BNE CODE_03A1F2                     ;; 03A1EB : D0 05       ;
                       JSR FallingSpike                    ;; 03A1ED : 20 14 92    ;
@@ -4184,10 +4184,10 @@ DATA_03A265:          db $04,$03,$02,$01,$00,$01,$02,$03  ;; 03A265             
                       db $04,$05,$06,$07,$07,$07,$07,$07  ;; ?QPWZ?               ;
                       db $07,$07,$07,$07                  ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_03A279:          LDA $38                             ;; 03A279 : A5 38       ;
-                      LSR                                 ;; 03A27B : 4A          ;
-                      LSR                                 ;; 03A27C : 4A          ;
-                      LSR                                 ;; 03A27D : 4A          ;
+CODE_03A279:          LDA.B $38                           ;; 03A279 : A5 38       ;
+                      LSR A                               ;; 03A27B : 4A          ;
+                      LSR A                               ;; 03A27C : 4A          ;
+                      LSR A                               ;; 03A27D : 4A          ;
                       TAY                                 ;; 03A27E : A8          ;
                       LDA.W DATA_03A265,Y                 ;; 03A27F : B9 65 A2    ;
                       STA.W $1429                         ;; 03A282 : 8D 29 14    ;
@@ -4197,13 +4197,13 @@ CODE_03A279:          LDA $38                             ;; 03A279 : A5 38     
                       ORA.W $157C,X                       ;; 03A28B : 1D 7C 15    ;
                       STA.W $1BA2                         ;; 03A28E : 8D A2 1B    ;
                       LDA.B $14                           ;; 03A291 : A5 14       ;
-                      LSR                                 ;; 03A293 : 4A          ;
+                      LSR A                               ;; 03A293 : 4A          ;
                       AND.B #$03                          ;; 03A294 : 29 03       ;
                       STA.W $1428                         ;; 03A296 : 8D 28 14    ;
                       LDA.B #$90                          ;; 03A299 : A9 90       ;
-                      STA $2A                             ;; 03A29B : 85 2A       ;
+                      STA.B $2A                           ;; 03A29B : 85 2A       ;
                       LDA.B #$C8                          ;; 03A29D : A9 C8       ;
-                      STA $2C                             ;; 03A29F : 85 2C       ;
+                      STA.B $2C                           ;; 03A29F : 85 2C       ;
                       JSL CODE_03DEDF                     ;; 03A2A1 : 22 DF DE 03 ;
                       LDA.W $14B5                         ;; 03A2A5 : AD B5 14    ;
                       BEQ CODE_03A2AD                     ;; 03A2A8 : F0 03       ;
@@ -4214,35 +4214,35 @@ CODE_03A2AD:          LDA.W $1564,X                       ;; 03A2AD : BD 64 15  
 CODE_03A2B5:          LDA.W $1594,X                       ;; 03A2B5 : BD 94 15    ;
                       BEQ CODE_03A2CE                     ;; 03A2B8 : F0 14       ;
                       DEC A                               ;; 03A2BA : 3A          ;
-                      LSR                                 ;; 03A2BB : 4A          ;
-                      LSR                                 ;; 03A2BC : 4A          ;
+                      LSR A                               ;; 03A2BB : 4A          ;
+                      LSR A                               ;; 03A2BC : 4A          ;
                       PHA                                 ;; 03A2BD : 48          ;
-                      LSR                                 ;; 03A2BE : 4A          ;
+                      LSR A                               ;; 03A2BE : 4A          ;
                       TAY                                 ;; 03A2BF : A8          ;
                       LDA.W DATA_03A8BE,Y                 ;; 03A2C0 : B9 BE A8    ;
-                      STA $02                             ;; 03A2C3 : 85 02       ;
+                      STA.B $02                           ;; 03A2C3 : 85 02       ;
                       PLA                                 ;; 03A2C5 : 68          ;
                       AND.B #$03                          ;; 03A2C6 : 29 03       ;
-                      STA $03                             ;; 03A2C8 : 85 03       ;
+                      STA.B $03                           ;; 03A2C8 : 85 03       ;
                       JSR CODE_03AA6E                     ;; 03A2CA : 20 6E AA    ;
                       NOP                                 ;; 03A2CD : EA          ;
-CODE_03A2CE:          LDA $9D                             ;; 03A2CE : A5 9D       ;
+CODE_03A2CE:          LDA.B $9D                           ;; 03A2CE : A5 9D       ;
                       BNE Return03A340                    ;; 03A2D0 : D0 6E       ;
                       STZ.W $1594,X                       ;; 03A2D2 : 9E 94 15    ;
                       LDA.B #$30                          ;; 03A2D5 : A9 30       ;
-                      STA $64                             ;; 03A2D7 : 85 64       ;
-                      LDA $38                             ;; 03A2D9 : A5 38       ;
+                      STA.B $64                           ;; 03A2D7 : 85 64       ;
+                      LDA.B $38                           ;; 03A2D9 : A5 38       ;
                       CMP.B #$20                          ;; 03A2DB : C9 20       ;
                       BCS CODE_03A2E1                     ;; 03A2DD : B0 02       ;
-                      STZ $64                             ;; 03A2DF : 64 64       ;
+                      STZ.B $64                           ;; 03A2DF : 64 64       ;
 CODE_03A2E1:          JSR CODE_03A661                     ;; 03A2E1 : 20 61 A6    ;
                       LDA.W $14B0                         ;; 03A2E4 : AD B0 14    ;
                       BEQ CODE_03A2F2                     ;; 03A2E7 : F0 09       ;
-                      LDA $13                             ;; 03A2E9 : A5 13       ;
+                      LDA.B $13                           ;; 03A2E9 : A5 13       ;
                       AND.B #$03                          ;; 03A2EB : 29 03       ;
                       BNE CODE_03A2F2                     ;; 03A2ED : D0 03       ;
                       DEC.W $14B0                         ;; 03A2EF : CE B0 14    ;
-CODE_03A2F2:          LDA $13                             ;; 03A2F2 : A5 13       ;
+CODE_03A2F2:          LDA.B $13                           ;; 03A2F2 : A5 13       ;
                       AND.B #$7F                          ;; 03A2F4 : 29 7F       ;
                       BNE CODE_03A305                     ;; 03A2F6 : D0 0D       ;
                       JSL GetRand                         ;; 03A2F8 : 22 F9 AC 01 ;
@@ -4303,12 +4303,12 @@ DATA_03A3D9:          db $E3,$ED,$ED,$EB,$EB,$E9,$E9,$E7  ;; 03A3D9             
 CODE_03A3E2:          JSR GetDrawInfoBnk3                 ;; 03A3E2 : 20 60 B7    ;
                       LDA.W $1564,X                       ;; 03A3E5 : BD 64 15    ;
                       DEC A                               ;; 03A3E8 : 3A          ;
-                      LSR                                 ;; 03A3E9 : 4A          ;
-                      STA $03                             ;; 03A3EA : 85 03       ;
-                      ASL                                 ;; 03A3EC : 0A          ;
-                      ASL                                 ;; 03A3ED : 0A          ;
-                      ASL                                 ;; 03A3EE : 0A          ;
-                      STA $02                             ;; 03A3EF : 85 02       ;
+                      LSR A                               ;; 03A3E9 : 4A          ;
+                      STA.B $03                           ;; 03A3EA : 85 03       ;
+                      ASL A                               ;; 03A3EC : 0A          ;
+                      ASL A                               ;; 03A3ED : 0A          ;
+                      ASL A                               ;; 03A3EE : 0A          ;
+                      STA.B $02                           ;; 03A3EF : 85 02       ;
                       LDA.B #$70                          ;; 03A3F1 : A9 70       ;
                       STA.W $15EA,X                       ;; 03A3F3 : 9D EA 15    ;
                       TAY                                 ;; 03A3F6 : A8          ;
@@ -4316,21 +4316,21 @@ CODE_03A3E2:          JSR GetDrawInfoBnk3                 ;; 03A3E2 : 20 60 B7  
                       LDX.B #$07                          ;; 03A3F8 : A2 07       ;
 CODE_03A3FA:          PHX                                 ;; 03A3FA : DA          ;
                       TXA                                 ;; 03A3FB : 8A          ;
-                      ORA $02                             ;; 03A3FC : 05 02       ;
+                      ORA.B $02                           ;; 03A3FC : 05 02       ;
                       TAX                                 ;; 03A3FE : AA          ;
-                      LDA $00                             ;; 03A3FF : A5 00       ;
+                      LDA.B $00                           ;; 03A3FF : A5 00       ;
                       CLC                                 ;; 03A401 : 18          ;
                       ADC.W DATA_03A341,X                 ;; 03A402 : 7D 41 A3    ;
                       CLC                                 ;; 03A405 : 18          ;
                       ADC.B #$08                          ;; 03A406 : 69 08       ;
                       STA.W $0300,Y                       ;; 03A408 : 99 00 03    ;
-                      LDA $01                             ;; 03A40B : A5 01       ;
+                      LDA.B $01                           ;; 03A40B : A5 01       ;
                       CLC                                 ;; 03A40D : 18          ;
                       ADC.W DATA_03A389,X                 ;; 03A40E : 7D 89 A3    ;
                       CLC                                 ;; 03A411 : 18          ;
                       ADC.B #$30                          ;; 03A412 : 69 30       ;
                       STA.W $0301,Y                       ;; 03A414 : 99 01 03    ;
-                      LDX $03                             ;; 03A417 : A6 03       ;
+                      LDX.B $03                           ;; 03A417 : A6 03       ;
                       LDA.W DATA_03A3D9,X                 ;; 03A419 : BD D9 A3    ;
                       STA.W $0302,Y                       ;; 03A41C : 99 02 03    ;
                       PLX                                 ;; 03A41F : FA          ;
@@ -4359,26 +4359,26 @@ CODE_03A441:          LDA.W $154C,X                       ;; 03A441 : BD 4C 15  
                       LDA.B #$0E                          ;; 03A44B : A9 0E       ;
                       STA.W $1570,X                       ;; 03A44D : 9D 70 15    ;
                       LDA.B #$04                          ;; 03A450 : A9 04       ;
-                      STA $AA,X                           ;; 03A452 : 95 AA       ;
-                      STZ $B6,X                           ;; 03A454 : 74 B6       ; Sprite X Speed = 0 
-                      LDA $D8,X                           ;; 03A456 : B5 D8       ;
+                      STA.B $AA,X                         ;; 03A452 : 95 AA       ;
+                      STZ.B $B6,X                         ;; 03A454 : 74 B6       ; Sprite X Speed = 0 
+                      LDA.B $D8,X                         ;; 03A456 : B5 D8       ;
                       SEC                                 ;; 03A458 : 38          ;
-                      SBC $1C                             ;; 03A459 : E5 1C       ;
+                      SBC.B $1C                           ;; 03A459 : E5 1C       ;
                       CMP.B #$10                          ;; 03A45B : C9 10       ;
                       BNE Return03A464                    ;; 03A45D : D0 05       ;
                       LDA.B #$A4                          ;; 03A45F : A9 A4       ;
                       STA.W $1540,X                       ;; 03A461 : 9D 40 15    ;
 Return03A464:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_03A465:          STZ $AA,X                           ;; 03A465 : 74 AA       ; Sprite Y Speed = 0 
-                      STZ $B6,X                           ;; 03A467 : 74 B6       ; Sprite X Speed = 0 
+CODE_03A465:          STZ.B $AA,X                         ;; 03A465 : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $B6,X                         ;; 03A467 : 74 B6       ; Sprite X Speed = 0 
                       CMP.B #$01                          ;; 03A469 : C9 01       ;
                       BEQ CODE_03A47C                     ;; 03A46B : F0 0F       ;
                       CMP.B #$40                          ;; 03A46D : C9 40       ;
                       BCS Return03A47B                    ;; 03A46F : B0 0A       ;
-                      LSR                                 ;; 03A471 : 4A          ;
-                      LSR                                 ;; 03A472 : 4A          ;
-                      LSR                                 ;; 03A473 : 4A          ;
+                      LSR A                               ;; 03A471 : 4A          ;
+                      LSR A                               ;; 03A472 : 4A          ;
+                      LSR A                               ;; 03A473 : 4A          ;
                       TAY                                 ;; 03A474 : A8          ;
                       LDA.W DATA_03A437,Y                 ;; 03A475 : B9 37 A4    ;
                       STA.W $1570,X                       ;; 03A478 : 9D 70 15    ;
@@ -4413,34 +4413,34 @@ CODE_03A49C:          JSR CODE_03A4D2                     ;; 03A49C : 20 D2 A4  
                       LDA.W $1528,X                       ;; 03A4A5 : BD 28 15    ;
                       AND.B #$01                          ;; 03A4A8 : 29 01       ;
                       TAY                                 ;; 03A4AA : A8          ;
-                      LDA $B6,X                           ;; 03A4AB : B5 B6       ;
+                      LDA.B $B6,X                         ;; 03A4AB : B5 B6       ;
                       CLC                                 ;; 03A4AD : 18          ;
                       ADC.W DATA_03A490,Y                 ;; 03A4AE : 79 90 A4    ;
-                      STA $B6,X                           ;; 03A4B1 : 95 B6       ;
+                      STA.B $B6,X                         ;; 03A4B1 : 95 B6       ;
                       CMP.W DATA_03A492,Y                 ;; 03A4B3 : D9 92 A4    ;
                       BNE CODE_03A4BB                     ;; 03A4B6 : D0 03       ;
                       INC.W $1528,X                       ;; 03A4B8 : FE 28 15    ;
 CODE_03A4BB:          LDA.W $1534,X                       ;; 03A4BB : BD 34 15    ;
                       AND.B #$01                          ;; 03A4BE : 29 01       ;
                       TAY                                 ;; 03A4C0 : A8          ;
-                      LDA $AA,X                           ;; 03A4C1 : B5 AA       ;
+                      LDA.B $AA,X                         ;; 03A4C1 : B5 AA       ;
                       CLC                                 ;; 03A4C3 : 18          ;
                       ADC.W DATA_03A494,Y                 ;; 03A4C4 : 79 94 A4    ;
-                      STA $AA,X                           ;; 03A4C7 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03A4C7 : 95 AA       ;
                       CMP.W DATA_03A496,Y                 ;; 03A4C9 : D9 96 A4    ;
                       BNE Return03A4D1                    ;; 03A4CC : D0 03       ;
                       INC.W $1534,X                       ;; 03A4CE : FE 34 15    ;
 Return03A4D1:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03A4D2:          LDY.B #$00                          ;; 03A4D2 : A0 00       ;
-                      LDA $13                             ;; 03A4D4 : A5 13       ;
+                      LDA.B $13                           ;; 03A4D4 : A5 13       ;
                       AND.B #$E0                          ;; 03A4D6 : 29 E0       ;
                       BNE CODE_03A4E6                     ;; 03A4D8 : D0 0C       ;
-                      LDA $13                             ;; 03A4DA : A5 13       ;
+                      LDA.B $13                           ;; 03A4DA : A5 13       ;
                       AND.B #$18                          ;; 03A4DC : 29 18       ;
-                      LSR                                 ;; 03A4DE : 4A          ;
-                      LSR                                 ;; 03A4DF : 4A          ;
-                      LSR                                 ;; 03A4E0 : 4A          ;
+                      LSR A                               ;; 03A4DE : 4A          ;
+                      LSR A                               ;; 03A4DF : 4A          ;
+                      LSR A                               ;; 03A4E0 : 4A          ;
                       TAY                                 ;; 03A4E1 : A8          ;
                       LDA.W DATA_03A498,Y                 ;; 03A4E2 : B9 98 A4    ;
                       TAY                                 ;; 03A4E5 : A8          ;
@@ -4451,7 +4451,7 @@ CODE_03A4E6:          TYA                                 ;; 03A4E6 : 98        
                                                           ;;                      ;
 DATA_03A4EB:          db $80,$00                          ;; 03A4EB               ;
                                                           ;;                      ;
-CODE_03A4ED:          LDA $13                             ;; 03A4ED : A5 13       ;
+CODE_03A4ED:          LDA.B $13                           ;; 03A4ED : A5 13       ;
                       AND.B #$1F                          ;; 03A4EF : 29 1F       ;
                       BNE Return03A4FC                    ;; 03A4F1 : D0 09       ;
                       JSR SubHorzPosBnk3                  ;; 03A4F3 : 20 17 B8    ;
@@ -4507,8 +4507,8 @@ CODE_03A5AD:          LDA.W $14B1                         ;; 03A5AD : AD B1 14  
                       STA.W $14B0                         ;; 03A5B9 : 8D B0 14    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_03A5BD:          LSR                                 ;; 03A5BD : 4A          ;
-                      LSR                                 ;; 03A5BE : 4A          ;
+CODE_03A5BD:          LSR A                               ;; 03A5BD : 4A          ;
+                      LSR A                               ;; 03A5BE : 4A          ;
                       TAY                                 ;; 03A5BF : A8          ;
                       LDA.W DATA_03A52D,Y                 ;; 03A5C0 : B9 2D A5    ;
                       STA.W $1570,X                       ;; 03A5C3 : 9D 70 15    ;
@@ -4526,19 +4526,19 @@ CODE_03A5D8:          LDA.W $14B6                         ;; 03A5D8 : AD B6 14  
                       BEQ Return03A60D                    ;; 03A5DB : F0 30       ;
                       DEC.W $14B6                         ;; 03A5DD : CE B6 14    ;
                       BEQ CODE_03A60E                     ;; 03A5E0 : F0 2C       ;
-                      LSR                                 ;; 03A5E2 : 4A          ;
-                      LSR                                 ;; 03A5E3 : 4A          ;
+                      LSR A                               ;; 03A5E2 : 4A          ;
+                      LSR A                               ;; 03A5E3 : 4A          ;
                       TAY                                 ;; 03A5E4 : A8          ;
                       LDA.W DATA_03A52D,Y                 ;; 03A5E5 : B9 2D A5    ;
                       STA.W $1570,X                       ;; 03A5E8 : 9D 70 15    ;
                       LDA.W DATA_03A56D,Y                 ;; 03A5EB : B9 6D A5    ;
-                      STA $36                             ;; 03A5EE : 85 36       ;
-                      STZ $37                             ;; 03A5F0 : 64 37       ;
+                      STA.B $36                           ;; 03A5EE : 85 36       ;
+                      STZ.B $37                           ;; 03A5F0 : 64 37       ;
                       CMP.B #$FF                          ;; 03A5F2 : C9 FF       ;
                       BNE CODE_03A5FC                     ;; 03A5F4 : D0 06       ;
-                      STZ $36                             ;; 03A5F6 : 64 36       ;
-                      INC $37                             ;; 03A5F8 : E6 37       ;
-                      STZ $64                             ;; 03A5FA : 64 64       ;
+                      STZ.B $36                           ;; 03A5F6 : 64 36       ;
+                      INC.B $37                           ;; 03A5F8 : E6 37       ;
+                      STZ.B $64                           ;; 03A5FA : 64 64       ;
 CODE_03A5FC:          LDA.W $14B6                         ;; 03A5FC : AD B6 14    ;
                       CMP.B #$80                          ;; 03A5FF : C9 80       ;
                       BNE CODE_03A60B                     ;; 03A601 : D0 08       ;
@@ -4560,18 +4560,18 @@ CODE_03A619:          STA.W $14B0                         ;; 03A619 : 8D B0 14  
 CODE_03A61D:          LDA.B #$08                          ;; 03A61D : A9 08       ;
                       STA.W $14D0                         ;; 03A61F : 8D D0 14    ;
                       LDA.B #$A1                          ;; 03A622 : A9 A1       ;
-                      STA $A6                             ;; 03A624 : 85 A6       ;
-                      LDA $E4,X                           ;; 03A626 : B5 E4       ;
+                      STA.B $A6                           ;; 03A624 : 85 A6       ;
+                      LDA.B $E4,X                         ;; 03A626 : B5 E4       ;
                       CLC                                 ;; 03A628 : 18          ;
                       ADC.B #$08                          ;; 03A629 : 69 08       ;
-                      STA $EC                             ;; 03A62B : 85 EC       ;
+                      STA.B $EC                           ;; 03A62B : 85 EC       ;
                       LDA.W $14E0,X                       ;; 03A62D : BD E0 14    ;
                       ADC.B #$00                          ;; 03A630 : 69 00       ;
                       STA.W $14E8                         ;; 03A632 : 8D E8 14    ;
-                      LDA $D8,X                           ;; 03A635 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03A635 : B5 D8       ;
                       CLC                                 ;; 03A637 : 18          ;
                       ADC.B #$40                          ;; 03A638 : 69 40       ;
-                      STA $E0                             ;; 03A63A : 85 E0       ;
+                      STA.B $E0                           ;; 03A63A : 85 E0       ;
                       LDA.W $14D4,X                       ;; 03A63C : BD D4 14    ;
                       ADC.B #$00                          ;; 03A63F : 69 00       ;
                       STA.W $14DC                         ;; 03A641 : 8D DC 14    ;
@@ -4609,19 +4609,19 @@ CODE_03A691:          PLY                                 ;; 03A691 : 7A        
                       PLY                                 ;; 03A692 : 7A          ;
                       PHA                                 ;; 03A693 : 48          ;
                       LDA.W $14B5                         ;; 03A694 : AD B5 14    ;
-                      LSR                                 ;; 03A697 : 4A          ;
-                      LSR                                 ;; 03A698 : 4A          ;
+                      LSR A                               ;; 03A697 : 4A          ;
+                      LSR A                               ;; 03A698 : 4A          ;
                       TAY                                 ;; 03A699 : A8          ;
                       LDA.W DATA_03A64D,Y                 ;; 03A69A : B9 4D A6    ;
-                      STA $36                             ;; 03A69D : 85 36       ;
-                      STZ $37                             ;; 03A69F : 64 37       ;
+                      STA.B $36                           ;; 03A69D : 85 36       ;
+                      STZ.B $37                           ;; 03A69F : 64 37       ;
                       BPL CODE_03A6A5                     ;; 03A6A1 : 10 02       ;
-                      INC $37                             ;; 03A6A3 : E6 37       ;
+                      INC.B $37                           ;; 03A6A3 : E6 37       ;
 CODE_03A6A5:          PLA                                 ;; 03A6A5 : 68          ;
                       LDY.B #$0C                          ;; 03A6A6 : A0 0C       ;
                       CMP.B #$40                          ;; 03A6A8 : C9 40       ;
                       BCS CODE_03A6B6                     ;; 03A6AA : B0 0A       ;
-CODE_03A6AC:          LDA $13                             ;; 03A6AC : A5 13       ;
+CODE_03A6AC:          LDA.B $13                           ;; 03A6AC : A5 13       ;
                       LDY.B #$10                          ;; 03A6AE : A0 10       ;
                       AND.B #$04                          ;; 03A6B0 : 29 04       ;
                       BEQ CODE_03A6B6                     ;; 03A6B2 : F0 02       ;
@@ -4634,7 +4634,7 @@ Return03A6BF:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 CODE_03A6C0:          LDA.B #$04                          ;; 03A6C0 : A9 04       ;
                       STA.W $151C,X                       ;; 03A6C2 : 9D 1C 15    ;
-                      STZ $B6,X                           ;; 03A6C5 : 74 B6       ; Sprite X Speed = 0 
+                      STZ.B $B6,X                         ;; 03A6C5 : 74 B6       ; Sprite X Speed = 0 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 KillMostSprites:      LDY.B #$09                          ;; ?QPWZ? : A0 09       ;
@@ -4666,15 +4666,15 @@ CODE_03A6F8:          LDA.W $1540,X                       ;; 03A6F8 : BD 40 15  
                       BNE CODE_03A706                     ;; 03A6FF : D0 05       ;
                       LDY.B #$17                          ;; 03A701 : A0 17       ;
                       STY.W $1DFB                         ;; 03A703 : 8C FB 1D    ; / Change music 
-CODE_03A706:          LSR                                 ;; 03A706 : 4A          ;
-                      LSR                                 ;; 03A707 : 4A          ;
-                      LSR                                 ;; 03A708 : 4A          ;
-                      LSR                                 ;; 03A709 : 4A          ;
+CODE_03A706:          LSR A                               ;; 03A706 : 4A          ;
+                      LSR A                               ;; 03A707 : 4A          ;
+                      LSR A                               ;; 03A708 : 4A          ;
+                      LSR A                               ;; 03A709 : 4A          ;
                       TAY                                 ;; 03A70A : A8          ;
                       LDA.W DATA_03A6F0,Y                 ;; 03A70B : B9 F0 A6    ;
                       STA.W $1570,X                       ;; 03A70E : 9D 70 15    ;
-                      STZ $B6,X                           ;; 03A711 : 74 B6       ; Sprite X Speed = 0 
-                      STZ $AA,X                           ;; 03A713 : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $B6,X                         ;; 03A711 : 74 B6       ; Sprite X Speed = 0 
+                      STZ.B $AA,X                         ;; 03A713 : 74 AA       ; Sprite Y Speed = 0 
                       STZ.W $1528,X                       ;; 03A715 : 9E 28 15    ;
                       STZ.W $1534,X                       ;; 03A718 : 9E 34 15    ;
                       STZ.W $14B2                         ;; 03A71B : 9C B2 14    ;
@@ -4702,40 +4702,40 @@ DATA_03A72F:          db $01,$01                          ;; 03A72F             
 CODE_03A731:          LDY.W $1528,X                       ;; 03A731 : BC 28 15    ;
                       CPY.B #$02                          ;; 03A734 : C0 02       ;
                       BCS CODE_03A74F                     ;; 03A736 : B0 17       ;
-                      LDA $13                             ;; 03A738 : A5 13       ;
+                      LDA.B $13                           ;; 03A738 : A5 13       ;
                       AND.W DATA_03A723,Y                 ;; 03A73A : 39 23 A7    ;
                       BNE CODE_03A74F                     ;; 03A73D : D0 10       ;
-                      LDA $B6,X                           ;; 03A73F : B5 B6       ;
+                      LDA.B $B6,X                         ;; 03A73F : B5 B6       ;
                       CLC                                 ;; 03A741 : 18          ;
                       ADC.W DATA_03A71F,Y                 ;; 03A742 : 79 1F A7    ;
-                      STA $B6,X                           ;; 03A745 : 95 B6       ;
+                      STA.B $B6,X                         ;; 03A745 : 95 B6       ;
                       CMP.W DATA_03A721,Y                 ;; 03A747 : D9 21 A7    ;
                       BNE CODE_03A74F                     ;; 03A74A : D0 03       ;
                       INC.W $1528,X                       ;; 03A74C : FE 28 15    ;
 CODE_03A74F:          LDY.W $1534,X                       ;; 03A74F : BC 34 15    ;
                       CPY.B #$02                          ;; 03A752 : C0 02       ;
                       BCS CODE_03A76D                     ;; 03A754 : B0 17       ;
-                      LDA $13                             ;; 03A756 : A5 13       ;
+                      LDA.B $13                           ;; 03A756 : A5 13       ;
                       AND.W DATA_03A72B,Y                 ;; 03A758 : 39 2B A7    ;
                       BNE CODE_03A76D                     ;; 03A75B : D0 10       ;
-                      LDA $AA,X                           ;; 03A75D : B5 AA       ;
+                      LDA.B $AA,X                         ;; 03A75D : B5 AA       ;
                       CLC                                 ;; 03A75F : 18          ;
                       ADC.W DATA_03A725,Y                 ;; 03A760 : 79 25 A7    ;
-                      STA $AA,X                           ;; 03A763 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03A763 : 95 AA       ;
                       CMP.W DATA_03A727,Y                 ;; 03A765 : D9 27 A7    ;
                       BNE CODE_03A76D                     ;; 03A768 : D0 03       ;
                       INC.W $1534,X                       ;; 03A76A : FE 34 15    ;
 CODE_03A76D:          LDY.W $14B2                         ;; 03A76D : AC B2 14    ;
                       CPY.B #$02                          ;; 03A770 : C0 02       ;
                       BEQ CODE_03A794                     ;; 03A772 : F0 20       ;
-                      LDA $13                             ;; 03A774 : A5 13       ;
+                      LDA.B $13                           ;; 03A774 : A5 13       ;
                       AND.W DATA_03A72F,Y                 ;; 03A776 : 39 2F A7    ;
                       BNE CODE_03A78D                     ;; 03A779 : D0 12       ;
-                      LDA $38                             ;; 03A77B : A5 38       ;
+                      LDA.B $38                           ;; 03A77B : A5 38       ;
                       CLC                                 ;; 03A77D : 18          ;
                       ADC.W DATA_03A729,Y                 ;; 03A77E : 79 29 A7    ;
-                      STA $38                             ;; 03A781 : 85 38       ;
-                      STA $39                             ;; 03A783 : 85 39       ;
+                      STA.B $38                           ;; 03A781 : 85 38       ;
+                      STA.B $39                           ;; 03A783 : 85 39       ;
                       CMP.W DATA_03A72D,Y                 ;; 03A785 : D9 2D A7    ;
                       BNE CODE_03A78D                     ;; 03A788 : D0 03       ;
                       INC.W $14B2                         ;; 03A78A : EE B2 14    ;
@@ -4754,12 +4754,12 @@ CODE_03A794:          LDA.B #$03                          ;; 03A794 : A9 03     
 Return03A7AC:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03A7AD:          LDA.B #$60                          ;; 03A7AD : A9 60       ;
-                      STA $38                             ;; 03A7AF : 85 38       ;
-                      STA $39                             ;; 03A7B1 : 85 39       ;
+                      STA.B $38                           ;; 03A7AF : 85 38       ;
+                      STA.B $39                           ;; 03A7B1 : 85 39       ;
                       LDA.B #$FF                          ;; 03A7B3 : A9 FF       ;
                       STA.W $14E0,X                       ;; 03A7B5 : 9D E0 14    ;
                       LDA.B #$60                          ;; 03A7B8 : A9 60       ;
-                      STA $E4,X                           ;; 03A7BA : 95 E4       ;
+                      STA.B $E4,X                         ;; 03A7BA : 95 E4       ;
                       LDA.W $14B0                         ;; 03A7BC : AD B0 14    ;
                       BNE CODE_03A7DF                     ;; 03A7BF : D0 1E       ;
                       LDA.B #$18                          ;; 03A7C1 : A9 18       ;
@@ -4767,19 +4767,19 @@ CODE_03A7AD:          LDA.B #$60                          ;; 03A7AD : A9 60     
                       LDA.B #$02                          ;; 03A7C6 : A9 02       ;
                       STA.W $151C,X                       ;; 03A7C8 : 9D 1C 15    ;
                       LDA.B #$18                          ;; 03A7CB : A9 18       ;
-                      STA $D8,X                           ;; 03A7CD : 95 D8       ;
+                      STA.B $D8,X                         ;; 03A7CD : 95 D8       ;
                       LDA.B #$00                          ;; 03A7CF : A9 00       ;
                       STA.W $14D4,X                       ;; 03A7D1 : 9D D4 14    ;
                       LDA.B #$08                          ;; 03A7D4 : A9 08       ;
-                      STA $38                             ;; 03A7D6 : 85 38       ;
-                      STA $39                             ;; 03A7D8 : 85 39       ;
+                      STA.B $38                           ;; 03A7D6 : 85 38       ;
+                      STA.B $39                           ;; 03A7D8 : 85 39       ;
                       LDA.B #$64                          ;; 03A7DA : A9 64       ;
-                      STA $B6,X                           ;; 03A7DC : 95 B6       ;
+                      STA.B $B6,X                         ;; 03A7DC : 95 B6       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03A7DF:          CMP.B #$60                          ;; 03A7DF : C9 60       ;
                       BCS Return03A840                    ;; 03A7E1 : B0 5D       ;
-                      LDA $13                             ;; 03A7E3 : A5 13       ;
+                      LDA.B $13                           ;; 03A7E3 : A5 13       ;
                       AND.B #$1F                          ;; 03A7E5 : 29 1F       ;
                       BNE Return03A840                    ;; 03A7E7 : D0 57       ;
                       LDY.B #$07                          ;; 03A7E9 : A0 07       ;
@@ -4810,18 +4810,18 @@ CODE_03A7F6:          LDA.B #$17                          ;; 03A7F6 : A9 17     
                       PHX                                 ;; 03A81F : DA          ;
                       TYX                                 ;; 03A820 : BB          ;
                       JSL InitSpriteTables                ;; 03A821 : 22 D2 F7 07 ;
-                      INC $C2,X                           ;; 03A825 : F6 C2       ;
+                      INC.B $C2,X                         ;; 03A825 : F6 C2       ;
                       ASL.W $1686,X                       ;; 03A827 : 1E 86 16    ;
                       LSR.W $1686,X                       ;; 03A82A : 5E 86 16    ;
                       LDA.B #$39                          ;; 03A82D : A9 39       ;
                       STA.W $1662,X                       ;; 03A82F : 9D 62 16    ;
                       PLX                                 ;; 03A832 : FA          ;
                       PLA                                 ;; 03A833 : 68          ;
-                      LSR                                 ;; 03A834 : 4A          ;
-                      LSR                                 ;; 03A835 : 4A          ;
-                      LSR                                 ;; 03A836 : 4A          ;
-                      LSR                                 ;; 03A837 : 4A          ;
-                      LSR                                 ;; 03A838 : 4A          ;
+                      LSR A                               ;; 03A834 : 4A          ;
+                      LSR A                               ;; 03A835 : 4A          ;
+                      LSR A                               ;; 03A836 : 4A          ;
+                      LSR A                               ;; 03A837 : 4A          ;
+                      LSR A                               ;; 03A838 : 4A          ;
                       TAY                                 ;; 03A839 : A8          ;
                       LDA.W BowserSound,Y                 ;; 03A83A : B9 41 A8    ;
                       STA.W $1DFC                         ;; 03A83D : 8D FC 1D    ; / Play sound effect 
@@ -4833,18 +4833,18 @@ BowserSound:          db $2D                              ;; ?QPWZ?             
 BowserSoundMusic:     db $2E,$2F,$30,$31,$32,$33,$34,$19  ;; ?QPWZ?               ;
                       db $1A                              ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_03A84B:          STZ $AA,X                           ;; 03A84B : 74 AA       ; Sprite Y Speed = 0 
+CODE_03A84B:          STZ.B $AA,X                         ;; 03A84B : 74 AA       ; Sprite Y Speed = 0 
                       LDA.W $1540,X                       ;; 03A84D : BD 40 15    ;
                       BNE CODE_03A86E                     ;; 03A850 : D0 1C       ;
-                      LDA $B6,X                           ;; 03A852 : B5 B6       ;
+                      LDA.B $B6,X                         ;; 03A852 : B5 B6       ;
                       BEQ CODE_03A858                     ;; 03A854 : F0 02       ;
-                      DEC $B6,X                           ;; 03A856 : D6 B6       ;
-CODE_03A858:          LDA $13                             ;; 03A858 : A5 13       ;
+                      DEC.B $B6,X                         ;; 03A856 : D6 B6       ;
+CODE_03A858:          LDA.B $13                           ;; 03A858 : A5 13       ;
                       AND.B #$03                          ;; 03A85A : 29 03       ;
                       BNE Return03A86D                    ;; 03A85C : D0 0F       ;
-                      INC $38                             ;; 03A85E : E6 38       ;
-                      INC $39                             ;; 03A860 : E6 39       ;
-                      LDA $38                             ;; 03A862 : A5 38       ;
+                      INC.B $38                           ;; 03A85E : E6 38       ;
+                      INC.B $39                           ;; 03A860 : E6 39       ;
+                      LDA.B $38                           ;; 03A862 : A5 38       ;
                       CMP.B #$20                          ;; 03A864 : C9 20       ;
                       BNE Return03A86D                    ;; 03A866 : D0 05       ;
                       LDA.B #$FF                          ;; 03A868 : A9 FF       ;
@@ -4856,8 +4856,8 @@ CODE_03A86E:          CMP.B #$A0                          ;; 03A86E : C9 A0     
                       PHA                                 ;; 03A872 : 48          ;
                       JSR CODE_03A8D6                     ;; 03A873 : 20 D6 A8    ;
                       PLA                                 ;; 03A876 : 68          ;
-CODE_03A877:          STZ $B6,X                           ;; 03A877 : 74 B6       ; Sprite X Speed = 0 
-                      STZ $AA,X                           ;; 03A879 : 74 AA       ; Sprite Y Speed = 0 
+CODE_03A877:          STZ.B $B6,X                         ;; 03A877 : 74 B6       ; Sprite X Speed = 0 
+                      STZ.B $AA,X                         ;; 03A879 : 74 AA       ; Sprite Y Speed = 0 
                       CMP.B #$01                          ;; 03A87B : C9 01       ;
                       BEQ CODE_03A89D                     ;; 03A87D : F0 1E       ;
                       CMP.B #$40                          ;; 03A87F : C9 40       ;
@@ -4869,9 +4869,9 @@ CODE_03A877:          STZ $B6,X                           ;; 03A877 : 74 B6     
                       LDA.W BowserSoundMusic,Y            ;; 03A88B : B9 42 A8    ;
                       STA.W $1DFB                         ;; 03A88E : 8D FB 1D    ; / Change music 
                       PLA                                 ;; 03A891 : 68          ;
-CODE_03A892:          LSR                                 ;; 03A892 : 4A          ;
-                      LSR                                 ;; 03A893 : 4A          ;
-                      LSR                                 ;; 03A894 : 4A          ;
+CODE_03A892:          LSR A                               ;; 03A892 : 4A          ;
+                      LSR A                               ;; 03A893 : 4A          ;
+                      LSR A                               ;; 03A894 : 4A          ;
                       TAY                                 ;; 03A895 : A8          ;
                       LDA.W DATA_03A437,Y                 ;; 03A896 : B9 37 A4    ;
                       STA.W $1570,X                       ;; 03A899 : 9D 70 15    ;
@@ -4880,8 +4880,8 @@ CODE_03A892:          LSR                                 ;; 03A892 : 4A        
 CODE_03A89D:          LDA.W $14B4                         ;; 03A89D : AD B4 14    ;
                       INC A                               ;; 03A8A0 : 1A          ;
                       STA.W $151C,X                       ;; 03A8A1 : 9D 1C 15    ;
-                      STZ $B6,X                           ;; 03A8A4 : 74 B6       ; Sprite X Speed = 0 
-                      STZ $AA,X                           ;; 03A8A6 : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $B6,X                         ;; 03A8A4 : 74 B6       ; Sprite X Speed = 0 
+                      STZ.B $AA,X                         ;; 03A8A6 : 74 AA       ; Sprite Y Speed = 0 
                       LDA.B #$80                          ;; 03A8A8 : A9 80       ;
                       STA.W $14B0                         ;; 03A8AA : 8D B0 14    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -4914,14 +4914,14 @@ CODE_03A8E3:          LDA.B #$10                          ;; 03A8E3 : A9 10     
                       STA.W $14C8,Y                       ;; 03A8EA : 99 C8 14    ; / 
                       LDA.B #$74                          ;; 03A8ED : A9 74       ;
                       STA.W $009E,Y                       ;; 03A8EF : 99 9E 00    ;
-                      LDA $E4,X                           ;; 03A8F2 : B5 E4       ;
+                      LDA.B $E4,X                         ;; 03A8F2 : B5 E4       ;
                       CLC                                 ;; 03A8F4 : 18          ;
                       ADC.B #$04                          ;; 03A8F5 : 69 04       ;
                       STA.W $00E4,Y                       ;; 03A8F7 : 99 E4 00    ;
                       LDA.W $14E0,X                       ;; 03A8FA : BD E0 14    ;
                       ADC.B #$00                          ;; 03A8FD : 69 00       ;
                       STA.W $14E0,Y                       ;; 03A8FF : 99 E0 14    ;
-                      LDA $D8,X                           ;; 03A902 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03A902 : B5 D8       ;
                       CLC                                 ;; 03A904 : 18          ;
                       ADC.B #$18                          ;; 03A905 : 69 18       ;
                       STA.W $00D8,Y                       ;; 03A907 : 99 D8 00    ;
@@ -4932,14 +4932,14 @@ CODE_03A8E3:          LDA.B #$10                          ;; 03A8E3 : A9 10     
                       TYX                                 ;; 03A913 : BB          ;
                       JSL InitSpriteTables                ;; 03A914 : 22 D2 F7 07 ;
                       LDA.B #$C0                          ;; 03A918 : A9 C0       ;
-                      STA $AA,X                           ;; 03A91A : 95 AA       ;
+                      STA.B $AA,X                         ;; 03A91A : 95 AA       ;
                       STZ.W $157C,X                       ;; 03A91C : 9E 7C 15    ;
                       LDY.B #$0C                          ;; 03A91F : A0 0C       ;
-                      LDA $E4,X                           ;; 03A921 : B5 E4       ;
+                      LDA.B $E4,X                         ;; 03A921 : B5 E4       ;
                       BPL CODE_03A92A                     ;; 03A923 : 10 05       ;
                       LDY.B #$F4                          ;; 03A925 : A0 F4       ;
                       INC.W $157C,X                       ;; 03A927 : FE 7C 15    ;
-CODE_03A92A:          STY $B6,X                           ;; 03A92A : 94 B6       ;
+CODE_03A92A:          STY.B $B6,X                         ;; 03A92A : 94 B6       ;
                       PLX                                 ;; 03A92C : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -4985,32 +4985,32 @@ DATA_03AA1E:          db $01,$01,$01,$01,$01,$01,$01,$01  ;; 03AA1E             
                       db $40,$40,$40,$40,$41,$41,$40,$40  ;; ?QPWZ?               ;
                       db $40,$40,$40,$40,$40,$40,$40,$40  ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_03AA6E:          LDA $E4,X                           ;; 03AA6E : B5 E4       ;
+CODE_03AA6E:          LDA.B $E4,X                         ;; 03AA6E : B5 E4       ;
                       CLC                                 ;; 03AA70 : 18          ;
                       ADC.B #$04                          ;; 03AA71 : 69 04       ;
                       SEC                                 ;; 03AA73 : 38          ;
-                      SBC $1A                             ;; 03AA74 : E5 1A       ;
-                      STA $00                             ;; 03AA76 : 85 00       ;
-                      LDA $D8,X                           ;; 03AA78 : B5 D8       ;
+                      SBC.B $1A                           ;; 03AA74 : E5 1A       ;
+                      STA.B $00                           ;; 03AA76 : 85 00       ;
+                      LDA.B $D8,X                         ;; 03AA78 : B5 D8       ;
                       CLC                                 ;; 03AA7A : 18          ;
                       ADC.B #$20                          ;; 03AA7B : 69 20       ;
                       SEC                                 ;; 03AA7D : 38          ;
-                      SBC $02                             ;; 03AA7E : E5 02       ;
+                      SBC.B $02                           ;; 03AA7E : E5 02       ;
                       SEC                                 ;; 03AA80 : 38          ;
-                      SBC $1C                             ;; 03AA81 : E5 1C       ;
-                      STA $01                             ;; 03AA83 : 85 01       ;
+                      SBC.B $1C                           ;; 03AA81 : E5 1C       ;
+                      STA.B $01                           ;; 03AA83 : 85 01       ;
                       CPY.B #$08                          ;; 03AA85 : C0 08       ;
                       BCC CODE_03AAC6                     ;; 03AA87 : 90 3D       ;
                       CPY.B #$10                          ;; 03AA89 : C0 10       ;
                       BCS CODE_03AAC6                     ;; 03AA8B : B0 39       ;
-                      LDA $00                             ;; 03AA8D : A5 00       ;
+                      LDA.B $00                           ;; 03AA8D : A5 00       ;
                       SEC                                 ;; 03AA8F : 38          ;
                       SBC.B #$04                          ;; 03AA90 : E9 04       ;
                       STA.W $02A0                         ;; 03AA92 : 8D A0 02    ;
                       CLC                                 ;; 03AA95 : 18          ;
                       ADC.B #$10                          ;; 03AA96 : 69 10       ;
                       STA.W $02A4                         ;; 03AA98 : 8D A4 02    ;
-                      LDA $01                             ;; 03AA9B : A5 01       ;
+                      LDA.B $01                           ;; 03AA9B : A5 01       ;
                       SEC                                 ;; 03AA9D : 38          ;
                       SBC.B #$18                          ;; 03AA9E : E9 18       ;
                       STA.W $02A1                         ;; 03AAA0 : 8D A1 02    ;
@@ -5020,7 +5020,7 @@ CODE_03AA6E:          LDA $E4,X                           ;; 03AA6E : B5 E4     
                       LDA.B #$22                          ;; 03AAAB : A9 22       ;
                       STA.W $02A6                         ;; 03AAAD : 8D A6 02    ;
                       LDA.B $14                           ;; 03AAB0 : A5 14       ;
-                      LSR                                 ;; 03AAB2 : 4A          ;
+                      LSR A                               ;; 03AAB2 : 4A          ;
                       AND.B #$06                          ;; 03AAB3 : 29 06       ;
                       INC A                               ;; 03AAB5 : 1A          ;
                       INC A                               ;; 03AAB6 : 1A          ;
@@ -5031,22 +5031,22 @@ CODE_03AA6E:          LDA $E4,X                           ;; 03AA6E : B5 E4     
                       STA.W $0448                         ;; 03AAC0 : 8D 48 04    ;
                       STA.W $0449                         ;; 03AAC3 : 8D 49 04    ;
 CODE_03AAC6:          LDY.B #$70                          ;; 03AAC6 : A0 70       ;
-CODE_03AAC8:          LDA $03                             ;; 03AAC8 : A5 03       ;
-                      ASL                                 ;; 03AACA : 0A          ;
-                      ASL                                 ;; 03AACB : 0A          ;
-                      STA $04                             ;; 03AACC : 85 04       ;
+CODE_03AAC8:          LDA.B $03                           ;; 03AAC8 : A5 03       ;
+                      ASL A                               ;; 03AACA : 0A          ;
+                      ASL A                               ;; 03AACB : 0A          ;
+                      STA.B $04                           ;; 03AACC : 85 04       ;
                       PHX                                 ;; 03AACE : DA          ;
                       LDX.B #$03                          ;; 03AACF : A2 03       ;
 CODE_03AAD1:          PHX                                 ;; 03AAD1 : DA          ;
                       TXA                                 ;; 03AAD2 : 8A          ;
                       CLC                                 ;; 03AAD3 : 18          ;
-                      ADC $04                             ;; 03AAD4 : 65 04       ;
+                      ADC.B $04                           ;; 03AAD4 : 65 04       ;
                       TAX                                 ;; 03AAD6 : AA          ;
-                      LDA $00                             ;; 03AAD7 : A5 00       ;
+                      LDA.B $00                           ;; 03AAD7 : A5 00       ;
                       CLC                                 ;; 03AAD9 : 18          ;
                       ADC.W DATA_03A92E,X                 ;; 03AADA : 7D 2E A9    ;
                       STA.W $0300,Y                       ;; 03AADD : 99 00 03    ;
-                      LDA $01                             ;; 03AAE0 : A5 01       ;
+                      LDA.B $01                           ;; 03AAE0 : A5 01       ;
                       CLC                                 ;; 03AAE2 : 18          ;
                       ADC.W DATA_03A97E,X                 ;; 03AAE3 : 7D 7E A9    ;
                       STA.W $0301,Y                       ;; 03AAE6 : 99 01 03    ;
@@ -5062,8 +5062,8 @@ CODE_03AAFC:          STA.W $0303,Y                       ;; 03AAFC : 99 03 03  
                       PLX                                 ;; 03AAFF : FA          ;
                       PHY                                 ;; 03AB00 : 5A          ;
                       TYA                                 ;; 03AB01 : 98          ;
-                      LSR                                 ;; 03AB02 : 4A          ;
-                      LSR                                 ;; 03AB03 : 4A          ;
+                      LSR A                               ;; 03AB02 : 4A          ;
+                      LSR A                               ;; 03AB03 : 4A          ;
                       TAY                                 ;; 03AB04 : A8          ;
                       LDA.B #$02                          ;; 03AB05 : A9 02       ;
                       STA.W $0460,Y                       ;; 03AB07 : 99 60 04    ;
@@ -5090,33 +5090,33 @@ DATA_03AB1B:          db $20,$E0,$01,$FF,$10,$F0          ;; 03AB1B             
 CODE_03AB21:          JSR CODE_03A4FD                     ;; 03AB21 : 20 FD A4    ;
                       JSR CODE_03A4D2                     ;; 03AB24 : 20 D2 A4    ;
                       JSR CODE_03A4ED                     ;; 03AB27 : 20 ED A4    ;
-                      LDA $13                             ;; 03AB2A : A5 13       ;
+                      LDA.B $13                           ;; 03AB2A : A5 13       ;
                       AND.B #$00                          ;; 03AB2C : 29 00       ;
                       BNE CODE_03AB4B                     ;; 03AB2E : D0 1B       ;
                       LDY.B #$00                          ;; 03AB30 : A0 00       ;
-                      LDA $E4,X                           ;; 03AB32 : B5 E4       ;
-                      CMP $94                             ;; 03AB34 : C5 94       ;
+                      LDA.B $E4,X                         ;; 03AB32 : B5 E4       ;
+                      CMP.B $94                           ;; 03AB34 : C5 94       ;
                       LDA.W $14E0,X                       ;; 03AB36 : BD E0 14    ;
-                      SBC $95                             ;; 03AB39 : E5 95       ;
+                      SBC.B $95                           ;; 03AB39 : E5 95       ;
                       BMI CODE_03AB3E                     ;; 03AB3B : 30 01       ;
                       INY                                 ;; 03AB3D : C8          ;
-CODE_03AB3E:          LDA $B6,X                           ;; 03AB3E : B5 B6       ;
+CODE_03AB3E:          LDA.B $B6,X                         ;; 03AB3E : B5 B6       ;
                       CMP.W DATA_03AB17,Y                 ;; 03AB40 : D9 17 AB    ;
                       BEQ CODE_03AB4B                     ;; 03AB43 : F0 06       ;
                       CLC                                 ;; 03AB45 : 18          ;
                       ADC.W DATA_03AB15,Y                 ;; 03AB46 : 79 15 AB    ;
-                      STA $B6,X                           ;; 03AB49 : 95 B6       ;
+                      STA.B $B6,X                         ;; 03AB49 : 95 B6       ;
 CODE_03AB4B:          LDY.B #$00                          ;; 03AB4B : A0 00       ;
-                      LDA $D8,X                           ;; 03AB4D : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03AB4D : B5 D8       ;
                       CMP.B #$10                          ;; 03AB4F : C9 10       ;
                       BMI CODE_03AB54                     ;; 03AB51 : 30 01       ;
                       INY                                 ;; 03AB53 : C8          ;
-CODE_03AB54:          LDA $AA,X                           ;; 03AB54 : B5 AA       ;
+CODE_03AB54:          LDA.B $AA,X                         ;; 03AB54 : B5 AA       ;
                       CMP.W DATA_03AB1B,Y                 ;; 03AB56 : D9 1B AB    ;
                       BEQ Return03AB61                    ;; 03AB59 : F0 06       ;
                       CLC                                 ;; 03AB5B : 18          ;
                       ADC.W DATA_03AB19,Y                 ;; 03AB5C : 79 19 AB    ;
-                      STA $AA,X                           ;; 03AB5F : 95 AA       ;
+                      STA.B $AA,X                         ;; 03AB5F : 95 AA       ;
 Return03AB61:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -5127,24 +5127,24 @@ CODE_03AB64:          LDA.B #$03                          ;; 03AB64 : A9 03     
                       JSR CODE_03A4FD                     ;; 03AB69 : 20 FD A4    ;
                       JSR CODE_03A4D2                     ;; 03AB6C : 20 D2 A4    ;
                       JSR CODE_03A4ED                     ;; 03AB6F : 20 ED A4    ;
-                      LDA $AA,X                           ;; 03AB72 : B5 AA       ;
+                      LDA.B $AA,X                         ;; 03AB72 : B5 AA       ;
                       CLC                                 ;; 03AB74 : 18          ;
                       ADC.B #$03                          ;; 03AB75 : 69 03       ;
-                      STA $AA,X                           ;; 03AB77 : 95 AA       ;
-                      LDA $D8,X                           ;; 03AB79 : B5 D8       ;
+                      STA.B $AA,X                         ;; 03AB77 : 95 AA       ;
+                      LDA.B $D8,X                         ;; 03AB79 : B5 D8       ;
                       CMP.B #$64                          ;; 03AB7B : C9 64       ;
                       BCC Return03AB9E                    ;; 03AB7D : 90 1F       ;
                       LDA.W $14D4,X                       ;; 03AB7F : BD D4 14    ;
                       BMI Return03AB9E                    ;; 03AB82 : 30 1A       ;
                       LDA.B #$64                          ;; 03AB84 : A9 64       ;
-                      STA $D8,X                           ;; 03AB86 : 95 D8       ;
+                      STA.B $D8,X                         ;; 03AB86 : 95 D8       ;
                       LDA.B #$A0                          ;; 03AB88 : A9 A0       ;
-                      STA $AA,X                           ;; 03AB8A : 95 AA       ;
+                      STA.B $AA,X                         ;; 03AB8A : 95 AA       ;
                       LDA.B #$09                          ;; 03AB8C : A9 09       ; \ Play sound effect 
                       STA.W $1DFC                         ;; 03AB8E : 8D FC 1D    ; / 
                       JSR SubHorzPosBnk3                  ;; 03AB91 : 20 17 B8    ;
                       LDA.W DATA_03AB62,Y                 ;; 03AB94 : B9 62 AB    ;
-                      STA $B6,X                           ;; 03AB97 : 95 B6       ;
+                      STA.B $B6,X                         ;; 03AB97 : 95 B6       ;
                       LDA.B #$20                          ;; 03AB99 : A9 20       ; \ Set ground shake timer 
                       STA.W $1887                         ;; 03AB9B : 8D 87 18    ; / 
 Return03AB9E:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -5153,7 +5153,7 @@ CODE_03AB9F:          JSR CODE_03A6AC                     ;; 03AB9F : 20 AC A6  
                       LDA.W $14D4,X                       ;; 03ABA2 : BD D4 14    ;
                       BMI CODE_03ABAF                     ;; 03ABA5 : 30 08       ;
                       BNE CODE_03ABB9                     ;; 03ABA7 : D0 10       ;
-                      LDA $D8,X                           ;; 03ABA9 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03ABA9 : B5 D8       ;
                       CMP.B #$10                          ;; 03ABAB : C9 10       ;
                       BCS CODE_03ABB9                     ;; 03ABAD : B0 0A       ;
 CODE_03ABAF:          LDA.B #$05                          ;; 03ABAF : A9 05       ;
@@ -5161,23 +5161,23 @@ CODE_03ABAF:          LDA.B #$05                          ;; 03ABAF : A9 05     
                       LDA.B #$60                          ;; 03ABB4 : A9 60       ;
                       STA.W $1540,X                       ;; 03ABB6 : 9D 40 15    ;
 CODE_03ABB9:          LDA.B #$F8                          ;; 03ABB9 : A9 F8       ;
-                      STA $AA,X                           ;; 03ABBB : 95 AA       ;
+                      STA.B $AA,X                         ;; 03ABBB : 95 AA       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03ABBE:          JSR CODE_03A6AC                     ;; 03ABBE : 20 AC A6    ;
-                      STZ $B6,X                           ;; 03ABC1 : 74 B6       ; Sprite X Speed = 0 
-                      STZ $AA,X                           ;; 03ABC3 : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $B6,X                         ;; 03ABC1 : 74 B6       ; Sprite X Speed = 0 
+                      STZ.B $AA,X                         ;; 03ABC3 : 74 AA       ; Sprite Y Speed = 0 
                       LDA.W $1540,X                       ;; 03ABC5 : BD 40 15    ;
                       BNE CODE_03ABEB                     ;; 03ABC8 : D0 21       ;
-                      LDA $36                             ;; 03ABCA : A5 36       ;
+                      LDA.B $36                           ;; 03ABCA : A5 36       ;
                       CLC                                 ;; 03ABCC : 18          ;
                       ADC.B #$0A                          ;; 03ABCD : 69 0A       ;
-                      STA $36                             ;; 03ABCF : 85 36       ;
-                      LDA $37                             ;; 03ABD1 : A5 37       ;
+                      STA.B $36                           ;; 03ABCF : 85 36       ;
+                      LDA.B $37                           ;; 03ABD1 : A5 37       ;
                       ADC.B #$00                          ;; 03ABD3 : 69 00       ;
-                      STA $37                             ;; 03ABD5 : 85 37       ;
+                      STA.B $37                           ;; 03ABD5 : 85 37       ;
                       BEQ Return03ABEA                    ;; 03ABD7 : F0 11       ;
-                      STZ $36                             ;; 03ABD9 : 64 36       ;
+                      STZ.B $36                           ;; 03ABD9 : 64 36       ;
                       LDA.B #$20                          ;; 03ABDB : A9 20       ;
                       STA.W $154C,X                       ;; 03ABDD : 9D 4C 15    ;
                       LDA.B #$60                          ;; 03ABE0 : A9 60       ;
@@ -5203,7 +5203,7 @@ CODE_03AC03:          JSR CODE_03A6AC                     ;; 03AC03 : 20 AC A6  
                       CMP.B #$01                          ;; 03AC09 : C9 01       ;
                       BNE CODE_03AC22                     ;; 03AC0B : D0 15       ;
                       LDA.B #$0B                          ;; 03AC0D : A9 0B       ;
-                      STA $71                             ;; 03AC0F : 85 71       ;
+                      STA.B $71                           ;; 03AC0F : 85 71       ;
                       INC.W $190D                         ;; 03AC11 : EE 0D 19    ;
                       STZ.W $0701                         ;; 03AC14 : 9C 01 07    ;
                       STZ.W $0702                         ;; 03AC17 : 9C 02 07    ;
@@ -5213,24 +5213,24 @@ CODE_03AC03:          JSR CODE_03A6AC                     ;; 03AC03 : 20 AC A6  
 CODE_03AC22:          LDA.W $1540,X                       ;; 03AC22 : BD 40 15    ;
                       BNE Return03AC4C                    ;; 03AC25 : D0 25       ;
                       LDA.B #$FA                          ;; 03AC27 : A9 FA       ;
-                      STA $B6,X                           ;; 03AC29 : 95 B6       ;
+                      STA.B $B6,X                         ;; 03AC29 : 95 B6       ;
                       LDA.B #$FC                          ;; 03AC2B : A9 FC       ;
-                      STA $AA,X                           ;; 03AC2D : 95 AA       ;
-                      LDA $36                             ;; 03AC2F : A5 36       ;
+                      STA.B $AA,X                         ;; 03AC2D : 95 AA       ;
+                      LDA.B $36                           ;; 03AC2F : A5 36       ;
                       CLC                                 ;; 03AC31 : 18          ;
                       ADC.B #$05                          ;; 03AC32 : 69 05       ;
-                      STA $36                             ;; 03AC34 : 85 36       ;
-                      LDA $37                             ;; 03AC36 : A5 37       ;
+                      STA.B $36                           ;; 03AC34 : 85 36       ;
+                      LDA.B $37                           ;; 03AC36 : A5 37       ;
                       ADC.B #$00                          ;; 03AC38 : 69 00       ;
-                      STA $37                             ;; 03AC3A : 85 37       ;
-                      LDA $13                             ;; 03AC3C : A5 13       ;
+                      STA.B $37                           ;; 03AC3A : 85 37       ;
+                      LDA.B $13                           ;; 03AC3C : A5 13       ;
                       AND.B #$03                          ;; 03AC3E : 29 03       ;
                       BNE Return03AC4C                    ;; 03AC40 : D0 0A       ;
-                      LDA $38                             ;; 03AC42 : A5 38       ;
+                      LDA.B $38                           ;; 03AC42 : A5 38       ;
                       CMP.B #$80                          ;; 03AC44 : C9 80       ;
                       BCS CODE_03AC4D                     ;; 03AC46 : B0 05       ;
-                      INC $38                             ;; 03AC48 : E6 38       ;
-                      INC $39                             ;; 03AC4A : E6 39       ;
+                      INC.B $38                           ;; 03AC48 : E6 38       ;
+                      INC.B $39                           ;; 03AC4A : E6 39       ;
 Return03AC4C:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03AC4D:          LDA.W $164A,X                       ;; 03AC4D : BD 4A 16    ;
@@ -5246,18 +5246,18 @@ CODE_03AC5A:          LDA.B #$FE                          ;; 03AC5A : A9 FE     
 CODE_03AC63:          LDA.B #$08                          ;; 03AC63 : A9 08       ;
                       STA.W $14D0                         ;; 03AC65 : 8D D0 14    ;
                       LDA.B #$7C                          ;; 03AC68 : A9 7C       ;
-                      STA $A6                             ;; 03AC6A : 85 A6       ;
-                      LDA $E4,X                           ;; 03AC6C : B5 E4       ;
+                      STA.B $A6                           ;; 03AC6A : 85 A6       ;
+                      LDA.B $E4,X                         ;; 03AC6C : B5 E4       ;
                       CLC                                 ;; 03AC6E : 18          ;
                       ADC.B #$08                          ;; 03AC6F : 69 08       ;
-                      STA $EC                             ;; 03AC71 : 85 EC       ;
+                      STA.B $EC                           ;; 03AC71 : 85 EC       ;
                       LDA.W $14E0,X                       ;; 03AC73 : BD E0 14    ;
                       ADC.B #$00                          ;; 03AC76 : 69 00       ;
                       STA.W $14E8                         ;; 03AC78 : 8D E8 14    ;
-                      LDA $D8,X                           ;; 03AC7B : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03AC7B : B5 D8       ;
                       CLC                                 ;; 03AC7D : 18          ;
                       ADC.B #$47                          ;; 03AC7E : 69 47       ;
-                      STA $E0                             ;; 03AC80 : 85 E0       ;
+                      STA.B $E0                           ;; 03AC80 : 85 E0       ;
                       LDA.W $14D4,X                       ;; 03AC82 : BD D4 14    ;
                       ADC.B #$00                          ;; 03AC85 : 69 00       ;
                       STA.W $14DC                         ;; 03AC87 : 8D DC 14    ;
@@ -5272,15 +5272,15 @@ BlushTileDispY:       db $01,$11                          ;; ?QPWZ?             
                                                           ;;                      ;
 BlushTiles:           db $6E,$88                          ;; ?QPWZ?               ;
                                                           ;;                      ;
-PrincessPeach:        LDA $E4,X                           ;; ?QPWZ? : B5 E4       ;
+PrincessPeach:        LDA.B $E4,X                         ;; ?QPWZ? : B5 E4       ;
                       SEC                                 ;; 03AC99 : 38          ;
-                      SBC $1A                             ;; 03AC9A : E5 1A       ;
-                      STA $00                             ;; 03AC9C : 85 00       ;
-                      LDA $D8,X                           ;; 03AC9E : B5 D8       ;
+                      SBC.B $1A                           ;; 03AC9A : E5 1A       ;
+                      STA.B $00                           ;; 03AC9C : 85 00       ;
+                      LDA.B $D8,X                         ;; 03AC9E : B5 D8       ;
                       SEC                                 ;; 03ACA0 : 38          ;
-                      SBC $1C                             ;; 03ACA1 : E5 1C       ;
-                      STA $01                             ;; 03ACA3 : 85 01       ;
-                      LDA $13                             ;; 03ACA5 : A5 13       ;
+                      SBC.B $1C                           ;; 03ACA1 : E5 1C       ;
+                      STA.B $01                           ;; 03ACA3 : 85 01       ;
+                      LDA.B $13                           ;; 03ACA5 : A5 13       ;
                       AND.B #$7F                          ;; 03ACA7 : 29 7F       ;
                       BNE CODE_03ACB8                     ;; 03ACA9 : D0 0D       ;
                       JSL GetRand                         ;; 03ACAB : 22 F9 AC 01 ;
@@ -5298,7 +5298,7 @@ CODE_03ACC1:          LDA.W $157C,X                       ;; 03ACC1 : BD 7C 15  
                       CLC                                 ;; 03ACC7 : 18          ;
                       ADC.B #$08                          ;; 03ACC8 : 69 08       ;
                       TAY                                 ;; 03ACCA : A8          ;
-CODE_03ACCB:          STY $03                             ;; 03ACCB : 84 03       ;
+CODE_03ACCB:          STY.B $03                           ;; 03ACCB : 84 03       ;
                       LDA.B #$D0                          ;; 03ACCD : A9 D0       ;
                       STA.W $15EA,X                       ;; 03ACCF : 9D EA 15    ;
                       TAY                                 ;; 03ACD2 : A8          ;
@@ -5310,36 +5310,36 @@ CODE_03ACCB:          STY $03                             ;; 03ACCB : 84 03     
                       BEQ CODE_03AD18                     ;; 03ACE1 : F0 35       ;
                       PHX                                 ;; 03ACE3 : DA          ;
                       LDX.B #$00                          ;; 03ACE4 : A2 00       ;
-                      LDA $19                             ;; 03ACE6 : A5 19       ;
+                      LDA.B $19                           ;; 03ACE6 : A5 19       ;
                       BNE CODE_03ACEB                     ;; 03ACE8 : D0 01       ;
                       INX                                 ;; 03ACEA : E8          ;
 CODE_03ACEB:          LDY.B #$4C                          ;; 03ACEB : A0 4C       ;
-                      LDA $7E                             ;; 03ACED : A5 7E       ;
+                      LDA.B $7E                           ;; 03ACED : A5 7E       ;
                       STA.W $0300,Y                       ;; 03ACEF : 99 00 03    ;
-                      LDA $80                             ;; 03ACF2 : A5 80       ;
+                      LDA.B $80                           ;; 03ACF2 : A5 80       ;
                       CLC                                 ;; 03ACF4 : 18          ;
                       ADC.W BlushTileDispY,X              ;; 03ACF5 : 7D 93 AC    ;
                       STA.W $0301,Y                       ;; 03ACF8 : 99 01 03    ;
                       LDA.W BlushTiles,X                  ;; 03ACFB : BD 95 AC    ;
                       STA.W $0302,Y                       ;; 03ACFE : 99 02 03    ;
                       PLX                                 ;; 03AD01 : FA          ;
-                      LDA $76                             ;; 03AD02 : A5 76       ;
+                      LDA.B $76                           ;; 03AD02 : A5 76       ;
                       CMP.B #$01                          ;; 03AD04 : C9 01       ;
                       LDA.B #$31                          ;; 03AD06 : A9 31       ;
                       BCC CODE_03AD0C                     ;; 03AD08 : 90 02       ;
                       ORA.B #$40                          ;; 03AD0A : 09 40       ;
 CODE_03AD0C:          STA.W $0303,Y                       ;; 03AD0C : 99 03 03    ;
                       TYA                                 ;; 03AD0F : 98          ;
-                      LSR                                 ;; 03AD10 : 4A          ;
-                      LSR                                 ;; 03AD11 : 4A          ;
+                      LSR A                               ;; 03AD10 : 4A          ;
+                      LSR A                               ;; 03AD11 : 4A          ;
                       TAY                                 ;; 03AD12 : A8          ;
                       LDA.B #$02                          ;; 03AD13 : A9 02       ;
                       STA.W $0460,Y                       ;; 03AD15 : 99 60 04    ;
-CODE_03AD18:          STZ $B6,X                           ;; 03AD18 : 74 B6       ; Sprite X Speed = 0 
-                      STZ $7B                             ;; 03AD1A : 64 7B       ;
+CODE_03AD18:          STZ.B $B6,X                         ;; 03AD18 : 74 B6       ; Sprite X Speed = 0 
+                      STZ.B $7B                           ;; 03AD1A : 64 7B       ;
                       LDA.B #$04                          ;; 03AD1C : A9 04       ;
                       STA.W $1602,X                       ;; 03AD1E : 9D 02 16    ;
-                      LDA $C2,X                           ;; 03AD21 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 03AD21 : B5 C2       ;
                       JSL ExecutePtr                      ;; 03AD23 : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_03AD37                      ;; ?QPWZ? : 37 AD       ;
@@ -5354,24 +5354,24 @@ CODE_03AD18:          STZ $B6,X                           ;; 03AD18 : 74 B6     
 CODE_03AD37:          LDA.B #$06                          ;; 03AD37 : A9 06       ;
                       STA.W $1602,X                       ;; 03AD39 : 9D 02 16    ;
                       JSL UpdateYPosNoGvtyW               ;; 03AD3C : 22 1A 80 01 ;
-                      LDA $AA,X                           ;; 03AD40 : B5 AA       ;
+                      LDA.B $AA,X                         ;; 03AD40 : B5 AA       ;
                       CMP.B #$08                          ;; 03AD42 : C9 08       ;
                       BCS CODE_03AD4B                     ;; 03AD44 : B0 05       ;
                       CLC                                 ;; 03AD46 : 18          ;
                       ADC.B #$01                          ;; 03AD47 : 69 01       ;
-                      STA $AA,X                           ;; 03AD49 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03AD49 : 95 AA       ;
 CODE_03AD4B:          LDA.W $14D4,X                       ;; 03AD4B : BD D4 14    ;
                       BMI CODE_03AD63                     ;; 03AD4E : 30 13       ;
-                      LDA $D8,X                           ;; 03AD50 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03AD50 : B5 D8       ;
                       CMP.B #$A0                          ;; 03AD52 : C9 A0       ;
                       BCC CODE_03AD63                     ;; 03AD54 : 90 0D       ;
                       LDA.B #$A0                          ;; 03AD56 : A9 A0       ;
-                      STA $D8,X                           ;; 03AD58 : 95 D8       ;
-                      STZ $AA,X                           ;; 03AD5A : 74 AA       ; Sprite Y Speed = 0 
+                      STA.B $D8,X                         ;; 03AD58 : 95 D8       ;
+                      STZ.B $AA,X                         ;; 03AD5A : 74 AA       ; Sprite Y Speed = 0 
                       LDA.B #$A0                          ;; 03AD5C : A9 A0       ;
                       STA.W $1540,X                       ;; 03AD5E : 9D 40 15    ;
-                      INC $C2,X                           ;; 03AD61 : F6 C2       ;
-CODE_03AD63:          LDA $13                             ;; 03AD63 : A5 13       ;
+                      INC.B $C2,X                         ;; 03AD61 : F6 C2       ;
+CODE_03AD63:          LDA.B $13                           ;; 03AD63 : A5 13       ;
                       AND.B #$07                          ;; 03AD65 : 29 07       ;
                       BNE Return03AD73                    ;; 03AD67 : D0 0A       ;
                       LDY.B #$0B                          ;; 03AD69 : A0 0B       ;
@@ -5384,21 +5384,21 @@ Return03AD73:         RTS                                 ;; ?QPWZ? : 60        
 CODE_03AD74:          LDA.B #$05                          ;; 03AD74 : A9 05       ;
                       STA.W $17F0,Y                       ;; 03AD76 : 99 F0 17    ;
                       JSL GetRand                         ;; 03AD79 : 22 F9 AC 01 ;
-                      STZ $00                             ;; 03AD7D : 64 00       ;
+                      STZ.B $00                           ;; 03AD7D : 64 00       ;
                       AND.B #$1F                          ;; 03AD7F : 29 1F       ;
                       CLC                                 ;; 03AD81 : 18          ;
                       ADC.B #$F8                          ;; 03AD82 : 69 F8       ;
                       BPL CODE_03AD88                     ;; 03AD84 : 10 02       ;
-                      DEC $00                             ;; 03AD86 : C6 00       ;
+                      DEC.B $00                           ;; 03AD86 : C6 00       ;
 CODE_03AD88:          CLC                                 ;; 03AD88 : 18          ;
-                      ADC $E4,X                           ;; 03AD89 : 75 E4       ;
+                      ADC.B $E4,X                         ;; 03AD89 : 75 E4       ;
                       STA.W $1808,Y                       ;; 03AD8B : 99 08 18    ;
                       LDA.W $14E0,X                       ;; 03AD8E : BD E0 14    ;
-                      ADC $00                             ;; 03AD91 : 65 00       ;
+                      ADC.B $00                           ;; 03AD91 : 65 00       ;
                       STA.W $18EA,Y                       ;; 03AD93 : 99 EA 18    ;
                       LDA.W $148E                         ;; 03AD96 : AD 8E 14    ;
                       AND.B #$1F                          ;; 03AD99 : 29 1F       ;
-                      ADC $D8,X                           ;; 03AD9B : 75 D8       ;
+                      ADC.B $D8,X                         ;; 03AD9B : 75 D8       ;
                       STA.W $17FC,Y                       ;; 03AD9D : 99 FC 17    ;
                       LDA.W $14D4,X                       ;; 03ADA0 : BD D4 14    ;
                       ADC.B #$00                          ;; 03ADA3 : 69 00       ;
@@ -5411,14 +5411,14 @@ CODE_03AD88:          CLC                                 ;; 03AD88 : 18        
                                                           ;;                      ;
 CODE_03ADB3:          LDA.W $1540,X                       ;; 03ADB3 : BD 40 15    ;
                       BNE CODE_03ADC2                     ;; 03ADB6 : D0 0A       ;
-                      INC $C2,X                           ;; 03ADB8 : F6 C2       ;
+                      INC.B $C2,X                         ;; 03ADB8 : F6 C2       ;
                       JSR CODE_03ADCC                     ;; 03ADBA : 20 CC AD    ;
                       BCC CODE_03ADC2                     ;; 03ADBD : 90 03       ;
                       INC.W $151C,X                       ;; 03ADBF : FE 1C 15    ;
 CODE_03ADC2:          JSR SubHorzPosBnk3                  ;; 03ADC2 : 20 17 B8    ;
                       TYA                                 ;; 03ADC5 : 98          ;
                       STA.W $157C,X                       ;; 03ADC6 : 9D 7C 15    ;
-                      STA $76                             ;; 03ADC9 : 85 76       ;
+                      STA.B $76                           ;; 03ADC9 : 85 76       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03ADCC:          JSL GetSpriteClippingA              ;; 03ADCC : 22 9F B6 03 ;
@@ -5448,35 +5448,35 @@ ADDR_03ADF9:          BCC CODE_03AE14                     ;; 03ADF9 : 90 19     
                       EOR.B #$01                          ;; 03ADFC : 49 01       ;
                       TAY                                 ;; 03ADFE : A8          ;
 CODE_03ADFF:          LDA.W DATA_03ADD9,Y                 ;; 03ADFF : B9 D9 AD    ;
-                      STA $B6,X                           ;; 03AE02 : 95 B6       ;
+                      STA.B $B6,X                         ;; 03AE02 : 95 B6       ;
                       EOR.B #$FF                          ;; 03AE04 : 49 FF       ;
                       INC A                               ;; 03AE06 : 1A          ;
-                      STA $7B                             ;; 03AE07 : 85 7B       ;
+                      STA.B $7B                           ;; 03AE07 : 85 7B       ;
                       TYA                                 ;; 03AE09 : 98          ;
                       STA.W $157C,X                       ;; 03AE0A : 9D 7C 15    ;
-                      STA $76                             ;; 03AE0D : 85 76       ;
+                      STA.B $76                           ;; 03AE0D : 85 76       ;
                       JSL UpdateXPosNoGvtyW               ;; 03AE0F : 22 22 80 01 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03AE14:          JSR SubHorzPosBnk3                  ;; 03AE14 : 20 17 B8    ;
                       TYA                                 ;; 03AE17 : 98          ;
                       STA.W $157C,X                       ;; 03AE18 : 9D 7C 15    ;
-                      STA $76                             ;; 03AE1B : 85 76       ;
-                      INC $C2,X                           ;; 03AE1D : F6 C2       ;
+                      STA.B $76                           ;; 03AE1B : 85 76       ;
+                      INC.B $C2,X                         ;; 03AE1D : F6 C2       ;
                       LDA.B #$60                          ;; 03AE1F : A9 60       ;
                       STA.W $1540,X                       ;; 03AE21 : 9D 40 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03AE25:          LDA.W $1540,X                       ;; 03AE25 : BD 40 15    ;
                       BNE Return03AE31                    ;; 03AE28 : D0 07       ;
-                      INC $C2,X                           ;; 03AE2A : F6 C2       ;
+                      INC.B $C2,X                         ;; 03AE2A : F6 C2       ;
                       LDA.B #$A0                          ;; 03AE2C : A9 A0       ;
                       STA.W $1540,X                       ;; 03AE2E : 9D 40 15    ;
 Return03AE31:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03AE32:          LDA.W $1540,X                       ;; 03AE32 : BD 40 15    ;
                       BNE CODE_03AE3F                     ;; 03AE35 : D0 08       ;
-                      INC $C2,X                           ;; 03AE37 : F6 C2       ;
+                      INC.B $C2,X                         ;; 03AE37 : F6 C2       ;
                       STZ.W $188A                         ;; 03AE39 : 9C 8A 18    ;
                       STZ.W $188B                         ;; 03AE3C : 9C 8B 18    ;
 CODE_03AE3F:          CMP.B #$50                          ;; 03AE3F : C9 50       ;
@@ -5518,12 +5518,12 @@ CODE_03AEAF:          JSR CODE_03D674                     ;; 03AEAF : 20 74 D6  
                       STA.W $1540,X                       ;; 03AEC4 : 9D 40 15    ;
 Return03AEC7:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_03AEC8:          INC $C2,X                           ;; 03AEC8 : F6 C2       ;
+CODE_03AEC8:          INC.B $C2,X                         ;; 03AEC8 : F6 C2       ;
                       LDA.B #$40                          ;; 03AECA : A9 40       ;
                       STA.W $1540,X                       ;; 03AECC : 9D 40 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_03AED0:          INC $C2,X                           ;; 03AED0 : F6 C2       ;
+CODE_03AED0:          INC.B $C2,X                         ;; 03AED0 : F6 C2       ;
                       LDA.B #$80                          ;; 03AED2 : A9 80       ;
                       STA.W $1FEB                         ;; 03AED4 : 8D EB 1F    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -5534,25 +5534,25 @@ CODE_03AED0:          INC $C2,X                           ;; 03AED0 : F6 C2     
                                                           ;;                      ;
 CODE_03AEE8:          LDA.W $1540,X                       ;; 03AEE8 : BD 40 15    ;
                       BEQ CODE_03AED0                     ;; 03AEEB : F0 E3       ;
-                      LSR                                 ;; 03AEED : 4A          ;
-                      STA $00                             ;; 03AEEE : 85 00       ;
-                      STZ $01                             ;; 03AEF0 : 64 01       ;
+                      LSR A                               ;; 03AEED : 4A          ;
+                      STA.B $00                           ;; 03AEEE : 85 00       ;
+                      STZ.B $01                           ;; 03AEF0 : 64 01       ;
                       REP #$20                            ;; 03AEF2 : C2 20       ; Accum (16 bit) 
-                      LDA $00                             ;; 03AEF4 : A5 00       ;
-                      ASL                                 ;; 03AEF6 : 0A          ;
-                      ASL                                 ;; 03AEF7 : 0A          ;
-                      ASL                                 ;; 03AEF8 : 0A          ;
-                      ASL                                 ;; 03AEF9 : 0A          ;
-                      ASL                                 ;; 03AEFA : 0A          ;
-                      ORA $00                             ;; 03AEFB : 05 00       ;
-                      STA $00                             ;; 03AEFD : 85 00       ;
-                      ASL                                 ;; 03AEFF : 0A          ;
-                      ASL                                 ;; 03AF00 : 0A          ;
-                      ASL                                 ;; 03AF01 : 0A          ;
-                      ASL                                 ;; 03AF02 : 0A          ;
-                      ASL                                 ;; 03AF03 : 0A          ;
-                      ORA $00                             ;; 03AF04 : 05 00       ;
-                      STA $00                             ;; 03AF06 : 85 00       ;
+                      LDA.B $00                           ;; 03AEF4 : A5 00       ;
+                      ASL A                               ;; 03AEF6 : 0A          ;
+                      ASL A                               ;; 03AEF7 : 0A          ;
+                      ASL A                               ;; 03AEF8 : 0A          ;
+                      ASL A                               ;; 03AEF9 : 0A          ;
+                      ASL A                               ;; 03AEFA : 0A          ;
+                      ORA.B $00                           ;; 03AEFB : 05 00       ;
+                      STA.B $00                           ;; 03AEFD : 85 00       ;
+                      ASL A                               ;; 03AEFF : 0A          ;
+                      ASL A                               ;; 03AF00 : 0A          ;
+                      ASL A                               ;; 03AF01 : 0A          ;
+                      ASL A                               ;; 03AF02 : 0A          ;
+                      ASL A                               ;; 03AF03 : 0A          ;
+                      ORA.B $00                           ;; 03AF04 : 05 00       ;
+                      STA.B $00                           ;; 03AF06 : 85 00       ;
                       SEP #$20                            ;; 03AF08 : E2 20       ; Accum (8 bit) 
                       PHX                                 ;; 03AF0A : DA          ;
                       TAX                                 ;; 03AF0B : AA          ;
@@ -5561,9 +5561,9 @@ CODE_03AEE8:          LDA.W $1540,X                       ;; 03AEE8 : BD 40 15  
                       STA.W $0682,Y                       ;; 03AF11 : 99 82 06    ;
                       LDA.B #$F1                          ;; 03AF14 : A9 F1       ;
                       STA.W $0683,Y                       ;; 03AF16 : 99 83 06    ;
-                      LDA $00                             ;; 03AF19 : A5 00       ;
+                      LDA.B $00                           ;; 03AF19 : A5 00       ;
                       STA.W $0684,Y                       ;; 03AF1B : 99 84 06    ;
-                      LDA $01                             ;; 03AF1E : A5 01       ;
+                      LDA.B $01                           ;; 03AF1E : A5 01       ;
                       STA.W $0685,Y                       ;; 03AF20 : 99 85 06    ;
                       LDA.B #$00                          ;; 03AF23 : A9 00       ;
                       STA.W $0686,Y                       ;; 03AF25 : 99 86 06    ;
@@ -5584,12 +5584,12 @@ DATA_03AF4C:          db $34,$34,$34,$35,$35,$36,$36,$37  ;; 03AF4C             
                                                           ;;                      ;
 CODE_03AF59:          JSR GetDrawInfoBnk3                 ;; 03AF59 : 20 60 B7    ;
                       LDA.W $157C,X                       ;; 03AF5C : BD 7C 15    ;
-                      STA $04                             ;; 03AF5F : 85 04       ;
+                      STA.B $04                           ;; 03AF5F : 85 04       ;
                       LDA.B $14                           ;; 03AF61 : A5 14       ;
-                      LSR                                 ;; 03AF63 : 4A          ;
-                      LSR                                 ;; 03AF64 : 4A          ;
+                      LSR A                               ;; 03AF63 : 4A          ;
+                      LSR A                               ;; 03AF64 : 4A          ;
                       AND.B #$07                          ;; 03AF65 : 29 07       ;
-                      STA $02                             ;; 03AF67 : 85 02       ;
+                      STA.B $02                           ;; 03AF67 : 85 02       ;
                       LDA.B #$EC                          ;; 03AF69 : A9 EC       ;
                       STA.W $15EA,X                       ;; 03AF6B : 9D EA 15    ;
                       TAY                                 ;; 03AF6E : A8          ;
@@ -5597,23 +5597,23 @@ CODE_03AF59:          JSR GetDrawInfoBnk3                 ;; 03AF59 : 20 60 B7  
                       LDX.B #$03                          ;; 03AF70 : A2 03       ;
 CODE_03AF72:          PHX                                 ;; 03AF72 : DA          ;
                       TXA                                 ;; 03AF73 : 8A          ;
-                      ASL                                 ;; 03AF74 : 0A          ;
-                      ASL                                 ;; 03AF75 : 0A          ;
-                      ADC $02                             ;; 03AF76 : 65 02       ;
+                      ASL A                               ;; 03AF74 : 0A          ;
+                      ASL A                               ;; 03AF75 : 0A          ;
+                      ADC.B $02                           ;; 03AF76 : 65 02       ;
                       AND.B #$07                          ;; 03AF78 : 29 07       ;
                       TAX                                 ;; 03AF7A : AA          ;
-                      LDA $00                             ;; 03AF7B : A5 00       ;
+                      LDA.B $00                           ;; 03AF7B : A5 00       ;
                       CLC                                 ;; 03AF7D : 18          ;
                       ADC.W DATA_03AF34,X                 ;; 03AF7E : 7D 34 AF    ;
                       STA.W $0300,Y                       ;; 03AF81 : 99 00 03    ;
-                      LDA $01                             ;; 03AF84 : A5 01       ;
+                      LDA.B $01                           ;; 03AF84 : A5 01       ;
                       CLC                                 ;; 03AF86 : 18          ;
                       ADC.W DATA_03AF3C,X                 ;; 03AF87 : 7D 3C AF    ;
                       STA.W $0301,Y                       ;; 03AF8A : 99 01 03    ;
                       LDA.B #$59                          ;; 03AF8D : A9 59       ;
                       STA.W $0302,Y                       ;; 03AF8F : 99 02 03    ;
                       LDA.W DATA_03AF44,X                 ;; 03AF92 : BD 44 AF    ;
-                      ORA $64                             ;; 03AF95 : 05 64       ;
+                      ORA.B $64                           ;; 03AF95 : 05 64       ;
                       STA.W $0303,Y                       ;; 03AF97 : 99 03 03    ;
                       PLX                                 ;; 03AF9A : FA          ;
                       INY                                 ;; 03AF9B : C8          ;
@@ -5624,31 +5624,31 @@ CODE_03AF72:          PHX                                 ;; 03AF72 : DA        
                       BPL CODE_03AF72                     ;; 03AFA0 : 10 D0       ;
                       LDA.W $14B3                         ;; 03AFA2 : AD B3 14    ;
                       INC.W $14B3                         ;; 03AFA5 : EE B3 14    ;
-                      LSR                                 ;; 03AFA8 : 4A          ;
-                      LSR                                 ;; 03AFA9 : 4A          ;
-                      LSR                                 ;; 03AFAA : 4A          ;
+                      LSR A                               ;; 03AFA8 : 4A          ;
+                      LSR A                               ;; 03AFA9 : 4A          ;
+                      LSR A                               ;; 03AFAA : 4A          ;
                       CMP.B #$0D                          ;; 03AFAB : C9 0D       ;
                       BCS CODE_03AFD7                     ;; 03AFAD : B0 28       ;
                       TAX                                 ;; 03AFAF : AA          ;
                       LDY.B #$FC                          ;; 03AFB0 : A0 FC       ;
-                      LDA $04                             ;; 03AFB2 : A5 04       ;
-                      ASL                                 ;; 03AFB4 : 0A          ;
-                      ROL                                 ;; 03AFB5 : 2A          ;
-                      ASL                                 ;; 03AFB6 : 0A          ;
-                      ASL                                 ;; 03AFB7 : 0A          ;
-                      ASL                                 ;; 03AFB8 : 0A          ;
-                      ADC $00                             ;; 03AFB9 : 65 00       ;
+                      LDA.B $04                           ;; 03AFB2 : A5 04       ;
+                      ASL A                               ;; 03AFB4 : 0A          ;
+                      ROL A                               ;; 03AFB5 : 2A          ;
+                      ASL A                               ;; 03AFB6 : 0A          ;
+                      ASL A                               ;; 03AFB7 : 0A          ;
+                      ASL A                               ;; 03AFB8 : 0A          ;
+                      ADC.B $00                           ;; 03AFB9 : 65 00       ;
                       CLC                                 ;; 03AFBB : 18          ;
                       ADC.B #$15                          ;; 03AFBC : 69 15       ;
                       STA.W $0300,Y                       ;; 03AFBE : 99 00 03    ;
-                      LDA $01                             ;; 03AFC1 : A5 01       ;
+                      LDA.B $01                           ;; 03AFC1 : A5 01       ;
                       CLC                                 ;; 03AFC3 : 18          ;
                       ADC.L DATA_03AF4C,X                 ;; 03AFC4 : 7F 4C AF 03 ;
                       STA.W $0301,Y                       ;; 03AFC8 : 99 01 03    ;
                       LDA.B #$49                          ;; 03AFCB : A9 49       ;
                       STA.W $0302,Y                       ;; 03AFCD : 99 02 03    ;
                       LDA.B #$07                          ;; 03AFD0 : A9 07       ;
-                      ORA $64                             ;; 03AFD2 : 05 64       ;
+                      ORA.B $64                           ;; 03AFD2 : 05 64       ;
                       STA.W $0303,Y                       ;; 03AFD4 : 99 03 03    ;
 CODE_03AFD7:          PLX                                 ;; 03AFD7 : FA          ;
                       LDY.B #$00                          ;; 03AFD8 : A0 00       ;
@@ -5667,8 +5667,8 @@ CODE_03AFE6:          LDA.W $0300,Y                       ;; 03AFE6 : B9 00 03  
                       STA.W $0203,Y                       ;; 03AFFB : 99 03 02    ;
                       PHY                                 ;; 03AFFE : 5A          ;
                       TYA                                 ;; 03AFFF : 98          ;
-                      LSR                                 ;; 03B000 : 4A          ;
-                      LSR                                 ;; 03B001 : 4A          ;
+                      LSR A                               ;; 03B000 : 4A          ;
+                      LSR A                               ;; 03B001 : 4A          ;
                       TAY                                 ;; 03B002 : A8          ;
                       LDA.W $0460,Y                       ;; 03B003 : B9 60 04    ;
                       STA.W $0420,Y                       ;; 03B006 : 99 20 04    ;
@@ -5689,9 +5689,9 @@ DATA_03B015:          db $00,$00                          ;; 03B015             
                                                           ;;                      ;
 DATA_03B017:          db $F8,$08                          ;; 03B017               ;
                                                           ;;                      ;
-CODE_03B019:          STZ $02                             ;; 03B019 : 64 02       ;
+CODE_03B019:          STZ.B $02                           ;; 03B019 : 64 02       ;
                       JSR CODE_03B020                     ;; 03B01B : 20 20 B0    ;
-                      INC $02                             ;; 03B01E : E6 02       ;
+                      INC.B $02                           ;; 03B01E : E6 02       ;
 CODE_03B020:          LDY.B #$01                          ;; 03B020 : A0 01       ;
 CODE_03B022:          LDA.W $14C8,Y                       ;; 03B022 : B9 C8 14    ;
                       BEQ CODE_03B02B                     ;; 03B025 : F0 04       ;
@@ -5703,33 +5703,33 @@ CODE_03B02B:          LDA.B #$08                          ;; 03B02B : A9 08     
                       STA.W $14C8,Y                       ;; 03B02D : 99 C8 14    ; / 
                       LDA.B #$A2                          ;; 03B030 : A9 A2       ;
                       STA.W $009E,Y                       ;; 03B032 : 99 9E 00    ;
-                      LDA $D8,X                           ;; 03B035 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03B035 : B5 D8       ;
                       CLC                                 ;; 03B037 : 18          ;
                       ADC.B #$10                          ;; 03B038 : 69 10       ;
                       STA.W $00D8,Y                       ;; 03B03A : 99 D8 00    ;
                       LDA.W $14D4,X                       ;; 03B03D : BD D4 14    ;
                       ADC.B #$00                          ;; 03B040 : 69 00       ;
                       STA.W $14D4,Y                       ;; 03B042 : 99 D4 14    ;
-                      LDA $E4,X                           ;; 03B045 : B5 E4       ;
-                      STA $00                             ;; 03B047 : 85 00       ;
+                      LDA.B $E4,X                         ;; 03B045 : B5 E4       ;
+                      STA.B $00                           ;; 03B047 : 85 00       ;
                       LDA.W $14E0,X                       ;; 03B049 : BD E0 14    ;
-                      STA $01                             ;; 03B04C : 85 01       ;
+                      STA.B $01                           ;; 03B04C : 85 01       ;
                       PHX                                 ;; 03B04E : DA          ;
-                      LDX $02                             ;; 03B04F : A6 02       ;
-                      LDA $00                             ;; 03B051 : A5 00       ;
+                      LDX.B $02                           ;; 03B04F : A6 02       ;
+                      LDA.B $00                           ;; 03B051 : A5 00       ;
                       CLC                                 ;; 03B053 : 18          ;
                       ADC.W DATA_03B013,X                 ;; 03B054 : 7D 13 B0    ;
                       STA.W $00E4,Y                       ;; 03B057 : 99 E4 00    ;
-                      LDA $01                             ;; 03B05A : A5 01       ;
+                      LDA.B $01                           ;; 03B05A : A5 01       ;
                       ADC.W DATA_03B015,X                 ;; 03B05C : 7D 15 B0    ;
                       STA.W $14E0,Y                       ;; 03B05F : 99 E0 14    ;
                       TYX                                 ;; 03B062 : BB          ;
                       JSL InitSpriteTables                ;; 03B063 : 22 D2 F7 07 ;
-                      LDY $02                             ;; 03B067 : A4 02       ;
+                      LDY.B $02                           ;; 03B067 : A4 02       ;
                       LDA.W DATA_03B017,Y                 ;; 03B069 : B9 17 B0    ;
-                      STA $B6,X                           ;; 03B06C : 95 B6       ;
+                      STA.B $B6,X                         ;; 03B06C : 95 B6       ;
                       LDA.B #$C0                          ;; 03B06E : A9 C0       ;
-                      STA $AA,X                           ;; 03B070 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03B070 : 95 AA       ;
                       PLX                                 ;; 03B072 : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -5738,14 +5738,14 @@ DATA_03B074:          db $40,$C0                          ;; 03B074             
                                                           ;;                      ;
 DATA_03B076:          db $10,$F0                          ;; 03B076               ;
                                                           ;;                      ;
-CODE_03B078:          LDA $38                             ;; 03B078 : A5 38       ;
+CODE_03B078:          LDA.B $38                           ;; 03B078 : A5 38       ;
                       CMP.B #$20                          ;; 03B07A : C9 20       ;
                       BNE Return03B0DB                    ;; 03B07C : D0 5D       ;
                       LDA.W $151C,X                       ;; 03B07E : BD 1C 15    ;
                       CMP.B #$07                          ;; 03B081 : C9 07       ;
                       BCC Return03B0F2                    ;; 03B083 : 90 6D       ;
-                      LDA $36                             ;; 03B085 : A5 36       ;
-                      ORA $37                             ;; 03B087 : 05 37       ;
+                      LDA.B $36                           ;; 03B085 : A5 36       ;
+                      ORA.B $37                           ;; 03B087 : 05 37       ;
                       BNE Return03B0F2                    ;; 03B089 : D0 67       ;
                       JSR CODE_03B0DC                     ;; 03B08B : 20 DC B0    ;
                       LDA.W $154C,X                       ;; 03B08E : BD 4C 15    ;
@@ -5755,7 +5755,7 @@ CODE_03B078:          LDA $38                             ;; 03B078 : A5 38     
                       JSL MarioSprInteract                ;; 03B098 : 22 DC A7 01 ;
                       BCC CODE_03B0BD                     ;; 03B09C : 90 1F       ;
                       JSR CODE_03B0D6                     ;; 03B09E : 20 D6 B0    ;
-                      STZ $7D                             ;; 03B0A1 : 64 7D       ;
+                      STZ.B $7D                           ;; 03B0A1 : 64 7D       ;
                       JSR SubHorzPosBnk3                  ;; 03B0A3 : 20 17 B8    ;
                       LDA.W $14B1                         ;; 03B0A6 : AD B1 14    ;
                       ORA.W $14B6                         ;; 03B0A9 : 0D B6 14    ;
@@ -5764,7 +5764,7 @@ CODE_03B078:          LDA $38                             ;; 03B078 : A5 38     
                       BRA CODE_03B0B6                     ;; 03B0B1 : 80 03       ;
                                                           ;;                      ;
 CODE_03B0B3:          LDA.W DATA_03B074,Y                 ;; 03B0B3 : B9 74 B0    ;
-CODE_03B0B6:          STA $7B                             ;; 03B0B6 : 85 7B       ;
+CODE_03B0B6:          STA.B $7B                           ;; 03B0B6 : 85 7B       ;
                       LDA.B #$01                          ;; 03B0B8 : A9 01       ; \ Play sound effect 
                       STA.W $1DF9                         ;; 03B0BA : 8D F9 1D    ; / 
 CODE_03B0BD:          INC.W $1662,X                       ;; 03B0BD : FE 62 16    ;
@@ -5843,32 +5843,32 @@ Return03B160:         RTS                                 ;; ?QPWZ? : 60        
 BowserBallSpeed:      db $10,$F0                          ;; ?QPWZ?               ;
                                                           ;;                      ;
 BowserBowlingBall:    JSR BowserBallGfx                   ;; ?QPWZ? : 20 21 B2    ;
-                      LDA $9D                             ;; 03B166 : A5 9D       ;
+                      LDA.B $9D                           ;; 03B166 : A5 9D       ;
                       BNE Return03B1D4                    ;; 03B168 : D0 6A       ;
                       JSR SubOffscreen0Bnk3               ;; 03B16A : 20 5D B8    ;
                       JSL MarioSprInteract                ;; 03B16D : 22 DC A7 01 ;
                       JSL UpdateXPosNoGvtyW               ;; 03B171 : 22 22 80 01 ;
                       JSL UpdateYPosNoGvtyW               ;; 03B175 : 22 1A 80 01 ;
-                      LDA $AA,X                           ;; 03B179 : B5 AA       ;
+                      LDA.B $AA,X                         ;; 03B179 : B5 AA       ;
                       CMP.B #$40                          ;; 03B17B : C9 40       ;
                       BPL CODE_03B186                     ;; 03B17D : 10 07       ;
                       CLC                                 ;; 03B17F : 18          ;
                       ADC.B #$03                          ;; 03B180 : 69 03       ;
-                      STA $AA,X                           ;; 03B182 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03B182 : 95 AA       ;
                       BRA CODE_03B18A                     ;; 03B184 : 80 04       ;
                                                           ;;                      ;
 CODE_03B186:          LDA.B #$40                          ;; 03B186 : A9 40       ;
-                      STA $AA,X                           ;; 03B188 : 95 AA       ;
-CODE_03B18A:          LDA $AA,X                           ;; 03B18A : B5 AA       ;
+                      STA.B $AA,X                         ;; 03B188 : 95 AA       ;
+CODE_03B18A:          LDA.B $AA,X                         ;; 03B18A : B5 AA       ;
                       BMI CODE_03B1C5                     ;; 03B18C : 30 37       ;
                       LDA.W $14D4,X                       ;; 03B18E : BD D4 14    ;
                       BMI CODE_03B1C5                     ;; 03B191 : 30 32       ;
-                      LDA $D8,X                           ;; 03B193 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03B193 : B5 D8       ;
                       CMP.B #$B0                          ;; 03B195 : C9 B0       ;
                       BCC CODE_03B1C5                     ;; 03B197 : 90 2C       ;
                       LDA.B #$B0                          ;; 03B199 : A9 B0       ;
-                      STA $D8,X                           ;; 03B19B : 95 D8       ;
-                      LDA $AA,X                           ;; 03B19D : B5 AA       ;
+                      STA.B $D8,X                         ;; 03B19B : 95 D8       ;
+                      LDA.B $AA,X                         ;; 03B19D : B5 AA       ;
                       CMP.B #$3E                          ;; 03B19F : C9 3E       ;
                       BCC CODE_03B1AD                     ;; 03B1A1 : 90 0A       ;
                       LDY.B #$25                          ;; 03B1A3 : A0 25       ; \ Play sound effect 
@@ -5880,12 +5880,12 @@ CODE_03B1AD:          CMP.B #$08                          ;; 03B1AD : C9 08     
                       LDA.B #$01                          ;; 03B1B1 : A9 01       ; \ Play sound effect 
                       STA.W $1DF9                         ;; 03B1B3 : 8D F9 1D    ; / 
 CODE_03B1B6:          JSR CODE_03B7F8                     ;; 03B1B6 : 20 F8 B7    ;
-                      LDA $B6,X                           ;; 03B1B9 : B5 B6       ;
+                      LDA.B $B6,X                         ;; 03B1B9 : B5 B6       ;
                       BNE CODE_03B1C5                     ;; 03B1BB : D0 08       ;
                       JSR SubHorzPosBnk3                  ;; 03B1BD : 20 17 B8    ;
                       LDA.W BowserBallSpeed,Y             ;; 03B1C0 : B9 61 B1    ;
-                      STA $B6,X                           ;; 03B1C3 : 95 B6       ;
-CODE_03B1C5:          LDA $B6,X                           ;; 03B1C5 : B5 B6       ;
+                      STA.B $B6,X                         ;; 03B1C3 : 95 B6       ;
+CODE_03B1C5:          LDA.B $B6,X                         ;; 03B1C5 : B5 B6       ;
                       BEQ Return03B1D4                    ;; 03B1C7 : F0 0B       ;
                       BMI CODE_03B1D1                     ;; 03B1C9 : 30 06       ;
                       DEC.W $1570,X                       ;; 03B1CB : DE 70 15    ;
@@ -5917,23 +5917,23 @@ BowserBallGfx:        LDA.B #$70                          ;; ?QPWZ? : A9 70     
                       JSR GetDrawInfoBnk3                 ;; 03B226 : 20 60 B7    ;
                       PHX                                 ;; 03B229 : DA          ;
                       LDX.B #$0B                          ;; 03B22A : A2 0B       ;
-CODE_03B22C:          LDA $00                             ;; 03B22C : A5 00       ;
+CODE_03B22C:          LDA.B $00                           ;; 03B22C : A5 00       ;
                       CLC                                 ;; 03B22E : 18          ;
                       ADC.W BowserBallDispX,X             ;; 03B22F : 7D D5 B1    ;
                       STA.W $0300,Y                       ;; 03B232 : 99 00 03    ;
-                      LDA $01                             ;; 03B235 : A5 01       ;
+                      LDA.B $01                           ;; 03B235 : A5 01       ;
                       CLC                                 ;; 03B237 : 18          ;
                       ADC.W BowserBallDispY,X             ;; 03B238 : 7D E1 B1    ;
                       STA.W $0301,Y                       ;; 03B23B : 99 01 03    ;
                       LDA.W BowserBallTiles,X             ;; 03B23E : BD ED B1    ;
                       STA.W $0302,Y                       ;; 03B241 : 99 02 03    ;
                       LDA.W BowserBallGfxProp,X           ;; 03B244 : BD F9 B1    ;
-                      ORA $64                             ;; 03B247 : 05 64       ;
+                      ORA.B $64                           ;; 03B247 : 05 64       ;
                       STA.W $0303,Y                       ;; 03B249 : 99 03 03    ;
                       PHY                                 ;; 03B24C : 5A          ;
                       TYA                                 ;; 03B24D : 98          ;
-                      LSR                                 ;; 03B24E : 4A          ;
-                      LSR                                 ;; 03B24F : 4A          ;
+                      LSR A                               ;; 03B24E : 4A          ;
+                      LSR A                               ;; 03B24F : 4A          ;
                       TAY                                 ;; 03B250 : A8          ;
                       LDA.W BowserBallTileSize,X          ;; 03B251 : BD 05 B2    ;
                       STA.W $0460,Y                       ;; 03B254 : 99 60 04    ;
@@ -5948,9 +5948,9 @@ CODE_03B22C:          LDA $00                             ;; 03B22C : A5 00     
                       PHX                                 ;; 03B260 : DA          ;
                       LDY.W $15EA,X                       ;; 03B261 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.W $1570,X                       ;; 03B264 : BD 70 15    ;
-                      LSR                                 ;; 03B267 : 4A          ;
-                      LSR                                 ;; 03B268 : 4A          ;
-                      LSR                                 ;; 03B269 : 4A          ;
+                      LSR A                               ;; 03B267 : 4A          ;
+                      LSR A                               ;; 03B268 : 4A          ;
+                      LSR A                               ;; 03B269 : 4A          ;
                       AND.B #$07                          ;; 03B26A : 29 07       ;
                       PHA                                 ;; 03B26C : 48          ;
                       TAX                                 ;; 03B26D : AA          ;
@@ -5988,7 +5988,7 @@ MechaKoopa:           JSL CODE_03B307                     ;; ?QPWZ? : 22 07 B3 0
                       LDA.W $14C8,X                       ;; 03B2AD : BD C8 14    ;
                       CMP.B #$08                          ;; 03B2B0 : C9 08       ;
                       BNE Return03B306                    ;; 03B2B2 : D0 52       ;
-                      LDA $9D                             ;; 03B2B4 : A5 9D       ;
+                      LDA.B $9D                           ;; 03B2B4 : A5 9D       ;
                       BNE Return03B306                    ;; 03B2B6 : D0 4E       ;
                       JSR SubOffscreen0Bnk3               ;; 03B2B8 : 20 5D B8    ;
                       JSL SprSpr_MarioSprRts              ;; 03B2BB : 22 3A 80 01 ;
@@ -5996,12 +5996,12 @@ MechaKoopa:           JSL CODE_03B307                     ;; ?QPWZ? : 22 07 B3 0
                       LDA.W $1588,X                       ;; 03B2C3 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 03B2C6 : 29 04       ;  | 
                       BEQ CODE_03B2E3                     ;; 03B2C8 : F0 19       ; / 
-                      STZ $AA,X                           ;; 03B2CA : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $AA,X                         ;; 03B2CA : 74 AA       ; Sprite Y Speed = 0 
                       LDY.W $157C,X                       ;; 03B2CC : BC 7C 15    ;
                       LDA.W MechakoopaSpeed,Y             ;; 03B2CF : B9 A7 B2    ;
-                      STA $B6,X                           ;; 03B2D2 : 95 B6       ;
-                      LDA $C2,X                           ;; 03B2D4 : B5 C2       ;
-                      INC $C2,X                           ;; 03B2D6 : F6 C2       ;
+                      STA.B $B6,X                         ;; 03B2D2 : 95 B6       ;
+                      LDA.B $C2,X                         ;; 03B2D4 : B5 C2       ;
+                      INC.B $C2,X                         ;; 03B2D6 : F6 C2       ;
                       AND.B #$3F                          ;; 03B2D8 : 29 3F       ;
                       BNE CODE_03B2E3                     ;; 03B2DA : D0 07       ;
                       JSR SubHorzPosBnk3                  ;; 03B2DC : 20 17 B8    ;
@@ -6010,18 +6010,18 @@ MechaKoopa:           JSL CODE_03B307                     ;; ?QPWZ? : 22 07 B3 0
 CODE_03B2E3:          LDA.W $1588,X                       ;; 03B2E3 : BD 88 15    ; \ Branch if not touching object 
                       AND.B #$03                          ;; 03B2E6 : 29 03       ;  | 
                       BEQ CODE_03B2F9                     ;; 03B2E8 : F0 0F       ; / 
-                      LDA $B6,X                           ;; 03B2EA : B5 B6       ;
+                      LDA.B $B6,X                         ;; 03B2EA : B5 B6       ;
                       EOR.B #$FF                          ;; 03B2EC : 49 FF       ;
                       INC A                               ;; 03B2EE : 1A          ;
-                      STA $B6,X                           ;; 03B2EF : 95 B6       ;
+                      STA.B $B6,X                         ;; 03B2EF : 95 B6       ;
                       LDA.W $157C,X                       ;; 03B2F1 : BD 7C 15    ;
                       EOR.B #$01                          ;; 03B2F4 : 49 01       ;
                       STA.W $157C,X                       ;; 03B2F6 : 9D 7C 15    ;
 CODE_03B2F9:          INC.W $1570,X                       ;; 03B2F9 : FE 70 15    ;
                       LDA.W $1570,X                       ;; 03B2FC : BD 70 15    ;
                       AND.B #$0C                          ;; 03B2FF : 29 0C       ;
-                      LSR                                 ;; 03B301 : 4A          ;
-                      LSR                                 ;; 03B302 : 4A          ;
+                      LSR A                               ;; 03B301 : 4A          ;
+                      LSR A                               ;; 03B302 : 4A          ;
                       STA.W $1602,X                       ;; 03B303 : 9D 02 16    ;
 Return03B306:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -6066,27 +6066,27 @@ CODE_03B36B:          TYA                                 ;; 03B36B : 98        
                       STA.W $15F6,X                       ;; 03B37C : 9D F6 15    ;
 CODE_03B37F:          JSR GetDrawInfoBnk3                 ;; 03B37F : 20 60 B7    ;
                       LDA.W $15F6,X                       ;; 03B382 : BD F6 15    ;
-                      STA $04                             ;; 03B385 : 85 04       ;
+                      STA.B $04                           ;; 03B385 : 85 04       ;
                       TYA                                 ;; 03B387 : 98          ;
                       CLC                                 ;; 03B388 : 18          ;
                       ADC.B #$0C                          ;; 03B389 : 69 0C       ;
                       TAY                                 ;; 03B38B : A8          ;
                       LDA.W $1602,X                       ;; 03B38C : BD 02 16    ;
-                      ASL                                 ;; 03B38F : 0A          ;
-                      ASL                                 ;; 03B390 : 0A          ;
-                      STA $03                             ;; 03B391 : 85 03       ;
+                      ASL A                               ;; 03B38F : 0A          ;
+                      ASL A                               ;; 03B390 : 0A          ;
+                      STA.B $03                           ;; 03B391 : 85 03       ;
                       LDA.W $157C,X                       ;; 03B393 : BD 7C 15    ;
-                      ASL                                 ;; 03B396 : 0A          ;
-                      ASL                                 ;; 03B397 : 0A          ;
+                      ASL A                               ;; 03B396 : 0A          ;
+                      ASL A                               ;; 03B397 : 0A          ;
                       EOR.B #$04                          ;; 03B398 : 49 04       ;
-                      STA $02                             ;; 03B39A : 85 02       ;
+                      STA.B $02                           ;; 03B39A : 85 02       ;
                       PHX                                 ;; 03B39C : DA          ;
                       LDX.B #$03                          ;; 03B39D : A2 03       ;
 CODE_03B39F:          PHX                                 ;; 03B39F : DA          ;
                       PHY                                 ;; 03B3A0 : 5A          ;
                       TYA                                 ;; 03B3A1 : 98          ;
-                      LSR                                 ;; 03B3A2 : 4A          ;
-                      LSR                                 ;; 03B3A3 : 4A          ;
+                      LSR A                               ;; 03B3A2 : 4A          ;
+                      LSR A                               ;; 03B3A3 : 4A          ;
                       TAY                                 ;; 03B3A4 : A8          ;
                       LDA.W MechakoopaTileSize,X          ;; 03B3A5 : BD 4F B3    ;
                       STA.W $0460,Y                       ;; 03B3A8 : 99 60 04    ;
@@ -6094,24 +6094,24 @@ CODE_03B39F:          PHX                                 ;; 03B39F : DA        
                       PLA                                 ;; 03B3AC : 68          ;
                       PHA                                 ;; 03B3AD : 48          ;
                       CLC                                 ;; 03B3AE : 18          ;
-                      ADC $02                             ;; 03B3AF : 65 02       ;
+                      ADC.B $02                           ;; 03B3AF : 65 02       ;
                       TAX                                 ;; 03B3B1 : AA          ;
-                      LDA $00                             ;; 03B3B2 : A5 00       ;
+                      LDA.B $00                           ;; 03B3B2 : A5 00       ;
                       CLC                                 ;; 03B3B4 : 18          ;
                       ADC.W MechakoopaDispX,X             ;; 03B3B5 : 7D 0F B3    ;
                       STA.W $0300,Y                       ;; 03B3B8 : 99 00 03    ;
                       LDA.W MechakoopaGfxProp,X           ;; 03B3BB : BD 47 B3    ;
-                      ORA $04                             ;; 03B3BE : 05 04       ;
-                      ORA $64                             ;; 03B3C0 : 05 64       ;
+                      ORA.B $04                           ;; 03B3BE : 05 04       ;
+                      ORA.B $64                           ;; 03B3C0 : 05 64       ;
                       STA.W $0303,Y                       ;; 03B3C2 : 99 03 03    ;
                       PLA                                 ;; 03B3C5 : 68          ;
                       PHA                                 ;; 03B3C6 : 48          ;
                       CLC                                 ;; 03B3C7 : 18          ;
-                      ADC $03                             ;; 03B3C8 : 65 03       ;
+                      ADC.B $03                           ;; 03B3C8 : 65 03       ;
                       TAX                                 ;; 03B3CA : AA          ;
                       LDA.W MechakoopaTiles,X             ;; 03B3CB : BD 2F B3    ;
                       STA.W $0302,Y                       ;; 03B3CE : 99 02 03    ;
-                      LDA $01                             ;; 03B3D1 : A5 01       ;
+                      LDA.B $01                           ;; 03B3D1 : A5 01       ;
                       CLC                                 ;; 03B3D3 : 18          ;
                       ADC.W MechakoopaDispY,X             ;; 03B3D4 : 7D 17 B3    ;
                       STA.W $0301,Y                       ;; 03B3D7 : 99 01 03    ;
@@ -6143,24 +6143,24 @@ MechaKoopaKeyGfx:     LDA.W $15EA,X                       ;; ?QPWZ? : BD EA 15  
                       JSR GetDrawInfoBnk3                 ;; 03B400 : 20 60 B7    ;
                       PHX                                 ;; 03B403 : DA          ;
                       LDA.W $1570,X                       ;; 03B404 : BD 70 15    ;
-                      LSR                                 ;; 03B407 : 4A          ;
-                      LSR                                 ;; 03B408 : 4A          ;
+                      LSR A                               ;; 03B407 : 4A          ;
+                      LSR A                               ;; 03B408 : 4A          ;
                       AND.B #$03                          ;; 03B409 : 29 03       ;
-                      STA $02                             ;; 03B40B : 85 02       ;
+                      STA.B $02                           ;; 03B40B : 85 02       ;
                       LDA.W $157C,X                       ;; 03B40D : BD 7C 15    ;
                       TAX                                 ;; 03B410 : AA          ;
-                      LDA $00                             ;; 03B411 : A5 00       ;
+                      LDA.B $00                           ;; 03B411 : A5 00       ;
                       CLC                                 ;; 03B413 : 18          ;
                       ADC.W MechaKeyDispX,X               ;; 03B414 : 7D EF B3    ;
                       STA.W $0300,Y                       ;; 03B417 : 99 00 03    ;
-                      LDA $01                             ;; 03B41A : A5 01       ;
+                      LDA.B $01                           ;; 03B41A : A5 01       ;
                       SEC                                 ;; 03B41C : 38          ;
                       SBC.B #$00                          ;; 03B41D : E9 00       ;
                       STA.W $0301,Y                       ;; 03B41F : 99 01 03    ;
                       LDA.W MechaKeyGfxProp,X             ;; 03B422 : BD F1 B3    ;
-                      ORA $64                             ;; 03B425 : 05 64       ;
+                      ORA.B $64                           ;; 03B425 : 05 64       ;
                       STA.W $0303,Y                       ;; 03B427 : 99 03 03    ;
-                      LDX $02                             ;; 03B42A : A6 02       ;
+                      LDX.B $02                           ;; 03B42A : A6 02       ;
                       LDA.W MechaKeyTiles,X               ;; 03B42C : BD F3 B3    ;
                       STA.W $0302,Y                       ;; 03B42F : 99 02 03    ;
                       PLX                                 ;; 03B432 : FA          ;
@@ -6198,8 +6198,8 @@ CODE_03B461:          LDA.W BowserItemBoxPosX,X           ;; 03B461 : BD 43 B4  
                       STA.W $0203,Y                       ;; 03B475 : 99 03 02    ;
                       PHY                                 ;; 03B478 : 5A          ;
                       TYA                                 ;; 03B479 : 98          ;
-                      LSR                                 ;; 03B47A : 4A          ;
-                      LSR                                 ;; 03B47B : 4A          ;
+                      LSR A                               ;; 03B47A : 4A          ;
+                      LSR A                               ;; 03B47B : 4A          ;
                       TAY                                 ;; 03B47C : A8          ;
                       LDA.B #$02                          ;; 03B47D : A9 02       ;
                       STA.W $0420,Y                       ;; 03B47F : 99 20 04    ;
@@ -6221,9 +6221,9 @@ BowserRoofPosY:       db $B0,$B0,$B0,$B0,$B0,$B0,$D0,$D0  ;; ?QPWZ?             
                                                           ;;                      ;
 BowserSceneGfx:       PHX                                 ;; ?QPWZ? : DA          ;
                       LDY.B #$BC                          ;; 03B4AD : A0 BC       ;
-                      STZ $01                             ;; 03B4AF : 64 01       ;
+                      STZ.B $01                           ;; 03B4AF : 64 01       ;
                       LDA.W $190D                         ;; 03B4B1 : AD 0D 19    ;
-                      STA $0F                             ;; 03B4B4 : 85 0F       ;
+                      STA.B $0F                           ;; 03B4B4 : 85 0F       ;
                       CMP.B #$01                          ;; 03B4B6 : C9 01       ;
                       LDX.B #$10                          ;; 03B4B8 : A2 10       ;
                       BCC CODE_03B4BF                     ;; 03B4BA : 90 03       ;
@@ -6231,24 +6231,24 @@ BowserSceneGfx:       PHX                                 ;; ?QPWZ? : DA        
                       DEX                                 ;; 03B4BE : CA          ;
 CODE_03B4BF:          LDA.B #$C0                          ;; 03B4BF : A9 C0       ;
                       SEC                                 ;; 03B4C1 : 38          ;
-                      SBC $1C                             ;; 03B4C2 : E5 1C       ;
+                      SBC.B $1C                           ;; 03B4C2 : E5 1C       ;
                       STA.W $0301,Y                       ;; 03B4C4 : 99 01 03    ;
-                      LDA $01                             ;; 03B4C7 : A5 01       ;
+                      LDA.B $01                           ;; 03B4C7 : A5 01       ;
                       SEC                                 ;; 03B4C9 : 38          ;
-                      SBC $1A                             ;; 03B4CA : E5 1A       ;
+                      SBC.B $1A                           ;; 03B4CA : E5 1A       ;
                       STA.W $0300,Y                       ;; 03B4CC : 99 00 03    ;
                       CLC                                 ;; 03B4CF : 18          ;
                       ADC.B #$10                          ;; 03B4D0 : 69 10       ;
-                      STA $01                             ;; 03B4D2 : 85 01       ;
+                      STA.B $01                           ;; 03B4D2 : 85 01       ;
                       LDA.B #$08                          ;; 03B4D4 : A9 08       ;
                       STA.W $0302,Y                       ;; 03B4D6 : 99 02 03    ;
                       LDA.B #$0D                          ;; 03B4D9 : A9 0D       ;
-                      ORA $64                             ;; 03B4DB : 05 64       ;
+                      ORA.B $64                           ;; 03B4DB : 05 64       ;
                       STA.W $0303,Y                       ;; 03B4DD : 99 03 03    ;
                       PHY                                 ;; 03B4E0 : 5A          ;
                       TYA                                 ;; 03B4E1 : 98          ;
-                      LSR                                 ;; 03B4E2 : 4A          ;
-                      LSR                                 ;; 03B4E3 : 4A          ;
+                      LSR A                               ;; 03B4E2 : 4A          ;
+                      LSR A                               ;; 03B4E3 : 4A          ;
                       TAY                                 ;; 03B4E4 : A8          ;
                       LDA.B #$02                          ;; 03B4E5 : A9 02       ;
                       STA.W $0460,Y                       ;; 03B4E7 : 99 60 04    ;
@@ -6260,16 +6260,16 @@ CODE_03B4BF:          LDA.B #$C0                          ;; 03B4BF : A9 C0     
                       DEX                                 ;; 03B4EF : CA          ;
                       BPL CODE_03B4BF                     ;; 03B4F0 : 10 CD       ;
                       LDX.B #$0F                          ;; 03B4F2 : A2 0F       ;
-                      LDA $0F                             ;; 03B4F4 : A5 0F       ;
+                      LDA.B $0F                           ;; 03B4F4 : A5 0F       ;
                       BNE CODE_03B532                     ;; 03B4F6 : D0 3A       ;
                       LDY.B #$14                          ;; 03B4F8 : A0 14       ;
 CODE_03B4FA:          LDA.W BowserRoofPosX,X              ;; 03B4FA : BD 8C B4    ;
                       SEC                                 ;; 03B4FD : 38          ;
-                      SBC $1A                             ;; 03B4FE : E5 1A       ;
+                      SBC.B $1A                           ;; 03B4FE : E5 1A       ;
                       STA.W $0200,Y                       ;; 03B500 : 99 00 02    ;
                       LDA.W BowserRoofPosY,X              ;; 03B503 : BD 9C B4    ;
                       SEC                                 ;; 03B506 : 38          ;
-                      SBC $1C                             ;; 03B507 : E5 1C       ;
+                      SBC.B $1C                           ;; 03B507 : E5 1C       ;
                       STA.W $0201,Y                       ;; 03B509 : 99 01 02    ;
                       LDA.B #$08                          ;; 03B50C : A9 08       ;
                       CPX.B #$06                          ;; 03B50E : E0 06       ;
@@ -6277,12 +6277,12 @@ CODE_03B4FA:          LDA.W BowserRoofPosX,X              ;; 03B4FA : BD 8C B4  
                       LDA.B #$03                          ;; 03B512 : A9 03       ;
 CODE_03B514:          STA.W $0202,Y                       ;; 03B514 : 99 02 02    ;
                       LDA.B #$0D                          ;; 03B517 : A9 0D       ;
-                      ORA $64                             ;; 03B519 : 05 64       ;
+                      ORA.B $64                           ;; 03B519 : 05 64       ;
                       STA.W $0203,Y                       ;; 03B51B : 99 03 02    ;
                       PHY                                 ;; 03B51E : 5A          ;
                       TYA                                 ;; 03B51F : 98          ;
-                      LSR                                 ;; 03B520 : 4A          ;
-                      LSR                                 ;; 03B521 : 4A          ;
+                      LSR A                               ;; 03B520 : 4A          ;
+                      LSR A                               ;; 03B521 : 4A          ;
                       TAY                                 ;; 03B522 : A8          ;
                       LDA.B #$02                          ;; 03B523 : A9 02       ;
                       STA.W $0420,Y                       ;; 03B525 : 99 20 04    ;
@@ -6298,11 +6298,11 @@ CODE_03B514:          STA.W $0202,Y                       ;; 03B514 : 99 02 02  
 CODE_03B532:          LDY.B #$50                          ;; 03B532 : A0 50       ;
 CODE_03B534:          LDA.W BowserRoofPosX,X              ;; 03B534 : BD 8C B4    ;
                       SEC                                 ;; 03B537 : 38          ;
-                      SBC $1A                             ;; 03B538 : E5 1A       ;
+                      SBC.B $1A                           ;; 03B538 : E5 1A       ;
                       STA.W $0300,Y                       ;; 03B53A : 99 00 03    ;
                       LDA.W BowserRoofPosY,X              ;; 03B53D : BD 9C B4    ;
                       SEC                                 ;; 03B540 : 38          ;
-                      SBC $1C                             ;; 03B541 : E5 1C       ;
+                      SBC.B $1C                           ;; 03B541 : E5 1C       ;
                       STA.W $0301,Y                       ;; 03B543 : 99 01 03    ;
                       LDA.B #$08                          ;; 03B546 : A9 08       ;
                       CPX.B #$06                          ;; 03B548 : E0 06       ;
@@ -6310,12 +6310,12 @@ CODE_03B534:          LDA.W BowserRoofPosX,X              ;; 03B534 : BD 8C B4  
                       LDA.B #$03                          ;; 03B54C : A9 03       ;
 CODE_03B54E:          STA.W $0302,Y                       ;; 03B54E : 99 02 03    ;
                       LDA.B #$0D                          ;; 03B551 : A9 0D       ;
-                      ORA $64                             ;; 03B553 : 05 64       ;
+                      ORA.B $64                           ;; 03B553 : 05 64       ;
                       STA.W $0303,Y                       ;; 03B555 : 99 03 03    ;
                       PHY                                 ;; 03B558 : 5A          ;
                       TYA                                 ;; 03B559 : 98          ;
-                      LSR                                 ;; 03B55A : 4A          ;
-                      LSR                                 ;; 03B55B : 4A          ;
+                      LSR A                               ;; 03B55A : 4A          ;
+                      LSR A                               ;; 03B55B : 4A          ;
                       TAY                                 ;; 03B55C : A8          ;
                       LDA.B #$02                          ;; 03B55D : A9 02       ;
                       STA.W $0460,Y                       ;; 03B55F : 99 60 04    ;
@@ -6371,19 +6371,19 @@ MairoClipDispY:       db $06,$14,$10,$18                  ;; ?QPWZ?             
 MarioClippingHeight:  db $1A,$0C,$20,$18                  ;; ?QPWZ?               ;
                                                           ;;                      ;
 GetMarioClipping:     PHX                                 ;; ?QPWZ? : DA          ;
-                      LDA $94                             ;; 03B665 : A5 94       ; \ 
+                      LDA.B $94                           ;; 03B665 : A5 94       ; \ 
                       CLC                                 ;; 03B667 : 18          ;  | 
                       ADC.B #$02                          ;; 03B668 : 69 02       ;  | 
-                      STA $00                             ;; 03B66A : 85 00       ;  | $00 = (Mario X position + #$02) Low byte 
-                      LDA $95                             ;; 03B66C : A5 95       ;  | 
+                      STA.B $00                           ;; 03B66A : 85 00       ;  | $00 = (Mario X position + #$02) Low byte 
+                      LDA.B $95                           ;; 03B66C : A5 95       ;  | 
                       ADC.B #$00                          ;; 03B66E : 69 00       ;  | 
-                      STA $08                             ;; 03B670 : 85 08       ; / $08 = (Mario X position + #$02) High byte 
+                      STA.B $08                           ;; 03B670 : 85 08       ; / $08 = (Mario X position + #$02) High byte 
                       LDA.B #$0C                          ;; 03B672 : A9 0C       ; \ $06 = Clipping width X (#$0C) 
-                      STA $02                             ;; 03B674 : 85 02       ; / 
+                      STA.B $02                           ;; 03B674 : 85 02       ; / 
                       LDX.B #$00                          ;; 03B676 : A2 00       ; \ If mario small or ducking, X = #$01 
-                      LDA $73                             ;; 03B678 : A5 73       ;  | else, X = #$00 
+                      LDA.B $73                           ;; 03B678 : A5 73       ;  | else, X = #$00 
                       BNE CODE_03B680                     ;; 03B67A : D0 04       ;  | 
-                      LDA $19                             ;; 03B67C : A5 19       ;  | 
+                      LDA.B $19                           ;; 03B67C : A5 19       ;  | 
                       BNE CODE_03B681                     ;; 03B67E : D0 01       ;  | 
 CODE_03B680:          INX                                 ;; 03B680 : E8          ; / 
 CODE_03B681:          LDA.W $187A                         ;; 03B681 : AD 7A 18    ; \ If on Yoshi, X += #$02 
@@ -6391,14 +6391,14 @@ CODE_03B681:          LDA.W $187A                         ;; 03B681 : AD 7A 18  
                       INX                                 ;; 03B686 : E8          ;  | 
                       INX                                 ;; 03B687 : E8          ; / 
 CODE_03B688:          LDA.L MarioClippingHeight,X         ;; 03B688 : BF 60 B6 03 ; \ $03 = Clipping height 
-                      STA $03                             ;; 03B68C : 85 03       ; / 
-                      LDA $96                             ;; 03B68E : A5 96       ; \ 
+                      STA.B $03                           ;; 03B68C : 85 03       ; / 
+                      LDA.B $96                           ;; 03B68E : A5 96       ; \ 
                       CLC                                 ;; 03B690 : 18          ;  | 
                       ADC.L MairoClipDispY,X              ;; 03B691 : 7F 5C B6 03 ;  | 
-                      STA $01                             ;; 03B695 : 85 01       ;  | $01 = (Mario Y position + displacement) Low byte 
-                      LDA $97                             ;; 03B697 : A5 97       ;  | 
+                      STA.B $01                           ;; 03B695 : 85 01       ;  | $01 = (Mario Y position + displacement) Low byte 
+                      LDA.B $97                           ;; 03B697 : A5 97       ;  | 
                       ADC.B #$00                          ;; 03B699 : 69 00       ;  | 
-                      STA $09                             ;; 03B69B : 85 09       ; / $09 = (Mario Y position + displacement) High byte 
+                      STA.B $09                           ;; 03B69B : 85 09       ; / $09 = (Mario Y position + displacement) High byte 
                       PLX                                 ;; 03B69D : FA          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -6408,30 +6408,30 @@ GetSpriteClippingA:   PHY                                 ;; ?QPWZ? : 5A        
                       LDA.W $1662,X                       ;; 03B6A2 : BD 62 16    ; \ X = Clipping table index 
                       AND.B #$3F                          ;; 03B6A5 : 29 3F       ;  | 
                       TAX                                 ;; 03B6A7 : AA          ; / 
-                      STZ $0F                             ;; 03B6A8 : 64 0F       ; \ 
+                      STZ.B $0F                           ;; 03B6A8 : 64 0F       ; \ 
                       LDA.L SprClippingDispX,X            ;; 03B6AA : BF 6C B5 03 ;  | Load low byte of X displacement 
                       BPL CODE_03B6B2                     ;; 03B6AE : 10 02       ;  | 
-                      DEC $0F                             ;; 03B6B0 : C6 0F       ;  | $0F = High byte of X displacement 
+                      DEC.B $0F                           ;; 03B6B0 : C6 0F       ;  | $0F = High byte of X displacement 
 CODE_03B6B2:          CLC                                 ;; 03B6B2 : 18          ;  | 
                       ADC.W $00E4,Y                       ;; 03B6B3 : 79 E4 00    ;  | 
-                      STA $04                             ;; 03B6B6 : 85 04       ;  | $04 = (Sprite X position + displacement) Low byte 
+                      STA.B $04                           ;; 03B6B6 : 85 04       ;  | $04 = (Sprite X position + displacement) Low byte 
                       LDA.W $14E0,Y                       ;; 03B6B8 : B9 E0 14    ;  | 
-                      ADC $0F                             ;; 03B6BB : 65 0F       ;  | 
-                      STA $0A                             ;; 03B6BD : 85 0A       ; / $0A = (Sprite X position + displacement) High byte 
+                      ADC.B $0F                           ;; 03B6BB : 65 0F       ;  | 
+                      STA.B $0A                           ;; 03B6BD : 85 0A       ; / $0A = (Sprite X position + displacement) High byte 
                       LDA.L SprClippingWidth,X            ;; 03B6BF : BF A8 B5 03 ; \ $06 = Clipping width 
-                      STA $06                             ;; 03B6C3 : 85 06       ; / 
-                      STZ $0F                             ;; 03B6C5 : 64 0F       ; \ 
+                      STA.B $06                           ;; 03B6C3 : 85 06       ; / 
+                      STZ.B $0F                           ;; 03B6C5 : 64 0F       ; \ 
                       LDA.L SprClippingDispY,X            ;; 03B6C7 : BF E4 B5 03 ;  | Load low byte of Y displacement 
                       BPL CODE_03B6CF                     ;; 03B6CB : 10 02       ;  | 
-                      DEC $0F                             ;; 03B6CD : C6 0F       ;  | $0F = High byte of Y displacement 
+                      DEC.B $0F                           ;; 03B6CD : C6 0F       ;  | $0F = High byte of Y displacement 
 CODE_03B6CF:          CLC                                 ;; 03B6CF : 18          ;  | 
                       ADC.W $00D8,Y                       ;; 03B6D0 : 79 D8 00    ;  | 
-                      STA $05                             ;; 03B6D3 : 85 05       ;  | $05 = (Sprite Y position + displacement) Low byte 
+                      STA.B $05                           ;; 03B6D3 : 85 05       ;  | $05 = (Sprite Y position + displacement) Low byte 
                       LDA.W $14D4,Y                       ;; 03B6D5 : B9 D4 14    ;  | 
-                      ADC $0F                             ;; 03B6D8 : 65 0F       ;  | 
-                      STA $0B                             ;; 03B6DA : 85 0B       ; / $0B = (Sprite Y position + displacement) High byte 
+                      ADC.B $0F                           ;; 03B6D8 : 65 0F       ;  | 
+                      STA.B $0B                           ;; 03B6DA : 85 0B       ; / $0B = (Sprite Y position + displacement) High byte 
                       LDA.L SprClippingHeight,X           ;; 03B6DC : BF 20 B6 03 ; \ $07 = Clipping height 
-                      STA $07                             ;; 03B6E0 : 85 07       ; / 
+                      STA.B $07                           ;; 03B6E0 : 85 07       ; / 
                       PLX                                 ;; 03B6E2 : FA          ; X = Sprite index 
                       PLY                                 ;; 03B6E3 : 7A          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
@@ -6442,59 +6442,59 @@ GetSpriteClippingB:   PHY                                 ;; ?QPWZ? : 5A        
                       LDA.W $1662,X                       ;; 03B6E8 : BD 62 16    ; \ X = Clipping table index 
                       AND.B #$3F                          ;; 03B6EB : 29 3F       ;  | 
                       TAX                                 ;; 03B6ED : AA          ; / 
-                      STZ $0F                             ;; 03B6EE : 64 0F       ; \ 
+                      STZ.B $0F                           ;; 03B6EE : 64 0F       ; \ 
                       LDA.L SprClippingDispX,X            ;; 03B6F0 : BF 6C B5 03 ;  | Load low byte of X displacement 
                       BPL CODE_03B6F8                     ;; 03B6F4 : 10 02       ;  | 
-                      DEC $0F                             ;; 03B6F6 : C6 0F       ;  | $0F = High byte of X displacement 
+                      DEC.B $0F                           ;; 03B6F6 : C6 0F       ;  | $0F = High byte of X displacement 
 CODE_03B6F8:          CLC                                 ;; 03B6F8 : 18          ;  | 
                       ADC.W $00E4,Y                       ;; 03B6F9 : 79 E4 00    ;  | 
-                      STA $00                             ;; 03B6FC : 85 00       ;  | $00 = (Sprite X position + displacement) Low byte 
+                      STA.B $00                           ;; 03B6FC : 85 00       ;  | $00 = (Sprite X position + displacement) Low byte 
                       LDA.W $14E0,Y                       ;; 03B6FE : B9 E0 14    ;  | 
-                      ADC $0F                             ;; 03B701 : 65 0F       ;  | 
-                      STA $08                             ;; 03B703 : 85 08       ; / $08 = (Sprite X position + displacement) High byte 
+                      ADC.B $0F                           ;; 03B701 : 65 0F       ;  | 
+                      STA.B $08                           ;; 03B703 : 85 08       ; / $08 = (Sprite X position + displacement) High byte 
                       LDA.L SprClippingWidth,X            ;; 03B705 : BF A8 B5 03 ; \ $02 = Clipping width 
-                      STA $02                             ;; 03B709 : 85 02       ; / 
-                      STZ $0F                             ;; 03B70B : 64 0F       ; \ 
+                      STA.B $02                           ;; 03B709 : 85 02       ; / 
+                      STZ.B $0F                           ;; 03B70B : 64 0F       ; \ 
                       LDA.L SprClippingDispY,X            ;; 03B70D : BF E4 B5 03 ;  | Load low byte of Y displacement 
                       BPL CODE_03B715                     ;; 03B711 : 10 02       ;  | 
-                      DEC $0F                             ;; 03B713 : C6 0F       ;  | $0F = High byte of Y displacement 
+                      DEC.B $0F                           ;; 03B713 : C6 0F       ;  | $0F = High byte of Y displacement 
 CODE_03B715:          CLC                                 ;; 03B715 : 18          ;  | 
                       ADC.W $00D8,Y                       ;; 03B716 : 79 D8 00    ;  | 
-                      STA $01                             ;; 03B719 : 85 01       ;  | $01 = (Sprite Y position + displacement) Low byte 
+                      STA.B $01                           ;; 03B719 : 85 01       ;  | $01 = (Sprite Y position + displacement) Low byte 
                       LDA.W $14D4,Y                       ;; 03B71B : B9 D4 14    ;  | 
-                      ADC $0F                             ;; 03B71E : 65 0F       ;  | 
-                      STA $09                             ;; 03B720 : 85 09       ; / $09 = (Sprite Y position + displacement) High byte 
+                      ADC.B $0F                           ;; 03B71E : 65 0F       ;  | 
+                      STA.B $09                           ;; 03B720 : 85 09       ; / $09 = (Sprite Y position + displacement) High byte 
                       LDA.L SprClippingHeight,X           ;; 03B722 : BF 20 B6 03 ; \ $03 = Clipping height 
-                      STA $03                             ;; 03B726 : 85 03       ; / 
+                      STA.B $03                           ;; 03B726 : 85 03       ; / 
                       PLX                                 ;; 03B728 : FA          ; X = Sprite index 
                       PLY                                 ;; 03B729 : 7A          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CheckForContact:      PHX                                 ;; ?QPWZ? : DA          ;
                       LDX.B #$01                          ;; 03B72C : A2 01       ;
-CODE_03B72E:          LDA $00,X                           ;; 03B72E : B5 00       ;
+CODE_03B72E:          LDA.B $00,X                         ;; 03B72E : B5 00       ;
                       SEC                                 ;; 03B730 : 38          ;
-                      SBC $04,X                           ;; 03B731 : F5 04       ;
+                      SBC.B $04,X                         ;; 03B731 : F5 04       ;
                       PHA                                 ;; 03B733 : 48          ;
-                      LDA $08,X                           ;; 03B734 : B5 08       ;
-                      SBC $0A,X                           ;; 03B736 : F5 0A       ;
-                      STA $0C                             ;; 03B738 : 85 0C       ;
+                      LDA.B $08,X                         ;; 03B734 : B5 08       ;
+                      SBC.B $0A,X                         ;; 03B736 : F5 0A       ;
+                      STA.B $0C                           ;; 03B738 : 85 0C       ;
                       PLA                                 ;; 03B73A : 68          ;
                       CLC                                 ;; 03B73B : 18          ;
                       ADC.B #$80                          ;; 03B73C : 69 80       ;
-                      LDA $0C                             ;; 03B73E : A5 0C       ;
+                      LDA.B $0C                           ;; 03B73E : A5 0C       ;
                       ADC.B #$00                          ;; 03B740 : 69 00       ;
                       BNE CODE_03B75A                     ;; 03B742 : D0 16       ;
-                      LDA $04,X                           ;; 03B744 : B5 04       ;
+                      LDA.B $04,X                         ;; 03B744 : B5 04       ;
                       SEC                                 ;; 03B746 : 38          ;
-                      SBC $00,X                           ;; 03B747 : F5 00       ;
+                      SBC.B $00,X                         ;; 03B747 : F5 00       ;
                       CLC                                 ;; 03B749 : 18          ;
-                      ADC $06,X                           ;; 03B74A : 75 06       ;
-                      STA $0F                             ;; 03B74C : 85 0F       ;
-                      LDA $02,X                           ;; 03B74E : B5 02       ;
+                      ADC.B $06,X                         ;; 03B74A : 75 06       ;
+                      STA.B $0F                           ;; 03B74C : 85 0F       ;
+                      LDA.B $02,X                         ;; 03B74E : B5 02       ;
                       CLC                                 ;; 03B750 : 18          ;
-                      ADC $06,X                           ;; 03B751 : 75 06       ;
-                      CMP $0F                             ;; 03B753 : C5 0F       ;
+                      ADC.B $06,X                         ;; 03B751 : 75 06       ;
+                      CMP.B $0F                           ;; 03B753 : C5 0F       ;
                       BCC CODE_03B75A                     ;; 03B755 : 90 03       ;
                       DEX                                 ;; 03B757 : CA          ;
                       BPL CODE_03B72E                     ;; 03B758 : 10 D4       ;
@@ -6508,23 +6508,23 @@ DATA_03B75E:          db $01,$02                          ;; 03B75E             
                                                           ;;                      ;
 GetDrawInfoBnk3:      STZ.W $186C,X                       ;; ?QPWZ? : 9E 6C 18    ; Reset sprite offscreen flag, vertical 
                       STZ.W $15A0,X                       ;; 03B763 : 9E A0 15    ; Reset sprite offscreen flag, horizontal 
-                      LDA $E4,X                           ;; 03B766 : B5 E4       ; \ 
-                      CMP $1A                             ;; 03B768 : C5 1A       ;  | Set horizontal offscreen if necessary 
+                      LDA.B $E4,X                         ;; 03B766 : B5 E4       ; \ 
+                      CMP.B $1A                           ;; 03B768 : C5 1A       ;  | Set horizontal offscreen if necessary 
                       LDA.W $14E0,X                       ;; 03B76A : BD E0 14    ;  | 
-                      SBC $1B                             ;; 03B76D : E5 1B       ;  | 
+                      SBC.B $1B                           ;; 03B76D : E5 1B       ;  | 
                       BEQ CODE_03B774                     ;; 03B76F : F0 03       ;  | 
                       INC.W $15A0,X                       ;; 03B771 : FE A0 15    ; / 
 CODE_03B774:          LDA.W $14E0,X                       ;; 03B774 : BD E0 14    ; \ 
                       XBA                                 ;; 03B777 : EB          ;  | Mark sprite invalid if far enough off screen 
-                      LDA $E4,X                           ;; 03B778 : B5 E4       ;  | 
+                      LDA.B $E4,X                         ;; 03B778 : B5 E4       ;  | 
                       REP #$20                            ;; 03B77A : C2 20       ; Accum (16 bit) 
                       SEC                                 ;; 03B77C : 38          ;  | 
-                      SBC $1A                             ;; 03B77D : E5 1A       ;  | 
+                      SBC.B $1A                           ;; 03B77D : E5 1A       ;  | 
                       CLC                                 ;; 03B77F : 18          ;  | 
                       ADC.W #$0040                        ;; 03B780 : 69 40 00    ;  | 
                       CMP.W #$0180                        ;; 03B783 : C9 80 01    ;  | 
                       SEP #$20                            ;; 03B786 : E2 20       ; Accum (8 bit) 
-                      ROL                                 ;; 03B788 : 2A          ;  | 
+                      ROL A                               ;; 03B788 : 2A          ;  | 
                       AND.B #$01                          ;; 03B789 : 29 01       ;  | 
                       STA.W $15C4,X                       ;; 03B78B : 9D C4 15    ;  | 
                       BNE CODE_03B7CF                     ;; 03B78E : D0 3F       ; /  
@@ -6533,17 +6533,17 @@ CODE_03B774:          LDA.W $14E0,X                       ;; 03B774 : BD E0 14  
                       AND.B #$20                          ;; 03B795 : 29 20       ;  | if not smushed (1662 & 0x20), go through loop twice 
                       BEQ CODE_03B79A                     ;; 03B797 : F0 01       ;  | else, go through loop once 
                       INY                                 ;; 03B799 : C8          ; /                        
-CODE_03B79A:          LDA $D8,X                           ;; 03B79A : B5 D8       ; \                        
+CODE_03B79A:          LDA.B $D8,X                         ;; 03B79A : B5 D8       ; \                        
                       CLC                                 ;; 03B79C : 18          ;  | set vertical offscree 
                       ADC.W DATA_03B75C,Y                 ;; 03B79D : 79 5C B7    ;  |                       
                       PHP                                 ;; 03B7A0 : 08          ;  |                       
-                      CMP $1C                             ;; 03B7A1 : C5 1C       ;  | (vert screen boundry) 
-                      ROL $00                             ;; 03B7A3 : 26 00       ;  |                       
+                      CMP.B $1C                           ;; 03B7A1 : C5 1C       ;  | (vert screen boundry) 
+                      ROL.B $00                           ;; 03B7A3 : 26 00       ;  |                       
                       PLP                                 ;; 03B7A5 : 28          ;  |                       
                       LDA.W $14D4,X                       ;; 03B7A6 : BD D4 14    ;  |                       
                       ADC.B #$00                          ;; 03B7A9 : 69 00       ;  |                       
-                      LSR $00                             ;; 03B7AB : 46 00       ;  |                       
-                      SBC $1D                             ;; 03B7AD : E5 1D       ;  |                       
+                      LSR.B $00                           ;; 03B7AB : 46 00       ;  |                       
+                      SBC.B $1D                           ;; 03B7AD : E5 1D       ;  |                       
                       BEQ CODE_03B7BA                     ;; 03B7AF : F0 09       ;  |                       
                       LDA.W $186C,X                       ;; 03B7B1 : BD 6C 18    ;  | (vert offscreen)      
                       ORA.W DATA_03B75E,Y                 ;; 03B7B4 : 19 5E B7    ;  |                       
@@ -6551,14 +6551,14 @@ CODE_03B79A:          LDA $D8,X                           ;; 03B79A : B5 D8     
 CODE_03B7BA:          DEY                                 ;; 03B7BA : 88          ;  |                       
                       BPL CODE_03B79A                     ;; 03B7BB : 10 DD       ; /                        
                       LDY.W $15EA,X                       ;; 03B7BD : BC EA 15    ; get offset to sprite OAM                           
-                      LDA $E4,X                           ;; 03B7C0 : B5 E4       ; \ 
+                      LDA.B $E4,X                         ;; 03B7C0 : B5 E4       ; \ 
                       SEC                                 ;; 03B7C2 : 38          ;  |                                                     
-                      SBC $1A                             ;; 03B7C3 : E5 1A       ;  |                                                    
-                      STA $00                             ;; 03B7C5 : 85 00       ; / $00 = sprite x position relative to screen boarder 
-                      LDA $D8,X                           ;; 03B7C7 : B5 D8       ; \                                                     
+                      SBC.B $1A                           ;; 03B7C3 : E5 1A       ;  |                                                    
+                      STA.B $00                           ;; 03B7C5 : 85 00       ; / $00 = sprite x position relative to screen boarder 
+                      LDA.B $D8,X                         ;; 03B7C7 : B5 D8       ; \                                                     
                       SEC                                 ;; 03B7C9 : 38          ;  |                                                     
-                      SBC $1C                             ;; 03B7CA : E5 1C       ;  |                                                    
-                      STA $01                             ;; 03B7CC : 85 01       ; / $01 = sprite y position relative to screen boarder 
+                      SBC.B $1C                           ;; 03B7CA : E5 1C       ;  |                                                    
+                      STA.B $01                           ;; 03B7CC : 85 01       ; / $01 = sprite y position relative to screen boarder 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03B7CF:          PLA                                 ;; 03B7CF : 68          ; \ Return from *main gfx routine* subroutine... 
@@ -6572,14 +6572,14 @@ DATA_03B7D2:          db $00,$00,$00,$F8,$F8,$F8,$F8,$F8  ;; 03B7D2             
                       db $FC,$F8,$EC,$EC,$EC,$E8,$E4,$E0  ;; ?QPWZ?               ;
                       db $DC,$D8,$D4,$D0,$CC,$C8          ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_03B7F8:          LDA $AA,X                           ;; 03B7F8 : B5 AA       ;
+CODE_03B7F8:          LDA.B $AA,X                         ;; 03B7F8 : B5 AA       ;
                       PHA                                 ;; 03B7FA : 48          ;
-                      STZ $AA,X                           ;; 03B7FB : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $AA,X                         ;; 03B7FB : 74 AA       ; Sprite Y Speed = 0 
                       PLA                                 ;; 03B7FD : 68          ;
-                      LSR                                 ;; 03B7FE : 4A          ;
-                      LSR                                 ;; 03B7FF : 4A          ;
+                      LSR A                               ;; 03B7FE : 4A          ;
+                      LSR A                               ;; 03B7FF : 4A          ;
                       TAY                                 ;; 03B800 : A8          ;
-                      LDA $9E,X                           ;; 03B801 : B5 9E       ;
+                      LDA.B $9E,X                         ;; 03B801 : B5 9E       ;
                       CMP.B #$A1                          ;; 03B803 : C9 A1       ;
                       BNE CODE_03B80C                     ;; 03B805 : D0 05       ;
                       TYA                                 ;; 03B807 : 98          ;
@@ -6589,26 +6589,26 @@ CODE_03B7F8:          LDA $AA,X                           ;; 03B7F8 : B5 AA     
 CODE_03B80C:          LDA.W DATA_03B7D2,Y                 ;; 03B80C : B9 D2 B7    ;
                       LDY.W $1588,X                       ;; 03B80F : BC 88 15    ;
                       BMI Return03B816                    ;; 03B812 : 30 02       ;
-                      STA $AA,X                           ;; 03B814 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03B814 : 95 AA       ;
 Return03B816:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 SubHorzPosBnk3:       LDY.B #$00                          ;; ?QPWZ? : A0 00       ;
-                      LDA $94                             ;; 03B819 : A5 94       ;
+                      LDA.B $94                           ;; 03B819 : A5 94       ;
                       SEC                                 ;; 03B81B : 38          ;
-                      SBC $E4,X                           ;; 03B81C : F5 E4       ;
-                      STA $0F                             ;; 03B81E : 85 0F       ;
-                      LDA $95                             ;; 03B820 : A5 95       ;
+                      SBC.B $E4,X                         ;; 03B81C : F5 E4       ;
+                      STA.B $0F                           ;; 03B81E : 85 0F       ;
+                      LDA.B $95                           ;; 03B820 : A5 95       ;
                       SBC.W $14E0,X                       ;; 03B822 : FD E0 14    ;
                       BPL Return03B828                    ;; 03B825 : 10 01       ;
                       INY                                 ;; 03B827 : C8          ;
 Return03B828:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 SubVertPosBnk3:       LDY.B #$00                          ;; ?QPWZ? : A0 00       ;
-                      LDA $96                             ;; 03B82B : A5 96       ;
+                      LDA.B $96                           ;; 03B82B : A5 96       ;
                       SEC                                 ;; 03B82D : 38          ;
-                      SBC $D8,X                           ;; 03B82E : F5 D8       ;
-                      STA $0F                             ;; 03B830 : 85 0F       ;
-                      LDA $97                             ;; 03B832 : A5 97       ;
+                      SBC.B $D8,X                         ;; 03B82E : F5 D8       ;
+                      STA.B $0F                           ;; 03B830 : 85 0F       ;
+                      LDA.B $97                           ;; 03B832 : A5 97       ;
                       SBC.W $14D4,X                       ;; 03B834 : FD D4 14    ;
                       BPL Return03B83A                    ;; 03B837 : 10 01       ;
                       INY                                 ;; 03B839 : C8          ;
@@ -6629,16 +6629,16 @@ SubOffscreen3Bnk3:    LDA.B #$06                          ;; ?QPWZ? : A9 06     
                       BRA CODE_03B859                     ;; 03B855 : 80 02       ;  | 
                                                           ;;                      ;
                       LDA.B #$02                          ;; ?QPWZ? : A9 02       ;  | 
-CODE_03B859:          STA $03                             ;; 03B859 : 85 03       ;  | 
+CODE_03B859:          STA.B $03                           ;; 03B859 : 85 03       ;  | 
                       BRA CODE_03B85F                     ;; 03B85B : 80 02       ;  | 
                                                           ;;                      ;
-SubOffscreen0Bnk3:    STZ $03                             ;; ?QPWZ? : 64 03       ; / 
+SubOffscreen0Bnk3:    STZ.B $03                           ;; ?QPWZ? : 64 03       ; / 
 CODE_03B85F:          JSR IsSprOffScreenBnk3              ;; 03B85F : 20 FB B8    ; \ if sprite is not off screen, return 
                       BEQ Return03B8C2                    ;; 03B862 : F0 5E       ; / 
-                      LDA $5B                             ;; 03B864 : A5 5B       ; \  vertical level 
+                      LDA.B $5B                           ;; 03B864 : A5 5B       ; \  vertical level 
                       AND.B #$01                          ;; 03B866 : 29 01       ;  | 
                       BNE VerticalLevelBnk3               ;; 03B868 : D0 59       ; / 
-                      LDA $D8,X                           ;; 03B86A : B5 D8       ; \ 
+                      LDA.B $D8,X                         ;; 03B86A : B5 D8       ; \ 
                       CLC                                 ;; 03B86C : 18          ;  | 
                       ADC.B #$50                          ;; 03B86D : 69 50       ;  | if the sprite has gone off the bottom of the level... 
                       LDA.W $14D4,X                       ;; 03B86F : BD D4 14    ;  | (if adding 0x50 to the sprite y position would make the high byte >= 2) 
@@ -6648,28 +6648,28 @@ CODE_03B85F:          JSR IsSprOffScreenBnk3              ;; 03B85F : 20 FB B8  
                       LDA.W $167A,X                       ;; 03B878 : BD 7A 16    ; \ if "process offscreen" flag is set, return 
                       AND.B #$04                          ;; 03B87B : 29 04       ;  | 
                       BNE Return03B8C2                    ;; 03B87D : D0 43       ; / 
-                      LDA $13                             ;; 03B87F : A5 13       ;
+                      LDA.B $13                           ;; 03B87F : A5 13       ;
                       AND.B #$01                          ;; 03B881 : 29 01       ;
-                      ORA $03                             ;; 03B883 : 05 03       ;
-                      STA $01                             ;; 03B885 : 85 01       ;
+                      ORA.B $03                           ;; 03B883 : 05 03       ;
+                      STA.B $01                           ;; 03B885 : 85 01       ;
                       TAY                                 ;; 03B887 : A8          ;
-                      LDA $1A                             ;; 03B888 : A5 1A       ;
+                      LDA.B $1A                           ;; 03B888 : A5 1A       ;
                       CLC                                 ;; 03B88A : 18          ;
                       ADC.W DATA_03B83F,Y                 ;; 03B88B : 79 3F B8    ;
-                      ROL $00                             ;; 03B88E : 26 00       ;
-                      CMP $E4,X                           ;; 03B890 : D5 E4       ;
+                      ROL.B $00                           ;; 03B88E : 26 00       ;
+                      CMP.B $E4,X                         ;; 03B890 : D5 E4       ;
                       PHP                                 ;; 03B892 : 08          ;
-                      LDA $1B                             ;; 03B893 : A5 1B       ;
-                      LSR $00                             ;; 03B895 : 46 00       ;
+                      LDA.B $1B                           ;; 03B893 : A5 1B       ;
+                      LSR.B $00                           ;; 03B895 : 46 00       ;
                       ADC.W DATA_03B847,Y                 ;; 03B897 : 79 47 B8    ;
                       PLP                                 ;; 03B89A : 28          ;
                       SBC.W $14E0,X                       ;; 03B89B : FD E0 14    ;
-                      STA $00                             ;; 03B89E : 85 00       ;
-                      LSR $01                             ;; 03B8A0 : 46 01       ;
+                      STA.B $00                           ;; 03B89E : 85 00       ;
+                      LSR.B $01                           ;; 03B8A0 : 46 01       ;
                       BCC CODE_03B8A8                     ;; 03B8A2 : 90 04       ;
                       EOR.B #$80                          ;; 03B8A4 : 49 80       ;
-                      STA $00                             ;; 03B8A6 : 85 00       ;
-CODE_03B8A8:          LDA $00                             ;; 03B8A8 : A5 00       ;
+                      STA.B $00                           ;; 03B8A6 : 85 00       ;
+CODE_03B8A8:          LDA.B $00                           ;; 03B8A8 : A5 00       ;
                       BPL Return03B8C2                    ;; 03B8AA : 10 16       ;
 OffScrEraseSprBnk3:   LDA.W $14C8,X                       ;; ?QPWZ? : BD C8 14    ; \ If sprite status < 8, permanently erase sprite 
                       CMP.B #$08                          ;; 03B8AF : C9 08       ;  | 
@@ -6685,29 +6685,29 @@ Return03B8C2:         RTS                                 ;; ?QPWZ? : 60        
 VerticalLevelBnk3:    LDA.W $167A,X                       ;; ?QPWZ? : BD 7A 16    ; \ If "process offscreen" flag is set, return 
                       AND.B #$04                          ;; 03B8C6 : 29 04       ;  | 
                       BNE Return03B8C2                    ;; 03B8C8 : D0 F8       ; / 
-                      LDA $13                             ;; 03B8CA : A5 13       ; \ Return every other frame 
-                      LSR                                 ;; 03B8CC : 4A          ;  | 
+                      LDA.B $13                           ;; 03B8CA : A5 13       ; \ Return every other frame 
+                      LSR A                               ;; 03B8CC : 4A          ;  | 
                       BCS Return03B8C2                    ;; 03B8CD : B0 F3       ; / 
                       AND.B #$01                          ;; 03B8CF : 29 01       ;
-                      STA $01                             ;; 03B8D1 : 85 01       ;
+                      STA.B $01                           ;; 03B8D1 : 85 01       ;
                       TAY                                 ;; 03B8D3 : A8          ;
-                      LDA $1C                             ;; 03B8D4 : A5 1C       ;
+                      LDA.B $1C                           ;; 03B8D4 : A5 1C       ;
                       CLC                                 ;; 03B8D6 : 18          ;
                       ADC.W DATA_03B83B,Y                 ;; 03B8D7 : 79 3B B8    ;
-                      ROL $00                             ;; 03B8DA : 26 00       ;
-                      CMP $D8,X                           ;; 03B8DC : D5 D8       ;
+                      ROL.B $00                           ;; 03B8DA : 26 00       ;
+                      CMP.B $D8,X                         ;; 03B8DC : D5 D8       ;
                       PHP                                 ;; 03B8DE : 08          ;
                       LDA.W $001D                         ;; 03B8DF : AD 1D 00    ;
-                      LSR $00                             ;; 03B8E2 : 46 00       ;
+                      LSR.B $00                           ;; 03B8E2 : 46 00       ;
                       ADC.W DATA_03B83D,Y                 ;; 03B8E4 : 79 3D B8    ;
                       PLP                                 ;; 03B8E7 : 28          ;
                       SBC.W $14D4,X                       ;; 03B8E8 : FD D4 14    ;
-                      STA $00                             ;; 03B8EB : 85 00       ;
-                      LDY $01                             ;; 03B8ED : A4 01       ;
+                      STA.B $00                           ;; 03B8EB : 85 00       ;
+                      LDY.B $01                           ;; 03B8ED : A4 01       ;
                       BEQ CODE_03B8F5                     ;; 03B8EF : F0 04       ;
                       EOR.B #$80                          ;; 03B8F1 : 49 80       ;
-                      STA $00                             ;; 03B8F3 : 85 00       ;
-CODE_03B8F5:          LDA $00                             ;; 03B8F5 : A5 00       ;
+                      STA.B $00                           ;; 03B8F3 : 85 00       ;
+CODE_03B8F5:          LDA.B $00                           ;; 03B8F5 : A5 00       ;
                       BPL Return03B8C2                    ;; 03B8F7 : 10 C9       ;
                       BMI OffScrEraseSprBnk3              ;; 03B8F9 : 30 B1       ;
 IsSprOffScreenBnk3:   LDA.W $15A0,X                       ;; ?QPWZ? : BD A0 15    ; \ If sprite is on screen, A = 0  
@@ -6940,21 +6940,21 @@ BooBossPals:          db $FF,$7F,$63,$0C,$00,$00,$00,$0C  ;; ?QPWZ?             
                       db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;; ?QPWZ?               ;
                       db $FF,$FF,$FF,$FF,$FF,$FF          ;; ?QPWZ?               ;
                                                           ;;                      ;
-GenTileFromSpr2:      STA $9C                             ;; ?QPWZ? : 85 9C       ; $9C = tile to generate 
-                      LDA $E4,X                           ;; 03C002 : B5 E4       ; \ $9A = Sprite X position + #$08 
+GenTileFromSpr2:      STA.B $9C                           ;; ?QPWZ? : 85 9C       ; $9C = tile to generate 
+                      LDA.B $E4,X                         ;; 03C002 : B5 E4       ; \ $9A = Sprite X position + #$08 
                       SEC                                 ;; 03C004 : 38          ;  | for block creation 
                       SBC.B #$08                          ;; 03C005 : E9 08       ;  | 
-                      STA $9A                             ;; 03C007 : 85 9A       ;  | 
+                      STA.B $9A                           ;; 03C007 : 85 9A       ;  | 
                       LDA.W $14E0,X                       ;; 03C009 : BD E0 14    ;  | 
                       SBC.B #$00                          ;; 03C00C : E9 00       ;  | 
-                      STA $9B                             ;; 03C00E : 85 9B       ; / 
-                      LDA $D8,X                           ;; 03C010 : B5 D8       ; \ $98 = Sprite Y position + #$08 
+                      STA.B $9B                           ;; 03C00E : 85 9B       ; / 
+                      LDA.B $D8,X                         ;; 03C010 : B5 D8       ; \ $98 = Sprite Y position + #$08 
                       CLC                                 ;; 03C012 : 18          ;  | for block creation 
                       ADC.B #$08                          ;; 03C013 : 69 08       ;  | 
-                      STA $98                             ;; 03C015 : 85 98       ;  | 
+                      STA.B $98                           ;; 03C015 : 85 98       ;  | 
                       LDA.W $14D4,X                       ;; 03C017 : BD D4 14    ;  | 
                       ADC.B #$00                          ;; 03C01A : 69 00       ;  | 
-                      STA $99                             ;; 03C01C : 85 99       ; / 
+                      STA.B $99                           ;; 03C01C : 85 99       ; / 
                       JSL GenerateTile                    ;; 03C01E : 22 B0 BE 00 ; Generate the tile 
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -6979,10 +6979,10 @@ CODE_03C02F:          LDY.W $160E,X                       ;; 03C02F : BC 0E 16  
                       CMP.B #$81                          ;; 03C044 : C9 81       ;
                       BNE CODE_03C054                     ;; 03C046 : D0 0C       ;
                       LDA.B $14                           ;; 03C048 : A5 14       ;
-                      LSR                                 ;; 03C04A : 4A          ;
-                      LSR                                 ;; 03C04B : 4A          ;
-                      LSR                                 ;; 03C04C : 4A          ;
-                      LSR                                 ;; 03C04D : 4A          ;
+                      LSR A                               ;; 03C04A : 4A          ;
+                      LSR A                               ;; 03C04B : 4A          ;
+                      LSR A                               ;; 03C04C : 4A          ;
+                      LSR A                               ;; 03C04D : 4A          ;
                       AND.B #$03                          ;; 03C04E : 29 03       ;
                       TAY                                 ;; 03C050 : A8          ;
                       LDA.W DATA_03C02B,Y                 ;; 03C051 : B9 2B C0    ;
@@ -6998,9 +6998,9 @@ ADDR_03C05C:          STZ.W $18AC                         ;; 03C05C : 9C AC 18  
                       STA.W $14C8,X                       ;; 03C069 : 9D C8 14    ; / 
                       LDA.B #$1F                          ;; 03C06C : A9 1F       ; \ Play sound effect 
                       STA.W $1DFC                         ;; 03C06E : 8D FC 1D    ; / 
-                      LDA $D8,X                           ;; 03C071 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03C071 : B5 D8       ;
                       SBC.B #$10                          ;; 03C073 : E9 10       ;
-                      STA $D8,X                           ;; 03C075 : 95 D8       ;
+                      STA.B $D8,X                         ;; 03C075 : 95 D8       ;
                       LDA.W $14D4,X                       ;; 03C077 : BD D4 14    ;
                       SBC.B #$00                          ;; 03C07A : E9 00       ;
                       STA.W $14D4,X                       ;; 03C07C : 9D D4 14    ;
@@ -7034,28 +7034,28 @@ DATA_03C0B2:          db $68,$6A,$6C,$6E                  ;; 03C0B2             
 DATA_03C0B6:          db $00,$03,$01,$02,$04,$02,$00,$01  ;; 03C0B6               ;
                       db $00,$04,$00,$02,$00,$03,$04,$01  ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_03C0C6:          LDA $9D                             ;; 03C0C6 : A5 9D       ;
+CODE_03C0C6:          LDA.B $9D                           ;; 03C0C6 : A5 9D       ;
                       BNE CODE_03C0CD                     ;; 03C0C8 : D0 03       ;
                       JSR CODE_03C11E                     ;; 03C0CA : 20 1E C1    ;
-CODE_03C0CD:          STZ $00                             ;; 03C0CD : 64 00       ;
+CODE_03C0CD:          STZ.B $00                           ;; 03C0CD : 64 00       ;
                       LDX.B #$13                          ;; 03C0CF : A2 13       ;
                       LDY.B #$B0                          ;; 03C0D1 : A0 B0       ;
-CODE_03C0D3:          STX $02                             ;; 03C0D3 : 86 02       ;
-                      LDA $00                             ;; 03C0D5 : A5 00       ;
+CODE_03C0D3:          STX.B $02                           ;; 03C0D3 : 86 02       ;
+                      LDA.B $00                           ;; 03C0D5 : A5 00       ;
                       STA.W $0300,Y                       ;; 03C0D7 : 99 00 03    ;
                       CLC                                 ;; 03C0DA : 18          ;
                       ADC.B #$10                          ;; 03C0DB : 69 10       ;
-                      STA $00                             ;; 03C0DD : 85 00       ;
+                      STA.B $00                           ;; 03C0DD : 85 00       ;
                       LDA.B #$C4                          ;; 03C0DF : A9 C4       ;
                       STA.W $0301,Y                       ;; 03C0E1 : 99 01 03    ;
-                      LDA $64                             ;; 03C0E4 : A5 64       ;
+                      LDA.B $64                           ;; 03C0E4 : A5 64       ;
                       ORA.B #$09                          ;; 03C0E6 : 09 09       ;
                       STA.W $0303,Y                       ;; 03C0E8 : 99 03 03    ;
                       PHX                                 ;; 03C0EB : DA          ;
                       LDA.B $14                           ;; 03C0EC : A5 14       ;
-                      LSR                                 ;; 03C0EE : 4A          ;
-                      LSR                                 ;; 03C0EF : 4A          ;
-                      LSR                                 ;; 03C0F0 : 4A          ;
+                      LSR A                               ;; 03C0EE : 4A          ;
+                      LSR A                               ;; 03C0EF : 4A          ;
+                      LSR A                               ;; 03C0F0 : 4A          ;
                       CLC                                 ;; 03C0F1 : 18          ;
                       ADC.L DATA_03C0B6,X                 ;; 03C0F2 : 7F B6 C0 03 ;
                       AND.B #$03                          ;; 03C0F6 : 29 03       ;
@@ -7063,8 +7063,8 @@ CODE_03C0D3:          STX $02                             ;; 03C0D3 : 86 02     
                       LDA.L DATA_03C0B2,X                 ;; 03C0F9 : BF B2 C0 03 ;
                       STA.W $0302,Y                       ;; 03C0FD : 99 02 03    ;
                       TYA                                 ;; 03C100 : 98          ;
-                      LSR                                 ;; 03C101 : 4A          ;
-                      LSR                                 ;; 03C102 : 4A          ;
+                      LSR A                               ;; 03C101 : 4A          ;
+                      LSR A                               ;; 03C102 : 4A          ;
                       TAX                                 ;; 03C103 : AA          ;
                       LDA.B #$02                          ;; 03C104 : A9 02       ;
                       STA.W $0460,X                       ;; 03C106 : 9D 60 04    ;
@@ -7084,13 +7084,13 @@ DATA_03C116:          db $FF,$00,$FF,$00                  ;; 03C116             
                                                           ;;                      ;
 IggyPlatBounds:       db $E7,$18,$D7,$28                  ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_03C11E:          LDA $9D                             ;; 03C11E : A5 9D       ; \ If sprites locked... 
+CODE_03C11E:          LDA.B $9D                           ;; 03C11E : A5 9D       ; \ If sprites locked... 
                       ORA.W $1493                         ;; 03C120 : 0D 93 14    ;  | ...or battle is over (set to FF when over)... 
                       BNE Return03C175                    ;; 03C123 : D0 50       ; / ...return 
                       LDA.W $1906                         ;; 03C125 : AD 06 19    ; \ If platform at a maximum tilt, (stationary timer > 0) 
                       BEQ CODE_03C12D                     ;; 03C128 : F0 03       ;  | 
                       DEC.W $1906                         ;; 03C12A : CE 06 19    ; / decrement stationary timer 
-CODE_03C12D:          LDA $13                             ;; 03C12D : A5 13       ; \ Return every other time through... 
+CODE_03C12D:          LDA.B $13                           ;; 03C12D : A5 13       ; \ Return every other time through... 
                       AND.B #$01                          ;; 03C12F : 29 01       ;  | 
                       ORA.W $1906                         ;; 03C131 : 0D 06 19    ;  | ...return if stationary 
                       BNE Return03C175                    ;; 03C134 : D0 3F       ; / 
@@ -7102,15 +7102,15 @@ CODE_03C12D:          LDA $13                             ;; 03C12D : A5 13     
                       BCC CODE_03C145                     ;; 03C141 : 90 02       ;  | ...cause a steep tilt by setting X=X+2 
                       INX                                 ;; 03C143 : E8          ;  | 
                       INX                                 ;; 03C144 : E8          ; / 
-CODE_03C145:          LDA $36                             ;; 03C145 : A5 36       ; $36 is tilt of platform: //D8 /E8 -0- 18\ 28\\ 
+CODE_03C145:          LDA.B $36                           ;; 03C145 : A5 36       ; $36 is tilt of platform: //D8 /E8 -0- 18\ 28\\ 
                       CLC                                 ;; 03C147 : 18          ; \ Get new tilt of platform by adding value 
                       ADC.L IggyPlatSpeed,X               ;; 03C148 : 7F 12 C1 03 ;  | 
-                      STA $36                             ;; 03C14C : 85 36       ; / 
+                      STA.B $36                           ;; 03C14C : 85 36       ; / 
                       PHA                                 ;; 03C14E : 48          ;
-                      LDA $37                             ;; 03C14F : A5 37       ; $37 is boolean tilt of platform: 0\ /1 
+                      LDA.B $37                           ;; 03C14F : A5 37       ; $37 is boolean tilt of platform: 0\ /1 
                       ADC.L DATA_03C116,X                 ;; 03C151 : 7F 16 C1 03 ; \ if tilted up to left,  $37=0 
                       AND.B #$01                          ;; 03C155 : 29 01       ;  | if tilted up to right, $37=1 
-                      STA $37                             ;; 03C157 : 85 37       ; / 
+                      STA.B $37                           ;; 03C157 : 85 37       ; / 
                       PLA                                 ;; 03C159 : 68          ;
                       CMP.L IggyPlatBounds,X              ;; 03C15A : DF 1A C1 03 ; \ Return if platform not at a maximum tilt 
                       BNE Return03C175                    ;; 03C15E : D0 15       ; / 
@@ -7146,15 +7146,15 @@ CODE_03C1CA:          PHB                                 ;; 03C1CA : 8B        
                       LDA.W $15B8,X                       ;; 03C1CF : BD B8 15    ;
                       BPL CODE_03C1D5                     ;; 03C1D2 : 10 01       ;
                       INY                                 ;; 03C1D4 : C8          ;
-CODE_03C1D5:          LDA $E4,X                           ;; 03C1D5 : B5 E4       ;
+CODE_03C1D5:          LDA.B $E4,X                         ;; 03C1D5 : B5 E4       ;
                       CLC                                 ;; 03C1D7 : 18          ;
                       ADC.W DATA_03C1C6,Y                 ;; 03C1D8 : 79 C6 C1    ;
-                      STA $E4,X                           ;; 03C1DB : 95 E4       ;
+                      STA.B $E4,X                         ;; 03C1DB : 95 E4       ;
                       LDA.W $14E0,X                       ;; 03C1DD : BD E0 14    ;
                       ADC.W DATA_03C1C8,Y                 ;; 03C1E0 : 79 C8 C1    ;
                       STA.W $14E0,X                       ;; 03C1E3 : 9D E0 14    ;
                       LDA.B #$18                          ;; 03C1E6 : A9 18       ;
-                      STA $AA,X                           ;; 03C1E8 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03C1E8 : 95 AA       ;
                       PLB                                 ;; 03C1EA : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -7162,14 +7162,14 @@ CODE_03C1D5:          LDA $E4,X                           ;; 03C1D5 : B5 E4     
 DATA_03C1EC:          db $00,$04,$07,$08,$08,$07,$04,$00  ;; 03C1EC               ;
                       db $00                              ;; ?QPWZ?               ;
                                                           ;;                      ;
-LightSwitch:          LDA $9D                             ;; ?QPWZ? : A5 9D       ;
+LightSwitch:          LDA.B $9D                           ;; ?QPWZ? : A5 9D       ;
                       BNE CODE_03C22B                     ;; 03C1F7 : D0 32       ;
                       JSL InvisBlkMainRt                  ;; 03C1F9 : 22 4F B4 01 ;
                       JSR SubOffscreen0Bnk3               ;; 03C1FD : 20 5D B8    ;
                       LDA.W $1558,X                       ;; 03C200 : BD 58 15    ;
                       CMP.B #$05                          ;; 03C203 : C9 05       ;
                       BNE CODE_03C22B                     ;; 03C205 : D0 24       ;
-                      STZ $C2,X                           ;; 03C207 : 74 C2       ;
+                      STZ.B $C2,X                         ;; 03C207 : 74 C2       ;
                       LDY.B #$0B                          ;; 03C209 : A0 0B       ; \ Play sound effect 
                       STY.W $1DF9                         ;; 03C20B : 8C F9 1D    ; / 
                       PHA                                 ;; 03C20E : 48          ;
@@ -7187,17 +7187,17 @@ CODE_03C227:          DEY                                 ;; 03C227 : 88        
                       BPL CODE_03C211                     ;; 03C228 : 10 E7       ;
                       PLA                                 ;; 03C22A : 68          ;
 CODE_03C22B:          LDA.W $1558,X                       ;; 03C22B : BD 58 15    ;
-                      LSR                                 ;; 03C22E : 4A          ;
+                      LSR A                               ;; 03C22E : 4A          ;
                       TAY                                 ;; 03C22F : A8          ;
-                      LDA $1C                             ;; 03C230 : A5 1C       ;
+                      LDA.B $1C                           ;; 03C230 : A5 1C       ;
                       PHA                                 ;; 03C232 : 48          ;
                       CLC                                 ;; 03C233 : 18          ;
                       ADC.W DATA_03C1EC,Y                 ;; 03C234 : 79 EC C1    ;
-                      STA $1C                             ;; 03C237 : 85 1C       ;
-                      LDA $1D                             ;; 03C239 : A5 1D       ;
+                      STA.B $1C                           ;; 03C237 : 85 1C       ;
+                      LDA.B $1D                           ;; 03C239 : A5 1D       ;
                       PHA                                 ;; 03C23B : 48          ;
                       ADC.B #$00                          ;; 03C23C : 69 00       ;
-                      STA $1D                             ;; 03C23E : 85 1D       ;
+                      STA.B $1D                           ;; 03C23E : 85 1D       ;
                       JSL GenericSprGfxRt2                ;; 03C240 : 22 B2 90 01 ;
                       LDY.W $15EA,X                       ;; 03C244 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B #$2A                          ;; 03C247 : A9 2A       ;
@@ -7206,9 +7206,9 @@ CODE_03C22B:          LDA.W $1558,X                       ;; 03C22B : BD 58 15  
                       AND.B #$BF                          ;; 03C24F : 29 BF       ;
                       STA.W $0303,Y                       ;; 03C251 : 99 03 03    ;
                       PLA                                 ;; 03C254 : 68          ;
-                      STA $1D                             ;; 03C255 : 85 1D       ;
+                      STA.B $1D                           ;; 03C255 : 85 1D       ;
                       PLA                                 ;; 03C257 : 68          ;
-                      STA $1C                             ;; 03C258 : 85 1C       ;
+                      STA.B $1C                           ;; 03C258 : 85 1C       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -7227,39 +7227,39 @@ CODE_03C263:          PHB                                 ;; 03C263 : 8B        
                                                           ;;                      ;
 ChainsawGfx:          JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7    ;
                       PHX                                 ;; 03C26E : DA          ;
-                      LDA $9E,X                           ;; 03C26F : B5 9E       ;
+                      LDA.B $9E,X                         ;; 03C26F : B5 9E       ;
                       SEC                                 ;; 03C271 : 38          ;
                       SBC.B #$65                          ;; 03C272 : E9 65       ;
                       TAX                                 ;; 03C274 : AA          ;
                       LDA.W DATA_03C25F,X                 ;; 03C275 : BD 5F C2    ;
-                      STA $03                             ;; 03C278 : 85 03       ;
+                      STA.B $03                           ;; 03C278 : 85 03       ;
                       LDA.W DATA_03C261,X                 ;; 03C27A : BD 61 C2    ;
-                      STA $04                             ;; 03C27D : 85 04       ;
+                      STA.B $04                           ;; 03C27D : 85 04       ;
                       PLX                                 ;; 03C27F : FA          ;
                       LDA.B $14                           ;; 03C280 : A5 14       ;
                       AND.B #$02                          ;; 03C282 : 29 02       ;
-                      STA $02                             ;; 03C284 : 85 02       ;
-                      LDA $00                             ;; 03C286 : A5 00       ;
+                      STA.B $02                           ;; 03C284 : 85 02       ;
+                      LDA.B $00                           ;; 03C286 : A5 00       ;
                       SEC                                 ;; 03C288 : 38          ;
                       SBC.B #$08                          ;; 03C289 : E9 08       ;
                       STA.W $0300,Y                       ;; 03C28B : 99 00 03    ;
                       STA.W $0304,Y                       ;; 03C28E : 99 04 03    ;
                       STA.W $0308,Y                       ;; 03C291 : 99 08 03    ;
-                      LDA $01                             ;; 03C294 : A5 01       ;
+                      LDA.B $01                           ;; 03C294 : A5 01       ;
                       SEC                                 ;; 03C296 : 38          ;
                       SBC.B #$08                          ;; 03C297 : E9 08       ;
                       STA.W $0301,Y                       ;; 03C299 : 99 01 03    ;
                       CLC                                 ;; 03C29C : 18          ;
-                      ADC $03                             ;; 03C29D : 65 03       ;
+                      ADC.B $03                           ;; 03C29D : 65 03       ;
                       CLC                                 ;; 03C29F : 18          ;
-                      ADC $02                             ;; 03C2A0 : 65 02       ;
+                      ADC.B $02                           ;; 03C2A0 : 65 02       ;
                       STA.W $0305,Y                       ;; 03C2A2 : 99 05 03    ;
                       CLC                                 ;; 03C2A5 : 18          ;
-                      ADC $03                             ;; 03C2A6 : 65 03       ;
+                      ADC.B $03                           ;; 03C2A6 : 65 03       ;
                       STA.W $0309,Y                       ;; 03C2A8 : 99 09 03    ;
                       LDA.B $14                           ;; 03C2AB : A5 14       ;
-                      LSR                                 ;; 03C2AD : 4A          ;
-                      LSR                                 ;; 03C2AE : 4A          ;
+                      LSR A                               ;; 03C2AD : 4A          ;
+                      LSR A                               ;; 03C2AE : 4A          ;
                       AND.B #$03                          ;; 03C2AF : 29 03       ;
                       PHX                                 ;; 03C2B1 : DA          ;
                       TAX                                 ;; 03C2B2 : AA          ;
@@ -7272,7 +7272,7 @@ ChainsawGfx:          JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7  
                       STA.W $030A,Y                       ;; 03C2C1 : 99 0A 03    ;
                       LDA.B #$37                          ;; 03C2C4 : A9 37       ;
                       STA.W $0303,Y                       ;; 03C2C6 : 99 03 03    ;
-                      LDA $04                             ;; 03C2C9 : A5 04       ;
+                      LDA.B $04                           ;; 03C2C9 : A5 04       ;
                       STA.W $0307,Y                       ;; 03C2CB : 99 07 03    ;
                       STA.W $030B,Y                       ;; 03C2CE : 99 0B 03    ;
                       LDY.B #$02                          ;; 03C2D1 : A0 02       ;
@@ -7292,14 +7292,14 @@ CODE_03C2DC:          LDA.W $14C8,X                       ;; 03C2DC : BD C8 14  
 Generate1Up:          LDA.B #$08                          ;; ?QPWZ? : A9 08       ; \ Sprite status = Normal 
                       STA.W $14C8,X                       ;; 03C2E8 : 9D C8 14    ; / 
                       LDA.B #$78                          ;; 03C2EB : A9 78       ; \ Sprite = 1Up 
-                      STA $9E,X                           ;; 03C2ED : 95 9E       ; / 
-                      LDA $94                             ;; 03C2EF : A5 94       ; \ Sprite X position = Mario X position 
-                      STA $E4,X                           ;; 03C2F1 : 95 E4       ;  | 
-                      LDA $95                             ;; 03C2F3 : A5 95       ;  | 
+                      STA.B $9E,X                         ;; 03C2ED : 95 9E       ; / 
+                      LDA.B $94                           ;; 03C2EF : A5 94       ; \ Sprite X position = Mario X position 
+                      STA.B $E4,X                         ;; 03C2F1 : 95 E4       ;  | 
+                      LDA.B $95                           ;; 03C2F3 : A5 95       ;  | 
                       STA.W $14E0,X                       ;; 03C2F5 : 9D E0 14    ; / 
-                      LDA $96                             ;; 03C2F8 : A5 96       ; \ Sprite Y position = Matio Y position 
-                      STA $D8,X                           ;; 03C2FA : 95 D8       ;  | 
-                      LDA $97                             ;; 03C2FC : A5 97       ;  | 
+                      LDA.B $96                           ;; 03C2F8 : A5 96       ; \ Sprite Y position = Matio Y position 
+                      STA.B $D8,X                         ;; 03C2FA : 95 D8       ;  | 
+                      LDA.B $97                           ;; 03C2FC : A5 97       ;  | 
                       STA.W $14D4,X                       ;; 03C2FE : 9D D4 14    ; / 
                       JSL InitSpriteTables                ;; 03C301 : 22 D2 F7 07 ; Load sprite tables 
                       LDA.B #$10                          ;; 03C305 : A9 10       ; \ Disable interaction timer = #$10 
@@ -7312,24 +7312,24 @@ InvisMushroom:        JSR GetDrawInfoBnk3                 ;; ?QPWZ? : 20 60 B7  
                       JSL MarioSprInteract                ;; 03C312 : 22 DC A7 01 ; \ Return if no interaction 
                       BCC Return03C347                    ;; 03C316 : 90 2F       ; / 
                       LDA.B #$74                          ;; 03C318 : A9 74       ; \ Replace, Sprite = Mushroom 
-                      STA $9E,X                           ;; 03C31A : 95 9E       ; / 
+                      STA.B $9E,X                         ;; 03C31A : 95 9E       ; / 
                       JSL InitSpriteTables                ;; 03C31C : 22 D2 F7 07 ; Reset sprite tables 
                       LDA.B #$20                          ;; 03C320 : A9 20       ; \ Disable interaction timer = #$20 
                       STA.W $154C,X                       ;; 03C322 : 9D 4C 15    ; / 
-                      LDA $D8,X                           ;; 03C325 : B5 D8       ; \ Sprite Y position = Mario Y position - $000F 
+                      LDA.B $D8,X                         ;; 03C325 : B5 D8       ; \ Sprite Y position = Mario Y position - $000F 
                       SEC                                 ;; 03C327 : 38          ;  | 
                       SBC.B #$0F                          ;; 03C328 : E9 0F       ;  | 
-                      STA $D8,X                           ;; 03C32A : 95 D8       ;  | 
+                      STA.B $D8,X                         ;; 03C32A : 95 D8       ;  | 
                       LDA.W $14D4,X                       ;; 03C32C : BD D4 14    ;  | 
                       SBC.B #$00                          ;; 03C32F : E9 00       ;  | 
                       STA.W $14D4,X                       ;; 03C331 : 9D D4 14    ; / 
 PopupMushroom:        LDA.B #$00                          ;; ?QPWZ? : A9 00       ; \ Sprite direction = dirction of Mario's X speed 
-                      LDY $7B                             ;; 03C336 : A4 7B       ;  | 
+                      LDY.B $7B                           ;; 03C336 : A4 7B       ;  | 
                       BPL CODE_03C33B                     ;; 03C338 : 10 01       ;  | 
                       INC A                               ;; 03C33A : 1A          ;  | 
 CODE_03C33B:          STA.W $157C,X                       ;; 03C33B : 9D 7C 15    ; / 
                       LDA.B #$C0                          ;; 03C33E : A9 C0       ; \ Set upward speed 
-                      STA $AA,X                           ;; 03C340 : 95 AA       ; / 
+                      STA.B $AA,X                         ;; 03C340 : 95 AA       ; / 
                       LDA.B #$02                          ;; 03C342 : A9 02       ; \ Play sound effect 
                       STA.W $1DFC                         ;; 03C344 : 8D FC 1D    ; / 
 Return03C347:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -7338,7 +7338,7 @@ Return03C347:         RTS                                 ;; ?QPWZ? : 60        
 NinjiSpeedY:          db $D0,$C0,$B0,$D0                  ;; ?QPWZ?               ;
                                                           ;;                      ;
 Ninji:                JSL GenericSprGfxRt2                ;; ?QPWZ? : 22 B2 90 01 ; Draw sprite uing the routine for sprites <= 53 
-                      LDA $9D                             ;; 03C350 : A5 9D       ; \ Return if sprites locked			 
+                      LDA.B $9D                           ;; 03C350 : A5 9D       ; \ Return if sprites locked			 
                       BNE Return03C38F                    ;; 03C352 : D0 3B       ; /						 
                       JSR SubHorzPosBnk3                  ;; 03C354 : 20 17 B8    ; \ Always face mario				 
                       TYA                                 ;; 03C357 : 98          ;  |						 
@@ -7349,19 +7349,19 @@ Ninji:                JSL GenericSprGfxRt2                ;; ?QPWZ? : 22 B2 90 0
                       LDA.W $1588,X                       ;; 03C366 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 03C369 : 29 04       ;  | 
                       BEQ CODE_03C385                     ;; 03C36B : F0 18       ; / 
-                      STZ $AA,X                           ;; 03C36D : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $AA,X                         ;; 03C36D : 74 AA       ; Sprite Y Speed = 0 
                       LDA.W $1540,X                       ;; 03C36F : BD 40 15    ;
                       BNE CODE_03C385                     ;; 03C372 : D0 11       ;
                       LDA.B #$60                          ;; 03C374 : A9 60       ;
                       STA.W $1540,X                       ;; 03C376 : 9D 40 15    ;
-                      INC $C2,X                           ;; 03C379 : F6 C2       ;
-                      LDA $C2,X                           ;; 03C37B : B5 C2       ;
+                      INC.B $C2,X                         ;; 03C379 : F6 C2       ;
+                      LDA.B $C2,X                         ;; 03C37B : B5 C2       ;
                       AND.B #$03                          ;; 03C37D : 29 03       ;
                       TAY                                 ;; 03C37F : A8          ;
                       LDA.W NinjiSpeedY,Y                 ;; 03C380 : B9 48 C3    ;
-                      STA $AA,X                           ;; 03C383 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03C383 : 95 AA       ;
 CODE_03C385:          LDA.B #$00                          ;; 03C385 : A9 00       ;
-                      LDY $AA,X                           ;; 03C387 : B4 AA       ;
+                      LDY.B $AA,X                         ;; 03C387 : B4 AA       ;
                       BMI CODE_03C38C                     ;; 03C389 : 30 01       ;
                       INC A                               ;; 03C38B : 1A          ;
 CODE_03C38C:          STA.W $1602,X                       ;; 03C38C : 9D 02 16    ;
@@ -7401,52 +7401,52 @@ DryBonesTiles:        db $00,$64,$66,$00,$64,$68,$82,$64  ;; ?QPWZ?             
                                                           ;;                      ;
 DATA_03C3D7:          db $00,$00,$FF                      ;; 03C3D7               ;
                                                           ;;                      ;
-CODE_03C3DA:          LDA $9E,X                           ;; 03C3DA : B5 9E       ;
+CODE_03C3DA:          LDA.B $9E,X                         ;; 03C3DA : B5 9E       ;
                       CMP.B #$31                          ;; 03C3DC : C9 31       ;
                       BEQ CODE_03C3AE                     ;; 03C3DE : F0 CE       ;
                       JSR GetDrawInfoBnk3                 ;; 03C3E0 : 20 60 B7    ;
                       LDA.W $15AC,X                       ;; 03C3E3 : BD AC 15    ;
-                      STA $05                             ;; 03C3E6 : 85 05       ;
+                      STA.B $05                           ;; 03C3E6 : 85 05       ;
                       LDA.W $157C,X                       ;; 03C3E8 : BD 7C 15    ;
-                      ASL                                 ;; 03C3EB : 0A          ;
+                      ASL A                               ;; 03C3EB : 0A          ;
                       ADC.W $157C,X                       ;; 03C3EC : 7D 7C 15    ;
-                      STA $02                             ;; 03C3EF : 85 02       ;
+                      STA.B $02                           ;; 03C3EF : 85 02       ;
                       PHX                                 ;; 03C3F1 : DA          ;
                       LDA.W $1602,X                       ;; 03C3F2 : BD 02 16    ;
                       PHA                                 ;; 03C3F5 : 48          ;
-                      ASL                                 ;; 03C3F6 : 0A          ;
+                      ASL A                               ;; 03C3F6 : 0A          ;
                       ADC.W $1602,X                       ;; 03C3F7 : 7D 02 16    ;
-                      STA $03                             ;; 03C3FA : 85 03       ;
+                      STA.B $03                           ;; 03C3FA : 85 03       ;
                       PLX                                 ;; 03C3FC : FA          ;
                       LDA.W DATA_03C3D7,X                 ;; 03C3FD : BD D7 C3    ;
-                      STA $04                             ;; 03C400 : 85 04       ;
+                      STA.B $04                           ;; 03C400 : 85 04       ;
                       LDX.B #$02                          ;; 03C402 : A2 02       ;
 CODE_03C404:          PHX                                 ;; 03C404 : DA          ;
                       TXA                                 ;; 03C405 : 8A          ;
                       CLC                                 ;; 03C406 : 18          ;
-                      ADC $02                             ;; 03C407 : 65 02       ;
+                      ADC.B $02                           ;; 03C407 : 65 02       ;
                       TAX                                 ;; 03C409 : AA          ;
                       PHX                                 ;; 03C40A : DA          ;
-                      LDA $05                             ;; 03C40B : A5 05       ;
+                      LDA.B $05                           ;; 03C40B : A5 05       ;
                       BEQ CODE_03C414                     ;; 03C40D : F0 05       ;
                       TXA                                 ;; 03C40F : 8A          ;
                       CLC                                 ;; 03C410 : 18          ;
                       ADC.B #$06                          ;; 03C411 : 69 06       ;
                       TAX                                 ;; 03C413 : AA          ;
-CODE_03C414:          LDA $00                             ;; 03C414 : A5 00       ;
+CODE_03C414:          LDA.B $00                           ;; 03C414 : A5 00       ;
                       CLC                                 ;; 03C416 : 18          ;
                       ADC.W DryBonesTileDispX,X           ;; 03C417 : 7D B3 C3    ;
                       STA.W $0300,Y                       ;; 03C41A : 99 00 03    ;
                       PLX                                 ;; 03C41D : FA          ;
                       LDA.W DryBonesGfxProp,X             ;; 03C41E : BD BF C3    ;
-                      ORA $64                             ;; 03C421 : 05 64       ;
+                      ORA.B $64                           ;; 03C421 : 05 64       ;
                       STA.W $0303,Y                       ;; 03C423 : 99 03 03    ;
                       PLA                                 ;; 03C426 : 68          ;
                       PHA                                 ;; 03C427 : 48          ;
                       CLC                                 ;; 03C428 : 18          ;
-                      ADC $03                             ;; 03C429 : 65 03       ;
+                      ADC.B $03                           ;; 03C429 : 65 03       ;
                       TAX                                 ;; 03C42B : AA          ;
-                      LDA $01                             ;; 03C42C : A5 01       ;
+                      LDA.B $01                           ;; 03C42C : A5 01       ;
                       CLC                                 ;; 03C42E : 18          ;
                       ADC.W DryBonesTileDispY,X           ;; 03C42F : 7D C5 C3    ;
                       STA.W $0301,Y                       ;; 03C432 : 99 01 03    ;
@@ -7458,7 +7458,7 @@ CODE_03C414:          LDA $00                             ;; 03C414 : A5 00     
                       INY                                 ;; 03C43E : C8          ;
                       INY                                 ;; 03C43F : C8          ;
                       DEX                                 ;; 03C440 : CA          ;
-                      CPX $04                             ;; 03C441 : E4 04       ;
+                      CPX.B $04                           ;; 03C441 : E4 04       ;
                       BNE CODE_03C404                     ;; 03C443 : D0 BF       ;
                       PLX                                 ;; 03C445 : FA          ;
                       LDY.B #$02                          ;; 03C446 : A0 02       ;
@@ -7478,19 +7478,19 @@ Return03C460:         RTL                                 ;; ?QPWZ? : 6B        
                                                           ;;                      ;
 CODE_03C461:          LDA.B #$06                          ;; 03C461 : A9 06       ; \ Extended sprite = Bone 
                       STA.W $170B,Y                       ;; 03C463 : 99 0B 17    ; / 
-                      LDA $D8,X                           ;; 03C466 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03C466 : B5 D8       ;
                       SEC                                 ;; 03C468 : 38          ;
                       SBC.B #$10                          ;; 03C469 : E9 10       ;
                       STA.W $1715,Y                       ;; 03C46B : 99 15 17    ;
                       LDA.W $14D4,X                       ;; 03C46E : BD D4 14    ;
                       SBC.B #$00                          ;; 03C471 : E9 00       ;
                       STA.W $1729,Y                       ;; 03C473 : 99 29 17    ;
-                      LDA $E4,X                           ;; 03C476 : B5 E4       ;
+                      LDA.B $E4,X                         ;; 03C476 : B5 E4       ;
                       STA.W $171F,Y                       ;; 03C478 : 99 1F 17    ;
                       LDA.W $14E0,X                       ;; 03C47B : BD E0 14    ;
                       STA.W $1733,Y                       ;; 03C47E : 99 33 17    ;
                       LDA.W $157C,X                       ;; 03C481 : BD 7C 15    ;
-                      LSR                                 ;; 03C484 : 4A          ;
+                      LSR A                               ;; 03C484 : 4A          ;
                       LDA.B #$18                          ;; 03C485 : A9 18       ;
                       BCC CODE_03C48B                     ;; 03C487 : 90 02       ;
                       LDA.B #$E8                          ;; 03C489 : A9 E8       ;
@@ -7514,12 +7514,12 @@ CODE_03C4A5:          LDY.W $15EA,X                       ;; 03C4A5 : BC EA 15  
                       LDA.B #$28                          ;; 03C4AD : A9 28       ;
                       STA.W $0301,Y                       ;; 03C4AF : 99 01 03    ;
                       PHX                                 ;; 03C4B2 : DA          ;
-                      LDA $C2,X                           ;; 03C4B3 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 03C4B3 : B5 C2       ;
                       LDX.B #$08                          ;; 03C4B5 : A2 08       ;
                       AND.B #$01                          ;; 03C4B7 : 29 01       ;
                       BEQ CODE_03C4C1                     ;; 03C4B9 : F0 06       ;
-                      LDA $13                             ;; 03C4BB : A5 13       ;
-                      LSR                                 ;; 03C4BD : 4A          ;
+                      LDA.B $13                           ;; 03C4BB : A5 13       ;
+                      LSR A                               ;; 03C4BD : 4A          ;
                       AND.B #$07                          ;; 03C4BE : 29 07       ;
                       TAX                                 ;; 03C4C0 : AA          ;
 CODE_03C4C1:          LDA.W DiscoBallTiles,X              ;; 03C4C1 : BD 93 C4    ;
@@ -7527,8 +7527,8 @@ CODE_03C4C1:          LDA.W DiscoBallTiles,X              ;; 03C4C1 : BD 93 C4  
                       LDA.W DATA_03C49C,X                 ;; 03C4C7 : BD 9C C4    ;
                       STA.W $0303,Y                       ;; 03C4CA : 99 03 03    ;
                       TYA                                 ;; 03C4CD : 98          ;
-                      LSR                                 ;; 03C4CE : 4A          ;
-                      LSR                                 ;; 03C4CF : 4A          ;
+                      LSR A                               ;; 03C4CE : 4A          ;
+                      LSR A                               ;; 03C4CF : 4A          ;
                       TAY                                 ;; 03C4D0 : A8          ;
                       LDA.B #$02                          ;; 03C4D1 : A9 02       ;
                       STA.W $0460,Y                       ;; 03C4D3 : 99 60 04    ;
@@ -7559,21 +7559,21 @@ CODE_03C4FA:          DEY                                 ;; 03C4FA : 88        
                       INC.W $1534,X                       ;; 03C4FD : FE 34 15    ;
 CODE_03C500:          JSR CODE_03C4A5                     ;; 03C500 : 20 A5 C4    ;
                       LDA.B #$FF                          ;; 03C503 : A9 FF       ;
-                      STA $40                             ;; 03C505 : 85 40       ;
+                      STA.B $40                           ;; 03C505 : 85 40       ;
                       LDA.B #$20                          ;; 03C507 : A9 20       ;
-                      STA $44                             ;; 03C509 : 85 44       ;
+                      STA.B $44                           ;; 03C509 : 85 44       ;
                       LDA.B #$20                          ;; 03C50B : A9 20       ;
-                      STA $43                             ;; 03C50D : 85 43       ;
+                      STA.B $43                           ;; 03C50D : 85 43       ;
                       LDA.B #$80                          ;; 03C50F : A9 80       ;
                       STA.W $0D9F                         ;; 03C511 : 8D 9F 0D    ;
-                      LDA $C2,X                           ;; 03C514 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 03C514 : B5 C2       ;
                       AND.B #$01                          ;; 03C516 : 29 01       ;
                       TAY                                 ;; 03C518 : A8          ;
                       LDA.W DATA_03C4D8,Y                 ;; 03C519 : B9 D8 C4    ;
                       STA.W $0701                         ;; 03C51C : 8D 01 07    ;
                       LDA.W DATA_03C4DA,Y                 ;; 03C51F : B9 DA C4    ;
                       STA.W $0702                         ;; 03C522 : 8D 02 07    ;
-                      LDA $9D                             ;; 03C525 : A5 9D       ;
+                      LDA.B $9D                           ;; 03C525 : A5 9D       ;
                       BNE Return03C4F9                    ;; 03C527 : D0 D0       ;
                       LDA.W $1482                         ;; 03C529 : AD 82 14    ;
                       BNE CODE_03C54D                     ;; 03C52C : D0 1F       ;
@@ -7604,7 +7604,7 @@ CODE_03C54D:          LDY.W $1483                         ;; 03C54D : AC 83 14  
                       INC A                               ;; 03C56C : 1A          ;
                       AND.B #$01                          ;; 03C56D : 29 01       ;
                       STA.W $1483                         ;; 03C56F : 8D 83 14    ;
-CODE_03C572:          LDA $13                             ;; 03C572 : A5 13       ;
+CODE_03C572:          LDA.B $13                           ;; 03C572 : A5 13       ;
                       AND.B #$03                          ;; 03C574 : 29 03       ;
                       BNE Return03C4F9                    ;; 03C576 : D0 81       ;
                       LDY.B #$00                          ;; 03C578 : A0 00       ;
@@ -7631,8 +7631,8 @@ CODE_03C58A:          STA.W $1480                         ;; 03C58A : 8D 80 14  
 CODE_03C5A5:          STA.W $1481                         ;; 03C5A5 : 8D 81 14    ;
                       STY.W $1485                         ;; 03C5A8 : 8C 85 14    ;
                       STZ.W $147F                         ;; 03C5AB : 9C 7F 14    ;
-                      LDA $C2,X                           ;; 03C5AE : B5 C2       ;
-                      STA $0F                             ;; 03C5B0 : 85 0F       ;
+                      LDA.B $C2,X                         ;; 03C5AE : B5 C2       ;
+                      STA.B $0F                           ;; 03C5B0 : 85 0F       ;
                       PHX                                 ;; 03C5B2 : DA          ;
                       REP #$10                            ;; 03C5B3 : C2 10       ; Index (16 bit) 
                       LDX.W #$0000                        ;; 03C5B5 : A2 00 00    ;
@@ -7666,7 +7666,7 @@ CODE_03C5F0:          SBC.B #$CF                          ;; 03C5F0 : E9 CF     
                       BNE CODE_03C603                     ;; 03C5FB : D0 06       ;
                       DEC.W $147C                         ;; 03C5FD : CE 7C 14    ;
                       DEC.W $147C                         ;; 03C600 : CE 7C 14    ;
-CODE_03C603:          LDA $0F                             ;; 03C603 : A5 0F       ;
+CODE_03C603:          LDA.B $0F                           ;; 03C603 : A5 0F       ;
                       BNE CODE_03C60F                     ;; 03C605 : D0 08       ;
 CODE_03C607:          LDA.B #$01                          ;; 03C607 : A9 01       ;
                       STA.W $04A0,X                       ;; 03C609 : 9D A0 04    ;
@@ -7786,9 +7786,9 @@ CODE_03C7D0:          LDA.B #$08                          ;; 03C7D0 : A9 08     
                       STA.W $14E0,Y                       ;; 03C7DC : 99 E0 14    ;
                       LDA.B #$A8                          ;; 03C7DF : A9 A8       ;
                       CLC                                 ;; 03C7E1 : 18          ;
-                      ADC $1C                             ;; 03C7E2 : 65 1C       ;
+                      ADC.B $1C                           ;; 03C7E2 : 65 1C       ;
                       STA.W $00D8,Y                       ;; 03C7E4 : 99 D8 00    ;
-                      LDA $1D                             ;; 03C7E7 : A5 1D       ;
+                      LDA.B $1D                           ;; 03C7E7 : A5 1D       ;
                       ADC.B #$00                          ;; 03C7E9 : 69 00       ;
                       STA.W $14D4,Y                       ;; 03C7EB : 99 D4 14    ;
                       PHX                                 ;; 03C7EE : DA          ;
@@ -7812,7 +7812,7 @@ CODE_03C810:          LDA.B #$70                          ;; 03C810 : A9 70     
                       STA.W $1564,X                       ;; 03C812 : 9D 64 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-Firework:             LDA $C2,X                           ;; ?QPWZ? : B5 C2       ;
+Firework:             LDA.B $C2,X                         ;; ?QPWZ? : B5 C2       ;
                       JSL ExecutePtr                      ;; 03C818 : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_03C828                      ;; ?QPWZ? : 28 C8       ;
@@ -7824,12 +7824,12 @@ FireworkSpeedY:       db $E4,$E6,$E4,$E2                  ;; ?QPWZ?             
                                                           ;;                      ;
 CODE_03C828:          LDY.W $1534,X                       ;; 03C828 : BC 34 15    ;
                       LDA.W FireworkSpeedY,Y              ;; 03C82B : B9 24 C8    ;
-                      STA $AA,X                           ;; 03C82E : 95 AA       ;
+                      STA.B $AA,X                         ;; 03C82E : 95 AA       ;
                       LDA.B #$25                          ;; 03C830 : A9 25       ; \ Play sound effect 
                       STA.W $1DFC                         ;; 03C832 : 8D FC 1D    ; / 
                       LDA.B #$10                          ;; 03C835 : A9 10       ;
                       STA.W $1564,X                       ;; 03C837 : 9D 64 15    ;
-                      INC $C2,X                           ;; 03C83A : F6 C2       ;
+                      INC.B $C2,X                         ;; 03C83A : F6 C2       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -7846,15 +7846,15 @@ CODE_03C845:          LDA.W $1564,X                       ;; 03C845 : BD 64 15  
                       LDA.W FireworkSfx2,Y                ;; 03C855 : B9 7E C7    ; \ Play sound effect 
                       STA.W $1DFC                         ;; 03C858 : 8D FC 1D    ; / 
 CODE_03C85B:          JSL UpdateYPosNoGvtyW               ;; 03C85B : 22 1A 80 01 ;
-                      INC $B6,X                           ;; 03C85F : F6 B6       ;
-                      LDA $B6,X                           ;; 03C861 : B5 B6       ;
+                      INC.B $B6,X                         ;; 03C85F : F6 B6       ;
+                      LDA.B $B6,X                         ;; 03C861 : B5 B6       ;
                       AND.B #$03                          ;; 03C863 : 29 03       ;
                       BNE CODE_03C869                     ;; 03C865 : D0 02       ;
-                      INC $AA,X                           ;; 03C867 : F6 AA       ;
-CODE_03C869:          LDA $AA,X                           ;; 03C869 : B5 AA       ;
+                      INC.B $AA,X                         ;; 03C867 : F6 AA       ;
+CODE_03C869:          LDA.B $AA,X                         ;; 03C869 : B5 AA       ;
                       CMP.B #$FC                          ;; 03C86B : C9 FC       ;
                       BNE CODE_03C885                     ;; 03C86D : D0 16       ;
-                      INC $C2,X                           ;; 03C86F : F6 C2       ;
+                      INC.B $C2,X                         ;; 03C86F : F6 C2       ;
                       LDY.W $1534,X                       ;; 03C871 : BC 34 15    ;
                       LDA.W DATA_03C83D,Y                 ;; 03C874 : B9 3D C8    ;
                       STA.W $151C,X                       ;; 03C877 : 9D 1C 15    ;
@@ -7877,7 +7877,7 @@ CODE_03C88D:          LDA.W $15AC,X                       ;; 03C88D : BD AC 15  
                       LDA.W FireworkSfx4,Y                ;; 03C89C : B9 86 C7    ; \ Play sound effect 
                       STA.W $1DFC                         ;; 03C89F : 8D FC 1D    ; / 
 CODE_03C8A2:          JSR CODE_03C8B1                     ;; 03C8A2 : 20 B1 C8    ;
-                      LDA $C2,X                           ;; 03C8A5 : B5 C2       ;
+                      LDA.B $C2,X                         ;; 03C8A5 : B5 C2       ;
                       CMP.B #$02                          ;; 03C8A7 : C9 02       ;
                       BNE CODE_03C8AE                     ;; 03C8A9 : D0 03       ;
                       JSR CODE_03C8B1                     ;; 03C8AB : 20 B1 C8    ;
@@ -7904,8 +7904,8 @@ CODE_03C8D4:          LDA.B #$01                          ;; 03C8D4 : A9 01     
                                                           ;;                      ;
 ADDR_03C8DB:          LDA.B #$FF                          ;; 03C8DB : A9 FF       ;
                       STA.W $1570,X                       ;; 03C8DD : 9D 70 15    ;
-CODE_03C8E0:          INC $C2,X                           ;; 03C8E0 : F6 C2       ;
-                      STZ $AA,X                           ;; 03C8E2 : 74 AA       ; Sprite Y Speed = 0 
+CODE_03C8E0:          INC.B $C2,X                         ;; 03C8E0 : F6 C2       ;
+                      STZ.B $AA,X                         ;; 03C8E2 : 74 AA       ; Sprite Y Speed = 0 
 CODE_03C8E4:          LDA.W $151C,X                       ;; 03C8E4 : BD 1C 15    ;
                       AND.B #$FF                          ;; 03C8E7 : 29 FF       ;
                       TAY                                 ;; 03C8E9 : A8          ;
@@ -7925,13 +7925,13 @@ DATA_03C8F1:          db $06,$05,$04,$03,$03,$03,$03,$02  ;; 03C8F1             
                       db $02,$02,$02,$02,$02,$02,$02,$02  ;; ?QPWZ?               ;
                       db $02,$02,$02,$02,$02,$02,$02,$02  ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_03C941:          LDA $13                             ;; 03C941 : A5 13       ;
+CODE_03C941:          LDA.B $13                           ;; 03C941 : A5 13       ;
                       AND.B #$07                          ;; 03C943 : 29 07       ;
                       BNE CODE_03C949                     ;; 03C945 : D0 02       ;
-                      INC $AA,X                           ;; 03C947 : F6 AA       ;
+                      INC.B $AA,X                         ;; 03C947 : F6 AA       ;
 CODE_03C949:          JSL UpdateYPosNoGvtyW               ;; 03C949 : 22 1A 80 01 ;
                       LDA.B #$07                          ;; 03C94D : A9 07       ;
-                      LDY $AA,X                           ;; 03C94F : B4 AA       ;
+                      LDY.B $AA,X                         ;; 03C94F : B4 AA       ;
                       CPY.B #$08                          ;; 03C951 : C0 08       ;
                       BNE CODE_03C958                     ;; 03C953 : D0 03       ;
                       STZ.W $14C8,X                       ;; 03C955 : 9E C8 14    ;
@@ -7949,43 +7949,43 @@ CODE_03C962:          STA.W $1602,X                       ;; 03C962 : 9D 02 16  
 DATA_03C969:          db $EC,$8E,$EC,$EC                  ;; 03C969               ;
                                                           ;;                      ;
 CODE_03C96D:          TXA                                 ;; 03C96D : 8A          ;
-                      EOR $13                             ;; 03C96E : 45 13       ;
+                      EOR.B $13                           ;; 03C96E : 45 13       ;
                       AND.B #$03                          ;; 03C970 : 29 03       ;
                       BNE Return03C9B8                    ;; 03C972 : D0 44       ;
                       JSR GetDrawInfoBnk3                 ;; 03C974 : 20 60 B7    ;
                       LDY.B #$00                          ;; 03C977 : A0 00       ;
-                      LDA $00                             ;; 03C979 : A5 00       ;
+                      LDA.B $00                           ;; 03C979 : A5 00       ;
                       STA.W $0300,Y                       ;; 03C97B : 99 00 03    ;
                       STA.W $0304,Y                       ;; 03C97E : 99 04 03    ;
-                      LDA $01                             ;; 03C981 : A5 01       ;
+                      LDA.B $01                           ;; 03C981 : A5 01       ;
                       STA.W $0301,Y                       ;; 03C983 : 99 01 03    ;
                       PHX                                 ;; 03C986 : DA          ;
                       LDA.W $1534,X                       ;; 03C987 : BD 34 15    ;
                       TAX                                 ;; 03C98A : AA          ;
-                      LDA $13                             ;; 03C98B : A5 13       ;
-                      LSR                                 ;; 03C98D : 4A          ;
-                      LSR                                 ;; 03C98E : 4A          ;
+                      LDA.B $13                           ;; 03C98B : A5 13       ;
+                      LSR A                               ;; 03C98D : 4A          ;
+                      LSR A                               ;; 03C98E : 4A          ;
                       AND.B #$02                          ;; 03C98F : 29 02       ;
-                      LSR                                 ;; 03C991 : 4A          ;
+                      LSR A                               ;; 03C991 : 4A          ;
                       ADC.W DATA_03C969,X                 ;; 03C992 : 7D 69 C9    ;
                       STA.W $0302,Y                       ;; 03C995 : 99 02 03    ;
                       PLX                                 ;; 03C998 : FA          ;
-                      LDA $13                             ;; 03C999 : A5 13       ;
-                      ASL                                 ;; 03C99B : 0A          ;
+                      LDA.B $13                           ;; 03C999 : A5 13       ;
+                      ASL A                               ;; 03C99B : 0A          ;
                       AND.B #$0E                          ;; 03C99C : 29 0E       ;
-                      STA $02                             ;; 03C99E : 85 02       ;
-                      LDA $13                             ;; 03C9A0 : A5 13       ;
-                      ASL                                 ;; 03C9A2 : 0A          ;
-                      ASL                                 ;; 03C9A3 : 0A          ;
-                      ASL                                 ;; 03C9A4 : 0A          ;
-                      ASL                                 ;; 03C9A5 : 0A          ;
+                      STA.B $02                           ;; 03C99E : 85 02       ;
+                      LDA.B $13                           ;; 03C9A0 : A5 13       ;
+                      ASL A                               ;; 03C9A2 : 0A          ;
+                      ASL A                               ;; 03C9A3 : 0A          ;
+                      ASL A                               ;; 03C9A4 : 0A          ;
+                      ASL A                               ;; 03C9A5 : 0A          ;
                       AND.B #$40                          ;; 03C9A6 : 29 40       ;
-                      ORA $02                             ;; 03C9A8 : 05 02       ;
+                      ORA.B $02                           ;; 03C9A8 : 05 02       ;
                       ORA.B #$31                          ;; 03C9AA : 09 31       ;
                       STA.W $0303,Y                       ;; 03C9AC : 99 03 03    ;
                       TYA                                 ;; 03C9AF : 98          ;
-                      LSR                                 ;; 03C9B0 : 4A          ;
-                      LSR                                 ;; 03C9B1 : 4A          ;
+                      LSR A                               ;; 03C9B0 : 4A          ;
+                      LSR A                               ;; 03C9B1 : 4A          ;
                       TAY                                 ;; 03C9B2 : A8          ;
                       LDA.B #$00                          ;; 03C9B3 : A9 00       ;
                       STA.W $0460,Y                       ;; 03C9B5 : 99 60 04    ;
@@ -8000,128 +8000,128 @@ DATA_03C9B9:          db $36,$35,$C7,$34,$34,$34,$34,$24  ;; 03C9B9             
 DATA_03C9E1:          db $00,$01,$01,$00,$00,$FF,$FF,$00  ;; 03C9E1               ;
                                                           ;;                      ;
 CODE_03C9E9:          TXA                                 ;; 03C9E9 : 8A          ;
-                      EOR $13                             ;; 03C9EA : 45 13       ;
-                      STA $05                             ;; 03C9EC : 85 05       ;
+                      EOR.B $13                           ;; 03C9EA : 45 13       ;
+                      STA.B $05                           ;; 03C9EC : 85 05       ;
                       LDA.W $1570,X                       ;; 03C9EE : BD 70 15    ;
-                      STA $06                             ;; 03C9F1 : 85 06       ;
+                      STA.B $06                           ;; 03C9F1 : 85 06       ;
                       LDA.W $1602,X                       ;; 03C9F3 : BD 02 16    ;
-                      STA $07                             ;; 03C9F6 : 85 07       ;
-                      LDA $E4,X                           ;; 03C9F8 : B5 E4       ;
-                      STA $08                             ;; 03C9FA : 85 08       ;
-                      LDA $D8,X                           ;; 03C9FC : B5 D8       ;
+                      STA.B $07                           ;; 03C9F6 : 85 07       ;
+                      LDA.B $E4,X                         ;; 03C9F8 : B5 E4       ;
+                      STA.B $08                           ;; 03C9FA : 85 08       ;
+                      LDA.B $D8,X                         ;; 03C9FC : B5 D8       ;
                       SEC                                 ;; 03C9FE : 38          ;
-                      SBC $1C                             ;; 03C9FF : E5 1C       ;
-                      STA $09                             ;; 03CA01 : 85 09       ;
+                      SBC.B $1C                           ;; 03C9FF : E5 1C       ;
+                      STA.B $09                           ;; 03CA01 : 85 09       ;
                       LDA.W $1534,X                       ;; 03CA03 : BD 34 15    ;
-                      STA $0A                             ;; 03CA06 : 85 0A       ;
+                      STA.B $0A                           ;; 03CA06 : 85 0A       ;
                       PHX                                 ;; 03CA08 : DA          ;
                       LDX.B #$3F                          ;; 03CA09 : A2 3F       ;
                       LDY.B #$00                          ;; 03CA0B : A0 00       ;
-CODE_03CA0D:          STX $04                             ;; 03CA0D : 86 04       ;
-                      LDA $0A                             ;; 03CA0F : A5 0A       ;
+CODE_03CA0D:          STX.B $04                           ;; 03CA0D : 86 04       ;
+                      LDA.B $0A                           ;; 03CA0F : A5 0A       ;
                       CMP.B #$03                          ;; 03CA11 : C9 03       ;
                       LDA.W DATA_03C626,X                 ;; 03CA13 : BD 26 C6    ;
                       BCC CODE_03CA1B                     ;; 03CA16 : 90 03       ;
                       LDA.W DATA_03C6CE,X                 ;; 03CA18 : BD CE C6    ;
 CODE_03CA1B:          SEC                                 ;; 03CA1B : 38          ;
                       SBC.B #$40                          ;; 03CA1C : E9 40       ;
-                      STA $00                             ;; 03CA1E : 85 00       ;
+                      STA.B $00                           ;; 03CA1E : 85 00       ;
                       PHY                                 ;; 03CA20 : 5A          ;
-                      LDA $0A                             ;; 03CA21 : A5 0A       ;
+                      LDA.B $0A                           ;; 03CA21 : A5 0A       ;
                       CMP.B #$03                          ;; 03CA23 : C9 03       ;
                       LDA.W DATA_03C67A,X                 ;; 03CA25 : BD 7A C6    ;
                       BCC CODE_03CA2D                     ;; 03CA28 : 90 03       ;
                       LDA.W DATA_03C722,X                 ;; 03CA2A : BD 22 C7    ;
 CODE_03CA2D:          SEC                                 ;; 03CA2D : 38          ;
                       SBC.B #$50                          ;; 03CA2E : E9 50       ;
-                      STA $01                             ;; 03CA30 : 85 01       ;
-                      LDA $00                             ;; 03CA32 : A5 00       ;
+                      STA.B $01                           ;; 03CA30 : 85 01       ;
+                      LDA.B $00                           ;; 03CA32 : A5 00       ;
                       BPL CODE_03CA39                     ;; 03CA34 : 10 03       ;
                       EOR.B #$FF                          ;; 03CA36 : 49 FF       ;
                       INC A                               ;; 03CA38 : 1A          ;
 CODE_03CA39:          STA.W $4202                         ;; 03CA39 : 8D 02 42    ; Multiplicand A
-                      LDA $06                             ;; 03CA3C : A5 06       ;
+                      LDA.B $06                           ;; 03CA3C : A5 06       ;
                       STA.W $4203                         ;; 03CA3E : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03CA41 : EA          ;
                       NOP                                 ;; 03CA42 : EA          ;
                       NOP                                 ;; 03CA43 : EA          ;
                       NOP                                 ;; 03CA44 : EA          ;
                       LDA.W $4217                         ;; 03CA45 : AD 17 42    ; Product/Remainder Result (High Byte)
-                      LDY $00                             ;; 03CA48 : A4 00       ;
+                      LDY.B $00                           ;; 03CA48 : A4 00       ;
                       BPL CODE_03CA4F                     ;; 03CA4A : 10 03       ;
                       EOR.B #$FF                          ;; 03CA4C : 49 FF       ;
                       INC A                               ;; 03CA4E : 1A          ;
-CODE_03CA4F:          STA $02                             ;; 03CA4F : 85 02       ;
-                      LDA $01                             ;; 03CA51 : A5 01       ;
+CODE_03CA4F:          STA.B $02                           ;; 03CA4F : 85 02       ;
+                      LDA.B $01                           ;; 03CA51 : A5 01       ;
                       BPL CODE_03CA58                     ;; 03CA53 : 10 03       ;
                       EOR.B #$FF                          ;; 03CA55 : 49 FF       ;
                       INC A                               ;; 03CA57 : 1A          ;
 CODE_03CA58:          STA.W $4202                         ;; 03CA58 : 8D 02 42    ; Multiplicand A
-                      LDA $06                             ;; 03CA5B : A5 06       ;
+                      LDA.B $06                           ;; 03CA5B : A5 06       ;
                       STA.W $4203                         ;; 03CA5D : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03CA60 : EA          ;
                       NOP                                 ;; 03CA61 : EA          ;
                       NOP                                 ;; 03CA62 : EA          ;
                       NOP                                 ;; 03CA63 : EA          ;
                       LDA.W $4217                         ;; 03CA64 : AD 17 42    ; Product/Remainder Result (High Byte)
-                      LDY $01                             ;; 03CA67 : A4 01       ;
+                      LDY.B $01                           ;; 03CA67 : A4 01       ;
                       BPL CODE_03CA6E                     ;; 03CA69 : 10 03       ;
                       EOR.B #$FF                          ;; 03CA6B : 49 FF       ;
                       INC A                               ;; 03CA6D : 1A          ;
-CODE_03CA6E:          STA $03                             ;; 03CA6E : 85 03       ;
+CODE_03CA6E:          STA.B $03                           ;; 03CA6E : 85 03       ;
                       LDY.B #$00                          ;; 03CA70 : A0 00       ;
-                      LDA $07                             ;; 03CA72 : A5 07       ;
+                      LDA.B $07                           ;; 03CA72 : A5 07       ;
                       CMP.B #$06                          ;; 03CA74 : C9 06       ;
                       BCC CODE_03CA82                     ;; 03CA76 : 90 0A       ;
-                      LDA $05                             ;; 03CA78 : A5 05       ;
+                      LDA.B $05                           ;; 03CA78 : A5 05       ;
                       CLC                                 ;; 03CA7A : 18          ;
-                      ADC $04                             ;; 03CA7B : 65 04       ;
-                      LSR                                 ;; 03CA7D : 4A          ;
-                      LSR                                 ;; 03CA7E : 4A          ;
+                      ADC.B $04                           ;; 03CA7B : 65 04       ;
+                      LSR A                               ;; 03CA7D : 4A          ;
+                      LSR A                               ;; 03CA7E : 4A          ;
                       AND.B #$07                          ;; 03CA7F : 29 07       ;
                       TAY                                 ;; 03CA81 : A8          ;
 CODE_03CA82:          LDA.W DATA_03C9E1,Y                 ;; 03CA82 : B9 E1 C9    ;
                       PLY                                 ;; 03CA85 : 7A          ;
                       CLC                                 ;; 03CA86 : 18          ;
-                      ADC $02                             ;; 03CA87 : 65 02       ;
+                      ADC.B $02                           ;; 03CA87 : 65 02       ;
                       CLC                                 ;; 03CA89 : 18          ;
-                      ADC $08                             ;; 03CA8A : 65 08       ;
+                      ADC.B $08                           ;; 03CA8A : 65 08       ;
                       STA.W $0200,Y                       ;; 03CA8C : 99 00 02    ;
-                      LDA $03                             ;; 03CA8F : A5 03       ;
+                      LDA.B $03                           ;; 03CA8F : A5 03       ;
                       CLC                                 ;; 03CA91 : 18          ;
-                      ADC $09                             ;; 03CA92 : 65 09       ;
+                      ADC.B $09                           ;; 03CA92 : 65 09       ;
                       STA.W $0201,Y                       ;; 03CA94 : 99 01 02    ;
                       PHX                                 ;; 03CA97 : DA          ;
-                      LDA $05                             ;; 03CA98 : A5 05       ;
+                      LDA.B $05                           ;; 03CA98 : A5 05       ;
                       AND.B #$03                          ;; 03CA9A : 29 03       ;
-                      STA $0F                             ;; 03CA9C : 85 0F       ;
-                      ASL                                 ;; 03CA9E : 0A          ;
-                      ASL                                 ;; 03CA9F : 0A          ;
-                      ASL                                 ;; 03CAA0 : 0A          ;
-                      ADC $0F                             ;; 03CAA1 : 65 0F       ;
-                      ADC $0F                             ;; 03CAA3 : 65 0F       ;
-                      ADC $07                             ;; 03CAA5 : 65 07       ;
+                      STA.B $0F                           ;; 03CA9C : 85 0F       ;
+                      ASL A                               ;; 03CA9E : 0A          ;
+                      ASL A                               ;; 03CA9F : 0A          ;
+                      ASL A                               ;; 03CAA0 : 0A          ;
+                      ADC.B $0F                           ;; 03CAA1 : 65 0F       ;
+                      ADC.B $0F                           ;; 03CAA3 : 65 0F       ;
+                      ADC.B $07                           ;; 03CAA5 : 65 07       ;
                       TAX                                 ;; 03CAA7 : AA          ;
                       LDA.W DATA_03C9B9,X                 ;; 03CAA8 : BD B9 C9    ;
                       STA.W $0202,Y                       ;; 03CAAB : 99 02 02    ;
                       PLX                                 ;; 03CAAE : FA          ;
-                      LDA $05                             ;; 03CAAF : A5 05       ;
-                      LSR                                 ;; 03CAB1 : 4A          ;
+                      LDA.B $05                           ;; 03CAAF : A5 05       ;
+                      LSR A                               ;; 03CAB1 : 4A          ;
                       NOP                                 ;; 03CAB2 : EA          ;
                       NOP                                 ;; 03CAB3 : EA          ;
                       PHX                                 ;; 03CAB4 : DA          ;
-                      LDX $0A                             ;; 03CAB5 : A6 0A       ;
+                      LDX.B $0A                           ;; 03CAB5 : A6 0A       ;
                       CPX.B #$03                          ;; 03CAB7 : E0 03       ;
                       BEQ CODE_03CABD                     ;; 03CAB9 : F0 02       ;
-                      EOR $04                             ;; 03CABB : 45 04       ;
+                      EOR.B $04                           ;; 03CABB : 45 04       ;
 CODE_03CABD:          AND.B #$0E                          ;; 03CABD : 29 0E       ;
                       ORA.B #$31                          ;; 03CABF : 09 31       ;
                       STA.W $0203,Y                       ;; 03CAC1 : 99 03 02    ;
                       PLX                                 ;; 03CAC4 : FA          ;
                       PHY                                 ;; 03CAC5 : 5A          ;
                       TYA                                 ;; 03CAC6 : 98          ;
-                      LSR                                 ;; 03CAC7 : 4A          ;
-                      LSR                                 ;; 03CAC8 : 4A          ;
+                      LSR A                               ;; 03CAC7 : 4A          ;
+                      LSR A                               ;; 03CAC8 : 4A          ;
                       TAY                                 ;; 03CAC9 : A8          ;
                       LDA.B #$00                          ;; 03CACA : A9 00       ;
                       STA.W $0420,Y                       ;; 03CACC : 99 20 04    ;
@@ -8135,111 +8135,111 @@ CODE_03CABD:          AND.B #$0E                          ;; 03CABD : 29 0E     
                       JMP CODE_03CA0D                     ;; 03CAD7 : 4C 0D CA    ;
                                                           ;;                      ;
 CODE_03CADA:          LDX.B #$53                          ;; 03CADA : A2 53       ;
-CODE_03CADC:          STX $04                             ;; 03CADC : 86 04       ;
-                      LDA $0A                             ;; 03CADE : A5 0A       ;
+CODE_03CADC:          STX.B $04                           ;; 03CADC : 86 04       ;
+                      LDA.B $0A                           ;; 03CADE : A5 0A       ;
                       CMP.B #$03                          ;; 03CAE0 : C9 03       ;
                       LDA.W DATA_03C626,X                 ;; 03CAE2 : BD 26 C6    ;
                       BCC CODE_03CAEA                     ;; 03CAE5 : 90 03       ;
                       LDA.W DATA_03C6CE,X                 ;; 03CAE7 : BD CE C6    ;
 CODE_03CAEA:          SEC                                 ;; 03CAEA : 38          ;
                       SBC.B #$40                          ;; 03CAEB : E9 40       ;
-                      STA $00                             ;; 03CAED : 85 00       ;
-                      LDA $0A                             ;; 03CAEF : A5 0A       ;
+                      STA.B $00                           ;; 03CAED : 85 00       ;
+                      LDA.B $0A                           ;; 03CAEF : A5 0A       ;
                       CMP.B #$03                          ;; 03CAF1 : C9 03       ;
                       LDA.W DATA_03C67A,X                 ;; 03CAF3 : BD 7A C6    ;
                       BCC CODE_03CAFB                     ;; 03CAF6 : 90 03       ;
                       LDA.W DATA_03C722,X                 ;; 03CAF8 : BD 22 C7    ;
 CODE_03CAFB:          SEC                                 ;; 03CAFB : 38          ;
                       SBC.B #$50                          ;; 03CAFC : E9 50       ;
-                      STA $01                             ;; 03CAFE : 85 01       ;
+                      STA.B $01                           ;; 03CAFE : 85 01       ;
                       PHY                                 ;; 03CB00 : 5A          ;
-                      LDA $00                             ;; 03CB01 : A5 00       ;
+                      LDA.B $00                           ;; 03CB01 : A5 00       ;
                       BPL CODE_03CB08                     ;; 03CB03 : 10 03       ;
                       EOR.B #$FF                          ;; 03CB05 : 49 FF       ;
                       INC A                               ;; 03CB07 : 1A          ;
 CODE_03CB08:          STA.W $4202                         ;; 03CB08 : 8D 02 42    ; Multiplicand A
-                      LDA $06                             ;; 03CB0B : A5 06       ;
+                      LDA.B $06                           ;; 03CB0B : A5 06       ;
                       STA.W $4203                         ;; 03CB0D : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03CB10 : EA          ;
                       NOP                                 ;; 03CB11 : EA          ;
                       NOP                                 ;; 03CB12 : EA          ;
                       NOP                                 ;; 03CB13 : EA          ;
                       LDA.W $4217                         ;; 03CB14 : AD 17 42    ; Product/Remainder Result (High Byte)
-                      LDY $00                             ;; 03CB17 : A4 00       ;
+                      LDY.B $00                           ;; 03CB17 : A4 00       ;
                       BPL CODE_03CB1E                     ;; 03CB19 : 10 03       ;
                       EOR.B #$FF                          ;; 03CB1B : 49 FF       ;
                       INC A                               ;; 03CB1D : 1A          ;
-CODE_03CB1E:          STA $02                             ;; 03CB1E : 85 02       ;
-                      LDA $01                             ;; 03CB20 : A5 01       ;
+CODE_03CB1E:          STA.B $02                           ;; 03CB1E : 85 02       ;
+                      LDA.B $01                           ;; 03CB20 : A5 01       ;
                       BPL CODE_03CB27                     ;; 03CB22 : 10 03       ;
                       EOR.B #$FF                          ;; 03CB24 : 49 FF       ;
                       INC A                               ;; 03CB26 : 1A          ;
 CODE_03CB27:          STA.W $4202                         ;; 03CB27 : 8D 02 42    ; Multiplicand A
-                      LDA $06                             ;; 03CB2A : A5 06       ;
+                      LDA.B $06                           ;; 03CB2A : A5 06       ;
                       STA.W $4203                         ;; 03CB2C : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03CB2F : EA          ;
                       NOP                                 ;; 03CB30 : EA          ;
                       NOP                                 ;; 03CB31 : EA          ;
                       NOP                                 ;; 03CB32 : EA          ;
                       LDA.W $4217                         ;; 03CB33 : AD 17 42    ; Product/Remainder Result (High Byte)
-                      LDY $01                             ;; 03CB36 : A4 01       ;
+                      LDY.B $01                           ;; 03CB36 : A4 01       ;
                       BPL CODE_03CB3D                     ;; 03CB38 : 10 03       ;
                       EOR.B #$FF                          ;; 03CB3A : 49 FF       ;
                       INC A                               ;; 03CB3C : 1A          ;
-CODE_03CB3D:          STA $03                             ;; 03CB3D : 85 03       ;
+CODE_03CB3D:          STA.B $03                           ;; 03CB3D : 85 03       ;
                       LDY.B #$00                          ;; 03CB3F : A0 00       ;
-                      LDA $07                             ;; 03CB41 : A5 07       ;
+                      LDA.B $07                           ;; 03CB41 : A5 07       ;
                       CMP.B #$06                          ;; 03CB43 : C9 06       ;
                       BCC CODE_03CB51                     ;; 03CB45 : 90 0A       ;
-                      LDA $05                             ;; 03CB47 : A5 05       ;
+                      LDA.B $05                           ;; 03CB47 : A5 05       ;
                       CLC                                 ;; 03CB49 : 18          ;
-                      ADC $04                             ;; 03CB4A : 65 04       ;
-                      LSR                                 ;; 03CB4C : 4A          ;
-                      LSR                                 ;; 03CB4D : 4A          ;
+                      ADC.B $04                           ;; 03CB4A : 65 04       ;
+                      LSR A                               ;; 03CB4C : 4A          ;
+                      LSR A                               ;; 03CB4D : 4A          ;
                       AND.B #$07                          ;; 03CB4E : 29 07       ;
                       TAY                                 ;; 03CB50 : A8          ;
 CODE_03CB51:          LDA.W DATA_03C9E1,Y                 ;; 03CB51 : B9 E1 C9    ;
                       PLY                                 ;; 03CB54 : 7A          ;
                       CLC                                 ;; 03CB55 : 18          ;
-                      ADC $02                             ;; 03CB56 : 65 02       ;
+                      ADC.B $02                           ;; 03CB56 : 65 02       ;
                       CLC                                 ;; 03CB58 : 18          ;
-                      ADC $08                             ;; 03CB59 : 65 08       ;
+                      ADC.B $08                           ;; 03CB59 : 65 08       ;
                       STA.W $0300,Y                       ;; 03CB5B : 99 00 03    ;
-                      LDA $03                             ;; 03CB5E : A5 03       ;
+                      LDA.B $03                           ;; 03CB5E : A5 03       ;
                       CLC                                 ;; 03CB60 : 18          ;
-                      ADC $09                             ;; 03CB61 : 65 09       ;
+                      ADC.B $09                           ;; 03CB61 : 65 09       ;
                       STA.W $0301,Y                       ;; 03CB63 : 99 01 03    ;
                       PHX                                 ;; 03CB66 : DA          ;
-                      LDA $05                             ;; 03CB67 : A5 05       ;
+                      LDA.B $05                           ;; 03CB67 : A5 05       ;
                       AND.B #$03                          ;; 03CB69 : 29 03       ;
-                      STA $0F                             ;; 03CB6B : 85 0F       ;
-                      ASL                                 ;; 03CB6D : 0A          ;
-                      ASL                                 ;; 03CB6E : 0A          ;
-                      ASL                                 ;; 03CB6F : 0A          ;
-                      ADC $0F                             ;; 03CB70 : 65 0F       ;
-                      ADC $0F                             ;; 03CB72 : 65 0F       ;
-                      ADC $07                             ;; 03CB74 : 65 07       ;
+                      STA.B $0F                           ;; 03CB6B : 85 0F       ;
+                      ASL A                               ;; 03CB6D : 0A          ;
+                      ASL A                               ;; 03CB6E : 0A          ;
+                      ASL A                               ;; 03CB6F : 0A          ;
+                      ADC.B $0F                           ;; 03CB70 : 65 0F       ;
+                      ADC.B $0F                           ;; 03CB72 : 65 0F       ;
+                      ADC.B $07                           ;; 03CB74 : 65 07       ;
                       TAX                                 ;; 03CB76 : AA          ;
                       LDA.W DATA_03C9B9,X                 ;; 03CB77 : BD B9 C9    ;
                       STA.W $0302,Y                       ;; 03CB7A : 99 02 03    ;
                       PLX                                 ;; 03CB7D : FA          ;
-                      LDA $05                             ;; 03CB7E : A5 05       ;
-                      LSR                                 ;; 03CB80 : 4A          ;
+                      LDA.B $05                           ;; 03CB7E : A5 05       ;
+                      LSR A                               ;; 03CB80 : 4A          ;
                       NOP                                 ;; 03CB81 : EA          ;
                       NOP                                 ;; 03CB82 : EA          ;
                       PHX                                 ;; 03CB83 : DA          ;
-                      LDX $0A                             ;; 03CB84 : A6 0A       ;
+                      LDX.B $0A                           ;; 03CB84 : A6 0A       ;
                       CPX.B #$03                          ;; 03CB86 : E0 03       ;
                       BEQ CODE_03CB8C                     ;; 03CB88 : F0 02       ;
-                      EOR $04                             ;; 03CB8A : 45 04       ;
+                      EOR.B $04                           ;; 03CB8A : 45 04       ;
 CODE_03CB8C:          AND.B #$0E                          ;; 03CB8C : 29 0E       ;
                       ORA.B #$31                          ;; 03CB8E : 09 31       ;
                       STA.W $0303,Y                       ;; 03CB90 : 99 03 03    ;
                       PLX                                 ;; 03CB93 : FA          ;
                       PHY                                 ;; 03CB94 : 5A          ;
                       TYA                                 ;; 03CB95 : 98          ;
-                      LSR                                 ;; 03CB96 : 4A          ;
-                      LSR                                 ;; 03CB97 : 4A          ;
+                      LSR A                               ;; 03CB96 : 4A          ;
+                      LSR A                               ;; 03CB97 : 4A          ;
                       TAY                                 ;; 03CB98 : A8          ;
                       LDA.B #$00                          ;; 03CB99 : A9 00       ;
                       STA.W $0460,Y                       ;; 03CB9B : 99 60 04    ;
@@ -8273,22 +8273,22 @@ CODE_03CBB3:          JSL FindFreeSprSlot                 ;; 03CBB3 : 22 E4 A9 0
                       PLX                                 ;; 03CBC4 : FA          ;
                       LDA.B #$08                          ;; 03CBC5 : A9 08       ; \ Sprite status = Normal 
                       STA.W $14C8,Y                       ;; 03CBC7 : 99 C8 14    ; / 
-                      LDA $D8,X                           ;; 03CBCA : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03CBCA : B5 D8       ;
                       STA.W $00D8,Y                       ;; 03CBCC : 99 D8 00    ;
                       LDA.W $14D4,X                       ;; 03CBCF : BD D4 14    ;
                       STA.W $14D4,Y                       ;; 03CBD2 : 99 D4 14    ;
-                      LDA $E4,X                           ;; 03CBD5 : B5 E4       ;
-                      STA $01                             ;; 03CBD7 : 85 01       ;
+                      LDA.B $E4,X                         ;; 03CBD5 : B5 E4       ;
+                      STA.B $01                           ;; 03CBD7 : 85 01       ;
                       LDA.W $14E0,X                       ;; 03CBD9 : BD E0 14    ;
-                      STA $00                             ;; 03CBDC : 85 00       ;
+                      STA.B $00                           ;; 03CBDC : 85 00       ;
                       PHX                                 ;; 03CBDE : DA          ;
                       LDA.W $157C,X                       ;; 03CBDF : BD 7C 15    ;
                       TAX                                 ;; 03CBE2 : AA          ;
-                      LDA $01                             ;; 03CBE3 : A5 01       ;
+                      LDA.B $01                           ;; 03CBE3 : A5 01       ;
                       CLC                                 ;; 03CBE5 : 18          ;
                       ADC.L ChuckSprGenDispX,X            ;; 03CBE6 : 7F AD CB 03 ;
                       STA.W $00E4,Y                       ;; 03CBEA : 99 E4 00    ;
-                      LDA $00                             ;; 03CBED : A5 00       ;
+                      LDA.B $00                           ;; 03CBED : A5 00       ;
                       ADC.L ChuckSprGenSpeedHi,X          ;; 03CBEF : 7F AF CB 03 ;
                       STA.W $14E0,Y                       ;; 03CBF3 : 99 E0 14    ;
                       LDA.L ChuckSprGenSpeedLo,X          ;; 03CBF6 : BF B1 CB 03 ;
@@ -8312,7 +8312,7 @@ CODE_03CC14:          JSR CODE_03D484                     ;; 03CC14 : 20 84 D4  
                       LDA.W $14C8,X                       ;; 03CC17 : BD C8 14    ;
                       CMP.B #$08                          ;; 03CC1A : C9 08       ;
                       BNE Return03CC37                    ;; 03CC1C : D0 19       ;
-                      LDA $9D                             ;; 03CC1E : A5 9D       ;
+                      LDA.B $9D                           ;; 03CC1E : A5 9D       ;
                       BNE Return03CC37                    ;; 03CC20 : D0 15       ;
                       LDA.W $151C,X                       ;; 03CC22 : BD 1C 15    ;
                       JSL ExecutePtr                      ;; 03CC25 : 22 DF 86 00 ;
@@ -8356,20 +8356,20 @@ CODE_03CC9D:          LDA.W $160E,X                       ;; 03CC9D : BD 0E 16  
                       LDA.W DATA_03CC5A,Y                 ;; 03CCA4 : B9 5A CC    ;
                       TAY                                 ;; 03CCA7 : A8          ;
                       LDA.W DATA_03CC38,Y                 ;; 03CCA8 : B9 38 CC    ;
-                      STA $E4,X                           ;; 03CCAB : 95 E4       ;
-                      LDA $C2,X                           ;; 03CCAD : B5 C2       ;
+                      STA.B $E4,X                         ;; 03CCAB : 95 E4       ;
+                      LDA.B $C2,X                         ;; 03CCAD : B5 C2       ;
                       CMP.B #$06                          ;; 03CCAF : C9 06       ;
                       LDA.W DATA_03CC40,Y                 ;; 03CCB1 : B9 40 CC    ;
                       BCC CODE_03CCB8                     ;; 03CCB4 : 90 02       ;
                       LDA.B #$50                          ;; 03CCB6 : A9 50       ;
-CODE_03CCB8:          STA $D8,X                           ;; 03CCB8 : 95 D8       ;
+CODE_03CCB8:          STA.B $D8,X                         ;; 03CCB8 : 95 D8       ;
                       LDA.B #$08                          ;; 03CCBA : A9 08       ;
                       LDY.W $1570,X                       ;; 03CCBC : BC 70 15    ;
                       BNE CODE_03CCCC                     ;; 03CCBF : D0 0B       ;
                       JSR CODE_03CCE2                     ;; 03CCC1 : 20 E2 CC    ;
                       JSL GetRand                         ;; 03CCC4 : 22 F9 AC 01 ;
-                      LSR                                 ;; 03CCC8 : 4A          ;
-                      LSR                                 ;; 03CCC9 : 4A          ;
+                      LSR A                               ;; 03CCC8 : 4A          ;
+                      LSR A                               ;; 03CCC9 : 4A          ;
                       AND.B #$07                          ;; 03CCCA : 29 07       ;
 CODE_03CCCC:          STA.W $1528,X                       ;; 03CCCC : 9D 28 15    ;
                       TAY                                 ;; 03CCCF : A8          ;
@@ -8396,15 +8396,15 @@ CODE_03CCE8:          LDA.B #$08                          ;; 03CCE8 : A9 08     
                       PLX                                 ;; 03CCF8 : FA          ;
                       LDA.W DATA_03CCE0,Y                 ;; 03CCF9 : B9 E0 CC    ;
                       STA.W $1570,Y                       ;; 03CCFC : 99 70 15    ;
-                      LDA $C2,X                           ;; 03CCFF : B5 C2       ;
+                      LDA.B $C2,X                         ;; 03CCFF : B5 C2       ;
                       STA.W $00C2,Y                       ;; 03CD01 : 99 C2 00    ;
                       LDA.W $160E,X                       ;; 03CD04 : BD 0E 16    ;
                       STA.W $160E,Y                       ;; 03CD07 : 99 0E 16    ;
-                      LDA $E4,X                           ;; 03CD0A : B5 E4       ;
+                      LDA.B $E4,X                         ;; 03CD0A : B5 E4       ;
                       STA.W $00E4,Y                       ;; 03CD0C : 99 E4 00    ;
                       LDA.W $14E0,X                       ;; 03CD0F : BD E0 14    ;
                       STA.W $14E0,Y                       ;; 03CD12 : 99 E0 14    ;
-                      LDA $D8,X                           ;; 03CD15 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03CD15 : B5 D8       ;
                       STA.W $00D8,Y                       ;; 03CD17 : 99 D8 00    ;
                       LDA.W $14D4,X                       ;; 03CD1A : BD D4 14    ;
                       STA.W $14D4,Y                       ;; 03CD1D : 99 D4 14    ;
@@ -8416,7 +8416,7 @@ CODE_03CD21:          LDA.W $1540,X                       ;; 03CD21 : BD 40 15  
                       STA.W $1540,X                       ;; 03CD28 : 9D 40 15    ;
                       INC.W $151C,X                       ;; 03CD2B : FE 1C 15    ;
 CODE_03CD2E:          LDA.B #$F8                          ;; 03CD2E : A9 F8       ;
-                      STA $AA,X                           ;; 03CD30 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03CD30 : 95 AA       ;
                       JSL UpdateYPosNoGvtyW               ;; 03CD32 : 22 1A 80 01 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -8449,15 +8449,15 @@ CODE_03CDCF:          LDA.B #$24                          ;; 03CDCF : A9 24     
                       STA.W $151C,X                       ;; 03CDD6 : 9D 1C 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_03CDDA:          LSR                                 ;; 03CDDA : 4A          ;
-                      LSR                                 ;; 03CDDB : 4A          ;
-                      STA $00                             ;; 03CDDC : 85 00       ;
+CODE_03CDDA:          LSR A                               ;; 03CDDA : 4A          ;
+                      LSR A                               ;; 03CDDB : 4A          ;
+                      STA.B $00                           ;; 03CDDC : 85 00       ;
                       LDA.W $1528,X                       ;; 03CDDE : BD 28 15    ;
-                      ASL                                 ;; 03CDE1 : 0A          ;
-                      ASL                                 ;; 03CDE2 : 0A          ;
-                      ASL                                 ;; 03CDE3 : 0A          ;
-                      ASL                                 ;; 03CDE4 : 0A          ;
-                      ORA $00                             ;; 03CDE5 : 05 00       ;
+                      ASL A                               ;; 03CDE1 : 0A          ;
+                      ASL A                               ;; 03CDE2 : 0A          ;
+                      ASL A                               ;; 03CDE3 : 0A          ;
+                      ASL A                               ;; 03CDE4 : 0A          ;
+                      ORA.B $00                           ;; 03CDE5 : 05 00       ;
                       TAY                                 ;; 03CDE7 : A8          ;
                       LDA.W DATA_03CD37,Y                 ;; 03CDE8 : B9 37 CD    ;
                       STA.W $1602,X                       ;; 03CDEB : 9D 02 16    ;
@@ -8474,7 +8474,7 @@ CODE_03CDFD:          STZ.W $151C,X                       ;; 03CDFD : 9E 1C 15  
                       LDA.B #$30                          ;; 03CE00 : A9 30       ;
                       STA.W $1540,X                       ;; 03CE02 : 9D 40 15    ;
 CODE_03CE05:          LDA.B #$10                          ;; 03CE05 : A9 10       ;
-                      STA $AA,X                           ;; 03CE07 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03CE07 : 95 AA       ;
                       JSL UpdateYPosNoGvtyW               ;; 03CE09 : 22 1A 80 01 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -8486,7 +8486,7 @@ CODE_03CE0E:          LDA.W $1540,X                       ;; 03CE0E : BD 40 15  
                       BNE CODE_03CDCF                     ;; 03CE1B : D0 B2       ;
                       LDA.B #$05                          ;; 03CE1D : A9 05       ;
                       STA.W $151C,X                       ;; 03CE1F : 9D 1C 15    ;
-                      STZ $AA,X                           ;; 03CE22 : 74 AA       ; Sprite Y Speed = 0 
+                      STZ.B $AA,X                         ;; 03CE22 : 74 AA       ; Sprite Y Speed = 0 
                       LDA.B #$23                          ;; 03CE24 : A9 23       ;
                       STA.W $1DF9                         ;; 03CE26 : 8D F9 1D    ; / Play sound effect 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -8498,8 +8498,8 @@ CODE_03CE2F:          CMP.B #$24                          ;; 03CE2F : C9 24     
                       LDY.B #$29                          ;; 03CE33 : A0 29       ;
                       STY.W $1DFC                         ;; 03CE35 : 8C FC 1D    ; / Play sound effect 
 CODE_03CE38:          LDA.B $14                           ;; 03CE38 : A5 14       ;
-                      LSR                                 ;; 03CE3A : 4A          ;
-                      LSR                                 ;; 03CE3B : 4A          ;
+                      LSR A                               ;; 03CE3A : 4A          ;
+                      LSR A                               ;; 03CE3B : 4A          ;
                       AND.B #$01                          ;; 03CE3C : 29 01       ;
                       STA.W $1602,X                       ;; 03CE3E : 9D 02 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -8508,9 +8508,9 @@ CODE_03CE42:          CMP.B #$10                          ;; 03CE42 : C9 10     
                       BNE CODE_03CE4B                     ;; 03CE44 : D0 05       ;
                       LDY.B #$2A                          ;; 03CE46 : A0 2A       ;
                       STY.W $1DFC                         ;; 03CE48 : 8C FC 1D    ; / Play sound effect 
-CODE_03CE4B:          LSR                                 ;; 03CE4B : 4A          ;
-                      LSR                                 ;; 03CE4C : 4A          ;
-                      LSR                                 ;; 03CE4D : 4A          ;
+CODE_03CE4B:          LSR A                               ;; 03CE4B : 4A          ;
+                      LSR A                               ;; 03CE4C : 4A          ;
+                      LSR A                               ;; 03CE4D : 4A          ;
                       TAY                                 ;; 03CE4E : A8          ;
                       LDA.W DATA_03CE56,Y                 ;; 03CE4F : B9 56 CE    ;
                       STA.W $1602,X                       ;; 03CE52 : 9D 02 16    ;
@@ -8520,15 +8520,15 @@ CODE_03CE4B:          LSR                                 ;; 03CE4B : 4A        
 DATA_03CE56:          db $16,$16,$15,$14                  ;; 03CE56               ;
                                                           ;;                      ;
 CODE_03CE5A:          JSL UpdateYPosNoGvtyW               ;; 03CE5A : 22 1A 80 01 ;
-                      LDA $AA,X                           ;; 03CE5E : B5 AA       ;
+                      LDA.B $AA,X                         ;; 03CE5E : B5 AA       ;
                       CMP.B #$40                          ;; 03CE60 : C9 40       ;
                       BPL CODE_03CE69                     ;; 03CE62 : 10 05       ;
                       CLC                                 ;; 03CE64 : 18          ;
                       ADC.B #$03                          ;; 03CE65 : 69 03       ;
-                      STA $AA,X                           ;; 03CE67 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03CE67 : 95 AA       ;
 CODE_03CE69:          LDA.W $14D4,X                       ;; 03CE69 : BD D4 14    ;
                       BEQ CODE_03CE87                     ;; 03CE6C : F0 19       ;
-                      LDA $D8,X                           ;; 03CE6E : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03CE6E : B5 D8       ;
                       CMP.B #$85                          ;; 03CE70 : C9 85       ;
                       BCC CODE_03CE87                     ;; 03CE72 : 90 13       ;
                       LDA.B #$06                          ;; 03CE74 : A9 06       ;
@@ -8549,13 +8549,13 @@ CODE_03CE89:          LDA.W $1540,X                       ;; 03CE89 : BD 40 15  
                       LDA.B #$0B                          ;; 03CE99 : A9 0B       ;
                       STA.W $1DFB                         ;; 03CE9B : 8D FB 1D    ; / Change music 
 CODE_03CE9E:          LDA.B #$04                          ;; 03CE9E : A9 04       ;
-                      STA $AA,X                           ;; 03CEA0 : 95 AA       ;
+                      STA.B $AA,X                         ;; 03CEA0 : 95 AA       ;
                       JSL UpdateYPosNoGvtyW               ;; 03CEA2 : 22 1A 80 01 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03CEA7:          JSL MarioSprInteract                ;; 03CEA7 : 22 DC A7 01 ;
                       BCC Return03CEF1                    ;; 03CEAB : 90 44       ;
-                      LDA $7D                             ;; 03CEAD : A5 7D       ;
+                      LDA.B $7D                           ;; 03CEAD : A5 7D       ;
                       CMP.B #$10                          ;; 03CEAF : C9 10       ;
                       BMI CODE_03CEED                     ;; 03CEB1 : 30 3A       ;
                       JSL DisplayContactGfx               ;; 03CEB3 : 22 99 AB 01 ;
@@ -8785,12 +8785,12 @@ DATA_03D46D:          db $04,$04,$02,$03,$04,$02,$02,$02  ;; 03D46D             
                                                           ;;                      ;
 CODE_03D484:          JSR GetDrawInfoBnk3                 ;; 03D484 : 20 60 B7    ;
                       LDA.W $1602,X                       ;; 03D487 : BD 02 16    ;
-                      ASL                                 ;; 03D48A : 0A          ;
-                      ASL                                 ;; 03D48B : 0A          ;
+                      ASL A                               ;; 03D48A : 0A          ;
+                      ASL A                               ;; 03D48B : 0A          ;
                       ADC.W $1602,X                       ;; 03D48C : 7D 02 16    ;
                       ADC.W $1602,X                       ;; 03D48F : 7D 02 16    ;
-                      STA $02                             ;; 03D492 : 85 02       ;
-                      LDA $C2,X                           ;; 03D494 : B5 C2       ;
+                      STA.B $02                           ;; 03D492 : 85 02       ;
+                      LDA.B $C2,X                         ;; 03D494 : B5 C2       ;
                       CMP.B #$06                          ;; 03D496 : C9 06       ;
                       BEQ CODE_03D4DF                     ;; 03D498 : F0 45       ;
                       PHX                                 ;; 03D49A : DA          ;
@@ -8801,13 +8801,13 @@ CODE_03D484:          JSR GetDrawInfoBnk3                 ;; 03D484 : 20 60 B7  
 CODE_03D4A3:          PHX                                 ;; 03D4A3 : DA          ;
                       TXA                                 ;; 03D4A4 : 8A          ;
                       CLC                                 ;; 03D4A5 : 18          ;
-                      ADC $02                             ;; 03D4A6 : 65 02       ;
+                      ADC.B $02                           ;; 03D4A6 : 65 02       ;
                       TAX                                 ;; 03D4A8 : AA          ;
-                      LDA $00                             ;; 03D4A9 : A5 00       ;
+                      LDA.B $00                           ;; 03D4A9 : A5 00       ;
                       CLC                                 ;; 03D4AB : 18          ;
                       ADC.W DATA_03CEF2,X                 ;; 03D4AC : 7D F2 CE    ;
                       STA.W $0300,Y                       ;; 03D4AF : 99 00 03    ;
-                      LDA $01                             ;; 03D4B2 : A5 01       ;
+                      LDA.B $01                           ;; 03D4B2 : A5 01       ;
                       CLC                                 ;; 03D4B4 : 18          ;
                       ADC.W DATA_03D006,X                 ;; 03D4B5 : 7D 06 D0    ;
                       STA.W $0301,Y                       ;; 03D4B8 : 99 01 03    ;
@@ -8818,8 +8818,8 @@ CODE_03D4A3:          PHX                                 ;; 03D4A3 : DA        
                       STA.W $0303,Y                       ;; 03D4C6 : 99 03 03    ;
                       PHY                                 ;; 03D4C9 : 5A          ;
                       TYA                                 ;; 03D4CA : 98          ;
-                      LSR                                 ;; 03D4CB : 4A          ;
-                      LSR                                 ;; 03D4CC : 4A          ;
+                      LSR A                               ;; 03D4CB : 4A          ;
+                      LSR A                               ;; 03D4CC : 4A          ;
                       TAY                                 ;; 03D4CD : A8          ;
                       LDA.W DATA_03D342,X                 ;; 03D4CE : BD 42 D3    ;
                       STA.W $0460,Y                       ;; 03D4D1 : 99 60 04    ;
@@ -8842,13 +8842,13 @@ CODE_03D4DF:          PHX                                 ;; 03D4DF : DA        
 CODE_03D4E8:          PHX                                 ;; 03D4E8 : DA          ;
                       TXA                                 ;; 03D4E9 : 8A          ;
                       CLC                                 ;; 03D4EA : 18          ;
-                      ADC $02                             ;; 03D4EB : 65 02       ;
+                      ADC.B $02                           ;; 03D4EB : 65 02       ;
                       TAX                                 ;; 03D4ED : AA          ;
-                      LDA $00                             ;; 03D4EE : A5 00       ;
+                      LDA.B $00                           ;; 03D4EE : A5 00       ;
                       CLC                                 ;; 03D4F0 : 18          ;
                       ADC.W DATA_03CF7C,X                 ;; 03D4F1 : 7D 7C CF    ;
                       STA.W $0300,Y                       ;; 03D4F4 : 99 00 03    ;
-                      LDA $01                             ;; 03D4F7 : A5 01       ;
+                      LDA.B $01                           ;; 03D4F7 : A5 01       ;
                       CLC                                 ;; 03D4F9 : 18          ;
                       ADC.W DATA_03D090,X                 ;; 03D4FA : 7D 90 D0    ;
                       STA.W $0301,Y                       ;; 03D4FD : 99 01 03    ;
@@ -8859,8 +8859,8 @@ CODE_03D4E8:          PHX                                 ;; 03D4E8 : DA        
                       STA.W $0303,Y                       ;; 03D50B : 99 03 03    ;
                       PHY                                 ;; 03D50E : 5A          ;
                       TYA                                 ;; 03D50F : 98          ;
-                      LSR                                 ;; 03D510 : 4A          ;
-                      LSR                                 ;; 03D511 : 4A          ;
+                      LSR A                               ;; 03D510 : 4A          ;
+                      LSR A                               ;; 03D511 : 4A          ;
                       TAY                                 ;; 03D512 : A8          ;
                       LDA.W DATA_03D3CC,X                 ;; 03D513 : BD CC D3    ;
                       STA.W $0460,Y                       ;; 03D516 : 99 60 04    ;
@@ -8928,8 +8928,8 @@ CODE_03D674:          PHX                                 ;; 03D674 : DA        
                       LDY.W #$0000                        ;; 03D67D : A0 00 00    ;
 CODE_03D680:          PHX                                 ;; 03D680 : DA          ;
                       TXA                                 ;; 03D681 : 8A          ;
-                      ASL                                 ;; 03D682 : 0A          ;
-                      ASL                                 ;; 03D683 : 0A          ;
+                      ASL A                               ;; 03D682 : 0A          ;
+                      ASL A                               ;; 03D683 : 0A          ;
                       TAX                                 ;; 03D684 : AA          ;
                       LDA.W DATA_03D524,X                 ;; 03D685 : BD 24 D5    ;
                       STA.W $0200,Y                       ;; 03D688 : 99 00 02    ;
@@ -8937,8 +8937,8 @@ CODE_03D680:          PHX                                 ;; 03D680 : DA        
                       STA.W $0202,Y                       ;; 03D68E : 99 02 02    ;
                       PHY                                 ;; 03D691 : 5A          ;
                       TYA                                 ;; 03D692 : 98          ;
-                      LSR                                 ;; 03D693 : 4A          ;
-                      LSR                                 ;; 03D694 : 4A          ;
+                      LSR A                               ;; 03D693 : 4A          ;
+                      LSR A                               ;; 03D694 : 4A          ;
                       TAY                                 ;; 03D695 : A8          ;
                       SEP #$20                            ;; 03D696 : E2 20       ; Accum (8 bit) 
                       LDA.B #$00                          ;; 03D698 : A9 00       ;
@@ -8984,11 +8984,11 @@ CODE_03D70C:          PHX                                 ;; 03D70C : DA        
                       CPX.B #$0C                          ;; 03D721 : E0 0C       ;
                       BCS CODE_03D757                     ;; 03D723 : B0 32       ;
                       LDA.L DATA_03D700,X                 ;; 03D725 : BF 00 D7 03 ;
-                      STA $9A                             ;; 03D729 : 85 9A       ;
-                      STZ $9B                             ;; 03D72B : 64 9B       ;
+                      STA.B $9A                           ;; 03D729 : 85 9A       ;
+                      STZ.B $9B                           ;; 03D72B : 64 9B       ;
                       LDA.B #$B0                          ;; 03D72D : A9 B0       ;
-                      STA $98                             ;; 03D72F : 85 98       ;
-                      STZ $99                             ;; 03D731 : 64 99       ;
+                      STA.B $98                           ;; 03D72F : 85 98       ;
+                      STZ.B $99                           ;; 03D731 : 64 99       ;
                       LDA.W $14A7                         ;; 03D733 : AD A7 14    ;
                       BEQ CODE_03D74A                     ;; 03D736 : F0 12       ;
                       CMP.B #$3C                          ;; 03D738 : C9 3C       ;
@@ -9010,38 +9010,38 @@ CODE_03D757:          PLX                                 ;; 03D757 : FA        
 CODE_03D759:          REP #$20                            ;; 03D759 : C2 20       ; Accum (16 bit) 
                       LDA.W #$0170                        ;; 03D75B : A9 70 01    ;
                       SEC                                 ;; 03D75E : 38          ;
-                      SBC $9A                             ;; 03D75F : E5 9A       ;
-                      STA $9A                             ;; 03D761 : 85 9A       ;
+                      SBC.B $9A                           ;; 03D75F : E5 9A       ;
+                      STA.B $9A                           ;; 03D761 : 85 9A       ;
                       SEP #$20                            ;; 03D763 : E2 20       ; Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_03D766:          JSR CODE_03D76C                     ;; 03D766 : 20 6C D7    ;
                       JSR CODE_03D759                     ;; 03D769 : 20 59 D7    ;
 CODE_03D76C:          REP #$20                            ;; 03D76C : C2 20       ; Accum (16 bit) 
-                      LDA $9A                             ;; 03D76E : A5 9A       ;
+                      LDA.B $9A                           ;; 03D76E : A5 9A       ;
                       SEC                                 ;; 03D770 : 38          ;
-                      SBC $1A                             ;; 03D771 : E5 1A       ;
+                      SBC.B $1A                           ;; 03D771 : E5 1A       ;
                       CMP.W #$0100                        ;; 03D773 : C9 00 01    ;
                       SEP #$20                            ;; 03D776 : E2 20       ; Accum (8 bit) 
                       BCS Return03D77E                    ;; 03D778 : B0 04       ;
                       JSL CODE_028A44                     ;; 03D77A : 22 44 8A 02 ;
 Return03D77E:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_03D77F:          LDA $9A                             ;; 03D77F : A5 9A       ;
-                      LSR                                 ;; 03D781 : 4A          ;
-                      LSR                                 ;; 03D782 : 4A          ;
-                      LSR                                 ;; 03D783 : 4A          ;
-                      STA $01                             ;; 03D784 : 85 01       ;
-                      LSR                                 ;; 03D786 : 4A          ;
-                      ORA $98                             ;; 03D787 : 05 98       ;
+CODE_03D77F:          LDA.B $9A                           ;; 03D77F : A5 9A       ;
+                      LSR A                               ;; 03D781 : 4A          ;
+                      LSR A                               ;; 03D782 : 4A          ;
+                      LSR A                               ;; 03D783 : 4A          ;
+                      STA.B $01                           ;; 03D784 : 85 01       ;
+                      LSR A                               ;; 03D786 : 4A          ;
+                      ORA.B $98                           ;; 03D787 : 05 98       ;
                       REP #$20                            ;; 03D789 : C2 20       ; Accum (16 bit) 
                       AND.W #$00FF                        ;; 03D78B : 29 FF 00    ;
-                      LDX $9B                             ;; 03D78E : A6 9B       ;
+                      LDX.B $9B                           ;; 03D78E : A6 9B       ;
                       BEQ CODE_03D798                     ;; 03D790 : F0 06       ;
                       CLC                                 ;; 03D792 : 18          ;
                       ADC.W #$01B0                        ;; 03D793 : 69 B0 01    ;
                       LDX.B #$04                          ;; 03D796 : A2 04       ;
-CODE_03D798:          STX $00                             ;; 03D798 : 86 00       ;
+CODE_03D798:          STX.B $00                           ;; 03D798 : 86 00       ;
                       REP #$10                            ;; 03D79A : C2 10       ; Index (16 bit) 
                       TAX                                 ;; 03D79C : AA          ;
                       SEP #$20                            ;; 03D79D : E2 20       ; Accum (8 bit) 
@@ -9054,7 +9054,7 @@ CODE_03D798:          STX $00                             ;; 03D798 : 86 00     
                       TAX                                 ;; 03D7B1 : AA          ;
                       LDA.W #$C05A                        ;; 03D7B2 : A9 5A C0    ;
                       CLC                                 ;; 03D7B5 : 18          ;
-                      ADC $00                             ;; 03D7B6 : 65 00       ;
+                      ADC.B $00                           ;; 03D7B6 : 65 00       ;
                       STA.L $7F837D,X                     ;; 03D7B8 : 9F 7D 83 7F ;
                       ORA.W #$2000                        ;; 03D7BC : 09 00 20    ;
                       STA.L $7F8383,X                     ;; 03D7BF : 9F 83 83 7F ;
@@ -9139,51 +9139,51 @@ CODE_03D968:          STA.W $2118                         ;; 03D968 : 8D 18 21  
                       PHK                                 ;; 03D976 : 4B          ;
                       PLB                                 ;; 03D977 : AB          ;
                       LDA.B #$EC                          ;; 03D978 : A9 EC       ;
-                      STA $05                             ;; 03D97A : 85 05       ;
+                      STA.B $05                           ;; 03D97A : 85 05       ;
                       LDA.B #$D7                          ;; 03D97C : A9 D7       ;
-                      STA $06                             ;; 03D97E : 85 06       ;
+                      STA.B $06                           ;; 03D97E : 85 06       ;
                       LDA.B #$03                          ;; 03D980 : A9 03       ;
-                      STA $07                             ;; 03D982 : 85 07       ;
+                      STA.B $07                           ;; 03D982 : 85 07       ;
                       LDA.B #$10                          ;; 03D984 : A9 10       ;
-                      STA $00                             ;; 03D986 : 85 00       ;
+                      STA.B $00                           ;; 03D986 : 85 00       ;
                       LDA.B #$08                          ;; 03D988 : A9 08       ;
-                      STA $01                             ;; 03D98A : 85 01       ;
+                      STA.B $01                           ;; 03D98A : 85 01       ;
                       JSR CODE_03D991                     ;; 03D98C : 20 91 D9    ;
                       PLB                                 ;; 03D98F : AB          ;
 Return03D990:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_03D991:          STZ.W $2115                         ;; 03D991 : 9C 15 21    ; VRAM Address Increment Value
                       LDY.B #$00                          ;; 03D994 : A0 00       ;
-CODE_03D996:          STY $02                             ;; 03D996 : 84 02       ;
+CODE_03D996:          STY.B $02                           ;; 03D996 : 84 02       ;
                       LDA.B #$00                          ;; 03D998 : A9 00       ;
-CODE_03D99A:          STA $03                             ;; 03D99A : 85 03       ;
-                      LDA $00                             ;; 03D99C : A5 00       ;
+CODE_03D99A:          STA.B $03                           ;; 03D99A : 85 03       ;
+                      LDA.B $00                           ;; 03D99C : A5 00       ;
                       STA.W $2116                         ;; 03D99E : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
-                      LDA $01                             ;; 03D9A1 : A5 01       ;
+                      LDA.B $01                           ;; 03D9A1 : A5 01       ;
                       STA.W $2117                         ;; 03D9A3 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
-                      LDY $02                             ;; 03D9A6 : A4 02       ;
+                      LDY.B $02                           ;; 03D9A6 : A4 02       ;
                       LDA.B #$10                          ;; 03D9A8 : A9 10       ;
-                      STA $04                             ;; 03D9AA : 85 04       ;
+                      STA.B $04                           ;; 03D9AA : 85 04       ;
 CODE_03D9AC:          LDA [$05],Y                         ;; 03D9AC : B7 05       ;
                       STA.W $0AF6,Y                       ;; 03D9AE : 99 F6 0A    ;
-                      ASL                                 ;; 03D9B1 : 0A          ;
-                      ASL                                 ;; 03D9B2 : 0A          ;
-                      ORA $03                             ;; 03D9B3 : 05 03       ;
+                      ASL A                               ;; 03D9B1 : 0A          ;
+                      ASL A                               ;; 03D9B2 : 0A          ;
+                      ORA.B $03                           ;; 03D9B3 : 05 03       ;
                       TAX                                 ;; 03D9B5 : AA          ;
                       LDA.L DATA_03D8EC,X                 ;; 03D9B6 : BF EC D8 03 ;
                       STA.W $2118                         ;; 03D9BA : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       LDA.L DATA_03D8EE,X                 ;; 03D9BD : BF EE D8 03 ;
                       STA.W $2118                         ;; 03D9C1 : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       INY                                 ;; 03D9C4 : C8          ;
-                      DEC $04                             ;; 03D9C5 : C6 04       ;
+                      DEC.B $04                           ;; 03D9C5 : C6 04       ;
                       BNE CODE_03D9AC                     ;; 03D9C7 : D0 E3       ;
-                      LDA $00                             ;; 03D9C9 : A5 00       ;
+                      LDA.B $00                           ;; 03D9C9 : A5 00       ;
                       CLC                                 ;; 03D9CB : 18          ;
                       ADC.B #$80                          ;; 03D9CC : 69 80       ;
-                      STA $00                             ;; 03D9CE : 85 00       ;
+                      STA.B $00                           ;; 03D9CE : 85 00       ;
                       BCC CODE_03D9D4                     ;; 03D9D0 : 90 02       ;
-                      INC $01                             ;; 03D9D2 : E6 01       ;
-CODE_03D9D4:          LDA $03                             ;; 03D9D4 : A5 03       ;
+                      INC.B $01                           ;; 03D9D2 : E6 01       ;
+CODE_03D9D4:          LDA.B $03                           ;; 03D9D4 : A5 03       ;
                       EOR.B #$01                          ;; 03D9D6 : 49 01       ;
                       BNE CODE_03D99A                     ;; 03D9D8 : D0 C0       ;
                       TYA                                 ;; 03D9DA : 98          ;
@@ -9315,27 +9315,27 @@ CODE_03DD7D:          PHX                                 ;; 03DD7D : DA        
                       PHB                                 ;; 03DD7E : 8B          ;
                       PHK                                 ;; 03DD7F : 4B          ;
                       PLB                                 ;; 03DD80 : AB          ;
-                      LDY $C2,X                           ;; 03DD81 : B4 C2       ;
+                      LDY.B $C2,X                         ;; 03DD81 : B4 C2       ;
                       STY.W $13FC                         ;; 03DD83 : 8C FC 13    ;
                       CPY.B #$04                          ;; 03DD86 : C0 04       ;
                       BNE CODE_03DD97                     ;; 03DD88 : D0 0D       ;
                       JSR CODE_03DE8E                     ;; 03DD8A : 20 8E DE    ;
                       LDA.B #$48                          ;; 03DD8D : A9 48       ;
-                      STA $2C                             ;; 03DD8F : 85 2C       ;
+                      STA.B $2C                           ;; 03DD8F : 85 2C       ;
                       LDA.B #$14                          ;; 03DD91 : A9 14       ;
-                      STA $38                             ;; 03DD93 : 85 38       ;
-                      STA $39                             ;; 03DD95 : 85 39       ;
+                      STA.B $38                           ;; 03DD93 : 85 38       ;
+                      STA.B $39                           ;; 03DD95 : 85 39       ;
 CODE_03DD97:          LDA.B #$FF                          ;; 03DD97 : A9 FF       ;
-                      STA $5D                             ;; 03DD99 : 85 5D       ;
+                      STA.B $5D                           ;; 03DD99 : 85 5D       ;
                       INC A                               ;; 03DD9B : 1A          ;
-                      STA $5E                             ;; 03DD9C : 85 5E       ;
+                      STA.B $5E                           ;; 03DD9C : 85 5E       ;
                       LDY.W $13FC                         ;; 03DD9E : AC FC 13    ;
                       LDX.W DATA_03DD78,Y                 ;; 03DDA1 : BE 78 DD    ;
                       LDA.W KoopaPalPtrLo,Y               ;; 03DDA4 : B9 6E DD    ; \ $00 = Pointer in bank 0 (from above tables) 
-                      STA $00                             ;; 03DDA7 : 85 00       ;  | 
+                      STA.B $00                           ;; 03DDA7 : 85 00       ;  | 
                       LDA.W KoopaPalPtrHi,Y               ;; 03DDA9 : B9 73 DD    ;  | 
-                      STA $01                             ;; 03DDAC : 85 01       ;  | 
-                      STZ $02                             ;; 03DDAE : 64 02       ; / 
+                      STA.B $01                           ;; 03DDAC : 85 01       ;  | 
+                      STZ.B $02                           ;; 03DDAE : 64 02       ; / 
                       LDY.B #$0B                          ;; 03DDB0 : A0 0B       ; \ Read 0B bytes and put them in $0707 
 CODE_03DDB2:          LDA [$00],Y                         ;; 03DDB2 : B7 00       ;  | 
                       STA.W $0707,Y                       ;; 03DDB4 : 99 07 07    ;  | 
@@ -9349,9 +9349,9 @@ CODE_03DDB2:          LDA [$00],Y                         ;; 03DDB2 : B7 00     
                       BEQ CODE_03DDD7                     ;; 03DDC6 : F0 0F       ;
                       JSL CODE_00BA28                     ;; 03DDC8 : 22 28 BA 00 ;
                       LDA.B #$80                          ;; 03DDCC : A9 80       ;
-                      STA $03                             ;; 03DDCE : 85 03       ;
+                      STA.B $03                           ;; 03DDCE : 85 03       ;
 CODE_03DDD0:          JSR CODE_03DDE5                     ;; 03DDD0 : 20 E5 DD    ;
-                      DEC $03                             ;; 03DDD3 : C6 03       ;
+                      DEC.B $03                           ;; 03DDD3 : C6 03       ;
                       BNE CODE_03DDD0                     ;; 03DDD5 : D0 F9       ;
 CODE_03DDD7:          LDX.B #$5F                          ;; 03DDD7 : A2 5F       ;
 CODE_03DDD9:          LDA.B #$FF                          ;; 03DDD9 : A9 FF       ;
@@ -9365,21 +9365,21 @@ CODE_03DDD9:          LDA.B #$FF                          ;; 03DDD9 : A9 FF     
 CODE_03DDE5:          LDX.B #$00                          ;; 03DDE5 : A2 00       ;
                       TXY                                 ;; 03DDE7 : 9B          ;
                       LDA.B #$08                          ;; 03DDE8 : A9 08       ;
-                      STA $05                             ;; 03DDEA : 85 05       ;
+                      STA.B $05                           ;; 03DDEA : 85 05       ;
 CODE_03DDEC:          JSR CODE_03DE39                     ;; 03DDEC : 20 39 DE    ;
                       PHY                                 ;; 03DDEF : 5A          ;
                       TYA                                 ;; 03DDF0 : 98          ;
-                      LSR                                 ;; 03DDF1 : 4A          ;
+                      LSR A                               ;; 03DDF1 : 4A          ;
                       CLC                                 ;; 03DDF2 : 18          ;
                       ADC.B #$0F                          ;; 03DDF3 : 69 0F       ;
                       TAY                                 ;; 03DDF5 : A8          ;
                       JSR CODE_03DE3C                     ;; 03DDF6 : 20 3C DE    ;
                       LDY.B #$08                          ;; 03DDF9 : A0 08       ;
 CODE_03DDFB:          LDA.W $1BA3,X                       ;; 03DDFB : BD A3 1B    ;
-                      ASL                                 ;; 03DDFE : 0A          ;
-                      ROL                                 ;; 03DDFF : 2A          ;
-                      ROL                                 ;; 03DE00 : 2A          ;
-                      ROL                                 ;; 03DE01 : 2A          ;
+                      ASL A                               ;; 03DDFE : 0A          ;
+                      ROL A                               ;; 03DDFF : 2A          ;
+                      ROL A                               ;; 03DE00 : 2A          ;
+                      ROL A                               ;; 03DE01 : 2A          ;
                       AND.B #$07                          ;; 03DE02 : 29 07       ;
                       STA.W $1BA3,X                       ;; 03DE04 : 9D A3 1B    ;
                       STA.W $2119                         ;; 03DE07 : 8D 19 21    ; Data for VRAM Write (High Byte)
@@ -9387,26 +9387,26 @@ CODE_03DDFB:          LDA.W $1BA3,X                       ;; 03DDFB : BD A3 1B  
                       DEY                                 ;; 03DE0B : 88          ;
                       BNE CODE_03DDFB                     ;; 03DE0C : D0 ED       ;
                       PLY                                 ;; 03DE0E : 7A          ;
-                      DEC $05                             ;; 03DE0F : C6 05       ;
+                      DEC.B $05                           ;; 03DE0F : C6 05       ;
                       BNE CODE_03DDEC                     ;; 03DE11 : D0 D9       ;
                       LDA.B #$07                          ;; 03DE13 : A9 07       ;
 CODE_03DE15:          TAX                                 ;; 03DE15 : AA          ;
                       LDY.B #$08                          ;; 03DE16 : A0 08       ;
-                      STY $05                             ;; 03DE18 : 84 05       ;
+                      STY.B $05                           ;; 03DE18 : 84 05       ;
 CODE_03DE1A:          LDY.W $1BA3,X                       ;; 03DE1A : BC A3 1B    ;
                       STY.W $2119                         ;; 03DE1D : 8C 19 21    ; Data for VRAM Write (High Byte)
                       DEX                                 ;; 03DE20 : CA          ;
-                      DEC $05                             ;; 03DE21 : C6 05       ;
+                      DEC.B $05                           ;; 03DE21 : C6 05       ;
                       BNE CODE_03DE1A                     ;; 03DE23 : D0 F5       ;
                       CLC                                 ;; 03DE25 : 18          ;
                       ADC.B #$08                          ;; 03DE26 : 69 08       ;
                       CMP.B #$40                          ;; 03DE28 : C9 40       ;
                       BCC CODE_03DE15                     ;; 03DE2A : 90 E9       ;
                       REP #$20                            ;; 03DE2C : C2 20       ; Accum (16 bit) 
-                      LDA $00                             ;; 03DE2E : A5 00       ;
+                      LDA.B $00                           ;; 03DE2E : A5 00       ;
                       CLC                                 ;; 03DE30 : 18          ;
                       ADC.W #$0018                        ;; 03DE31 : 69 18 00    ;
-                      STA $00                             ;; 03DE34 : 85 00       ;
+                      STA.B $00                           ;; 03DE34 : 85 00       ;
                       SEP #$20                            ;; 03DE36 : E2 20       ; Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -9415,7 +9415,7 @@ CODE_03DE3C:          PHX                                 ;; 03DE3C : DA        
                       LDA [$00],Y                         ;; 03DE3D : B7 00       ;
                       PHY                                 ;; 03DE3F : 5A          ;
                       LDY.B #$08                          ;; 03DE40 : A0 08       ;
-CODE_03DE42:          ASL                                 ;; 03DE42 : 0A          ;
+CODE_03DE42:          ASL A                               ;; 03DE42 : 0A          ;
                       ROR.W $1BA3,X                       ;; 03DE43 : 7E A3 1B    ;
                       INX                                 ;; 03DE46 : E8          ;
                       DEY                                 ;; 03DE47 : 88          ;
@@ -9438,13 +9438,13 @@ DATA_03DE4E:          db $40,$41,$42,$43,$44,$45,$46,$47  ;; 03DE4E             
 CODE_03DE8E:          STZ.W $2115                         ;; 03DE8E : 9C 15 21    ; VRAM Address Increment Value
                       REP #$20                            ;; 03DE91 : C2 20       ; Accum (16 bit) 
                       LDA.W #$0A1C                        ;; 03DE93 : A9 1C 0A    ;
-                      STA $00                             ;; 03DE96 : 85 00       ;
+                      STA.B $00                           ;; 03DE96 : 85 00       ;
                       LDX.B #$00                          ;; 03DE98 : A2 00       ;
 CODE_03DE9A:          REP #$20                            ;; 03DE9A : C2 20       ; Accum (16 bit) 
-                      LDA $00                             ;; 03DE9C : A5 00       ;
+                      LDA.B $00                           ;; 03DE9C : A5 00       ;
                       CLC                                 ;; 03DE9E : 18          ;
                       ADC.W #$0080                        ;; 03DE9F : 69 80 00    ;
-                      STA $00                             ;; 03DEA2 : 85 00       ;
+                      STA.B $00                           ;; 03DEA2 : 85 00       ;
                       STA.W $2116                         ;; 03DEA4 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       SEP #$20                            ;; 03DEA7 : E2 20       ; Accum (8 bit) 
                       LDY.B #$08                          ;; 03DEA9 : A0 08       ;
@@ -9470,24 +9470,24 @@ CODE_03DEDF:          PHB                                 ;; 03DEDF : 8B        
                       PLB                                 ;; 03DEE1 : AB          ;
                       LDA.W $14E0,X                       ;; 03DEE2 : BD E0 14    ;
                       XBA                                 ;; 03DEE5 : EB          ;
-                      LDA $E4,X                           ;; 03DEE6 : B5 E4       ;
+                      LDA.B $E4,X                         ;; 03DEE6 : B5 E4       ;
                       LDY.B #$00                          ;; 03DEE8 : A0 00       ;
                       JSR CODE_03DFAE                     ;; 03DEEA : 20 AE DF    ;
                       LDA.W $14D4,X                       ;; 03DEED : BD D4 14    ;
                       XBA                                 ;; 03DEF0 : EB          ;
-                      LDA $D8,X                           ;; 03DEF1 : B5 D8       ;
+                      LDA.B $D8,X                         ;; 03DEF1 : B5 D8       ;
                       LDY.B #$02                          ;; 03DEF3 : A0 02       ;
                       JSR CODE_03DFAE                     ;; 03DEF5 : 20 AE DF    ;
                       PHX                                 ;; 03DEF8 : DA          ;
                       REP #$30                            ;; 03DEF9 : C2 30       ; Index (16 bit) Accum (16 bit) 
-                      STZ $06                             ;; 03DEFB : 64 06       ;
+                      STZ.B $06                           ;; 03DEFB : 64 06       ;
                       LDY.W #$0003                        ;; 03DEFD : A0 03 00    ;
                       LDA.W $0D9B                         ;; 03DF00 : AD 9B 0D    ;
-                      LSR                                 ;; 03DF03 : 4A          ;
+                      LSR A                               ;; 03DF03 : 4A          ;
                       BCC CODE_03DF44                     ;; 03DF04 : 90 3E       ;
                       LDA.W $1428                         ;; 03DF06 : AD 28 14    ;
                       AND.W #$0003                        ;; 03DF09 : 29 03 00    ;
-                      ASL                                 ;; 03DF0C : 0A          ;
+                      ASL A                               ;; 03DF0C : 0A          ;
                       TAX                                 ;; 03DF0D : AA          ;
                       LDA.L DATA_03DEBF,X                 ;; 03DF0E : BF BF DE 03 ;
                       STA.L $7EC681                       ;; 03DF12 : 8F 81 C6 7E ;
@@ -9496,7 +9496,7 @@ CODE_03DEDF:          PHB                                 ;; 03DEDF : 8B        
                       LDA.L DATA_03DECF,X                 ;; 03DF1E : BF CF DE 03 ;
                       STA.L $7EC685                       ;; 03DF22 : 8F 85 C6 7E ;
                       LDA.W #$0008                        ;; 03DF26 : A9 08 00    ;
-                      STA $06                             ;; 03DF29 : 85 06       ;
+                      STA.B $06                           ;; 03DF29 : 85 06       ;
                       LDX.W #$0380                        ;; 03DF2B : A2 80 03    ;
                       LDA.W $1BA2                         ;; 03DF2E : AD A2 1B    ;
                       AND.W #$007F                        ;; 03DF31 : 29 7F 00    ;
@@ -9507,26 +9507,26 @@ CODE_03DF3C:          TXA                                 ;; 03DF3C : 8A        
                       LDX.W #$000A                        ;; 03DF3D : A2 0A 00    ;
                       LDY.W #$0007                        ;; 03DF40 : A0 07 00    ;
                       SEC                                 ;; 03DF43 : 38          ;
-CODE_03DF44:          STY $00                             ;; 03DF44 : 84 00       ;
+CODE_03DF44:          STY.B $00                           ;; 03DF44 : 84 00       ;
                       BCS CODE_03DF55                     ;; 03DF46 : B0 0D       ;
 CODE_03DF48:          LDA.W $1BA2                         ;; 03DF48 : AD A2 1B    ;
                       AND.W #$007F                        ;; 03DF4B : 29 7F 00    ;
-                      ASL                                 ;; 03DF4E : 0A          ;
-                      ASL                                 ;; 03DF4F : 0A          ;
-                      ASL                                 ;; 03DF50 : 0A          ;
-                      ASL                                 ;; 03DF51 : 0A          ;
+                      ASL A                               ;; 03DF4E : 0A          ;
+                      ASL A                               ;; 03DF4F : 0A          ;
+                      ASL A                               ;; 03DF50 : 0A          ;
+                      ASL A                               ;; 03DF51 : 0A          ;
                       LDX.W #$0003                        ;; 03DF52 : A2 03 00    ;
-CODE_03DF55:          STX $02                             ;; 03DF55 : 86 02       ;
+CODE_03DF55:          STX.B $02                           ;; 03DF55 : 86 02       ;
                       PHA                                 ;; 03DF57 : 48          ;
                       LDY.W $1BA1                         ;; 03DF58 : AC A1 1B    ;
                       BPL CODE_03DF60                     ;; 03DF5B : 10 03       ;
                       CLC                                 ;; 03DF5D : 18          ;
-                      ADC $00                             ;; 03DF5E : 65 00       ;
+                      ADC.B $00                           ;; 03DF5E : 65 00       ;
 CODE_03DF60:          TAY                                 ;; 03DF60 : A8          ;
                       SEP #$20                            ;; 03DF61 : E2 20       ; Accum (8 bit) 
-                      LDX $06                             ;; 03DF63 : A6 06       ;
-                      LDA $00                             ;; 03DF65 : A5 00       ;
-                      STA $04                             ;; 03DF67 : 85 04       ;
+                      LDX.B $06                           ;; 03DF63 : A6 06       ;
+                      LDA.B $00                           ;; 03DF65 : A5 00       ;
+                      STA.B $04                           ;; 03DF67 : 85 04       ;
 CODE_03DF69:          LDA.W DATA_03D9DE,Y                 ;; 03DF69 : B9 DE D9    ;
                       INY                                 ;; 03DF6C : C8          ;
                       BIT.W $1BA2                         ;; 03DF6D : 2C A2 1B    ;
@@ -9536,14 +9536,14 @@ CODE_03DF69:          LDA.W DATA_03D9DE,Y                 ;; 03DF69 : B9 DE D9  
                       DEY                                 ;; 03DF75 : 88          ;
 CODE_03DF76:          STA.L $7EC680,X                     ;; 03DF76 : 9F 80 C6 7E ;
                       INX                                 ;; 03DF7A : E8          ;
-                      DEC $04                             ;; 03DF7B : C6 04       ;
+                      DEC.B $04                           ;; 03DF7B : C6 04       ;
                       BPL CODE_03DF69                     ;; 03DF7D : 10 EA       ;
-                      STX $06                             ;; 03DF7F : 86 06       ;
+                      STX.B $06                           ;; 03DF7F : 86 06       ;
                       REP #$20                            ;; 03DF81 : C2 20       ; Accum (16 bit) 
                       PLA                                 ;; 03DF83 : 68          ;
                       SEC                                 ;; 03DF84 : 38          ;
-                      ADC $00                             ;; 03DF85 : 65 00       ;
-                      LDX $02                             ;; 03DF87 : A6 02       ;
+                      ADC.B $00                           ;; 03DF85 : 65 00       ;
+                      LDX.B $02                           ;; 03DF87 : A6 02       ;
                       CPX.W #$0004                        ;; 03DF89 : E0 04 00    ;
                       BEQ CODE_03DF48                     ;; 03DF8C : F0 BA       ;
                       CPX.W #$0008                        ;; 03DF8E : E0 08 00    ;
@@ -9553,7 +9553,7 @@ CODE_03DF96:          CPX.W #$000A                        ;; 03DF96 : E0 0A 00  
                       BNE CODE_03DFA6                     ;; 03DF99 : D0 0B       ;
                       LDA.W $1427                         ;; 03DF9B : AD 27 14    ;
                       AND.W #$0003                        ;; 03DF9E : 29 03 00    ;
-                      ASL                                 ;; 03DFA1 : 0A          ;
+                      ASL A                               ;; 03DFA1 : 0A          ;
                       TAY                                 ;; 03DFA2 : A8          ;
                       LDA.W DATA_03DED7,Y                 ;; 03DFA3 : B9 D7 DE    ;
 CODE_03DFA6:          DEX                                 ;; 03DFA6 : CA          ;
@@ -9571,8 +9571,8 @@ CODE_03DFAE:          PHX                                 ;; 03DFAE : DA        
                       CLC                                 ;; 03DFB6 : 18          ;
                       ADC.L DATA_03DEBB,X                 ;; 03DFB7 : 7F BB DE 03 ;
                       CLC                                 ;; 03DFBB : 18          ;
-                      ADC $1A,X                           ;; 03DFBC : 75 1A       ;
-                      STA $3A,X                           ;; 03DFBE : 95 3A       ;
+                      ADC.B $1A,X                         ;; 03DFBC : 75 1A       ;
+                      STA.B $3A,X                         ;; 03DFBE : 95 3A       ;
                       SEP #$20                            ;; 03DFC0 : E2 20       ; Accum (8 bit) 
                       PLX                                 ;; 03DFC2 : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -9597,7 +9597,7 @@ CODE_03DFCC:          PHX                                 ;; 03DFCC : DA        
                       BRA CODE_03E031                     ;; 03DFEE : 80 41       ;
                                                           ;;                      ;
 CODE_03DFF0:          LDA.B $14                           ;; 03DFF0 : A5 14       ; Accum (8 bit) 
-                      LSR                                 ;; 03DFF2 : 4A          ;
+                      LSR A                               ;; 03DFF2 : 4A          ;
                       BCC CODE_03E036                     ;; 03DFF3 : 90 41       ;
                       DEC.W $1FFC                         ;; 03DFF5 : CE FC 1F    ;
                       BNE CODE_03E036                     ;; 03DFF8 : D0 3C       ;
@@ -9620,7 +9620,7 @@ CODE_03E01B:          DEC.W $1FFD                         ;; 03E01B : CE FD 1F  
                       LDA.B #$04                          ;; 03E023 : A9 04       ;
                       STA.W $1FFD                         ;; 03E025 : 8D FD 1F    ;
 CODE_03E028:          TXA                                 ;; 03E028 : 8A          ;
-                      ASL                                 ;; 03E029 : 0A          ;
+                      ASL A                               ;; 03E029 : 0A          ;
                       TAX                                 ;; 03E02A : AA          ;
                       REP #$20                            ;; 03E02B : C2 20       ; Accum (16 bit) 
                       LDA.L DATA_00B5DE,X                 ;; 03E02D : BF DE B5 00 ;
@@ -9630,12 +9630,12 @@ CODE_03E036:          LDX.W $1429                         ;; 03E036 : AE 29 14  
                       LDA.L DATA_03DFC4,X                 ;; 03E039 : BF C4 DF 03 ;
                       TAX                                 ;; 03E03D : AA          ;
                       LDA.B #$0E                          ;; 03E03E : A9 0E       ;
-                      STA $00                             ;; 03E040 : 85 00       ;
+                      STA.B $00                           ;; 03E040 : 85 00       ;
 CODE_03E042:          LDA.L DATA_00B69E,X                 ;; 03E042 : BF 9E B6 00 ;
                       STA.W $0686,Y                       ;; 03E046 : 99 86 06    ;
                       INX                                 ;; 03E049 : E8          ;
                       INY                                 ;; 03E04A : C8          ;
-                      DEC $00                             ;; 03E04B : C6 00       ;
+                      DEC.B $00                           ;; 03E04B : C6 00       ;
                       BNE CODE_03E042                     ;; 03E04D : D0 F3       ;
                       TYX                                 ;; 03E04F : BB          ;
                       STZ.W $0686,X                       ;; 03E050 : 9E 86 06    ;
@@ -9766,7 +9766,7 @@ CODE_03E042:          LDA.L DATA_00B69E,X                 ;; 03E042 : BF 9E B6 0
                       db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;; ?QPWZ?               ;
                       db $FF,$FF,$FF,$FF                  ;; ?QPWZ?               ;
                                                           ;;                      ;
-                      DEC $19                             ;; 03E400 : C6 19       ; \ Unreachable 
+                      DEC.B $19                           ;; 03E400 : C6 19       ; \ Unreachable 
                       RTS                                 ;; ?QPWZ? : 60          ; / Decrease Mario's Status 
                                                           ;;                      ;
                                                           ;;                      ;
