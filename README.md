@@ -8,3 +8,4 @@ You'll need the assembler, Asar (you can find it [here](https://www.smwcentral.n
 2. Unzip that somewhere, and stick asar.exe in the folder with PATCH.bat.
 3. Open smw.asm and change the variable !V to correspond to the version of the game you want to assemble.
 4. Run the bat file. The assembled ROM will be called "smw.smc."
+5. If you provide a ROM of each version of the game and call them "comparison_J.smc", etc., the batch file will also check the assembled ROM to see if it matches any exactly.
