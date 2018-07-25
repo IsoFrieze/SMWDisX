@@ -1,3 +1,3 @@
-echo f | xcopy /y "base.smc" "patched.smc"
-asar patch.asm patched.smc
+echo. 2>smw.smc
+asar smw.asm smw.smc
 pause

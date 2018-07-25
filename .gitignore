@@ -1,3 +1,2 @@
-asar.exe
-base.smc
-comparison.smc
+*.exe
+*.smc
