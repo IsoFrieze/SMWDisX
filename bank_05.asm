@@ -52,7 +52,7 @@ CODE_058079:          LDA.B #$00                          ;; 058079 : A9 00     
                       STZ.W $1928                         ;; 058089 : 9C 28 19    ;
                       JSR LoadLevel                       ;; 05808C : 20 AC 83    ; Load the level 
                       SEP #$30                            ;; 05808F : E2 30       ; 8 bit A,X,Y ; Index (8 bit) Accum (8 bit) 
-                      LDA.W $0100                         ;; 058091 : AD 00 01    ; \ 
+                      LDA.W !GameMode                     ;; 058091 : AD 00 01    ; \ 
                       CMP.B #$22                          ;; 058094 : C9 22       ;  | 
                       BPL CODE_05809C                     ;; 058096 : 10 04       ;  |If level mode is less than x22, 
                       JSL CODE_02A751                     ;; 058098 : 22 51 A7 02 ;  |JSL to $02A751 
@@ -94,7 +94,7 @@ CODE_0580BD:          REP #$30                            ;; 0580BD : C2 30     
                       LDA.W #$0007                        ;; 0580E3 : A9 07 00    ;
                       STA.B !_0                           ;; 0580E6 : 85 00       ;
                       LDA.L MAP16AppTable,X               ;; 0580E8 : BF 76 87 05 ;
-CODE_0580EC:          STA.W $0FBE,Y                       ;; 0580EC : 99 BE 0F    ;
+CODE_0580EC:          STA.W !Map16Pointers,Y              ;; 0580EC : 99 BE 0F    ;
                       INY                                 ;; 0580EF : C8          ;
                       INY                                 ;; 0580F0 : C8          ;
                       CLC                                 ;; 0580F1 : 18          ;
@@ -106,10 +106,10 @@ CODE_0580EC:          STA.W $0FBE,Y                       ;; 0580EC : 99 BE 0F  
                       LDA.W $1928                         ;; 0580FE : AD 28 19    ;
                       CMP.B #$20                          ;; 058101 : C9 20       ;
                       BNE CODE_0580BD                     ;; 058103 : D0 B8       ;
-                      LDA.W $0D9D                         ;; 058105 : AD 9D 0D    ;
+                      LDA.W !ThroughMain                  ;; 058105 : AD 9D 0D    ;
                       STA.W $212C                         ;; 058108 : 8D 2C 21    ; Background and Object Enable
                       STA.W $212E                         ;; 05810B : 8D 2E 21    ; Window Mask Designation for Main Screen
-                      LDA.W $0D9E                         ;; 05810E : AD 9E 0D    ;
+                      LDA.W !ThroughSub                   ;; 05810E : AD 9E 0D    ;
                       STA.W $212D                         ;; 058111 : 8D 2D 21    ; Sub Screen Designation
                       STA.W $212F                         ;; 058114 : 8D 2F 21    ; Window Mask Designation for Sub Screen
                       REP #$20                            ;; 058117 : C2 20       ; Accum (16 bit) 
@@ -188,7 +188,7 @@ CODE_058188:          REP #$20                            ;; 058188 : C2 20     
                       STA.B !_0                           ;; 0581A0 : 85 00       ;
                       LDX.W #$0000                        ;; 0581A2 : A2 00 00    ;
 CODE_0581A5:          LDA.B !_0                           ;; 0581A5 : A5 00       ;
-                      STA.W $0FBE,X                       ;; 0581A7 : 9D BE 0F    ;
+                      STA.W !Map16Pointers,X              ;; 0581A7 : 9D BE 0F    ;
                       LDA.B !_0                           ;; 0581AA : A5 00       ;
                       CLC                                 ;; 0581AC : 18          ;
                       ADC.W #$0008                        ;; 0581AD : 69 08 00    ;
@@ -244,7 +244,7 @@ CODE_05823D:          ASL.B !_C                           ;; 05823D : 06 0C     
                       BCC CODE_058253                     ;; 05823F : 90 12       ;
                       REP #$20                            ;; 058241 : C2 20       ; Accum (16 bit) 
                       LDA.B !_2                           ;; 058243 : A5 02       ;
-                      STA.W $0FBE,X                       ;; 058245 : 9D BE 0F    ;
+                      STA.W !Map16Pointers,X              ;; 058245 : 9D BE 0F    ;
                       LDA.B !_2                           ;; 058248 : A5 02       ;
                       CLC                                 ;; 05824A : 18          ;
                       ADC.W #$0008                        ;; 05824B : 69 08 00    ;
@@ -253,7 +253,7 @@ CODE_05823D:          ASL.B !_C                           ;; 05823D : 06 0C     
                                                           ;;                      ;
 CODE_058253:          REP #$20                            ;; 058253 : C2 20       ; Accum (16 bit) 
                       LDA.B !_0                           ;; 058255 : A5 00       ;
-                      STA.W $0FBE,X                       ;; 058257 : 9D BE 0F    ;
+                      STA.W !Map16Pointers,X              ;; 058257 : 9D BE 0F    ;
                       LDA.B !_0                           ;; 05825A : A5 00       ;
                       CLC                                 ;; 05825C : 18          ;
                       ADC.W #$0008                        ;; 05825D : 69 08 00    ;
@@ -287,7 +287,7 @@ CODE_058281:          LDA.B #$FF                          ;; 058281 : A9 FF     
                       STA.B !_0                           ;; 058298 : 85 00       ;
                       LDX.W #$0003                        ;; 05829A : A2 03 00    ;
 CODE_05829D:          LDA.B !_0                           ;; 05829D : A5 00       ;
-                      STA.W $0FBE,Y                       ;; 05829F : 99 BE 0F    ;
+                      STA.W !Map16Pointers,Y              ;; 05829F : 99 BE 0F    ;
                       CLC                                 ;; 0582A2 : 18          ;
                       ADC.W #$0008                        ;; 0582A3 : 69 08 00    ;
                       STA.B !_0                           ;; 0582A6 : 85 00       ;
@@ -300,7 +300,7 @@ CODE_05829D:          LDA.B !_0                           ;; 05829D : A5 00     
                       TAY                                 ;; 0582B1 : A8          ;
                       LDX.W #$0003                        ;; 0582B2 : A2 03 00    ;
 CODE_0582B5:          LDA.B !_0                           ;; 0582B5 : A5 00       ;
-                      STA.W $0FBE,Y                       ;; 0582B7 : 99 BE 0F    ;
+                      STA.W !Map16Pointers,Y              ;; 0582B7 : 99 BE 0F    ;
                       CLC                                 ;; 0582BA : 18          ;
                       ADC.W #$0008                        ;; 0582BB : 69 08 00    ;
                       STA.B !_0                           ;; 0582BE : 85 00       ;
@@ -475,13 +475,13 @@ CODE_0584E3:          LDY.B #$00                          ;; 0584E3 : A0 00     
                       LDA.L LevXYPPCCCTtbl,X              ;; 0584FF : BF B7 84 05 ; \Get XYPPCCCT settings from table 
                       STA.B !SpriteProperties             ;; 058503 : 85 64       ; / 
                       LDA.L LevMainScrnTbl,X              ;; 058505 : BF 37 84 05 ; \Get main screen setting from table 
-                      STA.W $0D9D                         ;; 058509 : 8D 9D 0D    ; / 
+                      STA.W !ThroughMain                  ;; 058509 : 8D 9D 0D    ; / 
                       LDA.L LevSubScrnTbl,X               ;; 05850C : BF 57 84 05 ; \Get subscreen setting from table 
-                      STA.W $0D9E                         ;; 058510 : 8D 9E 0D    ; / 
+                      STA.W !ThroughSub                   ;; 058510 : 8D 9E 0D    ; / 
                       LDA.L LevCGADSUBtable,X             ;; 058513 : BF 77 84 05 ; \Get CGADSUB settings from table 
                       STA.B !ColorSettings                ;; 058517 : 85 40       ; / 
                       LDA.L SpecialLevTable,X             ;; 058519 : BF 97 84 05 ; \Get special level setting from table 
-                      STA.W $0D9B                         ;; 05851D : 8D 9B 0D    ; / 
+                      STA.W !IRQNMICommand                ;; 05851D : 8D 9B 0D    ; / 
                       LDA.L VerticalTable,X               ;; 058520 : BF 17 84 05 ; \Get vertical level setting from table 
                       STA.B !ScreenMode                   ;; 058524 : 85 5B       ; / 
                       LSR A                               ;; 058526 : 4A          ; \ 
@@ -513,13 +513,13 @@ LevelModeEven:        STA.B !LastScreenHoriz              ;; ?QPWZ? : 85 5E     
                       AND.B #$07                          ;; 05854E : 29 07       ;  | 
                       TAX                                 ;; 058550 : AA          ;  |Get music 
                       LDA.L LevelMusicTable,X             ;; 058551 : BF DB 84 05 ;  | 
-                      LDX.W $0DDA                         ;; 058555 : AE DA 0D    ;  | \ 
+                      LDX.W !MusicBackup                  ;; 058555 : AE DA 0D    ;  | \ 
                       BPL CODE_05855C                     ;; 058558 : 10 02       ;  |  | 
                       ORA.B #$80                          ;; 05855A : 09 80       ;  |  |Related to not restarting music if the new track 
-CODE_05855C:          CMP.W $0DDA                         ;; 05855C : CD DA 0D    ;  |  |is the same as the old one? 
+CODE_05855C:          CMP.W !MusicBackup                  ;; 05855C : CD DA 0D    ;  |  |is the same as the old one? 
                       BNE CODE_058563                     ;; 05855F : D0 02       ;  |  | 
                       ORA.B #$40                          ;; 058561 : 09 40       ;  | / 
-CODE_058563:          STA.W $0DDA                         ;; 058563 : 8D DA 0D    ; / 
+CODE_058563:          STA.W !MusicBackup                  ;; 058563 : 8D DA 0D    ; / 
                       LDA.B !_0                           ;; 058566 : A5 00       ; "Pull" third byte 
                       AND.B #$80                          ;; 058568 : 29 80       ; \ 
                       LSR A                               ;; 05856A : 4A          ;  | 
@@ -541,9 +541,9 @@ CODE_058563:          STA.W $0DDA                         ;; 058563 : 8D DA 0D  
                       LDA.W $141A                         ;; 05857E : AD 1A 14    ;  | 
                       BNE CODE_058590                     ;; 058581 : D0 0D       ;  | 
                       LDA.L TimerTable,X                  ;; 058583 : BF D7 84 05 ;  | 
-                      STA.W $0F31                         ;; 058587 : 8D 31 0F    ;  | 
-                      STZ.W $0F32                         ;; 05858A : 9C 32 0F    ;  | 
-                      STZ.W $0F33                         ;; 05858D : 9C 33 0F    ; / 
+                      STA.W !InGameTimerHundreds          ;; 058587 : 8D 31 0F    ;  | 
+                      STZ.W !InGameTimerTens              ;; 05858A : 9C 32 0F    ;  | 
+                      STZ.W !InGameTimerOnes              ;; 05858D : 9C 33 0F    ; / 
 CODE_058590:          LDA.B !_0                           ;; 058590 : A5 00       ; "Pull" fourth bit 
                       AND.B #$07                          ;; 058592 : 29 07       ; \Get FG color settings 
                       STA.W $192D                         ;; 058594 : 8D 2D 19    ; / 
@@ -838,7 +838,7 @@ CODE_05877E:          PHP                                 ;; 05877E : 08        
                       LDA.W #$0007                        ;; 0587B2 : A9 07 00    ;
                       STA.B !_0                           ;; 0587B5 : 85 00       ;
                       LDA.L MAP16AppTable,X               ;; 0587B7 : BF 76 87 05 ;
-CODE_0587BB:          STA.W $0FBE,Y                       ;; 0587BB : 99 BE 0F    ; MAP16 pointer table 
+CODE_0587BB:          STA.W !Map16Pointers,Y              ;; 0587BB : 99 BE 0F    ; MAP16 pointer table 
                       INY                                 ;; 0587BE : C8          ;
                       INY                                 ;; 0587BF : C8          ;
                       CLC                                 ;; 0587C0 : 18          ;
@@ -1124,7 +1124,7 @@ CODE_058A55:          LDY.B !_8                           ;; 058A55 : A4 08     
                       LDA.B !_0                           ;; 058A62 : A5 00       ;
                       ASL A                               ;; 058A64 : 0A          ;
                       TAY                                 ;; 058A65 : A8          ;
-                      LDA.W $0FBE,Y                       ;; 058A66 : B9 BE 0F    ;
+                      LDA.W !Map16Pointers,Y              ;; 058A66 : B9 BE 0F    ;
                       STA.B !_A                           ;; 058A69 : 85 0A       ;
                       LDY.W #$0000                        ;; 058A6B : A0 00 00    ;
                       LDA.B [!_A],Y                       ;; 058A6E : B7 0A       ;
@@ -1244,7 +1244,7 @@ CODE_058B35:          LDY.B !_8                           ;; 058B35 : A4 08     
                       LDA.B !_0                           ;; 058B42 : A5 00       ;
                       ASL A                               ;; 058B44 : 0A          ;
                       TAY                                 ;; 058B45 : A8          ;
-                      LDA.W $0FBE,Y                       ;; 058B46 : B9 BE 0F    ;
+                      LDA.W !Map16Pointers,Y              ;; 058B46 : B9 BE 0F    ;
                       STA.B !_A                           ;; 058B49 : 85 0A       ;
                       LDY.W #$0000                        ;; 058B4B : A0 00 00    ;
                       LDA.B [!_A],Y                       ;; 058B4E : B7 0A       ;
@@ -1364,7 +1364,7 @@ CODE_058C23:          LDY.B !_8                           ;; 058C23 : A4 08     
                       LDA.B !_0                           ;; 058C30 : A5 00       ;
                       ASL A                               ;; 058C32 : 0A          ;
                       TAY                                 ;; 058C33 : A8          ;
-                      LDA.W $0FBE,Y                       ;; 058C34 : B9 BE 0F    ;
+                      LDA.W !Map16Pointers,Y              ;; 058C34 : B9 BE 0F    ;
                       STA.B !_A                           ;; 058C37 : 85 0A       ;
                       LDY.W #$0000                        ;; 058C39 : A0 00 00    ;
                       LDA.B [!_A],Y                       ;; 058C3C : B7 0A       ;
@@ -1494,7 +1494,7 @@ CODE_058D1A:          LDY.B !_8                           ;; 058D1A : A4 08     
                       LDA.B !_0                           ;; 058D27 : A5 00       ;
                       ASL A                               ;; 058D29 : 0A          ;
                       TAY                                 ;; 058D2A : A8          ;
-                      LDA.W $0FBE,Y                       ;; 058D2B : B9 BE 0F    ;
+                      LDA.W !Map16Pointers,Y              ;; 058D2B : B9 BE 0F    ;
                       STA.B !_A                           ;; 058D2E : 85 0A       ;
                       LDY.W #$0000                        ;; 058D30 : A0 00 00    ;
                       LDA.B [!_A],Y                       ;; 058D33 : B7 0A       ;
@@ -2803,12 +2803,12 @@ CODE_05B10C:          PHB                                 ;; 05B10C : 8B        
                       STZ.B !Layer12Window                ;; 05B123 : 64 41       ;
                       STZ.B !Layer34Window                ;; 05B125 : 64 42       ;
                       STZ.B !OBJCWWindow                  ;; 05B127 : 64 43       ;
-                      STZ.W $0D9F                         ;; 05B129 : 9C 9F 0D    ;
+                      STZ.W !HDMAEnable                   ;; 05B129 : 9C 9F 0D    ;
                       LDA.B #$02                          ;; 05B12C : A9 02       ;
                       STA.B !ColorAddition                ;; 05B12E : 85 44       ;
                       BRA CODE_05B18E                     ;; 05B130 : 80 5C       ;
                                                           ;;                      ;
-CODE_05B132:          LDA.W $0109                         ;; 05B132 : AD 09 01    ;
+CODE_05B132:          LDA.W !OverworldOverride            ;; 05B132 : AD 09 01    ;
                       ORA.W $13D2                         ;; 05B135 : 0D D2 13    ;
                       BEQ CODE_05B16E                     ;; 05B138 : F0 34       ;
                       LDA.W $1DF5                         ;; 05B13A : AD F5 1D    ;
@@ -2829,11 +2829,11 @@ CODE_05B132:          LDA.W $0109                         ;; 05B132 : AD 09 01  
 CODE_05B15A:          PLB                                 ;; 05B15A : AB          ;
                       LDA.B #$8E                          ;; 05B15B : A9 8E       ;
                       STA.W $1F19                         ;; 05B15D : 8D 19 1F    ;
-SubSideExit:          STZ.W $0109                         ;; ?QPWZ? : 9C 09 01    ;
+SubSideExit:          STZ.W !OverworldOverride            ;; ?QPWZ? : 9C 09 01    ;
                       LDA.B #$00                          ;; 05B163 : A9 00       ;
-CODE_05B165:          STA.W $0DD5                         ;; 05B165 : 8D D5 0D    ;
+CODE_05B165:          STA.W !OWLevelExitMode              ;; 05B165 : 8D D5 0D    ;
                       LDA.B #$0B                          ;; 05B168 : A9 0B       ;
-                      STA.W $0100                         ;; 05B16A : 8D 00 01    ;
+                      STA.W !GameMode                     ;; 05B16A : 8D 00 01    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_05B16E:          LDA.B !byetudlrHold                 ;; 05B16E : A5 15       ; Index (8 bit) 
@@ -2848,7 +2848,7 @@ CODE_05B16E:          LDA.B !byetudlrHold                 ;; 05B16E : A5 15     
                       EOR.B !axlr0000Frame                ;; 05B180 : 45 18       ;
                       AND.B #$C0                          ;; 05B182 : 29 C0       ;
                       BNE CODE_05B18E                     ;; 05B184 : D0 08       ;
-CODE_05B186:          LDA.W $0109                         ;; 05B186 : AD 09 01    ;
+CODE_05B186:          LDA.W !OverworldOverride            ;; 05B186 : AD 09 01    ;
                       BNE CODE_05B15A                     ;; 05B189 : D0 CF       ;
                       INC.W $1B88                         ;; 05B18B : EE 88 1B    ;
 CODE_05B18E:          JMP CODE_05B299                     ;; 05B18E : 4C 99 B2    ;
@@ -2961,8 +2961,8 @@ CODE_05B250:          LDX.W $1B88                         ;; 05B250 : AE 88 1B  
 CODE_05B26D:          CPX.W $1B89                         ;; 05B26D : EC 89 1B    ;
                       BCC CODE_05B275                     ;; 05B270 : 90 03       ;
                       LDA.W #$00FF                        ;; 05B272 : A9 FF 00    ;
-CODE_05B275:          STA.W $04EC,Y                       ;; 05B275 : 99 EC 04    ;
-                      STA.W $053C,X                       ;; 05B278 : 9D 3C 05    ;
+CODE_05B275:          STA.W !WindowTable+$4C,Y            ;; 05B275 : 99 EC 04    ;
+                      STA.W !WindowTable+$9C,X            ;; 05B278 : 9D 3C 05    ;
                       INX                                 ;; 05B27B : E8          ;
                       INX                                 ;; 05B27C : E8          ;
                       DEY                                 ;; 05B27D : 88          ;
@@ -2978,7 +2978,7 @@ CODE_05B28E:          STA.B !OBJCWWindow                  ;; 05B28E : 85 43     
                       LDA.B #$22                          ;; 05B290 : A9 22       ;
                       STA.B !ColorAddition                ;; 05B292 : 85 44       ;
                       LDA.B #$80                          ;; 05B294 : A9 80       ;
-                      STA.W $0D9F                         ;; 05B296 : 8D 9F 0D    ;
+                      STA.W !HDMAEnable                   ;; 05B296 : 8D 9F 0D    ;
 CODE_05B299:          PLB                                 ;; 05B299 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -3005,11 +3005,11 @@ CODE_05B2EB:          PHX                                 ;; 05B2EB : DA        
                       REP #$20                            ;; 05B2F4 : C2 20       ; Accum (16 bit) 
                       LDY.B #$1C                          ;; 05B2F6 : A0 1C       ;
 CODE_05B2F8:          LDA.W DATA_05B29B,X                 ;; 05B2F8 : BD 9B B2    ;
-                      STA.W $0202,Y                       ;; 05B2FB : 99 02 02    ;
+                      STA.W !OAMTileNo,Y                  ;; 05B2FB : 99 02 02    ;
                       PHX                                 ;; 05B2FE : DA          ;
                       LDX.B !_0                           ;; 05B2FF : A6 00       ;
                       LDA.W DATA_05B2DB,X                 ;; 05B301 : BD DB B2    ;
-                      STA.W $0200,Y                       ;; 05B304 : 99 00 02    ;
+                      STA.W !OAMTileXPos,Y                ;; 05B304 : 99 00 02    ;
                       PLX                                 ;; 05B307 : FA          ;
                       INX                                 ;; 05B308 : E8          ;
                       INX                                 ;; 05B309 : E8          ;
@@ -3020,14 +3020,14 @@ CODE_05B2F8:          LDA.W DATA_05B29B,X                 ;; 05B2F8 : BD 9B B2  
                       DEY                                 ;; 05B310 : 88          ;
                       DEY                                 ;; 05B311 : 88          ;
                       BPL CODE_05B2F8                     ;; 05B312 : 10 E4       ;
-                      STZ.W $0400                         ;; 05B314 : 9C 00 04    ;
+                      STZ.W !OAMTileBitSize               ;; 05B314 : 9C 00 04    ;
                       SEP #$20                            ;; 05B317 : E2 20       ; Accum (8 bit) 
                       PLX                                 ;; 05B319 : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_05B31B:          LDY.B #$1C                          ;; 05B31B : A0 1C       ;
                       LDA.B #$F0                          ;; 05B31D : A9 F0       ;
-CODE_05B31F:          STA.W $0201,Y                       ;; 05B31F : 99 01 02    ;
+CODE_05B31F:          STA.W !OAMTileYPos,Y                ;; 05B31F : 99 01 02    ;
                       DEY                                 ;; 05B322 : 88          ;
                       DEY                                 ;; 05B323 : 88          ;
                       DEY                                 ;; 05B324 : 88          ;
@@ -3043,21 +3043,21 @@ CODE_05B330:          STA.B !_0                           ;; 05B330 : 85 00     
                       CLC                                 ;; 05B332 : 18          ;
                       ADC.W $13CC                         ;; 05B333 : 6D CC 13    ;
                       STA.W $13CC                         ;; 05B336 : 8D CC 13    ;
-                      LDA.W $0DC0                         ;; 05B339 : AD C0 0D    ;
+                      LDA.W !GreenStarBlockCoins          ;; 05B339 : AD C0 0D    ;
                       BEQ Return05B35A                    ;; 05B33C : F0 1C       ;
                       SEC                                 ;; 05B33E : 38          ;
                       SBC.B !_0                           ;; 05B33F : E5 00       ;
                       BPL CODE_05B345                     ;; 05B341 : 10 02       ;
                       LDA.B #$00                          ;; 05B343 : A9 00       ;
-CODE_05B345:          STA.W $0DC0                         ;; 05B345 : 8D C0 0D    ;
+CODE_05B345:          STA.W !GreenStarBlockCoins          ;; 05B345 : 8D C0 0D    ;
                       BRA Return05B35A                    ;; 05B348 : 80 10       ;
                                                           ;;                      ;
 CODE_05B34A:          INC.W $13CC                         ;; 05B34A : EE CC 13    ;
                       LDA.B #$01                          ;; 05B34D : A9 01       ;
                       STA.W $1DFC                         ;; 05B34F : 8D FC 1D    ; / Play sound effect 
-                      LDA.W $0DC0                         ;; 05B352 : AD C0 0D    ;
+                      LDA.W !GreenStarBlockCoins          ;; 05B352 : AD C0 0D    ;
                       BEQ Return05B35A                    ;; 05B355 : F0 03       ;
-                      DEC.W $0DC0                         ;; 05B357 : CE C0 0D    ;
+                      DEC.W !GreenStarBlockCoins          ;; 05B357 : CE C0 0D    ;
 Return05B35A:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -3362,11 +3362,11 @@ CODE_05BB39:          PHB                                 ;; 05BB39 : 8B        
                       LSR A                               ;; 05BB50 : 4A          ;
                       STA.B !_0                           ;; 05BB51 : 85 00       ;
                       LDA.W DATA_05B93B,X                 ;; 05BB53 : BD 3B B9    ;
-                      STA.W $0D80                         ;; 05BB56 : 8D 80 0D    ;
+                      STA.W !Gfx33DestAddrC               ;; 05BB56 : 8D 80 0D    ;
                       LDA.W DATA_05B93D,X                 ;; 05BB59 : BD 3D B9    ;
-                      STA.W $0D7E                         ;; 05BB5C : 8D 7E 0D    ;
+                      STA.W !Gfx33DestAddrB               ;; 05BB5C : 8D 7E 0D    ;
                       LDA.W DATA_05B93F,X                 ;; 05BB5F : BD 3F B9    ;
-                      STA.W $0D7C                         ;; 05BB62 : 8D 7C 0D    ;
+                      STA.W !Gfx33DestAddrA               ;; 05BB62 : 8D 7C 0D    ;
                       LDX.B #$04                          ;; 05BB65 : A2 04       ;
 CODE_05BB67:          PHY                                 ;; 05BB67 : 5A          ;
                       PHX                                 ;; 05BB68 : DA          ;
@@ -3396,7 +3396,7 @@ CODE_05BB88:          REP #$30                            ;; 05BB88 : C2 30     
                       LDA.W AnimatedTileData,Y            ;; 05BB93 : B9 99 B9    ;
                       SEP #$10                            ;; 05BB96 : E2 10       ; Index (8 bit) 
                       PLX                                 ;; 05BB98 : FA          ;
-                      STA.W $0D76,X                       ;; 05BB99 : 9D 76 0D    ;
+                      STA.W !Gfx33SrcAddrA,X              ;; 05BB99 : 9D 76 0D    ;
                       PLY                                 ;; 05BB9C : 7A          ;
                       INY                                 ;; 05BB9D : C8          ;
                       DEX                                 ;; 05BB9E : CA          ;
@@ -5184,17 +5184,17 @@ DATA_05CC16:          db $51,$0D,$00,$09,$30,$28,$31,$28  ;; 05CC16             
 DATA_05CC61:          db $40,$41,$42,$43,$44              ;; 05CC61               ;
                                                           ;;                      ;
 CODE_05CC66:          LDY.B #$00                          ;; 05CC66 : A0 00       ;
-                      LDX.W $0DB3                         ;; 05CC68 : AE B3 0D    ;
-                      LDA.W $0F48,X                       ;; 05CC6B : BD 48 0F    ;
+                      LDX.W !PlayerTurnLvl                ;; 05CC68 : AE B3 0D    ;
+                      LDA.W !PlayerBonusStars,X           ;; 05CC6B : BD 48 0F    ;
 CODE_05CC6E:          CMP.B #$0A                          ;; 05CC6E : C9 0A       ;
                       BCC CODE_05CC77                     ;; 05CC70 : 90 05       ;
                       SBC.B #$0A                          ;; 05CC72 : E9 0A       ;
                       INY                                 ;; 05CC74 : C8          ;
                       BRA CODE_05CC6E                     ;; 05CC75 : 80 F7       ;
                                                           ;;                      ;
-CODE_05CC77:          CPY.W $0F32                         ;; 05CC77 : CC 32 0F    ;
+CODE_05CC77:          CPY.W !InGameTimerTens              ;; 05CC77 : CC 32 0F    ;
                       BNE CODE_05CC84                     ;; 05CC7A : D0 08       ;
-                      CPY.W $0F33                         ;; 05CC7C : CC 33 0F    ;
+                      CPY.W !InGameTimerOnes              ;; 05CC7C : CC 33 0F    ;
                       BNE CODE_05CC84                     ;; 05CC7F : D0 03       ;
                       INC.W $18E4                         ;; 05CC81 : EE E4 18    ;
 CODE_05CC84:          LDA.B #$01                          ;; 05CC84 : A9 01       ;
@@ -5219,7 +5219,7 @@ CODE_05CC9D:          LDA.W DATA_05CC16,Y                 ;; 05CC9D : B9 16 CC  
                       LDA.L $7F837B                       ;; 05CCAA : AF 7B 83 7F ;
                       TAX                                 ;; 05CCAE : AA          ;
                       SEP #$20                            ;; 05CCAF : E2 20       ; Accum (8 bit) 
-                      LDA.W $0DB3                         ;; 05CCB1 : AD B3 0D    ;
+                      LDA.W !PlayerTurnLvl                ;; 05CCB1 : AD B3 0D    ;
                       BEQ CODE_05CCC8                     ;; 05CCB4 : F0 12       ;
                       LDY.W #$0000                        ;; 05CCB6 : A0 00 00    ;
 CODE_05CCB9:          LDA.W DATA_05CC61,Y                 ;; 05CCB9 : B9 61 CC    ;
@@ -5234,7 +5234,7 @@ CODE_05CCC8:          LDY.W #$0002                        ;; 05CCC8 : A0 02 00  
                       CLC                                 ;; 05CCCD : 18          ;
                       ADC.L $7F837B                       ;; 05CCCE : 6F 7B 83 7F ;
                       TAX                                 ;; 05CCD2 : AA          ;
-CODE_05CCD3:          LDA.W $0F31,Y                       ;; 05CCD3 : B9 31 0F    ;
+CODE_05CCD3:          LDA.W !InGameTimerHundreds,Y        ;; 05CCD3 : B9 31 0F    ;
                       STA.L $7F83AF,X                     ;; 05CCD6 : 9F AF 83 7F ;
                       DEY                                 ;; 05CCDA : 88          ;
                       DEX                                 ;; 05CCDB : CA          ;
@@ -5256,7 +5256,7 @@ CODE_05CCF9:          SEP #$10                            ;; 05CCF9 : E2 10     
                       REP #$20                            ;; 05CCFE : C2 20       ; Accum (16 bit) 
                       STZ.B !_0                           ;; 05CD00 : 64 00       ;
                       LDA.B !_2                           ;; 05CD02 : A5 02       ;
-                      STA.W $0F40                         ;; 05CD04 : 8D 40 0F    ;
+                      STA.W !ScoreIncrement               ;; 05CD04 : 8D 40 0F    ;
                       LDX.B #$42                          ;; 05CD07 : A2 42       ;
                       LDY.B #$00                          ;; 05CD09 : A0 00       ;
                       JSR CODE_05CDFD                     ;; 05CD0B : 20 FD CD    ;
@@ -5392,19 +5392,19 @@ DATA_05CE42:          db $00,$0A,$14,$1E,$28,$32,$3C,$46  ;; 05CE42             
                       db $50,$5A                          ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_05CE4C:          REP #$20                            ;; 05CE4C : C2 20       ; Accum (16 bit) 
-                      LDA.W $0F31                         ;; 05CE4E : AD 31 0F    ;
+                      LDA.W !InGameTimerHundreds          ;; 05CE4E : AD 31 0F    ;
                       ASL A                               ;; 05CE51 : 0A          ;
                       TAX                                 ;; 05CE52 : AA          ;
                       LDA.W DATA_05CE3A,X                 ;; 05CE53 : BD 3A CE    ;
                       STA.B !_0                           ;; 05CE56 : 85 00       ;
-                      LDA.W $0F32                         ;; 05CE58 : AD 32 0F    ;
+                      LDA.W !InGameTimerTens              ;; 05CE58 : AD 32 0F    ;
                       TAX                                 ;; 05CE5B : AA          ;
                       LDA.W DATA_05CE42,X                 ;; 05CE5C : BD 42 CE    ;
                       AND.W #$00FF                        ;; 05CE5F : 29 FF 00    ;
                       CLC                                 ;; 05CE62 : 18          ;
                       ADC.B !_0                           ;; 05CE63 : 65 00       ;
                       STA.B !_0                           ;; 05CE65 : 85 00       ;
-                      LDA.W $0F33                         ;; 05CE67 : AD 33 0F    ;
+                      LDA.W !InGameTimerOnes              ;; 05CE67 : AD 33 0F    ;
                       AND.W #$00FF                        ;; 05CE6A : 29 FF 00    ;
                       CLC                                 ;; 05CE6D : 18          ;
                       ADC.B !_0                           ;; 05CE6E : 65 00       ;
@@ -5451,38 +5451,38 @@ CODE_05CECA:          PHB                                 ;; 05CECA : 8B        
                       PLB                                 ;; 05CECC : AB          ;
                       REP #$20                            ;; 05CECD : C2 20       ; Accum (16 bit) 
                       LDX.B #$00                          ;; 05CECF : A2 00       ;
-                      LDA.W $0DB3                         ;; 05CED1 : AD B3 0D    ;
+                      LDA.W !PlayerTurnLvl                ;; 05CED1 : AD B3 0D    ;
                       AND.W #$00FF                        ;; 05CED4 : 29 FF 00    ;
                       BEQ CODE_05CEDB                     ;; 05CED7 : F0 02       ;
                       LDX.B #$03                          ;; 05CED9 : A2 03       ;
 CODE_05CEDB:          LDY.B #$02                          ;; 05CEDB : A0 02       ;
-                      LDA.W $0F40                         ;; 05CEDD : AD 40 0F    ;
+                      LDA.W !ScoreIncrement               ;; 05CEDD : AD 40 0F    ;
                       BEQ CODE_05CF05                     ;; 05CEE0 : F0 23       ;
                       CMP.W #$0063                        ;; 05CEE2 : C9 63 00    ;
                       BCS CODE_05CEE9                     ;; 05CEE5 : B0 02       ;
                       LDY.B #$00                          ;; 05CEE7 : A0 00       ;
 CODE_05CEE9:          SEC                                 ;; 05CEE9 : 38          ;
                       SBC.W DATA_05CEC2,Y                 ;; 05CEEA : F9 C2 CE    ;
-                      STA.W $0F40                         ;; 05CEED : 8D 40 0F    ;
+                      STA.W !ScoreIncrement               ;; 05CEED : 8D 40 0F    ;
                       STA.B !_2                           ;; 05CEF0 : 85 02       ;
                       LDA.W DATA_05CEC6,Y                 ;; 05CEF2 : B9 C6 CE    ;
                       CLC                                 ;; 05CEF5 : 18          ;
-                      ADC.W $0F34,X                       ;; 05CEF6 : 7D 34 0F    ;
-                      STA.W $0F34,X                       ;; 05CEF9 : 9D 34 0F    ;
-                      LDA.W $0F36,X                       ;; 05CEFC : BD 36 0F    ;
+                      ADC.W !PlayerScore,X                ;; 05CEF6 : 7D 34 0F    ;
+                      STA.W !PlayerScore,X                ;; 05CEF9 : 9D 34 0F    ;
+                      LDA.W !PlayerScore+2,X              ;; 05CEFC : BD 36 0F    ;
                       ADC.W #$0000                        ;; 05CEFF : 69 00 00    ;
-                      STA.W $0F36,X                       ;; 05CF02 : 9D 36 0F    ;
+                      STA.W !PlayerScore+2,X              ;; 05CF02 : 9D 36 0F    ;
 CODE_05CF05:          LDX.W $1900                         ;; 05CF05 : AE 00 19    ;
                       BEQ CODE_05CF36                     ;; 05CF08 : F0 2C       ;
                       SEP #$20                            ;; 05CF0A : E2 20       ; Accum (8 bit) 
                       LDA.B !TrueFrame                    ;; 05CF0C : A5 13       ;
                       AND.B #$03                          ;; 05CF0E : 29 03       ;
                       BNE CODE_05CF34                     ;; 05CF10 : D0 22       ;
-                      LDX.W $0DB3                         ;; 05CF12 : AE B3 0D    ;
-                      LDA.W $0F48,X                       ;; 05CF15 : BD 48 0F    ;
+                      LDX.W !PlayerTurnLvl                ;; 05CF12 : AE B3 0D    ;
+                      LDA.W !PlayerBonusStars,X           ;; 05CF15 : BD 48 0F    ;
                       CLC                                 ;; 05CF18 : 18          ;
                       ADC.B #$01                          ;; 05CF19 : 69 01       ;
-                      STA.W $0F48,X                       ;; 05CF1B : 9D 48 0F    ;
+                      STA.W !PlayerBonusStars,X           ;; 05CF1B : 9D 48 0F    ;
                       LDA.W $1900                         ;; 05CF1E : AD 00 19    ;
                       DEC A                               ;; 05CF21 : 3A          ;
                       STA.W $1900                         ;; 05CF22 : 8D 00 19    ;
@@ -5494,7 +5494,7 @@ CODE_05CF05:          LDX.W $1900                         ;; 05CF05 : AE 00 19  
                       SBC.B #$06                          ;; 05CF2F : E9 06       ;
                       STA.W $1900                         ;; 05CF31 : 8D 00 19    ;
 CODE_05CF34:          REP #$20                            ;; 05CF34 : C2 20       ; Accum (16 bit) 
-CODE_05CF36:          LDA.W $0F40                         ;; 05CF36 : AD 40 0F    ;
+CODE_05CF36:          LDA.W !ScoreIncrement               ;; 05CF36 : AD 40 0F    ;
                       BNE CODE_05CF4D                     ;; 05CF39 : D0 12       ;
                       LDX.W $1900                         ;; 05CF3B : AE 00 19    ;
                       BNE CODE_05CF4D                     ;; 05CF3E : D0 0D       ;
@@ -5517,7 +5517,7 @@ CODE_05CF59:          LDA.W DATA_05CEA3,Y                 ;; 05CF59 : B9 A3 CE  
                       DEY                                 ;; 05CF62 : 88          ;
                       DEY                                 ;; 05CF63 : 88          ;
                       BPL CODE_05CF59                     ;; 05CF64 : 10 F3       ;
-                      LDA.W $0F40                         ;; 05CF66 : AD 40 0F    ;
+                      LDA.W !ScoreIncrement               ;; 05CF66 : AD 40 0F    ;
                       BEQ CODE_05CFA0                     ;; 05CF69 : F0 35       ;
                       STZ.B !_0                           ;; 05CF6B : 64 00       ;
                       LDA.L $7F837B                       ;; 05CF6D : AF 7B 83 7F ;
@@ -5863,7 +5863,7 @@ CODE_05D7B3:          LDX.B !PlayerXPosNext+1             ;; 05D7B3 : A6 95     
 CODE_05D7BD:          LDA.W $19B8,X                       ;; 05D7BD : BD B8 19    ;
                       STA.W $17BB                         ;; 05D7C0 : 8D BB 17    ;
                       STA.B !_E                           ;; 05D7C3 : 85 0E       ;
-                      LDA.W $0DD6                         ;; 05D7C5 : AD D6 0D    ;
+                      LDA.W !PlayerTurnOW                 ;; 05D7C5 : AD D6 0D    ;
                       LSR A                               ;; 05D7C8 : 4A          ;
                       LSR A                               ;; 05D7C9 : 4A          ;
                       TAY                                 ;; 05D7CA : A8          ;
@@ -5926,12 +5926,12 @@ CODE_05D83B:          JMP CODE_05D8B7                     ;; 05D83B : 4C B7 D8  
                                                           ;;                      ;
 CODE_05D83E:          STZ.B !_F                           ;; 05D83E : 64 0F       ; Index (8 bit) 
                       LDY.B #$00                          ;; 05D840 : A0 00       ;
-                      LDA.W $0109                         ;; 05D842 : AD 09 01    ;
+                      LDA.W !OverworldOverride            ;; 05D842 : AD 09 01    ;
                       BNE CODE_05D8A2                     ;; 05D845 : D0 5B       ;
                       REP #$30                            ;; 05D847 : C2 30       ; 16 bit A,X,Y ; Index (16 bit) Accum (16 bit) 
                       STZ.B !Layer1XPos                   ;; 05D849 : 64 1A       ; Set "X position of screen boundary" to 0 
                       STZ.B !Layer2XPos                   ;; 05D84B : 64 1E       ; Set "Layer 2 X position" to 0 
-                      LDX.W $0DD6                         ;; 05D84D : AE D6 0D    ;
+                      LDX.W !PlayerTurnOW                 ;; 05D84D : AE D6 0D    ;
                       LDA.W $1F1F,X                       ;; 05D850 : BD 1F 1F    ;
                       AND.W #$000F                        ;; 05D853 : 29 0F 00    ;
                       STA.B !_0                           ;; 05D856 : 85 00       ;
@@ -5960,7 +5960,7 @@ CODE_05D83E:          STZ.B !_F                           ;; 05D83E : 64 0F     
                       ORA.B !_2                           ;; 05D87D : 05 02       ;
                       ORA.B !_0                           ;; 05D87F : 05 00       ;
                       TAX                                 ;; 05D881 : AA          ;
-                      LDA.W $0DD6                         ;; 05D882 : AD D6 0D    ; \ 
+                      LDA.W !PlayerTurnOW                 ;; 05D882 : AD D6 0D    ; \ 
                       AND.W #$00FF                        ;; 05D885 : 29 FF 00    ;  | 
                       LSR A                               ;; 05D888 : 4A          ;  |Set Y to current player 
                       LSR A                               ;; 05D889 : 4A          ;  | 
@@ -6317,7 +6317,7 @@ CODE_05DB49:          REP #$20                            ;; 05DB49 : C2 20     
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_05DB6E:          LDX.B #$0A                          ;; 05DB6E : A2 0A       ;
-                      LDA.W $0DC0                         ;; 05DB70 : AD C0 0D    ;
+                      LDA.W !GreenStarBlockCoins          ;; 05DB70 : AD C0 0D    ;
                       CMP.B #$16                          ;; 05DB73 : C9 16       ;
                       BPL CODE_05DB7F                     ;; 05DB75 : 10 08       ;
                       LDX.B #$08                          ;; 05DB77 : A2 08       ;
@@ -6327,18 +6327,18 @@ CODE_05DB6E:          LDX.B #$0A                          ;; 05DB6E : A2 0A     
 CODE_05DB7F:          JMP CODE_05DB49                     ;; 05DB7F : 4C 49 DB    ;
                                                           ;;                      ;
 CODE_05DB82:          LDX.B #$0C                          ;; 05DB82 : A2 0C       ;
-                      LDA.W $0F31                         ;; 05DB84 : AD 31 0F    ;
+                      LDA.W !InGameTimerHundreds          ;; 05DB84 : AD 31 0F    ;
                       CMP.B #$02                          ;; 05DB87 : C9 02       ;
                       BMI CODE_05DBA6                     ;; 05DB89 : 30 1B       ;
-                      LDA.W $0F32                         ;; 05DB8B : AD 32 0F    ;
+                      LDA.W !InGameTimerTens              ;; 05DB8B : AD 32 0F    ;
                       CMP.B #$03                          ;; 05DB8E : C9 03       ;
                       BMI CODE_05DBA6                     ;; 05DB90 : 30 14       ;
                       BNE CODE_05DB9B                     ;; 05DB92 : D0 07       ;
-                      LDA.W $0F33                         ;; 05DB94 : AD 33 0F    ;
+                      LDA.W !InGameTimerOnes              ;; 05DB94 : AD 33 0F    ;
                       CMP.B #$05                          ;; 05DB97 : C9 05       ;
                       BMI CODE_05DBA6                     ;; 05DB99 : 30 0B       ;
 CODE_05DB9B:          LDX.B #$0E                          ;; 05DB9B : A2 0E       ;
-                      LDA.W $0F32                         ;; 05DB9D : AD 32 0F    ;
+                      LDA.W !InGameTimerTens              ;; 05DB9D : AD 32 0F    ;
                       CMP.B #$05                          ;; 05DBA0 : C9 05       ;
                       BMI CODE_05DBA6                     ;; 05DBA2 : 30 02       ;
                       LDX.B #$10                          ;; 05DBA4 : A2 10       ;
@@ -6378,10 +6378,10 @@ CODE_05DBF7:          LDA.W DATA_05DBC9,X                 ;; 05DBF7 : BD C9 DB  
                       DEX                                 ;; 05DBFE : CA          ;
                       BPL CODE_05DBF7                     ;; 05DBFF : 10 F6       ;
                       LDX.B #$00                          ;; 05DC01 : A2 00       ;
-                      LDA.W $0DB3                         ;; 05DC03 : AD B3 0D    ;
+                      LDA.W !PlayerTurnLvl                ;; 05DC03 : AD B3 0D    ;
                       BEQ CODE_05DC0A                     ;; 05DC06 : F0 02       ;
                       LDX.B #$01                          ;; 05DC08 : A2 01       ;
-CODE_05DC0A:          LDA.W $0DB4,X                       ;; 05DC0A : BD B4 0D    ;
+CODE_05DC0A:          LDA.W !SavedPlayerLives,X           ;; 05DC0A : BD B4 0D    ;
                       INC A                               ;; 05DC0D : 1A          ;
                       JSR CODE_05DC3A                     ;; 05DC0E : 20 3A DC    ;
                       CPX.B #$00                          ;; 05DC11 : E0 00       ;
