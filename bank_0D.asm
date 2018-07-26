@@ -1418,7 +1418,7 @@ CODE_0DA44B:          SEP #$30                            ;; 0DA44B : E2 30     
                       dl CODE_0DB5B7                      ;; ?QPWZ? : B7 B5 0D    ;
                                                           ;;                      ;
 CODE_0DA512:          LDY.B #$00                          ;; 0DA512 : A0 00       ;
-                      LDA [$65],Y                         ;; 0DA514 : B7 65       ;
+                      LDA.B [$65],Y                       ;; 0DA514 : B7 65       ;
                       STA.B $5A                           ;; 0DA516 : 85 5A       ;
                       INY                                 ;; 0DA518 : C8          ;
                       TYA                                 ;; 0DA519 : 98          ;
@@ -1547,7 +1547,7 @@ CODE_0DA626:          LDA.B $57                           ;; 0DA626 : A5 57     
                       AND.B #$07                          ;; 0DA628 : 29 07       ;
                       TAX                                 ;; 0DA62A : AA          ;
                       LDY.B $0E                           ;; 0DA62B : A4 0E       ;
-                      LDA ($08),Y                         ;; 0DA62D : B1 08       ;
+                      LDA.B ($08),Y                       ;; 0DA62D : B1 08       ;
                       AND.L DATA_0DA8A6,X                 ;; 0DA62F : 3F A6 A8 0D ;
                       STA.B $0F                           ;; 0DA633 : 85 0F       ;
                       PLA                                 ;; 0DA635 : 68          ;
@@ -1562,7 +1562,7 @@ CODE_0DA626:          LDA.B $57                           ;; 0DA626 : A5 57     
                       LDA.B #$32                          ;; 0DA644 : A9 32       ;
                       STA.B $0C                           ;; 0DA646 : 85 0C       ;
 CODE_0DA648:          LDA.B $0C                           ;; 0DA648 : A5 0C       ;
-                      STA [$6B],Y                         ;; 0DA64A : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA64A : 97 6B       ;
 Return0DA64C:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DA64D:          LDA.B #$32                          ;; 0DA64D : A9 32       ;
@@ -1582,7 +1582,7 @@ ADDR_0DA656:          LDY.B $57                           ;; 0DA656 : A4 57     
                       LDA.L DATA_0DA652,X                 ;; 0DA660 : BF 52 A6 0D ;
                       JSR CODE_0DA95B                     ;; 0DA664 : 20 5B A9    ;
                       LDA.L DATA_0DA654,X                 ;; 0DA667 : BF 54 A6 0D ;
-                      STA [$6B],Y                         ;; 0DA66B : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA66B : 97 6B       ;
                       JSR Sta1To6ePointer                 ;; 0DA66D : 20 08 AA    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -1595,11 +1595,11 @@ CODE_0DA673:          LDY.B $57                           ;; 0DA673 : A4 57     
                       SBC.B #$44                          ;; 0DA677 : E9 44       ;
                       TAX                                 ;; 0DA679 : AA          ;
                       LDA.L DATA_0DA671,X                 ;; 0DA67A : BF 71 A6 0D ;
-                      STA [$6B],Y                         ;; 0DA67E : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA67E : 97 6B       ;
                       JSR Sta1To6ePointer                 ;; 0DA680 : 20 08 AA    ;
                       JSR CODE_0DA97D                     ;; 0DA683 : 20 7D A9    ;
                       LDA.B #$EB                          ;; 0DA686 : A9 EB       ;
-                      STA [$6B],Y                         ;; 0DA688 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA688 : 97 6B       ;
                       JSR Sta1To6ePointer                 ;; 0DA68A : 20 08 AA    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -1616,7 +1616,7 @@ CODE_0DA68E:          LDX.W $13BF                         ;; 0DA68E : AE BF 13  
                       JSR CODE_0DA95B                     ;; 0DA6A6 : 20 5B A9    ;
                       JSR StzTo6ePointer                  ;; 0DA6A9 : 20 0D AA    ;
                       LDA.B #$38                          ;; 0DA6AC : A9 38       ;
-                      STA [$6B],Y                         ;; 0DA6AE : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA6AE : 97 6B       ;
 Return0DA6B0:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DA6B1:          LDA.B $6B                           ;; 0DA6B1 : A5 6B       ;
@@ -1647,11 +1647,11 @@ CODE_0DA6D1:          LDY.B $57                           ;; 0DA6D1 : A4 57     
                       TAX                                 ;; 0DA6D7 : AA          ;
                       JSR StzTo6ePointer                  ;; 0DA6D8 : 20 0D AA    ;
                       LDA.L DATA_0DA6CD,X                 ;; 0DA6DB : BF CD A6 0D ;
-                      STA [$6B],Y                         ;; 0DA6DF : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA6DF : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DA6E1 : 20 7D A9    ;
                       JSR StzTo6ePointer                  ;; 0DA6E4 : 20 0D AA    ;
                       LDA.L DATA_0DA6CF,X                 ;; 0DA6E7 : BF CF A6 0D ;
-                      STA [$6B],Y                         ;; 0DA6EB : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA6EB : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -1718,7 +1718,7 @@ CODE_0DA796:          CMP.B #$49                          ;; 0DA796 : C9 49     
                       BCC CODE_0DA7AC                     ;; 0DA798 : 90 12       ;
                       CMP.B #$54                          ;; 0DA79A : C9 54       ;
                       BCC CODE_0DA7AC                     ;; 0DA79C : 90 0E       ;
-                      LDA [$6B],Y                         ;; 0DA79E : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 0DA79E : B7 6B       ;
                       CMP.B #$25                          ;; 0DA7A0 : C9 25       ;
                       BEQ CODE_0DA7AC                     ;; 0DA7A2 : F0 08       ;
                       CMP.B #$49                          ;; 0DA7A4 : C9 49       ;
@@ -1779,11 +1779,11 @@ CODE_0DA80D:          LDY.B $57                           ;; 0DA80D : A4 57     
                       TAX                                 ;; 0DA813 : AA          ;
                       JSR Sta1To6ePointer                 ;; 0DA814 : 20 08 AA    ;
                       LDA.L DATA_0DA809,X                 ;; 0DA817 : BF 09 A8 0D ;
-                      STA [$6B],Y                         ;; 0DA81B : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA81B : 97 6B       ;
                       JSR CODE_0DA82A                     ;; 0DA81D : 20 2A A8    ;
                       JSR Sta1To6ePointer                 ;; 0DA820 : 20 08 AA    ;
                       LDA.L DATA_0DA80B,X                 ;; 0DA823 : BF 0B A8 0D ;
-                      STA [$6B],Y                         ;; 0DA827 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA827 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DA82A:          LDA.B $57                           ;; 0DA82A : A5 57       ;
@@ -1818,14 +1818,14 @@ CODE_0DA846:          LDY.B $57                           ;; 0DA846 : A4 57     
                       JSR CODE_0DA95B                     ;; 0DA854 : 20 5B A9    ;
                       JSR Sta1To6ePointer                 ;; 0DA857 : 20 08 AA    ;
                       LDA.L DATA_0DA840,X                 ;; 0DA85A : BF 40 A8 0D ;
-                      STA [$6B],Y                         ;; 0DA85E : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA85E : 97 6B       ;
                       JSR CODE_0DA82A                     ;; 0DA860 : 20 2A A8    ;
                       JSR Sta1To6ePointer                 ;; 0DA863 : 20 08 AA    ;
                       LDA.L DATA_0DA842,X                 ;; 0DA866 : BF 42 A8 0D ;
                       JSR CODE_0DA95B                     ;; 0DA86A : 20 5B A9    ;
                       JSR Sta1To6ePointer                 ;; 0DA86D : 20 08 AA    ;
                       LDA.L DATA_0DA844,X                 ;; 0DA870 : BF 44 A8 0D ;
-                      STA [$6B],Y                         ;; 0DA874 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA874 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -1842,15 +1842,15 @@ CODE_0DA87D:          LDY.B $57                           ;; 0DA87D : A4 57     
                       TAX                                 ;; 0DA883 : AA          ;
                       JSR Sta1To6ePointer                 ;; 0DA884 : 20 08 AA    ;
                       LDA.L DATA_0DA877,X                 ;; 0DA887 : BF 77 A8 0D ;
-                      STA [$6B],Y                         ;; 0DA88B : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA88B : 97 6B       ;
                       JSR CODE_0DA82A                     ;; 0DA88D : 20 2A A8    ;
                       JSR Sta1To6ePointer                 ;; 0DA890 : 20 08 AA    ;
                       LDA.L DATA_0DA879,X                 ;; 0DA893 : BF 79 A8 0D ;
-                      STA [$6B],Y                         ;; 0DA897 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA897 : 97 6B       ;
                       JSR CODE_0DA82A                     ;; 0DA899 : 20 2A A8    ;
                       JSR Sta1To6ePointer                 ;; 0DA89C : 20 08 AA    ;
                       LDA.L DATA_0DA87B,X                 ;; 0DA89F : BF 7B A8 0D ;
-                      STA [$6B],Y                         ;; 0DA8A3 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DA8A3 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -1908,7 +1908,7 @@ CODE_0DA912:          TYA                                 ;; 0DA912 : 98        
                       AND.B #$07                          ;; 0DA913 : 29 07       ;
                       TAX                                 ;; 0DA915 : AA          ;
                       LDY.B $0E                           ;; 0DA916 : A4 0E       ;
-                      LDA ($08),Y                         ;; 0DA918 : B1 08       ;
+                      LDA.B ($08),Y                       ;; 0DA918 : B1 08       ;
                       AND.L DATA_0DA8A6,X                 ;; 0DA91A : 3F A6 A8 0D ;
                       STA.B $0F                           ;; 0DA91E : 85 0F       ;
                       PLA                                 ;; 0DA920 : 68          ;
@@ -1941,7 +1941,7 @@ CODE_0DA943:          DEC.B $02                           ;; 0DA943 : C6 02     
                                                           ;;                      ;
 Return0DA95A:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0DA95B:          STA [$6B],Y                         ;; 0DA95B : 97 6B       ;
+CODE_0DA95B:          STA.B [$6B],Y                       ;; 0DA95B : 97 6B       ;
 CODE_0DA95D:          INY                                 ;; 0DA95D : C8          ;
                       TYA                                 ;; 0DA95E : 98          ;
                       AND.B #$0F                          ;; 0DA95F : 29 0F       ;
@@ -2043,11 +2043,11 @@ CODE_0DA9EF:          LDA.B $6B                           ;; 0DA9EF : A5 6B     
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 Sta1To6ePointer:      LDA.B #$01                          ;; ?QPWZ? : A9 01       ;
-                      STA [$6E],Y                         ;; 0DAA0A : 97 6E       ;
+                      STA.B [$6E],Y                       ;; 0DAA0A : 97 6E       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 StzTo6ePointer:       LDA.B #$00                          ;; ?QPWZ? : A9 00       ;
-                      STA [$6E],Y                         ;; 0DAA0F : 97 6E       ;
+                      STA.B [$6E],Y                       ;; 0DAA0F : 97 6E       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -2077,7 +2077,7 @@ CODE_0DAA26:          LDY.B $57                           ;; 0DAA26 : A4 57     
                       JSR CODE_0DA95B                     ;; 0DAA43 : 20 5B A9    ;
                       JSR Sta1To6ePointer                 ;; 0DAA46 : 20 08 AA    ;
                       LDA.L DATA_0DAA17,X                 ;; 0DAA49 : BF 17 AA 0D ;
-                      STA [$6B],Y                         ;; 0DAA4D : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DAA4D : 97 6B       ;
                       JMP CODE_0DAA77                     ;; 0DAA4F : 4C 77 AA    ;
                                                           ;;                      ;
 CODE_0DAA52:          CPX.B #$05                          ;; 0DAA52 : E0 05       ;
@@ -2087,7 +2087,7 @@ CODE_0DAA52:          CPX.B #$05                          ;; 0DAA52 : E0 05     
                       JSR CODE_0DA95B                     ;; 0DAA5B : 20 5B A9    ;
                       JSR Sta1To6ePointer                 ;; 0DAA5E : 20 08 AA    ;
                       LDA.B #$69                          ;; 0DAA61 : A9 69       ;
-                      STA [$6B],Y                         ;; 0DAA63 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DAA63 : 97 6B       ;
                       JMP CODE_0DAA77                     ;; 0DAA65 : 4C 77 AA    ;
                                                           ;;                      ;
 CODE_0DAA68:          JSR Sta1To6ePointer                 ;; 0DAA68 : 20 08 AA    ;
@@ -2095,7 +2095,7 @@ CODE_0DAA68:          JSR Sta1To6ePointer                 ;; 0DAA68 : 20 08 AA  
                       JSR CODE_0DA95B                     ;; 0DAA6D : 20 5B A9    ;
                       JSR Sta1To6ePointer                 ;; 0DAA70 : 20 08 AA    ;
                       LDA.B #$36                          ;; 0DAA73 : A9 36       ;
-                      STA [$6B],Y                         ;; 0DAA75 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DAA75 : 97 6B       ;
 CODE_0DAA77:          JSR CODE_0DA6BA                     ;; 0DAA77 : 20 BA A6    ;
                       JSR CODE_0DA97D                     ;; 0DAA7A : 20 7D A9    ;
                       CPX.B #$05                          ;; 0DAA7D : E0 05       ;
@@ -2113,7 +2113,7 @@ CODE_0DAA8C:          DEC.B $00                           ;; 0DAA8C : C6 00     
                       JSR CODE_0DA95B                     ;; 0DAA97 : 20 5B A9    ;
                       JSR Sta1To6ePointer                 ;; 0DAA9A : 20 08 AA    ;
                       LDA.L DATA_0DAA21,X                 ;; 0DAA9D : BF 21 AA 0D ;
-                      STA [$6B],Y                         ;; 0DAAA1 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DAAA1 : 97 6B       ;
 Return0DAAA3:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -2152,7 +2152,7 @@ CODE_0DAAEF:          DEC.B $01                           ;; 0DAAEF : C6 01     
                       BNE CODE_0DAAC9                     ;; 0DAAF1 : D0 D6       ;
                       JSR Sta1To6ePointer                 ;; 0DAAF3 : 20 08 AA    ;
                       LDA.L DATA_0DAAA4,X                 ;; 0DAAF6 : BF A4 AA 0D ;
-                      STA [$6B],Y                         ;; 0DAAFA : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DAAFA : 97 6B       ;
 CODE_0DAAFC:          LDA.B $00                           ;; 0DAAFC : A5 00       ;
                       STA.B $01                           ;; 0DAAFE : 85 01       ;
                       JSR CODE_0DA6BA                     ;; 0DAB00 : 20 BA A6    ;
@@ -2172,19 +2172,19 @@ CODE_0DAB0D:          LDY.B $57                           ;; 0DAB0D : A4 57     
                       TAX                                 ;; 0DAB15 : AA          ;
                       JSR Sta1To6ePointer                 ;; 0DAB16 : 20 08 AA    ;
                       LDA.B #$41                          ;; 0DAB19 : A9 41       ;
-                      STA [$6B],Y                         ;; 0DAB1B : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DAB1B : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DAB1D : 20 7D A9    ;
                       DEX                                 ;; 0DAB20 : CA          ;
                       BMI Return0DAB3D                    ;; 0DAB21 : 30 1A       ;
                       JSR Sta1To6ePointer                 ;; 0DAB23 : 20 08 AA    ;
                       LDA.B #$42                          ;; 0DAB26 : A9 42       ;
-                      STA [$6B],Y                         ;; 0DAB28 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DAB28 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DAB2A : 20 7D A9    ;
                       DEX                                 ;; 0DAB2D : CA          ;
                       BMI Return0DAB3D                    ;; 0DAB2E : 30 0D       ;
 CODE_0DAB30:          JSR Sta1To6ePointer                 ;; 0DAB30 : 20 08 AA    ;
                       LDA.B #$43                          ;; 0DAB33 : A9 43       ;
-                      STA [$6B],Y                         ;; 0DAB35 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DAB35 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DAB37 : 20 7D A9    ;
                       DEX                                 ;; 0DAB3A : CA          ;
                       BPL CODE_0DAB30                     ;; 0DAB3B : 10 F3       ;
@@ -2292,7 +2292,7 @@ CODE_0DABFD:          STA.B $0C                           ;; 0DABFD : 85 0C     
                       TXA                                 ;; 0DABFF : 8A          ;
                       PHA                                 ;; 0DAC00 : 48          ;
                       LDX.B #$02                          ;; 0DAC01 : A2 02       ;
-                      LDA [$6B],Y                         ;; 0DAC03 : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 0DAC03 : B7 6B       ;
 CODE_0DAC05:          CMP.L DATA_0DABF7,X                 ;; 0DAC05 : DF F7 AB 0D ;
                       BEQ CODE_0DAC11                     ;; 0DAC09 : F0 06       ;
                       DEX                                 ;; 0DAC0B : CA          ;
@@ -2873,7 +2873,7 @@ CODE_0DB075:          LDY.B $57                           ;; 0DB075 : A4 57     
                       JSR Sta1To6ePointer                 ;; 0DB08B : 20 08 AA    ;
 CODE_0DB08E:          LDA.L DATA_0DB039,X                 ;; 0DB08E : BF 39 B0 0D ;
                       JSR CODE_0DB114                     ;; 0DB092 : 20 14 B1    ;
-                      STA [$6B],Y                         ;; 0DB095 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB095 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DB097 : 20 7D A9    ;
                       DEC.B $00                           ;; 0DB09A : C6 00       ;
                       BMI CODE_0DB0E2                     ;; 0DB09C : 30 44       ;
@@ -2887,7 +2887,7 @@ CODE_0DB08E:          LDA.L DATA_0DB039,X                 ;; 0DB08E : BF 39 B0 0
 CODE_0DB0AD:          JSR Sta1To6ePointer                 ;; 0DB0AD : 20 08 AA    ;
 CODE_0DB0B0:          LDA.L DATA_0DB048,X                 ;; 0DB0B0 : BF 48 B0 0D ;
                       JSR CODE_0DB198                     ;; 0DB0B4 : 20 98 B1    ;
-                      STA [$6B],Y                         ;; 0DB0B7 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB0B7 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DB0B9 : 20 7D A9    ;
                       DEC.B $00                           ;; 0DB0BC : C6 00       ;
                       BMI CODE_0DB0E2                     ;; 0DB0BE : 30 22       ;
@@ -2901,7 +2901,7 @@ CODE_0DB0C0:          JSR StzTo6ePointer                  ;; 0DB0C0 : 20 0D AA  
 CODE_0DB0CF:          JSR Sta1To6ePointer                 ;; 0DB0CF : 20 08 AA    ;
 CODE_0DB0D2:          LDA.L DATA_0DB057,X                 ;; 0DB0D2 : BF 57 B0 0D ;
                       JSR CODE_0DB198                     ;; 0DB0D6 : 20 98 B1    ;
-                      STA [$6B],Y                         ;; 0DB0D9 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB0D9 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DB0DB : 20 7D A9    ;
                       DEC.B $00                           ;; 0DB0DE : C6 00       ;
                       BPL CODE_0DB0C0                     ;; 0DB0E0 : 10 DE       ;
@@ -2909,7 +2909,7 @@ CODE_0DB0E2:          CPX.B #$0B                          ;; 0DB0E2 : E0 0B     
                       BMI Return0DB0EF                    ;; 0DB0E4 : 30 09       ;
                       JSR Sta1To6ePointer                 ;; 0DB0E6 : 20 08 AA    ;
                       LDA.L DATA_0DB066,X                 ;; 0DB0E9 : BF 66 B0 0D ;
-                      STA [$6B],Y                         ;; 0DB0ED : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB0ED : 97 6B       ;
 Return0DB0EF:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -2932,7 +2932,7 @@ CODE_0DB120:          CPX.B #$02                          ;; 0DB120 : E0 02     
                       STX.B $0B                           ;; 0DB124 : 86 0B       ;
                       STA.B $0C                           ;; 0DB126 : 85 0C       ;
                       LDX.B #$11                          ;; 0DB128 : A2 11       ;
-                      LDA [$6B],Y                         ;; 0DB12A : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 0DB12A : B7 6B       ;
 CODE_0DB12C:          CMP.L DATA_0DB0F0,X                 ;; 0DB12C : DF F0 B0 0D ;
                       BEQ CODE_0DB152                     ;; 0DB130 : F0 20       ;
                       DEX                                 ;; 0DB132 : CA          ;
@@ -2979,7 +2979,7 @@ CODE_0DB1A4:          CPX.B #$02                          ;; 0DB1A4 : E0 02     
                       STX.B $0B                           ;; 0DB1A8 : 86 0B       ;
                       STA.B $0C                           ;; 0DB1AA : 85 0C       ;
                       LDX.B #$1D                          ;; 0DB1AC : A2 1D       ;
-                      LDA [$6B],Y                         ;; 0DB1AE : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 0DB1AE : B7 6B       ;
 CODE_0DB1B0:          CMP.L DATA_0DB15C,X                 ;; 0DB1B0 : DF 5C B1 0D ;
                       BEQ CODE_0DB1BE                     ;; 0DB1B4 : F0 08       ;
                       DEX                                 ;; 0DB1B6 : CA          ;
@@ -3066,7 +3066,7 @@ CODE_0DB23B:          LDA.L DATA_0DB212,X                 ;; 0DB23B : BF 12 B2 0
                       STA.B $03                           ;; 0DB249 : 85 03       ;
 CODE_0DB24B:          JSR StzTo6ePointer                  ;; 0DB24B : 20 0D AA    ;
                       LDA.B $03                           ;; 0DB24E : A5 03       ;
-                      STA [$6B],Y                         ;; 0DB250 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB250 : 97 6B       ;
                       TYA                                 ;; 0DB252 : 98          ;
                       CLC                                 ;; 0DB253 : 18          ;
                       ADC.B #$10                          ;; 0DB254 : 69 10       ;
@@ -3086,7 +3086,7 @@ CODE_0DB265:          LDA.L DATA_0DB215,X                 ;; 0DB265 : BF 15 B2 0
                       STA.B $03                           ;; 0DB273 : 85 03       ;
 CODE_0DB275:          JSR StzTo6ePointer                  ;; 0DB275 : 20 0D AA    ;
                       LDA.B $03                           ;; 0DB278 : A5 03       ;
-                      STA [$6B],Y                         ;; 0DB27A : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB27A : 97 6B       ;
                       TYA                                 ;; 0DB27C : 98          ;
                       CLC                                 ;; 0DB27D : 18          ;
                       ADC.B #$10                          ;; 0DB27E : 69 10       ;
@@ -3106,7 +3106,7 @@ CODE_0DB28F:          LDA.L DATA_0DB218,X                 ;; 0DB28F : BF 18 B2 0
                       STA.B $03                           ;; 0DB29D : 85 03       ;
 CODE_0DB29F:          JSR StzTo6ePointer                  ;; 0DB29F : 20 0D AA    ;
                       LDA.B $03                           ;; 0DB2A2 : A5 03       ;
-                      STA [$6B],Y                         ;; 0DB2A4 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB2A4 : 97 6B       ;
                       JSR CODE_0DA6BA                     ;; 0DB2A6 : 20 BA A6    ;
                       LDA.B $57                           ;; 0DB2A9 : A5 57       ;
                       CLC                                 ;; 0DB2AB : 18          ;
@@ -3168,17 +3168,17 @@ CODE_0DB314:          TYA                                 ;; 0DB314 : 98        
                       AND.B #$07                          ;; 0DB315 : 29 07       ;
                       TAX                                 ;; 0DB317 : AA          ;
                       LDY.B $0E                           ;; 0DB318 : A4 0E       ;
-                      LDA ($08),Y                         ;; 0DB31A : B1 08       ;
+                      LDA.B ($08),Y                       ;; 0DB31A : B1 08       ;
                       AND.L DATA_0DA8A6,X                 ;; 0DB31C : 3F A6 A8 0D ;
                       BNE Return0DB335                    ;; 0DB320 : D0 13       ;
                       LDY.B $57                           ;; 0DB322 : A4 57       ;
                       JSR StzTo6ePointer                  ;; 0DB324 : 20 0D AA    ;
                       LDA.B #$2D                          ;; 0DB327 : A9 2D       ;
-                      STA [$6B],Y                         ;; 0DB329 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB329 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DB32B : 20 7D A9    ;
                       JSR StzTo6ePointer                  ;; 0DB32E : 20 0D AA    ;
                       LDA.B #$2E                          ;; 0DB331 : A9 2E       ;
-                      STA [$6B],Y                         ;; 0DB333 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB333 : 97 6B       ;
 Return0DB335:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 ADDR_0DB336:          LDY.B $57                           ;; 0DB336 : A4 57       ;
@@ -3225,7 +3225,7 @@ ADDR_0DB380:          TYA                                 ;; 0DB380 : 98        
                       AND.B #$07                          ;; 0DB381 : 29 07       ;
                       TAX                                 ;; 0DB383 : AA          ;
                       LDY.B $0E                           ;; 0DB384 : A4 0E       ;
-                      LDA ($08),Y                         ;; 0DB386 : B1 08       ;
+                      LDA.B ($08),Y                       ;; 0DB386 : B1 08       ;
                       AND.L DATA_0DA8A6,X                 ;; 0DB388 : 3F A6 A8 0D ;
                       STA.B $0F                           ;; 0DB38C : 85 0F       ;
                       PLA                                 ;; 0DB38E : 68          ;
@@ -3391,7 +3391,7 @@ CODE_0DB49E:          LDY.B $57                           ;; 0DB49E : A4 57     
                                                           ;;                      ;
 CODE_0DB4B7:          JSR StzTo6ePointer                  ;; 0DB4B7 : 20 0D AA    ;
                       LDA.L DATA_0DB49C,X                 ;; 0DB4BA : BF 9C B4 0D ;
-                      STA [$6B],Y                         ;; 0DB4BE : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB4BE : 97 6B       ;
 CODE_0DB4C0:          TYA                                 ;; 0DB4C0 : 98          ;
                       CLC                                 ;; 0DB4C1 : 18          ;
                       ADC.B #$10                          ;; 0DB4C2 : 69 10       ;
@@ -3409,7 +3409,7 @@ DATA_0DB4D5:          db $07,$09                          ;; 0DB4D5             
 DATA_0DB4D7:          db $1A,$19                          ;; 0DB4D7               ;
                                                           ;;                      ;
 CODE_0DB4D9:          STA.B $0C                           ;; 0DB4D9 : 85 0C       ;
-                      LDA [$6B],Y                         ;; 0DB4DB : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 0DB4DB : B7 6B       ;
                       CMP.B #$08                          ;; 0DB4DD : C9 08       ;
                       BNE CODE_0DB4E8                     ;; 0DB4DF : D0 07       ;
                       LDA.L DATA_0DB4D5,X                 ;; 0DB4E1 : BF D5 B4 0D ;
@@ -3421,7 +3421,7 @@ CODE_0DB4E8:          CMP.B #$0E                          ;; 0DB4E8 : C9 0E     
 CODE_0DB4F0:          STA.B $0C                           ;; 0DB4F0 : 85 0C       ;
 CODE_0DB4F2:          JSR StzTo6ePointer                  ;; 0DB4F2 : 20 0D AA    ;
                       LDA.B $0C                           ;; 0DB4F5 : A5 0C       ;
-                      STA [$6B],Y                         ;; 0DB4F7 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB4F7 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -3430,7 +3430,7 @@ DATA_0DB4FA:          db $0D,$0F                          ;; 0DB4FA             
 DATA_0DB4FC:          db $1C,$1B                          ;; 0DB4FC               ;
                                                           ;;                      ;
 CODE_0DB4FE:          STA.B $0C                           ;; 0DB4FE : 85 0C       ;
-                      LDA [$6B],Y                         ;; 0DB500 : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 0DB500 : B7 6B       ;
                       CMP.B #$0E                          ;; 0DB502 : C9 0E       ;
                       BNE CODE_0DB50D                     ;; 0DB504 : D0 07       ;
                       LDA.L DATA_0DB4FA,X                 ;; 0DB506 : BF FA B4 0D ;
@@ -3442,7 +3442,7 @@ CODE_0DB50D:          CMP.B #$08                          ;; 0DB50D : C9 08     
 CODE_0DB515:          STA.B $0C                           ;; 0DB515 : 85 0C       ;
 CODE_0DB517:          JSR StzTo6ePointer                  ;; 0DB517 : 20 0D AA    ;
                       LDA.B $0C                           ;; 0DB51A : A5 0C       ;
-                      STA [$6B],Y                         ;; 0DB51C : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB51C : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DB51F:          LDY.B $57                           ;; 0DB51F : A4 57       ;
@@ -3459,13 +3459,13 @@ CODE_0DB51F:          LDY.B $57                           ;; 0DB51F : A4 57     
                                                           ;;                      ;
 CODE_0DB532:          JSR Sta1To6ePointer                 ;; 0DB532 : 20 08 AA    ;
                       LDA.B #$54                          ;; 0DB535 : A9 54       ;
-CODE_0DB537:          STA [$6B],Y                         ;; 0DB537 : 97 6B       ;
+CODE_0DB537:          STA.B [$6B],Y                       ;; 0DB537 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DB539 : 20 7D A9    ;
                       DEX                                 ;; 0DB53C : CA          ;
                       BNE CODE_0DB532                     ;; 0DB53D : D0 F3       ;
                       JSR Sta1To6ePointer                 ;; 0DB53F : 20 08 AA    ;
                       LDA.B #$55                          ;; 0DB542 : A9 55       ;
-                      STA [$6B],Y                         ;; 0DB544 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB544 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DB547:          LDY.B $57                           ;; 0DB547 : A4 57       ;
@@ -3483,7 +3483,7 @@ CODE_0DB55B:          JSR CODE_0DA95B                     ;; 0DB55B : 20 5B A9  
                       BNE CODE_0DB556                     ;; 0DB55F : D0 F5       ;
                       JSR Sta1To6ePointer                 ;; 0DB561 : 20 08 AA    ;
                       LDA.B #$58                          ;; 0DB564 : A9 58       ;
-                      STA [$6B],Y                         ;; 0DB566 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB566 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -3496,7 +3496,7 @@ ADDR_0DB571:          LDY.B $57                           ;; 0DB571 : A4 57     
                       TAX                                 ;; 0DB578 : AA          ;
                       JSR StzTo6ePointer                  ;; 0DB579 : 20 0D AA    ;
                       LDA.L DATA_0DB569,X                 ;; 0DB57C : BF 69 B5 0D ;
-                      STA [$6B],Y                         ;; 0DB580 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB580 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DB583:          LDX.B #$01                          ;; 0DB583 : A2 01       ;
@@ -3512,12 +3512,12 @@ CODE_0DB58D:          LDY.B $57                           ;; 0DB58D : A4 57     
                       BNE CODE_0DB59E                     ;; 0DB592 : D0 0A       ;
                       JSR StzTo6ePointer                  ;; 0DB594 : 20 0D AA    ;
                       LDA.L DATA_0DB589,X                 ;; 0DB597 : BF 89 B5 0D ;
-                      STA [$6B],Y                         ;; 0DB59B : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB59B : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DB59E:          JSR Sta1To6ePointer                 ;; 0DB59E : 20 08 AA    ;
                       LDA.L DATA_0DB587,X                 ;; 0DB5A1 : BF 87 B5 0D ;
-                      STA [$6B],Y                         ;; 0DB5A5 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB5A5 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -3548,7 +3548,7 @@ CODE_0DB5D7:          JSR CODE_0DA95B                     ;; 0DB5D7 : 20 5B A9  
                       BNE CODE_0DB5D0                     ;; 0DB5DC : D0 F2       ;
                       JSR StzTo6ePointer                  ;; 0DB5DE : 20 0D AA    ;
                       LDA.L DATA_0DB5B2,X                 ;; 0DB5E1 : BF B2 B5 0D ;
-                      STA [$6B],Y                         ;; 0DB5E5 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB5E5 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -3671,7 +3671,7 @@ CODE_0DB6E3:          LDY.B $57                           ;; 0DB6E3 : A4 57     
                       TAX                                 ;; 0DB6EA : AA          ;
                       JSR StzTo6ePointer                  ;; 0DB6EB : 20 0D AA    ;
                       LDA.L DATA_0DB6E1,X                 ;; 0DB6EE : BF E1 B6 0D ;
-                      STA [$6B],Y                         ;; 0DB6F2 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB6F2 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -3694,7 +3694,7 @@ ADDR_0DB705:          LDY.B $57                           ;; 0DB705 : A4 57     
                                                           ;;                      ;
 ADDR_0DB71E:          JSR StzTo6ePointer                  ;; 0DB71E : 20 0D AA    ;
                       LDA.L DATA_0DB6FD,X                 ;; 0DB721 : BF FD B6 0D ;
-ADDR_0DB725:          STA [$6B],Y                         ;; 0DB725 : 97 6B       ;
+ADDR_0DB725:          STA.B [$6B],Y                       ;; 0DB725 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DB727 : 20 7D A9    ;
                       DEC.B $00                           ;; 0DB72A : C6 00       ;
                       BPL ADDR_0DB71E                     ;; 0DB72C : 10 F0       ;
@@ -3753,7 +3753,7 @@ CODE_0DB79B:          DEC.B $00                           ;; 0DB79B : C6 00     
 CODE_0DB79F:          JSR CODE_0DA95D                     ;; 0DB79F : 20 5D A9    ;
                       JSR Sta1To6ePointer                 ;; 0DB7A2 : 20 08 AA    ;
                       LDA.B #$EB                          ;; 0DB7A5 : A9 EB       ;
-                      STA [$6B],Y                         ;; 0DB7A7 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB7A7 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DB7AA:          LDY.B $57                           ;; 0DB7AA : A4 57       ;
@@ -3833,7 +3833,7 @@ CODE_0DB836:          DEX                                 ;; 0DB836 : CA        
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DB84E:          STA.B $0F                           ;; 0DB84E : 85 0F       ;
-                      LDA [$6B],Y                         ;; 0DB850 : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 0DB850 : B7 6B       ;
                       CMP.B #$25                          ;; 0DB852 : C9 25       ;
                       BEQ CODE_0DB85E                     ;; 0DB854 : F0 08       ;
                       CMP.B #$3F                          ;; 0DB856 : C9 3F       ;
@@ -3988,7 +3988,7 @@ CODE_0DB975:          JSR StzTo6ePointer                  ;; 0DB975 : 20 0D AA  
                       BMI Return0DB996                    ;; 0DB984 : 30 10       ;
                       JSR StzTo6ePointer                  ;; 0DB986 : 20 0D AA    ;
                       LDA.L DATA_0DB964,X                 ;; 0DB989 : BF 64 B9 0D ;
-                      STA [$6B],Y                         ;; 0DB98D : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB98D : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DB98F : 20 7D A9    ;
                       DEC.B $00                           ;; 0DB992 : C6 00       ;
                       BPL CODE_0DB975                     ;; 0DB994 : 10 DF       ;
@@ -3997,7 +3997,7 @@ Return0DB996:         RTS                                 ;; ?QPWZ? : 60        
 CODE_0DB997:          STA.B $0F                           ;; 0DB997 : 85 0F       ;
                       CPX.B #$01                          ;; 0DB999 : E0 01       ;
                       BNE CODE_0DB9AE                     ;; 0DB99B : D0 11       ;
-                      LDA [$6B],Y                         ;; 0DB99D : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 0DB99D : B7 6B       ;
                       CMP.B #$B1                          ;; 0DB99F : C9 B1       ;
                       BEQ CODE_0DB9A7                     ;; 0DB9A1 : F0 04       ;
                       CMP.B #$B6                          ;; 0DB9A3 : C9 B6       ;
@@ -4006,14 +4006,14 @@ CODE_0DB9A7:          STA.B $0F                           ;; 0DB9A7 : 85 0F     
                       INC.B $0F                           ;; 0DB9A9 : E6 0F       ;
                       JMP CODE_0DB9BB                     ;; 0DB9AB : 4C BB B9    ;
                                                           ;;                      ;
-CODE_0DB9AE:          LDA [$6B],Y                         ;; 0DB9AE : B7 6B       ;
+CODE_0DB9AE:          LDA.B [$6B],Y                       ;; 0DB9AE : B7 6B       ;
                       CMP.B #$0E                          ;; 0DB9B0 : C9 0E       ;
                       BNE CODE_0DB9BB                     ;; 0DB9B2 : D0 07       ;
                       JSR Sta1To6ePointer                 ;; 0DB9B4 : 20 08 AA    ;
                       LDA.B #$0D                          ;; 0DB9B7 : A9 0D       ;
                       STA.B $0F                           ;; 0DB9B9 : 85 0F       ;
 CODE_0DB9BB:          LDA.B $0F                           ;; 0DB9BB : A5 0F       ;
-                      STA [$6B],Y                         ;; 0DB9BD : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB9BD : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DB9C0:          LDY.B $57                           ;; 0DB9C0 : A4 57       ;
@@ -4035,14 +4035,14 @@ CODE_0DB9CA:          JSR CODE_0DA6B1                     ;; 0DB9CA : 20 B1 A6  
                       JSR CODE_0DA95B                     ;; 0DB9E1 : 20 5B A9    ;
                       JSR StzTo6ePointer                  ;; 0DB9E4 : 20 0D AA    ;
                       LDA.B #$BC                          ;; 0DB9E7 : A9 BC       ;
-                      STA [$6B],Y                         ;; 0DB9E9 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DB9E9 : 97 6B       ;
                       JSR CODE_0DA6BA                     ;; 0DB9EB : 20 BA A6    ;
                       JSR CODE_0DA97D                     ;; 0DB9EE : 20 7D A9    ;
                       DEC.B $00                           ;; 0DB9F1 : C6 00       ;
                       BPL CODE_0DB9CA                     ;; 0DB9F3 : 10 D5       ;
 Return0DB9F5:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0DB9F6:          LDA [$6B],Y                         ;; 0DB9F6 : B7 6B       ;
+CODE_0DB9F6:          LDA.B [$6B],Y                       ;; 0DB9F6 : B7 6B       ;
                       CMP.B #$0E                          ;; 0DB9F8 : C9 0E       ;
                       BNE CODE_0DBA01                     ;; 0DB9FA : D0 05       ;
                       JSR Sta1To6ePointer                 ;; 0DB9FC : 20 08 AA    ;
@@ -4051,7 +4051,7 @@ CODE_0DBA01:          TXA                                 ;; 0DBA01 : 8A        
                       JSR CODE_0DA95B                     ;; 0DBA02 : 20 5B A9    ;
                       INX                                 ;; 0DBA05 : E8          ;
                       TXA                                 ;; 0DBA06 : 8A          ;
-                      STA [$6B],Y                         ;; 0DBA07 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DBA07 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DBA0A:          LDY.B $57                           ;; 0DBA0A : A4 57       ;
@@ -4102,14 +4102,14 @@ CODE_0DBA4C:          LDY.B $57                           ;; 0DBA4C : A4 57     
                       STA.B $00                           ;; 0DBA59 : 85 00       ;
                       JSR Sta1To6ePointer                 ;; 0DBA5B : 20 08 AA    ;
                       LDA.L DATA_0DBA44,X                 ;; 0DBA5E : BF 44 BA 0D ;
-                      STA [$6B],Y                         ;; 0DBA62 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DBA62 : 97 6B       ;
                       JMP CODE_0DBA74                     ;; 0DBA64 : 4C 74 BA    ;
                                                           ;;                      ;
 CODE_0DBA67:          CPX.B #$02                          ;; 0DBA67 : E0 02       ;
                       BPL CODE_0DBA6E                     ;; 0DBA69 : 10 03       ;
                       JSR Sta1To6ePointer                 ;; 0DBA6B : 20 08 AA    ;
 CODE_0DBA6E:          LDA.L DATA_0DBA48,X                 ;; 0DBA6E : BF 48 BA 0D ;
-                      STA [$6B],Y                         ;; 0DBA72 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DBA72 : 97 6B       ;
 CODE_0DBA74:          JSR CODE_0DA97D                     ;; 0DBA74 : 20 7D A9    ;
                       DEC.B $00                           ;; 0DBA77 : C6 00       ;
                       BPL CODE_0DBA67                     ;; 0DBA79 : 10 EC       ;
@@ -4183,7 +4183,7 @@ CODE_0DBB2C:          LDY.B $57                           ;; 0DBB2C : A4 57     
                       JSR CODE_0DA95B                     ;; 0DBB3D : 20 5B A9    ;
                       JSR Sta1To6ePointer                 ;; 0DBB40 : 20 08 AA    ;
                       LDA.B #$62                          ;; 0DBB43 : A9 62       ;
-                      STA [$6B],Y                         ;; 0DBB45 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DBB45 : 97 6B       ;
                       JMP CODE_0DBB59                     ;; 0DBB47 : 4C 59 BB    ;
                                                           ;;                      ;
 CODE_0DBB4A:          JSR Sta1To6ePointer                 ;; 0DBB4A : 20 08 AA    ;
@@ -4191,7 +4191,7 @@ CODE_0DBB4A:          JSR Sta1To6ePointer                 ;; 0DBB4A : 20 08 AA  
                       JSR CODE_0DA95B                     ;; 0DBB4F : 20 5B A9    ;
                       JSR Sta1To6ePointer                 ;; 0DBB52 : 20 08 AA    ;
                       LDA.B #$64                          ;; 0DBB55 : A9 64       ;
-                      STA [$6B],Y                         ;; 0DBB57 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DBB57 : 97 6B       ;
 CODE_0DBB59:          JSR CODE_0DA6BA                     ;; 0DBB59 : 20 BA A6    ;
                       JSR CODE_0DA97D                     ;; 0DBB5C : 20 7D A9    ;
                       DEX                                 ;; 0DBB5F : CA          ;
@@ -4479,7 +4479,7 @@ CODE_0DC259:          LDY.B $57                           ;; 0DC259 : A4 57     
                       TAX                                 ;; 0DC260 : AA          ;
                       JSR Sta1To6ePointer                 ;; 0DC261 : 20 08 AA    ;
                       LDA.L DATA_0DC257,X                 ;; 0DC264 : BF 57 C2 0D ;
-                      STA [$6B],Y                         ;; 0DC268 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DC268 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -4508,14 +4508,14 @@ CODE_0DC2F1:          JSR StzTo6ePointer                  ;; 0DC2F1 : 20 0D AA  
                       LDA.L DATA_0DC26B,X                 ;; 0DC2F4 : BF 6B C2 0D ;
                       CMP.B #$25                          ;; 0DC2F8 : C9 25       ;
                       BEQ CODE_0DC2FE                     ;; 0DC2FA : F0 02       ;
-                      STA [$6B],Y                         ;; 0DC2FC : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DC2FC : 97 6B       ;
 CODE_0DC2FE:          JSR CODE_0DA95D                     ;; 0DC2FE : 20 5D A9    ;
                       INX                                 ;; 0DC301 : E8          ;
                       DEC.B $00                           ;; 0DC302 : C6 00       ;
                       BNE CODE_0DC2F1                     ;; 0DC304 : D0 EB       ;
                       JSR StzTo6ePointer                  ;; 0DC306 : 20 0D AA    ;
                       LDA.L DATA_0DC26B,X                 ;; 0DC309 : BF 6B C2 0D ;
-                      STA [$6B],Y                         ;; 0DC30D : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DC30D : 97 6B       ;
                       INX                                 ;; 0DC30F : E8          ;
                       JSR CODE_0DA97D                     ;; 0DC310 : 20 7D A9    ;
                       CPX.B #$7E                          ;; 0DC313 : E0 7E       ;
@@ -4694,7 +4694,7 @@ CODE_0DC44F:          LDY.B $57                           ;; 0DC44F : A4 57     
                       TAX                                 ;; 0DC45D : AA          ;
 CODE_0DC45E:          JSR Sta1To6ePointer                 ;; 0DC45E : 20 08 AA    ;
                       LDA.L DATA_0DC44C,X                 ;; 0DC461 : BF 4C C4 0D ;
-                      STA [$6B],Y                         ;; 0DC465 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DC465 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DC467 : 20 7D A9    ;
                       DEC.B $00                           ;; 0DC46A : C6 00       ;
                       BPL CODE_0DC45E                     ;; 0DC46C : 10 F0       ;
@@ -4733,7 +4733,7 @@ CODE_0DC4A8:          DEC.B $02                           ;; 0DC4A8 : C6 02     
                       BNE CODE_0DC49E                     ;; 0DC4AA : D0 F2       ;
                       JSR Sta1To6ePointer                 ;; 0DC4AC : 20 08 AA    ;
                       LDA.L DATA_0DC475,X                 ;; 0DC4AF : BF 75 C4 0D ;
-                      STA [$6B],Y                         ;; 0DC4B3 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DC4B3 : 97 6B       ;
                       JSR CODE_0DA6BA                     ;; 0DC4B5 : 20 BA A6    ;
                       JSR CODE_0DA97D                     ;; 0DC4B8 : 20 7D A9    ;
                       LDX.B #$01                          ;; 0DC4BB : A2 01       ;
@@ -4879,7 +4879,7 @@ CODE_0DC5D8:          LDY.B $57                           ;; 0DC5D8 : A4 57     
                       JSR CODE_0DA95B                     ;; 0DC5EA : 20 5B A9    ;
                       JSR Sta1To6ePointer                 ;; 0DC5ED : 20 08 AA    ;
                       LDA.B #$34                          ;; 0DC5F0 : A9 34       ;
-                      STA [$6B],Y                         ;; 0DC5F2 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DC5F2 : 97 6B       ;
                       JMP CODE_0DC606                     ;; 0DC5F4 : 4C 06 C6    ;
                                                           ;;                      ;
 CODE_0DC5F7:          JSR StzTo6ePointer                  ;; 0DC5F7 : 20 0D AA    ;
@@ -4887,7 +4887,7 @@ CODE_0DC5F7:          JSR StzTo6ePointer                  ;; 0DC5F7 : 20 0D AA  
                       JSR CODE_0DA95B                     ;; 0DC5FC : 20 5B A9    ;
                       JSR StzTo6ePointer                  ;; 0DC5FF : 20 0D AA    ;
                       LDA.B #$9E                          ;; 0DC602 : A9 9E       ;
-                      STA [$6B],Y                         ;; 0DC604 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DC604 : 97 6B       ;
 CODE_0DC606:          JSR CODE_0DA6BA                     ;; 0DC606 : 20 BA A6    ;
                       JSR CODE_0DA97D                     ;; 0DC609 : 20 7D A9    ;
                       DEC.B $00                           ;; 0DC60C : C6 00       ;
@@ -4897,7 +4897,7 @@ CODE_0DC606:          JSR CODE_0DA6BA                     ;; 0DC606 : 20 BA A6  
                       JSR CODE_0DA95B                     ;; 0DC615 : 20 5B A9    ;
                       JSR Sta1To6ePointer                 ;; 0DC618 : 20 08 AA    ;
                       LDA.B #$34                          ;; 0DC61B : A9 34       ;
-                      STA [$6B],Y                         ;; 0DC61D : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DC61D : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -5245,7 +5245,7 @@ CODE_0DCE94:          LDY.B $57                           ;; 0DCE94 : A4 57     
                       TAX                                 ;; 0DCE9B : AA          ;
                       JSR StzTo6ePointer                  ;; 0DCE9C : 20 0D AA    ;
                       LDA.L DATA_0DCE90,X                 ;; 0DCE9F : BF 90 CE 0D ;
-                      STA [$6B],Y                         ;; 0DCEA3 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DCEA3 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 ADDR_0DCEA6:          LDY.B $57                           ;; 0DCEA6 : A4 57       ;
@@ -5258,7 +5258,7 @@ ADDR_0DCEA6:          LDY.B $57                           ;; 0DCEA6 : A4 57     
                       JSR CODE_0DA95B                     ;; 0DCEB3 : 20 5B A9    ;
                       JSR StzTo6ePointer                  ;; 0DCEB6 : 20 0D AA    ;
                       LDA.B #$85                          ;; 0DCEB9 : A9 85       ;
-                      STA [$6B],Y                         ;; 0DCEBB : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DCEBB : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -5269,7 +5269,7 @@ CODE_0DCEC0:          LDY.B $57                           ;; 0DCEC0 : A4 57     
                       LDX.B #$00                          ;; 0DCEC4 : A2 00       ;
 CODE_0DCEC6:          JSR StzTo6ePointer                  ;; 0DCEC6 : 20 0D AA    ;
                       LDA.L DATA_0DCEBE,X                 ;; 0DCEC9 : BF BE CE 0D ;
-                      STA [$6B],Y                         ;; 0DCECD : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DCECD : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DCECF : 20 7D A9    ;
                       INX                                 ;; 0DCED2 : E8          ;
                       CPX.B #$02                          ;; 0DCED3 : E0 02       ;
@@ -5345,7 +5345,7 @@ CODE_0DCF33:          LDY.B $57                           ;; 0DCF33 : A4 57     
                       STA.B $00                           ;; 0DCF40 : 85 00       ;
 CODE_0DCF42:          JSR StzTo6ePointer                  ;; 0DCF42 : 20 0D AA    ;
                       LDA.L DATA_0DCF30,X                 ;; 0DCF45 : BF 30 CF 0D ;
-                      STA [$6B],Y                         ;; 0DCF49 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DCF49 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DCF4B : 20 7D A9    ;
                       DEC.B $00                           ;; 0DCF4E : C6 00       ;
                       BPL CODE_0DCF42                     ;; 0DCF50 : 10 F0       ;
@@ -5376,7 +5376,7 @@ CODE_0DCF7A:          JSR StzTo6ePointer                  ;; 0DCF7A : 20 0D AA  
                       JSR CODE_0DA95B                     ;; 0DCF7F : 20 5B A9    ;
                       JSR StzTo6ePointer                  ;; 0DCF82 : 20 0D AA    ;
                       LDA.B #$8D                          ;; 0DCF85 : A9 8D       ;
-                      STA [$6B],Y                         ;; 0DCF87 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DCF87 : 97 6B       ;
                       JSR CODE_0DA6BA                     ;; 0DCF89 : 20 BA A6    ;
                       LDA.B $57                           ;; 0DCF8C : A5 57       ;
                       CLC                                 ;; 0DCF8E : 18          ;
@@ -5414,7 +5414,7 @@ CODE_0DCFB9:          STA.B $00                           ;; 0DCFB9 : 85 00     
                       TAX                                 ;; 0DCFC3 : AA          ;
 CODE_0DCFC4:          JSR StzTo6ePointer                  ;; 0DCFC4 : 20 0D AA    ;
                       LDA.B $00                           ;; 0DCFC7 : A5 00       ;
-                      STA [$6B],Y                         ;; 0DCFC9 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DCFC9 : 97 6B       ;
                       LDA.B $57                           ;; 0DCFCB : A5 57       ;
                       CLC                                 ;; 0DCFCD : 18          ;
                       ADC.B #$0F                          ;; 0DCFCE : 69 0F       ;
@@ -5450,7 +5450,7 @@ ADDR_0DCFFC:          JSR StzTo6ePointer                  ;; 0DCFFC : 20 0D AA  
                       JSR CODE_0DA95B                     ;; 0DD001 : 20 5B A9    ;
                       JSR StzTo6ePointer                  ;; 0DD004 : 20 0D AA    ;
                       LDA.B #$8F                          ;; 0DD007 : A9 8F       ;
-                      STA [$6B],Y                         ;; 0DD009 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DD009 : 97 6B       ;
                       JSR CODE_0DA6BA                     ;; 0DD00B : 20 BA A6    ;
                       LDA.B $57                           ;; 0DD00E : A5 57       ;
                       CLC                                 ;; 0DD010 : 18          ;
@@ -5490,7 +5490,7 @@ CODE_0DD03C:          STA.B $00                           ;; 0DD03C : 85 00     
                       TAX                                 ;; 0DD046 : AA          ;
 CODE_0DD047:          JSR StzTo6ePointer                  ;; 0DD047 : 20 0D AA    ;
                       LDA.B $00                           ;; 0DD04A : A5 00       ;
-                      STA [$6B],Y                         ;; 0DD04C : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DD04C : 97 6B       ;
                       LDA.B $57                           ;; 0DD04E : A5 57       ;
                       CLC                                 ;; 0DD050 : 18          ;
                       ADC.B #$10                          ;; 0DD051 : 69 10       ;
@@ -5529,7 +5529,7 @@ ADDR_0DD080:          LDY.B $57                           ;; 0DD080 : A4 57     
                       TAX                                 ;; 0DD086 : AA          ;
 ADDR_0DD087:          JSR StzTo6ePointer                  ;; 0DD087 : 20 0D AA    ;
                       LDA.B #$88                          ;; 0DD08A : A9 88       ;
-                      STA [$6B],Y                         ;; 0DD08C : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DD08C : 97 6B       ;
                       TYA                                 ;; 0DD08E : 98          ;
                       CLC                                 ;; 0DD08F : 18          ;
                       ADC.B #$10                          ;; 0DD090 : 69 10       ;
@@ -5538,7 +5538,7 @@ ADDR_0DD087:          JSR StzTo6ePointer                  ;; 0DD087 : 20 0D AA  
                       JSR CODE_0DA987                     ;; 0DD095 : 20 87 A9    ;
 ADDR_0DD098:          JSR StzTo6ePointer                  ;; 0DD098 : 20 0D AA    ;
                       LDA.B #$8A                          ;; 0DD09B : A9 8A       ;
-                      STA [$6B],Y                         ;; 0DD09D : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DD09D : 97 6B       ;
                       TYA                                 ;; 0DD09F : 98          ;
                       CLC                                 ;; 0DD0A0 : 18          ;
                       ADC.B #$0F                          ;; 0DD0A1 : 69 0F       ;
@@ -5567,7 +5567,7 @@ ADDR_0DD0C3:          LDY.B $57                           ;; 0DD0C3 : A4 57     
                       TAX                                 ;; 0DD0C9 : AA          ;
 ADDR_0DD0CA:          JSR StzTo6ePointer                  ;; 0DD0CA : 20 0D AA    ;
                       LDA.B #$89                          ;; 0DD0CD : A9 89       ;
-                      STA [$6B],Y                         ;; 0DD0CF : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DD0CF : 97 6B       ;
                       TYA                                 ;; 0DD0D1 : 98          ;
                       CLC                                 ;; 0DD0D2 : 18          ;
                       ADC.B #$10                          ;; 0DD0D3 : 69 10       ;
@@ -5576,7 +5576,7 @@ ADDR_0DD0CA:          JSR StzTo6ePointer                  ;; 0DD0CA : 20 0D AA  
                       JSR CODE_0DA987                     ;; 0DD0D8 : 20 87 A9    ;
 ADDR_0DD0DB:          JSR StzTo6ePointer                  ;; 0DD0DB : 20 0D AA    ;
                       LDA.B #$8B                          ;; 0DD0DE : A9 8B       ;
-                      STA [$6B],Y                         ;; 0DD0E0 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DD0E0 : 97 6B       ;
                       TYA                                 ;; 0DD0E2 : 98          ;
                       CLC                                 ;; 0DD0E3 : 18          ;
                       ADC.B #$10                          ;; 0DD0E4 : 69 10       ;
@@ -5605,7 +5605,7 @@ CODE_0DD103:          LDY.B $57                           ;; 0DD103 : A4 57     
                       STA.B $00                           ;; 0DD109 : 85 00       ;
                       JSR Sta1To6ePointer                 ;; 0DD10B : 20 08 AA    ;
                       LDX.B #$07                          ;; 0DD10E : A2 07       ;
-                      LDA [$6B],Y                         ;; 0DD110 : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 0DD110 : B7 6B       ;
                       CMP.B #$73                          ;; 0DD112 : C9 73       ;
                       BMI CODE_0DD11C                     ;; 0DD114 : 30 06       ;
                       CMP.B #$76                          ;; 0DD116 : C9 76       ;
@@ -5622,7 +5622,7 @@ CODE_0DD12B:          DEC.B $00                           ;; 0DD12B : C6 00     
                       BNE CODE_0DD123                     ;; 0DD12D : D0 F4       ;
                       JSR Sta1To6ePointer                 ;; 0DD12F : 20 08 AA    ;
                       LDX.B #$09                          ;; 0DD132 : A2 09       ;
-                      LDA [$6B],Y                         ;; 0DD134 : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 0DD134 : B7 6B       ;
                       CMP.B #$73                          ;; 0DD136 : C9 73       ;
                       BMI CODE_0DD140                     ;; 0DD138 : 30 06       ;
                       CMP.B #$76                          ;; 0DD13A : C9 76       ;
@@ -5694,13 +5694,13 @@ ADDR_0DD1A5:          LDY.B $57                           ;; 0DD1A5 : A4 57     
                                                           ;;                      ;
 ADDR_0DD1B6:          JSR Sta1To6ePointer                 ;; 0DD1B6 : 20 08 AA    ;
                       LDA.B #$5D                          ;; 0DD1B9 : A9 5D       ;
-ADDR_0DD1BB:          STA [$6B],Y                         ;; 0DD1BB : 97 6B       ;
+ADDR_0DD1BB:          STA.B [$6B],Y                       ;; 0DD1BB : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DD1BD : 20 7D A9    ;
                       DEX                                 ;; 0DD1C0 : CA          ;
                       BNE ADDR_0DD1B6                     ;; 0DD1C1 : D0 F3       ;
                       JSR Sta1To6ePointer                 ;; 0DD1C3 : 20 08 AA    ;
                       LDA.B #$5E                          ;; 0DD1C6 : A9 5E       ;
-                      STA [$6B],Y                         ;; 0DD1C8 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DD1C8 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -5726,7 +5726,7 @@ CODE_0DD1D9:          LDY.B $57                           ;; 0DD1D9 : A4 57     
                       JSR CODE_0DA95B                     ;; 0DD1F2 : 20 5B A9    ;
                       JSR StzTo6ePointer                  ;; 0DD1F5 : 20 0D AA    ;
                       LDA.L DATA_0DD1CF,X                 ;; 0DD1F8 : BF CF D1 0D ;
-                      STA [$6B],Y                         ;; 0DD1FC : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DD1FC : 97 6B       ;
                       DEC.B $00                           ;; 0DD1FE : C6 00       ;
                       BPL CODE_0DD205                     ;; 0DD200 : 10 03       ;
                       JMP Return0DD24B                    ;; 0DD202 : 4C 4B D2    ;
@@ -5738,7 +5738,7 @@ CODE_0DD205:          JSR CODE_0DA6BA                     ;; 0DD205 : 20 BA A6  
                       JSR CODE_0DA95B                     ;; 0DD210 : 20 5B A9    ;
                       JSR Sta1To6ePointer                 ;; 0DD213 : 20 08 AA    ;
                       LDA.B #$60                          ;; 0DD216 : A9 60       ;
-                      STA [$6B],Y                         ;; 0DD218 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DD218 : 97 6B       ;
                       DEC.B $00                           ;; 0DD21A : C6 00       ;
                       BMI Return0DD24B                    ;; 0DD21C : 30 2D       ;
                       JSR CODE_0DA6BA                     ;; 0DD21E : 20 BA A6    ;
@@ -5750,7 +5750,7 @@ CODE_0DD226:          JSR Sta1To6ePointer                 ;; 0DD226 : 20 08 AA  
                       INX                                 ;; 0DD230 : E8          ;
                       JSR Sta1To6ePointer                 ;; 0DD231 : 20 08 AA    ;
                       LDA.L DATA_0DD1D3,X                 ;; 0DD234 : BF D3 D1 0D ;
-                      STA [$6B],Y                         ;; 0DD238 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DD238 : 97 6B       ;
                       INX                                 ;; 0DD23A : E8          ;
                       JSR CODE_0DA6BA                     ;; 0DD23B : 20 BA A6    ;
                       JSR CODE_0DA97D                     ;; 0DD23E : 20 7D A9    ;
@@ -6089,7 +6089,7 @@ CODE_0DD990:          SEP #$30                            ;; 0DD990 : E2 30     
 CODE_0DDA57:          LDY.B $57                           ;; 0DDA57 : A4 57       ;
                       JSR Sta1To6ePointer                 ;; 0DDA59 : 20 08 AA    ;
                       LDA.B #$FE                          ;; 0DDA5C : A9 FE       ;
-                      STA [$6B],Y                         ;; 0DDA5E : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDA5E : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -6102,7 +6102,7 @@ CODE_0DDA68:          LDY.B $57                           ;; 0DDA68 : A4 57     
                       TAX                                 ;; 0DDA6F : AA          ;
                       JSR StzTo6ePointer                  ;; 0DDA70 : 20 0D AA    ;
                       LDA.L DATA_0DDA61,X                 ;; 0DDA73 : BF 61 DA 0D ;
-                      STA [$6B],Y                         ;; 0DDA77 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDA77 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -6117,11 +6117,11 @@ CODE_0DDA80:          LDY.B $57                           ;; 0DDA80 : A4 57     
                       TAX                                 ;; 0DDA87 : AA          ;
                       JSR StzTo6ePointer                  ;; 0DDA88 : 20 0D AA    ;
                       LDA.L DATA_0DDA7A,X                 ;; 0DDA8B : BF 7A DA 0D ;
-                      STA [$6B],Y                         ;; 0DDA8F : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDA8F : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DDA91 : 20 7D A9    ;
                       JSR StzTo6ePointer                  ;; 0DDA94 : 20 0D AA    ;
                       LDA.L DATA_0DDA7D,X                 ;; 0DDA97 : BF 7D DA 0D ;
-                      STA [$6B],Y                         ;; 0DDA9B : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDA9B : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -6164,7 +6164,7 @@ CODE_0DDAC8:          LDY.B $57                           ;; 0DDAC8 : A4 57     
                                                           ;;                      ;
 CODE_0DDAE1:          JSR Sta1To6ePointer                 ;; 0DDAE1 : 20 08 AA    ;
                       LDA.L DATA_0DDAC6,X                 ;; 0DDAE4 : BF C6 DA 0D ;
-CODE_0DDAE8:          STA [$6B],Y                         ;; 0DDAE8 : 97 6B       ;
+CODE_0DDAE8:          STA.B [$6B],Y                       ;; 0DDAE8 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DDAEA : 20 7D A9    ;
                       DEC.B $00                           ;; 0DDAED : C6 00       ;
                       BPL CODE_0DDAE1                     ;; 0DDAEF : 10 F0       ;
@@ -6480,7 +6480,7 @@ CODE_0DDD2E:          LDY.B $57                           ;; 0DDD2E : A4 57     
                       BEQ CODE_0DDD51                     ;; 0DDD3F : F0 10       ;
 CODE_0DDD41:          JSR Sta1To6ePointer                 ;; 0DDD41 : 20 08 AA    ;
                       LDA.L DATA_0DDD26,X                 ;; 0DDD44 : BF 26 DD 0D ;
-                      STA [$6B],Y                         ;; 0DDD48 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDD48 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DDD4A : 20 7D A9    ;
                       DEC.B $00                           ;; 0DDD4D : C6 00       ;
                       BNE CODE_0DDD41                     ;; 0DDD4F : D0 F0       ;
@@ -6535,7 +6535,7 @@ CODE_0DDDA7:          JSR CODE_0DA6B1                     ;; 0DDDA7 : 20 B1 A6  
                       LDX.B $01                           ;; 0DDDAA : A6 01       ;
                       JSR Sta1To6ePointer                 ;; 0DDDAC : 20 08 AA    ;
                       LDA.B #$CA                          ;; 0DDDAF : A9 CA       ;
-                      STA [$6B],Y                         ;; 0DDDB1 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDDB1 : 97 6B       ;
                       TYA                                 ;; 0DDDB3 : 98          ;
                       CLC                                 ;; 0DDDB4 : 18          ;
                       ADC.B #$10                          ;; 0DDDB5 : 69 10       ;
@@ -6547,7 +6547,7 @@ CODE_0DDDA7:          JSR CODE_0DA6B1                     ;; 0DDDA7 : 20 B1 A6  
                       STA.B $6F                           ;; 0DDDC0 : 85 6F       ;
 CODE_0DDDC2:          JSR Sta1To6ePointer                 ;; 0DDDC2 : 20 08 AA    ;
                       LDA.B #$CB                          ;; 0DDDC5 : A9 CB       ;
-                      STA [$6B],Y                         ;; 0DDDC7 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDDC7 : 97 6B       ;
                       TYA                                 ;; 0DDDC9 : 98          ;
                       CLC                                 ;; 0DDDCA : 18          ;
                       ADC.B #$10                          ;; 0DDDCB : 69 10       ;
@@ -6559,7 +6559,7 @@ CODE_0DDDC2:          JSR Sta1To6ePointer                 ;; 0DDDC2 : 20 08 AA  
                       STA.B $6F                           ;; 0DDDD6 : 85 6F       ;
 CODE_0DDDD8:          JSR Sta1To6ePointer                 ;; 0DDDD8 : 20 08 AA    ;
                       LDA.B #$F1                          ;; 0DDDDB : A9 F1       ;
-                      STA [$6B],Y                         ;; 0DDDDD : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDDDD : 97 6B       ;
                       TYA                                 ;; 0DDDDF : 98          ;
                       CLC                                 ;; 0DDDE0 : 18          ;
                       ADC.B #$10                          ;; 0DDDE1 : 69 10       ;
@@ -6575,7 +6575,7 @@ CODE_0DDDEE:          DEX                                 ;; 0DDDEE : CA        
                                                           ;;                      ;
 CODE_0DDDF3:          JSR StzTo6ePointer                  ;; 0DDDF3 : 20 0D AA    ;
                       LDA.B #$3F                          ;; 0DDDF6 : A9 3F       ;
-                      STA [$6B],Y                         ;; 0DDDF8 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDDF8 : 97 6B       ;
                       TYA                                 ;; 0DDDFA : 98          ;
                       CLC                                 ;; 0DDDFB : 18          ;
                       ADC.B #$10                          ;; 0DDDFC : 69 10       ;
@@ -6626,7 +6626,7 @@ CODE_0DDE4A:          JSR CODE_0DA6B1                     ;; 0DDE4A : 20 B1 A6  
                       LDX.B $01                           ;; 0DDE4D : A6 01       ;
                       JSR Sta1To6ePointer                 ;; 0DDE4F : 20 08 AA    ;
                       LDA.B #$CC                          ;; 0DDE52 : A9 CC       ;
-                      STA [$6B],Y                         ;; 0DDE54 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDE54 : 97 6B       ;
                       TYA                                 ;; 0DDE56 : 98          ;
                       CLC                                 ;; 0DDE57 : 18          ;
                       ADC.B #$10                          ;; 0DDE58 : 69 10       ;
@@ -6638,7 +6638,7 @@ CODE_0DDE4A:          JSR CODE_0DA6B1                     ;; 0DDE4A : 20 B1 A6  
                       STA.B $6F                           ;; 0DDE63 : 85 6F       ;
 CODE_0DDE65:          JSR Sta1To6ePointer                 ;; 0DDE65 : 20 08 AA    ;
                       LDA.B #$CD                          ;; 0DDE68 : A9 CD       ;
-                      STA [$6B],Y                         ;; 0DDE6A : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDE6A : 97 6B       ;
                       TYA                                 ;; 0DDE6C : 98          ;
                       CLC                                 ;; 0DDE6D : 18          ;
                       ADC.B #$10                          ;; 0DDE6E : 69 10       ;
@@ -6650,7 +6650,7 @@ CODE_0DDE65:          JSR Sta1To6ePointer                 ;; 0DDE65 : 20 08 AA  
                       STA.B $6F                           ;; 0DDE79 : 85 6F       ;
 CODE_0DDE7B:          JSR Sta1To6ePointer                 ;; 0DDE7B : 20 08 AA    ;
                       LDA.B #$F2                          ;; 0DDE7E : A9 F2       ;
-                      STA [$6B],Y                         ;; 0DDE80 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDE80 : 97 6B       ;
                       TYA                                 ;; 0DDE82 : 98          ;
                       CLC                                 ;; 0DDE83 : 18          ;
                       ADC.B #$10                          ;; 0DDE84 : 69 10       ;
@@ -6666,7 +6666,7 @@ CODE_0DDE91:          DEX                                 ;; 0DDE91 : CA        
                                                           ;;                      ;
 CODE_0DDE96:          JSR StzTo6ePointer                  ;; 0DDE96 : 20 0D AA    ;
                       LDA.B #$3F                          ;; 0DDE99 : A9 3F       ;
-                      STA [$6B],Y                         ;; 0DDE9B : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDE9B : 97 6B       ;
                       TYA                                 ;; 0DDE9D : 98          ;
                       CLC                                 ;; 0DDE9E : 18          ;
                       ADC.B #$10                          ;; 0DDE9F : 69 10       ;
@@ -6787,7 +6787,7 @@ CODE_0DDFB2:          JSR StzTo6ePointer                  ;; 0DDFB2 : 20 0D AA  
                       JSR CODE_0DA95B                     ;; 0DDFC3 : 20 5B A9    ;
                       JSR StzTo6ePointer                  ;; 0DDFC6 : 20 0D AA    ;
                       LDA.L DATA_0DDEDE,X                 ;; 0DDFC9 : BF DE DE 0D ;
-                      STA [$6B],Y                         ;; 0DDFCD : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DDFCD : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DDFCF : 20 7D A9    ;
                       DEC.B $01                           ;; 0DDFD2 : C6 01       ;
                       BPL CODE_0DDFB2                     ;; 0DDFD4 : 10 DC       ;
@@ -6913,7 +6913,7 @@ CODE_0DE0FC:          JSR StzTo6ePointer                  ;; 0DE0FC : 20 0D AA  
                       BPL CODE_0DE0FC                     ;; 0DE109 : 10 F1       ;
                       JSR Sta1To6ePointer                 ;; 0DE10B : 20 08 AA    ;
                       LDA.B #$5F                          ;; 0DE10E : A9 5F       ;
-                      STA [$6B],Y                         ;; 0DE110 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DE110 : 97 6B       ;
                       JSR CODE_0DA6BA                     ;; 0DE112 : 20 BA A6    ;
                       LDA.B #$02                          ;; 0DE115 : A9 02       ;
                       STA.B $02                           ;; 0DE117 : 85 02       ;
@@ -6959,7 +6959,7 @@ CODE_0DE165:          DEC.B $02                           ;; 0DE165 : C6 02     
                       BNE CODE_0DE15B                     ;; 0DE167 : D0 F2       ;
                       JSR Sta1To6ePointer                 ;; 0DE169 : 20 08 AA    ;
                       LDA.L DATA_0DE132,X                 ;; 0DE16C : BF 32 E1 0D ;
-                      STA [$6B],Y                         ;; 0DE170 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DE170 : 97 6B       ;
                       JSR CODE_0DA6BA                     ;; 0DE172 : 20 BA A6    ;
                       JSR CODE_0DA97D                     ;; 0DE175 : 20 7D A9    ;
                       LDX.B #$01                          ;; 0DE178 : A2 01       ;
@@ -7278,7 +7278,7 @@ CODE_0DE95F:          LDY.B $57                           ;; 0DE95F : A4 57     
                       TAX                                 ;; 0DE966 : AA          ;
                       JSR StzTo6ePointer                  ;; 0DE967 : 20 0D AA    ;
                       LDA.L DATA_0DE957,X                 ;; 0DE96A : BF 57 E9 0D ;
-                      STA [$6B],Y                         ;; 0DE96E : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DE96E : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 ADDR_0DE971:          LDA.B #$03                          ;; 0DE971 : A9 03       ;
@@ -7286,7 +7286,7 @@ ADDR_0DE971:          LDA.B #$03                          ;; 0DE971 : A9 03     
                       LDY.B #$00                          ;; 0DE975 : A0 00       ;
 ADDR_0DE977:          JSR StzTo6ePointer                  ;; 0DE977 : 20 0D AA    ;
                       LDA.B #$77                          ;; 0DE97A : A9 77       ;
-                      STA [$6B],Y                         ;; 0DE97C : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DE97C : 97 6B       ;
                       INY                                 ;; 0DE97E : C8          ;
                       BNE ADDR_0DE977                     ;; 0DE97F : D0 F6       ;
                       LDA.B $6C                           ;; 0DE981 : A5 6C       ;
@@ -7454,7 +7454,7 @@ CODE_0DEB72:          JSR StzTo6ePointer                  ;; 0DEB72 : 20 0D AA  
                       BNE CODE_0DEB72                     ;; 0DEB7F : D0 F1       ;
                       JSR StzTo6ePointer                  ;; 0DEB81 : 20 0D AA    ;
                       LDA.L DATA_0DEADE,X                 ;; 0DEB84 : BF DE EA 0D ;
-                      STA [$6B],Y                         ;; 0DEB88 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DEB88 : 97 6B       ;
                       INX                                 ;; 0DEB8A : E8          ;
                       JSR CODE_0DA97D                     ;; 0DEB8B : 20 7D A9    ;
                       CPX.B #$8C                          ;; 0DEB8E : E0 8C       ;
@@ -7495,7 +7495,7 @@ CODE_0DEC3B:          JSR StzTo6ePointer                  ;; 0DEC3B : 20 0D AA  
                       BNE CODE_0DEC3B                     ;; 0DEC48 : D0 F1       ;
                       JSR StzTo6ePointer                  ;; 0DEC4A : 20 0D AA    ;
                       LDA.L DATA_0DEB93,X                 ;; 0DEC4D : BF 93 EB 0D ;
-                      STA [$6B],Y                         ;; 0DEC51 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DEC51 : 97 6B       ;
                       INX                                 ;; 0DEC53 : E8          ;
                       JSR CODE_0DA97D                     ;; 0DEC54 : 20 7D A9    ;
                       CPX.B #$A0                          ;; 0DEC57 : E0 A0       ;
@@ -7505,7 +7505,7 @@ CODE_0DEC3B:          JSR StzTo6ePointer                  ;; 0DEC3B : 20 0D AA  
 CODE_0DEC5C:          LDY.B $57                           ;; 0DEC5C : A4 57       ;
                       JSR Sta1To6ePointer                 ;; 0DEC5E : 20 08 AA    ;
                       LDA.B #$10                          ;; 0DEC61 : A9 10       ;
-                      STA [$6B],Y                         ;; 0DEC63 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DEC63 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 ADDR_0DEC66:          CMP.B #$CA                          ;; 0DEC66 : C9 CA       ;
@@ -7513,7 +7513,7 @@ ADDR_0DEC68:          LDY.B $57                           ;; 0DEC68 : A4 57     
                       LDX.B #$00                          ;; 0DEC6A : A2 00       ;
 ADDR_0DEC6C:          JSR StzTo6ePointer                  ;; 0DEC6C : 20 0D AA    ;
                       LDA.L ADDR_0DEC66,X                 ;; 0DEC6F : BF 66 EC 0D ;
-                      STA [$6B],Y                         ;; 0DEC73 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DEC73 : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DEC75 : 20 7D A9    ;
                       INX                                 ;; 0DEC78 : E8          ;
                       CPX.B #$02                          ;; 0DEC79 : E0 02       ;
@@ -7618,7 +7618,7 @@ CODE_0DED32:          JSR CODE_0DA95B                     ;; 0DED32 : 20 5B A9  
                       BNE CODE_0DED2B                     ;; 0DED37 : D0 F2       ;
                       JSR StzTo6ePointer                  ;; 0DED39 : 20 0D AA    ;
                       LDA.L DATA_0DED0F,X                 ;; 0DED3C : BF 0F ED 0D ;
-                      STA [$6B],Y                         ;; 0DED40 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DED40 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DED43:          LDY.B $57                           ;; 0DED43 : A4 57       ;
@@ -7636,7 +7636,7 @@ CODE_0DED57:          JSR CODE_0DA95B                     ;; 0DED57 : 20 5B A9  
                       BNE CODE_0DED52                     ;; 0DED5B : D0 F5       ;
                       JSR Sta1To6ePointer                 ;; 0DED5D : 20 08 AA    ;
                       LDA.B #$0C                          ;; 0DED60 : A9 0C       ;
-                      STA [$6B],Y                         ;; 0DED62 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DED62 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -7660,7 +7660,7 @@ CODE_0DED6B:          LDY.B $57                           ;; 0DED6B : A4 57     
                                                           ;;                      ;
 CODE_0DED84:          JSR StzTo6ePointer                  ;; 0DED84 : 20 0D AA    ;
                       LDA.L DATA_0DED68,X                 ;; 0DED87 : BF 68 ED 0D ;
-CODE_0DED8B:          STA [$6B],Y                         ;; 0DED8B : 97 6B       ;
+CODE_0DED8B:          STA.B [$6B],Y                       ;; 0DED8B : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DED8D : 20 7D A9    ;
                       DEC.B $00                           ;; 0DED90 : C6 00       ;
                       BPL CODE_0DED84                     ;; 0DED92 : 10 F0       ;
@@ -7681,7 +7681,7 @@ CODE_0DED99:          LDA.B $59                           ;; 0DED99 : A5 59     
                       STA.B $00                           ;; 0DEDA6 : 85 00       ;
 CODE_0DEDA8:          JSR Sta1To6ePointer                 ;; 0DEDA8 : 20 08 AA    ;
                       LDA.L DATA_0DED95,X                 ;; 0DEDAB : BF 95 ED 0D ;
-                      STA [$6B],Y                         ;; 0DEDAF : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DEDAF : 97 6B       ;
                       JSR CODE_0DA97D                     ;; 0DEDB1 : 20 7D A9    ;
                       DEC.B $00                           ;; 0DEDB4 : C6 00       ;
                       BPL CODE_0DEDA8                     ;; 0DEDB6 : 10 F0       ;
@@ -7702,7 +7702,7 @@ CODE_0DEDCD:          JSR CODE_0DA95B                     ;; 0DEDCD : 20 5B A9  
                       BNE CODE_0DEDC8                     ;; 0DEDD1 : D0 F5       ;
                       JSR Sta1To6ePointer                 ;; 0DEDD3 : 20 08 AA    ;
                       LDA.B #$09                          ;; 0DEDD6 : A9 09       ;
-                      STA [$6B],Y                         ;; 0DEDD8 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DEDD8 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DEDDB:          LDY.B $57                           ;; 0DEDDB : A4 57       ;
@@ -7866,7 +7866,7 @@ CODE_0DEEFD:          JSR CODE_0DA6BA                     ;; 0DEEFD : 20 BA A6  
                                                           ;;                      ;
 CODE_0DEF0A:          JSR StzTo6ePointer                  ;; 0DEF0A : 20 0D AA    ;
                       LDA.B #$79                          ;; 0DEF0D : A9 79       ;
-CODE_0DEF0F:          STA [$6B],Y                         ;; 0DEF0F : 97 6B       ;
+CODE_0DEF0F:          STA.B [$6B],Y                       ;; 0DEF0F : 97 6B       ;
                       TYA                                 ;; 0DEF11 : 98          ;
                       CLC                                 ;; 0DEF12 : 18          ;
                       ADC.B #$10                          ;; 0DEF13 : 69 10       ;
@@ -7914,7 +7914,7 @@ CODE_0DEF59:          JSR CODE_0DA95B                     ;; 0DEF59 : 20 5B A9  
                       BNE CODE_0DEF54                     ;; 0DEF5D : D0 F5       ;
                       JSR StzTo6ePointer                  ;; 0DEF5F : 20 0D AA    ;
                       LDA.B #$A2                          ;; 0DEF62 : A9 A2       ;
-                      STA [$6B],Y                         ;; 0DEF64 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DEF64 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DEF67:          LDY.B $57                           ;; 0DEF67 : A4 57       ;
@@ -7978,7 +7978,7 @@ CODE_0DEFCB:          JSR CODE_0DA95B                     ;; 0DEFCB : 20 5B A9  
                       BNE CODE_0DEFC6                     ;; 0DEFD0 : D0 F4       ;
                       JSR Sta1To6ePointer                 ;; 0DEFD2 : 20 08 AA    ;
                       LDA.B #$62                          ;; 0DEFD5 : A9 62       ;
-                      STA [$6B],Y                         ;; 0DEFD7 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DEFD7 : 97 6B       ;
                       LDX.B #$01                          ;; 0DEFD9 : A2 01       ;
                       JMP CODE_0DEFFE                     ;; 0DEFDB : 4C FE EF    ;
                                                           ;;                      ;
@@ -7992,7 +7992,7 @@ CODE_0DEFEE:          JSR CODE_0DA95B                     ;; 0DEFEE : 20 5B A9  
                       BNE CODE_0DEFE7                     ;; 0DEFF3 : D0 F2       ;
                       JSR Sta1To6ePointer                 ;; 0DEFF5 : 20 08 AA    ;
                       LDA.L DATA_0DEFA6,X                 ;; 0DEFF8 : BF A6 EF 0D ;
-                      STA [$6B],Y                         ;; 0DEFFC : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DEFFC : 97 6B       ;
 CODE_0DEFFE:          JSR CODE_0DA6BA                     ;; 0DEFFE : 20 BA A6    ;
                       LDA.B $00                           ;; 0DF001 : A5 00       ;
                       STA.B $02                           ;; 0DF003 : 85 02       ;
@@ -8012,7 +8012,7 @@ CODE_0DF01C:          JSR CODE_0DA95B                     ;; 0DF01C : 20 5B A9  
                       BNE CODE_0DF017                     ;; 0DF021 : D0 F4       ;
                       JSR Sta1To6ePointer                 ;; 0DF023 : 20 08 AA    ;
                       LDA.B #$6D                          ;; 0DF026 : A9 6D       ;
-                      STA [$6B],Y                         ;; 0DF028 : 97 6B       ;
+                      STA.B [$6B],Y                       ;; 0DF028 : 97 6B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DF02B:          LDY.B $57                           ;; 0DF02B : A4 57       ;

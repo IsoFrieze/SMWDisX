@@ -132,7 +132,7 @@ CODE_058126:          PHP                                 ;; 058126 : 08        
 CODE_058136:          SEP #$20                            ;; 058136 : E2 20       ; Accum (8 bit) 
                       REP #$10                            ;; 058138 : C2 10       ; Index (16 bit) 
                       LDY.B $03                           ;; 05813A : A4 03       ;
-                      LDA [$68],Y                         ;; 05813C : B7 68       ;
+                      LDA.B [$68],Y                       ;; 05813C : B7 68       ;
                       STA.B $07                           ;; 05813E : 85 07       ;
                       INY                                 ;; 058140 : C8          ;
                       REP #$20                            ;; 058141 : C2 20       ; Accum (16 bit) 
@@ -143,13 +143,13 @@ CODE_058136:          SEP #$20                            ;; 058136 : E2 20     
                       LDA.B $07                           ;; 05814B : A5 07       ;
                       AND.B #$7F                          ;; 05814D : 29 7F       ;
                       STA.B $07                           ;; 05814F : 85 07       ;
-                      LDA [$68],Y                         ;; 058151 : B7 68       ;
+                      LDA.B [$68],Y                       ;; 058151 : B7 68       ;
                       INY                                 ;; 058153 : C8          ;
                       REP #$20                            ;; 058154 : C2 20       ; Accum (16 bit) 
                       STY.B $03                           ;; 058156 : 84 03       ;
                       LDY.B $05                           ;; 058158 : A4 05       ;
 CODE_05815A:          SEP #$20                            ;; 05815A : E2 20       ; Accum (8 bit) 
-                      STA [$0D],Y                         ;; 05815C : 97 0D       ;
+                      STA.B [$0D],Y                       ;; 05815C : 97 0D       ;
                       INY                                 ;; 05815E : C8          ;
                       DEC.B $07                           ;; 05815F : C6 07       ;
                       BPL CODE_05815A                     ;; 058161 : 10 F7       ;
@@ -160,13 +160,13 @@ CODE_05815A:          SEP #$20                            ;; 05815A : E2 20     
 CODE_05816A:          REP #$20                            ;; 05816A : C2 20       ; Accum (16 bit) 
                       LDY.B $03                           ;; 05816C : A4 03       ;
                       SEP #$20                            ;; 05816E : E2 20       ; Accum (8 bit) 
-                      LDA [$68],Y                         ;; 058170 : B7 68       ;
+                      LDA.B [$68],Y                       ;; 058170 : B7 68       ;
                       INY                                 ;; 058172 : C8          ;
                       REP #$20                            ;; 058173 : C2 20       ; Accum (16 bit) 
                       STY.B $03                           ;; 058175 : 84 03       ;
                       LDY.B $05                           ;; 058177 : A4 05       ;
                       SEP #$20                            ;; 058179 : E2 20       ; Accum (8 bit) 
-                      STA [$0D],Y                         ;; 05817B : 97 0D       ;
+                      STA.B [$0D],Y                       ;; 05817B : 97 0D       ;
                       REP #$20                            ;; 05817D : C2 20       ; Accum (16 bit) 
                       INY                                 ;; 05817F : C8          ;
                       STY.B $05                           ;; 058180 : 84 05       ;
@@ -176,11 +176,11 @@ CODE_05816A:          REP #$20                            ;; 05816A : C2 20     
 CODE_058188:          REP #$20                            ;; 058188 : C2 20       ; Accum (16 bit) 
                       LDY.B $03                           ;; 05818A : A4 03       ;
                       SEP #$20                            ;; 05818C : E2 20       ; Accum (8 bit) 
-                      LDA [$68],Y                         ;; 05818E : B7 68       ;
+                      LDA.B [$68],Y                       ;; 05818E : B7 68       ;
                       CMP.B #$FF                          ;; 058190 : C9 FF       ;
                       BNE CODE_058136                     ;; 058192 : D0 A2       ;
                       INY                                 ;; 058194 : C8          ;
-                      LDA [$68],Y                         ;; 058195 : B7 68       ;
+                      LDA.B [$68],Y                       ;; 058195 : B7 68       ;
                       CMP.B #$FF                          ;; 058197 : C9 FF       ;
                       BNE CODE_058136                     ;; 058199 : D0 9B       ;
                       REP #$20                            ;; 05819B : C2 20       ; Accum (16 bit) 
@@ -238,7 +238,7 @@ CODE_0581FB:          SEP #$30                            ;; 0581FB : E2 30     
                       LDY.W #$0000                        ;; 058233 : A0 00 00    ; \Set X and Y to x0000 
                       TYX                                 ;; 058236 : BB          ; / 
 CODE_058237:          SEP #$20                            ;; 058237 : E2 20       ; Accum (8 bit) 
-                      LDA [$0D],Y                         ;; 058239 : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 058239 : B7 0D       ;
                       STA.B $0C                           ;; 05823B : 85 0C       ;
 CODE_05823D:          ASL.B $0C                           ;; 05823D : 06 0C       ;
                       BCC CODE_058253                     ;; 05823F : 90 12       ;
@@ -386,7 +386,7 @@ LoadAgain:            LDA.W $1925                         ;; ?QPWZ? : AD 25 19  
                       CMP.B #$10                          ;; 0583C3 : C9 10       ;  | 
                       BEQ LoadLevelDone                   ;; 0583C5 : F0 4B       ; / 
                       LDY.B #$00                          ;; 0583C7 : A0 00       ; \ 
-                      LDA [$65],Y                         ;; 0583C9 : B7 65       ;  | 
+                      LDA.B [$65],Y                       ;; 0583C9 : B7 65       ;  | 
                       CMP.B #$FF                          ;; 0583CB : C9 FF       ;  |If level isn't empty, load the level. 
                       BEQ LevLoadNotEmpty                 ;; 0583CD : F0 03       ;  | 
                       JSR LoadLevelData                   ;; 0583CF : 20 FF 85    ; / 
@@ -455,7 +455,7 @@ TimerTable:           db $00,$02,$03,$04                  ;; ?QPWZ?             
 LevelMusicTable:      db $02,$06,$01,$08,$07,$03,$05,$12  ;; ?QPWZ?               ; A level can choose between 8 tracks. ; This table contains the tracks to choose from. 
                                                           ;;                      ;
 CODE_0584E3:          LDY.B #$00                          ;; 0584E3 : A0 00       ;
-                      LDA [$65],Y                         ;; 0584E5 : B7 65       ; Get first byte 
+                      LDA.B [$65],Y                       ;; 0584E5 : B7 65       ; Get first byte 
                       TAX                                 ;; 0584E7 : AA          ; \ 
                       AND.B #$1F                          ;; 0584E8 : 29 1F       ;  |Get amount of screens 
                       INC A                               ;; 0584EA : 1A          ;  | 
@@ -468,7 +468,7 @@ CODE_0584E3:          LDY.B #$00                          ;; 0584E3 : A0 00     
                       LSR A                               ;; 0584F2 : 4A          ;  | 
                       STA.W $1930                         ;; 0584F3 : 8D 30 19    ; / 
                       INY                                 ;; 0584F6 : C8          ; \Get second byte 
-                      LDA [$65],Y                         ;; 0584F7 : B7 65       ; / 
+                      LDA.B [$65],Y                       ;; 0584F7 : B7 65       ; / 
                       AND.B #$1F                          ;; 0584F9 : 29 1F       ; \Get level mode 
                       STA.W $1925                         ;; 0584FB : 8D 25 19    ; / 
                       TAX                                 ;; 0584FE : AA          ;
@@ -492,7 +492,7 @@ CODE_0584E3:          LDY.B #$00                          ;; 0584E3 : A0 00     
                       LDA.B #$01                          ;; 05852E : A9 01       ;  |Store x01 in $5E and screen amount in $5F 
 LevelModeEven:        STA.B $5E                           ;; ?QPWZ? : 85 5E       ;  | 
                       STX.B $5F                           ;; 058532 : 86 5F       ; / 
-                      LDA [$65],Y                         ;; 058534 : B7 65       ; Reload second byte 
+                      LDA.B [$65],Y                       ;; 058534 : B7 65       ; Reload second byte 
                       LSR A                               ;; 058536 : 4A          ; \ 
                       LSR A                               ;; 058537 : 4A          ;  | 
                       LSR A                               ;; 058538 : 4A          ;  |Get BG color settings 
@@ -500,7 +500,7 @@ LevelModeEven:        STA.B $5E                           ;; ?QPWZ? : 85 5E     
                       LSR A                               ;; 05853A : 4A          ;  | 
                       STA.W $192F                         ;; 05853B : 8D 2F 19    ; / 
                       INY                                 ;; 05853E : C8          ; \Get third byte 
-                      LDA [$65],Y                         ;; 05853F : B7 65       ; / 
+                      LDA.B [$65],Y                       ;; 05853F : B7 65       ; / 
                       STA.B $00                           ;; 058541 : 85 00       ; "Push" third byte 
                       TAX                                 ;; 058543 : AA          ; "Push" third byte 
                       AND.B #$0F                          ;; 058544 : 29 0F       ; \Load sprite set 
@@ -529,7 +529,7 @@ CODE_058563:          STA.W $0DDA                         ;; 058563 : 8D DA 0D  
                       ORA.B #$01                          ;; 05856E : 09 01       ;  | 
                       STA.B $3E                           ;; 058570 : 85 3E       ; / 
                       INY                                 ;; 058572 : C8          ; \Get fourth bit 
-                      LDA [$65],Y                         ;; 058573 : B7 65       ; / 
+                      LDA.B [$65],Y                       ;; 058573 : B7 65       ; / 
                       STA.B $00                           ;; 058575 : 85 00       ; "Push" fourth bit 
                       LSR A                               ;; 058577 : 4A          ; \ 
                       LSR A                               ;; 058578 : 4A          ;  | 
@@ -554,17 +554,17 @@ CODE_058590:          LDA.B $00                           ;; 058590 : A5 00     
                       LSR A                               ;; 05859D : 4A          ;  | 
                       STA.W $192E                         ;; 05859E : 8D 2E 19    ; / 
                       INY                                 ;; 0585A1 : C8          ; \Get fifth byte 
-                      LDA [$65],Y                         ;; 0585A2 : B7 65       ; / 
+                      LDA.B [$65],Y                       ;; 0585A2 : B7 65       ; / 
                       AND.B #$0F                          ;; 0585A4 : 29 0F       ; \ 
                       STA.W $1931                         ;; 0585A6 : 8D 31 19    ;  |Get tileset 
                       STA.W $1932                         ;; 0585A9 : 8D 32 19    ; / 
-                      LDA [$65],Y                         ;; 0585AC : B7 65       ; Reload fifth byte 
+                      LDA.B [$65],Y                       ;; 0585AC : B7 65       ; Reload fifth byte 
                       AND.B #$C0                          ;; 0585AE : 29 C0       ; \ 
                       ASL A                               ;; 0585B0 : 0A          ;  | 
                       ROL A                               ;; 0585B1 : 2A          ;  |Get item memory settings 
                       ROL A                               ;; 0585B2 : 2A          ;  | 
                       STA.W $13BE                         ;; 0585B3 : 8D BE 13    ; / 
-                      LDA [$65],Y                         ;; 0585B6 : B7 65       ; Reload fifth byte 
+                      LDA.B [$65],Y                       ;; 0585B6 : B7 65       ; Reload fifth byte 
                       AND.B #$30                          ;; 0585B8 : 29 30       ; \ 
                       LSR A                               ;; 0585BA : 4A          ;  |Get horizontal/vertical scroll 
                       LSR A                               ;; 0585BB : 4A          ;  | 
@@ -607,13 +607,13 @@ Return0585FE:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 LoadLevelData:        SEP #$30                            ;; ?QPWZ? : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDY.B #$00                          ;; 058601 : A0 00       ; \ 
-                      LDA [$65],Y                         ;; 058603 : B7 65       ;  | 
+                      LDA.B [$65],Y                       ;; 058603 : B7 65       ;  | 
                       STA.B $0A                           ;; 058605 : 85 0A       ;  | 
                       INY                                 ;; 058607 : C8          ;  | 
-                      LDA [$65],Y                         ;; 058608 : B7 65       ;  |Read three bytes of level data 
+                      LDA.B [$65],Y                       ;; 058608 : B7 65       ;  |Read three bytes of level data 
                       STA.B $0B                           ;; 05860A : 85 0B       ;  |Store them in $0A, $0B and $59 
                       INY                                 ;; 05860C : C8          ;  | 
-                      LDA [$65],Y                         ;; 05860D : B7 65       ;  | 
+                      LDA.B [$65],Y                       ;; 05860D : B7 65       ;  | 
                       STA.B $59                           ;; 05860F : 85 59       ;  | 
                       INY                                 ;; 058611 : C8          ; / 
                       TYA                                 ;; 058612 : 98          ; \ 
@@ -669,14 +669,14 @@ CODE_05863E:          LDA.B $0A                           ;; 05863E : A5 0A     
                       LDA.B #$00                          ;; 058670 : A9 00       ;
                       STA.B $05                           ;; 058672 : 85 05       ;
                       STA.B $08                           ;; 058674 : 85 08       ;
-                      LDA [$03],Y                         ;; 058676 : B7 03       ;
+                      LDA.B [$03],Y                       ;; 058676 : B7 03       ;
                       STA.B $00                           ;; 058678 : 85 00       ;
-                      LDA [$06],Y                         ;; 05867A : B7 06       ;
+                      LDA.B [$06],Y                       ;; 05867A : B7 06       ;
                       STA.B $0D                           ;; 05867C : 85 0D       ;
                       INY                                 ;; 05867E : C8          ;
-                      LDA [$03],Y                         ;; 05867F : B7 03       ;
+                      LDA.B [$03],Y                       ;; 05867F : B7 03       ;
                       STA.B $01                           ;; 058681 : 85 01       ;
-                      LDA [$06],Y                         ;; 058683 : B7 06       ;
+                      LDA.B [$06],Y                       ;; 058683 : B7 06       ;
                       STA.B $0E                           ;; 058685 : 85 0E       ;
                       LDA.B #$00                          ;; 058687 : A9 00       ;
                       STA.B $02                           ;; 058689 : 85 02       ;
@@ -691,19 +691,19 @@ CODE_05863E:          LDA.B $0A                           ;; 05863E : A5 0A     
                       CLC                                 ;; 05869C : 18          ;  |Multiply A by 2 and add $1928 to it 
                       ADC.W $1928                         ;; 05869D : 6D 28 19    ;  |Set Y to A 
                       TAY                                 ;; 0586A0 : A8          ; / 
-                      LDA [$00],Y                         ;; 0586A1 : B7 00       ;
+                      LDA.B [$00],Y                       ;; 0586A1 : B7 00       ;
                       STA.B $6B                           ;; 0586A3 : 85 6B       ;
-                      LDA [$0D],Y                         ;; 0586A5 : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 0586A5 : B7 0D       ;
                       STA.B $6E                           ;; 0586A7 : 85 6E       ;
                       INY                                 ;; 0586A9 : C8          ;
-                      LDA [$00],Y                         ;; 0586AA : B7 00       ;
+                      LDA.B [$00],Y                       ;; 0586AA : B7 00       ;
                       STA.B $6C                           ;; 0586AC : 85 6C       ;
-                      LDA [$0D],Y                         ;; 0586AE : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 0586AE : B7 0D       ;
                       STA.B $6F                           ;; 0586B0 : 85 6F       ;
                       INY                                 ;; 0586B2 : C8          ;
-                      LDA [$00],Y                         ;; 0586B3 : B7 00       ;
+                      LDA.B [$00],Y                       ;; 0586B3 : B7 00       ;
                       STA.B $6D                           ;; 0586B5 : 85 6D       ;
-                      LDA [$0D],Y                         ;; 0586B7 : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 0586B7 : B7 0D       ;
                       STA.B $70                           ;; 0586B9 : 85 70       ;
                       LDA.B $0A                           ;; 0586BB : A5 0A       ; \ 
                       AND.B #$10                          ;; 0586BD : 29 10       ;  |If high coordinate is set... 
@@ -719,7 +719,7 @@ LevLoadJsrNrm:        JSR LevLoadNrmObj                   ;; ?QPWZ? : 20 EA 86  
 LevLoadContinue:      SEP #$20                            ;; ?QPWZ? : E2 20       ; Accum (8 bit) 
                       REP #$10                            ;; 0586D4 : C2 10       ; Index (16 bit) 
                       LDY.W #$0000                        ;; 0586D6 : A0 00 00    ; \ 
-                      LDA [$65],Y                         ;; 0586D9 : B7 65       ;  | 
+                      LDA.B [$65],Y                       ;; 0586D9 : B7 65       ;  | 
                       CMP.B #$FF                          ;; 0586DB : C9 FF       ;  |If the next byte is xFF, return (loading is done). 
                       BEQ LevelDataEnd                    ;; 0586DD : F0 03       ;  |Otherwise, repeat this routine. 
                       JMP LoadLevelData                   ;; 0586DF : 4C FF 85    ;  | 
@@ -1092,16 +1092,16 @@ CODE_058A10:          TYA                                 ;; 058A10 : 98        
                       CLC                                 ;; 058A22 : 18          ;
                       ADC.B $00                           ;; 058A23 : 65 00       ;
                       TAY                                 ;; 058A25 : A8          ;
-                      LDA [$0A],Y                         ;; 058A26 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058A26 : B7 0A       ;
                       STA.B $6B                           ;; 058A28 : 85 6B       ;
-                      LDA [$0D],Y                         ;; 058A2A : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 058A2A : B7 0D       ;
                       STA.B $6E                           ;; 058A2C : 85 6E       ;
                       SEP #$20                            ;; 058A2E : E2 20       ; Accum (8 bit) 
                       INY                                 ;; 058A30 : C8          ;
                       INY                                 ;; 058A31 : C8          ;
-                      LDA [$0A],Y                         ;; 058A32 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058A32 : B7 0A       ;
                       STA.B $6D                           ;; 058A34 : 85 6D       ;
-                      LDA [$0D],Y                         ;; 058A36 : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 058A36 : B7 0D       ;
                       STA.B $70                           ;; 058A38 : 85 70       ;
                       SEP #$10                            ;; 058A3A : E2 10       ; Index (8 bit) 
                       LDY.B #$0D                          ;; 058A3C : A0 0D       ;
@@ -1116,10 +1116,10 @@ CODE_058A47:          STY.B $0C                           ;; 058A47 : 84 0C     
                       STA.B $08                           ;; 058A50 : 85 08       ;
                       LDX.W #$0000                        ;; 058A52 : A2 00 00    ;
 CODE_058A55:          LDY.B $08                           ;; 058A55 : A4 08       ;
-                      LDA [$6B],Y                         ;; 058A57 : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 058A57 : B7 6B       ;
                       AND.W #$00FF                        ;; 058A59 : 29 FF 00    ;
                       STA.B $00                           ;; 058A5C : 85 00       ;
-                      LDA [$6E],Y                         ;; 058A5E : B7 6E       ;
+                      LDA.B [$6E],Y                       ;; 058A5E : B7 6E       ;
                       STA.B $01                           ;; 058A60 : 85 01       ;
                       LDA.B $00                           ;; 058A62 : A5 00       ;
                       ASL A                               ;; 058A64 : 0A          ;
@@ -1127,19 +1127,19 @@ CODE_058A55:          LDY.B $08                           ;; 058A55 : A4 08     
                       LDA.W $0FBE,Y                       ;; 058A66 : B9 BE 0F    ;
                       STA.B $0A                           ;; 058A69 : 85 0A       ;
                       LDY.W #$0000                        ;; 058A6B : A0 00 00    ;
-                      LDA [$0A],Y                         ;; 058A6E : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058A6E : B7 0A       ;
                       STA.W $1BE6,X                       ;; 058A70 : 9D E6 1B    ;
                       INY                                 ;; 058A73 : C8          ;
                       INY                                 ;; 058A74 : C8          ;
-                      LDA [$0A],Y                         ;; 058A75 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058A75 : B7 0A       ;
                       STA.W $1BE8,X                       ;; 058A77 : 9D E8 1B    ;
                       INY                                 ;; 058A7A : C8          ;
                       INY                                 ;; 058A7B : C8          ;
-                      LDA [$0A],Y                         ;; 058A7C : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058A7C : B7 0A       ;
                       STA.W $1C66,X                       ;; 058A7E : 9D 66 1C    ;
                       INY                                 ;; 058A81 : C8          ;
                       INY                                 ;; 058A82 : C8          ;
-                      LDA [$0A],Y                         ;; 058A83 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058A83 : B7 0A       ;
                       STA.W $1C68,X                       ;; 058A85 : 9D 68 1C    ;
                       INX                                 ;; 058A88 : E8          ;
                       INX                                 ;; 058A89 : E8          ;
@@ -1208,16 +1208,16 @@ CODE_058AD5:          TYA                                 ;; 058AD5 : 98        
                       CLC                                 ;; 058AFE : 18          ;
                       ADC.B $00                           ;; 058AFF : 65 00       ;
                       TAY                                 ;; 058B01 : A8          ;
-                      LDA [$0A],Y                         ;; 058B02 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058B02 : B7 0A       ;
                       STA.B $6B                           ;; 058B04 : 85 6B       ;
-                      LDA [$0D],Y                         ;; 058B06 : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 058B06 : B7 0D       ;
                       STA.B $6E                           ;; 058B08 : 85 6E       ;
                       SEP #$20                            ;; 058B0A : E2 20       ; Accum (8 bit) 
                       INY                                 ;; 058B0C : C8          ;
                       INY                                 ;; 058B0D : C8          ;
-                      LDA [$0A],Y                         ;; 058B0E : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058B0E : B7 0A       ;
                       STA.B $6D                           ;; 058B10 : 85 6D       ;
-                      LDA [$0D],Y                         ;; 058B12 : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 058B12 : B7 0D       ;
                       STA.B $70                           ;; 058B14 : 85 70       ;
                       SEP #$10                            ;; 058B16 : E2 10       ; Index (8 bit) 
                       LDY.B #$0D                          ;; 058B18 : A0 0D       ;
@@ -1236,10 +1236,10 @@ CODE_058B23:          STY.B $0C                           ;; 058B23 : 84 0C     
                       STA.B $08                           ;; 058B30 : 85 08       ;
                       LDX.W #$0000                        ;; 058B32 : A2 00 00    ;
 CODE_058B35:          LDY.B $08                           ;; 058B35 : A4 08       ;
-                      LDA [$6B],Y                         ;; 058B37 : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 058B37 : B7 6B       ;
                       AND.W #$00FF                        ;; 058B39 : 29 FF 00    ;
                       STA.B $00                           ;; 058B3C : 85 00       ;
-                      LDA [$6E],Y                         ;; 058B3E : B7 6E       ;
+                      LDA.B [$6E],Y                       ;; 058B3E : B7 6E       ;
                       STA.B $01                           ;; 058B40 : 85 01       ;
                       LDA.B $00                           ;; 058B42 : A5 00       ;
                       ASL A                               ;; 058B44 : 0A          ;
@@ -1247,21 +1247,21 @@ CODE_058B35:          LDY.B $08                           ;; 058B35 : A4 08     
                       LDA.W $0FBE,Y                       ;; 058B46 : B9 BE 0F    ;
                       STA.B $0A                           ;; 058B49 : 85 0A       ;
                       LDY.W #$0000                        ;; 058B4B : A0 00 00    ;
-                      LDA [$0A],Y                         ;; 058B4E : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058B4E : B7 0A       ;
                       STA.W $1BE6,X                       ;; 058B50 : 9D E6 1B    ;
                       INY                                 ;; 058B53 : C8          ;
                       INY                                 ;; 058B54 : C8          ;
-                      LDA [$0A],Y                         ;; 058B55 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058B55 : B7 0A       ;
                       STA.W $1C66,X                       ;; 058B57 : 9D 66 1C    ;
                       INX                                 ;; 058B5A : E8          ;
                       INX                                 ;; 058B5B : E8          ;
                       INY                                 ;; 058B5C : C8          ;
                       INY                                 ;; 058B5D : C8          ;
-                      LDA [$0A],Y                         ;; 058B5E : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058B5E : B7 0A       ;
                       STA.W $1BE6,X                       ;; 058B60 : 9D E6 1B    ;
                       INY                                 ;; 058B63 : C8          ;
                       INY                                 ;; 058B64 : C8          ;
-                      LDA [$0A],Y                         ;; 058B65 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058B65 : B7 0A       ;
                       STA.W $1C66,X                       ;; 058B67 : 9D 66 1C    ;
                       INX                                 ;; 058B6A : E8          ;
                       INX                                 ;; 058B6B : E8          ;
@@ -1332,16 +1332,16 @@ CODE_058BDE:          TYA                                 ;; 058BDE : 98        
                       CLC                                 ;; 058BF0 : 18          ;
                       ADC.B $00                           ;; 058BF1 : 65 00       ;
                       TAY                                 ;; 058BF3 : A8          ;
-                      LDA [$0A],Y                         ;; 058BF4 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058BF4 : B7 0A       ;
                       STA.B $6B                           ;; 058BF6 : 85 6B       ;
-                      LDA [$0D],Y                         ;; 058BF8 : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 058BF8 : B7 0D       ;
                       STA.B $6E                           ;; 058BFA : 85 6E       ;
                       SEP #$20                            ;; 058BFC : E2 20       ; Accum (8 bit) 
                       INY                                 ;; 058BFE : C8          ;
                       INY                                 ;; 058BFF : C8          ;
-                      LDA [$0A],Y                         ;; 058C00 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058C00 : B7 0A       ;
                       STA.B $6D                           ;; 058C02 : 85 6D       ;
-                      LDA [$0D],Y                         ;; 058C04 : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 058C04 : B7 0D       ;
                       STA.B $70                           ;; 058C06 : 85 70       ;
                       SEP #$10                            ;; 058C08 : E2 10       ; Index (8 bit) 
                       LDY.B #$0D                          ;; 058C0A : A0 0D       ;
@@ -1356,10 +1356,10 @@ CODE_058C15:          STY.B $0C                           ;; 058C15 : 84 0C     
                       STA.B $08                           ;; 058C1E : 85 08       ;
                       LDX.W #$0000                        ;; 058C20 : A2 00 00    ;
 CODE_058C23:          LDY.B $08                           ;; 058C23 : A4 08       ;
-                      LDA [$6B],Y                         ;; 058C25 : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 058C25 : B7 6B       ;
                       AND.W #$00FF                        ;; 058C27 : 29 FF 00    ;
                       STA.B $00                           ;; 058C2A : 85 00       ;
-                      LDA [$6E],Y                         ;; 058C2C : B7 6E       ;
+                      LDA.B [$6E],Y                       ;; 058C2C : B7 6E       ;
                       STA.B $01                           ;; 058C2E : 85 01       ;
                       LDA.B $00                           ;; 058C30 : A5 00       ;
                       ASL A                               ;; 058C32 : 0A          ;
@@ -1367,22 +1367,22 @@ CODE_058C23:          LDY.B $08                           ;; 058C23 : A4 08     
                       LDA.W $0FBE,Y                       ;; 058C34 : B9 BE 0F    ;
                       STA.B $0A                           ;; 058C37 : 85 0A       ;
                       LDY.W #$0000                        ;; 058C39 : A0 00 00    ;
-                      LDA [$0A],Y                         ;; 058C3C : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058C3C : B7 0A       ;
                       ORA.B $03                           ;; 058C3E : 05 03       ;
                       STA.W $1CE8,X                       ;; 058C40 : 9D E8 1C    ;
                       INY                                 ;; 058C43 : C8          ;
                       INY                                 ;; 058C44 : C8          ;
-                      LDA [$0A],Y                         ;; 058C45 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058C45 : B7 0A       ;
                       ORA.B $03                           ;; 058C47 : 05 03       ;
                       STA.W $1CEA,X                       ;; 058C49 : 9D EA 1C    ;
                       INY                                 ;; 058C4C : C8          ;
                       INY                                 ;; 058C4D : C8          ;
-                      LDA [$0A],Y                         ;; 058C4E : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058C4E : B7 0A       ;
                       ORA.B $03                           ;; 058C50 : 05 03       ;
                       STA.W $1D68,X                       ;; 058C52 : 9D 68 1D    ;
                       INY                                 ;; 058C55 : C8          ;
                       INY                                 ;; 058C56 : C8          ;
-                      LDA [$0A],Y                         ;; 058C57 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058C57 : B7 0A       ;
                       ORA.B $03                           ;; 058C59 : 05 03       ;
                       STA.W $1D6A,X                       ;; 058C5B : 9D 6A 1D    ;
                       INX                                 ;; 058C5E : E8          ;
@@ -1458,16 +1458,16 @@ CODE_058CBA:          TYA                                 ;; 058CBA : 98        
                       CLC                                 ;; 058CE3 : 18          ;
                       ADC.B $00                           ;; 058CE4 : 65 00       ;
                       TAY                                 ;; 058CE6 : A8          ;
-                      LDA [$0A],Y                         ;; 058CE7 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058CE7 : B7 0A       ;
                       STA.B $6B                           ;; 058CE9 : 85 6B       ;
-                      LDA [$0D],Y                         ;; 058CEB : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 058CEB : B7 0D       ;
                       STA.B $6E                           ;; 058CED : 85 6E       ;
                       SEP #$20                            ;; 058CEF : E2 20       ; Accum (8 bit) 
                       INY                                 ;; 058CF1 : C8          ;
                       INY                                 ;; 058CF2 : C8          ;
-                      LDA [$0A],Y                         ;; 058CF3 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058CF3 : B7 0A       ;
                       STA.B $6D                           ;; 058CF5 : 85 6D       ;
-                      LDA [$0D],Y                         ;; 058CF7 : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 058CF7 : B7 0D       ;
                       STA.B $70                           ;; 058CF9 : 85 70       ;
                       SEP #$10                            ;; 058CFB : E2 10       ; Index (8 bit) 
                       LDY.B #$0D                          ;; 058CFD : A0 0D       ;
@@ -1486,10 +1486,10 @@ CODE_058D08:          STY.B $0C                           ;; 058D08 : 84 0C     
                       STA.B $08                           ;; 058D15 : 85 08       ;
                       LDX.W #$0000                        ;; 058D17 : A2 00 00    ;
 CODE_058D1A:          LDY.B $08                           ;; 058D1A : A4 08       ;
-                      LDA [$6B],Y                         ;; 058D1C : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 058D1C : B7 6B       ;
                       AND.W #$00FF                        ;; 058D1E : 29 FF 00    ;
                       STA.B $00                           ;; 058D21 : 85 00       ;
-                      LDA [$6E],Y                         ;; 058D23 : B7 6E       ;
+                      LDA.B [$6E],Y                       ;; 058D23 : B7 6E       ;
                       STA.B $01                           ;; 058D25 : 85 01       ;
                       LDA.B $00                           ;; 058D27 : A5 00       ;
                       ASL A                               ;; 058D29 : 0A          ;
@@ -1497,24 +1497,24 @@ CODE_058D1A:          LDY.B $08                           ;; 058D1A : A4 08     
                       LDA.W $0FBE,Y                       ;; 058D2B : B9 BE 0F    ;
                       STA.B $0A                           ;; 058D2E : 85 0A       ;
                       LDY.W #$0000                        ;; 058D30 : A0 00 00    ;
-                      LDA [$0A],Y                         ;; 058D33 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058D33 : B7 0A       ;
                       ORA.B $03                           ;; 058D35 : 05 03       ;
                       STA.W $1CE8,X                       ;; 058D37 : 9D E8 1C    ;
                       INY                                 ;; 058D3A : C8          ;
                       INY                                 ;; 058D3B : C8          ;
-                      LDA [$0A],Y                         ;; 058D3C : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058D3C : B7 0A       ;
                       ORA.B $03                           ;; 058D3E : 05 03       ;
                       STA.W $1D68,X                       ;; 058D40 : 9D 68 1D    ;
                       INX                                 ;; 058D43 : E8          ;
                       INX                                 ;; 058D44 : E8          ;
                       INY                                 ;; 058D45 : C8          ;
                       INY                                 ;; 058D46 : C8          ;
-                      LDA [$0A],Y                         ;; 058D47 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058D47 : B7 0A       ;
                       ORA.B $03                           ;; 058D49 : 05 03       ;
                       STA.W $1CE8,X                       ;; 058D4B : 9D E8 1C    ;
                       INY                                 ;; 058D4E : C8          ;
                       INY                                 ;; 058D4F : C8          ;
-                      LDA [$0A],Y                         ;; 058D50 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058D50 : B7 0A       ;
                       ORA.B $03                           ;; 058D52 : 05 03       ;
                       STA.W $1D68,X                       ;; 058D54 : 9D 68 1D    ;
                       INX                                 ;; 058D57 : E8          ;
@@ -1581,29 +1581,29 @@ CODE_058DBE:          SEP #$20                            ;; 058DBE : E2 20     
                       STA.B $08                           ;; 058DD4 : 85 08       ;
                       LDX.W #$0000                        ;; 058DD6 : A2 00 00    ;
 CODE_058DD9:          LDY.B $08                           ;; 058DD9 : A4 08       ;
-                      LDA [$6B],Y                         ;; 058DDB : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 058DDB : B7 6B       ;
                       AND.W #$00FF                        ;; 058DDD : 29 FF 00    ;
                       STA.B $00                           ;; 058DE0 : 85 00       ;
-                      LDA [$6E],Y                         ;; 058DE2 : B7 6E       ;
+                      LDA.B [$6E],Y                       ;; 058DE2 : B7 6E       ;
                       STA.B $01                           ;; 058DE4 : 85 01       ;
                       LDA.B $00                           ;; 058DE6 : A5 00       ;
                       ASL A                               ;; 058DE8 : 0A          ;
                       ASL A                               ;; 058DE9 : 0A          ;
                       ASL A                               ;; 058DEA : 0A          ;
                       TAY                                 ;; 058DEB : A8          ;
-                      LDA [$0A],Y                         ;; 058DEC : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058DEC : B7 0A       ;
                       STA.W $1CE8,X                       ;; 058DEE : 9D E8 1C    ;
                       INY                                 ;; 058DF1 : C8          ;
                       INY                                 ;; 058DF2 : C8          ;
-                      LDA [$0A],Y                         ;; 058DF3 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058DF3 : B7 0A       ;
                       STA.W $1CEA,X                       ;; 058DF5 : 9D EA 1C    ;
                       INY                                 ;; 058DF8 : C8          ;
                       INY                                 ;; 058DF9 : C8          ;
-                      LDA [$0A],Y                         ;; 058DFA : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058DFA : B7 0A       ;
                       STA.W $1D68,X                       ;; 058DFC : 9D 68 1D    ;
                       INY                                 ;; 058DFF : C8          ;
                       INY                                 ;; 058E00 : C8          ;
-                      LDA [$0A],Y                         ;; 058E01 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 058E01 : B7 0A       ;
                       STA.W $1D6A,X                       ;; 058E03 : 9D 6A 1D    ;
                       INX                                 ;; 058E06 : E8          ;
                       INX                                 ;; 058E07 : E8          ;
@@ -6015,10 +6015,10 @@ CODE_05D8B7:          REP #$30                            ;; 05D8B7 : C2 30     
                       STA.B $CF                           ;; 05D8F3 : 85 CF       ; / 
                       LDA.B #$07                          ;; 05D8F5 : A9 07       ; \ Set highest byte to x07 
                       STA.B $D0                           ;; 05D8F7 : 85 D0       ; / (All sprite data is stored in bank 07) 
-                      LDA [$CE]                           ;; 05D8F9 : A7 CE       ; \ Get first byte of sprite data (header) 
+                      LDA.B [$CE]                         ;; 05D8F9 : A7 CE       ; \ Get first byte of sprite data (header) 
                       AND.B #$3F                          ;; 05D8FB : 29 3F       ;  |Get level's sprite memory 
                       STA.W $1692                         ;; 05D8FD : 8D 92 16    ; / Store in $1692 
-                      LDA [$CE]                           ;; 05D900 : A7 CE       ; \ Get first byte of sprite data (header) again 
+                      LDA.B [$CE]                         ;; 05D900 : A7 CE       ; \ Get first byte of sprite data (header) again 
                       AND.B #$C0                          ;; 05D902 : 29 C0       ;  |Get level's sprite buoyancy settings 
                       STA.W $190E                         ;; 05D904 : 8D 0E 19    ; / Store in $190E 
                       REP #$10                            ;; 05D907 : C2 10       ; 16 bit X,Y ; Index (16 bit) 
@@ -6098,7 +6098,7 @@ CODE_05D9A1:          LDA.B $5B                           ;; 05D9A1 : A5 5B     
                       AND.B #$01                          ;; 05D9A3 : 29 01       ;
                       BEQ CODE_05D9B8                     ;; 05D9A5 : F0 11       ;
                       LDY.W #$0000                        ;; 05D9A7 : A0 00 00    ;
-                      LDA [$65],Y                         ;; 05D9AA : B7 65       ;
+                      LDA.B [$65],Y                       ;; 05D9AA : B7 65       ;
                       AND.B #$1F                          ;; 05D9AC : 29 1F       ;
                       STA.B $97                           ;; 05D9AE : 85 97       ;
                       INC A                               ;; 05D9B0 : 1A          ;
@@ -6161,7 +6161,7 @@ CODE_05DA17:          SEP #$30                            ;; 05DA17 : E2 30     
                                                           ;;                      ;
 CODE_05DA24:          LDX.B #$04                          ;; 05DA24 : A2 04       ;
                       LDY.B #$04                          ;; 05DA26 : A0 04       ;
-                      LDA [$65],Y                         ;; 05DA28 : B7 65       ;
+                      LDA.B [$65],Y                       ;; 05DA28 : B7 65       ;
                       AND.B #$0F                          ;; 05DA2A : 29 0F       ;
 CODE_05DA2C:          CMP.L DATA_05D760,X                 ;; 05DA2C : DF 60 D7 05 ;
                       BEQ CODE_05DA38                     ;; 05DA30 : F0 06       ;
@@ -6206,10 +6206,10 @@ CODE_05DA60:          LDA.W $13CF                         ;; 05DA60 : AD CF 13  
                       STA.B $CF                           ;; 05DA84 : 85 CF       ;
                       LDA.B #$07                          ;; 05DA86 : A9 07       ;
                       STA.B $D0                           ;; 05DA88 : 85 D0       ;
-                      LDA [$CE]                           ;; 05DA8A : A7 CE       ;
+                      LDA.B [$CE]                         ;; 05DA8A : A7 CE       ;
                       AND.B #$3F                          ;; 05DA8C : 29 3F       ;
                       STA.W $1692                         ;; 05DA8E : 8D 92 16    ;
-                      LDA [$CE]                           ;; 05DA91 : A7 CE       ;
+                      LDA.B [$CE]                         ;; 05DA91 : A7 CE       ;
                       AND.B #$C0                          ;; 05DA93 : 29 C0       ;
                       STA.W $190E                         ;; 05DA95 : 8D 0E 19    ;
                       STZ.W $1413                         ;; 05DA98 : 9C 13 14    ;
@@ -6252,7 +6252,7 @@ CODE_05DAEB:          PLB                                 ;; 05DAEB : AB        
                                                           ;;                      ;
 CODE_05DAEF:          SEP #$30                            ;; 05DAEF : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDY.B #$04                          ;; 05DAF1 : A0 04       ;
-                      LDA [$65],Y                         ;; 05DAF3 : B7 65       ;
+                      LDA.B [$65],Y                       ;; 05DAF3 : B7 65       ;
                       AND.B #$C0                          ;; 05DAF5 : 29 C0       ;
                       CLC                                 ;; 05DAF7 : 18          ;
                       ROL A                               ;; 05DAF8 : 2A          ;
@@ -6307,10 +6307,10 @@ CODE_05DB49:          REP #$20                            ;; 05DB49 : C2 20     
                       LDA.L ChocIsld2Layer2,X             ;; 05DB57 : BF 2C DB 05 ;
                       STA.B $68                           ;; 05DB5B : 85 68       ;
                       SEP #$20                            ;; 05DB5D : E2 20       ; Accum (8 bit) 
-                      LDA [$CE]                           ;; 05DB5F : A7 CE       ;
+                      LDA.B [$CE]                         ;; 05DB5F : A7 CE       ;
                       AND.B #$7F                          ;; 05DB61 : 29 7F       ;
                       STA.W $1692                         ;; 05DB63 : 8D 92 16    ;
-                      LDA [$CE]                           ;; 05DB66 : A7 CE       ;
+                      LDA.B [$CE]                         ;; 05DB66 : A7 CE       ;
                       AND.B #$80                          ;; 05DB68 : 29 80       ;
                       STA.W $190E                         ;; 05DB6A : 8D 0E 19    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 

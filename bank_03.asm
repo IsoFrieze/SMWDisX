@@ -9164,7 +9164,7 @@ CODE_03D99A:          STA.B $03                           ;; 03D99A : 85 03     
                       LDY.B $02                           ;; 03D9A6 : A4 02       ;
                       LDA.B #$10                          ;; 03D9A8 : A9 10       ;
                       STA.B $04                           ;; 03D9AA : 85 04       ;
-CODE_03D9AC:          LDA [$05],Y                         ;; 03D9AC : B7 05       ;
+CODE_03D9AC:          LDA.B [$05],Y                       ;; 03D9AC : B7 05       ;
                       STA.W $0AF6,Y                       ;; 03D9AE : 99 F6 0A    ;
                       ASL A                               ;; 03D9B1 : 0A          ;
                       ASL A                               ;; 03D9B2 : 0A          ;
@@ -9337,7 +9337,7 @@ CODE_03DD97:          LDA.B #$FF                          ;; 03DD97 : A9 FF     
                       STA.B $01                           ;; 03DDAC : 85 01       ;  | 
                       STZ.B $02                           ;; 03DDAE : 64 02       ; / 
                       LDY.B #$0B                          ;; 03DDB0 : A0 0B       ; \ Read 0B bytes and put them in $0707 
-CODE_03DDB2:          LDA [$00],Y                         ;; 03DDB2 : B7 00       ;  | 
+CODE_03DDB2:          LDA.B [$00],Y                       ;; 03DDB2 : B7 00       ;  | 
                       STA.W $0707,Y                       ;; 03DDB4 : 99 07 07    ;  | 
                       DEY                                 ;; 03DDB7 : 88          ;  | 
                       BPL CODE_03DDB2                     ;; 03DDB8 : 10 F8       ; / 
@@ -9412,7 +9412,7 @@ CODE_03DE1A:          LDY.W $1BA3,X                       ;; 03DE1A : BC A3 1B  
                                                           ;;                      ;
 CODE_03DE39:          JSR CODE_03DE3C                     ;; 03DE39 : 20 3C DE    ;
 CODE_03DE3C:          PHX                                 ;; 03DE3C : DA          ;
-                      LDA [$00],Y                         ;; 03DE3D : B7 00       ;
+                      LDA.B [$00],Y                       ;; 03DE3D : B7 00       ;
                       PHY                                 ;; 03DE3F : 5A          ;
                       LDY.B #$08                          ;; 03DE40 : A0 08       ;
 CODE_03DE42:          ASL A                               ;; 03DE42 : 0A          ;

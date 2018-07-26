@@ -723,7 +723,7 @@ CODE_0C944C:          REP #$30                            ;; 0C944C : C2 30     
                       LDA.B #$7E                          ;; 0C9457 : A9 7E       ;
                       STA.B $0F                           ;; 0C9459 : 85 0F       ;
 CODE_0C945B:          LDY.B $03                           ;; 0C945B : A4 03       ;
-                      LDA [$68],Y                         ;; 0C945D : B7 68       ;
+                      LDA.B [$68],Y                       ;; 0C945D : B7 68       ;
                       STA.B $07                           ;; 0C945F : 85 07       ;
                       INY                                 ;; 0C9461 : C8          ;
                       STY.B $03                           ;; 0C9462 : 84 03       ;
@@ -732,11 +732,11 @@ CODE_0C945B:          LDY.B $03                           ;; 0C945B : A4 03     
                       LDA.B $07                           ;; 0C9468 : A5 07       ;
                       AND.B #$7F                          ;; 0C946A : 29 7F       ;
                       STA.B $07                           ;; 0C946C : 85 07       ;
-                      LDA [$68],Y                         ;; 0C946E : B7 68       ;
+                      LDA.B [$68],Y                       ;; 0C946E : B7 68       ;
                       INY                                 ;; 0C9470 : C8          ;
                       STY.B $03                           ;; 0C9471 : 84 03       ;
                       LDY.B $05                           ;; 0C9473 : A4 05       ;
-CODE_0C9475:          STA [$0D],Y                         ;; 0C9475 : 97 0D       ;
+CODE_0C9475:          STA.B [$0D],Y                       ;; 0C9475 : 97 0D       ;
                       INY                                 ;; 0C9477 : C8          ;
                       DEC.B $07                           ;; 0C9478 : C6 07       ;
                       BPL CODE_0C9475                     ;; 0C947A : 10 F9       ;
@@ -744,21 +744,21 @@ CODE_0C9475:          STA [$0D],Y                         ;; 0C9475 : 97 0D     
                       BRA CODE_0C9492                     ;; 0C947E : 80 12       ;
                                                           ;;                      ;
 CODE_0C9480:          LDY.B $03                           ;; 0C9480 : A4 03       ;
-                      LDA [$68],Y                         ;; 0C9482 : B7 68       ;
+                      LDA.B [$68],Y                       ;; 0C9482 : B7 68       ;
                       INY                                 ;; 0C9484 : C8          ;
                       STY.B $03                           ;; 0C9485 : 84 03       ;
                       LDY.B $05                           ;; 0C9487 : A4 05       ;
-                      STA [$0D],Y                         ;; 0C9489 : 97 0D       ;
+                      STA.B [$0D],Y                       ;; 0C9489 : 97 0D       ;
                       INY                                 ;; 0C948B : C8          ;
                       STY.B $05                           ;; 0C948C : 84 05       ;
                       DEC.B $07                           ;; 0C948E : C6 07       ;
                       BPL CODE_0C9480                     ;; 0C9490 : 10 EE       ;
 CODE_0C9492:          LDY.B $03                           ;; 0C9492 : A4 03       ;
-                      LDA [$68],Y                         ;; 0C9494 : B7 68       ;
+                      LDA.B [$68],Y                       ;; 0C9494 : B7 68       ;
                       CMP.B #$FF                          ;; 0C9496 : C9 FF       ;
                       BNE CODE_0C945B                     ;; 0C9498 : D0 C1       ;
                       INY                                 ;; 0C949A : C8          ;
-                      LDA [$68],Y                         ;; 0C949B : B7 68       ;
+                      LDA.B [$68],Y                       ;; 0C949B : B7 68       ;
                       CMP.B #$FF                          ;; 0C949D : C9 FF       ;
                       BNE CODE_0C945B                     ;; 0C949F : D0 BA       ;
                       REP #$20                            ;; 0C94A1 : C2 20       ; Accum (16 bit) 
@@ -799,9 +799,9 @@ CODE_0C94C0:          SEP #$20                            ;; 0C94C0 : E2 20     
                       STX.B $08                           ;; 0C94E9 : 86 08       ;
 CODE_0C94EB:          SEP #$20                            ;; 0C94EB : E2 20       ; Accum (8 bit) 
                       LDY.B $04                           ;; 0C94ED : A4 04       ;
-                      LDA [$6B],Y                         ;; 0C94EF : B7 6B       ;
+                      LDA.B [$6B],Y                       ;; 0C94EF : B7 6B       ;
                       STA.B $02                           ;; 0C94F1 : 85 02       ;
-                      LDA [$6E],Y                         ;; 0C94F3 : B7 6E       ;
+                      LDA.B [$6E],Y                       ;; 0C94F3 : B7 6E       ;
                       STA.B $03                           ;; 0C94F5 : 85 03       ;
                       REP #$20                            ;; 0C94F7 : C2 20       ; Accum (16 bit) 
                       LDA.B $02                           ;; 0C94F9 : A5 02       ;
@@ -821,22 +821,22 @@ CODE_0C94EB:          SEP #$20                            ;; 0C94EB : E2 20     
                       ASL A                               ;; 0C9513 : 0A          ;
                       ORA.B $06                           ;; 0C9514 : 05 06       ;
                       TAX                                 ;; 0C9516 : AA          ;
-                      LDA [$68],Y                         ;; 0C9517 : B7 68       ;
+                      LDA.B [$68],Y                       ;; 0C9517 : B7 68       ;
                       AND.B $65                           ;; 0C9519 : 25 65       ;
                       STA.L $7F4000,X                     ;; 0C951B : 9F 00 40 7F ;
                       INY                                 ;; 0C951F : C8          ;
                       INY                                 ;; 0C9520 : C8          ;
-                      LDA [$68],Y                         ;; 0C9521 : B7 68       ;
+                      LDA.B [$68],Y                       ;; 0C9521 : B7 68       ;
                       AND.B $65                           ;; 0C9523 : 25 65       ;
                       STA.L $7F4040,X                     ;; 0C9525 : 9F 40 40 7F ;
                       INY                                 ;; 0C9529 : C8          ;
                       INY                                 ;; 0C952A : C8          ;
-                      LDA [$68],Y                         ;; 0C952B : B7 68       ;
+                      LDA.B [$68],Y                       ;; 0C952B : B7 68       ;
                       AND.B $65                           ;; 0C952D : 25 65       ;
                       STA.L $7F4002,X                     ;; 0C952F : 9F 02 40 7F ;
                       INY                                 ;; 0C9533 : C8          ;
                       INY                                 ;; 0C9534 : C8          ;
-                      LDA [$68],Y                         ;; 0C9535 : B7 68       ;
+                      LDA.B [$68],Y                       ;; 0C9535 : B7 68       ;
                       AND.B $65                           ;; 0C9537 : 25 65       ;
                       STA.L $7F4042,X                     ;; 0C9539 : 9F 42 40 7F ;
                       INC.B $00                           ;; 0C953D : E6 00       ;
@@ -2721,7 +2721,7 @@ CODE_0CABB2:          SEP #$30                            ;; 0CABB2 : E2 30     
                       STA.B $08                           ;; 0CABFF : 85 08       ;
 CODE_0CAC01:          LDX.B $04                           ;; 0CAC01 : A6 04       ;
                       LDY.W #$0005                        ;; 0CAC03 : A0 05 00    ;
-CODE_0CAC06:          LDA [$00]                           ;; 0CAC06 : A7 00       ;
+CODE_0CAC06:          LDA.B [$00]                         ;; 0CAC06 : A7 00       ;
                       STA.W $0684,X                       ;; 0CAC08 : 9D 84 06    ;
                       INC.B $00                           ;; 0CAC0B : E6 00       ;
                       INC.B $00                           ;; 0CAC0D : E6 00       ;
@@ -2859,7 +2859,7 @@ CODE_0CADF6:          PHB                                 ;; 0CADF6 : 8B        
                       LDA.L $7F837B                       ;; 0CAE2B : AF 7B 83 7F ;
                       TAX                                 ;; 0CAE2F : AA          ;
 CODE_0CAE30:          REP #$20                            ;; 0CAE30 : C2 20       ; Accum (16 bit) 
-                      LDA [$00],Y                         ;; 0CAE32 : B7 00       ;
+                      LDA.B [$00],Y                       ;; 0CAE32 : B7 00       ;
                       STA.L $7F837D,X                     ;; 0CAE34 : 9F 7D 83 7F ;
                       INY                                 ;; 0CAE38 : C8          ;
                       INY                                 ;; 0CAE39 : C8          ;

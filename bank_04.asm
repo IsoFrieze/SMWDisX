@@ -49,7 +49,7 @@ CODE_0480B9:          LDY.W #$0000                        ;; 0480B9 : A0 00 00  
                       LDA.W #$0008                        ;; 0480BC : A9 08 00    ;
                       STA.B $07                           ;; 0480BF : 85 07       ;
                       STA.B $09                           ;; 0480C1 : 85 09       ;
-CODE_0480C3:          LDA [$00],Y                         ;; 0480C3 : B7 00       ;
+CODE_0480C3:          LDA.B [$00],Y                       ;; 0480C3 : B7 00       ;
                       STA.W $0AF6,X                       ;; 0480C5 : 9D F6 0A    ;
                       INY                                 ;; 0480C8 : C8          ;
                       INY                                 ;; 0480C9 : C8          ;
@@ -57,7 +57,7 @@ CODE_0480C3:          LDA [$00],Y                         ;; 0480C3 : B7 00     
                       INX                                 ;; 0480CB : E8          ;
                       DEC.B $07                           ;; 0480CC : C6 07       ;
                       BNE CODE_0480C3                     ;; 0480CE : D0 F3       ;
-CODE_0480D0:          LDA [$00],Y                         ;; 0480D0 : B7 00       ;
+CODE_0480D0:          LDA.B [$00],Y                       ;; 0480D0 : B7 00       ;
                       AND.W #$00FF                        ;; 0480D2 : 29 FF 00    ;
                       STA.W $0AF6,X                       ;; 0480D5 : 9D F6 0A    ;
                       INY                                 ;; 0480D8 : C8          ;
@@ -4826,22 +4826,22 @@ CODE_04D7F2:          REP #$30                            ;; 04D7F2 : C2 30     
                       STY.B $00                           ;; 04D820 : 84 00       ;
                       LDY.W #$07FF                        ;; 04D822 : A0 FF 07    ;
                       LDA.B #$00                          ;; 04D825 : A9 00       ;
-CODE_04D827:          STA [$0A],Y                         ;; 04D827 : 97 0A       ;
-                      STA [$0D],Y                         ;; 04D829 : 97 0D       ;
+CODE_04D827:          STA.B [$0A],Y                       ;; 04D827 : 97 0A       ;
+                      STA.B [$0D],Y                       ;; 04D829 : 97 0D       ;
                       DEY                                 ;; 04D82B : 88          ;
                       BPL CODE_04D827                     ;; 04D82C : 10 F9       ;
                       LDY.W #$0000                        ;; 04D82E : A0 00 00    ;
                       TYX                                 ;; 04D831 : BB          ;
-CODE_04D832:          LDA [$04],Y                         ;; 04D832 : B7 04       ;
+CODE_04D832:          LDA.B [$04],Y                       ;; 04D832 : B7 04       ;
                       CMP.B #$56                          ;; 04D834 : C9 56       ;
                       BCC CODE_04D849                     ;; 04D836 : 90 11       ;
                       CMP.B #$81                          ;; 04D838 : C9 81       ;
                       BCS CODE_04D849                     ;; 04D83A : B0 0D       ;
                       LDA.B $00                           ;; 04D83C : A5 00       ;
-                      STA [$0D],Y                         ;; 04D83E : 97 0D       ;
+                      STA.B [$0D],Y                       ;; 04D83E : 97 0D       ;
                       TAX                                 ;; 04D840 : AA          ;
                       LDA.L DATA_04D678,X                 ;; 04D841 : BF 78 D6 04 ;
-                      STA [$0A],Y                         ;; 04D845 : 97 0A       ;
+                      STA.B [$0A],Y                       ;; 04D845 : 97 0A       ;
                       INC.B $00                           ;; 04D847 : E6 00       ;
 CODE_04D849:          INY                                 ;; 04D849 : C8          ;
                       CPY.W #$0800                        ;; 04D84A : C0 00 08    ;
@@ -4946,7 +4946,7 @@ CODE_04DA49:          REP #$30                            ;; 04DA49 : C2 30     
                       SEP #$20                            ;; 04DA7B : E2 20       ; Accum (8 bit) 
                       LDA.B #$7E                          ;; 04DA7D : A9 7E       ;
                       STA.B $06                           ;; 04DA7F : 85 06       ;
-                      LDA [$04],Y                         ;; 04DA81 : B7 04       ;
+                      LDA.B [$04],Y                       ;; 04DA81 : B7 04       ;
 CODE_04DA83:          CMP.L DATA_04DA1D,X                 ;; 04DA83 : DF 1D DA 04 ;
                       BEQ CODE_04DA8F                     ;; 04DA87 : F0 06       ;
                       DEX                                 ;; 04DA89 : CA          ;
@@ -4954,11 +4954,11 @@ CODE_04DA83:          CMP.L DATA_04DA1D,X                 ;; 04DA83 : DF 1D DA 0
                       JMP CODE_04DA9D                     ;; 04DA8C : 4C 9D DA    ;
                                                           ;;                      ;
 CODE_04DA8F:          LDA.L DATA_04DA33,X                 ;; 04DA8F : BF 33 DA 04 ;
-                      STA [$04],Y                         ;; 04DA93 : 97 04       ;
+                      STA.B [$04],Y                       ;; 04DA93 : 97 04       ;
                       CPX.W #$0015                        ;; 04DA95 : E0 15 00    ;
                       BNE CODE_04DA9D                     ;; 04DA98 : D0 03       ;
                       INY                                 ;; 04DA9A : C8          ;
-                      STA [$04],Y                         ;; 04DA9B : 97 04       ;
+                      STA.B [$04],Y                       ;; 04DA9B : 97 04       ;
 CODE_04DA9D:          LDA.B $0F                           ;; 04DA9D : A5 0F       ;
                       JSR CODE_04E677                     ;; 04DA9F : 20 77 E6    ;
                       SEP #$10                            ;; 04DAA2 : E2 10       ; Index (8 bit) 
@@ -4977,12 +4977,12 @@ DATA_04DAB3:          db $01,$18,$00,$40,$7F,$00,$20      ;; 04DAB3             
                                                           ;;                      ;
 CODE_04DABA:          SEP #$20                            ;; 04DABA : E2 20       ; Accum (8 bit) 
                       REP #$10                            ;; 04DABC : C2 10       ; Index (16 bit) 
-                      LDA [$00],Y                         ;; 04DABE : B7 00       ;
+                      LDA.B [$00],Y                       ;; 04DABE : B7 00       ;
                       STA.B $03                           ;; 04DAC0 : 85 03       ;
                       AND.B #$80                          ;; 04DAC2 : 29 80       ;
                       BNE CODE_04DAD6                     ;; 04DAC4 : D0 10       ;
 CODE_04DAC6:          INY                                 ;; 04DAC6 : C8          ;
-                      LDA [$00],Y                         ;; 04DAC7 : B7 00       ;
+                      LDA.B [$00],Y                       ;; 04DAC7 : B7 00       ;
                       STA.L $7F4000,X                     ;; 04DAC9 : 9F 00 40 7F ;
                       INX                                 ;; 04DACD : E8          ;
                       INX                                 ;; 04DACE : E8          ;
@@ -4994,7 +4994,7 @@ CODE_04DAD6:          LDA.B $03                           ;; 04DAD6 : A5 03     
                       AND.B #$7F                          ;; 04DAD8 : 29 7F       ;
                       STA.B $03                           ;; 04DADA : 85 03       ;
                       INY                                 ;; 04DADC : C8          ;
-                      LDA [$00],Y                         ;; 04DADD : B7 00       ;
+                      LDA.B [$00],Y                       ;; 04DADD : B7 00       ;
 CODE_04DADF:          STA.L $7F4000,X                     ;; 04DADF : 9F 00 40 7F ;
                       INX                                 ;; 04DAE3 : E8          ;
                       INX                                 ;; 04DAE4 : E8          ;
@@ -5264,19 +5264,19 @@ CODE_04DCE8:          LDX.B $00                           ;; 04DCE8 : A6 00     
                       AND.W #$0F80                        ;; 04DD0D : 29 80 0F    ;
                       ORA.B $02                           ;; 04DD10 : 05 02       ;
                       TAX                                 ;; 04DD12 : AA          ;
-                      LDA [$65],Y                         ;; 04DD13 : B7 65       ;
+                      LDA.B [$65],Y                       ;; 04DD13 : B7 65       ;
                       STA.L $7EE400,X                     ;; 04DD15 : 9F 00 E4 7E ;
                       INY                                 ;; 04DD19 : C8          ;
                       INY                                 ;; 04DD1A : C8          ;
-                      LDA [$65],Y                         ;; 04DD1B : B7 65       ;
+                      LDA.B [$65],Y                       ;; 04DD1B : B7 65       ;
                       STA.L $7EE440,X                     ;; 04DD1D : 9F 40 E4 7E ;
                       INY                                 ;; 04DD21 : C8          ;
                       INY                                 ;; 04DD22 : C8          ;
-                      LDA [$65],Y                         ;; 04DD23 : B7 65       ;
+                      LDA.B [$65],Y                       ;; 04DD23 : B7 65       ;
                       STA.L $7EE402,X                     ;; 04DD25 : 9F 02 E4 7E ;
                       INY                                 ;; 04DD29 : C8          ;
                       INY                                 ;; 04DD2A : C8          ;
-                      LDA [$65],Y                         ;; 04DD2B : B7 65       ;
+                      LDA.B [$65],Y                       ;; 04DD2B : B7 65       ;
                       STA.L $7EE442,X                     ;; 04DD2D : 9F 42 E4 7E ;
                       SEP #$20                            ;; 04DD31 : E2 20       ; Accum (8 bit) 
                       INC.B $00                           ;; 04DD33 : E6 00       ;
@@ -5300,12 +5300,12 @@ CODE_04DD40:          REP #$10                            ;; 04DD40 : C2 10     
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_04DD57:          SEP #$20                            ;; 04DD57 : E2 20       ; Accum (8 bit) 
-                      LDA [$02],Y                         ;; 04DD59 : B7 02       ;
+                      LDA.B [$02],Y                       ;; 04DD59 : B7 02       ;
                       INY                                 ;; 04DD5B : C8          ;
                       STA.B $05                           ;; 04DD5C : 85 05       ;
                       AND.B #$80                          ;; 04DD5E : 29 80       ;
                       BNE CODE_04DD71                     ;; 04DD60 : D0 0F       ;
-CODE_04DD62:          LDA [$02],Y                         ;; 04DD62 : B7 02       ;
+CODE_04DD62:          LDA.B [$02],Y                       ;; 04DD62 : B7 02       ;
                       STA.L $7F0000,X                     ;; 04DD64 : 9F 00 00 7F ;
                       INY                                 ;; 04DD68 : C8          ;
                       INX                                 ;; 04DD69 : E8          ;
@@ -5316,14 +5316,14 @@ CODE_04DD62:          LDA [$02],Y                         ;; 04DD62 : B7 02     
 CODE_04DD71:          LDA.B $05                           ;; 04DD71 : A5 05       ;
                       AND.B #$7F                          ;; 04DD73 : 29 7F       ;
                       STA.B $05                           ;; 04DD75 : 85 05       ;
-                      LDA [$02],Y                         ;; 04DD77 : B7 02       ;
+                      LDA.B [$02],Y                       ;; 04DD77 : B7 02       ;
 CODE_04DD79:          STA.L $7F0000,X                     ;; 04DD79 : 9F 00 00 7F ;
                       INX                                 ;; 04DD7D : E8          ;
                       DEC.B $05                           ;; 04DD7E : C6 05       ;
                       BPL CODE_04DD79                     ;; 04DD80 : 10 F7       ;
                       INY                                 ;; 04DD82 : C8          ;
 CODE_04DD83:          REP #$20                            ;; 04DD83 : C2 20       ; Accum (16 bit) 
-                      LDA [$02],Y                         ;; 04DD85 : B7 02       ;
+                      LDA.B [$02],Y                       ;; 04DD85 : B7 02       ;
                       CMP.W #$FFFF                        ;; 04DD87 : C9 FF FF    ;
                       BNE CODE_04DD57                     ;; 04DD8A : D0 CB       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -5619,10 +5619,10 @@ CODE_04E4D5:          LDX.B $04                           ;; 04E4D5 : A6 04     
                       LDA.W #$0001                        ;; 04E4D7 : A9 01 00    ;
                       STA.B $0C                           ;; 04E4DA : 85 0C       ;
 CODE_04E4DC:          SEP #$20                            ;; 04E4DC : E2 20       ; Accum (8 bit) 
-                      LDA [$09],Y                         ;; 04E4DE : B7 09       ;
+                      LDA.B [$09],Y                       ;; 04E4DE : B7 09       ;
                       STA.L $7F4000,X                     ;; 04E4E0 : 9F 00 40 7F ;
                       INX                                 ;; 04E4E4 : E8          ;
-                      LDA [$06],Y                         ;; 04E4E5 : B7 06       ;
+                      LDA.B [$06],Y                       ;; 04E4E5 : B7 06       ;
                       STA.L $7F4000,X                     ;; 04E4E7 : 9F 00 40 7F ;
                       INY                                 ;; 04E4EB : C8          ;
                       INX                                 ;; 04E4EC : E8          ;
@@ -5660,10 +5660,10 @@ CODE_04E525:          LDX.B $04                           ;; 04E525 : A6 04     
                       LDA.W #$0005                        ;; 04E527 : A9 05 00    ;
                       STA.B $0C                           ;; 04E52A : 85 0C       ;
 CODE_04E52C:          SEP #$20                            ;; 04E52C : E2 20       ; Accum (8 bit) 
-                      LDA [$09],Y                         ;; 04E52E : B7 09       ;
+                      LDA.B [$09],Y                       ;; 04E52E : B7 09       ;
                       STA.L $7F4000,X                     ;; 04E530 : 9F 00 40 7F ;
                       INX                                 ;; 04E534 : E8          ;
-                      LDA [$06],Y                         ;; 04E535 : B7 06       ;
+                      LDA.B [$06],Y                       ;; 04E535 : B7 06       ;
                       STA.L $7F4000,X                     ;; 04E537 : 9F 00 40 7F ;
                       INY                                 ;; 04E53B : C8          ;
                       INX                                 ;; 04E53C : E8          ;
@@ -5814,7 +5814,7 @@ CODE_04E68A:          STX.W $13D1                         ;; 04E68A : 8E D1 13  
                       TAY                                 ;; 04E69F : A8          ;
                       SEP #$20                            ;; 04E6A0 : E2 20       ; Accum (8 bit) 
                       LDX.W #$0004                        ;; 04E6A2 : A2 04 00    ;
-                      LDA [$0A],Y                         ;; 04E6A5 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 04E6A5 : B7 0A       ;
 CODE_04E6A7:          CMP.L DATA_04E5A7,X                 ;; 04E6A7 : DF A7 E5 04 ;
                       BEQ CODE_04E6B3                     ;; 04E6AB : F0 06       ;
                       DEX                                 ;; 04E6AD : CA          ;
@@ -5826,7 +5826,7 @@ CODE_04E6B3:          TXA                                 ;; 04E6B3 : 8A        
                       CPX.W #$0003                        ;; 04E6B7 : E0 03 00    ;
                       BMI CODE_04E6CA                     ;; 04E6BA : 30 0E       ;
                       LDA.L DATA_04E5AC,X                 ;; 04E6BC : BF AC E5 04 ;
-                      STA [$0A],Y                         ;; 04E6C0 : 97 0A       ;
+                      STA.B [$0A],Y                       ;; 04E6C0 : 97 0A       ;
                       REP #$20                            ;; 04E6C2 : C2 20       ; Accum (16 bit) 
                       TYA                                 ;; 04E6C4 : 98          ;
                       CLC                                 ;; 04E6C5 : 18          ;
@@ -5834,7 +5834,7 @@ CODE_04E6B3:          TXA                                 ;; 04E6B3 : 8A        
                       TAY                                 ;; 04E6C9 : A8          ;
 CODE_04E6CA:          SEP #$20                            ;; 04E6CA : E2 20       ; Accum (8 bit) 
                       LDA.L DATA_04E5B1,X                 ;; 04E6CC : BF B1 E5 04 ;
-                      STA [$0A],Y                         ;; 04E6D0 : 97 0A       ;
+                      STA.B [$0A],Y                       ;; 04E6D0 : 97 0A       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_04E6D3:          INC.W $1B86                         ;; 04E6D3 : EE 86 1B    ;
@@ -5936,7 +5936,7 @@ CODE_04E79B:          TYA                                 ;; 04E79B : 98        
                       LDA.W #$0001                        ;; 04E7A2 : A9 01 00    ;
                       STA.B $04                           ;; 04E7A5 : 85 04       ;
                       LDY.B $00                           ;; 04E7A7 : A4 00       ;
-CODE_04E7A9:          LDA [$0C],Y                         ;; 04E7A9 : B7 0C       ;
+CODE_04E7A9:          LDA.B [$0C],Y                       ;; 04E7A9 : B7 0C       ;
                       AND.B $0A                           ;; 04E7AB : 25 0A       ;
                       STA.L $7F837D,X                     ;; 04E7AD : 9F 7D 83 7F ;
                       INX                                 ;; 04E7B1 : E8          ;
@@ -6039,7 +6039,7 @@ CODE_04E85B:          TYA                                 ;; 04E85B : 98        
                       LDA.W #$0005                        ;; 04E862 : A9 05 00    ;
                       STA.B $04                           ;; 04E865 : 85 04       ;
                       LDY.B $00                           ;; 04E867 : A4 00       ;
-CODE_04E869:          LDA [$0C],Y                         ;; 04E869 : B7 0C       ;
+CODE_04E869:          LDA.B [$0C],Y                       ;; 04E869 : B7 0C       ;
                       AND.B $0A                           ;; 04E86B : 25 0A       ;
                       STA.L $7F837D,X                     ;; 04E86D : 9F 7D 83 7F ;
                       INX                                 ;; 04E871 : E8          ;
@@ -6426,7 +6426,7 @@ CODE_04EC78:          LDA.B #$7E                          ;; 04EC78 : A9 7E     
                       TAY                                 ;; 04EC8F : A8          ;
                       LDX.W #$0015                        ;; 04EC90 : A2 15 00    ;
                       SEP #$20                            ;; 04EC93 : E2 20       ; Accum (8 bit) 
-                      LDA [$0D],Y                         ;; 04EC95 : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 04EC95 : B7 0D       ;
 CODE_04EC97:          CMP.L DATA_04DA1D,X                 ;; 04EC97 : DF 1D DA 04 ;
                       BEQ CODE_04ECA8                     ;; 04EC9B : F0 0B       ;
                       DEX                                 ;; 04EC9D : CA          ;
@@ -6494,7 +6494,7 @@ CODE_04ED83:          LDA.B #$7E                          ;; 04ED83 : A9 7E     
                       TAY                                 ;; 04ED9A : A8          ;
                       LDX.W #$0015                        ;; 04ED9B : A2 15 00    ;
                       SEP #$20                            ;; 04ED9E : E2 20       ; Accum (8 bit) 
-                      LDA [$0D],Y                         ;; 04EDA0 : B7 0D       ;
+                      LDA.B [$0D],Y                       ;; 04EDA0 : B7 0D       ;
 CODE_04EDA2:          CMP.L DATA_04DA1D,X                 ;; 04EDA2 : DF 1D DA 04 ;
                       BEQ CODE_04EDAB                     ;; 04EDA6 : F0 03       ;
                       DEX                                 ;; 04EDA8 : CA          ;
@@ -6535,19 +6535,19 @@ CODE_04EDE6:          LDA.B $00                           ;; 04EDE6 : A5 00     
                       LDA.W #$0300                        ;; 04EDF4 : A9 00 03    ;
                       STA.L $7F837F,X                     ;; 04EDF7 : 9F 7F 83 7F ;
                       STA.L $7F8387,X                     ;; 04EDFB : 9F 87 83 7F ;
-                      LDA [$0A],Y                         ;; 04EDFF : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 04EDFF : B7 0A       ;
                       STA.L $7F8381,X                     ;; 04EE01 : 9F 81 83 7F ;
                       INY                                 ;; 04EE05 : C8          ;
                       INY                                 ;; 04EE06 : C8          ;
-                      LDA [$0A],Y                         ;; 04EE07 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 04EE07 : B7 0A       ;
                       STA.L $7F8389,X                     ;; 04EE09 : 9F 89 83 7F ;
                       INY                                 ;; 04EE0D : C8          ;
                       INY                                 ;; 04EE0E : C8          ;
-                      LDA [$0A],Y                         ;; 04EE0F : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 04EE0F : B7 0A       ;
                       STA.L $7F8383,X                     ;; 04EE11 : 9F 83 83 7F ;
                       INY                                 ;; 04EE15 : C8          ;
                       INY                                 ;; 04EE16 : C8          ;
-                      LDA [$0A],Y                         ;; 04EE17 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 04EE17 : B7 0A       ;
                       STA.L $7F838B,X                     ;; 04EE19 : 9F 8B 83 7F ;
                       LDA.W #$00FF                        ;; 04EE1D : A9 FF 00    ;
                       STA.L $7F838D,X                     ;; 04EE20 : 9F 8D 83 7F ;
@@ -6639,19 +6639,19 @@ CODE_04EEAA:          SEP #$30                            ;; 04EEAA : E2 30     
                       LDA.W #$0300                        ;; 04EEF8 : A9 00 03    ;
                       STA.L $7F837F,X                     ;; 04EEFB : 9F 7F 83 7F ;
                       STA.L $7F8387,X                     ;; 04EEFF : 9F 87 83 7F ;
-                      LDA [$0A],Y                         ;; 04EF03 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 04EF03 : B7 0A       ;
                       STA.L $7F8381,X                     ;; 04EF05 : 9F 81 83 7F ;
                       INY                                 ;; 04EF09 : C8          ;
                       INY                                 ;; 04EF0A : C8          ;
-                      LDA [$0A],Y                         ;; 04EF0B : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 04EF0B : B7 0A       ;
                       STA.L $7F8389,X                     ;; 04EF0D : 9F 89 83 7F ;
                       INY                                 ;; 04EF11 : C8          ;
                       INY                                 ;; 04EF12 : C8          ;
-                      LDA [$0A],Y                         ;; 04EF13 : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 04EF13 : B7 0A       ;
                       STA.L $7F8383,X                     ;; 04EF15 : 9F 83 83 7F ;
                       INY                                 ;; 04EF19 : C8          ;
                       INY                                 ;; 04EF1A : C8          ;
-                      LDA [$0A],Y                         ;; 04EF1B : B7 0A       ;
+                      LDA.B [$0A],Y                       ;; 04EF1B : B7 0A       ;
                       STA.L $7F838B,X                     ;; 04EF1D : 9F 8B 83 7F ;
                       TXA                                 ;; 04EF21 : 8A          ;
                       CLC                                 ;; 04EF22 : 18          ;

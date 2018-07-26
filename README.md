@@ -20,7 +20,7 @@ Anyone can contribute as long as they follow the format rules below. This isn't 
 # Format
 I'm focusing on readability so its important that everything is nice and consistent.
 1. 22 characters for label, 36 characters for instruction, then the pc, raw bytes, then comment. Raw bytes don't need to be displayed for data blocks or binary inclusions.
-2. Address mode hints (.B .W .L) should be used by the following instructions if they are not indirectly, stack, or implied addressed: TSB TRB BIT LDA LDX LDY STA STX STY STZ CMP CPX CPY ORA AND EOR ADC SBC ASL ROL LSR ROR DEC INC. Some address modes (e.g. LDA $addr,Y) are unambiguous but should be kept for consistency.
+2. Address mode hints (.B .W .L) should be used by the following instructions if they are not accumulator addressed: TSB TRB BIT LDA LDX LDY STA STX STY STZ CMP CPX CPY ORA AND EOR ADC SBC ASL ROL LSR ROR DEC INC. Some address modes (e.g. LDA $addr,Y) are unambiguous but should be kept for consistency.
 3. Everything should be relative, using labels. This is kind of assumed, but it is very important with multiple version support since stuff shifts around a lot.
 4. Any operand that refers to an address should use a variable. This includes immediates.
 5. Large datablocks should be placed in bin files and incbin'd in the disassembly, to reduce text file size.
