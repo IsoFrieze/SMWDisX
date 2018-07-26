@@ -15,7 +15,7 @@ U version assembles perfectly since it was created from an old disassembly of th
 J, E0, E1 versions only have the ROM header correct at the moment.
 
 # Contribution
-Anyone can contribute as long as they follow the format rules below. This isn't like a personal project or anything.
+Anyone can contribute as long as they follow the format rules below. This isn't like a personal project or anything. Just make sure every commit that the ROM will properly assemble.
 
 # Format
 I'm focusing on readability so its important that everything is nice and consistent.
@@ -28,3 +28,4 @@ I'm focusing on readability so its important that everything is nice and consist
 7. Spaces not tabs.
 8. Probably more things that I'll add as I think of them.
 9. I'm using the semicolon to the left of the program counter as a marker of whether I have cleaned up that area of code yet. If there are two semicolons, that line still needs work.
+10. Don't allow variable names to be a prefix of another variable's name. This way you can Ctrl+F a variable name and you won't get similarly named variables. (This is why scratch RAM starts with an underscore.) Generally this means short names are bad.

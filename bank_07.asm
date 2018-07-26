@@ -3995,8 +3995,8 @@ DATA_07F1AA:          db $01,$02,$03,$04,$05,$06,$07,$08  ;; 07F1AA             
                       db $25,$26,$27,$28,$29,$30,$40,$50  ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_07F1CA:          LDA.W $1540,X                       ;; 07F1CA : BD 40 15    ;
-                      STA.B $04                           ;; 07F1CD : 85 04       ;
-                      STZ.B $02                           ;; 07F1CF : 64 02       ;
+                      STA.B !_4                           ;; 07F1CD : 85 04       ;
+                      STZ.B !_2                           ;; 07F1CF : 64 02       ;
                       LDA.W $1594,X                       ;; 07F1D1 : BD 94 15    ;
                       LSR A                               ;; 07F1D4 : 4A          ;
                       LSR A                               ;; 07F1D5 : 4A          ;
@@ -4019,7 +4019,7 @@ CODE_07F1ED:          PLA                                 ;; 07F1ED : 68        
                       LDA.L DATA_07F1A0,X                 ;; 07F1F1 : BF A0 F1 07 ;
                       TAX                                 ;; 07F1F5 : AA          ;
                       LDA.B #$20                          ;; 07F1F6 : A9 20       ;
-                      STA.B $02                           ;; 07F1F8 : 85 02       ;
+                      STA.B !_2                           ;; 07F1F8 : 85 02       ;
                       LDY.B #$54                          ;; 07F1FA : A0 54       ;
                       JSR CODE_07F200                     ;; 07F1FC : 20 00 F2    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
@@ -4029,7 +4029,7 @@ CODE_07F200:          LDA.L DATA_07F0C8,X                 ;; 07F200 : BF C8 F0 0
                       CLC                                 ;; 07F206 : 18          ;
                       ADC.B #$64                          ;; 07F207 : 69 64       ;
                       CLC                                 ;; 07F209 : 18          ;
-                      ADC.B $02                           ;; 07F20A : 65 02       ;
+                      ADC.B !_2                           ;; 07F20A : 65 02       ;
                       STA.W $0200,Y                       ;; 07F20C : 99 00 02    ;
                       LDA.L DATA_07F134,X                 ;; 07F20F : BF 34 F1 07 ;
                       CLC                                 ;; 07F213 : 18          ;
@@ -4037,7 +4037,7 @@ CODE_07F200:          LDA.L DATA_07F0C8,X                 ;; 07F200 : BF C8 F0 0
                       STA.W $0201,Y                       ;; 07F216 : 99 01 02    ;
                       LDA.B #$EF                          ;; 07F219 : A9 EF       ;
                       PHX                                 ;; 07F21B : DA          ;
-                      LDX.B $04                           ;; 07F21C : A6 04       ;
+                      LDX.B !_4                           ;; 07F21C : A6 04       ;
                       CPX.B #$10                          ;; 07F21E : E0 10       ;
                       BCS CODE_07F22A                     ;; 07F220 : B0 08       ;
                       TXA                                 ;; 07F222 : 8A          ;
@@ -4047,7 +4047,7 @@ CODE_07F200:          LDA.L DATA_07F0C8,X                 ;; 07F200 : BF C8 F0 0
                       LDA.L DATA_07F24E,X                 ;; 07F226 : BF 4E F2 07 ;
 CODE_07F22A:          STA.W $0202,Y                       ;; 07F22A : 99 02 02    ;
                       PLX                                 ;; 07F22D : FA          ;
-                      LDA.B $13                           ;; 07F22E : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 07F22E : A5 13       ;
                       LSR A                               ;; 07F230 : 4A          ;
                       AND.B #$0E                          ;; 07F231 : 29 0E       ;
                       ORA.B #$30                          ;; 07F233 : 09 30       ;

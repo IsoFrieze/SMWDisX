@@ -62,14 +62,14 @@ InvertAccum:          EOR.B #$FF                          ;; ?QPWZ? : 49 FF     
                                                           ;;                      ;
 CODE_01804E:          LDA.W $1588,X                       ;; 01804E : BD 88 15    ; \ Branch if in air 
                       BEQ Return018072                    ;; 018051 : F0 1F       ; / 
-                      LDA.B $13                           ;; 018053 : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 018053 : A5 13       ;
                       AND.B #$03                          ;; 018055 : 29 03       ;
                       ORA.B $86                           ;; 018057 : 05 86       ;
                       BNE Return018072                    ;; 018059 : D0 17       ;
                       LDA.B #$04                          ;; 01805B : A9 04       ;
-                      STA.B $00                           ;; 01805D : 85 00       ;
+                      STA.B !_0                           ;; 01805D : 85 00       ;
                       LDA.B #$0A                          ;; 01805F : A9 0A       ;
-                      STA.B $01                           ;; 018061 : 85 01       ;
+                      STA.B !_1                           ;; 018061 : 85 01       ;
 CODE_018063:          JSR IsSprOffScreen                  ;; 018063 : 20 CB 80    ;
                       BNE Return018072                    ;; 018066 : D0 0A       ;
                       LDY.B #$03                          ;; 018068 : A0 03       ;
@@ -82,10 +82,10 @@ Return018072:         RTS                                 ;; ?QPWZ? : 60        
 CODE_018073:          LDA.B #$03                          ;; 018073 : A9 03       ;
                       STA.W $17C0,Y                       ;; 018075 : 99 C0 17    ;
                       LDA.B $E4,X                         ;; 018078 : B5 E4       ;
-                      ADC.B $00                           ;; 01807A : 65 00       ;
+                      ADC.B !_0                           ;; 01807A : 65 00       ;
                       STA.W $17C8,Y                       ;; 01807C : 99 C8 17    ;
                       LDA.B $D8,X                         ;; 01807F : B5 D8       ;
-                      ADC.B $01                           ;; 018081 : 65 01       ;
+                      ADC.B !_1                           ;; 018081 : 65 01       ;
                       STA.W $17C4,Y                       ;; 018083 : 99 C4 17    ;
                       LDA.B #$13                          ;; 018086 : A9 13       ;
                       STA.W $17CC,Y                       ;; 018088 : 99 CC 17    ;
@@ -1007,7 +1007,7 @@ InvisSolid_Dinos:     JSL InvisBlk_DinosMain              ;; ?QPWZ? : 22 34 9C 0
 GoalSphere:           JSR SubSprGfx2Entry1                ;; ?QPWZ? : 20 0D 9F    ;
                       LDA.B $9D                           ;; 018766 : A5 9D       ; \ Branch if sprites locked 
                       BNE Return018788                    ;; 018768 : D0 1E       ; / 
-                      LDA.B $13                           ;; 01876A : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01876A : A5 13       ;
                       AND.B #$1F                          ;; 01876C : 29 1F       ;
                       ORA.B $9D                           ;; 01876E : 05 9D       ;
                       JSR CODE_01B152                     ;; 018770 : 20 52 B1    ;
@@ -1197,7 +1197,7 @@ MovingLedge:          JSL MovingLedgeMain                 ;; ?QPWZ? : 22 B4 E5 0
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 JumpOverShells:       TXA                                 ;; ?QPWZ? : 8A          ; \ Process every 4 frames 
-                      EOR.B $13                           ;; 018899 : 45 13       ;  | 
+                      EOR.B !TrueFrame                    ;; 018899 : 45 13       ;  | 
                       AND.B #$03                          ;; 01889B : 29 03       ;  | 
                       BNE Return0188AB                    ;; 01889D : D0 0C       ; / 
                       LDY.B #$09                          ;; 01889F : A0 09       ; \ Loop over sprites: 
@@ -1211,18 +1211,18 @@ Return0188AB:         RTS                                 ;; ?QPWZ? : 60        
 HandleJumpOver:       LDA.W $00E4,Y                       ;; ?QPWZ? : B9 E4 00    ;
                       SEC                                 ;; 0188AF : 38          ;
                       SBC.B #$1A                          ;; 0188B0 : E9 1A       ;
-                      STA.B $00                           ;; 0188B2 : 85 00       ;
+                      STA.B !_0                           ;; 0188B2 : 85 00       ;
                       LDA.W $14E0,Y                       ;; 0188B4 : B9 E0 14    ;
                       SBC.B #$00                          ;; 0188B7 : E9 00       ;
-                      STA.B $08                           ;; 0188B9 : 85 08       ;
+                      STA.B !_8                           ;; 0188B9 : 85 08       ;
                       LDA.B #$44                          ;; 0188BB : A9 44       ;
-                      STA.B $02                           ;; 0188BD : 85 02       ;
+                      STA.B !_2                           ;; 0188BD : 85 02       ;
                       LDA.W $00D8,Y                       ;; 0188BF : B9 D8 00    ;
-                      STA.B $01                           ;; 0188C2 : 85 01       ;
+                      STA.B !_1                           ;; 0188C2 : 85 01       ;
                       LDA.W $14D4,Y                       ;; 0188C4 : B9 D4 14    ;
-                      STA.B $09                           ;; 0188C7 : 85 09       ;
+                      STA.B !_9                           ;; 0188C7 : 85 09       ;
                       LDA.B #$10                          ;; 0188C9 : A9 10       ;
-                      STA.B $03                           ;; 0188CB : 85 03       ;
+                      STA.B !_3                           ;; 0188CB : 85 03       ;
                       JSL GetSpriteClippingA              ;; 0188CD : 22 9F B6 03 ;
                       JSL CheckForContact                 ;; 0188D1 : 22 2B B7 03 ;
                       BCC JumpLoopNext                    ;; 0188D5 : 90 D1       ; If not close to shell, go back to main loop 
@@ -1332,17 +1332,17 @@ CODE_0189C0:          JSR IsOnGround                      ;; 0189C0 : 20 0E 80  
                       LDA.B #$02                          ;; 0189C9 : A9 02       ;
                       BCC CODE_0189CE                     ;; 0189CB : 90 01       ;
                       LSR A                               ;; 0189CD : 4A          ;
-CODE_0189CE:          STA.B $00                           ;; 0189CE : 85 00       ;
+CODE_0189CE:          STA.B !_0                           ;; 0189CE : 85 00       ;
                       LDA.B $B6,X                         ;; 0189D0 : B5 B6       ;
                       CMP.B #$02                          ;; 0189D2 : C9 02       ;
                       BCC CODE_0189FD                     ;; 0189D4 : 90 27       ;
                       BPL CODE_0189DE                     ;; 0189D6 : 10 06       ;
                       CLC                                 ;; 0189D8 : 18          ;
-                      ADC.B $00                           ;; 0189D9 : 65 00       ;
+                      ADC.B !_0                           ;; 0189D9 : 65 00       ;
                       CLC                                 ;; 0189DB : 18          ;
-                      ADC.B $00                           ;; 0189DC : 65 00       ;
+                      ADC.B !_0                           ;; 0189DC : 65 00       ;
 CODE_0189DE:          SEC                                 ;; 0189DE : 38          ;
-                      SBC.B $00                           ;; 0189DF : E5 00       ;
+                      SBC.B !_0                           ;; 0189DF : E5 00       ;
                       STA.B $B6,X                         ;; 0189E1 : 95 B6       ;
                       JSR CODE_01804E                     ;; 0189E3 : 20 4E 80    ;
 CODE_0189E6:          STZ.W $1570,X                       ;; 0189E6 : 9E 70 15    ;
@@ -1389,17 +1389,17 @@ CODE_018A38:          JSR IsOnGround                      ;; 018A38 : 20 0E 80  
                       LDA.B #$02                          ;; 018A41 : A9 02       ;
                       BCC CODE_018A46                     ;; 018A43 : 90 01       ;
                       LSR A                               ;; 018A45 : 4A          ;
-CODE_018A46:          STA.B $00                           ;; 018A46 : 85 00       ;
+CODE_018A46:          STA.B !_0                           ;; 018A46 : 85 00       ;
                       LDA.W $00B6,Y                       ;; 018A48 : B9 B6 00    ;
                       CMP.B #$02                          ;; 018A4B : C9 02       ;
                       BCC CODE_018A69                     ;; 018A4D : 90 1A       ;
                       BPL CODE_018A57                     ;; 018A4F : 10 06       ;
                       CLC                                 ;; 018A51 : 18          ;
-                      ADC.B $00                           ;; 018A52 : 65 00       ;
+                      ADC.B !_0                           ;; 018A52 : 65 00       ;
                       CLC                                 ;; 018A54 : 18          ;
-                      ADC.B $00                           ;; 018A55 : 65 00       ;
+                      ADC.B !_0                           ;; 018A55 : 65 00       ;
 CODE_018A57:          SEC                                 ;; 018A57 : 38          ;
-                      SBC.B $00                           ;; 018A58 : E5 00       ;
+                      SBC.B !_0                           ;; 018A58 : E5 00       ;
                       STA.W $00B6,Y                       ;; 018A5A : 99 B6 00    ;
                       STA.B $B6,X                         ;; 018A5D : 95 B6       ;
                       JSR CODE_01804E                     ;; 018A5F : 20 4E 80    ;
@@ -1821,34 +1821,34 @@ GoombaWingGfxRt:      JSR GetDrawInfoBnk1                 ;; ?QPWZ? : 20 65 A3  
                       AND.B #$02                          ;; 018DF1 : 29 02       ;
                       CLC                                 ;; 018DF3 : 18          ;
                       ADC.W $1602,X                       ;; 018DF4 : 7D 02 16    ;
-                      STA.B $05                           ;; 018DF7 : 85 05       ;
+                      STA.B !_5                           ;; 018DF7 : 85 05       ;
                       ASL A                               ;; 018DF9 : 0A          ;
-                      STA.B $02                           ;; 018DFA : 85 02       ;
+                      STA.B !_2                           ;; 018DFA : 85 02       ;
                       LDA.W $157C,X                       ;; 018DFC : BD 7C 15    ;
-                      STA.B $04                           ;; 018DFF : 85 04       ;
+                      STA.B !_4                           ;; 018DFF : 85 04       ;
                       LDY.W $15EA,X                       ;; 018E01 : BC EA 15    ; Y = Index into sprite OAM 
                       PHX                                 ;; 018E04 : DA          ;
                       LDX.B #$01                          ;; 018E05 : A2 01       ;
-CODE_018E07:          STX.B $03                           ;; 018E07 : 86 03       ;
+CODE_018E07:          STX.B !_3                           ;; 018E07 : 86 03       ;
                       TXA                                 ;; 018E09 : 8A          ;
                       CLC                                 ;; 018E0A : 18          ;
-                      ADC.B $02                           ;; 018E0B : 65 02       ;
+                      ADC.B !_2                           ;; 018E0B : 65 02       ;
                       PHA                                 ;; 018E0D : 48          ;
-                      LDX.B $04                           ;; 018E0E : A6 04       ;
+                      LDX.B !_4                           ;; 018E0E : A6 04       ;
                       BNE CODE_018E15                     ;; 018E10 : D0 03       ;
                       CLC                                 ;; 018E12 : 18          ;
                       ADC.B #$08                          ;; 018E13 : 69 08       ;
 CODE_018E15:          TAX                                 ;; 018E15 : AA          ;
-                      LDA.B $00                           ;; 018E16 : A5 00       ;
+                      LDA.B !_0                           ;; 018E16 : A5 00       ;
                       CLC                                 ;; 018E18 : 18          ;
                       ADC.W DATA_018DC7,X                 ;; 018E19 : 7D C7 8D    ;
                       STA.W $0300,Y                       ;; 018E1C : 99 00 03    ;
                       PLX                                 ;; 018E1F : FA          ;
-                      LDA.B $01                           ;; 018E20 : A5 01       ;
+                      LDA.B !_1                           ;; 018E20 : A5 01       ;
                       CLC                                 ;; 018E22 : 18          ;
                       ADC.W DATA_018DD7,X                 ;; 018E23 : 7D D7 8D    ;
                       STA.W $0301,Y                       ;; 018E26 : 99 01 03    ;
-                      LDX.B $05                           ;; 018E29 : A6 05       ;
+                      LDX.B !_5                           ;; 018E29 : A6 05       ;
                       LDA.W GoombaWingTiles,X             ;; 018E2B : BD E1 8D    ;
                       STA.W $0302,Y                       ;; 018E2E : 99 02 03    ;
                       PHY                                 ;; 018E31 : 5A          ;
@@ -1859,8 +1859,8 @@ CODE_018E15:          TAX                                 ;; 018E15 : AA        
                       LDA.W GoombaWingTileSize,X          ;; 018E36 : BD E5 8D    ;
                       STA.W $0460,Y                       ;; 018E39 : 99 60 04    ;
                       PLY                                 ;; 018E3C : 7A          ;
-                      LDX.B $03                           ;; 018E3D : A6 03       ;
-                      LDA.B $04                           ;; 018E3F : A5 04       ;
+                      LDX.B !_3                           ;; 018E3D : A6 03       ;
+                      LDA.B !_4                           ;; 018E3F : A5 04       ;
                       LSR A                               ;; 018E41 : 4A          ;
                       LDA.W GoombaWingGfxProp,X           ;; 018E42 : BD DF 8D    ;
                       BCS CODE_018E49                     ;; 018E45 : B0 02       ;
@@ -1933,10 +1933,10 @@ Return018EC7:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 ChangePiranhaState:   LDA.B $C2,X                         ;; ?QPWZ? : B5 C2       ; \ $00 = Sprite state (00 - 03) 
                       AND.B #$03                          ;; 018ECA : 29 03       ;  | 
-                      STA.B $00                           ;; 018ECC : 85 00       ; / 
+                      STA.B !_0                           ;; 018ECC : 85 00       ; / 
                       BNE CODE_018EE1                     ;; 018ECE : D0 11       ; \ If the piranha is in the pipe (State 0)... 
                       JSR SubHorizPos                     ;; 018ED0 : 20 30 AD    ;  | ...check if Mario is nearby... 
-                      LDA.B $0F                           ;; 018ED3 : A5 0F       ;  | 
+                      LDA.B !_F                           ;; 018ED3 : A5 0F       ;  | 
                       CLC                                 ;; 018ED5 : 18          ;  | 
                       ADC.B #$1B                          ;; 018ED6 : 69 1B       ;  | 
                       CMP.B #$37                          ;; 018ED8 : C9 37       ;  | 
@@ -1944,7 +1944,7 @@ ChangePiranhaState:   LDA.B $C2,X                         ;; ?QPWZ? : B5 C2     
                       STA.W $1594,X                       ;; 018EDC : 9D 94 15    ;  | ...and set $1594,x if so 
                       BCC Return018EEE                    ;; 018EDF : 90 0D       ;  | 
 CODE_018EE1:          STZ.W $1594,X                       ;; 018EE1 : 9E 94 15    ; / 
-                      LDY.B $00                           ;; 018EE4 : A4 00       ; \ Set time in state 
+                      LDY.B !_0                           ;; 018EE4 : A4 00       ; \ Set time in state 
                       LDA.W PiranTimeInState,Y            ;; 018EE6 : B9 72 8E    ;  | 
                       STA.W $1540,X                       ;; 018EE9 : 9D 40 15    ; / 
                       INC.B $C2,X                         ;; 018EEC : F6 C2       ; Go to next state 
@@ -2072,7 +2072,7 @@ BulletBill:           LDA.B #$01                          ;; ?QPWZ? : A9 01     
 CODE_019014:          JSR SubOffscreen0Bnk1               ;; 019014 : 20 31 AC    ;
                       LDA.B $D8,X                         ;; 019017 : B5 D8       ;
                       SEC                                 ;; 019019 : 38          ;
-                      SBC.B $1C                           ;; 01901A : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01901A : E5 1C       ;
                       CMP.B #$F0                          ;; 01901C : C9 F0       ;
                       BCC CODE_019023                     ;; 01901E : 90 03       ;
                       STZ.W $14C8,X                       ;; 019020 : 9E C8 14    ;
@@ -2115,12 +2115,12 @@ CODE_01905D:          LDA.B $B6,X                         ;; 01905D : B5 B6     
                       ROR.B $B6,X                         ;; 019066 : 76 B6       ;
                       LDA.B $B6,X                         ;; 019068 : B5 B6       ;
                       PHA                                 ;; 01906A : 48          ;
-                      STA.B $00                           ;; 01906B : 85 00       ;
+                      STA.B !_0                           ;; 01906B : 85 00       ;
                       ASL A                               ;; 01906D : 0A          ;
-                      ROR.B $00                           ;; 01906E : 66 00       ;
+                      ROR.B !_0                           ;; 01906E : 66 00       ;
                       PLA                                 ;; 019070 : 68          ;
                       CLC                                 ;; 019071 : 18          ;
-                      ADC.B $00                           ;; 019072 : 65 00       ;
+                      ADC.B !_0                           ;; 019072 : 65 00       ;
                       STA.B $B6,X                         ;; 019074 : 95 B6       ;
 CODE_019076:          JSR SubSprXPosNoGrvty               ;; 019076 : 20 CC AB    ;
                       PLA                                 ;; 019079 : 68          ;
@@ -2197,37 +2197,37 @@ CODE_019140:          STZ.W $1694                         ;; 019140 : 9C 94 16  
                       STA.W $1695                         ;; 01914F : 8D 95 16    ;
                       STZ.W $164A,X                       ;; 019152 : 9E 4A 16    ;
                       JSR CODE_019211                     ;; 019155 : 20 11 92    ;
-                      LDA.B $5B                           ;; 019158 : A5 5B       ; Vertical level flag 
+                      LDA.B !ScreenMode                   ;; 019158 : A5 5B       ; Vertical level flag 
                       BPL CODE_0191BE                     ;; 01915A : 10 62       ;
                       INC.W $185E                         ;; 01915C : EE 5E 18    ;
                       LDA.B $E4,X                         ;; 01915F : B5 E4       ; \ Sprite's X position += $26 
                       CLC                                 ;; 019161 : 18          ;  | for call to below routine 
-                      ADC.B $26                           ;; 019162 : 65 26       ;  | 
+                      ADC.B !Layer23XRelPos               ;; 019162 : 65 26       ;  | 
                       STA.B $E4,X                         ;; 019164 : 95 E4       ;  | 
                       LDA.W $14E0,X                       ;; 019166 : BD E0 14    ;  | 
-                      ADC.B $27                           ;; 019169 : 65 27       ;  | 
+                      ADC.B !Layer23XRelPos+1             ;; 019169 : 65 27       ;  | 
                       STA.W $14E0,X                       ;; 01916B : 9D E0 14    ; / 
                       LDA.B $D8,X                         ;; 01916E : B5 D8       ; \ Sprite's Y position += $28 
                       CLC                                 ;; 019170 : 18          ;  | for call to below routine 
-                      ADC.B $28                           ;; 019171 : 65 28       ;  | 
+                      ADC.B !Layer23YRelPos               ;; 019171 : 65 28       ;  | 
                       STA.B $D8,X                         ;; 019173 : 95 D8       ;  | 
                       LDA.W $14D4,X                       ;; 019175 : BD D4 14    ;  | 
-                      ADC.B $29                           ;; 019178 : 65 29       ;  | 
+                      ADC.B !Layer23YRelPos+1             ;; 019178 : 65 29       ;  | 
                       STA.W $14D4,X                       ;; 01917A : 9D D4 14    ; / 
                       JSR CODE_019211                     ;; 01917D : 20 11 92    ;
                       LDA.B $E4,X                         ;; 019180 : B5 E4       ; \ Restore sprite's original position 
                       SEC                                 ;; 019182 : 38          ;  | 
-                      SBC.B $26                           ;; 019183 : E5 26       ;  | 
+                      SBC.B !Layer23XRelPos               ;; 019183 : E5 26       ;  | 
                       STA.B $E4,X                         ;; 019185 : 95 E4       ;  | 
                       LDA.W $14E0,X                       ;; 019187 : BD E0 14    ;  | 
-                      SBC.B $27                           ;; 01918A : E5 27       ;  | 
+                      SBC.B !Layer23XRelPos+1             ;; 01918A : E5 27       ;  | 
                       STA.W $14E0,X                       ;; 01918C : 9D E0 14    ;  | 
                       LDA.B $D8,X                         ;; 01918F : B5 D8       ;  | 
                       SEC                                 ;; 019191 : 38          ;  | 
-                      SBC.B $28                           ;; 019192 : E5 28       ;  | 
+                      SBC.B !Layer23YRelPos               ;; 019192 : E5 28       ;  | 
                       STA.B $D8,X                         ;; 019194 : 95 D8       ;  | 
                       LDA.W $14D4,X                       ;; 019196 : BD D4 14    ;  | 
-                      SBC.B $29                           ;; 019199 : E5 29       ;  | 
+                      SBC.B !Layer23YRelPos+1             ;; 019199 : E5 29       ;  | 
                       STA.W $14D4,X                       ;; 01919B : 9D D4 14    ; / 
                       LDA.W $1588,X                       ;; 01919E : BD 88 15    ;
                       BPL CODE_0191BE                     ;; 0191A1 : 10 1B       ;
@@ -2329,7 +2329,7 @@ CODE_01926F:          JSR CODE_0192C9                     ;; 01926F : 20 C9 92  
                       LDA.B $B6,X                         ;; 019277 : B5 B6       ; \ Branch if sprite has X speed... 
                       ORA.W $15AC,X                       ;; 019279 : 1D AC 15    ;  | ...or sprite is turning 
                       BNE CODE_019288                     ;; 01927C : D0 0A       ; / 
-                      LDA.B $13                           ;; 01927E : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01927E : A5 13       ;
                       JSR CODE_01928E                     ;; 019280 : 20 8E 92    ;
 Return019283:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -2431,19 +2431,19 @@ CODE_01933B:          CMP.B #$11                          ;; 01933B : C9 11     
                       CMP.B #$D8                          ;; 019343 : C9 D8       ;
                       BCS CODE_019386                     ;; 019345 : B0 3F       ;
                       JSL CODE_00FA19                     ;; 019347 : 22 19 FA 00 ;
-                      LDA.B [$05],Y                       ;; 01934B : B7 05       ;
+                      LDA.B [!_5],Y                       ;; 01934B : B7 05       ;
                       CMP.B #$10                          ;; 01934D : C9 10       ;
                       BEQ Return0193AF                    ;; 01934F : F0 5E       ;
                       BCS CODE_019386                     ;; 019351 : B0 33       ;
-                      LDA.B $00                           ;; 019353 : A5 00       ;
+                      LDA.B !_0                           ;; 019353 : A5 00       ;
                       CMP.B #$0C                          ;; 019355 : C9 0C       ;
                       BCS CODE_01935D                     ;; 019357 : B0 04       ;
-                      CMP.B [$05],Y                       ;; 019359 : D7 05       ;
+                      CMP.B [!_5],Y                       ;; 019359 : D7 05       ;
                       BCC Return0193AF                    ;; 01935B : 90 52       ;
-CODE_01935D:          LDA.B [$05],Y                       ;; 01935D : B7 05       ;
+CODE_01935D:          LDA.B [!_5],Y                       ;; 01935D : B7 05       ;
                       STA.W $1694                         ;; 01935F : 8D 94 16    ;
                       PHX                                 ;; 019362 : DA          ;
-                      LDX.B $08                           ;; 019363 : A6 08       ;
+                      LDX.B !_8                           ;; 019363 : A6 08       ;
                       LDA.L DATA_00E53D,X                 ;; 019365 : BF 3D E5 00 ;
                       PLX                                 ;; 019369 : FA          ;
                       STA.W $15B8,X                       ;; 01936A : 9D B8 15    ;
@@ -2459,7 +2459,7 @@ CODE_019375:          EOR.B $B6,X                         ;; 019375 : 55 B6     
 CODE_019380:          JSL CODE_03C1CA                     ;; 019380 : 22 CA C1 03 ;
 CODE_019384:          BRA CODE_0193B8                     ;; 019384 : 80 32       ;
                                                           ;;                      ;
-CODE_019386:          LDA.B $0C                           ;; 019386 : A5 0C       ;
+CODE_019386:          LDA.B !_C                           ;; 019386 : A5 0C       ;
                       AND.B #$0F                          ;; 019388 : 29 0F       ;
                       CMP.B #$05                          ;; 01938A : C9 05       ;
                       BCS Return0193AF                    ;; 01938C : B0 21       ;
@@ -2480,7 +2480,7 @@ CODE_019386:          LDA.B $0C                           ;; 019386 : A5 0C     
                       JSR CODE_0192C9                     ;; 0193AC : 20 C9 92    ;
 Return0193AF:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0193B0:          LDA.B $0C                           ;; 0193B0 : A5 0C       ;
+CODE_0193B0:          LDA.B !_C                           ;; 0193B0 : A5 0C       ;
                       AND.B #$0F                          ;; 0193B2 : 29 0F       ;
                       CMP.B #$05                          ;; 0193B4 : C9 05       ;
                       BCS Return019424                    ;; 0193B6 : B0 6C       ;
@@ -2499,7 +2499,7 @@ CODE_0193B8:          LDA.W $1686,X                       ;; 0193B8 : BD 86 16  
                       BEQ CODE_0193D9                     ;; 0193D3 : F0 04       ;
                       CPY.B #$0D                          ;; 0193D5 : C0 0D       ;
                       BNE CODE_019405                     ;; 0193D7 : D0 2C       ;
-CODE_0193D9:          LDA.B $13                           ;; 0193D9 : A5 13       ;
+CODE_0193D9:          LDA.B !TrueFrame                    ;; 0193D9 : A5 13       ;
                       AND.B #$03                          ;; 0193DB : 29 03       ;
                       BNE CODE_019405                     ;; 0193DD : D0 26       ;
                       JSR IsTouchingObjSide               ;; 0193DF : 20 08 80    ;
@@ -2535,77 +2535,77 @@ CODE_019414:          JSR CODE_019435                     ;; 019414 : 20 35 94  
                       STA.W $1588,X                       ;; 019421 : 9D 88 15    ;
 Return019424:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_019425:          LDA.B $0A                           ;; 019425 : A5 0A       ;
+CODE_019425:          LDA.B !_A                           ;; 019425 : A5 0A       ;
                       STA.B $9A                           ;; 019427 : 85 9A       ;
-                      LDA.B $0B                           ;; 019429 : A5 0B       ;
+                      LDA.B !_B                           ;; 019429 : A5 0B       ;
                       STA.B $9B                           ;; 01942B : 85 9B       ;
-                      LDA.B $0C                           ;; 01942D : A5 0C       ;
+                      LDA.B !_C                           ;; 01942D : A5 0C       ;
                       STA.B $98                           ;; 01942F : 85 98       ;
-                      LDA.B $0D                           ;; 019431 : A5 0D       ;
+                      LDA.B !_D                           ;; 019431 : A5 0D       ;
                       STA.B $99                           ;; 019433 : 85 99       ;
-CODE_019435:          LDY.B $0F                           ;; 019435 : A4 0F       ;
+CODE_019435:          LDY.B !_F                           ;; 019435 : A4 0F       ;
                       LDA.W $1588,X                       ;; 019437 : BD 88 15    ;
                       ORA.W DATA_019134,Y                 ;; 01943A : 19 34 91    ;
                       STA.W $1588,X                       ;; 01943D : 9D 88 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_019441:          STY.B $0F                           ;; 019441 : 84 0F       ; Can be 00-03 
+CODE_019441:          STY.B !_F                           ;; 019441 : 84 0F       ; Can be 00-03 
                       LDA.W $1656,X                       ;; 019443 : BD 56 16    ; \ Y = $1656,x (Upper 4 bits) + $0F (Lower 2 bits) 
                       AND.B #$0F                          ;; 019446 : 29 0F       ;  | 
                       ASL A                               ;; 019448 : 0A          ;  | 
                       ASL A                               ;; 019449 : 0A          ;  | 
-                      ADC.B $0F                           ;; 01944A : 65 0F       ;  | 
+                      ADC.B !_F                           ;; 01944A : 65 0F       ;  | 
                       TAY                                 ;; 01944C : A8          ; / 
 CODE_01944D:          LDA.W $185E                         ;; 01944D : AD 5E 18    ;
                       INC A                               ;; 019450 : 1A          ;
-                      AND.B $5B                           ;; 019451 : 25 5B       ;
+                      AND.B !ScreenMode                   ;; 019451 : 25 5B       ;
                       BEQ CODE_0194BF                     ;; 019453 : F0 6A       ;
                       LDA.B $D8,X                         ;; 019455 : B5 D8       ;
                       CLC                                 ;; 019457 : 18          ;
                       ADC.W SpriteObjClippingY,Y          ;; 019458 : 79 F7 90    ;
-                      STA.B $0C                           ;; 01945B : 85 0C       ;
+                      STA.B !_C                           ;; 01945B : 85 0C       ;
                       AND.B #$F0                          ;; 01945D : 29 F0       ;
-                      STA.B $00                           ;; 01945F : 85 00       ;
+                      STA.B !_0                           ;; 01945F : 85 00       ;
                       LDA.W $14D4,X                       ;; 019461 : BD D4 14    ;
                       ADC.B #$00                          ;; 019464 : 69 00       ;
-                      CMP.B $5D                           ;; 019466 : C5 5D       ;
+                      CMP.B !LevelScrLength               ;; 019466 : C5 5D       ;
                       BCS CODE_0194B4                     ;; 019468 : B0 4A       ;
-                      STA.B $0D                           ;; 01946A : 85 0D       ;
+                      STA.B !_D                           ;; 01946A : 85 0D       ;
                       LDA.B $E4,X                         ;; 01946C : B5 E4       ;
                       CLC                                 ;; 01946E : 18          ;
                       ADC.W SpriteObjClippingX,Y          ;; 01946F : 79 BA 90    ;
-                      STA.B $0A                           ;; 019472 : 85 0A       ;
-                      STA.B $01                           ;; 019474 : 85 01       ;
+                      STA.B !_A                           ;; 019472 : 85 0A       ;
+                      STA.B !_1                           ;; 019474 : 85 01       ;
                       LDA.W $14E0,X                       ;; 019476 : BD E0 14    ;
                       ADC.B #$00                          ;; 019479 : 69 00       ;
                       CMP.B #$02                          ;; 01947B : C9 02       ;
                       BCS CODE_0194B4                     ;; 01947D : B0 35       ;
-                      STA.B $0B                           ;; 01947F : 85 0B       ;
-                      LDA.B $01                           ;; 019481 : A5 01       ;
+                      STA.B !_B                           ;; 01947F : 85 0B       ;
+                      LDA.B !_1                           ;; 019481 : A5 01       ;
                       LSR A                               ;; 019483 : 4A          ;
                       LSR A                               ;; 019484 : 4A          ;
                       LSR A                               ;; 019485 : 4A          ;
                       LSR A                               ;; 019486 : 4A          ;
-                      ORA.B $00                           ;; 019487 : 05 00       ;
-                      STA.B $00                           ;; 019489 : 85 00       ;
-                      LDX.B $0D                           ;; 01948B : A6 0D       ;
+                      ORA.B !_0                           ;; 019487 : 05 00       ;
+                      STA.B !_0                           ;; 019489 : 85 00       ;
+                      LDX.B !_D                           ;; 01948B : A6 0D       ;
                       LDA.L DATA_00BA80,X                 ;; 01948D : BF 80 BA 00 ;
                       LDY.W $185E                         ;; 019491 : AC 5E 18    ;
                       BEQ CODE_01949A                     ;; 019494 : F0 04       ;
                       LDA.L DATA_00BA8E,X                 ;; 019496 : BF 8E BA 00 ;
 CODE_01949A:          CLC                                 ;; 01949A : 18          ;
-                      ADC.B $00                           ;; 01949B : 65 00       ;
-                      STA.B $05                           ;; 01949D : 85 05       ;
+                      ADC.B !_0                           ;; 01949B : 65 00       ;
+                      STA.B !_5                           ;; 01949D : 85 05       ;
                       LDA.L DATA_00BABC,X                 ;; 01949F : BF BC BA 00 ;
                       LDY.W $185E                         ;; 0194A3 : AC 5E 18    ;
                       BEQ CODE_0194AC                     ;; 0194A6 : F0 04       ;
                       LDA.L DATA_00BACA,X                 ;; 0194A8 : BF CA BA 00 ;
-CODE_0194AC:          ADC.B $0B                           ;; 0194AC : 65 0B       ;
-                      STA.B $06                           ;; 0194AE : 85 06       ;
+CODE_0194AC:          ADC.B !_B                           ;; 0194AC : 65 0B       ;
+                      STA.B !_6                           ;; 0194AE : 85 06       ;
                       JSR CODE_019523                     ;; 0194B0 : 20 23 95    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0194B4:          LDY.B $0F                           ;; 0194B4 : A4 0F       ;
+CODE_0194B4:          LDY.B !_F                           ;; 0194B4 : A4 0F       ;
                       LDA.B #$00                          ;; 0194B6 : A9 00       ;
                       STA.W $1693                         ;; 0194B8 : 8D 93 16    ;
                       STA.W $1694                         ;; 0194BB : 8D 94 16    ;
@@ -2614,58 +2614,58 @@ CODE_0194B4:          LDY.B $0F                           ;; 0194B4 : A4 0F     
 CODE_0194BF:          LDA.B $D8,X                         ;; 0194BF : B5 D8       ;
                       CLC                                 ;; 0194C1 : 18          ;
                       ADC.W SpriteObjClippingY,Y          ;; 0194C2 : 79 F7 90    ;
-                      STA.B $0C                           ;; 0194C5 : 85 0C       ;
+                      STA.B !_C                           ;; 0194C5 : 85 0C       ;
                       AND.B #$F0                          ;; 0194C7 : 29 F0       ;
-                      STA.B $00                           ;; 0194C9 : 85 00       ;
+                      STA.B !_0                           ;; 0194C9 : 85 00       ;
                       LDA.W $14D4,X                       ;; 0194CB : BD D4 14    ;
                       ADC.B #$00                          ;; 0194CE : 69 00       ;
-                      STA.B $0D                           ;; 0194D0 : 85 0D       ;
+                      STA.B !_D                           ;; 0194D0 : 85 0D       ;
                       REP #$20                            ;; 0194D2 : C2 20       ; Accum (16 bit) 
-                      LDA.B $0C                           ;; 0194D4 : A5 0C       ;
+                      LDA.B !_C                           ;; 0194D4 : A5 0C       ;
                       CMP.W #$01B0                        ;; 0194D6 : C9 B0 01    ;
                       SEP #$20                            ;; 0194D9 : E2 20       ; Accum (8 bit) 
                       BCS CODE_0194B4                     ;; 0194DB : B0 D7       ;
                       LDA.B $E4,X                         ;; 0194DD : B5 E4       ;
                       CLC                                 ;; 0194DF : 18          ;
                       ADC.W SpriteObjClippingX,Y          ;; 0194E0 : 79 BA 90    ;
-                      STA.B $0A                           ;; 0194E3 : 85 0A       ;
-                      STA.B $01                           ;; 0194E5 : 85 01       ;
+                      STA.B !_A                           ;; 0194E3 : 85 0A       ;
+                      STA.B !_1                           ;; 0194E5 : 85 01       ;
                       LDA.W $14E0,X                       ;; 0194E7 : BD E0 14    ;
                       ADC.B #$00                          ;; 0194EA : 69 00       ;
-                      STA.B $0B                           ;; 0194EC : 85 0B       ;
+                      STA.B !_B                           ;; 0194EC : 85 0B       ;
                       BMI CODE_0194B4                     ;; 0194EE : 30 C4       ;
-                      CMP.B $5D                           ;; 0194F0 : C5 5D       ;
+                      CMP.B !LevelScrLength               ;; 0194F0 : C5 5D       ;
                       BCS CODE_0194B4                     ;; 0194F2 : B0 C0       ;
-                      LDA.B $01                           ;; 0194F4 : A5 01       ;
+                      LDA.B !_1                           ;; 0194F4 : A5 01       ;
                       LSR A                               ;; 0194F6 : 4A          ;
                       LSR A                               ;; 0194F7 : 4A          ;
                       LSR A                               ;; 0194F8 : 4A          ;
                       LSR A                               ;; 0194F9 : 4A          ;
-                      ORA.B $00                           ;; 0194FA : 05 00       ;
-                      STA.B $00                           ;; 0194FC : 85 00       ;
-                      LDX.B $0B                           ;; 0194FE : A6 0B       ;
+                      ORA.B !_0                           ;; 0194FA : 05 00       ;
+                      STA.B !_0                           ;; 0194FC : 85 00       ;
+                      LDX.B !_B                           ;; 0194FE : A6 0B       ;
                       LDA.L DATA_00BA60,X                 ;; 019500 : BF 60 BA 00 ;
                       LDY.W $185E                         ;; 019504 : AC 5E 18    ;
                       BEQ CODE_01950D                     ;; 019507 : F0 04       ;
                       LDA.L DATA_00BA70,X                 ;; 019509 : BF 70 BA 00 ;
 CODE_01950D:          CLC                                 ;; 01950D : 18          ;
-                      ADC.B $00                           ;; 01950E : 65 00       ;
-                      STA.B $05                           ;; 019510 : 85 05       ;
+                      ADC.B !_0                           ;; 01950E : 65 00       ;
+                      STA.B !_5                           ;; 019510 : 85 05       ;
                       LDA.L DATA_00BA9C,X                 ;; 019512 : BF 9C BA 00 ;
                       LDY.W $185E                         ;; 019516 : AC 5E 18    ;
                       BEQ CODE_01951F                     ;; 019519 : F0 04       ;
                       LDA.L DATA_00BAAC,X                 ;; 01951B : BF AC BA 00 ;
-CODE_01951F:          ADC.B $0D                           ;; 01951F : 65 0D       ;
-                      STA.B $06                           ;; 019521 : 85 06       ;
+CODE_01951F:          ADC.B !_D                           ;; 01951F : 65 0D       ;
+                      STA.B !_6                           ;; 019521 : 85 06       ;
 CODE_019523:          LDA.B #$7E                          ;; 019523 : A9 7E       ;
-                      STA.B $07                           ;; 019525 : 85 07       ;
+                      STA.B !_7                           ;; 019525 : 85 07       ;
                       LDX.W $15E9                         ;; 019527 : AE E9 15    ; X = Sprite index 
-                      LDA.B [$05]                         ;; 01952A : A7 05       ;
+                      LDA.B [!_5]                         ;; 01952A : A7 05       ;
                       STA.W $1693                         ;; 01952C : 8D 93 16    ;
-                      INC.B $07                           ;; 01952F : E6 07       ;
-                      LDA.B [$05]                         ;; 019531 : A7 05       ;
+                      INC.B !_7                           ;; 01952F : E6 07       ;
+                      LDA.B [!_5]                         ;; 019531 : A7 05       ;
                       JSL CODE_00F545                     ;; 019533 : 22 45 F5 00 ;
-                      LDY.B $0F                           ;; 019537 : A4 0F       ;
+                      LDY.B !_F                           ;; 019537 : A4 0F       ;
                       CMP.B #$00                          ;; 019539 : C9 00       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -2853,7 +2853,7 @@ SetNormalStatus:      LDA.B #$08                          ;; ?QPWZ? : A9 08     
                       LSR.W $15F6,X                       ;; 0196D3 : 5E F6 15    ; / 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-IncrmntStunTimer:     LDA.B $13                           ;; ?QPWZ? : A5 13       ; \ Increment timer every other frame 
+IncrmntStunTimer:     LDA.B !TrueFrame                    ;; ?QPWZ? : A5 13       ; \ Increment timer every other frame 
                       AND.B #$01                          ;; 0196D9 : 29 01       ;  | 
                       BNE Return0196E0                    ;; 0196DB : D0 03       ;  | 
                       INC.W $1540,X                       ;; 0196DD : FE 40 15    ;  | 
@@ -2906,13 +2906,13 @@ GeneralResetSpr:      JSL FindFreeSprSlot                 ;; ?QPWZ? : 22 E4 A9 0
 CODE_019747:          PHY                                 ;; 019747 : 5A          ;
                       JSR SubHorizPos                     ;; 019748 : 20 30 AD    ;
                       LDA.W DATA_0197AD,Y                 ;; 01974B : B9 AD 97    ;
-                      STY.B $00                           ;; 01974E : 84 00       ;
+                      STY.B !_0                           ;; 01974E : 84 00       ;
                       PLY                                 ;; 019750 : 7A          ;
                       STA.W $00B6,Y                       ;; 019751 : 99 B6 00    ;
-                      LDA.B $00                           ;; 019754 : A5 00       ;
+                      LDA.B !_0                           ;; 019754 : A5 00       ;
                       EOR.B #$01                          ;; 019756 : 49 01       ;
                       STA.W $157C,Y                       ;; 019758 : 99 7C 15    ;
-                      STA.B $01                           ;; 01975B : 85 01       ;
+                      STA.B !_1                           ;; 01975B : 85 01       ;
                       LDA.B #$10                          ;; 01975D : A9 10       ;
                       STA.W $154C,Y                       ;; 01975F : 99 4C 15    ;
                       STA.W $1528,Y                       ;; 019762 : 99 28 15    ;
@@ -2944,7 +2944,7 @@ SpawnMovingCoin:      LDA.B #$08                          ;; ?QPWZ? : A9 08     
                       PLX                                 ;; 01979C : FA          ; / 
                       LDA.B #$D0                          ;; 01979D : A9 D0       ; \ Set Y speed 
                       STA.W $00AA,Y                       ;; 01979F : 99 AA 00    ; / 
-                      LDA.B $01                           ;; 0197A2 : A5 01       ; \ Set direction 
+                      LDA.B !_1                           ;; 0197A2 : A5 01       ; \ Set direction 
                       STA.W $157C,Y                       ;; 0197A4 : 99 7C 15    ; / 
                       LDA.B #$20                          ;; 0197A7 : A9 20       ;
                       STA.W $154C,Y                       ;; 0197A9 : 99 4C 15    ;
@@ -3029,7 +3029,7 @@ CODE_01984D:          LDA.B $9E,X                         ;; 01984D : B5 9E     
                       LDA.B #$08                          ;; 01985C : A9 08       ;
                       BCC CODE_019862                     ;; 01985E : 90 02       ;
                       LDA.B #$00                          ;; 019860 : A9 00       ;
-CODE_019862:          STA.B $00                           ;; 019862 : 85 00       ;
+CODE_019862:          STA.B !_0                           ;; 019862 : 85 00       ;
                       LDA.W $0308,Y                       ;; 019864 : B9 08 03    ;
                       CLC                                 ;; 019867 : 18          ;
                       ADC.B #$02                          ;; 019868 : 69 02       ;
@@ -3039,12 +3039,12 @@ CODE_019862:          STA.B $00                           ;; 019862 : 85 00     
                       STA.W $0304,Y                       ;; 019870 : 99 04 03    ;
                       LDA.W $0309,Y                       ;; 019873 : B9 09 03    ;
                       CLC                                 ;; 019876 : 18          ;
-                      ADC.B $00                           ;; 019877 : 65 00       ;
+                      ADC.B !_0                           ;; 019877 : 65 00       ;
                       STA.W $0301,Y                       ;; 019879 : 99 01 03    ;
                       STA.W $0305,Y                       ;; 01987C : 99 05 03    ;
                       PHY                                 ;; 01987F : 5A          ;
                       LDY.B #$64                          ;; 019880 : A0 64       ;
-                      LDA.B $14                           ;; 019882 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 019882 : A5 14       ;
                       AND.B #$F8                          ;; 019884 : 29 F8       ;
                       BNE CODE_01988A                     ;; 019886 : D0 02       ;
                       LDY.B #$4D                          ;; 019888 : A0 4D       ;
@@ -3107,7 +3107,7 @@ CODE_0198EA:          JSR IsOnGround                      ;; 0198EA : 20 0E 80  
 CODE_0198F6:          JSR IsTouchingCeiling               ;; 0198F6 : 20 14 80    ;
                       BEQ CODE_0198FD                     ;; 0198F9 : F0 02       ;
                       STZ.B $AA,X                         ;; 0198FB : 74 AA       ; Sprite Y Speed = 0 
-CODE_0198FD:          LDA.B $13                           ;; 0198FD : A5 13       ;
+CODE_0198FD:          LDA.B !TrueFrame                    ;; 0198FD : A5 13       ;
                       AND.B #$01                          ;; 0198FF : 29 01       ;
                       BNE CODE_01990D                     ;; 019901 : D0 0A       ;
                       LDA.W $15F6,X                       ;; 019903 : BD F6 15    ;
@@ -3150,7 +3150,7 @@ CODE_019946:          JSR UpdateDirection                 ;; 019946 : 20 15 9A  
                       JSR SubUpdateSprPos                 ;; 01994D : 20 32 90    ;
                       PLA                                 ;; 019950 : 68          ;
                       BEQ CODE_019969                     ;; 019951 : F0 16       ;
-                      STA.B $00                           ;; 019953 : 85 00       ;
+                      STA.B !_0                           ;; 019953 : 85 00       ;
                       LDY.W $164A,X                       ;; 019955 : BC 4A 16    ;
                       BNE CODE_019969                     ;; 019958 : D0 0F       ;
                       CMP.W $15B8,X                       ;; 01995A : DD B8 15    ;
@@ -3192,7 +3192,7 @@ CODE_01999E:          LDA.B #$01                          ;; 01999E : A9 01     
                       BNE CODE_0199D2                     ;; 0199A9 : D0 27       ;
                       LDA.B $E4,X                         ;; 0199AB : B5 E4       ;
                       SEC                                 ;; 0199AD : 38          ;
-                      SBC.B $1A                           ;; 0199AE : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 0199AE : E5 1A       ;
                       CLC                                 ;; 0199B0 : 18          ;
                       ADC.B #$14                          ;; 0199B1 : 69 14       ;
                       CMP.B #$1C                          ;; 0199B3 : C9 1C       ;
@@ -3260,7 +3260,7 @@ ShellGfxProp:         db $00,$00,$00,$40                  ;; ?QPWZ?             
                                                           ;;                      ;
 CODE_019A2A:          LDA.B $C2,X                         ;; 019A2A : B5 C2       ;
                       STA.W $1558,X                       ;; 019A2C : 9D 58 15    ;
-                      LDA.B $14                           ;; 019A2F : A5 14       ;
+                      LDA.B !EffFrame                     ;; 019A2F : A5 14       ;
                       LSR A                               ;; 019A31 : 4A          ;
                       LSR A                               ;; 019A32 : 4A          ;
                       AND.B #$03                          ;; 019A33 : 29 03       ;
@@ -3418,14 +3418,14 @@ CODE_019B64:          LDA.B #$00                          ;; 019B64 : A9 00     
                       CPY.B #$1C                          ;; 019B66 : C0 1C       ;
                       BEQ CODE_019B6C                     ;; 019B68 : F0 02       ;
                       LDA.B #$80                          ;; 019B6A : A9 80       ;
-CODE_019B6C:          STA.B $00                           ;; 019B6C : 85 00       ;
+CODE_019B6C:          STA.B !_0                           ;; 019B6C : 85 00       ;
                       LDA.B $64                           ;; 019B6E : A5 64       ; \ If sprite is behind scenery, 
                       PHA                                 ;; 019B70 : 48          ;  | 
                       LDY.W $1632,X                       ;; 019B71 : BC 32 16    ;  | 
                       BEQ CODE_019B78                     ;; 019B74 : F0 02       ;  | 
                       LDA.B #$10                          ;; 019B76 : A9 10       ;  | temorarily set layer priority for gfx routine 
 CODE_019B78:          STA.B $64                           ;; 019B78 : 85 64       ;  | 
-                      LDA.B $00                           ;; 019B7A : A5 00       ;
+                      LDA.B !_0                           ;; 019B7A : A5 00       ;
                       JSR SubSprGfx2Entry0                ;; 019B7C : 20 09 9F    ;  | Draw sprite 
                       PLA                                 ;; 019B7F : 68          ;  | 
                       STA.B $64                           ;; 019B80 : 85 64       ; / 
@@ -3486,55 +3486,55 @@ GeneralSprGfxProp:    db $00,$00,$00,$00,$00,$40,$00,$40  ;; ?QPWZ?             
                       db $40,$00,$C0,$80,$40,$40,$40,$40  ;; ?QPWZ?               ;
                                                           ;;                      ;
 SubSprGfx0Entry0:     LDY.B #$00                          ;; ?QPWZ? : A0 00       ;
-SubSprGfx0Entry1:     STA.B $05                           ;; ?QPWZ? : 85 05       ;
-                      STY.B $0F                           ;; 019CF7 : 84 0F       ;
+SubSprGfx0Entry1:     STA.B !_5                           ;; ?QPWZ? : 85 05       ;
+                      STY.B !_F                           ;; 019CF7 : 84 0F       ;
                       JSR GetDrawInfoBnk1                 ;; 019CF9 : 20 65 A3    ;
-                      LDY.B $0F                           ;; 019CFC : A4 0F       ;
+                      LDY.B !_F                           ;; 019CFC : A4 0F       ;
                       TYA                                 ;; 019CFE : 98          ;
                       CLC                                 ;; 019CFF : 18          ;
-                      ADC.B $01                           ;; 019D00 : 65 01       ;
-                      STA.B $01                           ;; 019D02 : 85 01       ;
+                      ADC.B !_1                           ;; 019D00 : 65 01       ;
+                      STA.B !_1                           ;; 019D02 : 85 01       ;
                       LDY.B $9E,X                         ;; 019D04 : B4 9E       ;
                       LDA.W $1602,X                       ;; 019D06 : BD 02 16    ;
                       ASL A                               ;; 019D09 : 0A          ;
                       ASL A                               ;; 019D0A : 0A          ;
                       ADC.W SprTilemapOffset,Y            ;; 019D0B : 79 7F 9C    ;
-                      STA.B $02                           ;; 019D0E : 85 02       ;
+                      STA.B !_2                           ;; 019D0E : 85 02       ;
                       LDA.W $15F6,X                       ;; 019D10 : BD F6 15    ;
                       ORA.B $64                           ;; 019D13 : 05 64       ;
-                      STA.B $03                           ;; 019D15 : 85 03       ;
+                      STA.B !_3                           ;; 019D15 : 85 03       ;
                       LDY.W $15EA,X                       ;; 019D17 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B #$03                          ;; 019D1A : A9 03       ;
-                      STA.B $04                           ;; 019D1C : 85 04       ;
+                      STA.B !_4                           ;; 019D1C : 85 04       ;
                       PHX                                 ;; 019D1E : DA          ;
-CODE_019D1F:          LDX.B $04                           ;; 019D1F : A6 04       ;
-                      LDA.B $00                           ;; 019D21 : A5 00       ;
+CODE_019D1F:          LDX.B !_4                           ;; 019D1F : A6 04       ;
+                      LDA.B !_0                           ;; 019D21 : A5 00       ;
                       CLC                                 ;; 019D23 : 18          ;
                       ADC.W GeneralSprDispX,X             ;; 019D24 : 7D D3 9C    ;
                       STA.W $0300,Y                       ;; 019D27 : 99 00 03    ;
-                      LDA.B $01                           ;; 019D2A : A5 01       ;
+                      LDA.B !_1                           ;; 019D2A : A5 01       ;
                       CLC                                 ;; 019D2C : 18          ;
                       ADC.W GeneralSprDispY,X             ;; 019D2D : 7D D7 9C    ;
                       STA.W $0301,Y                       ;; 019D30 : 99 01 03    ;
-                      LDA.B $02                           ;; 019D33 : A5 02       ;
+                      LDA.B !_2                           ;; 019D33 : A5 02       ;
                       CLC                                 ;; 019D35 : 18          ;
-                      ADC.B $04                           ;; 019D36 : 65 04       ;
+                      ADC.B !_4                           ;; 019D36 : 65 04       ;
                       TAX                                 ;; 019D38 : AA          ;
                       LDA.W SprTilemap,X                  ;; 019D39 : BD 83 9B    ;
                       STA.W $0302,Y                       ;; 019D3C : 99 02 03    ;
-                      LDA.B $05                           ;; 019D3F : A5 05       ;
+                      LDA.B !_5                           ;; 019D3F : A5 05       ;
                       ASL A                               ;; 019D41 : 0A          ;
                       ASL A                               ;; 019D42 : 0A          ;
-                      ADC.B $04                           ;; 019D43 : 65 04       ;
+                      ADC.B !_4                           ;; 019D43 : 65 04       ;
                       TAX                                 ;; 019D45 : AA          ;
                       LDA.W GeneralSprGfxProp,X           ;; 019D46 : BD DB 9C    ;
-                      ORA.B $03                           ;; 019D49 : 05 03       ;
+                      ORA.B !_3                           ;; 019D49 : 05 03       ;
                       STA.W $0303,Y                       ;; 019D4B : 99 03 03    ;
                       INY                                 ;; 019D4E : C8          ;
                       INY                                 ;; 019D4F : C8          ;
                       INY                                 ;; 019D50 : C8          ;
                       INY                                 ;; 019D51 : C8          ;
-                      DEC.B $04                           ;; 019D52 : C6 04       ;
+                      DEC.B !_4                           ;; 019D52 : C6 04       ;
                       BPL CODE_019D1F                     ;; 019D54 : 10 C9       ;
                       PLX                                 ;; 019D56 : FA          ;
                       LDA.B #$03                          ;; 019D57 : A9 03       ;
@@ -3556,7 +3556,7 @@ SubSprGfx1:           LDA.W $15F6,X                       ;; ?QPWZ? : BD F6 15  
                                                           ;;                      ;
 SubSprGfx1Hlpr0:      JSR GetDrawInfoBnk1                 ;; ?QPWZ? : 20 65 A3    ;
                       LDA.W $157C,X                       ;; 019D73 : BD 7C 15    ;
-                      STA.B $02                           ;; 019D76 : 85 02       ;
+                      STA.B !_2                           ;; 019D76 : 85 02       ;
                       TYA                                 ;; 019D78 : 98          ;
                       LDY.B $9E,X                         ;; 019D79 : B4 9E       ;
                       CPY.B #$0F                          ;; 019D7B : C0 0F       ;
@@ -3576,12 +3576,12 @@ CODE_019D81:          TAY                                 ;; 019D81 : A8        
                       LDA.W SprTilemap+1,X                ;; 019D95 : BD 84 9B    ;
                       STA.W $0306,Y                       ;; 019D98 : 99 06 03    ;
                       LDX.W $15E9                         ;; 019D9B : AE E9 15    ; X = Sprite index 
-                      LDA.B $01                           ;; 019D9E : A5 01       ;
+                      LDA.B !_1                           ;; 019D9E : A5 01       ;
                       STA.W $0301,Y                       ;; 019DA0 : 99 01 03    ;
                       CLC                                 ;; 019DA3 : 18          ;
                       ADC.B #$10                          ;; 019DA4 : 69 10       ;
                       STA.W $0305,Y                       ;; 019DA6 : 99 05 03    ;
-CODE_019DA9:          LDA.B $00                           ;; 019DA9 : A5 00       ;
+CODE_019DA9:          LDA.B !_0                           ;; 019DA9 : A5 00       ;
                       STA.W $0300,Y                       ;; 019DAB : 99 00 03    ;
                       STA.W $0304,Y                       ;; 019DAE : 99 04 03    ;
                       LDA.W $157C,X                       ;; 019DB1 : BD 7C 15    ;
@@ -3606,7 +3606,7 @@ CODE_019DBE:          ORA.B $64                           ;; 019DBE : 05 64     
                                                           ;;                      ;
 SubSprGfx1Hlpr1:      JSR GetDrawInfoBnk1                 ;; ?QPWZ? : 20 65 A3    ;
                       LDA.W $157C,X                       ;; 019DDC : BD 7C 15    ;
-                      STA.B $02                           ;; 019DDF : 85 02       ;
+                      STA.B !_2                           ;; 019DDF : 85 02       ;
                       TYA                                 ;; 019DE1 : 98          ;
                       CLC                                 ;; 019DE2 : 18          ;
                       ADC.B #$08                          ;; 019DE3 : 69 08       ;
@@ -3624,7 +3624,7 @@ SubSprGfx1Hlpr1:      JSR GetDrawInfoBnk1                 ;; ?QPWZ? : 20 65 A3  
                       LDA.W SprTilemap+1,X                ;; 019DF9 : BD 84 9B    ;
                       STA.W $0302,Y                       ;; 019DFC : 99 02 03    ;
                       LDX.W $15E9                         ;; 019DFF : AE E9 15    ; X = Sprite index 
-                      LDA.B $01                           ;; 019E02 : A5 01       ;
+                      LDA.B !_1                           ;; 019E02 : A5 01       ;
                       STA.W $0301,Y                       ;; 019E04 : 99 01 03    ;
                       CLC                                 ;; 019E07 : 18          ;
                       ADC.B #$10                          ;; 019E08 : 69 10       ;
@@ -3650,38 +3650,38 @@ KoopaWingGfxRt:       LDY.B #$00                          ;; ?QPWZ? : A0 00     
                       LDA.W $1602,X                       ;; 019E2F : BD 02 16    ;  | 
                       AND.B #$01                          ;; 019E32 : 29 01       ;  | 
                       TAY                                 ;; 019E34 : A8          ;  | 
-CODE_019E35:          STY.B $02                           ;; 019E35 : 84 02       ; / 
+CODE_019E35:          STY.B !_2                           ;; 019E35 : 84 02       ; / 
 CODE_019E37:          LDA.W $186C,X                       ;; 019E37 : BD 6C 18    ; \ Return if offscreen vertically 
                       BNE Return019E94                    ;; 019E3A : D0 58       ; / 
                       LDA.B $E4,X                         ;; 019E3C : B5 E4       ; \ $00 = X position low 
-                      STA.B $00                           ;; 019E3E : 85 00       ; / 
+                      STA.B !_0                           ;; 019E3E : 85 00       ; / 
                       LDA.W $14E0,X                       ;; 019E40 : BD E0 14    ; \ $04 = X position high 
-                      STA.B $04                           ;; 019E43 : 85 04       ; / 
+                      STA.B !_4                           ;; 019E43 : 85 04       ; / 
                       LDA.B $D8,X                         ;; 019E45 : B5 D8       ; \ $01 = Y position low 
-                      STA.B $01                           ;; 019E47 : 85 01       ; / 
+                      STA.B !_1                           ;; 019E47 : 85 01       ; / 
                       LDY.W $15EA,X                       ;; 019E49 : BC EA 15    ; Y = index to OAM 
                       PHX                                 ;; 019E4C : DA          ;
                       LDA.W $157C,X                       ;; 019E4D : BD 7C 15    ; \ X = index into tables 
                       ASL A                               ;; 019E50 : 0A          ;  | 
-                      ADC.B $02                           ;; 019E51 : 65 02       ;  | 
+                      ADC.B !_2                           ;; 019E51 : 65 02       ;  | 
                       TAX                                 ;; 019E53 : AA          ; / 
-                      LDA.B $00                           ;; 019E54 : A5 00       ; \ Store X position (relative to screen) 
+                      LDA.B !_0                           ;; 019E54 : A5 00       ; \ Store X position (relative to screen) 
                       CLC                                 ;; 019E56 : 18          ;  | 
                       ADC.W KoopaWingDispXLo,X            ;; 019E57 : 7D 10 9E    ;  | 
-                      STA.B $00                           ;; 019E5A : 85 00       ;  | 
-                      LDA.B $04                           ;; 019E5C : A5 04       ;  | 
+                      STA.B !_0                           ;; 019E5A : 85 00       ;  | 
+                      LDA.B !_4                           ;; 019E5C : A5 04       ;  | 
                       ADC.W KoopaWingDispXHi,X            ;; 019E5E : 7D 14 9E    ;  | 
                       PHA                                 ;; 019E61 : 48          ;  | 
-                      LDA.B $00                           ;; 019E62 : A5 00       ;  | 
+                      LDA.B !_0                           ;; 019E62 : A5 00       ;  | 
                       SEC                                 ;; 019E64 : 38          ;  | 
-                      SBC.B $1A                           ;; 019E65 : E5 1A       ;  | 
+                      SBC.B !Layer1XPos                   ;; 019E65 : E5 1A       ;  | 
                       STA.W $0300,Y                       ;; 019E67 : 99 00 03    ; / 
                       PLA                                 ;; 019E6A : 68          ; \ Return if off screen horizontally 
-                      SBC.B $1B                           ;; 019E6B : E5 1B       ;  | 
+                      SBC.B !Layer1XPos+1                 ;; 019E6B : E5 1B       ;  | 
                       BNE CODE_019E93                     ;; 019E6D : D0 24       ; / 
-                      LDA.B $01                           ;; 019E6F : A5 01       ; \ Store Y position (relative to screen) 
+                      LDA.B !_1                           ;; 019E6F : A5 01       ; \ Store Y position (relative to screen) 
                       SEC                                 ;; 019E71 : 38          ;  | 
-                      SBC.B $1C                           ;; 019E72 : E5 1C       ;  | 
+                      SBC.B !Layer1YPos                   ;; 019E72 : E5 1C       ;  | 
                       CLC                                 ;; 019E74 : 18          ;  | 
                       ADC.W KoopaWingDispY,X              ;; 019E75 : 7D 18 9E    ;  | 
                       STA.W $0301,Y                       ;; 019E78 : 99 01 03    ; / 
@@ -3759,13 +3759,13 @@ CODE_019E95:          LDA.B $D8,X                         ;; 019E95 : B5 D8     
                       STA.B $D8,X                         ;; 019F06 : 95 D8       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-SubSprGfx2Entry0:     STA.B $04                           ;; ?QPWZ? : 85 04       ;
+SubSprGfx2Entry0:     STA.B !_4                           ;; ?QPWZ? : 85 04       ;
                       BRA CODE_019F0F                     ;; 019F0B : 80 02       ;
                                                           ;;                      ;
-SubSprGfx2Entry1:     STZ.B $04                           ;; ?QPWZ? : 64 04       ;
+SubSprGfx2Entry1:     STZ.B !_4                           ;; ?QPWZ? : 64 04       ;
 CODE_019F0F:          JSR GetDrawInfoBnk1                 ;; 019F0F : 20 65 A3    ;
                       LDA.W $157C,X                       ;; 019F12 : BD 7C 15    ;
-                      STA.B $02                           ;; 019F15 : 85 02       ;
+                      STA.B !_2                           ;; 019F15 : 85 02       ;
                       LDY.B $9E,X                         ;; 019F17 : B4 9E       ;
                       LDA.W $1602,X                       ;; 019F19 : BD 02 16    ;
                       CLC                                 ;; 019F1C : 18          ;
@@ -3775,9 +3775,9 @@ CODE_019F0F:          JSR GetDrawInfoBnk1                 ;; 019F0F : 20 65 A3  
                       LDA.W SprTilemap,X                  ;; 019F24 : BD 83 9B    ;
                       STA.W $0302,Y                       ;; 019F27 : 99 02 03    ;
                       LDX.W $15E9                         ;; 019F2A : AE E9 15    ; X = Sprite index 
-                      LDA.B $00                           ;; 019F2D : A5 00       ;
+                      LDA.B !_0                           ;; 019F2D : A5 00       ;
                       STA.W $0300,Y                       ;; 019F2F : 99 00 03    ;
-                      LDA.B $01                           ;; 019F32 : A5 01       ;
+                      LDA.B !_1                           ;; 019F32 : A5 01       ;
                       STA.W $0301,Y                       ;; 019F34 : 99 01 03    ;
                       LDA.W $157C,X                       ;; 019F37 : BD 7C 15    ;
                       LSR A                               ;; 019F3A : 4A          ;
@@ -3785,7 +3785,7 @@ CODE_019F0F:          JSR GetDrawInfoBnk1                 ;; 019F0F : 20 65 A3  
                       ORA.W $15F6,X                       ;; 019F3D : 1D F6 15    ;
                       BCS CODE_019F44                     ;; 019F40 : B0 02       ;
                       EOR.B #$40                          ;; 019F42 : 49 40       ;
-CODE_019F44:          ORA.B $04                           ;; 019F44 : 05 04       ;
+CODE_019F44:          ORA.B !_4                           ;; 019F44 : 05 04       ;
                       ORA.B $64                           ;; 019F46 : 05 64       ;
                       STA.W $0303,Y                       ;; 019F48 : 99 03 03    ;
                       TYA                                 ;; 019F4B : 98          ;
@@ -3834,7 +3834,7 @@ DATA_019F99:          db $FC,$04                          ;; 019F99             
 CODE_019F9B:          LDA.B $9E,X                         ;; 019F9B : B5 9E       ; \ Branch if not Balloon 
                       CMP.B #$7D                          ;; 019F9D : C9 7D       ;  | 
                       BNE CODE_019FE0                     ;; 019F9F : D0 3F       ; / 
-                      LDA.B $13                           ;; 019FA1 : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 019FA1 : A5 13       ;
                       AND.B #$03                          ;; 019FA3 : 29 03       ;
                       BNE CODE_019FBE                     ;; 019FA5 : D0 17       ;
                       DEC.W $1891                         ;; 019FA7 : CE 91 18    ;
@@ -3886,7 +3886,7 @@ CODE_01A002:          JSR CODE_019624                     ;; 01A002 : 20 24 96  
                       JSR SubSprSprInteract               ;; 01A005 : 20 0D A4    ;
                       LDA.W $1419                         ;; 01A008 : AD 19 14    ;
                       BNE CODE_01A011                     ;; 01A00B : D0 04       ;
-                      BIT.B $15                           ;; 01A00D : 24 15       ;
+                      BIT.B !byetudlrHold                 ;; 01A00D : 24 15       ;
                       BVC CODE_01A015                     ;; 01A00F : 50 04       ;
 CODE_01A011:          JSR CODE_01A0B1                     ;; 01A011 : 20 B1 A0    ;
 Return01A014:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -3902,18 +3902,18 @@ CODE_01A015:          STZ.W $1626,X                       ;; 01A015 : 9E 26 16  
 CODE_01A026:          STY.B $AA,X                         ;; 01A026 : 94 AA       ;
                       LDA.B #$09                          ;; 01A028 : A9 09       ; \ Sprite status = Carryable 
                       STA.W $14C8,X                       ;; 01A02A : 9D C8 14    ; / 
-                      LDA.B $15                           ;; 01A02D : A5 15       ;
+                      LDA.B !byetudlrHold                 ;; 01A02D : A5 15       ;
                       AND.B #$08                          ;; 01A02F : 29 08       ;
                       BNE CODE_01A068                     ;; 01A031 : D0 35       ;
                       LDA.B $9E,X                         ;; 01A033 : B5 9E       ; \ Branch if sprite >= #$15 
                       CMP.B #$15                          ;; 01A035 : C9 15       ;  | 
                       BCS CODE_01A041                     ;; 01A037 : B0 08       ; / 
-                      LDA.B $15                           ;; 01A039 : A5 15       ;
+                      LDA.B !byetudlrHold                 ;; 01A039 : A5 15       ;
                       AND.B #$04                          ;; 01A03B : 29 04       ;
                       BEQ CODE_01A079                     ;; 01A03D : F0 3A       ;
                       BRA CODE_01A047                     ;; 01A03F : 80 06       ;
                                                           ;;                      ;
-CODE_01A041:          LDA.B $15                           ;; 01A041 : A5 15       ;
+CODE_01A041:          LDA.B !byetudlrHold                 ;; 01A041 : A5 15       ;
                       AND.B #$03                          ;; 01A043 : 29 03       ;
                       BNE CODE_01A079                     ;; 01A045 : D0 32       ;
 CODE_01A047:          LDY.B $76                           ;; 01A047 : A4 76       ;
@@ -3956,8 +3956,8 @@ CODE_01A090:          LDA.W ShellSpeedX,Y                 ;; 01A090 : B9 6B 9F  
                       EOR.B $7B                           ;; 01A095 : 45 7B       ;
                       BMI CODE_01A0A6                     ;; 01A097 : 30 0D       ;
                       LDA.B $7B                           ;; 01A099 : A5 7B       ;
-                      STA.B $00                           ;; 01A09B : 85 00       ;
-                      ASL.B $00                           ;; 01A09D : 06 00       ;
+                      STA.B !_0                           ;; 01A09B : 85 00       ;
+                      ASL.B !_0                           ;; 01A09D : 06 00       ;
                       ROR A                               ;; 01A09F : 6A          ;
                       CLC                                 ;; 01A0A0 : 18          ;
                       ADC.W ShellSpeedX,Y                 ;; 01A0A1 : 79 6B 9F    ;
@@ -3994,34 +3994,34 @@ CODE_01A0D6:          PHY                                 ;; 01A0D6 : 5A        
                       BEQ CODE_01A0E2                     ;; 01A0DE : F0 02       ;
                       LDY.B #$3D                          ;; 01A0E0 : A0 3D       ;
 CODE_01A0E2:          LDA.W $0094,Y                       ;; 01A0E2 : B9 94 00    ; \ $00 = Mario's X position 
-                      STA.B $00                           ;; 01A0E5 : 85 00       ;  | 
+                      STA.B !_0                           ;; 01A0E5 : 85 00       ;  | 
                       LDA.W $0095,Y                       ;; 01A0E7 : B9 95 00    ;  | 
-                      STA.B $01                           ;; 01A0EA : 85 01       ; / 
+                      STA.B !_1                           ;; 01A0EA : 85 01       ; / 
                       LDA.W $0096,Y                       ;; 01A0EC : B9 96 00    ; \ $02 = Mario's Y position 
-                      STA.B $02                           ;; 01A0EF : 85 02       ;  | 
+                      STA.B !_2                           ;; 01A0EF : 85 02       ;  | 
                       LDA.W $0097,Y                       ;; 01A0F1 : B9 97 00    ;  | 
-                      STA.B $03                           ;; 01A0F4 : 85 03       ; / 
+                      STA.B !_3                           ;; 01A0F4 : 85 03       ; / 
                       PLY                                 ;; 01A0F6 : 7A          ;
-                      LDA.B $00                           ;; 01A0F7 : A5 00       ;
+                      LDA.B !_0                           ;; 01A0F7 : A5 00       ;
                       CLC                                 ;; 01A0F9 : 18          ;
                       ADC.W DATA_019F5B,Y                 ;; 01A0FA : 79 5B 9F    ;
                       STA.B $E4,X                         ;; 01A0FD : 95 E4       ;
-                      LDA.B $01                           ;; 01A0FF : A5 01       ;
+                      LDA.B !_1                           ;; 01A0FF : A5 01       ;
                       ADC.W DATA_019F61,Y                 ;; 01A101 : 79 61 9F    ;
                       STA.W $14E0,X                       ;; 01A104 : 9D E0 14    ;
                       LDA.B #$0D                          ;; 01A107 : A9 0D       ;
                       LDY.B $73                           ;; 01A109 : A4 73       ; \ Branch if ducking 
                       BNE CODE_01A111                     ;; 01A10B : D0 04       ; / 
-                      LDY.B $19                           ;; 01A10D : A4 19       ; \ Branch if Mario isn't small 
+                      LDY.B !Powerup                      ;; 01A10D : A4 19       ; \ Branch if Mario isn't small 
                       BNE CODE_01A113                     ;; 01A10F : D0 02       ; / 
 CODE_01A111:          LDA.B #$0F                          ;; 01A111 : A9 0F       ;
 CODE_01A113:          LDY.W $1498                         ;; 01A113 : AC 98 14    ;
                       BEQ CODE_01A11A                     ;; 01A116 : F0 02       ;
                       LDA.B #$0F                          ;; 01A118 : A9 0F       ;
 CODE_01A11A:          CLC                                 ;; 01A11A : 18          ;
-                      ADC.B $02                           ;; 01A11B : 65 02       ;
+                      ADC.B !_2                           ;; 01A11B : 65 02       ;
                       STA.B $D8,X                         ;; 01A11D : 95 D8       ;
-                      LDA.B $03                           ;; 01A11F : A5 03       ;
+                      LDA.B !_3                           ;; 01A11F : A5 03       ;
                       ADC.B #$00                          ;; 01A121 : 69 00       ;
                       STA.W $14D4,X                       ;; 01A123 : 9D D4 14    ;
                       LDA.B #$01                          ;; 01A126 : A9 01       ;
@@ -4029,7 +4029,7 @@ CODE_01A11A:          CLC                                 ;; 01A11A : 18        
                       STA.W $1470                         ;; 01A12B : 8D 70 14    ; Set carrying enemy flag 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-StunGoomba:           LDA.B $14                           ;; ?QPWZ? : A5 14       ;
+StunGoomba:           LDA.B !EffFrame                     ;; ?QPWZ? : A5 14       ;
                       LSR A                               ;; 01A131 : 4A          ;
                       LSR A                               ;; 01A132 : 4A          ;
                       LDY.W $1540,X                       ;; 01A133 : BC 40 15    ;
@@ -4047,17 +4047,17 @@ CODE_01A13B:          AND.B #$01                          ;; 01A13B : 29 01     
 CODE_01A14D:          LDA.B #$80                          ;; 01A14D : A9 80       ;
                       JMP SubSprGfx2Entry0                ;; 01A14F : 4C 09 9F    ;
                                                           ;;                      ;
-StunMechaKoopa:       LDA.B $1A                           ;; ?QPWZ? : A5 1A       ;
+StunMechaKoopa:       LDA.B !Layer1XPos                   ;; ?QPWZ? : A5 1A       ;
                       PHA                                 ;; 01A154 : 48          ;
                       LDA.W $1540,X                       ;; 01A155 : BD 40 15    ;
                       CMP.B #$30                          ;; 01A158 : C9 30       ;
                       BCS CODE_01A162                     ;; 01A15A : B0 06       ;
                       AND.B #$01                          ;; 01A15C : 29 01       ;
-                      EOR.B $1A                           ;; 01A15E : 45 1A       ;
-                      STA.B $1A                           ;; 01A160 : 85 1A       ;
+                      EOR.B !Layer1XPos                   ;; 01A15E : 45 1A       ;
+                      STA.B !Layer1XPos                   ;; 01A160 : 85 1A       ;
 CODE_01A162:          JSL CODE_03B307                     ;; 01A162 : 22 07 B3 03 ;
                       PLA                                 ;; 01A166 : 68          ;
-                      STA.B $1A                           ;; 01A167 : 85 1A       ;
+                      STA.B !Layer1XPos                   ;; 01A167 : 85 1A       ;
 CODE_01A169:          LDA.W $14C8,X                       ;; 01A169 : BD C8 14    ; \ If sprite status == Carried, 
                       CMP.B #$0B                          ;; 01A16C : C9 0B       ;  | 
                       BNE Return01A177                    ;; 01A16E : D0 07       ;  | 
@@ -4162,17 +4162,17 @@ StunBabyYoshi:        LDA.B $9D                           ;; ?QPWZ? : A5 9D     
                       LDA.B $E4,X                         ;; 01A230 : B5 E4       ;
                       CLC                                 ;; 01A232 : 18          ;
                       ADC.B #$08                          ;; 01A233 : 69 08       ;
-                      STA.B $00                           ;; 01A235 : 85 00       ;
+                      STA.B !_0                           ;; 01A235 : 85 00       ;
                       LDA.W $14E0,X                       ;; 01A237 : BD E0 14    ;
                       ADC.B #$00                          ;; 01A23A : 69 00       ;
-                      STA.B $08                           ;; 01A23C : 85 08       ;
+                      STA.B !_8                           ;; 01A23C : 85 08       ;
                       LDA.B $D8,X                         ;; 01A23E : B5 D8       ;
                       CLC                                 ;; 01A240 : 18          ;
                       ADC.B #$08                          ;; 01A241 : 69 08       ;
-                      STA.B $01                           ;; 01A243 : 85 01       ;
+                      STA.B !_1                           ;; 01A243 : 85 01       ;
                       LDA.W $14D4,X                       ;; 01A245 : BD D4 14    ;
                       ADC.B #$00                          ;; 01A248 : 69 00       ;
-                      STA.B $09                           ;; 01A24A : 85 09       ;
+                      STA.B !_9                           ;; 01A24A : 85 09       ;
                       JSL CODE_02B9FA                     ;; 01A24C : 22 FA B9 02 ;
                       JSL CODE_02EA4E                     ;; 01A250 : 22 4E EA 02 ;
                       LDA.W $163E,X                       ;; 01A254 : BD 3E 16    ;
@@ -4187,7 +4187,7 @@ StunBabyYoshi:        LDA.B $9D                           ;; ?QPWZ? : A5 9D     
                       LDA.B #$F0                          ;; 01A269 : A9 F0       ;
                       STA.B $AA,X                         ;; 01A26B : 95 AA       ;
 CODE_01A26D:          LDY.B #$00                          ;; 01A26D : A0 00       ;
-                      LDA.B $14                           ;; 01A26F : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01A26F : A5 14       ;
                       AND.B #$18                          ;; 01A271 : 29 18       ;
                       BNE CODE_01A277                     ;; 01A273 : D0 02       ;
                       LDY.B #$03                          ;; 01A275 : A0 03       ;
@@ -4210,7 +4210,7 @@ CODE_01A288:          LDY.W $160E,X                       ;; 01A288 : BC 0E 16  
                       LDA.W $009E,Y                       ;; 01A29A : B9 9E 00    ; \ Branch if not Changing power up 
                       CMP.B #$81                          ;; 01A29D : C9 81       ;  | 
                       BNE CODE_01A2AD                     ;; 01A29F : D0 0C       ; / 
-                      LDA.B $14                           ;; 01A2A1 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01A2A1 : A5 14       ;
                       LSR A                               ;; 01A2A3 : 4A          ;
                       LSR A                               ;; 01A2A4 : 4A          ;
                       LSR A                               ;; 01A2A5 : 4A          ;
@@ -4265,7 +4265,7 @@ CODE_01A30A:          LDA.W $163E,X                       ;; 01A30A : BD 3E 16  
                       TAY                                 ;; 01A310 : A8          ;
                       LDA.W DATA_01A35A,Y                 ;; 01A311 : B9 5A A3    ;
                       STA.W $1602,X                       ;; 01A314 : 9D 02 16    ;
-                      STZ.B $01                           ;; 01A317 : 64 01       ;
+                      STZ.B !_1                           ;; 01A317 : 64 01       ;
                       LDA.W $163E,X                       ;; 01A319 : BD 3E 16    ;
                       CMP.B #$20                          ;; 01A31C : C9 20       ;
                       BCC CODE_01A34F                     ;; 01A31E : 90 2F       ;
@@ -4276,13 +4276,13 @@ CODE_01A30A:          LDA.W $163E,X                       ;; 01A30A : BD 3E 16  
                       BEQ CODE_01A32E                     ;; 01A327 : F0 05       ;
                       EOR.B #$FF                          ;; 01A329 : 49 FF       ;
                       INC A                               ;; 01A32B : 1A          ;
-                      DEC.B $01                           ;; 01A32C : C6 01       ;
+                      DEC.B !_1                           ;; 01A32C : C6 01       ;
 CODE_01A32E:          LDY.W $160E,X                       ;; 01A32E : BC 0E 16    ;
                       CLC                                 ;; 01A331 : 18          ;
                       ADC.B $E4,X                         ;; 01A332 : 75 E4       ;
                       STA.W $00E4,Y                       ;; 01A334 : 99 E4 00    ;
                       LDA.W $14E0,X                       ;; 01A337 : BD E0 14    ;
-                      ADC.B $01                           ;; 01A33A : 65 01       ;
+                      ADC.B !_1                           ;; 01A33A : 65 01       ;
                       STA.W $14E0,Y                       ;; 01A33C : 99 E0 14    ;
                       LDA.B $D8,X                         ;; 01A33F : B5 D8       ;
                       SEC                                 ;; 01A341 : 38          ;
@@ -4306,9 +4306,9 @@ DATA_01A363:          db $01,$02                          ;; 01A363             
 GetDrawInfoBnk1:      STZ.W $186C,X                       ;; ?QPWZ? : 9E 6C 18    ;
                       STZ.W $15A0,X                       ;; 01A368 : 9E A0 15    ;
                       LDA.B $E4,X                         ;; 01A36B : B5 E4       ;
-                      CMP.B $1A                           ;; 01A36D : C5 1A       ;
+                      CMP.B !Layer1XPos                   ;; 01A36D : C5 1A       ;
                       LDA.W $14E0,X                       ;; 01A36F : BD E0 14    ;
-                      SBC.B $1B                           ;; 01A372 : E5 1B       ;
+                      SBC.B !Layer1XPos+1                 ;; 01A372 : E5 1B       ;
                       BEQ CODE_01A379                     ;; 01A374 : F0 03       ;
                       INC.W $15A0,X                       ;; 01A376 : FE A0 15    ;
 CODE_01A379:          LDA.W $14E0,X                       ;; 01A379 : BD E0 14    ;
@@ -4316,7 +4316,7 @@ CODE_01A379:          LDA.W $14E0,X                       ;; 01A379 : BD E0 14  
                       LDA.B $E4,X                         ;; 01A37D : B5 E4       ;
                       REP #$20                            ;; 01A37F : C2 20       ; Accum (16 bit) 
                       SEC                                 ;; 01A381 : 38          ;
-                      SBC.B $1A                           ;; 01A382 : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01A382 : E5 1A       ;
                       CLC                                 ;; 01A384 : 18          ;
                       ADC.W #$0040                        ;; 01A385 : 69 40 00    ;
                       CMP.W #$0180                        ;; 01A388 : C9 80 01    ;
@@ -4337,13 +4337,13 @@ CODE_01A3A6:          LDA.B $D8,X                         ;; 01A3A6 : B5 D8     
                       CLC                                 ;; 01A3A8 : 18          ;
                       ADC.W DATA_01A361,Y                 ;; 01A3A9 : 79 61 A3    ;
                       PHP                                 ;; 01A3AC : 08          ;
-                      CMP.B $1C                           ;; 01A3AD : C5 1C       ;
-                      ROL.B $00                           ;; 01A3AF : 26 00       ;
+                      CMP.B !Layer1YPos                   ;; 01A3AD : C5 1C       ;
+                      ROL.B !_0                           ;; 01A3AF : 26 00       ;
                       PLP                                 ;; 01A3B1 : 28          ;
                       LDA.W $14D4,X                       ;; 01A3B2 : BD D4 14    ;
                       ADC.B #$00                          ;; 01A3B5 : 69 00       ;
-                      LSR.B $00                           ;; 01A3B7 : 46 00       ;
-                      SBC.B $1D                           ;; 01A3B9 : E5 1D       ;
+                      LSR.B !_0                           ;; 01A3B7 : 46 00       ;
+                      SBC.B !Layer1YPos+1                 ;; 01A3B9 : E5 1D       ;
                       BEQ CODE_01A3C6                     ;; 01A3BB : F0 09       ;
                       LDA.W $186C,X                       ;; 01A3BD : BD 6C 18    ;
                       ORA.W DATA_01A363,Y                 ;; 01A3C0 : 19 63 A3    ;
@@ -4357,12 +4357,12 @@ CODE_01A3CB:          PLA                                 ;; 01A3CB : 68        
 CODE_01A3CD:          LDY.W $15EA,X                       ;; 01A3CD : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B $E4,X                         ;; 01A3D0 : B5 E4       ;
                       SEC                                 ;; 01A3D2 : 38          ;
-                      SBC.B $1A                           ;; 01A3D3 : E5 1A       ;
-                      STA.B $00                           ;; 01A3D5 : 85 00       ;
+                      SBC.B !Layer1XPos                   ;; 01A3D3 : E5 1A       ;
+                      STA.B !_0                           ;; 01A3D5 : 85 00       ;
                       LDA.B $D8,X                         ;; 01A3D7 : B5 D8       ;
                       SEC                                 ;; 01A3D9 : 38          ;
-                      SBC.B $1C                           ;; 01A3DA : E5 1C       ;
-                      STA.B $01                           ;; 01A3DC : 85 01       ;
+                      SBC.B !Layer1YPos                   ;; 01A3DA : E5 1C       ;
+                      STA.B !_1                           ;; 01A3DC : 85 01       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01A3DF:          LDA.W $186C,X                       ;; 01A3DF : BD 6C 18    ;
@@ -4399,7 +4399,7 @@ DATA_01A40B:          db $02,$0A                          ;; 01A40B             
 SubSprSprInteract:    TXA                                 ;; ?QPWZ? : 8A          ;
                       BEQ Return01A40A                    ;; 01A40E : F0 FA       ;
                       TAY                                 ;; 01A410 : A8          ;
-                      EOR.B $13                           ;; 01A411 : 45 13       ; \ Return every other frame 
+                      EOR.B !TrueFrame                    ;; 01A411 : 45 13       ; \ Return every other frame 
                       LSR A                               ;; 01A413 : 4A          ;  | 
                       BCC Return01A40A                    ;; 01A414 : 90 F4       ; / 
                       DEX                                 ;; 01A416 : CA          ;
@@ -4419,17 +4419,17 @@ CODE_01A421:          LDA.W $1686,X                       ;; 01A421 : BD 86 16  
                       BNE CODE_01A4B0                     ;; 01A438 : D0 76       ;
                       STX.W $1695                         ;; 01A43A : 8E 95 16    ;
                       LDA.B $E4,X                         ;; 01A43D : B5 E4       ;
-                      STA.B $00                           ;; 01A43F : 85 00       ;
+                      STA.B !_0                           ;; 01A43F : 85 00       ;
                       LDA.W $14E0,X                       ;; 01A441 : BD E0 14    ;
-                      STA.B $01                           ;; 01A444 : 85 01       ;
+                      STA.B !_1                           ;; 01A444 : 85 01       ;
                       LDA.W $00E4,Y                       ;; 01A446 : B9 E4 00    ;
-                      STA.B $02                           ;; 01A449 : 85 02       ;
+                      STA.B !_2                           ;; 01A449 : 85 02       ;
                       LDA.W $14E0,Y                       ;; 01A44B : B9 E0 14    ;
-                      STA.B $03                           ;; 01A44E : 85 03       ;
+                      STA.B !_3                           ;; 01A44E : 85 03       ;
                       REP #$20                            ;; 01A450 : C2 20       ; Accum (16 bit) 
-                      LDA.B $00                           ;; 01A452 : A5 00       ;
+                      LDA.B !_0                           ;; 01A452 : A5 00       ;
                       SEC                                 ;; 01A454 : 38          ;
-                      SBC.B $02                           ;; 01A455 : E5 02       ;
+                      SBC.B !_2                           ;; 01A455 : E5 02       ;
                       CLC                                 ;; 01A457 : 18          ;
                       ADC.W #$0010                        ;; 01A458 : 69 10 00    ;
                       CMP.W #$0020                        ;; 01A45B : C9 20 00    ;
@@ -4443,10 +4443,10 @@ CODE_01A421:          LDA.W $1686,X                       ;; 01A421 : BD 86 16  
 CODE_01A46C:          LDA.B $D8,X                         ;; 01A46C : B5 D8       ;
                       CLC                                 ;; 01A46E : 18          ;
                       ADC.W DATA_01A40B,Y                 ;; 01A46F : 79 0B A4    ;
-                      STA.B $00                           ;; 01A472 : 85 00       ;
+                      STA.B !_0                           ;; 01A472 : 85 00       ;
                       LDA.W $14D4,X                       ;; 01A474 : BD D4 14    ;
                       ADC.B #$00                          ;; 01A477 : 69 00       ;
-                      STA.B $01                           ;; 01A479 : 85 01       ;
+                      STA.B !_1                           ;; 01A479 : 85 01       ;
                       LDY.W $15E9                         ;; 01A47B : AC E9 15    ; Y = Sprite index 
                       LDX.B #$00                          ;; 01A47E : A2 00       ;
                       LDA.W $1662,Y                       ;; 01A480 : B9 62 16    ;
@@ -4456,15 +4456,15 @@ CODE_01A46C:          LDA.B $D8,X                         ;; 01A46C : B5 D8     
 CODE_01A488:          LDA.W $00D8,Y                       ;; 01A488 : B9 D8 00    ;
                       CLC                                 ;; 01A48B : 18          ;
                       ADC.W DATA_01A40B,X                 ;; 01A48C : 7D 0B A4    ;
-                      STA.B $02                           ;; 01A48F : 85 02       ;
+                      STA.B !_2                           ;; 01A48F : 85 02       ;
                       LDA.W $14D4,Y                       ;; 01A491 : B9 D4 14    ;
                       ADC.B #$00                          ;; 01A494 : 69 00       ;
-                      STA.B $03                           ;; 01A496 : 85 03       ;
+                      STA.B !_3                           ;; 01A496 : 85 03       ;
                       LDX.W $1695                         ;; 01A498 : AE 95 16    ;
                       REP #$20                            ;; 01A49B : C2 20       ; Accum (16 bit) 
-                      LDA.B $00                           ;; 01A49D : A5 00       ;
+                      LDA.B !_0                           ;; 01A49D : A5 00       ;
                       SEC                                 ;; 01A49F : 38          ;
-                      SBC.B $02                           ;; 01A4A0 : E5 02       ;
+                      SBC.B !_2                           ;; 01A4A0 : E5 02       ;
                       CLC                                 ;; 01A4A2 : 18          ;
                       ADC.W #$000C                        ;; 01A4A3 : 69 0C 00    ;
                       CMP.W #$0018                        ;; 01A4A6 : C9 18 00    ;
@@ -4584,14 +4584,14 @@ CODE_01A56D:          LDA.B $E4,X                         ;; 01A56D : B5 E4     
                       SBC.W $14E0,Y                       ;; 01A576 : F9 E0 14    ;
                       ROL A                               ;; 01A579 : 2A          ;
                       AND.B #$01                          ;; 01A57A : 29 01       ;
-                      STA.B $00                           ;; 01A57C : 85 00       ;
+                      STA.B !_0                           ;; 01A57C : 85 00       ;
                       LDA.W $1686,Y                       ;; 01A57E : B9 86 16    ;
                       AND.B #$10                          ;; 01A581 : 29 10       ;
                       BNE CODE_01A5A1                     ;; 01A583 : D0 1C       ;
                       LDY.W $15E9                         ;; 01A585 : AC E9 15    ; Y = Sprite index 
                       LDA.W $157C,Y                       ;; 01A588 : B9 7C 15    ;
                       PHA                                 ;; 01A58B : 48          ;
-                      LDA.B $00                           ;; 01A58C : A5 00       ;
+                      LDA.B !_0                           ;; 01A58C : A5 00       ;
                       STA.W $157C,Y                       ;; 01A58E : 99 7C 15    ;
                       PLA                                 ;; 01A591 : 68          ;
                       CMP.W $157C,Y                       ;; 01A592 : D9 7C 15    ;
@@ -4605,7 +4605,7 @@ CODE_01A5A1:          LDA.W $1686,X                       ;; 01A5A1 : BD 86 16  
                       BNE Return01A5C3                    ;; 01A5A6 : D0 1B       ;
                       LDA.W $157C,X                       ;; 01A5A8 : BD 7C 15    ;
                       PHA                                 ;; 01A5AB : 48          ;
-                      LDA.B $00                           ;; 01A5AC : A5 00       ;
+                      LDA.B !_0                           ;; 01A5AC : A5 00       ;
                       EOR.B #$01                          ;; 01A5AE : 49 01       ;
                       STA.W $157C,X                       ;; 01A5B0 : 9D 7C 15    ;
                       PLA                                 ;; 01A5B3 : 68          ;
@@ -4757,7 +4757,7 @@ CODE_01A6CE:          STA.B $B6,X                         ;; 01A6CE : 95 B6     
                                                           ;;                      ;
 DATA_01A6D7:          db $30,$D0                          ;; 01A6D7               ;
                                                           ;;                      ;
-CODE_01A6D9:          STY.B $00                           ;; 01A6D9 : 84 00       ;
+CODE_01A6D9:          STY.B !_0                           ;; 01A6D9 : 84 00       ;
                       JSR IsOnGround                      ;; 01A6DB : 20 0E 80    ;
                       BEQ Return01A72D                    ;; 01A6DE : F0 4D       ;
                       LDA.W $1588,Y                       ;; 01A6E0 : B9 88 15    ; \ Branch if not on ground 
@@ -4769,18 +4769,18 @@ CODE_01A6D9:          STY.B $00                           ;; 01A6D9 : 84 00     
                       LDA.W $1558,Y                       ;; 01A6EE : B9 58 15    ;
                       ORA.W $1558,X                       ;; 01A6F1 : 1D 58 15    ;
                       BNE Return01A72D                    ;; 01A6F4 : D0 37       ;
-                      STZ.B $02                           ;; 01A6F6 : 64 02       ;
+                      STZ.B !_2                           ;; 01A6F6 : 64 02       ;
                       LDA.B $E4,X                         ;; 01A6F8 : B5 E4       ;
                       SEC                                 ;; 01A6FA : 38          ;
                       SBC.W $00E4,Y                       ;; 01A6FB : F9 E4 00    ;
                       BMI CODE_01A702                     ;; 01A6FE : 30 02       ;
-                      INC.B $02                           ;; 01A700 : E6 02       ;
+                      INC.B !_2                           ;; 01A700 : E6 02       ;
 CODE_01A702:          CLC                                 ;; 01A702 : 18          ;
                       ADC.B #$08                          ;; 01A703 : 69 08       ;
                       CMP.B #$10                          ;; 01A705 : C9 10       ;
                       BCC Return01A72D                    ;; 01A707 : 90 24       ;
                       LDA.W $157C,X                       ;; 01A709 : BD 7C 15    ;
-                      CMP.B $02                           ;; 01A70C : C5 02       ;
+                      CMP.B !_2                           ;; 01A70C : C5 02       ;
                       BNE Return01A72D                    ;; 01A70E : D0 1D       ;
                       LDA.B $9E,X                         ;; 01A710 : B5 9E       ; \ Branch if not Blue Shelless 
                       CMP.B #$02                          ;; 01A712 : C9 02       ;  | 
@@ -4846,22 +4846,22 @@ CODE_01A77C:          LDA.B $9E,X                         ;; 01A77C : B5 9E     
                       LDA.W $157C,X                       ;; 01A787 : BD 7C 15    ;
                       CMP.W $157C,Y                       ;; 01A78A : D9 7C 15    ;
                       BEQ CODE_01A7C2                     ;; 01A78D : F0 33       ;
-                      STY.B $01                           ;; 01A78F : 84 01       ;
+                      STY.B !_1                           ;; 01A78F : 84 01       ;
                       LDY.W $1534,X                       ;; 01A791 : BC 34 15    ;
                       BNE CODE_01A7C0                     ;; 01A794 : D0 2A       ;
                       STZ.W $1528,X                       ;; 01A796 : 9E 28 15    ;
                       STZ.W $163E,X                       ;; 01A799 : 9E 3E 16    ;
                       TAY                                 ;; 01A79C : A8          ;
-                      STY.B $00                           ;; 01A79D : 84 00       ;
+                      STY.B !_0                           ;; 01A79D : 84 00       ;
                       LDA.B $E4,X                         ;; 01A79F : B5 E4       ;
                       CLC                                 ;; 01A7A1 : 18          ;
                       ADC.W DATA_01A778,Y                 ;; 01A7A2 : 79 78 A7    ;
-                      LDY.B $01                           ;; 01A7A5 : A4 01       ;
+                      LDY.B !_1                           ;; 01A7A5 : A4 01       ;
                       STA.W $00E4,Y                       ;; 01A7A7 : 99 E4 00    ;
                       LDA.W $14E0,X                       ;; 01A7AA : BD E0 14    ;
-                      LDY.B $00                           ;; 01A7AD : A4 00       ;
+                      LDY.B !_0                           ;; 01A7AD : A4 00       ;
                       ADC.W DATA_01A77A,Y                 ;; 01A7AF : 79 7A A7    ;
-                      LDY.B $01                           ;; 01A7B2 : A4 01       ;
+                      LDY.B !_1                           ;; 01A7B2 : A4 01       ;
                       STA.W $14E0,Y                       ;; 01A7B4 : 99 E0 14    ;
                       TYA                                 ;; 01A7B7 : 98          ;
                       STA.W $160E,X                       ;; 01A7B8 : 9D 0E 16    ;
@@ -4891,7 +4891,7 @@ MarioSprInteractRt:   LDA.W $167A,X                       ;; ?QPWZ? : BD 7A 16  
                       AND.B #$20                          ;; 01A7E7 : 29 20       ;  | 
                       BNE ProcessInteract                 ;; 01A7E9 : D0 0C       ; / 
                       TXA                                 ;; 01A7EB : 8A          ; \ Otherwise, return every other frame 
-                      EOR.B $13                           ;; 01A7EC : 45 13       ;  | 
+                      EOR.B !TrueFrame                    ;; 01A7EC : 45 13       ;  | 
                       AND.B #$01                          ;; 01A7EE : 29 01       ;  | 
                       ORA.W $15A0,X                       ;; 01A7F0 : 1D A0 15    ;  | 
                       BEQ ProcessInteract                 ;; 01A7F3 : F0 02       ;  | 
@@ -4899,13 +4899,13 @@ ReturnNoContact:      CLC                                 ;; ?QPWZ? : 18        
                       RTS                                 ;; ?QPWZ? : 60          ; / 
                                                           ;;                      ;
 ProcessInteract:      JSR SubHorizPos                     ;; ?QPWZ? : 20 30 AD    ;
-                      LDA.B $0F                           ;; 01A7FA : A5 0F       ;
+                      LDA.B !_F                           ;; 01A7FA : A5 0F       ;
                       CLC                                 ;; 01A7FC : 18          ;
                       ADC.B #$50                          ;; 01A7FD : 69 50       ;
                       CMP.B #$A0                          ;; 01A7FF : C9 A0       ;
                       BCS ReturnNoContact                 ;; 01A801 : B0 F2       ; No contact, return 
                       JSR CODE_01AD42                     ;; 01A803 : 20 42 AD    ;
-                      LDA.B $0E                           ;; 01A806 : A5 0E       ;
+                      LDA.B !_E                           ;; 01A806 : A5 0E       ;
                       CLC                                 ;; 01A808 : 18          ;
                       ADC.B #$60                          ;; 01A809 : 69 60       ;
                       CMP.B #$C0                          ;; 01A80B : C9 C0       ;
@@ -4972,15 +4972,15 @@ CODE_01A895:          CLC                                 ;; 01A895 : 18        
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01A897:          LDA.B #$14                          ;; 01A897 : A9 14       ;
-                      STA.B $01                           ;; 01A899 : 85 01       ;
-                      LDA.B $05                           ;; 01A89B : A5 05       ;
+                      STA.B !_1                           ;; 01A899 : 85 01       ;
+                      LDA.B !_5                           ;; 01A89B : A5 05       ;
                       SEC                                 ;; 01A89D : 38          ;
-                      SBC.B $01                           ;; 01A89E : E5 01       ;
-                      ROL.B $00                           ;; 01A8A0 : 26 00       ;
+                      SBC.B !_1                           ;; 01A89E : E5 01       ;
+                      ROL.B !_0                           ;; 01A8A0 : 26 00       ;
                       CMP.B $D3                           ;; 01A8A2 : C5 D3       ;
                       PHP                                 ;; 01A8A4 : 08          ;
-                      LSR.B $00                           ;; 01A8A5 : 46 00       ;
-                      LDA.B $0B                           ;; 01A8A7 : A5 0B       ;
+                      LSR.B !_0                           ;; 01A8A5 : 46 00       ;
+                      LDA.B !_B                           ;; 01A8A7 : A5 0B       ;
                       SBC.B #$00                          ;; 01A8A9 : E9 00       ;
                       PLP                                 ;; 01A8AB : 28          ;
                       SBC.B $D4                           ;; 01A8AC : E5 D4       ;
@@ -5095,11 +5095,11 @@ CODE_01A998:          LDA.W SpriteToSpawn,Y               ;; 01A998 : B9 C9 A7  
 CODE_01A99B:          STA.B $9E,X                         ;; 01A99B : 95 9E       ;
                       LDA.W $15F6,X                       ;; 01A99D : BD F6 15    ;
                       AND.B #$0E                          ;; 01A9A0 : 29 0E       ;
-                      STA.B $0F                           ;; 01A9A2 : 85 0F       ;
+                      STA.B !_F                           ;; 01A9A2 : 85 0F       ;
                       JSL LoadSpriteTables                ;; 01A9A4 : 22 8B F7 07 ;
                       LDA.W $15F6,X                       ;; 01A9A8 : BD F6 15    ;
                       AND.B #$F1                          ;; 01A9AB : 29 F1       ;
-                      ORA.B $0F                           ;; 01A9AD : 05 0F       ;
+                      ORA.B !_F                           ;; 01A9AD : 05 0F       ;
                       STA.W $15F6,X                       ;; 01A9AF : 9D F6 15    ;
                       STZ.B $AA,X                         ;; 01A9B2 : 74 AA       ; Sprite Y Speed = 0 
                       LDA.B $9E,X                         ;; 01A9B4 : B5 9E       ;
@@ -5169,7 +5169,7 @@ SetAsStunned:         LDA.B #$09                          ;; ?QPWZ? : A9 09     
 BoostMarioSpeed:      LDA.B $74                           ;; ?QPWZ? : A5 74       ; \ Return if climbing 
                       BNE Return01AA41                    ;; 01AA35 : D0 0A       ; / 
                       LDA.B #$D0                          ;; 01AA37 : A9 D0       ;
-                      BIT.B $15                           ;; 01AA39 : 24 15       ;
+                      BIT.B !byetudlrHold                 ;; 01AA39 : 24 15       ;
                       BPL CODE_01AA3F                     ;; 01AA3B : 10 02       ;
                       LDA.B #$A8                          ;; 01AA3D : A9 A8       ;
 CODE_01AA3F:          STA.B $7D                           ;; 01AA3F : 85 7D       ;
@@ -5185,7 +5185,7 @@ CODE_01AA42:          LDA.W $140D                         ;; 01AA42 : AD 0D 14  
                       BEQ CODE_01AA58                     ;; 01AA53 : F0 03       ; / 
                       JMP CODE_01A924                     ;; 01AA55 : 4C 24 A9    ;
                                                           ;;                      ;
-CODE_01AA58:          LDA.B $15                           ;; 01AA58 : A5 15       ;
+CODE_01AA58:          LDA.B !byetudlrHold                 ;; 01AA58 : A5 15       ;
                       AND.B #$40                          ;; 01AA5A : 29 40       ;
                       BEQ CODE_01AA74                     ;; 01AA5C : F0 16       ;
                       LDA.W $1470                         ;; 01AA5E : AD 70 14    ; \ Branch if carrying an enemy... 
@@ -5252,10 +5252,10 @@ CODE_01AACD:          LDA.B $7D                           ;; 01AACD : A5 7D     
                       LDY.W $187A                         ;; 01AADA : AC 7A 18    ;
                       BEQ CODE_01AAE1                     ;; 01AADD : F0 02       ;
                       LDA.B #$2F                          ;; 01AADF : A9 2F       ;
-CODE_01AAE1:          STA.B $00                           ;; 01AAE1 : 85 00       ;
+CODE_01AAE1:          STA.B !_0                           ;; 01AAE1 : 85 00       ;
                       LDA.B $D8,X                         ;; 01AAE3 : B5 D8       ;
                       SEC                                 ;; 01AAE5 : 38          ;
-                      SBC.B $00                           ;; 01AAE6 : E5 00       ;
+                      SBC.B !_0                           ;; 01AAE6 : E5 00       ;
                       STA.B $96                           ;; 01AAE8 : 85 96       ;
                       LDA.W $14D4,X                       ;; 01AAEA : BD D4 14    ;
                       SBC.B #$00                          ;; 01AAED : E9 00       ;
@@ -5421,20 +5421,20 @@ SpriteOffScreen3:     db $30,$C0,$A0,$C0,$A0,$F0,$60,$90  ;; ?QPWZ?             
 SpriteOffScreen4:     db $01,$FF,$01,$FF,$01,$FF,$01,$FF  ;; ?QPWZ?               ;
                                                           ;;                      ;
 SubOffscreen3Bnk1:    LDA.B #$06                          ;; ?QPWZ? : A9 06       ; \ Entry point of routine determines value of $03 
-                      STA.B $03                           ;; 01AC23 : 85 03       ;  | 
+                      STA.B !_3                           ;; 01AC23 : 85 03       ;  | 
                       BRA CODE_01AC2D                     ;; 01AC25 : 80 06       ;  | 
                                                           ;;                      ;
 SubOffscreen2Bnk1:    LDA.B #$04                          ;; ?QPWZ? : A9 04       ;  | 
                       BRA CODE_01AC2D                     ;; 01AC29 : 80 02       ;  | 
                                                           ;;                      ;
 SubOffscreen1Bnk1:    LDA.B #$02                          ;; ?QPWZ? : A9 02       ;  | 
-CODE_01AC2D:          STA.B $03                           ;; 01AC2D : 85 03       ;  | 
+CODE_01AC2D:          STA.B !_3                           ;; 01AC2D : 85 03       ;  | 
                       BRA CODE_01AC33                     ;; 01AC2F : 80 02       ;  | 
                                                           ;;                      ;
-SubOffscreen0Bnk1:    STZ.B $03                           ;; ?QPWZ? : 64 03       ; / 
+SubOffscreen0Bnk1:    STZ.B !_3                           ;; ?QPWZ? : 64 03       ; / 
 CODE_01AC33:          JSR IsSprOffScreen                  ;; 01AC33 : 20 CB 80    ; \ if sprite is not off screen, return                                       
                       BEQ Return01ACA4                    ;; 01AC36 : F0 6C       ; /                                                                           
-                      LDA.B $5B                           ;; 01AC38 : A5 5B       ; \  vertical level                                    
+                      LDA.B !ScreenMode                   ;; 01AC38 : A5 5B       ; \  vertical level                                    
                       AND.B #$01                          ;; 01AC3A : 29 01       ;  | 
                       BNE VerticalLevel                   ;; 01AC3C : D0 67       ; /                                                                           
                       LDA.B $D8,X                         ;; 01AC3E : B5 D8       ; \                                                                           
@@ -5447,28 +5447,28 @@ CODE_01AC33:          JSR IsSprOffScreen                  ;; 01AC33 : 20 CB 80  
                       LDA.W $167A,X                       ;; 01AC4C : BD 7A 16    ; \ if "process offscreen" flag is set, return                                
                       AND.B #$04                          ;; 01AC4F : 29 04       ;  | 
                       BNE Return01ACA4                    ;; 01AC51 : D0 51       ; /                                                                           
-                      LDA.B $13                           ;; 01AC53 : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01AC53 : A5 13       ;
                       AND.B #$01                          ;; 01AC55 : 29 01       ;
-                      ORA.B $03                           ;; 01AC57 : 05 03       ;
-                      STA.B $01                           ;; 01AC59 : 85 01       ;
+                      ORA.B !_3                           ;; 01AC57 : 05 03       ;
+                      STA.B !_1                           ;; 01AC59 : 85 01       ;
                       TAY                                 ;; 01AC5B : A8          ;
-                      LDA.B $1A                           ;; 01AC5C : A5 1A       ;
+                      LDA.B !Layer1XPos                   ;; 01AC5C : A5 1A       ;
                       CLC                                 ;; 01AC5E : 18          ;
                       ADC.W SpriteOffScreen3,Y            ;; 01AC5F : 79 11 AC    ;
-                      ROL.B $00                           ;; 01AC62 : 26 00       ;
+                      ROL.B !_0                           ;; 01AC62 : 26 00       ;
                       CMP.B $E4,X                         ;; 01AC64 : D5 E4       ;
                       PHP                                 ;; 01AC66 : 08          ;
-                      LDA.B $1B                           ;; 01AC67 : A5 1B       ;
-                      LSR.B $00                           ;; 01AC69 : 46 00       ;
+                      LDA.B !Layer1XPos+1                 ;; 01AC67 : A5 1B       ;
+                      LSR.B !_0                           ;; 01AC69 : 46 00       ;
                       ADC.W SpriteOffScreen4,Y            ;; 01AC6B : 79 19 AC    ;
                       PLP                                 ;; 01AC6E : 28          ;
                       SBC.W $14E0,X                       ;; 01AC6F : FD E0 14    ;
-                      STA.B $00                           ;; 01AC72 : 85 00       ;
-                      LSR.B $01                           ;; 01AC74 : 46 01       ;
+                      STA.B !_0                           ;; 01AC72 : 85 00       ;
+                      LSR.B !_1                           ;; 01AC74 : 46 01       ;
                       BCC CODE_01AC7C                     ;; 01AC76 : 90 04       ;
                       EOR.B #$80                          ;; 01AC78 : 49 80       ;
-                      STA.B $00                           ;; 01AC7A : 85 00       ;
-CODE_01AC7C:          LDA.B $00                           ;; 01AC7C : A5 00       ;
+                      STA.B !_0                           ;; 01AC7A : 85 00       ;
+CODE_01AC7C:          LDA.B !_0                           ;; 01AC7C : A5 00       ;
                       BPL Return01ACA4                    ;; 01AC7E : 10 24       ;
 OffScrEraseSprite:    LDA.B $9E,X                         ;; ?QPWZ? : B5 9E       ; \ If MagiKoopa... 
                       CMP.B #$1F                          ;; 01AC82 : C9 1F       ;  | 
@@ -5490,7 +5490,7 @@ Return01ACA4:         RTS                                 ;; ?QPWZ? : 60        
 VerticalLevel:        LDA.W $167A,X                       ;; ?QPWZ? : BD 7A 16    ; \ If "process offscreen" flag is set, return                
                       AND.B #$04                          ;; 01ACA8 : 29 04       ;  | 
                       BNE Return01ACA4                    ;; 01ACAA : D0 F8       ; /                                                           
-                      LDA.B $13                           ;; 01ACAC : A5 13       ; \ Return every other frame 
+                      LDA.B !TrueFrame                    ;; 01ACAC : A5 13       ; \ Return every other frame 
                       LSR A                               ;; 01ACAE : 4A          ;  | 
                       BCS Return01ACA4                    ;; 01ACAF : B0 F3       ; /                                                           
                       LDA.B $E4,X                         ;; 01ACB1 : B5 E4       ; \                                                           
@@ -5499,10 +5499,10 @@ VerticalLevel:        LDA.W $167A,X                       ;; ?QPWZ? : BD 7A 16  
                       SBC.B #$00                          ;; 01ACB8 : E9 00       ;  |                                                          
                       CMP.B #$02                          ;; 01ACBA : C9 02       ;  |                                                          
                       BCS OffScrEraseSprite               ;; 01ACBC : B0 C2       ; /  ...erase the sprite      
-                      LDA.B $13                           ;; 01ACBE : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01ACBE : A5 13       ;
                       LSR A                               ;; 01ACC0 : 4A          ;
                       AND.B #$01                          ;; 01ACC1 : 29 01       ;
-                      STA.B $01                           ;; 01ACC3 : 85 01       ;
+                      STA.B !_1                           ;; 01ACC3 : 85 01       ;
                       TAY                                 ;; 01ACC5 : A8          ;
                       BEQ CODE_01ACD2                     ;; 01ACC6 : F0 0A       ;
                       LDA.B $9E,X                         ;; 01ACC8 : B5 9E       ; \ Return if Green Net Koopa 
@@ -5510,23 +5510,23 @@ VerticalLevel:        LDA.W $167A,X                       ;; ?QPWZ? : BD 7A 16  
                       BEQ Return01ACA4                    ;; 01ACCC : F0 D6       ;  | 
                       CMP.B #$24                          ;; 01ACCE : C9 24       ;  | 
                       BEQ Return01ACA4                    ;; 01ACD0 : F0 D2       ; / 
-CODE_01ACD2:          LDA.B $1C                           ;; 01ACD2 : A5 1C       ;
+CODE_01ACD2:          LDA.B !Layer1YPos                   ;; 01ACD2 : A5 1C       ;
                       CLC                                 ;; 01ACD4 : 18          ;
                       ADC.W SpriteOffScreen1,Y            ;; 01ACD5 : 79 0D AC    ;
-                      ROL.B $00                           ;; 01ACD8 : 26 00       ;
+                      ROL.B !_0                           ;; 01ACD8 : 26 00       ;
                       CMP.B $D8,X                         ;; 01ACDA : D5 D8       ;
                       PHP                                 ;; 01ACDC : 08          ;
-                      LDA.W $001D                         ;; 01ACDD : AD 1D 00    ;
-                      LSR.B $00                           ;; 01ACE0 : 46 00       ;
+                      LDA.W !Layer1YPos+1                 ;; 01ACDD : AD 1D 00    ;
+                      LSR.B !_0                           ;; 01ACE0 : 46 00       ;
                       ADC.W SpriteOffScreen2,Y            ;; 01ACE2 : 79 0F AC    ;
                       PLP                                 ;; 01ACE5 : 28          ;
                       SBC.W $14D4,X                       ;; 01ACE6 : FD D4 14    ;
-                      STA.B $00                           ;; 01ACE9 : 85 00       ;
-                      LDY.B $01                           ;; 01ACEB : A4 01       ;
+                      STA.B !_0                           ;; 01ACE9 : 85 00       ;
+                      LDY.B !_1                           ;; 01ACEB : A4 01       ;
                       BEQ CODE_01ACF3                     ;; 01ACED : F0 04       ;
                       EOR.B #$80                          ;; 01ACEF : 49 80       ;
-                      STA.B $00                           ;; 01ACF1 : 85 00       ;
-CODE_01ACF3:          LDA.B $00                           ;; 01ACF3 : A5 00       ;
+                      STA.B !_0                           ;; 01ACF1 : 85 00       ;
+CODE_01ACF3:          LDA.B !_0                           ;; 01ACF3 : A5 00       ;
                       BPL Return01ACA4                    ;; 01ACF5 : 10 AD       ;
                       BMI OffScrEraseSprite               ;; 01ACF7 : 30 87       ;
 GetRand:              PHY                                 ;; ?QPWZ? : 5A          ;
@@ -5560,7 +5560,7 @@ SubHorizPos:          LDY.B #$00                          ;; ?QPWZ? : A0 00     
                       LDA.B $D1                           ;; 01AD32 : A5 D1       ;
                       SEC                                 ;; 01AD34 : 38          ;
                       SBC.B $E4,X                         ;; 01AD35 : F5 E4       ;
-                      STA.B $0F                           ;; 01AD37 : 85 0F       ;
+                      STA.B !_F                           ;; 01AD37 : 85 0F       ;
                       LDA.B $D2                           ;; 01AD39 : A5 D2       ;
                       SBC.W $14E0,X                       ;; 01AD3B : FD E0 14    ;
                       BPL Return01AD41                    ;; 01AD3E : 10 01       ;
@@ -5571,7 +5571,7 @@ CODE_01AD42:          LDY.B #$00                          ;; 01AD42 : A0 00     
                       LDA.B $D3                           ;; 01AD44 : A5 D3       ;
                       SEC                                 ;; 01AD46 : 38          ;
                       SBC.B $D8,X                         ;; 01AD47 : F5 D8       ;
-                      STA.B $0E                           ;; 01AD49 : 85 0E       ;
+                      STA.B !_E                           ;; 01AD49 : 85 0E       ;
                       LDA.B $D4                           ;; 01AD4B : A5 D4       ;
                       SBC.W $14D4,X                       ;; 01AD4D : FD D4 14    ;
                       BPL Return01AD53                    ;; 01AD50 : 10 01       ;
@@ -5616,7 +5616,7 @@ CODE_01AD80:          JSR SubSprGfx2Entry1                ;; 01AD80 : 20 0D 9F  
                       JSR CODE_019E95                     ;; 01AD94 : 20 95 9E    ;
                       LDA.B $9D                           ;; 01AD97 : A5 9D       ; \ Branch if sprites locked 
                       BNE CODE_01ADF8                     ;; 01AD99 : D0 5D       ; / 
-                      LDA.B $13                           ;; 01AD9B : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01AD9B : A5 13       ;
                       AND.B #$01                          ;; 01AD9D : 29 01       ;
                       BNE CODE_01ADB7                     ;; 01AD9F : D0 16       ;
                       LDA.W $1594,X                       ;; 01ADA1 : BD 94 15    ;
@@ -5635,7 +5635,7 @@ CODE_01ADB7:          JSR SubSprYPosNoGrvty               ;; 01ADB7 : 20 D8 AB  
                       BEQ CODE_01ADE8                     ;; 01ADBE : F0 28       ;
                       LDA.W $1540,X                       ;; 01ADC0 : BD 40 15    ;
                       BNE CODE_01ADE6                     ;; 01ADC3 : D0 21       ;
-                      LDA.B $13                           ;; 01ADC5 : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01ADC5 : A5 13       ;
                       AND.B #$03                          ;; 01ADC7 : 29 03       ;
                       BNE CODE_01ADE6                     ;; 01ADC9 : D0 1B       ;
                       LDA.W $1534,X                       ;; 01ADCB : BD 34 15    ;
@@ -5682,14 +5682,14 @@ CODE_01ADF8:          JSR SubSprSprInteract               ;; 01ADF8 : 20 0D A4  
                       LDA.B #$FF                          ;; 01AE28 : A9 FF       ; \ Set to permanently erase sprite 
                       STA.W $161A,X                       ;; 01AE2A : 9D 1A 16    ; / 
                       LDY.W $151C,X                       ;; 01AE2D : BC 1C 15    ;
-                      LDA.B $19                           ;; 01AE30 : A5 19       ;
+                      LDA.B !Powerup                      ;; 01AE30 : A5 19       ;
                       BNE CODE_01AE38                     ;; 01AE32 : D0 04       ;
                       INY                                 ;; 01AE34 : C8          ;
                       INY                                 ;; 01AE35 : C8          ;
                       INY                                 ;; 01AE36 : C8          ;
                       INY                                 ;; 01AE37 : C8          ;
 CODE_01AE38:          LDA.W DATA_01AE88,Y                 ;; 01AE38 : B9 88 AE    ;
-                      STA.B $05                           ;; 01AE3B : 85 05       ;
+                      STA.B !_5                           ;; 01AE3B : 85 05       ;
                       PHB                                 ;; 01AE3D : 8B          ;
                       LDA.B #$02                          ;; 01AE3E : A9 02       ;
                       PHA                                 ;; 01AE40 : 48          ;
@@ -5710,11 +5710,11 @@ CODE_01AE5C:          PLB                                 ;; 01AE5C : AB        
 CODE_01AE5E:          LSR A                               ;; 01AE5E : 4A          ;
                       TAY                                 ;; 01AE5F : A8          ;
                       LDA.W DATA_01AE7F,Y                 ;; 01AE60 : B9 7F AE    ;
-                      STA.B $00                           ;; 01AE63 : 85 00       ;
+                      STA.B !_0                           ;; 01AE63 : 85 00       ;
                       LDY.W $15EA,X                       ;; 01AE65 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.W $0301,Y                       ;; 01AE68 : B9 01 03    ;
                       SEC                                 ;; 01AE6B : 38          ;
-                      SBC.B $00                           ;; 01AE6C : E5 00       ;
+                      SBC.B !_0                           ;; 01AE6C : E5 00       ;
                       STA.W $0301,Y                       ;; 01AE6E : 99 01 03    ;
                       LDA.B $C2,X                         ;; 01AE71 : B5 C2       ;
                       CMP.B #$01                          ;; 01AE73 : C9 01       ;
@@ -5766,14 +5766,14 @@ CODE_01AEC3:          LDA.W $186C,X                       ;; 01AEC3 : BD 6C 18  
                       TYA                                 ;; 01AED0 : 98          ;
                       STA.W $157C,X                       ;; 01AED1 : 9D 7C 15    ;
                       STZ.W $1528,X                       ;; 01AED4 : 9E 28 15    ;
-                      LDA.B $0F                           ;; 01AED7 : A5 0F       ;
+                      LDA.B !_F                           ;; 01AED7 : A5 0F       ;
                       CLC                                 ;; 01AED9 : 18          ;
                       ADC.B #$40                          ;; 01AEDA : 69 40       ;
                       CMP.B #$80                          ;; 01AEDC : C9 80       ;
                       BCS CODE_01AEE5                     ;; 01AEDE : B0 05       ;
                       LDA.B #$01                          ;; 01AEE0 : A9 01       ;
                       STA.W $1528,X                       ;; 01AEE2 : 9D 28 15    ;
-CODE_01AEE5:          LDA.B $0F                           ;; 01AEE5 : A5 0F       ;
+CODE_01AEE5:          LDA.B !_F                           ;; 01AEE5 : A5 0F       ;
                       CLC                                 ;; 01AEE7 : 18          ;
                       ADC.B #$24                          ;; 01AEE8 : 69 24       ;
                       CMP.B #$50                          ;; 01AEEA : C9 50       ;
@@ -5830,17 +5830,17 @@ ThwompGfxProp:        db $03,$43,$03,$43,$03              ;; ?QPWZ?             
                                                           ;;                      ;
 ThwompGfx:            JSR GetDrawInfoBnk1                 ;; ?QPWZ? : 20 65 A3    ;
                       LDA.W $1528,X                       ;; 01AF57 : BD 28 15    ;
-                      STA.B $02                           ;; 01AF5A : 85 02       ;
+                      STA.B !_2                           ;; 01AF5A : 85 02       ;
                       PHX                                 ;; 01AF5C : DA          ;
                       LDX.B #$03                          ;; 01AF5D : A2 03       ;
                       CMP.B #$00                          ;; 01AF5F : C9 00       ;
                       BEQ CODE_01AF64                     ;; 01AF61 : F0 01       ;
                       INX                                 ;; 01AF63 : E8          ;
-CODE_01AF64:          LDA.B $00                           ;; 01AF64 : A5 00       ;
+CODE_01AF64:          LDA.B !_0                           ;; 01AF64 : A5 00       ;
                       CLC                                 ;; 01AF66 : 18          ;
                       ADC.W ThwompDispX,X                 ;; 01AF67 : 7D 40 AF    ;
                       STA.W $0300,Y                       ;; 01AF6A : 99 00 03    ;
-                      LDA.B $01                           ;; 01AF6D : A5 01       ;
+                      LDA.B !_1                           ;; 01AF6D : A5 01       ;
                       CLC                                 ;; 01AF6F : 18          ;
                       ADC.W ThwompDispY,X                 ;; 01AF70 : 7D 45 AF    ;
                       STA.W $0301,Y                       ;; 01AF73 : 99 01 03    ;
@@ -5851,7 +5851,7 @@ CODE_01AF64:          LDA.B $00                           ;; 01AF64 : A5 00     
                       CPX.B #$04                          ;; 01AF81 : E0 04       ;
                       BNE CODE_01AF8F                     ;; 01AF83 : D0 0A       ;
                       PHX                                 ;; 01AF85 : DA          ;
-                      LDX.B $02                           ;; 01AF86 : A6 02       ;
+                      LDX.B !_2                           ;; 01AF86 : A6 02       ;
                       CPX.B #$02                          ;; 01AF88 : E0 02       ;
                       BNE CODE_01AF8E                     ;; 01AF8A : D0 02       ;
                       LDA.B #$CA                          ;; 01AF8C : A9 CA       ;
@@ -5963,7 +5963,7 @@ CODE_01B054:          JSR IsOnGround                      ;; 01B054 : 20 0E 80  
                       BEQ CODE_01B062                     ;; 01B05C : F0 04       ;
                       JSL CODE_0284BC                     ;; 01B05E : 22 BC 84 02 ;
 CODE_01B062:          JSL GetRand                         ;; 01B062 : 22 F9 AC 01 ;
-                      ADC.B $13                           ;; 01B066 : 65 13       ;
+                      ADC.B !TrueFrame                    ;; 01B066 : 65 13       ;
                       AND.B #$07                          ;; 01B068 : 29 07       ;
                       TAY                                 ;; 01B06A : A8          ;
                       LDA.W DATA_01B029,Y                 ;; 01B06B : B9 29 B0    ;
@@ -6035,10 +6035,10 @@ CODE_01B107:          JSR CODE_01B12A                     ;; 01B107 : 20 2A B1  
 CODE_01B10A:          LDA.W $1602,X                       ;; 01B10A : BD 02 16    ;
                       LSR A                               ;; 01B10D : 4A          ;
                       EOR.B #$01                          ;; 01B10E : 49 01       ;
-                      STA.B $00                           ;; 01B110 : 85 00       ;
+                      STA.B !_0                           ;; 01B110 : 85 00       ;
                       LDA.W $15F6,X                       ;; 01B112 : BD F6 15    ;
                       AND.B #$FE                          ;; 01B115 : 29 FE       ;
-                      ORA.B $00                           ;; 01B117 : 05 00       ;
+                      ORA.B !_0                           ;; 01B117 : 05 00       ;
                       STA.W $15F6,X                       ;; 01B119 : 9D F6 15    ;
                       JSR SubSprGfx2Entry1                ;; 01B11C : 20 0D 9F    ;
                       JSR SubOffscreen0Bnk1               ;; 01B11F : 20 31 AC    ;
@@ -6063,7 +6063,7 @@ CODE_01B12A:          LDA.B #$10                          ;; 01B12A : A9 10     
                       JSL GivePoints                      ;; 01B149 : 22 E5 AC 02 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_01B14E:          LDA.B $13                           ;; 01B14E : A5 13       ;
+CODE_01B14E:          LDA.B !TrueFrame                    ;; 01B14E : A5 13       ;
                       AND.B #$03                          ;; 01B150 : 29 03       ;
 CODE_01B152:          ORA.W $186C,X                       ;; 01B152 : 1D 6C 18    ;
                       ORA.B $9D                           ;; 01B155 : 05 9D       ;
@@ -6077,24 +6077,24 @@ CODE_01B152:          ORA.W $186C,X                       ;; 01B152 : 1D 6C 18  
                       DEY                                 ;; 01B166 : 88          ;
 CODE_01B167:          CLC                                 ;; 01B167 : 18          ;
                       ADC.B $E4,X                         ;; 01B168 : 75 E4       ;
-                      STA.B $02                           ;; 01B16A : 85 02       ;
+                      STA.B !_2                           ;; 01B16A : 85 02       ;
                       TYA                                 ;; 01B16C : 98          ;
                       ADC.W $14E0,X                       ;; 01B16D : 7D E0 14    ;
                       PHA                                 ;; 01B170 : 48          ;
-                      LDA.B $02                           ;; 01B171 : A5 02       ;
-                      CMP.B $1A                           ;; 01B173 : C5 1A       ;
+                      LDA.B !_2                           ;; 01B171 : A5 02       ;
+                      CMP.B !Layer1XPos                   ;; 01B173 : C5 1A       ;
                       PLA                                 ;; 01B175 : 68          ;
-                      SBC.B $1B                           ;; 01B176 : E5 1B       ;
+                      SBC.B !Layer1XPos+1                 ;; 01B176 : E5 1B       ;
                       BNE Return01B191                    ;; 01B178 : D0 17       ;
                       LDA.W $148E                         ;; 01B17A : AD 8E 14    ;
                       AND.B #$0F                          ;; 01B17D : 29 0F       ;
                       CLC                                 ;; 01B17F : 18          ;
                       ADC.B #$FE                          ;; 01B180 : 69 FE       ;
                       ADC.B $D8,X                         ;; 01B182 : 75 D8       ;
-                      STA.B $00                           ;; 01B184 : 85 00       ;
+                      STA.B !_0                           ;; 01B184 : 85 00       ;
                       LDA.W $14D4,X                       ;; 01B186 : BD D4 14    ;
                       ADC.B #$00                          ;; 01B189 : 69 00       ;
-                      STA.B $01                           ;; 01B18B : 85 01       ;
+                      STA.B !_1                           ;; 01B18B : 85 01       ;
                       JSL CODE_0285BA                     ;; 01B18D : 22 BA 85 02 ;
 Return01B191:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -6136,7 +6136,7 @@ JumpingFish:          LDA.B $9D                           ;; ?QPWZ? : A5 9D     
                       BRA CODE_01B206                     ;; 01B1DC : 80 28       ;
                                                           ;;                      ;
 CODE_01B1DE:          DEC.B $AA,X                         ;; 01B1DE : D6 AA       ;
-                      LDA.B $13                           ;; 01B1E0 : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01B1E0 : A5 13       ;
                       AND.B #$03                          ;; 01B1E2 : 29 03       ;
                       BNE CODE_01B1E8                     ;; 01B1E4 : D0 02       ;
                       DEC.B $AA,X                         ;; 01B1E6 : D6 AA       ;
@@ -6265,21 +6265,21 @@ CODE_01B2D1:          LDA.B $9E,X                         ;; 01B2D1 : B5 9E     
                                                           ;;                      ;
 CODE_01B2DF:          JSR GetDrawInfoBnk1                 ;; 01B2DF : 20 65 A3    ;
                       LDA.W $1602,X                       ;; 01B2E2 : BD 02 16    ;
-                      STA.B $01                           ;; 01B2E5 : 85 01       ;
+                      STA.B !_1                           ;; 01B2E5 : 85 01       ;
                       LDA.B $D8,X                         ;; 01B2E7 : B5 D8       ;
                       SEC                                 ;; 01B2E9 : 38          ;
-                      SBC.B $1C                           ;; 01B2EA : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01B2EA : E5 1C       ;
                       STA.W $0301,Y                       ;; 01B2EC : 99 01 03    ;
                       STA.W $0305,Y                       ;; 01B2EF : 99 05 03    ;
                       STA.W $0309,Y                       ;; 01B2F2 : 99 09 03    ;
-                      LDX.B $01                           ;; 01B2F5 : A6 01       ;
+                      LDX.B !_1                           ;; 01B2F5 : A6 01       ;
                       BEQ CODE_01B2FF                     ;; 01B2F7 : F0 06       ;
                       STA.W $030D,Y                       ;; 01B2F9 : 99 0D 03    ;
                       STA.W $0311,Y                       ;; 01B2FC : 99 11 03    ;
 CODE_01B2FF:          LDX.W $15E9                         ;; 01B2FF : AE E9 15    ; X = Sprite index 
                       LDA.B $E4,X                         ;; 01B302 : B5 E4       ;
                       SEC                                 ;; 01B304 : 38          ;
-                      SBC.B $1A                           ;; 01B305 : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01B305 : E5 1A       ;
                       STA.W $0300,Y                       ;; 01B307 : 99 00 03    ;
                       CLC                                 ;; 01B30A : 18          ;
                       ADC.B #$10                          ;; 01B30B : 69 10       ;
@@ -6287,7 +6287,7 @@ CODE_01B2FF:          LDX.W $15E9                         ;; 01B2FF : AE E9 15  
                       CLC                                 ;; 01B310 : 18          ;
                       ADC.B #$10                          ;; 01B311 : 69 10       ;
                       STA.W $0308,Y                       ;; 01B313 : 99 08 03    ;
-                      LDX.B $01                           ;; 01B316 : A6 01       ;
+                      LDX.B !_1                           ;; 01B316 : A6 01       ;
                       BEQ CODE_01B326                     ;; 01B318 : F0 0C       ;
                       CLC                                 ;; 01B31A : 18          ;
                       ADC.B #$10                          ;; 01B31B : 69 10       ;
@@ -6296,7 +6296,7 @@ CODE_01B2FF:          LDX.W $15E9                         ;; 01B2FF : AE E9 15  
                       ADC.B #$10                          ;; 01B321 : 69 10       ;
                       STA.W $0310,Y                       ;; 01B323 : 99 10 03    ;
 CODE_01B326:          LDX.W $15E9                         ;; 01B326 : AE E9 15    ; X = Sprite index 
-                      LDA.B $01                           ;; 01B329 : A5 01       ;
+                      LDA.B !_1                           ;; 01B329 : A5 01       ;
                       BEQ CODE_01B344                     ;; 01B32B : F0 17       ;
                       LDA.B #$EA                          ;; 01B32D : A9 EA       ;
                       STA.W $0302,Y                       ;; 01B32F : 99 02 03    ;
@@ -6323,12 +6323,12 @@ CODE_01B359:          LDA.B $64                           ;; 01B359 : A5 64     
                       STA.W $030B,Y                       ;; 01B364 : 99 0B 03    ;
                       STA.W $030F,Y                       ;; 01B367 : 99 0F 03    ;
                       STA.W $0313,Y                       ;; 01B36A : 99 13 03    ;
-                      LDA.B $01                           ;; 01B36D : A5 01       ;
+                      LDA.B !_1                           ;; 01B36D : A5 01       ;
                       BNE CODE_01B376                     ;; 01B36F : D0 05       ;
                       LDA.B #$62                          ;; 01B371 : A9 62       ;
                       STA.W $030A,Y                       ;; 01B373 : 99 0A 03    ;
 CODE_01B376:          LDA.B #$04                          ;; 01B376 : A9 04       ;
-                      LDY.B $01                           ;; 01B378 : A4 01       ;
+                      LDY.B !_1                           ;; 01B378 : A4 01       ;
                       BNE CODE_01B37E                     ;; 01B37A : D0 02       ;
                       LDA.B #$02                          ;; 01B37C : A9 02       ;
 CODE_01B37E:          LDY.B #$02                          ;; 01B37E : A0 02       ;
@@ -6348,15 +6348,15 @@ CODE_01B395:          JSR GetDrawInfoBnk1                 ;; 01B395 : 20 65 A3  
                       CMP.B #$5E                          ;; 01B39D : C9 5E       ;
                       BNE CODE_01B3A2                     ;; 01B39F : D0 01       ;
                       INY                                 ;; 01B3A1 : C8          ;
-CODE_01B3A2:          STY.B $00                           ;; 01B3A2 : 84 00       ;
+CODE_01B3A2:          STY.B !_0                           ;; 01B3A2 : 84 00       ;
                       PLY                                 ;; 01B3A4 : 7A          ;
                       LDA.B $D8,X                         ;; 01B3A5 : B5 D8       ;
                       SEC                                 ;; 01B3A7 : 38          ;
-                      SBC.B $1C                           ;; 01B3A8 : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01B3A8 : E5 1C       ;
                       STA.W $0301,Y                       ;; 01B3AA : 99 01 03    ;
                       STA.W $0309,Y                       ;; 01B3AD : 99 09 03    ;
                       STA.W $0311,Y                       ;; 01B3B0 : 99 11 03    ;
-                      LDX.B $00                           ;; 01B3B3 : A6 00       ;
+                      LDX.B !_0                           ;; 01B3B3 : A6 00       ;
                       BEQ CODE_01B3BD                     ;; 01B3B5 : F0 06       ;
                       STA.W $0319,Y                       ;; 01B3B7 : 99 19 03    ;
                       STA.W $0321,Y                       ;; 01B3BA : 99 21 03    ;
@@ -6364,20 +6364,20 @@ CODE_01B3BD:          CLC                                 ;; 01B3BD : 18        
                       ADC.B #$10                          ;; 01B3BE : 69 10       ;
                       STA.W $0305,Y                       ;; 01B3C0 : 99 05 03    ;
                       STA.W $030D,Y                       ;; 01B3C3 : 99 0D 03    ;
-                      LDX.B $00                           ;; 01B3C6 : A6 00       ;
+                      LDX.B !_0                           ;; 01B3C6 : A6 00       ;
                       BEQ CODE_01B3D0                     ;; 01B3C8 : F0 06       ;
                       STA.W $0315,Y                       ;; 01B3CA : 99 15 03    ;
                       STA.W $031D,Y                       ;; 01B3CD : 99 1D 03    ;
 CODE_01B3D0:          LDA.B #$08                          ;; 01B3D0 : A9 08       ;
-                      LDX.B $00                           ;; 01B3D2 : A6 00       ;
+                      LDX.B !_0                           ;; 01B3D2 : A6 00       ;
                       BNE CODE_01B3D8                     ;; 01B3D4 : D0 02       ;
                       LDA.B #$04                          ;; 01B3D6 : A9 04       ;
-CODE_01B3D8:          STA.B $01                           ;; 01B3D8 : 85 01       ;
+CODE_01B3D8:          STA.B !_1                           ;; 01B3D8 : 85 01       ;
                       DEC A                               ;; 01B3DA : 3A          ;
-                      STA.B $02                           ;; 01B3DB : 85 02       ;
+                      STA.B !_2                           ;; 01B3DB : 85 02       ;
                       LDX.W $15E9                         ;; 01B3DD : AE E9 15    ; X = Sprite index 
                       LDA.W $15F6,X                       ;; 01B3E0 : BD F6 15    ;
-                      STA.B $03                           ;; 01B3E3 : 85 03       ;
+                      STA.B !_3                           ;; 01B3E3 : 85 03       ;
                       LDA.B $9E,X                         ;; 01B3E5 : B5 9E       ;
                       CMP.B #$5B                          ;; 01B3E7 : C9 5B       ;
                       LDA.B #$00                          ;; 01B3E9 : A9 00       ;
@@ -6386,7 +6386,7 @@ CODE_01B3D8:          STA.B $01                           ;; 01B3D8 : 85 01     
 CODE_01B3EF:          PHA                                 ;; 01B3EF : 48          ;
                       LDA.B $E4,X                         ;; 01B3F0 : B5 E4       ;
                       SEC                                 ;; 01B3F2 : 38          ;
-                      SBC.B $1A                           ;; 01B3F3 : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01B3F3 : E5 1A       ;
                       PLX                                 ;; 01B3F5 : FA          ;
 CODE_01B3F6:          STA.W $0300,Y                       ;; 01B3F6 : 99 00 03    ;
                       CLC                                 ;; 01B3F9 : 18          ;
@@ -6395,10 +6395,10 @@ CODE_01B3F6:          STA.W $0300,Y                       ;; 01B3F6 : 99 00 03  
                       LDA.W DiagPlatTiles,X               ;; 01B3FD : BD 83 B3    ;
                       STA.W $0302,Y                       ;; 01B400 : 99 02 03    ;
                       LDA.B $64                           ;; 01B403 : A5 64       ;
-                      ORA.B $03                           ;; 01B405 : 05 03       ;
+                      ORA.B !_3                           ;; 01B405 : 05 03       ;
                       PHX                                 ;; 01B407 : DA          ;
-                      LDX.B $01                           ;; 01B408 : A6 01       ;
-                      CPX.B $02                           ;; 01B40A : E4 02       ;
+                      LDX.B !_1                           ;; 01B408 : A6 01       ;
+                      CPX.B !_2                           ;; 01B40A : E4 02       ;
                       PLX                                 ;; 01B40C : FA          ;
                       BCS CODE_01B411                     ;; 01B40D : B0 02       ;
                       ORA.B #$40                          ;; 01B40F : 09 40       ;
@@ -6409,11 +6409,11 @@ CODE_01B411:          STA.W $0303,Y                       ;; 01B411 : 99 03 03  
                       INY                                 ;; 01B417 : C8          ;
                       INY                                 ;; 01B418 : C8          ;
                       INX                                 ;; 01B419 : E8          ;
-                      DEC.B $01                           ;; 01B41A : C6 01       ;
+                      DEC.B !_1                           ;; 01B41A : C6 01       ;
                       BPL CODE_01B3F6                     ;; 01B41C : 10 D8       ;
                       LDX.W $15E9                         ;; 01B41E : AE E9 15    ; X = Sprite index 
                       LDY.W $15EA,X                       ;; 01B421 : BC EA 15    ; Y = Index into sprite OAM 
-                      LDA.B $00                           ;; 01B424 : A5 00       ;
+                      LDA.B !_0                           ;; 01B424 : A5 00       ;
                       BNE CODE_01B444                     ;; 01B426 : D0 1C       ;
                       LDA.B $9E,X                         ;; 01B428 : B5 9E       ;
                       CMP.B #$5B                          ;; 01B42A : C9 5B       ;
@@ -6429,7 +6429,7 @@ CODE_01B43A:          LDA.B #$CB                          ;; 01B43A : A9 CB     
                       LDA.B #$E4                          ;; 01B43F : A9 E4       ;
                       STA.W $030E,Y                       ;; 01B441 : 99 0E 03    ;
 CODE_01B444:          LDA.B #$08                          ;; 01B444 : A9 08       ;
-                      LDY.B $00                           ;; 01B446 : A4 00       ;
+                      LDY.B !_0                           ;; 01B446 : A4 00       ;
                       BNE CODE_01B44C                     ;; 01B448 : D0 02       ;
                       LDA.B #$04                          ;; 01B44A : A9 04       ;
 CODE_01B44C:          JMP CODE_01B37E                     ;; 01B44C : 4C 7E B3    ;
@@ -6445,12 +6445,12 @@ CODE_01B457:          JSR ProcessInteract                 ;; 01B457 : 20 F7 A7  
                       BCC CODE_01B4B2                     ;; 01B45A : 90 56       ;
                       LDA.B $D8,X                         ;; 01B45C : B5 D8       ;
                       SEC                                 ;; 01B45E : 38          ;
-                      SBC.B $1C                           ;; 01B45F : E5 1C       ;
-                      STA.B $00                           ;; 01B461 : 85 00       ;
+                      SBC.B !Layer1YPos                   ;; 01B45F : E5 1C       ;
+                      STA.B !_0                           ;; 01B461 : 85 00       ;
                       LDA.B $80                           ;; 01B463 : A5 80       ;
                       CLC                                 ;; 01B465 : 18          ;
                       ADC.B #$18                          ;; 01B466 : 69 18       ;
-                      CMP.B $00                           ;; 01B468 : C5 00       ;
+                      CMP.B !_0                           ;; 01B468 : C5 00       ;
                       BPL CODE_01B4B4                     ;; 01B46A : 10 48       ;
                       LDA.B $7D                           ;; 01B46C : A5 7D       ;
                       BMI CODE_01B4B2                     ;; 01B46E : 30 42       ;
@@ -6465,10 +6465,10 @@ CODE_01B457:          JSR ProcessInteract                 ;; 01B457 : 20 F7 A7  
                       LDY.W $187A                         ;; 01B481 : AC 7A 18    ;
                       BEQ CODE_01B488                     ;; 01B484 : F0 02       ;
                       LDA.B #$2F                          ;; 01B486 : A9 2F       ;
-CODE_01B488:          STA.B $01                           ;; 01B488 : 85 01       ;
+CODE_01B488:          STA.B !_1                           ;; 01B488 : 85 01       ;
                       LDA.B $D8,X                         ;; 01B48A : B5 D8       ;
                       SEC                                 ;; 01B48C : 38          ;
-                      SBC.B $01                           ;; 01B48D : E5 01       ;
+                      SBC.B !_1                           ;; 01B48D : E5 01       ;
                       STA.B $96                           ;; 01B48F : 85 96       ;
                       LDA.W $14D4,X                       ;; 01B491 : BD D4 14    ;
                       SBC.B #$00                          ;; 01B494 : E9 00       ;
@@ -6498,7 +6498,7 @@ CODE_01B4B4:          LDA.W $190F,X                       ;; 01B4B4 : BD 0F 19  
                       LDA.B #$00                          ;; 01B4BA : A9 00       ;
                       LDY.B $73                           ;; 01B4BC : A4 73       ;
                       BNE CODE_01B4C4                     ;; 01B4BE : D0 04       ;
-                      LDY.B $19                           ;; 01B4C0 : A4 19       ;
+                      LDY.B !Powerup                      ;; 01B4C0 : A4 19       ;
                       BNE CODE_01B4C6                     ;; 01B4C2 : D0 02       ;
 CODE_01B4C4:          LDA.B #$08                          ;; 01B4C4 : A9 08       ;
 CODE_01B4C6:          LDY.W $187A                         ;; 01B4C6 : AC 7A 18    ;
@@ -6506,7 +6506,7 @@ CODE_01B4C6:          LDY.W $187A                         ;; 01B4C6 : AC 7A 18  
                       ADC.B #$08                          ;; 01B4CB : 69 08       ;
 CODE_01B4CD:          CLC                                 ;; 01B4CD : 18          ;
                       ADC.B $80                           ;; 01B4CE : 65 80       ;
-                      CMP.B $00                           ;; 01B4D0 : C5 00       ;
+                      CMP.B !_0                           ;; 01B4D0 : C5 00       ;
                       BCC CODE_01B505                     ;; 01B4D2 : 90 31       ;
                       LDA.B $7D                           ;; 01B4D4 : A5 7D       ;
                       BPL CODE_01B4F7                     ;; 01B4D6 : 10 1F       ;
@@ -6604,10 +6604,10 @@ CODE_01B588:          LDA.W $164A,X                       ;; 01B588 : BD 4A 16  
                       CMP.B #$5D                          ;; 01B591 : C9 5D       ;
                       BCC CODE_01B597                     ;; 01B593 : 90 02       ;
                       LDY.B #$FC                          ;; 01B595 : A0 FC       ;
-CODE_01B597:          STY.B $00                           ;; 01B597 : 84 00       ;
+CODE_01B597:          STY.B !_0                           ;; 01B597 : 84 00       ;
                       LDA.B $AA,X                         ;; 01B599 : B5 AA       ;
                       BPL CODE_01B5A1                     ;; 01B59B : 10 04       ;
-                      CMP.B $00                           ;; 01B59D : C5 00       ;
+                      CMP.B !_0                           ;; 01B59D : C5 00       ;
                       BCC CODE_01B5A6                     ;; 01B59F : 90 05       ;
 CODE_01B5A1:          SEC                                 ;; 01B5A1 : 38          ;
                       SBC.B #$02                          ;; 01B5A2 : E9 02       ;
@@ -6623,25 +6623,25 @@ CODE_01B5A6:          LDA.B $7D                           ;; 01B5A6 : A5 7D     
                                                           ;;                      ;
 CODE_01B5B5:          JSR CODE_01B457                     ;; 01B5B5 : 20 57 B4    ;
 CODE_01B5B8:          PLA                                 ;; 01B5B8 : 68          ;
-                      STA.B $00                           ;; 01B5B9 : 85 00       ;
+                      STA.B !_0                           ;; 01B5B9 : 85 00       ;
                       STZ.W $185E                         ;; 01B5BB : 9C 5E 18    ;
                       BCC CODE_01B5E7                     ;; 01B5BE : 90 27       ;
                       LDA.B $9E,X                         ;; 01B5C0 : B5 9E       ;
                       CMP.B #$5D                          ;; 01B5C2 : C9 5D       ;
                       BCC CODE_01B5DA                     ;; 01B5C4 : 90 14       ;
                       LDY.B #$03                          ;; 01B5C6 : A0 03       ;
-                      LDA.B $19                           ;; 01B5C8 : A5 19       ;
+                      LDA.B !Powerup                      ;; 01B5C8 : A5 19       ;
                       BNE CODE_01B5CD                     ;; 01B5CA : D0 01       ;
                       DEY                                 ;; 01B5CC : 88          ;
-CODE_01B5CD:          STY.B $00                           ;; 01B5CD : 84 00       ;
+CODE_01B5CD:          STY.B !_0                           ;; 01B5CD : 84 00       ;
                       LDA.B $AA,X                         ;; 01B5CF : B5 AA       ;
-                      CMP.B $00                           ;; 01B5D1 : C5 00       ;
+                      CMP.B !_0                           ;; 01B5D1 : C5 00       ;
                       BPL CODE_01B5DA                     ;; 01B5D3 : 10 05       ;
                       CLC                                 ;; 01B5D5 : 18          ;
                       ADC.B #$02                          ;; 01B5D6 : 69 02       ;
                       STA.B $AA,X                         ;; 01B5D8 : 95 AA       ;
 CODE_01B5DA:          INC.W $185E                         ;; 01B5DA : EE 5E 18    ;
-                      LDA.B $00                           ;; 01B5DD : A5 00       ;
+                      LDA.B !_0                           ;; 01B5DD : A5 00       ;
                       CMP.B #$20                          ;; 01B5DF : C9 20       ;
                       BCC CODE_01B5E7                     ;; 01B5E1 : 90 04       ;
                       LSR A                               ;; 01B5E3 : 4A          ;
@@ -6656,18 +6656,18 @@ CODE_01B5E7:          LDA.W $185E                         ;; 01B5E7 : AD 5E 18  
                       LDA.B $7D                           ;; 01B5F7 : A5 7D       ;
                       BPL CODE_01B610                     ;; 01B5F9 : 10 15       ;
                       LDY.B #$08                          ;; 01B5FB : A0 08       ;
-                      LDA.B $19                           ;; 01B5FD : A5 19       ;
+                      LDA.B !Powerup                      ;; 01B5FD : A5 19       ;
                       BNE CODE_01B603                     ;; 01B5FF : D0 02       ;
                       LDY.B #$06                          ;; 01B601 : A0 06       ;
-CODE_01B603:          STY.B $00                           ;; 01B603 : 84 00       ;
+CODE_01B603:          STY.B !_0                           ;; 01B603 : 84 00       ;
                       LDA.B $AA,X                         ;; 01B605 : B5 AA       ;
                       CMP.B #$20                          ;; 01B607 : C9 20       ;
                       BPL CODE_01B610                     ;; 01B609 : 10 05       ;
                       CLC                                 ;; 01B60B : 18          ;
-                      ADC.B $00                           ;; 01B60C : 65 00       ;
+                      ADC.B !_0                           ;; 01B60C : 65 00       ;
                       STA.B $AA,X                         ;; 01B60E : 95 AA       ;
 CODE_01B610:          LDA.B #$01                          ;; 01B610 : A9 01       ;
-                      AND.B $13                           ;; 01B612 : 25 13       ;
+                      AND.B !TrueFrame                    ;; 01B612 : 25 13       ;
                       BNE CODE_01B64E                     ;; 01B614 : D0 38       ;
                       LDA.B $AA,X                         ;; 01B616 : B5 AA       ;
                       BEQ CODE_01B624                     ;; 01B618 : F0 0A       ;
@@ -6680,14 +6680,14 @@ CODE_01B61F:          SEC                                 ;; 01B61F : 38        
 CODE_01B624:          LDY.W $185E                         ;; 01B624 : AC 5E 18    ;
                       BEQ CODE_01B631                     ;; 01B627 : F0 08       ;
                       LDY.B #$05                          ;; 01B629 : A0 05       ;
-                      LDA.B $19                           ;; 01B62B : A5 19       ;
+                      LDA.B !Powerup                      ;; 01B62B : A5 19       ;
                       BNE CODE_01B631                     ;; 01B62D : D0 02       ;
                       LDY.B #$02                          ;; 01B62F : A0 02       ;
-CODE_01B631:          STY.B $00                           ;; 01B631 : 84 00       ;
+CODE_01B631:          STY.B !_0                           ;; 01B631 : 84 00       ;
                       LDA.B $D8,X                         ;; 01B633 : B5 D8       ;
                       PHA                                 ;; 01B635 : 48          ;
                       SEC                                 ;; 01B636 : 38          ;
-                      SBC.B $00                           ;; 01B637 : E5 00       ;
+                      SBC.B !_0                           ;; 01B637 : E5 00       ;
                       STA.B $D8,X                         ;; 01B639 : 95 D8       ;
                       LDA.W $14D4,X                       ;; 01B63B : BD D4 14    ;
                       PHA                                 ;; 01B63E : 48          ;
@@ -6714,15 +6714,15 @@ FloatMineGfxProp:     db $31,$71,$A1,$F1                  ;; ?QPWZ?             
 CODE_01B666:          JSR GetDrawInfoBnk1                 ;; 01B666 : 20 65 A3    ;
                       PHX                                 ;; 01B669 : DA          ;
                       LDX.B #$03                          ;; 01B66A : A2 03       ;
-CODE_01B66C:          LDA.B $00                           ;; 01B66C : A5 00       ;
+CODE_01B66C:          LDA.B !_0                           ;; 01B66C : A5 00       ;
                       CLC                                 ;; 01B66E : 18          ;
                       ADC.W DATA_01B65A,X                 ;; 01B66F : 7D 5A B6    ;
                       STA.W $0300,Y                       ;; 01B672 : 99 00 03    ;
-                      LDA.B $01                           ;; 01B675 : A5 01       ;
+                      LDA.B !_1                           ;; 01B675 : A5 01       ;
                       CLC                                 ;; 01B677 : 18          ;
                       ADC.W DATA_01B65E,X                 ;; 01B678 : 7D 5E B6    ;
                       STA.W $0301,Y                       ;; 01B67B : 99 01 03    ;
-                      LDA.B $14                           ;; 01B67E : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01B67E : A5 14       ;
                       LSR A                               ;; 01B680 : 4A          ;
                       LSR A                               ;; 01B681 : 4A          ;
                       AND.B #$04                          ;; 01B682 : 29 04       ;
@@ -6802,61 +6802,61 @@ CODE_01B703:          LDA.W BlkBridgeTiming,Y             ;; 01B703 : B9 A3 B6  
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01B710:          JSR GetDrawInfoBnk1                 ;; 01B710 : 20 65 A3    ;
-                      STZ.B $00                           ;; 01B713 : 64 00       ;
-                      STZ.B $01                           ;; 01B715 : 64 01       ;
-                      STZ.B $02                           ;; 01B717 : 64 02       ;
-                      STZ.B $03                           ;; 01B719 : 64 03       ;
+                      STZ.B !_0                           ;; 01B713 : 64 00       ;
+                      STZ.B !_1                           ;; 01B715 : 64 01       ;
+                      STZ.B !_2                           ;; 01B717 : 64 02       ;
+                      STZ.B !_3                           ;; 01B719 : 64 03       ;
                       LDA.B $C2,X                         ;; 01B71B : B5 C2       ;
                       AND.B #$02                          ;; 01B71D : 29 02       ;
                       TAY                                 ;; 01B71F : A8          ;
                       LDA.W $151C,X                       ;; 01B720 : BD 1C 15    ;
-                      STA.W $0000,Y                       ;; 01B723 : 99 00 00    ;
+                      STA.W !_0,Y                         ;; 01B723 : 99 00 00    ;
                       LSR A                               ;; 01B726 : 4A          ;
-                      STA.W $0001,Y                       ;; 01B727 : 99 01 00    ;
+                      STA.W !_1,Y                         ;; 01B727 : 99 01 00    ;
                       LDY.W $15EA,X                       ;; 01B72A : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B $D8,X                         ;; 01B72D : B5 D8       ;
                       SEC                                 ;; 01B72F : 38          ;
-                      SBC.B $1C                           ;; 01B730 : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01B730 : E5 1C       ;
                       STA.W $0311,Y                       ;; 01B732 : 99 11 03    ;
                       PHA                                 ;; 01B735 : 48          ;
                       PHA                                 ;; 01B736 : 48          ;
                       PHA                                 ;; 01B737 : 48          ;
                       SEC                                 ;; 01B738 : 38          ;
-                      SBC.B $02                           ;; 01B739 : E5 02       ;
+                      SBC.B !_2                           ;; 01B739 : E5 02       ;
                       STA.W $0309,Y                       ;; 01B73B : 99 09 03    ;
                       PLA                                 ;; 01B73E : 68          ;
                       SEC                                 ;; 01B73F : 38          ;
-                      SBC.B $03                           ;; 01B740 : E5 03       ;
+                      SBC.B !_3                           ;; 01B740 : E5 03       ;
                       STA.W $030D,Y                       ;; 01B742 : 99 0D 03    ;
                       PLA                                 ;; 01B745 : 68          ;
                       CLC                                 ;; 01B746 : 18          ;
-                      ADC.B $02                           ;; 01B747 : 65 02       ;
+                      ADC.B !_2                           ;; 01B747 : 65 02       ;
                       STA.W $0301,Y                       ;; 01B749 : 99 01 03    ;
                       PLA                                 ;; 01B74C : 68          ;
                       CLC                                 ;; 01B74D : 18          ;
-                      ADC.B $03                           ;; 01B74E : 65 03       ;
+                      ADC.B !_3                           ;; 01B74E : 65 03       ;
                       STA.W $0305,Y                       ;; 01B750 : 99 05 03    ;
                       LDA.B $E4,X                         ;; 01B753 : B5 E4       ;
                       SEC                                 ;; 01B755 : 38          ;
-                      SBC.B $1A                           ;; 01B756 : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01B756 : E5 1A       ;
                       STA.W $0310,Y                       ;; 01B758 : 99 10 03    ;
                       PHA                                 ;; 01B75B : 48          ;
                       PHA                                 ;; 01B75C : 48          ;
                       PHA                                 ;; 01B75D : 48          ;
                       SEC                                 ;; 01B75E : 38          ;
-                      SBC.B $00                           ;; 01B75F : E5 00       ;
+                      SBC.B !_0                           ;; 01B75F : E5 00       ;
                       STA.W $0308,Y                       ;; 01B761 : 99 08 03    ;
                       PLA                                 ;; 01B764 : 68          ;
                       SEC                                 ;; 01B765 : 38          ;
-                      SBC.B $01                           ;; 01B766 : E5 01       ;
+                      SBC.B !_1                           ;; 01B766 : E5 01       ;
                       STA.W $030C,Y                       ;; 01B768 : 99 0C 03    ;
                       PLA                                 ;; 01B76B : 68          ;
                       CLC                                 ;; 01B76C : 18          ;
-                      ADC.B $00                           ;; 01B76D : 65 00       ;
+                      ADC.B !_0                           ;; 01B76D : 65 00       ;
                       STA.W $0300,Y                       ;; 01B76F : 99 00 03    ;
                       PLA                                 ;; 01B772 : 68          ;
                       CLC                                 ;; 01B773 : 18          ;
-                      ADC.B $01                           ;; 01B774 : 65 01       ;
+                      ADC.B !_1                           ;; 01B774 : 65 01       ;
                       STA.W $0304,Y                       ;; 01B776 : 99 04 03    ;
                       LDA.B $C2,X                         ;; 01B779 : B5 C2       ;
                       LSR A                               ;; 01B77B : 4A          ;
@@ -6874,16 +6874,16 @@ CODE_01B710:          JSR GetDrawInfoBnk1                 ;; 01B710 : 20 65 A3  
                       STA.W $0313,Y                       ;; 01B799 : 99 13 03    ;
                       ORA.B #$60                          ;; 01B79C : 09 60       ;
                       STA.W $0303,Y                       ;; 01B79E : 99 03 03    ;
-                      LDA.B $00                           ;; 01B7A1 : A5 00       ;
+                      LDA.B !_0                           ;; 01B7A1 : A5 00       ;
                       PHA                                 ;; 01B7A3 : 48          ;
-                      LDA.B $02                           ;; 01B7A4 : A5 02       ;
+                      LDA.B !_2                           ;; 01B7A4 : A5 02       ;
                       PHA                                 ;; 01B7A6 : 48          ;
                       LDA.B #$04                          ;; 01B7A7 : A9 04       ;
                       JSR CODE_01B37E                     ;; 01B7A9 : 20 7E B3    ;
                       PLA                                 ;; 01B7AC : 68          ;
-                      STA.B $02                           ;; 01B7AD : 85 02       ;
+                      STA.B !_2                           ;; 01B7AD : 85 02       ;
                       PLA                                 ;; 01B7AF : 68          ;
-                      STA.B $00                           ;; 01B7B0 : 85 00       ;
+                      STA.B !_0                           ;; 01B7B0 : 85 00       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 FinishOAMWrite:       PHB                                 ;; ?QPWZ? : 8B          ; Wrapper 
@@ -6893,28 +6893,28 @@ FinishOAMWrite:       PHB                                 ;; ?QPWZ? : 8B        
                       PLB                                 ;; 01B7B9 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-FinishOAMWriteRt:     STY.B $0B                           ;; ?QPWZ? : 84 0B       ;
-                      STA.B $08                           ;; 01B7BD : 85 08       ;
+FinishOAMWriteRt:     STY.B !_B                           ;; ?QPWZ? : 84 0B       ;
+                      STA.B !_8                           ;; 01B7BD : 85 08       ;
                       LDY.W $15EA,X                       ;; 01B7BF : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B $D8,X                         ;; 01B7C2 : B5 D8       ;
-                      STA.B $00                           ;; 01B7C4 : 85 00       ;
+                      STA.B !_0                           ;; 01B7C4 : 85 00       ;
                       SEC                                 ;; 01B7C6 : 38          ;
-                      SBC.B $1C                           ;; 01B7C7 : E5 1C       ;
-                      STA.B $06                           ;; 01B7C9 : 85 06       ;
+                      SBC.B !Layer1YPos                   ;; 01B7C7 : E5 1C       ;
+                      STA.B !_6                           ;; 01B7C9 : 85 06       ;
                       LDA.W $14D4,X                       ;; 01B7CB : BD D4 14    ;
-                      STA.B $01                           ;; 01B7CE : 85 01       ;
+                      STA.B !_1                           ;; 01B7CE : 85 01       ;
                       LDA.B $E4,X                         ;; 01B7D0 : B5 E4       ;
-                      STA.B $02                           ;; 01B7D2 : 85 02       ;
+                      STA.B !_2                           ;; 01B7D2 : 85 02       ;
                       SEC                                 ;; 01B7D4 : 38          ;
-                      SBC.B $1A                           ;; 01B7D5 : E5 1A       ;
-                      STA.B $07                           ;; 01B7D7 : 85 07       ;
+                      SBC.B !Layer1XPos                   ;; 01B7D5 : E5 1A       ;
+                      STA.B !_7                           ;; 01B7D7 : 85 07       ;
                       LDA.W $14E0,X                       ;; 01B7D9 : BD E0 14    ;
-                      STA.B $03                           ;; 01B7DC : 85 03       ;
+                      STA.B !_3                           ;; 01B7DC : 85 03       ;
 CODE_01B7DE:          TYA                                 ;; 01B7DE : 98          ;
                       LSR A                               ;; 01B7DF : 4A          ;
                       LSR A                               ;; 01B7E0 : 4A          ;
                       TAX                                 ;; 01B7E1 : AA          ;
-                      LDA.B $0B                           ;; 01B7E2 : A5 0B       ;
+                      LDA.B !_B                           ;; 01B7E2 : A5 0B       ;
                       BPL CODE_01B7F0                     ;; 01B7E4 : 10 0A       ;
                       LDA.W $0460,X                       ;; 01B7E6 : BD 60 04    ;
                       AND.B #$02                          ;; 01B7E9 : 29 02       ;
@@ -6925,15 +6925,15 @@ CODE_01B7F0:          STA.W $0460,X                       ;; 01B7F0 : 9D 60 04  
 CODE_01B7F3:          LDX.B #$00                          ;; 01B7F3 : A2 00       ;
                       LDA.W $0300,Y                       ;; 01B7F5 : B9 00 03    ;
                       SEC                                 ;; 01B7F8 : 38          ;
-                      SBC.B $07                           ;; 01B7F9 : E5 07       ;
+                      SBC.B !_7                           ;; 01B7F9 : E5 07       ;
                       BPL CODE_01B7FE                     ;; 01B7FB : 10 01       ;
                       DEX                                 ;; 01B7FD : CA          ;
 CODE_01B7FE:          CLC                                 ;; 01B7FE : 18          ;
-                      ADC.B $02                           ;; 01B7FF : 65 02       ;
-                      STA.B $04                           ;; 01B801 : 85 04       ;
+                      ADC.B !_2                           ;; 01B7FF : 65 02       ;
+                      STA.B !_4                           ;; 01B801 : 85 04       ;
                       TXA                                 ;; 01B803 : 8A          ;
-                      ADC.B $03                           ;; 01B804 : 65 03       ;
-                      STA.B $05                           ;; 01B806 : 85 05       ;
+                      ADC.B !_3                           ;; 01B804 : 65 03       ;
+                      STA.B !_5                           ;; 01B806 : 85 05       ;
                       JSR CODE_01B844                     ;; 01B808 : 20 44 B8    ;
                       BCC CODE_01B819                     ;; 01B80B : 90 0C       ;
                       TYA                                 ;; 01B80D : 98          ;
@@ -6946,15 +6946,15 @@ CODE_01B7FE:          CLC                                 ;; 01B7FE : 18        
 CODE_01B819:          LDX.B #$00                          ;; 01B819 : A2 00       ;
                       LDA.W $0301,Y                       ;; 01B81B : B9 01 03    ;
                       SEC                                 ;; 01B81E : 38          ;
-                      SBC.B $06                           ;; 01B81F : E5 06       ;
+                      SBC.B !_6                           ;; 01B81F : E5 06       ;
                       BPL CODE_01B824                     ;; 01B821 : 10 01       ;
                       DEX                                 ;; 01B823 : CA          ;
 CODE_01B824:          CLC                                 ;; 01B824 : 18          ;
-                      ADC.B $00                           ;; 01B825 : 65 00       ;
-                      STA.B $09                           ;; 01B827 : 85 09       ;
+                      ADC.B !_0                           ;; 01B825 : 65 00       ;
+                      STA.B !_9                           ;; 01B827 : 85 09       ;
                       TXA                                 ;; 01B829 : 8A          ;
-                      ADC.B $01                           ;; 01B82A : 65 01       ;
-                      STA.B $0A                           ;; 01B82C : 85 0A       ;
+                      ADC.B !_1                           ;; 01B82A : 65 01       ;
+                      STA.B !_A                           ;; 01B82C : 85 0A       ;
                       JSR CODE_01C9BF                     ;; 01B82E : 20 BF C9    ;
                       BCC CODE_01B838                     ;; 01B831 : 90 05       ;
                       LDA.B #$F0                          ;; 01B833 : A9 F0       ;
@@ -6963,15 +6963,15 @@ CODE_01B838:          INY                                 ;; 01B838 : C8        
                       INY                                 ;; 01B839 : C8          ;
                       INY                                 ;; 01B83A : C8          ;
                       INY                                 ;; 01B83B : C8          ;
-                      DEC.B $08                           ;; 01B83C : C6 08       ;
+                      DEC.B !_8                           ;; 01B83C : C6 08       ;
                       BPL CODE_01B7DE                     ;; 01B83E : 10 9E       ;
                       LDX.W $15E9                         ;; 01B840 : AE E9 15    ; X = Sprite index 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01B844:          REP #$20                            ;; 01B844 : C2 20       ; Accum (16 bit) 
-                      LDA.B $04                           ;; 01B846 : A5 04       ;
+                      LDA.B !_4                           ;; 01B846 : A5 04       ;
                       SEC                                 ;; 01B848 : 38          ;
-                      SBC.B $1A                           ;; 01B849 : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01B849 : E5 1A       ;
                       CMP.W #$0100                        ;; 01B84B : C9 00 01    ;
                       SEP #$20                            ;; 01B84E : E2 20       ; Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -6987,32 +6987,32 @@ CODE_01B852:          LDA.W $15C4,X                       ;; 01B852 : BD C4 15  
                       BCC Return01B8B1                    ;; 01B860 : 90 4F       ;
                       LDA.B $D8,X                         ;; 01B862 : B5 D8       ;
                       SEC                                 ;; 01B864 : 38          ;
-                      SBC.B $1C                           ;; 01B865 : E5 1C       ;
-                      STA.B $02                           ;; 01B867 : 85 02       ;
+                      SBC.B !Layer1YPos                   ;; 01B865 : E5 1C       ;
+                      STA.B !_2                           ;; 01B867 : 85 02       ;
                       SEC                                 ;; 01B869 : 38          ;
-                      SBC.B $0D                           ;; 01B86A : E5 0D       ;
-                      STA.B $09                           ;; 01B86C : 85 09       ;
+                      SBC.B !_D                           ;; 01B86A : E5 0D       ;
+                      STA.B !_9                           ;; 01B86C : 85 09       ;
                       LDA.B $80                           ;; 01B86E : A5 80       ;
                       CLC                                 ;; 01B870 : 18          ;
                       ADC.B #$18                          ;; 01B871 : 69 18       ;
-                      CMP.B $09                           ;; 01B873 : C5 09       ;
+                      CMP.B !_9                           ;; 01B873 : C5 09       ;
                       BCS ADDR_01B8B2                     ;; 01B875 : B0 3B       ;
                       LDA.B $7D                           ;; 01B877 : A5 7D       ;
                       BMI Return01B8B1                    ;; 01B879 : 30 36       ;
                       STZ.B $7D                           ;; 01B87B : 64 7D       ;
                       LDA.B #$01                          ;; 01B87D : A9 01       ;
                       STA.W $1471                         ;; 01B87F : 8D 71 14    ;
-                      LDA.B $0D                           ;; 01B882 : A5 0D       ;
+                      LDA.B !_D                           ;; 01B882 : A5 0D       ;
                       CLC                                 ;; 01B884 : 18          ;
                       ADC.B #$1F                          ;; 01B885 : 69 1F       ;
                       LDY.W $187A                         ;; 01B887 : AC 7A 18    ;
                       BEQ CODE_01B88F                     ;; 01B88A : F0 03       ;
                       CLC                                 ;; 01B88C : 18          ;
                       ADC.B #$10                          ;; 01B88D : 69 10       ;
-CODE_01B88F:          STA.B $00                           ;; 01B88F : 85 00       ;
+CODE_01B88F:          STA.B !_0                           ;; 01B88F : 85 00       ;
                       LDA.B $D8,X                         ;; 01B891 : B5 D8       ;
                       SEC                                 ;; 01B893 : 38          ;
-                      SBC.B $00                           ;; 01B894 : E5 00       ;
+                      SBC.B !_0                           ;; 01B894 : E5 00       ;
                       STA.B $96                           ;; 01B896 : 85 96       ;
                       LDA.W $14D4,X                       ;; 01B898 : BD D4 14    ;
                       SBC.B #$00                          ;; 01B89B : E9 00       ;
@@ -7029,19 +7029,19 @@ CODE_01B8A7:          CLC                                 ;; 01B8A7 : 18        
                       STA.B $95                           ;; 01B8AF : 85 95       ;
 Return01B8B1:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-ADDR_01B8B2:          LDA.B $02                           ;; 01B8B2 : A5 02       ;
+ADDR_01B8B2:          LDA.B !_2                           ;; 01B8B2 : A5 02       ;
                       CLC                                 ;; 01B8B4 : 18          ;
-                      ADC.B $0D                           ;; 01B8B5 : 65 0D       ;
-                      STA.B $02                           ;; 01B8B7 : 85 02       ;
+                      ADC.B !_D                           ;; 01B8B5 : 65 0D       ;
+                      STA.B !_2                           ;; 01B8B7 : 85 02       ;
                       LDA.B #$FF                          ;; 01B8B9 : A9 FF       ;
                       LDY.B $73                           ;; 01B8BB : A4 73       ;
                       BNE ADDR_01B8C3                     ;; 01B8BD : D0 04       ;
-                      LDY.B $19                           ;; 01B8BF : A4 19       ;
+                      LDY.B !Powerup                      ;; 01B8BF : A4 19       ;
                       BNE ADDR_01B8C5                     ;; 01B8C1 : D0 02       ;
 ADDR_01B8C3:          LDA.B #$08                          ;; 01B8C3 : A9 08       ;
 ADDR_01B8C5:          CLC                                 ;; 01B8C5 : 18          ;
                       ADC.B $80                           ;; 01B8C6 : 65 80       ;
-                      CMP.B $02                           ;; 01B8C8 : C5 02       ;
+                      CMP.B !_2                           ;; 01B8C8 : C5 02       ;
                       BCC ADDR_01B8D5                     ;; 01B8CA : 90 09       ;
                       LDA.B $7D                           ;; 01B8CC : A5 7D       ;
                       BPL Return01B8D4                    ;; 01B8CE : 10 04       ;
@@ -7049,24 +7049,24 @@ ADDR_01B8C5:          CLC                                 ;; 01B8C5 : 18        
                       STA.B $7D                           ;; 01B8D2 : 85 7D       ;
 Return01B8D4:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-ADDR_01B8D5:          LDA.B $0E                           ;; 01B8D5 : A5 0E       ;
+ADDR_01B8D5:          LDA.B !_E                           ;; 01B8D5 : A5 0E       ;
                       CLC                                 ;; 01B8D7 : 18          ;
                       ADC.B #$10                          ;; 01B8D8 : 69 10       ;
-                      STA.B $00                           ;; 01B8DA : 85 00       ;
+                      STA.B !_0                           ;; 01B8DA : 85 00       ;
                       LDY.B #$00                          ;; 01B8DC : A0 00       ;
                       LDA.B $E4,X                         ;; 01B8DE : B5 E4       ;
                       SEC                                 ;; 01B8E0 : 38          ;
-                      SBC.B $1A                           ;; 01B8E1 : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01B8E1 : E5 1A       ;
                       CMP.B $7E                           ;; 01B8E3 : C5 7E       ;
                       BCC ADDR_01B8EF                     ;; 01B8E5 : 90 08       ;
-                      LDA.B $00                           ;; 01B8E7 : A5 00       ;
+                      LDA.B !_0                           ;; 01B8E7 : A5 00       ;
                       EOR.B #$FF                          ;; 01B8E9 : 49 FF       ;
                       INC A                               ;; 01B8EB : 1A          ;
-                      STA.B $00                           ;; 01B8EC : 85 00       ;
+                      STA.B !_0                           ;; 01B8EC : 85 00       ;
                       DEY                                 ;; 01B8EE : 88          ;
 ADDR_01B8EF:          LDA.B $E4,X                         ;; 01B8EF : B5 E4       ;
                       CLC                                 ;; 01B8F1 : 18          ;
-                      ADC.B $00                           ;; 01B8F2 : 65 00       ;
+                      ADC.B !_0                           ;; 01B8F2 : 65 00       ;
                       STA.B $94                           ;; 01B8F4 : 85 94       ;
                       TYA                                 ;; 01B8F6 : 98          ;
                       ADC.W $14E0,X                       ;; 01B8F7 : 7D E0 14    ;
@@ -7074,34 +7074,34 @@ ADDR_01B8EF:          LDA.B $E4,X                         ;; 01B8EF : B5 E4     
                       STZ.B $7B                           ;; 01B8FC : 64 7B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_01B8FF:          LDA.B $00                           ;; 01B8FF : A5 00       ;
-                      STA.B $0E                           ;; 01B901 : 85 0E       ;
-                      LDA.B $02                           ;; 01B903 : A5 02       ;
-                      STA.B $0D                           ;; 01B905 : 85 0D       ;
+CODE_01B8FF:          LDA.B !_0                           ;; 01B8FF : A5 00       ;
+                      STA.B !_E                           ;; 01B901 : 85 0E       ;
+                      LDA.B !_2                           ;; 01B903 : A5 02       ;
+                      STA.B !_D                           ;; 01B905 : 85 0D       ;
                       LDA.B $E4,X                         ;; 01B907 : B5 E4       ;
                       SEC                                 ;; 01B909 : 38          ;
-                      SBC.B $00                           ;; 01B90A : E5 00       ;
-                      STA.B $04                           ;; 01B90C : 85 04       ;
+                      SBC.B !_0                           ;; 01B90A : E5 00       ;
+                      STA.B !_4                           ;; 01B90C : 85 04       ;
                       LDA.W $14E0,X                       ;; 01B90E : BD E0 14    ;
                       SBC.B #$00                          ;; 01B911 : E9 00       ;
-                      STA.B $0A                           ;; 01B913 : 85 0A       ;
-                      LDA.B $00                           ;; 01B915 : A5 00       ;
+                      STA.B !_A                           ;; 01B913 : 85 0A       ;
+                      LDA.B !_0                           ;; 01B915 : A5 00       ;
                       ASL A                               ;; 01B917 : 0A          ;
                       CLC                                 ;; 01B918 : 18          ;
                       ADC.B #$10                          ;; 01B919 : 69 10       ;
-                      STA.B $06                           ;; 01B91B : 85 06       ;
+                      STA.B !_6                           ;; 01B91B : 85 06       ;
                       LDA.B $D8,X                         ;; 01B91D : B5 D8       ;
                       SEC                                 ;; 01B91F : 38          ;
-                      SBC.B $02                           ;; 01B920 : E5 02       ;
-                      STA.B $05                           ;; 01B922 : 85 05       ;
+                      SBC.B !_2                           ;; 01B920 : E5 02       ;
+                      STA.B !_5                           ;; 01B922 : 85 05       ;
                       LDA.W $14D4,X                       ;; 01B924 : BD D4 14    ;
                       SBC.B #$00                          ;; 01B927 : E9 00       ;
-                      STA.B $0B                           ;; 01B929 : 85 0B       ;
-                      LDA.B $02                           ;; 01B92B : A5 02       ;
+                      STA.B !_B                           ;; 01B929 : 85 0B       ;
+                      LDA.B !_2                           ;; 01B92B : A5 02       ;
                       ASL A                               ;; 01B92D : 0A          ;
                       CLC                                 ;; 01B92E : 18          ;
                       ADC.B #$10                          ;; 01B92F : 69 10       ;
-                      STA.B $07                           ;; 01B931 : 85 07       ;
+                      STA.B !_7                           ;; 01B931 : 85 07       ;
                       JSL GetMarioClipping                ;; 01B933 : 22 64 B6 03 ;
                       JSL CheckForContact                 ;; 01B937 : 22 2B B7 03 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -7189,11 +7189,11 @@ CODE_01B9CC:          LDA.W $1EEB                         ;; 01B9CC : AD EB 1E  
 CODE_01B9D6:          LDA.W DATA_01B969,Y                 ;; 01B9D6 : B9 69 B9    ;
                       STA.W $1602,X                       ;; 01B9D9 : 9D 02 16    ;
                       LDA.W DATA_01B973,Y                 ;; 01B9DC : B9 73 B9    ;
-                      STA.B $00                           ;; 01B9DF : 85 00       ;
+                      STA.B !_0                           ;; 01B9DF : 85 00       ;
                       LDA.W $15F6,X                       ;; 01B9E1 : BD F6 15    ;
                       PHA                                 ;; 01B9E4 : 48          ;
                       AND.B #$FE                          ;; 01B9E5 : 29 FE       ;
-                      ORA.B $00                           ;; 01B9E7 : 05 00       ;
+                      ORA.B !_0                           ;; 01B9E7 : 05 00       ;
                       STA.W $15F6,X                       ;; 01B9E9 : 9D F6 15    ;
                       JSR SubSprGfx1                      ;; 01B9EC : 20 67 9D    ;
                       PLA                                 ;; 01B9EF : 68          ;
@@ -7338,32 +7338,32 @@ CODE_01BB27:          CMP.B #$10                          ;; 01BB27 : C9 10     
                       STA.W $13F9                         ;; 01BB30 : 8D F9 13    ;
 CODE_01BB33:          LDA.B #$30                          ;; 01BB33 : A9 30       ;
                       STA.W $15EA,X                       ;; 01BB35 : 9D EA 15    ;
-                      STA.B $03                           ;; 01BB38 : 85 03       ;
+                      STA.B !_3                           ;; 01BB38 : 85 03       ;
                       TAY                                 ;; 01BB3A : A8          ;
                       LDA.B $E4,X                         ;; 01BB3B : B5 E4       ;
                       SEC                                 ;; 01BB3D : 38          ;
-                      SBC.B $1A                           ;; 01BB3E : E5 1A       ;
-                      STA.B $00                           ;; 01BB40 : 85 00       ;
+                      SBC.B !Layer1XPos                   ;; 01BB3E : E5 1A       ;
+                      STA.B !_0                           ;; 01BB40 : 85 00       ;
                       LDA.B $D8,X                         ;; 01BB42 : B5 D8       ;
                       SEC                                 ;; 01BB44 : 38          ;
-                      SBC.B $1C                           ;; 01BB45 : E5 1C       ;
-                      STA.B $01                           ;; 01BB47 : 85 01       ;
+                      SBC.B !Layer1YPos                   ;; 01BB45 : E5 1C       ;
+                      STA.B !_1                           ;; 01BB47 : 85 01       ;
                       LDA.W $1540,X                       ;; 01BB49 : BD 40 15    ;
                       LSR A                               ;; 01BB4C : 4A          ;
-                      STA.B $02                           ;; 01BB4D : 85 02       ;
+                      STA.B !_2                           ;; 01BB4D : 85 02       ;
                       TAX                                 ;; 01BB4F : AA          ;
                       LDA.W DATA_01BAA7,X                 ;; 01BB50 : BD A7 BA    ;
-                      STA.B $06                           ;; 01BB53 : 85 06       ;
-                      LDA.B $00                           ;; 01BB55 : A5 00       ;
+                      STA.B !_6                           ;; 01BB53 : 85 06       ;
+                      LDA.B !_0                           ;; 01BB55 : A5 00       ;
                       CLC                                 ;; 01BB57 : 18          ;
                       ADC.W DATA_01BA97,X                 ;; 01BB58 : 7D 97 BA    ;
                       STA.W $0300,Y                       ;; 01BB5B : 99 00 03    ;
                       STA.W $0304,Y                       ;; 01BB5E : 99 04 03    ;
                       STA.W $0308,Y                       ;; 01BB61 : 99 08 03    ;
-                      LDA.B $06                           ;; 01BB64 : A5 06       ;
+                      LDA.B !_6                           ;; 01BB64 : A5 06       ;
                       CMP.B #$02                          ;; 01BB66 : C9 02       ;
                       BEQ CODE_01BB8E                     ;; 01BB68 : F0 24       ;
-                      LDA.B $00                           ;; 01BB6A : A5 00       ;
+                      LDA.B !_0                           ;; 01BB6A : A5 00       ;
                       CLC                                 ;; 01BB6C : 18          ;
                       ADC.B #$20                          ;; 01BB6D : 69 20       ;
                       SEC                                 ;; 01BB6F : 38          ;
@@ -7371,15 +7371,15 @@ CODE_01BB33:          LDA.B #$30                          ;; 01BB33 : A9 30     
                       STA.W $030C,Y                       ;; 01BB73 : 99 0C 03    ;
                       STA.W $0310,Y                       ;; 01BB76 : 99 10 03    ;
                       STA.W $0314,Y                       ;; 01BB79 : 99 14 03    ;
-                      LDA.B $06                           ;; 01BB7C : A5 06       ;
+                      LDA.B !_6                           ;; 01BB7C : A5 06       ;
                       BNE CODE_01BB8E                     ;; 01BB7E : D0 0E       ;
-                      LDA.B $00                           ;; 01BB80 : A5 00       ;
+                      LDA.B !_0                           ;; 01BB80 : A5 00       ;
                       CLC                                 ;; 01BB82 : 18          ;
                       ADC.B #$10                          ;; 01BB83 : 69 10       ;
                       STA.W $0318,Y                       ;; 01BB85 : 99 18 03    ;
                       STA.W $031C,Y                       ;; 01BB88 : 99 1C 03    ;
                       STA.W $0320,Y                       ;; 01BB8B : 99 20 03    ;
-CODE_01BB8E:          LDA.B $01                           ;; 01BB8E : A5 01       ;
+CODE_01BB8E:          LDA.B !_1                           ;; 01BB8E : A5 01       ;
                       STA.W $0301,Y                       ;; 01BB90 : 99 01 03    ;
                       STA.W $030D,Y                       ;; 01BB93 : 99 0D 03    ;
                       STA.W $0319,Y                       ;; 01BB96 : 99 19 03    ;
@@ -7394,12 +7394,12 @@ CODE_01BB8E:          LDA.B $01                           ;; 01BB8E : A5 01     
                       STA.W $0315,Y                       ;; 01BBAB : 99 15 03    ;
                       STA.W $0321,Y                       ;; 01BBAE : 99 21 03    ;
                       LDA.B #$08                          ;; 01BBB1 : A9 08       ;
-                      STA.B $07                           ;; 01BBB3 : 85 07       ;
-                      LDA.B $06                           ;; 01BBB5 : A5 06       ;
+                      STA.B !_7                           ;; 01BBB3 : 85 07       ;
+                      LDA.B !_6                           ;; 01BBB5 : A5 06       ;
                       ASL A                               ;; 01BBB7 : 0A          ;
                       ASL A                               ;; 01BBB8 : 0A          ;
                       ASL A                               ;; 01BBB9 : 0A          ;
-                      ADC.B $06                           ;; 01BBBA : 65 06       ;
+                      ADC.B !_6                           ;; 01BBBA : 65 06       ;
                       TAX                                 ;; 01BBBC : AA          ;
 CODE_01BBBD:          LDA.W DATA_01BAB7,X                 ;; 01BBBD : BD B7 BA    ;
                       STA.W $0302,Y                       ;; 01BBC0 : 99 02 03    ;
@@ -7408,9 +7408,9 @@ CODE_01BBBD:          LDA.W DATA_01BAB7,X                 ;; 01BBBD : BD B7 BA  
                       INY                                 ;; 01BBC5 : C8          ;
                       INY                                 ;; 01BBC6 : C8          ;
                       INX                                 ;; 01BBC7 : E8          ;
-                      DEC.B $07                           ;; 01BBC8 : C6 07       ;
+                      DEC.B !_7                           ;; 01BBC8 : C6 07       ;
                       BPL CODE_01BBBD                     ;; 01BBCA : 10 F1       ;
-                      LDY.B $03                           ;; 01BBCC : A4 03       ;
+                      LDY.B !_3                           ;; 01BBCC : A4 03       ;
                       LDX.B #$08                          ;; 01BBCE : A2 08       ;
 CODE_01BBD0:          LDA.B $64                           ;; 01BBD0 : A5 64       ;
                       ORA.B #$09                          ;; 01BBD2 : 09 09       ;
@@ -7431,7 +7431,7 @@ CODE_01BBE8:          STA.W $0303,Y                       ;; 01BBE8 : 99 03 03  
                       INY                                 ;; 01BBEE : C8          ;
                       DEX                                 ;; 01BBEF : CA          ;
                       BPL CODE_01BBD0                     ;; 01BBF0 : 10 DE       ;
-                      LDA.B $06                           ;; 01BBF2 : A5 06       ;
+                      LDA.B !_6                           ;; 01BBF2 : A5 06       ;
                       PHA                                 ;; 01BBF4 : 48          ;
                       LDX.W $15E9                         ;; 01BBF5 : AE E9 15    ; X = Sprite index 
                       LDA.B #$08                          ;; 01BBF8 : A9 08       ;
@@ -7452,16 +7452,16 @@ CODE_01BC11:          LDA.B #$03                          ;; 01BC11 : A9 03     
 Return01BC1C:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01BC1D:          LDA.B $94                           ;; 01BC1D : A5 94       ; \ $00 = Mario X Low 
-                      STA.B $00                           ;; 01BC1F : 85 00       ; / 
+                      STA.B !_0                           ;; 01BC1F : 85 00       ; / 
                       LDA.B $96                           ;; 01BC21 : A5 96       ; \ $01 = Mario Y Low 
-                      STA.B $01                           ;; 01BC23 : 85 01       ; / 
+                      STA.B !_1                           ;; 01BC23 : 85 01       ; / 
                       LDA.B #$10                          ;; 01BC25 : A9 10       ; \ $02 = $03 = #$10 
-                      STA.B $02                           ;; 01BC27 : 85 02       ;  | 
-                      STA.B $03                           ;; 01BC29 : 85 03       ; / 
+                      STA.B !_2                           ;; 01BC27 : 85 02       ;  | 
+                      STA.B !_3                           ;; 01BC29 : 85 03       ; / 
                       LDA.B $95                           ;; 01BC2B : A5 95       ; \ $08 = Mario X High 
-                      STA.B $08                           ;; 01BC2D : 85 08       ; / 
+                      STA.B !_8                           ;; 01BC2D : 85 08       ; / 
                       LDA.B $97                           ;; 01BC2F : A5 97       ; \ $09 = Mario Y High 
-                      STA.B $09                           ;; 01BC31 : 85 09       ; / 
+                      STA.B !_9                           ;; 01BC31 : 85 09       ; / 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -7496,7 +7496,7 @@ CODE_01BC3F:          JSR CODE_01B14E                     ;; 01BC3F : 20 4E B1  
                       JSL GetRand                         ;; 01BC71 : 22 F9 AC 01 ;
                       ADC.W $148E                         ;; 01BC75 : 6D 8E 14    ;
                       ADC.B $7B                           ;; 01BC78 : 65 7B       ;
-                      ADC.B $13                           ;; 01BC7A : 65 13       ;
+                      ADC.B !TrueFrame                    ;; 01BC7A : 65 13       ;
                       LDY.B #$78                          ;; 01BC7C : A0 78       ;
                       CMP.B #$35                          ;; 01BC7E : C9 35       ;
                       BEQ StoreSpriteNum                  ;; 01BC80 : F0 0E       ;
@@ -7528,7 +7528,7 @@ CODE_01BCB9:          JSR CODE_01BD98                     ;; 01BCB9 : 20 98 BD  
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01BCBD:          JSR SubSprSpr_MarioSpr              ;; 01BCBD : 20 C1 8F    ;
-                      LDA.B $13                           ;; 01BCC0 : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01BCC0 : A5 13       ;
                       LSR A                               ;; 01BCC2 : 4A          ;
                       LSR A                               ;; 01BCC3 : 4A          ;
                       AND.B #$03                          ;; 01BCC4 : 29 03       ;
@@ -7539,7 +7539,7 @@ CODE_01BCBD:          JSR SubSprSpr_MarioSpr              ;; 01BCBD : 20 C1 8F  
                       JSR SubOffscreen0Bnk1               ;; 01BCD0 : 20 31 AC    ;
                       LDA.B $D8,X                         ;; 01BCD3 : B5 D8       ;
                       SEC                                 ;; 01BCD5 : 38          ;
-                      SBC.B $1C                           ;; 01BCD6 : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01BCD6 : E5 1C       ;
                       CMP.B #$E0                          ;; 01BCD8 : C9 E0       ;
                       BCC Return01BCDF                    ;; 01BCDA : 90 03       ;
                       STZ.W $14C8,X                       ;; 01BCDC : 9E C8 14    ;
@@ -7550,69 +7550,69 @@ MagiKoopasMagicDisp:  db $00,$01,$02,$05,$08,$0B,$0E,$0F  ;; ?QPWZ?             
                       db $10,$0F,$0E,$0B,$08,$05,$02,$01  ;; ?QPWZ?               ;
                                                           ;;                      ;
 MagiKoopasMagicGfx:   JSR GetDrawInfoBnk1                 ;; ?QPWZ? : 20 65 A3    ;
-                      LDA.B $14                           ;; 01BCF3 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01BCF3 : A5 14       ;
                       LSR A                               ;; 01BCF5 : 4A          ;
                       AND.B #$0F                          ;; 01BCF6 : 29 0F       ;
-                      STA.B $03                           ;; 01BCF8 : 85 03       ;
+                      STA.B !_3                           ;; 01BCF8 : 85 03       ;
                       CLC                                 ;; 01BCFA : 18          ;
                       ADC.B #$0C                          ;; 01BCFB : 69 0C       ;
                       AND.B #$0F                          ;; 01BCFD : 29 0F       ;
-                      STA.B $02                           ;; 01BCFF : 85 02       ;
-                      LDA.B $01                           ;; 01BD01 : A5 01       ;
+                      STA.B !_2                           ;; 01BCFF : 85 02       ;
+                      LDA.B !_1                           ;; 01BD01 : A5 01       ;
                       SEC                                 ;; 01BD03 : 38          ;
                       SBC.B #$04                          ;; 01BD04 : E9 04       ;
-                      STA.B $01                           ;; 01BD06 : 85 01       ;
-                      LDA.B $00                           ;; 01BD08 : A5 00       ;
+                      STA.B !_1                           ;; 01BD06 : 85 01       ;
+                      LDA.B !_0                           ;; 01BD08 : A5 00       ;
                       SEC                                 ;; 01BD0A : 38          ;
                       SBC.B #$04                          ;; 01BD0B : E9 04       ;
-                      STA.B $00                           ;; 01BD0D : 85 00       ;
-                      LDX.B $02                           ;; 01BD0F : A6 02       ;
-                      LDA.B $01                           ;; 01BD11 : A5 01       ;
+                      STA.B !_0                           ;; 01BD0D : 85 00       ;
+                      LDX.B !_2                           ;; 01BD0F : A6 02       ;
+                      LDA.B !_1                           ;; 01BD11 : A5 01       ;
                       CLC                                 ;; 01BD13 : 18          ;
                       ADC.W MagiKoopasMagicDisp,X         ;; 01BD14 : 7D E0 BC    ;
                       STA.W $0301,Y                       ;; 01BD17 : 99 01 03    ;
-                      LDX.B $03                           ;; 01BD1A : A6 03       ;
-                      LDA.B $00                           ;; 01BD1C : A5 00       ;
+                      LDX.B !_3                           ;; 01BD1A : A6 03       ;
+                      LDA.B !_0                           ;; 01BD1C : A5 00       ;
                       CLC                                 ;; 01BD1E : 18          ;
                       ADC.W MagiKoopasMagicDisp,X         ;; 01BD1F : 7D E0 BC    ;
                       STA.W $0300,Y                       ;; 01BD22 : 99 00 03    ;
-                      LDA.B $02                           ;; 01BD25 : A5 02       ;
+                      LDA.B !_2                           ;; 01BD25 : A5 02       ;
                       CLC                                 ;; 01BD27 : 18          ;
                       ADC.B #$05                          ;; 01BD28 : 69 05       ;
                       AND.B #$0F                          ;; 01BD2A : 29 0F       ;
-                      STA.B $02                           ;; 01BD2C : 85 02       ;
+                      STA.B !_2                           ;; 01BD2C : 85 02       ;
                       TAX                                 ;; 01BD2E : AA          ;
-                      LDA.B $01                           ;; 01BD2F : A5 01       ;
+                      LDA.B !_1                           ;; 01BD2F : A5 01       ;
                       CLC                                 ;; 01BD31 : 18          ;
                       ADC.W MagiKoopasMagicDisp,X         ;; 01BD32 : 7D E0 BC    ;
                       STA.W $0305,Y                       ;; 01BD35 : 99 05 03    ;
-                      LDA.B $03                           ;; 01BD38 : A5 03       ;
+                      LDA.B !_3                           ;; 01BD38 : A5 03       ;
                       CLC                                 ;; 01BD3A : 18          ;
                       ADC.B #$05                          ;; 01BD3B : 69 05       ;
                       AND.B #$0F                          ;; 01BD3D : 29 0F       ;
-                      STA.B $03                           ;; 01BD3F : 85 03       ;
+                      STA.B !_3                           ;; 01BD3F : 85 03       ;
                       TAX                                 ;; 01BD41 : AA          ;
-                      LDA.B $00                           ;; 01BD42 : A5 00       ;
+                      LDA.B !_0                           ;; 01BD42 : A5 00       ;
                       CLC                                 ;; 01BD44 : 18          ;
                       ADC.W MagiKoopasMagicDisp,X         ;; 01BD45 : 7D E0 BC    ;
                       STA.W $0304,Y                       ;; 01BD48 : 99 04 03    ;
-                      LDA.B $02                           ;; 01BD4B : A5 02       ;
+                      LDA.B !_2                           ;; 01BD4B : A5 02       ;
                       CLC                                 ;; 01BD4D : 18          ;
                       ADC.B #$05                          ;; 01BD4E : 69 05       ;
                       AND.B #$0F                          ;; 01BD50 : 29 0F       ;
-                      STA.B $02                           ;; 01BD52 : 85 02       ;
+                      STA.B !_2                           ;; 01BD52 : 85 02       ;
                       TAX                                 ;; 01BD54 : AA          ;
-                      LDA.B $01                           ;; 01BD55 : A5 01       ;
+                      LDA.B !_1                           ;; 01BD55 : A5 01       ;
                       CLC                                 ;; 01BD57 : 18          ;
                       ADC.W MagiKoopasMagicDisp,X         ;; 01BD58 : 7D E0 BC    ;
                       STA.W $0309,Y                       ;; 01BD5B : 99 09 03    ;
-                      LDA.B $03                           ;; 01BD5E : A5 03       ;
+                      LDA.B !_3                           ;; 01BD5E : A5 03       ;
                       CLC                                 ;; 01BD60 : 18          ;
                       ADC.B #$05                          ;; 01BD61 : 69 05       ;
                       AND.B #$0F                          ;; 01BD63 : 29 0F       ;
-                      STA.B $03                           ;; 01BD65 : 85 03       ;
+                      STA.B !_3                           ;; 01BD65 : 85 03       ;
                       TAX                                 ;; 01BD67 : AA          ;
-                      LDA.B $00                           ;; 01BD68 : A5 00       ;
+                      LDA.B !_0                           ;; 01BD68 : A5 00       ;
                       CLC                                 ;; 01BD6A : 18          ;
                       ADC.W MagiKoopasMagicDisp,X         ;; 01BD6B : 7D E0 BC    ;
                       STA.W $0308,Y                       ;; 01BD6E : 99 08 03    ;
@@ -7687,29 +7687,29 @@ CODE_01BDF2:          LDA.W $18BF                         ;; 01BDF2 : AD BF 18  
 CODE_01BDFB:          LDA.B $9D                           ;; 01BDFB : A5 9D       ; \ Branch if sprites locked 
                       BNE Return01BE5E                    ;; 01BDFD : D0 5F       ; / 
                       LDY.B #$24                          ;; 01BDFF : A0 24       ;
-                      STY.B $40                           ;; 01BE01 : 84 40       ;
+                      STY.B !ColorSettings                ;; 01BE01 : 84 40       ;
                       LDA.W $1540,X                       ;; 01BE03 : BD 40 15    ;
                       BNE Return01BE5E                    ;; 01BE06 : D0 56       ;
                       JSL GetRand                         ;; 01BE08 : 22 F9 AC 01 ;
                       CMP.B #$D1                          ;; 01BE0C : C9 D1       ;
                       BCS Return01BE5E                    ;; 01BE0E : B0 4E       ;
                       CLC                                 ;; 01BE10 : 18          ;
-                      ADC.B $1C                           ;; 01BE11 : 65 1C       ;
+                      ADC.B !Layer1YPos                   ;; 01BE11 : 65 1C       ;
                       AND.B #$F0                          ;; 01BE13 : 29 F0       ;
                       STA.B $D8,X                         ;; 01BE15 : 95 D8       ;
-                      LDA.B $1D                           ;; 01BE17 : A5 1D       ;
+                      LDA.B !Layer1YPos+1                 ;; 01BE17 : A5 1D       ;
                       ADC.B #$00                          ;; 01BE19 : 69 00       ;
                       STA.W $14D4,X                       ;; 01BE1B : 9D D4 14    ;
                       JSL GetRand                         ;; 01BE1E : 22 F9 AC 01 ;
                       CLC                                 ;; 01BE22 : 18          ;
-                      ADC.B $1A                           ;; 01BE23 : 65 1A       ;
+                      ADC.B !Layer1XPos                   ;; 01BE23 : 65 1A       ;
                       AND.B #$F0                          ;; 01BE25 : 29 F0       ;
                       STA.B $E4,X                         ;; 01BE27 : 95 E4       ;
-                      LDA.B $1B                           ;; 01BE29 : A5 1B       ;
+                      LDA.B !Layer1XPos+1                 ;; 01BE29 : A5 1B       ;
                       ADC.B #$00                          ;; 01BE2B : 69 00       ;
                       STA.W $14E0,X                       ;; 01BE2D : 9D E0 14    ;
                       JSR SubHorizPos                     ;; 01BE30 : 20 30 AD    ;
-                      LDA.B $0F                           ;; 01BE33 : A5 0F       ;
+                      LDA.B !_F                           ;; 01BE33 : A5 0F       ;
                       CLC                                 ;; 01BE35 : 18          ;
                       ADC.B #$20                          ;; 01BE36 : 69 20       ;
                       CMP.B #$40                          ;; 01BE38 : C9 40       ;
@@ -7749,7 +7749,7 @@ CODE_01BE6E:          STZ.W $15D0,X                       ;; 01BE6E : 9E D0 15  
                       BNE CODE_01BE86                     ;; 01BE7E : D0 06       ;
                       INC.B $C2,X                         ;; 01BE80 : F6 C2       ;
 CODE_01BE82:          LDY.B #$34                          ;; 01BE82 : A0 34       ;
-                      STY.B $40                           ;; 01BE84 : 84 40       ;
+                      STY.B !ColorSettings                ;; 01BE84 : 84 40       ;
 CODE_01BE86:          CMP.B #$40                          ;; 01BE86 : C9 40       ;
                       BNE CODE_01BE96                     ;; 01BE88 : D0 0C       ;
                       PHA                                 ;; 01BE8A : 48          ;
@@ -7797,12 +7797,12 @@ CODE_01BECE:          LDA.W $1602,X                       ;; 01BECE : BD 02 16  
                       CLC                                 ;; 01BEDA : 18          ;
                       ADC.W DATA_01BE6C,Y                 ;; 01BEDB : 79 6C BE    ;
                       SEC                                 ;; 01BEDE : 38          ;
-                      SBC.B $1A                           ;; 01BEDF : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01BEDF : E5 1A       ;
                       LDY.W $15EA,X                       ;; 01BEE1 : BC EA 15    ; Y = Index into sprite OAM 
                       STA.W $0308,Y                       ;; 01BEE4 : 99 08 03    ;
                       LDA.B $D8,X                         ;; 01BEE7 : B5 D8       ;
                       SEC                                 ;; 01BEE9 : 38          ;
-                      SBC.B $1C                           ;; 01BEEA : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01BEEA : E5 1C       ;
                       CLC                                 ;; 01BEEC : 18          ;
                       ADC.B #$10                          ;; 01BEED : 69 10       ;
                       STA.W $0309,Y                       ;; 01BEEF : 99 09 03    ;
@@ -7858,77 +7858,77 @@ CODE_01BF28:          LDA.B #$10                          ;; 01BF28 : A9 10     
                       LDA.B #$20                          ;; 01BF57 : A9 20       ;
                       JSR CODE_01BF6A                     ;; 01BF59 : 20 6A BF    ;
                       LDX.W $15E9                         ;; 01BF5C : AE E9 15    ; X = Sprite index 
-                      LDA.B $00                           ;; 01BF5F : A5 00       ;PULLS SPEED FROM RAM HERE?                   
+                      LDA.B !_0                           ;; 01BF5F : A5 00       ;PULLS SPEED FROM RAM HERE?                   
                       STA.W $00AA,Y                       ;; 01BF61 : 99 AA 00    ;
-                      LDA.B $01                           ;; 01BF64 : A5 01       ;
+                      LDA.B !_1                           ;; 01BF64 : A5 01       ;
                       STA.W $00B6,Y                       ;; 01BF66 : 99 B6 00    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_01BF6A:          STA.B $01                           ;; 01BF6A : 85 01       ;FILLS OUT RAM TO USE FOR SPEED?                   
+CODE_01BF6A:          STA.B !_1                           ;; 01BF6A : 85 01       ;FILLS OUT RAM TO USE FOR SPEED?                   
                       PHX                                 ;; 01BF6C : DA          ;
                       PHY                                 ;; 01BF6D : 5A          ;
                       JSR CODE_01AD42                     ;; 01BF6E : 20 42 AD    ;
-                      STY.B $02                           ;; 01BF71 : 84 02       ;
-                      LDA.B $0E                           ;; 01BF73 : A5 0E       ;
+                      STY.B !_2                           ;; 01BF71 : 84 02       ;
+                      LDA.B !_E                           ;; 01BF73 : A5 0E       ;
                       BPL CODE_01BF7C                     ;; 01BF75 : 10 05       ;
                       EOR.B #$FF                          ;; 01BF77 : 49 FF       ;
                       CLC                                 ;; 01BF79 : 18          ;
                       ADC.B #$01                          ;; 01BF7A : 69 01       ;
-CODE_01BF7C:          STA.B $0C                           ;; 01BF7C : 85 0C       ;
+CODE_01BF7C:          STA.B !_C                           ;; 01BF7C : 85 0C       ;
                       JSR SubHorizPos                     ;; 01BF7E : 20 30 AD    ;
-                      STY.B $03                           ;; 01BF81 : 84 03       ;
-                      LDA.B $0F                           ;; 01BF83 : A5 0F       ;
+                      STY.B !_3                           ;; 01BF81 : 84 03       ;
+                      LDA.B !_F                           ;; 01BF83 : A5 0F       ;
                       BPL CODE_01BF8C                     ;; 01BF85 : 10 05       ;
                       EOR.B #$FF                          ;; 01BF87 : 49 FF       ;
                       CLC                                 ;; 01BF89 : 18          ;
                       ADC.B #$01                          ;; 01BF8A : 69 01       ;
-CODE_01BF8C:          STA.B $0D                           ;; 01BF8C : 85 0D       ;
+CODE_01BF8C:          STA.B !_D                           ;; 01BF8C : 85 0D       ;
                       LDY.B #$00                          ;; 01BF8E : A0 00       ;
-                      LDA.B $0D                           ;; 01BF90 : A5 0D       ;
-                      CMP.B $0C                           ;; 01BF92 : C5 0C       ;
+                      LDA.B !_D                           ;; 01BF90 : A5 0D       ;
+                      CMP.B !_C                           ;; 01BF92 : C5 0C       ;
                       BCS CODE_01BF9F                     ;; 01BF94 : B0 09       ;
                       INY                                 ;; 01BF96 : C8          ;
                       PHA                                 ;; 01BF97 : 48          ;
-                      LDA.B $0C                           ;; 01BF98 : A5 0C       ;
-                      STA.B $0D                           ;; 01BF9A : 85 0D       ;
+                      LDA.B !_C                           ;; 01BF98 : A5 0C       ;
+                      STA.B !_D                           ;; 01BF9A : 85 0D       ;
                       PLA                                 ;; 01BF9C : 68          ;
-                      STA.B $0C                           ;; 01BF9D : 85 0C       ;
+                      STA.B !_C                           ;; 01BF9D : 85 0C       ;
 CODE_01BF9F:          LDA.B #$00                          ;; 01BF9F : A9 00       ;
-                      STA.B $0B                           ;; 01BFA1 : 85 0B       ;
-                      STA.B $00                           ;; 01BFA3 : 85 00       ;
-                      LDX.B $01                           ;; 01BFA5 : A6 01       ;
-CODE_01BFA7:          LDA.B $0B                           ;; 01BFA7 : A5 0B       ;
+                      STA.B !_B                           ;; 01BFA1 : 85 0B       ;
+                      STA.B !_0                           ;; 01BFA3 : 85 00       ;
+                      LDX.B !_1                           ;; 01BFA5 : A6 01       ;
+CODE_01BFA7:          LDA.B !_B                           ;; 01BFA7 : A5 0B       ;
                       CLC                                 ;; 01BFA9 : 18          ;
-                      ADC.B $0C                           ;; 01BFAA : 65 0C       ;
-                      CMP.B $0D                           ;; 01BFAC : C5 0D       ;
+                      ADC.B !_C                           ;; 01BFAA : 65 0C       ;
+                      CMP.B !_D                           ;; 01BFAC : C5 0D       ;
                       BCC CODE_01BFB4                     ;; 01BFAE : 90 04       ;
-                      SBC.B $0D                           ;; 01BFB0 : E5 0D       ;
-                      INC.B $00                           ;; 01BFB2 : E6 00       ;
-CODE_01BFB4:          STA.B $0B                           ;; 01BFB4 : 85 0B       ;
+                      SBC.B !_D                           ;; 01BFB0 : E5 0D       ;
+                      INC.B !_0                           ;; 01BFB2 : E6 00       ;
+CODE_01BFB4:          STA.B !_B                           ;; 01BFB4 : 85 0B       ;
                       DEX                                 ;; 01BFB6 : CA          ;
                       BNE CODE_01BFA7                     ;; 01BFB7 : D0 EE       ;
                       TYA                                 ;; 01BFB9 : 98          ;
                       BEQ CODE_01BFC6                     ;; 01BFBA : F0 0A       ;
-                      LDA.B $00                           ;; 01BFBC : A5 00       ;
+                      LDA.B !_0                           ;; 01BFBC : A5 00       ;
                       PHA                                 ;; 01BFBE : 48          ;
-                      LDA.B $01                           ;; 01BFBF : A5 01       ;
-                      STA.B $00                           ;; 01BFC1 : 85 00       ;
+                      LDA.B !_1                           ;; 01BFBF : A5 01       ;
+                      STA.B !_0                           ;; 01BFC1 : 85 00       ;
                       PLA                                 ;; 01BFC3 : 68          ;
-                      STA.B $01                           ;; 01BFC4 : 85 01       ;
-CODE_01BFC6:          LDA.B $00                           ;; 01BFC6 : A5 00       ;
-                      LDY.B $02                           ;; 01BFC8 : A4 02       ;
+                      STA.B !_1                           ;; 01BFC4 : 85 01       ;
+CODE_01BFC6:          LDA.B !_0                           ;; 01BFC6 : A5 00       ;
+                      LDY.B !_2                           ;; 01BFC8 : A4 02       ;
                       BEQ CODE_01BFD3                     ;; 01BFCA : F0 07       ;
                       EOR.B #$FF                          ;; 01BFCC : 49 FF       ;
                       CLC                                 ;; 01BFCE : 18          ;
                       ADC.B #$01                          ;; 01BFCF : 69 01       ;
-                      STA.B $00                           ;; 01BFD1 : 85 00       ;
-CODE_01BFD3:          LDA.B $01                           ;; 01BFD3 : A5 01       ;
-                      LDY.B $03                           ;; 01BFD5 : A4 03       ;
+                      STA.B !_0                           ;; 01BFD1 : 85 00       ;
+CODE_01BFD3:          LDA.B !_1                           ;; 01BFD3 : A5 01       ;
+                      LDY.B !_3                           ;; 01BFD5 : A4 03       ;
                       BEQ CODE_01BFE0                     ;; 01BFD7 : F0 07       ;
                       EOR.B #$FF                          ;; 01BFD9 : 49 FF       ;
                       CLC                                 ;; 01BFDB : 18          ;
                       ADC.B #$01                          ;; 01BFDC : 69 01       ;
-                      STA.B $01                           ;; 01BFDE : 85 01       ;
+                      STA.B !_1                           ;; 01BFDE : 85 01       ;
 CODE_01BFE0:          PLY                                 ;; 01BFE0 : 7A          ;
                       PLX                                 ;; 01BFE1 : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -7959,7 +7959,7 @@ CODE_01C004:          LDA.W $1540,X                       ;; 01C004 : BD 40 15  
                       CMP.B #$09                          ;; 01C014 : C9 09       ;
                       BNE CODE_01C01C                     ;; 01C016 : D0 04       ;
                       LDY.B #$24                          ;; 01C018 : A0 24       ;
-                      STY.B $40                           ;; 01C01A : 84 40       ;
+                      STY.B !ColorSettings                ;; 01C01A : 84 40       ;
 CODE_01C01C:          CMP.B #$09                          ;; 01C01C : C9 09       ;
                       BNE CODE_01C028                     ;; 01C01E : D0 08       ;
                       INC.B $C2,X                         ;; 01C020 : F6 C2       ;
@@ -7974,14 +7974,14 @@ CODE_01C028:          LDA.W $1570,X                       ;; 01C028 : BD 70 15  
                       ASL A                               ;; 01C02E : 0A          ;
                       ASL A                               ;; 01C02F : 0A          ;
                       TAX                                 ;; 01C030 : AA          ;
-                      STZ.B $00                           ;; 01C031 : 64 00       ;
+                      STZ.B !_0                           ;; 01C031 : 64 00       ;
                       LDY.W $0681                         ;; 01C033 : AC 81 06    ;
 CODE_01C036:          LDA.L MagiKoopaPals,X               ;; 01C036 : BF 02 B9 03 ;
                       STA.W $0684,Y                       ;; 01C03A : 99 84 06    ;
                       INY                                 ;; 01C03D : C8          ;
                       INX                                 ;; 01C03E : E8          ;
-                      INC.B $00                           ;; 01C03F : E6 00       ;
-                      LDA.B $00                           ;; 01C041 : A5 00       ;
+                      INC.B !_0                           ;; 01C03F : E6 00       ;
+                      LDA.B !_0                           ;; 01C041 : A5 00       ;
                       CMP.B #$10                          ;; 01C043 : C9 10       ;
                       BNE CODE_01C036                     ;; 01C045 : D0 EF       ;
                       LDX.W $0681                         ;; 01C047 : AE 81 06    ;
@@ -8045,13 +8045,13 @@ CODE_01C0B4:          LDA.W $1588,X                       ;; 01C0B4 : BD 88 15  
                       STA.B $AA,X                         ;; 01C0BD : 95 AA       ;
                       JSR SubSprYPosNoGrvty               ;; 01C0BF : 20 D8 AB    ;
                       LDA.B $C2,X                         ;; 01C0C2 : B5 C2       ;
-                      STA.B $00                           ;; 01C0C4 : 85 00       ;
+                      STA.B !_0                           ;; 01C0C4 : 85 00       ;
                       LDA.W $151C,X                       ;; 01C0C6 : BD 1C 15    ;
-                      STA.B $01                           ;; 01C0C9 : 85 01       ;
+                      STA.B !_1                           ;; 01C0C9 : 85 01       ;
                       REP #$20                            ;; 01C0CB : C2 20       ; Accum (16 bit) 
                       LDA.B $94                           ;; 01C0CD : A5 94       ;
                       SEC                                 ;; 01C0CF : 38          ;
-                      SBC.B $00                           ;; 01C0D0 : E5 00       ;
+                      SBC.B !_0                           ;; 01C0D0 : E5 00       ;
                       CMP.W #$0010                        ;; 01C0D2 : C9 10 00    ;
                       SEP #$20                            ;; 01C0D5 : E2 20       ; Accum (8 bit) 
                       BCS Return01C12C                    ;; 01C0D7 : B0 53       ;
@@ -8094,7 +8094,7 @@ Return01C12C:         RTS                                 ;; ?QPWZ? : 60        
 CODE_01C12D:          LDA.W $160E,X                       ;; 01C12D : BD 0E 16    ;
                       BNE CODE_01C175                     ;; 01C130 : D0 43       ;
                       JSR GetDrawInfoBnk1                 ;; 01C132 : 20 65 A3    ;
-                      LDA.B $00                           ;; 01C135 : A5 00       ;
+                      LDA.B !_0                           ;; 01C135 : A5 00       ;
                       SEC                                 ;; 01C137 : 38          ;
                       SBC.B #$08                          ;; 01C138 : E9 08       ;
                       STA.W $0300,Y                       ;; 01C13A : 99 00 03    ;
@@ -8104,7 +8104,7 @@ CODE_01C12D:          LDA.W $160E,X                       ;; 01C12D : BD 0E 16  
                       CLC                                 ;; 01C143 : 18          ;
                       ADC.B #$08                          ;; 01C144 : 69 08       ;
                       STA.W $0308,Y                       ;; 01C146 : 99 08 03    ;
-                      LDA.B $01                           ;; 01C149 : A5 01       ;
+                      LDA.B !_1                           ;; 01C149 : A5 01       ;
                       CLC                                 ;; 01C14B : 18          ;
                       ADC.B #$08                          ;; 01C14C : 69 08       ;
                       STA.W $0301,Y                       ;; 01C14E : 99 01 03    ;
@@ -8140,7 +8140,7 @@ GrowingVine:          LDA.B $64                           ;; ?QPWZ? : A5 64     
                       STA.B $64                           ;; 01C18F : 85 64       ;
 CODE_01C191:          JSR SubSprGfx2Entry1                ;; 01C191 : 20 0D 9F    ;
                       LDY.W $15EA,X                       ;; 01C194 : BC EA 15    ; Y = Index into sprite OAM 
-                      LDA.B $14                           ;; 01C197 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01C197 : A5 14       ;
                       LSR A                               ;; 01C199 : 4A          ;
                       LSR A                               ;; 01C19A : 4A          ;
                       LSR A                               ;; 01C19B : 4A          ;
@@ -8210,7 +8210,7 @@ BalloonKeyFlyObjs:    LDA.W $14C8,X                       ;; ?QPWZ? : BD C8 14  
                       JSR SubSprYPosNoGrvty               ;; 01C219 : 20 D8 AB    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_01C21D:          LDA.B $13                           ;; 01C21D : A5 13       ;
+CODE_01C21D:          LDA.B !TrueFrame                    ;; 01C21D : A5 13       ;
                       AND.B #$01                          ;; 01C21F : 29 01       ;
                       BNE CODE_01C239                     ;; 01C221 : D0 16       ;
                       LDA.W $151C,X                       ;; 01C223 : BD 1C 15    ;
@@ -8247,11 +8247,11 @@ CODE_01C255:          LDA.B $9E,X                         ;; 01C255 : B5 9E     
 CODE_01C262:          LDA.B $C2,X                         ;; 01C262 : B5 C2       ;
                       CMP.B #$02                          ;; 01C264 : C9 02       ;
                       BNE CODE_01C27C                     ;; 01C266 : D0 14       ;
-                      LDA.B $13                           ;; 01C268 : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01C268 : A5 13       ;
                       AND.B #$03                          ;; 01C26A : 29 03       ;
                       BNE CODE_01C271                     ;; 01C26C : D0 03       ;
                       JSR CODE_01B14E                     ;; 01C26E : 20 4E B1    ;
-CODE_01C271:          LDA.B $14                           ;; 01C271 : A5 14       ;
+CODE_01C271:          LDA.B !EffFrame                     ;; 01C271 : A5 14       ;
                       LSR A                               ;; 01C273 : 4A          ;
                       AND.B #$0E                          ;; 01C274 : 29 0E       ;
                       EOR.W $15F6,X                       ;; 01C276 : 5D F6 15    ;
@@ -8359,7 +8359,7 @@ CODE_01C324:          LDA.W $187B,X                       ;; 01C324 : BD 7B 18  
                                                           ;;                      ;
 EatenBerryGfxProp:    db $02,$02,$04,$06                  ;; ?QPWZ?               ;
                                                           ;;                      ;
-FireFlower:           LDA.B $14                           ;; ?QPWZ? : A5 14       ; \ Flip flower every 8 frames 
+FireFlower:           LDA.B !EffFrame                     ;; ?QPWZ? : A5 14       ; \ Flip flower every 8 frames 
                       AND.B #$08                          ;; 01C34B : 29 08       ;  | 
                       LSR A                               ;; 01C34D : 4A          ;  | 
                       LSR A                               ;; 01C34E : 4A          ;  | 
@@ -8389,7 +8389,7 @@ CODE_01C371:          LDA.B $64                           ;; 01C371 : A5 64     
                       LDA.B #$10                          ;; 01C380 : A9 10       ;
                       STA.B $AA,X                         ;; 01C382 : 95 AA       ;
                       JSR SubSprYPosNoGrvty               ;; 01C384 : 20 D8 AB    ;
-CODE_01C387:          LDA.B $14                           ;; 01C387 : A5 14       ;
+CODE_01C387:          LDA.B !EffFrame                     ;; 01C387 : A5 14       ;
                       AND.B #$0C                          ;; 01C389 : 29 0C       ;
                       BNE CODE_01C3AB                     ;; 01C38B : D0 1E       ;
                       PLA                                 ;; 01C38D : 68          ;
@@ -8467,7 +8467,7 @@ ADDR_01C41E:          JSR SubSprXPosNoGrvty               ;; 01C41E : 20 CC AB  
                       BRA CODE_01C42F                     ;; 01C42A : 80 03       ;
                                                           ;;                      ;
 CODE_01C42C:          JSR SubUpdateSprPos                 ;; 01C42C : 20 32 90    ;
-CODE_01C42F:          LDA.B $13                           ;; 01C42F : A5 13       ;
+CODE_01C42F:          LDA.B !TrueFrame                    ;; 01C42F : A5 13       ;
                       AND.B #$03                          ;; 01C431 : 29 03       ;
                       BEQ CODE_01C437                     ;; 01C433 : F0 02       ;
                       DEC.B $AA,X                         ;; 01C435 : D6 AA       ;
@@ -8587,7 +8587,7 @@ TouchedPowerUp:       SEC                                 ;; ?QPWZ? : 38        
                       SBC.B #$74                          ;; 01C539 : E9 74       ;  | ... powerup touched (upper 2 bits)  
                       ASL A                               ;; 01C53B : 0A          ;  | 
                       ASL A                               ;; 01C53C : 0A          ;  | 
-                      ORA.B $19                           ;; 01C53D : 05 19       ;  | ... Mario's status (lower 3 bits) 
+                      ORA.B !Powerup                      ;; 01C53D : 05 19       ;  | ... Mario's status (lower 3 bits) 
                       TAY                                 ;; 01C53F : A8          ; / 
                       LDA.W ItemBoxSprite,Y               ;; 01C540 : B9 10 C5    ; \ Put appropriate item in item box 
                       BEQ NoItem                          ;; 01C543 : F0 08       ;  | 
@@ -8634,7 +8634,7 @@ GiveMarioStar:        JSL CODE_01C580                     ;; ?QPWZ? : 22 80 C5 0
                       BRA CODE_01C56F                     ;; 01C596 : 80 D7       ;
                                                           ;;                      ;
 GiveMarioCape:        LDA.B #$02                          ;; ?QPWZ? : A9 02       ;
-                      STA.B $19                           ;; 01C59A : 85 19       ;
+                      STA.B !Powerup                      ;; 01C59A : 85 19       ;
                       LDA.B #$0D                          ;; 01C59C : A9 0D       ; \ Play sound effect 
                       STA.W $1DF9                         ;; 01C59E : 8D F9 1D    ; / 
                       LDA.B #$04                          ;; 01C5A1 : A9 04       ;
@@ -8678,7 +8678,7 @@ GiveMarioFire:        LDA.B #$20                          ;; ?QPWZ? : A9 20     
                       LDA.B #$04                          ;; 01C5F3 : A9 04       ;
                       STA.B $71                           ;; 01C5F5 : 85 71       ;
                       LDA.B #$03                          ;; 01C5F7 : A9 03       ;
-                      STA.B $19                           ;; 01C5F9 : 85 19       ;
+                      STA.B !Powerup                      ;; 01C5F9 : 85 19       ;
                       JMP CODE_01C56F                     ;; 01C5FB : 4C 6F C5    ;
                                                           ;;                      ;
 GiveMario1Up:         LDA.B #$08                          ;; ?QPWZ? : A9 08       ;
@@ -8694,7 +8694,7 @@ PowerUpTiles:         db $24,$26,$48,$0E,$24,$00,$00,$00  ;; ?QPWZ?             
 StarPalValues:        db $00,$04,$08,$04                  ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_01C61A:          JSR GetDrawInfoBnk1                 ;; 01C61A : 20 65 A3    ;
-                      STZ.B $0A                           ;; 01C61D : 64 0A       ;
+                      STZ.B !_A                           ;; 01C61D : 64 0A       ;
                       LDA.W $140F                         ;; 01C61F : AD 0F 14    ;
                       BNE CODE_01C636                     ;; 01C622 : D0 12       ;
                       LDA.W $0D9B                         ;; 01C624 : AD 9B 0D    ;
@@ -8715,9 +8715,9 @@ CoinSprGfx:           JSR CoinSprGfxSub                   ;; ?QPWZ? : 20 45 C6  
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CoinSprGfxSub:        JSR GetDrawInfoBnk1                 ;; ?QPWZ? : 20 65 A3    ;
-                      LDA.B $00                           ;; 01C648 : A5 00       ;
+                      LDA.B !_0                           ;; 01C648 : A5 00       ;
                       STA.W $0300,Y                       ;; 01C64A : 99 00 03    ;
-                      LDA.B $01                           ;; 01C64D : A5 01       ;
+                      LDA.B !_1                           ;; 01C64D : A5 01       ;
                       STA.W $0301,Y                       ;; 01C64F : 99 01 03    ;
                       LDA.B #$E8                          ;; 01C652 : A9 E8       ;
                       STA.W $0302,Y                       ;; 01C654 : 99 02 03    ;
@@ -8726,7 +8726,7 @@ CoinSprGfxSub:        JSR GetDrawInfoBnk1                 ;; ?QPWZ? : 20 65 A3  
                       STA.W $0303,Y                       ;; 01C65C : 99 03 03    ;
                       TXA                                 ;; 01C65F : 8A          ;
                       CLC                                 ;; 01C660 : 18          ;
-                      ADC.B $14                           ;; 01C661 : 65 14       ;
+                      ADC.B !EffFrame                     ;; 01C661 : 65 14       ;
                       LSR A                               ;; 01C663 : 4A          ;
                       LSR A                               ;; 01C664 : 4A          ;
                       AND.B #$03                          ;; 01C665 : 29 03       ;
@@ -8739,12 +8739,12 @@ MovingCoinTiles:      db $EA,$FA,$EA                      ;; ?QPWZ?             
                                                           ;;                      ;
 CODE_01C670:          PHX                                 ;; 01C670 : DA          ;
                       TAX                                 ;; 01C671 : AA          ;
-                      LDA.B $00                           ;; 01C672 : A5 00       ;
+                      LDA.B !_0                           ;; 01C672 : A5 00       ;
                       CLC                                 ;; 01C674 : 18          ;
                       ADC.B #$04                          ;; 01C675 : 69 04       ;
                       STA.W $0300,Y                       ;; 01C677 : 99 00 03    ;
                       STA.W $0304,Y                       ;; 01C67A : 99 04 03    ;
-                      LDA.B $01                           ;; 01C67D : A5 01       ;
+                      LDA.B !_1                           ;; 01C67D : A5 01       ;
                       CLC                                 ;; 01C67F : 18          ;
                       ADC.B #$08                          ;; 01C680 : 69 08       ;
                       STA.W $0305,Y                       ;; 01C682 : 99 05 03    ;
@@ -8762,17 +8762,17 @@ CODE_01C69A:          LDA.B #$01                          ;; 01C69A : A9 01     
                                                           ;;                      ;
 PowerUpGfxRt:         CMP.B #$76                          ;; ?QPWZ? : C9 76       ; \ Setup flashing palette for star 
                       BNE NoFlashingPal                   ;; 01C6A3 : D0 0D       ;  | 
-                      LDA.B $13                           ;; 01C6A5 : A5 13       ;  |  
+                      LDA.B !TrueFrame                    ;; 01C6A5 : A5 13       ;  |  
                       LSR A                               ;; 01C6A7 : 4A          ;  | 
                       AND.B #$03                          ;; 01C6A8 : 29 03       ;  | 
                       PHY                                 ;; 01C6AA : 5A          ;  | 
                       TAY                                 ;; 01C6AB : A8          ;  | 
                       LDA.W StarPalValues,Y               ;; 01C6AC : B9 16 C6    ;  | 
                       PLY                                 ;; 01C6AF : 7A          ;  | 
-                      STA.B $0A                           ;; 01C6B0 : 85 0A       ; / $0A contains palette info, will be applied later 
-NoFlashingPal:        LDA.B $00                           ;; ?QPWZ? : A5 00       ; \ Set tile x position 
+                      STA.B !_A                           ;; 01C6B0 : 85 0A       ; / $0A contains palette info, will be applied later 
+NoFlashingPal:        LDA.B !_0                           ;; ?QPWZ? : A5 00       ; \ Set tile x position 
                       STA.W $0300,Y                       ;; 01C6B4 : 99 00 03    ; / 
-                      LDA.B $01                           ;; 01C6B7 : A5 01       ; \ Set tile y position 
+                      LDA.B !_1                           ;; 01C6B7 : A5 01       ; \ Set tile y position 
                       DEC A                               ;; 01C6B9 : 3A          ;  | 
                       STA.W $0301,Y                       ;; 01C6BA : 99 01 03    ; / 
                       LDA.W $157C,X                       ;; 01C6BD : BD 7C 15    ; \ Flip flower/cape if 157C,x is set 
@@ -8782,7 +8782,7 @@ NoFlashingPal:        LDA.B $00                           ;; ?QPWZ? : A5 00     
                       ORA.B #$40                          ;; 01C6C5 : 09 40       ; / 
 CODE_01C6C7:          ORA.B $64                           ;; 01C6C7 : 05 64       ; \ Add in level priority information 
                       ORA.W $15F6,X                       ;; 01C6C9 : 1D F6 15    ;  | Add in palette/gfx page 
-                      EOR.B $0A                           ;; 01C6CC : 45 0A       ;  | Adjust palette for star 
+                      EOR.B !_A                           ;; 01C6CC : 45 0A       ;  | Adjust palette for star 
                       STA.W $0303,Y                       ;; 01C6CE : 99 03 03    ; / Set property byte 
                       LDA.B $9E,X                         ;; 01C6D1 : B5 9E       ; \ Set powerup tile 
                       SEC                                 ;; 01C6D3 : 38          ;  | 
@@ -8868,7 +8868,7 @@ InitBrwnChainPlat:    LDA.B #$80                          ;; ?QPWZ? : A9 80     
 BrownChainedPlat:     JSR SubOffscreen2Bnk1               ;; ?QPWZ? : 20 27 AC    ;
                       LDA.B $9D                           ;; 01C776 : A5 9D       ; \ Branch if sprites locked 
                       BNE CODE_01C795                     ;; 01C778 : D0 1B       ; / 
-                      LDA.B $13                           ;; 01C77A : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01C77A : A5 13       ;
                       AND.B #$03                          ;; 01C77C : 29 03       ;
                       ORA.W $1602,X                       ;; 01C77E : 1D 02 16    ;
                       BNE CODE_01C795                     ;; 01C781 : D0 12       ;
@@ -8909,13 +8909,13 @@ CODE_01C795:          LDA.W $151C,X                       ;; 01C795 : BD 1C 15  
                       LDY.W $15EA,X                       ;; 01C7CE : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.W $14BA                         ;; 01C7D1 : AD BA 14    ;
                       SEC                                 ;; 01C7D4 : 38          ;
-                      SBC.B $1C                           ;; 01C7D5 : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01C7D5 : E5 1C       ;
                       SEC                                 ;; 01C7D7 : 38          ;
                       SBC.B #$08                          ;; 01C7D8 : E9 08       ;
                       STA.W $0301,Y                       ;; 01C7DA : 99 01 03    ;
                       LDA.W $14B8                         ;; 01C7DD : AD B8 14    ;
                       SEC                                 ;; 01C7E0 : 38          ;
-                      SBC.B $1A                           ;; 01C7E1 : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01C7E1 : E5 1A       ;
                       SEC                                 ;; 01C7E3 : 38          ;
                       SBC.B #$08                          ;; 01C7E4 : E9 08       ;
                       STA.W $0300,Y                       ;; 01C7E6 : 99 00 03    ;
@@ -8931,18 +8931,18 @@ CODE_01C795:          LDA.W $151C,X                       ;; 01C795 : BD 1C 15  
                       EOR.B #$FF                          ;; 01C7FE : 49 FF       ;
                       INC A                               ;; 01C800 : 1A          ;
                       INY                                 ;; 01C801 : C8          ;
-CODE_01C802:          STY.B $00                           ;; 01C802 : 84 00       ;
+CODE_01C802:          STY.B !_0                           ;; 01C802 : 84 00       ;
                       STA.W $4205                         ;; 01C804 : 8D 05 42    ; Dividend (High-Byte)
                       STZ.W $4204                         ;; 01C807 : 9C 04 42    ; Dividend (Low Byte)
                       LDA.B #$05                          ;; 01C80A : A9 05       ;
                       STA.W $4206                         ;; 01C80C : 8D 06 42    ; Divisor B
                       JSR DoNothing                       ;; 01C80F : 20 94 CC    ;
                       LDA.W $4214                         ;; 01C812 : AD 14 42    ; Quotient of Divide Result (Low Byte)
-                      STA.B $02                           ;; 01C815 : 85 02       ;
-                      STA.B $06                           ;; 01C817 : 85 06       ;
+                      STA.B !_2                           ;; 01C815 : 85 02       ;
+                      STA.B !_6                           ;; 01C817 : 85 06       ;
                       LDA.W $4215                         ;; 01C819 : AD 15 42    ; Quotient of Divide Result (High Byte)
-                      STA.B $03                           ;; 01C81C : 85 03       ;
-                      STA.B $07                           ;; 01C81E : 85 07       ;
+                      STA.B !_3                           ;; 01C81C : 85 03       ;
+                      STA.B !_7                           ;; 01C81E : 85 07       ;
                       LDY.B #$00                          ;; 01C820 : A0 00       ;
                       LDA.W $14B8                         ;; 01C822 : AD B8 14    ;
                       SEC                                 ;; 01C825 : 38          ;
@@ -8951,18 +8951,18 @@ CODE_01C802:          STY.B $00                           ;; 01C802 : 84 00     
                       EOR.B #$FF                          ;; 01C82B : 49 FF       ;
                       INC A                               ;; 01C82D : 1A          ;
                       INY                                 ;; 01C82E : C8          ;
-CODE_01C82F:          STY.B $01                           ;; 01C82F : 84 01       ;
+CODE_01C82F:          STY.B !_1                           ;; 01C82F : 84 01       ;
                       STA.W $4205                         ;; 01C831 : 8D 05 42    ; Dividend (High-Byte)
                       STZ.W $4204                         ;; 01C834 : 9C 04 42    ; Dividend (Low Byte)
                       LDA.B #$05                          ;; 01C837 : A9 05       ;
                       STA.W $4206                         ;; 01C839 : 8D 06 42    ; Divisor B
                       JSR DoNothing                       ;; 01C83C : 20 94 CC    ;
                       LDA.W $4214                         ;; 01C83F : AD 14 42    ; Quotient of Divide Result (Low Byte)
-                      STA.B $04                           ;; 01C842 : 85 04       ;
-                      STA.B $08                           ;; 01C844 : 85 08       ;
+                      STA.B !_4                           ;; 01C842 : 85 04       ;
+                      STA.B !_8                           ;; 01C844 : 85 08       ;
                       LDA.W $4215                         ;; 01C846 : AD 15 42    ; Quotient of Divide Result (High Byte)
-                      STA.B $05                           ;; 01C849 : 85 05       ;
-                      STA.B $09                           ;; 01C84B : 85 09       ;
+                      STA.B !_5                           ;; 01C849 : 85 05       ;
+                      STA.B !_9                           ;; 01C84B : 85 09       ;
                       LDY.W $15EA,X                       ;; 01C84D : BC EA 15    ; Y = Index into sprite OAM 
                       INY                                 ;; 01C850 : C8          ;
                       INY                                 ;; 01C851 : C8          ;
@@ -8970,17 +8970,17 @@ CODE_01C82F:          STY.B $01                           ;; 01C82F : 84 01     
                       INY                                 ;; 01C853 : C8          ;
                       LDA.W $14B2                         ;; 01C854 : AD B2 14    ;
                       SEC                                 ;; 01C857 : 38          ;
-                      SBC.B $1C                           ;; 01C858 : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01C858 : E5 1C       ;
                       SEC                                 ;; 01C85A : 38          ;
                       SBC.B #$08                          ;; 01C85B : E9 08       ;
-                      STA.B $0A                           ;; 01C85D : 85 0A       ;
+                      STA.B !_A                           ;; 01C85D : 85 0A       ;
                       STA.W $0301,Y                       ;; 01C85F : 99 01 03    ;
                       LDA.W $14B0                         ;; 01C862 : AD B0 14    ;
                       SEC                                 ;; 01C865 : 38          ;
-                      SBC.B $1A                           ;; 01C866 : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01C866 : E5 1A       ;
                       SEC                                 ;; 01C868 : 38          ;
                       SBC.B #$08                          ;; 01C869 : E9 08       ;
-                      STA.B $0B                           ;; 01C86B : 85 0B       ;
+                      STA.B !_B                           ;; 01C86B : 85 0B       ;
                       STA.W $0300,Y                       ;; 01C86D : 99 00 03    ;
                       LDA.B #$A2                          ;; 01C870 : A9 A2       ;
                       STA.W $0302,Y                       ;; 01C872 : 99 02 03    ;
@@ -8991,44 +8991,44 @@ CODE_01C87C:          INY                                 ;; 01C87C : C8        
                       INY                                 ;; 01C87D : C8          ;
                       INY                                 ;; 01C87E : C8          ;
                       INY                                 ;; 01C87F : C8          ;
-                      LDA.B $00                           ;; 01C880 : A5 00       ;
+                      LDA.B !_0                           ;; 01C880 : A5 00       ;
                       BNE CODE_01C88E                     ;; 01C882 : D0 0A       ;
-                      LDA.B $0A                           ;; 01C884 : A5 0A       ;
+                      LDA.B !_A                           ;; 01C884 : A5 0A       ;
                       CLC                                 ;; 01C886 : 18          ;
-                      ADC.B $07                           ;; 01C887 : 65 07       ;
+                      ADC.B !_7                           ;; 01C887 : 65 07       ;
                       STA.W $0301,Y                       ;; 01C889 : 99 01 03    ;
                       BRA CODE_01C896                     ;; 01C88C : 80 08       ;
                                                           ;;                      ;
-CODE_01C88E:          LDA.B $0A                           ;; 01C88E : A5 0A       ;
+CODE_01C88E:          LDA.B !_A                           ;; 01C88E : A5 0A       ;
                       SEC                                 ;; 01C890 : 38          ;
-                      SBC.B $07                           ;; 01C891 : E5 07       ;
+                      SBC.B !_7                           ;; 01C891 : E5 07       ;
                       STA.W $0301,Y                       ;; 01C893 : 99 01 03    ;
-CODE_01C896:          LDA.B $06                           ;; 01C896 : A5 06       ;
+CODE_01C896:          LDA.B !_6                           ;; 01C896 : A5 06       ;
                       CLC                                 ;; 01C898 : 18          ;
-                      ADC.B $02                           ;; 01C899 : 65 02       ;
-                      STA.B $06                           ;; 01C89B : 85 06       ;
-                      LDA.B $07                           ;; 01C89D : A5 07       ;
-                      ADC.B $03                           ;; 01C89F : 65 03       ;
-                      STA.B $07                           ;; 01C8A1 : 85 07       ;
-                      LDA.B $01                           ;; 01C8A3 : A5 01       ;
+                      ADC.B !_2                           ;; 01C899 : 65 02       ;
+                      STA.B !_6                           ;; 01C89B : 85 06       ;
+                      LDA.B !_7                           ;; 01C89D : A5 07       ;
+                      ADC.B !_3                           ;; 01C89F : 65 03       ;
+                      STA.B !_7                           ;; 01C8A1 : 85 07       ;
+                      LDA.B !_1                           ;; 01C8A3 : A5 01       ;
                       BNE CODE_01C8B1                     ;; 01C8A5 : D0 0A       ;
-                      LDA.B $0B                           ;; 01C8A7 : A5 0B       ;
+                      LDA.B !_B                           ;; 01C8A7 : A5 0B       ;
                       CLC                                 ;; 01C8A9 : 18          ;
-                      ADC.B $09                           ;; 01C8AA : 65 09       ;
+                      ADC.B !_9                           ;; 01C8AA : 65 09       ;
                       STA.W $0300,Y                       ;; 01C8AC : 99 00 03    ;
                       BRA CODE_01C8B9                     ;; 01C8AF : 80 08       ;
                                                           ;;                      ;
-CODE_01C8B1:          LDA.B $0B                           ;; 01C8B1 : A5 0B       ;
+CODE_01C8B1:          LDA.B !_B                           ;; 01C8B1 : A5 0B       ;
                       SEC                                 ;; 01C8B3 : 38          ;
-                      SBC.B $09                           ;; 01C8B4 : E5 09       ;
+                      SBC.B !_9                           ;; 01C8B4 : E5 09       ;
                       STA.W $0300,Y                       ;; 01C8B6 : 99 00 03    ;
-CODE_01C8B9:          LDA.B $08                           ;; 01C8B9 : A5 08       ;
+CODE_01C8B9:          LDA.B !_8                           ;; 01C8B9 : A5 08       ;
                       CLC                                 ;; 01C8BB : 18          ;
-                      ADC.B $04                           ;; 01C8BC : 65 04       ;
-                      STA.B $08                           ;; 01C8BE : 85 08       ;
-                      LDA.B $09                           ;; 01C8C0 : A5 09       ;
-                      ADC.B $05                           ;; 01C8C2 : 65 05       ;
-                      STA.B $09                           ;; 01C8C4 : 85 09       ;
+                      ADC.B !_4                           ;; 01C8BC : 65 04       ;
+                      STA.B !_8                           ;; 01C8BE : 85 08       ;
+                      LDA.B !_9                           ;; 01C8C0 : A5 09       ;
+                      ADC.B !_5                           ;; 01C8C2 : 65 05       ;
+                      STA.B !_9                           ;; 01C8C4 : 85 09       ;
                       LDA.B #$A2                          ;; 01C8C6 : A9 A2       ;
                       STA.W $0302,Y                       ;; 01C8C8 : 99 02 03    ;
                       LDA.B #$31                          ;; 01C8CB : A9 31       ;
@@ -9036,20 +9036,20 @@ CODE_01C8B9:          LDA.B $08                           ;; 01C8B9 : A5 08     
                       DEX                                 ;; 01C8D0 : CA          ;
                       BPL CODE_01C87C                     ;; 01C8D1 : 10 A9       ;
                       LDX.B #$03                          ;; 01C8D3 : A2 03       ;
-CODE_01C8D5:          STX.B $02                           ;; 01C8D5 : 86 02       ;
+CODE_01C8D5:          STX.B !_2                           ;; 01C8D5 : 86 02       ;
                       INY                                 ;; 01C8D7 : C8          ;
                       INY                                 ;; 01C8D8 : C8          ;
                       INY                                 ;; 01C8D9 : C8          ;
                       INY                                 ;; 01C8DA : C8          ;
                       LDA.W $14BA                         ;; 01C8DB : AD BA 14    ;
                       SEC                                 ;; 01C8DE : 38          ;
-                      SBC.B $1C                           ;; 01C8DF : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01C8DF : E5 1C       ;
                       SEC                                 ;; 01C8E1 : 38          ;
                       SBC.B #$10                          ;; 01C8E2 : E9 10       ;
                       STA.W $0301,Y                       ;; 01C8E4 : 99 01 03    ;
                       LDA.W $14B8                         ;; 01C8E7 : AD B8 14    ;
                       SEC                                 ;; 01C8EA : 38          ;
-                      SBC.B $1A                           ;; 01C8EB : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01C8EB : E5 1A       ;
                       CLC                                 ;; 01C8ED : 18          ;
                       ADC.W DATA_01C9B7,X                 ;; 01C8EE : 7D B7 C9    ;
                       STA.W $0300,Y                       ;; 01C8F1 : 99 00 03    ;
@@ -9061,26 +9061,26 @@ CODE_01C8D5:          STX.B $02                           ;; 01C8D5 : 86 02     
                       BPL CODE_01C8D5                     ;; 01C900 : 10 D3       ;
                       LDX.W $15E9                         ;; 01C902 : AE E9 15    ; X = Sprite index 
                       LDA.B #$09                          ;; 01C905 : A9 09       ;
-                      STA.B $08                           ;; 01C907 : 85 08       ;
+                      STA.B !_8                           ;; 01C907 : 85 08       ;
                       LDA.W $14B2                         ;; 01C909 : AD B2 14    ;
                       SEC                                 ;; 01C90C : 38          ;
                       SBC.B #$08                          ;; 01C90D : E9 08       ;
-                      STA.B $00                           ;; 01C90F : 85 00       ;
+                      STA.B !_0                           ;; 01C90F : 85 00       ;
                       LDA.W $14B3                         ;; 01C911 : AD B3 14    ;
                       SBC.B #$00                          ;; 01C914 : E9 00       ;
-                      STA.B $01                           ;; 01C916 : 85 01       ;
+                      STA.B !_1                           ;; 01C916 : 85 01       ;
                       LDA.W $14B0                         ;; 01C918 : AD B0 14    ;
                       SEC                                 ;; 01C91B : 38          ;
                       SBC.B #$08                          ;; 01C91C : E9 08       ;
-                      STA.B $02                           ;; 01C91E : 85 02       ;
+                      STA.B !_2                           ;; 01C91E : 85 02       ;
                       LDA.W $14B1                         ;; 01C920 : AD B1 14    ;
                       SBC.B #$00                          ;; 01C923 : E9 00       ;
-                      STA.B $03                           ;; 01C925 : 85 03       ;
+                      STA.B !_3                           ;; 01C925 : 85 03       ;
                       LDY.W $15EA,X                       ;; 01C927 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.W $0305,Y                       ;; 01C92A : B9 05 03    ;
-                      STA.B $06                           ;; 01C92D : 85 06       ;
+                      STA.B !_6                           ;; 01C92D : 85 06       ;
                       LDA.W $0304,Y                       ;; 01C92F : B9 04 03    ;
-                      STA.B $07                           ;; 01C932 : 85 07       ;
+                      STA.B !_7                           ;; 01C932 : 85 07       ;
 CODE_01C934:          TYA                                 ;; 01C934 : 98          ;
                       LSR A                               ;; 01C935 : 4A          ;
                       LSR A                               ;; 01C936 : 4A          ;
@@ -9090,15 +9090,15 @@ CODE_01C934:          TYA                                 ;; 01C934 : 98        
                       LDX.B #$00                          ;; 01C93D : A2 00       ;
                       LDA.W $0300,Y                       ;; 01C93F : B9 00 03    ;
                       SEC                                 ;; 01C942 : 38          ;
-                      SBC.B $07                           ;; 01C943 : E5 07       ;
+                      SBC.B !_7                           ;; 01C943 : E5 07       ;
                       BPL CODE_01C948                     ;; 01C945 : 10 01       ;
                       DEX                                 ;; 01C947 : CA          ;
 CODE_01C948:          CLC                                 ;; 01C948 : 18          ;
-                      ADC.B $02                           ;; 01C949 : 65 02       ;
-                      STA.B $04                           ;; 01C94B : 85 04       ;
+                      ADC.B !_2                           ;; 01C949 : 65 02       ;
+                      STA.B !_4                           ;; 01C94B : 85 04       ;
                       TXA                                 ;; 01C94D : 8A          ;
-                      ADC.B $03                           ;; 01C94E : 65 03       ;
-                      STA.B $05                           ;; 01C950 : 85 05       ;
+                      ADC.B !_3                           ;; 01C94E : 65 03       ;
+                      STA.B !_5                           ;; 01C950 : 85 05       ;
                       JSR CODE_01B844                     ;; 01C952 : 20 44 B8    ;
                       BCC CODE_01C960                     ;; 01C955 : 90 09       ;
                       TYA                                 ;; 01C957 : 98          ;
@@ -9110,35 +9110,35 @@ CODE_01C948:          CLC                                 ;; 01C948 : 18        
 CODE_01C960:          LDX.B #$00                          ;; 01C960 : A2 00       ;
                       LDA.W $0301,Y                       ;; 01C962 : B9 01 03    ;
                       SEC                                 ;; 01C965 : 38          ;
-                      SBC.B $06                           ;; 01C966 : E5 06       ;
+                      SBC.B !_6                           ;; 01C966 : E5 06       ;
                       BPL CODE_01C96B                     ;; 01C968 : 10 01       ;
                       DEX                                 ;; 01C96A : CA          ;
 CODE_01C96B:          CLC                                 ;; 01C96B : 18          ;
-                      ADC.B $00                           ;; 01C96C : 65 00       ;
-                      STA.B $09                           ;; 01C96E : 85 09       ;
+                      ADC.B !_0                           ;; 01C96C : 65 00       ;
+                      STA.B !_9                           ;; 01C96E : 85 09       ;
                       TXA                                 ;; 01C970 : 8A          ;
-                      ADC.B $01                           ;; 01C971 : 65 01       ;
-                      STA.B $0A                           ;; 01C973 : 85 0A       ;
+                      ADC.B !_1                           ;; 01C971 : 65 01       ;
+                      STA.B !_A                           ;; 01C973 : 85 0A       ;
                       JSR CODE_01C9BF                     ;; 01C975 : 20 BF C9    ;
                       BCC CODE_01C97F                     ;; 01C978 : 90 05       ;
                       LDA.B #$F0                          ;; 01C97A : A9 F0       ;
                       STA.W $0301,Y                       ;; 01C97C : 99 01 03    ;
-CODE_01C97F:          LDA.B $08                           ;; 01C97F : A5 08       ;
+CODE_01C97F:          LDA.B !_8                           ;; 01C97F : A5 08       ;
                       CMP.B #$09                          ;; 01C981 : C9 09       ;
                       BNE CODE_01C999                     ;; 01C983 : D0 14       ;
-                      LDA.B $04                           ;; 01C985 : A5 04       ;
+                      LDA.B !_4                           ;; 01C985 : A5 04       ;
                       STA.W $14B8                         ;; 01C987 : 8D B8 14    ;
-                      LDA.B $05                           ;; 01C98A : A5 05       ;
+                      LDA.B !_5                           ;; 01C98A : A5 05       ;
                       STA.W $14B9                         ;; 01C98C : 8D B9 14    ;
-                      LDA.B $09                           ;; 01C98F : A5 09       ;
+                      LDA.B !_9                           ;; 01C98F : A5 09       ;
                       STA.W $14BA                         ;; 01C991 : 8D BA 14    ;
-                      LDA.B $0A                           ;; 01C994 : A5 0A       ;
+                      LDA.B !_A                           ;; 01C994 : A5 0A       ;
                       STA.W $14BB                         ;; 01C996 : 8D BB 14    ;
 CODE_01C999:          INY                                 ;; 01C999 : C8          ;
                       INY                                 ;; 01C99A : C8          ;
                       INY                                 ;; 01C99B : C8          ;
                       INY                                 ;; 01C99C : C8          ;
-                      DEC.B $08                           ;; 01C99D : C6 08       ;
+                      DEC.B !_8                           ;; 01C99D : C6 08       ;
                       BPL CODE_01C934                     ;; 01C99F : 10 93       ;
                       LDX.W $15E9                         ;; 01C9A1 : AE E9 15    ; X = Sprite index 
                       LDY.W $15EA,X                       ;; 01C9A4 : BC EA 15    ; Y = Index into sprite OAM 
@@ -9157,16 +9157,16 @@ DATA_01C9B7:          db $E0,$F0,$00,$10                  ;; 01C9B7             
 BrwnChainPlatTiles:   db $60,$61,$61,$62                  ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_01C9BF:          REP #$20                            ;; 01C9BF : C2 20       ; Accum (16 bit) 
-                      LDA.B $09                           ;; 01C9C1 : A5 09       ;
+                      LDA.B !_9                           ;; 01C9C1 : A5 09       ;
                       PHA                                 ;; 01C9C3 : 48          ;
                       CLC                                 ;; 01C9C4 : 18          ;
                       ADC.W #$0010                        ;; 01C9C5 : 69 10 00    ;
-                      STA.B $09                           ;; 01C9C8 : 85 09       ;
+                      STA.B !_9                           ;; 01C9C8 : 85 09       ;
                       SEC                                 ;; 01C9CA : 38          ;
-                      SBC.B $1C                           ;; 01C9CB : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01C9CB : E5 1C       ;
                       CMP.W #$0100                        ;; 01C9CD : C9 00 01    ;
                       PLA                                 ;; 01C9D0 : 68          ;
-                      STA.B $09                           ;; 01C9D1 : 85 09       ;
+                      STA.B !_9                           ;; 01C9D1 : 85 09       ;
                       SEP #$20                            ;; 01C9D3 : E2 20       ; Accum (8 bit) 
 Return01C9D5:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -9189,7 +9189,7 @@ CODE_01C9EC:          LDA.W $14B9                         ;; 01C9EC : AD B9 14  
                       LDA.W $14B8                         ;; 01C9F0 : AD B8 14    ;
                       REP #$20                            ;; 01C9F3 : C2 20       ; Accum (16 bit) 
                       SEC                                 ;; 01C9F5 : 38          ;
-                      SBC.B $1A                           ;; 01C9F6 : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01C9F6 : E5 1A       ;
                       CLC                                 ;; 01C9F8 : 18          ;
                       ADC.W #$0010                        ;; 01C9F9 : 69 10 00    ;
                       CMP.W #$0120                        ;; 01C9FC : C9 20 01    ;
@@ -9206,15 +9206,15 @@ CODE_01C9EC:          LDA.W $14B9                         ;; 01C9EC : AD B9 14  
                       STA.W $160E,X                       ;; 01CA15 : 9D 0E 16    ;
                       LDA.W $14BA                         ;; 01CA18 : AD BA 14    ;
                       SEC                                 ;; 01CA1B : 38          ;
-                      SBC.B $1C                           ;; 01CA1C : E5 1C       ;
-                      STA.B $03                           ;; 01CA1E : 85 03       ;
+                      SBC.B !Layer1YPos                   ;; 01CA1C : E5 1C       ;
+                      STA.B !_3                           ;; 01CA1E : 85 03       ;
                       SEC                                 ;; 01CA20 : 38          ;
                       SBC.B #$08                          ;; 01CA21 : E9 08       ;
-                      STA.B $0E                           ;; 01CA23 : 85 0E       ;
+                      STA.B !_E                           ;; 01CA23 : 85 0E       ;
                       LDA.B $80                           ;; 01CA25 : A5 80       ;
                       CLC                                 ;; 01CA27 : 18          ;
                       ADC.B #$18                          ;; 01CA28 : 69 18       ;
-                      CMP.B $0E                           ;; 01CA2A : C5 0E       ;
+                      CMP.B !_E                           ;; 01CA2A : C5 0E       ;
                       BCS Return01CA9B                    ;; 01CA2C : B0 6D       ;
                       LDA.B $7D                           ;; 01CA2E : A5 7D       ;
                       BMI CODE_01C9E2                     ;; 01CA30 : 30 B0       ;
@@ -9226,10 +9226,10 @@ CODE_01C9EC:          LDA.W $14B9                         ;; 01C9EC : AD B9 14  
                       LDY.W $187A                         ;; 01CA3E : AC 7A 18    ;
                       BEQ CODE_01CA45                     ;; 01CA41 : F0 02       ;
                       LDA.B #$38                          ;; 01CA43 : A9 38       ;
-CODE_01CA45:          STA.B $0F                           ;; 01CA45 : 85 0F       ;
+CODE_01CA45:          STA.B !_F                           ;; 01CA45 : 85 0F       ;
                       LDA.W $14BA                         ;; 01CA47 : AD BA 14    ;
                       SEC                                 ;; 01CA4A : 38          ;
-                      SBC.B $0F                           ;; 01CA4B : E5 0F       ;
+                      SBC.B !_F                           ;; 01CA4B : E5 0F       ;
                       STA.B $96                           ;; 01CA4D : 85 96       ;
                       LDA.W $14BB                         ;; 01CA4F : AD BB 14    ;
                       SBC.B #$00                          ;; 01CA52 : E9 00       ;
@@ -9248,11 +9248,11 @@ CODE_01CA64:          CLC                                 ;; 01CA64 : 18        
                       ADC.B $95                           ;; 01CA6A : 65 95       ;
                       STA.B $95                           ;; 01CA6C : 85 95       ;
 CODE_01CA6E:          JSR CODE_01C9E2                     ;; 01CA6E : 20 E2 C9    ;
-                      LDA.B $16                           ;; 01CA71 : A5 16       ;
+                      LDA.B !byetudlrFrame                ;; 01CA71 : A5 16       ;
                       BMI CODE_01CA79                     ;; 01CA73 : 30 04       ;
                       LDA.B #$FF                          ;; 01CA75 : A9 FF       ;
                       STA.B $78                           ;; 01CA77 : 85 78       ;
-CODE_01CA79:          LDA.B $13                           ;; 01CA79 : A5 13       ;
+CODE_01CA79:          LDA.B !TrueFrame                    ;; 01CA79 : A5 13       ;
                       LSR A                               ;; 01CA7B : 4A          ;
                       BCC Return01CA9B                    ;; 01CA7C : 90 1D       ;
                       LDA.W $151C,X                       ;; 01CA7E : BD 1C 15    ;
@@ -9273,21 +9273,21 @@ Return01CA9B:         RTS                                 ;; ?QPWZ? : 60        
 CODE_01CA9C:          LDA.W $14B8                         ;; 01CA9C : AD B8 14    ;
                       SEC                                 ;; 01CA9F : 38          ;
                       SBC.B #$18                          ;; 01CAA0 : E9 18       ;
-                      STA.B $04                           ;; 01CAA2 : 85 04       ;
+                      STA.B !_4                           ;; 01CAA2 : 85 04       ;
                       LDA.W $14B9                         ;; 01CAA4 : AD B9 14    ;
                       SBC.B #$00                          ;; 01CAA7 : E9 00       ;
-                      STA.B $0A                           ;; 01CAA9 : 85 0A       ;
+                      STA.B !_A                           ;; 01CAA9 : 85 0A       ;
                       LDA.B #$40                          ;; 01CAAB : A9 40       ;
-                      STA.B $06                           ;; 01CAAD : 85 06       ;
+                      STA.B !_6                           ;; 01CAAD : 85 06       ;
                       LDA.W $14BA                         ;; 01CAAF : AD BA 14    ;
                       SEC                                 ;; 01CAB2 : 38          ;
                       SBC.B #$0C                          ;; 01CAB3 : E9 0C       ;
-                      STA.B $05                           ;; 01CAB5 : 85 05       ;
+                      STA.B !_5                           ;; 01CAB5 : 85 05       ;
                       LDA.W $14BB                         ;; 01CAB7 : AD BB 14    ;
                       SBC.B #$00                          ;; 01CABA : E9 00       ;
-                      STA.B $0B                           ;; 01CABC : 85 0B       ;
+                      STA.B !_B                           ;; 01CABC : 85 0B       ;
                       LDA.B #$13                          ;; 01CABE : A9 13       ;
-                      STA.B $07                           ;; 01CAC0 : 85 07       ;
+                      STA.B !_7                           ;; 01CAC0 : 85 07       ;
                       JSL GetMarioClipping                ;; 01CAC2 : 22 64 B6 03 ;
                       JSL CheckForContact                 ;; 01CAC6 : 22 2B B7 03 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -9320,183 +9320,183 @@ CODE_01CACB:          LDA.B #$50                          ;; 01CACB : A9 50     
                       SBC.W $14C0                         ;; 01CB0F : ED C0 14    ;
                       STA.W $14B3                         ;; 01CB12 : 8D B3 14    ;
                       LDA.W $151C,X                       ;; 01CB15 : BD 1C 15    ;
-                      STA.B $36                           ;; 01CB18 : 85 36       ;
+                      STA.B !Mode7Angle                   ;; 01CB18 : 85 36       ;
                       LDA.W $1528,X                       ;; 01CB1A : BD 28 15    ;
-                      STA.B $37                           ;; 01CB1D : 85 37       ;
+                      STA.B !Mode7Angle+1                 ;; 01CB1D : 85 37       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_01CB20:          LDA.B $37                           ;; 01CB20 : A5 37       ;
+CODE_01CB20:          LDA.B !Mode7Angle+1                 ;; 01CB20 : A5 37       ;
                       STA.W $1866                         ;; 01CB22 : 8D 66 18    ;
                       PHX                                 ;; 01CB25 : DA          ;
                       REP #$30                            ;; 01CB26 : C2 30       ; Index (16 bit) Accum (16 bit) 
-                      LDA.B $36                           ;; 01CB28 : A5 36       ;
+                      LDA.B !Mode7Angle                   ;; 01CB28 : A5 36       ;
                       ASL A                               ;; 01CB2A : 0A          ;
                       AND.W #$01FF                        ;; 01CB2B : 29 FF 01    ;
                       TAX                                 ;; 01CB2E : AA          ;
                       LDA.L CircleCoords,X                ;; 01CB2F : BF DB F7 07 ;
                       STA.W $14C2                         ;; 01CB33 : 8D C2 14    ;
-                      LDA.B $36                           ;; 01CB36 : A5 36       ;
+                      LDA.B !Mode7Angle                   ;; 01CB36 : A5 36       ;
                       CLC                                 ;; 01CB38 : 18          ;
                       ADC.W #$0080                        ;; 01CB39 : 69 80 00    ;
-                      STA.B $00                           ;; 01CB3C : 85 00       ;
+                      STA.B !_0                           ;; 01CB3C : 85 00       ;
                       ASL A                               ;; 01CB3E : 0A          ;
                       AND.W #$01FF                        ;; 01CB3F : 29 FF 01    ;
                       TAX                                 ;; 01CB42 : AA          ;
                       LDA.L CircleCoords,X                ;; 01CB43 : BF DB F7 07 ;
                       STA.W $14C5                         ;; 01CB47 : 8D C5 14    ;
                       SEP #$30                            ;; 01CB4A : E2 30       ; Index (8 bit) Accum (8 bit) 
-                      LDA.B $01                           ;; 01CB4C : A5 01       ;
+                      LDA.B !_1                           ;; 01CB4C : A5 01       ;
                       STA.W $1867                         ;; 01CB4E : 8D 67 18    ;
                       PLX                                 ;; 01CB51 : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01CB53:          REP #$20                            ;; 01CB53 : C2 20       ; Accum (16 bit) 
                       LDA.W $14C5                         ;; 01CB55 : AD C5 14    ;
-                      STA.B $02                           ;; 01CB58 : 85 02       ;
+                      STA.B !_2                           ;; 01CB58 : 85 02       ;
                       LDA.W $14BC                         ;; 01CB5A : AD BC 14    ;
-                      STA.B $00                           ;; 01CB5D : 85 00       ;
+                      STA.B !_0                           ;; 01CB5D : 85 00       ;
                       SEP #$20                            ;; 01CB5F : E2 20       ; Accum (8 bit) 
                       JSR CODE_01CC28                     ;; 01CB61 : 20 28 CC    ;
                       LDA.W $1867                         ;; 01CB64 : AD 67 18    ;
                       LSR A                               ;; 01CB67 : 4A          ;
                       REP #$20                            ;; 01CB68 : C2 20       ; Accum (16 bit) 
-                      LDA.B $04                           ;; 01CB6A : A5 04       ;
+                      LDA.B !_4                           ;; 01CB6A : A5 04       ;
                       BCC CODE_01CB72                     ;; 01CB6C : 90 04       ;
                       EOR.W #$FFFF                        ;; 01CB6E : 49 FF FF    ;
                       INC A                               ;; 01CB71 : 1A          ;
-CODE_01CB72:          STA.B $08                           ;; 01CB72 : 85 08       ;
-                      LDA.B $06                           ;; 01CB74 : A5 06       ;
+CODE_01CB72:          STA.B !_8                           ;; 01CB72 : 85 08       ;
+                      LDA.B !_6                           ;; 01CB74 : A5 06       ;
                       BCC CODE_01CB7C                     ;; 01CB76 : 90 04       ;
                       EOR.W #$FFFF                        ;; 01CB78 : 49 FF FF    ;
                       INC A                               ;; 01CB7B : 1A          ;
-CODE_01CB7C:          STA.B $0A                           ;; 01CB7C : 85 0A       ;
+CODE_01CB7C:          STA.B !_A                           ;; 01CB7C : 85 0A       ;
                       LDA.W $14C2                         ;; 01CB7E : AD C2 14    ;
-                      STA.B $02                           ;; 01CB81 : 85 02       ;
+                      STA.B !_2                           ;; 01CB81 : 85 02       ;
                       LDA.W $14BF                         ;; 01CB83 : AD BF 14    ;
-                      STA.B $00                           ;; 01CB86 : 85 00       ;
+                      STA.B !_0                           ;; 01CB86 : 85 00       ;
                       SEP #$20                            ;; 01CB88 : E2 20       ; Accum (8 bit) 
                       JSR CODE_01CC28                     ;; 01CB8A : 20 28 CC    ;
                       LDA.W $1866                         ;; 01CB8D : AD 66 18    ;
                       LSR A                               ;; 01CB90 : 4A          ;
                       REP #$20                            ;; 01CB91 : C2 20       ; Accum (16 bit) 
-                      LDA.B $04                           ;; 01CB93 : A5 04       ;
+                      LDA.B !_4                           ;; 01CB93 : A5 04       ;
                       BCC CODE_01CB9B                     ;; 01CB95 : 90 04       ;
                       EOR.W #$FFFF                        ;; 01CB97 : 49 FF FF    ;
                       INC A                               ;; 01CB9A : 1A          ;
-CODE_01CB9B:          STA.B $04                           ;; 01CB9B : 85 04       ;
-                      LDA.B $06                           ;; 01CB9D : A5 06       ;
+CODE_01CB9B:          STA.B !_4                           ;; 01CB9B : 85 04       ;
+                      LDA.B !_6                           ;; 01CB9D : A5 06       ;
                       BCC CODE_01CBA5                     ;; 01CB9F : 90 04       ;
                       EOR.W #$FFFF                        ;; 01CBA1 : 49 FF FF    ;
                       INC A                               ;; 01CBA4 : 1A          ;
-CODE_01CBA5:          STA.B $06                           ;; 01CBA5 : 85 06       ;
-                      LDA.B $04                           ;; 01CBA7 : A5 04       ;
+CODE_01CBA5:          STA.B !_6                           ;; 01CBA5 : 85 06       ;
+                      LDA.B !_4                           ;; 01CBA7 : A5 04       ;
                       CLC                                 ;; 01CBA9 : 18          ;
-                      ADC.B $08                           ;; 01CBAA : 65 08       ;
-                      STA.B $04                           ;; 01CBAC : 85 04       ;
-                      LDA.B $06                           ;; 01CBAE : A5 06       ;
-                      ADC.B $0A                           ;; 01CBB0 : 65 0A       ;
-                      STA.B $06                           ;; 01CBB2 : 85 06       ;
-                      LDA.B $05                           ;; 01CBB4 : A5 05       ;
+                      ADC.B !_8                           ;; 01CBAA : 65 08       ;
+                      STA.B !_4                           ;; 01CBAC : 85 04       ;
+                      LDA.B !_6                           ;; 01CBAE : A5 06       ;
+                      ADC.B !_A                           ;; 01CBB0 : 65 0A       ;
+                      STA.B !_6                           ;; 01CBB2 : 85 06       ;
+                      LDA.B !_5                           ;; 01CBB4 : A5 05       ;
                       CLC                                 ;; 01CBB6 : 18          ;
                       ADC.W $14B0                         ;; 01CBB7 : 6D B0 14    ;
                       STA.W $14B8                         ;; 01CBBA : 8D B8 14    ;
                       LDA.W $14C5                         ;; 01CBBD : AD C5 14    ;
-                      STA.B $02                           ;; 01CBC0 : 85 02       ;
+                      STA.B !_2                           ;; 01CBC0 : 85 02       ;
                       LDA.W $14BF                         ;; 01CBC2 : AD BF 14    ;
-                      STA.B $00                           ;; 01CBC5 : 85 00       ;
+                      STA.B !_0                           ;; 01CBC5 : 85 00       ;
                       SEP #$20                            ;; 01CBC7 : E2 20       ; Accum (8 bit) 
                       JSR CODE_01CC28                     ;; 01CBC9 : 20 28 CC    ;
                       LDA.W $1867                         ;; 01CBCC : AD 67 18    ;
                       LSR A                               ;; 01CBCF : 4A          ;
                       REP #$20                            ;; 01CBD0 : C2 20       ; Accum (16 bit) 
-                      LDA.B $04                           ;; 01CBD2 : A5 04       ;
+                      LDA.B !_4                           ;; 01CBD2 : A5 04       ;
                       BCC CODE_01CBDA                     ;; 01CBD4 : 90 04       ;
                       EOR.W #$FFFF                        ;; 01CBD6 : 49 FF FF    ;
                       INC A                               ;; 01CBD9 : 1A          ;
-CODE_01CBDA:          STA.B $08                           ;; 01CBDA : 85 08       ;
-                      LDA.B $06                           ;; 01CBDC : A5 06       ;
+CODE_01CBDA:          STA.B !_8                           ;; 01CBDA : 85 08       ;
+                      LDA.B !_6                           ;; 01CBDC : A5 06       ;
                       BCC CODE_01CBE4                     ;; 01CBDE : 90 04       ;
                       EOR.W #$FFFF                        ;; 01CBE0 : 49 FF FF    ;
                       INC A                               ;; 01CBE3 : 1A          ;
-CODE_01CBE4:          STA.B $0A                           ;; 01CBE4 : 85 0A       ;
+CODE_01CBE4:          STA.B !_A                           ;; 01CBE4 : 85 0A       ;
                       LDA.W $14C2                         ;; 01CBE6 : AD C2 14    ;
-                      STA.B $02                           ;; 01CBE9 : 85 02       ;
+                      STA.B !_2                           ;; 01CBE9 : 85 02       ;
                       LDA.W $14BC                         ;; 01CBEB : AD BC 14    ;
-                      STA.B $00                           ;; 01CBEE : 85 00       ;
+                      STA.B !_0                           ;; 01CBEE : 85 00       ;
                       SEP #$20                            ;; 01CBF0 : E2 20       ; Accum (8 bit) 
                       JSR CODE_01CC28                     ;; 01CBF2 : 20 28 CC    ;
                       LDA.W $1866                         ;; 01CBF5 : AD 66 18    ;
                       LSR A                               ;; 01CBF8 : 4A          ;
                       REP #$20                            ;; 01CBF9 : C2 20       ; Accum (16 bit) 
-                      LDA.B $04                           ;; 01CBFB : A5 04       ;
+                      LDA.B !_4                           ;; 01CBFB : A5 04       ;
                       BCC CODE_01CC03                     ;; 01CBFD : 90 04       ;
                       EOR.W #$FFFF                        ;; 01CBFF : 49 FF FF    ;
                       INC A                               ;; 01CC02 : 1A          ;
-CODE_01CC03:          STA.B $04                           ;; 01CC03 : 85 04       ;
-                      LDA.B $06                           ;; 01CC05 : A5 06       ;
+CODE_01CC03:          STA.B !_4                           ;; 01CC03 : 85 04       ;
+                      LDA.B !_6                           ;; 01CC05 : A5 06       ;
                       BCC CODE_01CC0D                     ;; 01CC07 : 90 04       ;
                       EOR.W #$FFFF                        ;; 01CC09 : 49 FF FF    ;
                       INC A                               ;; 01CC0C : 1A          ;
-CODE_01CC0D:          STA.B $06                           ;; 01CC0D : 85 06       ;
-                      LDA.B $04                           ;; 01CC0F : A5 04       ;
+CODE_01CC0D:          STA.B !_6                           ;; 01CC0D : 85 06       ;
+                      LDA.B !_4                           ;; 01CC0F : A5 04       ;
                       SEC                                 ;; 01CC11 : 38          ;
-                      SBC.B $08                           ;; 01CC12 : E5 08       ;
-                      STA.B $04                           ;; 01CC14 : 85 04       ;
-                      LDA.B $06                           ;; 01CC16 : A5 06       ;
-                      SBC.B $0A                           ;; 01CC18 : E5 0A       ;
-                      STA.B $06                           ;; 01CC1A : 85 06       ;
+                      SBC.B !_8                           ;; 01CC12 : E5 08       ;
+                      STA.B !_4                           ;; 01CC14 : 85 04       ;
+                      LDA.B !_6                           ;; 01CC16 : A5 06       ;
+                      SBC.B !_A                           ;; 01CC18 : E5 0A       ;
+                      STA.B !_6                           ;; 01CC1A : 85 06       ;
                       LDA.W $14B2                         ;; 01CC1C : AD B2 14    ;
                       SEC                                 ;; 01CC1F : 38          ;
-                      SBC.B $05                           ;; 01CC20 : E5 05       ;
+                      SBC.B !_5                           ;; 01CC20 : E5 05       ;
                       STA.W $14BA                         ;; 01CC22 : 8D BA 14    ;
                       SEP #$20                            ;; 01CC25 : E2 20       ; Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_01CC28:          LDA.B $00                           ;; 01CC28 : A5 00       ;
+CODE_01CC28:          LDA.B !_0                           ;; 01CC28 : A5 00       ;
                       STA.W $4202                         ;; 01CC2A : 8D 02 42    ; Multiplicand A
-                      LDA.B $02                           ;; 01CC2D : A5 02       ;
+                      LDA.B !_2                           ;; 01CC2D : A5 02       ;
                       STA.W $4203                         ;; 01CC2F : 8D 03 42    ; Multplier B
                       JSR DoNothing                       ;; 01CC32 : 20 94 CC    ;
                       LDA.W $4216                         ;; 01CC35 : AD 16 42    ; Product/Remainder Result (Low Byte)
-                      STA.B $04                           ;; 01CC38 : 85 04       ;
+                      STA.B !_4                           ;; 01CC38 : 85 04       ;
                       LDA.W $4217                         ;; 01CC3A : AD 17 42    ; Product/Remainder Result (High Byte)
-                      STA.B $05                           ;; 01CC3D : 85 05       ;
-                      LDA.B $00                           ;; 01CC3F : A5 00       ;
+                      STA.B !_5                           ;; 01CC3D : 85 05       ;
+                      LDA.B !_0                           ;; 01CC3F : A5 00       ;
                       STA.W $4202                         ;; 01CC41 : 8D 02 42    ; Multiplicand A
-                      LDA.B $03                           ;; 01CC44 : A5 03       ;
+                      LDA.B !_3                           ;; 01CC44 : A5 03       ;
                       STA.W $4203                         ;; 01CC46 : 8D 03 42    ; Multplier B
                       JSR DoNothing                       ;; 01CC49 : 20 94 CC    ;
                       LDA.W $4216                         ;; 01CC4C : AD 16 42    ; Product/Remainder Result (Low Byte)
                       CLC                                 ;; 01CC4F : 18          ;
-                      ADC.B $05                           ;; 01CC50 : 65 05       ;
-                      STA.B $05                           ;; 01CC52 : 85 05       ;
+                      ADC.B !_5                           ;; 01CC50 : 65 05       ;
+                      STA.B !_5                           ;; 01CC52 : 85 05       ;
                       LDA.W $4217                         ;; 01CC54 : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 01CC57 : 69 00       ;
-                      STA.B $06                           ;; 01CC59 : 85 06       ;
-                      LDA.B $01                           ;; 01CC5B : A5 01       ;
+                      STA.B !_6                           ;; 01CC59 : 85 06       ;
+                      LDA.B !_1                           ;; 01CC5B : A5 01       ;
                       STA.W $4202                         ;; 01CC5D : 8D 02 42    ; Multiplicand A
-                      LDA.B $02                           ;; 01CC60 : A5 02       ;
+                      LDA.B !_2                           ;; 01CC60 : A5 02       ;
                       STA.W $4203                         ;; 01CC62 : 8D 03 42    ; Multplier B
                       JSR DoNothing                       ;; 01CC65 : 20 94 CC    ;
                       LDA.W $4216                         ;; 01CC68 : AD 16 42    ; Product/Remainder Result (Low Byte)
                       CLC                                 ;; 01CC6B : 18          ;
-                      ADC.B $05                           ;; 01CC6C : 65 05       ;
-                      STA.B $05                           ;; 01CC6E : 85 05       ;
+                      ADC.B !_5                           ;; 01CC6C : 65 05       ;
+                      STA.B !_5                           ;; 01CC6E : 85 05       ;
                       LDA.W $4217                         ;; 01CC70 : AD 17 42    ; Product/Remainder Result (High Byte)
-                      ADC.B $06                           ;; 01CC73 : 65 06       ;
-                      STA.B $06                           ;; 01CC75 : 85 06       ;
-                      LDA.B $01                           ;; 01CC77 : A5 01       ;
+                      ADC.B !_6                           ;; 01CC73 : 65 06       ;
+                      STA.B !_6                           ;; 01CC75 : 85 06       ;
+                      LDA.B !_1                           ;; 01CC77 : A5 01       ;
                       STA.W $4202                         ;; 01CC79 : 8D 02 42    ; Multiplicand A
-                      LDA.B $03                           ;; 01CC7C : A5 03       ;
+                      LDA.B !_3                           ;; 01CC7C : A5 03       ;
                       STA.W $4203                         ;; 01CC7E : 8D 03 42    ; Multplier B
                       JSR DoNothing                       ;; 01CC81 : 20 94 CC    ;
                       LDA.W $4216                         ;; 01CC84 : AD 16 42    ; Product/Remainder Result (Low Byte)
                       CLC                                 ;; 01CC87 : 18          ;
-                      ADC.B $06                           ;; 01CC88 : 65 06       ;
-                      STA.B $06                           ;; 01CC8A : 85 06       ;
+                      ADC.B !_6                           ;; 01CC88 : 65 06       ;
+                      STA.B !_6                           ;; 01CC8A : 85 06       ;
                       LDA.W $4217                         ;; 01CC8C : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 01CC8F : 69 00       ;
-                      STA.B $07                           ;; 01CC91 : 85 07       ;
+                      STA.B !_7                           ;; 01CC91 : 85 07       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 DoNothing:            NOP                                 ;; ?QPWZ? : EA          ; \ Do nothing at all 
@@ -9517,13 +9517,13 @@ CODE_01CC9D:          LDA.W $14B5                         ;; 01CC9D : AD B5 14  
                       JSR CODE_01CB53                     ;; 01CCAB : 20 53 CB    ;
                       LDA.W $14BA                         ;; 01CCAE : AD BA 14    ;
                       AND.B #$F0                          ;; 01CCB1 : 29 F0       ;
-                      STA.B $00                           ;; 01CCB3 : 85 00       ;
+                      STA.B !_0                           ;; 01CCB3 : 85 00       ;
                       LDA.W $14B8                         ;; 01CCB5 : AD B8 14    ;
                       LSR A                               ;; 01CCB8 : 4A          ;
                       LSR A                               ;; 01CCB9 : 4A          ;
                       LSR A                               ;; 01CCBA : 4A          ;
                       LSR A                               ;; 01CCBB : 4A          ;
-                      ORA.B $00                           ;; 01CCBC : 05 00       ;
+                      ORA.B !_0                           ;; 01CCBC : 05 00       ;
                       TAY                                 ;; 01CCBE : A8          ;
                       LDA.W $0AF6,Y                       ;; 01CCBF : B9 F6 0A    ;
                       CMP.B #$15                          ;; 01CCC2 : C9 15       ;
@@ -9533,9 +9533,9 @@ CODE_01CCC5:          CLC                                 ;; 01CCC5 : 18        
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_01CCC7:          REP #$20                            ;; 01CCC7 : C2 20       ; Accum (16 bit) 
-                      LDA.B $2A                           ;; 01CCC9 : A5 2A       ;
+                      LDA.B !Mode7CenterX                 ;; 01CCC9 : A5 2A       ;
                       STA.W $14B0                         ;; 01CCCB : 8D B0 14    ;
-                      LDA.B $2C                           ;; 01CCCE : A5 2C       ;
+                      LDA.B !Mode7CenterY                 ;; 01CCCE : A5 2C       ;
                       STA.W $14B2                         ;; 01CCD0 : 8D B2 14    ;
                       LDA.W $14B4                         ;; 01CCD3 : AD B4 14    ;
                       SEC                                 ;; 01CCD6 : 38          ;
@@ -9619,8 +9619,8 @@ CODE_01CD4E:          LDY.B #$90                          ;; 01CD4E : A0 90     
 CODE_01CD5E:          LDA.B #$01                          ;; 01CD5E : A9 01       ;
                       STA.W $157C,X                       ;; 01CD60 : 9D 7C 15    ;
                       LDA.B #$20                          ;; 01CD63 : A9 20       ;
-                      STA.B $38                           ;; 01CD65 : 85 38       ;
-                      STA.B $39                           ;; 01CD67 : 85 39       ;
+                      STA.B !Mode7XScale                  ;; 01CD65 : 85 38       ;
+                      STA.B !Mode7YScale                  ;; 01CD67 : 85 39       ;
                       JSL CODE_03DD7D                     ;; 01CD69 : 22 7D DD 03 ;
                       LDY.B $C2,X                         ;; 01CD6D : B4 C2       ;
                       LDA.W DATA_01CD92,Y                 ;; 01CD6F : B9 92 CD    ;
@@ -9664,14 +9664,14 @@ WallKoopaKids:        STZ.W $13FB                         ;; ?QPWZ? : 9C FB 13  
                       LDA.W DATA_01CDA5,Y                 ;; 01CDBD : B9 A5 CD    ;
                       BCS CODE_01CDC4                     ;; 01CDC0 : B0 02       ;
                       EOR.B #$80                          ;; 01CDC2 : 49 80       ;
-CODE_01CDC4:          STA.B $00                           ;; 01CDC4 : 85 00       ;
+CODE_01CDC4:          STA.B !_0                           ;; 01CDC4 : 85 00       ;
                       LDY.B $C2,X                         ;; 01CDC6 : B4 C2       ;
                       LDA.W DATA_01CD99,Y                 ;; 01CDC8 : B9 99 CD    ;
                       LDY.W $1602,X                       ;; 01CDCB : BC 02 16    ;
                       CLC                                 ;; 01CDCE : 18          ;
                       ADC.W DATA_01CD9C,Y                 ;; 01CDCF : 79 9C CD    ;
                       CLC                                 ;; 01CDD2 : 18          ;
-                      ADC.B $00                           ;; 01CDD3 : 65 00       ;
+                      ADC.B !_0                           ;; 01CDD3 : 65 00       ;
 CODE_01CDD5:          STA.W $1BA2                         ;; 01CDD5 : 8D A2 1B    ;
                       JSL CODE_03DEDF                     ;; 01CDD8 : 22 DF DE 03 ;
                       JSR CODE_01CDA7                     ;; 01CDDC : 20 A7 CD    ;
@@ -9714,7 +9714,7 @@ CODE_01CE1E:          LDA.W $187B,X                       ;; 01CE1E : BD 7B 18  
                       INC.W $151C,X                       ;; 01CE30 : FE 1C 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_01CE34:          LDA.B $1A                           ;; 01CE34 : A5 1A       ;
+CODE_01CE34:          LDA.B !Layer1XPos                   ;; 01CE34 : A5 1A       ;
                       CMP.B #$7E                          ;; 01CE36 : C9 7E       ;
                       BCC Return01CE3D                    ;; 01CE38 : 90 03       ;
                       INC.W $151C,X                       ;; 01CE3A : FE 1C 15    ;
@@ -9750,8 +9750,8 @@ CODE_01CE6B:          LDA.W $1528,X                       ;; 01CE6B : BD 28 15  
                       dw CODE_01CEB6                      ;; ?QPWZ? : B6 CE       ;
                       dw CODE_01CEFD                      ;; ?QPWZ? : FD CE       ;
                                                           ;;                      ;
-CODE_01CE78:          STZ.B $36                           ;; 01CE78 : 64 36       ;
-                      STZ.B $37                           ;; 01CE7A : 64 37       ;
+CODE_01CE78:          STZ.B !Mode7Angle                   ;; 01CE78 : 64 36       ;
+                      STZ.B !Mode7Angle+1                 ;; 01CE7A : 64 37       ;
                       LDA.W $1540,X                       ;; 01CE7C : BD 40 15    ;
                       BEQ CODE_01CEA5                     ;; 01CE7F : F0 24       ;
                       LDY.B #$03                          ;; 01CE81 : A0 03       ;
@@ -9809,7 +9809,7 @@ CODE_01CEDC:          JSR SubHorizPos                     ;; 01CEDC : 20 30 AD  
                       ADC.W DATA_01D4E7,Y                 ;; 01CEE7 : 79 E7 D4    ;
                       STA.B $B6,X                         ;; 01CEEA : 95 B6       ;
 CODE_01CEEC:          JSR SubSprXPosNoGrvty               ;; 01CEEC : 20 CC AB    ;
-                      LDA.B $14                           ;; 01CEEF : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01CEEF : A5 14       ;
                       LSR A                               ;; 01CEF1 : 4A          ;
                       LSR A                               ;; 01CEF2 : 4A          ;
                       AND.B #$03                          ;; 01CEF3 : 29 03       ;
@@ -9845,7 +9845,7 @@ CODE_01CF1C:          JSR CODE_01D0C0                     ;; 01CF1C : 20 C0 D0  
                                                           ;;                      ;
 CODE_01CF2F:          JSR SubSprXPosNoGrvty               ;; 01CF2F : 20 CC AB    ;
                       JSR SubSprYPosNoGrvty               ;; 01CF32 : 20 D8 AB    ;
-                      LDA.B $13                           ;; 01CF35 : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01CF35 : A5 13       ;
                       LSR A                               ;; 01CF37 : 4A          ;
                       BCS CODE_01CF44                     ;; 01CF38 : B0 0A       ;
                       LDA.B $AA,X                         ;; 01CF3A : B5 AA       ;
@@ -9855,8 +9855,8 @@ CODE_01CF2F:          JSR SubSprXPosNoGrvty               ;; 01CF2F : 20 CC AB  
 CODE_01CF42:          INC.B $AA,X                         ;; 01CF42 : F6 AA       ;
 CODE_01CF44:          LDA.W $1558,X                       ;; 01CF44 : BD 58 15    ;
                       BNE CODE_01CF4F                     ;; 01CF47 : D0 06       ;
-                      LDA.B $36                           ;; 01CF49 : A5 36       ;
-                      ORA.B $37                           ;; 01CF4B : 05 37       ;
+                      LDA.B !Mode7Angle                   ;; 01CF49 : A5 36       ;
+                      ORA.B !Mode7Angle+1                 ;; 01CF4B : 05 37       ;
                       BEQ CODE_01CF67                     ;; 01CF4D : F0 18       ;
 CODE_01CF4F:          LDA.B $B6,X                         ;; 01CF4F : B5 B6       ;
                       ASL A                               ;; 01CF51 : 0A          ;
@@ -9866,12 +9866,12 @@ CODE_01CF4F:          LDA.B $B6,X                         ;; 01CF4F : B5 B6     
                       LDA.B #$FC                          ;; 01CF58 : A9 FC       ;
                       DEY                                 ;; 01CF5A : 88          ;
 CODE_01CF5B:          CLC                                 ;; 01CF5B : 18          ;
-                      ADC.B $36                           ;; 01CF5C : 65 36       ;
-                      STA.B $36                           ;; 01CF5E : 85 36       ;
+                      ADC.B !Mode7Angle                   ;; 01CF5C : 65 36       ;
+                      STA.B !Mode7Angle                   ;; 01CF5E : 85 36       ;
                       TYA                                 ;; 01CF60 : 98          ;
-                      ADC.B $37                           ;; 01CF61 : 65 37       ;
+                      ADC.B !Mode7Angle+1                 ;; 01CF61 : 65 37       ;
                       AND.B #$01                          ;; 01CF63 : 29 01       ;
-                      STA.B $37                           ;; 01CF65 : 85 37       ;
+                      STA.B !Mode7Angle+1                 ;; 01CF65 : 85 37       ;
 CODE_01CF67:          LDA.B #$06                          ;; 01CF67 : A9 06       ;
                       LDY.B $AA,X                         ;; 01CF69 : B4 AA       ;
                       BMI CODE_01CF79                     ;; 01CF6B : 30 0C       ;
@@ -9893,7 +9893,7 @@ CODE_01CF7D:          JSR SubSprYPosNoGrvty               ;; 01CF7D : 20 D8 AB  
                       BCC CODE_01CF9E                     ;; 01CF8C : 90 10       ;
                       BEQ CODE_01CFC6                     ;; 01CF8E : F0 36       ;
                       LDY.B #$06                          ;; 01CF90 : A0 06       ;
-                      LDA.B $14                           ;; 01CF92 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01CF92 : A5 14       ;
                       AND.B #$04                          ;; 01CF94 : 29 04       ;
                       BEQ CODE_01CF99                     ;; 01CF96 : F0 01       ;
                       INY                                 ;; 01CF98 : C8          ;
@@ -9902,14 +9902,14 @@ CODE_01CF99:          TYA                                 ;; 01CF99 : 98        
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01CF9E:          LDY.W $18A6                         ;; 01CF9E : AC A6 18    ;
-                      LDA.B $38                           ;; 01CFA1 : A5 38       ;
+                      LDA.B !Mode7XScale                  ;; 01CFA1 : A5 38       ;
                       CMP.B #$20                          ;; 01CFA3 : C9 20       ;
                       BEQ CODE_01CFA9                     ;; 01CFA5 : F0 02       ;
-                      INC.B $38                           ;; 01CFA7 : E6 38       ;
-CODE_01CFA9:          LDA.B $39                           ;; 01CFA9 : A5 39       ;
+                      INC.B !Mode7XScale                  ;; 01CFA7 : E6 38       ;
+CODE_01CFA9:          LDA.B !Mode7YScale                  ;; 01CFA9 : A5 39       ;
                       CMP.B #$20                          ;; 01CFAB : C9 20       ;
                       BEQ CODE_01CFB1                     ;; 01CFAD : F0 02       ;
-                      DEC.B $39                           ;; 01CFAF : C6 39       ;
+                      DEC.B !Mode7YScale                  ;; 01CFAF : C6 39       ;
 CODE_01CFB1:          LDA.B #$07                          ;; 01CFB1 : A9 07       ;
                       STA.W $1602,X                       ;; 01CFB3 : 9D 02 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -9942,24 +9942,24 @@ CODE_01CFE0:          LDY.W $1540,X                       ;; 01CFE0 : BC 40 15  
                       STA.B $D8,X                         ;; 01CFEA : 95 D8       ;
                       BCS CODE_01CFF1                     ;; 01CFEC : B0 03       ;
                       DEC.W $14D4,X                       ;; 01CFEE : DE D4 14    ;
-CODE_01CFF1:          DEC.B $39                           ;; 01CFF1 : C6 39       ;
+CODE_01CFF1:          DEC.B !Mode7YScale                  ;; 01CFF1 : C6 39       ;
                       TYA                                 ;; 01CFF3 : 98          ;
                       AND.B #$03                          ;; 01CFF4 : 29 03       ;
                       BEQ CODE_01CFFA                     ;; 01CFF6 : F0 02       ;
-                      DEC.B $38                           ;; 01CFF8 : C6 38       ;
+                      DEC.B !Mode7XScale                  ;; 01CFF8 : C6 38       ;
 CODE_01CFFA:          BRA CODE_01D00F                     ;; 01CFFA : 80 13       ;
                                                           ;;                      ;
-CODE_01CFFC:          LDA.B $36                           ;; 01CFFC : A5 36       ;
+CODE_01CFFC:          LDA.B !Mode7Angle                   ;; 01CFFC : A5 36       ;
                       CLC                                 ;; 01CFFE : 18          ;
                       ADC.B #$06                          ;; 01CFFF : 69 06       ;
-                      STA.B $36                           ;; 01D001 : 85 36       ;
-                      LDA.B $37                           ;; 01D003 : A5 37       ;
+                      STA.B !Mode7Angle                   ;; 01D001 : 85 36       ;
+                      LDA.B !Mode7Angle+1                 ;; 01D003 : A5 37       ;
                       ADC.B #$00                          ;; 01D005 : 69 00       ;
                       AND.B #$01                          ;; 01D007 : 29 01       ;
-                      STA.B $37                           ;; 01D009 : 85 37       ;
-                      INC.B $38                           ;; 01D00B : E6 38       ;
-                      INC.B $39                           ;; 01D00D : E6 39       ;
-CODE_01D00F:          LDA.B $39                           ;; 01D00F : A5 39       ;
+                      STA.B !Mode7Angle+1                 ;; 01D009 : 85 37       ;
+                      INC.B !Mode7XScale                  ;; 01D00B : E6 38       ;
+                      INC.B !Mode7YScale                  ;; 01D00D : E6 39       ;
+CODE_01D00F:          LDA.B !Mode7YScale                  ;; 01D00F : A5 39       ;
                       CMP.B #$A0                          ;; 01D011 : C9 A0       ;
                       BCC Return01D042                    ;; 01D013 : 90 2D       ;
                       LDA.W $15A0,X                       ;; 01D015 : BD A0 15    ;
@@ -10008,9 +10008,9 @@ CODE_01D069:          LDA.B #$08                          ;; 01D069 : A9 08     
                       LDA.B #$34                          ;; 01D06E : A9 34       ;
                       STA.W $009E,Y                       ;; 01D070 : 99 9E 00    ;
                       LDA.B $E4,X                         ;; 01D073 : B5 E4       ;
-                      STA.B $00                           ;; 01D075 : 85 00       ;
+                      STA.B !_0                           ;; 01D075 : 85 00       ;
                       LDA.W $14E0,X                       ;; 01D077 : BD E0 14    ;
-                      STA.B $01                           ;; 01D07A : 85 01       ;
+                      STA.B !_1                           ;; 01D07A : 85 01       ;
                       LDA.B $D8,X                         ;; 01D07C : B5 D8       ;
                       CLC                                 ;; 01D07E : 18          ;
                       ADC.B #$03                          ;; 01D07F : 69 03       ;
@@ -10021,11 +10021,11 @@ CODE_01D069:          LDA.B #$08                          ;; 01D069 : A9 08     
                       LDA.W $157C,X                       ;; 01D08C : BD 7C 15    ;
                       PHX                                 ;; 01D08F : DA          ;
                       TAX                                 ;; 01D090 : AA          ;
-                      LDA.B $00                           ;; 01D091 : A5 00       ;
+                      LDA.B !_0                           ;; 01D091 : A5 00       ;
                       CLC                                 ;; 01D093 : 18          ;
                       ADC.W DATA_01D057,X                 ;; 01D094 : 7D 57 D0    ;
                       STA.W $00E4,Y                       ;; 01D097 : 99 E4 00    ;
-                      LDA.B $01                           ;; 01D09A : A5 01       ;
+                      LDA.B !_1                           ;; 01D09A : A5 01       ;
                       ADC.B #$FF                          ;; 01D09C : 69 FF       ;
                       STA.W $14E0,Y                       ;; 01D09E : 99 E0 14    ;
                       PLX                                 ;; 01D0A1 : FA          ;
@@ -10051,7 +10051,7 @@ CODE_01D0C0:          LDA.B $AA,X                         ;; 01D0C0 : B5 AA     
                       BMI CODE_01D0DC                     ;; 01D0C2 : 30 18       ;
                       LDA.W $14D4,X                       ;; 01D0C4 : BD D4 14    ;
                       BNE CODE_01D0DC                     ;; 01D0C7 : D0 13       ;
-                      LDA.B $39                           ;; 01D0C9 : A5 39       ;
+                      LDA.B !Mode7YScale                  ;; 01D0C9 : A5 39       ;
                       LSR A                               ;; 01D0CB : 4A          ;
                       TAY                                 ;; 01D0CC : A8          ;
                       LDA.B $D8,X                         ;; 01D0CD : B5 D8       ;
@@ -10092,7 +10092,7 @@ DATA_01D13E:          db $90,$30,$30,$90                  ;; 01D13E             
                                                           ;;                      ;
 DATA_01D142:          db $00,$01,$02,$01                  ;; 01D142               ;
                                                           ;;                      ;
-CODE_01D146:          LDA.B $14                           ;; 01D146 : A5 14       ;
+CODE_01D146:          LDA.B !EffFrame                     ;; 01D146 : A5 14       ;
                       LSR A                               ;; 01D148 : 4A          ;
                       LDY.W $1626,X                       ;; 01D149 : BC 26 16    ;
                       CPY.B #$02                          ;; 01D14C : C0 02       ;
@@ -10118,16 +10118,16 @@ CODE_01D15E:          STA.W $1602,X                       ;; 01D15E : 9D 02 16  
                       INC.W $1534,X                       ;; 01D176 : FE 34 15    ;
                       DEC.W $160E,X                       ;; 01D179 : DE 0E 16    ;
 CODE_01D17C:          LDA.W $1534,X                       ;; 01D17C : BD 34 15    ;
-                      STA.B $05                           ;; 01D17F : 85 05       ;
-                      STA.B $06                           ;; 01D181 : 85 06       ;
-                      STA.B $0B                           ;; 01D183 : 85 0B       ;
-                      STA.B $0C                           ;; 01D185 : 85 0C       ;
+                      STA.B !_5                           ;; 01D17F : 85 05       ;
+                      STA.B !_6                           ;; 01D181 : 85 06       ;
+                      STA.B !_B                           ;; 01D183 : 85 0B       ;
+                      STA.B !_C                           ;; 01D185 : 85 0C       ;
                       LDA.W $160E,X                       ;; 01D187 : BD 0E 16    ;
-                      STA.B $07                           ;; 01D18A : 85 07       ;
-                      STA.B $08                           ;; 01D18C : 85 08       ;
-                      STA.B $09                           ;; 01D18E : 85 09       ;
-                      STA.B $0A                           ;; 01D190 : 85 0A       ;
-                      LDA.B $36                           ;; 01D192 : A5 36       ;
+                      STA.B !_7                           ;; 01D18A : 85 07       ;
+                      STA.B !_8                           ;; 01D18C : 85 08       ;
+                      STA.B !_9                           ;; 01D18E : 85 09       ;
+                      STA.B !_A                           ;; 01D190 : 85 0A       ;
+                      LDA.B !Mode7Angle                   ;; 01D192 : A5 36       ;
                       ASL A                               ;; 01D194 : 0A          ;
                       BEQ CODE_01D19A                     ;; 01D195 : F0 03       ;
                       JMP CODE_01D224                     ;; 01D197 : 4C 24 D2    ;
@@ -10153,7 +10153,7 @@ CODE_01D1B5:          LDA.W $157C,X                       ;; 01D1B5 : BD 7C 15  
                       INY                                 ;; 01D1BB : C8          ;
                       INY                                 ;; 01D1BC : C8          ;
                       INY                                 ;; 01D1BD : C8          ;
-CODE_01D1BE:          LDA.W $0005,Y                       ;; 01D1BE : B9 05 00    ;
+CODE_01D1BE:          LDA.W !_5,Y                         ;; 01D1BE : B9 05 00    ;
                       STA.B $E4,X                         ;; 01D1C1 : 95 E4       ;
                       LDY.W $1594,X                       ;; 01D1C3 : BC 94 15    ;
                       LDA.B $D8,X                         ;; 01D1C6 : B5 D8       ;
@@ -10186,7 +10186,7 @@ CODE_01D1E1:          ASL A                               ;; 01D1E1 : 0A        
 CODE_01D201:          CMP.B #$02                          ;; 01D201 : C9 02       ;
                       BNE Return01D214                    ;; 01D203 : D0 0F       ;
                       JSR SubHorizPos                     ;; 01D205 : 20 30 AD    ;
-                      LDA.B $0F                           ;; 01D208 : A5 0F       ;
+                      LDA.B !_F                           ;; 01D208 : A5 0F       ;
                       CLC                                 ;; 01D20A : 18          ;
                       ADC.B #$10                          ;; 01D20B : 69 10       ;
                       CMP.B #$20                          ;; 01D20D : C9 20       ;
@@ -10201,14 +10201,14 @@ CODE_01D215:          LDY.W $157C,X                       ;; 01D215 : BC 7C 15  
                       AND.B #$03                          ;; 01D21F : 29 03       ;
                       STA.W $1594,X                       ;; 01D221 : 9D 94 15    ;
 CODE_01D224:          LDY.W $157C,X                       ;; 01D224 : BC 7C 15    ;
-                      LDA.B $36                           ;; 01D227 : A5 36       ;
+                      LDA.B !Mode7Angle                   ;; 01D227 : A5 36       ;
                       CLC                                 ;; 01D229 : 18          ;
                       ADC.W DATA_01D239,Y                 ;; 01D22A : 79 39 D2    ;
-                      STA.B $36                           ;; 01D22D : 85 36       ;
-                      LDA.B $37                           ;; 01D22F : A5 37       ;
+                      STA.B !Mode7Angle                   ;; 01D22D : 85 36       ;
+                      LDA.B !Mode7Angle+1                 ;; 01D22F : A5 37       ;
                       ADC.W DATA_01D23B,Y                 ;; 01D231 : 79 3B D2    ;
                       AND.B #$01                          ;; 01D234 : 29 01       ;
-                      STA.B $37                           ;; 01D236 : 85 37       ;
+                      STA.B !Mode7Angle+1                 ;; 01D236 : 85 37       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -10242,17 +10242,17 @@ CODE_01D25E:          LDA.B #$06                          ;; 01D25E : A9 06     
                       CLC                                 ;; 01D26C : 18          ;
                       ADC.B #$04                          ;; 01D26D : 69 04       ;
                       STA.B $AA,X                         ;; 01D26F : 95 AA       ;
-CODE_01D271:          LDA.B $36                           ;; 01D271 : A5 36       ;
-                      ORA.B $37                           ;; 01D273 : 05 37       ;
+CODE_01D271:          LDA.B !Mode7Angle                   ;; 01D271 : A5 36       ;
+                      ORA.B !Mode7Angle+1                 ;; 01D273 : 05 37       ;
                       BEQ CODE_01D286                     ;; 01D275 : F0 0F       ;
-                      LDA.B $36                           ;; 01D277 : A5 36       ;
+                      LDA.B !Mode7Angle                   ;; 01D277 : A5 36       ;
                       CLC                                 ;; 01D279 : 18          ;
                       ADC.B #$08                          ;; 01D27A : 69 08       ;
-                      STA.B $36                           ;; 01D27C : 85 36       ;
-                      LDA.B $37                           ;; 01D27E : A5 37       ;
+                      STA.B !Mode7Angle                   ;; 01D27C : 85 36       ;
+                      LDA.B !Mode7Angle+1                 ;; 01D27E : A5 37       ;
                       ADC.B #$00                          ;; 01D280 : 69 00       ;
                       AND.B #$01                          ;; 01D282 : 29 01       ;
-                      STA.B $37                           ;; 01D284 : 85 37       ;
+                      STA.B !Mode7Angle+1                 ;; 01D284 : 85 37       ;
 CODE_01D286:          JSR CODE_01D0C0                     ;; 01D286 : 20 C0 D0    ;
                       BCC Return01D2A7                    ;; 01D289 : 90 1C       ;
                       LDA.B #$20                          ;; 01D28B : A9 20       ; \ Set ground shake timer 
@@ -10265,8 +10265,8 @@ CODE_01D299:          LDA.B #$09                          ;; 01D299 : A9 09     
                       STA.W $1DFC                         ;; 01D29B : 8D FC 1D    ; / 
                       LDA.B #$28                          ;; 01D29E : A9 28       ;
                       STA.W $1540,X                       ;; 01D2A0 : 9D 40 15    ;
-                      STZ.B $36                           ;; 01D2A3 : 64 36       ;
-                      STZ.B $37                           ;; 01D2A5 : 64 37       ;
+                      STZ.B !Mode7Angle                   ;; 01D2A3 : 64 36       ;
+                      STZ.B !Mode7Angle+1                 ;; 01D2A5 : 64 37       ;
 Return01D2A7:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01D2A8:          LDA.W $151C,X                       ;; 01D2A8 : BD 1C 15    ;
@@ -10378,13 +10378,13 @@ CODE_01D351:          LDA.B $E4,X                         ;; 01D351 : B5 E4     
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01D379:          LDA.B #$18                          ;; 01D379 : A9 18       ;
-                      STA.B $38                           ;; 01D37B : 85 38       ;
+                      STA.B !Mode7XScale                  ;; 01D37B : 85 38       ;
                       PHX                                 ;; 01D37D : DA          ;
-                      LDA.B $39                           ;; 01D37E : A5 39       ;
+                      LDA.B !Mode7YScale                  ;; 01D37E : A5 39       ;
                       LSR A                               ;; 01D380 : 4A          ;
                       TAX                                 ;; 01D381 : AA          ;
                       LDA.B #$28                          ;; 01D382 : A9 28       ;
-                      STA.B $39                           ;; 01D384 : 85 39       ;
+                      STA.B !Mode7YScale                  ;; 01D384 : 85 39       ;
                       LSR A                               ;; 01D386 : 4A          ;
                       TAY                                 ;; 01D387 : A8          ;
                       LDA.W DATA_01D0DE-8,Y               ;; 01D388 : B9 D6 D0    ;
@@ -10416,16 +10416,16 @@ CODE_01D3BA:          STY.W $1695                         ;; 01D3BA : 8C 95 16  
                       CMP.B #$05                          ;; 01D3C0 : C9 05       ;
                       BNE CODE_01D405                     ;; 01D3C2 : D0 41       ;
                       LDA.W $171F,Y                       ;; 01D3C4 : B9 1F 17    ;
-                      STA.B $00                           ;; 01D3C7 : 85 00       ;
+                      STA.B !_0                           ;; 01D3C7 : 85 00       ;
                       LDA.W $1733,Y                       ;; 01D3C9 : B9 33 17    ;
-                      STA.B $08                           ;; 01D3CC : 85 08       ;
+                      STA.B !_8                           ;; 01D3CC : 85 08       ;
                       LDA.W $1715,Y                       ;; 01D3CE : B9 15 17    ;
-                      STA.B $01                           ;; 01D3D1 : 85 01       ;
+                      STA.B !_1                           ;; 01D3D1 : 85 01       ;
                       LDA.W $1729,Y                       ;; 01D3D3 : B9 29 17    ;
-                      STA.B $09                           ;; 01D3D6 : 85 09       ;
+                      STA.B !_9                           ;; 01D3D6 : 85 09       ;
                       LDA.B #$08                          ;; 01D3D8 : A9 08       ;
-                      STA.B $02                           ;; 01D3DA : 85 02       ;
-                      STA.B $03                           ;; 01D3DC : 85 03       ;
+                      STA.B !_2                           ;; 01D3DA : 85 02       ;
+                      STA.B !_3                           ;; 01D3DC : 85 03       ;
                       PHY                                 ;; 01D3DE : 5A          ;
                       JSR CODE_01D40B                     ;; 01D3DF : 20 0B D4    ;
                       PLY                                 ;; 01D3E2 : 7A          ;
@@ -10450,14 +10450,14 @@ Return01D40A:         RTS                                 ;; ?QPWZ? : 60        
 CODE_01D40B:          LDA.B $E4,X                         ;; 01D40B : B5 E4       ;
                       SEC                                 ;; 01D40D : 38          ;
                       SBC.B #$08                          ;; 01D40E : E9 08       ;
-                      STA.B $04                           ;; 01D410 : 85 04       ;
+                      STA.B !_4                           ;; 01D410 : 85 04       ;
                       LDA.W $14E0,X                       ;; 01D412 : BD E0 14    ;
                       SBC.B #$00                          ;; 01D415 : E9 00       ;
-                      STA.B $0A                           ;; 01D417 : 85 0A       ;
+                      STA.B !_A                           ;; 01D417 : 85 0A       ;
                       LDA.B #$10                          ;; 01D419 : A9 10       ;
-                      STA.B $06                           ;; 01D41B : 85 06       ;
+                      STA.B !_6                           ;; 01D41B : 85 06       ;
                       LDA.B #$10                          ;; 01D41D : A9 10       ;
-                      STA.B $07                           ;; 01D41F : 85 07       ;
+                      STA.B !_7                           ;; 01D41F : 85 07       ;
                       LDA.W $1602,X                       ;; 01D421 : BD 02 16    ;
                       CMP.B #$69                          ;; 01D424 : C9 69       ;
                       LDA.B #$08                          ;; 01D426 : A9 08       ;
@@ -10465,10 +10465,10 @@ CODE_01D40B:          LDA.B $E4,X                         ;; 01D40B : B5 E4     
                       ADC.B #$0A                          ;; 01D42A : 69 0A       ;
 CODE_01D42C:          CLC                                 ;; 01D42C : 18          ;
                       ADC.B $D8,X                         ;; 01D42D : 75 D8       ;
-                      STA.B $05                           ;; 01D42F : 85 05       ;
+                      STA.B !_5                           ;; 01D42F : 85 05       ;
                       LDA.W $14D4,X                       ;; 01D431 : BD D4 14    ;
                       ADC.B #$00                          ;; 01D434 : 69 00       ;
-                      STA.B $0B                           ;; 01D436 : 85 0B       ;
+                      STA.B !_B                           ;; 01D436 : 85 0B       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -10499,12 +10499,12 @@ CODE_01D468:          JSR SubSprXPosNoGrvty               ;; 01D468 : 20 CC AB  
                       LDA.B $E4,X                         ;; 01D46B : B5 E4       ;
                       CLC                                 ;; 01D46D : 18          ;
                       ADC.B #$20                          ;; 01D46E : 69 20       ;
-                      STA.B $00                           ;; 01D470 : 85 00       ;
+                      STA.B !_0                           ;; 01D470 : 85 00       ;
                       LDA.W $14E0,X                       ;; 01D472 : BD E0 14    ;
                       ADC.B #$00                          ;; 01D475 : 69 00       ;
-                      STA.B $01                           ;; 01D477 : 85 01       ;
+                      STA.B !_1                           ;; 01D477 : 85 01       ;
                       REP #$20                            ;; 01D479 : C2 20       ; Accum (16 bit) 
-                      LDA.B $00                           ;; 01D47B : A5 00       ;
+                      LDA.B !_0                           ;; 01D47B : A5 00       ;
                       CMP.W #$0230                        ;; 01D47D : C9 30 02    ;
                       SEP #$20                            ;; 01D480 : E2 20       ; Accum (8 bit) 
                       BCC CODE_01D487                     ;; 01D482 : 90 03       ;
@@ -10512,10 +10512,10 @@ CODE_01D468:          JSR SubSprXPosNoGrvty               ;; 01D468 : 20 CC AB  
 CODE_01D487:          JSR GetDrawInfoBnk1                 ;; 01D487 : 20 65 A3    ;
                       LDA.W $1602,X                       ;; 01D48A : BD 02 16    ;
                       ASL A                               ;; 01D48D : 0A          ;
-                      STA.B $03                           ;; 01D48E : 85 03       ;
+                      STA.B !_3                           ;; 01D48E : 85 03       ;
                       LDA.W $157C,X                       ;; 01D490 : BD 7C 15    ;
                       ASL A                               ;; 01D493 : 0A          ;
-                      STA.B $02                           ;; 01D494 : 85 02       ;
+                      STA.B !_2                           ;; 01D494 : 85 02       ;
                       LDA.W DATA_01D439,X                 ;; 01D496 : BD 39 D4    ;
                       STA.W $15EA,X                       ;; 01D499 : 9D EA 15    ;
                       TAY                                 ;; 01D49C : A8          ;
@@ -10529,26 +10529,26 @@ CODE_01D4A8:          PHX                                 ;; 01D4A8 : DA        
                       PHX                                 ;; 01D4A9 : DA          ;
                       TXA                                 ;; 01D4AA : 8A          ;
                       CLC                                 ;; 01D4AB : 18          ;
-                      ADC.B $02                           ;; 01D4AC : 65 02       ;
+                      ADC.B !_2                           ;; 01D4AC : 65 02       ;
                       TAX                                 ;; 01D4AE : AA          ;
-                      LDA.B $00                           ;; 01D4AF : A5 00       ;
+                      LDA.B !_0                           ;; 01D4AF : A5 00       ;
                       CLC                                 ;; 01D4B1 : 18          ;
                       ADC.W DATA_01D442,X                 ;; 01D4B2 : 7D 42 D4    ;
                       STA.W $0300,Y                       ;; 01D4B5 : 99 00 03    ;
-                      LDA.B $14                           ;; 01D4B8 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01D4B8 : A5 14       ;
                       LSR A                               ;; 01D4BA : 4A          ;
                       LSR A                               ;; 01D4BB : 4A          ;
                       ROR A                               ;; 01D4BC : 6A          ;
                       AND.B #$80                          ;; 01D4BD : 29 80       ;
                       ORA.W DATA_01D44A,X                 ;; 01D4BF : 1D 4A D4    ;
                       STA.W $0303,Y                       ;; 01D4C2 : 99 03 03    ;
-                      LDA.B $01                           ;; 01D4C5 : A5 01       ;
+                      LDA.B !_1                           ;; 01D4C5 : A5 01       ;
                       INC A                               ;; 01D4C7 : 1A          ;
                       INC A                               ;; 01D4C8 : 1A          ;
                       STA.W $0301,Y                       ;; 01D4C9 : 99 01 03    ;
                       PLA                                 ;; 01D4CC : 68          ;
                       CLC                                 ;; 01D4CD : 18          ;
-                      ADC.B $03                           ;; 01D4CE : 65 03       ;
+                      ADC.B !_3                           ;; 01D4CE : 65 03       ;
                       TAX                                 ;; 01D4D0 : AA          ;
                       LDA.W LudwigFireTiles,X             ;; 01D4D1 : BD 46 D4    ;
                       STA.W $0302,Y                       ;; 01D4D4 : 99 02 03    ;
@@ -10581,7 +10581,7 @@ CODE_01D505:          LDA.B $9D                           ;; 01D505 : A5 9D     
                       BNE CODE_01D558                     ;; 01D507 : D0 4F       ; / 
                       LDA.W $1540,X                       ;; 01D509 : BD 40 15    ;
                       BNE CODE_01D558                     ;; 01D50C : D0 4A       ;
-                      LDA.B $13                           ;; 01D50E : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01D50E : A5 13       ;
                       LSR A                               ;; 01D510 : 4A          ;
                       BCC CODE_01D51A                     ;; 01D511 : 90 07       ;
                       INC.B $D8,X                         ;; 01D513 : F6 D8       ;
@@ -10589,7 +10589,7 @@ CODE_01D505:          LDA.B $9D                           ;; 01D505 : A5 9D     
                       INC.W $14D4,X                       ;; 01D517 : FE D4 14    ;
 CODE_01D51A:          LDA.W $151C,X                       ;; 01D51A : BD 1C 15    ;
                       BNE CODE_01D558                     ;; 01D51D : D0 39       ;
-                      LDA.B $13                           ;; 01D51F : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01D51F : A5 13       ;
                       LSR A                               ;; 01D521 : 4A          ;
                       BCC CODE_01D53A                     ;; 01D522 : 90 16       ;
                       LDA.B $C2,X                         ;; 01D524 : B5 C2       ;
@@ -10647,11 +10647,11 @@ CODE_01D5B3:          STZ.W $185E                         ;; 01D5B3 : 9C 5E 18  
                       CLC                                 ;; 01D5C3 : 18          ;
                       ADC.B #$F0                          ;; 01D5C4 : 69 F0       ;
                       TAY                                 ;; 01D5C6 : A8          ;
-CODE_01D5C7:          STY.B $00                           ;; 01D5C7 : 84 00       ;
+CODE_01D5C7:          STY.B !_0                           ;; 01D5C7 : 84 00       ;
                       LDA.B $D8,X                         ;; 01D5C9 : B5 D8       ;
                       PHA                                 ;; 01D5CB : 48          ;
                       CLC                                 ;; 01D5CC : 18          ;
-                      ADC.B $00                           ;; 01D5CD : 65 00       ;
+                      ADC.B !_0                           ;; 01D5CD : 65 00       ;
                       STA.B $D8,X                         ;; 01D5CF : 95 D8       ;
                       LDA.W $14D4,X                       ;; 01D5D1 : BD D4 14    ;
                       PHA                                 ;; 01D5D4 : 48          ;
@@ -10684,17 +10684,17 @@ CODE_01D5C7:          STY.B $00                           ;; 01D5C7 : 84 00     
                       PHA                                 ;; 01D613 : 48          ;
                       ADC.W DATA_01D58E,Y                 ;; 01D614 : 79 8E D5    ;
                       STA.W $14E0,X                       ;; 01D617 : 9D E0 14    ;
-                      STZ.B $00                           ;; 01D61A : 64 00       ;
+                      STZ.B !_0                           ;; 01D61A : 64 00       ;
                       LDA.W DATA_01D59E,Y                 ;; 01D61C : B9 9E D5    ;
                       SEC                                 ;; 01D61F : 38          ;
                       SBC.W $185E                         ;; 01D620 : ED 5E 18    ;
                       BPL CODE_01D627                     ;; 01D623 : 10 02       ;
-                      DEC.B $00                           ;; 01D625 : C6 00       ;
+                      DEC.B !_0                           ;; 01D625 : C6 00       ;
 CODE_01D627:          CLC                                 ;; 01D627 : 18          ;
                       ADC.B $D8,X                         ;; 01D628 : 75 D8       ;
                       STA.B $D8,X                         ;; 01D62A : 95 D8       ;
                       LDA.W $14D4,X                       ;; 01D62C : BD D4 14    ;
-                      ADC.B $00                           ;; 01D62F : 65 00       ;
+                      ADC.B !_0                           ;; 01D62F : 65 00       ;
                       STA.W $14D4,X                       ;; 01D631 : 9D D4 14    ;
                       LDA.W $1602,X                       ;; 01D634 : BD 02 16    ;
                       SEC                                 ;; 01D637 : 38          ;
@@ -10742,7 +10742,7 @@ CODE_01D68C:          JSR SubSprYPosNoGrvty               ;; 01D68C : 20 D8 AB  
                       BRA CODE_01D6B5                     ;; 01D691 : 80 22       ;
                                                           ;;                      ;
 CODE_01D693:          TXA                                 ;; 01D693 : 8A          ;
-                      EOR.B $13                           ;; 01D694 : 45 13       ;
+                      EOR.B !TrueFrame                    ;; 01D694 : 45 13       ;
                       LSR A                               ;; 01D696 : 4A          ;
                       BCC CODE_01D6B5                     ;; 01D697 : 90 1C       ;
                       JSR CODE_019140                     ;; 01D699 : 20 40 91    ;
@@ -10813,23 +10813,23 @@ DATA_01D717:          db $F8,$00                          ;; 01D717             
 LineRope_Chainsaw:    TXA                                 ;; ?QPWZ? : 8A          ;
                       ASL A                               ;; 01D71A : 0A          ;
                       ASL A                               ;; 01D71B : 0A          ;
-                      EOR.B $14                           ;; 01D71C : 45 14       ;
-                      STA.B $02                           ;; 01D71E : 85 02       ;
+                      EOR.B !EffFrame                     ;; 01D71C : 45 14       ;
+                      STA.B !_2                           ;; 01D71E : 85 02       ;
                       AND.B #$07                          ;; 01D720 : 29 07       ;
                       ORA.B $9D                           ;; 01D722 : 05 9D       ;
                       BNE LineGrinder                     ;; 01D724 : D0 14       ;
-                      LDA.B $02                           ;; 01D726 : A5 02       ;
+                      LDA.B !_2                           ;; 01D726 : A5 02       ;
                       LSR A                               ;; 01D728 : 4A          ;
                       LSR A                               ;; 01D729 : 4A          ;
                       LSR A                               ;; 01D72A : 4A          ;
                       AND.B #$01                          ;; 01D72B : 29 01       ;
                       TAY                                 ;; 01D72D : A8          ;
                       LDA.W DATA_01D717,Y                 ;; 01D72E : B9 17 D7    ;
-                      STA.B $00                           ;; 01D731 : 85 00       ;
+                      STA.B !_0                           ;; 01D731 : 85 00       ;
                       LDA.B #$F2                          ;; 01D733 : A9 F2       ;
-                      STA.B $01                           ;; 01D735 : 85 01       ;
+                      STA.B !_1                           ;; 01D735 : 85 01       ;
                       JSR CODE_018063                     ;; 01D737 : 20 63 80    ;
-LineGrinder:          LDA.B $13                           ;; ?QPWZ? : A5 13       ;
+LineGrinder:          LDA.B !TrueFrame                    ;; ?QPWZ? : A5 13       ;
                       AND.B #$07                          ;; 01D73C : 29 07       ;
                       ORA.W $1626,X                       ;; 01D73E : 1D 26 16    ;
                       ORA.B $9D                           ;; 01D741 : 05 9D       ;
@@ -10860,7 +10860,7 @@ CODE_01D768:          LDA.B $9D                           ;; 01D768 : A5 9D     
                       INC.W $1534,X                       ;; 01D777 : FE 34 15    ;
                       LDA.W $187B,X                       ;; 01D77A : BD 7B 18    ;
                       BEQ CODE_01D787                     ;; 01D77D : F0 08       ;
-                      LDA.B $13                           ;; 01D77F : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01D77F : A5 13       ;
                       LSR A                               ;; 01D781 : 4A          ;
                       BCC CODE_01D787                     ;; 01D782 : 90 03       ;
                       INC.W $1534,X                       ;; 01D784 : FE 34 15    ;
@@ -10877,7 +10877,7 @@ CODE_01D792:          LDY.W $1570,X                       ;; 01D792 : BC 70 15  
                       BEQ CODE_01D7AD                     ;; 01D79C : F0 0F       ;
                       LDA.W $187B,X                       ;; 01D79E : BD 7B 18    ;
                       BEQ Return01D7AF                    ;; 01D7A1 : F0 0C       ;
-                      LDA.B $13                           ;; 01D7A3 : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01D7A3 : A5 13       ;
                       LSR A                               ;; 01D7A5 : 4A          ;
                       BCC Return01D7AF                    ;; 01D7A6 : 90 07       ;
                       DEC.W $1570,X                       ;; 01D7A8 : DE 70 15    ;
@@ -10890,28 +10890,28 @@ CODE_01D7B0:          PHB                                 ;; 01D7B0 : 8B        
                       PHA                                 ;; 01D7B3 : 48          ; LineTable instead of $07/F9DB+something 
                       PLB                                 ;; 01D7B4 : AB          ;
                       LDA.W $151C,X                       ;; 01D7B5 : BD 1C 15    ;
-                      STA.B $04                           ;; 01D7B8 : 85 04       ;
+                      STA.B !_4                           ;; 01D7B8 : 85 04       ;
                       LDA.W $1528,X                       ;; 01D7BA : BD 28 15    ;
-                      STA.B $05                           ;; 01D7BD : 85 05       ;
-                      LDA.B ($04),Y                       ;; 01D7BF : B1 04       ;
+                      STA.B !_5                           ;; 01D7BD : 85 05       ;
+                      LDA.B (!_4),Y                       ;; 01D7BF : B1 04       ;
                       AND.B #$0F                          ;; 01D7C1 : 29 0F       ;
-                      STA.B $06                           ;; 01D7C3 : 85 06       ;
-                      LDA.B ($04),Y                       ;; 01D7C5 : B1 04       ;
+                      STA.B !_6                           ;; 01D7C3 : 85 06       ;
+                      LDA.B (!_4),Y                       ;; 01D7C5 : B1 04       ;
                       PLB                                 ;; 01D7C7 : AB          ;
                       LSR A                               ;; 01D7C8 : 4A          ;
                       LSR A                               ;; 01D7C9 : 4A          ;
                       LSR A                               ;; 01D7CA : 4A          ;
                       LSR A                               ;; 01D7CB : 4A          ;
-                      STA.B $07                           ;; 01D7CC : 85 07       ;
+                      STA.B !_7                           ;; 01D7CC : 85 07       ;
                       LDA.B $D8,X                         ;; 01D7CE : B5 D8       ;
                       AND.B #$F0                          ;; 01D7D0 : 29 F0       ;
                       CLC                                 ;; 01D7D2 : 18          ;
-                      ADC.B $07                           ;; 01D7D3 : 65 07       ;
+                      ADC.B !_7                           ;; 01D7D3 : 65 07       ;
                       STA.B $D8,X                         ;; 01D7D5 : 95 D8       ;
                       LDA.B $E4,X                         ;; 01D7D7 : B5 E4       ;
                       AND.B #$F0                          ;; 01D7D9 : 29 F0       ;
                       CLC                                 ;; 01D7DB : 18          ;
-                      ADC.B $06                           ;; 01D7DC : 65 06       ;
+                      ADC.B !_6                           ;; 01D7DC : 65 06       ;
                       STA.B $E4,X                         ;; 01D7DE : 95 E4       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -10931,32 +10931,32 @@ CODE_01D7F6:          STY.W $1695                         ;; 01D7F6 : 8C 95 16  
                       LDA.B $E4,X                         ;; 01D7F9 : B5 E4       ;
                       CLC                                 ;; 01D7FB : 18          ;
                       ADC.W DATA_01D7E1,Y                 ;; 01D7FC : 79 E1 D7    ;
-                      STA.B $02                           ;; 01D7FF : 85 02       ;
+                      STA.B !_2                           ;; 01D7FF : 85 02       ;
                       LDA.W $14E0,X                       ;; 01D801 : BD E0 14    ;
                       ADC.W DATA_01D7E5,Y                 ;; 01D804 : 79 E5 D7    ;
-                      STA.B $03                           ;; 01D807 : 85 03       ;
+                      STA.B !_3                           ;; 01D807 : 85 03       ;
                       LDA.B $D8,X                         ;; 01D809 : B5 D8       ;
                       CLC                                 ;; 01D80B : 18          ;
                       ADC.W DATA_01D7E9,Y                 ;; 01D80C : 79 E9 D7    ;
-                      STA.B $00                           ;; 01D80F : 85 00       ;
+                      STA.B !_0                           ;; 01D80F : 85 00       ;
                       LDA.W $14D4,X                       ;; 01D811 : BD D4 14    ;
                       ADC.W DATA_01D7ED,Y                 ;; 01D814 : 79 ED D7    ;
-                      STA.B $01                           ;; 01D817 : 85 01       ;
+                      STA.B !_1                           ;; 01D817 : 85 01       ;
                       LDA.W $1540,X                       ;; 01D819 : BD 40 15    ;
                       BNE CODE_01D83A                     ;; 01D81C : D0 1C       ;
-                      LDA.B $00                           ;; 01D81E : A5 00       ;
+                      LDA.B !_0                           ;; 01D81E : A5 00       ;
                       AND.B #$F0                          ;; 01D820 : 29 F0       ;
-                      STA.B $04                           ;; 01D822 : 85 04       ;
+                      STA.B !_4                           ;; 01D822 : 85 04       ;
                       LDA.B $D8,X                         ;; 01D824 : B5 D8       ;
                       AND.B #$F0                          ;; 01D826 : 29 F0       ;
-                      CMP.B $04                           ;; 01D828 : C5 04       ;
+                      CMP.B !_4                           ;; 01D828 : C5 04       ;
                       BNE CODE_01D83A                     ;; 01D82A : D0 0E       ;
-                      LDA.B $02                           ;; 01D82C : A5 02       ;
+                      LDA.B !_2                           ;; 01D82C : A5 02       ;
                       AND.B #$F0                          ;; 01D82E : 29 F0       ;
-                      STA.B $05                           ;; 01D830 : 85 05       ;
+                      STA.B !_5                           ;; 01D830 : 85 05       ;
                       LDA.B $E4,X                         ;; 01D832 : B5 E4       ;
                       AND.B #$F0                          ;; 01D834 : 29 F0       ;
-                      CMP.B $05                           ;; 01D836 : C5 05       ;
+                      CMP.B !_5                           ;; 01D836 : C5 05       ;
                       BEQ CODE_01D861                     ;; 01D838 : F0 27       ;
 CODE_01D83A:          JSR CODE_01D94D                     ;; 01D83A : 20 4D D9    ;WIERD ROUTINE INVOLVING POSITIONS.  ALL VARIABLES SET ABOVE...         
                       BNE CODE_01D7F1                     ;; 01D83D : D0 B2       ;
@@ -11015,20 +11015,20 @@ CODE_01D89F:          LDY.W $160E,X                       ;; 01D89F : BC 0E 16  
                       BRA CODE_01D8C8                     ;; 01D8A2 : 80 24       ;
                                                           ;;                      ;
 CODE_01D8A4:          LDA.B $D8,X                         ;; 01D8A4 : B5 D8       ;
-                      STA.B $08                           ;; 01D8A6 : 85 08       ;
+                      STA.B !_8                           ;; 01D8A6 : 85 08       ;
                       LDA.W $14D4,X                       ;; 01D8A8 : BD D4 14    ;
-                      STA.B $09                           ;; 01D8AB : 85 09       ;
+                      STA.B !_9                           ;; 01D8AB : 85 09       ;
                       LDA.B $E4,X                         ;; 01D8AD : B5 E4       ;
-                      STA.B $0A                           ;; 01D8AF : 85 0A       ;
+                      STA.B !_A                           ;; 01D8AF : 85 0A       ;
                       LDA.W $14E0,X                       ;; 01D8B1 : BD E0 14    ;
-                      STA.B $0B                           ;; 01D8B4 : 85 0B       ;
-                      LDA.B $00                           ;; 01D8B6 : A5 00       ;
+                      STA.B !_B                           ;; 01D8B4 : 85 0B       ;
+                      LDA.B !_0                           ;; 01D8B6 : A5 00       ;
                       STA.B $D8,X                         ;; 01D8B8 : 95 D8       ;
-                      LDA.B $01                           ;; 01D8BA : A5 01       ;
+                      LDA.B !_1                           ;; 01D8BA : A5 01       ;
                       STA.W $14D4,X                       ;; 01D8BC : 9D D4 14    ;
-                      LDA.B $02                           ;; 01D8BF : A5 02       ;
+                      LDA.B !_2                           ;; 01D8BF : A5 02       ;
                       STA.B $E4,X                         ;; 01D8C1 : 95 E4       ;
-                      LDA.B $03                           ;; 01D8C3 : A5 03       ;
+                      LDA.B !_3                           ;; 01D8C3 : A5 03       ;
                       STA.W $14E0,X                       ;; 01D8C5 : 9D E0 14    ;
 CODE_01D8C8:          PHB                                 ;; 01D8C8 : 8B          ;
                       LDA.B #$07                          ;; 01D8C9 : A9 07       ;
@@ -11065,18 +11065,18 @@ CODE_01D901:          AND.B #$0F                          ;; 01D901 : 29 0F     
                       BEQ CODE_01D910                     ;; 01D90B : F0 03       ;
                       INC.W $157C,X                       ;; 01D90D : FE 7C 15    ;
 CODE_01D910:          LDA.B $D8,X                         ;; 01D910 : B5 D8       ;
-                      STA.B $0C                           ;; 01D912 : 85 0C       ;
+                      STA.B !_C                           ;; 01D912 : 85 0C       ;
                       LDA.B $E4,X                         ;; 01D914 : B5 E4       ;
-                      STA.B $0D                           ;; 01D916 : 85 0D       ;
+                      STA.B !_D                           ;; 01D916 : 85 0D       ;
                       JSR CODE_01D768                     ;; 01D918 : 20 68 D7    ;
-                      LDA.B $0C                           ;; 01D91B : A5 0C       ;
+                      LDA.B !_C                           ;; 01D91B : A5 0C       ;
                       SEC                                 ;; 01D91D : 38          ;
                       SBC.B $D8,X                         ;; 01D91E : F5 D8       ;
                       CLC                                 ;; 01D920 : 18          ;
                       ADC.B #$08                          ;; 01D921 : 69 08       ;
                       CMP.B #$10                          ;; 01D923 : C9 10       ;
                       BCS CODE_01D938                     ;; 01D925 : B0 11       ;
-                      LDA.B $0D                           ;; 01D927 : A5 0D       ;
+                      LDA.B !_D                           ;; 01D927 : A5 0D       ;
                       SEC                                 ;; 01D929 : 38          ;
                       SBC.B $E4,X                         ;; 01D92A : F5 E4       ;
                       CLC                                 ;; 01D92C : 18          ;
@@ -11087,59 +11087,59 @@ CODE_01D933:          LDA.B #$01                          ;; 01D933 : A9 01     
                       STA.B $C2,X                         ;; 01D935 : 95 C2       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_01D938:          LDA.B $08                           ;; 01D938 : A5 08       ;
+CODE_01D938:          LDA.B !_8                           ;; 01D938 : A5 08       ;
                       STA.B $D8,X                         ;; 01D93A : 95 D8       ;
-                      LDA.B $09                           ;; 01D93C : A5 09       ;
+                      LDA.B !_9                           ;; 01D93C : A5 09       ;
                       STA.W $14D4,X                       ;; 01D93E : 9D D4 14    ;
-                      LDA.B $0A                           ;; 01D941 : A5 0A       ;
+                      LDA.B !_A                           ;; 01D941 : A5 0A       ;
                       STA.B $E4,X                         ;; 01D943 : 95 E4       ;
-                      LDA.B $0B                           ;; 01D945 : A5 0B       ;
+                      LDA.B !_B                           ;; 01D945 : A5 0B       ;
                       STA.W $14E0,X                       ;; 01D947 : 9D E0 14    ;
                       JMP CODE_01D861                     ;; 01D94A : 4C 61 D8    ;
                                                           ;;                      ;
-CODE_01D94D:          LDA.B $00                           ;; 01D94D : A5 00       ;
+CODE_01D94D:          LDA.B !_0                           ;; 01D94D : A5 00       ;
                       AND.B #$F0                          ;; 01D94F : 29 F0       ;
-                      STA.B $06                           ;; 01D951 : 85 06       ;
-                      LDA.B $02                           ;; 01D953 : A5 02       ;
+                      STA.B !_6                           ;; 01D951 : 85 06       ;
+                      LDA.B !_2                           ;; 01D953 : A5 02       ;
                       LSR A                               ;; 01D955 : 4A          ;
                       LSR A                               ;; 01D956 : 4A          ;
                       LSR A                               ;; 01D957 : 4A          ;
                       LSR A                               ;; 01D958 : 4A          ;
                       PHA                                 ;; 01D959 : 48          ;
-                      ORA.B $06                           ;; 01D95A : 05 06       ;
+                      ORA.B !_6                           ;; 01D95A : 05 06       ;
                       PHA                                 ;; 01D95C : 48          ;
-                      LDA.B $5B                           ;; 01D95D : A5 5B       ;
+                      LDA.B !ScreenMode                   ;; 01D95D : A5 5B       ;
                       AND.B #$01                          ;; 01D95F : 29 01       ;
                       BEQ CODE_01D977                     ;; 01D961 : F0 14       ;
                       PLA                                 ;; 01D963 : 68          ;
-                      LDX.B $01                           ;; 01D964 : A6 01       ;
+                      LDX.B !_1                           ;; 01D964 : A6 01       ;
                       CLC                                 ;; 01D966 : 18          ;
                       ADC.L DATA_00BA80,X                 ;; 01D967 : 7F 80 BA 00 ;
-                      STA.B $05                           ;; 01D96B : 85 05       ;
+                      STA.B !_5                           ;; 01D96B : 85 05       ;
                       LDA.L DATA_00BABC,X                 ;; 01D96D : BF BC BA 00 ;
-                      ADC.B $03                           ;; 01D971 : 65 03       ;
-                      STA.B $06                           ;; 01D973 : 85 06       ;
+                      ADC.B !_3                           ;; 01D971 : 65 03       ;
+                      STA.B !_6                           ;; 01D973 : 85 06       ;
                       BRA CODE_01D989                     ;; 01D975 : 80 12       ;
                                                           ;;                      ;
 CODE_01D977:          PLA                                 ;; 01D977 : 68          ;
-                      LDX.B $03                           ;; 01D978 : A6 03       ;
+                      LDX.B !_3                           ;; 01D978 : A6 03       ;
                       CLC                                 ;; 01D97A : 18          ;
                       ADC.L DATA_00BA60,X                 ;; 01D97B : 7F 60 BA 00 ;
-                      STA.B $05                           ;; 01D97F : 85 05       ;
+                      STA.B !_5                           ;; 01D97F : 85 05       ;
                       LDA.L DATA_00BA9C,X                 ;; 01D981 : BF 9C BA 00 ;
-                      ADC.B $01                           ;; 01D985 : 65 01       ;
-                      STA.B $06                           ;; 01D987 : 85 06       ;
+                      ADC.B !_1                           ;; 01D985 : 65 01       ;
+                      STA.B !_6                           ;; 01D987 : 85 06       ;
 CODE_01D989:          LDA.B #$7E                          ;; 01D989 : A9 7E       ;
-                      STA.B $07                           ;; 01D98B : 85 07       ;
+                      STA.B !_7                           ;; 01D98B : 85 07       ;
                       LDX.W $15E9                         ;; 01D98D : AE E9 15    ; X = Sprite index 
-                      LDA.B [$05]                         ;; 01D990 : A7 05       ;
+                      LDA.B [!_5]                         ;; 01D990 : A7 05       ;
                       STA.W $1693                         ;; 01D992 : 8D 93 16    ;
-                      INC.B $07                           ;; 01D995 : E6 07       ;
-                      LDA.B [$05]                         ;; 01D997 : A7 05       ;
+                      INC.B !_7                           ;; 01D995 : E6 07       ;
+                      LDA.B [!_5]                         ;; 01D997 : A7 05       ;
                       PLY                                 ;; 01D999 : 7A          ;
-                      STY.B $05                           ;; 01D99A : 84 05       ;
+                      STY.B !_5                           ;; 01D99A : 84 05       ;
                       PHA                                 ;; 01D99C : 48          ;
-                      LDA.B $05                           ;; 01D99D : A5 05       ;
+                      LDA.B !_5                           ;; 01D99D : A5 05       ;
                       AND.B #$07                          ;; 01D99F : 29 07       ;
                       TAY                                 ;; 01D9A1 : A8          ;
                       PLA                                 ;; 01D9A2 : 68          ;
@@ -11208,11 +11208,11 @@ CODE_01DA0A:          LDA.W $14C8,X                       ;; 01DA0A : BD C8 14  
                       BNE Return01DA8F                    ;; 01DA1F : D0 6E       ;
                       LDA.W $18BE                         ;; 01DA21 : AD BE 18    ;
                       BNE CODE_01DA2F                     ;; 01DA24 : D0 09       ;
-                      LDA.B $15                           ;; 01DA26 : A5 15       ;
+                      LDA.B !byetudlrHold                 ;; 01DA26 : A5 15       ;
                       AND.B #$08                          ;; 01DA28 : 29 08       ;
                       BEQ Return01DA8F                    ;; 01DA2A : F0 63       ;
                       STA.W $18BE                         ;; 01DA2C : 8D BE 18    ;
-CODE_01DA2F:          BIT.B $16                           ;; 01DA2F : 24 16       ;
+CODE_01DA2F:          BIT.B !byetudlrFrame                ;; 01DA2F : 24 16       ;
                       BPL CODE_01DA3F                     ;; 01DA31 : 10 0C       ;
                       LDA.B #$B0                          ;; 01DA33 : A9 B0       ;
                       STA.B $7D                           ;; 01DA35 : 85 7D       ;
@@ -11230,13 +11230,13 @@ CODE_01DA47:          CLC                                 ;; 01DA47 : 18        
                       ADC.B $97                           ;; 01DA4D : 65 97       ;
                       STA.B $97                           ;; 01DA4F : 85 97       ;
                       LDA.B $D8,X                         ;; 01DA51 : B5 D8       ;
-                      STA.B $00                           ;; 01DA53 : 85 00       ;
+                      STA.B !_0                           ;; 01DA53 : 85 00       ;
                       LDA.W $14D4,X                       ;; 01DA55 : BD D4 14    ;
-                      STA.B $01                           ;; 01DA58 : 85 01       ;
+                      STA.B !_1                           ;; 01DA58 : 85 01       ;
                       REP #$20                            ;; 01DA5A : C2 20       ; Accum (16 bit) 
                       LDA.B $96                           ;; 01DA5C : A5 96       ;
                       SEC                                 ;; 01DA5E : 38          ;
-                      SBC.B $00                           ;; 01DA5F : E5 00       ;
+                      SBC.B !_0                           ;; 01DA5F : E5 00       ;
                       CMP.W #$0000                        ;; 01DA61 : C9 00 00    ;
                       BPL CODE_01DA68                     ;; 01DA64 : 10 02       ;
                       INC.B $96                           ;; 01DA66 : E6 96       ;
@@ -11276,11 +11276,11 @@ CODE_01DAA2:          LDY.B #$18                          ;; 01DAA2 : A0 18     
                       LDA.W $1602,X                       ;; 01DAA4 : BD 02 16    ;
                       BEQ CODE_01DAAB                     ;; 01DAA7 : F0 02       ;
                       LDY.B #$28                          ;; 01DAA9 : A0 28       ;CONDITIONAL DEPENDING ON PLATFORM TYPE?               
-CODE_01DAAB:          STY.B $00                           ;; 01DAAB : 84 00       ;
+CODE_01DAAB:          STY.B !_0                           ;; 01DAAB : 84 00       ;
                       LDA.B $E4,X                         ;; 01DAAD : B5 E4       ;
                       PHA                                 ;; 01DAAF : 48          ;
                       SEC                                 ;; 01DAB0 : 38          ;
-                      SBC.B $00                           ;; 01DAB1 : E5 00       ;
+                      SBC.B !_0                           ;; 01DAB1 : E5 00       ;
                       STA.B $E4,X                         ;; 01DAB3 : 95 E4       ;
                       LDA.W $14E0,X                       ;; 01DAB5 : BD E0 14    ;
                       PHA                                 ;; 01DAB8 : 48          ;
@@ -11319,11 +11319,11 @@ CODE_01DAAB:          STY.B $00                           ;; 01DAAB : 84 00     
                       LDA.W $1602,X                       ;; 01DAF6 : BD 02 16    ;
                       BEQ CODE_01DAFD                     ;; 01DAF9 : F0 02       ;
                       LDY.B #$28                          ;; 01DAFB : A0 28       ;
-CODE_01DAFD:          STY.B $00                           ;; 01DAFD : 84 00       ;
+CODE_01DAFD:          STY.B !_0                           ;; 01DAFD : 84 00       ;
                       LDA.B $E4,X                         ;; 01DAFF : B5 E4       ;
                       PHA                                 ;; 01DB01 : 48          ;
                       SEC                                 ;; 01DB02 : 38          ;
-                      SBC.B $00                           ;; 01DB03 : E5 00       ;
+                      SBC.B !_0                           ;; 01DB03 : E5 00       ;
                       STA.B $E4,X                         ;; 01DB05 : 95 E4       ;
                       LDA.W $14E0,X                       ;; 01DB07 : BD E0 14    ;
                       PHA                                 ;; 01DB0A : 48          ;
@@ -11376,7 +11376,7 @@ Grinder:              JSR CODE_01DBA2                     ;; ?QPWZ? : 20 A2 DB  
                       BNE Return01DB95                    ;; 01DB64 : D0 2F       ;
                       LDA.B $9D                           ;; 01DB66 : A5 9D       ; \ Branch if sprites locked 
                       BNE Return01DB95                    ;; 01DB68 : D0 2B       ; / 
-                      LDA.B $13                           ;; 01DB6A : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01DB6A : A5 13       ;
                       AND.B #$03                          ;; 01DB6C : 29 03       ;
                       BNE CODE_01DB75                     ;; 01DB6E : D0 05       ;
                       LDA.B #$04                          ;; 01DB70 : A9 04       ; \ Play sound effect 
@@ -11405,15 +11405,15 @@ DATA_01DB9E:          db $03,$43,$83,$C3                  ;; 01DB9E             
 CODE_01DBA2:          JSR GetDrawInfoBnk1                 ;; 01DBA2 : 20 65 A3    ;
                       PHX                                 ;; 01DBA5 : DA          ;
                       LDX.B #$03                          ;; 01DBA6 : A2 03       ;
-CODE_01DBA8:          LDA.B $00                           ;; 01DBA8 : A5 00       ;
+CODE_01DBA8:          LDA.B !_0                           ;; 01DBA8 : A5 00       ;
                       CLC                                 ;; 01DBAA : 18          ;
                       ADC.W DATA_01DB96,X                 ;; 01DBAB : 7D 96 DB    ;
                       STA.W $0300,Y                       ;; 01DBAE : 99 00 03    ;
-                      LDA.B $01                           ;; 01DBB1 : A5 01       ;
+                      LDA.B !_1                           ;; 01DBB1 : A5 01       ;
                       CLC                                 ;; 01DBB3 : 18          ;
                       ADC.W DATA_01DB9A,X                 ;; 01DBB4 : 7D 9A DB    ;
                       STA.W $0301,Y                       ;; 01DBB7 : 99 01 03    ;
-                      LDA.B $14                           ;; 01DBBA : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01DBBA : A5 14       ;
                       AND.B #$02                          ;; 01DBBC : 29 02       ;
                       ORA.B #$6C                          ;; 01DBBE : 09 6C       ;
                       STA.W $0302,Y                       ;; 01DBC0 : 99 02 03    ;
@@ -11439,7 +11439,7 @@ CODE_01DBD4:          JSR SubSprGfx2Entry1                ;; 01DBD4 : 20 0D 9F  
                       SBC.B #$08                          ;; 01DBE7 : E9 08       ;
                       STA.W $0301,Y                       ;; 01DBE9 : 99 01 03    ;
                       PHX                                 ;; 01DBEC : DA          ;
-                      LDA.B $14                           ;; 01DBED : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01DBED : A5 14       ;
                       LSR A                               ;; 01DBEF : 4A          ;
                       LSR A                               ;; 01DBF0 : 4A          ;
                       AND.B #$01                          ;; 01DBF1 : 29 01       ;
@@ -11460,15 +11460,15 @@ DATA_01DC09:          db $05,$45                          ;; 01DC09             
 CODE_01DC0B:          JSR GetDrawInfoBnk1                 ;; 01DC0B : 20 65 A3    ;
                       PHX                                 ;; 01DC0E : DA          ;
                       LDX.B #$03                          ;; 01DC0F : A2 03       ;
-CODE_01DC11:          LDA.B $00                           ;; 01DC11 : A5 00       ;
+CODE_01DC11:          LDA.B !_0                           ;; 01DC11 : A5 00       ;
                       CLC                                 ;; 01DC13 : 18          ;
                       ADC.W DATA_01DC3B,X                 ;; 01DC14 : 7D 3B DC    ;
                       STA.W $0300,Y                       ;; 01DC17 : 99 00 03    ;
-                      LDA.B $01                           ;; 01DC1A : A5 01       ;
+                      LDA.B !_1                           ;; 01DC1A : A5 01       ;
                       CLC                                 ;; 01DC1C : 18          ;
                       ADC.W DATA_01DC3F,X                 ;; 01DC1D : 7D 3F DC    ;
                       STA.W $0301,Y                       ;; 01DC20 : 99 01 03    ;
-                      LDA.B $14                           ;; 01DC23 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01DC23 : A5 14       ;
                       AND.B #$02                          ;; 01DC25 : 29 02       ;
                       ORA.B #$6C                          ;; 01DC27 : 09 6C       ;
                       STA.W $0302,Y                       ;; 01DC29 : 99 02 03    ;
@@ -11495,44 +11495,44 @@ LineGuideRopeTiles:   db $C0,$CE,$CE,$CE,$CE,$CE,$CE,$CE  ;; ?QPWZ?             
                       db $CE                              ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_01DC54:          JSR GetDrawInfoBnk1                 ;; 01DC54 : 20 65 A3    ;
-                      LDA.B $00                           ;; 01DC57 : A5 00       ;
+                      LDA.B !_0                           ;; 01DC57 : A5 00       ;
                       SEC                                 ;; 01DC59 : 38          ;
                       SBC.B #$08                          ;; 01DC5A : E9 08       ;
-                      STA.B $00                           ;; 01DC5C : 85 00       ;
-                      LDA.B $01                           ;; 01DC5E : A5 01       ;
+                      STA.B !_0                           ;; 01DC5C : 85 00       ;
+                      LDA.B !_1                           ;; 01DC5E : A5 01       ;
                       SEC                                 ;; 01DC60 : 38          ;
                       SBC.B #$08                          ;; 01DC61 : E9 08       ;
-                      STA.B $01                           ;; 01DC63 : 85 01       ;
+                      STA.B !_1                           ;; 01DC63 : 85 01       ;
                       TXA                                 ;; 01DC65 : 8A          ;
                       ASL A                               ;; 01DC66 : 0A          ;
                       ASL A                               ;; 01DC67 : 0A          ;
-                      EOR.B $14                           ;; 01DC68 : 45 14       ;
+                      EOR.B !EffFrame                     ;; 01DC68 : 45 14       ;
                       LSR A                               ;; 01DC6A : 4A          ;
                       LSR A                               ;; 01DC6B : 4A          ;
                       LSR A                               ;; 01DC6C : 4A          ;
                       AND.B #$03                          ;; 01DC6D : 29 03       ;
-                      STA.B $02                           ;; 01DC6F : 85 02       ;
+                      STA.B !_2                           ;; 01DC6F : 85 02       ;
                       LDA.B #$05                          ;; 01DC71 : A9 05       ;
                       CPX.B #$06                          ;; 01DC73 : E0 06       ;
                       BCC CODE_01DC7E                     ;; 01DC75 : 90 07       ;
                       LDY.W $1692                         ;; 01DC77 : AC 92 16    ;
                       BEQ CODE_01DC7E                     ;; 01DC7A : F0 02       ;
                       LDA.B #$09                          ;; 01DC7C : A9 09       ;
-CODE_01DC7E:          STA.B $03                           ;; 01DC7E : 85 03       ;
+CODE_01DC7E:          STA.B !_3                           ;; 01DC7E : 85 03       ;
                       LDY.W $15EA,X                       ;; 01DC80 : BC EA 15    ; Y = Index into sprite OAM 
                       LDX.B #$00                          ;; 01DC83 : A2 00       ;
-CODE_01DC85:          LDA.B $00                           ;; 01DC85 : A5 00       ;
+CODE_01DC85:          LDA.B !_0                           ;; 01DC85 : A5 00       ;
                       STA.W $0300,Y                       ;; 01DC87 : 99 00 03    ;
-                      LDA.B $01                           ;; 01DC8A : A5 01       ;
+                      LDA.B !_1                           ;; 01DC8A : A5 01       ;
                       STA.W $0301,Y                       ;; 01DC8C : 99 01 03    ;
                       CLC                                 ;; 01DC8F : 18          ;
                       ADC.B #$10                          ;; 01DC90 : 69 10       ;
-                      STA.B $01                           ;; 01DC92 : 85 01       ;
+                      STA.B !_1                           ;; 01DC92 : 85 01       ;
                       LDA.W LineGuideRopeTiles,X          ;; 01DC94 : BD 4B DC    ;
                       CPX.B #$00                          ;; 01DC97 : E0 00       ;
                       BNE CODE_01DCA2                     ;; 01DC99 : D0 07       ;
                       PHX                                 ;; 01DC9B : DA          ;
-                      LDX.B $02                           ;; 01DC9C : A6 02       ;
+                      LDX.B !_2                           ;; 01DC9C : A6 02       ;
                       LDA.W RopeMotorTiles,X              ;; 01DC9E : BD 47 DC    ;
                       PLX                                 ;; 01DCA1 : FA          ;
 CODE_01DCA2:          STA.W $0302,Y                       ;; 01DCA2 : 99 02 03    ;
@@ -11546,7 +11546,7 @@ CODE_01DCAD:          STA.W $0303,Y                       ;; 01DCAD : 99 03 03  
                       INY                                 ;; 01DCB2 : C8          ;
                       INY                                 ;; 01DCB3 : C8          ;
                       INX                                 ;; 01DCB4 : E8          ;
-                      CPX.B $03                           ;; 01DCB5 : E4 03       ;
+                      CPX.B !_3                           ;; 01DCB5 : E4 03       ;
                       BNE CODE_01DC85                     ;; 01DCB7 : D0 CC       ;
                       LDA.B #$DE                          ;; 01DCB9 : A9 DE       ;
                       STA.W $02FE,Y                       ;; 01DCBB : 99 FE 02    ;
@@ -11620,7 +11620,7 @@ CODE_01DDD6:          STA.W $14D4,X                       ;; 01DDD6 : 9D D4 14  
                       STA.W $157C,X                       ;; 01DDE0 : 9D 7C 15    ;
                       TXA                                 ;; 01DDE3 : 8A          ;
                       CLC                                 ;; 01DDE4 : 18          ;
-                      ADC.B $13                           ;; 01DDE5 : 65 13       ;
+                      ADC.B !TrueFrame                    ;; 01DDE5 : 65 13       ;
                       AND.B #$07                          ;; 01DDE7 : 29 07       ;
                       STA.W $1570,X                       ;; 01DDE9 : 9D 70 15    ;
                       DEX                                 ;; 01DDEC : CA          ;
@@ -11628,8 +11628,8 @@ CODE_01DDD6:          STA.W $14D4,X                       ;; 01DDD6 : 9D D4 14  
                       STZ.W $188F                         ;; 01DDEF : 9C 8F 18    ;
                       STZ.W $1890                         ;; 01DDF2 : 9C 90 18    ;
                       JSL GetRand                         ;; 01DDF5 : 22 F9 AC 01 ;
-                      EOR.B $13                           ;; 01DDF9 : 45 13       ;
-                      ADC.B $14                           ;; 01DDFB : 65 14       ;
+                      EOR.B !TrueFrame                    ;; 01DDF9 : 45 13       ;
+                      ADC.B !EffFrame                     ;; 01DDFB : 65 14       ;
                       AND.B #$07                          ;; 01DDFD : 29 07       ;
                       TAY                                 ;; 01DDFF : A8          ;
                       LDA.W DATA_01DE21,Y                 ;; 01DE00 : B9 21 DE    ;
@@ -11665,7 +11665,7 @@ Return01DE40:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 CODE_01DE41:          LDA.B $C2,X                         ;; 01DE41 : B5 C2       ;
                       BNE CODE_01DE8C                     ;; 01DE43 : D0 47       ;
-                      LDA.B $14                           ;; 01DE45 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01DE45 : A5 14       ;
                       AND.B #$03                          ;; 01DE47 : 29 03       ;
                       BNE CODE_01DE58                     ;; 01DE49 : D0 0D       ;
                       INC.W $1570,X                       ;; 01DE4B : FE 70 15    ;
@@ -11678,13 +11678,13 @@ CODE_01DE58:          JSR MarioSprInteractRt              ;; 01DE58 : 20 E4 A7  
                       LDA.B $7D                           ;; 01DE5D : A5 7D       ;
                       BPL CODE_01DE8C                     ;; 01DE5F : 10 2B       ;
                       LDA.B #$F4                          ;; 01DE61 : A9 F4       ;
-                      LDY.B $19                           ;; 01DE63 : A4 19       ;
+                      LDY.B !Powerup                      ;; 01DE63 : A4 19       ;
                       BEQ CODE_01DE69                     ;; 01DE65 : F0 02       ;
                       LDA.B #$00                          ;; 01DE67 : A9 00       ;
 CODE_01DE69:          CLC                                 ;; 01DE69 : 18          ;
                       ADC.B $D8,X                         ;; 01DE6A : 75 D8       ;
                       SEC                                 ;; 01DE6C : 38          ;
-                      SBC.B $1C                           ;; 01DE6D : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01DE6D : E5 1C       ;
                       CMP.B $80                           ;; 01DE6F : C5 80       ;
                       BCS CODE_01DE8C                     ;; 01DE71 : B0 19       ;
                       LDA.B #$10                          ;; 01DE73 : A9 10       ;
@@ -11762,11 +11762,11 @@ CODE_01DF19:          LDA.W $1540,X                       ;; 01DF19 : BD 40 15  
                       LSR A                               ;; 01DF1C : 4A          ;
                       TAY                                 ;; 01DF1D : A8          ;
                       LDA.W DATA_01DF10,Y                 ;; 01DF1E : B9 10 DF    ;
-                      STA.B $00                           ;; 01DF21 : 85 00       ;
+                      STA.B !_0                           ;; 01DF21 : 85 00       ;
                       LDY.W $15EA,X                       ;; 01DF23 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B $E4,X                         ;; 01DF26 : B5 E4       ;
                       SEC                                 ;; 01DF28 : 38          ;
-                      SBC.B $1A                           ;; 01DF29 : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01DF29 : E5 1A       ;
                       STA.W $0310,Y                       ;; 01DF2B : 99 10 03    ;
                       STA.W $0300,Y                       ;; 01DF2E : 99 00 03    ;
                       STA.W $0308,Y                       ;; 01DF31 : 99 08 03    ;
@@ -11789,9 +11789,9 @@ CODE_01DF4D:          LSR A                               ;; 01DF4D : 4A        
 CODE_01DF4E:          PHP                                 ;; 01DF4E : 08          ;
                       LDA.B $D8,X                         ;; 01DF4F : B5 D8       ;
                       SEC                                 ;; 01DF51 : 38          ;
-                      SBC.B $00                           ;; 01DF52 : E5 00       ;
+                      SBC.B !_0                           ;; 01DF52 : E5 00       ;
                       SEC                                 ;; 01DF54 : 38          ;
-                      SBC.B $1C                           ;; 01DF55 : E5 1C       ;
+                      SBC.B !Layer1YPos                   ;; 01DF55 : E5 1C       ;
                       STA.W $0311,Y                       ;; 01DF57 : 99 11 03    ;
                       PLP                                 ;; 01DF5A : 28          ;
                       BCS CODE_01DF6C                     ;; 01DF5B : B0 0F       ;
@@ -11846,50 +11846,50 @@ DATA_01DFC1:          db $00,$01,$02,$02,$03,$04,$04,$05  ;; 01DFC1             
                       db $08,$06,$03,$08,$07,$01,$08,$05  ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_01DFD9:          LDA.B #$07                          ;; 01DFD9 : A9 07       ;
-                      STA.B $00                           ;; 01DFDB : 85 00       ;
+                      STA.B !_0                           ;; 01DFDB : 85 00       ;
 CODE_01DFDD:          LDX.B #$02                          ;; 01DFDD : A2 02       ;
-CODE_01DFDF:          STX.B $01                           ;; 01DFDF : 86 01       ;
-                      LDA.B $00                           ;; 01DFE1 : A5 00       ;
+CODE_01DFDF:          STX.B !_1                           ;; 01DFDF : 86 01       ;
+                      LDA.B !_0                           ;; 01DFE1 : A5 00       ;
                       ASL A                               ;; 01DFE3 : 0A          ;
-                      ADC.B $00                           ;; 01DFE4 : 65 00       ;
+                      ADC.B !_0                           ;; 01DFE4 : 65 00       ;
                       CLC                                 ;; 01DFE6 : 18          ;
-                      ADC.B $01                           ;; 01DFE7 : 65 01       ;
+                      ADC.B !_1                           ;; 01DFE7 : 65 01       ;
                       TAY                                 ;; 01DFE9 : A8          ;
                       LDA.W DATA_01DFC1,Y                 ;; 01DFEA : B9 C1 DF    ;
                       TAY                                 ;; 01DFED : A8          ;
                       LDA.W DATA_01DD9A,Y                 ;; 01DFEE : B9 9A DD    ;
-                      STA.B $02                           ;; 01DFF1 : 85 02       ;
+                      STA.B !_2                           ;; 01DFF1 : 85 02       ;
                       LDA.W DATA_01DD91,Y                 ;; 01DFF3 : B9 91 DD    ;
-                      STA.B $03                           ;; 01DFF6 : 85 03       ;
+                      STA.B !_3                           ;; 01DFF6 : 85 03       ;
                       LDY.B #$09                          ;; 01DFF8 : A0 09       ;
 CODE_01DFFA:          LDA.W $00D8,Y                       ;; 01DFFA : B9 D8 00    ;
-                      CMP.B $02                           ;; 01DFFD : C5 02       ;
+                      CMP.B !_2                           ;; 01DFFD : C5 02       ;
                       BNE CODE_01E008                     ;; 01DFFF : D0 07       ;
                       LDA.W $00E4,Y                       ;; 01E001 : B9 E4 00    ;
-                      CMP.B $03                           ;; 01E004 : C5 03       ;
+                      CMP.B !_3                           ;; 01E004 : C5 03       ;
                       BEQ CODE_01E00D                     ;; 01E006 : F0 05       ;
 CODE_01E008:          DEY                                 ;; 01E008 : 88          ;
                       CPY.B #$01                          ;; 01E009 : C0 01       ;
                       BNE CODE_01DFFA                     ;; 01E00B : D0 ED       ;
 CODE_01E00D:          LDA.W $1570,Y                       ;; 01E00D : B9 70 15    ;
-                      STA.B $04,X                         ;; 01E010 : 95 04       ;
-                      STY.B $07,X                         ;; 01E012 : 94 07       ;
+                      STA.B !_4,X                         ;; 01E010 : 95 04       ;
+                      STY.B !_7,X                         ;; 01E012 : 94 07       ;
                       DEX                                 ;; 01E014 : CA          ;
                       BPL CODE_01DFDF                     ;; 01E015 : 10 C8       ;
-                      LDA.B $04                           ;; 01E017 : A5 04       ;
-                      CMP.B $05                           ;; 01E019 : C5 05       ;
+                      LDA.B !_4                           ;; 01E017 : A5 04       ;
+                      CMP.B !_5                           ;; 01E019 : C5 05       ;
                       BNE CODE_01E035                     ;; 01E01B : D0 18       ;
-                      CMP.B $06                           ;; 01E01D : C5 06       ;
+                      CMP.B !_6                           ;; 01E01D : C5 06       ;
                       BNE CODE_01E035                     ;; 01E01F : D0 14       ;
                       INC.W $1890                         ;; 01E021 : EE 90 18    ;
                       LDA.B #$70                          ;; 01E024 : A9 70       ;
-                      LDY.B $07                           ;; 01E026 : A4 07       ;
+                      LDY.B !_7                           ;; 01E026 : A4 07       ;
                       STA.W $154C,Y                       ;; 01E028 : 99 4C 15    ;
-                      LDY.B $08                           ;; 01E02B : A4 08       ;
+                      LDY.B !_8                           ;; 01E02B : A4 08       ;
                       STA.W $154C,Y                       ;; 01E02D : 99 4C 15    ;
-                      LDY.B $09                           ;; 01E030 : A4 09       ;
+                      LDY.B !_9                           ;; 01E030 : A4 09       ;
                       STA.W $154C,Y                       ;; 01E032 : 99 4C 15    ;
-CODE_01E035:          DEC.B $00                           ;; 01E035 : C6 00       ;
+CODE_01E035:          DEC.B !_0                           ;; 01E035 : C6 00       ;
                       BPL CODE_01DFDD                     ;; 01E037 : 10 A4       ;
                       LDX.W $15E9                         ;; 01E039 : AE E9 15    ; X = Sprite index 
                       LDY.B #$29                          ;; 01E03C : A0 29       ;
@@ -11965,12 +11965,12 @@ CODE_01E0C8:          STA.W $15F6,X                       ;; 01E0C8 : 9D F6 15  
 CODE_01E0E2:          LDA.B $D8,X                         ;; 01E0E2 : B5 D8       ;
                       SEC                                 ;; 01E0E4 : 38          ;
                       SBC.W $1528,X                       ;; 01E0E5 : FD 28 15    ;
-                      STA.B $00                           ;; 01E0E8 : 85 00       ;
+                      STA.B !_0                           ;; 01E0E8 : 85 00       ;
                       LDA.W $14D4,X                       ;; 01E0EA : BD D4 14    ;
                       SBC.W $151C,X                       ;; 01E0ED : FD 1C 15    ;
                       LSR A                               ;; 01E0F0 : 4A          ;
-                      ROR.B $00                           ;; 01E0F1 : 66 00       ;
-                      LDA.B $00                           ;; 01E0F3 : A5 00       ;
+                      ROR.B !_0                           ;; 01E0F1 : 66 00       ;
+                      LDA.B !_0                           ;; 01E0F3 : A5 00       ;
                       LSR A                               ;; 01E0F5 : 4A          ;
                       LSR A                               ;; 01E0F6 : 4A          ;
                       LSR A                               ;; 01E0F7 : 4A          ;
@@ -11983,7 +11983,7 @@ CODE_01E103:          STA.B $AA,X                         ;; 01E103 : 95 AA     
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01E106:          JSR SubSprYPosNoGrvty               ;; 01E106 : 20 D8 AB    ;
-                      LDA.B $14                           ;; 01E109 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01E109 : A5 14       ;
                       AND.B #$07                          ;; 01E10B : 29 07       ;
                       ORA.B $C2,X                         ;; 01E10D : 15 C2       ;
                       BNE CODE_01E115                     ;; 01E10F : D0 04       ;
@@ -12021,7 +12021,7 @@ CODE_01E151:          TXA                                 ;; 01E151 : 8A        
                       ASL A                               ;; 01E152 : 0A          ;
                       ASL A                               ;; 01E153 : 0A          ;
                       CLC                                 ;; 01E154 : 18          ;
-                      ADC.B $13                           ;; 01E155 : 65 13       ;
+                      ADC.B !TrueFrame                    ;; 01E155 : 65 13       ;
                       LDY.B #$F0                          ;; 01E157 : A0 F0       ;
                       AND.B #$04                          ;; 01E159 : 29 04       ;
                       BEQ CODE_01E15F                     ;; 01E15B : F0 02       ;
@@ -12035,7 +12035,7 @@ CODE_01E164:          LDA.B $D8,X                         ;; 01E164 : B5 D8     
 CODE_01E16D:          JSR SubSprGfx2Entry1                ;; 01E16D : 20 0D 9F    ;
                       LDY.W $15EA,X                       ;; 01E170 : BC EA 15    ; Y = Index into sprite OAM 
                       PHX                                 ;; 01E173 : DA          ;
-                      LDA.B $14                           ;; 01E174 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01E174 : A5 14       ;
                       AND.B #$0C                          ;; 01E176 : 29 0C       ;
                       LSR A                               ;; 01E178 : 4A          ;
                       ADC.W $15E9                         ;; 01E179 : 6D E9 15    ;
@@ -12132,10 +12132,10 @@ CODE_01E201:          JSL GetSpriteClippingA              ;; 01E201 : 22 9F B6 0
                       LDA.B #$30                          ;; 01E235 : A9 30       ;
                       STA.W $154C,X                       ;; 01E237 : 9D 4C 15    ;
 CODE_01E23A:          JSR GetDrawInfoBnk1                 ;; 01E23A : 20 65 A3    ;
-                      LDA.B $00                           ;; 01E23D : A5 00       ;
+                      LDA.B !_0                           ;; 01E23D : A5 00       ;
                       STA.W $0300,Y                       ;; 01E23F : 99 00 03    ;
                       STA.W $0304,Y                       ;; 01E242 : 99 04 03    ;
-                      LDA.B $01                           ;; 01E245 : A5 01       ;
+                      LDA.B !_1                           ;; 01E245 : A5 01       ;
                       STA.W $0301,Y                       ;; 01E247 : 99 01 03    ;
                       CLC                                 ;; 01E24A : 18          ;
                       ADC.B #$08                          ;; 01E24B : 69 08       ;
@@ -12152,7 +12152,7 @@ CODE_01E23A:          JSR GetDrawInfoBnk1                 ;; 01E23A : 20 65 A3  
                       JSR FinishOAMWriteRt                ;; 01E266 : 20 BB B7    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_01E26A:          LDA.B $13                           ;; 01E26A : A5 13       ;
+CODE_01E26A:          LDA.B !TrueFrame                    ;; 01E26A : A5 13       ;
                       AND.B #$3F                          ;; 01E26C : 29 3F       ;
                       BNE CODE_01E27B                     ;; 01E26E : D0 0B       ;
                       LDA.W $1890                         ;; 01E270 : AD 90 18    ;
@@ -12202,7 +12202,7 @@ MontyMole:            JSR SubOffscreen0Bnk1               ;; ?QPWZ? : 20 31 AC  
                       dw CODE_01E393                      ;; ?QPWZ? : 93 E3       ;
                                                           ;;                      ;
 CODE_01E2E0:          JSR SubHorizPos                     ;; 01E2E0 : 20 30 AD    ;
-                      LDA.B $0F                           ;; 01E2E3 : A5 0F       ;
+                      LDA.B !_F                           ;; 01E2E3 : A5 0F       ;
                       CLC                                 ;; 01E2E5 : 18          ;
                       ADC.B #$60                          ;; 01E2E6 : 69 60       ;
                       CMP.B #$C0                          ;; 01E2E8 : C9 C0       ;
@@ -12249,7 +12249,7 @@ CODE_01E320:          JSR FaceMario                       ;; 01E320 : 20 7C 85  
 CODE_01E343:          LDA.B $9E,X                         ;; 01E343 : B5 9E       ;
                       CMP.B #$4D                          ;; 01E345 : C9 4D       ;
                       BNE CODE_01E363                     ;; 01E347 : D0 1A       ;
-                      LDA.B $14                           ;; 01E349 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01E349 : A5 14       ;
                       LSR A                               ;; 01E34B : 4A          ;
                       LSR A                               ;; 01E34C : 4A          ;
                       LSR A                               ;; 01E34D : 4A          ;
@@ -12267,7 +12267,7 @@ DATA_01E35F:          db $01,$02                          ;; 01E35F             
                                                           ;;                      ;
 DATA_01E361:          db $00,$05                          ;; 01E361               ;
                                                           ;;                      ;
-CODE_01E363:          LDA.B $14                           ;; 01E363 : A5 14       ;
+CODE_01E363:          LDA.B !EffFrame                     ;; 01E363 : A5 14       ;
                       ASL A                               ;; 01E365 : 0A          ;
                       ASL A                               ;; 01E366 : 0A          ;
                       AND.B #$C0                          ;; 01E367 : 29 C0       ;
@@ -12528,7 +12528,7 @@ CODE_01E563:          STZ.W $1570,X                       ;; 01E563 : 9E 70 15  
 CODE_01E57B:          LDA.B $9E,X                         ;; 01E57B : B5 9E       ;
                       CMP.B #$31                          ;; 01E57D : C9 31       ;
                       BNE CODE_01E598                     ;; 01E57F : D0 17       ;
-                      LDA.B $13                           ;; 01E581 : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01E581 : A5 13       ;
                       LSR A                               ;; 01E583 : 4A          ;
                       BCC CODE_01E589                     ;; 01E584 : 90 03       ;
                       INC.W $1528,X                       ;; 01E586 : FE 28 15    ;
@@ -12632,12 +12632,12 @@ CODE_01E650:          LDA.W $1540,X                       ;; 01E650 : BD 40 15  
                       BCC CODE_01E664                     ;; 01E65F : 90 03       ;
                       CLC                                 ;; 01E661 : 18          ;
                       ADC.B #$12                          ;; 01E662 : 69 12       ;
-CODE_01E664:          STA.B $00                           ;; 01E664 : 85 00       ;
+CODE_01E664:          STA.B !_0                           ;; 01E664 : 85 00       ;
                       LDA.W DATA_01E611,Y                 ;; 01E666 : B9 11 E6    ;
                       STA.W $1602,X                       ;; 01E669 : 9D 02 16    ;
                       LDA.B $D8,X                         ;; 01E66C : B5 D8       ;
                       SEC                                 ;; 01E66E : 38          ;
-                      SBC.B $00                           ;; 01E66F : E5 00       ;
+                      SBC.B !_0                           ;; 01E66F : E5 00       ;
                       STA.B $96                           ;; 01E671 : 85 96       ;
                       LDA.W $14D4,X                       ;; 01E673 : BD D4 14    ;
                       SBC.B #$00                          ;; 01E676 : E9 00       ;
@@ -12651,13 +12651,13 @@ CODE_01E664:          STA.B $00                           ;; 01E664 : 85 00     
                       BCS CODE_01E6AE                     ;; 01E688 : B0 24       ;
                       STZ.W $1471                         ;; 01E68A : 9C 71 14    ;
                       LDY.B #$B0                          ;; 01E68D : A0 B0       ;
-                      LDA.B $17                           ;; 01E68F : A5 17       ;
+                      LDA.B !axlr0000Hold                 ;; 01E68F : A5 17       ;
                       BPL CODE_01E69A                     ;; 01E691 : 10 07       ;
                       LDA.B #$01                          ;; 01E693 : A9 01       ;
                       STA.W $140D                         ;; 01E695 : 8D 0D 14    ;
                       BRA CODE_01E69E                     ;; 01E698 : 80 04       ;
                                                           ;;                      ;
-CODE_01E69A:          LDA.B $15                           ;; 01E69A : A5 15       ;
+CODE_01E69A:          LDA.B !byetudlrHold                 ;; 01E69A : A5 15       ;
                       BPL CODE_01E6A7                     ;; 01E69C : 10 09       ;
 CODE_01E69E:          LDA.B #$0B                          ;; 01E69E : A9 0B       ;
                       STA.B $72                           ;; 01E6A0 : 85 72       ;
@@ -12684,7 +12684,7 @@ CODE_01E6B0:          JSR ProcessInteract                 ;; 01E6B0 : 20 F7 A7  
                       STZ.B $7D                           ;; 01E6CA : 64 7D       ;
                       BRA CODE_01E6F0                     ;; 01E6CC : 80 22       ;
                                                           ;;                      ;
-CODE_01E6CE:          BIT.B $15                           ;; 01E6CE : 24 15       ;
+CODE_01E6CE:          BIT.B !byetudlrHold                 ;; 01E6CE : 24 15       ;
                       BVC CODE_01E6E2                     ;; 01E6D0 : 50 10       ;
                       LDA.W $1470                         ;; 01E6D2 : AD 70 14    ; \ Branch if carrying an enemy... 
                       ORA.W $187A                         ;; 01E6D5 : 0D 7A 18    ;  | ...or if on Yoshi 
@@ -12712,12 +12712,12 @@ DATA_01E6FD:          db $00,$02,$00                      ;; 01E6FD             
 SmushedGfxRt:         JSR GetDrawInfoBnk1                 ;; ?QPWZ? : 20 65 A3    ;
                       JSR IsSprOffScreen                  ;; 01E703 : 20 CB 80    ;
                       BNE Return01E75A                    ;; 01E706 : D0 52       ;
-                      LDA.B $00                           ;; 01E708 : A5 00       ; \ Set X displacement for both tiles 
+                      LDA.B !_0                           ;; 01E708 : A5 00       ; \ Set X displacement for both tiles 
                       STA.W $0300,Y                       ;; 01E70A : 99 00 03    ;  | (Sprite position + #$00/#$08) 
                       CLC                                 ;; 01E70D : 18          ;  | 
                       ADC.B #$08                          ;; 01E70E : 69 08       ;  | 
                       STA.W $0304,Y                       ;; 01E710 : 99 04 03    ; / 
-                      LDA.B $01                           ;; 01E713 : A5 01       ; \ Set Y displacement for both tiles 
+                      LDA.B !_1                           ;; 01E713 : A5 01       ; \ Set Y displacement for both tiles 
                       CLC                                 ;; 01E715 : 18          ;  | (Sprite position + #$08) 
                       ADC.B #$08                          ;; 01E716 : 69 08       ;  | 
                       STA.W $0301,Y                       ;; 01E718 : 99 01 03    ;  | 
@@ -12780,7 +12780,7 @@ CODE_01E7A8:          JMP LakituCloudGfx                  ;; 01E7A8 : 4C CA E8  
                                                           ;;                      ;
 NoCloudGfx:           LDY.W $18E0                         ;; ?QPWZ? : AC E0 18    ;
                       BEQ CODE_01E7C5                     ;; 01E7AE : F0 15       ;
-                      LDA.B $14                           ;; 01E7B0 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01E7B0 : A5 14       ;
                       AND.B #$03                          ;; 01E7B2 : 29 03       ;
                       BNE CODE_01E7C5                     ;; 01E7B4 : D0 0F       ;
                       LDA.W $18E0                         ;; 01E7B6 : AD E0 18    ;
@@ -12858,7 +12858,7 @@ CODE_01E840:          JSR LakituCloudGfx                  ;; 01E840 : 20 CA E8  
                       CLC                                 ;; 01E84F : 18          ;
                       ADC.B #$03                          ;; 01E850 : 69 03       ;
                       STA.B $7D                           ;; 01E852 : 85 7D       ;
-                      LDA.B $14                           ;; 01E854 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01E854 : A5 14       ;
                       LSR A                               ;; 01E856 : 4A          ;
                       LSR A                               ;; 01E857 : 4A          ;
                       LSR A                               ;; 01E858 : 4A          ;
@@ -12884,7 +12884,7 @@ CODE_01E866:          LDA.B $D1                           ;; 01E866 : A5 D1     
                       STZ.B $72                           ;; 01E87E : 64 72       ;
                       INC.W $1471                         ;; 01E880 : EE 71 14    ;
                       INC.W $18C2                         ;; 01E883 : EE C2 18    ;
-                      LDA.B $16                           ;; 01E886 : A5 16       ;
+                      LDA.B !byetudlrFrame                ;; 01E886 : A5 16       ;
                       AND.B #$80                          ;; 01E888 : 29 80       ;
                       BEQ Return01E897                    ;; 01E88A : F0 0B       ;
                       LDA.B #$C0                          ;; 01E88C : A9 C0       ;
@@ -12896,14 +12896,14 @@ Return01E897:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 CODE_01E898:          PHY                                 ;; 01E898 : 5A          ;
                       JSR CODE_01E98D                     ;; 01E899 : 20 8D E9    ;
-                      LDA.B $14                           ;; 01E89C : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01E89C : A5 14       ;
                       LSR A                               ;; 01E89E : 4A          ;
                       LSR A                               ;; 01E89F : 4A          ;
                       LSR A                               ;; 01E8A0 : 4A          ;
                       AND.B #$07                          ;; 01E8A1 : 29 07       ;
                       TAY                                 ;; 01E8A3 : A8          ;
                       LDA.W DATA_01E793,Y                 ;; 01E8A4 : B9 93 E7    ;
-                      STA.B $00                           ;; 01E8A7 : 85 00       ;
+                      STA.B !_0                           ;; 01E8A7 : 85 00       ;
                       PLY                                 ;; 01E8A9 : 7A          ;
                       LDA.B $E4,X                         ;; 01E8AA : B5 E4       ;
                       STA.W $00E4,Y                       ;; 01E8AC : 99 E4 00    ;
@@ -12911,7 +12911,7 @@ CODE_01E898:          PHY                                 ;; 01E898 : 5A        
                       STA.W $14E0,Y                       ;; 01E8B2 : 99 E0 14    ;
                       LDA.B $D8,X                         ;; 01E8B5 : B5 D8       ;
                       SEC                                 ;; 01E8B7 : 38          ;
-                      SBC.B $00                           ;; 01E8B8 : E5 00       ;
+                      SBC.B !_0                           ;; 01E8B8 : E5 00       ;
                       STA.W $00D8,Y                       ;; 01E8BA : 99 D8 00    ;
                       LDA.W $14D4,X                       ;; 01E8BD : BD D4 14    ;
                       SBC.B #$00                          ;; 01E8C0 : E9 00       ;
@@ -12922,33 +12922,33 @@ LakituCloudGfx:       JSR GetDrawInfoBnk1                 ;; ?QPWZ? : 20 65 A3  
                       LDA.W $186C,X                       ;; 01E8CD : BD 6C 18    ;
                       BNE Return01E897                    ;; 01E8D0 : D0 C5       ;
                       LDA.B #$F8                          ;; 01E8D2 : A9 F8       ;
-                      STA.B $0C                           ;; 01E8D4 : 85 0C       ;
+                      STA.B !_C                           ;; 01E8D4 : 85 0C       ;
                       LDA.B #$FC                          ;; 01E8D6 : A9 FC       ;
-                      STA.B $0D                           ;; 01E8D8 : 85 0D       ;
+                      STA.B !_D                           ;; 01E8D8 : 85 0D       ;
                       LDA.B #$00                          ;; 01E8DA : A9 00       ;
                       LDY.B $C2,X                         ;; 01E8DC : B4 C2       ;
                       BNE CODE_01E8E2                     ;; 01E8DE : D0 02       ;
                       LDA.B #$30                          ;; 01E8E0 : A9 30       ;
-CODE_01E8E2:          STA.B $0E                           ;; 01E8E2 : 85 0E       ;
+CODE_01E8E2:          STA.B !_E                           ;; 01E8E2 : 85 0E       ;
                       STA.W $18B6                         ;; 01E8E4 : 8D B6 18    ;
                       ORA.B #$04                          ;; 01E8E7 : 09 04       ;
-                      STA.B $0F                           ;; 01E8E9 : 85 0F       ;
-                      LDA.B $00                           ;; 01E8EB : A5 00       ;
+                      STA.B !_F                           ;; 01E8E9 : 85 0F       ;
+                      LDA.B !_0                           ;; 01E8EB : A5 00       ;
                       STA.W $14B0                         ;; 01E8ED : 8D B0 14    ;
-                      LDA.B $01                           ;; 01E8F0 : A5 01       ;
+                      LDA.B !_1                           ;; 01E8F0 : A5 01       ;
                       STA.W $14B2                         ;; 01E8F2 : 8D B2 14    ;
-                      LDA.B $14                           ;; 01E8F5 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01E8F5 : A5 14       ;
                       LSR A                               ;; 01E8F7 : 4A          ;
                       LSR A                               ;; 01E8F8 : 4A          ;
                       AND.B #$0C                          ;; 01E8F9 : 29 0C       ;
-                      STA.B $02                           ;; 01E8FB : 85 02       ;
+                      STA.B !_2                           ;; 01E8FB : 85 02       ;
                       LDA.B #$03                          ;; 01E8FD : A9 03       ;
-                      STA.B $03                           ;; 01E8FF : 85 03       ;
-CODE_01E901:          LDA.B $03                           ;; 01E901 : A5 03       ;
+                      STA.B !_3                           ;; 01E8FF : 85 03       ;
+CODE_01E901:          LDA.B !_3                           ;; 01E901 : A5 03       ;
                       TAX                                 ;; 01E903 : AA          ;
-                      LDY.B $0C,X                         ;; 01E904 : B4 0C       ;
+                      LDY.B !_C,X                         ;; 01E904 : B4 0C       ;
                       CLC                                 ;; 01E906 : 18          ;
-                      ADC.B $02                           ;; 01E907 : 65 02       ;
+                      ADC.B !_2                           ;; 01E907 : 65 02       ;
                       TAX                                 ;; 01E909 : AA          ;
                       LDA.W DATA_01E76F,X                 ;; 01E90A : BD 6F E7    ;
                       CLC                                 ;; 01E90D : 18          ;
@@ -12975,7 +12975,7 @@ CODE_01E935:          LDA.B $64                           ;; 01E935 : A5 64     
                       INY                                 ;; 01E93B : C8          ;
                       INY                                 ;; 01E93C : C8          ;
                       INY                                 ;; 01E93D : C8          ;
-                      DEC.B $03                           ;; 01E93E : C6 03       ;
+                      DEC.B !_3                           ;; 01E93E : C6 03       ;
                       BPL CODE_01E901                     ;; 01E940 : 10 BF       ;
                       LDX.W $15E9                         ;; 01E942 : AE E9 15    ; X = Sprite index 
                       LDA.B #$F8                          ;; 01E945 : A9 F8       ;
@@ -13019,8 +13019,8 @@ CODE_01E98D:          LDA.B $9D                           ;; 01E98D : A5 9D     
                       TYA                                 ;; 01E994 : 98          ;
                       LDY.W $160E,X                       ;; 01E995 : BC 0E 16    ;
                       STA.W $157C,Y                       ;; 01E998 : 99 7C 15    ;
-                      STA.B $00                           ;; 01E99B : 85 00       ;
-                      LDY.B $00                           ;; 01E99D : A4 00       ;
+                      STA.B !_0                           ;; 01E99B : 85 00       ;
+                      LDY.B !_0                           ;; 01E99D : A4 00       ;
                       LDA.W $18BF                         ;; 01E99F : AD BF 18    ;
                       BEQ CODE_01E9BD                     ;; 01E9A2 : F0 19       ;
                       PHY                                 ;; 01E9A4 : 5A          ;
@@ -13037,7 +13037,7 @@ CODE_01E9B8:          PLY                                 ;; 01E9B8 : 7A        
                       TYA                                 ;; 01E9B9 : 98          ;
                       EOR.B #$01                          ;; 01E9BA : 49 01       ;
                       TAY                                 ;; 01E9BC : A8          ;
-CODE_01E9BD:          LDA.B $13                           ;; 01E9BD : A5 13       ;
+CODE_01E9BD:          LDA.B !TrueFrame                    ;; 01E9BD : A5 13       ;
                       AND.B #$01                          ;; 01E9BF : 29 01       ;
                       BNE CODE_01E9E6                     ;; 01E9C1 : D0 23       ;
                       LDA.B $B6,X                         ;; 01E9C3 : B5 B6       ;
@@ -13072,7 +13072,7 @@ CODE_01E9F9:          JSR SubSprXPosNoGrvty               ;; 01E9F9 : 20 CC AB  
                       STA.B $B6,X                         ;; 01E9FD : 95 B6       ;
                       JSR SubSprYPosNoGrvty               ;; 01E9FF : 20 D8 AB    ;
                       LDY.W $160E,X                       ;; 01EA02 : BC 0E 16    ;
-                      LDA.B $13                           ;; 01EA05 : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01EA05 : A5 13       ;
                       AND.B #$7F                          ;; 01EA07 : 29 7F       ;
                       ORA.W $151C,Y                       ;; 01EA09 : 19 1C 15    ;
                       BNE Return01EA16                    ;; 01EA0C : D0 08       ;
@@ -13201,7 +13201,7 @@ CODE_01EAF7:          LDA.B $72                           ;; 01EAF7 : A5 72     
                       LDA.W $151C,X                       ;; 01EAFB : BD 1C 15    ;
                       BEQ CODE_01EB0C                     ;; 01EAFE : F0 0C       ;
                       LDY.B #$07                          ;; 01EB00 : A0 07       ;
-                      LDA.B $15                           ;; 01EB02 : A5 15       ;
+                      LDA.B !byetudlrHold                 ;; 01EB02 : A5 15       ;
                       AND.B #$08                          ;; 01EB04 : 29 08       ;
                       BEQ CODE_01EB0A                     ;; 01EB06 : F0 02       ;
                       LDY.B #$06                          ;; 01EB08 : A0 06       ;
@@ -13212,7 +13212,7 @@ CODE_01EB0C:          LDA.W $18AF                         ;; 01EB0C : AD AF 18  
                       DEC.W $18AF                         ;; 01EB11 : CE AF 18    ;
                       BRA CODE_01EB1C                     ;; 01EB14 : 80 06       ;
                                                           ;;                      ;
-CODE_01EB16:          LDA.B $15                           ;; 01EB16 : A5 15       ;
+CODE_01EB16:          LDA.B !byetudlrHold                 ;; 01EB16 : A5 15       ;
                       AND.B #$04                          ;; 01EB18 : 29 04       ;
                       BEQ CODE_01EB21                     ;; 01EB1A : F0 05       ;
 CODE_01EB1C:          LDY.B #$04                          ;; 01EB1C : A0 04       ;
@@ -13228,7 +13228,7 @@ CODE_01EB2E:          LDA.W $187A                         ;; 01EB2E : AD 7A 18  
                       LDA.W $1419                         ;; 01EB33 : AD 19 14    ;
                       CMP.B #$01                          ;; 01EB36 : C9 01       ;
                       BNE CODE_01EB44                     ;; 01EB38 : D0 0A       ;
-                      LDA.B $13                           ;; 01EB3A : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01EB3A : A5 13       ;
                       AND.B #$08                          ;; 01EB3C : 29 08       ;
                       LSR A                               ;; 01EB3E : 4A          ;
                       LSR A                               ;; 01EB3F : 4A          ;
@@ -13397,7 +13397,7 @@ CODE_01EC8B:          LDA.B #$09                          ;; 01EC8B : A9 09     
                       PHY                                 ;; 01EC95 : 5A          ;
                       PHY                                 ;; 01EC96 : 5A          ;
                       LDY.W $157C,X                       ;; 01EC97 : BC 7C 15    ;
-                      STY.B $0F                           ;; 01EC9A : 84 0F       ;
+                      STY.B !_F                           ;; 01EC9A : 84 0F       ;
                       LDA.B $E4,X                         ;; 01EC9C : B5 E4       ;
                       CLC                                 ;; 01EC9E : 18          ;
                       ADC.W DATA_01EC5D,Y                 ;; 01EC9F : 79 5D EC    ;
@@ -13418,7 +13418,7 @@ CODE_01EC8B:          LDA.B #$09                          ;; 01EC8B : A9 09     
                       PHX                                 ;; 01ECC3 : DA          ;
                       TYX                                 ;; 01ECC4 : BB          ;
                       JSL InitSpriteTables                ;; 01ECC5 : 22 D2 F7 07 ;
-                      LDY.B $0F                           ;; 01ECC9 : A4 0F       ;
+                      LDY.B !_F                           ;; 01ECC9 : A4 0F       ;
                       LDA.W DATA_01EC5B,Y                 ;; 01ECCB : B9 5B EC    ;
                       STA.B $B6,X                         ;; 01ECCE : 95 B6       ;
                       LDA.B #$F0                          ;; 01ECD0 : A9 F0       ;
@@ -13452,20 +13452,20 @@ CODE_01ED01:          JSR UpdateDirection                 ;; 01ED01 : 20 15 9A  
 CODE_01ED0C:          LDA.B #$04                          ;; 01ED0C : A9 04       ;
                       CLC                                 ;; 01ED0E : 18          ;
                       ADC.B $E4,X                         ;; 01ED0F : 75 E4       ;
-                      STA.B $04                           ;; 01ED11 : 85 04       ;
+                      STA.B !_4                           ;; 01ED11 : 85 04       ;
                       LDA.W $14E0,X                       ;; 01ED13 : BD E0 14    ;
                       ADC.B #$00                          ;; 01ED16 : 69 00       ;
-                      STA.B $0A                           ;; 01ED18 : 85 0A       ;
+                      STA.B !_A                           ;; 01ED18 : 85 0A       ;
                       LDA.B #$13                          ;; 01ED1A : A9 13       ;
                       CLC                                 ;; 01ED1C : 18          ;
                       ADC.B $D8,X                         ;; 01ED1D : 75 D8       ;
-                      STA.B $05                           ;; 01ED1F : 85 05       ;
+                      STA.B !_5                           ;; 01ED1F : 85 05       ;
                       LDA.W $14D4,X                       ;; 01ED21 : BD D4 14    ;
                       ADC.B #$00                          ;; 01ED24 : 69 00       ;
-                      STA.B $0B                           ;; 01ED26 : 85 0B       ;
+                      STA.B !_B                           ;; 01ED26 : 85 0B       ;
                       LDA.B #$08                          ;; 01ED28 : A9 08       ;
-                      STA.B $07                           ;; 01ED2A : 85 07       ;
-                      STA.B $06                           ;; 01ED2C : 85 06       ;
+                      STA.B !_7                           ;; 01ED2A : 85 07       ;
+                      STA.B !_6                           ;; 01ED2C : 85 06       ;
                       JSL GetMarioClipping                ;; 01ED2E : 22 64 B6 03 ;
                       JSL CheckForContact                 ;; 01ED32 : 22 2B B7 03 ;
                       BCC CODE_01ED70                     ;; 01ED36 : 90 38       ;
@@ -13496,7 +13496,7 @@ CODE_01ED70:          LDA.B $C2,X                         ;; 01ED70 : B5 C2     
                       CMP.B #$01                          ;; 01ED72 : C9 01       ;
                       BNE Return01EDCB                    ;; 01ED74 : D0 55       ;
                       JSR CODE_01F622                     ;; 01ED76 : 20 22 F6    ;
-                      LDA.B $15                           ;; 01ED79 : A5 15       ;
+                      LDA.B !byetudlrHold                 ;; 01ED79 : A5 15       ;
                       AND.B #$03                          ;; 01ED7B : 29 03       ;
                       BEQ CODE_01ED95                     ;; 01ED7D : F0 16       ;
                       DEC A                               ;; 01ED7F : 3A          ;
@@ -13510,7 +13510,7 @@ CODE_01ED70:          LDA.B $C2,X                         ;; 01ED70 : B5 C2     
                       STA.W $15AC,X                       ;; 01ED92 : 9D AC 15    ; / 
 CODE_01ED95:          LDA.W $13F3                         ;; 01ED95 : AD F3 13    ;
                       BNE CODE_01ED9E                     ;; 01ED98 : D0 04       ;
-                      BIT.B $18                           ;; 01ED9A : 24 18       ;
+                      BIT.B !axlr0000Frame                ;; 01ED9A : 24 18       ;
                       BPL Return01EDCB                    ;; 01ED9C : 10 2D       ;
 CODE_01ED9E:          LDA.B #$02                          ;; 01ED9E : A9 02       ;
                       STA.W $1FE2,X                       ;; 01EDA0 : 9D E2 1F    ;
@@ -13600,20 +13600,20 @@ CODE_01EE7D:          LDA.W $1419                         ;; 01EE7D : AD 19 14  
                       INC A                               ;; 01EE86 : 1A          ;
                       STA.W $1602,X                       ;; 01EE87 : 9D 02 16    ;
 CODE_01EE8A:          JSR CODE_01EF18                     ;; 01EE8A : 20 18 EF    ;
-                      LDY.B $0E                           ;; 01EE8D : A4 0E       ;
+                      LDY.B !_E                           ;; 01EE8D : A4 0E       ;
                       LDA.W $0302,Y                       ;; 01EE8F : B9 02 03    ;
-                      STA.B $00                           ;; 01EE92 : 85 00       ;
-                      STZ.B $01                           ;; 01EE94 : 64 01       ;
+                      STA.B !_0                           ;; 01EE92 : 85 00       ;
+                      STZ.B !_1                           ;; 01EE94 : 64 01       ;
                       LDA.B #$06                          ;; 01EE96 : A9 06       ;
                       STA.W $0302,Y                       ;; 01EE98 : 99 02 03    ;
                       LDY.W $15EA,X                       ;; 01EE9B : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.W $0302,Y                       ;; 01EE9E : B9 02 03    ;
-                      STA.B $02                           ;; 01EEA1 : 85 02       ;
-                      STZ.B $03                           ;; 01EEA3 : 64 03       ;
+                      STA.B !_2                           ;; 01EEA1 : 85 02       ;
+                      STZ.B !_3                           ;; 01EEA3 : 64 03       ;
                       LDA.B #$08                          ;; 01EEA5 : A9 08       ;
                       STA.W $0302,Y                       ;; 01EEA7 : 99 02 03    ;
                       REP #$20                            ;; 01EEAA : C2 20       ; Accum (16 bit) 
-                      LDA.B $00                           ;; 01EEAC : A5 00       ;
+                      LDA.B !_0                           ;; 01EEAC : A5 00       ;
                       ASL A                               ;; 01EEAE : 0A          ;
                       ASL A                               ;; 01EEAF : 0A          ;
                       ASL A                               ;; 01EEB0 : 0A          ;
@@ -13625,7 +13625,7 @@ CODE_01EE8A:          JSR CODE_01EF18                     ;; 01EE8A : 20 18 EF  
                       CLC                                 ;; 01EEBA : 18          ;
                       ADC.W #$0200                        ;; 01EEBB : 69 00 02    ;
                       STA.W $0D95                         ;; 01EEBE : 8D 95 0D    ;
-                      LDA.B $02                           ;; 01EEC1 : A5 02       ;
+                      LDA.B !_2                           ;; 01EEC1 : A5 02       ;
                       ASL A                               ;; 01EEC3 : 0A          ;
                       ASL A                               ;; 01EEC4 : 0A          ;
                       ASL A                               ;; 01EEC5 : 0A          ;
@@ -13658,7 +13658,7 @@ CODE_01EEF6:          CMP.B #$28                          ;; 01EEF6 : C9 28     
                       LDA.B #$00                          ;; 01EEFC : A9 00       ;
                       BRA CODE_01EF13                     ;; 01EEFE : 80 13       ;
                                                           ;;                      ;
-CODE_01EF00:          LDA.B $14                           ;; 01EF00 : A5 14       ;
+CODE_01EF00:          LDA.B !EffFrame                     ;; 01EF00 : A5 14       ;
                       LSR A                               ;; 01EF02 : 4A          ;
                       LSR A                               ;; 01EF03 : 4A          ;
                       LDY.B $7D                           ;; 01EF04 : A4 7D       ;
@@ -13676,7 +13676,7 @@ CODE_01EF18:          LDY.W $1602,X                       ;; 01EF18 : BC 02 16  
                       STY.W $185E                         ;; 01EF1B : 8C 5E 18    ;
                       LDA.W YoshiHeadTiles,Y              ;; 01EF1E : B9 F9 ED    ;
                       STA.W $1602,X                       ;; 01EF21 : 9D 02 16    ;
-                      STA.B $0F                           ;; 01EF24 : 85 0F       ;
+                      STA.B !_F                           ;; 01EF24 : 85 0F       ;
                       LDA.B $D8,X                         ;; 01EF26 : B5 D8       ;
                       PHA                                 ;; 01EF28 : 48          ;
                       CLC                                 ;; 01EF29 : 18          ;
@@ -13709,7 +13709,7 @@ CODE_01EF41:          TAY                                 ;; 01EF41 : A8        
                       LDA.B #$04                          ;; 01EF61 : A9 04       ;
                       STA.W $15EA,X                       ;; 01EF63 : 9D EA 15    ;
 CODE_01EF66:          LDA.W $15EA,X                       ;; 01EF66 : BD EA 15    ;
-                      STA.B $0E                           ;; 01EF69 : 85 0E       ;
+                      STA.B !_E                           ;; 01EF69 : 85 0E       ;
                       JSR SubSprGfx2Entry1                ;; 01EF6B : 20 0D 9F    ;
                       PHX                                 ;; 01EF6E : DA          ;
                       LDY.W $15EA,X                       ;; 01EF6F : BC EA 15    ; Y = Index into sprite OAM 
@@ -13741,14 +13741,14 @@ CODE_01EFA3:          JSR SubSprGfx2Entry1                ;; 01EFA3 : 20 0D 9F  
                       STA.W $14D4,X                       ;; 01EFA7 : 9D D4 14    ;
                       PLA                                 ;; 01EFAA : 68          ;
                       STA.B $D8,X                         ;; 01EFAB : 95 D8       ;
-                      LDY.B $0E                           ;; 01EFAD : A4 0E       ;
-                      LDA.B $0F                           ;; 01EFAF : A5 0F       ;
+                      LDY.B !_E                           ;; 01EFAD : A4 0E       ;
+                      LDA.B !_F                           ;; 01EFAF : A5 0F       ;
                       BPL CODE_01EFB8                     ;; 01EFB1 : 10 05       ;
                       LDA.B #$F0                          ;; 01EFB3 : A9 F0       ;
                       STA.W $0301,Y                       ;; 01EFB5 : 99 01 03    ;
 CODE_01EFB8:          LDA.B $C2,X                         ;; 01EFB8 : B5 C2       ;
                       BNE CODE_01EFC6                     ;; 01EFBA : D0 0A       ;
-                      LDA.B $14                           ;; 01EFBC : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01EFBC : A5 14       ;
                       AND.B #$30                          ;; 01EFBE : 29 30       ;
                       BNE CODE_01EFDB                     ;; 01EFC0 : D0 19       ;
                       LDA.B #$2A                          ;; 01EFC2 : A9 2A       ;
@@ -13759,7 +13759,7 @@ CODE_01EFC6:          CMP.B #$02                          ;; 01EFC6 : C9 02     
                       LDA.W $151C,X                       ;; 01EFCA : BD 1C 15    ;
                       ORA.W $13C6                         ;; 01EFCD : 0D C6 13    ;
                       BNE CODE_01EFDB                     ;; 01EFD0 : D0 09       ;
-                      LDA.B $14                           ;; 01EFD2 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01EFD2 : A5 14       ;
                       AND.B #$10                          ;; 01EFD4 : 29 10       ;
                       BEQ CODE_01EFFD                     ;; 01EFD6 : F0 25       ;
                       BRA CODE_01EFF8                     ;; 01EFD8 : 80 1E       ;
@@ -13785,7 +13785,7 @@ CODE_01EFFD:          LDA.W $1564,X                       ;; 01EFFD : BD 64 15  
                       BEQ CODE_01F00F                     ;; 01F003 : F0 0A       ;
                       CPY.B #$26                          ;; 01F005 : C0 26       ;
                       BCS CODE_01F038                     ;; 01F007 : B0 2F       ;
-                      LDA.B $14                           ;; 01F009 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01F009 : A5 14       ;
                       AND.B #$18                          ;; 01F00B : 29 18       ;
                       BNE CODE_01F038                     ;; 01F00D : D0 29       ;
 CODE_01F00F:          LDA.W $1564,X                       ;; 01F00F : BD 64 15    ;
@@ -13797,12 +13797,12 @@ CODE_01F00F:          LDA.W $1564,X                       ;; 01F00F : BD 64 15  
                       CMP.B #$1C                          ;; 01F01C : C9 1C       ;
                       BCC CODE_01F038                     ;; 01F01E : 90 18       ;
                       BNE CODE_01F02F                     ;; 01F020 : D0 0D       ;
-                      LDA.B $0E                           ;; 01F022 : A5 0E       ;
+                      LDA.B !_E                           ;; 01F022 : A5 0E       ;
                       PHA                                 ;; 01F024 : 48          ;
                       JSL SetTreeTile                     ;; 01F025 : 22 F3 D1 02 ;
                       JSR CODE_01F0D3                     ;; 01F029 : 20 D3 F0    ;
                       PLA                                 ;; 01F02C : 68          ;
-                      STA.B $0E                           ;; 01F02D : 85 0E       ;
+                      STA.B !_E                           ;; 01F02D : 85 0E       ;
 CODE_01F02F:          INC.W $13FB                         ;; 01F02F : EE FB 13    ;
                       LDA.B #$00                          ;; 01F032 : A9 00       ;
                       LDY.B #$2A                          ;; 01F034 : A0 2A       ;
@@ -13811,7 +13811,7 @@ CODE_01F02F:          INC.W $13FB                         ;; 01F02F : EE FB 13  
 CODE_01F038:          LDY.B #$04                          ;; 01F038 : A0 04       ;
 CODE_01F03A:          PHA                                 ;; 01F03A : 48          ;
                       TYA                                 ;; 01F03B : 98          ;
-                      LDY.B $0E                           ;; 01F03C : A4 0E       ;
+                      LDY.B !_E                           ;; 01F03C : A4 0E       ;
                       STA.W $0302,Y                       ;; 01F03E : 99 02 03    ;
                       PLA                                 ;; 01F041 : 68          ;
                       CMP.B #$0F                          ;; 01F042 : C9 0F       ;
@@ -13828,24 +13828,24 @@ CODE_01F054:          LDY.W $1602,X                       ;; 01F054 : BC 02 16  
                       BNE CODE_01F05E                     ;; 01F059 : D0 03       ;
                       CLC                                 ;; 01F05B : 18          ;
                       ADC.B #$14                          ;; 01F05C : 69 14       ;
-CODE_01F05E:          STA.B $02                           ;; 01F05E : 85 02       ;
+CODE_01F05E:          STA.B !_2                           ;; 01F05E : 85 02       ;
                       JSR IsSprOffScreen                  ;; 01F060 : 20 CB 80    ;
                       BNE Return01F0A0                    ;; 01F063 : D0 3B       ;
                       LDA.B $E4,X                         ;; 01F065 : B5 E4       ;
                       SEC                                 ;; 01F067 : 38          ;
-                      SBC.B $1A                           ;; 01F068 : E5 1A       ;
-                      STA.B $00                           ;; 01F06A : 85 00       ;
+                      SBC.B !Layer1XPos                   ;; 01F068 : E5 1A       ;
+                      STA.B !_0                           ;; 01F06A : 85 00       ;
                       LDA.B $D8,X                         ;; 01F06C : B5 D8       ;
                       SEC                                 ;; 01F06E : 38          ;
-                      SBC.B $1C                           ;; 01F06F : E5 1C       ;
-                      STA.B $01                           ;; 01F071 : 85 01       ;
+                      SBC.B !Layer1YPos                   ;; 01F06F : E5 1C       ;
+                      STA.B !_1                           ;; 01F071 : 85 01       ;
                       PHX                                 ;; 01F073 : DA          ;
-                      LDX.B $02                           ;; 01F074 : A6 02       ;
-                      LDA.B $00                           ;; 01F076 : A5 00       ;
+                      LDX.B !_2                           ;; 01F074 : A6 02       ;
+                      LDA.B !_0                           ;; 01F076 : A5 00       ;
                       CLC                                 ;; 01F078 : 18          ;
                       ADC.L DATA_03C176,X                 ;; 01F079 : 7F 76 C1 03 ;
                       STA.W $0300                         ;; 01F07D : 8D 00 03    ;
-                      LDA.B $01                           ;; 01F080 : A5 01       ;
+                      LDA.B !_1                           ;; 01F080 : A5 01       ;
                       CLC                                 ;; 01F082 : 18          ;
                       ADC.L DATA_03C19E,X                 ;; 01F083 : 7F 9E C1 03 ;
                       STA.W $0301                         ;; 01F087 : 8D 01 03    ;
@@ -13961,7 +13961,7 @@ CODE_01F167:          CMP.B #$0D                          ;; 01F167 : C9 0D     
                       LDA.W YoshiAbilityIndex,Y           ;; 01F17C : B9 45 F1    ;  | 
                       ASL A                               ;; 01F17F : 0A          ;  | 
                       ASL A                               ;; 01F180 : 0A          ;  | 
-                      STA.B $00                           ;; 01F181 : 85 00       ;  | 
+                      STA.B !_0                           ;; 01F181 : 85 00       ;  | 
                       PLY                                 ;; 01F183 : 7A          ;  | 
                       PHY                                 ;; 01F184 : 5A          ;  | 
                       LDA.W $15F6,Y                       ;; 01F185 : B9 F6 15    ;  | 
@@ -13969,7 +13969,7 @@ CODE_01F167:          CMP.B #$0D                          ;; 01F167 : C9 0D     
                       AND.B #$07                          ;; 01F189 : 29 07       ;  | 
                       TAY                                 ;; 01F18B : A8          ;  | 
                       LDA.W YoshiAbilityIndex,Y           ;; 01F18C : B9 45 F1    ;  | 
-                      ORA.B $00                           ;; 01F18F : 05 00       ;  | 
+                      ORA.B !_0                           ;; 01F18F : 05 00       ;  | 
                       TAY                                 ;; 01F191 : A8          ;  | 
                       LDA.W YoshiShellAbility,Y           ;; 01F192 : B9 37 F1    ; / 
 CODE_01F195:          PHA                                 ;; 01F195 : 48          ; \ Set yoshi wing ability 
@@ -13979,7 +13979,7 @@ CODE_01F195:          PHA                                 ;; 01F195 : 48        
                       AND.B #$01                          ;; 01F19C : 29 01       ;  | $18E7 = #$01 
                       STA.W $18E7                         ;; 01F19E : 8D E7 18    ; / 
                       PLY                                 ;; 01F1A1 : 7A          ;
-CODE_01F1A2:          LDA.B $14                           ;; 01F1A2 : A5 14       ;
+CODE_01F1A2:          LDA.B !EffFrame                     ;; 01F1A2 : A5 14       ;
                       AND.B #$03                          ;; 01F1A4 : 29 03       ;
                       BNE CODE_01F1C6                     ;; 01F1A6 : D0 1E       ;
                       LDA.W $18AC                         ;; 01F1A8 : AD AC 18    ;
@@ -14009,7 +14009,7 @@ Return01F1DE:         RTS                                 ;; ?QPWZ? : 60        
 CODE_01F1DF:          LDA.B $C2,X                         ;; 01F1DF : B5 C2       ;
                       CMP.B #$01                          ;; 01F1E1 : C9 01       ;
                       BNE Return01F1DE                    ;; 01F1E3 : D0 F9       ;
-                      BIT.B $16                           ;; 01F1E5 : 24 16       ;
+                      BIT.B !byetudlrFrame                ;; 01F1E5 : 24 16       ;
                       BVC Return01F1DE                    ;; 01F1E7 : 50 F5       ;
                       LDA.W $18AC                         ;; 01F1E9 : AD AC 18    ;
                       BNE CODE_01F1F1                     ;; 01F1EC : D0 03       ;
@@ -14079,7 +14079,7 @@ CODE_01F27C:          PHX                                 ;; 01F27C : DA        
                       TYX                                 ;; 01F27D : BB          ;
                       STZ.W $14C8,X                       ;; 01F27E : 9E C8 14    ;
                       LDA.B #$02                          ;; 01F281 : A9 02       ;
-                      STA.B $00                           ;; 01F283 : 85 00       ;
+                      STA.B !_0                           ;; 01F283 : 85 00       ;
                       JSR CODE_01F295                     ;; 01F285 : 20 95 F2    ;
                       JSR CODE_01F295                     ;; 01F288 : 20 95 F2    ;
                       JSR CODE_01F295                     ;; 01F28B : 20 95 F2    ;
@@ -14104,7 +14104,7 @@ CODE_01F295:          JSR CODE_018EEF                     ;; 01F295 : 20 EF 8E  
                       PHX                                 ;; 01F2B8 : DA          ;
                       LDA.W $157C,X                       ;; 01F2B9 : BD 7C 15    ;
                       LSR A                               ;; 01F2BC : 4A          ;
-                      LDX.B $00                           ;; 01F2BD : A6 00       ;
+                      LDX.B !_0                           ;; 01F2BD : A6 00       ;
                       LDA.W DATA_01F2D9,X                 ;; 01F2BF : BD D9 F2    ;
                       BCC CODE_01F2C7                     ;; 01F2C2 : 90 03       ;
                       EOR.B #$FF                          ;; 01F2C4 : 49 FF       ;
@@ -14115,7 +14115,7 @@ CODE_01F2C7:          STA.W $1747,Y                       ;; 01F2C7 : 99 47 17  
                       LDA.B #$A0                          ;; 01F2D0 : A9 A0       ;
                       STA.W $176F,Y                       ;; 01F2D2 : 99 6F 17    ;
                       PLX                                 ;; 01F2D5 : FA          ;
-                      DEC.B $00                           ;; 01F2D6 : C6 00       ;
+                      DEC.B !_0                           ;; 01F2D6 : C6 00       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -14205,7 +14205,7 @@ CODE_01F373:          LDA.B #$00                          ;; 01F373 : A9 00     
                       STA.W $1564,X                       ;; 01F37A : 9D 64 15    ;
                       LDA.B #$FF                          ;; 01F37D : A9 FF       ;
                       STA.W $160E,X                       ;; 01F37F : 9D 0E 16    ;
-                      STY.B $00                           ;; 01F382 : 84 00       ;
+                      STY.B !_0                           ;; 01F382 : 84 00       ;
                       LDA.W $009E,Y                       ;; 01F384 : B9 9E 00    ;
                       CMP.B #$9D                          ;; 01F387 : C9 9D       ;
                       BNE CODE_01F39F                     ;; 01F389 : D0 14       ;
@@ -14230,10 +14230,10 @@ CODE_01F39F:          LDA.W $009E,Y                       ;; 01F39F : B9 9E 00  
                       AND.B #$03                          ;; 01F3AF : 29 03       ;
                       TAY                                 ;; 01F3B1 : A8          ;
                       LDA.W ChangingItemSprite,Y          ;; 01F3B2 : B9 13 C3    ;
-                      LDY.B $00                           ;; 01F3B5 : A4 00       ;
+                      LDY.B !_0                           ;; 01F3B5 : A4 00       ;
                       STA.W $009E,Y                       ;; 01F3B7 : 99 9E 00    ;
 CODE_01F3BA:          PHA                                 ;; 01F3BA : 48          ;
-                      LDY.B $00                           ;; 01F3BB : A4 00       ;
+                      LDY.B !_0                           ;; 01F3BB : A4 00       ;
                       LDA.W $167A,Y                       ;; 01F3BD : B9 7A 16    ;
                       ASL A                               ;; 01F3C0 : 0A          ;
                       ASL A                               ;; 01F3C1 : 0A          ;
@@ -14280,8 +14280,8 @@ CODE_01F3FE:          LDA.W $15A0,X                       ;; 01F3FE : BD A0 15  
                       CLC                                 ;; 01F412 : 18          ;
                       ADC.B $D8,X                         ;; 01F413 : 75 D8       ;
                       SEC                                 ;; 01F415 : 38          ;
-                      SBC.B $1C                           ;; 01F416 : E5 1C       ;
-                      STA.B $01                           ;; 01F418 : 85 01       ;
+                      SBC.B !Layer1YPos                   ;; 01F416 : E5 1C       ;
+                      STA.B !_1                           ;; 01F418 : 85 01       ;
                       LDA.W $157C,X                       ;; 01F41A : BD 7C 15    ;
                       BNE CODE_01F424                     ;; 01F41D : D0 05       ;
                       TYA                                 ;; 01F41F : 98          ;
@@ -14289,13 +14289,13 @@ CODE_01F3FE:          LDA.W $15A0,X                       ;; 01F3FE : BD A0 15  
                       ADC.B #$08                          ;; 01F421 : 69 08       ;
                       TAY                                 ;; 01F423 : A8          ;
 CODE_01F424:          LDA.W DATA_01F60A,Y                 ;; 01F424 : B9 0A F6    ;
-                      STA.B $0D                           ;; 01F427 : 85 0D       ;
+                      STA.B !_D                           ;; 01F427 : 85 0D       ;
                       LDA.B $E4,X                         ;; 01F429 : B5 E4       ;
                       SEC                                 ;; 01F42B : 38          ;
-                      SBC.B $1A                           ;; 01F42C : E5 1A       ;
+                      SBC.B !Layer1XPos                   ;; 01F42C : E5 1A       ;
                       CLC                                 ;; 01F42E : 18          ;
-                      ADC.B $0D                           ;; 01F42F : 65 0D       ;
-                      STA.B $00                           ;; 01F431 : 85 00       ;
+                      ADC.B !_D                           ;; 01F42F : 65 0D       ;
+                      STA.B !_0                           ;; 01F431 : 85 00       ;
                       LDA.W $157C,X                       ;; 01F433 : BD 7C 15    ;
                       BNE CODE_01F43C                     ;; 01F436 : D0 04       ;
                       BCS Return01F3FD                    ;; 01F438 : B0 C3       ;
@@ -14316,36 +14316,36 @@ CODE_01F43E:          LDA.W $151C,X                       ;; 01F43E : BD 1C 15  
                       NOP                                 ;; 01F452 : EA          ;
                       NOP                                 ;; 01F453 : EA          ;
                       LDA.W $157C,X                       ;; 01F454 : BD 7C 15    ;
-                      STA.B $07                           ;; 01F457 : 85 07       ;
+                      STA.B !_7                           ;; 01F457 : 85 07       ;
                       LSR A                               ;; 01F459 : 4A          ;
                       LDA.W $4215                         ;; 01F45A : AD 15 42    ; Quotient of Divide Result (High Byte)
                       BCC CODE_01F462                     ;; 01F45D : 90 03       ;
                       EOR.B #$FF                          ;; 01F45F : 49 FF       ;
                       INC A                               ;; 01F461 : 1A          ;
-CODE_01F462:          STA.B $05                           ;; 01F462 : 85 05       ;
+CODE_01F462:          STA.B !_5                           ;; 01F462 : 85 05       ;
                       LDA.B #$04                          ;; 01F464 : A9 04       ;
-                      STA.B $06                           ;; 01F466 : 85 06       ;
+                      STA.B !_6                           ;; 01F466 : 85 06       ;
                       LDY.B #$0C                          ;; 01F468 : A0 0C       ;
-CODE_01F46A:          LDA.B $00                           ;; 01F46A : A5 00       ;
+CODE_01F46A:          LDA.B !_0                           ;; 01F46A : A5 00       ;
                       STA.W $0200,Y                       ;; 01F46C : 99 00 02    ;
                       CLC                                 ;; 01F46F : 18          ;
-                      ADC.B $05                           ;; 01F470 : 65 05       ;
-                      STA.B $00                           ;; 01F472 : 85 00       ;
-                      LDA.B $05                           ;; 01F474 : A5 05       ;
+                      ADC.B !_5                           ;; 01F470 : 65 05       ;
+                      STA.B !_0                           ;; 01F472 : 85 00       ;
+                      LDA.B !_5                           ;; 01F474 : A5 05       ;
                       BPL CODE_01F47C                     ;; 01F476 : 10 04       ;
                       BCC Return01F4B1                    ;; 01F478 : 90 37       ;
                       BRA CODE_01F47E                     ;; 01F47A : 80 02       ;
                                                           ;;                      ;
 CODE_01F47C:          BCS Return01F4B1                    ;; 01F47C : B0 33       ;
-CODE_01F47E:          LDA.B $01                           ;; 01F47E : A5 01       ;
+CODE_01F47E:          LDA.B !_1                           ;; 01F47E : A5 01       ;
                       STA.W $0201,Y                       ;; 01F480 : 99 01 02    ;
-                      LDA.B $06                           ;; 01F483 : A5 06       ;
+                      LDA.B !_6                           ;; 01F483 : A5 06       ;
                       CMP.B #$01                          ;; 01F485 : C9 01       ;
                       LDA.B #$76                          ;; 01F487 : A9 76       ;
                       BCS CODE_01F48D                     ;; 01F489 : B0 02       ;
                       LDA.B #$66                          ;; 01F48B : A9 66       ;
 CODE_01F48D:          STA.W $0202,Y                       ;; 01F48D : 99 02 02    ;
-                      LDA.B $07                           ;; 01F490 : A5 07       ;
+                      LDA.B !_7                           ;; 01F490 : A5 07       ;
                       LSR A                               ;; 01F492 : 4A          ;
                       LDA.B #$09                          ;; 01F493 : A9 09       ;
                       BCS CODE_01F499                     ;; 01F495 : B0 02       ;
@@ -14364,14 +14364,14 @@ CODE_01F499:          ORA.B $64                           ;; 01F499 : 05 64     
                       INY                                 ;; 01F4AA : C8          ;
                       INY                                 ;; 01F4AB : C8          ;
                       INY                                 ;; 01F4AC : C8          ;
-                      DEC.B $06                           ;; 01F4AD : C6 06       ;
+                      DEC.B !_6                           ;; 01F4AD : C6 06       ;
                       BPL CODE_01F46A                     ;; 01F4AF : 10 B9       ;
 Return01F4B1:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01F4B2:          LDA.W $160E,X                       ;; 01F4B2 : BD 0E 16    ;
                       BMI CODE_01F524                     ;; 01F4B5 : 30 6D       ;
                       LDY.B #$00                          ;; 01F4B7 : A0 00       ;
-                      LDA.B $0D                           ;; 01F4B9 : A5 0D       ;
+                      LDA.B !_D                           ;; 01F4B9 : A5 0D       ;
                       BMI CODE_01F4C3                     ;; 01F4BB : 30 06       ;
                       CLC                                 ;; 01F4BD : 18          ;
                       ADC.W $151C,X                       ;; 01F4BE : 7D 1C 15    ;
@@ -14381,7 +14381,7 @@ CODE_01F4C3:          LDA.W $151C,X                       ;; 01F4C3 : BD 1C 15  
                       EOR.B #$FF                          ;; 01F4C6 : 49 FF       ;
                       INC A                               ;; 01F4C8 : 1A          ;
                       CLC                                 ;; 01F4C9 : 18          ;
-                      ADC.B $0D                           ;; 01F4CA : 65 0D       ;
+                      ADC.B !_D                           ;; 01F4CA : 65 0D       ;
 CODE_01F4CC:          SEC                                 ;; 01F4CC : 38          ;
                       SBC.B #$04                          ;; 01F4CD : E9 04       ;
                       BPL CODE_01F4D2                     ;; 01F4CF : 10 01       ;
@@ -14397,7 +14397,7 @@ CODE_01F4D2:          PHY                                 ;; 01F4D2 : 5A        
                       LDY.W $160E,X                       ;; 01F4E1 : BC 0E 16    ;
                       STA.W $14E0,Y                       ;; 01F4E4 : 99 E0 14    ;
                       LDA.B #$FC                          ;; 01F4E7 : A9 FC       ;
-                      STA.B $00                           ;; 01F4E9 : 85 00       ;
+                      STA.B !_0                           ;; 01F4E9 : 85 00       ;
                       LDA.W $1662,Y                       ;; 01F4EB : B9 62 16    ;
                       AND.B #$40                          ;; 01F4EE : 29 40       ;
                       BNE CODE_01F4FD                     ;; 01F4F0 : D0 0B       ;
@@ -14405,18 +14405,18 @@ CODE_01F4D2:          PHY                                 ;; 01F4D2 : 5A        
                       AND.B #$20                          ;; 01F4F5 : 29 20       ;  | is NOT set 
                       BEQ CODE_01F4FD                     ;; 01F4F7 : F0 04       ; / 
                       LDA.B #$F8                          ;; 01F4F9 : A9 F8       ;
-                      STA.B $00                           ;; 01F4FB : 85 00       ;
-CODE_01F4FD:          STZ.B $01                           ;; 01F4FD : 64 01       ;
-                      LDA.B $00                           ;; 01F4FF : A5 00       ;
+                      STA.B !_0                           ;; 01F4FB : 85 00       ;
+CODE_01F4FD:          STZ.B !_1                           ;; 01F4FD : 64 01       ;
+                      LDA.B !_0                           ;; 01F4FF : A5 00       ;
                       CLC                                 ;; 01F501 : 18          ;
                       ADC.W $185E                         ;; 01F502 : 6D 5E 18    ;
                       BPL CODE_01F509                     ;; 01F505 : 10 02       ;
-                      DEC.B $01                           ;; 01F507 : C6 01       ;
+                      DEC.B !_1                           ;; 01F507 : C6 01       ;
 CODE_01F509:          CLC                                 ;; 01F509 : 18          ;
                       ADC.B $D8,X                         ;; 01F50A : 75 D8       ;
                       STA.W $00D8,Y                       ;; 01F50C : 99 D8 00    ;
                       LDA.W $14D4,X                       ;; 01F50F : BD D4 14    ;
-                      ADC.B $01                           ;; 01F512 : 65 01       ;
+                      ADC.B !_1                           ;; 01F512 : 65 01       ;
                       STA.W $14D4,Y                       ;; 01F514 : 99 D4 14    ;
                       LDA.B #$00                          ;; 01F517 : A9 00       ;
                       STA.W $00AA,Y                       ;; 01F519 : 99 AA 00    ;
@@ -14427,7 +14427,7 @@ CODE_01F509:          CLC                                 ;; 01F509 : 18        
                                                           ;;                      ;
 CODE_01F524:          PHY                                 ;; 01F524 : 5A          ;
                       LDY.B #$00                          ;; 01F525 : A0 00       ;
-                      LDA.B $0D                           ;; 01F527 : A5 0D       ;
+                      LDA.B !_D                           ;; 01F527 : A5 0D       ;
                       BMI CODE_01F531                     ;; 01F529 : 30 06       ;
                       CLC                                 ;; 01F52B : 18          ;
                       ADC.W $151C,X                       ;; 01F52C : 7D 1C 15    ;
@@ -14437,31 +14437,31 @@ CODE_01F531:          LDA.W $151C,X                       ;; 01F531 : BD 1C 15  
                       EOR.B #$FF                          ;; 01F534 : 49 FF       ;
                       INC A                               ;; 01F536 : 1A          ;
                       CLC                                 ;; 01F537 : 18          ;
-                      ADC.B $0D                           ;; 01F538 : 65 0D       ;
+                      ADC.B !_D                           ;; 01F538 : 65 0D       ;
 CODE_01F53A:          CLC                                 ;; 01F53A : 18          ;
                       ADC.B #$00                          ;; 01F53B : 69 00       ;
                       BPL CODE_01F540                     ;; 01F53D : 10 01       ;
                       DEY                                 ;; 01F53F : 88          ;
 CODE_01F540:          CLC                                 ;; 01F540 : 18          ;
                       ADC.B $E4,X                         ;; 01F541 : 75 E4       ;
-                      STA.B $00                           ;; 01F543 : 85 00       ;
+                      STA.B !_0                           ;; 01F543 : 85 00       ;
                       TYA                                 ;; 01F545 : 98          ;
                       ADC.W $14E0,X                       ;; 01F546 : 7D E0 14    ;
-                      STA.B $08                           ;; 01F549 : 85 08       ;
+                      STA.B !_8                           ;; 01F549 : 85 08       ;
                       PLY                                 ;; 01F54B : 7A          ;
                       LDA.W $185E                         ;; 01F54C : AD 5E 18    ;
                       CLC                                 ;; 01F54F : 18          ;
                       ADC.B #$02                          ;; 01F550 : 69 02       ;
                       CLC                                 ;; 01F552 : 18          ;
                       ADC.B $D8,X                         ;; 01F553 : 75 D8       ;
-                      STA.B $01                           ;; 01F555 : 85 01       ;
+                      STA.B !_1                           ;; 01F555 : 85 01       ;
                       LDA.W $14D4,X                       ;; 01F557 : BD D4 14    ;
                       ADC.B #$00                          ;; 01F55A : 69 00       ;
-                      STA.B $09                           ;; 01F55C : 85 09       ;
+                      STA.B !_9                           ;; 01F55C : 85 09       ;
                       LDA.B #$08                          ;; 01F55E : A9 08       ;
-                      STA.B $02                           ;; 01F560 : 85 02       ;
+                      STA.B !_2                           ;; 01F560 : 85 02       ;
                       LDA.B #$04                          ;; 01F562 : A9 04       ;
-                      STA.B $03                           ;; 01F564 : 85 03       ;
+                      STA.B !_3                           ;; 01F564 : 85 03       ;
                       LDY.B #$0B                          ;; 01F566 : A0 0B       ; Loop over spites: 
 CODE_01F568:          STY.W $1695                         ;; 01F568 : 8C 95 16    ;
                       CPY.W $15E9                         ;; 01F56B : CC E9 15    ;
@@ -14498,7 +14498,7 @@ EatSprite:            LDA.W $009E,Y                       ;; ?QPWZ? : B9 9E 00  
                       CMP.B #$70                          ;; 01F5AA : C9 70       ;  | 
                       BNE CODE_01F5FB                     ;; 01F5AC : D0 4D       ; / 
                       STY.W $185E                         ;; ?QPWZ? : 8C 5E 18    ; $185E = Index of sprite being eaten 
-                      LDA.B $01                           ;; 01F5B1 : A5 01       ;
+                      LDA.B !_1                           ;; 01F5B1 : A5 01       ;
                       SEC                                 ;; 01F5B3 : 38          ;
                       SBC.W $00D8,Y                       ;; 01F5B4 : F9 D8 00    ;
                       CLC                                 ;; 01F5B7 : 18          ;
@@ -14513,20 +14513,20 @@ EatSprite:            LDA.W $009E,Y                       ;; ?QPWZ? : B9 9E 00  
                       STA.W $14C8,Y                       ;; 01F5C9 : 99 C8 14    ; / 
                       LDA.B #$70                          ;; 01F5CC : A9 70       ; \ Sprite = Pokey 
                       STA.W $009E,Y                       ;; 01F5CE : 99 9E 00    ; / 
-                      LDA.B $00                           ;; 01F5D1 : A5 00       ;
+                      LDA.B !_0                           ;; 01F5D1 : A5 00       ;
                       STA.W $00E4,Y                       ;; 01F5D3 : 99 E4 00    ;
-                      LDA.B $08                           ;; 01F5D6 : A5 08       ;
+                      LDA.B !_8                           ;; 01F5D6 : A5 08       ;
                       STA.W $14E0,Y                       ;; 01F5D8 : 99 E0 14    ;
-                      LDA.B $01                           ;; 01F5DB : A5 01       ;
+                      LDA.B !_1                           ;; 01F5DB : A5 01       ;
                       STA.W $00D8,Y                       ;; 01F5DD : 99 D8 00    ;
-                      LDA.B $09                           ;; 01F5E0 : A5 09       ;
+                      LDA.B !_9                           ;; 01F5E0 : A5 09       ;
                       STA.W $14D4,Y                       ;; 01F5E2 : 99 D4 14    ;
                       PHX                                 ;; 01F5E5 : DA          ;
                       TYX                                 ;; 01F5E6 : BB          ; X = Index of new sprite 
                       JSL InitSpriteTables                ;; 01F5E7 : 22 D2 F7 07 ; Reset sprite tables 
                       LDX.W $185E                         ;; 01F5EB : AE 5E 18    ; X = Index of sprite being eaten 
                       LDA.B $C2,X                         ;; 01F5EE : B5 C2       ;
-                      AND.B $0D                           ;; 01F5F0 : 25 0D       ;
+                      AND.B !_D                           ;; 01F5F0 : 25 0D       ;
                       STA.W $00C2,Y                       ;; 01F5F2 : 99 C2 00    ; y = index of new sptr here?? 
                       LDA.B #$01                          ;; 01F5F5 : A9 01       ;
                       STA.W $1534,Y                       ;; 01F5F7 : 99 34 15    ;
@@ -14550,7 +14550,7 @@ CODE_01F622:          LDA.W $163E,X                       ;; 01F622 : BD 3E 16  
                       LDY.B #$0B                          ;; 01F629 : A0 0B       ;
 CODE_01F62B:          STY.W $1695                         ;; 01F62B : 8C 95 16    ;
                       TYA                                 ;; 01F62E : 98          ;
-                      EOR.B $13                           ;; 01F62F : 45 13       ;
+                      EOR.B !TrueFrame                    ;; 01F62F : 45 13       ;
                       AND.B #$01                          ;; 01F631 : 29 01       ;
                       BNE CODE_01F661                     ;; 01F633 : D0 2C       ;
                       TYA                                 ;; 01F635 : 98          ;
@@ -14640,10 +14640,10 @@ CODE_01F6DD:          CMP.B #$4E                          ;; 01F6DD : C9 4E     
 CODE_01F6E5:          LDA.W $00C2,Y                       ;; 01F6E5 : B9 C2 00    ;
                       CMP.B #$02                          ;; 01F6E8 : C9 02       ;
                       BCC Return01F6DC                    ;; 01F6EA : 90 F0       ;
-CODE_01F6EC:          LDA.B $05                           ;; 01F6EC : A5 05       ;
+CODE_01F6EC:          LDA.B !_5                           ;; 01F6EC : A5 05       ;
                       CLC                                 ;; 01F6EE : 18          ;
                       ADC.B #$0D                          ;; 01F6EF : 69 0D       ;
-                      CMP.B $01                           ;; 01F6F1 : C5 01       ;
+                      CMP.B !_1                           ;; 01F6F1 : C5 01       ;
                       BMI Return01F74B                    ;; 01F6F3 : 30 56       ;
                       LDA.W $14C8,Y                       ;; 01F6F5 : B9 C8 14    ;
                       CMP.B #$0A                          ;; 01F6F8 : C9 0A       ;
@@ -14651,13 +14651,13 @@ CODE_01F6EC:          LDA.B $05                           ;; 01F6EC : A5 05     
                       PHX                                 ;; 01F6FC : DA          ;
                       TYX                                 ;; 01F6FD : BB          ;
                       JSR SubHorizPos                     ;; 01F6FE : 20 30 AD    ;
-                      STY.B $00                           ;; 01F701 : 84 00       ;
+                      STY.B !_0                           ;; 01F701 : 84 00       ;
                       LDA.B $B6,X                         ;; 01F703 : B5 B6       ;
                       PLX                                 ;; 01F705 : FA          ;
                       ASL A                               ;; 01F706 : 0A          ;
                       ROL A                               ;; 01F707 : 2A          ;
                       AND.B #$01                          ;; 01F708 : 29 01       ;
-                      CMP.B $00                           ;; 01F70A : C5 00       ;
+                      CMP.B !_0                           ;; 01F70A : C5 00       ;
                       BNE Return01F74B                    ;; 01F70C : D0 3D       ;
 CODE_01F70E:          LDA.W $1490                         ;; 01F70E : AD 90 14    ; \ Branch if Mario has star 
                       BNE Return01F74B                    ;; 01F711 : D0 38       ; / 
@@ -14703,7 +14703,7 @@ YoshiEgg:             LDA.W $187B,X                       ;; ?QPWZ? : BD 7B 18  
                       JSR IsSprOffScreen                  ;; 01F769 : 20 CB 80    ;
                       BNE CODE_01F78D                     ;; 01F76C : D0 1F       ;
                       JSR SubHorizPos                     ;; 01F76E : 20 30 AD    ;
-                      LDA.B $0F                           ;; 01F771 : A5 0F       ;
+                      LDA.B !_F                           ;; 01F771 : A5 0F       ;
                       CLC                                 ;; 01F773 : 18          ;
                       ADC.B #$20                          ;; 01F774 : 69 20       ;
                       CMP.B #$40                          ;; 01F776 : C9 40       ;
@@ -14734,10 +14734,10 @@ CODE_01F799:          LDA.W $1540,X                       ;; 01F799 : BD 40 15  
                       JSR SubSprGfx2Entry1                ;; 01F7AA : 20 0D 9F    ;
                       LDY.W $15EA,X                       ;; 01F7AD : BC EA 15    ; Y = Index into sprite OAM 
                       PLA                                 ;; 01F7B0 : 68          ;
-                      STA.B $00                           ;; 01F7B1 : 85 00       ;
+                      STA.B !_0                           ;; 01F7B1 : 85 00       ;
                       LDA.W $0303,Y                       ;; 01F7B3 : B9 03 03    ;
                       AND.B #$FE                          ;; 01F7B6 : 29 FE       ;
-                      ORA.B $00                           ;; 01F7B8 : 05 00       ;
+                      ORA.B !_0                           ;; 01F7B8 : 05 00       ;
                       STA.W $0303,Y                       ;; 01F7BA : 99 03 03    ;
                       PLA                                 ;; 01F7BD : 68          ;
                       STA.W $0302,Y                       ;; 01F7BE : 99 02 03    ;
@@ -14749,11 +14749,11 @@ CODE_01F7C2:          JSR CODE_01F7C8                     ;; 01F7C2 : 20 C8 F7  
 CODE_01F7C8:          JSR IsSprOffScreen                  ;; 01F7C8 : 20 CB 80    ;
                       BNE Return01F82C                    ;; 01F7CB : D0 5F       ;
                       LDA.B $E4,X                         ;; 01F7CD : B5 E4       ;
-                      STA.B $00                           ;; 01F7CF : 85 00       ;
+                      STA.B !_0                           ;; 01F7CF : 85 00       ;
                       LDA.B $D8,X                         ;; 01F7D1 : B5 D8       ;
-                      STA.B $02                           ;; 01F7D3 : 85 02       ;
+                      STA.B !_2                           ;; 01F7D3 : 85 02       ;
                       LDA.W $14D4,X                       ;; 01F7D5 : BD D4 14    ;
-                      STA.B $03                           ;; 01F7D8 : 85 03       ;
+                      STA.B !_3                           ;; 01F7D8 : 85 03       ;
                       PHX                                 ;; 01F7DA : DA          ;
                       LDY.B #$03                          ;; 01F7DB : A0 03       ;
                       LDX.B #$0B                          ;; 01F7DD : A2 0B       ;
@@ -14768,15 +14768,15 @@ CODE_01F7E4:          DEX                                 ;; 01F7E4 : CA        
 CODE_01F7F1:          LDX.W $185D                         ;; 01F7F1 : AE 5D 18    ;
 CODE_01F7F4:          LDA.B #$03                          ;; 01F7F4 : A9 03       ;
                       STA.W $17F0,X                       ;; 01F7F6 : 9D F0 17    ;
-                      LDA.B $00                           ;; 01F7F9 : A5 00       ;
+                      LDA.B !_0                           ;; 01F7F9 : A5 00       ;
                       CLC                                 ;; 01F7FB : 18          ;
                       ADC.W DATA_01F831,Y                 ;; 01F7FC : 79 31 F8    ;
                       STA.W $1808,X                       ;; 01F7FF : 9D 08 18    ;
-                      LDA.B $02                           ;; 01F802 : A5 02       ;
+                      LDA.B !_2                           ;; 01F802 : A5 02       ;
                       CLC                                 ;; 01F804 : 18          ;
                       ADC.W DATA_01F82D,Y                 ;; 01F805 : 79 2D F8    ;
                       STA.W $17FC,X                       ;; 01F808 : 9D FC 17    ;
-                      LDA.B $03                           ;; 01F80B : A5 03       ;
+                      LDA.B !_3                           ;; 01F80B : A5 03       ;
                       STA.W $1814,X                       ;; 01F80D : 9D 14 18    ;
                       LDA.W DATA_01F835,Y                 ;; 01F810 : B9 35 F8    ;
                       STA.W $1820,X                       ;; 01F813 : 9D 20 18    ;
@@ -14818,10 +14818,10 @@ CODE_01F83D:          LDA.W $151C,X                       ;; 01F83D : BD 1C 15  
                       PHA                                 ;; 01F854 : 48          ;
                       JSL InitSpriteTables                ;; 01F855 : 22 D2 F7 07 ;
                       PLA                                 ;; 01F859 : 68          ;
-                      STA.B $00                           ;; 01F85A : 85 00       ;
+                      STA.B !_0                           ;; 01F85A : 85 00       ;
                       LDA.W $15F6,X                       ;; 01F85C : BD F6 15    ;
                       AND.B #$F1                          ;; 01F85F : 29 F1       ;
-                      ORA.B $00                           ;; 01F861 : 05 00       ;
+                      ORA.B !_0                           ;; 01F861 : 05 00       ;
                       STA.W $15F6,X                       ;; 01F863 : 9D F6 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -14905,7 +14905,7 @@ CODE_01F8F2:          JSR SubHorizPos                     ;; 01F8F2 : 20 30 AD  
                       STA.W $1540,X                       ;; 01F8FC : 9D 40 15    ;
                       LDA.B $C2,X                         ;; 01F8FF : B5 C2       ;
                       BEQ CODE_01F90C                     ;; 01F901 : F0 09       ;
-                      LDA.B $0F                           ;; 01F903 : A5 0F       ;
+                      LDA.B !_F                           ;; 01F903 : A5 0F       ;
                       CLC                                 ;; 01F905 : 18          ;
                       ADC.B #$0A                          ;; 01F906 : 69 0A       ;
                       CMP.B #$14                          ;; 01F908 : C9 14       ;
@@ -14914,7 +14914,7 @@ CODE_01F90C:          STZ.B $C2,X                         ;; 01F90C : 74 C2     
                       CPY.B $76                           ;; 01F90E : C4 76       ;
                       BNE CODE_01F914                     ;; 01F910 : D0 02       ;
                       INC.B $C2,X                         ;; 01F912 : F6 C2       ;
-CODE_01F914:          LDA.B $0F                           ;; 01F914 : A5 0F       ;
+CODE_01F914:          LDA.B !_F                           ;; 01F914 : A5 0F       ;
                       CLC                                 ;; 01F916 : 18          ;
                       ADC.B #$0A                          ;; 01F917 : 69 0A       ;
                       CMP.B #$14                          ;; 01F919 : C9 14       ;
@@ -14940,7 +14940,7 @@ CODE_01F92F:          STZ.W $1602,X                       ;; 01F92F : 9E 02 16  
                       CPY.B #$AF                          ;; 01F943 : C0 AF       ;
                       BEQ CODE_01F948                     ;; 01F945 : F0 01       ;
                       INC A                               ;; 01F947 : 1A          ;
-CODE_01F948:          AND.B $13                           ;; 01F948 : 25 13       ;
+CODE_01F948:          AND.B !TrueFrame                    ;; 01F948 : 25 13       ;
                       BNE CODE_01F96F                     ;; 01F94A : D0 23       ;
                       INC.W $1570,X                       ;; 01F94C : FE 70 15    ;
                       LDA.W $1570,X                       ;; 01F94F : BD 70 15    ;
@@ -14977,7 +14977,7 @@ CODE_01F97F:          LSR A                               ;; 01F97F : 4A        
                       LDA.W DATA_01F8D1,Y                 ;; 01F983 : B9 D1 F8    ;
                       STA.W $1602,X                       ;; 01F986 : 9D 02 16    ;
 CODE_01F989:          STZ.W $1570,X                       ;; 01F989 : 9E 70 15    ;
-                      LDA.B $13                           ;; 01F98C : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01F98C : A5 13       ;
                       AND.B #$07                          ;; 01F98E : 29 07       ;
                       BNE CODE_01F9C8                     ;; 01F990 : D0 36       ;
                       JSR SubHorizPos                     ;; 01F992 : 20 30 AD    ;
@@ -15086,9 +15086,9 @@ DATA_01FA56:          db $10,$F0                          ;; 01FA56             
 IggysBall:            JSR SubSprGfx2Entry1                ;; ?QPWZ? : 20 0D 9F    ;
                       LDY.W $157C,X                       ;; 01FA5B : BC 7C 15    ;
                       LDA.W DATA_01FA4C,Y                 ;; 01FA5E : B9 4C FA    ;
-                      STA.B $00                           ;; 01FA61 : 85 00       ;
+                      STA.B !_0                           ;; 01FA61 : 85 00       ;
                       LDY.W $15EA,X                       ;; 01FA63 : BC EA 15    ; Y = Index into sprite OAM 
-                      LDA.B $14                           ;; 01FA66 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01FA66 : A5 14       ;
                       LSR A                               ;; 01FA68 : 4A          ;
                       LSR A                               ;; 01FA69 : 4A          ;
                       AND.B #$03                          ;; 01FA6A : 29 03       ;
@@ -15097,7 +15097,7 @@ IggysBall:            JSR SubSprGfx2Entry1                ;; ?QPWZ? : 20 0D 9F  
                       LDA.W IggyBallTiles,X               ;; 01FA6E : BD 4E FA    ;
                       STA.W $0302,Y                       ;; 01FA71 : 99 02 03    ;
                       LDA.W DATA_01FA52,X                 ;; 01FA74 : BD 52 FA    ;
-                      EOR.B $00                           ;; 01FA77 : 45 00       ;
+                      EOR.B !_0                           ;; 01FA77 : 45 00       ;
                       STA.W $0303,Y                       ;; 01FA79 : 99 03 03    ;
                       PLX                                 ;; 01FA7C : FA          ;
                       LDA.B $9D                           ;; 01FA7D : A5 9D       ; \ Branch if sprites locked 
@@ -15150,12 +15150,12 @@ PlatformKoopaKids:    LDA.B $9D                           ;; ?QPWZ? : A5 9D     
                       ORA.W $154C,X                       ;; 01FAF7 : 1D 4C 15    ;
                       BNE CODE_01FB1A                     ;; 01FAFA : D0 1E       ;
                       JSR SubHorizPos                     ;; 01FAFC : 20 30 AD    ;
-                      STY.B $00                           ;; 01FAFF : 84 00       ;
-                      LDA.B $36                           ;; 01FB01 : A5 36       ;
+                      STY.B !_0                           ;; 01FAFF : 84 00       ;
+                      LDA.B !Mode7Angle                   ;; 01FB01 : A5 36       ;
                       ASL A                               ;; 01FB03 : 0A          ;
                       ROL A                               ;; 01FB04 : 2A          ;
                       AND.B #$01                          ;; 01FB05 : 29 01       ;
-                      CMP.B $00                           ;; 01FB07 : C5 00       ;
+                      CMP.B !_0                           ;; 01FB07 : C5 00       ;
                       BNE CODE_01FB1A                     ;; 01FB09 : D0 0F       ;
                       INC.W $1534,X                       ;; 01FB0B : FE 34 15    ;
                       LDA.W $1534,X                       ;; 01FB0E : BD 34 15    ;
@@ -15207,7 +15207,7 @@ CODE_01FB6E:          LDA.B $E4,X                         ;; 01FB6E : B5 E4     
                       JMP CODE_01FC0E                     ;; 01FB78 : 4C 0E FC    ;
                                                           ;;                      ;
 CODE_01FB7B:          JSR SubSprXPosNoGrvty               ;; 01FB7B : 20 CC AB    ;
-                      LDA.B $13                           ;; 01FB7E : A5 13       ;
+                      LDA.B !TrueFrame                    ;; 01FB7E : A5 13       ;
                       AND.B #$1F                          ;; 01FB80 : 29 1F       ;
                       ORA.W $1564,X                       ;; 01FB82 : 1D 64 15    ;
                       BNE CODE_01FB99                     ;; 01FB85 : D0 12       ;
@@ -15221,7 +15221,7 @@ CODE_01FB7B:          JSR SubSprXPosNoGrvty               ;; 01FB7B : 20 CC AB  
                       STA.W $15AC,X                       ;; 01FB96 : 9D AC 15    ;
 CODE_01FB99:          STZ.B $AA,X                         ;; 01FB99 : 74 AA       ; Sprite Y Speed = 0 
                       STZ.B $B6,X                         ;; 01FB9B : 74 B6       ; Sprite X Speed = 0 
-                      LDA.B $36                           ;; 01FB9D : A5 36       ;
+                      LDA.B !Mode7Angle                   ;; 01FB9D : A5 36       ;
                       BPL CODE_01FBA4                     ;; 01FB9F : 10 03       ;
                       CLC                                 ;; 01FBA1 : 18          ;
                       ADC.B #$08                          ;; 01FBA2 : 69 08       ;
@@ -15230,14 +15230,14 @@ CODE_01FBA4:          LSR A                               ;; 01FBA4 : 4A        
                       LSR A                               ;; 01FBA6 : 4A          ;
                       LSR A                               ;; 01FBA7 : 4A          ;
                       TAY                                 ;; 01FBA8 : A8          ;
-                      STY.B $00                           ;; 01FBA9 : 84 00       ;
+                      STY.B !_0                           ;; 01FBA9 : 84 00       ;
                       EOR.B #$FF                          ;; 01FBAB : 49 FF       ;
                       INC A                               ;; 01FBAD : 1A          ;
                       AND.B #$0F                          ;; 01FBAE : 29 0F       ;
-                      STA.B $01                           ;; 01FBB0 : 85 01       ;
+                      STA.B !_1                           ;; 01FBB0 : 85 01       ;
                       LDA.W $154C,X                       ;; 01FBB2 : BD 4C 15    ;
                       BNE CODE_01FBD9                     ;; 01FBB5 : D0 22       ;
-                      LDA.B $37                           ;; 01FBB7 : A5 37       ;
+                      LDA.B !Mode7Angle+1                 ;; 01FBB7 : A5 37       ;
                       BNE CODE_01FBC9                     ;; 01FBB9 : D0 0E       ;
                       LDA.B $E4,X                         ;; 01FBBB : B5 E4       ;
                       CMP.B #$78                          ;; 01FBBD : C9 78       ;
@@ -15248,7 +15248,7 @@ CODE_01FBA4:          LSR A                               ;; 01FBA4 : 4A        
 CODE_01FBC5:          LDA.B #$01                          ;; 01FBC5 : A9 01       ;
                       BRA CODE_01FBEE                     ;; 01FBC7 : 80 25       ;
                                                           ;;                      ;
-CODE_01FBC9:          LDY.B $01                           ;; 01FBC9 : A4 01       ;
+CODE_01FBC9:          LDY.B !_1                           ;; 01FBC9 : A4 01       ;
                       LDA.B $E4,X                         ;; 01FBCB : B5 E4       ;
                       CMP.B #$78                          ;; 01FBCD : C9 78       ;
                       BCS CODE_01FBD5                     ;; 01FBCF : B0 04       ;
@@ -15258,15 +15258,15 @@ CODE_01FBC9:          LDY.B $01                           ;; 01FBC9 : A4 01     
 CODE_01FBD5:          LDA.B #$FF                          ;; 01FBD5 : A9 FF       ;
                       BRA CODE_01FBEE                     ;; 01FBD7 : 80 15       ;
                                                           ;;                      ;
-CODE_01FBD9:          LDA.B $37                           ;; 01FBD9 : A5 37       ;
+CODE_01FBD9:          LDA.B !Mode7Angle+1                 ;; 01FBD9 : A5 37       ;
                       BNE CODE_01FBE7                     ;; 01FBDB : D0 0A       ;
-                      LDY.B $00                           ;; 01FBDD : A4 00       ;
+                      LDY.B !_0                           ;; 01FBDD : A4 00       ;
                       LDA.W DATA_01FADD,Y                 ;; 01FBDF : B9 DD FA    ;
                       EOR.B #$FF                          ;; 01FBE2 : 49 FF       ;
                       INC A                               ;; 01FBE4 : 1A          ;
                       BRA CODE_01FBEC                     ;; 01FBE5 : 80 05       ;
                                                           ;;                      ;
-CODE_01FBE7:          LDY.B $01                           ;; 01FBE7 : A4 01       ;
+CODE_01FBE7:          LDY.B !_1                           ;; 01FBE7 : A4 01       ;
                       LDA.W DATA_01FADD,Y                 ;; 01FBE9 : B9 DD FA    ;
 CODE_01FBEC:          ASL A                               ;; 01FBEC : 0A          ;
                       ASL A                               ;; 01FBED : 0A          ;
@@ -15345,31 +15345,31 @@ CODE_01FC77:          LDA.W $14B8                         ;; 01FC77 : AD B8 14  
 CODE_01FC84:          LDA.W $14B8                         ;; 01FC84 : AD B8 14    ;
                       SEC                                 ;; 01FC87 : 38          ;
                       SBC.B #$08                          ;; 01FC88 : E9 08       ;
-                      STA.B $00                           ;; 01FC8A : 85 00       ;
+                      STA.B !_0                           ;; 01FC8A : 85 00       ;
                       LDA.W $14BA                         ;; 01FC8C : AD BA 14    ;
                       CLC                                 ;; 01FC8F : 18          ;
                       ADC.B #$60                          ;; 01FC90 : 69 60       ;
-                      STA.B $01                           ;; 01FC92 : 85 01       ;
+                      STA.B !_1                           ;; 01FC92 : 85 01       ;
                       LDA.B #$0F                          ;; 01FC94 : A9 0F       ;
-                      STA.B $02                           ;; 01FC96 : 85 02       ;
+                      STA.B !_2                           ;; 01FC96 : 85 02       ;
                       LDA.B #$0C                          ;; 01FC98 : A9 0C       ;
-                      STA.B $03                           ;; 01FC9A : 85 03       ;
-                      STZ.B $08                           ;; 01FC9C : 64 08       ;
-                      STZ.B $09                           ;; 01FC9E : 64 09       ;
+                      STA.B !_3                           ;; 01FC9A : 85 03       ;
+                      STZ.B !_8                           ;; 01FC9C : 64 08       ;
+                      STZ.B !_9                           ;; 01FC9E : 64 09       ;
                       LDA.B $7E                           ;; 01FCA0 : A5 7E       ;
                       CLC                                 ;; 01FCA2 : 18          ;
                       ADC.B #$02                          ;; 01FCA3 : 69 02       ;
-                      STA.B $04                           ;; 01FCA5 : 85 04       ;
+                      STA.B !_4                           ;; 01FCA5 : 85 04       ;
                       LDA.B $80                           ;; 01FCA7 : A5 80       ;
                       CLC                                 ;; 01FCA9 : 18          ;
                       ADC.B #$10                          ;; 01FCAA : 69 10       ;
-                      STA.B $05                           ;; 01FCAC : 85 05       ;
+                      STA.B !_5                           ;; 01FCAC : 85 05       ;
                       LDA.B #$0C                          ;; 01FCAE : A9 0C       ;
-                      STA.B $06                           ;; 01FCB0 : 85 06       ;
+                      STA.B !_6                           ;; 01FCB0 : 85 06       ;
                       LDA.B #$0E                          ;; 01FCB2 : A9 0E       ;
-                      STA.B $07                           ;; 01FCB4 : 85 07       ;
-                      STZ.B $0A                           ;; 01FCB6 : 64 0A       ;
-                      STZ.B $0B                           ;; 01FCB8 : 64 0B       ;
+                      STA.B !_7                           ;; 01FCB4 : 85 07       ;
+                      STZ.B !_A                           ;; 01FCB6 : 64 0A       ;
+                      STZ.B !_B                           ;; 01FCB8 : 64 0B       ;
                       JSL CheckForContact                 ;; 01FCBA : 22 2B B7 03 ;
                       BCC CODE_01FD0A                     ;; 01FCBE : 90 4A       ;
                       LDA.W $1558,X                       ;; 01FCC0 : BD 58 15    ;
@@ -15415,17 +15415,17 @@ CODE_01FD0C:          STY.W $1695                         ;; 01FD0C : 8C 95 16  
                       BNE CODE_01FD4A                     ;; 01FD14 : D0 34       ;
                       LDA.W $171F,Y                       ;; 01FD16 : B9 1F 17    ;
                       SEC                                 ;; 01FD19 : 38          ;
-                      SBC.B $1A                           ;; 01FD1A : E5 1A       ;
-                      STA.B $04                           ;; 01FD1C : 85 04       ;
-                      STZ.B $0A                           ;; 01FD1E : 64 0A       ;
+                      SBC.B !Layer1XPos                   ;; 01FD1A : E5 1A       ;
+                      STA.B !_4                           ;; 01FD1C : 85 04       ;
+                      STZ.B !_A                           ;; 01FD1E : 64 0A       ;
                       LDA.W $1715,Y                       ;; 01FD20 : B9 15 17    ;
                       SEC                                 ;; 01FD23 : 38          ;
-                      SBC.B $1C                           ;; 01FD24 : E5 1C       ;
-                      STA.B $05                           ;; 01FD26 : 85 05       ;
-                      STZ.B $0B                           ;; 01FD28 : 64 0B       ;
+                      SBC.B !Layer1YPos                   ;; 01FD24 : E5 1C       ;
+                      STA.B !_5                           ;; 01FD26 : 85 05       ;
+                      STZ.B !_B                           ;; 01FD28 : 64 0B       ;
                       LDA.B #$08                          ;; 01FD2A : A9 08       ;
-                      STA.B $06                           ;; 01FD2C : 85 06       ;
-                      STA.B $07                           ;; 01FD2E : 85 07       ;
+                      STA.B !_6                           ;; 01FD2C : 85 06       ;
+                      STA.B !_7                           ;; 01FD2E : 85 07       ;
                       JSL CheckForContact                 ;; 01FD30 : 22 2B B7 03 ;
                       BCC CODE_01FD4A                     ;; 01FD34 : 90 14       ;
                       LDA.B #$01                          ;; 01FD36 : A9 01       ; \ Extended sprite = Smoke puff 
@@ -15456,21 +15456,21 @@ CODE_01FD50:          LDA.B $E4,X                         ;; 01FD50 : B5 E4     
                       ADC.B #$00                          ;; 01FD6B : 69 00       ;
                       STA.W $14B7                         ;; 01FD6D : 8D B7 14    ;
                       REP #$20                            ;; 01FD70 : C2 20       ; Accum (16 bit) 
-                      LDA.B $36                           ;; 01FD72 : A5 36       ;
+                      LDA.B !Mode7Angle                   ;; 01FD72 : A5 36       ;
                       EOR.W #$01FF                        ;; 01FD74 : 49 FF 01    ;
                       INC A                               ;; 01FD77 : 1A          ;
                       AND.W #$01FF                        ;; 01FD78 : 29 FF 01    ;
-                      STA.B $36                           ;; 01FD7B : 85 36       ;
+                      STA.B !Mode7Angle                   ;; 01FD7B : 85 36       ;
                       SEP #$20                            ;; 01FD7D : E2 20       ; Accum (8 bit) 
                       PHX                                 ;; 01FD7F : DA          ;
                       JSL CODE_01CC9D                     ;; 01FD80 : 22 9D CC 01 ;
                       PLX                                 ;; 01FD84 : FA          ;
                       REP #$20                            ;; 01FD85 : C2 20       ; Accum (16 bit) 
-                      LDA.B $36                           ;; 01FD87 : A5 36       ;
+                      LDA.B !Mode7Angle                   ;; 01FD87 : A5 36       ;
                       EOR.W #$01FF                        ;; 01FD89 : 49 FF 01    ;
                       INC A                               ;; 01FD8C : 1A          ;
                       AND.W #$01FF                        ;; 01FD8D : 29 FF 01    ;
-                      STA.B $36                           ;; 01FD90 : 85 36       ;
+                      STA.B !Mode7Angle                   ;; 01FD90 : 85 36       ;
                       SEP #$20                            ;; 01FD92 : E2 20       ; Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -15550,8 +15550,8 @@ DATA_01FEB7:          db $00,$02,$00,$37,$3B              ;; 01FEB7             
                                                           ;;                      ;
 CODE_01FEBC:          LDY.B $C2,X                         ;; 01FEBC : B4 C2       ;
                       LDA.W DATA_01FEB7,Y                 ;; 01FEBE : B9 B7 FE    ;
-                      STA.B $0D                           ;; 01FEC1 : 85 0D       ;
-                      STY.B $05                           ;; 01FEC3 : 84 05       ;
+                      STA.B !_D                           ;; 01FEC1 : 85 0D       ;
+                      STY.B !_5                           ;; 01FEC3 : 84 05       ;
                       LDY.W $15EA,X                       ;; 01FEC5 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.W $157C,X                       ;; 01FEC8 : BD 7C 15    ;
                       LSR A                               ;; 01FECB : 4A          ;
@@ -15559,20 +15559,20 @@ CODE_01FEBC:          LDY.B $C2,X                         ;; 01FEBC : B4 C2     
                       LSR A                               ;; 01FECD : 4A          ;
                       AND.B #$40                          ;; 01FECE : 29 40       ;
                       EOR.B #$40                          ;; 01FED0 : 49 40       ;
-                      STA.B $02                           ;; 01FED2 : 85 02       ;
+                      STA.B !_2                           ;; 01FED2 : 85 02       ;
                       LDA.W $1602,X                       ;; 01FED4 : BD 02 16    ;
                       ASL A                               ;; 01FED7 : 0A          ;
                       ASL A                               ;; 01FED8 : 0A          ;
-                      STA.B $03                           ;; 01FED9 : 85 03       ;
+                      STA.B !_3                           ;; 01FED9 : 85 03       ;
                       PHX                                 ;; 01FEDB : DA          ;
                       LDX.B #$03                          ;; 01FEDC : A2 03       ;
 CODE_01FEDE:          PHX                                 ;; 01FEDE : DA          ;
                       TXA                                 ;; 01FEDF : 8A          ;
                       CLC                                 ;; 01FEE0 : 18          ;
-                      ADC.B $03                           ;; 01FEE1 : 65 03       ;
+                      ADC.B !_3                           ;; 01FEE1 : 65 03       ;
                       TAX                                 ;; 01FEE3 : AA          ;
                       PHX                                 ;; 01FEE4 : DA          ;
-                      LDA.B $02                           ;; 01FEE5 : A5 02       ;
+                      LDA.B !_2                           ;; 01FEE5 : A5 02       ;
                       BEQ CODE_01FEEE                     ;; 01FEE7 : F0 05       ;
                       TXA                                 ;; 01FEE9 : 8A          ;
                       CLC                                 ;; 01FEEA : 18          ;
@@ -15594,7 +15594,7 @@ CODE_01FEEE:          LDA.W $14B8                         ;; 01FEEE : AD B8 14  
                       LDA.W DATA_01FE83,X                 ;; 01FF09 : BD 83 FE    ;
                       STA.W $0302,Y                       ;; 01FF0C : 99 02 03    ;
                       PHX                                 ;; 01FF0F : DA          ;
-                      LDX.B $05                           ;; 01FF10 : A6 05       ;
+                      LDX.B !_5                           ;; 01FF10 : A6 05       ;
                       CPX.B #$03                          ;; 01FF12 : E0 03       ;
                       BNE CODE_01FF22                     ;; 01FF14 : D0 0C       ;
                       CMP.B #$05                          ;; 01FF16 : C9 05       ;
@@ -15605,10 +15605,10 @@ CODE_01FEEE:          LDA.W $14B8                         ;; 01FEEE : AD B8 14  
                       STA.W $0302,Y                       ;; 01FF1F : 99 02 03    ;
 CODE_01FF22:          LDA.W $0302,Y                       ;; 01FF22 : B9 02 03    ;
                       CMP.B #$4A                          ;; 01FF25 : C9 4A       ;
-                      LDA.B $0D                           ;; 01FF27 : A5 0D       ;
+                      LDA.B !_D                           ;; 01FF27 : A5 0D       ;
                       BCC CODE_01FF2D                     ;; 01FF29 : 90 02       ;
                       LDA.B #$35                          ;; 01FF2B : A9 35       ;  Iggy ball palette 
-CODE_01FF2D:          ORA.B $02                           ;; 01FF2D : 05 02       ;
+CODE_01FF2D:          ORA.B !_2                           ;; 01FF2D : 05 02       ;
                       STA.W $0303,Y                       ;; 01FF2F : 99 03 03    ;
                       PLA                                 ;; 01FF32 : 68          ;
                       AND.B #$03                          ;; 01FF33 : 29 03       ;
@@ -15642,7 +15642,7 @@ DATA_01FF57:          db $00,$00,$40,$00                  ;; 01FF57             
 CODE_01FF5B:          PHX                                 ;; 01FF5B : DA          ;
                       LDY.B $C2,X                         ;; 01FF5C : B4 C2       ;
                       LDA.W DATA_01FEB7,Y                 ;; 01FF5E : B9 B7 FE    ;
-                      STA.B $0D                           ;; 01FF61 : 85 0D       ;
+                      STA.B !_D                           ;; 01FF61 : 85 0D       ;
                       LDY.B #$70                          ;; 01FF63 : A0 70       ;
                       LDA.W $14B8                         ;; 01FF65 : AD B8 14    ;
                       SEC                                 ;; 01FF68 : 38          ;
@@ -15652,7 +15652,7 @@ CODE_01FF5B:          PHX                                 ;; 01FF5B : DA        
                       CLC                                 ;; 01FF71 : 18          ;
                       ADC.B #$60                          ;; 01FF72 : 69 60       ;
                       STA.W $0301,Y                       ;; 01FF74 : 99 01 03    ;
-                      LDA.B $14                           ;; 01FF77 : A5 14       ;
+                      LDA.B !EffFrame                     ;; 01FF77 : A5 14       ;
                       LSR A                               ;; 01FF79 : 4A          ;
                       AND.B #$03                          ;; 01FF7A : 29 03       ;
                       TAX                                 ;; 01FF7C : AA          ;
@@ -15660,7 +15660,7 @@ CODE_01FF5B:          PHX                                 ;; 01FF5B : DA        
                       STA.W $0302,Y                       ;; 01FF80 : 99 02 03    ;
                       LDA.B #$30                          ;; 01FF83 : A9 30       ;
                       ORA.W DATA_01FF57,X                 ;; 01FF85 : 1D 57 FF    ;
-                      ORA.B $0D                           ;; 01FF88 : 05 0D       ;
+                      ORA.B !_D                           ;; 01FF88 : 05 0D       ;
                       STA.W $0303,Y                       ;; 01FF8A : 99 03 03    ;
                       TYA                                 ;; 01FF8D : 98          ;
                       LSR A                               ;; 01FF8E : 4A          ;
