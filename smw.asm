@@ -8,7 +8,7 @@
 ; 1 = North American
 ; 2 = PAL 1.0
 ; 3 = PAL 1.1
-!V = 1
+!_VER = 1
                                                           ;                      ;
                       incsrc "rammap.asm"                 ;                      ;
                                                           ;                      ;
@@ -33,31 +33,31 @@
                                                           ;                      ;
 ORG $00FFC0                                               ;                      ;
                                                           ;                      ;
-ROMName:              db "SUPER MARIOWORLD  ",$20,$20,$20 ; 00FFC0               ; internal rom name (PLEASE SOMEONE TELL ME WHY STRINGS ALONE DON'T ASSEMBLE)
-MemoryMap:            db $20                              ; 00FFD5               ; memory map mode + high speed (see page 1-2-17)
-CatridgeType:         db $02                              ; 00FFD6               ; cartridge type (see page 1-2-18)
-ROMSize:              db $09                              ; 00FFD7               ; ROM size (see page 1-2-19)
-SRAMSize:             db $01                              ; 00FFD8               ; SRAM size (see page 1-2-19)
+ROMName:              db "SUPER MARIOWORLD  ",$20,$20,$20 ; 00FFC0               ; Internal ROM name (PLEASE SOMEONE TELL ME WHY STRINGS ALONE DON'T ASSEMBLE)
+MemoryMap:            db $20                              ; 00FFD5               ; LoROM, slow
+CatridgeType:         db $02                              ; 00FFD6               ; ROM + SRAM + Battery
+ROMSize:              db $09                              ; 00FFD7               ; <= 4Mb ROM
+SRAMSize:             db $01                              ; 00FFD8               ; 16Kb SRAM
                                                           ;                      ;
-                   if !V == 0                   ;\   IF   ; ++++++++++++++++++++ ; J
-DestinationCode:      db $00                              ; 00FFD9               ; destination code (see page 1-2-20)
-                   elseif !V == 1               ;< ELSEIF ; -------------------- ; U
-DestinationCode:      db $01                              ; 00FFD9               ; destination code (see page 1-2-20)
+                   if !_VER == 0                ;\   IF   ; ++++++++++++++++++++ ; J
+DestinationCode:      db $00                              ; 00FFD9               ; Japan
+                   elseif !_VER == 1            ;< ELSEIF ; -------------------- ; U
+DestinationCode:      db $01                              ; 00FFD9               ; North America (USA and Canada)
                    else                         ;<  ELSE  ; -------------------- ; E0 & E1
-DestinationCode:      db $02                              ; 00FFD9               ; destination code (see page 1-2-20)
+DestinationCode:      db $02                              ; 00FFD9               ; All of Europe
                    endif                        ;/ ENDIF  ; ++++++++++++++++++++ ;
                                                           ;                      ;
-DummyByte:            db $01                              ; 00FFDA               ; usually #$33 (usually)
+LicenseeCode:         db $01                              ; 00FFDA               ; Nintendo EAD
                                                           ;                      ;
-                   if !V != 3                   ;\   IF   ; ++++++++++++++++++++ ; J & U & E0
-MaskROMVersion:       db $00                              ; 00FFDB               ; mask ROM version
+                   if !_VER != 3                ;\   IF   ; ++++++++++++++++++++ ; J & U & E0
+MaskROMVersion:       db $00                              ; 00FFDB               ; V 1.0
                    else                         ;<  ELSE  ; -------------------- ; E1
-MaskROMVersion:       db $01                              ; 00FFDB               ; mask ROM version
+MaskROMVersion:       db $01                              ; 00FFDB               ; V 1.1
                    endif                        ;/ ENDIF  ; ++++++++++++++++++++ ;
                                                           ;                      ;
 Checksum:             dw $0000,$FFFF                      ; 00FFDC               ; asar does this on its own
                                                           ;                      ;
-                   if !V <= 1                   ;\   IF   ; ++++++++++++++++++++ ; J & U
+                   if !_VER <= 1                ;\   IF   ; ++++++++++++++++++++ ; J & U
 NativeVectors:        dw $FFFF                            ; 00FFE0               ;
                       dw $FFFF                            ; 00FFE2               ;
                       dw I_EMPTY                          ; 00FFE4               ;
@@ -74,7 +74,7 @@ EmulationVectors:     dw $FFFF                            ; 00FFF0              
                       dw I_EMPTY                          ; 00FFFA               ;
                       dw I_RESET                          ; 00FFFC               ;
                       dw I_EMPTY                          ; 00FFFE               ;
-                   elseif !V == 2               ;< ELSEIF ; -------------------- ; E0
+                   elseif !_VER == 2            ;< ELSEIF ; -------------------- ; E0
 NativeVectors:        dw $0000                            ; 00FFE0               ;
                       dw $0001                            ; 00FFE2               ;
                       dw I_EMPTY                          ; 00FFE4               ;

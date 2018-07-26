@@ -562,14 +562,14 @@ CODE_0485A7:          REP #$20                            ;; 0485A7 : C2 20     
                       LDA.W #$001E                        ;; 0485A9 : A9 1E 00    ; \ Mario X postion = #$001E 
                       CLC                                 ;; 0485AC : 18          ;  | (On overworld boarder) 
                       ADC.B !Layer1XPos                   ;; 0485AD : 65 1A       ;  | 
-                      STA.B $94                           ;; 0485AF : 85 94       ; / 
+                      STA.B !PlayerXPosNext               ;; 0485AF : 85 94       ; / 
                       LDA.W #$0006                        ;; 0485B1 : A9 06 00    ; \ Mario Y postion = #$0006 
                       CLC                                 ;; 0485B4 : 18          ;  | (On overworld boarder) 
                       ADC.B !Layer1YPos                   ;; 0485B5 : 65 1C       ;  | 
-                      STA.B $96                           ;; 0485B7 : 85 96       ; / 
+                      STA.B !PlayerYPosNext               ;; 0485B7 : 85 96       ; / 
                       SEP #$20                            ;; 0485B9 : E2 20       ; Accum (8 bit) 
                       LDA.B #$08                          ;; 0485BB : A9 08       ;
-                      STA.W $007B                         ;; 0485BD : 8D 7B 00    ;
+                      STA.W !PlayerXSpeed                 ;; 0485BD : 8D 7B 00    ;
                       PHB                                 ;; 0485C0 : 8B          ;
                       LDA.B #$00                          ;; 0485C1 : A9 00       ;
                       PHA                                 ;; 0485C3 : 48          ;
@@ -680,13 +680,13 @@ CODE_048676:          STA.B !_6                           ;; 048676 : 85 06     
                       SBC.B #$09                          ;; 048694 : E9 09       ; subtract 9 from 2P Y-pos
                       STA.B !_3                           ;; 048696 : 85 03       ; $03 = 2P Y-pos on screen
                       LDA.B #$03                          ;; 048698 : A9 03       ;
-                      STA.B $8C                           ;; 04869A : 85 8C       ; $8C = #$03
+                      STA.B !GraphicsCompPtr+2            ;; 04869A : 85 8C       ; $8C = #$03
                       LDA.B !_0                           ;; 04869C : A5 00       ;
                       STA.B !_6                           ;; 04869E : 85 06       ; $06 = 1P X-pos on screen
-                      STA.B $8A                           ;; 0486A0 : 85 8A       ; $8A = 1P X-pos on screen
+                      STA.B !GraphicsCompPtr              ;; 0486A0 : 85 8A       ; $8A = 1P X-pos on screen
                       LDA.B !_1                           ;; 0486A2 : A5 01       ;
                       STA.B !_7                           ;; 0486A4 : 85 07       ; $07 = 1P Y-pos on screen
-                      STA.B $8B                           ;; 0486A6 : 85 8B       ; $8B = 1P Y-pos on screen
+                      STA.B !GraphicsCompPtr+1            ;; 0486A6 : 85 8B       ; $8B = 1P Y-pos on screen
                       LDA.W $0DD6                         ;; 0486A8 : AD D6 0D    ; A = player x 4
                       LSR A                               ;; 0486AB : 4A          ; A = player x 2
                       TAY                                 ;; 0486AC : A8          ; Y = player x 2
@@ -697,10 +697,10 @@ CODE_048676:          STA.B !_6                           ;; 048676 : 85 06     
                       BCC CODE_0486BC                     ;; 0486B6 : 90 04       ; don't skip if moving on land
                       CMP.B #$0F                          ;; 0486B8 : C9 0F       ;
                       BCC CODE_0486C5                     ;; 0486BA : 90 09       ; skip if moving in water
-CODE_0486BC:          LDA.B $8B                           ;; 0486BC : A5 8B       ;
+CODE_0486BC:          LDA.B !GraphicsCompPtr+1            ;; 0486BC : A5 8B       ;
                       SEC                                 ;; 0486BE : 38          ;
                       SBC.B #$05                          ;; 0486BF : E9 05       ; subtract 5 from Y-pos if on land
-                      STA.B $8B                           ;; 0486C1 : 85 8B       ; $8B = 1P Y-pos on screen
+                      STA.B !GraphicsCompPtr+1            ;; 0486C1 : 85 8B       ; $8B = 1P Y-pos on screen
                       STA.B !_7                           ;; 0486C3 : 85 07       ; $07 = 1P Y-pos on screen
 CODE_0486C5:          REP #$30                            ;; 0486C5 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.W $0DD6                         ;; 0486C7 : AD D6 0D    ; A = player x 4
@@ -724,7 +724,7 @@ CODE_0486C5:          REP #$30                            ;; 0486C5 : C2 30     
                       STZ.W $044D                         ;; 0486F3 : 9C 4D 04    ; |
                       STZ.W $044E                         ;; 0486F6 : 9C 4E 04    ; /
                       LDA.B #$03                          ;; 0486F9 : A9 03       ;
-                      STA.B $8C                           ;; 0486FB : 85 8C       ; $8C = #$03
+                      STA.B !GraphicsCompPtr+2            ;; 0486FB : 85 8C       ; $8C = #$03
                       LDA.W $1F11                         ;; 0486FD : AD 11 1F    ; A = 1P submap
                       LDY.W $13D9                         ;; 048700 : AC D9 13    ; Y = overworld process
                       CPY.B #$0A                          ;; 048703 : C0 0A       ;
@@ -734,10 +734,10 @@ CODE_048709:          CMP.W $1F12                         ;; 048709 : CD 12 1F  
                       BNE CODE_048786                     ;; 04870C : D0 78       ; skip everything if 1P and 2P are on different submaps
                       LDA.B !_2                           ;; 04870E : A5 02       ;
                       STA.B !_6                           ;; 048710 : 85 06       ; $06 = 2P X-pos on screen
-                      STA.B $8A                           ;; 048712 : 85 8A       ; $8A = 2P X-pos on screen
+                      STA.B !GraphicsCompPtr              ;; 048712 : 85 8A       ; $8A = 2P X-pos on screen
                       LDA.B !_3                           ;; 048714 : A5 03       ;
                       STA.B !_7                           ;; 048716 : 85 07       ; $07 = 2P Y-pos on screen
-                      STA.B $8B                           ;; 048718 : 85 8B       ; $8B = 2P Y-pos on screen
+                      STA.B !GraphicsCompPtr+1            ;; 048718 : 85 8B       ; $8B = 2P Y-pos on screen
                       LDA.W $0DD6                         ;; 04871A : AD D6 0D    ; A = player x 4
                       LSR A                               ;; 04871D : 4A          ; A = player x 2
                       EOR.B #$02                          ;; 04871E : 49 02       ; A = other player x 2
@@ -749,10 +749,10 @@ CODE_048709:          CMP.W $1F12                         ;; 048709 : CD 12 1F  
                       BCC CODE_048730                     ;; 04872A : 90 04       ; don't skip if moving on land
                       CMP.B #$0F                          ;; 04872C : C9 0F       ;
                       BCC CODE_048739                     ;; 04872E : 90 09       ; skip if moving in water
-CODE_048730:          LDA.B $8B                           ;; 048730 : A5 8B       ;
+CODE_048730:          LDA.B !GraphicsCompPtr+1            ;; 048730 : A5 8B       ;
                       SEC                                 ;; 048732 : 38          ;
                       SBC.B #$05                          ;; 048733 : E9 05       ; subtract 5 from Y-pos if on land
-                      STA.B $8B                           ;; 048735 : 85 8B       ; $8B = 2P Y-pos on screen
+                      STA.B !GraphicsCompPtr+1            ;; 048735 : 85 8B       ; $8B = 2P Y-pos on screen
                       STA.B !_7                           ;; 048737 : 85 07       ; $07 = 2P Y-pos on screen
 CODE_048739:          REP #$30                            ;; 048739 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.W $0DB2                         ;; 04873B : AD B2 0D    ;
@@ -787,7 +787,7 @@ CODE_048739:          REP #$30                            ;; 048739 : C2 30     
 CODE_048786:          SEP #$30                            ;; 048786 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_048789:          LDA.B $8A                           ;; 048789 : A5 8A       ; A = Y-pos on screen | X-pos on screen
+CODE_048789:          LDA.B !GraphicsCompPtr              ;; 048789 : A5 8A       ; A = Y-pos on screen | X-pos on screen
                       PHA                                 ;; 04878B : 48          ;
                       PHX                                 ;; 04878C : DA          ; X = player x #$20
                       LDA.B !_4                           ;; 04878D : A5 04       ; A = player x #$200
@@ -799,12 +799,12 @@ CODE_048789:          LDA.B $8A                           ;; 048789 : A5 8A     
                       AND.W #$FF00                        ;; 048796 : 29 00 FF    ; A = player lives | #$00
                       BPL CODE_0487C7                     ;; 048799 : 10 2C       ; skip if player lives positive
                       SEP #$20                            ;; 04879B : E2 20       ; Accum (8 bit) 
-                      LDA.B $8A                           ;; 04879D : A5 8A       ;
+                      LDA.B !GraphicsCompPtr              ;; 04879D : A5 8A       ;
                       STA.W $02B4,X                       ;; 04879F : 9D B4 02    ; OAM X-pos of 1st halo tile
                       CLC                                 ;; 0487A2 : 18          ;
                       ADC.B #$08                          ;; 0487A3 : 69 08       ;
                       STA.W $02B8,X                       ;; 0487A5 : 9D B8 02    ; OAM X-pos of 2nd halo tile
-                      LDA.B $8B                           ;; 0487A8 : A5 8B       ;
+                      LDA.B !GraphicsCompPtr+1            ;; 0487A8 : A5 8B       ;
                       CLC                                 ;; 0487AA : 18          ;
                       ADC.B #$F9                          ;; 0487AB : 69 F9       ;
                       STA.W $02B5,X                       ;; 0487AD : 9D B5 02    ; OAM Y-pos of 1st halo tile
@@ -818,7 +818,7 @@ CODE_048789:          LDA.B $8A                           ;; 048789 : A5 8A     
                       STA.W $02BB,X                       ;; 0487C2 : 9D BB 02    ; OAM yxppccct of 2nd halo tile
                       REP #$20                            ;; 0487C5 : C2 20       ; Accum (16 bit) 
 CODE_0487C7:          PLA                                 ;; 0487C7 : 68          ; A = Y-pos on screen | X-pos on screen
-                      STA.B $8A                           ;; 0487C8 : 85 8A       ; $8A = X-pos on screen, $8B = Y-pos on screen
+                      STA.B !GraphicsCompPtr              ;; 0487C8 : 85 8A       ; $8A = X-pos on screen, $8B = Y-pos on screen
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -924,7 +924,7 @@ CODE_04898B:          CPX.W #$0000                        ;; 04898B : E0 00 00  
                       AND.W #$00FF                        ;; 0489A3 : 29 FF 00    ;
                       TAY                                 ;; 0489A6 : A8          ; Y = index into tilemap table
 CODE_0489A7:          REP #$20                            ;; 0489A7 : C2 20       ; Accum (16 bit) 
-                      LDA.B $8A                           ;; 0489A9 : A5 8A       ; A = Y-pos on screen | X-pos on screen 
+                      LDA.B !GraphicsCompPtr              ;; 0489A9 : A5 8A       ; A = Y-pos on screen | X-pos on screen 
                       STA.W $029C,X                       ;; 0489AB : 9D 9C 02    ; OAM y-pos and x-pos for tile
                       LDA.W OWPlayerTiles,Y               ;; 0489AE : B9 CB 87    ; get tile | yxppccct
                       CLC                                 ;; 0489B1 : 18          ;
@@ -937,21 +937,21 @@ CODE_0489A7:          REP #$20                            ;; 0489A7 : C2 20     
                       INX                                 ;; 0489BC : E8          ; increment X to next OAM tile
                       INY                                 ;; 0489BD : C8          ;
                       INY                                 ;; 0489BE : C8          ; increment index to tilemap table
-                      LDA.B $8A                           ;; 0489BF : A5 8A       ;
+                      LDA.B !GraphicsCompPtr              ;; 0489BF : A5 8A       ;
                       CLC                                 ;; 0489C1 : 18          ;
                       ADC.B #$08                          ;; 0489C2 : 69 08       ; \
-                      STA.B $8A                           ;; 0489C4 : 85 8A       ; | update X and Y position of tile
-                      DEC.B $8C                           ;; 0489C6 : C6 8C       ; | (zig zag pattern)
-                      LDA.B $8C                           ;; 0489C8 : A5 8C       ; |
+                      STA.B !GraphicsCompPtr              ;; 0489C4 : 85 8A       ; | update X and Y position of tile
+                      DEC.B !GraphicsCompPtr+2            ;; 0489C6 : C6 8C       ; | (zig zag pattern)
+                      LDA.B !GraphicsCompPtr+2            ;; 0489C8 : A5 8C       ; |
                       AND.B #$01                          ;; 0489CA : 29 01       ; |
                       BEQ CODE_0489D9                     ;; 0489CC : F0 0B       ; |
                       LDA.B !_6                           ;; 0489CE : A5 06       ; |
-                      STA.B $8A                           ;; 0489D0 : 85 8A       ; |
-                      LDA.B $8B                           ;; 0489D2 : A5 8B       ; |
+                      STA.B !GraphicsCompPtr              ;; 0489D0 : 85 8A       ; |
+                      LDA.B !GraphicsCompPtr+1            ;; 0489D2 : A5 8B       ; |
                       CLC                                 ;; 0489D4 : 18          ; |
                       ADC.B #$08                          ;; 0489D5 : 69 08       ; |
-                      STA.B $8B                           ;; 0489D7 : 85 8B       ; /
-CODE_0489D9:          LDA.B $8C                           ;; 0489D9 : A5 8C       ;
+                      STA.B !GraphicsCompPtr+1            ;; 0489D7 : 85 8B       ; /
+CODE_0489D9:          LDA.B !GraphicsCompPtr+2            ;; 0489D9 : A5 8C       ;
                       BPL CODE_0489A7                     ;; 0489DB : 10 CA       ; loop if we have tiles left
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -1055,7 +1055,7 @@ DATA_048C1E:          db $FB,$FB,$03,$03,$00,$00,$08,$08  ;; 048C1E             
 DATA_048CDE:          db $00,$00,$00,$02,$00,$04,$00,$06  ;; 048CDE               ;
                                                           ;;                      ;
 CODE_048CE6:          LDA.B #$07                          ;; 048CE6 : A9 07       ;
-                      STA.B $8C                           ;; 048CE8 : 85 8C       ; $8C = #$07
+                      STA.B !GraphicsCompPtr+2            ;; 048CE8 : 85 8C       ; $8C = #$07
                       REP #$30                            ;; 048CEA : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.W $1F13,Y                       ;; 048CEC : B9 13 1F    ;
                       ASL A                               ;; 048CEF : 0A          ;
@@ -1090,11 +1090,11 @@ CODE_048D1B:          REP #$20                            ;; 048D1B : C2 20     
                       SEP #$20                            ;; 048D21 : E2 20       ; Accum (8 bit) 
                       LDA.W DATA_048B5E,Y                 ;; 048D23 : B9 5E 8B    ; X offset table for riding yoshi sprites
                       CLC                                 ;; 048D26 : 18          ;
-                      ADC.B $8A                           ;; 048D27 : 65 8A       ;
+                      ADC.B !GraphicsCompPtr              ;; 048D27 : 65 8A       ;
                       STA.W $029C,X                       ;; 048D29 : 9D 9C 02    ; OAM X-position
                       LDA.W DATA_048C1E,Y                 ;; 048D2C : B9 1E 8C    ; Y offset table for riding yoshi sprites
                       CLC                                 ;; 048D2F : 18          ;
-                      ADC.B $8B                           ;; 048D30 : 65 8B       ;
+                      ADC.B !GraphicsCompPtr+1            ;; 048D30 : 65 8B       ;
                       STA.W $029D,X                       ;; 048D32 : 9D 9D 02    ; OAM Y-position
                       PLY                                 ;; 048D35 : 7A          ;
                       REP #$20                            ;; 048D36 : C2 20       ; Accum (16 bit) 
@@ -1130,7 +1130,7 @@ CODE_048D67:          SEP #$20                            ;; 048D67 : E2 20     
                       INX                                 ;; 048D6C : E8          ;
                       INY                                 ;; 048D6D : C8          ;
                       INY                                 ;; 048D6E : C8          ;
-                      DEC.B $8C                           ;; 048D6F : C6 8C       ;
+                      DEC.B !GraphicsCompPtr+2            ;; 048D6F : C6 8C       ;
                       BPL CODE_048D1B                     ;; 048D71 : 10 A8       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -5176,7 +5176,7 @@ CODE_04DC42:          LDA.B !_0                           ;; 04DC42 : A5 00     
                       LDA.W #$07FF                        ;; 04DC57 : A9 FF 07    ;
                       LDX.W #$F7DF                        ;; 04DC5A : A2 DF F7    ;
                       LDY.W #$C800                        ;; 04DC5D : A0 00 C8    ;
-                      MVN $7E,$0C                         ;; 04DC60 : 54 7E 0C    ;
+                      MVN !PlayerXPosScrRel,$0C           ;; 04DC60 : 54 7E 0C    ;
                       PLB                                 ;; 04DC63 : AB          ;
                       JSR CODE_04D7F2                     ;; 04DC64 : 20 F2 D7    ;
                       SEP #$30                            ;; 04DC67 : E2 30       ; Index (8 bit) Accum (8 bit) 
@@ -5220,9 +5220,9 @@ CODE_04DCB6:          PHP                                 ;; 04DCB6 : 08        
                       REP #$10                            ;; 04DCB7 : C2 10       ; Index (16 bit) 
                       SEP #$20                            ;; 04DCB9 : E2 20       ; Accum (8 bit) 
                       LDX.W #$D000                        ;; 04DCBB : A2 00 D0    ;
-                      STX.B $65                           ;; 04DCBE : 86 65       ;
+                      STX.B !Layer1DataPtr                ;; 04DCBE : 86 65       ;
                       LDA.B #$05                          ;; 04DCC0 : A9 05       ;
-                      STA.B $67                           ;; 04DCC2 : 85 67       ;
+                      STA.B !Layer1DataPtr+2              ;; 04DCC2 : 85 67       ;
                       LDX.W #$0000                        ;; 04DCC4 : A2 00 00    ;
                       STX.B !_0                           ;; 04DCC7 : 86 00       ;
                       LDA.W $1DE8                         ;; 04DCC9 : AD E8 1D    ;
@@ -5264,19 +5264,19 @@ CODE_04DCE8:          LDX.B !_0                           ;; 04DCE8 : A6 00     
                       AND.W #$0F80                        ;; 04DD0D : 29 80 0F    ;
                       ORA.B !_2                           ;; 04DD10 : 05 02       ;
                       TAX                                 ;; 04DD12 : AA          ;
-                      LDA.B [$65],Y                       ;; 04DD13 : B7 65       ;
+                      LDA.B [!Layer1DataPtr],Y            ;; 04DD13 : B7 65       ;
                       STA.L $7EE400,X                     ;; 04DD15 : 9F 00 E4 7E ;
                       INY                                 ;; 04DD19 : C8          ;
                       INY                                 ;; 04DD1A : C8          ;
-                      LDA.B [$65],Y                       ;; 04DD1B : B7 65       ;
+                      LDA.B [!Layer1DataPtr],Y            ;; 04DD1B : B7 65       ;
                       STA.L $7EE440,X                     ;; 04DD1D : 9F 40 E4 7E ;
                       INY                                 ;; 04DD21 : C8          ;
                       INY                                 ;; 04DD22 : C8          ;
-                      LDA.B [$65],Y                       ;; 04DD23 : B7 65       ;
+                      LDA.B [!Layer1DataPtr],Y            ;; 04DD23 : B7 65       ;
                       STA.L $7EE402,X                     ;; 04DD25 : 9F 02 E4 7E ;
                       INY                                 ;; 04DD29 : C8          ;
                       INY                                 ;; 04DD2A : C8          ;
-                      LDA.B [$65],Y                       ;; 04DD2B : B7 65       ;
+                      LDA.B [!Layer1DataPtr],Y            ;; 04DD2B : B7 65       ;
                       STA.L $7EE442,X                     ;; 04DD2D : 9F 42 E4 7E ;
                       SEP #$20                            ;; 04DD31 : E2 20       ; Accum (8 bit) 
                       INC.B !_0                           ;; 04DD33 : E6 00       ;
@@ -6305,10 +6305,10 @@ CODE_04EB32:          STZ.W $0474,X                       ;; 04EB32 : 9E 74 04  
                       CMP.B #$03                          ;; 04EB40 : C9 03       ;
                       BNE CODE_04EB46                     ;; 04EB42 : D0 02       ;
                       LDY.B #$01                          ;; 04EB44 : A0 01       ;
-CODE_04EB46:          STY.B $8A                           ;; 04EB46 : 84 8A       ;
+CODE_04EB46:          STY.B !GraphicsCompPtr              ;; 04EB46 : 84 8A       ;
 CODE_04EB48:          LDA.W $1495                         ;; 04EB48 : AD 95 14    ;
                       JSL CODE_00B006                     ;; 04EB4B : 22 06 B0 00 ;
-                      DEC.B $8A                           ;; 04EB4F : C6 8A       ;
+                      DEC.B !GraphicsCompPtr              ;; 04EB4F : C6 8A       ;
                       BNE CODE_04EB48                     ;; 04EB51 : D0 F5       ;
                       JMP CODE_04EA8B                     ;; 04EB53 : 4C 8B EA    ;
                                                           ;;                      ;
