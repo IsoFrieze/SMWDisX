@@ -3019,17 +3019,17 @@ CODE_03991A:          TXA                                 ;; 03991A : 8A        
                       STA.B !_6                           ;; 03995A : 85 06       ;
                       SEP #$30                            ;; 03995C : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDA.B !_4                           ;; 03995E : A5 04       ;
-                      STA.W $4202                         ;; 039960 : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 039960 : 8D 02 42    ; Multiplicand A
                       LDA.B #$38                          ;; 039963 : A9 38       ;
                       LDY.B !_5                           ;; 039965 : A4 05       ;
                       BNE CODE_039978                     ;; 039967 : D0 0F       ;
-                      STA.W $4203                         ;; 039969 : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 039969 : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03996C : EA          ;
                       NOP                                 ;; 03996D : EA          ;
                       NOP                                 ;; 03996E : EA          ;
                       NOP                                 ;; 03996F : EA          ;
-                      ASL.W $4216                         ;; 039970 : 0E 16 42    ; Product/Remainder Result (Low Byte)
-                      LDA.W $4217                         ;; 039973 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      ASL.W !HW_RDMPY                     ;; 039970 : 0E 16 42    ; Product/Remainder Result (Low Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 039973 : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 039976 : 69 00       ;
 CODE_039978:          LSR.B !_1                           ;; 039978 : 46 01       ;
                       BCC CODE_03997F                     ;; 03997A : 90 03       ;
@@ -3037,17 +3037,17 @@ CODE_039978:          LSR.B !_1                           ;; 039978 : 46 01     
                       INC A                               ;; 03997E : 1A          ;
 CODE_03997F:          STA.B !_4                           ;; 03997F : 85 04       ;
                       LDA.B !_6                           ;; 039981 : A5 06       ;
-                      STA.W $4202                         ;; 039983 : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 039983 : 8D 02 42    ; Multiplicand A
                       LDA.B #$38                          ;; 039986 : A9 38       ;
                       LDY.B !_7                           ;; 039988 : A4 07       ;
                       BNE CODE_03999B                     ;; 03998A : D0 0F       ;
-                      STA.W $4203                         ;; 03998C : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 03998C : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03998F : EA          ;
                       NOP                                 ;; 039990 : EA          ;
                       NOP                                 ;; 039991 : EA          ;
                       NOP                                 ;; 039992 : EA          ;
-                      ASL.W $4216                         ;; 039993 : 0E 16 42    ; Product/Remainder Result (Low Byte)
-                      LDA.W $4217                         ;; 039996 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      ASL.W !HW_RDMPY                     ;; 039993 : 0E 16 42    ; Product/Remainder Result (Low Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 039996 : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 039999 : 69 00       ;
 CODE_03999B:          LSR.B !_3                           ;; 03999B : 46 03       ;
                       BCC CODE_0399A2                     ;; 03999D : 90 03       ;
@@ -8039,14 +8039,14 @@ CODE_03CA2D:          SEC                                 ;; 03CA2D : 38        
                       BPL CODE_03CA39                     ;; 03CA34 : 10 03       ;
                       EOR.B #$FF                          ;; 03CA36 : 49 FF       ;
                       INC A                               ;; 03CA38 : 1A          ;
-CODE_03CA39:          STA.W $4202                         ;; 03CA39 : 8D 02 42    ; Multiplicand A
+CODE_03CA39:          STA.W !HW_WRMPYA                    ;; 03CA39 : 8D 02 42    ; Multiplicand A
                       LDA.B !_6                           ;; 03CA3C : A5 06       ;
-                      STA.W $4203                         ;; 03CA3E : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 03CA3E : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03CA41 : EA          ;
                       NOP                                 ;; 03CA42 : EA          ;
                       NOP                                 ;; 03CA43 : EA          ;
                       NOP                                 ;; 03CA44 : EA          ;
-                      LDA.W $4217                         ;; 03CA45 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 03CA45 : AD 17 42    ; Product/Remainder Result (High Byte)
                       LDY.B !_0                           ;; 03CA48 : A4 00       ;
                       BPL CODE_03CA4F                     ;; 03CA4A : 10 03       ;
                       EOR.B #$FF                          ;; 03CA4C : 49 FF       ;
@@ -8056,14 +8056,14 @@ CODE_03CA4F:          STA.B !_2                           ;; 03CA4F : 85 02     
                       BPL CODE_03CA58                     ;; 03CA53 : 10 03       ;
                       EOR.B #$FF                          ;; 03CA55 : 49 FF       ;
                       INC A                               ;; 03CA57 : 1A          ;
-CODE_03CA58:          STA.W $4202                         ;; 03CA58 : 8D 02 42    ; Multiplicand A
+CODE_03CA58:          STA.W !HW_WRMPYA                    ;; 03CA58 : 8D 02 42    ; Multiplicand A
                       LDA.B !_6                           ;; 03CA5B : A5 06       ;
-                      STA.W $4203                         ;; 03CA5D : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 03CA5D : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03CA60 : EA          ;
                       NOP                                 ;; 03CA61 : EA          ;
                       NOP                                 ;; 03CA62 : EA          ;
                       NOP                                 ;; 03CA63 : EA          ;
-                      LDA.W $4217                         ;; 03CA64 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 03CA64 : AD 17 42    ; Product/Remainder Result (High Byte)
                       LDY.B !_1                           ;; 03CA67 : A4 01       ;
                       BPL CODE_03CA6E                     ;; 03CA69 : 10 03       ;
                       EOR.B #$FF                          ;; 03CA6B : 49 FF       ;
@@ -8157,14 +8157,14 @@ CODE_03CAFB:          SEC                                 ;; 03CAFB : 38        
                       BPL CODE_03CB08                     ;; 03CB03 : 10 03       ;
                       EOR.B #$FF                          ;; 03CB05 : 49 FF       ;
                       INC A                               ;; 03CB07 : 1A          ;
-CODE_03CB08:          STA.W $4202                         ;; 03CB08 : 8D 02 42    ; Multiplicand A
+CODE_03CB08:          STA.W !HW_WRMPYA                    ;; 03CB08 : 8D 02 42    ; Multiplicand A
                       LDA.B !_6                           ;; 03CB0B : A5 06       ;
-                      STA.W $4203                         ;; 03CB0D : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 03CB0D : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03CB10 : EA          ;
                       NOP                                 ;; 03CB11 : EA          ;
                       NOP                                 ;; 03CB12 : EA          ;
                       NOP                                 ;; 03CB13 : EA          ;
-                      LDA.W $4217                         ;; 03CB14 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 03CB14 : AD 17 42    ; Product/Remainder Result (High Byte)
                       LDY.B !_0                           ;; 03CB17 : A4 00       ;
                       BPL CODE_03CB1E                     ;; 03CB19 : 10 03       ;
                       EOR.B #$FF                          ;; 03CB1B : 49 FF       ;
@@ -8174,14 +8174,14 @@ CODE_03CB1E:          STA.B !_2                           ;; 03CB1E : 85 02     
                       BPL CODE_03CB27                     ;; 03CB22 : 10 03       ;
                       EOR.B #$FF                          ;; 03CB24 : 49 FF       ;
                       INC A                               ;; 03CB26 : 1A          ;
-CODE_03CB27:          STA.W $4202                         ;; 03CB27 : 8D 02 42    ; Multiplicand A
+CODE_03CB27:          STA.W !HW_WRMPYA                    ;; 03CB27 : 8D 02 42    ; Multiplicand A
                       LDA.B !_6                           ;; 03CB2A : A5 06       ;
-                      STA.W $4203                         ;; 03CB2C : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 03CB2C : 8D 03 42    ; Multplier B
                       NOP                                 ;; 03CB2F : EA          ;
                       NOP                                 ;; 03CB30 : EA          ;
                       NOP                                 ;; 03CB31 : EA          ;
                       NOP                                 ;; 03CB32 : EA          ;
-                      LDA.W $4217                         ;; 03CB33 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 03CB33 : AD 17 42    ; Product/Remainder Result (High Byte)
                       LDY.B !_1                           ;; 03CB36 : A4 01       ;
                       BPL CODE_03CB3D                     ;; 03CB38 : 10 03       ;
                       EOR.B #$FF                          ;; 03CB3A : 49 FF       ;
@@ -9046,30 +9046,30 @@ CODE_03D798:          STX.B !_0                           ;; 03D798 : 86 00     
                       TAX                                 ;; 03D79C : AA          ;
                       SEP #$20                            ;; 03D79D : E2 20       ; Accum (8 bit) 
                       LDA.B #$25                          ;; 03D79F : A9 25       ;
-                      STA.L $7EC800,X                     ;; 03D7A1 : 9F 00 C8 7E ;
+                      STA.L !Map16TilesLow,X              ;; 03D7A1 : 9F 00 C8 7E ;
                       LDA.B #$00                          ;; 03D7A5 : A9 00       ;
-                      STA.L $7FC800,X                     ;; 03D7A7 : 9F 00 C8 7F ;
+                      STA.L !Map16TilesHigh,X             ;; 03D7A7 : 9F 00 C8 7F ;
                       REP #$20                            ;; 03D7AB : C2 20       ; Accum (16 bit) 
-                      LDA.L $7F837B                       ;; 03D7AD : AF 7B 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 03D7AD : AF 7B 83 7F ;
                       TAX                                 ;; 03D7B1 : AA          ;
                       LDA.W #$C05A                        ;; 03D7B2 : A9 5A C0    ;
                       CLC                                 ;; 03D7B5 : 18          ;
                       ADC.B !_0                           ;; 03D7B6 : 65 00       ;
-                      STA.L $7F837D,X                     ;; 03D7B8 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 03D7B8 : 9F 7D 83 7F ;
                       ORA.W #$2000                        ;; 03D7BC : 09 00 20    ;
-                      STA.L $7F8383,X                     ;; 03D7BF : 9F 83 83 7F ;
+                      STA.L !DynamicStripeImage+6,X       ;; 03D7BF : 9F 83 83 7F ;
                       LDA.W #$0240                        ;; 03D7C3 : A9 40 02    ;
-                      STA.L $7F837F,X                     ;; 03D7C6 : 9F 7F 83 7F ;
-                      STA.L $7F8385,X                     ;; 03D7CA : 9F 85 83 7F ;
+                      STA.L !DynamicStripeImage+2,X       ;; 03D7C6 : 9F 7F 83 7F ;
+                      STA.L !DynamicStripeImage+8,X       ;; 03D7CA : 9F 85 83 7F ;
                       LDA.W #$38FC                        ;; 03D7CE : A9 FC 38    ;
-                      STA.L $7F8381,X                     ;; 03D7D1 : 9F 81 83 7F ;
-                      STA.L $7F8387,X                     ;; 03D7D5 : 9F 87 83 7F ;
+                      STA.L !DynamicStripeImage+4,X       ;; 03D7D1 : 9F 81 83 7F ;
+                      STA.L !DynamicStripeImage+$0A,X     ;; 03D7D5 : 9F 87 83 7F ;
                       LDA.W #$00FF                        ;; 03D7D9 : A9 FF 00    ;
-                      STA.L $7F8389,X                     ;; 03D7DC : 9F 89 83 7F ;
+                      STA.L !DynamicStripeImage+$0C,X     ;; 03D7DC : 9F 89 83 7F ;
                       TXA                                 ;; 03D7E0 : 8A          ;
                       CLC                                 ;; 03D7E1 : 18          ;
                       ADC.W #$000C                        ;; 03D7E2 : 69 0C 00    ;
-                      STA.L $7F837B                       ;; 03D7E5 : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 03D7E5 : 8F 7B 83 7F ;
                       SEP #$30                            ;; 03D7E9 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -9124,12 +9124,12 @@ DATA_03D8EE:          db $FF,$FF,$FF,$FF,$24,$34,$25,$0B  ;; 03D8EE             
                       db $0F,$1F                          ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_03D958:          REP #$10                            ;; 03D958 : C2 10       ; Index (16 bit) 
-                      STZ.W $2115                         ;; 03D95A : 9C 15 21    ; VRAM Address Increment Value
-                      STZ.W $2116                         ;; 03D95D : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
-                      STZ.W $2117                         ;; 03D960 : 9C 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STZ.W !HW_VMAINC                    ;; 03D95A : 9C 15 21    ; VRAM Address Increment Value
+                      STZ.W !HW_VMADD                     ;; 03D95D : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STZ.W !HW_VMADD+1                   ;; 03D960 : 9C 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.W #$4000                        ;; 03D963 : A2 00 40    ;
                       LDA.B #$FF                          ;; 03D966 : A9 FF       ;
-CODE_03D968:          STA.W $2118                         ;; 03D968 : 8D 18 21    ; Data for VRAM Write (Low Byte)
+CODE_03D968:          STA.W !HW_VMDATA                    ;; 03D968 : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       DEX                                 ;; 03D96B : CA          ;
                       BNE CODE_03D968                     ;; 03D96C : D0 FA       ;
                       SEP #$10                            ;; 03D96E : E2 10       ; Index (8 bit) 
@@ -9152,15 +9152,15 @@ CODE_03D968:          STA.W $2118                         ;; 03D968 : 8D 18 21  
                       PLB                                 ;; 03D98F : AB          ;
 Return03D990:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_03D991:          STZ.W $2115                         ;; 03D991 : 9C 15 21    ; VRAM Address Increment Value
+CODE_03D991:          STZ.W !HW_VMAINC                    ;; 03D991 : 9C 15 21    ; VRAM Address Increment Value
                       LDY.B #$00                          ;; 03D994 : A0 00       ;
 CODE_03D996:          STY.B !_2                           ;; 03D996 : 84 02       ;
                       LDA.B #$00                          ;; 03D998 : A9 00       ;
 CODE_03D99A:          STA.B !_3                           ;; 03D99A : 85 03       ;
                       LDA.B !_0                           ;; 03D99C : A5 00       ;
-                      STA.W $2116                         ;; 03D99E : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 03D99E : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.B !_1                           ;; 03D9A1 : A5 01       ;
-                      STA.W $2117                         ;; 03D9A3 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 03D9A3 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDY.B !_2                           ;; 03D9A6 : A4 02       ;
                       LDA.B #$10                          ;; 03D9A8 : A9 10       ;
                       STA.B !_4                           ;; 03D9AA : 85 04       ;
@@ -9171,9 +9171,9 @@ CODE_03D9AC:          LDA.B [!_5],Y                       ;; 03D9AC : B7 05     
                       ORA.B !_3                           ;; 03D9B3 : 05 03       ;
                       TAX                                 ;; 03D9B5 : AA          ;
                       LDA.L DATA_03D8EC,X                 ;; 03D9B6 : BF EC D8 03 ;
-                      STA.W $2118                         ;; 03D9BA : 8D 18 21    ; Data for VRAM Write (Low Byte)
+                      STA.W !HW_VMDATA                    ;; 03D9BA : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       LDA.L DATA_03D8EE,X                 ;; 03D9BD : BF EE D8 03 ;
-                      STA.W $2118                         ;; 03D9C1 : 8D 18 21    ; Data for VRAM Write (Low Byte)
+                      STA.W !HW_VMDATA                    ;; 03D9C1 : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       INY                                 ;; 03D9C4 : C8          ;
                       DEC.B !_4                           ;; 03D9C5 : C6 04       ;
                       BNE CODE_03D9AC                     ;; 03D9C7 : D0 E3       ;
@@ -9342,9 +9342,9 @@ CODE_03DDB2:          LDA.B [!_0],Y                       ;; 03DDB2 : B7 00     
                       DEY                                 ;; 03DDB7 : 88          ;  | 
                       BPL CODE_03DDB2                     ;; 03DDB8 : 10 F8       ; / 
                       LDA.B #$80                          ;; 03DDBA : A9 80       ;
-                      STA.W $2115                         ;; 03DDBC : 8D 15 21    ; VRAM Address Increment Value
-                      STZ.W $2116                         ;; 03DDBF : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
-                      STZ.W $2117                         ;; 03DDC2 : 9C 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMAINC                    ;; 03DDBC : 8D 15 21    ; VRAM Address Increment Value
+                      STZ.W !HW_VMADD                     ;; 03DDBF : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STZ.W !HW_VMADD+1                   ;; 03DDC2 : 9C 17 21    ; Address for VRAM Read/Write (High Byte)
                       TXY                                 ;; 03DDC5 : 9B          ;
                       BEQ CODE_03DDD7                     ;; 03DDC6 : F0 0F       ;
                       JSL CODE_00BA28                     ;; 03DDC8 : 22 28 BA 00 ;
@@ -9355,7 +9355,7 @@ CODE_03DDD0:          JSR CODE_03DDE5                     ;; 03DDD0 : 20 E5 DD  
                       BNE CODE_03DDD0                     ;; 03DDD5 : D0 F9       ;
 CODE_03DDD7:          LDX.B #$5F                          ;; 03DDD7 : A2 5F       ;
 CODE_03DDD9:          LDA.B #$FF                          ;; 03DDD9 : A9 FF       ;
-                      STA.L $7EC680,X                     ;; 03DDDB : 9F 80 C6 7E ;
+                      STA.L !Mode7BossTilemap,X           ;; 03DDDB : 9F 80 C6 7E ;
                       DEX                                 ;; 03DDDF : CA          ;
                       BPL CODE_03DDD9                     ;; 03DDE0 : 10 F7       ;
                       PLB                                 ;; 03DDE2 : AB          ;
@@ -9435,7 +9435,7 @@ DATA_03DE4E:          db $40,$41,$42,$43,$44,$45,$46,$47  ;; 03DE4E             
                       db $68,$69,$6A,$6B,$6C,$6D,$6E,$6F  ;; ?QPWZ?               ;
                       db $78,$79,$7A,$7B,$7C,$7D,$7E,$3F  ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_03DE8E:          STZ.W $2115                         ;; 03DE8E : 9C 15 21    ; VRAM Address Increment Value
+CODE_03DE8E:          STZ.W !HW_VMAINC                    ;; 03DE8E : 9C 15 21    ; VRAM Address Increment Value
                       REP #$20                            ;; 03DE91 : C2 20       ; Accum (16 bit) 
                       LDA.W #$0A1C                        ;; 03DE93 : A9 1C 0A    ;
                       STA.B !_0                           ;; 03DE96 : 85 00       ;
@@ -9445,11 +9445,11 @@ CODE_03DE9A:          REP #$20                            ;; 03DE9A : C2 20     
                       CLC                                 ;; 03DE9E : 18          ;
                       ADC.W #$0080                        ;; 03DE9F : 69 80 00    ;
                       STA.B !_0                           ;; 03DEA2 : 85 00       ;
-                      STA.W $2116                         ;; 03DEA4 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 03DEA4 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       SEP #$20                            ;; 03DEA7 : E2 20       ; Accum (8 bit) 
                       LDY.B #$08                          ;; 03DEA9 : A0 08       ;
 CODE_03DEAB:          LDA.L DATA_03DE4E,X                 ;; 03DEAB : BF 4E DE 03 ;
-                      STA.W $2118                         ;; 03DEAF : 8D 18 21    ; Data for VRAM Write (Low Byte)
+                      STA.W !HW_VMDATA                    ;; 03DEAF : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       INX                                 ;; 03DEB2 : E8          ;
                       DEY                                 ;; 03DEB3 : 88          ;
                       BNE CODE_03DEAB                     ;; 03DEB4 : D0 F5       ;
@@ -9490,11 +9490,11 @@ CODE_03DEDF:          PHB                                 ;; 03DEDF : 8B        
                       ASL A                               ;; 03DF0C : 0A          ;
                       TAX                                 ;; 03DF0D : AA          ;
                       LDA.L DATA_03DEBF,X                 ;; 03DF0E : BF BF DE 03 ;
-                      STA.L $7EC681                       ;; 03DF12 : 8F 81 C6 7E ;
+                      STA.L !Mode7BossTilemap+1           ;; 03DF12 : 8F 81 C6 7E ;
                       LDA.L DATA_03DEC7,X                 ;; 03DF16 : BF C7 DE 03 ;
-                      STA.L $7EC683                       ;; 03DF1A : 8F 83 C6 7E ;
+                      STA.L !Mode7BossTilemap+3           ;; 03DF1A : 8F 83 C6 7E ;
                       LDA.L DATA_03DECF,X                 ;; 03DF1E : BF CF DE 03 ;
-                      STA.L $7EC685                       ;; 03DF22 : 8F 85 C6 7E ;
+                      STA.L !Mode7BossTilemap+5           ;; 03DF22 : 8F 85 C6 7E ;
                       LDA.W #$0008                        ;; 03DF26 : A9 08 00    ;
                       STA.B !_6                           ;; 03DF29 : 85 06       ;
                       LDX.W #$0380                        ;; 03DF2B : A2 80 03    ;
@@ -9534,7 +9534,7 @@ CODE_03DF69:          LDA.W DATA_03D9DE,Y                 ;; 03DF69 : B9 DE D9  
                       EOR.B #$01                          ;; 03DF72 : 49 01       ;
                       DEY                                 ;; 03DF74 : 88          ;
                       DEY                                 ;; 03DF75 : 88          ;
-CODE_03DF76:          STA.L $7EC680,X                     ;; 03DF76 : 9F 80 C6 7E ;
+CODE_03DF76:          STA.L !Mode7BossTilemap,X           ;; 03DF76 : 9F 80 C6 7E ;
                       INX                                 ;; 03DF7A : E8          ;
                       DEC.B !_4                           ;; 03DF7B : C6 04       ;
                       BPL CODE_03DF69                     ;; 03DF7D : 10 EA       ;

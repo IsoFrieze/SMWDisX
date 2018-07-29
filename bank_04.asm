@@ -278,10 +278,10 @@ CODE_0482D1:          CMP.B #$02                          ;; 0482D1 : C9 02     
                       STZ.W !PauseFlag                    ;; 0482E7 : 9C D4 13    ;
                       JMP CODE_0483BD                     ;; 0482EA : 4C BD 83    ;
                                                           ;;                      ;
-CODE_0482ED:          STZ.W $4204                         ;; 0482ED : 9C 04 42    ; Dividend (Low Byte)
+CODE_0482ED:          STZ.W !HW_WRDIV                     ;; 0482ED : 9C 04 42    ; Dividend (Low Byte)
                       LDY.B !_4,X                         ;; 0482F0 : B4 04       ;
-                      STY.W $4205                         ;; 0482F2 : 8C 05 42    ; Dividend (High-Byte)
-                      STA.W $4206                         ;; 0482F5 : 8D 06 42    ; Divisor B
+                      STY.W !HW_WRDIV+1                   ;; 0482F2 : 8C 05 42    ; Dividend (High-Byte)
+                      STA.W !HW_WRDIV+2                   ;; 0482F5 : 8D 06 42    ; Divisor B
                       NOP                                 ;; 0482F8 : EA          ; \ 
                       NOP                                 ;; 0482F9 : EA          ;  | 
                       NOP                                 ;; 0482FA : EA          ;  |Makes you wonder what used to be here... 
@@ -289,7 +289,7 @@ CODE_0482ED:          STZ.W $4204                         ;; 0482ED : 9C 04 42  
                       NOP                                 ;; 0482FC : EA          ;  | 
                       NOP                                 ;; 0482FD : EA          ; / 
                       REP #$20                            ;; 0482FE : C2 20       ; Accum (16 bit) 
-                      LDA.W $4214                         ;; 048300 : AD 14 42    ; Quotient of Divide Result (Low Byte)
+                      LDA.W !HW_RDDIV                     ;; 048300 : AD 14 42    ; Quotient of Divide Result (Low Byte)
                       LSR A                               ;; 048303 : 4A          ;
                       LSR A                               ;; 048304 : 4A          ;
                       SEP #$20                            ;; 048305 : E2 20       ; Accum (8 bit) 
@@ -1202,7 +1202,7 @@ CODE_048DDF:          LDA.W !CutsceneID                   ;; 048DDF : AD C6 13  
                       JSR OW_TilePos_Calc                 ;; 048E0B : 20 85 98    ;
                       REP #$10                            ;; 048E0E : C2 10       ; Index (16 bit) 
                       LDX.B !_4                           ;; 048E10 : A6 04       ;
-                      LDA.L $7ED000,X                     ;; 048E12 : BF 00 D0 7E ;
+                      LDA.L !OWLayer1Translevel,X         ;; 048E12 : BF 00 D0 7E ;
                       AND.W #$00FF                        ;; 048E16 : 29 FF 00    ;
                       TAX                                 ;; 048E19 : AA          ;
                       LDA.W !OWLevelTileSettings,X        ;; 048E1A : BD A2 1E    ;
@@ -1251,7 +1251,7 @@ CODE_048E55:          REP #$30                            ;; 048E55 : C2 30     
                       JSR OW_TilePos_Calc                 ;; 048E73 : 20 85 98    ;
                       STZ.B !_0                           ;; 048E76 : 64 00       ;
                       LDX.B !_4                           ;; 048E78 : A6 04       ;
-                      LDA.L $7ED000,X                     ;; 048E7A : BF 00 D0 7E ;
+                      LDA.L !OWLayer1Translevel,X         ;; 048E7A : BF 00 D0 7E ;
                       AND.W #$00FF                        ;; 048E7E : 29 FF 00    ;
                       ASL A                               ;; 048E81 : 0A          ;
                       TAX                                 ;; 048E82 : AA          ;
@@ -1262,7 +1262,7 @@ CODE_048E55:          REP #$30                            ;; 048E55 : C2 30     
                       BMI CODE_048E9E                     ;; 048E8D : 30 0F       ;
                       CPX.W #$0800                        ;; 048E8F : E0 00 08    ;
                       BCS CODE_048E9E                     ;; 048E92 : B0 0A       ;
-                      LDA.L $7EC800,X                     ;; 048E94 : BF 00 C8 7E ;
+                      LDA.L !Map16TilesLow,X              ;; 048E94 : BF 00 C8 7E ;
                       AND.W #$00FF                        ;; 048E98 : 29 FF 00    ;
                       STA.W !OverworldLayer1Tile          ;; 048E9B : 8D C1 13    ;
 CODE_048E9E:          SEP #$30                            ;; 048E9E : E2 30       ; Index (8 bit) Accum (8 bit) 
@@ -1345,7 +1345,7 @@ CODE_048F13:          REP #$20                            ;; 048F13 : C2 20     
                       BPL CODE_048F5F                     ;; 048F3F : 10 1E       ;
                       REP #$20                            ;; 048F41 : C2 20       ; Accum (16 bit) 
                       LDX.B !_4                           ;; 048F43 : A6 04       ;
-                      LDA.L $7ED000,X                     ;; 048F45 : BF 00 D0 7E ;
+                      LDA.L !OWLayer1Translevel,X         ;; 048F45 : BF 00 D0 7E ;
                       AND.W #$00FF                        ;; 048F49 : 29 FF 00    ;
                       TAX                                 ;; 048F4C : AA          ;
                       LDA.W !OWLevelTileSettings,X        ;; 048F4D : BD A2 1E    ;
@@ -1358,7 +1358,7 @@ CODE_048F56:          SEP #$20                            ;; 048F56 : E2 20     
                                                           ;;                      ;
 CODE_048F5F:          REP #$20                            ;; 048F5F : C2 20       ; Accum (16 bit) 
                       LDX.B !_4                           ;; 048F61 : A6 04       ;
-                      LDA.L $7ED000,X                     ;; 048F63 : BF 00 D0 7E ;
+                      LDA.L !OWLayer1Translevel,X         ;; 048F63 : BF 00 D0 7E ;
                       AND.W #$00FF                        ;; 048F67 : 29 FF 00    ;
                       TAX                                 ;; 048F6A : AA          ;
                       LDA.W !OWLevelTileSettings,X        ;; 048F6B : BD A2 1E    ;
@@ -1452,7 +1452,7 @@ CODE_049003:          REP #$20                            ;; 049003 : C2 20     
                       JSR OW_TilePos_Calc                 ;; 049020 : 20 85 98    ;
                       REP #$10                            ;; 049023 : C2 10       ; Index (16 bit) 
                       LDX.B !_4                           ;; 049025 : A6 04       ;
-                      LDA.L $7EC800,X                     ;; 049027 : BF 00 C8 7E ;
+                      LDA.L !Map16TilesLow,X              ;; 049027 : BF 00 C8 7E ;
                       AND.W #$00FF                        ;; 04902B : 29 FF 00    ;
                       STA.W !OverworldLayer1Tile          ;; 04902E : 8D C1 13    ;
                       SEP #$30                            ;; 049031 : E2 30       ; Index (8 bit) Accum (8 bit) 
@@ -1635,7 +1635,7 @@ CODE_0491E9:          REP #$20                            ;; 0491E9 : C2 20     
                       STZ.B !_9                           ;; 04921A : 64 09       ;
                       REP #$30                            ;; 04921C : C2 30       ; 16 bit A,X,Y ; Index (16 bit) Accum (16 bit) 
                       LDX.B !_4                           ;; 04921E : A6 04       ; X = tile pos 
-                      LDA.L $7ED000,X                     ;; 049220 : BF 00 D0 7E ; \ Get level number of current tile pos 
+                      LDA.L !OWLayer1Translevel,X         ;; 049220 : BF 00 D0 7E ; \ Get level number of current tile pos 
                       AND.W #$00FF                        ;; 049224 : 29 FF 00    ; / 
                       LDY.W #$000A                        ;; 049227 : A0 0A 00    ;
 CODE_04922A:          CMP.W DATA_04906C,Y                 ;; 04922A : D9 6C 90    ;
@@ -1647,7 +1647,7 @@ CODE_04922A:          CMP.W DATA_04906C,Y                 ;; 04922A : D9 6C 90  
 CODE_04923B:          DEY                                 ;; 04923B : 88          ;
                       DEY                                 ;; 04923C : 88          ;
                       BPL CODE_04922A                     ;; 04923D : 10 EB       ;
-                      LDA.L $7ED800,X                     ;; 04923F : BF 00 D8 7E ;
+                      LDA.L !OWLayer2Directions,X         ;; 04923F : BF 00 D8 7E ;
                       AND.W #$00FF                        ;; 049243 : 29 FF 00    ;
                       LDX.B !_8                           ;; 049246 : A6 08       ;
                       BEQ CODE_04924E                     ;; 049248 : F0 04       ;
@@ -1693,7 +1693,7 @@ CODE_04928C:          REP #$30                            ;; 04928C : C2 30     
                       PHA                                 ;; 049294 : 48          ;
                       STZ.B !_6                           ;; 049295 : 64 06       ;
                       LDX.B !_4                           ;; 049297 : A6 04       ;
-                      LDA.L $7ED000,X                     ;; 049299 : BF 00 D0 7E ;
+                      LDA.L !OWLayer1Translevel,X         ;; 049299 : BF 00 D0 7E ;
                       AND.W #$00FF                        ;; 04929D : 29 FF 00    ;
                       TAX                                 ;; 0492A0 : AA          ;
                       PLA                                 ;; 0492A1 : 68          ;
@@ -1731,7 +1731,7 @@ CODE_0492CB:          LDA.B !_4                           ;; 0492CB : A5 04     
                       BMI CODE_049301                     ;; 0492E2 : 30 1D       ;
                       CMP.W #$0800                        ;; 0492E4 : C9 00 08    ;
                       BCS CODE_049301                     ;; 0492E7 : B0 18       ;
-                      LDA.L $7EC800,X                     ;; 0492E9 : BF 00 C8 7E ;
+                      LDA.L !Map16TilesLow,X              ;; 0492E9 : BF 00 C8 7E ;
                       AND.W #$00FF                        ;; 0492ED : 29 FF 00    ;
                       BEQ CODE_049301                     ;; 0492F0 : F0 0F       ;
                       CMP.W #$0056                        ;; 0492F2 : C9 56 00    ;
@@ -1744,7 +1744,7 @@ CODE_0492FE:          BRL CODE_049384                     ;; 0492FE : 82 83 00  
 CODE_049301:          STZ.W !HardcodedPathIsUsed          ;; 049301 : 9C 78 1B    ;
                       STZ.W !HardcodedPathIndex           ;; 049304 : 9C 7A 1B    ;
                       LDX.B !_8                           ;; 049307 : A6 08       ;
-                      LDA.L $7ED000,X                     ;; 049309 : BF 00 D0 7E ;
+                      LDA.L !OWLayer1Translevel,X         ;; 049309 : BF 00 D0 7E ;
                       AND.W #$00FF                        ;; 04930D : 29 FF 00    ;
                       STA.B !_0                           ;; 049310 : 85 00       ;
                       LDX.W #$0009                        ;; 049312 : A2 09 00    ;
@@ -1935,20 +1935,20 @@ CODE_0494A4:          STY.B !_8                           ;; 0494A4 : 84 08     
                       ASL A                               ;; 0494AF : 0A          ;
                       ASL A                               ;; 0494B0 : 0A          ;
                       ASL A                               ;; 0494B1 : 0A          ;
-                      STA.W $4202                         ;; 0494B2 : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 0494B2 : 8D 02 42    ; Multiplicand A
                       LDA.B !_C                           ;; 0494B5 : A5 0C       ;
                       BEQ CODE_0494DA                     ;; 0494B7 : F0 21       ;
-                      STA.W $4203                         ;; 0494B9 : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 0494B9 : 8D 03 42    ; Multplier B
                       NOP                                 ;; 0494BC : EA          ;
                       NOP                                 ;; 0494BD : EA          ;
                       NOP                                 ;; 0494BE : EA          ;
                       NOP                                 ;; 0494BF : EA          ;
                       REP #$20                            ;; 0494C0 : C2 20       ; Accum (16 bit) 
-                      LDA.W $4216                         ;; 0494C2 : AD 16 42    ; Product/Remainder Result (Low Byte)
-                      STA.W $4204                         ;; 0494C5 : 8D 04 42    ; Dividend (Low Byte)
+                      LDA.W !HW_RDMPY                     ;; 0494C2 : AD 16 42    ; Product/Remainder Result (Low Byte)
+                      STA.W !HW_WRDIV                     ;; 0494C5 : 8D 04 42    ; Dividend (Low Byte)
                       SEP #$20                            ;; 0494C8 : E2 20       ; Accum (8 bit) 
                       LDA.B !_A                           ;; 0494CA : A5 0A       ;
-                      STA.W $4206                         ;; 0494CC : 8D 06 42    ; Divisor B
+                      STA.W !HW_WRDIV+2                   ;; 0494CC : 8D 06 42    ; Divisor B
                       NOP                                 ;; 0494CF : EA          ;
                       NOP                                 ;; 0494D0 : EA          ;
                       NOP                                 ;; 0494D1 : EA          ;
@@ -1956,7 +1956,7 @@ CODE_0494A4:          STY.B !_8                           ;; 0494A4 : 84 08     
                       NOP                                 ;; 0494D3 : EA          ;
                       NOP                                 ;; 0494D4 : EA          ;
                       REP #$20                            ;; 0494D5 : C2 20       ; Accum (16 bit) 
-                      LDA.W $4214                         ;; 0494D7 : AD 14 42    ; Quotient of Divide Result (Low Byte)
+                      LDA.W !HW_RDDIV                     ;; 0494D7 : AD 14 42    ; Quotient of Divide Result (Low Byte)
 CODE_0494DA:          REP #$20                            ;; 0494DA : C2 20       ; Accum (16 bit) 
                       STA.B !_E                           ;; 0494DC : 85 0E       ;
                       LDX.W !OverworldClimbing            ;; 0494DE : AE 80 1B    ;
@@ -2009,7 +2009,7 @@ CODE_049522:          LDA.W !Layer1ScrollTimer            ;; 049522 : AD 44 14  
                       JSR OW_TilePos_Calc                 ;; 04953B : 20 85 98    ;
                       STZ.B !_0                           ;; 04953E : 64 00       ;
                       LDX.B !_4                           ;; 049540 : A6 04       ;
-                      LDA.L $7ED000,X                     ;; 049542 : BF 00 D0 7E ;
+                      LDA.L !OWLayer1Translevel,X         ;; 049542 : BF 00 D0 7E ;
                       AND.W #$00FF                        ;; 049546 : 29 FF 00    ;
                       ASL A                               ;; 049549 : 0A          ;
                       TAX                                 ;; 04954A : AA          ;
@@ -2074,7 +2074,7 @@ CODE_0495CE:          LDX.B !_4                           ;; 0495CE : A6 04     
                       BMI ADDR_049575                     ;; 0495D0 : 30 A3       ;
                       CMP.W #$0800                        ;; 0495D2 : C9 00 08    ;
                       BCS ADDR_049575                     ;; 0495D5 : B0 9E       ;
-                      LDA.L $7EC800,X                     ;; 0495D7 : BF 00 C8 7E ; \ Load OW tile number 
+                      LDA.L !Map16TilesLow,X              ;; 0495D7 : BF 00 C8 7E ; \ Load OW tile number 
                       AND.W #$00FF                        ;; 0495DB : 29 FF 00    ; / 
 CODE_0495DE:          STA.W !OverworldLayer1Tile          ;; 0495DE : 8D C1 13    ; Set "Current OW tile" 
                       BEQ ADDR_049575                     ;; 0495E1 : F0 92       ;
@@ -2178,7 +2178,7 @@ CODE_0496A5:          NOP                                 ;; 0496A5 : EA        
                       TAY                                 ;; 0496BB : A8          ;
                       STZ.B !_6                           ;; 0496BC : 64 06       ;
                       LDX.B !_4                           ;; 0496BE : A6 04       ;
-                      LDA.L $7ED000,X                     ;; 0496C0 : BF 00 D0 7E ;
+                      LDA.L !OWLayer1Translevel,X         ;; 0496C0 : BF 00 D0 7E ;
                       AND.W #$00FF                        ;; 0496C4 : 29 FF 00    ;
                       TAX                                 ;; 0496C7 : AA          ;
                       LDA.W DATA_04941E,Y                 ;; 0496C8 : B9 1E 94    ;
@@ -2486,7 +2486,7 @@ CODE_049903:          LDX.W !OWLevelExitMode              ;; 049903 : AE D5 0D  
                       JSR OW_TilePos_Calc                 ;; 049933 : 20 85 98    ;
                       REP #$10                            ;; 049936 : C2 10       ; Index (16 bit) 
                       LDX.B !_4                           ;; 049938 : A6 04       ;
-                      LDA.L $7ED800,X                     ;; 04993A : BF 00 D8 7E ;
+                      LDA.L !OWLayer2Directions,X         ;; 04993A : BF 00 D8 7E ;
                       AND.W #$00FF                        ;; 04993E : 29 FF 00    ;
                       LDX.B !_8                           ;; 049941 : A6 08       ;
                       BEQ CODE_049949                     ;; 049943 : F0 04       ;
@@ -2497,7 +2497,7 @@ CODE_049949:          AND.W #$0003                        ;; 049949 : 29 03 00  
                       ASL A                               ;; 04994C : 0A          ;
                       TAY                                 ;; 04994D : A8          ;
                       LDX.B !_4                           ;; 04994E : A6 04       ;
-                      LDA.L $7ED000,X                     ;; 049950 : BF 00 D0 7E ;
+                      LDA.L !OWLayer1Translevel,X         ;; 049950 : BF 00 D0 7E ;
                       AND.W #$00FF                        ;; 049954 : 29 FF 00    ;
                       TAX                                 ;; 049957 : AA          ;
                       LDA.W DATA_04941E,Y                 ;; 049958 : B9 1E 94    ;
@@ -2702,18 +2702,18 @@ DATA_049CED:          db $CB,$01,$9D,$01,$9E,$01,$9F,$01  ;; 049CED             
                       db $AC,$01,$B2,$01,$B7,$01,$C1,$01  ;; ?QPWZ?               ;
                       db $C6,$01                          ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_049D07:          LDA.L $7F837B                       ;; 049D07 : AF 7B 83 7F ; Index (16 bit) Accum (16 bit) 
+CODE_049D07:          LDA.L !DynStripeImgSize             ;; 049D07 : AF 7B 83 7F ; Index (16 bit) Accum (16 bit) 
                       TAX                                 ;; 049D0B : AA          ;
                       CLC                                 ;; 049D0C : 18          ;
                       ADC.W #$0026                        ;; 049D0D : 69 26 00    ;
                       STA.B !_2                           ;; 049D10 : 85 02       ;
                       CLC                                 ;; 049D12 : 18          ;
                       ADC.W #$0004                        ;; 049D13 : 69 04 00    ;
-                      STA.L $7F837B                       ;; 049D16 : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 049D16 : 8F 7B 83 7F ;
                       LDA.W #$2500                        ;; 049D1A : A9 00 25    ;
-                      STA.L $7F837F,X                     ;; 049D1D : 9F 7F 83 7F ;
+                      STA.L !DynamicStripeImage+2,X       ;; 049D1D : 9F 7F 83 7F ;
                       LDA.W #$8B50                        ;; 049D21 : A9 50 8B    ;
-                      STA.L $7F837D,X                     ;; 049D24 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 049D24 : 9F 7D 83 7F ;
                       LDA.B !_1                           ;; 049D28 : A5 01       ;
                       AND.W #$007F                        ;; 049D2A : 29 7F 00    ;
                       ASL A                               ;; 049D2D : 0A          ;
@@ -2754,7 +2754,7 @@ CODE_049D6A:          CPX.B !_2                           ;; 049D6A : E4 02     
                       BRA CODE_049D6A                     ;; 049D74 : 80 F4       ;
                                                           ;;                      ;
 CODE_049D76:          LDA.B #$FF                          ;; 049D76 : A9 FF       ;
-                      STA.L $7F8381,X                     ;; 049D78 : 9F 81 83 7F ;
+                      STA.L !DynamicStripeImage+4,X       ;; 049D78 : 9F 81 83 7F ;
                       REP #$20                            ;; 049D7C : C2 20       ; Accum (16 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -2763,9 +2763,9 @@ CODE_049D7F:          LDA.W LevelNameStrings,Y            ;; 049D7F : B9 C5 9A  
                       CPX.B !_2                           ;; 049D83 : E4 02       ;
                       BCS CODE_049D95                     ;; 049D85 : B0 0E       ;
                       AND.B #$7F                          ;; 049D87 : 29 7F       ;
-                      STA.L $7F8381,X                     ;; 049D89 : 9F 81 83 7F ;
+                      STA.L !DynamicStripeImage+4,X       ;; 049D89 : 9F 81 83 7F ;
                       LDA.B #$39                          ;; 049D8D : A9 39       ;
-                      STA.L $7F8382,X                     ;; 049D8F : 9F 82 83 7F ;
+                      STA.L !DynamicStripeImage+5,X       ;; 049D8F : 9F 82 83 7F ;
                       INX                                 ;; 049D93 : E8          ;
                       INX                                 ;; 049D94 : E8          ;
 CODE_049D95:          INY                                 ;; 049D95 : C8          ;
@@ -4745,13 +4745,13 @@ CODE_04D714:          JSL CODE_05881A                     ;; 04D714 : 22 1A 88 0
                       STA.B !Layer1PrevTileDown           ;; 04D73D : 85 4F       ;
                       SEP #$30                            ;; 04D73F : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDA.B #$80                          ;; 04D741 : A9 80       ;
-                      STA.W $2115                         ;; 04D743 : 8D 15 21    ; VRAM Address Increment Value
-                      STZ.W $2116                         ;; 04D746 : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMAINC                    ;; 04D743 : 8D 15 21    ; VRAM Address Increment Value
+                      STZ.W !HW_VMADD                     ;; 04D746 : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$30                          ;; 04D749 : A9 30       ;
-                      STA.W $2117                         ;; 04D74B : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 04D74B : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 04D74E : A2 06       ;
 CODE_04D750:          LDA.L DATA_04DAB3,X                 ;; 04D750 : BF B3 DA 04 ;
-                      STA.W $4310,X                       ;; 04D754 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 04D754 : 9D 10 43    ;
                       DEX                                 ;; 04D757 : CA          ;
                       BPL CODE_04D750                     ;; 04D758 : 10 F6       ;
                       LDA.W !PlayerTurnOW                 ;; 04D75A : AD D6 0D    ;
@@ -4761,43 +4761,43 @@ CODE_04D750:          LDA.L DATA_04DAB3,X                 ;; 04D750 : BF B3 DA 0
                       LDA.W !OWPlayerSubmap,X             ;; 04D760 : BD 11 1F    ;
                       BEQ CODE_04D76A                     ;; 04D763 : F0 05       ;
                       LDA.B #$60                          ;; 04D765 : A9 60       ;
-                      STA.W $4313                         ;; 04D767 : 8D 13 43    ; A Address (High Byte)
+                      STA.W !HW_DMAADDR+$11               ;; 04D767 : 8D 13 43    ; A Address (High Byte)
 CODE_04D76A:          LDA.B #$02                          ;; 04D76A : A9 02       ;
-                      STA.W $420B                         ;; 04D76C : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 04D76C : 8D 0B 42    ; Regular DMA Channel Enable
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_04D770:          STA.L $7FC800,X                     ;; 04D770 : 9F 00 C8 7F ;
-                      STA.L $7FC9B0,X                     ;; 04D774 : 9F B0 C9 7F ;
-                      STA.L $7FCB60,X                     ;; 04D778 : 9F 60 CB 7F ;
-                      STA.L $7FCD10,X                     ;; 04D77C : 9F 10 CD 7F ;
-                      STA.L $7FCEC0,X                     ;; 04D780 : 9F C0 CE 7F ;
-                      STA.L $7FD070,X                     ;; 04D784 : 9F 70 D0 7F ;
-                      STA.L $7FD220,X                     ;; 04D788 : 9F 20 D2 7F ;
-                      STA.L $7FD3D0,X                     ;; 04D78C : 9F D0 D3 7F ;
-                      STA.L $7FD580,X                     ;; 04D790 : 9F 80 D5 7F ;
-                      STA.L $7FD730,X                     ;; 04D794 : 9F 30 D7 7F ;
-                      STA.L $7FD8E0,X                     ;; 04D798 : 9F E0 D8 7F ;
-                      STA.L $7FDA90,X                     ;; 04D79C : 9F 90 DA 7F ;
-                      STA.L $7FDC40,X                     ;; 04D7A0 : 9F 40 DC 7F ;
-                      STA.L $7FDDF0,X                     ;; 04D7A4 : 9F F0 DD 7F ;
-                      STA.L $7FDFA0,X                     ;; 04D7A8 : 9F A0 DF 7F ;
-                      STA.L $7FE150,X                     ;; 04D7AC : 9F 50 E1 7F ;
-                      STA.L $7FE300,X                     ;; 04D7B0 : 9F 00 E3 7F ;
-                      STA.L $7FE4B0,X                     ;; 04D7B4 : 9F B0 E4 7F ;
-                      STA.L $7FE660,X                     ;; 04D7B8 : 9F 60 E6 7F ;
-                      STA.L $7FE810,X                     ;; 04D7BC : 9F 10 E8 7F ;
-                      STA.L $7FE9C0,X                     ;; 04D7C0 : 9F C0 E9 7F ;
-                      STA.L $7FEB70,X                     ;; 04D7C4 : 9F 70 EB 7F ;
-                      STA.L $7FED20,X                     ;; 04D7C8 : 9F 20 ED 7F ;
-                      STA.L $7FEED0,X                     ;; 04D7CC : 9F D0 EE 7F ;
-                      STA.L $7FF080,X                     ;; 04D7D0 : 9F 80 F0 7F ;
-                      STA.L $7FF230,X                     ;; 04D7D4 : 9F 30 F2 7F ;
-                      STA.L $7FF3E0,X                     ;; 04D7D8 : 9F E0 F3 7F ;
-                      STA.L $7FF590,X                     ;; 04D7DC : 9F 90 F5 7F ;
-                      STA.L $7FF740,X                     ;; 04D7E0 : 9F 40 F7 7F ;
-                      STA.L $7FF8F0,X                     ;; 04D7E4 : 9F F0 F8 7F ;
-                      STA.L $7FFAA0,X                     ;; 04D7E8 : 9F A0 FA 7F ;
-                      STA.L $7FFC50,X                     ;; 04D7EC : 9F 50 FC 7F ;
+CODE_04D770:          STA.L !Map16TilesHigh,X             ;; 04D770 : 9F 00 C8 7F ;
+                      STA.L !Map16TilesHigh+$1B0,X        ;; 04D774 : 9F B0 C9 7F ;
+                      STA.L !Map16TilesHigh+$360,X        ;; 04D778 : 9F 60 CB 7F ;
+                      STA.L !Map16TilesHigh+$510,X        ;; 04D77C : 9F 10 CD 7F ;
+                      STA.L !Map16TilesHigh+$6C0,X        ;; 04D780 : 9F C0 CE 7F ;
+                      STA.L !Map16TilesHigh+$870,X        ;; 04D784 : 9F 70 D0 7F ;
+                      STA.L !Map16TilesHigh+$A20,X        ;; 04D788 : 9F 20 D2 7F ;
+                      STA.L !Map16TilesHigh+$BD0,X        ;; 04D78C : 9F D0 D3 7F ;
+                      STA.L !Map16TilesHigh+$D80,X        ;; 04D790 : 9F 80 D5 7F ;
+                      STA.L !Map16TilesHigh+$F30,X        ;; 04D794 : 9F 30 D7 7F ;
+                      STA.L !Map16TilesHigh+$10E0,X       ;; 04D798 : 9F E0 D8 7F ;
+                      STA.L !Map16TilesHigh+$1290,X       ;; 04D79C : 9F 90 DA 7F ;
+                      STA.L !Map16TilesHigh+$1440,X       ;; 04D7A0 : 9F 40 DC 7F ;
+                      STA.L !Map16TilesHigh+$15F0,X       ;; 04D7A4 : 9F F0 DD 7F ;
+                      STA.L !Map16TilesHigh+$17A0,X       ;; 04D7A8 : 9F A0 DF 7F ;
+                      STA.L !Map16TilesHigh+$1950,X       ;; 04D7AC : 9F 50 E1 7F ;
+                      STA.L !Map16TilesHigh+$1B00,X       ;; 04D7B0 : 9F 00 E3 7F ;
+                      STA.L !Map16TilesHigh+$1CB0,X       ;; 04D7B4 : 9F B0 E4 7F ;
+                      STA.L !Map16TilesHigh+$1E60,X       ;; 04D7B8 : 9F 60 E6 7F ;
+                      STA.L !Map16TilesHigh+$2010,X       ;; 04D7BC : 9F 10 E8 7F ;
+                      STA.L !Map16TilesHigh+$21C0,X       ;; 04D7C0 : 9F C0 E9 7F ;
+                      STA.L !Map16TilesHigh+$2370,X       ;; 04D7C4 : 9F 70 EB 7F ;
+                      STA.L !Map16TilesHigh+$2520,X       ;; 04D7C8 : 9F 20 ED 7F ;
+                      STA.L !Map16TilesHigh+$26D0,X       ;; 04D7CC : 9F D0 EE 7F ;
+                      STA.L !Map16TilesHigh+$2880,X       ;; 04D7D0 : 9F 80 F0 7F ;
+                      STA.L !Map16TilesHigh+$2A30,X       ;; 04D7D4 : 9F 30 F2 7F ;
+                      STA.L !Map16TilesHigh+$2BE0,X       ;; 04D7D8 : 9F E0 F3 7F ;
+                      STA.L !Map16TilesHigh+$2D90,X       ;; 04D7DC : 9F 90 F5 7F ;
+                      STA.L !Map16TilesHigh+$2F40,X       ;; 04D7E0 : 9F 40 F7 7F ;
+                      STA.L !Map16TilesHigh+$30F0,X       ;; 04D7E4 : 9F F0 F8 7F ;
+                      STA.L !Map16TilesHigh+$32A0,X       ;; 04D7E8 : 9F A0 FA 7F ;
+                      STA.L !Map16TilesHigh+$3450,X       ;; 04D7EC : 9F 50 FC 7F ;
                       INX                                 ;; 04D7F0 : E8          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -4983,7 +4983,7 @@ CODE_04DABA:          SEP #$20                            ;; 04DABA : E2 20     
                       BNE CODE_04DAD6                     ;; 04DAC4 : D0 10       ;
 CODE_04DAC6:          INY                                 ;; 04DAC6 : C8          ;
                       LDA.B [!_0],Y                       ;; 04DAC7 : B7 00       ;
-                      STA.L $7F4000,X                     ;; 04DAC9 : 9F 00 40 7F ;
+                      STA.L !OWLayer2Tilemap,X            ;; 04DAC9 : 9F 00 40 7F ;
                       INX                                 ;; 04DACD : E8          ;
                       INX                                 ;; 04DACE : E8          ;
                       DEC.B !_3                           ;; 04DACF : C6 03       ;
@@ -4995,7 +4995,7 @@ CODE_04DAD6:          LDA.B !_3                           ;; 04DAD6 : A5 03     
                       STA.B !_3                           ;; 04DADA : 85 03       ;
                       INY                                 ;; 04DADC : C8          ;
                       LDA.B [!_0],Y                       ;; 04DADD : B7 00       ;
-CODE_04DADF:          STA.L $7F4000,X                     ;; 04DADF : 9F 00 40 7F ;
+CODE_04DADF:          STA.L !OWLayer2Tilemap,X            ;; 04DADF : 9F 00 40 7F ;
                       INX                                 ;; 04DAE3 : E8          ;
                       INX                                 ;; 04DAE4 : E8          ;
                       DEC.B !_3                           ;; 04DAE5 : C6 03       ;
@@ -5242,10 +5242,10 @@ CODE_04DCB6:          PHP                                 ;; 04DCB6 : 08        
                       ADC.B #$04                          ;; 04DCE4 : 69 04       ;
                       STA.B !_1                           ;; 04DCE6 : 85 01       ;
 CODE_04DCE8:          LDX.B !_0                           ;; 04DCE8 : A6 00       ;
-                      LDA.L $7EC800,X                     ;; 04DCEA : BF 00 C8 7E ;
+                      LDA.L !Map16TilesLow,X              ;; 04DCEA : BF 00 C8 7E ;
                       STA.B !_2                           ;; 04DCEE : 85 02       ;
                       REP #$20                            ;; 04DCF0 : C2 20       ; Accum (16 bit) 
-                      LDA.L $7FC800,X                     ;; 04DCF2 : BF 00 C8 7F ;
+                      LDA.L !Map16TilesHigh,X             ;; 04DCF2 : BF 00 C8 7F ;
                       STA.B !_3                           ;; 04DCF6 : 85 03       ;
                       LDA.B !_2                           ;; 04DCF8 : A5 02       ;
                       ASL A                               ;; 04DCFA : 0A          ;
@@ -5265,19 +5265,19 @@ CODE_04DCE8:          LDX.B !_0                           ;; 04DCE8 : A6 00     
                       ORA.B !_2                           ;; 04DD10 : 05 02       ;
                       TAX                                 ;; 04DD12 : AA          ;
                       LDA.B [!Layer1DataPtr],Y            ;; 04DD13 : B7 65       ;
-                      STA.L $7EE400,X                     ;; 04DD15 : 9F 00 E4 7E ;
+                      STA.L !OWLayer1VramBuffer,X         ;; 04DD15 : 9F 00 E4 7E ;
                       INY                                 ;; 04DD19 : C8          ;
                       INY                                 ;; 04DD1A : C8          ;
                       LDA.B [!Layer1DataPtr],Y            ;; 04DD1B : B7 65       ;
-                      STA.L $7EE440,X                     ;; 04DD1D : 9F 40 E4 7E ;
+                      STA.L !OWLayer1VramBuffer+$40,X     ;; 04DD1D : 9F 40 E4 7E ;
                       INY                                 ;; 04DD21 : C8          ;
                       INY                                 ;; 04DD22 : C8          ;
                       LDA.B [!Layer1DataPtr],Y            ;; 04DD23 : B7 65       ;
-                      STA.L $7EE402,X                     ;; 04DD25 : 9F 02 E4 7E ;
+                      STA.L !OWLayer1VramBuffer+2,X       ;; 04DD25 : 9F 02 E4 7E ;
                       INY                                 ;; 04DD29 : C8          ;
                       INY                                 ;; 04DD2A : C8          ;
                       LDA.B [!Layer1DataPtr],Y            ;; 04DD2B : B7 65       ;
-                      STA.L $7EE442,X                     ;; 04DD2D : 9F 42 E4 7E ;
+                      STA.L !OWLayer1VramBuffer+$42,X     ;; 04DD2D : 9F 42 E4 7E ;
                       SEP #$20                            ;; 04DD31 : E2 20       ; Accum (8 bit) 
                       INC.B !_0                           ;; 04DD33 : E6 00       ;
                       LDA.B !_0                           ;; 04DD35 : A5 00       ;
@@ -5306,7 +5306,7 @@ CODE_04DD57:          SEP #$20                            ;; 04DD57 : E2 20     
                       AND.B #$80                          ;; 04DD5E : 29 80       ;
                       BNE CODE_04DD71                     ;; 04DD60 : D0 0F       ;
 CODE_04DD62:          LDA.B [!_2],Y                       ;; 04DD62 : B7 02       ;
-                      STA.L $7F0000,X                     ;; 04DD64 : 9F 00 00 7F ;
+                      STA.L !OWEventTilemap,X             ;; 04DD64 : 9F 00 00 7F ;
                       INY                                 ;; 04DD68 : C8          ;
                       INX                                 ;; 04DD69 : E8          ;
                       DEC.B !_5                           ;; 04DD6A : C6 05       ;
@@ -5317,7 +5317,7 @@ CODE_04DD71:          LDA.B !_5                           ;; 04DD71 : A5 05     
                       AND.B #$7F                          ;; 04DD73 : 29 7F       ;
                       STA.B !_5                           ;; 04DD75 : 85 05       ;
                       LDA.B [!_2],Y                       ;; 04DD77 : B7 02       ;
-CODE_04DD79:          STA.L $7F0000,X                     ;; 04DD79 : 9F 00 00 7F ;
+CODE_04DD79:          STA.L !OWEventTilemap,X             ;; 04DD79 : 9F 00 00 7F ;
                       INX                                 ;; 04DD7D : E8          ;
                       DEC.B !_5                           ;; 04DD7E : C6 05       ;
                       BPL CODE_04DD79                     ;; 04DD80 : 10 F7       ;
@@ -5620,10 +5620,10 @@ CODE_04E4D5:          LDX.B !_4                           ;; 04E4D5 : A6 04     
                       STA.B !_C                           ;; 04E4DA : 85 0C       ;
 CODE_04E4DC:          SEP #$20                            ;; 04E4DC : E2 20       ; Accum (8 bit) 
                       LDA.B [!_9],Y                       ;; 04E4DE : B7 09       ;
-                      STA.L $7F4000,X                     ;; 04E4E0 : 9F 00 40 7F ;
+                      STA.L !OWLayer2Tilemap,X            ;; 04E4E0 : 9F 00 40 7F ;
                       INX                                 ;; 04E4E4 : E8          ;
                       LDA.B [!_6],Y                       ;; 04E4E5 : B7 06       ;
-                      STA.L $7F4000,X                     ;; 04E4E7 : 9F 00 40 7F ;
+                      STA.L !OWLayer2Tilemap,X            ;; 04E4E7 : 9F 00 40 7F ;
                       INY                                 ;; 04E4EB : C8          ;
                       INX                                 ;; 04E4EC : E8          ;
                       REP #$20                            ;; 04E4ED : C2 20       ; Accum (16 bit) 
@@ -5661,10 +5661,10 @@ CODE_04E525:          LDX.B !_4                           ;; 04E525 : A6 04     
                       STA.B !_C                           ;; 04E52A : 85 0C       ;
 CODE_04E52C:          SEP #$20                            ;; 04E52C : E2 20       ; Accum (8 bit) 
                       LDA.B [!_9],Y                       ;; 04E52E : B7 09       ;
-                      STA.L $7F4000,X                     ;; 04E530 : 9F 00 40 7F ;
+                      STA.L !OWLayer2Tilemap,X            ;; 04E530 : 9F 00 40 7F ;
                       INX                                 ;; 04E534 : E8          ;
                       LDA.B [!_6],Y                       ;; 04E535 : B7 06       ;
-                      STA.L $7F4000,X                     ;; 04E537 : 9F 00 40 7F ;
+                      STA.L !OWLayer2Tilemap,X            ;; 04E537 : 9F 00 40 7F ;
                       INY                                 ;; 04E53B : C8          ;
                       INX                                 ;; 04E53C : E8          ;
                       REP #$20                            ;; 04E53D : C2 20       ; Accum (16 bit) 
@@ -5896,9 +5896,9 @@ CODE_04E6F9:          JSR CODE_04EA62                     ;; 04E6F9 : 20 62 EA  
                                                           ;;                      ;
 CODE_04E74F:          JSR CODE_04E824                     ;; 04E74F : 20 24 E8    ;
 CODE_04E752:          LDA.W #$00FF                        ;; 04E752 : A9 FF 00    ;
-                      STA.L $7F837D,X                     ;; 04E755 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04E755 : 9F 7D 83 7F ;
                       TXA                                 ;; 04E759 : 8A          ;
-                      STA.L $7F837B                       ;; 04E75A : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 04E75A : 8F 7B 83 7F ;
                       JSR CODE_04E496                     ;; 04E75E : 20 96 E4    ;
                       SEP #$30                            ;; 04E761 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDA.B #$15                          ;; 04E763 : A9 15       ;
@@ -5908,10 +5908,10 @@ CODE_04E752:          LDA.W #$00FF                        ;; 04E752 : A9 FF 00  
                                                           ;;                      ;
 CODE_04E76C:          LDA.W #$0001                        ;; 04E76C : A9 01 00    ; Index (16 bit) Accum (16 bit) 
                       STA.B !_6                           ;; 04E76F : 85 06       ;
-                      LDA.L $7F837B                       ;; 04E771 : AF 7B 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 04E771 : AF 7B 83 7F ;
                       TAX                                 ;; 04E775 : AA          ;
 CODE_04E776:          LDA.B !_2                           ;; 04E776 : A5 02       ;
-                      STA.L $7F837D,X                     ;; 04E778 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04E778 : 9F 7D 83 7F ;
                       INX                                 ;; 04E77C : E8          ;
                       INX                                 ;; 04E77D : E8          ;
                       LDY.W #$0300                        ;; 04E77E : A0 00 03    ;
@@ -5930,7 +5930,7 @@ CODE_04E776:          LDA.B !_2                           ;; 04E776 : A5 02     
                       XBA                                 ;; 04E799 : EB          ;
                       TAY                                 ;; 04E79A : A8          ;
 CODE_04E79B:          TYA                                 ;; 04E79B : 98          ;
-                      STA.L $7F837D,X                     ;; 04E79C : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04E79C : 9F 7D 83 7F ;
                       INX                                 ;; 04E7A0 : E8          ;
                       INX                                 ;; 04E7A1 : E8          ;
                       LDA.W #$0001                        ;; 04E7A2 : A9 01 00    ;
@@ -5938,7 +5938,7 @@ CODE_04E79B:          TYA                                 ;; 04E79B : 98        
                       LDY.B !_0                           ;; 04E7A7 : A4 00       ;
 CODE_04E7A9:          LDA.B [!_C],Y                       ;; 04E7A9 : B7 0C       ;
                       AND.B !_A                           ;; 04E7AB : 25 0A       ;
-                      STA.L $7F837D,X                     ;; 04E7AD : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04E7AD : 9F 7D 83 7F ;
                       INX                                 ;; 04E7B1 : E8          ;
                       INX                                 ;; 04E7B2 : E8          ;
                       INY                                 ;; 04E7B3 : C8          ;
@@ -5960,14 +5960,14 @@ CODE_04E7A9:          LDA.B [!_C],Y                       ;; 04E7A9 : B7 0C     
                       CLC                                 ;; 04E7CF : 18          ;
                       ADC.W #$0400                        ;; 04E7D0 : 69 00 04    ;
                       XBA                                 ;; 04E7D3 : EB          ;
-                      STA.L $7F837D,X                     ;; 04E7D4 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04E7D4 : 9F 7D 83 7F ;
                       INX                                 ;; 04E7D8 : E8          ;
                       INX                                 ;; 04E7D9 : E8          ;
                       LDA.B !_8                           ;; 04E7DA : A5 08       ;
                       ASL A                               ;; 04E7DC : 0A          ;
                       DEC A                               ;; 04E7DD : 3A          ;
                       XBA                                 ;; 04E7DE : EB          ;
-                      STA.L $7F837D,X                     ;; 04E7DF : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04E7DF : 9F 7D 83 7F ;
                       INX                                 ;; 04E7E3 : E8          ;
                       INX                                 ;; 04E7E4 : E8          ;
 CODE_04E7E5:          DEC.B !_4                           ;; 04E7E5 : C6 04       ;
@@ -6007,10 +6007,10 @@ Return04E823:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 CODE_04E824:          LDA.W #$0005                        ;; 04E824 : A9 05 00    ;
                       STA.B !_6                           ;; 04E827 : 85 06       ;
-                      LDA.L $7F837B                       ;; 04E829 : AF 7B 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 04E829 : AF 7B 83 7F ;
                       TAX                                 ;; 04E82D : AA          ;
 CODE_04E82E:          LDA.B !_2                           ;; 04E82E : A5 02       ;
-                      STA.L $7F837D,X                     ;; 04E830 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04E830 : 9F 7D 83 7F ;
                       INX                                 ;; 04E834 : E8          ;
                       INX                                 ;; 04E835 : E8          ;
                       LDY.W #$0B00                        ;; 04E836 : A0 00 0B    ;
@@ -6033,7 +6033,7 @@ CODE_04E82E:          LDA.B !_2                           ;; 04E82E : A5 02     
                       SBC.B !_8                           ;; 04E857 : E5 08       ;
                       STA.B !_8                           ;; 04E859 : 85 08       ;
 CODE_04E85B:          TYA                                 ;; 04E85B : 98          ;
-                      STA.L $7F837D,X                     ;; 04E85C : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04E85C : 9F 7D 83 7F ;
                       INX                                 ;; 04E860 : E8          ;
                       INX                                 ;; 04E861 : E8          ;
                       LDA.W #$0005                        ;; 04E862 : A9 05 00    ;
@@ -6041,7 +6041,7 @@ CODE_04E85B:          TYA                                 ;; 04E85B : 98        
                       LDY.B !_0                           ;; 04E867 : A4 00       ;
 CODE_04E869:          LDA.B [!_C],Y                       ;; 04E869 : B7 0C       ;
                       AND.B !_A                           ;; 04E86B : 25 0A       ;
-                      STA.L $7F837D,X                     ;; 04E86D : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04E86D : 9F 7D 83 7F ;
                       INX                                 ;; 04E871 : E8          ;
                       INX                                 ;; 04E872 : E8          ;
                       INY                                 ;; 04E873 : C8          ;
@@ -6063,14 +6063,14 @@ CODE_04E869:          LDA.B [!_C],Y                       ;; 04E869 : B7 0C     
                       CLC                                 ;; 04E88F : 18          ;
                       ADC.W #$0400                        ;; 04E890 : 69 00 04    ;
                       XBA                                 ;; 04E893 : EB          ;
-                      STA.L $7F837D,X                     ;; 04E894 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04E894 : 9F 7D 83 7F ;
                       INX                                 ;; 04E898 : E8          ;
                       INX                                 ;; 04E899 : E8          ;
                       LDA.B !_8                           ;; 04E89A : A5 08       ;
                       ASL A                               ;; 04E89C : 0A          ;
                       DEC A                               ;; 04E89D : 3A          ;
                       XBA                                 ;; 04E89E : EB          ;
-                      STA.L $7F837D,X                     ;; 04E89F : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04E89F : 9F 7D 83 7F ;
                       INX                                 ;; 04E8A3 : E8          ;
                       INX                                 ;; 04E8A4 : E8          ;
 CODE_04E8A5:          DEC.B !_4                           ;; 04E8A5 : C6 04       ;
@@ -6195,7 +6195,7 @@ CODE_04EA4E:          SEP #$20                            ;; 04EA4E : E2 20     
                       REP #$10                            ;; 04EA50 : C2 10       ; Index (16 bit) 
                       LDX.B !_4                           ;; 04EA52 : A6 04       ;
                       LDA.B !_0                           ;; 04EA54 : A5 00       ;
-                      STA.L $7EC800,X                     ;; 04EA56 : 9F 00 C8 7E ;
+                      STA.L !Map16TilesLow,X              ;; 04EA56 : 9F 00 C8 7E ;
 CODE_04EA5A:          SEP #$30                            ;; 04EA5A : E2 30       ; Index (8 bit) Accum (8 bit) 
                       PLX                                 ;; 04EA5C : FA          ;
                       LDA.B !_F                           ;; 04EA5D : A5 0F       ;
@@ -6268,10 +6268,10 @@ CODE_04EAED:          STA.B !_2                           ;; 04EAED : 85 02     
                       STA.W !OAMTileYPos+$150,Y           ;; 04EAF1 : 99 51 03    ;
                       LDA.L DATA_0C8000,X                 ;; 04EAF4 : BF 00 80 0C ;
                       STA.W !OAMTileNo+$150,Y             ;; 04EAF8 : 99 52 03    ;
-                      LDA.L $7F0000,X                     ;; 04EAFB : BF 00 00 7F ;
+                      LDA.L !OWEventTilemap,X             ;; 04EAFB : BF 00 00 7F ;
                       AND.B #$C0                          ;; 04EAFF : 29 C0       ;
                       STA.B !_4                           ;; 04EB01 : 85 04       ;
-                      LDA.L $7F0000,X                     ;; 04EB03 : BF 00 00 7F ;
+                      LDA.L !OWEventTilemap,X             ;; 04EB03 : BF 00 00 7F ;
                       AND.B #$1C                          ;; 04EB07 : 29 1C       ;
                       LSR A                               ;; 04EB09 : 4A          ;
                       ORA.B !_4                           ;; 04EB0A : 05 04       ;
@@ -6514,7 +6514,7 @@ CODE_04EDAB:          REP #$30                            ;; 04EDAB : C2 30     
                       SEP #$20                            ;; 04EDC5 : E2 20       ; Accum (8 bit) 
                       LDA.L DATA_04DA33,X                 ;; 04EDC7 : BF 33 DA 04 ;
                       PLX                                 ;; 04EDCB : FA          ;
-                      STA.L $7EC800,X                     ;; 04EDCC : 9F 00 C8 7E ;
+                      STA.L !Map16TilesLow,X              ;; 04EDCC : 9F 00 C8 7E ;
                       LDA.B #$04                          ;; 04EDD0 : A9 04       ;
                       STA.B !_C                           ;; 04EDD2 : 85 0C       ;
                       REP #$20                            ;; 04EDD4 : C2 20       ; Accum (16 bit) 
@@ -6525,36 +6525,36 @@ CODE_04EDAB:          REP #$30                            ;; 04EDAB : C2 30     
                       ASL A                               ;; 04EDDE : 0A          ;
                       ASL A                               ;; 04EDDF : 0A          ;
                       TAY                                 ;; 04EDE0 : A8          ;
-                      LDA.L $7F837B                       ;; 04EDE1 : AF 7B 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 04EDE1 : AF 7B 83 7F ;
                       TAX                                 ;; 04EDE5 : AA          ;
 CODE_04EDE6:          LDA.B !_0                           ;; 04EDE6 : A5 00       ;
-                      STA.L $7F837D,X                     ;; 04EDE8 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04EDE8 : 9F 7D 83 7F ;
                       CLC                                 ;; 04EDEC : 18          ;
                       ADC.W #$2000                        ;; 04EDED : 69 00 20    ;
-                      STA.L $7F8385,X                     ;; 04EDF0 : 9F 85 83 7F ;
+                      STA.L !DynamicStripeImage+8,X       ;; 04EDF0 : 9F 85 83 7F ;
                       LDA.W #$0300                        ;; 04EDF4 : A9 00 03    ;
-                      STA.L $7F837F,X                     ;; 04EDF7 : 9F 7F 83 7F ;
-                      STA.L $7F8387,X                     ;; 04EDFB : 9F 87 83 7F ;
+                      STA.L !DynamicStripeImage+2,X       ;; 04EDF7 : 9F 7F 83 7F ;
+                      STA.L !DynamicStripeImage+$0A,X     ;; 04EDFB : 9F 87 83 7F ;
                       LDA.B [!_A],Y                       ;; 04EDFF : B7 0A       ;
-                      STA.L $7F8381,X                     ;; 04EE01 : 9F 81 83 7F ;
+                      STA.L !DynamicStripeImage+4,X       ;; 04EE01 : 9F 81 83 7F ;
                       INY                                 ;; 04EE05 : C8          ;
                       INY                                 ;; 04EE06 : C8          ;
                       LDA.B [!_A],Y                       ;; 04EE07 : B7 0A       ;
-                      STA.L $7F8389,X                     ;; 04EE09 : 9F 89 83 7F ;
+                      STA.L !DynamicStripeImage+$0C,X     ;; 04EE09 : 9F 89 83 7F ;
                       INY                                 ;; 04EE0D : C8          ;
                       INY                                 ;; 04EE0E : C8          ;
                       LDA.B [!_A],Y                       ;; 04EE0F : B7 0A       ;
-                      STA.L $7F8383,X                     ;; 04EE11 : 9F 83 83 7F ;
+                      STA.L !DynamicStripeImage+6,X       ;; 04EE11 : 9F 83 83 7F ;
                       INY                                 ;; 04EE15 : C8          ;
                       INY                                 ;; 04EE16 : C8          ;
                       LDA.B [!_A],Y                       ;; 04EE17 : B7 0A       ;
-                      STA.L $7F838B,X                     ;; 04EE19 : 9F 8B 83 7F ;
+                      STA.L !DynamicStripeImage+$0E,X     ;; 04EE19 : 9F 8B 83 7F ;
                       LDA.W #$00FF                        ;; 04EE1D : A9 FF 00    ;
-                      STA.L $7F838D,X                     ;; 04EE20 : 9F 8D 83 7F ;
+                      STA.L !DynamicStripeImage+$10,X     ;; 04EE20 : 9F 8D 83 7F ;
                       TXA                                 ;; 04EE24 : 8A          ;
                       CLC                                 ;; 04EE25 : 18          ;
                       ADC.W #$0010                        ;; 04EE26 : 69 10 00    ;
-                      STA.L $7F837B                       ;; 04EE29 : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 04EE29 : 8F 7B 83 7F ;
                       SEP #$30                            ;; 04EE2D : E2 30       ; Index (8 bit) Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -6586,9 +6586,9 @@ CODE_04EE30:          SEP #$20                            ;; 04EE30 : E2 20     
                                                           ;;                      ;
 CODE_04EE68:          JSR CODE_04E824                     ;; 04EE68 : 20 24 E8    ;
 CODE_04EE6B:          LDA.W #$00FF                        ;; 04EE6B : A9 FF 00    ;
-                      STA.L $7F837D,X                     ;; 04EE6E : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04EE6E : 9F 7D 83 7F ;
                       TXA                                 ;; 04EE72 : 8A          ;
-                      STA.L $7F837B                       ;; 04EE73 : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 04EE73 : 8F 7B 83 7F ;
                       SEP #$30                            ;; 04EE77 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -6616,7 +6616,7 @@ CODE_04EEAA:          SEP #$30                            ;; 04EEAA : E2 30     
                       TAX                                 ;; 04EEC7 : AA          ;
                       LDA.L DATA_04E587,X                 ;; 04EEC8 : BF 87 E5 04 ;
                       STA.B !_0                           ;; 04EECC : 85 00       ;
-                      LDA.L $7F837B                       ;; 04EECE : AF 7B 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 04EECE : AF 7B 83 7F ;
                       TAX                                 ;; 04EED2 : AA          ;
                       LDA.W !StructureCrushTile           ;; 04EED3 : AD D0 13    ;
                       AND.W #$00FF                        ;; 04EED6 : 29 FF 00    ;
@@ -6627,32 +6627,32 @@ CODE_04EEAA:          SEP #$30                            ;; 04EEAA : E2 30     
                       ASL A                               ;; 04EEE0 : 0A          ;
                       TAY                                 ;; 04EEE1 : A8          ;
                       LDA.B !_0                           ;; 04EEE2 : A5 00       ;
-                      STA.L $7F837D,X                     ;; 04EEE4 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04EEE4 : 9F 7D 83 7F ;
                       CLC                                 ;; 04EEE8 : 18          ;
                       ADC.W #$2000                        ;; 04EEE9 : 69 00 20    ;
-                      STA.L $7F8385,X                     ;; 04EEEC : 9F 85 83 7F ;
+                      STA.L !DynamicStripeImage+8,X       ;; 04EEEC : 9F 85 83 7F ;
                       XBA                                 ;; 04EEF0 : EB          ;
                       CLC                                 ;; 04EEF1 : 18          ;
                       ADC.W #$0020                        ;; 04EEF2 : 69 20 00    ;
                       XBA                                 ;; 04EEF5 : EB          ;
                       STA.B !_0                           ;; 04EEF6 : 85 00       ;
                       LDA.W #$0300                        ;; 04EEF8 : A9 00 03    ;
-                      STA.L $7F837F,X                     ;; 04EEFB : 9F 7F 83 7F ;
-                      STA.L $7F8387,X                     ;; 04EEFF : 9F 87 83 7F ;
+                      STA.L !DynamicStripeImage+2,X       ;; 04EEFB : 9F 7F 83 7F ;
+                      STA.L !DynamicStripeImage+$0A,X     ;; 04EEFF : 9F 87 83 7F ;
                       LDA.B [!_A],Y                       ;; 04EF03 : B7 0A       ;
-                      STA.L $7F8381,X                     ;; 04EF05 : 9F 81 83 7F ;
+                      STA.L !DynamicStripeImage+4,X       ;; 04EF05 : 9F 81 83 7F ;
                       INY                                 ;; 04EF09 : C8          ;
                       INY                                 ;; 04EF0A : C8          ;
                       LDA.B [!_A],Y                       ;; 04EF0B : B7 0A       ;
-                      STA.L $7F8389,X                     ;; 04EF0D : 9F 89 83 7F ;
+                      STA.L !DynamicStripeImage+$0C,X     ;; 04EF0D : 9F 89 83 7F ;
                       INY                                 ;; 04EF11 : C8          ;
                       INY                                 ;; 04EF12 : C8          ;
                       LDA.B [!_A],Y                       ;; 04EF13 : B7 0A       ;
-                      STA.L $7F8383,X                     ;; 04EF15 : 9F 83 83 7F ;
+                      STA.L !DynamicStripeImage+6,X       ;; 04EF15 : 9F 83 83 7F ;
                       INY                                 ;; 04EF19 : C8          ;
                       INY                                 ;; 04EF1A : C8          ;
                       LDA.B [!_A],Y                       ;; 04EF1B : B7 0A       ;
-                      STA.L $7F838B,X                     ;; 04EF1D : 9F 8B 83 7F ;
+                      STA.L !DynamicStripeImage+$0E,X     ;; 04EF1D : 9F 8B 83 7F ;
                       TXA                                 ;; 04EF21 : 8A          ;
                       CLC                                 ;; 04EF22 : 18          ;
                       ADC.W #$0010                        ;; 04EF23 : 69 10 00    ;
@@ -6797,23 +6797,23 @@ CODE_04F29B:          LDA.W !KeyholeXPos+1                ;; 04F29B : AD 37 14  
                       LDX.W !KeyholeXPos                  ;; 04F2AD : AE 36 14    ;
 CODE_04F2B0:          LDY.W !PlayerTurnOW                 ;; 04F2B0 : AC D6 0D    ;
                       LDA.W !OWPlayerXPos,Y               ;; 04F2B3 : B9 17 1F    ;
-                      STA.L $7EB978,X                     ;; 04F2B6 : 9F 78 B9 7E ;
+                      STA.L !SwitchEventTableC,X          ;; 04F2B6 : 9F 78 B9 7E ;
                       LDA.W !OWPlayerXPos+1,Y             ;; 04F2BA : B9 18 1F    ;
-                      STA.L $7EB900,X                     ;; 04F2BD : 9F 00 B9 7E ;
+                      STA.L !Layer2TilemapLow,X           ;; 04F2BD : 9F 00 B9 7E ;
                       LDA.W !OWPlayerYPos,Y               ;; 04F2C1 : B9 19 1F    ;
-                      STA.L $7EB9A0,X                     ;; 04F2C4 : 9F A0 B9 7E ;
+                      STA.L !SwitchEventTableD,X          ;; 04F2C4 : 9F A0 B9 7E ;
                       LDA.W !OWPlayerYPos+1,Y             ;; 04F2C8 : B9 1A 1F    ;
-                      STA.L $7EB928,X                     ;; 04F2CB : 9F 28 B9 7E ;
+                      STA.L !SwitchEventTableA,X          ;; 04F2CB : 9F 28 B9 7E ;
                       LDA.B #$00                          ;; 04F2CF : A9 00       ;
-                      STA.L $7EB9C8,X                     ;; 04F2D1 : 9F C8 B9 7E ;
-                      STA.L $7EB950,X                     ;; 04F2D5 : 9F 50 B9 7E ;
+                      STA.L !SwitchEventTableE,X          ;; 04F2D1 : 9F C8 B9 7E ;
+                      STA.L !SwitchEventTableB,X          ;; 04F2D5 : 9F 50 B9 7E ;
                       LDY.B !_0                           ;; 04F2D9 : A4 00       ;
                       LDA.W DATA_04F280,Y                 ;; 04F2DB : B9 80 F2    ;
-                      STA.L $7EB9F0,X                     ;; 04F2DE : 9F F0 B9 7E ;
+                      STA.L !SwitchEventTableF,X          ;; 04F2DE : 9F F0 B9 7E ;
                       LDA.W DATA_04F288,Y                 ;; 04F2E2 : B9 88 F2    ;
-                      STA.L $7EBA18,X                     ;; 04F2E5 : 9F 18 BA 7E ;
+                      STA.L !SwitchEventTableG,X          ;; 04F2E5 : 9F 18 BA 7E ;
                       LDA.B #$D0                          ;; 04F2E9 : A9 D0       ;
-                      STA.L $7EBA40,X                     ;; 04F2EB : 9F 40 BA 7E ;
+                      STA.L !SwitchEventTableH,X          ;; 04F2EB : 9F 40 BA 7E ;
                       INX                                 ;; 04F2EF : E8          ;
                       DEC.B !_0                           ;; 04F2F0 : C6 00       ;
                       BPL CODE_04F2B0                     ;; 04F2F2 : 10 BC       ;
@@ -6841,17 +6841,17 @@ CODE_04F31E:          PHX                                 ;; 04F31E : DA        
                       JSR CODE_04F397                     ;; 04F324 : 20 97 F3    ;
                       JSR CODE_04F397                     ;; 04F327 : 20 97 F3    ;
                       PLX                                 ;; 04F32A : FA          ;
-                      LDA.L $7EBA40,X                     ;; 04F32B : BF 40 BA 7E ;
+                      LDA.L !SwitchEventTableH,X          ;; 04F32B : BF 40 BA 7E ;
                       CLC                                 ;; 04F32F : 18          ;
                       ADC.B #$01                          ;; 04F330 : 69 01       ;
                       BMI CODE_04F33A                     ;; 04F332 : 30 06       ;
                       CMP.B #$40                          ;; 04F334 : C9 40       ;
                       BCC CODE_04F33A                     ;; 04F336 : 90 02       ;
                       LDA.B #$40                          ;; 04F338 : A9 40       ;
-CODE_04F33A:          STA.L $7EBA40,X                     ;; 04F33A : 9F 40 BA 7E ;
-                      LDA.L $7EB950,X                     ;; 04F33E : BF 50 B9 7E ;
+CODE_04F33A:          STA.L !SwitchEventTableH,X          ;; 04F33A : 9F 40 BA 7E ;
+                      LDA.L !SwitchEventTableB,X          ;; 04F33E : BF 50 B9 7E ;
                       XBA                                 ;; 04F342 : EB          ;
-                      LDA.L $7EB9C8,X                     ;; 04F343 : BF C8 B9 7E ;
+                      LDA.L !SwitchEventTableE,X          ;; 04F343 : BF C8 B9 7E ;
                       REP #$20                            ;; 04F347 : C2 20       ; Accum (16 bit) 
                       CLC                                 ;; 04F349 : 18          ;
                       ADC.B !_2                           ;; 04F34A : 65 02       ;
@@ -6900,15 +6900,15 @@ CODE_04F397:          TXA                                 ;; 04F397 : 8A        
                       ADC.B #$28                          ;; 04F399 : 69 28       ;
                       TAX                                 ;; 04F39B : AA          ;
 CODE_04F39C:          PHY                                 ;; 04F39C : 5A          ;
-                      LDA.L $7EB9F0,X                     ;; 04F39D : BF F0 B9 7E ;
+                      LDA.L !SwitchEventTableF,X          ;; 04F39D : BF F0 B9 7E ;
                       ASL A                               ;; 04F3A1 : 0A          ;
                       ASL A                               ;; 04F3A2 : 0A          ;
                       ASL A                               ;; 04F3A3 : 0A          ;
                       ASL A                               ;; 04F3A4 : 0A          ;
                       CLC                                 ;; 04F3A5 : 18          ;
-                      ADC.L $7EBA68,X                     ;; 04F3A6 : 7F 68 BA 7E ;
-                      STA.L $7EBA68,X                     ;; 04F3AA : 9F 68 BA 7E ;
-                      LDA.L $7EB9F0,X                     ;; 04F3AE : BF F0 B9 7E ;
+                      ADC.L !SwitchEventTableI,X          ;; 04F3A6 : 7F 68 BA 7E ;
+                      STA.L !SwitchEventTableI,X          ;; 04F3AA : 9F 68 BA 7E ;
+                      LDA.L !SwitchEventTableF,X          ;; 04F3AE : BF F0 B9 7E ;
                       PHP                                 ;; 04F3B2 : 08          ;
                       LSR A                               ;; 04F3B3 : 4A          ;
                       LSR A                               ;; 04F3B4 : 4A          ;
@@ -6919,12 +6919,12 @@ CODE_04F39C:          PHY                                 ;; 04F39C : 5A        
                       BPL CODE_04F3BF                     ;; 04F3BA : 10 03       ;
                       ORA.B #$F0                          ;; 04F3BC : 09 F0       ;
                       DEY                                 ;; 04F3BE : 88          ;
-CODE_04F3BF:          ADC.L $7EB978,X                     ;; 04F3BF : 7F 78 B9 7E ;
-                      STA.L $7EB978,X                     ;; 04F3C3 : 9F 78 B9 7E ;
+CODE_04F3BF:          ADC.L !SwitchEventTableC,X          ;; 04F3BF : 7F 78 B9 7E ;
+                      STA.L !SwitchEventTableC,X          ;; 04F3C3 : 9F 78 B9 7E ;
                       XBA                                 ;; 04F3C7 : EB          ;
                       TYA                                 ;; 04F3C8 : 98          ;
-                      ADC.L $7EB900,X                     ;; 04F3C9 : 7F 00 B9 7E ;
-                      STA.L $7EB900,X                     ;; 04F3CD : 9F 00 B9 7E ;
+                      ADC.L !Layer2TilemapLow,X           ;; 04F3C9 : 7F 00 B9 7E ;
+                      STA.L !Layer2TilemapLow,X           ;; 04F3CD : 9F 00 B9 7E ;
                       XBA                                 ;; 04F3D1 : EB          ;
                       PLY                                 ;; 04F3D2 : 7A          ;
                       REP #$20                            ;; 04F3D3 : C2 20       ; Accum (16 bit) 
@@ -7115,11 +7115,11 @@ CODE_04F56C:          REP #$20                            ;; 04F56C : C2 20     
                       LDY.B #$50                          ;; 04F594 : A0 50       ;
                       TYA                                 ;; 04F596 : 98          ;
                       CLC                                 ;; 04F597 : 18          ;
-                      ADC.L $7F837B                       ;; 04F598 : 6F 7B 83 7F ;
-                      STA.L $7F837B                       ;; 04F59C : 8F 7B 83 7F ;
+                      ADC.L !DynStripeImgSize             ;; 04F598 : 6F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 04F59C : 8F 7B 83 7F ;
                       TAX                                 ;; 04F5A0 : AA          ;
 CODE_04F5A1:          LDA.W DATA_04F4B2,Y                 ;; 04F5A1 : B9 B2 F4    ;
-                      STA.L $7F837D,X                     ;; 04F5A4 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 04F5A4 : 9F 7D 83 7F ;
                       DEX                                 ;; 04F5A8 : CA          ;
                       DEY                                 ;; 04F5A9 : 88          ;
                       BPL CODE_04F5A1                     ;; 04F5AA : 10 F5       ;
@@ -7128,13 +7128,13 @@ CODE_04F5A1:          LDA.W DATA_04F4B2,Y                 ;; 04F5A1 : B9 B2 F4  
                       LDY.W !SavedPlayerLives             ;; 04F5AF : AC B4 0D    ;
                       BMI CODE_04F5BF                     ;; 04F5B2 : 30 0B       ;
                       LDA.W #$38FC                        ;; 04F5B4 : A9 FC 38    ;
-                      STA.L $7F83C1,X                     ;; 04F5B7 : 9F C1 83 7F ;
-                      STA.L $7F83C3,X                     ;; 04F5BB : 9F C3 83 7F ;
+                      STA.L !DynamicStripeImage+$44,X     ;; 04F5B7 : 9F C1 83 7F ;
+                      STA.L !DynamicStripeImage+$46,X     ;; 04F5BB : 9F C3 83 7F ;
 CODE_04F5BF:          LDY.W !SavedPlayerLives+1           ;; 04F5BF : AC B5 0D    ;
                       BMI CODE_04F5CF                     ;; 04F5C2 : 30 0B       ;
                       LDA.W #$38FC                        ;; 04F5C4 : A9 FC 38    ;
-                      STA.L $7F83C9,X                     ;; 04F5C7 : 9F C9 83 7F ;
-                      STA.L $7F83CB,X                     ;; 04F5CB : 9F CB 83 7F ;
+                      STA.L !DynamicStripeImage+$4C,X     ;; 04F5C7 : 9F C9 83 7F ;
+                      STA.L !DynamicStripeImage+$4E,X     ;; 04F5CB : 9F CB 83 7F ;
 CODE_04F5CF:          SEP #$20                            ;; 04F5CF : E2 20       ; Accum (8 bit) 
                       INC.W !OWPromptArrowTimer           ;; 04F5D1 : EE 8B 1B    ;
                       LDA.W !OWPromptArrowTimer           ;; 04F5D4 : AD 8B 1B    ;
@@ -7145,13 +7145,13 @@ CODE_04F5CF:          SEP #$20                            ;; 04F5CF : E2 20     
                       TAY                                 ;; 04F5DF : A8          ;
                       REP #$20                            ;; 04F5E0 : C2 20       ; Accum (16 bit) 
                       LDA.W DATA_04F503,Y                 ;; 04F5E2 : B9 03 F5    ;
-                      STA.L $7F83B1,X                     ;; 04F5E5 : 9F B1 83 7F ;
+                      STA.L !DynamicStripeImage+$34,X     ;; 04F5E5 : 9F B1 83 7F ;
                       LDA.W DATA_04F507,Y                 ;; 04F5E9 : B9 07 F5    ;
-                      STA.L $7F83B3,X                     ;; 04F5EC : 9F B3 83 7F ;
+                      STA.L !DynamicStripeImage+$36,X     ;; 04F5EC : 9F B3 83 7F ;
                       LDA.W DATA_04F50B,Y                 ;; 04F5F0 : B9 0B F5    ;
-                      STA.L $7F83B9,X                     ;; 04F5F3 : 9F B9 83 7F ;
+                      STA.L !DynamicStripeImage+$3C,X     ;; 04F5F3 : 9F B9 83 7F ;
                       LDA.W DATA_04F50F,Y                 ;; 04F5F7 : B9 0F F5    ;
-                      STA.L $7F83BB,X                     ;; 04F5FA : 9F BB 83 7F ;
+                      STA.L !DynamicStripeImage+$3E,X     ;; 04F5FA : 9F BB 83 7F ;
                       SEP #$20                            ;; 04F5FE : E2 20       ; Accum (8 bit) 
 CODE_04F600:          LDA.W !SavedPlayerLives             ;; 04F600 : AD B4 0D    ;
                       JSR CODE_04F60E                     ;; 04F603 : 20 0E F6    ;
@@ -7168,9 +7168,9 @@ CODE_04F60E:          INC A                               ;; 04F60E : 1A        
                       LDX.B #$FC                          ;; 04F617 : A2 FC       ;
 CODE_04F619:          TXY                                 ;; 04F619 : 9B          ;
                       PLX                                 ;; 04F61A : FA          ;
-                      STA.L $7F83A1,X                     ;; 04F61B : 9F A1 83 7F ;
+                      STA.L !DynamicStripeImage+$24,X     ;; 04F61B : 9F A1 83 7F ;
                       TYA                                 ;; 04F61F : 98          ;
-                      STA.L $7F839F,X                     ;; 04F620 : 9F 9F 83 7F ;
+                      STA.L !DynamicStripeImage+$22,X     ;; 04F620 : 9F 9F 83 7F ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -8269,11 +8269,11 @@ ADDR_04FF6B:          CPX.B !_C                           ;; 04FF6B : E4 0C     
                       LDA.B #$20                          ;; 04FF6F : A9 20       ;
                       BRA ADDR_04FF91                     ;; 04FF71 : 80 1E       ;
                                                           ;;                      ;
-ADDR_04FF73:          STZ.W $4204                         ;; 04FF73 : 9C 04 42    ; Dividend (Low Byte)
+ADDR_04FF73:          STZ.W !HW_WRDIV                     ;; 04FF73 : 9C 04 42    ; Dividend (Low Byte)
                       LDA.B !_6,X                         ;; 04FF76 : B5 06       ;
-                      STA.W $4205                         ;; 04FF78 : 8D 05 42    ; Dividend (High-Byte)
+                      STA.W !HW_WRDIV+1                   ;; 04FF78 : 8D 05 42    ; Dividend (High-Byte)
                       LDA.W !_6,Y                         ;; 04FF7B : B9 06 00    ;
-                      STA.W $4206                         ;; 04FF7E : 8D 06 42    ; Divisor B
+                      STA.W !HW_WRDIV+2                   ;; 04FF7E : 8D 06 42    ; Divisor B
                       NOP                                 ;; 04FF81 : EA          ;
                       NOP                                 ;; 04FF82 : EA          ;
                       NOP                                 ;; 04FF83 : EA          ;
@@ -8281,7 +8281,7 @@ ADDR_04FF73:          STZ.W $4204                         ;; 04FF73 : 9C 04 42  
                       NOP                                 ;; 04FF85 : EA          ;
                       NOP                                 ;; 04FF86 : EA          ;
                       REP #$20                            ;; 04FF87 : C2 20       ; Accum (16 bit) 
-                      LDA.W $4214                         ;; 04FF89 : AD 14 42    ; Quotient of Divide Result (Low Byte)
+                      LDA.W !HW_RDDIV                     ;; 04FF89 : AD 14 42    ; Quotient of Divide Result (Low Byte)
                       LSR A                               ;; 04FF8C : 4A          ;
                       LSR A                               ;; 04FF8D : 4A          ;
                       LSR A                               ;; 04FF8E : 4A          ;

@@ -688,8 +688,8 @@ CODE_0C93E2:          LDA.W !LevelLoadObject              ;; 0C93E2 : AD 28 19  
                       LDY.W #$0001                        ;; 0C9402 : A0 01 00    ;
 CODE_0C9405:          LDX.W #$0000                        ;; 0C9405 : A2 00 00    ;
                       TYA                                 ;; 0C9408 : 98          ;
-CODE_0C9409:          STA.L $7EBD00,X                     ;; 0C9409 : 9F 00 BD 7E ;
-                      STA.L $7EBF00,X                     ;; 0C940D : 9F 00 BF 7E ;
+CODE_0C9409:          STA.L !Layer2TilemapHigh,X          ;; 0C9409 : 9F 00 BD 7E ;
+                      STA.L !Layer2TilemapHigh+$200,X     ;; 0C940D : 9F 00 BF 7E ;
                       INX                                 ;; 0C9411 : E8          ;
                       CPX.W #$0200                        ;; 0C9412 : E0 00 02    ;
                       BNE CODE_0C9409                     ;; 0C9415 : D0 F2       ;
@@ -823,22 +823,22 @@ CODE_0C94EB:          SEP #$20                            ;; 0C94EB : E2 20     
                       TAX                                 ;; 0C9516 : AA          ;
                       LDA.B [!Layer2DataPtr],Y            ;; 0C9517 : B7 68       ;
                       AND.B !Layer1DataPtr                ;; 0C9519 : 25 65       ;
-                      STA.L $7F4000,X                     ;; 0C951B : 9F 00 40 7F ;
+                      STA.L !OWLayer2Tilemap,X            ;; 0C951B : 9F 00 40 7F ;
                       INY                                 ;; 0C951F : C8          ;
                       INY                                 ;; 0C9520 : C8          ;
                       LDA.B [!Layer2DataPtr],Y            ;; 0C9521 : B7 68       ;
                       AND.B !Layer1DataPtr                ;; 0C9523 : 25 65       ;
-                      STA.L $7F4040,X                     ;; 0C9525 : 9F 40 40 7F ;
+                      STA.L !OWLayer2Tilemap+$40,X        ;; 0C9525 : 9F 40 40 7F ;
                       INY                                 ;; 0C9529 : C8          ;
                       INY                                 ;; 0C952A : C8          ;
                       LDA.B [!Layer2DataPtr],Y            ;; 0C952B : B7 68       ;
                       AND.B !Layer1DataPtr                ;; 0C952D : 25 65       ;
-                      STA.L $7F4002,X                     ;; 0C952F : 9F 02 40 7F ;
+                      STA.L !OWLayer2Tilemap+2,X          ;; 0C952F : 9F 02 40 7F ;
                       INY                                 ;; 0C9533 : C8          ;
                       INY                                 ;; 0C9534 : C8          ;
                       LDA.B [!Layer2DataPtr],Y            ;; 0C9535 : B7 68       ;
                       AND.B !Layer1DataPtr                ;; 0C9537 : 25 65       ;
-                      STA.L $7F4042,X                     ;; 0C9539 : 9F 42 40 7F ;
+                      STA.L !OWLayer2Tilemap+$42,X        ;; 0C9539 : 9F 42 40 7F ;
                       INC.B !_0                           ;; 0C953D : E6 00       ;
                       INC.B !_4                           ;; 0C953F : E6 04       ;
                       DEC.B !_8                           ;; 0C9541 : C6 08       ;
@@ -864,43 +864,43 @@ CODE_0C9567:          SEP #$30                            ;; 0C9567 : E2 30     
                       PHK                                 ;; 0C956A : 4B          ;
                       PLB                                 ;; 0C956B : AB          ;
                       LDA.B #$80                          ;; 0C956C : A9 80       ;
-                      STA.W $2115                         ;; 0C956E : 8D 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_VMAINC                    ;; 0C956E : 8D 15 21    ; VRAM Address Increment Value
                       LDA.B #$C0                          ;; 0C9571 : A9 C0       ;
-                      STA.W $2116                         ;; 0C9573 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 0C9573 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$30                          ;; 0C9576 : A9 30       ;
-                      STA.W $2117                         ;; 0C9578 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 0C9578 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDY.B #$06                          ;; 0C957B : A0 06       ;
 CODE_0C957D:          LDA.W DATA_0C9559,Y                 ;; 0C957D : B9 59 95    ;
-                      STA.W $4310,Y                       ;; 0C9580 : 99 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,Y            ;; 0C9580 : 99 10 43    ;
                       DEY                                 ;; 0C9583 : 88          ;
                       BPL CODE_0C957D                     ;; 0C9584 : 10 F7       ;
                       LDA.W !LevelLoadObject              ;; 0C9586 : AD 28 19    ;
                       ASL A                               ;; 0C9589 : 0A          ;
                       ASL A                               ;; 0C958A : 0A          ;
                       ASL A                               ;; 0C958B : 0A          ;
-                      ORA.W $4313                         ;; 0C958C : 0D 13 43    ; A Address (High Byte)
-                      STA.W $4313                         ;; 0C958F : 8D 13 43    ; A Address (High Byte)
+                      ORA.W !HW_DMAADDR+$11               ;; 0C958C : 0D 13 43    ; A Address (High Byte)
+                      STA.W !HW_DMAADDR+$11               ;; 0C958F : 8D 13 43    ; A Address (High Byte)
                       LDA.B #$02                          ;; 0C9592 : A9 02       ;
-                      STA.W $420B                         ;; 0C9594 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 0C9594 : 8D 0B 42    ; Regular DMA Channel Enable
                       LDA.B #$80                          ;; 0C9597 : A9 80       ;
-                      STA.W $2115                         ;; 0C9599 : 8D 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_VMAINC                    ;; 0C9599 : 8D 15 21    ; VRAM Address Increment Value
                       LDA.B #$C0                          ;; 0C959C : A9 C0       ;
-                      STA.W $2116                         ;; 0C959E : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 0C959E : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$34                          ;; 0C95A1 : A9 34       ;
-                      STA.W $2117                         ;; 0C95A3 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 0C95A3 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDY.B #$06                          ;; 0C95A6 : A0 06       ;
 CODE_0C95A8:          LDA.W DATA_0C9560,Y                 ;; 0C95A8 : B9 60 95    ;
-                      STA.W $4310,Y                       ;; 0C95AB : 99 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,Y            ;; 0C95AB : 99 10 43    ;
                       DEY                                 ;; 0C95AE : 88          ;
                       BPL CODE_0C95A8                     ;; 0C95AF : 10 F7       ;
                       LDA.W !LevelLoadObject              ;; 0C95B1 : AD 28 19    ;
                       ASL A                               ;; 0C95B4 : 0A          ;
                       ASL A                               ;; 0C95B5 : 0A          ;
                       ASL A                               ;; 0C95B6 : 0A          ;
-                      ORA.W $4313                         ;; 0C95B7 : 0D 13 43    ; A Address (High Byte)
-                      STA.W $4313                         ;; 0C95BA : 8D 13 43    ; A Address (High Byte)
+                      ORA.W !HW_DMAADDR+$11               ;; 0C95B7 : 0D 13 43    ; A Address (High Byte)
+                      STA.W !HW_DMAADDR+$11               ;; 0C95BA : 8D 13 43    ; A Address (High Byte)
                       LDA.B #$02                          ;; 0C95BD : A9 02       ;
-                      STA.W $420B                         ;; 0C95BF : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 0C95BF : 8D 0B 42    ; Regular DMA Channel Enable
                       STZ.W !CreditsUpdateBG              ;; 0C95C2 : 9C FE 1F    ;
                       PLB                                 ;; 0C95C5 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
@@ -1197,18 +1197,18 @@ DATA_0C9D18:          db $C1,$00,$26,$00,$DD,$00,$FB,$00  ;; 0C9D18             
 DATA_0C9EAC:          db $40,$3E,$FC,$00,$FF              ;; 0C9EAC               ;
                                                           ;;                      ;
 CODE_0C9EB1:          REP #$30                            ;; 0C9EB1 : C2 30       ; Index (16 bit) Accum (16 bit) 
-                      LDA.L $7F837B                       ;; 0C9EB3 : AF 7B 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 0C9EB3 : AF 7B 83 7F ;
                       TAX                                 ;; 0C9EB7 : AA          ;
                       LDY.W #$0000                        ;; 0C9EB8 : A0 00 00    ;
                       SEP #$20                            ;; 0C9EBB : E2 20       ; Accum (8 bit) 
                       LDA.B !Layer1DataPtr+1              ;; 0C9EBD : A5 66       ;
-                      STA.L $7F837D,X                     ;; 0C9EBF : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 0C9EBF : 9F 7D 83 7F ;
                       LDA.B !Layer1DataPtr                ;; 0C9EC3 : A5 65       ;
-                      STA.L $7F837E,X                     ;; 0C9EC5 : 9F 7E 83 7F ;
+                      STA.L !DynamicStripeImage+1,X       ;; 0C9EC5 : 9F 7E 83 7F ;
                       INX                                 ;; 0C9EC9 : E8          ;
                       INX                                 ;; 0C9ECA : E8          ;
 CODE_0C9ECB:          LDA.W DATA_0C9EAC,Y                 ;; 0C9ECB : B9 AC 9E    ;
-                      STA.L $7F837D,X                     ;; 0C9ECE : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 0C9ECE : 9F 7D 83 7F ;
                       INX                                 ;; 0C9ED2 : E8          ;
                       INY                                 ;; 0C9ED3 : C8          ;
                       CPY.W #$0005                        ;; 0C9ED4 : C0 05 00    ;
@@ -1216,7 +1216,7 @@ CODE_0C9ECB:          LDA.W DATA_0C9EAC,Y                 ;; 0C9ECB : B9 AC 9E  
                       REP #$20                            ;; 0C9ED9 : C2 20       ; Accum (16 bit) 
                       DEX                                 ;; 0C9EDB : CA          ;
                       TXA                                 ;; 0C9EDC : 8A          ;
-                      STA.L $7F837B                       ;; 0C9EDD : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 0C9EDD : 8F 7B 83 7F ;
                       LDA.B !Layer1DataPtr+2              ;; 0C9EE1 : A5 67       ;
                       AND.W #$00FF                        ;; 0C9EE3 : 29 FF 00    ;
                       ASL A                               ;; 0C9EE6 : 0A          ;
@@ -1236,22 +1236,22 @@ CODE_0C9ECB:          LDA.W DATA_0C9EAC,Y                 ;; 0C9ECB : B9 AC 9E  
                       INY                                 ;; 0C9F03 : C8          ;
                       INY                                 ;; 0C9F04 : C8          ;
                       LDA.B !Layer1DataPtr+1              ;; 0C9F05 : A5 66       ;
-                      STA.L $7F837D,X                     ;; 0C9F07 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 0C9F07 : 9F 7D 83 7F ;
                       LDA.B !Layer1DataPtr                ;; 0C9F0B : A5 65       ;
                       CLC                                 ;; 0C9F0D : 18          ;
                       ADC.B !_2                           ;; 0C9F0E : 65 02       ;
-                      STA.L $7F837E,X                     ;; 0C9F10 : 9F 7E 83 7F ;
+                      STA.L !DynamicStripeImage+1,X       ;; 0C9F10 : 9F 7E 83 7F ;
                       INX                                 ;; 0C9F14 : E8          ;
                       INX                                 ;; 0C9F15 : E8          ;
                       LDA.B !_1                           ;; 0C9F16 : A5 01       ;
-                      STA.L $7F837D,X                     ;; 0C9F18 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 0C9F18 : 9F 7D 83 7F ;
                       LDA.B !_0                           ;; 0C9F1C : A5 00       ;
-                      STA.L $7F837E,X                     ;; 0C9F1E : 9F 7E 83 7F ;
+                      STA.L !DynamicStripeImage+1,X       ;; 0C9F1E : 9F 7E 83 7F ;
                       INX                                 ;; 0C9F22 : E8          ;
                       INX                                 ;; 0C9F23 : E8          ;
                       REP #$20                            ;; 0C9F24 : C2 20       ; Accum (16 bit) 
 CODE_0C9F26:          LDA.W DATA_0C95C7,Y                 ;; 0C9F26 : B9 C7 95    ;
-                      STA.L $7F837D,X                     ;; 0C9F29 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 0C9F29 : 9F 7D 83 7F ;
                       INX                                 ;; 0C9F2D : E8          ;
                       INX                                 ;; 0C9F2E : E8          ;
                       INY                                 ;; 0C9F2F : C8          ;
@@ -1260,9 +1260,9 @@ CODE_0C9F26:          LDA.W DATA_0C95C7,Y                 ;; 0C9F26 : B9 C7 95  
                       DEC.B !_0                           ;; 0C9F33 : C6 00       ;
                       BPL CODE_0C9F26                     ;; 0C9F35 : 10 EF       ;
                       LDA.W #$00FF                        ;; 0C9F37 : A9 FF 00    ;
-                      STA.L $7F837D,X                     ;; 0C9F3A : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 0C9F3A : 9F 7D 83 7F ;
                       TXA                                 ;; 0C9F3E : 8A          ;
-                      STA.L $7F837B                       ;; 0C9F3F : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 0C9F3F : 8F 7B 83 7F ;
 CODE_0C9F43:          REP #$20                            ;; 0C9F43 : C2 20       ; Accum (16 bit) 
                       SEP #$10                            ;; 0C9F45 : E2 10       ; Index (8 bit) 
                       LDA.B !Layer1DataPtr                ;; 0C9F47 : A5 65       ;
@@ -2672,8 +2672,8 @@ CODE_0CAB7C:          STA.W !WindowTable,X                ;; 0CAB7C : 9D A0 04  
                       BNE CODE_0CAB74                     ;; 0CAB86 : D0 EC       ;
                       SEP #$20                            ;; 0CAB88 : E2 20       ; Accum (8 bit) 
                       LDA.B #$13                          ;; 0CAB8A : A9 13       ;
-                      STA.W $212E                         ;; 0CAB8C : 8D 2E 21    ; Window Mask Designation for Main Screen
-                      STA.W $212F                         ;; 0CAB8F : 8D 2F 21    ; Window Mask Designation for Sub Screen
+                      STA.W !HW_TMW                       ;; 0CAB8C : 8D 2E 21    ; Window Mask Designation for Main Screen
+                      STA.W !HW_TSW                       ;; 0CAB8F : 8D 2F 21    ; Window Mask Designation for Sub Screen
                       LDA.B #$22                          ;; 0CAB92 : A9 22       ;
                       STA.B !ColorAddition                ;; 0CAB94 : 85 44       ;
                       LDA.B #$80                          ;; 0CAB96 : A9 80       ;
@@ -2856,11 +2856,11 @@ CODE_0CADF6:          PHB                                 ;; 0CADF6 : 8B        
                       LDA.B #$0D                          ;; 0CAE24 : A9 0D       ;
                       STA.W !_2                           ;; 0CAE26 : 8D 02 00    ;
                       LDY.B #$00                          ;; 0CAE29 : A0 00       ;
-                      LDA.L $7F837B                       ;; 0CAE2B : AF 7B 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 0CAE2B : AF 7B 83 7F ;
                       TAX                                 ;; 0CAE2F : AA          ;
 CODE_0CAE30:          REP #$20                            ;; 0CAE30 : C2 20       ; Accum (16 bit) 
                       LDA.B [!_0],Y                       ;; 0CAE32 : B7 00       ;
-                      STA.L $7F837D,X                     ;; 0CAE34 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 0CAE34 : 9F 7D 83 7F ;
                       INY                                 ;; 0CAE38 : C8          ;
                       INY                                 ;; 0CAE39 : C8          ;
                       INX                                 ;; 0CAE3A : E8          ;
@@ -2868,7 +2868,7 @@ CODE_0CAE30:          REP #$20                            ;; 0CAE30 : C2 20     
                       CMP.W #$FFFF                        ;; 0CAE3C : C9 FF FF    ;
                       BNE CODE_0CAE30                     ;; 0CAE3F : D0 EF       ;
                       TXA                                 ;; 0CAE41 : 8A          ;
-                      STA.L $7F837B                       ;; 0CAE42 : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 0CAE42 : 8F 7B 83 7F ;
                       SEP #$20                            ;; 0CAE46 : E2 20       ; Accum (8 bit) 
 CODE_0CAE48:          PLX                                 ;; 0CAE48 : FA          ;
                       PLY                                 ;; 0CAE49 : 7A          ;
@@ -4992,17 +4992,17 @@ DATA_0CD1A7:          db $20,$B3,$00,$0F,$C0,$01,$C1,$01  ;; 0CD1A7             
 CODE_0CD1D0:          LDY.B #$28                          ;; 0CD1D0 : A0 28       ;
                       TYA                                 ;; 0CD1D2 : 98          ;
                       CLC                                 ;; 0CD1D3 : 18          ;
-                      ADC.L $7F837B                       ;; 0CD1D4 : 6F 7B 83 7F ;
+                      ADC.L !DynStripeImgSize             ;; 0CD1D4 : 6F 7B 83 7F ;
                       TAX                                 ;; 0CD1D8 : AA          ;
 CODE_0CD1D9:          LDA.W DATA_0CD1A7,Y                 ;; 0CD1D9 : B9 A7 D1    ;
-                      STA.L $7F837D,X                     ;; 0CD1DC : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 0CD1DC : 9F 7D 83 7F ;
                       DEX                                 ;; 0CD1E0 : CA          ;
                       DEY                                 ;; 0CD1E1 : 88          ;
                       BPL CODE_0CD1D9                     ;; 0CD1E2 : 10 F5       ;
                       LDA.B #$28                          ;; 0CD1E4 : A9 28       ;
                       CLC                                 ;; 0CD1E6 : 18          ;
-                      ADC.L $7F837B                       ;; 0CD1E7 : 6F 7B 83 7F ;
-                      STA.L $7F837B                       ;; 0CD1EB : 8F 7B 83 7F ;
+                      ADC.L !DynStripeImgSize             ;; 0CD1E7 : 6F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 0CD1EB : 8F 7B 83 7F ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -5018,22 +5018,22 @@ DATA_0CD1FF:          db $21,$14,$21,$34,$21,$54,$21,$74  ;; 0CD1FF             
                       db $21,$18,$21,$38,$21,$58,$21,$78  ;; ?QPWZ?               ;
                       db $21,$98,$21,$B8,$21,$D8          ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_0CD22D:          LDA.L $7F837B                       ;; 0CD22D : AF 7B 83 7F ;
+CODE_0CD22D:          LDA.L !DynStripeImgSize             ;; 0CD22D : AF 7B 83 7F ;
                       STA.B !_1                           ;; 0CD231 : 85 01       ;
                       LDY.B #$0C                          ;; 0CD233 : A0 0C       ;
                       TYA                                 ;; 0CD235 : 98          ;
                       CLC                                 ;; 0CD236 : 18          ;
-                      ADC.L $7F837B                       ;; 0CD237 : 6F 7B 83 7F ;
+                      ADC.L !DynStripeImgSize             ;; 0CD237 : 6F 7B 83 7F ;
                       TAX                                 ;; 0CD23B : AA          ;
 CODE_0CD23C:          LDA.W DATA_0CD1F0,Y                 ;; 0CD23C : B9 F0 D1    ;
-                      STA.L $7F837D,X                     ;; 0CD23F : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 0CD23F : 9F 7D 83 7F ;
                       DEX                                 ;; 0CD243 : CA          ;
                       DEY                                 ;; 0CD244 : 88          ;
                       BPL CODE_0CD23C                     ;; 0CD245 : 10 F5       ;
                       LDA.B #$0C                          ;; 0CD247 : A9 0C       ;
                       CLC                                 ;; 0CD249 : 18          ;
-                      ADC.L $7F837B                       ;; 0CD24A : 6F 7B 83 7F ;
-                      STA.L $7F837B                       ;; 0CD24E : 8F 7B 83 7F ;
+                      ADC.L !DynStripeImgSize             ;; 0CD24A : 6F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 0CD24E : 8F 7B 83 7F ;
                       LDA.B !PlayerXPosNext               ;; 0CD252 : A5 94       ;
                       SEC                                 ;; 0CD254 : 38          ;
                       SBC.B #$A0                          ;; 0CD255 : E9 A0       ;
@@ -5049,9 +5049,9 @@ CODE_0CD23C:          LDA.W DATA_0CD1F0,Y                 ;; 0CD23C : B9 F0 D1  
                       LDX.B !_1                           ;; 0CD265 : A6 01       ;
                       REP #$20                            ;; 0CD267 : C2 20       ; Accum (16 bit) 
                       LDA.W DATA_0CD1FD,Y                 ;; 0CD269 : B9 FD D1    ;
-                      STA.L $7F837D,X                     ;; 0CD26C : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 0CD26C : 9F 7D 83 7F ;
                       LDA.W DATA_0CD1FF,Y                 ;; 0CD270 : B9 FF D1    ;
-                      STA.L $7F8383,X                     ;; 0CD273 : 9F 83 83 7F ;
+                      STA.L !DynamicStripeImage+6,X       ;; 0CD273 : 9F 83 83 7F ;
                       SEP #$20                            ;; 0CD277 : E2 20       ; Accum (8 bit) 
                       CPY.B #$1C                          ;; 0CD279 : C0 1C       ;
                       BNE Return0CD282                    ;; 0CD27B : D0 05       ;

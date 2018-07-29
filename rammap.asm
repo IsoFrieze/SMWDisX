@@ -835,3 +835,40 @@ incsrc "hardware_registers.asm"
 !LightningTimer = $7E1FFD
 !CreditsUpdateBG = $7E1FFE
 ; 7E1FFF unused
+
+!MarioGraphics = $7E2000
+!Layer2TilemapLow = $7EB900
+!SwitchEventTableA = $7EB928
+!SwitchEventTableB = $7EB950
+!SwitchEventTableC = $7EB978
+!SwitchEventTableD = $7EB9A0
+!SwitchEventTableE = $7EB9C8
+!SwitchEventTableF = $7EB9F0
+!SwitchEventTableG = $7EBA18
+!SwitchEventTableH = $7EBA40
+!SwitchEventTableI = $7EBA68
+!Layer2TilemapHigh = $7EBD00
+; 7EC100 - 7EC67F unused
+!Mode7BossTilemap = $7EC680
+; 7EC6E0 - 7EC7FF unused
+!Map16TilesLow = $7EC800
+!OWLayer1Translevel = $7ED000
+!OWLayer2Directions = $7ED800
+!OWLayer1VramBuffer = $7EE400
+!OWEventTilemap = $7F0000
+; 7F0D00 - 7F3FFF unused
+!OWLayer2Tilemap = $7F4000
+!OAMResetRoutine = $7F8000
+; 7F8183 - 7F837A unused
+!DynStripeImgSize = $7F837B
+!DynamicStripeImage = $7F837D
+; 7F868D - 7F977A unused
+!MarioStartGraphics = $7F977B
+!WigglerSegments = $7F9A7B
+; 7F9C7B - 7FC7FF unused
+!Map16TilesHigh = $7FC800
+
+!SaveData = $700000
+!SaveDataChecksum = $70008C
+!SaveDataBackup = $7001AD
+; 70035A - 7007FF unused

@@ -1,15 +1,15 @@
 ORG $008000                                               ;;                      ;
                                                           ;;                      ;
 I_RESET:              SEI                                 ;; 008000 : 78          ; Disable interrupts 
-                      STZ.W $4200                         ;; 008001 : 9C 00 42    ; Clear NMI and V/H Count, disable joypad ; NMI, V/H Count, and Joypad Enable
-                      STZ.W $420C                         ;; 008004 : 9C 0C 42    ; Disable HDMA ; H-DMA Channel Enable
-                      STZ.W $420B                         ;; 008007 : 9C 0B 42    ; Disable DMA ; Regular DMA Channel Enable
-                      STZ.W $2140                         ;; 00800A : 9C 40 21    ; \ ; APU I/O Port
-                      STZ.W $2141                         ;; 00800D : 9C 41 21    ;  |Clear APU I/O ports 1-4 ; APU I/O Port
-                      STZ.W $2142                         ;; 008010 : 9C 42 21    ;  | ; APU I/O Port
-                      STZ.W $2143                         ;; 008013 : 9C 43 21    ; / ; APU I/O Port
+                      STZ.W !HW_NMITIMEN                  ;; 008001 : 9C 00 42    ; Clear NMI and V/H Count, disable joypad ; NMI, V/H Count, and Joypad Enable
+                      STZ.W !HW_HDMAEN                    ;; 008004 : 9C 0C 42    ; Disable HDMA ; H-DMA Channel Enable
+                      STZ.W !HW_MDMAEN                    ;; 008007 : 9C 0B 42    ; Disable DMA ; Regular DMA Channel Enable
+                      STZ.W !HW_APUIO0                    ;; 00800A : 9C 40 21    ; \ ; APU I/O Port
+                      STZ.W !HW_APUIO1                    ;; 00800D : 9C 41 21    ;  |Clear APU I/O ports 1-4 ; APU I/O Port
+                      STZ.W !HW_APUIO2                    ;; 008010 : 9C 42 21    ;  | ; APU I/O Port
+                      STZ.W !HW_APUIO3                    ;; 008013 : 9C 43 21    ; / ; APU I/O Port
                       LDA.B #$80                          ;; 008016 : A9 80       ; \ Turn off screen 
-                      STA.W $2100                         ;; 008018 : 8D 00 21    ; / ; Screen Display Register
+                      STA.W !HW_INIDISP                   ;; 008018 : 8D 00 21    ; / ; Screen Display Register
                       CLC                                 ;; 00801B : 18          ; \ Turn off emulation mode 
                       XCE                                 ;; 00801C : FB          ; /  
                       REP #$38                            ;; 00801D : C2 38       ; 16 bit A,X,Y, Decimal mode off ; Index (16 bit) Accum (16 bit) 
@@ -18,13 +18,13 @@ I_RESET:              SEI                                 ;; 008000 : 78        
                       LDA.W #$01FF                        ;; 008023 : A9 FF 01    ; \ Set stack location 
                       TCS                                 ;; 008026 : 1B          ; /  
                       LDA.W #$F0A9                        ;; 008027 : A9 A9 F0    ; \  
-                      STA.L $7F8000                       ;; 00802A : 8F 00 80 7F ;  | 
+                      STA.L !OAMResetRoutine              ;; 00802A : 8F 00 80 7F ;  | 
                       LDX.W #$017D                        ;; 00802E : A2 7D 01    ;  | 
                       LDY.W #$03FD                        ;; 008031 : A0 FD 03    ;  | 
 CODE_008034:          LDA.W #$008D                        ;; 008034 : A9 8D 00    ;  | 
-                      STA.L $7F8002,X                     ;; 008037 : 9F 02 80 7F ;  | 
+                      STA.L !OAMResetRoutine+2,X          ;; 008037 : 9F 02 80 7F ;  | 
                       TYA                                 ;; 00803B : 98          ;  | 
-                      STA.L $7F8003,X                     ;; 00803C : 9F 03 80 7F ;  |Create routine in RAM 
+                      STA.L !OAMResetRoutine+3,X          ;; 00803C : 9F 03 80 7F ;  |Create routine in RAM 
                       SEC                                 ;; 008040 : 38          ;  | 
                       SBC.W #$0004                        ;; 008041 : E9 04 00    ;  | 
                       TAY                                 ;; 008044 : A8          ;  | 
@@ -34,7 +34,7 @@ CODE_008034:          LDA.W #$008D                        ;; 008034 : A9 8D 00  
                       BPL CODE_008034                     ;; 008048 : 10 EA       ;  | 
                       SEP #$30                            ;; 00804A : E2 30       ;  | ; Index (8 bit) Accum (8 bit) 
                       LDA.B #$6B                          ;; 00804C : A9 6B       ;  | 
-                      STA.L $7F8182                       ;; 00804E : 8F 82 81 7F ; / 
+                      STA.L !OAMResetRoutine+$182         ;; 00804E : 8F 82 81 7F ; / 
                       JSR UploadSPCEngine                 ;; 008052 : 20 E8 80    ; SPC700 Bank 02 + Main code upload handler 
                       STZ.W !GameMode                     ;; 008055 : 9C 00 01    ; Set game mode to 0 
                       STZ.W !OverworldOverride            ;; 008058 : 9C 09 01    ; Set secondary game mode to 0 
@@ -42,7 +42,7 @@ CODE_008034:          LDA.W #$008D                        ;; 008034 : A9 8D 00  
                       JSR UploadSamples                   ;; 00805E : 20 FD 80    ;
                       JSR CODE_009250                     ;; 008061 : 20 50 92    ;
                       LDA.B #$03                          ;; 008064 : A9 03       ; \ Set OAM Size and Data Area Designation to x03 
-                      STA.W $2101                         ;; 008066 : 8D 01 21    ; /  ; OAM Size and Data Area Designation
+                      STA.W !HW_OBJSEL                    ;; 008066 : 8D 01 21    ; /  ; OAM Size and Data Area Designation
                       INC.B !LagFlag                      ;; 008069 : E6 10       ; Skip the following loop 
 CODE_00806B:          LDA.B !LagFlag                      ;; 00806B : A5 10       ;  |Loop until the interrupt routine sets $10 
                       BEQ CODE_00806B                     ;; 00806D : F0 FC       ; / to a non-zero value. 
@@ -56,7 +56,7 @@ SPC700UploadLoop:     PHP                                 ;; ?QPWZ? : 08        
                       REP #$30                            ;; 00807A : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDY.W #$0000                        ;; 00807C : A0 00 00    ;
                       LDA.W #$BBAA                        ;; 00807F : A9 AA BB    ;
-CODE_008082:          CMP.W $2140                         ;; 008082 : CD 40 21    ; APU I/O Port
+CODE_008082:          CMP.W !HW_APUIO0                    ;; 008082 : CD 40 21    ; APU I/O Port
                       BNE CODE_008082                     ;; 008085 : D0 FB       ;
                       SEP #$20                            ;; 008087 : E2 20       ; Accum (8 bit) 
                       LDA.B #$CC                          ;; 008089 : A9 CC       ; Load byte to start transfer 
@@ -72,15 +72,15 @@ CODE_008095:          XBA                                 ;; 008095 : EB        
                       LDA.B [!_0],Y                       ;; 008096 : B7 00       ;
                       INY                                 ;; 008098 : C8          ;
                       XBA                                 ;; 008099 : EB          ;
-CODE_00809A:          CMP.W $2140                         ;; 00809A : CD 40 21    ; APU I/O Port
+CODE_00809A:          CMP.W !HW_APUIO0                    ;; 00809A : CD 40 21    ; APU I/O Port
                       BNE CODE_00809A                     ;; 00809D : D0 FB       ;
                       INC A                               ;; 00809F : 1A          ;
 CODE_0080A0:          REP #$20                            ;; 0080A0 : C2 20       ; Accum (16 bit) 
-                      STA.W $2140                         ;; 0080A2 : 8D 40 21    ; APU I/O Port
+                      STA.W !HW_APUIO0                    ;; 0080A2 : 8D 40 21    ; APU I/O Port
                       SEP #$20                            ;; 0080A5 : E2 20       ; Accum (8 bit) 
                       DEX                                 ;; 0080A7 : CA          ;
                       BNE CODE_008095                     ;; 0080A8 : D0 EB       ;
-CODE_0080AA:          CMP.W $2140                         ;; 0080AA : CD 40 21    ; APU I/O Port
+CODE_0080AA:          CMP.W !HW_APUIO0                    ;; 0080AA : CD 40 21    ; APU I/O Port
                       BNE CODE_0080AA                     ;; 0080AD : D0 FB       ;
 CODE_0080AF:          ADC.B #$03                          ;; 0080AF : 69 03       ;
                       BEQ CODE_0080AF                     ;; 0080B1 : F0 FC       ;
@@ -93,22 +93,22 @@ CODE_0080B3:          PHA                                 ;; 0080B3 : 48        
                       LDA.B [!_0],Y                       ;; 0080BB : B7 00       ;
                       INY                                 ;; 0080BD : C8          ;
                       INY                                 ;; 0080BE : C8          ;
-                      STA.W $2142                         ;; 0080BF : 8D 42 21    ; APU I/O Port
+                      STA.W !HW_APUIO2                    ;; 0080BF : 8D 42 21    ; APU I/O Port
                       SEP #$20                            ;; 0080C2 : E2 20       ; Accum (8 bit) 
                       CPX.W #$0001                        ;; 0080C4 : E0 01 00    ;
                       LDA.B #$00                          ;; 0080C7 : A9 00       ;
                       ROL A                               ;; 0080C9 : 2A          ;
-                      STA.W $2141                         ;; 0080CA : 8D 41 21    ; APU I/O Port
+                      STA.W !HW_APUIO1                    ;; 0080CA : 8D 41 21    ; APU I/O Port
                       ADC.B #$7F                          ;; 0080CD : 69 7F       ;
                       PLA                                 ;; 0080CF : 68          ;
-                      STA.W $2140                         ;; 0080D0 : 8D 40 21    ; APU I/O Port
-CODE_0080D3:          CMP.W $2140                         ;; 0080D3 : CD 40 21    ; APU I/O Port
+                      STA.W !HW_APUIO0                    ;; 0080D0 : 8D 40 21    ; APU I/O Port
+CODE_0080D3:          CMP.W !HW_APUIO0                    ;; 0080D3 : CD 40 21    ; APU I/O Port
                       BNE CODE_0080D3                     ;; 0080D6 : D0 FB       ;
                       BVS CODE_00808D                     ;; 0080D8 : 70 B3       ;
-                      STZ.W $2140                         ;; 0080DA : 9C 40 21    ; APU I/O Port
-                      STZ.W $2141                         ;; 0080DD : 9C 41 21    ; APU I/O Port
-                      STZ.W $2142                         ;; 0080E0 : 9C 42 21    ; APU I/O Port
-                      STZ.W $2143                         ;; 0080E3 : 9C 43 21    ; APU I/O Port
+                      STZ.W !HW_APUIO0                    ;; 0080DA : 9C 40 21    ; APU I/O Port
+                      STZ.W !HW_APUIO1                    ;; 0080DD : 9C 41 21    ; APU I/O Port
+                      STZ.W !HW_APUIO2                    ;; 0080E0 : 9C 42 21    ; APU I/O Port
+                      STZ.W !HW_APUIO3                    ;; 0080E3 : 9C 43 21    ; APU I/O Port
                       PLP                                 ;; 0080E6 : 28          ;
                       RTS                                 ;; 0080E7 : 60          ;
                                                           ;;                      ;
@@ -138,10 +138,10 @@ UploadMusicBank1:     LDA.B #$B1                          ;; ?QPWZ? : A9 B1     
                       LDA.B #$0E                          ;; 008118 : A9 0E       ;  | 
                       STA.W !_2                           ;; 00811A : 8D 02 00    ; /  
 StrtSPCMscUpld:       LDA.B #$FF                          ;; ?QPWZ? : A9 FF       ;
-                      STA.W $2141                         ;; 00811F : 8D 41 21    ; APU I/O Port
+                      STA.W !HW_APUIO1                    ;; 00811F : 8D 41 21    ; APU I/O Port
                       JSR UploadDataToSPC                 ;; 008122 : 20 F7 80    ;
                       LDX.B #$03                          ;; 008125 : A2 03       ;
-SPC700ZeroLoop:       STZ.W $2140,X                       ;; ?QPWZ? : 9E 40 21    ;
+SPC700ZeroLoop:       STZ.W !HW_APUIO0,X                  ;; ?QPWZ? : 9E 40 21    ;
                       STZ.W !SPCIO0,X                     ;; 00812A : 9E F9 1D    ;
                       STZ.W !Empty1DFD,X                  ;; 00812D : 9E FD 1D    ;
                       DEX                                 ;; 008130 : CA          ;
@@ -183,44 +183,44 @@ I_NMI:                SEI                                 ;; 00816A : 78        
                       PHK                                 ;; 008172 : 4B          ;
                       PLB                                 ;; 008173 : AB          ;
                       SEP #$30                            ;; 008174 : E2 30       ; 8 bit A,X,Y ; Index (8 bit) Accum (8 bit) 
-                      LDA.W $4210                         ;; 008176 : AD 10 42    ; Load "NMI Enable."  This has the effect of clearing the Interrupt, so that ; NMI Enable
+                      LDA.W !HW_RDNMI                     ;; 008176 : AD 10 42    ; Load "NMI Enable."  This has the effect of clearing the Interrupt, so that ; NMI Enable
                       LDA.W !SPCIO2                       ;; 008179 : AD FB 1D    ; \  
                       BNE CODE_008186                     ;; 00817C : D0 08       ;  | 
-                      LDY.W $2142                         ;; 00817E : AC 42 21    ;  | ; APU I/O Port
+                      LDY.W !HW_APUIO2                    ;; 00817E : AC 42 21    ;  | ; APU I/O Port
                       CPY.W !LastUsedMusic                ;; 008181 : CC FF 1D    ;  |Update SPC700 I/O port 2 
                       BNE CODE_00818F                     ;; 008184 : D0 09       ;  | 
-CODE_008186:          STA.W $2142                         ;; 008186 : 8D 42 21    ;  | ; APU I/O Port
+CODE_008186:          STA.W !HW_APUIO2                    ;; 008186 : 8D 42 21    ;  | ; APU I/O Port
                       STA.W !LastUsedMusic                ;; 008189 : 8D FF 1D    ;  | 
                       STZ.W !SPCIO2                       ;; 00818C : 9C FB 1D    ;  | 
 CODE_00818F:          LDA.W !SPCIO0                       ;; 00818F : AD F9 1D    ; \  
-                      STA.W $2140                         ;; 008192 : 8D 40 21    ;  | ; APU I/O Port
+                      STA.W !HW_APUIO0                    ;; 008192 : 8D 40 21    ;  | ; APU I/O Port
                       LDA.W !SPCIO1                       ;; 008195 : AD FA 1D    ;  | 
-                      STA.W $2141                         ;; 008198 : 8D 41 21    ;  |Update SPC700 I/O ports 0, 1 and 3 ; APU I/O Port
+                      STA.W !HW_APUIO1                    ;; 008198 : 8D 41 21    ;  |Update SPC700 I/O ports 0, 1 and 3 ; APU I/O Port
                       LDA.W !SPCIO3                       ;; 00819B : AD FC 1D    ;  | 
-                      STA.W $2143                         ;; 00819E : 8D 43 21    ;  | ; APU I/O Port
+                      STA.W !HW_APUIO3                    ;; 00819E : 8D 43 21    ;  | ; APU I/O Port
                       STZ.W !SPCIO0                       ;; 0081A1 : 9C F9 1D    ;  | 
                       STZ.W !SPCIO1                       ;; 0081A4 : 9C FA 1D    ;  | 
                       STZ.W !SPCIO3                       ;; 0081A7 : 9C FC 1D    ; /  
                       LDA.B #$80                          ;; 0081AA : A9 80       ; \ Screen off, brightness=0 
-                      STA.W $2100                         ;; 0081AC : 8D 00 21    ; / ; Screen Display Register
-                      STZ.W $420C                         ;; 0081AF : 9C 0C 42    ; Zero The HDMA reg ; H-DMA Channel Enable
+                      STA.W !HW_INIDISP                   ;; 0081AC : 8D 00 21    ; / ; Screen Display Register
+                      STZ.W !HW_HDMAEN                    ;; 0081AF : 9C 0C 42    ; Zero The HDMA reg ; H-DMA Channel Enable
                       LDA.B !Layer12Window                ;; 0081B2 : A5 41       ;
-                      STA.W $2123                         ;; 0081B4 : 8D 23 21    ; BG 1 and 2 Window Mask Settings
+                      STA.W !HW_W12SEL                    ;; 0081B4 : 8D 23 21    ; BG 1 and 2 Window Mask Settings
                       LDA.B !Layer34Window                ;; 0081B7 : A5 42       ;
-                      STA.W $2124                         ;; 0081B9 : 8D 24 21    ; BG 3 and 4 Window Mask Settings
+                      STA.W !HW_W34SEL                    ;; 0081B9 : 8D 24 21    ; BG 3 and 4 Window Mask Settings
                       LDA.B !OBJCWWindow                  ;; 0081BC : A5 43       ;
-                      STA.W $2125                         ;; 0081BE : 8D 25 21    ; OBJ and Color Window Settings
+                      STA.W !HW_WOBJSEL                   ;; 0081BE : 8D 25 21    ; OBJ and Color Window Settings
                       LDA.B !ColorAddition                ;; 0081C1 : A5 44       ;
-                      STA.W $2130                         ;; 0081C3 : 8D 30 21    ; Initial Settings for Color Addition
+                      STA.W !HW_CGSWSEL                   ;; 0081C3 : 8D 30 21    ; Initial Settings for Color Addition
                       LDA.W !IRQNMICommand                ;; 0081C6 : AD 9B 0D    ; \  
                       BPL CODE_0081CE                     ;; 0081C9 : 10 03       ;  |If in a "Special level", 
                       JMP CODE_0082C4                     ;; 0081CB : 4C C4 82    ;  |jump to $82C4 
                                                           ;;                      ;
 CODE_0081CE:          LDA.B !ColorSettings                ;; 0081CE : A5 40       ; \ Get the CGADSUB byte... 
                       AND.B #$FB                          ;; 0081D0 : 29 FB       ;  |Get the Add/Subtract Select and Enable part... 
-                      STA.W $2131                         ;; 0081D2 : 8D 31 21    ; / ...and store it to the A/SSaE register... ; Add/Subtract Select and Enable
+                      STA.W !HW_CGADSUB                   ;; 0081D2 : 8D 31 21    ; / ...and store it to the A/SSaE register... ; Add/Subtract Select and Enable
                       LDA.B #$09                          ;; 0081D5 : A9 09       ; \ 8x8 tiles, Graphics mode 1 
-                      STA.W $2105                         ;; 0081D7 : 8D 05 21    ; /  ; BG Mode and Tile Size Setting
+                      STA.W !HW_BGMODE                    ;; 0081D7 : 8D 05 21    ; /  ; BG Mode and Tile Size Setting
                       LDA.B !LagFlag                      ;; 0081DA : A5 10       ; \ If there isn't any lag, 
                       BEQ CODE_0081E7                     ;; 0081DC : F0 09       ; / branch to $81E7 
                       LDA.W !IRQNMICommand                ;; 0081DE : AD 9B 0D    ; \  
@@ -271,24 +271,24 @@ CODE_00823D:          JSR LoadScrnImage                   ;; 00823D : 20 D2 85  
                       JSR DoSomeSpriteDMA                 ;; 008240 : 20 49 84    ;
 CODE_008243:          JSR ControllerUpdate                ;; 008243 : 20 50 86    ;
 NMINotSpecialLv:      LDA.B !Layer1XPos                   ;; ?QPWZ? : A5 1A       ; \  
-                      STA.W $210D                         ;; 008248 : 8D 0D 21    ;  |Set BG 1 Horizontal Scroll Offset ; BG 1 Horizontal Scroll Offset
+                      STA.W !HW_BG1HOFS                   ;; 008248 : 8D 0D 21    ;  |Set BG 1 Horizontal Scroll Offset ; BG 1 Horizontal Scroll Offset
                       LDA.B !Layer1XPos+1                 ;; 00824B : A5 1B       ;  |to X position of screen boundry  
-                      STA.W $210D                         ;; 00824D : 8D 0D 21    ; /  ; BG 1 Horizontal Scroll Offset
+                      STA.W !HW_BG1HOFS                   ;; 00824D : 8D 0D 21    ; /  ; BG 1 Horizontal Scroll Offset
                       LDA.B !Layer1YPos                   ;; 008250 : A5 1C       ; \  
                       CLC                                 ;; 008252 : 18          ;  | 
                       ADC.W !ScreenShakeYOffset           ;; 008253 : 6D 88 18    ;  |Set BG 1 Vertical Scroll Offset 
-                      STA.W $210E                         ;; 008256 : 8D 0E 21    ;  |to Y position of screen boundry + Layer 1 disposition ; BG 1 Vertical Scroll Offset
+                      STA.W !HW_BG1VOFS                   ;; 008256 : 8D 0E 21    ;  |to Y position of screen boundry + Layer 1 disposition ; BG 1 Vertical Scroll Offset
                       LDA.B !Layer1YPos+1                 ;; 008259 : A5 1D       ;  | 
                       ADC.W !ScreenShakeYOffset+1         ;; 00825B : 6D 89 18    ;  | 
-                      STA.W $210E                         ;; 00825E : 8D 0E 21    ; /  ; BG 1 Vertical Scroll Offset
+                      STA.W !HW_BG1VOFS                   ;; 00825E : 8D 0E 21    ; /  ; BG 1 Vertical Scroll Offset
                       LDA.B !Layer2XPos                   ;; 008261 : A5 1E       ; \  
-                      STA.W $210F                         ;; 008263 : 8D 0F 21    ;  |Set BG 2 Horizontal Scroll Offset ; BG 2 Horizontal Scroll Offset
+                      STA.W !HW_BG2HOFS                   ;; 008263 : 8D 0F 21    ;  |Set BG 2 Horizontal Scroll Offset ; BG 2 Horizontal Scroll Offset
                       LDA.B !Layer2XPos+1                 ;; 008266 : A5 1F       ;  |to X position of Layer 2 
-                      STA.W $210F                         ;; 008268 : 8D 0F 21    ; /  ; BG 2 Horizontal Scroll Offset
+                      STA.W !HW_BG2HOFS                   ;; 008268 : 8D 0F 21    ; /  ; BG 2 Horizontal Scroll Offset
                       LDA.B !Layer2YPos                   ;; 00826B : A5 20       ; \  
-                      STA.W $2110                         ;; 00826D : 8D 10 21    ;  |Set BG 2 Vertical Scroll Offset ; BG 2 Vertical Scroll Offset
+                      STA.W !HW_BG2VOFS                   ;; 00826D : 8D 10 21    ;  |Set BG 2 Vertical Scroll Offset ; BG 2 Vertical Scroll Offset
                       LDA.B !Layer2YPos+1                 ;; 008270 : A5 21       ;  |to Y position of Layer 2 
-                      STA.W $2110                         ;; 008272 : 8D 10 21    ; /  ; BG 2 Vertical Scroll Offset
+                      STA.W !HW_BG2VOFS                   ;; 008272 : 8D 10 21    ; /  ; BG 2 Vertical Scroll Offset
                       LDA.W !IRQNMICommand                ;; 008275 : AD 9B 0D    ; \ If in a normal (not special) level, branch 
                       BEQ CODE_008292                     ;; 008278 : F0 18       ; /  
 CODE_00827A:          LDA.B #$81                          ;; 00827A : A9 81       ;
@@ -296,26 +296,26 @@ CODE_00827A:          LDA.B #$81                          ;; 00827A : A9 81     
                       CPY.B #$08                          ;; 00827F : C0 08       ;  |If not playing ending movie, branch to $82A1 
                       BNE CODE_0082A1                     ;; 008281 : D0 1E       ; /  
                       LDY.W !Brightness                   ;; 008283 : AC AE 0D    ; \  
-                      STY.W $2100                         ;; 008286 : 8C 00 21    ; / Set brightness to $0DAE ; Screen Display Register
+                      STY.W !HW_INIDISP                   ;; 008286 : 8C 00 21    ; / Set brightness to $0DAE ; Screen Display Register
                       LDY.W !HDMAEnable                   ;; 008289 : AC 9F 0D    ; \  
-                      STY.W $420C                         ;; 00828C : 8C 0C 42    ; / Set HDMA channel enable to $0D9F ; H-DMA Channel Enable
+                      STY.W !HW_HDMAEN                    ;; 00828C : 8C 0C 42    ; / Set HDMA channel enable to $0D9F ; H-DMA Channel Enable
                       JMP IRQNMIEnding                    ;; 00828F : 4C 8C 83    ;
                                                           ;;                      ;
 CODE_008292:          LDY.B #$24                          ;; 008292 : A0 24       ; \  ; IRQ timer, at which scanline the IRQ will be fired.
-CODE_008294:          LDA.W $4211                         ;; 008294 : AD 11 42    ;  |(i.e. below the status bar) ; IRQ Flag By H/V Count Timer
-                      STY.W $4209                         ;; 008297 : 8C 09 42    ;  | ; V-Count Timer (Upper 8 Bits)
-                      STZ.W $420A                         ;; 00829A : 9C 0A 42    ; /  ; V-Count Timer MSB (Bit 0)
+CODE_008294:          LDA.W !HW_TIMEUP                    ;; 008294 : AD 11 42    ;  |(i.e. below the status bar) ; IRQ Flag By H/V Count Timer
+                      STY.W !HW_VTIME                     ;; 008297 : 8C 09 42    ;  | ; V-Count Timer (Upper 8 Bits)
+                      STZ.W !HW_VTIME+1                   ;; 00829A : 9C 0A 42    ; /  ; V-Count Timer MSB (Bit 0)
                       STZ.B !IRQType                      ;; 00829D : 64 11       ;
                       LDA.B #$A1                          ;; 00829F : A9 A1       ;
-CODE_0082A1:          STA.W $4200                         ;; 0082A1 : 8D 00 42    ; NMI, V/H Count, and Joypad Enable
-                      STZ.W $2111                         ;; 0082A4 : 9C 11 21    ; \  ; BG 3 Horizontal Scroll Offset- Write twice register
-                      STZ.W $2111                         ;; 0082A7 : 9C 11 21    ;  |Set Layer 3 horizontal and vertical ; BG 3 Horizontal Scroll Offset
-                      STZ.W $2112                         ;; 0082AA : 9C 12 21    ;  |scroll to x00 ; BG 3 Vertical Scroll Offset ; Write twice register
-                      STZ.W $2112                         ;; 0082AD : 9C 12 21    ; /  ; BG 3 Vertical Scroll Offset
+CODE_0082A1:          STA.W !HW_NMITIMEN                  ;; 0082A1 : 8D 00 42    ; NMI, V/H Count, and Joypad Enable
+                      STZ.W !HW_BG3HOFS                   ;; 0082A4 : 9C 11 21    ; \  ; BG 3 Horizontal Scroll Offset- Write twice register
+                      STZ.W !HW_BG3HOFS                   ;; 0082A7 : 9C 11 21    ;  |Set Layer 3 horizontal and vertical ; BG 3 Horizontal Scroll Offset
+                      STZ.W !HW_BG3VOFS                   ;; 0082AA : 9C 12 21    ;  |scroll to x00 ; BG 3 Vertical Scroll Offset ; Write twice register
+                      STZ.W !HW_BG3VOFS                   ;; 0082AD : 9C 12 21    ; /  ; BG 3 Vertical Scroll Offset
                       LDA.W !Brightness                   ;; 0082B0 : AD AE 0D    ; \  
-                      STA.W $2100                         ;; 0082B3 : 8D 00 21    ; / Set brightness to $0DAE ; Screen Display Register
+                      STA.W !HW_INIDISP                   ;; 0082B3 : 8D 00 21    ; / Set brightness to $0DAE ; Screen Display Register
                       LDA.W !HDMAEnable                   ;; 0082B6 : AD 9F 0D    ; \  
-                      STA.W $420C                         ;; 0082B9 : 8D 0C 42    ; / Set HDMA channel enable to $0D9F ; H-DMA Channel Enable
+                      STA.W !HW_HDMAEN                    ;; 0082B9 : 8D 0C 42    ; / Set HDMA channel enable to $0D9F ; H-DMA Channel Enable
                       REP #$30                            ;; 0082BC : C2 30       ; \ Pull all ; Index (16 bit) Accum (16 bit) 
                       PLB                                 ;; 0082BE : AB          ;  | 
                       PLY                                 ;; 0082BF : 7A          ;  | 
@@ -346,45 +346,45 @@ CODE_0082EB:          JSR CODE_00A488                     ;; 0082EB : 20 88 A4  
                       JSR DoSomeSpriteDMA                 ;; 0082F1 : 20 49 84    ;
                       JSR ControllerUpdate                ;; 0082F4 : 20 50 86    ;
 CODE_0082F7:          LDA.B #$09                          ;; 0082F7 : A9 09       ;
-                      STA.W $2105                         ;; 0082F9 : 8D 05 21    ; BG Mode and Tile Size Setting
+                      STA.W !HW_BGMODE                    ;; 0082F9 : 8D 05 21    ; BG Mode and Tile Size Setting
                       LDA.B !Mode7CenterX                 ;; 0082FC : A5 2A       ;
                       CLC                                 ;; 0082FE : 18          ;
                       ADC.B #$80                          ;; 0082FF : 69 80       ;
-                      STA.W $211F                         ;; 008301 : 8D 1F 21    ; Mode 7 Center Position X
+                      STA.W !HW_M7X                       ;; 008301 : 8D 1F 21    ; Mode 7 Center Position X
                       LDA.B !Mode7CenterX+1               ;; 008304 : A5 2B       ;
                       ADC.B #$00                          ;; 008306 : 69 00       ;
-                      STA.W $211F                         ;; 008308 : 8D 1F 21    ; Mode 7 Center Position X
+                      STA.W !HW_M7X                       ;; 008308 : 8D 1F 21    ; Mode 7 Center Position X
                       LDA.B !Mode7CenterY                 ;; 00830B : A5 2C       ;
                       CLC                                 ;; 00830D : 18          ;
                       ADC.B #$80                          ;; 00830E : 69 80       ;
-                      STA.W $2120                         ;; 008310 : 8D 20 21    ; Mode 7 Center Position Y
+                      STA.W !HW_M7Y                       ;; 008310 : 8D 20 21    ; Mode 7 Center Position Y
                       LDA.B !Mode7CenterY+1               ;; 008313 : A5 2D       ;
                       ADC.B #$00                          ;; 008315 : 69 00       ;
-                      STA.W $2120                         ;; 008317 : 8D 20 21    ; Mode 7 Center Position Y
+                      STA.W !HW_M7Y                       ;; 008317 : 8D 20 21    ; Mode 7 Center Position Y
                       LDA.B !Mode7ParamA                  ;; 00831A : A5 2E       ;
-                      STA.W $211B                         ;; 00831C : 8D 1B 21    ; Mode 7 Matrix Parameter A
+                      STA.W !HW_M7A                       ;; 00831C : 8D 1B 21    ; Mode 7 Matrix Parameter A
                       LDA.B !Mode7ParamA+1                ;; 00831F : A5 2F       ;
-                      STA.W $211B                         ;; 008321 : 8D 1B 21    ; Mode 7 Matrix Parameter A
+                      STA.W !HW_M7A                       ;; 008321 : 8D 1B 21    ; Mode 7 Matrix Parameter A
                       LDA.B !Mode7ParamB                  ;; 008324 : A5 30       ;
-                      STA.W $211C                         ;; 008326 : 8D 1C 21    ; Mode 7 Matrix Parameter B
+                      STA.W !HW_M7B                       ;; 008326 : 8D 1C 21    ; Mode 7 Matrix Parameter B
                       LDA.B !Mode7ParamB+1                ;; 008329 : A5 31       ;
-                      STA.W $211C                         ;; 00832B : 8D 1C 21    ; Mode 7 Matrix Parameter B
+                      STA.W !HW_M7B                       ;; 00832B : 8D 1C 21    ; Mode 7 Matrix Parameter B
                       LDA.B !Mode7ParamC                  ;; 00832E : A5 32       ;
-                      STA.W $211D                         ;; 008330 : 8D 1D 21    ; Mode 7 Matrix Parameter C
+                      STA.W !HW_M7C                       ;; 008330 : 8D 1D 21    ; Mode 7 Matrix Parameter C
                       LDA.B !Mode7ParamC+1                ;; 008333 : A5 33       ;
-                      STA.W $211D                         ;; 008335 : 8D 1D 21    ; Mode 7 Matrix Parameter C
+                      STA.W !HW_M7C                       ;; 008335 : 8D 1D 21    ; Mode 7 Matrix Parameter C
                       LDA.B !Mode7ParamD                  ;; 008338 : A5 34       ;
-                      STA.W $211E                         ;; 00833A : 8D 1E 21    ; Mode 7 Matrix Parameter D
+                      STA.W !HW_M7D                       ;; 00833A : 8D 1E 21    ; Mode 7 Matrix Parameter D
                       LDA.B !Mode7ParamD+1                ;; 00833D : A5 35       ;
-                      STA.W $211E                         ;; 00833F : 8D 1E 21    ; Mode 7 Matrix Parameter D
+                      STA.W !HW_M7D                       ;; 00833F : 8D 1E 21    ; Mode 7 Matrix Parameter D
                       JSR SETL1SCROLL                     ;; 008342 : 20 16 84    ;
                       LDA.W !IRQNMICommand                ;; 008345 : AD 9B 0D    ;
                       LSR A                               ;; 008348 : 4A          ;
                       BCC CODE_00835C                     ;; 008349 : 90 11       ;
                       LDA.W !Brightness                   ;; 00834B : AD AE 0D    ;
-                      STA.W $2100                         ;; 00834E : 8D 00 21    ; Screen Display Register
+                      STA.W !HW_INIDISP                   ;; 00834E : 8D 00 21    ; Screen Display Register
                       LDA.W !HDMAEnable                   ;; 008351 : AD 9F 0D    ;
-                      STA.W $420C                         ;; 008354 : 8D 0C 42    ; H-DMA Channel Enable
+                      STA.W !HW_HDMAEN                    ;; 008354 : 8D 0C 42    ; H-DMA Channel Enable
                       LDA.B #$81                          ;; 008357 : A9 81       ;
                       JMP CODE_0083F3                     ;; 008359 : 4C F3 83    ;
                                                           ;;                      ;
@@ -410,26 +410,26 @@ I_IRQ:                SEI                                 ;; 008374 : 78        
                       PHK                                 ;; 00837C : 4B          ;  | 
                       PLB                                 ;; 00837D : AB          ; /  
                       SEP #$30                            ;; 00837E : E2 30       ; Index (8 bit) Accum (8 bit) 
-                      LDA.W $4211                         ;; 008380 : AD 11 42    ; Read the IRQ register, 'unapply' the interrupt ; IRQ Flag By H/V Count Timer
+                      LDA.W !HW_TIMEUP                    ;; 008380 : AD 11 42    ; Read the IRQ register, 'unapply' the interrupt ; IRQ Flag By H/V Count Timer
                       BPL CODE_0083B2                     ;; 008383 : 10 2D       ; If "Timer IRQ" is clear, skip the next code block 
                       LDA.B #$81                          ;; 008385 : A9 81       ;
                       LDY.W !IRQNMICommand                ;; 008387 : AC 9B 0D    ;
                       BMI CODE_0083BA                     ;; 00838A : 30 2E       ; If Bit 7 (negative flag) is set, branch to a different IRQ mode 
-IRQNMIEnding:         STA.W $4200                         ;; ?QPWZ? : 8D 00 42    ; Enable NMI Interrupt and Automatic Joypad reading ; NMI, V/H Count, and Joypad Enable
+IRQNMIEnding:         STA.W !HW_NMITIMEN                  ;; ?QPWZ? : 8D 00 42    ; Enable NMI Interrupt and Automatic Joypad reading ; NMI, V/H Count, and Joypad Enable
                       LDY.B #$1F                          ;; 00838F : A0 1F       ;
                       JSR WaitForHBlank                   ;; 008391 : 20 3B 84    ;
                       LDA.B !Layer3XPos                   ;; 008394 : A5 22       ; \ Adjust scroll settings for layer 3 
-                      STA.W $2111                         ;; 008396 : 8D 11 21    ;  | ; BG 3 Horizontal Scroll Offset
+                      STA.W !HW_BG3HOFS                   ;; 008396 : 8D 11 21    ;  | ; BG 3 Horizontal Scroll Offset
                       LDA.B !Layer3XPos+1                 ;; 008399 : A5 23       ;  | 
-                      STA.W $2111                         ;; 00839B : 8D 11 21    ;  | ; BG 3 Horizontal Scroll Offset
+                      STA.W !HW_BG3HOFS                   ;; 00839B : 8D 11 21    ;  | ; BG 3 Horizontal Scroll Offset
                       LDA.B !Layer3YPos                   ;; 00839E : A5 24       ;  | 
-                      STA.W $2112                         ;; 0083A0 : 8D 12 21    ;  | ; BG 3 Vertical Scroll Offset
+                      STA.W !HW_BG3VOFS                   ;; 0083A0 : 8D 12 21    ;  | ; BG 3 Vertical Scroll Offset
                       LDA.B !Layer3YPos+1                 ;; 0083A3 : A5 25       ;  | 
-                      STA.W $2112                         ;; 0083A5 : 8D 12 21    ; /  ; BG 3 Vertical Scroll Offset
+                      STA.W !HW_BG3VOFS                   ;; 0083A5 : 8D 12 21    ; /  ; BG 3 Vertical Scroll Offset
 CODE_0083A8:          LDA.B !MainBGMode                   ;; 0083A8 : A5 3E       ; \Set the layer BG sizes, L3 priority, and BG mode 
-                      STA.W $2105                         ;; 0083AA : 8D 05 21    ; /(Effectively, this is the screen mode) ; BG Mode and Tile Size Setting
+                      STA.W !HW_BGMODE                    ;; 0083AA : 8D 05 21    ; /(Effectively, this is the screen mode) ; BG Mode and Tile Size Setting
                       LDA.B !ColorSettings                ;; 0083AD : A5 40       ; \Write CGADSUB 
-                      STA.W $2131                         ;; 0083AF : 8D 31 21    ; / ; Add/Subtract Select and Enable
+                      STA.W !HW_CGADSUB                   ;; 0083AF : 8D 31 21    ; / ; Add/Subtract Select and Enable
 CODE_0083B2:          REP #$30                            ;; 0083B2 : C2 30       ; \ Pull everything back ; Index (16 bit) Accum (16 bit) 
                       PLB                                 ;; 0083B4 : AB          ;  | 
                       PLY                                 ;; 0083B5 : 7A          ;  | 
@@ -442,19 +442,19 @@ CODE_0083BA:          BIT.W !IRQNMICommand                ;; 0083BA : 2C 9B 0D  
                       BVC CODE_0083E3                     ;; 0083BD : 50 24       ; If clear, skip the next code section 
                       LDY.B !IRQType                      ;; 0083BF : A4 11       ; \Skip if $11 = 0 
                       BEQ CODE_0083D0                     ;; 0083C1 : F0 0D       ; / 
-                      STA.W $4200                         ;; 0083C3 : 8D 00 42    ; #$81 -> NMI / Controller Enable reg ; NMI, V/H Count, and Joypad Enable
+                      STA.W !HW_NMITIMEN                  ;; 0083C3 : 8D 00 42    ; #$81 -> NMI / Controller Enable reg ; NMI, V/H Count, and Joypad Enable
                       LDY.B #$14                          ;; 0083C6 : A0 14       ;
                       JSR WaitForHBlank                   ;; 0083C8 : 20 3B 84    ;
                       JSR SETL1SCROLL                     ;; 0083CB : 20 16 84    ;
                       BRA CODE_0083A8                     ;; 0083CE : 80 D8       ;
                                                           ;;                      ;
 CODE_0083D0:          INC.B !IRQType                      ;; 0083D0 : E6 11       ; $11++ 
-                      LDA.W $4211                         ;; 0083D2 : AD 11 42    ; \ Set up the IRQ routine for layer 3 ; IRQ Flag By H/V Count Timer
+                      LDA.W !HW_TIMEUP                    ;; 0083D2 : AD 11 42    ; \ Set up the IRQ routine for layer 3 ; IRQ Flag By H/V Count Timer
                       LDA.B #$AE                          ;; 0083D5 : A9 AE       ;  |-\  
                       SEC                                 ;; 0083D7 : 38          ;  |  |Vertical Counter trigger at 174 - $1888 
                       SBC.W !ScreenShakeYOffset           ;; 0083D8 : ED 88 18    ;  |-/ Oddly enough, $1888 seems to be 16-bit, but the 
-                      STA.W $4209                         ;; 0083DB : 8D 09 42    ;  |Store to Vertical Counter Timer ; V-Count Timer (Upper 8 Bits)
-                      STZ.W $420A                         ;; 0083DE : 9C 0A 42    ; / Make the high byte of said timer 0 ; V-Count Timer MSB (Bit 0)
+                      STA.W !HW_VTIME                     ;; 0083DB : 8D 09 42    ;  |Store to Vertical Counter Timer ; V-Count Timer (Upper 8 Bits)
+                      STZ.W !HW_VTIME+1                   ;; 0083DE : 9C 0A 42    ; / Make the high byte of said timer 0 ; V-Count Timer MSB (Bit 0)
                       LDA.B #$A1                          ;; 0083E1 : A9 A1       ; A = NMI enable, V count enable, joypad automatic read enable, H count disable 
 CODE_0083E3:          LDY.W !EndLevelTimer                ;; 0083E3 : AC 93 14    ; if $1493 = 0 skip down 
                       BEQ CODE_0083F3                     ;; 0083E6 : F0 0B       ;
@@ -464,63 +464,63 @@ CODE_0083E3:          LDY.W !EndLevelTimer                ;; 0083E3 : AC 93 14  
                       LDA.B #$81                          ;; 0083EF : A9 81       ;
                       BRA IRQNMIEnding                    ;; 0083F1 : 80 99       ; Jump up to IRQNMIEnding 
                                                           ;;                      ;
-CODE_0083F3:          STA.W $4200                         ;; 0083F3 : 8D 00 42    ; A -> NMI/Joypad Auto-Read/HV-Count Control Register ; NMI, V/H Count, and Joypad Enable
+CODE_0083F3:          STA.W !HW_NMITIMEN                  ;; 0083F3 : 8D 00 42    ; A -> NMI/Joypad Auto-Read/HV-Count Control Register ; NMI, V/H Count, and Joypad Enable
                       JSR CODE_008439                     ;; 0083F6 : 20 39 84    ;
                       NOP                                 ;; 0083F9 : EA          ; \Not often you see NOP, I think there was a JSL here at one point maybe 
                       NOP                                 ;; 0083FA : EA          ; / 
                       LDA.B #$07                          ;; 0083FB : A9 07       ; \Write Screen register 
-                      STA.W $2105                         ;; 0083FD : 8D 05 21    ; / ; BG Mode and Tile Size Setting
+                      STA.W !HW_BGMODE                    ;; 0083FD : 8D 05 21    ; / ; BG Mode and Tile Size Setting
                       LDA.B !Mode7XPos                    ;; 008400 : A5 3A       ; \ Write L1 Horizontal scroll 
-                      STA.W $210D                         ;; 008402 : 8D 0D 21    ;  | ; BG 1 Horizontal Scroll Offset
+                      STA.W !HW_BG1HOFS                   ;; 008402 : 8D 0D 21    ;  | ; BG 1 Horizontal Scroll Offset
                       LDA.B !Mode7XPos+1                  ;; 008405 : A5 3B       ;  | 
-                      STA.W $210D                         ;; 008407 : 8D 0D 21    ; /  ; BG 1 Horizontal Scroll Offset
+                      STA.W !HW_BG1HOFS                   ;; 008407 : 8D 0D 21    ; /  ; BG 1 Horizontal Scroll Offset
                       LDA.B !Mode7YPos                    ;; 00840A : A5 3C       ; \ Write L1 Vertical Scroll 
-                      STA.W $210E                         ;; 00840C : 8D 0E 21    ;  | ; BG 1 Vertical Scroll Offset
+                      STA.W !HW_BG1VOFS                   ;; 00840C : 8D 0E 21    ;  | ; BG 1 Vertical Scroll Offset
                       LDA.B !Mode7YPos+1                  ;; 00840F : A5 3D       ;  | 
-                      STA.W $210E                         ;; 008411 : 8D 0E 21    ; /  ; BG 1 Vertical Scroll Offset
+                      STA.W !HW_BG1VOFS                   ;; 008411 : 8D 0E 21    ; /  ; BG 1 Vertical Scroll Offset
                       BRA CODE_0083B2                     ;; 008414 : 80 9C       ; And exit IRQ 
                                                           ;;                      ;
 SETL1SCROLL:          LDA.B #$59                          ;; ?QPWZ? : A9 59       ; \ 
-                      STA.W $2107                         ;; 008418 : 8D 07 21    ; /Write L1 GFX source address ; BG 1 Address and Size
+                      STA.W !HW_BG1SC                     ;; 008418 : 8D 07 21    ; /Write L1 GFX source address ; BG 1 Address and Size
                       LDA.B #$07                          ;; 00841B : A9 07       ; \Write L1/L2 Tilemap address 
-                      STA.W $210B                         ;; 00841D : 8D 0B 21    ; / ; BG 1 & 2 Tile Data Designation
+                      STA.W !HW_BG12NBA                   ;; 00841D : 8D 0B 21    ; / ; BG 1 & 2 Tile Data Designation
                       LDA.B !Layer1XPos                   ;; 008420 : A5 1A       ; \ Write L1 Horizontal scroll 
-                      STA.W $210D                         ;; 008422 : 8D 0D 21    ;  | ; BG 1 Horizontal Scroll Offset
+                      STA.W !HW_BG1HOFS                   ;; 008422 : 8D 0D 21    ;  | ; BG 1 Horizontal Scroll Offset
                       LDA.B !Layer1XPos+1                 ;; 008425 : A5 1B       ;  | 
-                      STA.W $210D                         ;; 008427 : 8D 0D 21    ; / ; BG 1 Horizontal Scroll Offset
+                      STA.W !HW_BG1HOFS                   ;; 008427 : 8D 0D 21    ; / ; BG 1 Horizontal Scroll Offset
                       LDA.B !Layer1YPos                   ;; 00842A : A5 1C       ; \ $1C + $1888 -> L1 Vert scroll 
                       CLC                                 ;; 00842C : 18          ;  |$1888 = Some sort of vertioffset 
                       ADC.W !ScreenShakeYOffset           ;; 00842D : 6D 88 18    ;  | 
-                      STA.W $210E                         ;; 008430 : 8D 0E 21    ; / ; BG 1 Vertical Scroll Offset
+                      STA.W !HW_BG1VOFS                   ;; 008430 : 8D 0E 21    ; / ; BG 1 Vertical Scroll Offset
                       LDA.B !Layer1YPos+1                 ;; 008433 : A5 1D       ; \Other half of L1 vert scroll 
-                      STA.W $210E                         ;; 008435 : 8D 0E 21    ; / ; BG 1 Vertical Scroll Offset
+                      STA.W !HW_BG1VOFS                   ;; 008435 : 8D 0E 21    ; / ; BG 1 Vertical Scroll Offset
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_008439:          LDY.B #$20                          ;; 008439 : A0 20       ; <<- Could this be just to waste time? 
-WaitForHBlank:        BIT.W $4212                         ;; ?QPWZ? : 2C 12 42    ; So... LDY gets set with 20 if there is a H-Blank...? ; H/V Blank Flags and Joypad Status
+WaitForHBlank:        BIT.W !HW_HVBJOY                    ;; ?QPWZ? : 2C 12 42    ; So... LDY gets set with 20 if there is a H-Blank...? ; H/V Blank Flags and Joypad Status
                       BVS CODE_008439                     ;; 00843E : 70 F9       ; if in H-Blank, make Y #$20 and try again 
-CODE_008440:          BIT.W $4212                         ;; 008440 : 2C 12 42    ; Now wait until not in H-Blank ; H/V Blank Flags and Joypad Status
+CODE_008440:          BIT.W !HW_HVBJOY                    ;; 008440 : 2C 12 42    ; Now wait until not in H-Blank ; H/V Blank Flags and Joypad Status
                       BVC CODE_008440                     ;; 008443 : 50 FB       ;
 CODE_008445:          DEY                                 ;; 008445 : 88          ;  |Y = 0 
                       BNE CODE_008445                     ;; 008446 : D0 FD       ; / ...wait a second... why didn't they just do LDY #$00? ...waste more time? 
                       RTS                                 ;; ?QPWZ? : 60          ; return 
                                                           ;;                      ;
-DoSomeSpriteDMA:      STZ.W $4300                         ;; ?QPWZ? : 9C 00 43    ; Parameters for DMA Transfer
+DoSomeSpriteDMA:      STZ.W !HW_DMAPARAM                  ;; ?QPWZ? : 9C 00 43    ; Parameters for DMA Transfer
                       REP #$20                            ;; 00844C : C2 20       ; Accum (16 bit) 
-                      STZ.W $2102                         ;; 00844E : 9C 02 21    ; OAM address ; Address for Accessing OAM
+                      STZ.W !HW_OAMADD                    ;; 00844E : 9C 02 21    ; OAM address ; Address for Accessing OAM
                       LDA.W #$0004                        ;; 008451 : A9 04 00    ;
-                      STA.W $4301                         ;; 008454 : 8D 01 43    ; Dest. address = $2104 (data write to OAM) ; B Address
+                      STA.W !HW_DMAREG                    ;; 008454 : 8D 01 43    ; Dest. address = $2104 (data write to OAM) ; B Address
                       LDA.W #$0002                        ;; 008457 : A9 02 00    ;
-                      STA.W $4303                         ;; 00845A : 8D 03 43    ; Source address = $00:0200  ; A Address (High Byte)
+                      STA.W !HW_DMAADDR+1                 ;; 00845A : 8D 03 43    ; Source address = $00:0200  ; A Address (High Byte)
                       LDA.W #$0220                        ;; 00845D : A9 20 02    ;
-                      STA.W $4305                         ;; 008460 : 8D 05 43    ; $0220 bytes to transfer ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMACNT                    ;; 008460 : 8D 05 43    ; $0220 bytes to transfer ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDY.B #$01                          ;; 008463 : A0 01       ;
-                      STY.W $420B                         ;; 008465 : 8C 0B 42    ; Start DMA ; Regular DMA Channel Enable
+                      STY.W !HW_MDMAEN                    ;; 008465 : 8C 0B 42    ; Start DMA ; Regular DMA Channel Enable
                       SEP #$20                            ;; 008468 : E2 20       ; Accum (8 bit) 
                       LDA.B #$80                          ;; 00846A : A9 80       ; \  
                       STA.W $2103                         ;; 00846C : 8D 03 21    ;  | 
                       LDA.B !OAMAddress                   ;; 00846F : A5 3F       ;  |Change the OAM read/write address to #$8000 + $3F 
-                      STA.W $2102                         ;; 008471 : 8D 02 21    ; /  ; Address for Accessing OAM
+                      STA.W !HW_OAMADD                    ;; 008471 : 8D 02 21    ; /  ; Address for Accessing OAM
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -663,50 +663,50 @@ LoadScrnImage:        LDY.B !StripeImage                  ;; ?QPWZ? : A4 12     
                       JSR CODE_00871E                     ;; 0085E3 : 20 1E 87    ;
                       LDA.B !StripeImage                  ;; 0085E6 : A5 12       ;
                       BNE CODE_0085F7                     ;; 0085E8 : D0 0D       ;
-                      STA.L $7F837B                       ;; 0085EA : 8F 7B 83 7F ;
-                      STA.L $7F837C                       ;; 0085EE : 8F 7C 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 0085EA : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize+1           ;; 0085EE : 8F 7C 83 7F ;
                       DEC A                               ;; 0085F2 : 3A          ;
-                      STA.L $7F837D                       ;; 0085F3 : 8F 7D 83 7F ;
+                      STA.L !DynamicStripeImage           ;; 0085F3 : 8F 7D 83 7F ;
 CODE_0085F7:          STZ.B !StripeImage                  ;; 0085F7 : 64 12       ; Do not reload the same thing next frame 
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_0085FA:          JSR TurnOffIO                       ;; 0085FA : 20 7D 93    ;
                       LDA.B #$FC                          ;; 0085FD : A9 FC       ;
                       STA.B !_0                           ;; 0085FF : 85 00       ;
-                      STZ.W $2115                         ;; 008601 : 9C 15 21    ; Set "VRAM Address Increment Value" to x00 ; VRAM Address Increment Value
-                      STZ.W $2116                         ;; 008604 : 9C 16 21    ; Set "Address for VRAM Read/Write (Low Byte)" to x00 ; Address for VRAM Read/Write (Low Byte)
+                      STZ.W !HW_VMAINC                    ;; 008601 : 9C 15 21    ; Set "VRAM Address Increment Value" to x00 ; VRAM Address Increment Value
+                      STZ.W !HW_VMADD                     ;; 008604 : 9C 16 21    ; Set "Address for VRAM Read/Write (Low Byte)" to x00 ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$50                          ;; 008607 : A9 50       ; \ Set "Address for VRAM Read/Write (High Byte)" to x50 
-                      STA.W $2117                         ;; 008609 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008609 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00860C : A2 06       ;
 CODE_00860E:          LDA.W DATA_008649,X                 ;; 00860E : BD 49 86    ;
-                      STA.W $4310,X                       ;; 008611 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008611 : 9D 10 43    ;
                       DEX                                 ;; 008614 : CA          ;
                       BPL CODE_00860E                     ;; 008615 : 10 F7       ;
                       LDY.B #$02                          ;; 008617 : A0 02       ; DMA something to VRAM, my guess is a tilemap... 
-                      STY.W $420B                         ;; 008619 : 8C 0B 42    ; Regular DMA Channel Enable
+                      STY.W !HW_MDMAEN                    ;; 008619 : 8C 0B 42    ; Regular DMA Channel Enable
                       LDA.B #$38                          ;; 00861C : A9 38       ;
                       STA.B !_0                           ;; 00861E : 85 00       ;
                       LDA.B #$80                          ;; 008620 : A9 80       ;
-                      STA.W $2115                         ;; 008622 : 8D 15 21    ; VRAM Address Increment Value
-                      STZ.W $2116                         ;; 008625 : 9C 16 21    ; \Change CRAM address ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMAINC                    ;; 008622 : 8D 15 21    ; VRAM Address Increment Value
+                      STZ.W !HW_VMADD                     ;; 008625 : 9C 16 21    ; \Change CRAM address ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$50                          ;; 008628 : A9 50       ;  | 
-                      STA.W $2117                         ;; 00862A : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 00862A : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00862D : A2 06       ; And Repeat the DMA 
 CODE_00862F:          LDA.W DATA_008649,X                 ;; 00862F : BD 49 86    ;
-                      STA.W $4310,X                       ;; 008632 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008632 : 9D 10 43    ;
                       DEX                                 ;; 008635 : CA          ;
                       BPL CODE_00862F                     ;; 008636 : 10 F7       ;
                       LDA.B #$19                          ;; 008638 : A9 19       ; \but change desination address to $2119 
-                      STA.W $4311                         ;; 00863A : 8D 11 43    ; / ; B Address
-                      STY.W $420B                         ;; 00863D : 8C 0B 42    ; Start DMA ; Regular DMA Channel Enable
+                      STA.W !HW_DMAREG+$10                ;; 00863A : 8D 11 43    ; / ; B Address
+                      STY.W !HW_MDMAEN                    ;; 00863D : 8C 0B 42    ; Start DMA ; Regular DMA Channel Enable
                       STZ.B !OAMAddress                   ;; 008640 : 64 3F       ; $3B = 0 (not sure what $3B is) 
-                      JSL $7F8000                         ;; 008642 : 22 00 80 7F ; and JSL to a RAM routine 
+                      JSL !OAMResetRoutine                ;; 008642 : 22 00 80 7F ; and JSL to a RAM routine 
                       JMP DoSomeSpriteDMA                 ;; 008646 : 4C 49 84    ; Jump to the next part of this routine 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_008649:          db $08,$18,$00,$00,$00,$00,$10      ;; 008649               ;
                                                           ;;                      ;
-ControllerUpdate:     LDA.W $4218                         ;; ?QPWZ? : AD 18 42    ; \  ; Joypad 1Data (Low Byte)
+ControllerUpdate:     LDA.W !HW_CNTRL1                    ;; ?QPWZ? : AD 18 42    ; \  ; Joypad 1Data (Low Byte)
                       AND.B #$F0                          ;; 008653 : 29 F0       ;  | 
                       STA.W !axlr0000P1Hold               ;; 008655 : 8D A4 0D    ;  | 
                       TAY                                 ;; 008658 : A8          ;  | 
@@ -714,14 +714,14 @@ ControllerUpdate:     LDA.W $4218                         ;; ?QPWZ? : AD 18 42  
                       AND.W !axlr0000P1Hold               ;; 00865C : 2D A4 0D    ;  | 
                       STA.W !axlr0000P1Frame              ;; 00865F : 8D A8 0D    ;  | 
                       STY.W !axlr0000P1Mask               ;; 008662 : 8C AC 0D    ;  | 
-                      LDA.W $4219                         ;; 008665 : AD 19 42    ;  | ; Joypad 1Data (High Byte)
+                      LDA.W !HW_CNTRL1+1                  ;; 008665 : AD 19 42    ;  | ; Joypad 1Data (High Byte)
                       STA.W !byetudlrP1Hold               ;; 008668 : 8D A2 0D    ;  | 
                       TAY                                 ;; 00866B : A8          ;  | 
                       EOR.W !byetudlrP1Mask               ;; 00866C : 4D AA 0D    ;  | 
                       AND.W !byetudlrP1Hold               ;; 00866F : 2D A2 0D    ;  | 
                       STA.W !byetudlrP1Frame              ;; 008672 : 8D A6 0D    ;  | 
                       STY.W !byetudlrP1Mask               ;; 008675 : 8C AA 0D    ;  |Read controller data 
-                      LDA.W $421A                         ;; 008678 : AD 1A 42    ;  | ; Joypad 2Data (Low Byte)
+                      LDA.W !HW_CNTRL2                    ;; 008678 : AD 1A 42    ;  | ; Joypad 2Data (Low Byte)
                       AND.B #$F0                          ;; 00867B : 29 F0       ;  | 
                       STA.W !axlr0000P2Hold               ;; 00867D : 8D A5 0D    ;  | 
                       TAY                                 ;; 008680 : A8          ;  | 
@@ -729,7 +729,7 @@ ControllerUpdate:     LDA.W $4218                         ;; ?QPWZ? : AD 18 42  
                       AND.W !axlr0000P2Hold               ;; 008684 : 2D A5 0D    ;  | 
                       STA.W !axlr0000P2Frame              ;; 008687 : 8D A9 0D    ;  | 
                       STY.W !axlr0000P2Mask               ;; 00868A : 8C AD 0D    ;  | 
-                      LDA.W $421B                         ;; 00868D : AD 1B 42    ;  | ; Joypad 2Data (High Byte)
+                      LDA.W !HW_CNTRL2+1                  ;; 00868D : AD 1B 42    ;  | ; Joypad 2Data (High Byte)
                       STA.W !byetudlrP2Hold               ;; 008690 : 8D A3 0D    ;  | 
                       TAY                                 ;; 008693 : A8          ;  | 
                       EOR.W !byetudlrP2Mask               ;; 008694 : 4D AB 0D    ;  | 
@@ -762,7 +762,7 @@ CODE_0086CF:          STA.W !OAMTileSize,X                ;; 0086CF : 9D 20 04  
                       BPL CODE_0086CF                     ;; 0086D4 : 10 F9       ;
                       SEP #$30                            ;; 0086D6 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDA.B #$F0                          ;; 0086D8 : A9 F0       ;
-                      JSL $7F812E                         ;; 0086DA : 22 2E 81 7F ;
+                      JSL !OAMResetRoutine+$12E           ;; 0086DA : 22 2E 81 7F ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 ExecutePtr:           STY.B !_3                           ;; ?QPWZ? : 84 03       ; "Push" Y 
@@ -803,7 +803,7 @@ ExecutePtrLong:       STY.B !_5                           ;; ?QPWZ? : 84 05     
                       JML.W [!_0]                         ;; 00871B : DC 00 00    ;
                                                           ;;                      ;
 CODE_00871E:          REP #$10                            ;; 00871E : C2 10       ; 16 bit X,Y ; Index (16 bit) 
-                      STA.W $4314                         ;; 008720 : 8D 14 43    ; A Address Bank
+                      STA.W !HW_DMAADDR+$12               ;; 008720 : 8D 14 43    ; A Address Bank
                       LDY.W #$0000                        ;; 008723 : A0 00 00    ; Set index to 0 
 CODE_008726:          LDA.B [!_0],Y                       ;; 008726 : B7 00       ; \ Read line header byte 1 
                       BPL CODE_00872D                     ;; 008728 : 10 03       ;  |If the byte & %10000000 is true, 
@@ -820,7 +820,7 @@ CODE_00872D:          STA.B !_4                           ;; 00872D : 85 04     
                       ASL A                               ;; 008739 : 0A          ;  |Store direction bit in $07 
                       ROL.B !_7                           ;; 00873A : 26 07       ; /  
                       LDA.B #$18                          ;; 00873C : A9 18       ; \ Set B address (DMA) to x18 
-                      STA.W $4311                         ;; 00873E : 8D 11 43    ; /  ; B Address
+                      STA.W !HW_DMAREG+$10                ;; 00873E : 8D 11 43    ; /  ; B Address
                       LDA.B [!_0],Y                       ;; 008741 : B7 00       ; Re-read line header byte 3 
                       AND.B #$40                          ;; 008743 : 29 40       ; \  
                       LSR A                               ;; 008745 : 4A          ;  | 
@@ -829,10 +829,10 @@ CODE_00872D:          STA.B !_4                           ;; 00872D : 85 04     
                       STA.B !_5                           ;; 008748 : 85 05       ; /  
                       STZ.B !_6                           ;; 00874A : 64 06       ;
                       ORA.B #$01                          ;; 00874C : 09 01       ;
-                      STA.W $4310                         ;; 00874E : 8D 10 43    ; Parameters for DMA Transfer
+                      STA.W !HW_DMAPARAM+$10              ;; 00874E : 8D 10 43    ; Parameters for DMA Transfer
                       REP #$20                            ;; 008751 : C2 20       ; 16 bit A ; Accum (16 bit) 
                       LDA.B !_3                           ;; 008753 : A5 03       ;
-                      STA.W $2116                         ;; 008755 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 008755 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.B [!_0],Y                       ;; 008758 : B7 00       ;
                       XBA                                 ;; 00875A : EB          ;
                       AND.W #$3FFF                        ;; 00875B : 29 FF 3F    ;
@@ -843,25 +843,25 @@ CODE_00872D:          STA.B !_4                           ;; 00872D : 85 04     
                       TYA                                 ;; 008762 : 98          ;
                       CLC                                 ;; 008763 : 18          ;
                       ADC.B !_0                           ;; 008764 : 65 00       ;
-                      STA.W $4312                         ;; 008766 : 8D 12 43    ; A Address (Low Byte)
-                      STX.W $4315                         ;; 008769 : 8E 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMAADDR+$10               ;; 008766 : 8D 12 43    ; A Address (Low Byte)
+                      STX.W !HW_DMACNT+$10                ;; 008769 : 8E 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDA.B !_5                           ;; 00876C : A5 05       ;
                       BEQ CODE_008795                     ;; 00876E : F0 25       ;
                       SEP #$20                            ;; 008770 : E2 20       ; 8 bit A ; Accum (8 bit) 
                       LDA.B !_7                           ;; 008772 : A5 07       ;
-                      STA.W $2115                         ;; 008774 : 8D 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_VMAINC                    ;; 008774 : 8D 15 21    ; VRAM Address Increment Value
                       LDA.B #$02                          ;; 008777 : A9 02       ;
-                      STA.W $420B                         ;; 008779 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 008779 : 8D 0B 42    ; Regular DMA Channel Enable
                       LDA.B #$19                          ;; 00877C : A9 19       ;
-                      STA.W $4311                         ;; 00877E : 8D 11 43    ; B Address
+                      STA.W !HW_DMAREG+$10                ;; 00877E : 8D 11 43    ; B Address
                       REP #$21                            ;; 008781 : C2 21       ; Accum (16 bit) 
                       LDA.B !_3                           ;; 008783 : A5 03       ;
-                      STA.W $2116                         ;; 008785 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 008785 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       TYA                                 ;; 008788 : 98          ;
                       ADC.B !_0                           ;; 008789 : 65 00       ;
                       INC A                               ;; 00878B : 1A          ;
-                      STA.W $4312                         ;; 00878C : 8D 12 43    ; A Address (Low Byte)
-                      STX.W $4315                         ;; 00878F : 8E 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMAADDR+$10               ;; 00878C : 8D 12 43    ; A Address (Low Byte)
+                      STX.W !HW_DMACNT+$10                ;; 00878F : 8E 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDX.W #$0002                        ;; 008792 : A2 02 00    ;
 CODE_008795:          STX.B !_3                           ;; 008795 : 86 03       ;
                       TYA                                 ;; 008797 : 98          ;
@@ -871,9 +871,9 @@ CODE_008795:          STX.B !_3                           ;; 008795 : 86 03     
                       SEP #$20                            ;; 00879C : E2 20       ; Accum (8 bit) 
                       LDA.B !_7                           ;; 00879E : A5 07       ;
                       ORA.B #$80                          ;; 0087A0 : 09 80       ;
-                      STA.W $2115                         ;; 0087A2 : 8D 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_VMAINC                    ;; 0087A2 : 8D 15 21    ; VRAM Address Increment Value
                       LDA.B #$02                          ;; 0087A5 : A9 02       ;
-                      STA.W $420B                         ;; 0087A7 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 0087A7 : 8D 0B 42    ; Regular DMA Channel Enable
                       JMP CODE_008726                     ;; 0087AA : 4C 26 87    ;
                                                           ;;                      ;
 CODE_0087AD:          SEP #$30                            ;; 0087AD : E2 30       ; Index (8 bit) Accum (8 bit) 
@@ -887,123 +887,123 @@ CODE_0087B7:          LDA.B !ScreenMode                   ;; 0087B7 : A5 5B     
                       JMP CODE_008849                     ;; 0087BD : 4C 49 88    ;  |jump to $8849 
                                                           ;;                      ;
 CODE_0087C0:          LDY.B #$81                          ;; 0087C0 : A0 81       ; \ Set "VRAM Address Increment Value" to x81 
-                      STY.W $2115                         ;; 0087C2 : 8C 15 21    ; /  ; VRAM Address Increment Value
+                      STY.W !HW_VMAINC                    ;; 0087C2 : 8C 15 21    ; /  ; VRAM Address Increment Value
                       LDA.W !Layer1VramAddr+1             ;; 0087C5 : AD E5 1B    ;
-                      STA.W $2116                         ;; 0087C8 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 0087C8 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer1VramAddr               ;; 0087CB : AD E4 1B    ;
-                      STA.W $2117                         ;; 0087CE : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 0087CE : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0087D1 : A2 06       ;
 CODE_0087D3:          LDA.W DATA_008A16,X                 ;; 0087D3 : BD 16 8A    ;
-                      STA.W $4310,X                       ;; 0087D6 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 0087D6 : 9D 10 43    ;
                       DEX                                 ;; 0087D9 : CA          ;
                       BPL CODE_0087D3                     ;; 0087DA : 10 F7       ;
                       LDA.B #$02                          ;; 0087DC : A9 02       ; \ Enable DMA channel 1 
-                      STA.W $420B                         ;; 0087DE : 8D 0B 42    ; /  ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 0087E1 : 8C 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 0087DE : 8D 0B 42    ; /  ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 0087E1 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer1VramAddr+1             ;; 0087E4 : AD E5 1B    ;
-                      STA.W $2116                         ;; 0087E7 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 0087E7 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer1VramAddr               ;; 0087EA : AD E4 1B    ;
                       CLC                                 ;; 0087ED : 18          ;
                       ADC.B #$08                          ;; 0087EE : 69 08       ;
-                      STA.W $2117                         ;; 0087F0 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 0087F0 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0087F3 : A2 06       ;
 CODE_0087F5:          LDA.W DATA_008A1D,X                 ;; 0087F5 : BD 1D 8A    ;
-                      STA.W $4310,X                       ;; 0087F8 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 0087F8 : 9D 10 43    ;
                       DEX                                 ;; 0087FB : CA          ;
                       BPL CODE_0087F5                     ;; 0087FC : 10 F7       ;
                       LDA.B #$02                          ;; 0087FE : A9 02       ;
-                      STA.W $420B                         ;; 008800 : 8D 0B 42    ; \ Enable DMA channel 1 ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 008803 : 8C 15 21    ; /  ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 008800 : 8D 0B 42    ; \ Enable DMA channel 1 ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 008803 : 8C 15 21    ; /  ; VRAM Address Increment Value
                       LDA.W !Layer1VramAddr+1             ;; 008806 : AD E5 1B    ;
                       INC A                               ;; 008809 : 1A          ;
-                      STA.W $2116                         ;; 00880A : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00880A : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer1VramAddr               ;; 00880D : AD E4 1B    ;
-                      STA.W $2117                         ;; 008810 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008810 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008813 : A2 06       ;
 CODE_008815:          LDA.W DATA_008A24,X                 ;; 008815 : BD 24 8A    ;
-                      STA.W $4310,X                       ;; 008818 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008818 : 9D 10 43    ;
                       DEX                                 ;; 00881B : CA          ;
                       BPL CODE_008815                     ;; 00881C : 10 F7       ;
                       LDA.B #$02                          ;; 00881E : A9 02       ; \ Enable DMA channel 1 
-                      STA.W $420B                         ;; 008820 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 008823 : 8C 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 008820 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 008823 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer1VramAddr+1             ;; 008826 : AD E5 1B    ;
                       INC A                               ;; 008829 : 1A          ;
-                      STA.W $2116                         ;; 00882A : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00882A : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer1VramAddr               ;; 00882D : AD E4 1B    ;
                       CLC                                 ;; 008830 : 18          ;
                       ADC.B #$08                          ;; 008831 : 69 08       ;
-                      STA.W $2117                         ;; 008833 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008833 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008836 : A2 06       ;
 CODE_008838:          LDA.W DATA_008A2B,X                 ;; 008838 : BD 2B 8A    ;
-                      STA.W $4310,X                       ;; 00883B : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 00883B : 9D 10 43    ;
                       DEX                                 ;; 00883E : CA          ;
                       BPL CODE_008838                     ;; 00883F : 10 F7       ;
                       LDA.B #$02                          ;; 008841 : A9 02       ; \ Enable DMA channel 1 
-                      STA.W $420B                         ;; 008843 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 008843 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
                       JMP CODE_0088DD                     ;; 008846 : 4C DD 88    ;
                                                           ;;                      ;
 CODE_008849:          LDY.B #$80                          ;; 008849 : A0 80       ;
-                      STY.W $2115                         ;; 00884B : 8C 15 21    ; VRAM Address Increment Value
+                      STY.W !HW_VMAINC                    ;; 00884B : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer1VramAddr+1             ;; 00884E : AD E5 1B    ;
-                      STA.W $2116                         ;; 008851 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 008851 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer1VramAddr               ;; 008854 : AD E4 1B    ;
-                      STA.W $2117                         ;; 008857 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008857 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00885A : A2 06       ;
 CODE_00885C:          LDA.W DATA_008A16,X                 ;; 00885C : BD 16 8A    ;
-                      STA.W $4310,X                       ;; 00885F : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 00885F : 9D 10 43    ;
                       DEX                                 ;; 008862 : CA          ;
                       BPL CODE_00885C                     ;; 008863 : 10 F7       ;
                       LDA.B #$02                          ;; 008865 : A9 02       ;
-                      STA.W $420B                         ;; 008867 : 8D 0B 42    ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 00886A : 8C 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 008867 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 00886A : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer1VramAddr+1             ;; 00886D : AD E5 1B    ;
-                      STA.W $2116                         ;; 008870 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 008870 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer1VramAddr               ;; 008873 : AD E4 1B    ;
                       CLC                                 ;; 008876 : 18          ;
                       ADC.B #$04                          ;; 008877 : 69 04       ;
-                      STA.W $2117                         ;; 008879 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008879 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00887C : A2 06       ;
 CODE_00887E:          LDA.W DATA_008A1D,X                 ;; 00887E : BD 1D 8A    ;
-                      STA.W $4310,X                       ;; 008881 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008881 : 9D 10 43    ;
                       DEX                                 ;; 008884 : CA          ;
                       BPL CODE_00887E                     ;; 008885 : 10 F7       ;
                       LDA.B #$40                          ;; 008887 : A9 40       ;
-                      STA.W $4315                         ;; 008889 : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMACNT+$10                ;; 008889 : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDA.B #$02                          ;; 00888C : A9 02       ;
-                      STA.W $420B                         ;; 00888E : 8D 0B 42    ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 008891 : 8C 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 00888E : 8D 0B 42    ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 008891 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer1VramAddr+1             ;; 008894 : AD E5 1B    ;
                       CLC                                 ;; 008897 : 18          ;
                       ADC.B #$20                          ;; 008898 : 69 20       ;
-                      STA.W $2116                         ;; 00889A : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00889A : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer1VramAddr               ;; 00889D : AD E4 1B    ;
-                      STA.W $2117                         ;; 0088A0 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 0088A0 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0088A3 : A2 06       ;
 CODE_0088A5:          LDA.W DATA_008A24,X                 ;; 0088A5 : BD 24 8A    ;
-                      STA.W $4310,X                       ;; 0088A8 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 0088A8 : 9D 10 43    ;
                       DEX                                 ;; 0088AB : CA          ;
                       BPL CODE_0088A5                     ;; 0088AC : 10 F7       ;
                       LDA.B #$02                          ;; 0088AE : A9 02       ;
-                      STA.W $420B                         ;; 0088B0 : 8D 0B 42    ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 0088B3 : 8C 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 0088B0 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 0088B3 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer1VramAddr+1             ;; 0088B6 : AD E5 1B    ;
                       CLC                                 ;; 0088B9 : 18          ;
                       ADC.B #$20                          ;; 0088BA : 69 20       ;
-                      STA.W $2116                         ;; 0088BC : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 0088BC : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer1VramAddr               ;; 0088BF : AD E4 1B    ;
                       CLC                                 ;; 0088C2 : 18          ;
                       ADC.B #$04                          ;; 0088C3 : 69 04       ;
-                      STA.W $2117                         ;; 0088C5 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 0088C5 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0088C8 : A2 06       ;
 CODE_0088CA:          LDA.W DATA_008A2B,X                 ;; 0088CA : BD 2B 8A    ;
-                      STA.W $4310,X                       ;; 0088CD : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 0088CD : 9D 10 43    ;
                       DEX                                 ;; 0088D0 : CA          ;
                       BPL CODE_0088CA                     ;; 0088D1 : 10 F7       ;
                       LDA.B #$40                          ;; 0088D3 : A9 40       ;
-                      STA.W $4315                         ;; 0088D5 : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMACNT+$10                ;; 0088D5 : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDA.B #$02                          ;; 0088D8 : A9 02       ;
-                      STA.W $420B                         ;; 0088DA : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 0088DA : 8D 0B 42    ; Regular DMA Channel Enable
 CODE_0088DD:          LDA.B #$00                          ;; 0088DD : A9 00       ;
                       STA.W !Layer1VramAddr               ;; 0088DF : 8D E4 1B    ;
                       LDA.W !Layer2VramAddr               ;; 0088E2 : AD E6 1C    ;
@@ -1016,123 +1016,123 @@ CODE_0088EA:          LDA.B !ScreenMode                   ;; 0088EA : A5 5B     
                       JMP CODE_00897C                     ;; 0088F0 : 4C 7C 89    ;
                                                           ;;                      ;
 CODE_0088F3:          LDY.B #$81                          ;; 0088F3 : A0 81       ;
-                      STY.W $2115                         ;; 0088F5 : 8C 15 21    ; VRAM Address Increment Value
+                      STY.W !HW_VMAINC                    ;; 0088F5 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer2VramAddr+1             ;; 0088F8 : AD E7 1C    ;
-                      STA.W $2116                         ;; 0088FB : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 0088FB : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer2VramAddr               ;; 0088FE : AD E6 1C    ;
-                      STA.W $2117                         ;; 008901 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008901 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008904 : A2 06       ;
 CODE_008906:          LDA.W DATA_008A32,X                 ;; 008906 : BD 32 8A    ;
-                      STA.W $4310,X                       ;; 008909 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008909 : 9D 10 43    ;
                       DEX                                 ;; 00890C : CA          ;
                       BPL CODE_008906                     ;; 00890D : 10 F7       ;
                       LDA.B #$02                          ;; 00890F : A9 02       ;
-                      STA.W $420B                         ;; 008911 : 8D 0B 42    ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 008914 : 8C 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 008911 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 008914 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer2VramAddr+1             ;; 008917 : AD E7 1C    ;
-                      STA.W $2116                         ;; 00891A : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00891A : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer2VramAddr               ;; 00891D : AD E6 1C    ;
                       CLC                                 ;; 008920 : 18          ;
                       ADC.B #$08                          ;; 008921 : 69 08       ;
-                      STA.W $2117                         ;; 008923 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008923 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008926 : A2 06       ;
 CODE_008928:          LDA.W DATA_008A39,X                 ;; 008928 : BD 39 8A    ;
-                      STA.W $4310,X                       ;; 00892B : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 00892B : 9D 10 43    ;
                       DEX                                 ;; 00892E : CA          ;
                       BPL CODE_008928                     ;; 00892F : 10 F7       ;
                       LDA.B #$02                          ;; 008931 : A9 02       ;
-                      STA.W $420B                         ;; 008933 : 8D 0B 42    ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 008936 : 8C 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 008933 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 008936 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer2VramAddr+1             ;; 008939 : AD E7 1C    ;
                       INC A                               ;; 00893C : 1A          ;
-                      STA.W $2116                         ;; 00893D : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00893D : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer2VramAddr               ;; 008940 : AD E6 1C    ;
-                      STA.W $2117                         ;; 008943 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008943 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008946 : A2 06       ;
 CODE_008948:          LDA.W DATA_008A40,X                 ;; 008948 : BD 40 8A    ;
-                      STA.W $4310,X                       ;; 00894B : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 00894B : 9D 10 43    ;
                       DEX                                 ;; 00894E : CA          ;
                       BPL CODE_008948                     ;; 00894F : 10 F7       ;
                       LDA.B #$02                          ;; 008951 : A9 02       ;
-                      STA.W $420B                         ;; 008953 : 8D 0B 42    ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 008956 : 8C 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 008953 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 008956 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer2VramAddr+1             ;; 008959 : AD E7 1C    ;
                       INC A                               ;; 00895C : 1A          ;
-                      STA.W $2116                         ;; 00895D : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00895D : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer2VramAddr               ;; 008960 : AD E6 1C    ;
                       CLC                                 ;; 008963 : 18          ;
                       ADC.B #$08                          ;; 008964 : 69 08       ;
-                      STA.W $2117                         ;; 008966 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008966 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008969 : A2 06       ;
 CODE_00896B:          LDA.W DATA_008A47,X                 ;; 00896B : BD 47 8A    ;
-                      STA.W $4310,X                       ;; 00896E : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 00896E : 9D 10 43    ;
                       DEX                                 ;; 008971 : CA          ;
                       BPL CODE_00896B                     ;; 008972 : 10 F7       ;
                       LDA.B #$02                          ;; 008974 : A9 02       ;
-                      STA.W $420B                         ;; 008976 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 008976 : 8D 0B 42    ; Regular DMA Channel Enable
                       JMP CODE_008A10                     ;; 008979 : 4C 10 8A    ;
                                                           ;;                      ;
 CODE_00897C:          LDY.B #$80                          ;; 00897C : A0 80       ;
-                      STY.W $2115                         ;; 00897E : 8C 15 21    ; VRAM Address Increment Value
+                      STY.W !HW_VMAINC                    ;; 00897E : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer2VramAddr+1             ;; 008981 : AD E7 1C    ;
-                      STA.W $2116                         ;; 008984 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 008984 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer2VramAddr               ;; 008987 : AD E6 1C    ;
-                      STA.W $2117                         ;; 00898A : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 00898A : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00898D : A2 06       ;
 CODE_00898F:          LDA.W DATA_008A32,X                 ;; 00898F : BD 32 8A    ;
-                      STA.W $4310,X                       ;; 008992 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008992 : 9D 10 43    ;
                       DEX                                 ;; 008995 : CA          ;
                       BPL CODE_00898F                     ;; 008996 : 10 F7       ;
                       LDA.B #$02                          ;; 008998 : A9 02       ;
-                      STA.W $420B                         ;; 00899A : 8D 0B 42    ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 00899D : 8C 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 00899A : 8D 0B 42    ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 00899D : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer2VramAddr+1             ;; 0089A0 : AD E7 1C    ;
-                      STA.W $2116                         ;; 0089A3 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 0089A3 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer2VramAddr               ;; 0089A6 : AD E6 1C    ;
                       CLC                                 ;; 0089A9 : 18          ;
                       ADC.B #$04                          ;; 0089AA : 69 04       ;
-                      STA.W $2117                         ;; 0089AC : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 0089AC : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0089AF : A2 06       ;
 CODE_0089B1:          LDA.W DATA_008A39,X                 ;; 0089B1 : BD 39 8A    ;
-                      STA.W $4310,X                       ;; 0089B4 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 0089B4 : 9D 10 43    ;
                       DEX                                 ;; 0089B7 : CA          ;
                       BPL CODE_0089B1                     ;; 0089B8 : 10 F7       ;
                       LDA.B #$40                          ;; 0089BA : A9 40       ;
-                      STA.W $4315                         ;; 0089BC : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMACNT+$10                ;; 0089BC : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDA.B #$02                          ;; 0089BF : A9 02       ;
-                      STA.W $420B                         ;; 0089C1 : 8D 0B 42    ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 0089C4 : 8C 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 0089C1 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 0089C4 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer2VramAddr+1             ;; 0089C7 : AD E7 1C    ;
                       CLC                                 ;; 0089CA : 18          ;
                       ADC.B #$20                          ;; 0089CB : 69 20       ;
-                      STA.W $2116                         ;; 0089CD : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 0089CD : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer2VramAddr               ;; 0089D0 : AD E6 1C    ;
-                      STA.W $2117                         ;; 0089D3 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 0089D3 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0089D6 : A2 06       ;
 CODE_0089D8:          LDA.W DATA_008A40,X                 ;; 0089D8 : BD 40 8A    ;
-                      STA.W $4310,X                       ;; 0089DB : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 0089DB : 9D 10 43    ;
                       DEX                                 ;; 0089DE : CA          ;
                       BPL CODE_0089D8                     ;; 0089DF : 10 F7       ;
                       LDA.B #$02                          ;; 0089E1 : A9 02       ;
-                      STA.W $420B                         ;; 0089E3 : 8D 0B 42    ; Regular DMA Channel Enable
-                      STY.W $2115                         ;; 0089E6 : 8C 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 0089E3 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STY.W !HW_VMAINC                    ;; 0089E6 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer2VramAddr+1             ;; 0089E9 : AD E7 1C    ;
                       CLC                                 ;; 0089EC : 18          ;
                       ADC.B #$20                          ;; 0089ED : 69 20       ;
-                      STA.W $2116                         ;; 0089EF : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 0089EF : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer2VramAddr               ;; 0089F2 : AD E6 1C    ;
                       CLC                                 ;; 0089F5 : 18          ;
                       ADC.B #$04                          ;; 0089F6 : 69 04       ;
-                      STA.W $2117                         ;; 0089F8 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 0089F8 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0089FB : A2 06       ;
 CODE_0089FD:          LDA.W DATA_008A47,X                 ;; 0089FD : BD 47 8A    ;
-                      STA.W $4310,X                       ;; 008A00 : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008A00 : 9D 10 43    ;
                       DEX                                 ;; 008A03 : CA          ;
                       BPL CODE_0089FD                     ;; 008A04 : 10 F7       ;
                       LDA.B #$40                          ;; 008A06 : A9 40       ;
-                      STA.W $4315                         ;; 008A08 : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMACNT+$10                ;; 008A08 : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDA.B #$02                          ;; 008A0B : A9 02       ;
-                      STA.W $420B                         ;; 008A0D : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 008A0D : 8D 0B 42    ; Regular DMA Channel Enable
 CODE_008A10:          LDA.B #$00                          ;; 008A10 : A9 00       ;
                       STA.W !Layer2VramAddr               ;; 008A12 : 8D E6 1C    ;
                       RTL                                 ;; ?QPWZ? : 6B          ;
@@ -1166,36 +1166,36 @@ CODE_008A55:          DEX                                 ;; 008A55 : CA        
 CODE_008A61:          CPX.W #$FFFE                        ;; 008A61 : E0 FE FF    ;
                       BNE CODE_008A53                     ;; 008A64 : D0 ED       ;
                       LDA.W #$0000                        ;; 008A66 : A9 00 00    ;
-                      STA.L $7F837B                       ;; 008A69 : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 008A69 : 8F 7B 83 7F ;
                       STZ.W !DynPaletteIndex              ;; 008A6D : 9C 81 06    ;
                       SEP #$30                            ;; 008A70 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDA.B #$FF                          ;; 008A72 : A9 FF       ;
-                      STA.L $7F837D                       ;; 008A74 : 8F 7D 83 7F ;
+                      STA.L !DynamicStripeImage           ;; 008A74 : 8F 7D 83 7F ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
-SetUpScreen:          STZ.W $2133                         ;; ?QPWZ? : 9C 33 21    ; Set "Screen Initial Settings" to x00 ; Screen Initial Settings
-                      STZ.W $2106                         ;; 008A7C : 9C 06 21    ; Turn off mosaic ; Mosaic Size and BG Enable
+SetUpScreen:          STZ.W !HW_SETINI                    ;; ?QPWZ? : 9C 33 21    ; Set "Screen Initial Settings" to x00 ; Screen Initial Settings
+                      STZ.W !HW_MOSAIC                    ;; 008A7C : 9C 06 21    ; Turn off mosaic ; Mosaic Size and BG Enable
                       LDA.B #$23                          ;; 008A7F : A9 23       ;
-                      STA.W $2107                         ;; 008A81 : 8D 07 21    ; BG 1 Address and Size
+                      STA.W !HW_BG1SC                     ;; 008A81 : 8D 07 21    ; BG 1 Address and Size
                       LDA.B #$33                          ;; 008A84 : A9 33       ;
-                      STA.W $2108                         ;; 008A86 : 8D 08 21    ; ; BG 2 Address and Size
+                      STA.W !HW_BG2SC                     ;; 008A86 : 8D 08 21    ; ; BG 2 Address and Size
                       LDA.B #$53                          ;; 008A89 : A9 53       ;
-                      STA.W $2109                         ;; 008A8B : 8D 09 21    ; BG 3 Address and Size
+                      STA.W !HW_BG3SC                     ;; 008A8B : 8D 09 21    ; BG 3 Address and Size
                       LDA.B #$00                          ;; 008A8E : A9 00       ;
-                      STA.W $210B                         ;; 008A90 : 8D 0B 21    ; BG 1 & 2 Tile Data Designation
+                      STA.W !HW_BG12NBA                   ;; 008A90 : 8D 0B 21    ; BG 1 & 2 Tile Data Designation
                       LDA.B #$04                          ;; 008A93 : A9 04       ;
-                      STA.W $210C                         ;; 008A95 : 8D 0C 21    ; BG 3 & 4 Tile Data Designation
+                      STA.W !HW_BG34NBA                   ;; 008A95 : 8D 0C 21    ; BG 3 & 4 Tile Data Designation
                       STZ.B !Layer12Window                ;; 008A98 : 64 41       ;
                       STZ.B !Layer34Window                ;; 008A9A : 64 42       ;
                       STZ.B !OBJCWWindow                  ;; 008A9C : 64 43       ;
-                      STZ.W $212A                         ;; 008A9E : 9C 2A 21    ; BG 1, 2, 3 and 4 Window Logic Settings
-                      STZ.W $212B                         ;; 008AA1 : 9C 2B 21    ; Color and OBJ Window Logic Settings
-                      STZ.W $212E                         ;; 008AA4 : 9C 2E 21    ; Window Mask Designation for Main Screen
-                      STZ.W $212F                         ;; 008AA7 : 9C 2F 21    ; Window Mask Designation for Sub Screen
+                      STZ.W !HW_WBGLOG                    ;; 008A9E : 9C 2A 21    ; BG 1, 2, 3 and 4 Window Logic Settings
+                      STZ.W !HW_WOBJLOG                   ;; 008AA1 : 9C 2B 21    ; Color and OBJ Window Logic Settings
+                      STZ.W !HW_TMW                       ;; 008AA4 : 9C 2E 21    ; Window Mask Designation for Main Screen
+                      STZ.W !HW_TSW                       ;; 008AA7 : 9C 2F 21    ; Window Mask Designation for Sub Screen
                       LDA.B #$02                          ;; 008AAA : A9 02       ;
                       STA.B !ColorAddition                ;; 008AAC : 85 44       ;
                       LDA.B #$80                          ;; 008AAE : A9 80       ; \ Set Mode7 "Screen Over" to %10000000, disable Mode7 flipping 
-                      STA.W $211A                         ;; 008AB0 : 8D 1A 21    ; /  ; Initial Setting for Mode 7
+                      STA.W !HW_M7SEL                     ;; 008AB0 : 8D 1A 21    ; /  ; Initial Setting for Mode 7
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -1259,18 +1259,18 @@ CODE_008B2B:          SEP #$20                            ;; 008B2B : E2 20     
                       LDA.B !_0                           ;; 008B32 : A5 00       ;
 CODE_008B34:          STA.B !_1                           ;; 008B34 : 85 01       ;
                       LDA.W DATA_008B57,X                 ;; 008B36 : BD 57 8B    ;
-                      STA.W $4202                         ;; 008B39 : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 008B39 : 8D 02 42    ; Multiplicand A
                       LDA.B !_0                           ;; 008B3C : A5 00       ;
-                      STA.W $4203                         ;; 008B3E : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 008B3E : 8D 03 42    ; Multplier B
                       NOP                                 ;; 008B41 : EA          ;
                       NOP                                 ;; 008B42 : EA          ;
                       NOP                                 ;; 008B43 : EA          ;
                       NOP                                 ;; 008B44 : EA          ;
-                      LDA.W $4217                         ;; 008B45 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 008B45 : AD 17 42    ; Product/Remainder Result (High Byte)
                       CLC                                 ;; 008B48 : 18          ;
                       ADC.B !_1                           ;; 008B49 : 65 01       ;
                       XBA                                 ;; 008B4B : EB          ;
-                      LDA.W $4216                         ;; 008B4C : AD 16 42    ; Product/Remainder Result (Low Byte)
+                      LDA.W !HW_RDMPY                     ;; 008B4C : AD 16 42    ; Product/Remainder Result (Low Byte)
                       REP #$20                            ;; 008B4F : C2 20       ; Accum (16 bit) 
                       LSR A                               ;; 008B51 : 4A          ;
                       LSR A                               ;; 008B52 : 4A          ;
@@ -1339,57 +1339,57 @@ DATA_008C89:          db $30,$28,$31,$28,$32,$28,$33,$28  ;; 008C89             
                       db $3B,$B8,$3B,$B8,$3A,$F8          ;; ?QPWZ?               ;
                                                           ;;                      ;
 GM04DoDMA:            LDA.B #$80                          ;; ?QPWZ? : A9 80       ; More DMA ; Accum (8 bit) 
-                      STA.W $2115                         ;; 008D01 : 8D 15 21    ; Increment when $2119 accessed ; VRAM Address Increment Value
+                      STA.W !HW_VMAINC                    ;; 008D01 : 8D 15 21    ; Increment when $2119 accessed ; VRAM Address Increment Value
                       LDA.B #$2E                          ;; 008D04 : A9 2E       ; \VRAM address = #$502E 
-                      STA.W $2116                         ;; 008D06 : 8D 16 21    ;  | ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 008D06 : 8D 16 21    ;  | ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$50                          ;; 008D09 : A9 50       ;  | 
-                      STA.W $2117                         ;; 008D0B : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008D0B : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008D0E : A2 06       ;
 CODE_008D10:          LDA.W DATA_008D90,X                 ;; 008D10 : BD 90 8D    ;
-                      STA.W $4310,X                       ;; 008D13 : 9D 10 43    ; Load up the DMA regs 
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008D13 : 9D 10 43    ; Load up the DMA regs 
                       DEX                                 ;; 008D16 : CA          ; DMA Source = 8C:8118 (...) 
                       BPL CODE_008D10                     ;; 008D17 : 10 F7       ; Dest = $2118, Transfer: #$08 bytes 
                       LDA.B #$02                          ;; 008D19 : A9 02       ;
-                      STA.W $420B                         ;; 008D1B : 8D 0B 42    ; Do the DMA ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 008D1B : 8D 0B 42    ; Do the DMA ; Regular DMA Channel Enable
                       LDA.B #$80                          ;; 008D1E : A9 80       ; \ Set VRAM mode = same as above 
-                      STA.W $2115                         ;; 008D20 : 8D 15 21    ;  |Address = #$5042 ; VRAM Address Increment Value
+                      STA.W !HW_VMAINC                    ;; 008D20 : 8D 15 21    ;  |Address = #$5042 ; VRAM Address Increment Value
                       LDA.B #$42                          ;; 008D23 : A9 42       ;  | 
-                      STA.W $2116                         ;; 008D25 : 8D 16 21    ;  | ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 008D25 : 8D 16 21    ;  | ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$50                          ;; 008D28 : A9 50       ;  | 
-                      STA.W $2117                         ;; 008D2A : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008D2A : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008D2D : A2 06       ; \ Set up more DMA 
 CODE_008D2F:          LDA.W DATA_008D97,X                 ;; 008D2F : BD 97 8D    ;  |Dest = $2100 
-                      STA.W $4310,X                       ;; 008D32 : 9D 10 43    ;  |Fixed source address = $89:1801 (Lunar Address: 7E:1801) 
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008D32 : 9D 10 43    ;  |Fixed source address = $89:1801 (Lunar Address: 7E:1801) 
                       DEX                                 ;; 008D35 : CA          ;  |#$808C bytes to transfer 
                       BPL CODE_008D2F                     ;; 008D36 : 10 F7       ; /Type = One reg write once 
                       LDA.B #$02                          ;; 008D38 : A9 02       ;
-                      STA.W $420B                         ;; 008D3A : 8D 0B 42    ; Start DMA ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 008D3A : 8D 0B 42    ; Start DMA ; Regular DMA Channel Enable
                       LDA.B #$80                          ;; 008D3D : A9 80       ; \prep VRAM for another write 
-                      STA.W $2115                         ;; 008D3F : 8D 15 21    ;  | ; VRAM Address Increment Value
+                      STA.W !HW_VMAINC                    ;; 008D3F : 8D 15 21    ;  | ; VRAM Address Increment Value
                       LDA.B #$63                          ;; 008D42 : A9 63       ;  | 
-                      STA.W $2116                         ;; 008D44 : 8D 16 21    ;  | ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 008D44 : 8D 16 21    ;  | ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$50                          ;; 008D47 : A9 50       ;  | 
-                      STA.W $2117                         ;; 008D49 : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008D49 : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008D4C : A2 06       ; \ Load up DMA again 
 CODE_008D4E:          LDA.W DATA_008D9E,X                 ;; 008D4E : BD 9E 8D    ;  |Dest = $2118 
-                      STA.W $4310,X                       ;; 008D51 : 9D 10 43    ;  |Source Address = $39:8CC1 
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008D51 : 9D 10 43    ;  |Source Address = $39:8CC1 
                       DEX                                 ;; 008D54 : CA          ;  |Size = #$0100 bytes 
                       BPL CODE_008D4E                     ;; 008D55 : 10 F7       ; /Type = Two reg write once 
                       LDA.B #$02                          ;; 008D57 : A9 02       ; \Start Transfer 
-                      STA.W $420B                         ;; 008D59 : 8D 0B 42    ; / ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 008D59 : 8D 0B 42    ; / ; Regular DMA Channel Enable
                       LDA.B #$80                          ;; 008D5C : A9 80       ; \ 
-                      STA.W $2115                         ;; 008D5E : 8D 15 21    ;  |Set up VRAM once more ; VRAM Address Increment Value
+                      STA.W !HW_VMAINC                    ;; 008D5E : 8D 15 21    ;  |Set up VRAM once more ; VRAM Address Increment Value
                       LDA.B #$8E                          ;; 008D61 : A9 8E       ;  | 
-                      STA.W $2116                         ;; 008D63 : 8D 16 21    ;  | ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 008D63 : 8D 16 21    ;  | ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$50                          ;; 008D66 : A9 50       ;  | 
-                      STA.W $2117                         ;; 008D68 : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008D68 : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008D6B : A2 06       ; \Last DMA... 
 CODE_008D6D:          LDA.W DATA_008DA5,X                 ;; 008D6D : BD A5 8D    ;  |Reg = $2118 Type = Two reg write once 
-                      STA.W $4310,X                       ;; 008D70 : 9D 10 43    ;  |Source Address = $08:8CF7 
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008D70 : 9D 10 43    ;  |Source Address = $08:8CF7 
                       DEX                                 ;; 008D73 : CA          ;  |Size = #$9C00 bytes (o_o) 
                       BPL CODE_008D6D                     ;; 008D74 : 10 F7       ; / 
                       LDA.B #$02                          ;; 008D76 : A9 02       ; \Transfer 
-                      STA.W $420B                         ;; 008D78 : 8D 0B 42    ; / ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 008D78 : 8D 0B 42    ; / ; Regular DMA Channel Enable
                       LDX.B #$36                          ;; 008D7B : A2 36       ; \Copy some data into RAM 
                       LDY.B #$6C                          ;; 008D7D : A0 6C       ;  | 
 CODE_008D7F:          LDA.W DATA_008C89,Y                 ;; 008D7F : B9 89 8C    ;  | 
@@ -1411,30 +1411,30 @@ DATA_008D9E:          db $01,$18,$C1,$8C,$00,$36,$00      ;; 008D9E             
                                                           ;;                      ;
 DATA_008DA5:          db $01,$18,$F7,$8C,$00,$08,$00      ;; 008DA5               ;
                                                           ;;                      ;
-DrawStatusBar:        STZ.W $2115                         ;; ?QPWZ? : 9C 15 21    ; Set VRAM Address Increment Value to x00 ; VRAM Address Increment Value
+DrawStatusBar:        STZ.W !HW_VMAINC                    ;; ?QPWZ? : 9C 15 21    ; Set VRAM Address Increment Value to x00 ; VRAM Address Increment Value
                       LDA.B #$42                          ;; 008DAF : A9 42       ; \  
-                      STA.W $2116                         ;; 008DB1 : 8D 16 21    ;  |Set Address for VRAM Read/Write to x5042 ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 008DB1 : 8D 16 21    ;  |Set Address for VRAM Read/Write to x5042 ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$50                          ;; 008DB4 : A9 50       ;  | 
-                      STA.W $2117                         ;; 008DB6 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008DB6 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008DB9 : A2 06       ; \  
 CODE_008DBB:          LDA.W DMAdata_StBr1,X               ;; 008DBB : BD E7 8D    ;  |Load settings from DMAdata_StBr1 into DMA channel 1 
-                      STA.W $4310,X                       ;; 008DBE : 9D 10 43    ;  | 
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008DBE : 9D 10 43    ;  | 
                       DEX                                 ;; 008DC1 : CA          ;  | 
                       BPL CODE_008DBB                     ;; 008DC2 : 10 F7       ; /  
                       LDA.B #$02                          ;; 008DC4 : A9 02       ; \ Activate DMA channel 1 
-                      STA.W $420B                         ;; 008DC6 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
-                      STZ.W $2115                         ;; 008DC9 : 9C 15 21    ; Set VRAM Address Increment Value to x00 ; VRAM Address Increment Value
+                      STA.W !HW_MDMAEN                    ;; 008DC6 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
+                      STZ.W !HW_VMAINC                    ;; 008DC9 : 9C 15 21    ; Set VRAM Address Increment Value to x00 ; VRAM Address Increment Value
                       LDA.B #$63                          ;; 008DCC : A9 63       ; \  
-                      STA.W $2116                         ;; 008DCE : 8D 16 21    ;  |Set Address for VRAM Read/Write to x5063 ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 008DCE : 8D 16 21    ;  |Set Address for VRAM Read/Write to x5063 ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$50                          ;; 008DD1 : A9 50       ;  | 
-                      STA.W $2117                         ;; 008DD3 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 008DD3 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008DD6 : A2 06       ; \  
 CODE_008DD8:          LDA.W DMAdata_StBr2,X               ;; 008DD8 : BD EE 8D    ;  |Load settings from DMAdata_StBr2 into DMA channel 1 
-                      STA.W $4310,X                       ;; 008DDB : 9D 10 43    ;  | 
+                      STA.W !HW_DMAPARAM+$10,X            ;; 008DDB : 9D 10 43    ;  | 
                       DEX                                 ;; 008DDE : CA          ;  | 
                       BPL CODE_008DD8                     ;; 008DDF : 10 F7       ; /  
                       LDA.B #$02                          ;; 008DE1 : A9 02       ; \ Activate DMA channel 1 
-                      STA.W $420B                         ;; 008DE3 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 008DE3 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -1885,14 +1885,14 @@ Return00922E:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 CODE_00922F:          STZ.W !MainPalette                  ;; 00922F : 9C 03 07    ;
                       STZ.W !MainPalette+1                ;; 009232 : 9C 04 07    ;
-                      STZ.W $2121                         ;; 009235 : 9C 21 21    ; Set "Address for CG-RAM Write" to 0 ; Address for CG-RAM Write
+                      STZ.W !HW_CGADD                     ;; 009235 : 9C 21 21    ; Set "Address for CG-RAM Write" to 0 ; Address for CG-RAM Write
                       LDX.B #$06                          ;; 009238 : A2 06       ;
 CODE_00923A:          LDA.W DATA_009249,X                 ;; 00923A : BD 49 92    ;
-                      STA.W $4320,X                       ;; 00923D : 9D 20 43    ;
+                      STA.W !HW_DMAPARAM+$20,X            ;; 00923D : 9D 20 43    ;
                       DEX                                 ;; 009240 : CA          ;
                       BPL CODE_00923A                     ;; 009241 : 10 F7       ;
                       LDA.B #$04                          ;; 009243 : A9 04       ;
-                      STA.W $420B                         ;; 009245 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 009245 : 8D 0B 42    ; Regular DMA Channel Enable
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
                                                           ;;                      ;
@@ -1900,11 +1900,11 @@ DATA_009249:          db $00,$22,$03,$07,$00,$00,$02      ;; 009249             
                                                           ;;                      ;
 CODE_009250:          LDX.B #$04                          ;; 009250 : A2 04       ;
 CODE_009252:          LDA.W DATA_009277,X                 ;; 009252 : BD 77 92    ;
-                      STA.W $4370,X                       ;; 009255 : 9D 70 43    ;
+                      STA.W !HW_DMAPARAM+$70,X            ;; 009255 : 9D 70 43    ;
                       DEX                                 ;; 009258 : CA          ;
                       BPL CODE_009252                     ;; 009259 : 10 F7       ;
                       LDA.B #$00                          ;; 00925B : A9 00       ;
-                      STA.W $4377                         ;; 00925D : 8D 77 43    ; Data Bank (H-DMA)
+                      STA.W !HW_HDMABANK+$70              ;; 00925D : 8D 77 43    ; Data Bank (H-DMA)
 CODE_009260:          STZ.W !HDMAEnable                   ;; 009260 : 9C 9F 0D    ; Disable all HDMA channels 
 CODE_009263:          REP #$10                            ;; 009263 : C2 10       ; 16 bit A ; Index (16 bit) 
                       LDX.W #$01BE                        ;; 009265 : A2 BE 01    ; \  
@@ -1953,17 +1953,17 @@ CODE_0092B2:          LDA.B #$58                          ;; 0092B2 : A9 58     
                       STZ.W !WindowTable+$1D              ;; 0092C3 : 9C BD 04    ;
                       LDX.B #$04                          ;; 0092C6 : A2 04       ;
 CODE_0092C8:          LDA.W DATA_009313,X                 ;; 0092C8 : BD 13 93    ;
-                      STA.W $4350,X                       ;; 0092CB : 9D 50 43    ;
+                      STA.W !HW_DMAPARAM+$50,X            ;; 0092CB : 9D 50 43    ;
                       LDA.W DATA_009318,X                 ;; 0092CE : BD 18 93    ;
-                      STA.W $4360,X                       ;; 0092D1 : 9D 60 43    ;
+                      STA.W !HW_DMAPARAM+$60,X            ;; 0092D1 : 9D 60 43    ;
                       LDA.W DATA_00931D,X                 ;; 0092D4 : BD 1D 93    ;
-                      STA.W $4370,X                       ;; 0092D7 : 9D 70 43    ;
+                      STA.W !HW_DMAPARAM+$70,X            ;; 0092D7 : 9D 70 43    ;
                       DEX                                 ;; 0092DA : CA          ;
                       BPL CODE_0092C8                     ;; 0092DB : 10 EB       ;
                       LDA.B #$00                          ;; 0092DD : A9 00       ;
-                      STA.W $4357                         ;; 0092DF : 8D 57 43    ; Data Bank (H-DMA)
-                      STA.W $4367                         ;; 0092E2 : 8D 67 43    ; Data Bank (H-DMA)
-                      STA.W $4377                         ;; 0092E5 : 8D 77 43    ; Data Bank (H-DMA)
+                      STA.W !HW_HDMABANK+$50              ;; 0092DF : 8D 57 43    ; Data Bank (H-DMA)
+                      STA.W !HW_HDMABANK+$60              ;; 0092E2 : 8D 67 43    ; Data Bank (H-DMA)
+                      STA.W !HW_HDMABANK+$70              ;; 0092E5 : 8D 77 43    ; Data Bank (H-DMA)
                       LDA.B #$E0                          ;; 0092E8 : A9 E0       ;
                       STA.W !HDMAEnable                   ;; 0092EA : 8D 9F 0D    ;
 CODE_0092ED:          REP #$30                            ;; 0092ED : C2 30       ; Index (16 bit) Accum (16 bit) 
@@ -2039,10 +2039,10 @@ GetGameMode:          LDA.W !GameMode                     ;; ?QPWZ? : AD 00 01  
                       dw CODE_009F7C                      ;; ?QPWZ? : 7C 9F       ; 28 - 
                       dw Return00968D                     ;; ?QPWZ? : 8D 96       ; 29 - 
                                                           ;;                      ;
-TurnOffIO:            STZ.W $4200                         ;; ?QPWZ? : 9C 00 42    ; Disable NMI ,VIRQ, HIRQ, Joypads ; NMI, V/H Count, and Joypad Enable
-                      STZ.W $420C                         ;; 009380 : 9C 0C 42    ; Turn off all HDMA ; H-DMA Channel Enable
+TurnOffIO:            STZ.W !HW_NMITIMEN                  ;; ?QPWZ? : 9C 00 42    ; Disable NMI ,VIRQ, HIRQ, Joypads ; NMI, V/H Count, and Joypad Enable
+                      STZ.W !HW_HDMAEN                    ;; 009380 : 9C 0C 42    ; Turn off all HDMA ; H-DMA Channel Enable
                       LDA.B #$80                          ;; 009383 : A9 80       ; \ 
-                      STA.W $2100                         ;; 009385 : 8D 00 21    ; /Disable Screen ; Screen Display Register
+                      STA.W !HW_INIDISP                   ;; 009385 : 8D 00 21    ; /Disable Screen ; Screen Display Register
                       RTS                                 ;; ?QPWZ? : 60          ; And return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -2093,15 +2093,15 @@ CODE_0093EA:          LDA.B #$01                          ;; 0093EA : A9 01     
                       JSR ScreenSettings                  ;; 0093F1 : 20 FD 93    ; Apply above settings 
 CODE_0093F4:          INC.W !GameMode                     ;; 0093F4 : EE 00 01    ; Move on to Game Mode 01 
 Mode04Finish:         LDA.B #$81                          ;; ?QPWZ? : A9 81       ; \ Enable NMI and joypad, Disable V-count and H-cout 
-                      STA.W $4200                         ;; 0093F9 : 8D 00 42    ; /  ; NMI, V/H Count, and Joypad Enable
+                      STA.W !HW_NMITIMEN                  ;; 0093F9 : 8D 00 42    ; /  ; NMI, V/H Count, and Joypad Enable
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
-ScreenSettings:       STA.W $2131                         ;; ?QPWZ? : 8D 31 21    ; \ Set CGADSUB settings to A ; Add/Subtract Select and Enable
+ScreenSettings:       STA.W !HW_CGADSUB                   ;; ?QPWZ? : 8D 31 21    ; \ Set CGADSUB settings to A ; Add/Subtract Select and Enable
                       STA.B !ColorSettings                ;; 009400 : 85 40       ; /  
-                      STX.W $212C                         ;; 009402 : 8E 2C 21    ; Set "Background and Object Enable" to X ; Background and Object Enable
-                      STY.W $212D                         ;; 009405 : 8C 2D 21    ; Set "Sub Screen Designation" Y ; Sub Screen Designation
-                      STZ.W $212E                         ;; 009408 : 9C 2E 21    ; \ Set "Window Mask Designation" for main and sub screen to x00 ; Window Mask Designation for Main Screen
-                      STZ.W $212F                         ;; 00940B : 9C 2F 21    ; /  ; Window Mask Designation for Sub Screen
+                      STX.W !HW_TM                        ;; 009402 : 8E 2C 21    ; Set "Background and Object Enable" to X ; Background and Object Enable
+                      STY.W !HW_TS                        ;; 009405 : 8C 2D 21    ; Set "Sub Screen Designation" Y ; Sub Screen Designation
+                      STZ.W !HW_TMW                       ;; 009408 : 9C 2E 21    ; \ Set "Window Mask Designation" for main and sub screen to x00 ; Window Mask Designation for Main Screen
+                      STZ.W !HW_TSW                       ;; 00940B : 9C 2F 21    ; /  ; Window Mask Designation for Sub Screen
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00940F:          DEC.W !VariousPromptTimer           ;; 00940F : CE F5 1D    ; Decrease timer 
@@ -2199,7 +2199,7 @@ CODE_0094E2:          STZ.B !Layer1XPos,X                 ;; 0094E2 : 74 1A     
                       LDX.B #$17                          ;; 0094F6 : A2 17       ;
                       LDY.B #$00                          ;; 0094F8 : A0 00       ;
                       JSR CODE_009622                     ;; 0094FA : 20 22 96    ;
-CODE_0094FD:          JSL $7F8000                         ;; 0094FD : 22 00 80 7F ;
+CODE_0094FD:          JSL !OAMResetRoutine                ;; 0094FD : 22 00 80 7F ;
                       LDA.W !CutsceneID                   ;; 009501 : AD C6 13    ;
                       CMP.B #$08                          ;; 009504 : C9 08       ;
                       BEQ CODE_009557                     ;; 009506 : F0 4F       ;
@@ -2249,13 +2249,13 @@ CODE_009557:          JSL CODE_0C938D                     ;; 009557 : 22 8D 93 0
 CODE_00955E:          LDY.B #$2F                          ;; 00955E : A0 2F       ;
                       JSL CODE_00BA28                     ;; 009560 : 22 28 BA 00 ;
                       LDA.B #$80                          ;; 009564 : A9 80       ;
-                      STA.W $2115                         ;; 009566 : 8D 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_VMAINC                    ;; 009566 : 8D 15 21    ; VRAM Address Increment Value
                       REP #$30                            ;; 009569 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.W #$4600                        ;; 00956B : A9 00 46    ;
-                      STA.W $2116                         ;; 00956E : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00956E : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDX.W #$0200                        ;; 009571 : A2 00 02    ;
 CODE_009574:          LDA.B [!_0]                         ;; 009574 : A7 00       ;
-                      STA.W $2118                         ;; 009576 : 8D 18 21    ; Data for VRAM Write (Low Byte)
+                      STA.W !HW_VMDATA                    ;; 009576 : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       INC.B !_0                           ;; 009579 : E6 00       ;
                       INC.B !_0                           ;; 00957B : E6 00       ;
                       DEX                                 ;; 00957D : CA          ;
@@ -2277,7 +2277,7 @@ CODE_009583:          INC.W !CutsceneID                   ;; 009583 : EE C6 13  
                       JSR CODE_00A993                     ;; 0095A1 : 20 93 A9    ;
                       JSL CODE_0CA3C9                     ;; 0095A4 : 22 C9 A3 0C ;
                       JSR CODE_00961E                     ;; 0095A8 : 20 1E 96    ;
-CODE_0095AB:          JSL $7F8000                         ;; 0095AB : 22 00 80 7F ;
+CODE_0095AB:          JSL !OAMResetRoutine                ;; 0095AB : 22 00 80 7F ;
                       JSL CODE_0C939A                     ;; 0095AF : 22 9A 93 0C ;
                       INC.B !EffFrame                     ;; 0095B3 : E6 14       ;
                       JSL CODE_05BB39                     ;; 0095B5 : 22 39 BB 05 ;
@@ -2330,7 +2330,7 @@ CODE_009622:          JSR KeepModeActive                  ;; 009622 : 20 29 9F  
                                                           ;;                      ;
 CODE_00962C:          STZ.W !PlayerGfxTileCount           ;; 00962C : 9C 84 0D    ;
                       JSR CODE_0092ED                     ;; 00962F : 20 ED 92    ;
-                      JSL $7F8000                         ;; 009632 : 22 00 80 7F ;
+                      JSL !OAMResetRoutine                ;; 009632 : 22 00 80 7F ;
                       JSL CODE_0C93A5                     ;; 009636 : 22 A5 93 0C ;
                       JMP CODE_008494                     ;; 00963A : 4C 94 84    ;
                                                           ;;                      ;
@@ -2380,7 +2380,7 @@ CODE_00968E:          JSR CODE_0085FA                     ;; 00968E : 20 FA 85  
 CODE_0096A8:          JSR CODE_0091B1                     ;; 0096A8 : 20 B1 91    ;
 CODE_0096AB:          JMP CODE_0093CA                     ;; 0096AB : 4C CA 93    ;
                                                           ;;                      ;
-CODE_0096AE:          STZ.W $4200                         ;; 0096AE : 9C 00 42    ; NMI, V/H Count, and Joypad Enable
+CODE_0096AE:          STZ.W !HW_NMITIMEN                  ;; 0096AE : 9C 00 42    ; NMI, V/H Count, and Joypad Enable
                       JSR ClearStack                      ;; 0096B1 : 20 4E 8A    ;
                       LDX.B #$07                          ;; 0096B4 : A2 07       ;
                       LDA.B #$FF                          ;; 0096B6 : A9 FF       ;
@@ -2396,7 +2396,7 @@ CODE_0096CB:          LDA.B #$EB                          ;; 0096CB : A9 EB     
                       LDY.B #$00                          ;; 0096CD : A0 00       ;
 CODE_0096CF:          STA.W !OverworldOverride            ;; 0096CF : 8D 09 01    ;
                       STY.W !OWPlayerSubmap               ;; 0096D2 : 8C 11 1F    ;
-CODE_0096D5:          STZ.W $4200                         ;; 0096D5 : 9C 00 42    ; NMI, V/H Count, and Joypad Enable
+CODE_0096D5:          STZ.W !HW_NMITIMEN                  ;; 0096D5 : 9C 00 42    ; NMI, V/H Count, and Joypad Enable
                       JSR NoButtons                       ;; 0096D8 : 20 2D F6    ;
                       LDA.W !SublevelCount                ;; 0096DB : AD 1A 14    ;
                       BNE CODE_0096E9                     ;; 0096DE : D0 09       ;
@@ -2449,7 +2449,7 @@ CODE_009750:          JSR CODE_0085FA                     ;; 009750 : 20 FA 85  
                       JSR CODE_00A82D                     ;; 009753 : 20 2D A8    ;
                       JMP CODE_0093CA                     ;; 009756 : 4C CA 93    ;
                                                           ;;                      ;
-CODE_009759:          JSL $7F8000                         ;; 009759 : 22 00 80 7F ;
+CODE_009759:          JSL !OAMResetRoutine                ;; 009759 : 22 00 80 7F ;
                       LDA.W !GameOverAnimation            ;; 00975D : AD 3C 14    ;
                       BNE CODE_00978B                     ;; 009760 : D0 29       ;
                       DEC.W !GameOverTimer                ;; 009762 : CE 3D 14    ;
@@ -2553,9 +2553,9 @@ CODE_00983B:          LDA.B #$13                          ;; 00983B : A9 13     
 CODE_00983D:          STA.W !SpriteTileset                ;; 00983D : 8D 2B 19    ;
                       JSR UploadSpriteGFX                 ;; 009840 : 20 DA A9    ;
                       LDA.B #$11                          ;; 009843 : A9 11       ;
-                      STA.W $212E                         ;; 009845 : 8D 2E 21    ; Window Mask Designation for Main Screen
-                      STZ.W $212D                         ;; 009848 : 9C 2D 21    ; Sub Screen Designation
-                      STZ.W $212F                         ;; 00984B : 9C 2F 21    ; Window Mask Designation for Sub Screen
+                      STA.W !HW_TMW                       ;; 009845 : 8D 2E 21    ; Window Mask Designation for Main Screen
+                      STZ.W !HW_TS                        ;; 009848 : 9C 2D 21    ; Sub Screen Designation
+                      STZ.W !HW_TSW                       ;; 00984B : 9C 2F 21    ; Window Mask Designation for Sub Screen
                       LDA.B #$02                          ;; 00984E : A9 02       ;
                       STA.B !Layer12Window                ;; 009850 : 85 41       ;
                       LDA.B #$32                          ;; 009852 : A9 32       ;
@@ -2569,7 +2569,7 @@ CODE_009860:          JSL CODE_00E2BD                     ;; 009860 : 22 BD E2 0
                       JSR CODE_00C593                     ;; 009867 : 20 93 C5    ;
                       STZ.B !PlayerYSpeed                 ;; 00986A : 64 7D       ; Y speed = 0 
                       JSL CODE_01808C                     ;; 00986C : 22 8C 80 01 ;
-                      JSL $7F8000                         ;; 009870 : 22 00 80 7F ;
+                      JSL !OAMResetRoutine                ;; 009870 : 22 00 80 7F ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
                                                           ;;                      ;
@@ -2580,7 +2580,7 @@ CODE_00987D:          JSR CODE_008ACD                     ;; 00987D : 20 CD 8A  
                       BVC CODE_009888                     ;; 009883 : 50 03       ;
                       JMP CODE_009A52                     ;; 009885 : 4C 52 9A    ;
                                                           ;;                      ;
-CODE_009888:          JSL $7F8000                         ;; 009888 : 22 00 80 7F ;
+CODE_009888:          JSL !OAMResetRoutine                ;; 009888 : 22 00 80 7F ;
                       JSL CODE_03C0C6                     ;; 00988C : 22 C6 C0 03 ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
@@ -2599,19 +2599,19 @@ CODE_0098A9:          LDA.W !IRQNMICommand                ;; 0098A9 : AD 9B 0D  
                       TAX                                 ;; 0098B5 : AA          ;
                       REP #$20                            ;; 0098B6 : C2 20       ; 16 bit A ; Accum (16 bit) 
                       LDY.B #$80                          ;; 0098B8 : A0 80       ;
-                      STY.W $2115                         ;; 0098BA : 8C 15 21    ; VRAM Address Increment Value
+                      STY.W !HW_VMAINC                    ;; 0098BA : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W #$1801                        ;; 0098BD : A9 01 18    ;
-                      STA.W $4320                         ;; 0098C0 : 8D 20 43    ; Parameters for DMA Transfer
+                      STA.W !HW_DMAPARAM+$20              ;; 0098C0 : 8D 20 43    ; Parameters for DMA Transfer
                       LDA.W #$7800                        ;; 0098C3 : A9 00 78    ;
-                      STA.W $2116                         ;; 0098C6 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 0098C6 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.L DATA_05BA39,X                 ;; 0098C9 : BF 39 BA 05 ;
-                      STA.W $4322                         ;; 0098CD : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 0098CD : 8D 22 43    ; A Address (Low Byte)
                       LDY.B #$7E                          ;; 0098D0 : A0 7E       ;
-                      STY.W $4324                         ;; 0098D2 : 8C 24 43    ; A Address Bank
+                      STY.W !HW_DMAADDR+$22               ;; 0098D2 : 8C 24 43    ; A Address Bank
                       LDA.W #$0080                        ;; 0098D5 : A9 80 00    ;
-                      STA.W $4325                         ;; 0098D8 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMACNT+$20                ;; 0098D8 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDY.B #$04                          ;; 0098DB : A0 04       ;
-                      STY.W $420B                         ;; 0098DD : 8C 0B 42    ; Regular DMA Channel Enable
+                      STY.W !HW_MDMAEN                    ;; 0098DD : 8C 0B 42    ; Regular DMA Channel Enable
                       CLC                                 ;; 0098E0 : 18          ;
 CODE_0098E1:          REP #$20                            ;; 0098E1 : C2 20       ; 16 bit A ; Accum (16 bit) 
                       LDA.W #$0004                        ;; 0098E3 : A9 04 00    ;
@@ -2622,22 +2622,22 @@ CODE_0098E1:          REP #$20                            ;; 0098E1 : C2 20     
 CODE_0098EF:          STA.B !_0                           ;; 0098EF : 85 00       ;
                       LDA.W #$C680                        ;; 0098F1 : A9 80 C6    ;
                       STA.B !_2                           ;; 0098F4 : 85 02       ;
-                      STZ.W $2115                         ;; 0098F6 : 9C 15 21    ; VRAM Address Increment Value
+                      STZ.W !HW_VMAINC                    ;; 0098F6 : 9C 15 21    ; VRAM Address Increment Value
                       LDA.W #$1800                        ;; 0098F9 : A9 00 18    ;
-                      STA.W $4320                         ;; 0098FC : 8D 20 43    ; Parameters for DMA Transfer
+                      STA.W !HW_DMAPARAM+$20              ;; 0098FC : 8D 20 43    ; Parameters for DMA Transfer
                       LDX.B #$7E                          ;; 0098FF : A2 7E       ;
-                      STX.W $4324                         ;; 009901 : 8E 24 43    ; A Address Bank
+                      STX.W !HW_DMAADDR+$22               ;; 009901 : 8E 24 43    ; A Address Bank
                       LDX.B #$04                          ;; 009904 : A2 04       ;
 CODE_009906:          LDA.W DATA_009891,Y                 ;; 009906 : B9 91 98    ;
-                      STA.W $2116                         ;; 009909 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 009909 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.B !_2                           ;; 00990C : A5 02       ;
-                      STA.W $4322                         ;; 00990E : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00990E : 8D 22 43    ; A Address (Low Byte)
                       CLC                                 ;; 009911 : 18          ;
                       ADC.B !_0                           ;; 009912 : 65 00       ;
                       STA.B !_2                           ;; 009914 : 85 02       ;
                       LDA.B !_0                           ;; 009916 : A5 00       ;
-                      STA.W $4325                         ;; 009918 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00991B : 8E 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 009918 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00991B : 8E 0B 42    ; Regular DMA Channel Enable
                       DEY                                 ;; 00991E : 88          ;
                       DEY                                 ;; 00991F : 88          ;
                       BPL CODE_009906                     ;; 009920 : 10 E4       ;
@@ -2682,46 +2682,46 @@ CODE_009970:          CMP.W #$0012                        ;; 009970 : C9 12 00  
 CODE_009978:          STY.B !_0                           ;; 009978 : 84 00       ;
                       LDX.W #$0000                        ;; 00997A : A2 00 00    ;
                       LDA.W #$C05A                        ;; 00997D : A9 5A C0    ;
-CODE_009980:          STA.L $7F837D,X                     ;; 009980 : 9F 7D 83 7F ;
+CODE_009980:          STA.L !DynamicStripeImage,X         ;; 009980 : 9F 7D 83 7F ;
                       XBA                                 ;; 009984 : EB          ;
                       CLC                                 ;; 009985 : 18          ;
                       ADC.W #$0080                        ;; 009986 : 69 80 00    ;
                       XBA                                 ;; 009989 : EB          ;
-                      STA.L $7F8401,X                     ;; 00998A : 9F 01 84 7F ;
+                      STA.L !DynamicStripeImage+$84,X     ;; 00998A : 9F 01 84 7F ;
                       XBA                                 ;; 00998E : EB          ;
                       SEC                                 ;; 00998F : 38          ;
                       SBC.B !_0                           ;; 009990 : E5 00       ;
                       XBA                                 ;; 009992 : EB          ;
-                      STA.L $7F8485,X                     ;; 009993 : 9F 85 84 7F ;
+                      STA.L !DynamicStripeImage+$108,X    ;; 009993 : 9F 85 84 7F ;
                       LDA.W #$7F00                        ;; 009997 : A9 00 7F    ;
-                      STA.L $7F837F,X                     ;; 00999A : 9F 7F 83 7F ;
-                      STA.L $7F8403,X                     ;; 00999E : 9F 03 84 7F ;
-                      STA.L $7F8487,X                     ;; 0099A2 : 9F 87 84 7F ;
+                      STA.L !DynamicStripeImage+2,X       ;; 00999A : 9F 7F 83 7F ;
+                      STA.L !DynamicStripeImage+$86,X     ;; 00999E : 9F 03 84 7F ;
+                      STA.L !DynamicStripeImage+$10A,X    ;; 0099A2 : 9F 87 84 7F ;
                       LDY.W #$0010                        ;; 0099A6 : A0 10 00    ;
 CODE_0099A9:          LDA.W #$38A2                        ;; 0099A9 : A9 A2 38    ;
-                      STA.L $7F8381,X                     ;; 0099AC : 9F 81 83 7F ;
+                      STA.L !DynamicStripeImage+4,X       ;; 0099AC : 9F 81 83 7F ;
                       INC A                               ;; 0099B0 : 1A          ;
-                      STA.L $7F8383,X                     ;; 0099B1 : 9F 83 83 7F ;
+                      STA.L !DynamicStripeImage+6,X       ;; 0099B1 : 9F 83 83 7F ;
                       LDA.W #$38B2                        ;; 0099B5 : A9 B2 38    ;
-                      STA.L $7F83C1,X                     ;; 0099B8 : 9F C1 83 7F ;
+                      STA.L !DynamicStripeImage+$44,X     ;; 0099B8 : 9F C1 83 7F ;
                       INC A                               ;; 0099BC : 1A          ;
-                      STA.L $7F83C3,X                     ;; 0099BD : 9F C3 83 7F ;
+                      STA.L !DynamicStripeImage+$46,X     ;; 0099BD : 9F C3 83 7F ;
                       LDA.W #$2C80                        ;; 0099C1 : A9 80 2C    ;
-                      STA.L $7F8405,X                     ;; 0099C4 : 9F 05 84 7F ;
+                      STA.L !DynamicStripeImage+$88,X     ;; 0099C4 : 9F 05 84 7F ;
                       INC A                               ;; 0099C8 : 1A          ;
-                      STA.L $7F8407,X                     ;; 0099C9 : 9F 07 84 7F ;
+                      STA.L !DynamicStripeImage+$8A,X     ;; 0099C9 : 9F 07 84 7F ;
                       INC A                               ;; 0099CD : 1A          ;
-                      STA.L $7F8445,X                     ;; 0099CE : 9F 45 84 7F ;
+                      STA.L !DynamicStripeImage+$C8,X     ;; 0099CE : 9F 45 84 7F ;
                       INC A                               ;; 0099D2 : 1A          ;
-                      STA.L $7F8447,X                     ;; 0099D3 : 9F 47 84 7F ;
+                      STA.L !DynamicStripeImage+$CA,X     ;; 0099D3 : 9F 47 84 7F ;
                       LDA.W #$28A0                        ;; 0099D7 : A9 A0 28    ;
-                      STA.L $7F8489,X                     ;; 0099DA : 9F 89 84 7F ;
+                      STA.L !DynamicStripeImage+$10C,X    ;; 0099DA : 9F 89 84 7F ;
                       INC A                               ;; 0099DE : 1A          ;
-                      STA.L $7F848B,X                     ;; 0099DF : 9F 8B 84 7F ;
+                      STA.L !DynamicStripeImage+$10E,X    ;; 0099DF : 9F 8B 84 7F ;
                       LDA.W #$28B0                        ;; 0099E3 : A9 B0 28    ;
-                      STA.L $7F84C9,X                     ;; 0099E6 : 9F C9 84 7F ;
+                      STA.L !DynamicStripeImage+$14C,X    ;; 0099E6 : 9F C9 84 7F ;
                       INC A                               ;; 0099EA : 1A          ;
-                      STA.L $7F84CB,X                     ;; 0099EB : 9F CB 84 7F ;
+                      STA.L !DynamicStripeImage+$14E,X    ;; 0099EB : 9F CB 84 7F ;
                       INX                                 ;; 0099EF : E8          ;
                       INX                                 ;; 0099F0 : E8          ;
                       INX                                 ;; 0099F1 : E8          ;
@@ -2738,7 +2738,7 @@ CODE_0099A9:          LDA.W #$38A2                        ;; 0099A9 : A9 A2 38  
                       JMP CODE_009980                     ;; 009A04 : 4C 80 99    ;
                                                           ;;                      ;
 CODE_009A07:          LDA.W #$00FF                        ;; 009A07 : A9 FF 00    ;
-                      STA.L $7F837D,X                     ;; 009A0A : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 009A0A : 9F 7D 83 7F ;
                       SEP #$30                            ;; 009A0E : E2 30       ; Index (8 bit) Accum (8 bit) 
                       JSR LoadScrnImage                   ;; 009A10 : 20 D2 85    ;
                       LDX.B #$B0                          ;; 009A13 : A2 B0       ;
@@ -2749,10 +2749,10 @@ CODE_009A17:          STA.B !PlayerYPosNext               ;; 009A17 : 85 96     
                                                           ;;                      ;
 CODE_009A1F:          LDY.B #$10                          ;; 009A1F : A0 10       ;
                       LDA.B #$32                          ;; 009A21 : A9 32       ;
-CODE_009A23:          STA.L $7EC800,X                     ;; 009A23 : 9F 00 C8 7E ;
-                      STA.L $7EC9B0,X                     ;; 009A27 : 9F B0 C9 7E ;
-                      STA.L $7FC800,X                     ;; 009A2B : 9F 00 C8 7F ;
-                      STA.L $7FC9B0,X                     ;; 009A2F : 9F B0 C9 7F ;
+CODE_009A23:          STA.L !Map16TilesLow,X              ;; 009A23 : 9F 00 C8 7E ;
+                      STA.L !Map16TilesLow+$1B0,X         ;; 009A27 : 9F B0 C9 7E ;
+                      STA.L !Map16TilesHigh,X             ;; 009A2B : 9F 00 C8 7F ;
+                      STA.L !Map16TilesHigh+$1B0,X        ;; 009A2F : 9F B0 C9 7F ;
                       INX                                 ;; 009A33 : E8          ;
                       DEY                                 ;; 009A34 : 88          ;
                       BNE CODE_009A23                     ;; 009A35 : D0 EC       ;
@@ -2761,8 +2761,8 @@ CODE_009A23:          STA.L $7EC800,X                     ;; 009A23 : 9F 00 C8 7
                       LDX.B #$D0                          ;; 009A3B : A2 D0       ;
 CODE_009A3D:          LDY.B #$10                          ;; 009A3D : A0 10       ;
                       LDA.B #$05                          ;; 009A3F : A9 05       ;
-CODE_009A41:          STA.L $7EC800,X                     ;; 009A41 : 9F 00 C8 7E ;
-                      STA.L $7EC9B0,X                     ;; 009A45 : 9F B0 C9 7E ;
+CODE_009A41:          STA.L !Map16TilesLow,X              ;; 009A41 : 9F 00 C8 7E ;
+                      STA.L !Map16TilesLow+$1B0,X         ;; 009A45 : 9F B0 C9 7E ;
                       INX                                 ;; 009A49 : E8          ;
                       DEY                                 ;; 009A4A : 88          ;
                       BNE CODE_009A41                     ;; 009A4B : D0 F4       ;
@@ -2783,12 +2783,12 @@ CODE_009A52:          LDA.W !IRQNMICommand                ;; 009A52 : AD 9B 0D  
                       JSL CODE_02827D                     ;; 009A6A : 22 7D 82 02 ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
-CODE_009A6F:          JSL $7F8000                         ;; 009A6F : 22 00 80 7F ;
+CODE_009A6F:          JSL !OAMResetRoutine                ;; 009A6F : 22 00 80 7F ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
-SetUp0DA0GM4:         LDA.W $4016                         ;; ?QPWZ? : AD 16 40    ; \Read old-style controller register for player 1 
+SetUp0DA0GM4:         LDA.W !HW_JOY1                      ;; ?QPWZ? : AD 16 40    ; \Read old-style controller register for player 1 
                       LSR A                               ;; 009A77 : 4A          ; /LSR A, but then discard (Is this for carry flag or something?) 
-                      LDA.W $4017                         ;; 009A78 : AD 17 40    ; \Load And Rotate left A (player 2 old-style controller regs) 
+                      LDA.W !HW_JOY2                      ;; 009A78 : AD 17 40    ; \Load And Rotate left A (player 2 old-style controller regs) 
                       ROL A                               ;; 009A7B : 2A          ; / 
                       AND.B #$03                          ;; 009A7C : 29 03       ; AND A with #$03 
                       BEQ CODE_009A87                     ;; 009A7E : F0 07       ; If A AND #$03 = 0 Then STA $0DA0 (A=0) 
@@ -2900,8 +2900,8 @@ CODE_009B43:          LSR.W !SaveFileDelete               ;; 009B43 : 4E DE 0D  
                       TAX                                 ;; 009B52 : AA          ;
                       LDY.W #$008F                        ;; 009B53 : A0 8F 00    ;
                       LDA.B #$00                          ;; 009B56 : A9 00       ;
-CODE_009B58:          STA.L $700000,X                     ;; 009B58 : 9F 00 00 70 ;
-                      STA.L $7001AD,X                     ;; 009B5C : 9F AD 01 70 ;
+CODE_009B58:          STA.L !SaveData,X                   ;; 009B58 : 9F 00 00 70 ;
+                      STA.L !SaveDataBackup,X             ;; 009B5C : 9F AD 01 70 ;
                       INX                                 ;; 009B60 : E8          ;
                       DEY                                 ;; 009B61 : 88          ;
                       BNE CODE_009B58                     ;; 009B62 : D0 F4       ;
@@ -2975,7 +2975,7 @@ CODE_009BC9:          PHB                                 ;; 009BC9 : 8B        
 CODE_009BD9:          LDY.W #$0000                        ;; 009BD9 : A0 00 00    ;
                       STY.B !GraphicsCompPtr              ;; 009BDC : 84 8A       ;
 CODE_009BDE:          LDA.W !SaveDataBuffer,Y             ;; 009BDE : B9 49 1F    ;
-                      STA.L $700000,X                     ;; 009BE1 : 9F 00 00 70 ;
+                      STA.L !SaveData,X                   ;; 009BE1 : 9F 00 00 70 ;
                       CLC                                 ;; 009BE5 : 18          ;
                       ADC.B !GraphicsCompPtr              ;; 009BE6 : 65 8A       ;
                       STA.B !GraphicsCompPtr              ;; 009BE8 : 85 8A       ;
@@ -2989,7 +2989,7 @@ CODE_009BEE:          INX                                 ;; 009BEE : E8        
                       LDA.W #$5A5A                        ;; 009BF7 : A9 5A 5A    ;
                       SEC                                 ;; 009BFA : 38          ;
                       SBC.B !GraphicsCompPtr              ;; 009BFB : E5 8A       ;
-                      STA.L $700000,X                     ;; 009BFD : 9F 00 00 70 ;
+                      STA.L !SaveData,X                   ;; 009BFD : 9F 00 00 70 ;
                       CPX.W #$01AD                        ;; 009C01 : E0 AD 01    ;
                       BCS CODE_009C0F                     ;; 009C04 : B0 09       ;
                       TXA                                 ;; 009C06 : 8A          ;
@@ -3048,11 +3048,11 @@ CODE_009C8F:          AND.B #$DF                          ;; 009C8F : 29 DF     
 CODE_009C9A:          STA.B !byetudlrFrame                ;; 009C9A : 85 16       ; Write to byte 01, Just-pressed variant 
                       JMP CODE_00A1DA                     ;; 009C9C : 4C DA A1    ; Jump to another section of this routine 
                                                           ;;                      ;
-CODE_009C9F:          JSL $7F8000                         ;; 009C9F : 22 00 80 7F ; IIRC, this contains a lot of STZ instructions 
+CODE_009C9F:          JSL !OAMResetRoutine                ;; 009C9F : 22 00 80 7F ; IIRC, this contains a lot of STZ instructions 
                       LDA.B #$04                          ;; 009CA3 : A9 04       ;
-                      STA.W $212C                         ;; 009CA5 : 8D 2C 21    ; Zero something related to PPU ; Background and Object Enable
+                      STA.W !HW_TM                        ;; 009CA5 : 8D 2C 21    ; Zero something related to PPU ; Background and Object Enable
                       LDA.B #$13                          ;; 009CA8 : A9 13       ;
-                      STA.W $212D                         ;; 009CAA : 8D 2D 21    ; Sub Screen Designation
+                      STA.W !HW_TS                        ;; 009CAA : 8D 2D 21    ; Sub Screen Designation
                       STZ.W !HDMAEnable                   ;; 009CAD : 9C 9F 0D    ; Disable all HDMA 
 CODE_009CB0:          LDA.B #$E9                          ;; 009CB0 : A9 E9       ;
                       STA.W !OverworldOverride            ;; 009CB2 : 8D 09 01    ; #$E9 -> Uknown RAM byte 
@@ -3093,10 +3093,10 @@ CODE_009CEF:          STX.W !SaveFile                     ;; 009CEF : 8E 0A 01  
                       STZ.W !OverworldOverride            ;; 009CF8 : 9C 09 01    ;
                       LDA.B #$8F                          ;; 009CFB : A9 8F       ;
                       STA.B !_0                           ;; 009CFD : 85 00       ;
-CODE_009CFF:          LDA.L $700000,X                     ;; 009CFF : BF 00 00 70 ;
+CODE_009CFF:          LDA.L !SaveData,X                   ;; 009CFF : BF 00 00 70 ;
                       PHX                                 ;; 009D03 : DA          ;
                       TYX                                 ;; 009D04 : BB          ;
-                      STA.L $700000,X                     ;; 009D05 : 9F 00 00 70 ;
+                      STA.L !SaveData,X                   ;; 009D05 : 9F 00 00 70 ;
                       PLX                                 ;; 009D09 : FA          ;
                       INX                                 ;; 009D0A : E8          ;
                       INY                                 ;; 009D0B : C8          ;
@@ -3104,7 +3104,7 @@ CODE_009CFF:          LDA.L $700000,X                     ;; 009CFF : BF 00 00 7
                       BNE CODE_009CFF                     ;; 009D0E : D0 EF       ;
                       PLX                                 ;; 009D10 : FA          ;
                       LDY.W #$0000                        ;; 009D11 : A0 00 00    ;
-CODE_009D14:          LDA.L $700000,X                     ;; 009D14 : BF 00 00 70 ;
+CODE_009D14:          LDA.L !SaveData,X                   ;; 009D14 : BF 00 00 70 ;
                       STA.W !SaveDataBuffer,Y             ;; 009D18 : 99 49 1F    ;
                       INX                                 ;; 009D1B : E8          ;
                       INY                                 ;; 009D1C : C8          ;
@@ -3129,7 +3129,7 @@ CODE_009D3C:          REP #$10                            ;; 009D3C : C2 10     
 CODE_009D41:          LDA.L DATA_05B6FE,X                 ;; 009D41 : BF FE B6 05 ; X =  read index 
                       PHX                                 ;; 009D45 : DA          ; Y = write index 
                       TYX                                 ;; 009D46 : BB          ;
-                      STA.L $7F837D,X                     ;; 009D47 : 9F 7D 83 7F ; Layer 3-related table 
+                      STA.L !DynamicStripeImage,X         ;; 009D47 : 9F 7D 83 7F ; Layer 3-related table 
                       PLX                                 ;; 009D4B : FA          ;
                       INX                                 ;; 009D4C : E8          ;
                       INY                                 ;; 009D4D : C8          ;
@@ -3144,7 +3144,7 @@ CODE_009D5B:          STX.B !_4                           ;; 009D5B : 86 04     
                       BCS CODE_009DA6                     ;; 009D5F : B0 45       ;
                       JSR CODE_009DB5                     ;; 009D61 : 20 B5 9D    ;
                       BNE CODE_009DA6                     ;; 009D64 : D0 40       ;
-                      LDA.L $70008C,X                     ;; 009D66 : BF 8C 00 70 ;
+                      LDA.L !SaveDataChecksum,X           ;; 009D66 : BF 8C 00 70 ;
                       SEP #$10                            ;; 009D6A : E2 10       ; Index (8 bit) 
                       CMP.B #$60                          ;; 009D6C : C9 60       ;
                       BCC CODE_009D76                     ;; 009D6E : 90 06       ;
@@ -3155,19 +3155,19 @@ CODE_009D5B:          STX.B !_4                           ;; 009D5B : 86 04     
 CODE_009D76:          JSR HexToDec                        ;; 009D76 : 20 45 90    ;
                       TXY                                 ;; 009D79 : 9B          ;
 CODE_009D7A:          LDX.B !_0                           ;; 009D7A : A6 00       ;
-                      STA.L $7F8381,X                     ;; 009D7C : 9F 81 83 7F ;
+                      STA.L !DynamicStripeImage+4,X       ;; 009D7C : 9F 81 83 7F ;
                       TYA                                 ;; 009D80 : 98          ;
                       BNE CODE_009D85                     ;; 009D81 : D0 02       ;
                       LDY.B #$FC                          ;; 009D83 : A0 FC       ;
 CODE_009D85:          TYA                                 ;; 009D85 : 98          ;
-                      STA.L $7F837F,X                     ;; 009D86 : 9F 7F 83 7F ;
+                      STA.L !DynamicStripeImage+2,X       ;; 009D86 : 9F 7F 83 7F ;
                       LDA.B #$38                          ;; 009D8A : A9 38       ;
-                      STA.L $7F8380,X                     ;; 009D8C : 9F 80 83 7F ;
-                      STA.L $7F8382,X                     ;; 009D90 : 9F 82 83 7F ;
+                      STA.L !DynamicStripeImage+3,X       ;; 009D8C : 9F 80 83 7F ;
+                      STA.L !DynamicStripeImage+5,X       ;; 009D90 : 9F 82 83 7F ;
                       REP #$20                            ;; 009D94 : C2 20       ; Accum (16 bit) 
                       LDY.B #$03                          ;; 009D96 : A0 03       ;
 CODE_009D98:          LDA.W #$38FC                        ;; 009D98 : A9 FC 38    ;
-                      STA.L $7F8383,X                     ;; 009D9B : 9F 83 83 7F ;
+                      STA.L !DynamicStripeImage+6,X       ;; 009D9B : 9F 83 83 7F ;
                       INX                                 ;; 009D9F : E8          ;
                       INX                                 ;; 009DA0 : E8          ;
                       DEY                                 ;; 009DA1 : 88          ;
@@ -3193,11 +3193,11 @@ CODE_009DB5:          LDA.W DATA_009CCB,X                 ;; 009DB5 : BD CB 9C  
                       TAY                                 ;; 009DC3 : A8          ;
 CODE_009DC4:          PHX                                 ;; 009DC4 : DA          ;
                       PHY                                 ;; 009DC5 : 5A          ;
-                      LDA.L $70008D,X                     ;; 009DC6 : BF 8D 00 70 ;
+                      LDA.L !SaveDataChecksum+1,X         ;; 009DC6 : BF 8D 00 70 ;
                       STA.B !GraphicsCompPtr              ;; 009DCA : 85 8A       ;
                       SEP #$20                            ;; 009DCC : E2 20       ; Accum (8 bit) 
                       LDY.W #$008D                        ;; 009DCE : A0 8D 00    ;
-CODE_009DD1:          LDA.L $700000,X                     ;; 009DD1 : BF 00 00 70 ;
+CODE_009DD1:          LDA.L !SaveData,X                   ;; 009DD1 : BF 00 00 70 ;
                       CLC                                 ;; 009DD5 : 18          ;
                       ADC.B !GraphicsCompPtr              ;; 009DD6 : 65 8A       ;
                       STA.B !GraphicsCompPtr              ;; 009DD8 : 85 8A       ;
@@ -3284,7 +3284,7 @@ CODE_009E82:          LDX.W !BlinkCursorPos               ;; 009E82 : AE 92 1B  
                       BNE CODE_009E94                     ;; 009E90 : D0 02       ;
                       LDX.B #$00                          ;; 009E92 : A2 00       ;
 CODE_009E94:          STX.B !_0                           ;; 009E94 : 86 00       ;
-                      LDA.L $7F837B                       ;; 009E96 : AF 7B 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 009E96 : AF 7B 83 7F ;
                       TAX                                 ;; 009E9A : AA          ;
                       REP #$20                            ;; 009E9B : C2 20       ; Accum (16 bit) 
                       LDA.W DATA_009E6A,Y                 ;; 009E9D : B9 6A 9E    ;
@@ -3292,18 +3292,18 @@ CODE_009E94:          STX.B !_0                           ;; 009E94 : 86 00     
                       STA.B !_2                           ;; 009EA2 : 85 02       ;
                       LDA.W DATA_009E74,Y                 ;; 009EA4 : B9 74 9E    ;
 CODE_009EA7:          XBA                                 ;; 009EA7 : EB          ;
-                      STA.L $7F837D,X                     ;; 009EA8 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 009EA8 : 9F 7D 83 7F ;
                       XBA                                 ;; 009EAC : EB          ;
                       CLC                                 ;; 009EAD : 18          ;
                       ADC.W #$0040                        ;; 009EAE : 69 40 00    ;
                       PHA                                 ;; 009EB1 : 48          ;
                       LDA.W #$0100                        ;; 009EB2 : A9 00 01    ;
-                      STA.L $7F837F,X                     ;; 009EB5 : 9F 7F 83 7F ;
+                      STA.L !DynamicStripeImage+2,X       ;; 009EB5 : 9F 7F 83 7F ;
                       LDA.W #$38FC                        ;; 009EB9 : A9 FC 38    ;
                       LSR.B !_0                           ;; 009EBC : 46 00       ;
                       BCC CODE_009EC3                     ;; 009EBE : 90 03       ;
                       LDA.W #$3D2E                        ;; 009EC0 : A9 2E 3D    ;
-CODE_009EC3:          STA.L $7F8381,X                     ;; 009EC3 : 9F 81 83 7F ;
+CODE_009EC3:          STA.L !DynamicStripeImage+4,X       ;; 009EC3 : 9F 81 83 7F ;
                       PLA                                 ;; 009EC7 : 68          ;
                       INX                                 ;; 009EC8 : E8          ;
                       INX                                 ;; 009EC9 : E8          ;
@@ -3315,9 +3315,9 @@ CODE_009EC3:          STA.L $7F8381,X                     ;; 009EC3 : 9F 81 83 7
                       BNE CODE_009EA7                     ;; 009ED0 : D0 D5       ;
                       SEP #$20                            ;; 009ED2 : E2 20       ; Accum (8 bit) 
 CODE_009ED4:          TXA                                 ;; 009ED4 : 8A          ;
-                      STA.L $7F837B                       ;; 009ED5 : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 009ED5 : 8F 7B 83 7F ;
                       LDA.B #$FF                          ;; 009ED9 : A9 FF       ;
-                      STA.L $7F837D,X                     ;; 009EDB : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 009EDB : 9F 7D 83 7F ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
                                                           ;;                      ;
@@ -3379,7 +3379,7 @@ GM__Mosaic:           INC.W !GameMode                     ;; ?QPWZ? : EE 00 01  
                       STA.W !MosaicDirection              ;; 009F63 : 8D AF 0D    ; /  
 CODE_009F66:          LDA.B #$03                          ;; 009F66 : A9 03       ; \  
                       ORA.W !MosaicSize                   ;; 009F68 : 0D B0 0D    ;  |Set mosaic size to $0DB0, enable mosaic on Layer 1 and 2. 
-                      STA.W $2106                         ;; 009F6B : 8D 06 21    ; /  ; Mosaic Size and BG Enable
+                      STA.W !HW_MOSAIC                    ;; 009F6B : 8D 06 21    ; /  ; Mosaic Size and BG Enable
 Return009F6E:         RTS                                 ;; ?QPWZ? : 60          ; I think we're done here 
                                                           ;;                      ;
 CODE_009F6F:          DEC.W !KeepModeActive               ;; 009F6F : CE B1 0D    ; Decrement something...  Seems like it might be a timing counter ; Index (8 bit) 
@@ -3478,7 +3478,7 @@ CODE_00A045:          REP #$30                            ;; 00A045 : C2 30     
                       LDX.W #$0100                        ;; 00A047 : A2 00 01    ;
 CODE_00A04A:          LDY.W #$0058                        ;; 00A04A : A0 58 00    ;
                       LDA.W #$0000                        ;; 00A04D : A9 00 00    ;
-CODE_00A050:          STA.L $7EE300,X                     ;; 00A050 : 9F 00 E3 7E ;
+CODE_00A050:          STA.L !OWLayer1VramBuffer-$100,X    ;; 00A050 : 9F 00 E3 7E ;
                       INX                                 ;; 00A054 : E8          ;
                       INX                                 ;; 00A055 : E8          ;
                       DEY                                 ;; 00A056 : 88          ;
@@ -3561,8 +3561,8 @@ CODE_00A101:          JSL CODE_04DAAD                     ;; 00A101 : 22 AD DA 0
                       LDX.B #$17                          ;; 00A119 : A2 17       ;
 CODE_00A11B:          LDY.B #$02                          ;; 00A11B : A0 02       ;
                       JSR ScreenSettings                  ;; 00A11D : 20 FD 93    ;
-                      STX.W $212E                         ;; 00A120 : 8E 2E 21    ; Window Mask Designation for Main Screen
-                      STY.W $212F                         ;; 00A123 : 8C 2F 21    ; Window Mask Designation for Sub Screen
+                      STX.W !HW_TMW                       ;; 00A120 : 8E 2E 21    ; Window Mask Designation for Main Screen
+                      STY.W !HW_TSW                       ;; 00A123 : 8C 2F 21    ; Window Mask Designation for Sub Screen
                       JSL CODE_04DC09                     ;; 00A126 : 22 09 DC 04 ;
                       LDX.W !PlayerTurnLvl                ;; 00A12A : AE B3 0D    ;
                       LDA.W !OWPlayerSubmap,X             ;; 00A12D : BD 11 1F    ;
@@ -3631,7 +3631,7 @@ CODE_00A1B5:          STZ.W !PauseTimer,X                 ;; 00A1B5 : 9E D3 13  
                                                           ;;                      ;
 CODE_00A1BE:          JSR SetUp0DA0GM4                    ;; 00A1BE : 20 74 9A    ;
                       INC.B !EffFrame                     ;; 00A1C1 : E6 14       ; Increase alternate frame counter 
-                      JSL $7F8000                         ;; 00A1C3 : 22 00 80 7F ;
+                      JSL !OAMResetRoutine                ;; 00A1C3 : 22 00 80 7F ;
                       JSL GameMode_0E_Prim                ;; 00A1C7 : 22 41 82 04 ; (Bank 4.asm) 
                       JMP CODE_008494                     ;; 00A1CB : 4C 94 84    ;
                                                           ;;                      ;
@@ -3730,7 +3730,7 @@ CODE_00A28A:          LDA.W !IRQNMICommand                ;; 00A28A : AD 9B 0D  
                       JSR CODE_00987D                     ;; 00A28F : 20 7D 98    ;
                       JMP CODE_00A2A9                     ;; 00A292 : 4C A9 A2    ;
                                                           ;;                      ;
-CODE_00A295:          JSL $7F8000                         ;; 00A295 : 22 00 80 7F ;
+CODE_00A295:          JSL !OAMResetRoutine                ;; 00A295 : 22 00 80 7F ;
                       JSL CODE_00F6DB                     ;; 00A299 : 22 DB F6 00 ;
                       JSL CODE_05BC00                     ;; 00A29D : 22 00 BC 05 ;
                       JSL CODE_0586F1                     ;; 00A2A1 : 22 F1 86 05 ;
@@ -3780,51 +3780,51 @@ MarioGFXDMA:          REP #$20                            ;; ?QPWZ? : C2 20     
                       LDY.W !PlayerGfxTileCount           ;; 00A304 : AC 84 0D    ;
                       BEQ CODE_00A328                     ;; 00A307 : F0 1F       ;
                       LDY.B #$86                          ;; 00A309 : A0 86       ; \ Set Address for CG-RAM Write to x86 
-                      STY.W $2121                         ;; 00A30B : 8C 21 21    ; / ; Address for CG-RAM Write
+                      STY.W !HW_CGADD                     ;; 00A30B : 8C 21 21    ; / ; Address for CG-RAM Write
                       LDA.W #$2200                        ;; 00A30E : A9 00 22    ;
-                      STA.W $4320                         ;; 00A311 : 8D 20 43    ; Parameters for DMA Transfer
+                      STA.W !HW_DMAPARAM+$20              ;; 00A311 : 8D 20 43    ; Parameters for DMA Transfer
                       LDA.W !PlayerPalletePtr             ;; 00A314 : AD 82 0D    ; \ Get location of palette from $0D82-$0D83 
-                      STA.W $4322                         ;; 00A317 : 8D 22 43    ; / ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A317 : 8D 22 43    ; / ; A Address (Low Byte)
                       LDY.B #$00                          ;; 00A31A : A0 00       ; \ Palette is stored in bank x00 
-                      STY.W $4324                         ;; 00A31C : 8C 24 43    ; / ; A Address Bank
+                      STY.W !HW_DMAADDR+$22               ;; 00A31C : 8C 24 43    ; / ; A Address Bank
                       LDA.W #$0014                        ;; 00A31F : A9 14 00    ; \ x14 bytes will be transferred 
-                      STA.W $4325                         ;; 00A322 : 8D 25 43    ; / ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00A325 : 8E 0B 42    ; Transfer the colors ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 00A322 : 8D 25 43    ; / ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00A325 : 8E 0B 42    ; Transfer the colors ; Regular DMA Channel Enable
 CODE_00A328:          LDY.B #$80                          ;; 00A328 : A0 80       ; \ Set VRAM Address Increment Value to x80 
-                      STY.W $2115                         ;; 00A32A : 8C 15 21    ; / ; VRAM Address Increment Value
+                      STY.W !HW_VMAINC                    ;; 00A32A : 8C 15 21    ; / ; VRAM Address Increment Value
                       LDA.W #$1801                        ;; 00A32D : A9 01 18    ;
-                      STA.W $4320                         ;; 00A330 : 8D 20 43    ; Parameters for DMA Transfer
+                      STA.W !HW_DMAPARAM+$20              ;; 00A330 : 8D 20 43    ; Parameters for DMA Transfer
                       LDA.W #$67F0                        ;; 00A333 : A9 F0 67    ;
-                      STA.W $2116                         ;; 00A336 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A336 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !DynGfxTile7FPtr              ;; 00A339 : AD 99 0D    ;
-                      STA.W $4322                         ;; 00A33C : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A33C : 8D 22 43    ; A Address (Low Byte)
                       LDY.B #$7E                          ;; 00A33F : A0 7E       ; \ Set bank to x7E 
-                      STY.W $4324                         ;; 00A341 : 8C 24 43    ; / ; A Address Bank
+                      STY.W !HW_DMAADDR+$22               ;; 00A341 : 8C 24 43    ; / ; A Address Bank
                       LDA.W #$0020                        ;; 00A344 : A9 20 00    ; \ x20 bytes will be transferred 
-                      STA.W $4325                         ;; 00A347 : 8D 25 43    ; / ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00A34A : 8E 0B 42    ; Transfer ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 00A347 : 8D 25 43    ; / ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00A34A : 8E 0B 42    ; Transfer ; Regular DMA Channel Enable
                       LDA.W #$6000                        ;; 00A34D : A9 00 60    ; \ Set Address for VRAM Read/Write to x6000 
-                      STA.W $2116                         ;; 00A350 : 8D 16 21    ; / ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A350 : 8D 16 21    ; / ; Address for VRAM Read/Write (Low Byte)
                       LDX.B #$00                          ;; 00A353 : A2 00       ;
 CODE_00A355:          LDA.W !DynGfxTilePtr,X              ;; 00A355 : BD 85 0D    ; \ Get address of graphics to copy 
-                      STA.W $4322                         ;; 00A358 : 8D 22 43    ; / ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A358 : 8D 22 43    ; / ; A Address (Low Byte)
                       LDA.W #$0040                        ;; 00A35B : A9 40 00    ; \ x40 bytes will be transferred 
-                      STA.W $4325                         ;; 00A35E : 8D 25 43    ; / ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMACNT+$20                ;; 00A35E : 8D 25 43    ; / ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDY.B #$04                          ;; 00A361 : A0 04       ; \ Transfer 
-                      STY.W $420B                         ;; 00A363 : 8C 0B 42    ; / ; Regular DMA Channel Enable
+                      STY.W !HW_MDMAEN                    ;; 00A363 : 8C 0B 42    ; / ; Regular DMA Channel Enable
                       INX                                 ;; 00A366 : E8          ; \ Move to next address 
                       INX                                 ;; 00A367 : E8          ; /  
                       CPX.W !PlayerGfxTileCount           ;; 00A368 : EC 84 0D    ; \ Repeat last segment while X<$0D84 
                       BCC CODE_00A355                     ;; 00A36B : 90 E8       ; /  
                       LDA.W #$6100                        ;; 00A36D : A9 00 61    ; \ Set Address for VRAM Read/Write to x6100 
-                      STA.W $2116                         ;; 00A370 : 8D 16 21    ; / ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A370 : 8D 16 21    ; / ; Address for VRAM Read/Write (Low Byte)
                       LDX.B #$00                          ;; 00A373 : A2 00       ;
 CODE_00A375:          LDA.W !DynGfxTilePtr+$0A,X          ;; 00A375 : BD 8F 0D    ; \ Get address of graphics to copy 
-                      STA.W $4322                         ;; 00A378 : 8D 22 43    ; / ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A378 : 8D 22 43    ; / ; A Address (Low Byte)
                       LDA.W #$0040                        ;; 00A37B : A9 40 00    ; \ x40 bytes will be transferred 
-                      STA.W $4325                         ;; 00A37E : 8D 25 43    ; / ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMACNT+$20                ;; 00A37E : 8D 25 43    ; / ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDY.B #$04                          ;; 00A381 : A0 04       ; \ Transfer 
-                      STY.W $420B                         ;; 00A383 : 8C 0B 42    ; / ; Regular DMA Channel Enable
+                      STY.W !HW_MDMAEN                    ;; 00A383 : 8C 0B 42    ; / ; Regular DMA Channel Enable
                       INX                                 ;; 00A386 : E8          ; \ Move to next address 
                       INX                                 ;; 00A387 : E8          ; /  
                       CPX.W !PlayerGfxTileCount           ;; 00A388 : EC 84 0D    ; \ Repeat last segment while X<$0D84 
@@ -3834,67 +3834,67 @@ CODE_00A375:          LDA.W !DynGfxTilePtr+$0A,X          ;; 00A375 : BD 8F 0D  
                                                           ;;                      ;
 CODE_00A390:          REP #$20                            ;; 00A390 : C2 20       ; Accum (16 bit) 
                       LDY.B #$80                          ;; 00A392 : A0 80       ;
-                      STY.W $2115                         ;; 00A394 : 8C 15 21    ; VRAM Address Increment Value
+                      STY.W !HW_VMAINC                    ;; 00A394 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W #$1801                        ;; 00A397 : A9 01 18    ;
-                      STA.W $4320                         ;; 00A39A : 8D 20 43    ; Parameters for DMA Transfer
+                      STA.W !HW_DMAPARAM+$20              ;; 00A39A : 8D 20 43    ; Parameters for DMA Transfer
                       LDY.B #$7E                          ;; 00A39D : A0 7E       ;
-                      STY.W $4324                         ;; 00A39F : 8C 24 43    ; A Address Bank
+                      STY.W !HW_DMAADDR+$22               ;; 00A39F : 8C 24 43    ; A Address Bank
                       LDX.B #$04                          ;; 00A3A2 : A2 04       ;
                       LDA.W !Gfx33DestAddrC               ;; 00A3A4 : AD 80 0D    ;
                       BEQ CODE_00A3BB                     ;; 00A3A7 : F0 12       ;
-                      STA.W $2116                         ;; 00A3A9 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A3A9 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Gfx33SrcAddrC                ;; 00A3AC : AD 7A 0D    ;
-                      STA.W $4322                         ;; 00A3AF : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A3AF : 8D 22 43    ; A Address (Low Byte)
                       LDA.W #$0080                        ;; 00A3B2 : A9 80 00    ;
-                      STA.W $4325                         ;; 00A3B5 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00A3B8 : 8E 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 00A3B5 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00A3B8 : 8E 0B 42    ; Regular DMA Channel Enable
 CODE_00A3BB:          LDA.W !Gfx33DestAddrB               ;; 00A3BB : AD 7E 0D    ;
                       BEQ CODE_00A3D2                     ;; 00A3BE : F0 12       ;
-                      STA.W $2116                         ;; 00A3C0 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A3C0 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Gfx33SrcAddrB                ;; 00A3C3 : AD 78 0D    ;
-                      STA.W $4322                         ;; 00A3C6 : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A3C6 : 8D 22 43    ; A Address (Low Byte)
                       LDA.W #$0080                        ;; 00A3C9 : A9 80 00    ;
-                      STA.W $4325                         ;; 00A3CC : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00A3CF : 8E 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 00A3CC : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00A3CF : 8E 0B 42    ; Regular DMA Channel Enable
 CODE_00A3D2:          LDA.W !Gfx33DestAddrA               ;; 00A3D2 : AD 7C 0D    ;
                       BEQ CODE_00A418                     ;; 00A3D5 : F0 41       ;
-                      STA.W $2116                         ;; 00A3D7 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A3D7 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       CMP.W #$0800                        ;; 00A3DA : C9 00 08    ;
                       BEQ CODE_00A3F0                     ;; 00A3DD : F0 11       ;
                       LDA.W !Gfx33SrcAddrA                ;; 00A3DF : AD 76 0D    ;
-                      STA.W $4322                         ;; 00A3E2 : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A3E2 : 8D 22 43    ; A Address (Low Byte)
                       LDA.W #$0080                        ;; 00A3E5 : A9 80 00    ;
-                      STA.W $4325                         ;; 00A3E8 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00A3EB : 8E 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 00A3E8 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00A3EB : 8E 0B 42    ; Regular DMA Channel Enable
                       BRA CODE_00A418                     ;; 00A3EE : 80 28       ;
                                                           ;;                      ;
 CODE_00A3F0:          LDA.W !Gfx33SrcAddrA                ;; 00A3F0 : AD 76 0D    ;
-                      STA.W $4322                         ;; 00A3F3 : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A3F3 : 8D 22 43    ; A Address (Low Byte)
                       LDA.W #$0040                        ;; 00A3F6 : A9 40 00    ;
-                      STA.W $4325                         ;; 00A3F9 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00A3FC : 8E 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 00A3F9 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00A3FC : 8E 0B 42    ; Regular DMA Channel Enable
                       LDA.W #$0900                        ;; 00A3FF : A9 00 09    ;
-                      STA.W $2116                         ;; 00A402 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A402 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Gfx33SrcAddrA                ;; 00A405 : AD 76 0D    ;
                       CLC                                 ;; 00A408 : 18          ;
                       ADC.W #$0040                        ;; 00A409 : 69 40 00    ;
-                      STA.W $4322                         ;; 00A40C : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A40C : 8D 22 43    ; A Address (Low Byte)
                       LDA.W #$0040                        ;; 00A40F : A9 40 00    ;
-                      STA.W $4325                         ;; 00A412 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00A415 : 8E 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 00A412 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00A415 : 8E 0B 42    ; Regular DMA Channel Enable
 CODE_00A418:          SEP #$20                            ;; 00A418 : E2 20       ; Accum (8 bit) 
                       LDA.B #$64                          ;; 00A41A : A9 64       ;
 CODE_00A41C:          STZ.B !_0                           ;; 00A41C : 64 00       ;
-CODE_00A41E:          STA.W $2121                         ;; 00A41E : 8D 21 21    ; Address for CG-RAM Write
+CODE_00A41E:          STA.W !HW_CGADD                     ;; 00A41E : 8D 21 21    ; Address for CG-RAM Write
                       LDA.B !EffFrame                     ;; 00A421 : A5 14       ;
                       AND.B #$1C                          ;; 00A423 : 29 1C       ;
                       LSR A                               ;; 00A425 : 4A          ;
                       ADC.B !_0                           ;; 00A426 : 65 00       ;
                       TAY                                 ;; 00A428 : A8          ;
                       LDA.W MorePalettes,Y                ;; 00A429 : B9 0C B6    ;
-                      STA.W $2122                         ;; 00A42C : 8D 22 21    ; Data for CG-RAM Write
+                      STA.W !HW_CGDATA                    ;; 00A42C : 8D 22 21    ; Data for CG-RAM Write
                       LDA.W DATA_00B60D,Y                 ;; 00A42F : B9 0D B6    ;
-                      STA.W $2122                         ;; 00A432 : 8D 22 21    ; Data for CG-RAM Write
+                      STA.W !HW_CGDATA                    ;; 00A432 : 8D 22 21    ; Data for CG-RAM Write
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_00A436:          LDA.W !MarioStartFlag               ;; 00A436 : AD 35 19    ;
@@ -3902,26 +3902,26 @@ CODE_00A436:          LDA.W !MarioStartFlag               ;; 00A436 : AD 35 19  
                       STZ.W !MarioStartFlag               ;; 00A43B : 9C 35 19    ;
                       REP #$20                            ;; 00A43E : C2 20       ; 16 bit A ; Accum (16 bit) 
                       LDY.B #$80                          ;; 00A440 : A0 80       ;
-                      STY.W $2115                         ;; 00A442 : 8C 15 21    ; VRAM Address Increment Value
+                      STY.W !HW_VMAINC                    ;; 00A442 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W #$64A0                        ;; 00A445 : A9 A0 64    ;
-                      STA.W $2116                         ;; 00A448 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A448 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W #$1801                        ;; 00A44B : A9 01 18    ;
-                      STA.W $4320                         ;; 00A44E : 8D 20 43    ; Parameters for DMA Transfer
+                      STA.W !HW_DMAPARAM+$20              ;; 00A44E : 8D 20 43    ; Parameters for DMA Transfer
                       LDA.W #$0BF6                        ;; 00A451 : A9 F6 0B    ;
-                      STA.W $4322                         ;; 00A454 : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A454 : 8D 22 43    ; A Address (Low Byte)
                       LDY.B #$00                          ;; 00A457 : A0 00       ;
-                      STY.W $4324                         ;; 00A459 : 8C 24 43    ; A Address Bank
+                      STY.W !HW_DMAADDR+$22               ;; 00A459 : 8C 24 43    ; A Address Bank
                       LDA.W #$00C0                        ;; 00A45C : A9 C0 00    ;
-                      STA.W $4325                         ;; 00A45F : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMACNT+$20                ;; 00A45F : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDX.B #$04                          ;; 00A462 : A2 04       ;
-                      STX.W $420B                         ;; 00A464 : 8E 0B 42    ; Regular DMA Channel Enable
+                      STX.W !HW_MDMAEN                    ;; 00A464 : 8E 0B 42    ; Regular DMA Channel Enable
                       LDA.W #$65A0                        ;; 00A467 : A9 A0 65    ;
-                      STA.W $2116                         ;; 00A46A : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A46A : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W #$0CB6                        ;; 00A46D : A9 B6 0C    ;
-                      STA.W $4322                         ;; 00A470 : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A470 : 8D 22 43    ; A Address (Low Byte)
                       LDA.W #$00C0                        ;; 00A473 : A9 C0 00    ;
-                      STA.W $4325                         ;; 00A476 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00A479 : 8E 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 00A476 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00A479 : 8E 0B 42    ; Regular DMA Channel Enable
                       SEP #$20                            ;; 00A47C : E2 20       ; 8 bit A ; Accum (8 bit) 
 Return00A47E:         RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
@@ -3945,25 +3945,25 @@ CODE_00A488:          LDY.W !PaletteIndexTable            ;; 00A488 : AC 80 06  
                       TAY                                 ;; 00A49F : A8          ;
 CODE_00A4A0:          LDA.B [!_0],Y                       ;; 00A4A0 : B7 00       ;
                       BEQ CODE_00A4CF                     ;; 00A4A2 : F0 2B       ;
-                      STX.W $4324                         ;; 00A4A4 : 8E 24 43    ; A Address Bank
-                      STA.W $4325                         ;; 00A4A7 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_DMAADDR+$22               ;; 00A4A4 : 8E 24 43    ; A Address Bank
+                      STA.W !HW_DMACNT+$20                ;; 00A4A7 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       STA.B !_3                           ;; 00A4AA : 85 03       ;
-                      STZ.W $4326                         ;; 00A4AC : 9C 26 43    ; Number Bytes to Transfer (High Byte) (DMA)
+                      STZ.W !HW_DMACNT+$21                ;; 00A4AC : 9C 26 43    ; Number Bytes to Transfer (High Byte) (DMA)
                       INY                                 ;; 00A4AF : C8          ;
                       LDA.B [!_0],Y                       ;; 00A4B0 : B7 00       ;
-                      STA.W $2121                         ;; 00A4B2 : 8D 21 21    ; Address for CG-RAM Write
+                      STA.W !HW_CGADD                     ;; 00A4B2 : 8D 21 21    ; Address for CG-RAM Write
                       REP #$20                            ;; 00A4B5 : C2 20       ; Accum (16 bit) 
                       LDA.W #$2200                        ;; 00A4B7 : A9 00 22    ;
-                      STA.W $4320                         ;; 00A4BA : 8D 20 43    ; Parameters for DMA Transfer
+                      STA.W !HW_DMAPARAM+$20              ;; 00A4BA : 8D 20 43    ; Parameters for DMA Transfer
                       INY                                 ;; 00A4BD : C8          ;
                       TYA                                 ;; 00A4BE : 98          ;
-                      STA.W $4322                         ;; 00A4BF : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A4BF : 8D 22 43    ; A Address (Low Byte)
                       CLC                                 ;; 00A4C2 : 18          ;
                       ADC.B !_3                           ;; 00A4C3 : 65 03       ;
                       TAY                                 ;; 00A4C5 : A8          ;
                       SEP #$20                            ;; 00A4C6 : E2 20       ; Accum (8 bit) 
                       LDA.B #$04                          ;; 00A4C8 : A9 04       ;
-                      STA.W $420B                         ;; 00A4CA : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 00A4CA : 8D 0B 42    ; Regular DMA Channel Enable
                       BRA CODE_00A4A0                     ;; 00A4CD : 80 D1       ;
                                                           ;;                      ;
 CODE_00A4CF:          SEP #$10                            ;; 00A4CF : E2 10       ; Index (8 bit) 
@@ -3977,18 +3977,18 @@ Return00A4E2:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 CODE_00A4E3:          REP #$10                            ;; 00A4E3 : C2 10       ; Index (16 bit) 
                       LDA.B #$80                          ;; 00A4E5 : A9 80       ;
-                      STA.W $2115                         ;; 00A4E7 : 8D 15 21    ; VRAM Address Increment Value
+                      STA.W !HW_VMAINC                    ;; 00A4E7 : 8D 15 21    ; VRAM Address Increment Value
                       LDY.W #$0750                        ;; 00A4EA : A0 50 07    ;
-                      STY.W $2116                         ;; 00A4ED : 8C 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STY.W !HW_VMADD                     ;; 00A4ED : 8C 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDY.W #$1801                        ;; 00A4F0 : A0 01 18    ;
-                      STY.W $4320                         ;; 00A4F3 : 8C 20 43    ; Parameters for DMA Transfer
+                      STY.W !HW_DMAPARAM+$20              ;; 00A4F3 : 8C 20 43    ; Parameters for DMA Transfer
                       LDY.W #$0AF6                        ;; 00A4F6 : A0 F6 0A    ;
-                      STY.W $4322                         ;; 00A4F9 : 8C 22 43    ; A Address (Low Byte)
-                      STZ.W $4324                         ;; 00A4FC : 9C 24 43    ; A Address Bank
+                      STY.W !HW_DMAADDR+$20               ;; 00A4F9 : 8C 22 43    ; A Address (Low Byte)
+                      STZ.W !HW_DMAADDR+$22               ;; 00A4FC : 9C 24 43    ; A Address Bank
                       LDY.W #$0160                        ;; 00A4FF : A0 60 01    ;
-                      STY.W $4325                         ;; 00A502 : 8C 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STY.W !HW_DMACNT+$20                ;; 00A502 : 8C 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDA.B #$04                          ;; 00A505 : A9 04       ;
-                      STA.W $420B                         ;; 00A507 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 00A507 : 8D 0B 42    ; Regular DMA Channel Enable
                       SEP #$10                            ;; 00A50A : E2 10       ; Index (8 bit) 
                       LDA.W !OverworldProcess             ;; 00A50C : AD D9 13    ;
                       CMP.B #$0A                          ;; 00A50F : C9 0A       ;
@@ -4006,15 +4006,15 @@ DATA_00A521:          db $00,$04,$08,$0C                  ;; 00A521             
 DATA_00A525:          db $00,$08,$10,$18                  ;; 00A525               ;
                                                           ;;                      ;
 CODE_00A529:          LDA.B #$80                          ;; 00A529 : A9 80       ;
-                      STA.W $2115                         ;; 00A52B : 8D 15 21    ; VRAM Address Increment Value
-                      STZ.W $2116                         ;; 00A52E : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMAINC                    ;; 00A52B : 8D 15 21    ; VRAM Address Increment Value
+                      STZ.W !HW_VMADD                     ;; 00A52E : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$30                          ;; 00A531 : A9 30       ;
                       CLC                                 ;; 00A533 : 18          ;
                       ADC.W DATA_00A521,Y                 ;; 00A534 : 79 21 A5    ;
-                      STA.W $2117                         ;; 00A537 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 00A537 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00A53A : A2 06       ;
 CODE_00A53C:          LDA.W DATA_00A586,X                 ;; 00A53C : BD 86 A5    ;
-                      STA.W $4310,X                       ;; 00A53F : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 00A53F : 9D 10 43    ;
                       DEX                                 ;; 00A542 : CA          ;
                       BPL CODE_00A53C                     ;; 00A543 : 10 F7       ;
                       LDA.W !PlayerTurnOW                 ;; 00A545 : AD D6 0D    ;
@@ -4024,27 +4024,27 @@ CODE_00A53C:          LDA.W DATA_00A586,X                 ;; 00A53C : BD 86 A5  
                       LDA.W !OWPlayerSubmap,X             ;; 00A54B : BD 11 1F    ;
                       BEQ CODE_00A555                     ;; 00A54E : F0 05       ;
                       LDA.B #$60                          ;; 00A550 : A9 60       ;
-                      STA.W $4313                         ;; 00A552 : 8D 13 43    ; A Address (High Byte)
-CODE_00A555:          LDA.W $4313                         ;; 00A555 : AD 13 43    ; A Address (High Byte)
+                      STA.W !HW_DMAADDR+$11               ;; 00A552 : 8D 13 43    ; A Address (High Byte)
+CODE_00A555:          LDA.W !HW_DMAADDR+$11               ;; 00A555 : AD 13 43    ; A Address (High Byte)
                       CLC                                 ;; 00A558 : 18          ;
                       ADC.W DATA_00A525,Y                 ;; 00A559 : 79 25 A5    ;
-                      STA.W $4313                         ;; 00A55C : 8D 13 43    ; A Address (High Byte)
+                      STA.W !HW_DMAADDR+$11               ;; 00A55C : 8D 13 43    ; A Address (High Byte)
                       LDA.B #$02                          ;; 00A55F : A9 02       ;
-                      STA.W $420B                         ;; 00A561 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 00A561 : 8D 0B 42    ; Regular DMA Channel Enable
                       LDA.B #$80                          ;; 00A564 : A9 80       ;
-                      STA.W $2115                         ;; 00A566 : 8D 15 21    ; VRAM Address Increment Value
-                      STZ.W $2116                         ;; 00A569 : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMAINC                    ;; 00A566 : 8D 15 21    ; VRAM Address Increment Value
+                      STZ.W !HW_VMADD                     ;; 00A569 : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$20                          ;; 00A56C : A9 20       ;
                       CLC                                 ;; 00A56E : 18          ;
                       ADC.W DATA_00A521,Y                 ;; 00A56F : 79 21 A5    ;
-                      STA.W $2117                         ;; 00A572 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 00A572 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00A575 : A2 06       ;
 CODE_00A577:          LDA.W DATA_00A58D,X                 ;; 00A577 : BD 8D A5    ;
-                      STA.W $4310,X                       ;; 00A57A : 9D 10 43    ;
+                      STA.W !HW_DMAPARAM+$10,X            ;; 00A57A : 9D 10 43    ;
                       DEX                                 ;; 00A57D : CA          ;
                       BPL CODE_00A577                     ;; 00A57E : 10 F7       ;
                       LDA.B #$02                          ;; 00A580 : A9 02       ;
-                      STA.W $420B                         ;; 00A582 : 8D 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_MDMAEN                    ;; 00A582 : 8D 0B 42    ; Regular DMA Channel Enable
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
                                                           ;;                      ;
@@ -4307,40 +4307,40 @@ CODE_00A7B9:          LDA.W #$0080                        ;; 00A7B9 : A9 80 00  
                                                           ;;                      ;
 CODE_00A7C2:          REP #$20                            ;; 00A7C2 : C2 20       ; 16 bit A ; Accum (16 bit) 
                       LDX.B #$80                          ;; 00A7C4 : A2 80       ;
-                      STX.W $2115                         ;; 00A7C6 : 8E 15 21    ; VRAM Address Increment Value
+                      STX.W !HW_VMAINC                    ;; 00A7C6 : 8E 15 21    ; VRAM Address Increment Value
                       LDA.W #$6000                        ;; 00A7C9 : A9 00 60    ;
-                      STA.W $2116                         ;; 00A7CC : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A7CC : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W #$1801                        ;; 00A7CF : A9 01 18    ;
-                      STA.W $4320                         ;; 00A7D2 : 8D 20 43    ; Parameters for DMA Transfer
+                      STA.W !HW_DMAPARAM+$20              ;; 00A7D2 : 8D 20 43    ; Parameters for DMA Transfer
                       LDA.W #$977B                        ;; 00A7D5 : A9 7B 97    ;
-                      STA.W $4322                         ;; 00A7D8 : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A7D8 : 8D 22 43    ; A Address (Low Byte)
                       LDX.B #$7F                          ;; 00A7DB : A2 7F       ;
-                      STX.W $4324                         ;; 00A7DD : 8E 24 43    ; A Address Bank
+                      STX.W !HW_DMAADDR+$22               ;; 00A7DD : 8E 24 43    ; A Address Bank
                       LDA.W #$00C0                        ;; 00A7E0 : A9 C0 00    ;
-                      STA.W $4325                         ;; 00A7E3 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STA.W !HW_DMACNT+$20                ;; 00A7E3 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDX.B #$04                          ;; 00A7E6 : A2 04       ;
-                      STX.W $420B                         ;; 00A7E8 : 8E 0B 42    ; Regular DMA Channel Enable
+                      STX.W !HW_MDMAEN                    ;; 00A7E8 : 8E 0B 42    ; Regular DMA Channel Enable
                       LDA.W #$6100                        ;; 00A7EB : A9 00 61    ;
-                      STA.W $2116                         ;; 00A7EE : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A7EE : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W #$983B                        ;; 00A7F1 : A9 3B 98    ;
-                      STA.W $4322                         ;; 00A7F4 : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A7F4 : 8D 22 43    ; A Address (Low Byte)
                       LDA.W #$00C0                        ;; 00A7F7 : A9 C0 00    ;
-                      STA.W $4325                         ;; 00A7FA : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00A7FD : 8E 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 00A7FA : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00A7FD : 8E 0B 42    ; Regular DMA Channel Enable
                       LDA.W #$64A0                        ;; 00A800 : A9 A0 64    ;
-                      STA.W $2116                         ;; 00A803 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A803 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W #$98FB                        ;; 00A806 : A9 FB 98    ;
-                      STA.W $4322                         ;; 00A809 : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A809 : 8D 22 43    ; A Address (Low Byte)
                       LDA.W #$00C0                        ;; 00A80C : A9 C0 00    ;
-                      STA.W $4325                         ;; 00A80F : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00A812 : 8E 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 00A80F : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00A812 : 8E 0B 42    ; Regular DMA Channel Enable
                       LDA.W #$65A0                        ;; 00A815 : A9 A0 65    ;
-                      STA.W $2116                         ;; 00A818 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STA.W !HW_VMADD                     ;; 00A818 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W #$99BB                        ;; 00A81B : A9 BB 99    ;
-                      STA.W $4322                         ;; 00A81E : 8D 22 43    ; A Address (Low Byte)
+                      STA.W !HW_DMAADDR+$20               ;; 00A81E : 8D 22 43    ; A Address (Low Byte)
                       LDA.W #$00C0                        ;; 00A821 : A9 C0 00    ;
-                      STA.W $4325                         ;; 00A824 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
-                      STX.W $420B                         ;; 00A827 : 8E 0B 42    ; Regular DMA Channel Enable
+                      STA.W !HW_DMACNT+$20                ;; 00A824 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
+                      STX.W !HW_MDMAEN                    ;; 00A827 : 8E 0B 42    ; Regular DMA Channel Enable
                       SEP #$20                            ;; 00A82A : E2 20       ; 8 bit A ; Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
@@ -4356,7 +4356,7 @@ CODE_00A82D:          LDY.B #$0F                          ;; 00A82D : A0 0F     
 CODE_00A842:          LDX.W #$0000                        ;; 00A842 : A2 00 00    ;
 CODE_00A845:          LDY.W #$0008                        ;; 00A845 : A0 08 00    ;
 CODE_00A848:          LDA.B [!_0]                         ;; 00A848 : A7 00       ;
-                      STA.L $7F977B,X                     ;; 00A84A : 9F 7B 97 7F ;
+                      STA.L !MarioStartGraphics,X         ;; 00A84A : 9F 7B 97 7F ;
                       INX                                 ;; 00A84E : E8          ;
                       INX                                 ;; 00A84F : E8          ;
                       INC.B !_0                           ;; 00A850 : E6 00       ;
@@ -4366,7 +4366,7 @@ CODE_00A848:          LDA.B [!_0]                         ;; 00A848 : A7 00     
                       LDY.W #$0008                        ;; 00A857 : A0 08 00    ;
 CODE_00A85A:          LDA.B [!_0]                         ;; 00A85A : A7 00       ;
                       AND.W #$00FF                        ;; 00A85C : 29 FF 00    ;
-                      STA.L $7F977B,X                     ;; 00A85F : 9F 7B 97 7F ;
+                      STA.L !MarioStartGraphics,X         ;; 00A85F : 9F 7B 97 7F ;
                       INX                                 ;; 00A863 : E8          ;
                       INX                                 ;; 00A864 : E8          ;
                       INC.B !_0                           ;; 00A865 : E6 00       ;
@@ -4441,9 +4441,9 @@ OBJECTGFXLIST:        db $14,$17,$19,$15,$14,$17,$1B,$18  ;; ?QPWZ?             
                       db $1C,$1D,$08,$1E,$1C,$1D,$08,$1E  ;; ?QPWZ?               ;
                       db $14,$17,$19,$2C,$19,$17,$1B,$18  ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_00A993:          STZ.W $2116                         ;; 00A993 : 9C 16 21    ; \  ; Address for VRAM Read/Write (Low Byte)
+CODE_00A993:          STZ.W !HW_VMADD                     ;; 00A993 : 9C 16 21    ; \  ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$40                          ;; 00A996 : A9 40       ;  |Set "Address for VRAM Read/Write" to x4000 
-                      STA.W $2117                         ;; 00A998 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 00A998 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
                       LDA.B #$03                          ;; 00A99B : A9 03       ;
                       STA.B !_F                           ;; 00A99D : 85 0F       ;
                       LDA.B #$28                          ;; 00A99F : A9 28       ;
@@ -4455,7 +4455,7 @@ CODE_00A9A3:          LDA.B !_E                           ;; 00A9A3 : A5 0E     
                       LDX.W #$03FF                        ;; 00A9AC : A2 FF 03    ;
                       LDY.W #$0000                        ;; 00A9AF : A0 00 00    ;
 CODE_00A9B2:          LDA.B [!_0],Y                       ;; 00A9B2 : B7 00       ;
-                      STA.W $2118                         ;; 00A9B4 : 8D 18 21    ; Data for VRAM Write (Low Byte)
+                      STA.W !HW_VMDATA                    ;; 00A9B4 : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       INY                                 ;; 00A9B7 : C8          ;
                       INY                                 ;; 00A9B8 : C8          ;
                       DEX                                 ;; 00A9B9 : CA          ;
@@ -4464,9 +4464,9 @@ CODE_00A9B2:          LDA.B [!_0],Y                       ;; 00A9B2 : B7 00     
                       INC.B !_E                           ;; 00A9BE : E6 0E       ;
                       DEC.B !_F                           ;; 00A9C0 : C6 0F       ;
                       BPL CODE_00A9A3                     ;; 00A9C2 : 10 DF       ;
-                      STZ.W $2116                         ;; 00A9C4 : 9C 16 21    ; \  ; Address for VRAM Read/Write (Low Byte)
+                      STZ.W !HW_VMADD                     ;; 00A9C4 : 9C 16 21    ; \  ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$60                          ;; 00A9C7 : A9 60       ;  |Set "Address for VRAM Read/Write" to x6000 
-                      STA.W $2117                         ;; 00A9C9 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 00A9C9 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
                       LDY.B #$00                          ;; 00A9CC : A0 00       ;
                       JSR UploadGFXFile                   ;; 00A9CE : 20 6B AA    ;
                       RTS                                 ;; ?QPWZ? : 60          ;
@@ -4477,7 +4477,7 @@ DATA_00A9D2:          db $78,$70,$68,$60                  ;; 00A9D2             
 DATA_00A9D6:          db $18,$10,$08,$00                  ;; 00A9D6               ;
                                                           ;;                      ;
 UploadSpriteGFX:      LDA.B #$80                          ;; ?QPWZ? : A9 80       ; Decompression as well? 
-                      STA.W $2115                         ;; 00A9DC : 8D 15 21    ; VRAM transfer control port ; VRAM Address Increment Value
+                      STA.W !HW_VMAINC                    ;; 00A9DC : 8D 15 21    ; VRAM transfer control port ; VRAM Address Increment Value
                       LDX.B #$03                          ;; 00A9DF : A2 03       ;
                       LDA.W !SpriteTileset                ;; 00A9E1 : AD 2B 19    ; $192B = current sprite GFX list index 
                       ASL A                               ;; 00A9E4 : 0A          ; \ 
@@ -4491,9 +4491,9 @@ CODE_00A9E7:          LDA.W SPRITEGFXLIST,Y               ;; 00A9E7 : B9 C3 A8  
                       LDA.B #$03                          ;; 00A9F0 : A9 03       ; #$03 -> A -> $0F 
                       STA.B !_F                           ;; 00A9F2 : 85 0F       ;
 GFXTransferLoop:      LDX.B !_F                           ;; ?QPWZ? : A6 0F       ; $0F -> X 
-                      STZ.W $2116                         ;; 00A9F6 : 9C 16 21    ; #$00 -> $2116 ; Address for VRAM Read/Write (Low Byte)
+                      STZ.W !HW_VMADD                     ;; 00A9F6 : 9C 16 21    ; #$00 -> $2116 ; Address for VRAM Read/Write (Low Byte)
                       LDA.W DATA_00A9D2,X                 ;; 00A9F9 : BD D2 A9    ; My guess: Locations in VRAM to upload GFX to 
-                      STA.W $2117                         ;; 00A9FC : 8D 17 21    ; Set VRAM address to $??00 ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 00A9FC : 8D 17 21    ; Set VRAM address to $??00 ; Address for VRAM Read/Write (High Byte)
                       LDY.B !_4,X                         ;; 00A9FF : B4 04       ; Y is possibly which GFX file 
                       LDA.W !SpriteGFXFile,X              ;; 00AA01 : BD 01 01    ; to upload to a section in VRAM, used in 
                       CMP.B !_4,X                         ;; 00AA04 : D5 04       ; the subroutine $00:BA28 
@@ -4522,9 +4522,9 @@ PrepLoadFGBG:         LDA.W OBJECTGFXLIST,Y               ;; ?QPWZ? : B9 2B A9  
                       LDA.B #$03                          ;; 00AA31 : A9 03       ;
                       STA.B !_F                           ;; 00AA33 : 85 0F       ; #$03 -> $0F 
 CODE_00AA35:          LDX.B !_F                           ;; 00AA35 : A6 0F       ; $0F -> X 
-                      STZ.W $2116                         ;; 00AA37 : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
+                      STZ.W !HW_VMADD                     ;; 00AA37 : 9C 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W DATA_00A9D6,X                 ;; 00AA3A : BD D6 A9    ; Load + Store VRAM upload positions 
-                      STA.W $2117                         ;; 00AA3D : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
+                      STA.W !HW_VMADD+1                   ;; 00AA3D : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDY.B !_4,X                         ;; 00AA40 : B4 04       ;
                       LDA.W !BackgroundGFXFile,X          ;; 00AA42 : BD 05 01    ; Check to see if the file to be uploaded already 
                       CMP.B !_4,X                         ;; 00AA45 : D5 04       ; exists in the slot in VRAM - if so, 
@@ -4593,7 +4593,7 @@ CODE_00AAC8:          LDA.W #$0000                        ;; 00AAC8 : A9 00 00  
                       STA.B !_A                           ;; 00AACB : 85 0A       ;
 CODE_00AACD:          LDX.B #$07                          ;; 00AACD : A2 07       ;
 CODE_00AACF:          LDA.B [!_0]                         ;; 00AACF : A7 00       ;
-                      STA.W $2118                         ;; 00AAD1 : 8D 18 21    ; Data for VRAM Write (Low Byte)
+                      STA.W !HW_VMDATA                    ;; 00AAD1 : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       XBA                                 ;; 00AAD4 : EB          ;
                       ORA.B [!_0]                         ;; 00AAD5 : 07 00       ;
                       STA.W !GfxBppConvertBuffer,X        ;; 00AAD7 : 9D B2 1B    ;
@@ -4610,7 +4610,7 @@ CODE_00AAE3:          LDA.B [!_0]                         ;; 00AAE3 : A7 00     
                       ORA.W !GfxBppConvertBuffer,X        ;; 00AAED : 1D B2 1B    ;
                       AND.B !_A                           ;; 00AAF0 : 25 0A       ;
                       ORA.B !_C                           ;; 00AAF2 : 05 0C       ;
-                      STA.W $2118                         ;; 00AAF4 : 8D 18 21    ; Data for VRAM Write (Low Byte)
+                      STA.W !HW_VMDATA                    ;; 00AAF4 : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       INC.B !_0                           ;; 00AAF7 : E6 00       ;
                       DEX                                 ;; 00AAF9 : CA          ;
                       BPL CODE_00AAE3                     ;; 00AAFA : 10 E7       ;
@@ -4626,7 +4626,7 @@ Upload____ToVRAM:     CPY.B #$08                          ;; ?QPWZ? : C0 08     
                       BCS CODE_00AB0D                     ;; 00AB0B : B0 00       ; /(Why not just NOPing it out, Nintendo?) 
 CODE_00AB0D:          LDX.B #$07                          ;; 00AB0D : A2 07       ;
 AddressWrite1:        LDA.B [!_0]                         ;; ?QPWZ? : A7 00       ; \ Okay, so take [$00], store 
-                      STA.W $2118                         ;; 00AB11 : 8D 18 21    ;  |it to VRAM, then bitwise ; Data for VRAM Write (Low Byte)
+                      STA.W !HW_VMDATA                    ;; 00AB11 : 8D 18 21    ;  |it to VRAM, then bitwise ; Data for VRAM Write (Low Byte)
                       XBA                                 ;; 00AB14 : EB          ;  |OR the high and low bytes together 
                       ORA.B [!_0]                         ;; 00AB15 : 07 00       ;  |store in both bytes of A 
                       STA.W !GfxBppConvertBuffer,X        ;; 00AB17 : 9D B2 1B    ; /and store to $1BB2,x 
@@ -4643,7 +4643,7 @@ AddressWrite2:        LDA.B [!_0]                         ;; ?QPWZ? : A7 00     
                       ORA.W !GfxBppConvertBuffer,X        ;; 00AB2D : 1D B2 1B    ; ...this place gives me headaches... Can't we work on some other code? :( 
                       AND.B !_A                           ;; 00AB30 : 25 0A       ; Sure, go ahead.  anyways, this seems to upload the decompressed GFX 
                       ORA.B !_C                           ;; 00AB32 : 05 0C       ; while scrambling it afterwards (o_O). 
-                      STA.W $2118                         ;; 00AB34 : 8D 18 21    ; Okay... WHAT THE HELL? ; Data for VRAM Write (Low Byte)
+                      STA.W !HW_VMDATA                    ;; 00AB34 : 8D 18 21    ; Okay... WHAT THE HELL? ; Data for VRAM Write (Low Byte)
                       INC.B !_0                           ;; 00AB37 : E6 00       ; I'll have nightmares about this routine for a few years. :( 
                       DEX                                 ;; 00AB39 : CA          ;
                       BPL AddressWrite2                   ;; 00AB3A : 10 E7       ; Ouch. 
@@ -5002,7 +5002,7 @@ CODE_00AE51:          DEY                                 ;; 00AE51 : 88        
 CODE_00AE57:          SEP #$20                            ;; 00AE57 : E2 20       ; Accum (8 bit) 
                       AND.B #$1F                          ;; 00AE59 : 29 1F       ;
                       ORA.W DATA_00AE44,X                 ;; 00AE5B : 1D 44 AE    ;
-                      STA.W $2132                         ;; 00AE5E : 8D 32 21    ; Fixed Color Data
+                      STA.W !HW_COLDATA                   ;; 00AE5E : 8D 32 21    ; Fixed Color Data
                       DEX                                 ;; 00AE61 : CA          ;
                       BPL CODE_00AE49                     ;; 00AE62 : 10 E5       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -5512,7 +5512,7 @@ CODE_00B888:          REP #$10                            ;; 00B888 : C2 10     
                       STA.B !GraphicsUncompPtr            ;; 00B8A8 : 85 8D       ; /  
                       LDX.W #$23FF                        ;; 00B8AA : A2 FF 23    ;
 CODE_00B8AD:          LDY.W #$0008                        ;; 00B8AD : A0 08 00    ;
-CODE_00B8B0:          LDA.L $7E2000,X                     ;; 00B8B0 : BF 00 20 7E ;
+CODE_00B8B0:          LDA.L !MarioGraphics,X              ;; 00B8B0 : BF 00 20 7E ;
                       AND.W #$00FF                        ;; 00B8B4 : 29 FF 00    ;
                       STA.B [!GraphicsUncompPtr]          ;; 00B8B7 : 87 8D       ;
                       DEX                                 ;; 00B8B9 : CA          ;
@@ -5522,7 +5522,7 @@ CODE_00B8B0:          LDA.L $7E2000,X                     ;; 00B8B0 : BF 00 20 7
                       BNE CODE_00B8B0                     ;; 00B8BF : D0 EF       ;
                       LDY.W #$0008                        ;; 00B8C1 : A0 08 00    ;
 CODE_00B8C4:          DEX                                 ;; 00B8C4 : CA          ;
-                      LDA.L $7E2000,X                     ;; 00B8C5 : BF 00 20 7E ;
+                      LDA.L !MarioGraphics,X              ;; 00B8C5 : BF 00 20 7E ;
                       STA.B [!GraphicsUncompPtr]          ;; 00B8C9 : 87 8D       ;
                       DEX                                 ;; 00B8CB : CA          ;
                       BMI CODE_00B8D7                     ;; 00B8CC : 30 09       ;
@@ -6288,25 +6288,25 @@ CODE_00C134:          CLC                                 ;; 00C134 : 18        
                       CMP.B !_E                           ;; 00C138 : C5 0E       ;
                       BEQ Return00C1AB                    ;; 00C13A : F0 6F       ;
                       BCC Return00C1AB                    ;; 00C13C : 90 6D       ;
-CODE_00C13E:          LDA.L $7F837B                       ;; 00C13E : AF 7B 83 7F ;
+CODE_00C13E:          LDA.L !DynStripeImgSize             ;; 00C13E : AF 7B 83 7F ;
                       TAX                                 ;; 00C142 : AA          ;
                       SEP #$20                            ;; 00C143 : E2 20       ; Accum (8 bit) 
                       LDA.B !_6                           ;; 00C145 : A5 06       ;
-                      STA.L $7F837D,X                     ;; 00C147 : 9F 7D 83 7F ;
-                      STA.L $7F8385,X                     ;; 00C14B : 9F 85 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 00C147 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage+8,X       ;; 00C14B : 9F 85 83 7F ;
                       LDA.B !_7                           ;; 00C14F : A5 07       ;
-                      STA.L $7F837E,X                     ;; 00C151 : 9F 7E 83 7F ;
+                      STA.L !DynamicStripeImage+1,X       ;; 00C151 : 9F 7E 83 7F ;
                       CLC                                 ;; 00C155 : 18          ;
                       ADC.B #$20                          ;; 00C156 : 69 20       ;
-                      STA.L $7F8386,X                     ;; 00C158 : 9F 86 83 7F ;
+                      STA.L !DynamicStripeImage+9,X       ;; 00C158 : 9F 86 83 7F ;
                       LDA.B #$00                          ;; 00C15C : A9 00       ;
-                      STA.L $7F837F,X                     ;; 00C15E : 9F 7F 83 7F ;
-                      STA.L $7F8387,X                     ;; 00C162 : 9F 87 83 7F ;
+                      STA.L !DynamicStripeImage+2,X       ;; 00C15E : 9F 7F 83 7F ;
+                      STA.L !DynamicStripeImage+$0A,X     ;; 00C162 : 9F 87 83 7F ;
                       LDA.B #$03                          ;; 00C166 : A9 03       ;
-                      STA.L $7F8380,X                     ;; 00C168 : 9F 80 83 7F ;
-                      STA.L $7F8388,X                     ;; 00C16C : 9F 88 83 7F ;
+                      STA.L !DynamicStripeImage+3,X       ;; 00C168 : 9F 80 83 7F ;
+                      STA.L !DynamicStripeImage+$0B,X     ;; 00C16C : 9F 88 83 7F ;
                       LDA.B #$FF                          ;; 00C170 : A9 FF       ;
-                      STA.L $7F838D,X                     ;; 00C172 : 9F 8D 83 7F ;
+                      STA.L !DynamicStripeImage+$10,X     ;; 00C172 : 9F 8D 83 7F ;
                       LDA.B #$0D                          ;; 00C176 : A9 0D       ;
                       STA.B !_6                           ;; 00C178 : 85 06       ;
                       REP #$20                            ;; 00C17A : C2 20       ; Accum (16 bit) 
@@ -6314,23 +6314,23 @@ CODE_00C13E:          LDA.L $7F837B                       ;; 00C13E : AF 7B 83 7
                       STA.B !_4                           ;; 00C17F : 85 04       ;
                       LDY.W #$0000                        ;; 00C181 : A0 00 00    ;
                       LDA.B [!_4],Y                       ;; 00C184 : B7 04       ;
-                      STA.L $7F8381,X                     ;; 00C186 : 9F 81 83 7F ;
+                      STA.L !DynamicStripeImage+4,X       ;; 00C186 : 9F 81 83 7F ;
                       INY                                 ;; 00C18A : C8          ;
                       INY                                 ;; 00C18B : C8          ;
                       LDA.B [!_4],Y                       ;; 00C18C : B7 04       ;
-                      STA.L $7F8389,X                     ;; 00C18E : 9F 89 83 7F ;
+                      STA.L !DynamicStripeImage+$0C,X     ;; 00C18E : 9F 89 83 7F ;
                       INY                                 ;; 00C192 : C8          ;
                       INY                                 ;; 00C193 : C8          ;
                       LDA.B [!_4],Y                       ;; 00C194 : B7 04       ;
-                      STA.L $7F8383,X                     ;; 00C196 : 9F 83 83 7F ;
+                      STA.L !DynamicStripeImage+6,X       ;; 00C196 : 9F 83 83 7F ;
                       INY                                 ;; 00C19A : C8          ;
                       INY                                 ;; 00C19B : C8          ;
                       LDA.B [!_4],Y                       ;; 00C19C : B7 04       ;
-                      STA.L $7F838B,X                     ;; 00C19E : 9F 8B 83 7F ;
+                      STA.L !DynamicStripeImage+$0E,X     ;; 00C19E : 9F 8B 83 7F ;
                       TXA                                 ;; 00C1A2 : 8A          ;
                       CLC                                 ;; 00C1A3 : 18          ;
                       ADC.W #$0010                        ;; 00C1A4 : 69 10 00    ;
-                      STA.L $7F837B                       ;; 00C1A7 : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 00C1A7 : 8F 7B 83 7F ;
 Return00C1AB:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00C1AC:          JSR CODE_00C00D                     ;; 00C1AC : 20 0D C0    ;
@@ -6393,24 +6393,24 @@ CODE_00C218:          CLC                                 ;; 00C218 : 18        
                       CMP.B !_E                           ;; 00C21C : C5 0E       ;
                       BEQ Return00C1AB                    ;; 00C21E : F0 8B       ;
                       BCC Return00C1AB                    ;; 00C220 : 90 89       ;
-CODE_00C222:          LDA.L $7F837B                       ;; 00C222 : AF 7B 83 7F ;
+CODE_00C222:          LDA.L !DynStripeImgSize             ;; 00C222 : AF 7B 83 7F ;
                       TAX                                 ;; 00C226 : AA          ;
                       SEP #$20                            ;; 00C227 : E2 20       ; Accum (8 bit) 
                       LDA.B !_6                           ;; 00C229 : A5 06       ;
-                      STA.L $7F837D,X                     ;; 00C22B : 9F 7D 83 7F ;
-                      STA.L $7F8389,X                     ;; 00C22F : 9F 89 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 00C22B : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage+$0C,X     ;; 00C22F : 9F 89 83 7F ;
                       LDA.B !_7                           ;; 00C233 : A5 07       ;
-                      STA.L $7F837E,X                     ;; 00C235 : 9F 7E 83 7F ;
+                      STA.L !DynamicStripeImage+1,X       ;; 00C235 : 9F 7E 83 7F ;
                       INC A                               ;; 00C239 : 1A          ;
-                      STA.L $7F838A,X                     ;; 00C23A : 9F 8A 83 7F ;
+                      STA.L !DynamicStripeImage+$0D,X     ;; 00C23A : 9F 8A 83 7F ;
                       LDA.B #$80                          ;; 00C23E : A9 80       ;
-                      STA.L $7F837F,X                     ;; 00C240 : 9F 7F 83 7F ;
-                      STA.L $7F838B,X                     ;; 00C244 : 9F 8B 83 7F ;
+                      STA.L !DynamicStripeImage+2,X       ;; 00C240 : 9F 7F 83 7F ;
+                      STA.L !DynamicStripeImage+$0E,X     ;; 00C244 : 9F 8B 83 7F ;
                       LDA.B #$07                          ;; 00C248 : A9 07       ;
-                      STA.L $7F8380,X                     ;; 00C24A : 9F 80 83 7F ;
-                      STA.L $7F838C,X                     ;; 00C24E : 9F 8C 83 7F ;
+                      STA.L !DynamicStripeImage+3,X       ;; 00C24A : 9F 80 83 7F ;
+                      STA.L !DynamicStripeImage+$0F,X     ;; 00C24E : 9F 8C 83 7F ;
                       LDA.B #$FF                          ;; 00C252 : A9 FF       ;
-                      STA.L $7F8395,X                     ;; 00C254 : 9F 95 83 7F ;
+                      STA.L !DynamicStripeImage+$18,X     ;; 00C254 : 9F 95 83 7F ;
                       LDA.B #$0D                          ;; 00C258 : A9 0D       ;
                       STA.B !_6                           ;; 00C25A : 85 06       ;
                       REP #$20                            ;; 00C25C : C2 20       ; Accum (16 bit) 
@@ -6418,27 +6418,27 @@ CODE_00C222:          LDA.L $7F837B                       ;; 00C222 : AF 7B 83 7
                       STA.B !_4                           ;; 00C261 : 85 04       ;
                       LDY.W #$0000                        ;; 00C263 : A0 00 00    ;
                       LDA.B [!_4],Y                       ;; 00C266 : B7 04       ;
-                      STA.L $7F8381,X                     ;; 00C268 : 9F 81 83 7F ;
-                      STA.L $7F8385,X                     ;; 00C26C : 9F 85 83 7F ;
+                      STA.L !DynamicStripeImage+4,X       ;; 00C268 : 9F 81 83 7F ;
+                      STA.L !DynamicStripeImage+8,X       ;; 00C26C : 9F 85 83 7F ;
                       INY                                 ;; 00C270 : C8          ;
                       INY                                 ;; 00C271 : C8          ;
                       LDA.B [!_4],Y                       ;; 00C272 : B7 04       ;
-                      STA.L $7F838D,X                     ;; 00C274 : 9F 8D 83 7F ;
-                      STA.L $7F8391,X                     ;; 00C278 : 9F 91 83 7F ;
+                      STA.L !DynamicStripeImage+$10,X     ;; 00C274 : 9F 8D 83 7F ;
+                      STA.L !DynamicStripeImage+$14,X     ;; 00C278 : 9F 91 83 7F ;
                       INY                                 ;; 00C27C : C8          ;
                       INY                                 ;; 00C27D : C8          ;
                       LDA.B [!_4],Y                       ;; 00C27E : B7 04       ;
-                      STA.L $7F8383,X                     ;; 00C280 : 9F 83 83 7F ;
-                      STA.L $7F8387,X                     ;; 00C284 : 9F 87 83 7F ;
+                      STA.L !DynamicStripeImage+6,X       ;; 00C280 : 9F 83 83 7F ;
+                      STA.L !DynamicStripeImage+$0A,X     ;; 00C284 : 9F 87 83 7F ;
                       INY                                 ;; 00C288 : C8          ;
                       INY                                 ;; 00C289 : C8          ;
                       LDA.B [!_4],Y                       ;; 00C28A : B7 04       ;
-                      STA.L $7F838F,X                     ;; 00C28C : 9F 8F 83 7F ;
-                      STA.L $7F8393,X                     ;; 00C290 : 9F 93 83 7F ;
+                      STA.L !DynamicStripeImage+$12,X     ;; 00C28C : 9F 8F 83 7F ;
+                      STA.L !DynamicStripeImage+$16,X     ;; 00C290 : 9F 93 83 7F ;
                       TXA                                 ;; 00C294 : 8A          ;
                       CLC                                 ;; 00C295 : 18          ;
                       ADC.W #$0018                        ;; 00C296 : 69 18 00    ;
-                      STA.L $7F837B                       ;; 00C299 : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 00C299 : 8F 7B 83 7F ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -6485,18 +6485,18 @@ CODE_00C334:          INC.B !_7                           ;; 00C334 : E6 07     
                       REP #$30                            ;; 00C355 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.L DATA_00C32E,X                 ;; 00C357 : BF 2E C3 00 ;
                       STA.B !_2                           ;; 00C35B : 85 02       ;
-                      LDA.L $7F837B                       ;; 00C35D : AF 7B 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 00C35D : AF 7B 83 7F ;
                       TAX                                 ;; 00C361 : AA          ;
                       LDY.W #$0005                        ;; 00C362 : A0 05 00    ;
 CODE_00C365:          SEP #$20                            ;; 00C365 : E2 20       ; Accum (8 bit) 
                       LDA.B !_6                           ;; 00C367 : A5 06       ;
-                      STA.L $7F837D,X                     ;; 00C369 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 00C369 : 9F 7D 83 7F ;
                       LDA.B !_7                           ;; 00C36D : A5 07       ;
-                      STA.L $7F837E,X                     ;; 00C36F : 9F 7E 83 7F ;
+                      STA.L !DynamicStripeImage+1,X       ;; 00C36F : 9F 7E 83 7F ;
                       LDA.B #$00                          ;; 00C373 : A9 00       ;
-                      STA.L $7F837F,X                     ;; 00C375 : 9F 7F 83 7F ;
+                      STA.L !DynamicStripeImage+2,X       ;; 00C375 : 9F 7F 83 7F ;
                       LDA.B #$0B                          ;; 00C379 : A9 0B       ;
-                      STA.L $7F8380,X                     ;; 00C37B : 9F 80 83 7F ;
+                      STA.L !DynamicStripeImage+3,X       ;; 00C37B : 9F 80 83 7F ;
                       LDA.B !_7                           ;; 00C37F : A5 07       ;
                       CLC                                 ;; 00C381 : 18          ;
                       ADC.B #$20                          ;; 00C382 : 69 20       ;
@@ -6511,13 +6511,13 @@ CODE_00C365:          SEP #$20                            ;; 00C365 : E2 20     
                       TAX                                 ;; 00C393 : AA          ;
                       DEY                                 ;; 00C394 : 88          ;
                       BPL CODE_00C365                     ;; 00C395 : 10 CE       ;
-                      LDA.L $7F837B                       ;; 00C397 : AF 7B 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 00C397 : AF 7B 83 7F ;
                       TAX                                 ;; 00C39B : AA          ;
                       LDY.W #$0000                        ;; 00C39C : A0 00 00    ;
 CODE_00C39F:          LDA.W #$0005                        ;; 00C39F : A9 05 00    ;
                       STA.B !_0                           ;; 00C3A2 : 85 00       ;
 CODE_00C3A4:          LDA.B [!_2],Y                       ;; 00C3A4 : B7 02       ;
-                      STA.L $7F8381,X                     ;; 00C3A6 : 9F 81 83 7F ;
+                      STA.L !DynamicStripeImage+4,X       ;; 00C3A6 : 9F 81 83 7F ;
                       INY                                 ;; 00C3AA : C8          ;
                       INY                                 ;; 00C3AB : C8          ;
                       INX                                 ;; 00C3AC : E8          ;
@@ -6531,11 +6531,11 @@ CODE_00C3A4:          LDA.B [!_2],Y                       ;; 00C3A4 : B7 02     
                       CPY.W #$0048                        ;; 00C3B8 : C0 48 00    ;
                       BNE CODE_00C39F                     ;; 00C3BB : D0 E2       ;
                       LDA.W #$00FF                        ;; 00C3BD : A9 FF 00    ;
-                      STA.L $7F837D,X                     ;; 00C3C0 : 9F 7D 83 7F ;
-                      LDA.L $7F837B                       ;; 00C3C4 : AF 7B 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 00C3C0 : 9F 7D 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 00C3C4 : AF 7B 83 7F ;
                       CLC                                 ;; 00C3C8 : 18          ;
                       ADC.W #$0060                        ;; 00C3C9 : 69 60 00    ;
-                      STA.L $7F837B                       ;; 00C3CC : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 00C3CC : 8F 7B 83 7F ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00C3D1:          REP #$30                            ;; 00C3D1 : C2 30       ; Index (16 bit) Accum (16 bit) 
@@ -6550,7 +6550,7 @@ CODE_00C3D1:          REP #$30                            ;; 00C3D1 : C2 30     
                       AND.W #$000F                        ;; 00C3E0 : 29 0F 00    ;
                       ORA.B !_4                           ;; 00C3E3 : 05 04       ;
                       TAY                                 ;; 00C3E5 : A8          ;
-                      LDA.L $7F837B                       ;; 00C3E6 : AF 7B 83 7F ;
+                      LDA.L !DynStripeImgSize             ;; 00C3E6 : AF 7B 83 7F ;
                       TAX                                 ;; 00C3EA : AA          ;
                       SEP #$20                            ;; 00C3EB : E2 20       ; Accum (8 bit) 
                       LDA.B #$25                          ;; 00C3ED : A9 25       ;
@@ -6571,16 +6571,16 @@ CODE_00C3D1:          REP #$30                            ;; 00C3D1 : C2 30     
                       STA.B [!Map16LowPtr],Y              ;; 00C407 : 97 6B       ;
                       LDY.W #$0003                        ;; 00C409 : A0 03 00    ;
 CODE_00C40C:          LDA.B !_6                           ;; 00C40C : A5 06       ;
-                      STA.L $7F837D,X                     ;; 00C40E : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 00C40E : 9F 7D 83 7F ;
                       LDA.B !_7                           ;; 00C412 : A5 07       ;
-                      STA.L $7F837E,X                     ;; 00C414 : 9F 7E 83 7F ;
+                      STA.L !DynamicStripeImage+1,X       ;; 00C414 : 9F 7E 83 7F ;
                       LDA.B #$40                          ;; 00C418 : A9 40       ;
-                      STA.L $7F837F,X                     ;; 00C41A : 9F 7F 83 7F ;
+                      STA.L !DynamicStripeImage+2,X       ;; 00C41A : 9F 7F 83 7F ;
                       LDA.B #$06                          ;; 00C41E : A9 06       ;
-                      STA.L $7F8380,X                     ;; 00C420 : 9F 80 83 7F ;
+                      STA.L !DynamicStripeImage+3,X       ;; 00C420 : 9F 80 83 7F ;
                       REP #$20                            ;; 00C424 : C2 20       ; Accum (16 bit) 
                       LDA.W #$18F8                        ;; 00C426 : A9 F8 18    ;
-                      STA.L $7F8381,X                     ;; 00C429 : 9F 81 83 7F ;
+                      STA.L !DynamicStripeImage+4,X       ;; 00C429 : 9F 81 83 7F ;
                       TXA                                 ;; 00C42D : 8A          ;
                       CLC                                 ;; 00C42E : 18          ;
                       ADC.W #$0006                        ;; 00C42F : 69 06 00    ;
@@ -6596,10 +6596,10 @@ CODE_00C40C:          LDA.B !_6                           ;; 00C40C : A5 06     
                       DEY                                 ;; 00C442 : 88          ;
                       BPL CODE_00C40C                     ;; 00C443 : 10 C7       ;
                       LDA.B #$FF                          ;; 00C445 : A9 FF       ;
-                      STA.L $7F837D,X                     ;; 00C447 : 9F 7D 83 7F ;
+                      STA.L !DynamicStripeImage,X         ;; 00C447 : 9F 7D 83 7F ;
                       REP #$20                            ;; 00C44B : C2 20       ; Accum (16 bit) 
                       TXA                                 ;; 00C44D : 8A          ;
-                      STA.L $7F837B                       ;; 00C44E : 8F 7B 83 7F ;
+                      STA.L !DynStripeImgSize             ;; 00C44E : 8F 7B 83 7F ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -7365,10 +7365,10 @@ CODE_00CB0A:          LDA.B #$80                          ;; 00CB0A : A9 80     
                                                           ;;                      ;
 CODE_00CC14:          PHY                                 ;; 00CC14 : 5A          ;
                       LDA.B !_1                           ;; 00CC15 : A5 01       ;
-                      STA.W $4205                         ;; 00CC17 : 8D 05 42    ; Dividend (High-Byte)
-                      STZ.W $4204                         ;; 00CC1A : 9C 04 42    ; Dividend (Low Byte)
+                      STA.W !HW_WRDIV+1                   ;; 00CC17 : 8D 05 42    ; Dividend (High-Byte)
+                      STZ.W !HW_WRDIV                     ;; 00CC1A : 9C 04 42    ; Dividend (Low Byte)
                       LDA.W !SpotlightSize                ;; 00CC1D : AD 33 14    ;
-                      STA.W $4206                         ;; 00CC20 : 8D 06 42    ; Divisor B
+                      STA.W !HW_WRDIV+2                   ;; 00CC20 : 8D 06 42    ; Divisor B
                       NOP                                 ;; 00CC23 : EA          ;
                       NOP                                 ;; 00CC24 : EA          ;
                       NOP                                 ;; 00CC25 : EA          ;
@@ -7376,29 +7376,29 @@ CODE_00CC14:          PHY                                 ;; 00CC14 : 5A        
                       NOP                                 ;; 00CC27 : EA          ;
                       NOP                                 ;; 00CC28 : EA          ;
                       REP #$20                            ;; 00CC29 : C2 20       ; Accum (16 bit) 
-                      LDA.W $4214                         ;; 00CC2B : AD 14 42    ; Quotient of Divide Result (Low Byte)
+                      LDA.W !HW_RDDIV                     ;; 00CC2B : AD 14 42    ; Quotient of Divide Result (Low Byte)
                       LSR A                               ;; 00CC2E : 4A          ;
                       TAY                                 ;; 00CC2F : A8          ;
                       SEP #$20                            ;; 00CC30 : E2 20       ; Accum (8 bit) 
                       LDA.B (!_6),Y                       ;; 00CC32 : B1 06       ;
-                      STA.W $4202                         ;; 00CC34 : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 00CC34 : 8D 02 42    ; Multiplicand A
                       LDA.W !SpotlightSize                ;; 00CC37 : AD 33 14    ;
-                      STA.W $4203                         ;; 00CC3A : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 00CC3A : 8D 03 42    ; Multplier B
                       NOP                                 ;; 00CC3D : EA          ;
                       NOP                                 ;; 00CC3E : EA          ;
                       NOP                                 ;; 00CC3F : EA          ;
                       NOP                                 ;; 00CC40 : EA          ;
-                      LDA.W $4217                         ;; 00CC41 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 00CC41 : AD 17 42    ; Product/Remainder Result (High Byte)
                       STA.B !_3                           ;; 00CC44 : 85 03       ;
                       LDA.B (!_4),Y                       ;; 00CC46 : B1 04       ;
-                      STA.W $4202                         ;; 00CC48 : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 00CC48 : 8D 02 42    ; Multiplicand A
                       LDA.W !SpotlightSize                ;; 00CC4B : AD 33 14    ;
-                      STA.W $4203                         ;; 00CC4E : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 00CC4E : 8D 03 42    ; Multplier B
                       NOP                                 ;; 00CC51 : EA          ;
                       NOP                                 ;; 00CC52 : EA          ;
                       NOP                                 ;; 00CC53 : EA          ;
                       NOP                                 ;; 00CC54 : EA          ;
-                      LDA.W $4217                         ;; 00CC55 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 00CC55 : AD 17 42    ; Product/Remainder Result (High Byte)
                       STA.B !_2                           ;; 00CC58 : 85 02       ;
                       PLY                                 ;; 00CC5A : 7A          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 

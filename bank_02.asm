@@ -10538,14 +10538,14 @@ CODE_02D653:          LDA.W !SpriteMisc151C,X             ;; 02D653 : BD 1C 15  
                       SEP #$30                            ;; 02D684 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDX.W !CurSpriteProcess             ;; 02D686 : AE E9 15    ; X = Sprite index 
                       LDA.B !_4                           ;; 02D689 : A5 04       ;
-                      STA.W $4202                         ;; 02D68B : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 02D68B : 8D 02 42    ; Multiplicand A
                       LDA.W !SpriteMisc187B,X             ;; 02D68E : BD 7B 18    ;
                       LDY.B !_5                           ;; 02D691 : A4 05       ;
                       BNE CODE_02D6A3                     ;; 02D693 : D0 0E       ;
-                      STA.W $4203                         ;; 02D695 : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 02D695 : 8D 03 42    ; Multplier B
                       JSR CODE_02D800                     ;; 02D698 : 20 00 D8    ;
-                      ASL.W $4216                         ;; 02D69B : 0E 16 42    ; Product/Remainder Result (Low Byte)
-                      LDA.W $4217                         ;; 02D69E : AD 17 42    ; Product/Remainder Result (High Byte)
+                      ASL.W !HW_RDMPY                     ;; 02D69B : 0E 16 42    ; Product/Remainder Result (Low Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 02D69E : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 02D6A1 : 69 00       ;
 CODE_02D6A3:          LSR.B !_1                           ;; 02D6A3 : 46 01       ;
                       BCC CODE_02D6AA                     ;; 02D6A5 : 90 03       ;
@@ -10553,14 +10553,14 @@ CODE_02D6A3:          LSR.B !_1                           ;; 02D6A3 : 46 01     
                       INC A                               ;; 02D6A9 : 1A          ;
 CODE_02D6AA:          STA.B !_4                           ;; 02D6AA : 85 04       ;
                       LDA.B !_6                           ;; 02D6AC : A5 06       ;
-                      STA.W $4202                         ;; 02D6AE : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 02D6AE : 8D 02 42    ; Multiplicand A
                       LDA.W !SpriteMisc187B,X             ;; 02D6B1 : BD 7B 18    ;
                       LDY.B !_7                           ;; 02D6B4 : A4 07       ;
                       BNE CODE_02D6C6                     ;; 02D6B6 : D0 0E       ;
-                      STA.W $4203                         ;; 02D6B8 : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 02D6B8 : 8D 03 42    ; Multplier B
                       JSR CODE_02D800                     ;; 02D6BB : 20 00 D8    ;
-                      ASL.W $4216                         ;; 02D6BE : 0E 16 42    ; Product/Remainder Result (Low Byte)
-                      LDA.W $4217                         ;; 02D6C1 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      ASL.W !HW_RDMPY                     ;; 02D6BE : 0E 16 42    ; Product/Remainder Result (Low Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 02D6C1 : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 02D6C4 : 69 00       ;
 CODE_02D6C6:          LSR.B !_3                           ;; 02D6C6 : 46 03       ;
                       BCC CODE_02D6CD                     ;; 02D6C8 : 90 03       ;
@@ -10798,15 +10798,15 @@ CODE_02D870:          PHP                                 ;; 02D870 : 08        
                       BPL CODE_02D876                     ;; 02D871 : 10 03       ;
                       EOR.B #$FF                          ;; 02D873 : 49 FF       ;
                       INC A                               ;; 02D875 : 1A          ;
-CODE_02D876:          STA.W $4205                         ;; 02D876 : 8D 05 42    ; Dividend (High-Byte)
-                      STZ.W $4204                         ;; 02D879 : 9C 04 42    ; Dividend (Low Byte)
+CODE_02D876:          STA.W !HW_WRDIV+1                   ;; 02D876 : 8D 05 42    ; Dividend (High-Byte)
+                      STZ.W !HW_WRDIV                     ;; 02D879 : 9C 04 42    ; Dividend (Low Byte)
                       LDA.W !SpriteMisc187B,X             ;; 02D87C : BD 7B 18    ;
                       LSR A                               ;; 02D87F : 4A          ;
-                      STA.W $4206                         ;; 02D880 : 8D 06 42    ; Divisor B
+                      STA.W !HW_WRDIV+2                   ;; 02D880 : 8D 06 42    ; Divisor B
                       JSR CODE_02D800                     ;; 02D883 : 20 00 D8    ;
-                      LDA.W $4214                         ;; 02D886 : AD 14 42    ; Quotient of Divide Result (Low Byte)
+                      LDA.W !HW_RDDIV                     ;; 02D886 : AD 14 42    ; Quotient of Divide Result (Low Byte)
                       STA.B !_E                           ;; 02D889 : 85 0E       ;
-                      LDA.W $4215                         ;; 02D88B : AD 15 42    ; Quotient of Divide Result (High Byte)
+                      LDA.W !HW_RDDIV+1                   ;; 02D88B : AD 15 42    ; Quotient of Divide Result (High Byte)
                       ASL.B !_E                           ;; 02D88E : 06 0E       ;
                       ROL A                               ;; 02D890 : 2A          ;
                       ASL.B !_E                           ;; 02D891 : 06 0E       ;
@@ -15057,17 +15057,17 @@ CODE_02FAF0:          PHX                                 ;; 02FAF0 : DA        
                       STA.B !_6                           ;; 02FB2F : 85 06       ;
                       SEP #$30                            ;; 02FB31 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDA.B !_4                           ;; 02FB33 : A5 04       ;
-                      STA.W $4202                         ;; 02FB35 : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 02FB35 : 8D 02 42    ; Multiplicand A
                       LDA.B #$50                          ;; 02FB38 : A9 50       ;
                       LDY.B !_5                           ;; 02FB3A : A4 05       ;
                       BNE CODE_02FB4D                     ;; 02FB3C : D0 0F       ;
-                      STA.W $4203                         ;; 02FB3E : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 02FB3E : 8D 03 42    ; Multplier B
                       NOP                                 ;; 02FB41 : EA          ;
                       NOP                                 ;; 02FB42 : EA          ;
                       NOP                                 ;; 02FB43 : EA          ;
                       NOP                                 ;; 02FB44 : EA          ;
-                      ASL.W $4216                         ;; 02FB45 : 0E 16 42    ; Product/Remainder Result (Low Byte)
-                      LDA.W $4217                         ;; 02FB48 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      ASL.W !HW_RDMPY                     ;; 02FB45 : 0E 16 42    ; Product/Remainder Result (Low Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 02FB48 : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 02FB4B : 69 00       ;
 CODE_02FB4D:          LSR.B !_1                           ;; 02FB4D : 46 01       ;
                       BCC CODE_02FB54                     ;; 02FB4F : 90 03       ;
@@ -15075,17 +15075,17 @@ CODE_02FB4D:          LSR.B !_1                           ;; 02FB4D : 46 01     
                       INC A                               ;; 02FB53 : 1A          ;
 CODE_02FB54:          STA.B !_4                           ;; 02FB54 : 85 04       ;
                       LDA.B !_6                           ;; 02FB56 : A5 06       ;
-                      STA.W $4202                         ;; 02FB58 : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 02FB58 : 8D 02 42    ; Multiplicand A
                       LDA.B #$50                          ;; 02FB5B : A9 50       ;
                       LDY.B !_7                           ;; 02FB5D : A4 07       ;
                       BNE CODE_02FB70                     ;; 02FB5F : D0 0F       ;
-                      STA.W $4203                         ;; 02FB61 : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 02FB61 : 8D 03 42    ; Multplier B
                       NOP                                 ;; 02FB64 : EA          ;
                       NOP                                 ;; 02FB65 : EA          ;
                       NOP                                 ;; 02FB66 : EA          ;
                       NOP                                 ;; 02FB67 : EA          ;
-                      ASL.W $4216                         ;; 02FB68 : 0E 16 42    ; Product/Remainder Result (Low Byte)
-                      LDA.W $4217                         ;; 02FB6B : AD 17 42    ; Product/Remainder Result (High Byte)
+                      ASL.W !HW_RDMPY                     ;; 02FB68 : 0E 16 42    ; Product/Remainder Result (Low Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 02FB6B : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 02FB6E : 69 00       ;
 CODE_02FB70:          LSR.B !_3                           ;; 02FB70 : 46 03       ;
                       BCC CODE_02FB77                     ;; 02FB72 : 90 03       ;

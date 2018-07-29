@@ -8932,15 +8932,15 @@ CODE_01C795:          LDA.W !SpriteMisc151C,X             ;; 01C795 : BD 1C 15  
                       INC A                               ;; 01C800 : 1A          ;
                       INY                                 ;; 01C801 : C8          ;
 CODE_01C802:          STY.B !_0                           ;; 01C802 : 84 00       ;
-                      STA.W $4205                         ;; 01C804 : 8D 05 42    ; Dividend (High-Byte)
-                      STZ.W $4204                         ;; 01C807 : 9C 04 42    ; Dividend (Low Byte)
+                      STA.W !HW_WRDIV+1                   ;; 01C804 : 8D 05 42    ; Dividend (High-Byte)
+                      STZ.W !HW_WRDIV                     ;; 01C807 : 9C 04 42    ; Dividend (Low Byte)
                       LDA.B #$05                          ;; 01C80A : A9 05       ;
-                      STA.W $4206                         ;; 01C80C : 8D 06 42    ; Divisor B
+                      STA.W !HW_WRDIV+2                   ;; 01C80C : 8D 06 42    ; Divisor B
                       JSR DoNothing                       ;; 01C80F : 20 94 CC    ;
-                      LDA.W $4214                         ;; 01C812 : AD 14 42    ; Quotient of Divide Result (Low Byte)
+                      LDA.W !HW_RDDIV                     ;; 01C812 : AD 14 42    ; Quotient of Divide Result (Low Byte)
                       STA.B !_2                           ;; 01C815 : 85 02       ;
                       STA.B !_6                           ;; 01C817 : 85 06       ;
-                      LDA.W $4215                         ;; 01C819 : AD 15 42    ; Quotient of Divide Result (High Byte)
+                      LDA.W !HW_RDDIV+1                   ;; 01C819 : AD 15 42    ; Quotient of Divide Result (High Byte)
                       STA.B !_3                           ;; 01C81C : 85 03       ;
                       STA.B !_7                           ;; 01C81E : 85 07       ;
                       LDY.B #$00                          ;; 01C820 : A0 00       ;
@@ -8952,15 +8952,15 @@ CODE_01C802:          STY.B !_0                           ;; 01C802 : 84 00     
                       INC A                               ;; 01C82D : 1A          ;
                       INY                                 ;; 01C82E : C8          ;
 CODE_01C82F:          STY.B !_1                           ;; 01C82F : 84 01       ;
-                      STA.W $4205                         ;; 01C831 : 8D 05 42    ; Dividend (High-Byte)
-                      STZ.W $4204                         ;; 01C834 : 9C 04 42    ; Dividend (Low Byte)
+                      STA.W !HW_WRDIV+1                   ;; 01C831 : 8D 05 42    ; Dividend (High-Byte)
+                      STZ.W !HW_WRDIV                     ;; 01C834 : 9C 04 42    ; Dividend (Low Byte)
                       LDA.B #$05                          ;; 01C837 : A9 05       ;
-                      STA.W $4206                         ;; 01C839 : 8D 06 42    ; Divisor B
+                      STA.W !HW_WRDIV+2                   ;; 01C839 : 8D 06 42    ; Divisor B
                       JSR DoNothing                       ;; 01C83C : 20 94 CC    ;
-                      LDA.W $4214                         ;; 01C83F : AD 14 42    ; Quotient of Divide Result (Low Byte)
+                      LDA.W !HW_RDDIV                     ;; 01C83F : AD 14 42    ; Quotient of Divide Result (Low Byte)
                       STA.B !_4                           ;; 01C842 : 85 04       ;
                       STA.B !_8                           ;; 01C844 : 85 08       ;
-                      LDA.W $4215                         ;; 01C846 : AD 15 42    ; Quotient of Divide Result (High Byte)
+                      LDA.W !HW_RDDIV+1                   ;; 01C846 : AD 15 42    ; Quotient of Divide Result (High Byte)
                       STA.B !_5                           ;; 01C849 : 85 05       ;
                       STA.B !_9                           ;; 01C84B : 85 09       ;
                       LDY.W !SpriteOAMIndex,X             ;; 01C84D : BC EA 15    ; Y = Index into sprite OAM 
@@ -9453,48 +9453,48 @@ CODE_01CC0D:          STA.B !_6                           ;; 01CC0D : 85 06     
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_01CC28:          LDA.B !_0                           ;; 01CC28 : A5 00       ;
-                      STA.W $4202                         ;; 01CC2A : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 01CC2A : 8D 02 42    ; Multiplicand A
                       LDA.B !_2                           ;; 01CC2D : A5 02       ;
-                      STA.W $4203                         ;; 01CC2F : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 01CC2F : 8D 03 42    ; Multplier B
                       JSR DoNothing                       ;; 01CC32 : 20 94 CC    ;
-                      LDA.W $4216                         ;; 01CC35 : AD 16 42    ; Product/Remainder Result (Low Byte)
+                      LDA.W !HW_RDMPY                     ;; 01CC35 : AD 16 42    ; Product/Remainder Result (Low Byte)
                       STA.B !_4                           ;; 01CC38 : 85 04       ;
-                      LDA.W $4217                         ;; 01CC3A : AD 17 42    ; Product/Remainder Result (High Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 01CC3A : AD 17 42    ; Product/Remainder Result (High Byte)
                       STA.B !_5                           ;; 01CC3D : 85 05       ;
                       LDA.B !_0                           ;; 01CC3F : A5 00       ;
-                      STA.W $4202                         ;; 01CC41 : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 01CC41 : 8D 02 42    ; Multiplicand A
                       LDA.B !_3                           ;; 01CC44 : A5 03       ;
-                      STA.W $4203                         ;; 01CC46 : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 01CC46 : 8D 03 42    ; Multplier B
                       JSR DoNothing                       ;; 01CC49 : 20 94 CC    ;
-                      LDA.W $4216                         ;; 01CC4C : AD 16 42    ; Product/Remainder Result (Low Byte)
+                      LDA.W !HW_RDMPY                     ;; 01CC4C : AD 16 42    ; Product/Remainder Result (Low Byte)
                       CLC                                 ;; 01CC4F : 18          ;
                       ADC.B !_5                           ;; 01CC50 : 65 05       ;
                       STA.B !_5                           ;; 01CC52 : 85 05       ;
-                      LDA.W $4217                         ;; 01CC54 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 01CC54 : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 01CC57 : 69 00       ;
                       STA.B !_6                           ;; 01CC59 : 85 06       ;
                       LDA.B !_1                           ;; 01CC5B : A5 01       ;
-                      STA.W $4202                         ;; 01CC5D : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 01CC5D : 8D 02 42    ; Multiplicand A
                       LDA.B !_2                           ;; 01CC60 : A5 02       ;
-                      STA.W $4203                         ;; 01CC62 : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 01CC62 : 8D 03 42    ; Multplier B
                       JSR DoNothing                       ;; 01CC65 : 20 94 CC    ;
-                      LDA.W $4216                         ;; 01CC68 : AD 16 42    ; Product/Remainder Result (Low Byte)
+                      LDA.W !HW_RDMPY                     ;; 01CC68 : AD 16 42    ; Product/Remainder Result (Low Byte)
                       CLC                                 ;; 01CC6B : 18          ;
                       ADC.B !_5                           ;; 01CC6C : 65 05       ;
                       STA.B !_5                           ;; 01CC6E : 85 05       ;
-                      LDA.W $4217                         ;; 01CC70 : AD 17 42    ; Product/Remainder Result (High Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 01CC70 : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B !_6                           ;; 01CC73 : 65 06       ;
                       STA.B !_6                           ;; 01CC75 : 85 06       ;
                       LDA.B !_1                           ;; 01CC77 : A5 01       ;
-                      STA.W $4202                         ;; 01CC79 : 8D 02 42    ; Multiplicand A
+                      STA.W !HW_WRMPYA                    ;; 01CC79 : 8D 02 42    ; Multiplicand A
                       LDA.B !_3                           ;; 01CC7C : A5 03       ;
-                      STA.W $4203                         ;; 01CC7E : 8D 03 42    ; Multplier B
+                      STA.W !HW_WRMPYB                    ;; 01CC7E : 8D 03 42    ; Multplier B
                       JSR DoNothing                       ;; 01CC81 : 20 94 CC    ;
-                      LDA.W $4216                         ;; 01CC84 : AD 16 42    ; Product/Remainder Result (Low Byte)
+                      LDA.W !HW_RDMPY                     ;; 01CC84 : AD 16 42    ; Product/Remainder Result (Low Byte)
                       CLC                                 ;; 01CC87 : 18          ;
                       ADC.B !_6                           ;; 01CC88 : 65 06       ;
                       STA.B !_6                           ;; 01CC8A : 85 06       ;
-                      LDA.W $4217                         ;; 01CC8C : AD 17 42    ; Product/Remainder Result (High Byte)
+                      LDA.W !HW_RDMPY+1                   ;; 01CC8C : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 01CC8F : 69 00       ;
                       STA.B !_7                           ;; 01CC91 : 85 07       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -14303,10 +14303,10 @@ CODE_01F424:          LDA.W DATA_01F60A,Y                 ;; 01F424 : B9 0A F6  
                                                           ;;                      ;
 CODE_01F43C:          BCC Return01F3FD                    ;; 01F43C : 90 BF       ;
 CODE_01F43E:          LDA.W !SpriteMisc151C,X             ;; 01F43E : BD 1C 15    ;
-                      STA.W $4205                         ;; 01F441 : 8D 05 42    ; Dividend (High-Byte)
-                      STZ.W $4204                         ;; 01F444 : 9C 04 42    ; Dividend (Low Byte)
+                      STA.W !HW_WRDIV+1                   ;; 01F441 : 8D 05 42    ; Dividend (High-Byte)
+                      STZ.W !HW_WRDIV                     ;; 01F444 : 9C 04 42    ; Dividend (Low Byte)
                       LDA.B #$04                          ;; 01F447 : A9 04       ;
-                      STA.W $4206                         ;; 01F449 : 8D 06 42    ; Divisor B
+                      STA.W !HW_WRDIV+2                   ;; 01F449 : 8D 06 42    ; Divisor B
                       NOP                                 ;; 01F44C : EA          ;
                       NOP                                 ;; 01F44D : EA          ;
                       NOP                                 ;; 01F44E : EA          ;
@@ -14318,7 +14318,7 @@ CODE_01F43E:          LDA.W !SpriteMisc151C,X             ;; 01F43E : BD 1C 15  
                       LDA.W !SpriteMisc157C,X             ;; 01F454 : BD 7C 15    ;
                       STA.B !_7                           ;; 01F457 : 85 07       ;
                       LSR A                               ;; 01F459 : 4A          ;
-                      LDA.W $4215                         ;; 01F45A : AD 15 42    ; Quotient of Divide Result (High Byte)
+                      LDA.W !HW_RDDIV+1                   ;; 01F45A : AD 15 42    ; Quotient of Divide Result (High Byte)
                       BCC CODE_01F462                     ;; 01F45D : 90 03       ;
                       EOR.B #$FF                          ;; 01F45F : 49 FF       ;
                       INC A                               ;; 01F461 : 1A          ;
