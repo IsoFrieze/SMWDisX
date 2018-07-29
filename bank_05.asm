@@ -1,4 +1,4 @@
-ORG $058000                                               ;;                      ;
+                      ORG $058000                         ;;                      ;
                                                           ;;                      ;
 TilesetMAP16Loc:      db $70,$8B,$00,$BC,$00,$C8,$00,$D4  ;; ?QPWZ?               ; Addresses to tileset-specific MAP16 data 
                       db $00,$E3,$00,$E3,$00,$C8,$70,$8B  ;; ?QPWZ?               ;
@@ -9,12 +9,12 @@ CODE_05801E:          PHP                                 ;; 05801E : 08        
                       SEP #$20                            ;; 05801F : E2 20       ; 8 bit A ; Accum (8 bit) 
                       REP #$10                            ;; 058021 : C2 10       ; 16 bit X,Y ; Index (16 bit) 
                       LDX.W #$0000                        ;; 058023 : A2 00 00    ; \ 
-CODE_058026:          LDA.B #$25                          ;; 058026 : A9 25       ;  | 
+                    - LDA.B #$25                          ;; 058026 : A9 25       ;  | 
                       STA.L !Layer2TilemapLow,X           ;; 058028 : 9F 00 B9 7E ;  |Set all background tiles (lower bytes) to x25 
                       STA.L !Layer2TilemapLow+$200,X      ;; 05802C : 9F 00 BB 7E ;  | 
                       INX                                 ;; 058030 : E8          ;  | 
                       CPX.W #$0200                        ;; 058031 : E0 00 02    ;  | 
-                      BNE CODE_058026                     ;; 058034 : D0 F0       ; / 
+                      BNE -                               ;; 058034 : D0 F0       ; / 
                       STZ.W !LevelLoadObject              ;; 058036 : 9C 28 19    ;
                       LDA.B !Layer2DataPtr+2              ;; 058039 : A5 6A       ; \ 
                       CMP.B #$FF                          ;; 05803B : C9 FF       ;  |If the layer 2 data is a background, 
@@ -23,15 +23,15 @@ CODE_058026:          LDA.B #$25                          ;; 058026 : A9 25     
                       LDY.W #$0000                        ;; 058041 : A0 00 00    ; \ 
                       LDX.B !Layer2DataPtr                ;; 058044 : A6 68       ;  | 
                       CPX.W #$E8FE                        ;; 058046 : E0 FE E8    ;  |If Layer 2 pointer >= $E8FF, 
-                      BCC CODE_05804E                     ;; 058049 : 90 03       ;  |the background should use Map16 page x11 instead of x10 
+                      BCC +                               ;; 058049 : 90 03       ;  |the background should use Map16 page x11 instead of x10 
                       LDY.W #$0001                        ;; 05804B : A0 01 00    ;  | 
-CODE_05804E:          LDX.W #$0000                        ;; 05804E : A2 00 00    ; \ 
+                    + LDX.W #$0000                        ;; 05804E : A2 00 00    ; \ 
                       TYA                                 ;; 058051 : 98          ;  | 
-CODE_058052:          STA.L !Layer2TilemapHigh,X          ;; 058052 : 9F 00 BD 7E ;  |Set the background's Map16 page 
+                    - STA.L !Layer2TilemapHigh,X          ;; 058052 : 9F 00 BD 7E ;  |Set the background's Map16 page 
                       STA.L !Layer2TilemapHigh+$200,X     ;; 058056 : 9F 00 BF 7E ;  |(i.e. setting all high tile bytes to Y) 
                       INX                                 ;; 05805A : E8          ;  | 
                       CPX.W #$0200                        ;; 05805B : E0 00 02    ;  | 
-                      BNE CODE_058052                     ;; 05805E : D0 F2       ; / 
+                      BNE -                               ;; 05805E : D0 F2       ; / 
                       LDA.B #$0C                          ;; 058060 : A9 0C       ; \ Set highest Layer 2 address to x0C 
                       STA.B !Layer2DataPtr+2              ;; 058062 : 85 6A       ; / (All backgrounds are stored in bank 0C) 
                       STZ.W !Empty1932                    ;; 058064 : 9C 32 19    ; \ Set tileset to 0 
@@ -42,21 +42,21 @@ CODE_058052:          STA.L !Layer2TilemapHigh,X          ;; 058052 : 9F 00 BD 7
                       JSR CODE_058126                     ;; 058071 : 20 26 81    ;
 CODE_058074:          SEP #$20                            ;; 058074 : E2 20       ; 8 bit A ; Accum (8 bit) 
                       LDX.W #$0000                        ;; 058076 : A2 00 00    ; \ 
-CODE_058079:          LDA.B #$00                          ;; 058079 : A9 00       ;  | 
+                    - LDA.B #$00                          ;; 058079 : A9 00       ;  | 
                       JSR CODE_05833A                     ;; 05807B : 20 3A 83    ;  |Clear level data 
                       DEX                                 ;; 05807E : CA          ;  | 
                       LDA.B #$25                          ;; 05807F : A9 25       ;  | 
                       JSR CODE_0582C8                     ;; 058081 : 20 C8 82    ;  | 
                       CPX.W #$0200                        ;; 058084 : E0 00 02    ;  | 
-                      BNE CODE_058079                     ;; 058087 : D0 F0       ; / 
+                      BNE -                               ;; 058087 : D0 F0       ; / 
                       STZ.W !LevelLoadObject              ;; 058089 : 9C 28 19    ;
                       JSR LoadLevel                       ;; 05808C : 20 AC 83    ; Load the level 
                       SEP #$30                            ;; 05808F : E2 30       ; 8 bit A,X,Y ; Index (8 bit) Accum (8 bit) 
                       LDA.W !GameMode                     ;; 058091 : AD 00 01    ; \ 
                       CMP.B #$22                          ;; 058094 : C9 22       ;  | 
-                      BPL CODE_05809C                     ;; 058096 : 10 04       ;  |If level mode is less than x22, 
+                      BPL +                               ;; 058096 : 10 04       ;  |If level mode is less than x22, 
                       JSL CODE_02A751                     ;; 058098 : 22 51 A7 02 ;  |JSL to $02A751 
-CODE_05809C:          PLP                                 ;; 05809C : 28          ;
+                    + PLP                                 ;; 05809C : 28          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_05809E:          PHP                                 ;; 05809E : 08          ;
@@ -94,13 +94,13 @@ CODE_0580BD:          REP #$30                            ;; 0580BD : C2 30     
                       LDA.W #$0007                        ;; 0580E3 : A9 07 00    ;
                       STA.B !_0                           ;; 0580E6 : 85 00       ;
                       LDA.L MAP16AppTable,X               ;; 0580E8 : BF 76 87 05 ;
-CODE_0580EC:          STA.W !Map16Pointers,Y              ;; 0580EC : 99 BE 0F    ;
+                    - STA.W !Map16Pointers,Y              ;; 0580EC : 99 BE 0F    ;
                       INY                                 ;; 0580EF : C8          ;
                       INY                                 ;; 0580F0 : C8          ;
                       CLC                                 ;; 0580F1 : 18          ;
                       ADC.W #$0008                        ;; 0580F2 : 69 08 00    ;
                       DEC.B !_0                           ;; 0580F5 : C6 00       ;
-                      BPL CODE_0580EC                     ;; 0580F7 : 10 F3       ;
+                      BPL -                               ;; 0580F7 : 10 F3       ;
                       SEP #$20                            ;; 0580F9 : E2 20       ; Accum (8 bit) 
                       INC.W !LevelLoadObject              ;; 0580FB : EE 28 19    ;
                       LDA.W !LevelLoadObject              ;; 0580FE : AD 28 19    ;
@@ -148,11 +148,11 @@ CODE_058136:          SEP #$20                            ;; 058136 : E2 20     
                       REP #$20                            ;; 058154 : C2 20       ; Accum (16 bit) 
                       STY.B !_3                           ;; 058156 : 84 03       ;
                       LDY.B !_5                           ;; 058158 : A4 05       ;
-CODE_05815A:          SEP #$20                            ;; 05815A : E2 20       ; Accum (8 bit) 
+                    - SEP #$20                            ;; 05815A : E2 20       ; Accum (8 bit) 
                       STA.B [!_D],Y                       ;; 05815C : 97 0D       ;
                       INY                                 ;; 05815E : C8          ;
                       DEC.B !_7                           ;; 05815F : C6 07       ;
-                      BPL CODE_05815A                     ;; 058161 : 10 F7       ;
+                      BPL -                               ;; 058161 : 10 F7       ;
                       REP #$20                            ;; 058163 : C2 20       ; Accum (16 bit) 
                       STY.B !_5                           ;; 058165 : 84 05       ;
                       JMP CODE_058188                     ;; 058167 : 4C 88 81    ;
@@ -187,7 +187,7 @@ CODE_058188:          REP #$20                            ;; 058188 : C2 20     
                       LDA.W #$9100                        ;; 05819D : A9 00 91    ;
                       STA.B !_0                           ;; 0581A0 : 85 00       ;
                       LDX.W #$0000                        ;; 0581A2 : A2 00 00    ;
-CODE_0581A5:          LDA.B !_0                           ;; 0581A5 : A5 00       ;
+                    - LDA.B !_0                           ;; 0581A5 : A5 00       ;
                       STA.W !Map16Pointers,X              ;; 0581A7 : 9D BE 0F    ;
                       LDA.B !_0                           ;; 0581AA : A5 00       ;
                       CLC                                 ;; 0581AC : 18          ;
@@ -196,7 +196,7 @@ CODE_0581A5:          LDA.B !_0                           ;; 0581A5 : A5 00     
                       INX                                 ;; 0581B2 : E8          ;
                       INX                                 ;; 0581B3 : E8          ;
                       CPX.W #$0400                        ;; 0581B4 : E0 00 04    ;
-                      BNE CODE_0581A5                     ;; 0581B7 : D0 EC       ;
+                      BNE -                               ;; 0581B7 : D0 EC       ;
                       PLP                                 ;; 0581B9 : 28          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -241,7 +241,7 @@ CODE_058237:          SEP #$20                            ;; 058237 : E2 20     
                       LDA.B [!_D],Y                       ;; 058239 : B7 0D       ;
                       STA.B !_C                           ;; 05823B : 85 0C       ;
 CODE_05823D:          ASL.B !_C                           ;; 05823D : 06 0C       ;
-                      BCC CODE_058253                     ;; 05823F : 90 12       ;
+                      BCC +                               ;; 05823F : 90 12       ;
                       REP #$20                            ;; 058241 : C2 20       ; Accum (16 bit) 
                       LDA.B !_2                           ;; 058243 : A5 02       ;
                       STA.W !Map16Pointers,X              ;; 058245 : 9D BE 0F    ;
@@ -251,7 +251,7 @@ CODE_05823D:          ASL.B !_C                           ;; 05823D : 06 0C     
                       STA.B !_2                           ;; 05824E : 85 02       ;
                       JMP CODE_058262                     ;; 058250 : 4C 62 82    ;
                                                           ;;                      ;
-CODE_058253:          REP #$20                            ;; 058253 : C2 20       ; Accum (16 bit) 
+                    + REP #$20                            ;; 058253 : C2 20       ; Accum (16 bit) 
                       LDA.B !_0                           ;; 058255 : A5 00       ;
                       STA.W !Map16Pointers,X              ;; 058257 : 9D BE 0F    ;
                       LDA.B !_0                           ;; 05825A : A5 00       ;
@@ -286,7 +286,7 @@ CODE_058281:          LDA.B #$FF                          ;; 058281 : A9 FF     
                       LDA.W #$8A70                        ;; 058295 : A9 70 8A    ;
                       STA.B !_0                           ;; 058298 : 85 00       ;
                       LDX.W #$0003                        ;; 05829A : A2 03 00    ;
-CODE_05829D:          LDA.B !_0                           ;; 05829D : A5 00       ;
+                    - LDA.B !_0                           ;; 05829D : A5 00       ;
                       STA.W !Map16Pointers,Y              ;; 05829F : 99 BE 0F    ;
                       CLC                                 ;; 0582A2 : 18          ;
                       ADC.W #$0008                        ;; 0582A3 : 69 08 00    ;
@@ -294,12 +294,12 @@ CODE_05829D:          LDA.B !_0                           ;; 05829D : A5 00     
                       INY                                 ;; 0582A8 : C8          ;
                       INY                                 ;; 0582A9 : C8          ;
                       DEX                                 ;; 0582AA : CA          ;
-                      BPL CODE_05829D                     ;; 0582AB : 10 F0       ;
+                      BPL -                               ;; 0582AB : 10 F0       ;
                       LDA.W #$01EC                        ;; 0582AD : A9 EC 01    ;
                       ASL A                               ;; 0582B0 : 0A          ;
                       TAY                                 ;; 0582B1 : A8          ;
                       LDX.W #$0003                        ;; 0582B2 : A2 03 00    ;
-CODE_0582B5:          LDA.B !_0                           ;; 0582B5 : A5 00       ;
+                    - LDA.B !_0                           ;; 0582B5 : A5 00       ;
                       STA.W !Map16Pointers,Y              ;; 0582B7 : 99 BE 0F    ;
                       CLC                                 ;; 0582BA : 18          ;
                       ADC.W #$0008                        ;; 0582BB : 69 08 00    ;
@@ -307,7 +307,7 @@ CODE_0582B5:          LDA.B !_0                           ;; 0582B5 : A5 00     
                       INY                                 ;; 0582C0 : C8          ;
                       INY                                 ;; 0582C1 : C8          ;
                       DEX                                 ;; 0582C2 : CA          ;
-                      BPL CODE_0582B5                     ;; 0582C3 : 10 F0       ;
+                      BPL -                               ;; 0582C3 : 10 F0       ;
 CODE_0582C5:          SEP #$30                            ;; 0582C5 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -388,9 +388,9 @@ LoadAgain:            LDA.W !LevelModeSetting             ;; ?QPWZ? : AD 25 19  
                       LDY.B #$00                          ;; 0583C7 : A0 00       ; \ 
                       LDA.B [!Layer1DataPtr],Y            ;; 0583C9 : B7 65       ;  | 
                       CMP.B #$FF                          ;; 0583CB : C9 FF       ;  |If level isn't empty, load the level. 
-                      BEQ LevLoadNotEmpty                 ;; 0583CD : F0 03       ;  | 
+                      BEQ +                               ;; 0583CD : F0 03       ;  | 
                       JSR LoadLevelData                   ;; 0583CF : 20 FF 85    ; / 
-LevLoadNotEmpty:      SEP #$30                            ;; ?QPWZ? : E2 30       ; Index (8 bit) Accum (8 bit) 
+                    + SEP #$30                            ;; ?QPWZ? : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDA.W !LevelModeSetting             ;; 0583D4 : AD 25 19    ; Get current level mode 
                       BEQ LoadLevelDone                   ;; 0583D7 : F0 39       ; \ 
                       CMP.B #$0A                          ;; 0583D9 : C9 0A       ;  | 
@@ -487,10 +487,10 @@ CODE_0584E3:          LDY.B #$00                          ;; 0584E3 : A0 00     
                       LSR A                               ;; 058526 : 4A          ; \ 
                       LDA.B !LevelScrLength               ;; 058527 : A5 5D       ;  | 
                       LDX.B #$01                          ;; 058529 : A2 01       ;  |If level mode is even: 
-                      BCC LevelModeEven                   ;; 05852B : 90 03       ;  |Store screen amount in $5E and x01 in $5F 
+                      BCC +                               ;; 05852B : 90 03       ;  |Store screen amount in $5E and x01 in $5F 
                       TAX                                 ;; 05852D : AA          ;  |Otherwise: 
                       LDA.B #$01                          ;; 05852E : A9 01       ;  |Store x01 in $5E and screen amount in $5F 
-LevelModeEven:        STA.B !LastScreenHoriz              ;; ?QPWZ? : 85 5E       ;  | 
+                    + STA.B !LastScreenHoriz              ;; ?QPWZ? : 85 5E       ;  | 
                       STX.B !LastScreenVert               ;; 058532 : 86 5F       ; / 
                       LDA.B [!Layer1DataPtr],Y            ;; 058534 : B7 65       ; Reload second byte 
                       LSR A                               ;; 058536 : 4A          ; \ 
@@ -514,12 +514,12 @@ LevelModeEven:        STA.B !LastScreenHoriz              ;; ?QPWZ? : 85 5E     
                       TAX                                 ;; 058550 : AA          ;  |Get music 
                       LDA.L LevelMusicTable,X             ;; 058551 : BF DB 84 05 ;  | 
                       LDX.W !MusicBackup                  ;; 058555 : AE DA 0D    ;  | \ 
-                      BPL CODE_05855C                     ;; 058558 : 10 02       ;  |  | 
+                      BPL +                               ;; 058558 : 10 02       ;  |  | 
                       ORA.B #$80                          ;; 05855A : 09 80       ;  |  |Related to not restarting music if the new track 
-CODE_05855C:          CMP.W !MusicBackup                  ;; 05855C : CD DA 0D    ;  |  |is the same as the old one? 
-                      BNE CODE_058563                     ;; 05855F : D0 02       ;  |  | 
+                    + CMP.W !MusicBackup                  ;; 05855C : CD DA 0D    ;  |  |is the same as the old one? 
+                      BNE +                               ;; 05855F : D0 02       ;  |  | 
                       ORA.B #$40                          ;; 058561 : 09 40       ;  | / 
-CODE_058563:          STA.W !MusicBackup                  ;; 058563 : 8D DA 0D    ; / 
+                    + STA.W !MusicBackup                  ;; 058563 : 8D DA 0D    ; / 
                       LDA.B !_0                           ;; 058566 : A5 00       ; "Pull" third byte 
                       AND.B #$80                          ;; 058568 : 29 80       ; \ 
                       LSR A                               ;; 05856A : 4A          ;  | 
@@ -539,12 +539,12 @@ CODE_058563:          STA.W !MusicBackup                  ;; 058563 : 8D DA 0D  
                       LSR A                               ;; 05857C : 4A          ;  | 
                       TAX                                 ;; 05857D : AA          ;  |Get time 
                       LDA.W !SublevelCount                ;; 05857E : AD 1A 14    ;  | 
-                      BNE CODE_058590                     ;; 058581 : D0 0D       ;  | 
+                      BNE +                               ;; 058581 : D0 0D       ;  | 
                       LDA.L TimerTable,X                  ;; 058583 : BF D7 84 05 ;  | 
                       STA.W !InGameTimerHundreds          ;; 058587 : 8D 31 0F    ;  | 
                       STZ.W !InGameTimerTens              ;; 05858A : 9C 32 0F    ;  | 
                       STZ.W !InGameTimerOnes              ;; 05858D : 9C 33 0F    ; / 
-CODE_058590:          LDA.B !_0                           ;; 058590 : A5 00       ; "Pull" fourth bit 
+                    + LDA.B !_0                           ;; 058590 : A5 00       ; "Pull" fourth bit 
                       AND.B #$07                          ;; 058592 : 29 07       ; \Get FG color settings 
                       STA.W !ForegroundPalette            ;; 058594 : 8D 2D 19    ; / 
                       LDA.B !_0                           ;; 058597 : A5 00       ; "Pull" fourth bit (again) 
@@ -571,10 +571,10 @@ CODE_058590:          LDA.B !_0                           ;; 058590 : A5 00     
                       LSR A                               ;; 0585BC : 4A          ;  | 
                       LSR A                               ;; 0585BD : 4A          ;  | 
                       CMP.B #$03                          ;; 0585BE : C9 03       ;  | \ 
-                      BNE HeaderVHscroll                  ;; 0585C0 : D0 05       ;  |  |If scroll mode is x03, disable both 
+                      BNE +                               ;; 0585C0 : D0 05       ;  |  |If scroll mode is x03, disable both 
                       STZ.W !HorizLayer1Setting           ;; 0585C2 : 9C 11 14    ;  |  |vertical and horizontal scroll 
                       LDA.B #$00                          ;; 0585C5 : A9 00       ;  | / 
-HeaderVHscroll:       STA.W !VertLayer1Setting            ;; ?QPWZ? : 8D 12 14    ; / 
+                    + STA.W !VertLayer1Setting            ;; ?QPWZ? : 8D 12 14    ; / 
                       LDA.B !Layer1DataPtr                ;; 0585CA : A5 65       ; \ 
                       CLC                                 ;; 0585CC : 18          ;  | 
                       ADC.B #$05                          ;; 0585CD : 69 05       ;  | 
@@ -588,7 +588,7 @@ CODE_0585D8:          LDA.B !LvlLoadObjNo                 ;; 0585D8 : A5 5A     
                       BNE CODE_0585E2                     ;; 0585DA : D0 06       ;
                       LDA.B !LvlLoadObjSize               ;; 0585DC : A5 59       ;
                       CMP.B #$02                          ;; 0585DE : C9 02       ;
-                      BCC Return0585FE                    ;; 0585E0 : 90 1C       ;
+                      BCC +                               ;; 0585E0 : 90 1C       ;
 CODE_0585E2:          LDA.B !_A                           ;; 0585E2 : A5 0A       ;
                       AND.B #$0F                          ;; 0585E4 : 29 0F       ;
                       STA.B !_0                           ;; 0585E6 : 85 00       ;
@@ -603,7 +603,7 @@ CODE_0585E2:          LDA.B !_A                           ;; 0585E2 : A5 0A     
                       AND.B #$F0                          ;; 0585F8 : 29 F0       ;
                       ORA.B !_0                           ;; 0585FA : 05 00       ;
                       STA.B !_B                           ;; 0585FC : 85 0B       ;
-Return0585FE:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 LoadLevelData:        SEP #$30                            ;; ?QPWZ? : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDY.B #$00                          ;; 058601 : A0 00       ; \ 
@@ -636,12 +636,12 @@ LoadLevelData:        SEP #$30                            ;; ?QPWZ? : E2 30     
                       STA.B !LvlLoadObjNo                 ;; 05862D : 85 5A       ; / 
                       LDA.B !ScreenMode                   ;; 05862F : A5 5B       ; A = vertical level setting 
                       LDY.W !LayerProcessing              ;; 058631 : AC 33 19    ; \ 
-                      BEQ CODE_058637                     ;; 058634 : F0 01       ;  |If $1933=x00, divide A by 2 
+                      BEQ +                               ;; 058634 : F0 01       ;  |If $1933=x00, divide A by 2 
                       LSR A                               ;; 058636 : 4A          ; / 
-CODE_058637:          AND.B #$01                          ;; 058637 : 29 01       ; \ 
-                      BEQ CODE_05863E                     ;; 058639 : F0 03       ;  |If lowest bit of A is set, jump to sub 
+                    + AND.B #$01                          ;; 058637 : 29 01       ; \ 
+                      BEQ +                               ;; 058639 : F0 03       ;  |If lowest bit of A is set, jump to sub 
                       JSR CODE_0585D8                     ;; 05863B : 20 D8 85    ; / 
-CODE_05863E:          LDA.B !_A                           ;; 05863E : A5 0A       ; \ 
+                    + LDA.B !_A                           ;; 05863E : A5 0A       ; \ 
                       AND.B #$0F                          ;; 058640 : 29 0F       ;  | 
                       ASL A                               ;; 058642 : 0A          ;  | 
                       ASL A                               ;; 058643 : 0A          ;  | 
@@ -707,24 +707,24 @@ CODE_05863E:          LDA.B !_A                           ;; 05863E : A5 0A     
                       STA.B !Map16HighPtr+2               ;; 0586B9 : 85 70       ;
                       LDA.B !_A                           ;; 0586BB : A5 0A       ; \ 
                       AND.B #$10                          ;; 0586BD : 29 10       ;  |If high coordinate is set... 
-                      BEQ LoadNoHiCoord                   ;; 0586BF : F0 04       ;  |(Lower half of horizontal level) 
+                      BEQ +                               ;; 0586BF : F0 04       ;  |(Lower half of horizontal level) 
                       INC.B !Map16LowPtr+1                ;; 0586C1 : E6 6C       ;  |(Right half of vertical level) 
                       INC.B !Map16HighPtr+1               ;; 0586C3 : E6 6F       ;  |...increase $6C and $6F 
-LoadNoHiCoord:        LDA.B !LvlLoadObjNo                 ;; ?QPWZ? : A5 5A       ; \ 
-                      BNE LevLoadJsrNrm                   ;; 0586C7 : D0 06       ;  |If block number is x00 (extended object), 
+                    + LDA.B !LvlLoadObjNo                 ;; ?QPWZ? : A5 5A       ; \ 
+                      BNE +                               ;; 0586C7 : D0 06       ;  |If block number is x00 (extended object), 
                       JSR LevLoadExtObj                   ;; 0586C9 : 20 E3 86    ;  |Jump to sub LevLoadExtObj 
                       JMP LevLoadContinue                 ;; 0586CC : 4C D2 86    ;  |                  (Why didn't they use BRA here?) 
                                                           ;;                      ;
-LevLoadJsrNrm:        JSR LevLoadNrmObj                   ;; ?QPWZ? : 20 EA 86    ;  |Jump to sub LevLoadNrmObj 
+                    + JSR LevLoadNrmObj                   ;; ?QPWZ? : 20 EA 86    ;  |Jump to sub LevLoadNrmObj 
 LevLoadContinue:      SEP #$20                            ;; ?QPWZ? : E2 20       ; Accum (8 bit) 
                       REP #$10                            ;; 0586D4 : C2 10       ; Index (16 bit) 
                       LDY.W #$0000                        ;; 0586D6 : A0 00 00    ; \ 
                       LDA.B [!Layer1DataPtr],Y            ;; 0586D9 : B7 65       ;  | 
                       CMP.B #$FF                          ;; 0586DB : C9 FF       ;  |If the next byte is xFF, return (loading is done). 
-                      BEQ LevelDataEnd                    ;; 0586DD : F0 03       ;  |Otherwise, repeat this routine. 
+                      BEQ +                               ;; 0586DD : F0 03       ;  |Otherwise, repeat this routine. 
                       JMP LoadLevelData                   ;; 0586DF : 4C FF 85    ;  | 
                                                           ;;                      ;
-LevelDataEnd:         RTS                                 ;; ?QPWZ? : 60          ; / 
+                    + RTS                                 ;; ?QPWZ? : 60          ; / 
                                                           ;;                      ;
 LevLoadExtObj:        SEP #$30                            ;; ?QPWZ? : E2 30       ; Index (8 bit) Accum (8 bit) 
                       JSL CODE_0DA100                     ;; 0586E5 : 22 00 A1 0D ;
@@ -748,7 +748,7 @@ CODE_0586F1:          PHP                                 ;; 0586F1 : 08        
                       LDA.B !Layer1XPos                   ;; 058707 : A5 1A       ;
                       AND.W #$FFF0                        ;; 058709 : 29 F0 FF    ;
                       CMP.B !Layer1PrevTileUp,X           ;; 05870C : D5 4D       ;
-                      BEQ CODE_058737                     ;; 05870E : F0 27       ;
+                      BEQ +                               ;; 05870E : F0 27       ;
                       JMP CODE_058724                     ;; 058710 : 4C 24 87    ;
                                                           ;;                      ;
 CODE_058713:          REP #$20                            ;; 058713 : C2 20       ; Accum (16 bit) 
@@ -758,7 +758,7 @@ CODE_058713:          REP #$20                            ;; 058713 : C2 20     
                       LDA.B !Layer1YPos                   ;; 05871B : A5 1C       ;
                       AND.W #$FFF0                        ;; 05871D : 29 F0 FF    ;
                       CMP.B !Layer1PrevTileUp,X           ;; 058720 : D5 4D       ;
-                      BEQ CODE_058737                     ;; 058722 : F0 13       ;
+                      BEQ +                               ;; 058722 : F0 13       ;
 CODE_058724:          STA.B !Layer1PrevTileUp,X           ;; 058724 : 95 4D       ;
                       TXA                                 ;; 058726 : 8A          ;
                       EOR.W #$0002                        ;; 058727 : 49 02 00    ;
@@ -768,7 +768,7 @@ CODE_058724:          STA.B !Layer1PrevTileUp,X           ;; 058724 : 95 4D     
                       JSL CODE_05881A                     ;; 058730 : 22 1A 88 05 ;
                       JMP CODE_058774                     ;; 058734 : 4C 74 87    ;
                                                           ;;                      ;
-CODE_058737:          SEP #$20                            ;; 058737 : E2 20       ; Accum (8 bit) 
+                    + SEP #$20                            ;; 058737 : E2 20       ; Accum (8 bit) 
                       LDA.B !ScreenMode                   ;; 058739 : A5 5B       ;
                       AND.B #$02                          ;; 05873B : 29 02       ;
                       BNE CODE_058753                     ;; 05873D : D0 14       ;
@@ -838,13 +838,13 @@ CODE_05877E:          PHP                                 ;; 05877E : 08        
                       LDA.W #$0007                        ;; 0587B2 : A9 07 00    ;
                       STA.B !_0                           ;; 0587B5 : 85 00       ;
                       LDA.L MAP16AppTable,X               ;; 0587B7 : BF 76 87 05 ;
-CODE_0587BB:          STA.W !Map16Pointers,Y              ;; 0587BB : 99 BE 0F    ; MAP16 pointer table 
+                    - STA.W !Map16Pointers,Y              ;; 0587BB : 99 BE 0F    ; MAP16 pointer table 
                       INY                                 ;; 0587BE : C8          ;
                       INY                                 ;; 0587BF : C8          ;
                       CLC                                 ;; 0587C0 : 18          ;
                       ADC.W #$0008                        ;; 0587C1 : 69 08 00    ; 8 bytes per tile? 
                       DEC.B !_0                           ;; 0587C4 : C6 00       ;
-                      BPL CODE_0587BB                     ;; 0587C6 : 10 F3       ;
+                      BPL -                               ;; 0587C6 : 10 F3       ;
                       JMP CODE_0587E1                     ;; 0587C8 : 4C E1 87    ;
                                                           ;;                      ;
 CODE_0587CB:          REP #$20                            ;; 0587CB : C2 20       ; Accum (16 bit) 
@@ -864,7 +864,7 @@ CODE_0587CB:          REP #$20                            ;; 0587CB : C2 20     
 CODE_0587E1:          SEP #$20                            ;; 0587E1 : E2 20       ; Accum (8 bit) 
                       LDA.B !ScreenMode                   ;; 0587E3 : A5 5B       ; Load the vertical level flag 
                       AND.B #$02                          ;; 0587E5 : 29 02       ; \if bit 1 is set, process based on that 
-                      BNE CODE_058802                     ;; 0587E7 : D0 19       ; / 
+                      BNE +                               ;; 0587E7 : D0 19       ; / 
                       REP #$20                            ;; 0587E9 : C2 20       ; Not a vertical level ; Accum (16 bit) 
                       LDA.B !Layer2XPos                   ;; 0587EB : A5 1E       ; \Y = L2XPos * 16 
                       LSR A                               ;; 0587ED : 4A          ; | 
@@ -881,7 +881,7 @@ CODE_0587E1:          SEP #$20                            ;; 0587E1 : E2 20     
                       STA.B !Layer2TileDown               ;; 0587FD : 85 4B       ;
                       JMP CODE_058818                     ;; 0587FF : 4C 18 88    ;
                                                           ;;                      ;
-CODE_058802:          REP #$20                            ;; 058802 : C2 20       ; \A = Y = !4*16 (?)  ; Accum (16 bit) 
+                    + REP #$20                            ;; 058802 : C2 20       ; \A = Y = !4*16 (?)  ; Accum (16 bit) 
                       LDA.B !Layer2YPos                   ;; 058804 : A5 20       ; | 
                       LSR A                               ;; 058806 : 4A          ; | 
                       LSR A                               ;; 058807 : 4A          ; | 
@@ -1076,9 +1076,9 @@ CODE_0589CE:          PHP                                 ;; 0589CE : 08        
                       LDY.W #$0020                        ;; 058A04 : A0 20 00    ;
                       LDA.B !Layer1TileUp,X               ;; 058A07 : B5 45       ;
                       AND.B #$10                          ;; 058A09 : 29 10       ;
-                      BEQ CODE_058A10                     ;; 058A0B : F0 03       ;
+                      BEQ +                               ;; 058A0B : F0 03       ;
                       LDY.W #$0024                        ;; 058A0D : A0 24 00    ;
-CODE_058A10:          TYA                                 ;; 058A10 : 98          ;
+                    + TYA                                 ;; 058A10 : 98          ;
                       STA.W !Layer1VramAddr               ;; 058A11 : 8D E4 1B    ;
                       REP #$20                            ;; 058A14 : C2 20       ; Accum (16 bit) 
                       LDA.B !Layer1TileUp,X               ;; 058A16 : B5 45       ;
@@ -1107,15 +1107,15 @@ CODE_058A10:          TYA                                 ;; 058A10 : 98        
                       LDY.B #$0D                          ;; 058A3C : A0 0D       ;
                       LDA.W !ObjectTileset                ;; 058A3E : AD 31 19    ;
                       CMP.B #$10                          ;; 058A41 : C9 10       ;
-                      BMI CODE_058A47                     ;; 058A43 : 30 02       ;
+                      BMI +                               ;; 058A43 : 30 02       ;
                       LDY.B #$05                          ;; 058A45 : A0 05       ;
-CODE_058A47:          STY.B !_C                           ;; 058A47 : 84 0C       ;
+                    + STY.B !_C                           ;; 058A47 : 84 0C       ;
                       REP #$30                            ;; 058A49 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.B !Layer1TileUp,X               ;; 058A4B : B5 45       ;
                       AND.W #$000F                        ;; 058A4D : 29 0F 00    ;
                       STA.B !_8                           ;; 058A50 : 85 08       ;
                       LDX.W #$0000                        ;; 058A52 : A2 00 00    ;
-CODE_058A55:          LDY.B !_8                           ;; 058A55 : A4 08       ;
+                    - LDY.B !_8                           ;; 058A55 : A4 08       ;
                       LDA.B [!Map16LowPtr],Y              ;; 058A57 : B7 6B       ;
                       AND.W #$00FF                        ;; 058A59 : 29 FF 00    ;
                       STA.B !_0                           ;; 058A5C : 85 00       ;
@@ -1150,7 +1150,7 @@ CODE_058A55:          LDY.B !_8                           ;; 058A55 : A4 08     
                       ADC.W #$0010                        ;; 058A8F : 69 10 00    ;
                       STA.B !_8                           ;; 058A92 : 85 08       ;
                       CMP.W #$01B0                        ;; 058A94 : C9 B0 01    ;
-                      BCC CODE_058A55                     ;; 058A97 : 90 BC       ;
+                      BCC -                               ;; 058A97 : 90 BC       ;
                       PLP                                 ;; 058A99 : 28          ;
 Return058A9A:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -1177,9 +1177,9 @@ CODE_058A9B:          PHP                                 ;; 058A9B : 08        
                       LDY.W #$0020                        ;; 058AC9 : A0 20 00    ;
                       LDA.B !Layer1TileUp,X               ;; 058ACC : B5 45       ;
                       AND.B #$10                          ;; 058ACE : 29 10       ;
-                      BEQ CODE_058AD5                     ;; 058AD0 : F0 03       ;
+                      BEQ +                               ;; 058AD0 : F0 03       ;
                       LDY.W #$0028                        ;; 058AD2 : A0 28 00    ;
-CODE_058AD5:          TYA                                 ;; 058AD5 : 98          ;
+                    + TYA                                 ;; 058AD5 : 98          ;
                       STA.B !_0                           ;; 058AD6 : 85 00       ;
                       LDA.B !Layer1TileUp,X               ;; 058AD8 : B5 45       ;
                       LSR A                               ;; 058ADA : 4A          ;
@@ -1223,9 +1223,9 @@ CODE_058AD5:          TYA                                 ;; 058AD5 : 98        
                       LDY.B #$0D                          ;; 058B18 : A0 0D       ;
                       LDA.W !ObjectTileset                ;; 058B1A : AD 31 19    ;
                       CMP.B #$10                          ;; 058B1D : C9 10       ;
-                      BMI CODE_058B23                     ;; 058B1F : 30 02       ;
+                      BMI +                               ;; 058B1F : 30 02       ;
                       LDY.B #$05                          ;; 058B21 : A0 05       ;
-CODE_058B23:          STY.B !_C                           ;; 058B23 : 84 0C       ;
+                    + STY.B !_C                           ;; 058B23 : 84 0C       ;
                       REP #$30                            ;; 058B25 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.B !Layer1TileUp,X               ;; 058B27 : B5 45       ;
                       AND.W #$000F                        ;; 058B29 : 29 0F 00    ;
@@ -1271,13 +1271,13 @@ CODE_058B35:          LDY.B !_8                           ;; 058B35 : A4 08     
                       ADC.W #$0001                        ;; 058B70 : 69 01 00    ;
                       STA.B !_8                           ;; 058B73 : 85 08       ;
                       AND.W #$000F                        ;; 058B75 : 29 0F 00    ;
-                      BNE CODE_058B84                     ;; 058B78 : D0 0A       ;
+                      BNE +                               ;; 058B78 : D0 0A       ;
                       TYA                                 ;; 058B7A : 98          ;
                       AND.W #$FFF0                        ;; 058B7B : 29 F0 FF    ;
                       CLC                                 ;; 058B7E : 18          ;
                       ADC.W #$0100                        ;; 058B7F : 69 00 01    ;
                       STA.B !_8                           ;; 058B82 : 85 08       ;
-CODE_058B84:          LDA.B !_8                           ;; 058B84 : A5 08       ;
+                    + LDA.B !_8                           ;; 058B84 : A5 08       ;
                       AND.W #$010F                        ;; 058B86 : 29 0F 01    ;
                       BNE CODE_058B35                     ;; 058B89 : D0 AA       ;
                       PLP                                 ;; 058B8B : 28          ;
@@ -1293,9 +1293,9 @@ CODE_058B8D:          PHP                                 ;; 058B8D : 08        
                       LDY.W #$0000                        ;; 058B9A : A0 00 00    ;
                       LDA.W !ObjectTileset                ;; 058B9D : AD 31 19    ;
                       CMP.B #$03                          ;; 058BA0 : C9 03       ;
-                      BNE CODE_058BA7                     ;; 058BA2 : D0 03       ;
+                      BNE +                               ;; 058BA2 : D0 03       ;
                       LDY.W #$1000                        ;; 058BA4 : A0 00 10    ;
-CODE_058BA7:          STY.B !_3                           ;; 058BA7 : 84 03       ;
+                    + STY.B !_3                           ;; 058BA7 : 84 03       ;
                       LDA.L Ptrs00BDE8,X                  ;; 058BA9 : BF E8 BD 00 ;
                       STA.B !_A                           ;; 058BAD : 85 0A       ;
                       LDA.L Ptrs00BDE8+1,X                ;; 058BAF : BF E9 BD 00 ;
@@ -1316,9 +1316,9 @@ CODE_058BA7:          STY.B !_3                           ;; 058BA7 : 84 03     
                       LDY.W #$0030                        ;; 058BD2 : A0 30 00    ;
                       LDA.B !Layer2TileUp,X               ;; 058BD5 : B5 49       ;
                       AND.B #$10                          ;; 058BD7 : 29 10       ;
-                      BEQ CODE_058BDE                     ;; 058BD9 : F0 03       ;
+                      BEQ +                               ;; 058BD9 : F0 03       ;
                       LDY.W #$0034                        ;; 058BDB : A0 34 00    ;
-CODE_058BDE:          TYA                                 ;; 058BDE : 98          ;
+                    + TYA                                 ;; 058BDE : 98          ;
                       STA.W !Layer2VramAddr               ;; 058BDF : 8D E6 1C    ;
                       REP #$30                            ;; 058BE2 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.B !Layer2TileUp,X               ;; 058BE4 : B5 49       ;
@@ -1347,15 +1347,15 @@ CODE_058BDE:          TYA                                 ;; 058BDE : 98        
                       LDY.B #$0D                          ;; 058C0A : A0 0D       ;
                       LDA.W !ObjectTileset                ;; 058C0C : AD 31 19    ;
                       CMP.B #$10                          ;; 058C0F : C9 10       ;
-                      BMI CODE_058C15                     ;; 058C11 : 30 02       ;
+                      BMI +                               ;; 058C11 : 30 02       ;
                       LDY.B #$05                          ;; 058C13 : A0 05       ;
-CODE_058C15:          STY.B !_C                           ;; 058C15 : 84 0C       ;
+                    + STY.B !_C                           ;; 058C15 : 84 0C       ;
                       REP #$30                            ;; 058C17 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.B !Layer2TileUp,X               ;; 058C19 : B5 49       ;
                       AND.W #$000F                        ;; 058C1B : 29 0F 00    ;
                       STA.B !_8                           ;; 058C1E : 85 08       ;
                       LDX.W #$0000                        ;; 058C20 : A2 00 00    ;
-CODE_058C23:          LDY.B !_8                           ;; 058C23 : A4 08       ;
+                    - LDY.B !_8                           ;; 058C23 : A4 08       ;
                       LDA.B [!Map16LowPtr],Y              ;; 058C25 : B7 6B       ;
                       AND.W #$00FF                        ;; 058C27 : 29 FF 00    ;
                       STA.B !_0                           ;; 058C2A : 85 00       ;
@@ -1394,7 +1394,7 @@ CODE_058C23:          LDY.B !_8                           ;; 058C23 : A4 08     
                       ADC.W #$0010                        ;; 058C65 : 69 10 00    ;
                       STA.B !_8                           ;; 058C68 : 85 08       ;
                       CMP.W #$01B0                        ;; 058C6A : C9 B0 01    ;
-                      BCC CODE_058C23                     ;; 058C6D : 90 B4       ;
+                      BCC -                               ;; 058C6D : 90 B4       ;
                       PLP                                 ;; 058C6F : 28          ;
 Return058C70:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -1408,9 +1408,9 @@ CODE_058C71:          PHP                                 ;; 058C71 : 08        
                       LDY.W #$0000                        ;; 058C7E : A0 00 00    ;
                       LDA.W !ObjectTileset                ;; 058C81 : AD 31 19    ;
                       CMP.B #$03                          ;; 058C84 : C9 03       ;
-                      BNE CODE_058C8B                     ;; 058C86 : D0 03       ;
+                      BNE +                               ;; 058C86 : D0 03       ;
                       LDY.W #$1000                        ;; 058C88 : A0 00 10    ;
-CODE_058C8B:          STY.B !_3                           ;; 058C8B : 84 03       ;
+                    + STY.B !_3                           ;; 058C8B : 84 03       ;
                       LDA.L Ptrs00BDE8,X                  ;; 058C8D : BF E8 BD 00 ;
                       STA.B !_A                           ;; 058C91 : 85 0A       ;
                       LDA.L Ptrs00BDE8+1,X                ;; 058C93 : BF E9 BD 00 ;
@@ -1427,9 +1427,9 @@ CODE_058C8B:          STY.B !_3                           ;; 058C8B : 84 03     
                       LDY.W #$0030                        ;; 058CAE : A0 30 00    ;
                       LDA.B !Layer2TileUp,X               ;; 058CB1 : B5 49       ;
                       AND.B #$10                          ;; 058CB3 : 29 10       ;
-                      BEQ CODE_058CBA                     ;; 058CB5 : F0 03       ;
+                      BEQ +                               ;; 058CB5 : F0 03       ;
                       LDY.W #$0038                        ;; 058CB7 : A0 38 00    ;
-CODE_058CBA:          TYA                                 ;; 058CBA : 98          ;
+                    + TYA                                 ;; 058CBA : 98          ;
                       STA.B !_0                           ;; 058CBB : 85 00       ;
                       LDA.B !Layer2TileUp,X               ;; 058CBD : B5 49       ;
                       LSR A                               ;; 058CBF : 4A          ;
@@ -1473,9 +1473,9 @@ CODE_058CBA:          TYA                                 ;; 058CBA : 98        
                       LDY.B #$0D                          ;; 058CFD : A0 0D       ;
                       LDA.W !ObjectTileset                ;; 058CFF : AD 31 19    ;
                       CMP.B #$10                          ;; 058D02 : C9 10       ;
-                      BMI CODE_058D08                     ;; 058D04 : 30 02       ;
+                      BMI +                               ;; 058D04 : 30 02       ;
                       LDY.B #$05                          ;; 058D06 : A0 05       ;
-CODE_058D08:          STY.B !_C                           ;; 058D08 : 84 0C       ;
+                    + STY.B !_C                           ;; 058D08 : 84 0C       ;
                       REP #$30                            ;; 058D0A : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.B !Layer2TileUp,X               ;; 058D0C : B5 49       ;
                       AND.W #$000F                        ;; 058D0E : 29 0F 00    ;
@@ -1525,13 +1525,13 @@ CODE_058D1A:          LDY.B !_8                           ;; 058D1A : A4 08     
                       ADC.W #$0001                        ;; 058D5D : 69 01 00    ;
                       STA.B !_8                           ;; 058D60 : 85 08       ;
                       AND.W #$000F                        ;; 058D62 : 29 0F 00    ;
-                      BNE CODE_058D71                     ;; 058D65 : D0 0A       ;
+                      BNE +                               ;; 058D65 : D0 0A       ;
                       TYA                                 ;; 058D67 : 98          ;
                       AND.W #$FFF0                        ;; 058D68 : 29 F0 FF    ;
                       CLC                                 ;; 058D6B : 18          ;
                       ADC.W #$0100                        ;; 058D6C : 69 00 01    ;
                       STA.B !_8                           ;; 058D6F : 85 08       ;
-CODE_058D71:          LDA.B !_8                           ;; 058D71 : A5 08       ;
+                    + LDA.B !_8                           ;; 058D71 : A5 08       ;
                       AND.W #$010F                        ;; 058D73 : 29 0F 01    ;
                       BNE CODE_058D1A                     ;; 058D76 : D0 A2       ;
                       PLP                                 ;; 058D78 : 28          ;
@@ -1546,9 +1546,9 @@ CODE_058D7A:          PHP                                 ;; 058D7A : 08        
                       LDY.B #$30                          ;; 058D86 : A0 30       ;
                       LDA.W !LevelLoadObject              ;; 058D88 : AD 28 19    ;
                       AND.B #$10                          ;; 058D8B : 29 10       ;
-                      BEQ CODE_058D91                     ;; 058D8D : F0 02       ;
+                      BEQ +                               ;; 058D8D : F0 02       ;
                       LDY.B #$34                          ;; 058D8F : A0 34       ;
-CODE_058D91:          TYA                                 ;; 058D91 : 98          ;
+                    + TYA                                 ;; 058D91 : 98          ;
                       STA.W !Layer2VramAddr               ;; 058D92 : 8D E6 1C    ;
                       REP #$20                            ;; 058D95 : C2 20       ; Accum (16 bit) 
                       LDA.W #$B900                        ;; 058D97 : A9 00 B9    ;
@@ -1559,7 +1559,7 @@ CODE_058D91:          TYA                                 ;; 058D91 : 98        
                       STA.B !_A                           ;; 058DA4 : 85 0A       ;
                       LDA.W !LevelLoadObject              ;; 058DA6 : AD 28 19    ;
                       AND.W #$00F0                        ;; 058DA9 : 29 F0 00    ;
-                      BEQ CODE_058DBE                     ;; 058DAC : F0 10       ;
+                      BEQ +                               ;; 058DAC : F0 10       ;
                       LDA.B !Map16LowPtr                  ;; 058DAE : A5 6B       ;
                       CLC                                 ;; 058DB0 : 18          ;
                       ADC.W #$01B0                        ;; 058DB1 : 69 B0 01    ;
@@ -1568,7 +1568,7 @@ CODE_058D91:          TYA                                 ;; 058D91 : 98        
                       CLC                                 ;; 058DB8 : 18          ;
                       ADC.W #$01B0                        ;; 058DB9 : 69 B0 01    ;
                       STA.B !Map16HighPtr                 ;; 058DBC : 85 6E       ;
-CODE_058DBE:          SEP #$20                            ;; 058DBE : E2 20       ; Accum (8 bit) 
+                    + SEP #$20                            ;; 058DBE : E2 20       ; Accum (8 bit) 
                       LDA.B #$7E                          ;; 058DC0 : A9 7E       ;
                       STA.B !Map16LowPtr+2                ;; 058DC2 : 85 6D       ;
                       LDA.B #$7E                          ;; 058DC4 : A9 7E       ;
@@ -1580,7 +1580,7 @@ CODE_058DBE:          SEP #$20                            ;; 058DBE : E2 20     
                       AND.W #$000F                        ;; 058DD1 : 29 0F 00    ;
                       STA.B !_8                           ;; 058DD4 : 85 08       ;
                       LDX.W #$0000                        ;; 058DD6 : A2 00 00    ;
-CODE_058DD9:          LDY.B !_8                           ;; 058DD9 : A4 08       ;
+                    - LDY.B !_8                           ;; 058DD9 : A4 08       ;
                       LDA.B [!Map16LowPtr],Y              ;; 058DDB : B7 6B       ;
                       AND.W #$00FF                        ;; 058DDD : 29 FF 00    ;
                       STA.B !_0                           ;; 058DE0 : 85 00       ;
@@ -1614,7 +1614,7 @@ CODE_058DD9:          LDY.B !_8                           ;; 058DD9 : A4 08     
                       ADC.W #$0010                        ;; 058E0D : 69 10 00    ;
                       STA.B !_8                           ;; 058E10 : 85 08       ;
                       CMP.W #$01B0                        ;; 058E12 : C9 B0 01    ;
-                      BCC CODE_058DD9                     ;; 058E15 : 90 C2       ;
+                      BCC -                               ;; 058E15 : 90 C2       ;
                       PLP                                 ;; 058E17 : 28          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -2824,14 +2824,14 @@ CODE_05B132:          LDA.W !OverworldOverride            ;; 05B132 : AD 09 01  
                       INC.W !CreditsScreenNumber          ;; 05B150 : EE E9 1D    ;
                       LDA.B #$01                          ;; 05B153 : A9 01       ;
                       STA.W !MidwayFlag                   ;; 05B155 : 8D CE 13    ;
-                      BRA CODE_05B165                     ;; 05B158 : 80 0B       ;
+                      BRA +                               ;; 05B158 : 80 0B       ;
                                                           ;;                      ;
 CODE_05B15A:          PLB                                 ;; 05B15A : AB          ;
                       LDA.B #$8E                          ;; 05B15B : A9 8E       ;
                       STA.W !OWPlayerYPos                 ;; 05B15D : 8D 19 1F    ;
 SubSideExit:          STZ.W !OverworldOverride            ;; ?QPWZ? : 9C 09 01    ;
                       LDA.B #$00                          ;; 05B163 : A9 00       ;
-CODE_05B165:          STA.W !OWLevelExitMode              ;; 05B165 : 8D D5 0D    ;
+                    + STA.W !OWLevelExitMode              ;; 05B165 : 8D D5 0D    ;
                       LDA.B #$0B                          ;; 05B168 : A9 0B       ;
                       STA.W !GameMode                     ;; 05B16A : 8D 00 01    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
@@ -2856,19 +2856,19 @@ CODE_05B18E:          JMP CODE_05B299                     ;; 05B18E : 4C 99 B2  
 CODE_05B191:          CMP.W DATA_05B106,X                 ;; 05B191 : DD 06 B1    ;
                       BNE CODE_05B1A0                     ;; 05B194 : D0 0A       ;
                       TXA                                 ;; 05B196 : 8A          ;
-                      BEQ CODE_05B1A3                     ;; 05B197 : F0 0A       ;
+                      BEQ +                               ;; 05B197 : F0 0A       ;
                       JSR CODE_05B31B                     ;; 05B199 : 20 1B B3    ;
                       LDA.B #$09                          ;; 05B19C : A9 09       ;
                       STA.B !StripeImage                  ;; 05B19E : 85 12       ;
 CODE_05B1A0:          JMP CODE_05B250                     ;; 05B1A0 : 4C 50 B2    ;
                                                           ;;                      ;
-CODE_05B1A3:          LDX.B #$16                          ;; 05B1A3 : A2 16       ;
+                    + LDX.B #$16                          ;; 05B1A3 : A2 16       ;
 CODE_05B1A5:          LDY.B #$01                          ;; 05B1A5 : A0 01       ;
                       LDA.W DATA_05A590,X                 ;; 05B1A7 : BD 90 A5    ;
-                      BPL CODE_05B1AF                     ;; 05B1AA : 10 03       ;
+                      BPL +                               ;; 05B1AA : 10 03       ;
                       INY                                 ;; 05B1AC : C8          ;
                       AND.B #$7F                          ;; 05B1AD : 29 7F       ;
-CODE_05B1AF:          CPY.W !MessageBoxTrigger            ;; 05B1AF : CC 26 14    ;
+                    + CPY.W !MessageBoxTrigger            ;; 05B1AF : CC 26 14    ;
                       BNE CODE_05B1B9                     ;; 05B1B2 : D0 05       ;
                       CMP.W !TranslevelNo                 ;; 05B1B4 : CD BF 13    ;
                       BEQ CODE_05B1BC                     ;; 05B1B7 : F0 03       ;
@@ -2876,20 +2876,20 @@ CODE_05B1B9:          DEX                                 ;; 05B1B9 : CA        
                       BNE CODE_05B1A5                     ;; 05B1BA : D0 E9       ;
 CODE_05B1BC:          LDY.W !MessageBoxTrigger            ;; 05B1BC : AC 26 14    ;
                       CPY.B #$03                          ;; 05B1BF : C0 03       ;
-                      BNE CODE_05B1C5                     ;; 05B1C1 : D0 02       ;
+                      BNE +                               ;; 05B1C1 : D0 02       ;
                       LDX.B #$18                          ;; 05B1C3 : A2 18       ;
-CODE_05B1C5:          CPX.B #$04                          ;; 05B1C5 : E0 04       ;
-                      BCS CODE_05B1D1                     ;; 05B1C7 : B0 08       ;
+                    + CPX.B #$04                          ;; 05B1C5 : E0 04       ;
+                      BCS +                               ;; 05B1C7 : B0 08       ;
                       INX                                 ;; 05B1C9 : E8          ;
                       STX.W !SwitchPalaceColor            ;; 05B1CA : 8E D2 13    ;
                       DEX                                 ;; 05B1CD : CA          ;
                       JSR CODE_05B2EB                     ;; 05B1CE : 20 EB B2    ;
-CODE_05B1D1:          CPX.B #$16                          ;; 05B1D1 : E0 16       ;
-                      BNE CODE_05B1DB                     ;; 05B1D3 : D0 06       ;
+                    + CPX.B #$16                          ;; 05B1D1 : E0 16       ;
+                      BNE +                               ;; 05B1D3 : D0 06       ;
                       LDA.W !PlayerRidingYoshi            ;; 05B1D5 : AD 7A 18    ;
-                      BEQ CODE_05B1DB                     ;; 05B1D8 : F0 01       ;
+                      BEQ +                               ;; 05B1D8 : F0 01       ;
                       INX                                 ;; 05B1DA : E8          ;
-CODE_05B1DB:          TXA                                 ;; 05B1DB : 8A          ;
+                    + TXA                                 ;; 05B1DB : 8A          ;
                       ASL A                               ;; 05B1DC : 0A          ;
                       TAX                                 ;; 05B1DD : AA          ;
                       REP #$20                            ;; 05B1DE : C2 20       ; Accum (16 bit) 
@@ -2911,12 +2911,12 @@ CODE_05B1EF:          LDA.W DATA_05A580,Y                 ;; 05B1EF : B9 80 A5  
                       LDY.B !_0                           ;; 05B206 : A4 00       ;
 CODE_05B208:          LDA.B #$1F                          ;; 05B208 : A9 1F       ;
                       BIT.W !_3                           ;; 05B20A : 2C 03 00    ;
-                      BMI CODE_05B218                     ;; 05B20D : 30 09       ;
+                      BMI +                               ;; 05B20D : 30 09       ;
                       LDA.W DATA_05A5D9,Y                 ;; 05B20F : B9 D9 A5    ;
                       STA.W !_3                           ;; 05B212 : 8D 03 00    ;
                       AND.B #$7F                          ;; 05B215 : 29 7F       ;
                       INY                                 ;; 05B217 : C8          ;
-CODE_05B218:          STA.L !DynamicStripeImage+4,X       ;; 05B218 : 9F 81 83 7F ;
+                    + STA.L !DynamicStripeImage+4,X       ;; 05B218 : 9F 81 83 7F ;
                       LDA.B #$39                          ;; 05B21C : A9 39       ;
                       STA.L !DynamicStripeImage+5,X       ;; 05B21E : 9F 82 83 7F ;
                       INX                                 ;; 05B222 : E8          ;
@@ -2959,9 +2959,9 @@ CODE_05B250:          LDX.W !MessageBoxExpand             ;; 05B250 : AE 88 1B  
                       LDX.B #$00                          ;; 05B269 : A2 00       ;
                       LDY.B #$50                          ;; 05B26B : A0 50       ;
 CODE_05B26D:          CPX.W !MessageBoxTimer              ;; 05B26D : EC 89 1B    ;
-                      BCC CODE_05B275                     ;; 05B270 : 90 03       ;
+                      BCC +                               ;; 05B270 : 90 03       ;
                       LDA.W #$00FF                        ;; 05B272 : A9 FF 00    ;
-CODE_05B275:          STA.W !WindowTable+$4C,Y            ;; 05B275 : 99 EC 04    ;
+                    + STA.W !WindowTable+$4C,Y            ;; 05B275 : 99 EC 04    ;
                       STA.W !WindowTable+$9C,X            ;; 05B278 : 9D 3C 05    ;
                       INX                                 ;; 05B27B : E8          ;
                       INX                                 ;; 05B27C : E8          ;
@@ -2972,9 +2972,9 @@ CODE_05B275:          STA.W !WindowTable+$4C,Y            ;; 05B275 : 99 EC 04  
                       LDA.B #$22                          ;; 05B283 : A9 22       ;
                       STA.B !Layer12Window                ;; 05B285 : 85 41       ;
                       LDY.W !SwitchPalaceColor            ;; 05B287 : AC D2 13    ;
-                      BEQ CODE_05B28E                     ;; 05B28A : F0 02       ;
+                      BEQ +                               ;; 05B28A : F0 02       ;
                       LDA.B #$20                          ;; 05B28C : A9 20       ;
-CODE_05B28E:          STA.B !OBJCWWindow                  ;; 05B28E : 85 43       ;
+                    + STA.B !OBJCWWindow                  ;; 05B28E : 85 43       ;
                       LDA.B #$22                          ;; 05B290 : A9 22       ;
                       STA.B !ColorAddition                ;; 05B292 : 85 44       ;
                       LDA.B #$80                          ;; 05B294 : A9 80       ;
@@ -3004,7 +3004,7 @@ CODE_05B2EB:          PHX                                 ;; 05B2EB : DA        
                       STZ.B !_0                           ;; 05B2F2 : 64 00       ;
                       REP #$20                            ;; 05B2F4 : C2 20       ; Accum (16 bit) 
                       LDY.B #$1C                          ;; 05B2F6 : A0 1C       ;
-CODE_05B2F8:          LDA.W DATA_05B29B,X                 ;; 05B2F8 : BD 9B B2    ;
+                    - LDA.W DATA_05B29B,X                 ;; 05B2F8 : BD 9B B2    ;
                       STA.W !OAMTileNo,Y                  ;; 05B2FB : 99 02 02    ;
                       PHX                                 ;; 05B2FE : DA          ;
                       LDX.B !_0                           ;; 05B2FF : A6 00       ;
@@ -3019,7 +3019,7 @@ CODE_05B2F8:          LDA.W DATA_05B29B,X                 ;; 05B2F8 : BD 9B B2  
                       DEY                                 ;; 05B30F : 88          ;
                       DEY                                 ;; 05B310 : 88          ;
                       DEY                                 ;; 05B311 : 88          ;
-                      BPL CODE_05B2F8                     ;; 05B312 : 10 E4       ;
+                      BPL -                               ;; 05B312 : 10 E4       ;
                       STZ.W !OAMTileBitSize               ;; 05B314 : 9C 00 04    ;
                       SEP #$20                            ;; 05B317 : E2 20       ; Accum (8 bit) 
                       PLX                                 ;; 05B319 : FA          ;
@@ -3027,12 +3027,12 @@ CODE_05B2F8:          LDA.W DATA_05B29B,X                 ;; 05B2F8 : BD 9B B2  
                                                           ;;                      ;
 CODE_05B31B:          LDY.B #$1C                          ;; 05B31B : A0 1C       ;
                       LDA.B #$F0                          ;; 05B31D : A9 F0       ;
-CODE_05B31F:          STA.W !OAMTileYPos,Y                ;; 05B31F : 99 01 02    ;
+                    - STA.W !OAMTileYPos,Y                ;; 05B31F : 99 01 02    ;
                       DEY                                 ;; 05B322 : 88          ;
                       DEY                                 ;; 05B323 : 88          ;
                       DEY                                 ;; 05B324 : 88          ;
                       DEY                                 ;; 05B325 : 88          ;
-                      BPL CODE_05B31F                     ;; 05B326 : 10 F7       ;
+                      BPL -                               ;; 05B326 : 10 F7       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 ADDR_05B329:          PHA                                 ;; 05B329 : 48          ;
@@ -3047,9 +3047,9 @@ CODE_05B330:          STA.B !_0                           ;; 05B330 : 85 00     
                       BEQ Return05B35A                    ;; 05B33C : F0 1C       ;
                       SEC                                 ;; 05B33E : 38          ;
                       SBC.B !_0                           ;; 05B33F : E5 00       ;
-                      BPL CODE_05B345                     ;; 05B341 : 10 02       ;
+                      BPL +                               ;; 05B341 : 10 02       ;
                       LDA.B #$00                          ;; 05B343 : A9 00       ;
-CODE_05B345:          STA.W !GreenStarBlockCoins          ;; 05B345 : 8D C0 0D    ;
+                    + STA.W !GreenStarBlockCoins          ;; 05B345 : 8D C0 0D    ;
                       BRA Return05B35A                    ;; 05B348 : 80 10       ;
                                                           ;;                      ;
 CODE_05B34A:          INC.W !CoinAdder                    ;; 05B34A : EE CC 13    ;
@@ -3443,17 +3443,17 @@ CODE_05BC00:          PHB                                 ;; 05BC00 : 8B        
                       SBC.B !Layer2XPos                   ;; 05BC2A : E5 1E       ;
                       LDY.W !Layer2ScrollCmd              ;; 05BC2C : AC 3F 14    ;
                       DEY                                 ;; 05BC2F : 88          ;
-                      BNE CODE_05BC33                     ;; 05BC30 : D0 01       ;
+                      BNE +                               ;; 05BC30 : D0 01       ;
                       TYA                                 ;; 05BC32 : 98          ;
-CODE_05BC33:          STA.W !Layer2DXPos                  ;; 05BC33 : 8D BF 17    ;
+                    + STA.W !Layer2DXPos                  ;; 05BC33 : 8D BF 17    ;
                       LDA.W !NextLayer2YPos               ;; 05BC36 : AD 68 14    ;
                       SEC                                 ;; 05BC39 : 38          ;
                       SBC.B !Layer2YPos                   ;; 05BC3A : E5 20       ;
                       STA.W !Layer2DYPos                  ;; 05BC3C : 8D BE 17    ;
                       LDA.W !Layer3ScrollType             ;; 05BC3F : AD D5 13    ;
-                      BNE CODE_05BC47                     ;; 05BC42 : D0 03       ;
+                      BNE +                               ;; 05BC42 : D0 03       ;
                       JSR CODE_05C40C                     ;; 05BC44 : 20 0C C4    ;
-CODE_05BC47:          PLB                                 ;; 05BC47 : AB          ;
+                    + PLB                                 ;; 05BC47 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 Return05BC49:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -3466,14 +3466,14 @@ CODE_05BC4A:          REP #$20                            ;; 05BC4A : C2 20     
                       SBC.W !NextLayer1XPos               ;; 05BC55 : ED 62 14    ;
                       STA.B !Layer23XRelPos               ;; 05BC58 : 85 26       ;
                       LDA.W !NextLayer2YPos               ;; 05BC5A : AD 68 14    ;
-                      BRA CODE_05BC69                     ;; 05BC5D : 80 0A       ;
+                      BRA +                               ;; 05BC5D : 80 0A       ;
                                                           ;;                      ;
 CODE_05BC5F:          LDA.B !Layer3XPos                   ;; 05BC5F : A5 22       ;
                       SEC                                 ;; 05BC61 : 38          ;
                       SBC.W !NextLayer1XPos               ;; 05BC62 : ED 62 14    ;
                       STA.B !Layer23XRelPos               ;; 05BC65 : 85 26       ;
                       LDA.B !Layer3YPos                   ;; 05BC67 : A5 24       ;
-CODE_05BC69:          SEC                                 ;; 05BC69 : 38          ;
+                    + SEC                                 ;; 05BC69 : 38          ;
                       SBC.W !NextLayer1YPos               ;; 05BC6A : ED 64 14    ;
                       STA.B !Layer23YRelPos               ;; 05BC6D : 85 28       ;
                       SEP #$20                            ;; 05BC6F : E2 20       ; Accum (8 bit) 
@@ -3603,9 +3603,9 @@ CODE_05BD4C:          LDX.W !ScrollLayerIndex             ;; 05BD4C : AE 56 14  
                       TAX                                 ;; 05BD62 : AA          ;
                       LDY.W !Layer1ScrollBits             ;; 05BD63 : AC 40 14    ;
                       LDA.W !ScrollLayerIndex             ;; 05BD66 : AD 56 14    ;
-                      BEQ CODE_05BD6E                     ;; 05BD69 : F0 03       ;
+                      BEQ +                               ;; 05BD69 : F0 03       ;
                       LDY.W !Layer2ScrollBits             ;; 05BD6B : AC 41 14    ;
-CODE_05BD6E:          LDA.W DATA_05CA61,Y                 ;; 05BD6E : B9 61 CA    ;
+                    + LDA.W DATA_05CA61,Y                 ;; 05BD6E : B9 61 CA    ;
                       STA.W !Layer1ScrollType,X           ;; 05BD71 : 9D 42 14    ;
                       LDA.W DATA_05CA68,Y                 ;; 05BD74 : B9 68 CA    ;
                       STA.W !Layer1ScrollTimer,X          ;; 05BD77 : 9D 44 14    ;
@@ -3623,9 +3623,9 @@ CODE_05BD6E:          LDA.W DATA_05CA61,Y                 ;; 05BD6E : B9 61 CA  
                       LDY.W !Layer1ScrollBits             ;; 05BD90 : AC 40 14    ;
                       LDA.W !ScrollLayerIndex             ;; 05BD93 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05BD96 : 29 FF 00    ;
-                      BEQ ADDR_05BD9E                     ;; 05BD99 : F0 03       ;
+                      BEQ +                               ;; 05BD99 : F0 03       ;
                       LDY.W !Layer2ScrollBits             ;; 05BD9B : AC 41 14    ;
-ADDR_05BD9E:          LDA.W !ScrollLayerIndex             ;; 05BD9E : AD 56 14    ;
+                    + LDA.W !ScrollLayerIndex             ;; 05BD9E : AD 56 14    ;
                       AND.W #$00FF                        ;; 05BDA1 : 29 FF 00    ;
                       LSR A                               ;; 05BDA4 : 4A          ;
                       LSR A                               ;; 05BDA5 : 4A          ;
@@ -3634,10 +3634,10 @@ ADDR_05BD9E:          LDA.W !ScrollLayerIndex             ;; 05BD9E : AD 56 14  
                       STA.W !Layer1ScrollType,X           ;; 05BDAA : 9D 42 14    ;
                       LDA.W DATA_05CBC7,Y                 ;; 05BDAD : B9 C7 CB    ;
                       AND.W #$00FF                        ;; 05BDB0 : 29 FF 00    ;
-                      BEQ ADDR_05BDB9                     ;; 05BDB3 : F0 04       ;
+                      BEQ +                               ;; 05BDB3 : F0 04       ;
                       EOR.W #$FFFF                        ;; 05BDB5 : 49 FF FF    ;
                       INC A                               ;; 05BDB8 : 1A          ;
-ADDR_05BDB9:          LDX.W !ScrollLayerIndex             ;; 05BDB9 : AE 56 14    ;
+                    + LDX.W !ScrollLayerIndex             ;; 05BDB9 : AE 56 14    ;
                       CLC                                 ;; 05BDBC : 18          ;
                       ADC.W !NextLayer1YPos,X             ;; 05BDBD : 7D 64 14    ;
                       AND.W #$00FF                        ;; 05BDC0 : 29 FF 00    ;
@@ -3667,9 +3667,9 @@ ADDR_05BDF0:          REP #$20                            ;; 05BDF0 : C2 20     
                       LDY.W !Layer1ScrollBits             ;; 05BDF2 : AC 40 14    ;
                       LDA.W !ScrollLayerIndex             ;; 05BDF5 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05BDF8 : 29 FF 00    ;
-                      BEQ ADDR_05BE00                     ;; 05BDFB : F0 03       ;
+                      BEQ +                               ;; 05BDFB : F0 03       ;
                       LDY.W !Layer2ScrollBits             ;; 05BDFD : AC 41 14    ;
-ADDR_05BE00:          LDA.W !ScrollLayerIndex             ;; 05BE00 : AD 56 14    ;
+                    + LDA.W !ScrollLayerIndex             ;; 05BE00 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05BE03 : 29 FF 00    ;
                       LSR A                               ;; 05BE06 : 4A          ;
                       LSR A                               ;; 05BE07 : 4A          ;
@@ -3687,10 +3687,10 @@ ADDR_05BE00:          LDA.W !ScrollLayerIndex             ;; 05BE00 : AD 56 14  
                       LDX.W !ScrollLayerIndex             ;; 05BE1A : AE 56 14    ;
                       LDA.B !_0                           ;; 05BE1D : A5 00       ;
                       CPY.B #$01                          ;; 05BE1F : C0 01       ;
-                      BEQ ADDR_05BE27                     ;; 05BE21 : F0 04       ;
+                      BEQ +                               ;; 05BE21 : F0 04       ;
                       EOR.W #$FFFF                        ;; 05BE23 : 49 FF FF    ;
                       INC A                               ;; 05BE26 : 1A          ;
-ADDR_05BE27:          CLC                                 ;; 05BE27 : 18          ;
+                    + CLC                                 ;; 05BE27 : 18          ;
                       ADC.W !NextLayer1YPos,X             ;; 05BE28 : 7D 64 14    ;
                       STA.W !Layer1ScrollXPosUpd,X        ;; 05BE2B : 9D 4E 14    ;
                       STZ.W !Layer1ScrollXSpeed,X         ;; 05BE2E : 9E 46 14    ;
@@ -3711,9 +3711,9 @@ ADDR_05BE4D:          REP #$20                            ;; 05BE4D : C2 20     
                       LDY.W !Layer1ScrollBits             ;; 05BE4F : AC 40 14    ;
                       LDA.W !ScrollLayerIndex             ;; 05BE52 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05BE55 : 29 FF 00    ;
-                      BEQ ADDR_05BE5D                     ;; 05BE58 : F0 03       ;
+                      BEQ +                               ;; 05BE58 : F0 03       ;
                       LDY.W !Layer2ScrollBits             ;; 05BE5A : AC 41 14    ;
-ADDR_05BE5D:          LDA.W !ScrollLayerIndex             ;; 05BE5D : AD 56 14    ;
+                    + LDA.W !ScrollLayerIndex             ;; 05BE5D : AD 56 14    ;
                       AND.W #$00FF                        ;; 05BE60 : 29 FF 00    ;
                       LSR A                               ;; 05BE63 : 4A          ;
                       LSR A                               ;; 05BE64 : 4A          ;
@@ -3724,10 +3724,10 @@ ADDR_05BE5D:          LDA.W !ScrollLayerIndex             ;; 05BE5D : AD 56 14  
                       LDX.W !ScrollLayerIndex             ;; 05BE6D : AE 56 14    ;
                       LDA.W #$0F17                        ;; 05BE70 : A9 17 0F    ;
                       CPY.B #$01                          ;; 05BE73 : C0 01       ;
-                      BEQ ADDR_05BE7B                     ;; 05BE75 : F0 04       ;
+                      BEQ +                               ;; 05BE75 : F0 04       ;
                       EOR.W #$FFFF                        ;; 05BE77 : 49 FF FF    ;
                       INC A                               ;; 05BE7A : 1A          ;
-ADDR_05BE7B:          STA.W !Layer1ScrollYPosUpd,X        ;; 05BE7B : 9D 50 14    ;
+                    + STA.W !Layer1ScrollYPosUpd,X        ;; 05BE7B : 9D 50 14    ;
                       STZ.W !Layer1ScrollXSpeed,X         ;; 05BE7E : 9E 46 14    ;
                       STZ.W !Layer1ScrollYSpeed,X         ;; 05BE81 : 9E 48 14    ;
                       STZ.W !Layer1ScrollXPosUpd,X        ;; 05BE84 : 9E 4E 14    ;
@@ -3766,9 +3766,9 @@ CODE_05BEC6:          REP #$20                            ;; 05BEC6 : C2 20     
                       LDY.W !Layer1ScrollBits             ;; 05BEC8 : AC 40 14    ;
                       LDA.W !ScrollLayerIndex             ;; 05BECB : AD 56 14    ;
                       AND.W #$00FF                        ;; 05BECE : 29 FF 00    ;
-                      BEQ CODE_05BED6                     ;; 05BED1 : F0 03       ;
+                      BEQ +                               ;; 05BED1 : F0 03       ;
                       LDY.W !Layer2ScrollBits             ;; 05BED3 : AC 41 14    ;
-CODE_05BED6:          LDA.W !ScrollLayerIndex             ;; 05BED6 : AD 56 14    ;
+                    + LDA.W !ScrollLayerIndex             ;; 05BED6 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05BED9 : 29 FF 00    ;
                       LSR A                               ;; 05BEDC : 4A          ;
                       LSR A                               ;; 05BEDD : 4A          ;
@@ -3782,10 +3782,10 @@ CODE_05BED6:          LDA.W !ScrollLayerIndex             ;; 05BED6 : AD 56 14  
                       LDA.W DATA_05CBED,Y                 ;; 05BEE9 : B9 ED CB    ;
                       AND.W #$00FF                        ;; 05BEEC : 29 FF 00    ;
                       CPX.B #$01                          ;; 05BEEF : E0 01       ;
-                      BEQ CODE_05BEF7                     ;; 05BEF1 : F0 04       ;
+                      BEQ +                               ;; 05BEF1 : F0 04       ;
                       EOR.W #$FFFF                        ;; 05BEF3 : 49 FF FF    ;
                       INC A                               ;; 05BEF6 : 1A          ;
-CODE_05BEF7:          LDX.W !ScrollLayerIndex             ;; 05BEF7 : AE 56 14    ;
+                    + LDX.W !ScrollLayerIndex             ;; 05BEF7 : AE 56 14    ;
                       CLC                                 ;; 05BEFA : 18          ;
                       ADC.W !NextLayer1XPos,X             ;; 05BEFB : 7D 62 14    ;
                       AND.W #$00FF                        ;; 05BEFE : 29 FF 00    ;
@@ -3806,9 +3806,9 @@ CODE_05BF20:          REP #$20                            ;; 05BF20 : C2 20     
                       LDY.W !Layer1ScrollBits             ;; 05BF22 : AC 40 14    ;
                       LDA.W !ScrollLayerIndex             ;; 05BF25 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05BF28 : 29 FF 00    ;
-                      BEQ CODE_05BF30                     ;; 05BF2B : F0 03       ;
+                      BEQ +                               ;; 05BF2B : F0 03       ;
                       LDY.W !Layer2ScrollBits             ;; 05BF2D : AC 41 14    ;
-CODE_05BF30:          LDA.W !ScrollLayerIndex             ;; 05BF30 : AD 56 14    ;
+                    + LDA.W !ScrollLayerIndex             ;; 05BF30 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05BF33 : 29 FF 00    ;
                       LSR A                               ;; 05BF36 : 4A          ;
                       LSR A                               ;; 05BF37 : 4A          ;
@@ -3822,10 +3822,10 @@ CODE_05BF30:          LDA.W !ScrollLayerIndex             ;; 05BF30 : AD 56 14  
                       LDA.W DATA_05CBF5,Y                 ;; 05BF43 : B9 F5 CB    ;
                       AND.W #$00FF                        ;; 05BF46 : 29 FF 00    ;
                       CPX.B #$01                          ;; 05BF49 : E0 01       ;
-                      BEQ CODE_05BF51                     ;; 05BF4B : F0 04       ;
+                      BEQ +                               ;; 05BF4B : F0 04       ;
                       EOR.W #$FFFF                        ;; 05BF4D : 49 FF FF    ;
                       INC A                               ;; 05BF50 : 1A          ;
-CODE_05BF51:          LDX.W !ScrollLayerIndex             ;; 05BF51 : AE 56 14    ;
+                    + LDX.W !ScrollLayerIndex             ;; 05BF51 : AE 56 14    ;
                       CLC                                 ;; 05BF54 : 18          ;
                       ADC.W !NextLayer1YPos,X             ;; 05BF55 : 7D 64 14    ;
                       AND.W #$00FF                        ;; 05BF58 : 29 FF 00    ;
@@ -3937,12 +3937,12 @@ CODE_05C04D:          LDA.W !ScrollLayerIndex             ;; 05C04D : AD 56 14  
                       LSR A                               ;; 05C051 : 4A          ;
                       TAX                                 ;; 05C052 : AA          ;
                       LDA.W !Layer1ScrollTimer,X          ;; 05C053 : BD 44 14    ;
-                      BNE CODE_05C05F                     ;; 05C056 : D0 07       ;
+                      BNE +                               ;; 05C056 : D0 07       ;
                       LDX.W !ScrollLayerIndex             ;; 05C058 : AE 56 14    ;
                       STZ.W !Layer1ScrollXSpeed,X         ;; 05C05B : 9E 46 14    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_05C05F:          REP #$20                            ;; 05C05F : C2 20       ; Accum (16 bit) 
+                    + REP #$20                            ;; 05C05F : C2 20       ; Accum (16 bit) 
                       LDA.W !Layer1ScrollType,X           ;; 05C061 : BD 42 14    ;
                       TAY                                 ;; 05C064 : A8          ;
                       LDA.W DATA_05CA6E,Y                 ;; 05C065 : B9 6E CA    ;
@@ -3974,11 +3974,11 @@ CODE_05C098:          ASL A                               ;; 05C098 : 0A        
                       SEC                                 ;; 05C09C : 38          ;
                       SBC.B !_0                           ;; 05C09D : E5 00       ;
                       STA.B !_0                           ;; 05C09F : 85 00       ;
-                      BPL CODE_05C0A9                     ;; 05C0A1 : 10 06       ;
+                      BPL +                               ;; 05C0A1 : 10 06       ;
                       LDX.B #$00                          ;; 05C0A3 : A2 00       ;
                       EOR.W #$FFFF                        ;; 05C0A5 : 49 FF FF    ;
                       INC A                               ;; 05C0A8 : 1A          ;
-CODE_05C0A9:          STA.B !_4                           ;; 05C0A9 : 85 04       ;
+                    + STA.B !_4                           ;; 05C0A9 : 85 04       ;
                       STX.B !_8                           ;; 05C0AB : 86 08       ;
 CODE_05C0AD:          LDX.B #$00                          ;; 05C0AD : A2 00       ;
                       LDA.W DATA_05CABF,Y                 ;; 05C0AF : B9 BF CA    ;
@@ -3995,16 +3995,16 @@ CODE_05C0BD:          ASL A                               ;; 05C0BD : 0A        
                       SEC                                 ;; 05C0C1 : 38          ;
                       SBC.B !_2                           ;; 05C0C2 : E5 02       ;
                       STA.B !_2                           ;; 05C0C4 : 85 02       ;
-                      BPL CODE_05C0CE                     ;; 05C0C6 : 10 06       ;
+                      BPL +                               ;; 05C0C6 : 10 06       ;
                       LDX.B #$02                          ;; 05C0C8 : A2 02       ;
                       EOR.W #$FFFF                        ;; 05C0CA : 49 FF FF    ;
                       INC A                               ;; 05C0CD : 1A          ;
-CODE_05C0CE:          STA.B !_6                           ;; 05C0CE : 85 06       ;
+                    + STA.B !_6                           ;; 05C0CE : 85 06       ;
 CODE_05C0D0:          LDA.B !ScreenMode                   ;; 05C0D0 : A5 5B       ;
                       LSR A                               ;; 05C0D2 : 4A          ;
-                      BCS CODE_05C0D7                     ;; 05C0D3 : B0 02       ;
+                      BCS +                               ;; 05C0D3 : B0 02       ;
                       LDX.B !_8                           ;; 05C0D5 : A6 08       ;
-CODE_05C0D7:          STX.B !Layer1ScrollDir              ;; 05C0D7 : 86 55       ;
+                    + STX.B !Layer1ScrollDir              ;; 05C0D7 : 86 55       ;
                       LDA.W #$FFFF                        ;; 05C0D9 : A9 FF FF    ;
                       STA.B !_8                           ;; 05C0DC : 85 08       ;
                       LDA.B !_4                           ;; 05C0DE : A5 04       ;
@@ -4012,13 +4012,13 @@ CODE_05C0D7:          STX.B !Layer1ScrollDir              ;; 05C0D7 : 86 55     
                       LDA.B !_6                           ;; 05C0E2 : A5 06       ;
                       STA.B !_C                           ;; 05C0E4 : 85 0C       ;
                       CMP.B !_4                           ;; 05C0E6 : C5 04       ;
-                      BCC CODE_05C0F5                     ;; 05C0E8 : 90 0B       ;
+                      BCC +                               ;; 05C0E8 : 90 0B       ;
                       STA.B !_A                           ;; 05C0EA : 85 0A       ;
                       LDA.B !_4                           ;; 05C0EC : A5 04       ;
                       STA.B !_C                           ;; 05C0EE : 85 0C       ;
                       LDA.W #$0001                        ;; 05C0F0 : A9 01 00    ;
                       STA.B !_8                           ;; 05C0F3 : 85 08       ;
-CODE_05C0F5:          LDA.B !_A                           ;; 05C0F5 : A5 0A       ;
+                    + LDA.B !_A                           ;; 05C0F5 : A5 0A       ;
                       STA.W !HW_WRDIV                     ;; 05C0F7 : 8D 04 42    ; Dividend (Low Byte)
                       SEP #$20                            ;; 05C0FA : E2 20       ; Accum (8 bit) 
                       LDA.W DATA_05CB0F,Y                 ;; 05C0FC : B9 0F CB    ;
@@ -4031,7 +4031,7 @@ CODE_05C0F5:          LDA.B !_A                           ;; 05C0F5 : A5 0A     
                       NOP                                 ;; 05C107 : EA          ;
                       REP #$20                            ;; 05C108 : C2 20       ; Accum (16 bit) 
                       LDA.W !HW_RDDIV                     ;; 05C10A : AD 14 42    ; Quotient of Divide Result (Low Byte)
-                      BNE CODE_05C123                     ;; 05C10D : D0 14       ;
+                      BNE +                               ;; 05C10D : D0 14       ;
                       LDA.W !ScrollLayerIndex             ;; 05C10F : AD 56 14    ;
                       AND.W #$00FF                        ;; 05C112 : 29 FF 00    ;
                       LSR A                               ;; 05C115 : 4A          ;
@@ -4042,7 +4042,7 @@ CODE_05C0F5:          LDA.B !_A                           ;; 05C0F5 : A5 0A     
                       DEC.W !Layer1ScrollTimer,X          ;; 05C11D : DE 44 14    ;
                       JMP CODE_05C04D                     ;; 05C120 : 4C 4D C0    ;
                                                           ;;                      ;
-CODE_05C123:          STA.B !_A                           ;; 05C123 : 85 0A       ; Accum (16 bit) 
+                    + STA.B !_A                           ;; 05C123 : 85 0A       ; Accum (16 bit) 
                       LDA.B !_C                           ;; 05C125 : A5 0C       ;
                       ASL A                               ;; 05C127 : 0A          ;
                       ASL A                               ;; 05C128 : 0A          ;
@@ -4055,9 +4055,9 @@ CODE_05C123:          STA.B !_A                           ;; 05C123 : 85 0A     
 CODE_05C134:          ASL.B !_C                           ;; 05C134 : 06 0C       ;
                       ROL A                               ;; 05C136 : 2A          ;
                       CMP.B !_A                           ;; 05C137 : C5 0A       ;
-                      BCC CODE_05C13D                     ;; 05C139 : 90 02       ;
+                      BCC +                               ;; 05C139 : 90 02       ;
                       SBC.B !_A                           ;; 05C13B : E5 0A       ;
-CODE_05C13D:          ROL.B !_E                           ;; 05C13D : 26 0E       ;
+                    + ROL.B !_E                           ;; 05C13D : 26 0E       ;
                       DEY                                 ;; 05C13F : 88          ;
                       BNE CODE_05C134                     ;; 05C140 : D0 F2       ;
                       LDA.W !ScrollLayerIndex             ;; 05C142 : AD 56 14    ;
@@ -4078,14 +4078,14 @@ CODE_05C13D:          ROL.B !_E                           ;; 05C13D : 26 0E     
 CODE_05C15D:          LDA.B !_8                           ;; 05C15D : A5 08       ;
                       BMI CODE_05C165                     ;; 05C15F : 30 04       ;
                       LDA.B !_A                           ;; 05C161 : A5 0A       ;
-                      BRA CODE_05C167                     ;; 05C163 : 80 02       ;
+                      BRA +                               ;; 05C163 : 80 02       ;
                                                           ;;                      ;
 CODE_05C165:          LDA.B !_E                           ;; 05C165 : A5 0E       ;
-CODE_05C167:          BIT.B !_0,X                         ;; 05C167 : 34 00       ;
-                      BPL CODE_05C16F                     ;; 05C169 : 10 04       ;
+                    + BIT.B !_0,X                         ;; 05C167 : 34 00       ;
+                      BPL +                               ;; 05C169 : 10 04       ;
                       EOR.W #$FFFF                        ;; 05C16B : 49 FF FF    ;
                       INC A                               ;; 05C16E : 1A          ;
-CODE_05C16F:          PHX                                 ;; 05C16F : DA          ;
+                    + PHX                                 ;; 05C16F : DA          ;
                       PHA                                 ;; 05C170 : 48          ;
                       TXA                                 ;; 05C171 : 8A          ;
                       CLC                                 ;; 05C172 : 18          ;
@@ -4095,9 +4095,9 @@ CODE_05C16F:          PHX                                 ;; 05C16F : DA        
                       LDY.B #$00                          ;; 05C178 : A0 00       ;
                       CMP.W !Layer1ScrollXSpeed,X         ;; 05C17A : DD 46 14    ;
                       BEQ CODE_05C18D                     ;; 05C17D : F0 0E       ;
-                      BPL CODE_05C183                     ;; 05C17F : 10 02       ;
+                      BPL +                               ;; 05C17F : 10 02       ;
                       LDY.B #$02                          ;; 05C181 : A0 02       ;
-CODE_05C183:          LDA.W !Layer1ScrollXSpeed,X         ;; 05C183 : BD 46 14    ;
+                    + LDA.W !Layer1ScrollXSpeed,X         ;; 05C183 : BD 46 14    ;
                       CLC                                 ;; 05C186 : 18          ;
                       ADC.W DATA_05CB5F,Y                 ;; 05C187 : 79 5F CB    ;
                       STA.W !Layer1ScrollXSpeed,X         ;; 05C18A : 9D 46 14    ;
@@ -4129,13 +4129,13 @@ CODE_05C198:          JSR CODE_05C04D                     ;; 05C198 : 20 4D C0  
                       DEC.W !Layer1ScrollTimer,X          ;; 05C1B9 : DE 44 14    ;
                       LDA.W !Layer1ScrollTimer,X          ;; 05C1BC : BD 44 14    ;
                       CMP.B #$20                          ;; 05C1BF : C9 20       ;
-                      BCC ADDR_05C1D1                     ;; 05C1C1 : 90 0E       ;
+                      BCC +                               ;; 05C1C1 : 90 0E       ;
                       REP #$20                            ;; 05C1C3 : C2 20       ; Accum (16 bit) 
                       LDX.W !ScrollLayerIndex             ;; 05C1C5 : AE 56 14    ;
                       LDA.W !NextLayer1YPos,X             ;; 05C1C8 : BD 64 14    ;
                       EOR.W #$0001                        ;; 05C1CB : 49 01 00    ;
                       STA.W !NextLayer1YPos,X             ;; 05C1CE : 9D 64 14    ;
-ADDR_05C1D1:          JMP CODE_05C32B                     ;; 05C1D1 : 4C 2B C3    ;
+                    + JMP CODE_05C32B                     ;; 05C1D1 : 4C 2B C3    ;
                                                           ;;                      ;
 ADDR_05C1D4:          REP #$30                            ;; 05C1D4 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDY.W !ScrollLayerIndex             ;; 05C1D6 : AC 56 14    ;
@@ -4146,11 +4146,11 @@ ADDR_05C1D4:          REP #$30                            ;; 05C1D4 : C2 30     
                       BCC ADDR_05C1EB                     ;; 05C1E3 : 90 06       ;
                       STA.B !_4                           ;; 05C1E5 : 85 04       ;
                       STX.B !_2                           ;; 05C1E7 : 86 02       ;
-                      BRA ADDR_05C1EF                     ;; 05C1E9 : 80 04       ;
+                      BRA +                               ;; 05C1E9 : 80 04       ;
                                                           ;;                      ;
 ADDR_05C1EB:          STA.B !_2                           ;; 05C1EB : 85 02       ;
                       STX.B !_4                           ;; 05C1ED : 86 04       ;
-ADDR_05C1EF:          SEP #$10                            ;; 05C1EF : E2 10       ; Index (8 bit) 
+                    + SEP #$10                            ;; 05C1EF : E2 10       ; Index (8 bit) 
                       LDA.B !_2                           ;; 05C1F1 : A5 02       ;
                       CMP.B !_4                           ;; 05C1F3 : C5 04       ;
                       BCC ADDR_05C24D                     ;; 05C1F5 : 90 56       ;
@@ -4169,9 +4169,9 @@ ADDR_05C1EF:          SEP #$10                            ;; 05C1EF : E2 10     
                       LDY.W !Layer1ScrollBits             ;; 05C211 : AC 40 14    ;
                       LDA.W !ScrollLayerIndex             ;; 05C214 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05C217 : 29 FF 00    ;
-                      BEQ ADDR_05C21F                     ;; 05C21A : F0 03       ;
+                      BEQ +                               ;; 05C21A : F0 03       ;
                       LDY.W !Layer2ScrollBits             ;; 05C21C : AC 41 14    ;
-ADDR_05C21F:          LDA.W DATA_05CBC7,Y                 ;; 05C21F : B9 C7 CB    ;
+                    + LDA.W DATA_05CBC7,Y                 ;; 05C21F : B9 C7 CB    ;
                       AND.W #$00FF                        ;; 05C222 : 29 FF 00    ;
                       STA.B !_0                           ;; 05C225 : 85 00       ;
                       TXA                                 ;; 05C227 : 8A          ;
@@ -4182,12 +4182,12 @@ ADDR_05C21F:          LDA.W DATA_05CBC7,Y                 ;; 05C21F : B9 C7 CB  
                       EOR.W #$0001                        ;; 05C22E : 49 01 00    ;
                       STA.W !Layer1ScrollType,X           ;; 05C231 : 9D 42 14    ;
                       AND.W #$00FF                        ;; 05C234 : 29 FF 00    ;
-                      BNE ADDR_05C241                     ;; 05C237 : D0 08       ;
+                      BNE +                               ;; 05C237 : D0 08       ;
                       LDA.B !_0                           ;; 05C239 : A5 00       ;
                       EOR.W #$FFFF                        ;; 05C23B : 49 FF FF    ;
                       INC A                               ;; 05C23E : 1A          ;
                       STA.B !_0                           ;; 05C23F : 85 00       ;
-ADDR_05C241:          LDX.W !ScrollLayerIndex             ;; 05C241 : AE 56 14    ;
+                    + LDX.W !ScrollLayerIndex             ;; 05C241 : AE 56 14    ;
                       LDA.B !_0                           ;; 05C244 : A5 00       ;
                       CLC                                 ;; 05C246 : 18          ;
                       ADC.W !Layer1ScrollXPosUpd,X        ;; 05C247 : 7D 4E 14    ;
@@ -4202,16 +4202,16 @@ ADDR_05C24D:          LDA.W !ScrollLayerIndex             ;; 05C24D : AD 56 14  
                       LDA.W DATA_05CBC8,X                 ;; 05C25A : BD C8 CB    ;
                       AND.W #$00FF                        ;; 05C25D : 29 FF 00    ;
                       CPX.B #$01                          ;; 05C260 : E0 01       ;
-                      BEQ ADDR_05C268                     ;; 05C262 : F0 04       ;
+                      BEQ +                               ;; 05C262 : F0 04       ;
                       EOR.W #$FFFF                        ;; 05C264 : 49 FF FF    ;
                       INC A                               ;; 05C267 : 1A          ;
-ADDR_05C268:          LDX.W !ScrollLayerIndex             ;; 05C268 : AE 56 14    ;
+                    + LDX.W !ScrollLayerIndex             ;; 05C268 : AE 56 14    ;
                       LDY.B #$00                          ;; 05C26B : A0 00       ;
                       CMP.W !Layer1ScrollYSpeed,X         ;; 05C26D : DD 48 14    ;
                       BEQ ADDR_05C280                     ;; 05C270 : F0 0E       ;
-                      BPL ADDR_05C276                     ;; 05C272 : 10 02       ;
+                      BPL +                               ;; 05C272 : 10 02       ;
                       LDY.B #$02                          ;; 05C274 : A0 02       ;
-ADDR_05C276:          LDA.W !Layer1ScrollYSpeed,X         ;; 05C276 : BD 48 14    ;
+                    + LDA.W !Layer1ScrollYSpeed,X         ;; 05C276 : BD 48 14    ;
                       CLC                                 ;; 05C279 : 18          ;
                       ADC.W DATA_05CB7B,Y                 ;; 05C27A : 79 7B CB    ;
                       STA.W !Layer1ScrollYSpeed,X         ;; 05C27D : 9D 48 14    ;
@@ -4222,10 +4222,10 @@ ADDR_05C283:          REP #$20                            ;; 05C283 : C2 20     
                       LDA.W !Layer1ScrollXPosUpd,Y        ;; 05C288 : B9 4E 14    ;
                       SEC                                 ;; 05C28B : 38          ;
                       SBC.W !NextLayer1YPos,Y             ;; 05C28C : F9 64 14    ;
-                      BPL ADDR_05C295                     ;; 05C28F : 10 04       ;
+                      BPL +                               ;; 05C28F : 10 04       ;
                       EOR.W #$FFFF                        ;; 05C291 : 49 FF FF    ;
                       INC A                               ;; 05C294 : 1A          ;
-ADDR_05C295:          STA.B !_2                           ;; 05C295 : 85 02       ;
+                    + STA.B !_2                           ;; 05C295 : 85 02       ;
                       LDA.W !ScrollLayerIndex             ;; 05C297 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05C29A : 29 FF 00    ;
                       LSR A                               ;; 05C29D : 4A          ;
@@ -4260,34 +4260,34 @@ ADDR_05C295:          STA.B !_2                           ;; 05C295 : 85 02     
                       LDX.W !ScrollLayerIndex             ;; 05C2D0 : AE 56 14    ;
                       LDA.W #$0200                        ;; 05C2D3 : A9 00 02    ;
                       CPY.B #$01                          ;; 05C2D6 : C0 01       ;
-                      BNE ADDR_05C2DE                     ;; 05C2D8 : D0 04       ;
+                      BNE +                               ;; 05C2D8 : D0 04       ;
                       EOR.W #$FFFF                        ;; 05C2DA : 49 FF FF    ;
                       INC A                               ;; 05C2DD : 1A          ;
-ADDR_05C2DE:          CLC                                 ;; 05C2DE : 18          ;
+                    + CLC                                 ;; 05C2DE : 18          ;
                       ADC.W !NextLayer1YPos,X             ;; 05C2DF : 7D 64 14    ;
                       STA.W !NextLayer1YPos,X             ;; 05C2E2 : 9D 64 14    ;
 ADDR_05C2E5:          LDX.W !Layer1ScrollBits             ;; 05C2E5 : AE 40 14    ;
                       LDA.W !ScrollLayerIndex             ;; 05C2E8 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05C2EB : 29 FF 00    ;
-                      BEQ ADDR_05C2F3                     ;; 05C2EE : F0 03       ;
+                      BEQ +                               ;; 05C2EE : F0 03       ;
                       LDX.W !Layer2ScrollBits             ;; 05C2F0 : AE 41 14    ;
-ADDR_05C2F3:          LDA.W DATA_05CBE3,X                 ;; 05C2F3 : BD E3 CB    ;
+                    + LDA.W DATA_05CBE3,X                 ;; 05C2F3 : BD E3 CB    ;
                       AND.W #$00FF                        ;; 05C2F6 : 29 FF 00    ;
                       ASL A                               ;; 05C2F9 : 0A          ;
                       ASL A                               ;; 05C2FA : 0A          ;
                       ASL A                               ;; 05C2FB : 0A          ;
                       ASL A                               ;; 05C2FC : 0A          ;
                       CPY.B #$01                          ;; 05C2FD : C0 01       ;
-                      BEQ ADDR_05C305                     ;; 05C2FF : F0 04       ;
+                      BEQ +                               ;; 05C2FF : F0 04       ;
                       EOR.W #$FFFF                        ;; 05C301 : 49 FF FF    ;
                       INC A                               ;; 05C304 : 1A          ;
-ADDR_05C305:          LDX.W !ScrollLayerIndex             ;; 05C305 : AE 56 14    ;
+                    + LDX.W !ScrollLayerIndex             ;; 05C305 : AE 56 14    ;
                       LDY.B #$00                          ;; 05C308 : A0 00       ;
                       CMP.W !Layer1ScrollYSpeed,X         ;; 05C30A : DD 48 14    ;
                       BEQ ADDR_05C31D                     ;; 05C30D : F0 0E       ;
-                      BPL ADDR_05C313                     ;; 05C30F : 10 02       ;
+                      BPL +                               ;; 05C30F : 10 02       ;
                       LDY.B #$02                          ;; 05C311 : A0 02       ;
-ADDR_05C313:          LDA.W !Layer1ScrollYSpeed,X         ;; 05C313 : BD 48 14    ;
+                    + LDA.W !Layer1ScrollYSpeed,X         ;; 05C313 : BD 48 14    ;
                       CLC                                 ;; 05C316 : 18          ;
                       ADC.W DATA_05CB9B,Y                 ;; 05C317 : 79 9B CB    ;
                       STA.W !Layer1ScrollYSpeed,X         ;; 05C31A : 9D 48 14    ;
@@ -4305,10 +4305,10 @@ ADDR_05C32E:          REP #$20                            ;; 05C32E : C2 20     
                       LDA.W !Layer1ScrollYPosUpd,Y        ;; 05C333 : B9 50 14    ;
                       SEC                                 ;; 05C336 : 38          ;
                       SBC.W !NextLayer1XPos,Y             ;; 05C337 : F9 62 14    ;
-                      BPL ADDR_05C340                     ;; 05C33A : 10 04       ;
+                      BPL +                               ;; 05C33A : 10 04       ;
                       EOR.W #$FFFF                        ;; 05C33C : 49 FF FF    ;
                       INC A                               ;; 05C33F : 1A          ;
-ADDR_05C340:          STA.B !_2                           ;; 05C340 : 85 02       ;
+                    + STA.B !_2                           ;; 05C340 : 85 02       ;
                       LDA.W !ScrollLayerIndex             ;; 05C342 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05C345 : 29 FF 00    ;
                       LSR A                               ;; 05C348 : 4A          ;
@@ -4343,10 +4343,10 @@ ADDR_05C340:          STA.B !_2                           ;; 05C340 : 85 02     
                       LDX.W !ScrollLayerIndex             ;; 05C37B : AE 56 14    ;
                       LDA.W #$0600                        ;; 05C37E : A9 00 06    ;
                       CPY.B #$01                          ;; 05C381 : C0 01       ;
-                      BNE ADDR_05C389                     ;; 05C383 : D0 04       ;
+                      BNE +                               ;; 05C383 : D0 04       ;
                       EOR.W #$FFFF                        ;; 05C385 : 49 FF FF    ;
                       INC A                               ;; 05C388 : 1A          ;
-ADDR_05C389:          CLC                                 ;; 05C389 : 18          ;
+                    + CLC                                 ;; 05C389 : 18          ;
                       ADC.W !NextLayer1XPos,X             ;; 05C38A : 7D 62 14    ;
                       STA.W !NextLayer1XPos,X             ;; 05C38D : 9D 62 14    ;
                       LDA.W #$FFF8                        ;; 05C390 : A9 F8 FF    ;
@@ -4366,10 +4366,10 @@ ADDR_05C39F:          LDA.W !ScrollLayerIndex             ;; 05C39F : AD 56 14  
                       LDX.B #$02                          ;; 05C3B1 : A2 02       ;
                       LDY.B #$00                          ;; 05C3B3 : A0 00       ;
                       CMP.B #$01                          ;; 05C3B5 : C9 01       ;
-                      BEQ ADDR_05C3BD                     ;; 05C3B7 : F0 04       ;
+                      BEQ +                               ;; 05C3B7 : F0 04       ;
                       LDX.B #$00                          ;; 05C3B9 : A2 00       ;
                       LDY.B #$01                          ;; 05C3BB : A0 01       ;
-ADDR_05C3BD:          TXA                                 ;; 05C3BD : 8A          ;
+                    + TXA                                 ;; 05C3BD : 8A          ;
                       STA.W !Layer1ScrollDir,Y            ;; 05C3BE : 99 55 00    ;
                       REP #$20                            ;; 05C3C1 : C2 20       ; Accum (16 bit) 
                       PLA                                 ;; 05C3C3 : 68          ;
@@ -4377,25 +4377,25 @@ ADDR_05C3BD:          TXA                                 ;; 05C3BD : 8A        
                       LDX.W !Layer1ScrollBits             ;; 05C3C5 : AE 40 14    ;
                       LDA.W !ScrollLayerIndex             ;; 05C3C8 : AD 56 14    ;
                       AND.W #$00FF                        ;; 05C3CB : 29 FF 00    ;
-                      BEQ ADDR_05C3D3                     ;; 05C3CE : F0 03       ;
+                      BEQ +                               ;; 05C3CE : F0 03       ;
                       LDX.W !Layer2ScrollBits             ;; 05C3D0 : AE 41 14    ;
-ADDR_05C3D3:          LDA.W DATA_05CBE5,X                 ;; 05C3D3 : BD E5 CB    ;
+                    + LDA.W DATA_05CBE5,X                 ;; 05C3D3 : BD E5 CB    ;
                       AND.W #$00FF                        ;; 05C3D6 : 29 FF 00    ;
                       ASL A                               ;; 05C3D9 : 0A          ;
                       ASL A                               ;; 05C3DA : 0A          ;
                       ASL A                               ;; 05C3DB : 0A          ;
                       ASL A                               ;; 05C3DC : 0A          ;
                       CPY.B #$01                          ;; 05C3DD : C0 01       ;
-                      BEQ ADDR_05C3E5                     ;; 05C3DF : F0 04       ;
+                      BEQ +                               ;; 05C3DF : F0 04       ;
                       EOR.W #$FFFF                        ;; 05C3E1 : 49 FF FF    ;
                       INC A                               ;; 05C3E4 : 1A          ;
-ADDR_05C3E5:          LDX.W !ScrollLayerIndex             ;; 05C3E5 : AE 56 14    ;
+                    + LDX.W !ScrollLayerIndex             ;; 05C3E5 : AE 56 14    ;
                       LDY.B #$00                          ;; 05C3E8 : A0 00       ;
                       CMP.W !Layer1ScrollXSpeed,X         ;; 05C3EA : DD 46 14    ;
                       BEQ ADDR_05C3FD                     ;; 05C3ED : F0 0E       ;
-                      BPL ADDR_05C3F3                     ;; 05C3EF : 10 02       ;
+                      BPL +                               ;; 05C3EF : 10 02       ;
                       LDY.B #$02                          ;; 05C3F1 : A0 02       ;
-ADDR_05C3F3:          LDA.W !Layer1ScrollXSpeed,X         ;; 05C3F3 : BD 46 14    ;
+                    + LDA.W !Layer1ScrollXSpeed,X         ;; 05C3F3 : BD 46 14    ;
                       CLC                                 ;; 05C3F6 : 18          ;
                       ADC.W DATA_05CBA3,Y                 ;; 05C3F7 : 79 A3 CB    ;
                       STA.W !Layer1ScrollXSpeed,X         ;; 05C3FA : 9D 46 14    ;
@@ -4412,10 +4412,10 @@ DATA_05C408:          db $FC,$04                          ;; 05C408             
 DATA_05C40A:          db $30,$A0                          ;; 05C40A               ;
                                                           ;;                      ;
 CODE_05C40C:          LDA.W !Layer3TideSetting            ;; 05C40C : AD 03 14    ;
-                      BEQ CODE_05C414                     ;; 05C40F : F0 03       ;
+                      BEQ +                               ;; 05C40F : F0 03       ;
                       JMP CODE_05C494                     ;; 05C411 : 4C 94 C4    ;
                                                           ;;                      ;
-CODE_05C414:          REP #$20                            ;; 05C414 : C2 20       ; Accum (16 bit) 
+                    + REP #$20                            ;; 05C414 : C2 20       ; Accum (16 bit) 
                       LDY.W !ObjectTileset                ;; 05C416 : AC 31 19    ;
                       CPY.B #$01                          ;; 05C419 : C0 01       ;
                       BEQ CODE_05C421                     ;; 05C41B : F0 04       ;
@@ -4438,15 +4438,15 @@ CODE_05C428:          LDY.W !SpriteLock                   ;; 05C428 : AC 9D 00  
                       ASL A                               ;; 05C43C : 0A          ;
                       ASL A                               ;; 05C43D : 0A          ;
                       CPY.B #$01                          ;; 05C43E : C0 01       ;
-                      BEQ CODE_05C446                     ;; 05C440 : F0 04       ;
+                      BEQ +                               ;; 05C440 : F0 04       ;
                       EOR.W #$FFFF                        ;; 05C442 : 49 FF FF    ;
                       INC A                               ;; 05C445 : 1A          ;
-CODE_05C446:          LDY.B #$00                          ;; 05C446 : A0 00       ;
+                    + LDY.B #$00                          ;; 05C446 : A0 00       ;
                       CMP.W !Layer3ScrollXSpeed           ;; 05C448 : CD 58 14    ;
                       BEQ CODE_05C45B                     ;; 05C44B : F0 0E       ;
-                      BPL CODE_05C451                     ;; 05C44D : 10 02       ;
+                      BPL +                               ;; 05C44D : 10 02       ;
                       LDY.B #$02                          ;; 05C44F : A0 02       ;
-CODE_05C451:          LDA.W !Layer3ScrollXSpeed           ;; 05C451 : AD 58 14    ;
+                    + LDA.W !Layer3ScrollXSpeed           ;; 05C451 : AD 58 14    ;
                       CLC                                 ;; 05C454 : 18          ;
                       ADC.W DATA_05CBBB,Y                 ;; 05C455 : 79 BB CB    ;
                       STA.W !Layer3ScrollXSpeed           ;; 05C458 : 8D 58 14    ;
@@ -4456,18 +4456,18 @@ CODE_05C45B:          LDA.W !Layer3ScrollXPosUpd          ;; 05C45B : AD 5C 14  
                       ADC.W !Layer3ScrollXSpeed           ;; 05C462 : 6D 58 14    ;
                       STA.W !Layer3ScrollXPosUpd          ;; 05C465 : 8D 5C 14    ;
                       AND.W #$FF00                        ;; 05C468 : 29 00 FF    ;
-                      BPL CODE_05C470                     ;; 05C46B : 10 03       ;
+                      BPL +                               ;; 05C46B : 10 03       ;
                       ORA.W #$00FF                        ;; 05C46D : 09 FF 00    ;
-CODE_05C470:          XBA                                 ;; 05C470 : EB          ;
+                    + XBA                                 ;; 05C470 : EB          ;
                       CLC                                 ;; 05C471 : 18          ;
                       ADC.B !Layer3XPos                   ;; 05C472 : 65 22       ;
                       STA.B !Layer3XPos                   ;; 05C474 : 85 22       ;
                       LDA.W !Layer1DXPos                  ;; 05C476 : AD BD 17    ;
                       AND.W #$00FF                        ;; 05C479 : 29 FF 00    ;
                       CMP.W #$0080                        ;; 05C47C : C9 80 00    ;
-                      BCC CODE_05C484                     ;; 05C47F : 90 03       ;
+                      BCC +                               ;; 05C47F : 90 03       ;
                       ORA.W #$FF00                        ;; 05C481 : 09 00 FF    ;
-CODE_05C484:          STA.B !_0                           ;; 05C484 : 85 00       ;
+                    + STA.B !_0                           ;; 05C484 : 85 00       ;
                       LDA.B !Layer3XPos                   ;; 05C486 : A5 22       ;
                       CLC                                 ;; 05C488 : 18          ;
                       ADC.B !_0                           ;; 05C489 : 65 00       ;
@@ -4490,19 +4490,19 @@ CODE_05C494:          DEC A                               ;; 05C494 : 3A        
                       DEC.W !Layer3TideTimer              ;; 05C4AA : CE 9D 1B    ;
                       BNE CODE_05C4EC                     ;; 05C4AD : D0 3D       ;
 CODE_05C4AF:          CMP.W DATA_05C408,Y                 ;; 05C4AF : D9 08 C4    ;
-                      BEQ CODE_05C4BB                     ;; 05C4B2 : F0 07       ;
+                      BEQ +                               ;; 05C4B2 : F0 07       ;
                       CLC                                 ;; 05C4B4 : 18          ;
                       ADC.W DATA_05C406,Y                 ;; 05C4B5 : 79 06 C4    ;
                       STA.W !Layer3ScrollYSpeed           ;; 05C4B8 : 8D 5A 14    ;
-CODE_05C4BB:          LDA.B #$4B                          ;; 05C4BB : A9 4B       ;
+                    + LDA.B #$4B                          ;; 05C4BB : A9 4B       ;
                       STA.W !Layer3TideTimer              ;; 05C4BD : 8D 9D 1B    ;
 CODE_05C4C0:          LDA.B !Layer3YPos                   ;; 05C4C0 : A5 24       ;
                       CMP.W DATA_05C40A,Y                 ;; 05C4C2 : D9 0A C4    ;
-                      BNE CODE_05C4CD                     ;; 05C4C5 : D0 06       ;
+                      BNE +                               ;; 05C4C5 : D0 06       ;
                       TYA                                 ;; 05C4C7 : 98          ;
                       EOR.B #$01                          ;; 05C4C8 : 49 01       ;
                       STA.W !Layer3ScroolDir              ;; 05C4CA : 8D 60 14    ;
-CODE_05C4CD:          LDA.W !Layer3ScrollYSpeed           ;; 05C4CD : AD 5A 14    ;
+                    + LDA.W !Layer3ScrollYSpeed           ;; 05C4CD : AD 5A 14    ;
                       ASL A                               ;; 05C4D0 : 0A          ;
                       ASL A                               ;; 05C4D1 : 0A          ;
                       ASL A                               ;; 05C4D2 : 0A          ;
@@ -4517,9 +4517,9 @@ CODE_05C4CD:          LDA.W !Layer3ScrollYSpeed           ;; 05C4CD : AD 5A 14  
                       LSR A                               ;; 05C4E1 : 4A          ;
                       LSR A                               ;; 05C4E2 : 4A          ;
                       PLP                                 ;; 05C4E3 : 28          ;
-                      BPL CODE_05C4E8                     ;; 05C4E4 : 10 02       ;
+                      BPL +                               ;; 05C4E4 : 10 02       ;
                       ORA.B #$F0                          ;; 05C4E6 : 09 F0       ;
-CODE_05C4E8:          ADC.B !Layer3YPos                   ;; 05C4E8 : 65 24       ;
+                    + ADC.B !Layer3YPos                   ;; 05C4E8 : 65 24       ;
                       STA.B !Layer3YPos                   ;; 05C4EA : 85 24       ;
 CODE_05C4EC:          LDA.B !Layer3XPos                   ;; 05C4EC : A5 22       ;
                       SEC                                 ;; 05C4EE : 38          ;
@@ -4535,9 +4535,9 @@ CODE_05C4F9:          LDA.W !Layer1ScrollXPosUpd,X        ;; 05C4F9 : BD 4E 14  
                       ADC.W !Layer1ScrollXSpeed,X         ;; 05C500 : 7D 46 14    ;
                       STA.W !Layer1ScrollXPosUpd,X        ;; 05C503 : 9D 4E 14    ;
                       AND.W #$FF00                        ;; 05C506 : 29 00 FF    ;
-                      BPL CODE_05C50E                     ;; 05C509 : 10 03       ;
+                      BPL +                               ;; 05C509 : 10 03       ;
                       ORA.W #$00FF                        ;; 05C50B : 09 FF 00    ;
-CODE_05C50E:          XBA                                 ;; 05C50E : EB          ;
+                    + XBA                                 ;; 05C50E : EB          ;
                       CLC                                 ;; 05C50F : 18          ;
                       ADC.W !NextLayer1XPos,X             ;; 05C510 : 7D 62 14    ;
                       STA.W !NextLayer1XPos,X             ;; 05C513 : 9D 62 14    ;
@@ -4557,19 +4557,19 @@ CODE_05C51F:          REP #$30                            ;; 05C51F : C2 30     
                       BCC CODE_05C538                     ;; 05C530 : 90 06       ;
                       STA.B !_4                           ;; 05C532 : 85 04       ;
                       STX.B !_2                           ;; 05C534 : 86 02       ;
-                      BRA CODE_05C53C                     ;; 05C536 : 80 04       ;
+                      BRA +                               ;; 05C536 : 80 04       ;
                                                           ;;                      ;
 CODE_05C538:          STA.B !_2                           ;; 05C538 : 85 02       ;
                       STX.B !_4                           ;; 05C53A : 86 04       ;
-CODE_05C53C:          SEP #$10                            ;; 05C53C : E2 10       ; Index (8 bit) 
+                    + SEP #$10                            ;; 05C53C : E2 10       ; Index (8 bit) 
                       LDA.B !_2                           ;; 05C53E : A5 02       ;
                       CMP.B !_4                           ;; 05C540 : C5 04       ;
                       BCC CODE_05C585                     ;; 05C542 : 90 41       ;
                       LDY.W !Layer1ScrollBits             ;; 05C544 : AC 40 14    ;
                       LDA.W !ScrollLayerIndex             ;; 05C547 : AD 56 14    ;
-                      BEQ CODE_05C54F                     ;; 05C54A : F0 03       ;
+                      BEQ +                               ;; 05C54A : F0 03       ;
                       LDY.W !Layer2ScrollBits             ;; 05C54C : AC 41 14    ;
-CODE_05C54F:          TYA                                 ;; 05C54F : 98          ;
+                    + TYA                                 ;; 05C54F : 98          ;
                       ASL A                               ;; 05C550 : 0A          ;
                       TAY                                 ;; 05C551 : A8          ;
                       LDA.W DATA_05CBEE,Y                 ;; 05C552 : B9 EE CB    ;
@@ -4584,12 +4584,12 @@ CODE_05C54F:          TYA                                 ;; 05C54F : 98        
                       EOR.W #$0001                        ;; 05C566 : 49 01 00    ;
                       STA.W !Layer1ScrollType,X           ;; 05C569 : 9D 42 14    ;
                       AND.W #$00FF                        ;; 05C56C : 29 FF 00    ;
-                      BNE CODE_05C579                     ;; 05C56F : D0 08       ;
+                      BNE +                               ;; 05C56F : D0 08       ;
                       LDA.B !_0                           ;; 05C571 : A5 00       ;
                       EOR.W #$FFFF                        ;; 05C573 : 49 FF FF    ;
                       INC A                               ;; 05C576 : 1A          ;
                       STA.B !_0                           ;; 05C577 : 85 00       ;
-CODE_05C579:          LDX.W !ScrollLayerIndex             ;; 05C579 : AE 56 14    ;
+                    + LDX.W !ScrollLayerIndex             ;; 05C579 : AE 56 14    ;
                       LDA.B !_0                           ;; 05C57C : A5 00       ;
                       CLC                                 ;; 05C57E : 18          ;
                       ADC.W !Layer1ScrollYPosUpd,X        ;; 05C57F : 7D 50 14    ;
@@ -4604,16 +4604,16 @@ CODE_05C585:          LDA.W !ScrollLayerIndex             ;; 05C585 : AD 56 14  
                       LDA.W DATA_05CBF1,X                 ;; 05C592 : BD F1 CB    ;
                       AND.W #$00FF                        ;; 05C595 : 29 FF 00    ;
                       CPX.B #$01                          ;; 05C598 : E0 01       ;
-                      BEQ CODE_05C5A0                     ;; 05C59A : F0 04       ;
+                      BEQ +                               ;; 05C59A : F0 04       ;
                       EOR.W #$FFFF                        ;; 05C59C : 49 FF FF    ;
                       INC A                               ;; 05C59F : 1A          ;
-CODE_05C5A0:          LDX.W !ScrollLayerIndex             ;; 05C5A0 : AE 56 14    ;
+                    + LDX.W !ScrollLayerIndex             ;; 05C5A0 : AE 56 14    ;
                       LDY.B #$00                          ;; 05C5A3 : A0 00       ;
                       CMP.W !Layer1ScrollXSpeed,X         ;; 05C5A5 : DD 46 14    ;
                       BEQ CODE_05C5B8                     ;; 05C5A8 : F0 0E       ;
-                      BPL CODE_05C5AE                     ;; 05C5AA : 10 02       ;
+                      BPL +                               ;; 05C5AA : 10 02       ;
                       LDY.B #$02                          ;; 05C5AC : A0 02       ;
-CODE_05C5AE:          LDA.W !Layer1ScrollXSpeed,X         ;; 05C5AE : BD 46 14    ;
+                    + LDA.W !Layer1ScrollXSpeed,X         ;; 05C5AE : BD 46 14    ;
                       CLC                                 ;; 05C5B1 : 18          ;
                       ADC.W DATA_05CBC3,Y                 ;; 05C5B2 : 79 C3 CB    ;
                       STA.W !Layer1ScrollXSpeed,X         ;; 05C5B5 : 9D 46 14    ;
@@ -4629,19 +4629,19 @@ CODE_05C5BB:          REP #$30                            ;; 05C5BB : C2 30     
                       BCC CODE_05C5D4                     ;; 05C5CC : 90 06       ;
                       STA.B !_4                           ;; 05C5CE : 85 04       ;
                       STX.B !_2                           ;; 05C5D0 : 86 02       ;
-                      BRA CODE_05C5D8                     ;; 05C5D2 : 80 04       ;
+                      BRA +                               ;; 05C5D2 : 80 04       ;
                                                           ;;                      ;
 CODE_05C5D4:          STA.B !_2                           ;; 05C5D4 : 85 02       ;
                       STX.B !_4                           ;; 05C5D6 : 86 04       ;
-CODE_05C5D8:          SEP #$10                            ;; 05C5D8 : E2 10       ; Index (8 bit) 
+                    + SEP #$10                            ;; 05C5D8 : E2 10       ; Index (8 bit) 
                       LDA.B !_2                           ;; 05C5DA : A5 02       ;
                       CMP.B !_4                           ;; 05C5DC : C5 04       ;
                       BCC CODE_05C621                     ;; 05C5DE : 90 41       ;
                       LDY.W !Layer1ScrollBits             ;; 05C5E0 : AC 40 14    ;
                       LDA.W !ScrollLayerIndex             ;; 05C5E3 : AD 56 14    ;
-                      BEQ CODE_05C5EB                     ;; 05C5E6 : F0 03       ;
+                      BEQ +                               ;; 05C5E6 : F0 03       ;
                       LDY.W !Layer2ScrollBits             ;; 05C5E8 : AC 41 14    ;
-CODE_05C5EB:          TYA                                 ;; 05C5EB : 98          ;
+                    + TYA                                 ;; 05C5EB : 98          ;
                       ASL A                               ;; 05C5EC : 0A          ;
                       TAY                                 ;; 05C5ED : A8          ;
                       LDA.W DATA_05CBF6,Y                 ;; 05C5EE : B9 F6 CB    ;
@@ -4656,12 +4656,12 @@ CODE_05C5EB:          TYA                                 ;; 05C5EB : 98        
                       EOR.W #$0001                        ;; 05C602 : 49 01 00    ;
                       STA.W !Layer1ScrollType,X           ;; 05C605 : 9D 42 14    ;
                       AND.W #$00FF                        ;; 05C608 : 29 FF 00    ;
-                      BNE CODE_05C615                     ;; 05C60B : D0 08       ;
+                      BNE +                               ;; 05C60B : D0 08       ;
                       LDA.B !_0                           ;; 05C60D : A5 00       ;
                       EOR.W #$FFFF                        ;; 05C60F : 49 FF FF    ;
                       INC A                               ;; 05C612 : 1A          ;
                       STA.B !_0                           ;; 05C613 : 85 00       ;
-CODE_05C615:          LDX.W !ScrollLayerIndex             ;; 05C615 : AE 56 14    ;
+                    + LDX.W !ScrollLayerIndex             ;; 05C615 : AE 56 14    ;
                       LDA.B !_0                           ;; 05C618 : A5 00       ;
                       CLC                                 ;; 05C61A : 18          ;
                       ADC.W !Layer1ScrollXPosUpd,X        ;; 05C61B : 7D 4E 14    ;
@@ -4676,16 +4676,16 @@ CODE_05C621:          LDA.W !ScrollLayerIndex             ;; 05C621 : AD 56 14  
                       LDA.W DATA_05CBF1,X                 ;; 05C62E : BD F1 CB    ;
                       AND.W #$00FF                        ;; 05C631 : 29 FF 00    ;
                       CPX.B #$01                          ;; 05C634 : E0 01       ;
-                      BEQ CODE_05C63C                     ;; 05C636 : F0 04       ;
+                      BEQ +                               ;; 05C636 : F0 04       ;
                       EOR.W #$FFFF                        ;; 05C638 : 49 FF FF    ;
                       INC A                               ;; 05C63B : 1A          ;
-CODE_05C63C:          LDX.W !ScrollLayerIndex             ;; 05C63C : AE 56 14    ;
+                    + LDX.W !ScrollLayerIndex             ;; 05C63C : AE 56 14    ;
                       LDY.B #$00                          ;; 05C63F : A0 00       ;
                       CMP.W !Layer1ScrollYSpeed,X         ;; 05C641 : DD 48 14    ;
                       BEQ CODE_05C654                     ;; 05C644 : F0 0E       ;
-                      BPL CODE_05C64A                     ;; 05C646 : 10 02       ;
+                      BPL +                               ;; 05C646 : 10 02       ;
                       LDY.B #$02                          ;; 05C648 : A0 02       ;
-CODE_05C64A:          LDA.W !Layer1ScrollYSpeed,X         ;; 05C64A : BD 48 14    ;
+                    + LDA.W !Layer1ScrollYSpeed,X         ;; 05C64A : BD 48 14    ;
                       CLC                                 ;; 05C64D : 18          ;
                       ADC.W DATA_05CBC3,Y                 ;; 05C64E : 79 C3 CB    ;
                       STA.W !Layer1ScrollYSpeed,X         ;; 05C651 : 9D 48 14    ;
@@ -4694,7 +4694,7 @@ CODE_05C654:          INX                                 ;; 05C654 : E8        
                       JMP CODE_05C328                     ;; 05C656 : 4C 28 C3    ;
                                                           ;;                      ;
 ADDR_05C659:          LDA.W !Layer2ScrollBits             ;; 05C659 : AD 41 14    ;
-                      BEQ ADDR_05C674                     ;; 05C65C : F0 16       ;
+                      BEQ +                               ;; 05C65C : F0 16       ;
                       DEC.W !Layer2ScrollBits             ;; 05C65E : CE 41 14    ;
                       CMP.W #$B020                        ;; 05C661 : C9 20 B0    ;
                       ASL.W !CapeFloatTimer               ;; 05C664 : 0E A5 14    ;
@@ -4705,21 +4705,21 @@ ADDR_05C659:          LDA.W !Layer2ScrollBits             ;; 05C659 : AD 41 14  
                       STZ.B !EffFrame                     ;; 05C671 : 64 14       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-ADDR_05C674:          STZ.B !Layer2ScrollDir              ;; 05C674 : 64 56       ;
+                    + STZ.B !Layer2ScrollDir              ;; 05C674 : 64 56       ;
                       REP #$20                            ;; 05C676 : C2 20       ; Accum (16 bit) 
                       LDA.W !Layer2ScrollYSpeed           ;; 05C678 : AD 4C 14    ;
                       CMP.W #$FFC0                        ;; 05C67B : C9 C0 FF    ;
-                      BEQ ADDR_05C684                     ;; 05C67E : F0 04       ;
+                      BEQ +                               ;; 05C67E : F0 04       ;
                       DEC A                               ;; 05C680 : 3A          ;
                       STA.W !Layer2ScrollYSpeed           ;; 05C681 : 8D 4C 14    ;
-ADDR_05C684:          LDA.W !NextLayer2YPos               ;; 05C684 : AD 68 14    ;
+                    + LDA.W !NextLayer2YPos               ;; 05C684 : AD 68 14    ;
                       CMP.W #$0031                        ;; 05C687 : C9 31 00    ;
-                      BPL ADDR_05C68F                     ;; 05C68A : 10 03       ;
+                      BPL +                               ;; 05C68A : 10 03       ;
                       STZ.W !Layer2ScrollYSpeed           ;; 05C68C : 9C 4C 14    ;
-ADDR_05C68F:          BNE ADDR_05C696                     ;; 05C68F : D0 05       ;
+                    + BNE +                               ;; 05C68F : D0 05       ;
                       LDY.B #$20                          ;; 05C691 : A0 20       ;
                       STY.W !Layer2ScrollBits             ;; 05C693 : 8C 41 14    ;
-ADDR_05C696:          LDX.B #$06                          ;; 05C696 : A2 06       ;
+                    + LDX.B #$06                          ;; 05C696 : A2 06       ;
                       JSR CODE_05C4F9                     ;; 05C698 : 20 F9 C4    ;
                       JMP CODE_05C32B                     ;; 05C69B : 4C 2B C3    ;
                                                           ;;                      ;
@@ -4731,9 +4731,9 @@ ADDR_05C69E:          LDA.B #$02                          ;; 05C69E : A2 02     
                       BNE ADDR_05C6CD                     ;; 05C6A9 : D0 22       ;
                       LDA.W !Layer1ScrollXSpeed           ;; 05C6AB : AD 46 14    ;
                       CMP.W #$0080                        ;; 05C6AE : C9 80 00    ;
-                      BEQ ADDR_05C6B4                     ;; 05C6B1 : F0 01       ;
+                      BEQ +                               ;; 05C6B1 : F0 01       ;
                       INC A                               ;; 05C6B3 : 1A          ;
-ADDR_05C6B4:          STA.W !Layer1ScrollXSpeed           ;; 05C6B4 : 8D 46 14    ;
+                    + STA.W !Layer1ScrollXSpeed           ;; 05C6B4 : 8D 46 14    ;
                       LDY.B !LastScreenHoriz              ;; 05C6B7 : A4 5E       ;
                       DEY                                 ;; 05C6B9 : 88          ;
                       CPY.W !NextLayer1XPos+1             ;; 05C6BA : CC 63 14    ;
@@ -4748,19 +4748,19 @@ ADDR_05C6CD:          LDY.B #$16                          ;; 05C6CD : A0 16     
                       STY.W !HW_TM                        ;; 05C6CF : 8C 2C 21    ; Background and Object Enable
                       LDA.W !Layer2ScrollYSpeed           ;; 05C6D2 : AD 4C 14    ;
                       CMP.W #$FF80                        ;; 05C6D5 : C9 80 FF    ;
-                      BEQ ADDR_05C6DB                     ;; 05C6D8 : F0 01       ;
+                      BEQ +                               ;; 05C6D8 : F0 01       ;
                       DEC A                               ;; 05C6DA : 3A          ;
-ADDR_05C6DB:          STA.W !Layer2ScrollYSpeed           ;; 05C6DB : 8D 4C 14    ;
+                    + STA.W !Layer2ScrollYSpeed           ;; 05C6DB : 8D 4C 14    ;
                       STA.W !Layer1ScrollYSpeed           ;; 05C6DE : 8D 48 14    ;
                       LDA.W !NextLayer2YPos               ;; 05C6E1 : AD 68 14    ;
                       BNE ADDR_05C6EC                     ;; 05C6E4 : D0 06       ;
                       STZ.W !Layer2ScrollYSpeed           ;; 05C6E6 : 9C 4C 14    ;
                       STZ.W !Layer1ScrollYSpeed           ;; 05C6E9 : 9C 48 14    ;
 ADDR_05C6EC:          LDX.B #$06                          ;; 05C6EC : A2 06       ;
-ADDR_05C6EE:          JSR CODE_05C4F9                     ;; 05C6EE : 20 F9 C4    ;
+                    - JSR CODE_05C4F9                     ;; 05C6EE : 20 F9 C4    ;
                       DEX                                 ;; 05C6F1 : CA          ;
                       DEX                                 ;; 05C6F2 : CA          ;
-                      BPL ADDR_05C6EE                     ;; 05C6F3 : 10 F9       ;
+                      BPL -                               ;; 05C6F3 : 10 F9       ;
                       SEP #$20                            ;; 05C6F5 : E2 20       ; Accum (8 bit) 
                       LDA.W !NextLayer1XPos+1             ;; 05C6F7 : AD 63 14    ;
                       SEC                                 ;; 05C6FA : 38          ;
@@ -4772,10 +4772,10 @@ ADDR_05C6EE:          JSR CODE_05C4F9                     ;; 05C6EE : 20 F9 C4  
                       REP #$20                            ;; 05C703 : C2 20       ; Accum (16 bit) 
                       LDY.B #$82                          ;; 05C705 : A0 82       ;
                       CMP.W #$0000                        ;; 05C707 : C9 00 00    ;
-                      BPL ADDR_05C711                     ;; 05C70A : 10 05       ;
+                      BPL +                               ;; 05C70A : 10 05       ;
                       LDA.W #$0000                        ;; 05C70C : A9 00 00    ;
                       LDY.B #$02                          ;; 05C70F : A0 02       ;
-ADDR_05C711:          STA.W !NextLayer2XPos               ;; 05C711 : 8D 66 14    ;
+                    + STA.W !NextLayer2XPos               ;; 05C711 : 8D 66 14    ;
                       STA.B !Layer2XPos                   ;; 05C714 : 85 1E       ;
                       STY.B !ScreenMode                   ;; 05C716 : 84 5B       ;
                       JMP CODE_05C32B                     ;; 05C718 : 4C 2B C3    ;
@@ -4788,14 +4788,14 @@ DATA_05C71F:          db $C0,$FF,$40,$00                  ;; 05C71F             
 DATA_05C723:          db $FF,$FF,$01,$00                  ;; 05C723               ;
                                                           ;;                      ;
 CODE_05C727:          LDX.W !OnOffSwitch                  ;; 05C727 : AE AF 14    ; Accum (8 bit) 
-                      BEQ CODE_05C72E                     ;; 05C72A : F0 02       ;
+                      BEQ +                               ;; 05C72A : F0 02       ;
                       LDX.B #$02                          ;; 05C72C : A2 02       ;
-CODE_05C72E:          CPX.W !Layer2ScrollType             ;; 05C72E : EC 43 14    ;
+                    + CPX.W !Layer2ScrollType             ;; 05C72E : EC 43 14    ;
                       BEQ CODE_05C74A                     ;; 05C731 : F0 17       ;
                       DEC.W !Layer2ScrollTimer            ;; 05C733 : CE 45 14    ;
-                      BPL CODE_05C73B                     ;; 05C736 : 10 03       ;
+                      BPL +                               ;; 05C736 : 10 03       ;
                       STX.W !Layer2ScrollType             ;; 05C738 : 8E 43 14    ;
-CODE_05C73B:          LDA.W !NextLayer2YPos               ;; 05C73B : AD 68 14    ;
+                    + LDA.W !NextLayer2YPos               ;; 05C73B : AD 68 14    ;
                       EOR.B #$01                          ;; 05C73E : 49 01       ;
                       STA.W !NextLayer2YPos               ;; 05C740 : 8D 68 14    ;
                       STZ.W !Layer2ScrollYSpeed           ;; 05C743 : 9C 4C 14    ;
@@ -4809,22 +4809,22 @@ CODE_05C74A:          LDA.B #$10                          ;; 05C74A : A9 10     
                       CMP.W DATA_05C71B,X                 ;; 05C754 : DD 1B C7    ;
                       BNE CODE_05C770                     ;; 05C757 : D0 17       ;
                       CPX.B #$00                          ;; 05C759 : E0 00       ;
-                      BNE CODE_05C769                     ;; 05C75B : D0 0C       ;
+                      BNE +                               ;; 05C75B : D0 0C       ;
                       LDA.W #$0009                        ;; 05C75D : A9 09 00    ;
                       STA.W !SPCIO3                       ;; 05C760 : 8D FC 1D    ; / Play sound effect 
                       LDA.W #$0020                        ;; 05C763 : A9 20 00    ; \ Set ground shake timer 
                       STA.W !ScreenShakeTimer             ;; 05C766 : 8D 87 18    ; / 
-CODE_05C769:          LDX.B #$00                          ;; 05C769 : A2 00       ;
+                    + LDX.B #$00                          ;; 05C769 : A2 00       ;
                       STX.W !OnOffSwitch                  ;; 05C76B : 8E AF 14    ;
                       BRA CODE_05C784                     ;; 05C76E : 80 14       ;
                                                           ;;                      ;
 CODE_05C770:          LDA.W !Layer2ScrollYSpeed           ;; 05C770 : AD 4C 14    ; Accum (8 bit) 
                       CMP.W DATA_05C71F,X                 ;; 05C773 : DD 1F C7    ;
-                      BEQ CODE_05C77F                     ;; 05C776 : F0 07       ;
+                      BEQ +                               ;; 05C776 : F0 07       ;
                       CLC                                 ;; 05C778 : 18          ;
                       ADC.W DATA_05C723,X                 ;; 05C779 : 7D 23 C7    ;
                       STA.W !Layer2ScrollYSpeed           ;; 05C77C : 8D 4C 14    ;
-CODE_05C77F:          LDX.B #$06                          ;; 05C77F : A2 06       ;
+                    + LDX.B #$06                          ;; 05C77F : A2 06       ;
                       JSR CODE_05C4F9                     ;; 05C781 : 20 F9 C4    ;
 CODE_05C784:          JMP CODE_05C32B                     ;; 05C784 : 4C 2B C3    ;
                                                           ;;                      ;
@@ -4840,17 +4840,17 @@ CODE_05C787:          LDA.B #$02                          ;; 05C787 : A9 02     
                       REP #$20                            ;; 05C799 : C2 20       ; Accum (16 bit) 
                       LDA.W !Layer1ScrollXSpeed,X         ;; 05C79B : BD 46 14    ;
                       CMP.W DATA_05C001,Y                 ;; 05C79E : D9 01 C0    ;
-                      BEQ CODE_05C7A4                     ;; 05C7A1 : F0 01       ;
+                      BEQ +                               ;; 05C7A1 : F0 01       ;
                       INC A                               ;; 05C7A3 : 1A          ;
-CODE_05C7A4:          STA.W !Layer1ScrollXSpeed,X         ;; 05C7A4 : 9D 46 14    ;
+                    + STA.W !Layer1ScrollXSpeed,X         ;; 05C7A4 : 9D 46 14    ;
                       LDA.B !LastScreenHoriz              ;; 05C7A7 : A5 5E       ;
                       DEC A                               ;; 05C7A9 : 3A          ;
                       XBA                                 ;; 05C7AA : EB          ;
                       AND.W #$FF00                        ;; 05C7AB : 29 00 FF    ;
                       CMP.W !NextLayer1XPos,X             ;; 05C7AE : DD 62 14    ;
-                      BNE CODE_05C7B6                     ;; 05C7B1 : D0 03       ;
+                      BNE +                               ;; 05C7B1 : D0 03       ;
                       STZ.W !Layer1ScrollXSpeed,X         ;; 05C7B3 : 9E 46 14    ;
-CODE_05C7B6:          JSR CODE_05C4F9                     ;; 05C7B6 : 20 F9 C4    ;
+                    + JSR CODE_05C4F9                     ;; 05C7B6 : 20 F9 C4    ;
                       JMP CODE_05C32B                     ;; 05C7B9 : 4C 2B C3    ;
                                                           ;;                      ;
 CODE_05C7BC:          LDA.W !BGFastScrollActive           ;; 05C7BC : AD 9A 1B    ; Accum (8 bit) 
@@ -4860,17 +4860,17 @@ CODE_05C7C1:          LDA.B #$02                          ;; 05C7C1 : A9 02     
                       REP #$20                            ;; 05C7C5 : C2 20       ; Accum (16 bit) 
                       LDA.W !Layer2ScrollXSpeed           ;; 05C7C7 : AD 4A 14    ;
                       CMP.W #$0400                        ;; 05C7CA : C9 00 04    ;
-                      BEQ CODE_05C7D0                     ;; 05C7CD : F0 01       ;
+                      BEQ +                               ;; 05C7CD : F0 01       ;
                       INC A                               ;; 05C7CF : 1A          ;
-CODE_05C7D0:          STA.W !Layer2ScrollXSpeed           ;; 05C7D0 : 8D 4A 14    ;
+                    + STA.W !Layer2ScrollXSpeed           ;; 05C7D0 : 8D 4A 14    ;
                       LDX.B #$04                          ;; 05C7D3 : A2 04       ;
                       JSR CODE_05C4F9                     ;; 05C7D5 : 20 F9 C4    ;
                       LDA.W !Layer1DXPos                  ;; 05C7D8 : AD BD 17    ;
                       AND.W #$00FF                        ;; 05C7DB : 29 FF 00    ;
                       CMP.W #$0080                        ;; 05C7DE : C9 80 00    ;
-                      BCC CODE_05C7E6                     ;; 05C7E1 : 90 03       ;
+                      BCC +                               ;; 05C7E1 : 90 03       ;
                       ORA.W #$FF00                        ;; 05C7E3 : 09 00 FF    ;
-CODE_05C7E6:          CLC                                 ;; 05C7E6 : 18          ;
+                    + CLC                                 ;; 05C7E6 : 18          ;
                       ADC.W !NextLayer2XPos               ;; 05C7E7 : 6D 66 14    ;
                       STA.W !NextLayer2XPos               ;; 05C7EA : 8D 66 14    ;
 CODE_05C7ED:          JMP CODE_05C32B                     ;; 05C7ED : 4C 2B C3    ;
@@ -4905,15 +4905,15 @@ CODE_05C81C:          REP #$20                            ;; 05C81C : C2 20     
                       LDY.B #$02                          ;; 05C82E : A0 02       ;
 CODE_05C830:          LDA.W !NextLayer2XPos               ;; 05C830 : AD 66 14    ;
                       CMP.W DATA_05C7F0,X                 ;; 05C833 : DD F0 C7    ;
-                      BCC CODE_05C84C                     ;; 05C836 : 90 14       ;
+                      BCC +                               ;; 05C836 : 90 14       ;
                       CMP.W DATA_05C7FC,X                 ;; 05C838 : DD FC C7    ;
-                      BCS CODE_05C84C                     ;; 05C83B : B0 0F       ;
+                      BCS +                               ;; 05C83B : B0 0F       ;
                       STZ.W !Layer1ScrollType             ;; 05C83D : 9C 42 14    ;
                       LDA.W DATA_05C80E,Y                 ;; 05C840 : B9 0E C8    ;
                       STA.W !NextLayer2YPos               ;; 05C843 : 8D 68 14    ;
                       STZ.W !Layer2ScrollYSpeed           ;; 05C846 : 9C 4C 14    ;
                       STZ.W !Layer2ScrollYPosUpd          ;; 05C849 : 9C 54 14    ;
-CODE_05C84C:          INX                                 ;; 05C84C : E8          ;
+                    + INX                                 ;; 05C84C : E8          ;
                       INX                                 ;; 05C84D : E8          ;
                       DEC.B !_0                           ;; 05C84E : C6 00       ;
                       BNE CODE_05C830                     ;; 05C850 : D0 DE       ;
@@ -4980,9 +4980,9 @@ CODE_05C955:          LDX.W !Layer1ScrollBits             ;; 05C955 : AE 40 14  
 CODE_05C95B:          REP #$20                            ;; 05C95B : C2 20       ; Accum (16 bit) 
 CODE_05C95D:          LDA.W !NextLayer2XPos               ;; 05C95D : AD 66 14    ;
                       CMP.W DATA_05C880,X                 ;; 05C960 : DD 80 C8    ;
-                      BCC CODE_05C97B                     ;; 05C963 : 90 16       ;
+                      BCC +                               ;; 05C963 : 90 16       ;
                       CMP.W DATA_05C8A4,X                 ;; 05C965 : DD A4 C8    ;
-                      BCS CODE_05C97B                     ;; 05C968 : B0 11       ;
+                      BCS +                               ;; 05C968 : B0 11       ;
                       TXA                                 ;; 05C96A : 8A          ;
                       LSR A                               ;; 05C96B : 4A          ;
                       AND.W #$00FE                        ;; 05C96C : 29 FE 00    ;
@@ -4990,17 +4990,17 @@ CODE_05C95D:          LDA.W !NextLayer2XPos               ;; 05C95D : AD 66 14  
                       LDA.W #$00C1                        ;; 05C972 : A9 C1 00    ;
                       STA.W !NextLayer2YPos               ;; 05C975 : 8D 68 14    ;
                       STZ.W !Layer1ScrollTimer            ;; 05C978 : 9C 44 14    ;
-CODE_05C97B:          INX                                 ;; 05C97B : E8          ;
+                    + INX                                 ;; 05C97B : E8          ;
                       INX                                 ;; 05C97C : E8          ;
                       DEY                                 ;; 05C97D : 88          ;
                       BNE CODE_05C95D                     ;; 05C97E : D0 DD       ;
                       SEP #$20                            ;; 05C980 : E2 20       ; Accum (8 bit) 
                       LDA.W !Layer1ScrollTimer            ;; 05C982 : AD 44 14    ;
-                      BEQ CODE_05C98B                     ;; 05C985 : F0 04       ;
+                      BEQ +                               ;; 05C985 : F0 04       ;
                       DEC.W !Layer1ScrollTimer            ;; 05C987 : CE 44 14    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_05C98B:          LDA.W !Layer1ScrollType             ;; 05C98B : AD 42 14    ;
+                    + LDA.W !Layer1ScrollType             ;; 05C98B : AD 42 14    ;
                       CLC                                 ;; 05C98E : 18          ;
                       ADC.W !Layer2ScrollType             ;; 05C98F : 6D 43 14    ;
                       TAY                                 ;; 05C992 : A8          ;
@@ -5011,11 +5011,11 @@ CODE_05C98B:          LDA.W !Layer1ScrollType             ;; 05C98B : AD 42 14  
                       SEC                                 ;; 05C99A : 38          ;
                       SBC.W DATA_05C8C8,Y                 ;; 05C99B : F9 C8 C8    ;
                       EOR.W DATA_05C8FE,Y                 ;; 05C99E : 59 FE C8    ;
-                      BPL CODE_05C9A9                     ;; 05C9A1 : 10 06       ;
+                      BPL +                               ;; 05C9A1 : 10 06       ;
                       LDA.W DATA_05C8FE,Y                 ;; 05C9A3 : B9 FE C8    ;
                       JMP CODE_05C875                     ;; 05C9A6 : 4C 75 C8    ;
                                                           ;;                      ;
-CODE_05C9A9:          LDA.W DATA_05C8C8,Y                 ;; 05C9A9 : B9 C8 C8    ;
+                    + LDA.W DATA_05C8C8,Y                 ;; 05C9A9 : B9 C8 C8    ;
                       STA.W !NextLayer2YPos               ;; 05C9AC : 8D 68 14    ;
                       SEP #$20                            ;; 05C9AF : E2 20       ; Accum (8 bit) 
                       LDA.W DATA_05C934,X                 ;; 05C9B1 : BD 34 C9    ;
@@ -5024,13 +5024,13 @@ CODE_05C9A9:          LDA.W DATA_05C8C8,Y                 ;; 05C9A9 : B9 C8 C8  
                       CLC                                 ;; 05C9BA : 18          ;
                       ADC.B #$12                          ;; 05C9BB : 69 12       ;
                       CMP.B #$36                          ;; 05C9BD : C9 36       ;
-                      BCC CODE_05C9CD                     ;; 05C9BF : 90 0C       ;
+                      BCC +                               ;; 05C9BF : 90 0C       ;
                       LDA.B #$09                          ;; 05C9C1 : A9 09       ;
                       STA.W !SPCIO3                       ;; 05C9C3 : 8D FC 1D    ; / Play sound effect 
                       LDA.B #$20                          ;; 05C9C6 : A9 20       ; \ Set ground shake timer 
                       STA.W !ScreenShakeTimer             ;; 05C9C8 : 8D 87 18    ; / 
                       LDA.B #$00                          ;; 05C9CB : A9 00       ;
-CODE_05C9CD:          STA.W !Layer2ScrollType             ;; 05C9CD : 8D 43 14    ;
+                    + STA.W !Layer2ScrollType             ;; 05C9CD : 8D 43 14    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -5193,11 +5193,11 @@ CODE_05CC6E:          CMP.B #$0A                          ;; 05CC6E : C9 0A     
                       BRA CODE_05CC6E                     ;; 05CC75 : 80 F7       ;
                                                           ;;                      ;
 CODE_05CC77:          CPY.W !InGameTimerTens              ;; 05CC77 : CC 32 0F    ;
-                      BNE CODE_05CC84                     ;; 05CC7A : D0 08       ;
+                      BNE +                               ;; 05CC7A : D0 08       ;
                       CPY.W !InGameTimerOnes              ;; 05CC7C : CC 33 0F    ;
-                      BNE CODE_05CC84                     ;; 05CC7F : D0 03       ;
+                      BNE +                               ;; 05CC7F : D0 03       ;
                       INC.W !GivePlayerLives              ;; 05CC81 : EE E4 18    ;
-CODE_05CC84:          LDA.B #$01                          ;; 05CC84 : A9 01       ;
+                    + LDA.B #$01                          ;; 05CC84 : A9 01       ;
                       STA.W !Layer3ScrollType             ;; 05CC86 : 8D D5 13    ;
                       LDA.B #$08                          ;; 05CC89 : A9 08       ;
                       TSB.B !MainBGMode                   ;; 05CC8B : 04 3E       ;
@@ -5209,37 +5209,37 @@ CODE_05CC84:          LDA.B #$01                          ;; 05CC84 : A9 01     
                       CLC                                 ;; 05CC97 : 18          ;
                       ADC.L !DynStripeImgSize             ;; 05CC98 : 6F 7B 83 7F ;
                       TAX                                 ;; 05CC9C : AA          ;
-CODE_05CC9D:          LDA.W DATA_05CC16,Y                 ;; 05CC9D : B9 16 CC    ;
+                    - LDA.W DATA_05CC16,Y                 ;; 05CC9D : B9 16 CC    ;
                       STA.L !DynamicStripeImage,X         ;; 05CCA0 : 9F 7D 83 7F ;
                       DEX                                 ;; 05CCA4 : CA          ;
                       DEX                                 ;; 05CCA5 : CA          ;
                       DEY                                 ;; 05CCA6 : 88          ;
                       DEY                                 ;; 05CCA7 : 88          ;
-                      BPL CODE_05CC9D                     ;; 05CCA8 : 10 F3       ;
+                      BPL -                               ;; 05CCA8 : 10 F3       ;
                       LDA.L !DynStripeImgSize             ;; 05CCAA : AF 7B 83 7F ;
                       TAX                                 ;; 05CCAE : AA          ;
                       SEP #$20                            ;; 05CCAF : E2 20       ; Accum (8 bit) 
                       LDA.W !PlayerTurnLvl                ;; 05CCB1 : AD B3 0D    ;
                       BEQ CODE_05CCC8                     ;; 05CCB4 : F0 12       ;
                       LDY.W #$0000                        ;; 05CCB6 : A0 00 00    ;
-CODE_05CCB9:          LDA.W DATA_05CC61,Y                 ;; 05CCB9 : B9 61 CC    ;
+                    - LDA.W DATA_05CC61,Y                 ;; 05CCB9 : B9 61 CC    ;
                       STA.L !DynamicStripeImage+4,X       ;; 05CCBC : 9F 81 83 7F ;
                       INX                                 ;; 05CCC0 : E8          ;
                       INX                                 ;; 05CCC1 : E8          ;
                       INY                                 ;; 05CCC2 : C8          ;
                       CPY.W #$0005                        ;; 05CCC3 : C0 05 00    ;
-                      BNE CODE_05CCB9                     ;; 05CCC6 : D0 F1       ;
+                      BNE -                               ;; 05CCC6 : D0 F1       ;
 CODE_05CCC8:          LDY.W #$0002                        ;; 05CCC8 : A0 02 00    ;
                       LDA.B #$04                          ;; 05CCCB : A9 04       ;
                       CLC                                 ;; 05CCCD : 18          ;
                       ADC.L !DynStripeImgSize             ;; 05CCCE : 6F 7B 83 7F ;
                       TAX                                 ;; 05CCD2 : AA          ;
-CODE_05CCD3:          LDA.W !InGameTimerHundreds,Y        ;; 05CCD3 : B9 31 0F    ;
+                    - LDA.W !InGameTimerHundreds,Y        ;; 05CCD3 : B9 31 0F    ;
                       STA.L !DynamicStripeImage+$32,X     ;; 05CCD6 : 9F AF 83 7F ;
                       DEY                                 ;; 05CCDA : 88          ;
                       DEX                                 ;; 05CCDB : CA          ;
                       DEX                                 ;; 05CCDC : CA          ;
-                      BPL CODE_05CCD3                     ;; 05CCDD : 10 F4       ;
+                      BPL -                               ;; 05CCDD : 10 F4       ;
                       LDA.L !DynStripeImgSize             ;; 05CCDF : AF 7B 83 7F ;
                       TAX                                 ;; 05CCE3 : AA          ;
 CODE_05CCE4:          LDA.L !DynamicStripeImage+$32,X     ;; 05CCE4 : BF AF 83 7F ;
@@ -5304,11 +5304,11 @@ CODE_05CD76:          LDA.W !BonusStarsGained             ;; 05CD76 : AD 00 19  
                       CLC                                 ;; 05CD83 : 18          ;
                       ADC.L !DynStripeImgSize             ;; 05CD84 : 6F 7B 83 7F ;
                       TAX                                 ;; 05CD88 : AA          ;
-CODE_05CD89:          LDA.W DATA_05CD3F,Y                 ;; 05CD89 : B9 3F CD    ;
+                    - LDA.W DATA_05CD3F,Y                 ;; 05CD89 : B9 3F CD    ;
                       STA.L !DynamicStripeImage,X         ;; 05CD8C : 9F 7D 83 7F ;
                       DEX                                 ;; 05CD90 : CA          ;
                       DEY                                 ;; 05CD91 : 88          ;
-                      BPL CODE_05CD89                     ;; 05CD92 : 10 F5       ;
+                      BPL -                               ;; 05CD92 : 10 F5       ;
                       LDA.L !DynStripeImgSize             ;; 05CD94 : AF 7B 83 7F ;
                       TAX                                 ;; 05CD98 : AA          ;
                       LDA.W !BonusStarsGained             ;; 05CD99 : AD 00 19    ;
@@ -5325,14 +5325,14 @@ CODE_05CD89:          LDA.W DATA_05CD3F,Y                 ;; 05CD89 : B9 3F CD  
                       LSR A                               ;; 05CDB4 : 4A          ;
                       LSR A                               ;; 05CDB5 : 4A          ;
                       LSR A                               ;; 05CDB6 : 4A          ;
-                      BEQ CODE_05CDC9                     ;; 05CDB7 : F0 10       ;
+                      BEQ +                               ;; 05CDB7 : F0 10       ;
                       ASL A                               ;; 05CDB9 : 0A          ;
                       TAY                                 ;; 05CDBA : A8          ;
                       LDA.W DATA_05CD63,Y                 ;; 05CDBB : B9 63 CD    ;
                       STA.L !DynamicStripeImage+$16,X     ;; 05CDBE : 9F 93 83 7F ;
                       LDA.W DATA_05CD62,Y                 ;; 05CDC2 : B9 62 CD    ;
                       STA.L !DynamicStripeImage+$1E,X     ;; 05CDC5 : 9F 9B 83 7F ;
-CODE_05CDC9:          LDA.B #$22                          ;; 05CDC9 : A9 22       ;
+                    + LDA.B #$22                          ;; 05CDC9 : A9 22       ;
                       CLC                                 ;; 05CDCB : 18          ;
                       ADC.L !DynStripeImgSize             ;; 05CDCC : 6F 7B 83 7F ;
                       INC A                               ;; 05CDD0 : 1A          ;
@@ -5453,15 +5453,15 @@ CODE_05CECA:          PHB                                 ;; 05CECA : 8B        
                       LDX.B #$00                          ;; 05CECF : A2 00       ;
                       LDA.W !PlayerTurnLvl                ;; 05CED1 : AD B3 0D    ;
                       AND.W #$00FF                        ;; 05CED4 : 29 FF 00    ;
-                      BEQ CODE_05CEDB                     ;; 05CED7 : F0 02       ;
+                      BEQ +                               ;; 05CED7 : F0 02       ;
                       LDX.B #$03                          ;; 05CED9 : A2 03       ;
-CODE_05CEDB:          LDY.B #$02                          ;; 05CEDB : A0 02       ;
+                    + LDY.B #$02                          ;; 05CEDB : A0 02       ;
                       LDA.W !ScoreIncrement               ;; 05CEDD : AD 40 0F    ;
                       BEQ CODE_05CF05                     ;; 05CEE0 : F0 23       ;
                       CMP.W #$0063                        ;; 05CEE2 : C9 63 00    ;
-                      BCS CODE_05CEE9                     ;; 05CEE5 : B0 02       ;
+                      BCS +                               ;; 05CEE5 : B0 02       ;
                       LDY.B #$00                          ;; 05CEE7 : A0 00       ;
-CODE_05CEE9:          SEC                                 ;; 05CEE9 : 38          ;
+                    + SEC                                 ;; 05CEE9 : 38          ;
                       SBC.W DATA_05CEC2,Y                 ;; 05CEEA : F9 C2 CE    ;
                       STA.W !ScoreIncrement               ;; 05CEED : 8D 40 0F    ;
                       STA.B !_2                           ;; 05CEF0 : 85 02       ;
@@ -5477,7 +5477,7 @@ CODE_05CF05:          LDX.W !BonusStarsGained             ;; 05CF05 : AE 00 19  
                       SEP #$20                            ;; 05CF0A : E2 20       ; Accum (8 bit) 
                       LDA.B !TrueFrame                    ;; 05CF0C : A5 13       ;
                       AND.B #$03                          ;; 05CF0E : 29 03       ;
-                      BNE CODE_05CF34                     ;; 05CF10 : D0 22       ;
+                      BNE +                               ;; 05CF10 : D0 22       ;
                       LDX.W !PlayerTurnLvl                ;; 05CF12 : AE B3 0D    ;
                       LDA.W !PlayerBonusStars,X           ;; 05CF15 : BD 48 0F    ;
                       CLC                                 ;; 05CF18 : 18          ;
@@ -5488,35 +5488,35 @@ CODE_05CF05:          LDX.W !BonusStarsGained             ;; 05CF05 : AE 00 19  
                       STA.W !BonusStarsGained             ;; 05CF22 : 8D 00 19    ;
                       AND.B #$0F                          ;; 05CF25 : 29 0F       ;
                       CMP.B #$0F                          ;; 05CF27 : C9 0F       ;
-                      BNE CODE_05CF34                     ;; 05CF29 : D0 09       ;
+                      BNE +                               ;; 05CF29 : D0 09       ;
                       LDA.W !BonusStarsGained             ;; 05CF2B : AD 00 19    ;
                       SEC                                 ;; 05CF2E : 38          ;
                       SBC.B #$06                          ;; 05CF2F : E9 06       ;
                       STA.W !BonusStarsGained             ;; 05CF31 : 8D 00 19    ;
-CODE_05CF34:          REP #$20                            ;; 05CF34 : C2 20       ; Accum (16 bit) 
+                    + REP #$20                            ;; 05CF34 : C2 20       ; Accum (16 bit) 
 CODE_05CF36:          LDA.W !ScoreIncrement               ;; 05CF36 : AD 40 0F    ;
-                      BNE CODE_05CF4D                     ;; 05CF39 : D0 12       ;
+                      BNE +                               ;; 05CF39 : D0 12       ;
                       LDX.W !BonusStarsGained             ;; 05CF3B : AE 00 19    ;
-                      BNE CODE_05CF4D                     ;; 05CF3E : D0 0D       ;
+                      BNE +                               ;; 05CF3E : D0 0D       ;
                       LDX.B #$30                          ;; 05CF40 : A2 30       ;
                       STX.W !DrumrollTimer                ;; 05CF42 : 8E D6 13    ;
                       INC.W !OverworldProcess             ;; 05CF45 : EE D9 13    ;
                       LDX.B #$12                          ;; 05CF48 : A2 12       ;
                       STX.W !SPCIO3                       ;; 05CF4A : 8E FC 1D    ; / Play sound effect 
-CODE_05CF4D:          LDY.B #$1E                          ;; 05CF4D : A0 1E       ;
+                    + LDY.B #$1E                          ;; 05CF4D : A0 1E       ;
                       TYA                                 ;; 05CF4F : 98          ;
                       CLC                                 ;; 05CF50 : 18          ;
                       ADC.L !DynStripeImgSize             ;; 05CF51 : 6F 7B 83 7F ;
                       TAX                                 ;; 05CF55 : AA          ;
                       INC A                               ;; 05CF56 : 1A          ;
                       STA.B !_A                           ;; 05CF57 : 85 0A       ;
-CODE_05CF59:          LDA.W DATA_05CEA3,Y                 ;; 05CF59 : B9 A3 CE    ;
+                    - LDA.W DATA_05CEA3,Y                 ;; 05CF59 : B9 A3 CE    ;
                       STA.L !DynamicStripeImage,X         ;; 05CF5C : 9F 7D 83 7F ;
                       DEX                                 ;; 05CF60 : CA          ;
                       DEX                                 ;; 05CF61 : CA          ;
                       DEY                                 ;; 05CF62 : 88          ;
                       DEY                                 ;; 05CF63 : 88          ;
-                      BPL CODE_05CF59                     ;; 05CF64 : 10 F3       ;
+                      BPL -                               ;; 05CF64 : 10 F3       ;
                       LDA.W !ScoreIncrement               ;; 05CF66 : AD 40 0F    ;
                       BEQ CODE_05CFA0                     ;; 05CF69 : F0 35       ;
                       STZ.B !_0                           ;; 05CF6B : 64 00       ;
@@ -5544,7 +5544,7 @@ CODE_05CF8A:          LDA.L !DynamicStripeImage+4,X       ;; 05CF8A : BF 81 83 7
 CODE_05CFA0:          SEP #$20                            ;; 05CFA0 : E2 20       ; Accum (8 bit) 
                       REP #$10                            ;; 05CFA2 : C2 10       ; Index (16 bit) 
                       LDA.W !DisplayBonusStars            ;; 05CFA4 : AD 24 14    ;
-                      BEQ CODE_05CFDC                     ;; 05CFA7 : F0 33       ;
+                      BEQ +                               ;; 05CFA7 : F0 33       ;
                       LDA.L !DynStripeImgSize             ;; 05CFA9 : AF 7B 83 7F ;
                       TAX                                 ;; 05CFAD : AA          ;
                       LDA.W !BonusStarsGained             ;; 05CFAE : AD 00 19    ;
@@ -5560,13 +5560,13 @@ CODE_05CFA0:          SEP #$20                            ;; 05CFA0 : E2 20     
                       LSR A                               ;; 05CFC8 : 4A          ;
                       LSR A                               ;; 05CFC9 : 4A          ;
                       LSR A                               ;; 05CFCA : 4A          ;
-                      BEQ CODE_05CFDC                     ;; 05CFCB : F0 0F       ;
+                      BEQ +                               ;; 05CFCB : F0 0F       ;
                       TAY                                 ;; 05CFCD : A8          ;
                       LDA.W DATA_05CD62,Y                 ;; 05CFCE : B9 62 CD    ;
                       STA.L !DynamicStripeImage+$12,X     ;; 05CFD1 : 9F 8F 83 7F ;
                       LDA.W DATA_05CD63,Y                 ;; 05CFD5 : B9 63 CD    ;
                       STA.L !DynamicStripeImage+$1A,X     ;; 05CFD8 : 9F 97 83 7F ;
-CODE_05CFDC:          REP #$20                            ;; 05CFDC : C2 20       ; Accum (16 bit) 
+                    + REP #$20                            ;; 05CFDC : C2 20       ; Accum (16 bit) 
                       SEP #$10                            ;; 05CFDE : E2 10       ; Index (8 bit) 
                       LDA.B !_A                           ;; 05CFE0 : A5 0A       ;
                       STA.L !DynStripeImgSize             ;; 05CFE2 : 8F 7B 83 7F ;
@@ -5849,18 +5849,18 @@ CODE_05D796:          PHB                                 ;; 05D796 : 8B        
                       LDA.W !YoshiHeavenFlag              ;; 05D79E : AD 95 1B    ;
                       BNE CODE_05D7A8                     ;; 05D7A1 : D0 05       ;
                       LDY.W !BonusGameActivate            ;; 05D7A3 : AC 25 14    ;
-                      BEQ CODE_05D7AB                     ;; 05D7A6 : F0 03       ;
+                      BEQ +                               ;; 05D7A6 : F0 03       ;
 CODE_05D7A8:          JSR CODE_05DBAC                     ;; 05D7A8 : 20 AC DB    ;
-CODE_05D7AB:          LDA.W !SublevelCount                ;; 05D7AB : AD 1A 14    ;
-                      BNE CODE_05D7B3                     ;; 05D7AE : D0 03       ;
+                    + LDA.W !SublevelCount                ;; 05D7AB : AD 1A 14    ;
+                      BNE +                               ;; 05D7AE : D0 03       ;
                       JMP CODE_05D83E                     ;; 05D7B0 : 4C 3E D8    ;
                                                           ;;                      ;
-CODE_05D7B3:          LDX.B !PlayerXPosNext+1             ;; 05D7B3 : A6 95       ;
+                    + LDX.B !PlayerXPosNext+1             ;; 05D7B3 : A6 95       ;
                       LDA.B !ScreenMode                   ;; 05D7B5 : A5 5B       ;
                       AND.B #$01                          ;; 05D7B7 : 29 01       ;
-                      BEQ CODE_05D7BD                     ;; 05D7B9 : F0 02       ;
+                      BEQ +                               ;; 05D7B9 : F0 02       ;
                       LDX.B !PlayerYPosNext+1             ;; 05D7BB : A6 97       ;
-CODE_05D7BD:          LDA.W !ExitTableLow,X               ;; 05D7BD : BD B8 19    ;
+                    + LDA.W !ExitTableLow,X               ;; 05D7BD : BD B8 19    ;
                       STA.W !LoadingLevelNumber           ;; 05D7C0 : 8D BB 17    ;
                       STA.B !_E                           ;; 05D7C3 : 85 0E       ;
                       LDA.W !PlayerTurnOW                 ;; 05D7C5 : AD D6 0D    ;
@@ -5868,11 +5868,11 @@ CODE_05D7BD:          LDA.W !ExitTableLow,X               ;; 05D7BD : BD B8 19  
                       LSR A                               ;; 05D7C9 : 4A          ;
                       TAY                                 ;; 05D7CA : A8          ;
                       LDA.W !OWPlayerSubmap,Y             ;; 05D7CB : B9 11 1F    ;
-                      BEQ CODE_05D7D2                     ;; 05D7CE : F0 02       ;
+                      BEQ +                               ;; 05D7CE : F0 02       ;
                       LDA.B #$01                          ;; 05D7D0 : A9 01       ;
-CODE_05D7D2:          STA.B !_F                           ;; 05D7D2 : 85 0F       ;
+                    + STA.B !_F                           ;; 05D7D2 : 85 0F       ;
                       LDA.W !UseSecondaryExit             ;; 05D7D4 : AD 93 1B    ;
-                      BEQ CODE_05D83B                     ;; 05D7D7 : F0 62       ;
+                      BEQ +                               ;; 05D7D7 : F0 62       ;
                       REP #$30                            ;; 05D7D9 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.W #$0000                        ;; 05D7DB : A9 00 00    ;
                       SEP #$20                            ;; 05D7DE : E2 20       ; Accum (8 bit) 
@@ -5922,7 +5922,7 @@ CODE_05D7D2:          STA.B !_F                           ;; 05D7D2 : 85 0F     
                       LDA.W DATA_05FE00,Y                 ;; 05D833 : B9 00 FE    ;
                       AND.B #$07                          ;; 05D836 : 29 07       ;
                       STA.W !LevelEntranceType            ;; 05D838 : 8D 2A 19    ;
-CODE_05D83B:          JMP CODE_05D8B7                     ;; 05D83B : 4C B7 D8    ;
+                    + JMP CODE_05D8B7                     ;; 05D83B : 4C B7 D8    ;
                                                           ;;                      ;
 CODE_05D83E:          STZ.B !_F                           ;; 05D83E : 64 0F       ; Index (8 bit) 
                       LDY.B #$00                          ;; 05D840 : A0 00       ;
@@ -5967,24 +5967,24 @@ CODE_05D83E:          STZ.B !_F                           ;; 05D83E : 64 0F     
                       TAY                                 ;; 05D88A : A8          ; / 
                       LDA.W !OWPlayerSubmap,Y             ;; 05D88B : B9 11 1F    ; \ Get current player's submap 
                       AND.W #$000F                        ;; 05D88E : 29 0F 00    ; / 
-                      BEQ CODE_05D899                     ;; 05D891 : F0 06       ; \ 
+                      BEQ +                               ;; 05D891 : F0 06       ; \ 
                       TXA                                 ;; 05D893 : 8A          ;  | 
                       CLC                                 ;; 05D894 : 18          ;  |If on submap, increase X by x400 
                       ADC.W #$0400                        ;; 05D895 : 69 00 04    ;  | 
                       TAX                                 ;; 05D898 : AA          ;  | 
-CODE_05D899:          SEP #$20                            ;; 05D899 : E2 20       ; 8 bit A ; Accum (8 bit) 
+                    + SEP #$20                            ;; 05D899 : E2 20       ; 8 bit A ; Accum (8 bit) 
                       LDA.L !OWLayer1Translevel,X         ;; 05D89B : BF 00 D0 7E ;
                       STA.W !TranslevelNo                 ;; 05D89F : 8D BF 13    ; Store overworld level number 
 CODE_05D8A2:          CMP.B #$25                          ;; 05D8A2 : C9 25       ; \ 
-                      BCC CODE_05D8A9                     ;; 05D8A4 : 90 03       ;  | 
+                      BCC +                               ;; 05D8A4 : 90 03       ;  | 
                       SEC                                 ;; 05D8A6 : 38          ;  |If A>= x25, 
                       SBC.B #$24                          ;; 05D8A7 : E9 24       ;  |subtract x24 
-CODE_05D8A9:          STA.W !LoadingLevelNumber           ;; 05D8A9 : 8D BB 17    ;
+                    + STA.W !LoadingLevelNumber           ;; 05D8A9 : 8D BB 17    ;
                       STA.B !_E                           ;; 05D8AC : 85 0E       ; Store A as lower level number byte 
                       LDA.W !OWPlayerSubmap,Y             ;; 05D8AE : B9 11 1F    ; \ 
-                      BEQ CODE_05D8B5                     ;; 05D8B1 : F0 02       ;  |Set higher level number byte to: 
+                      BEQ +                               ;; 05D8B1 : F0 02       ;  |Set higher level number byte to: 
                       LDA.B #$01                          ;; 05D8B3 : A9 01       ;  |0 if on overworld 
-CODE_05D8B5:          STA.B !_F                           ;; 05D8B5 : 85 0F       ; / 
+                    + STA.B !_F                           ;; 05D8B5 : 85 0F       ; / 
 CODE_05D8B7:          REP #$30                            ;; 05D8B7 : C2 30       ; 16 bit A,X,Y ; Index (16 bit) Accum (16 bit) 
                       LDA.B !_E                           ;; 05D8B9 : A5 0E       ; \ 
                       ASL A                               ;; 05D8BB : 0A          ;  | 
@@ -6058,7 +6058,7 @@ CODE_05D8B7:          REP #$30                            ;; 05D8B7 : C2 30     
                       LSR A                               ;; 05D949 : 4A          ;
                       STA.B !ScreenMode                   ;; 05D94A : 85 5B       ;
                       LDA.W !UseSecondaryExit             ;; 05D94C : AD 93 1B    ;
-                      BNE CODE_05D9A1                     ;; 05D94F : D0 50       ;
+                      BNE +                               ;; 05D94F : D0 50       ;
                       LDA.W DATA_05F000,Y                 ;; 05D951 : B9 00 F0    ;
                       AND.B #$0F                          ;; 05D954 : 29 0F       ;
                       TAX                                 ;; 05D956 : AA          ;
@@ -6095,9 +6095,9 @@ CODE_05D8B7:          REP #$30                            ;; 05D8B7 : C2 30     
                       STA.B !Layer1YPos                   ;; 05D99A : 85 1C       ;
                       LDA.W DATA_05F600,Y                 ;; 05D99C : B9 00 F6    ;
                       STA.B !_1                           ;; 05D99F : 85 01       ;
-CODE_05D9A1:          LDA.B !ScreenMode                   ;; 05D9A1 : A5 5B       ;
+                    + LDA.B !ScreenMode                   ;; 05D9A1 : A5 5B       ;
                       AND.B #$01                          ;; 05D9A3 : 29 01       ;
-                      BEQ CODE_05D9B8                     ;; 05D9A5 : F0 11       ;
+                      BEQ +                               ;; 05D9A5 : F0 11       ;
                       LDY.W #$0000                        ;; 05D9A7 : A0 00 00    ;
                       LDA.B [!Layer1DataPtr],Y            ;; 05D9AA : B7 65       ;
                       AND.B #$1F                          ;; 05D9AC : 29 1F       ;
@@ -6106,8 +6106,8 @@ CODE_05D9A1:          LDA.B !ScreenMode                   ;; 05D9A1 : A5 5B     
                       STA.B !LastScreenVert               ;; 05D9B1 : 85 5F       ;
                       LDA.B #$01                          ;; 05D9B3 : A9 01       ;
                       STA.W !VertLayer1Setting            ;; 05D9B5 : 8D 12 14    ;
-CODE_05D9B8:          LDA.W !SublevelCount                ;; 05D9B8 : AD 1A 14    ;
-                      BNE CODE_05D9EC                     ;; 05D9BB : D0 2F       ;
+                    + LDA.W !SublevelCount                ;; 05D9B8 : AD 1A 14    ;
+                      BNE +                               ;; 05D9BB : D0 2F       ;
                       LDA.B !_2                           ;; 05D9BD : A5 02       ;
                       LSR A                               ;; 05D9BF : 4A          ;
                       LSR A                               ;; 05D9C0 : 4A          ;
@@ -6122,7 +6122,7 @@ CODE_05D9B8:          LDA.W !SublevelCount                ;; 05D9B8 : AD 1A 14  
                       LDX.W !TranslevelNo                 ;; 05D9D4 : AE BF 13    ;
                       LDA.W !OWLevelTileSettings,X        ;; 05D9D7 : BD A2 1E    ;
                       AND.B #$40                          ;; 05D9DA : 29 40       ;
-                      BEQ CODE_05D9EC                     ;; 05D9DC : F0 0E       ;
+                      BEQ +                               ;; 05D9DC : F0 0E       ;
                       STA.W !SkipMidwayCastleIntro        ;; 05D9DE : 8D CF 13    ;
                       LDA.B !_2                           ;; 05D9E1 : A5 02       ;
                       LSR A                               ;; 05D9E3 : 4A          ;
@@ -6132,26 +6132,26 @@ CODE_05D9B8:          LDA.W !SublevelCount                ;; 05D9B8 : AD 1A 14  
                       STA.B !PlayerXPosNext+1             ;; 05D9E7 : 85 95       ;
                       JMP CODE_05DA17                     ;; 05D9E9 : 4C 17 DA    ;
                                                           ;;                      ;
-CODE_05D9EC:          REP #$10                            ;; 05D9EC : C2 10       ; Index (16 bit) 
+                    + REP #$10                            ;; 05D9EC : C2 10       ; Index (16 bit) 
                       LDA.B !_1                           ;; 05D9EE : A5 01       ;
                       AND.B #$1F                          ;; 05D9F0 : 29 1F       ;
                       STA.B !_1                           ;; 05D9F2 : 85 01       ;
                       LDA.B !ScreenMode                   ;; 05D9F4 : A5 5B       ;
                       AND.B #$01                          ;; 05D9F6 : 29 01       ;
-                      BNE CODE_05DA01                     ;; 05D9F8 : D0 07       ;
+                      BNE +                               ;; 05D9F8 : D0 07       ;
                       LDA.B !_1                           ;; 05D9FA : A5 01       ;
                       STA.B !PlayerXPosNext+1             ;; 05D9FC : 85 95       ;
                       JMP CODE_05DA17                     ;; 05D9FE : 4C 17 DA    ;
                                                           ;;                      ;
-CODE_05DA01:          LDA.B !_1                           ;; 05DA01 : A5 01       ;
+                    + LDA.B !_1                           ;; 05DA01 : A5 01       ;
                       STA.B !PlayerYPosNext+1             ;; 05DA03 : 85 97       ;
                       STA.B !Layer1YPos+1                 ;; 05DA05 : 85 1D       ;
                       SEP #$10                            ;; 05DA07 : E2 10       ; Index (8 bit) 
                       LDY.W !VertLayer2Setting            ;; 05DA09 : AC 14 14    ;
                       CPY.B #$03                          ;; 05DA0C : C0 03       ;
-                      BEQ CODE_05DA12                     ;; 05DA0E : F0 02       ;
+                      BEQ +                               ;; 05DA0E : F0 02       ;
                       STA.B !Layer2YPos+1                 ;; 05DA10 : 85 21       ;
-CODE_05DA12:          LDA.B #$01                          ;; 05DA12 : A9 01       ;
+                    + LDA.B #$01                          ;; 05DA12 : A9 01       ;
                       STA.W !VertLayer1Setting            ;; 05DA14 : 8D 12 14    ;
 CODE_05DA17:          SEP #$30                            ;; 05DA17 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDA.W !TranslevelNo                 ;; 05DA19 : AD BF 13    ;
@@ -6168,14 +6168,14 @@ CODE_05DA2C:          CMP.L DATA_05D760,X                 ;; 05DA2C : DF 60 D7 0
                       BEQ CODE_05DA38                     ;; 05DA30 : F0 06       ;
                       DEX                                 ;; 05DA32 : CA          ;
                       BPL CODE_05DA2C                     ;; 05DA33 : 10 F7       ;
-CODE_05DA35:          JMP CODE_05DAD7                     ;; 05DA35 : 4C D7 DA    ;
+                    - JMP CODE_05DAD7                     ;; 05DA35 : 4C D7 DA    ;
                                                           ;;                      ;
 CODE_05DA38:          LDA.W !SublevelCount                ;; 05DA38 : AD 1A 14    ;
-                      BNE CODE_05DA35                     ;; 05DA3B : D0 F8       ;
+                      BNE -                               ;; 05DA3B : D0 F8       ;
                       LDA.W !ShowMarioStart               ;; 05DA3D : AD 1D 14    ;
-                      BNE CODE_05DA35                     ;; 05DA40 : D0 F3       ;
+                      BNE -                               ;; 05DA40 : D0 F3       ;
                       LDA.W !DisableNoYoshiIntro          ;; 05DA42 : AD 1F 14    ;
-                      BNE CODE_05DA35                     ;; 05DA45 : D0 EE       ;
+                      BNE -                               ;; 05DA45 : D0 EE       ;
                       LDA.W !TranslevelNo                 ;; 05DA47 : AD BF 13    ;
                       CMP.B #$31                          ;; 05DA4A : C9 31       ;
                       BEQ CODE_05DA5E                     ;; 05DA4C : F0 10       ;
@@ -6186,10 +6186,10 @@ CODE_05DA38:          LDA.W !SublevelCount                ;; 05DA38 : AD 1A 14  
                       CMP.B #$35                          ;; 05DA56 : C9 35       ;
                       BEQ CODE_05DA5E                     ;; 05DA58 : F0 04       ;
                       CMP.B #$40                          ;; 05DA5A : C9 40       ;
-                      BNE CODE_05DA60                     ;; 05DA5C : D0 02       ;
+                      BNE +                               ;; 05DA5C : D0 02       ;
 CODE_05DA5E:          LDX.B #$05                          ;; 05DA5E : A2 05       ;
-CODE_05DA60:          LDA.W !SkipMidwayCastleIntro        ;; 05DA60 : AD CF 13    ;
-                      BNE CODE_05DAD0                     ;; 05DA63 : D0 6B       ;
+                    + LDA.W !SkipMidwayCastleIntro        ;; 05DA60 : AD CF 13    ;
+                      BNE +                               ;; 05DA63 : D0 6B       ;
                       LDA.L DATA_05D790,X                 ;; 05DA65 : BF 90 D7 05 ;
                       STA.B !PlayerYPosNext               ;; 05DA69 : 85 96       ;
                       LDA.B #$01                          ;; 05DA6B : A9 01       ;
@@ -6237,17 +6237,17 @@ CODE_05DA60:          LDA.W !SkipMidwayCastleIntro        ;; 05DA60 : AD CF 13  
                       STA.B !Layer2DataPtr+1              ;; 05DAC9 : 85 69       ;
                       LDA.W PtrsLong05D778+2,Y            ;; 05DACB : B9 7A D7    ;
                       STA.B !Layer2DataPtr+2              ;; 05DACE : 85 6A       ;
-CODE_05DAD0:          LDA.L DATA_05D760,X                 ;; 05DAD0 : BF 60 D7 05 ;
+                    + LDA.L DATA_05D760,X                 ;; 05DAD0 : BF 60 D7 05 ;
                       STA.W !ObjectTileset                ;; 05DAD4 : 8D 31 19    ;
 CODE_05DAD7:          LDA.W !SublevelCount                ;; 05DAD7 : AD 1A 14    ;
-                      BEQ CODE_05DAEB                     ;; 05DADA : F0 0F       ;
+                      BEQ +                               ;; 05DADA : F0 0F       ;
                       LDA.W !BonusGameActivate            ;; 05DADC : AD 25 14    ;
-                      BNE CODE_05DAEB                     ;; 05DADF : D0 0A       ;
+                      BNE +                               ;; 05DADF : D0 0A       ;
                       LDA.W !TranslevelNo                 ;; 05DAE1 : AD BF 13    ;
                       CMP.B #$24                          ;; 05DAE4 : C9 24       ;
-                      BNE CODE_05DAEB                     ;; 05DAE6 : D0 03       ;
+                      BNE +                               ;; 05DAE6 : D0 03       ;
                       JSR CODE_05DAEF                     ;; 05DAE8 : 20 EF DA    ;
-CODE_05DAEB:          PLB                                 ;; 05DAEB : AB          ;
+                    + PLB                                 ;; 05DAEB : AB          ;
                       SEP #$30                            ;; 05DAEC : E2 30       ; Index (8 bit) Accum (8 bit) 
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -6319,12 +6319,12 @@ CODE_05DB49:          REP #$20                            ;; 05DB49 : C2 20     
 CODE_05DB6E:          LDX.B #$0A                          ;; 05DB6E : A2 0A       ;
                       LDA.W !GreenStarBlockCoins          ;; 05DB70 : AD C0 0D    ;
                       CMP.B #$16                          ;; 05DB73 : C9 16       ;
-                      BPL CODE_05DB7F                     ;; 05DB75 : 10 08       ;
+                      BPL +                               ;; 05DB75 : 10 08       ;
                       LDX.B #$08                          ;; 05DB77 : A2 08       ;
                       CMP.B #$0A                          ;; 05DB79 : C9 0A       ;
-                      BPL CODE_05DB7F                     ;; 05DB7B : 10 02       ;
+                      BPL +                               ;; 05DB7B : 10 02       ;
                       LDX.B #$06                          ;; 05DB7D : A2 06       ;
-CODE_05DB7F:          JMP CODE_05DB49                     ;; 05DB7F : 4C 49 DB    ;
+                    + JMP CODE_05DB49                     ;; 05DB7F : 4C 49 DB    ;
                                                           ;;                      ;
 CODE_05DB82:          LDX.B #$0C                          ;; 05DB82 : A2 0C       ;
                       LDA.W !InGameTimerHundreds          ;; 05DB84 : AD 31 0F    ;
@@ -6349,14 +6349,14 @@ DATA_05DBA9:          db $00,$C8,$00                      ;; 05DBA9             
                                                           ;;                      ;
 CODE_05DBAC:          LDY.B #$00                          ;; 05DBAC : A0 00       ;
                       LDA.W !YoshiHeavenFlag              ;; 05DBAE : AD 95 1B    ;
-                      BEQ CODE_05DBB5                     ;; 05DBB1 : F0 02       ;
+                      BEQ +                               ;; 05DBB1 : F0 02       ;
                       LDY.B #$01                          ;; 05DBB3 : A0 01       ;
-CODE_05DBB5:          LDX.B !PlayerXPosNext+1             ;; 05DBB5 : A6 95       ;
+                    + LDX.B !PlayerXPosNext+1             ;; 05DBB5 : A6 95       ;
                       LDA.B !ScreenMode                   ;; 05DBB7 : A5 5B       ;
                       AND.B #$01                          ;; 05DBB9 : 29 01       ;
-                      BEQ CODE_05DBBF                     ;; 05DBBB : F0 02       ;
+                      BEQ +                               ;; 05DBBB : F0 02       ;
                       LDX.B !PlayerYPosNext+1             ;; 05DBBD : A6 97       ;
-CODE_05DBBF:          LDA.W DATA_05DBA9,Y                 ;; 05DBBF : B9 A9 DB    ;
+                    + LDA.W DATA_05DBA9,Y                 ;; 05DBBF : B9 A9 DB    ;
                       STA.W !ExitTableLow,X               ;; 05DBC2 : 9D B8 19    ;
                       INC.W !SublevelCount                ;; 05DBC5 : EE 1A 14    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -6373,26 +6373,26 @@ CODE_05DBF2:          PHB                                 ;; 05DBF2 : 8B        
                       PHK                                 ;; 05DBF3 : 4B          ;
                       PLB                                 ;; 05DBF4 : AB          ;
                       LDX.B #$08                          ;; 05DBF5 : A2 08       ;
-CODE_05DBF7:          LDA.W DATA_05DBC9,X                 ;; 05DBF7 : BD C9 DB    ;
+                    - LDA.W DATA_05DBC9,X                 ;; 05DBF7 : BD C9 DB    ;
                       STA.L !DynamicStripeImage,X         ;; 05DBFA : 9F 7D 83 7F ;
                       DEX                                 ;; 05DBFE : CA          ;
-                      BPL CODE_05DBF7                     ;; 05DBFF : 10 F6       ;
+                      BPL -                               ;; 05DBFF : 10 F6       ;
                       LDX.B #$00                          ;; 05DC01 : A2 00       ;
                       LDA.W !PlayerTurnLvl                ;; 05DC03 : AD B3 0D    ;
-                      BEQ CODE_05DC0A                     ;; 05DC06 : F0 02       ;
+                      BEQ +                               ;; 05DC06 : F0 02       ;
                       LDX.B #$01                          ;; 05DC08 : A2 01       ;
-CODE_05DC0A:          LDA.W !SavedPlayerLives,X           ;; 05DC0A : BD B4 0D    ;
+                    + LDA.W !SavedPlayerLives,X           ;; 05DC0A : BD B4 0D    ;
                       INC A                               ;; 05DC0D : 1A          ;
                       JSR CODE_05DC3A                     ;; 05DC0E : 20 3A DC    ;
                       CPX.B #$00                          ;; 05DC11 : E0 00       ;
-                      BEQ CODE_05DC23                     ;; 05DC13 : F0 0E       ;
+                      BEQ +                               ;; 05DC13 : F0 0E       ;
                       CLC                                 ;; 05DC15 : 18          ;
                       ADC.B #$22                          ;; 05DC16 : 69 22       ;
                       STA.L !DynamicStripeImage+6         ;; 05DC18 : 8F 83 83 7F ;
                       LDA.B #$39                          ;; 05DC1C : A9 39       ;
                       STA.L !DynamicStripeImage+7         ;; 05DC1E : 8F 84 83 7F ;
                       TXA                                 ;; 05DC22 : 8A          ;
-CODE_05DC23:          CLC                                 ;; 05DC23 : 18          ;
+                    + CLC                                 ;; 05DC23 : 18          ;
                       ADC.B #$22                          ;; 05DC24 : 69 22       ;
                       STA.L !DynamicStripeImage+4         ;; 05DC26 : 8F 81 83 7F ;
                       LDA.B #$39                          ;; 05DC2A : A9 39       ;

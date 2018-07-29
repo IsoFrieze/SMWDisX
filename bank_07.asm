@@ -1,4 +1,4 @@
-ORG $078000                                               ;;                      ;
+                      ORG $078000                         ;;                      ;
                                                           ;;                      ;
 LevelData078000:      db $C0,$6F,$49,$04,$05,$6C,$31,$03  ;; ?QPWZ?               ;
                       db $6E,$34,$02,$70,$30,$01,$14,$00  ;; ?QPWZ?               ;
@@ -4008,12 +4008,12 @@ CODE_07F1CA:          LDA.W !SpriteMisc1540,X             ;; 07F1CA : BD 40 15  
                       LSR A                               ;; 07F1DE : 4A          ;
                       LSR A                               ;; 07F1DF : 4A          ;
                       TAX                                 ;; 07F1E0 : AA          ;
-                      BEQ CODE_07F1ED                     ;; 07F1E1 : F0 0A       ;
+                      BEQ +                               ;; 07F1E1 : F0 0A       ;
                       LDA.L DATA_07F1A0,X                 ;; 07F1E3 : BF A0 F1 07 ;
                       TAX                                 ;; 07F1E7 : AA          ;
                       LDY.B #$20                          ;; 07F1E8 : A0 20       ;
                       JSR CODE_07F200                     ;; 07F1EA : 20 00 F2    ;
-CODE_07F1ED:          PLA                                 ;; 07F1ED : 68          ;
+                    + PLA                                 ;; 07F1ED : 68          ;
                       AND.B #$0F                          ;; 07F1EE : 29 0F       ;
                       TAX                                 ;; 07F1F0 : AA          ;
                       LDA.L DATA_07F1A0,X                 ;; 07F1F1 : BF A0 F1 07 ;
@@ -4039,13 +4039,13 @@ CODE_07F200:          LDA.L DATA_07F0C8,X                 ;; 07F200 : BF C8 F0 0
                       PHX                                 ;; 07F21B : DA          ;
                       LDX.B !_4                           ;; 07F21C : A6 04       ;
                       CPX.B #$10                          ;; 07F21E : E0 10       ;
-                      BCS CODE_07F22A                     ;; 07F220 : B0 08       ;
+                      BCS +                               ;; 07F220 : B0 08       ;
                       TXA                                 ;; 07F222 : 8A          ;
                       LSR A                               ;; 07F223 : 4A          ;
                       LSR A                               ;; 07F224 : 4A          ;
                       TAX                                 ;; 07F225 : AA          ;
                       LDA.L DATA_07F24E,X                 ;; 07F226 : BF 4E F2 07 ;
-CODE_07F22A:          STA.W !OAMTileNo,Y                  ;; 07F22A : 99 02 02    ;
+                    + STA.W !OAMTileNo,Y                  ;; 07F22A : 99 02 02    ;
                       PLX                                 ;; 07F22D : FA          ;
                       LDA.B !TrueFrame                    ;; 07F22E : A5 13       ;
                       LSR A                               ;; 07F230 : 4A          ;
@@ -4082,10 +4082,10 @@ CODE_07F252:          PHX                                 ;; 07F252 : DA        
                       STA.W !BonusStarsGained             ;; 07F25D : 8D 00 19    ;
                       PLX                                 ;; 07F260 : FA          ;
                       CMP.B #$50                          ;; 07F261 : C9 50       ;
-                      BNE Return07F26B                    ;; 07F263 : D0 06       ;
+                      BNE +                               ;; 07F263 : D0 06       ;
                       LDA.B #$0A                          ;; 07F265 : A9 0A       ;
                       JSL GivePoints                      ;; 07F267 : 22 E5 AC 02 ;
-Return07F26B:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 Sprite1656Vals:       db $70,$70,$70,$70,$10,$10,$10,$10  ;; ?QPWZ?               ;
@@ -4470,9 +4470,9 @@ DATA_07FC37:          db $F0,$F0,$10,$10                  ;; 07FC37             
                                                           ;;                      ;
 CODE_07FC3B:          PHX                                 ;; 07FC3B : DA          ;
                       LDX.B #$03                          ;; 07FC3C : A2 03       ;
-CODE_07FC3E:          JSL CODE_07FC47                     ;; 07FC3E : 22 47 FC 07 ;
+                    - JSL CODE_07FC47                     ;; 07FC3E : 22 47 FC 07 ;
                       DEX                                 ;; 07FC42 : CA          ;
-                      BPL CODE_07FC3E                     ;; 07FC43 : 10 F9       ;
+                      BPL -                               ;; 07FC43 : 10 F9       ;
                       PLX                                 ;; 07FC45 : FA          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;

@@ -1,4 +1,4 @@
-ORG $028000                                               ;;                      ;
+                      ORG $028000                         ;;                      ;
                                                           ;;                      ;
                       db $80,$40,$20,$10,$08,$04,$02,$01  ;; 028000               ;
                                                           ;;                      ;
@@ -15,10 +15,10 @@ CODE_028019:          LDA.W !SpriteStatus,X               ;; 028019 : BD C8 14  
                       DEX                                 ;; 02801E : CA          ;
                       BPL CODE_028019                     ;; 02801F : 10 F8       ;
                       DEC.W !SpriteToOverwrite            ;; 028021 : CE 61 18    ;
-                      BPL ADDR_02802B                     ;; 028024 : 10 05       ;
+                      BPL +                               ;; 028024 : 10 05       ;
                       LDA.B #$01                          ;; 028026 : A9 01       ;
                       STA.W !SpriteToOverwrite            ;; 028028 : 8D 61 18    ;
-ADDR_02802B:          LDA.W !SpriteToOverwrite            ;; 02802B : AD 61 18    ;
+                    + LDA.W !SpriteToOverwrite            ;; 02802B : AD 61 18    ;
                       CLC                                 ;; 02802E : 18          ;
                       ADC.B #$0A                          ;; 02802F : 69 0A       ;
                       TAX                                 ;; 028031 : AA          ;
@@ -69,26 +69,26 @@ ExplodeBombSubRt:     STZ.W !SpriteTweakerA,X             ;; ?QPWZ? : 9E 56 16  
                       STA.W !SpriteTweakerB,X             ;; 02808F : 9D 62 16    ; / 
                       JSR GetDrawInfo2                    ;; 028092 : 20 78 D3    ;
                       LDA.B !SpriteLock                   ;; 028095 : A5 9D       ; \ Increase frame count if sprites not locked 
-                      BNE CODE_02809C                     ;; 028097 : D0 03       ;  | 
+                      BNE +                               ;; 028097 : D0 03       ;  | 
                       INC.W !SpriteMisc1570,X             ;; 028099 : FE 70 15    ; / 
-CODE_02809C:          LDA.W !SpriteMisc1540,X             ;; 02809C : BD 40 15    ; \ When timer is up free up sprite slot 
-                      BNE ExplodeBombGfx                  ;; 02809F : D0 04       ;  | 
+                    + LDA.W !SpriteMisc1540,X             ;; 02809C : BD 40 15    ; \ When timer is up free up sprite slot 
+                      BNE +                               ;; 02809F : D0 04       ;  | 
                       STZ.W !SpriteStatus,X               ;; 0280A1 : 9E C8 14    ; / 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-ExplodeBombGfx:       LDA.W !SpriteMisc1540,X             ;; ?QPWZ? : BD 40 15    ;
+                    + LDA.W !SpriteMisc1540,X             ;; ?QPWZ? : BD 40 15    ;
                       LSR A                               ;; 0280A8 : 4A          ;
                       AND.B #$03                          ;; 0280A9 : 29 03       ;
                       CMP.B #$03                          ;; 0280AB : C9 03       ;
-                      BNE CODE_0280C0                     ;; 0280AD : D0 11       ;
+                      BNE +                               ;; 0280AD : D0 11       ;
                       JSR ExplodeSprites                  ;; 0280AF : 20 39 81    ;
                       LDA.W !SpriteMisc1540,X             ;; 0280B2 : BD 40 15    ;
                       SEC                                 ;; 0280B5 : 38          ;
                       SBC.B #$10                          ;; 0280B6 : E9 10       ;
                       CMP.B #$20                          ;; 0280B8 : C9 20       ;
-                      BCS CODE_0280C0                     ;; 0280BA : B0 04       ;
+                      BCS +                               ;; 0280BA : B0 04       ;
                       JSL MarioSprInteract                ;; 0280BC : 22 DC A7 01 ;
-CODE_0280C0:          LDY.B #$04                          ;; 0280C0 : A0 04       ;
+                    + LDY.B #$04                          ;; 0280C0 : A0 04       ;
                       STY.B !_F                           ;; 0280C2 : 84 0F       ;
 CODE_0280C4:          LDA.W !SpriteMisc1540,X             ;; 0280C4 : BD 40 15    ;
                       LSR A                               ;; 0280C7 : 4A          ;
@@ -162,9 +162,9 @@ ExplodeLoopStart:     CPY.W !CurSpriteProcess             ;; ?QPWZ? : CC E9 15  
                       PHY                                 ;; 028140 : 5A          ;  | 
                       LDA.W !SpriteStatus,Y               ;; 028141 : B9 C8 14    ;  | Skip sprite if it's already dying/dead 
                       CMP.B #$08                          ;; 028144 : C9 08       ;  | 
-                      BCC CODE_02814B                     ;; 028146 : 90 03       ;  | 
+                      BCC +                               ;; 028146 : 90 03       ;  | 
                       JSR ExplodeKillSpr                  ;; 028148 : 20 50 81    ;  | Check for contact 
-CODE_02814B:          PLY                                 ;; 02814B : 7A          ;  | 
+                    + PLY                                 ;; 02814B : 7A          ;  | 
 CODE_02814C:          DEY                                 ;; 02814C : 88          ;  | Next 
                       BPL ExplodeLoopStart                ;; 02814D : 10 EC       ; / 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -175,17 +175,17 @@ ExplodeKillSpr:       PHX                                 ;; ?QPWZ? : DA        
                       PLX                                 ;; 028156 : FA          ;  | 
                       JSL GetSpriteClippingA              ;; 028157 : 22 9F B6 03 ;  | 
                       JSL CheckForContact                 ;; 02815B : 22 2B B7 03 ;  | 
-                      BCC Return028177                    ;; 02815F : 90 16       ; / 
+                      BCC +                               ;; 02815F : 90 16       ; / 
                       LDA.W !SpriteTweakerD,Y             ;; 028161 : B9 7A 16    ; \ Return if sprite is invincible 
                       AND.B #$02                          ;; 028164 : 29 02       ;  | to explosions 
-                      BNE Return028177                    ;; 028166 : D0 0F       ; / 
+                      BNE +                               ;; 028166 : D0 0F       ; / 
                       LDA.B #$02                          ;; 028168 : A9 02       ; \ Sprite status = Killed 
                       STA.W !SpriteStatus,Y               ;; 02816A : 99 C8 14    ; / 
                       LDA.B #$C0                          ;; 02816D : A9 C0       ; \ Sprite Y speed = #$C0 
                       STA.W !SpriteYSpeed,Y               ;; 02816F : 99 AA 00    ; / 
                       LDA.B #$00                          ;; 028172 : A9 00       ; \ Sprite X speed = #$00 
                       STA.W !SpriteXSpeed,Y               ;; 028174 : 99 B6 00    ; / 
-Return028177:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_028178:          db $F8,$38,$78,$B8,$00,$10,$20,$D0  ;; 028178               ;
@@ -249,13 +249,13 @@ CODE_02827D:          LDA.B !Layer1XPos                   ;; 02827D : A5 1A     
                       LDA.B #$66                          ;; 0282A9 : A9 66       ;
                       STY.B !_3                           ;; 0282AB : 84 03       ;
                       LDA.B #$F0                          ;; 0282AD : A9 F0       ;
-CODE_0282AF:          STA.W !OAMTileYPos+$0C,Y            ;; 0282AF : 99 0D 02    ;
+                    - STA.W !OAMTileYPos+$0C,Y            ;; 0282AF : 99 0D 02    ;
                       INY                                 ;; 0282B2 : C8          ;
                       INY                                 ;; 0282B3 : C8          ;
                       INY                                 ;; 0282B4 : C8          ;
                       INY                                 ;; 0282B5 : C8          ;
                       CPY.W #$018C                        ;; 0282B6 : C0 8C 01    ;
-                      BCC CODE_0282AF                     ;; 0282B9 : 90 F4       ;
+                      BCC -                               ;; 0282B9 : 90 F4       ;
                       LDX.W #$0000                        ;; 0282BB : A2 00 00    ;
                       STX.B !_C                           ;; 0282BE : 86 0C       ;
                       LDX.W #$0038                        ;; 0282C0 : A2 38 00    ;
@@ -291,12 +291,12 @@ CODE_0282D8:          STX.B !_0                           ;; 0282D8 : 86 00     
                       STA.W !OAMTileYPos+$0C,Y            ;; 028302 : 99 0D 02    ;
                       LDX.B !_A                           ;; 028305 : A6 0A       ;
                       LDA.W !BossBGSpriteUpdate           ;; 028307 : AD 8C 18    ;
-                      BNE CODE_028318                     ;; 02830A : D0 0C       ;
+                      BNE +                               ;; 02830A : D0 0C       ;
                       LDA.L DATA_028226,X                 ;; 02830C : BF 26 82 02 ;
                       STA.W !OAMTileNo+$0C,Y              ;; 028310 : 99 0E 02    ;
                       LDA.B #$0D                          ;; 028313 : A9 0D       ;
                       STA.W !OAMTileAttr+$0C,Y            ;; 028315 : 99 0F 02    ;
-CODE_028318:          REP #$20                            ;; 028318 : C2 20       ; Accum (16 bit) 
+                    + REP #$20                            ;; 028318 : C2 20       ; Accum (16 bit) 
                       PHY                                 ;; 02831A : 5A          ;
                       TYA                                 ;; 02831B : 98          ;
                       LSR A                               ;; 02831C : 4A          ;
@@ -307,10 +307,10 @@ CODE_028318:          REP #$20                            ;; 028318 : C2 20     
                       STA.W !OAMTileSize+3,Y              ;; 028323 : 99 23 04    ;
                       LDA.B !_2                           ;; 028326 : A5 02       ;
                       CMP.B #$F0                          ;; 028328 : C9 F0       ;
-                      BCC CODE_028367                     ;; 02832A : 90 3B       ;
+                      BCC +                               ;; 02832A : 90 3B       ;
                       LDA.W !SpriteMisc187B+9             ;; 02832C : AD 84 18    ;
                       CMP.B #$01                          ;; 02832F : C9 01       ;
-                      BEQ CODE_028367                     ;; 028331 : F0 34       ;
+                      BEQ +                               ;; 028331 : F0 34       ;
                       PLY                                 ;; 028333 : 7A          ;
                       PHY                                 ;; 028334 : 5A          ;
                       LDX.B !_3                           ;; 028335 : A6 03       ;
@@ -334,19 +334,19 @@ CODE_028318:          REP #$20                            ;; 028318 : C2 20     
                       CLC                                 ;; 02835E : 18          ;
                       ADC.B #$04                          ;; 02835F : 69 04       ;
                       STA.B !_3                           ;; 028361 : 85 03       ;
-                      BCC CODE_028367                     ;; 028363 : 90 02       ;
+                      BCC +                               ;; 028363 : 90 02       ;
                       INC.B !_4                           ;; 028365 : E6 04       ;
-CODE_028367:          PLY                                 ;; 028367 : 7A          ;
+                    + PLY                                 ;; 028367 : 7A          ;
                       LDX.B !_0                           ;; 028368 : A6 00       ;
                       DEY                                 ;; 02836A : 88          ;
                       DEY                                 ;; 02836B : 88          ;
                       DEY                                 ;; 02836C : 88          ;
                       DEY                                 ;; 02836D : 88          ;
                       DEX                                 ;; 02836E : CA          ;
-                      BMI CODE_028374                     ;; 02836F : 30 03       ;
+                      BMI +                               ;; 02836F : 30 03       ;
                       JMP CODE_0282D8                     ;; 028371 : 4C D8 82    ;
                                                           ;;                      ;
-CODE_028374:          SEP #$10                            ;; 028374 : E2 10       ; Index (8 bit) 
+                    + SEP #$10                            ;; 028374 : E2 10       ; Index (8 bit) 
                       LDA.B #$01                          ;; 028376 : A9 01       ;
                       STA.W !BossBGSpriteUpdate           ;; 028378 : 8D 8C 18    ;
                       LDA.W !SpriteMisc187B+9             ;; 02837B : AD 84 18    ;
@@ -370,11 +370,11 @@ CODE_0283A0:          LDX.B !_0                           ;; 0283A0 : A6 00     
                       TAY                                 ;; 0283A6 : A8          ;
                       JSL GetRand                         ;; 0283A7 : 22 F9 AC 01 ;
                       AND.B #$01                          ;; 0283AB : 29 01       ;
-                      BNE CODE_0283B7                     ;; 0283AD : D0 08       ;
+                      BNE +                               ;; 0283AD : D0 08       ;
                       LDA.W !OAMTileNo+$0C,Y              ;; 0283AF : B9 0E 02    ;
                       EOR.B #$02                          ;; 0283B2 : 49 02       ;
                       STA.W !OAMTileNo+$0C,Y              ;; 0283B4 : 99 0E 02    ;
-CODE_0283B7:          LDA.B #$09                          ;; 0283B7 : A9 09       ;
+                    + LDA.B #$09                          ;; 0283B7 : A9 09       ;
                       STA.W !OAMTileAttr+$0C,Y            ;; 0283B9 : 99 0F 02    ;
                       INC.B !_0                           ;; 0283BC : E6 00       ;
                       LDA.B !_0                           ;; 0283BE : A5 00       ;
@@ -400,11 +400,11 @@ CODE_0283CE:          LDA.W !SpriteMisc1534+9             ;; 0283CE : AD 3D 15  
 CODE_0283E0:          STX.B !_F                           ;; 0283E0 : 86 0F       ;
                       LDA.W !BossPillarFalling,X          ;; 0283E2 : BD A8 18    ;
                       BEQ CODE_0283F4                     ;; 0283E5 : F0 0D       ;
-                      BMI CODE_0283F1                     ;; 0283E7 : 30 08       ;
+                      BMI +                               ;; 0283E7 : 30 08       ;
                       STA.W !PlayerIsFrozen               ;; 0283E9 : 8D FB 13    ;
                       STA.B !SpriteLock                   ;; 0283EC : 85 9D       ;
                       JSR CODE_0283F8                     ;; 0283EE : 20 F8 83    ;
-CODE_0283F1:          JSR CODE_028439                     ;; 0283F1 : 20 39 84    ;
+                    + JSR CODE_028439                     ;; 0283F1 : 20 39 84    ;
 CODE_0283F4:          DEX                                 ;; 0283F4 : CA          ;
                       BPL CODE_0283E0                     ;; 0283F5 : 10 E9       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -432,13 +432,13 @@ CODE_0283F8:          LDA.W !BossPillarYPos,X             ;; 0283F8 : BD AA 18  
                       BNE CODE_02842A                     ;; 028420 : D0 08       ;
                       INC.W !BossPillarFalling+1          ;; 028422 : EE A9 18    ;
                       STZ.W !BossPillarYPos+1             ;; 028425 : 9C AB 18    ;
-                      BRA CODE_028433                     ;; 028428 : 80 09       ;
+                      BRA +                               ;; 028428 : 80 09       ;
                                                           ;;                      ;
 CODE_02842A:          CPX.B #$01                          ;; 02842A : E0 01       ;
-                      BNE CODE_028433                     ;; 02842C : D0 05       ;
+                      BNE +                               ;; 02842C : D0 05       ;
                       STZ.B !SpriteLock                   ;; 02842E : 64 9D       ;
                       STZ.W !PlayerIsFrozen               ;; 028430 : 9C FB 13    ;
-CODE_028433:          LDA.B #$B0                          ;; 028433 : A9 B0       ;
+                    + LDA.B #$B0                          ;; 028433 : A9 B0       ;
 CODE_028435:          STA.W !BossPillarYPos,X             ;; 028435 : 9D AA 18    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -457,15 +457,15 @@ CODE_028440:          LDA.B #$F0                          ;; 028440 : A9 F0     
                       CMP.B #$20                          ;; 028452 : C9 20       ;
                       BCC Return02848C                    ;; 028454 : 90 36       ;
                       CMP.B #$A4                          ;; 028456 : C9 A4       ;
-                      BCS CODE_02845D                     ;; 028458 : B0 03       ;
+                      BCS +                               ;; 028458 : B0 03       ;
                       STA.W !OAMTileYPos,Y                ;; 02845A : 99 01 02    ;
-CODE_02845D:          LDA.B !_C,X                         ;; 02845D : B5 0C       ;
+                    + LDA.B !_C,X                         ;; 02845D : B5 0C       ;
                       STA.W !OAMTileXPos,Y                ;; 02845F : 99 00 02    ;
                       LDA.B #$E6                          ;; 028462 : A9 E6       ;
                       LDX.B !_0                           ;; 028464 : A6 00       ;
-                      BEQ CODE_02846A                     ;; 028466 : F0 02       ;
+                      BEQ +                               ;; 028466 : F0 02       ;
                       LDA.B #$08                          ;; 028468 : A9 08       ;
-CODE_02846A:          STA.W !OAMTileNo,Y                  ;; 02846A : 99 02 02    ;
+                    + STA.W !OAMTileNo,Y                  ;; 02846A : 99 02 02    ;
                       LDA.B #$0D                          ;; 02846D : A9 0D       ;
                       STA.W !OAMTileAttr,Y                ;; 02846F : 99 03 02    ;
                       TYA                                 ;; 028472 : 98          ;
@@ -494,9 +494,9 @@ SubHorzPosBnk2:       LDY.B #$00                          ;; ?QPWZ? : A0 00     
                       STA.B !_F                           ;; 028494 : 85 0F       ;
                       LDA.B !PlayerXPosNext+1             ;; 028496 : A5 95       ;
                       SBC.W !SpriteYPosHigh,X             ;; 028498 : FD E0 14    ;
-                      BPL Return02849E                    ;; 02849B : 10 01       ;
+                      BPL +                               ;; 02849B : 10 01       ;
                       INY                                 ;; 02849D : C8          ;
-Return02849E:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 IsOffScreenBnk2:      LDA.W !SpriteOffscreenX,X           ;; ?QPWZ? : BD A0 15    ;
                       ORA.W !SpriteOffscreenVert,X        ;; 0284A2 : 1D 6C 18    ;
@@ -505,20 +505,20 @@ IsOffScreenBnk2:      LDA.W !SpriteOffscreenX,X           ;; ?QPWZ? : BD A0 15  
 CODE_0284A6:          STA.B !_3                           ;; 0284A6 : 85 03       ;
                       LDA.B #$02                          ;; 0284A8 : A9 02       ;
                       STA.B !_1                           ;; 0284AA : 85 01       ;
-CODE_0284AC:          JSL CODE_0284D8                     ;; 0284AC : 22 D8 84 02 ;
+                    - JSL CODE_0284D8                     ;; 0284AC : 22 D8 84 02 ;
                       LDA.B !_2                           ;; 0284B0 : A5 02       ;
                       CLC                                 ;; 0284B2 : 18          ;
                       ADC.B !_3                           ;; 0284B3 : 65 03       ;
                       STA.B !_2                           ;; 0284B5 : 85 02       ;
                       DEC.B !_1                           ;; 0284B7 : C6 01       ;
-                      BPL CODE_0284AC                     ;; 0284B9 : 10 F1       ;
+                      BPL -                               ;; 0284B9 : 10 F1       ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_0284BC:          LDA.B #$12                          ;; 0284BC : A9 12       ;
-                      BRA CODE_0284C2                     ;; 0284BE : 80 02       ;
+                      BRA +                               ;; 0284BE : 80 02       ;
                                                           ;;                      ;
 CODE_0284C0:          LDA.B #$00                          ;; 0284C0 : A9 00       ;
-CODE_0284C2:          STA.B !_0                           ;; 0284C2 : 85 00       ;
+                    + STA.B !_0                           ;; 0284C2 : 85 00       ;
                       STZ.B !_2                           ;; 0284C4 : 64 02       ;
                       LDA.B !SpriteNumber,X               ;; 0284C6 : B5 9E       ;
                       CMP.B #$41                          ;; 0284C8 : C9 41       ;
@@ -613,10 +613,10 @@ CODE_02853F:          LDA.B #$07                          ;; 02853F : A9 07     
 CODE_02858F:          LDY.B #$1F                          ;; 02858F : A0 1F       ; \ If Big Mario: 
                       LDX.B #$00                          ;; 028591 : A2 00       ;  | Y = #$1F 
                       LDA.B !Powerup                      ;; 028593 : A5 19       ;  | X = #$00 
-                      BNE CODE_02859B                     ;; 028595 : D0 04       ;  | Small Mario: 
+                      BNE +                               ;; 028595 : D0 04       ;  | Small Mario: 
                       LDY.B #$0F                          ;; 028597 : A0 0F       ;  | Y = #$0F 
                       LDX.B #$10                          ;; 028599 : A2 10       ; / X = #$10 
-CODE_02859B:          STX.B !_1                           ;; 02859B : 86 01       ;
+                    + STX.B !_1                           ;; 02859B : 86 01       ;
                       JSL GetRand                         ;; 02859D : 22 F9 AC 01 ;
                       TYA                                 ;; 0285A1 : 98          ;
                       AND.W !RandomNumber                 ;; 0285A2 : 2D 8D 14    ;
@@ -690,7 +690,7 @@ CODE_0285EF:          JSL GetRand                         ;; 0285EF : 22 F9 AC 0
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02862F:          JSL FindFreeSprSlot                 ;; 02862F : 22 E4 A9 02 ; \ Return if no free slots 
-                      BMI Return028662                    ;; 028633 : 30 2D       ; / 
+                      BMI +                               ;; 028633 : 30 2D       ; / 
                       TYX                                 ;; 028635 : BB          ;
                       LDA.B #$0B                          ;; 028636 : A9 0B       ; \ Sprite status = Being carried 
                       STA.W !SpriteStatus,X               ;; 028638 : 9D C8 14    ; / 
@@ -710,7 +710,7 @@ CODE_02862F:          JSL FindFreeSprSlot                 ;; 02862F : 22 E4 A9 0
                       LDA.B #$08                          ;; 02865A : A9 08       ;
                       STA.W !PickUpItemTimer              ;; 02865C : 8D 98 14    ;
                       STA.W !IsCarryingItem               ;; 02865F : 8D 8F 14    ;
-Return028662:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 ShatterBlock:         PHX                                 ;; ?QPWZ? : DA          ;
                       STA.B !_0                           ;; 028664 : 85 00       ;
@@ -721,10 +721,10 @@ CODE_02866A:          LDA.W !MinExtSpriteNumber,X         ;; 02866A : BD F0 17  
 CODE_02866F:          DEX                                 ;; 02866F : CA          ;
                       BPL CODE_02866A                     ;; 028670 : 10 F8       ;
                       DEC.W !MinExtSpriteSlotIdx          ;; 028672 : CE 5D 18    ;
-                      BPL CODE_02867C                     ;; 028675 : 10 05       ;
+                      BPL +                               ;; 028675 : 10 05       ;
                       LDA.B #$0B                          ;; 028677 : A9 0B       ;
                       STA.W !MinExtSpriteSlotIdx          ;; 028679 : 8D 5D 18    ;
-CODE_02867C:          LDX.W !MinExtSpriteSlotIdx          ;; 02867C : AE 5D 18    ;
+                    + LDX.W !MinExtSpriteSlotIdx          ;; 02867C : AE 5D 18    ;
 CODE_02867F:          LDA.B #$07                          ;; 02867F : A9 07       ; \ 
                       STA.W !SPCIO3                       ;; 028681 : 8D FC 1D    ; / Play sound effect 
                       LDA.B #$01                          ;; 028684 : A9 01       ;
@@ -755,7 +755,7 @@ CODE_02867F:          LDA.B #$07                          ;; 02867F : A9 07     
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 YoshiStompRoutine:    LDA.W !SpriteStompCounter           ;; ?QPWZ? : AD 97 16    ;
-                      BNE Return0286EC                    ;; 0286C2 : D0 28       ;
+                      BNE +                               ;; 0286C2 : D0 28       ;
                       PHB                                 ;; 0286C4 : 8B          ;
                       PHK                                 ;; 0286C5 : 4B          ;
                       PLB                                 ;; 0286C6 : AB          ;
@@ -775,7 +775,7 @@ YoshiStompRoutine:    LDA.W !SpriteStompCounter           ;; ?QPWZ? : AD 97 16  
                       STA.W !QuakeSpriteYPosHigh,Y        ;; 0286E5 : 99 DD 16    ;
                       JSR CODE_029BE4                     ;; 0286E8 : 20 E4 9B    ;
                       PLB                                 ;; 0286EB : AB          ;
-Return0286EC:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 SprBlkInteract:       LDY.B #$03                          ;; ?QPWZ? : A0 03       ;
 CODE_0286EF:          LDA.W !QuakeSpriteNumber,Y          ;; 0286EF : B9 CD 16    ;
@@ -792,7 +792,7 @@ CODE_0286F8:          LDA.B !TouchBlockXPos               ;; 0286F8 : A5 9A     
                       LDA.B !TouchBlockYPos+1             ;; 028707 : A5 99       ;
                       STA.W !QuakeSpriteYPosHigh,Y        ;; 028709 : 99 DD 16    ;
                       LDA.W !LayerProcessing              ;; 02870C : AD 33 19    ;
-                      BEQ CODE_02872F                     ;; 02870F : F0 1E       ;
+                      BEQ +                               ;; 02870F : F0 1E       ;
                       LDA.B !TouchBlockXPos               ;; 028711 : A5 9A       ;
                       SEC                                 ;; 028713 : 38          ;
                       SBC.B !Layer23XRelPos               ;; 028714 : E5 26       ;
@@ -807,7 +807,7 @@ CODE_0286F8:          LDA.B !TouchBlockXPos               ;; 0286F8 : A5 9A     
                       LDA.B !TouchBlockYPos+1             ;; 028728 : A5 99       ;
                       SBC.B !Layer23YRelPos+1             ;; 02872A : E5 29       ;
                       STA.W !QuakeSpriteYPosHigh,Y        ;; 02872C : 99 DD 16    ;
-CODE_02872F:          LDA.B #$01                          ;; 02872F : A9 01       ;
+                    + LDA.B #$01                          ;; 02872F : A9 01       ;
                       STA.W !QuakeSpriteNumber,Y          ;; 028731 : 99 CD 16    ;
                       LDA.B #$06                          ;; 028734 : A9 06       ;
                       STA.W !BounceSpriteIntTimer,Y       ;; 028736 : 99 F8 18    ;
@@ -837,11 +837,11 @@ CODE_028752:          LDA.B !_4                           ;; 028752 : A5 04     
                       CLC                                 ;; 028763 : 18          ;  | 
                       ADC.B #$05                          ;; 028764 : 69 05       ;  | 
                       STA.W !PlayerScore,X                ;; 028766 : 9D 34 0F    ;  | 
-                      BCC CODE_028773                     ;; 028769 : 90 08       ;  | 
+                      BCC +                               ;; 028769 : 90 08       ;  | 
                       INC.W !PlayerScore+1,X              ;; 02876B : FE 35 0F    ;  | 
-                      BNE CODE_028773                     ;; 02876E : D0 03       ;  | 
+                      BNE +                               ;; 02876E : D0 03       ;  | 
                       INC.W !PlayerScore+2,X              ;; 028770 : FE 36 0F    ; / 
-CODE_028773:          LDA.B #$D0                          ;; 028773 : A9 D0       ; Deflect Mario downward 
+                    + LDA.B #$D0                          ;; 028773 : A9 D0       ; Deflect Mario downward 
                       STA.B !PlayerYSpeed                 ;; 028775 : 85 7D       ; / 
                       LDA.B #$00                          ;; 028777 : A9 00       ; for shatter routine? 
                       JSL ShatterBlock                    ;; 028779 : 22 63 86 02 ; Actually break the block 
@@ -861,13 +861,13 @@ FindTurningBlkSlot:   LDA.W !BounceSpriteNumber,Y         ;; ?QPWZ? : B9 99 16  
                       DEY                                 ;; 028799 : 88          ;  | 
                       BPL FindTurningBlkSlot              ;; 02879A : 10 F8       ; / 
                       DEC.W !BounceSpriteSlotIdx          ;; 02879C : CE CD 18    ;
-                      BPL CODE_0287A6                     ;; 02879F : 10 05       ;
+                      BPL +                               ;; 02879F : 10 05       ;
                       LDA.B #$03                          ;; 0287A1 : A9 03       ;
                       STA.W !BounceSpriteSlotIdx          ;; 0287A3 : 8D CD 18    ;
-CODE_0287A6:          LDY.W !BounceSpriteSlotIdx          ;; 0287A6 : AC CD 18    ;
+                    + LDY.W !BounceSpriteSlotIdx          ;; 0287A6 : AC CD 18    ;
                       LDA.W !BounceSpriteNumber,Y         ;; 0287A9 : B9 99 16    ; \ Branch if not a turn block 
                       CMP.B #$07                          ;; 0287AC : C9 07       ;  | 
-                      BNE NoResetTurningBlk               ;; 0287AE : D0 54       ; / 
+                      BNE +                               ;; 0287AE : D0 54       ; / 
                       LDA.B !TouchBlockXPos               ;; 0287B0 : A5 9A       ; \ Save [$98-$9A] 
                       PHA                                 ;; 0287B2 : 48          ;  | 
                       LDA.B !TouchBlockXPos+1             ;; 0287B3 : A5 9B       ;  | 
@@ -915,7 +915,7 @@ CODE_0287A6:          LDY.W !BounceSpriteSlotIdx          ;; 0287A6 : AC CD 18  
                       STA.B !TouchBlockXPos+1             ;; 0287FF : 85 9B       ;  | 
                       PLA                                 ;; 028801 : 68          ;  | 
                       STA.B !TouchBlockXPos               ;; 028802 : 85 9A       ; / 
-NoResetTurningBlk:    LDY.W !BounceSpriteSlotIdx          ;; ?QPWZ? : AC CD 18    ;
+                    + LDY.W !BounceSpriteSlotIdx          ;; ?QPWZ? : AC CD 18    ;
 CODE_028807:          LDA.B !_4                           ;; 028807 : A5 04       ;
                       CMP.B #$10                          ;; 028809 : C9 10       ;
                       BCC CODE_028818                     ;; 02880B : 90 0B       ;
@@ -927,10 +927,10 @@ CODE_028807:          LDA.B !_4                           ;; 028807 : A5 04     
                                                           ;;                      ;
 CODE_028818:          LDA.B !_4                           ;; 028818 : A5 04       ; \ Play on/off sound if appropriate 
                       CMP.B #$05                          ;; 02881A : C9 05       ;  | 
-                      BNE CODE_028823                     ;; 02881C : D0 05       ;  | 
+                      BNE +                               ;; 02881C : D0 05       ;  | 
                       LDX.B #$0B                          ;; 02881E : A2 0B       ;  | 
                       STX.W !SPCIO0                       ;; 028820 : 8E F9 1D    ; / 
-CODE_028823:          TAX                                 ;; 028823 : AA          ;
+                    + TAX                                 ;; 028823 : AA          ;
                       LDA.W BlockBounce,X                 ;; 028824 : BD 89 87    ;
                       STA.W !BounceSpriteYXPPCCCT,Y       ;; 028827 : 99 01 19    ;
 CODE_02882A:          LDA.B !_4                           ;; 02882A : A5 04       ; \ Set block bounce sprite type 
@@ -964,15 +964,15 @@ CODE_02882A:          LDA.B !_4                           ;; 02882A : A5 04     
                       STA.W !BounceSpriteTimer,Y          ;; 02886B : 99 C5 16    ;
                       LDA.W !BounceSpriteNumber,Y         ;; 02886E : B9 99 16    ;
                       CMP.B #$07                          ;; 028871 : C9 07       ;
-                      BNE CODE_02887A                     ;; 028873 : D0 05       ;
+                      BNE +                               ;; 028873 : D0 05       ;
                       LDA.B #$FF                          ;; 028875 : A9 FF       ;
                       STA.W !TurnBlockSpinTimer,Y         ;; 028877 : 99 CE 18    ;
-CODE_02887A:          JSR SprBlkInteract                  ;; 02887A : 20 ED 86    ;
+                    + JSR SprBlkInteract                  ;; 02887A : 20 ED 86    ;
 CODE_02887D:          LDA.B !_5                           ;; 02887D : A5 05       ;
                       BEQ Return0288A0                    ;; 02887F : F0 1F       ;
                       CMP.B #$0A                          ;; 028881 : C9 0A       ;
-                      BNE CODE_028885                     ;; 028883 : D0 00       ;
-CODE_028885:          LDA.B !_5                           ;; 028885 : A5 05       ;
+                      BNE +                               ;; 028883 : D0 00       ;
+                    + LDA.B !_5                           ;; 028885 : A5 05       ;
                       CMP.B #$08                          ;; 028887 : C9 08       ;
                       BCS CODE_0288DC                     ;; 028889 : B0 51       ;
                       CMP.B #$06                          ;; 02888B : C9 06       ;
@@ -1033,10 +1033,10 @@ CODE_028907:          LDA.W !SpriteStatus,X               ;; 028907 : BD C8 14  
                       CPX.B #$FF                          ;; 02890D : E0 FF       ;  | 
                       BNE CODE_028907                     ;; 02890F : D0 F6       ; / 
                       DEC.W !SpriteToOverwrite            ;; 028911 : CE 61 18    ;
-                      BPL CODE_02891B                     ;; 028914 : 10 05       ;
+                      BPL +                               ;; 028914 : 10 05       ;
                       LDA.B #$01                          ;; 028916 : A9 01       ;
                       STA.W !SpriteToOverwrite            ;; 028918 : 8D 61 18    ;
-CODE_02891B:          LDA.W !SpriteToOverwrite            ;; 02891B : AD 61 18    ;
+                    + LDA.W !SpriteToOverwrite            ;; 02891B : AD 61 18    ;
                       CLC                                 ;; 02891E : 18          ;
                       ADC.B #$0A                          ;; 02891F : 69 0A       ;
                       TAX                                 ;; 028921 : AA          ;
@@ -1045,33 +1045,33 @@ CODE_028922:          STX.W !TileGenerateTrackA           ;; 028922 : 8E 5E 18  
                       LDA.W StatusOfSprInBlk,Y            ;; 028927 : B9 C5 88    ; \ Set sprite status 
                       STA.W !SpriteStatus,X               ;; 02892A : 9D C8 14    ; / 
                       LDA.W !YoshiIsLoose                 ;; 02892D : AD E2 18    ;
-                      BEQ CODE_028937                     ;; 028930 : F0 05       ;
+                      BEQ +                               ;; 028930 : F0 05       ;
                       TYA                                 ;; 028932 : 98          ;
                       CLC                                 ;; 028933 : 18          ;
                       ADC.B #$11                          ;; 028934 : 69 11       ;
                       TAY                                 ;; 028936 : A8          ;
-CODE_028937:          STY.W !SpriteInterIndex             ;; 028937 : 8C 95 16    ;
+                    + STY.W !SpriteInterIndex             ;; 028937 : 8C 95 16    ;
                       LDA.W SpriteInBlock,Y               ;; 02893A : B9 A3 88    ; \ Set sprite number 
                       STA.B !SpriteNumber,X               ;; 02893D : 95 9E       ; / 
                       STA.B !_E                           ;; 02893F : 85 0E       ;
                       LDY.B #$02                          ;; 028941 : A0 02       ;
                       CMP.B #$81                          ;; 028943 : C9 81       ;
-                      BCS CODE_02894C                     ;; 028945 : B0 05       ;
+                      BCS +                               ;; 028945 : B0 05       ;
                       CMP.B #$79                          ;; 028947 : C9 79       ;
-                      BCC CODE_02894C                     ;; 028949 : 90 01       ;
+                      BCC +                               ;; 028949 : 90 01       ;
                       INY                                 ;; 02894B : C8          ;
-CODE_02894C:          STY.W !SPCIO3                       ;; 02894C : 8C FC 1D    ; / Play sound effect 
+                    + STY.W !SPCIO3                       ;; 02894C : 8C FC 1D    ; / Play sound effect 
                       JSL InitSpriteTables                ;; 02894F : 22 D2 F7 07 ;
                       INC.W !SpriteOffscreenX,X           ;; 028953 : FE A0 15    ;
                       LDA.B !SpriteNumber,X               ;; 028956 : B5 9E       ;
                       CMP.B #$45                          ;; 028958 : C9 45       ;
                       BNE CODE_028972                     ;; 02895A : D0 16       ;
                       LDA.W !DirectCoinInit               ;; 02895C : AD 32 14    ;
-                      BEQ CODE_028967                     ;; 02895F : F0 06       ;
+                      BEQ +                               ;; 02895F : F0 06       ;
                       STZ.W !SpriteStatus,X               ;; 028961 : 9E C8 14    ;
                       JMP CODE_02889D                     ;; 028964 : 4C 9D 88    ;
                                                           ;;                      ;
-CODE_028967:          LDA.B #$0E                          ;; 028967 : A9 0E       ;
+                    + LDA.B #$0E                          ;; 028967 : A9 0E       ;
                       STA.W !SPCIO2                       ;; 028969 : 8D FB 1D    ; / Change music 
                       INC.W !DirectCoinInit               ;; 02896C : EE 32 14    ;
                       STZ.W !DirectCoinTimer              ;; 02896F : 9C 0C 19    ;
@@ -1084,7 +1084,7 @@ CODE_028972:          LDA.B !TouchBlockXPos               ;; 028972 : A5 9A     
                       LDA.B !TouchBlockYPos+1             ;; 02897F : A5 99       ;
                       STA.W !SpriteXPosHigh,X             ;; 028981 : 9D D4 14    ;
                       LDA.W !LayerProcessing              ;; 028984 : AD 33 19    ;
-                      BEQ CODE_0289A5                     ;; 028987 : F0 1C       ;
+                      BEQ +                               ;; 028987 : F0 1C       ;
                       LDA.B !TouchBlockXPos               ;; 028989 : A5 9A       ;
                       SEC                                 ;; 02898B : 38          ;
                       SBC.B !Layer23XRelPos               ;; 02898C : E5 26       ;
@@ -1099,7 +1099,7 @@ CODE_028972:          LDA.B !TouchBlockXPos               ;; 028972 : A5 9A     
                       LDA.B !TouchBlockYPos+1             ;; 02899E : A5 99       ;
                       SBC.B !Layer23YRelPos+1             ;; 0289A0 : E5 29       ;
                       STA.W !SpriteXPosHigh,X             ;; 0289A2 : 9D D4 14    ;
-CODE_0289A5:          LDA.B !SpriteNumber,X               ;; 0289A5 : B5 9E       ;
+                    + LDA.B !SpriteNumber,X               ;; 0289A5 : B5 9E       ;
                       CMP.B #$7D                          ;; 0289A7 : C9 7D       ;
                       BNE CODE_0289D3                     ;; 0289A9 : D0 28       ;
                       LDA.B !SpriteXPosLow,X              ;; 0289AB : B5 E4       ;
@@ -1117,11 +1117,11 @@ CODE_0289A5:          LDA.B !SpriteNumber,X               ;; 0289A5 : B5 9E     
                       JSL InitSpriteTables                ;; 0289C0 : 22 D2 F7 07 ;
                       PLA                                 ;; 0289C4 : 68          ;
                       CMP.B #$7D                          ;; 0289C5 : C9 7D       ;
-                      BNE CODE_0289CD                     ;; 0289C7 : D0 04       ;
+                      BNE +                               ;; 0289C7 : D0 04       ;
                       INC.W !SpriteMisc157C,X             ;; 0289C9 : FE 7C 15    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_0289CD:          CMP.B #$7E                          ;; 0289CD : C9 7E       ;
+                    + CMP.B #$7E                          ;; 0289CD : C9 7E       ;
                       BEQ CODE_028A03                     ;; 0289CF : F0 32       ;
                       BRA CODE_028A01                     ;; 0289D1 : 80 2E       ;
                                                           ;;                      ;
@@ -1156,19 +1156,19 @@ CODE_028A03:          INC.B !SpriteTableC2,X              ;; 028A03 : F6 C2     
 ADDR_028A08:          LDA.B #$FF                          ;; 028A08 : A9 FF       ;
                       STA.W !SpriteMisc1540,X             ;; 028A0A : 9D 40 15    ;
 CODE_028A0D:          LDA.B #$D0                          ;; 028A0D : A9 D0       ;
-                      BRA CODE_028A18                     ;; 028A0F : 80 07       ;
+                      BRA +                               ;; 028A0F : 80 07       ;
                                                           ;;                      ;
 CODE_028A11:          LDA.B #$3E                          ;; 028A11 : A9 3E       ;
                       STA.W !SpriteMisc1540,X             ;; 028A13 : 9D 40 15    ;
                       LDA.B #$D0                          ;; 028A16 : A9 D0       ;
-CODE_028A18:          STA.B !SpriteYSpeed,X               ;; 028A18 : 95 AA       ;
+                    + STA.B !SpriteYSpeed,X               ;; 028A18 : 95 AA       ;
                       LDA.B #$2C                          ;; 028A1A : A9 2C       ;
                       STA.W !SpriteMisc154C,X             ;; 028A1C : 9D 4C 15    ;
                       LDA.W !SpriteTweakerF,X             ;; 028A1F : BD 0F 19    ;
-                      BPL Return028A29                    ;; 028A22 : 10 05       ;
+                      BPL +                               ;; 028A22 : 10 05       ;
                       LDA.B #$10                          ;; 028A24 : A9 10       ;
                       STA.W !SpriteMisc15AC,X             ;; 028A26 : 9D AC 15    ;
-Return028A29:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_028A2A:          LDA.B !SpriteXPosLow,X              ;; 028A2A : B5 E4       ;
                       LSR A                               ;; 028A2C : 4A          ;
@@ -1210,10 +1210,10 @@ CODE_028A68:          LDA.W !CoinSpriteExists,X           ;; 028A68 : BD D0 17  
                       DEX                                 ;; 028A6D : CA          ;
                       BPL CODE_028A68                     ;; 028A6E : 10 F8       ;
                       DEC.W !CoinSpriteSlotIdx            ;; 028A70 : CE 65 18    ;
-                      BPL ADDR_028A7A                     ;; 028A73 : 10 05       ;
+                      BPL +                               ;; 028A73 : 10 05       ;
                       LDA.B #$03                          ;; 028A75 : A9 03       ;
                       STA.W !CoinSpriteSlotIdx            ;; 028A77 : 8D 65 18    ;
-ADDR_028A7A:          LDX.W !CoinSpriteSlotIdx            ;; 028A7A : AE 65 18    ;
+                    + LDX.W !CoinSpriteSlotIdx            ;; 028A7A : AE 65 18    ;
 CODE_028A7D:          JSL CODE_05B34A                     ;; 028A7D : 22 4A B3 05 ;
                       INC.W !CoinSpriteExists,X           ;; 028A81 : FE D0 17    ;
                       LDA.B !TouchBlockXPos               ;; 028A84 : A5 9A       ;
@@ -1247,10 +1247,10 @@ CODE_028AB1:          PHB                                 ;; 028AB1 : 8B        
                       BRA CODE_028AD5                     ;; 028AC1 : 80 12       ;
                                                           ;;                      ;
 CODE_028AC3:          DEC.W !GivePlayerLives              ;; 028AC3 : CE E4 18    ;
-                      BEQ CODE_028ACD                     ;; 028AC6 : F0 05       ;
+                      BEQ +                               ;; 028AC6 : F0 05       ;
                       LDA.B #$23                          ;; 028AC8 : A9 23       ;
                       STA.W !GiveLivesTimer               ;; 028ACA : 8D E5 18    ;
-CODE_028ACD:          LDA.B #$05                          ;; 028ACD : A9 05       ; \ Play sound effect 
+                    + LDA.B #$05                          ;; 028ACD : A9 05       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 028ACF : 8D FC 1D    ; / 
                       INC.W !PlayerLives                  ;; 028AD2 : EE BE 0D    ;
 CODE_028AD5:          LDA.W !InvinsibilityTimer           ;; 028AD5 : AD 90 14    ; \ Branch if Mario doesn't have star 
@@ -1268,17 +1268,17 @@ CODE_028AD5:          LDA.W !InvinsibilityTimer           ;; 028AD5 : AD 90 14  
                       BRA CODE_028AF5                     ;; 028AE9 : 80 0A       ;
                                                           ;;                      ;
 CODE_028AEB:          LDA.W !PlayerSparkleTimer           ;; 028AEB : AD D3 18    ;
-                      BEQ CODE_028B05                     ;; 028AEE : F0 15       ;
+                      BEQ +                               ;; 028AEE : F0 15       ;
                       DEC.W !PlayerSparkleTimer           ;; 028AF0 : CE D3 18    ;
                       AND.B #$01                          ;; 028AF3 : 29 01       ;
 CODE_028AF5:          ORA.B !PlayerXPosScrRel+1           ;; 028AF5 : 05 7F       ;
                       ORA.B !PlayerYPosScrRel+1           ;; 028AF7 : 05 81       ;
-                      BNE CODE_028B05                     ;; 028AF9 : D0 0A       ;
+                      BNE +                               ;; 028AF9 : D0 0A       ;
                       LDA.B !PlayerYPosScrRel             ;; 028AFB : A5 80       ;
                       CMP.B #$D0                          ;; 028AFD : C9 D0       ;
-                      BCS CODE_028B05                     ;; 028AFF : B0 04       ;
+                      BCS +                               ;; 028AFF : B0 04       ;
                       JSL CODE_02858F                     ;; 028B01 : 22 8F 85 02 ;
-CODE_028B05:          JSR CODE_028B67                     ;; 028B05 : 20 67 8B    ;
+                    + JSR CODE_028B67                     ;; 028B05 : 20 67 8B    ;
                       JSR CODE_02902D                     ;; 028B08 : 20 2D 90    ;
                       JSR ScoreSprGfx                     ;; 028B0B : 20 A4 AD    ;
                       JSR CODE_029B0A                     ;; 028B0E : 20 0A 9B    ;
@@ -1288,16 +1288,16 @@ CODE_028B05:          JSR CODE_028B67                     ;; 028B05 : 20 67 8B  
                       JSR CODE_0294F5                     ;; 028B1A : 20 F5 94    ;
                       JSR LoadSprFromLevel                ;; 028B1D : 20 FC A7    ;
                       LDA.W !SpriteRespawnTimer           ;; 028B20 : AD C0 18    ; \ Return if timer not set 
-                      BEQ CODE_028B65                     ;; 028B23 : F0 40       ; / 
+                      BEQ +                               ;; 028B23 : F0 40       ; / 
                       LDA.B !TrueFrame                    ;; 028B25 : A5 13       ; \ Decrement every other frame... 
                       AND.B #$01                          ;; 028B27 : 29 01       ;  | 
                       ORA.B !SpriteLock                   ;; 028B29 : 05 9D       ;  | ...as long as sprites not locked... 
                       ORA.W !SpriteWillAppear             ;; 028B2B : 0D BF 18    ;
-                      BNE CODE_028B65                     ;; 028B2E : D0 35       ;  | 
+                      BNE +                               ;; 028B2E : D0 35       ;  | 
                       DEC.W !SpriteRespawnTimer           ;; 028B30 : CE C0 18    ; / 
-                      BNE CODE_028B65                     ;; 028B33 : D0 30       ; Return if the timer hasn't just run out 
+                      BNE +                               ;; 028B33 : D0 30       ; Return if the timer hasn't just run out 
                       JSL FindFreeSprSlot                 ;; 028B35 : 22 E4 A9 02 ; \ Return if no free slots 
-                      BMI CODE_028B65                     ;; 028B39 : 30 2A       ; / 
+                      BMI +                               ;; 028B39 : 30 2A       ; / 
                       TYX                                 ;; 028B3B : BB          ;
                       LDA.B #$01                          ;; 028B3C : A9 01       ; \ Sprite status = Initialization 
                       STA.W !SpriteStatus,X               ;; 028B3E : 9D C8 14    ; / 
@@ -1316,15 +1316,15 @@ CODE_028B05:          JSR CODE_028B67                     ;; 028B05 : 20 67 8B  
                       LDA.W !SpriteRespawnYPos+1          ;; 028B5B : AD C4 18    ;
                       STA.W !SpriteXPosHigh,X             ;; 028B5E : 9D D4 14    ;
                       JSL InitSpriteTables                ;; 028B61 : 22 D2 F7 07 ; Reset sprite tables 
-CODE_028B65:          PLB                                 ;; 028B65 : AB          ;
+                    + PLB                                 ;; 028B65 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_028B67:          LDX.B #$0B                          ;; 028B67 : A2 0B       ;
 CODE_028B69:          LDA.W !MinExtSpriteNumber,X         ;; 028B69 : BD F0 17    ;
-                      BEQ CODE_028B74                     ;; 028B6C : F0 06       ;
+                      BEQ +                               ;; 028B6C : F0 06       ;
                       STX.W !MinorSpriteProcIndex         ;; 028B6E : 8E 98 16    ;
                       JSR CODE_028B94                     ;; 028B71 : 20 94 8B    ;
-CODE_028B74:          DEX                                 ;; 028B74 : CA          ;
+                    + DEX                                 ;; 028B74 : CA          ;
                       BPL CODE_028B69                     ;; 028B75 : 10 F2       ;
 Return028B77:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -1412,11 +1412,11 @@ ADDR_028C0F:          LDA.W !MinExtSpriteXPosSpx,X        ;; 028C0F : BD 50 18  
                       BPL ADDR_028C20                     ;; 028C19 : 10 05       ;
                       CLC                                 ;; 028C1B : 18          ;
                       ADC.B #$08                          ;; 028C1C : 69 08       ;
-                      BRA ADDR_028C23                     ;; 028C1E : 80 03       ;
+                      BRA +                               ;; 028C1E : 80 03       ;
                                                           ;;                      ;
 ADDR_028C20:          SEC                                 ;; 028C20 : 38          ;
                       SBC.B #$08                          ;; 028C21 : E9 08       ;
-ADDR_028C23:          STA.W !MinExtSpriteXSpeed,X         ;; 028C23 : 9D 2C 18    ;
+                    + STA.W !MinExtSpriteXSpeed,X         ;; 028C23 : 9D 2C 18    ;
                       JSR CODE_02B5BC                     ;; 028C26 : 20 BC B5    ;
                       TXA                                 ;; 028C29 : 8A          ;
                       EOR.B !TrueFrame                    ;; 028C2A : 45 13       ;
@@ -1445,14 +1445,14 @@ ADDR_028C3B:          LDA.B #$0B                          ;; 028C3B : A9 0B     
 Return028C60:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 ADDR_028C61:          DEC.W !MinExtSpriteXPosSpx,X        ;; 028C61 : DE 50 18    ;
-                      BNE ADDR_028C6E                     ;; 028C64 : D0 08       ;
+                      BNE +                               ;; 028C64 : D0 08       ;
 ADDR_028C66:          STZ.W !MinExtSpriteNumber,X         ;; 028C66 : 9E F0 17    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_028C6A:          db $66,$66,$64,$62                  ;; 028C6A               ;
                                                           ;;                      ;
-ADDR_028C6E:          LDY.W BrokenBlock,X                 ;; 028C6E : BC 78 8B    ;
+                    + LDY.W BrokenBlock,X                 ;; 028C6E : BC 78 8B    ;
                       LDA.W !MinExtSpriteXPosLow,X        ;; 028C71 : BD 08 18    ;
                       SEC                                 ;; 028C74 : 38          ;
                       SBC.B !Layer1XPos                   ;; 028C75 : E5 1A       ;
@@ -1515,9 +1515,9 @@ CODE_028CC4:          LDA.B !SpriteLock                   ;; 028CC4 : A5 9D     
                       STA.B !_7                           ;; 028CEA : 85 07       ;
                       JSL GetMarioClipping                ;; 028CEC : 22 64 B6 03 ;
                       JSL CheckForContact                 ;; 028CF0 : 22 2B B7 03 ;
-                      BCC CODE_028CFA                     ;; 028CF4 : 90 04       ;
+                      BCC +                               ;; 028CF4 : 90 04       ;
                       JSL HurtMario                       ;; 028CF6 : 22 B7 F5 00 ;
-CODE_028CFA:          DEC.W !MinExtSpriteXPosSpx,X        ;; 028CFA : DE 50 18    ;
+                    + DEC.W !MinExtSpriteXPosSpx,X        ;; 028CFA : DE 50 18    ;
                       BEQ CODE_028D62                     ;; 028CFD : F0 63       ;
 CODE_028CFF:          LDY.W BrokenBlock,X                 ;; 028CFF : BC 78 8B    ;
                       LDA.W !MinExtSpriteXPosLow,X        ;; 028D02 : BD 08 18    ;
@@ -1563,18 +1563,18 @@ CODE_028D4F:          LDA.W !MinExtSpriteXPosLow,X        ;; 028D4F : BD 08 18  
                       BNE CODE_028D62                     ;; 028D59 : D0 07       ;
                       LDA.W !MinExtSpriteXPosSpx,X        ;; 028D5B : BD 50 18    ;
                       CMP.B #$20                          ;; 028D5E : C9 20       ;
-                      BNE CODE_028D66                     ;; 028D60 : D0 04       ;
+                      BNE +                               ;; 028D60 : D0 04       ;
 CODE_028D62:          STZ.W !MinExtSpriteNumber,X         ;; 028D62 : 9E F0 17    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_028D66:          STZ.B !_0                           ;; 028D66 : 64 00       ;
+                    + STZ.B !_0                           ;; 028D66 : 64 00       ;
                       CMP.B #$10                          ;; 028D68 : C9 10       ;
                       BCC CODE_028D8B                     ;; 028D6A : 90 1F       ;
                       AND.B #$01                          ;; 028D6C : 29 01       ;
                       ORA.B !SpriteLock                   ;; 028D6E : 05 9D       ;
-                      BNE CODE_028D75                     ;; 028D70 : D0 03       ;
+                      BNE +                               ;; 028D70 : D0 03       ;
                       INC.W !MinExtSpriteYPosLow,X        ;; 028D72 : FE FC 17    ;
-CODE_028D75:          LDA.W !MinExtSpriteXPosSpx,X        ;; 028D75 : BD 50 18    ;
+                    + LDA.W !MinExtSpriteXPosSpx,X        ;; 028D75 : BD 50 18    ;
                       SEC                                 ;; 028D78 : 38          ;
                       SBC.B #$10                          ;; 028D79 : E9 10       ;
                       LSR A                               ;; 028D7B : 4A          ;
@@ -1583,10 +1583,10 @@ CODE_028D75:          LDA.W !MinExtSpriteXPosSpx,X        ;; 028D75 : BD 50 18  
                       LDA.B !TrueFrame                    ;; 028D7F : A5 13       ;
                       LSR A                               ;; 028D81 : 4A          ;
                       LDA.B !_2                           ;; 028D82 : A5 02       ;
-                      BCC CODE_028D89                     ;; 028D84 : 90 03       ;
+                      BCC +                               ;; 028D84 : 90 03       ;
                       EOR.B #$FF                          ;; 028D86 : 49 FF       ;
                       INC A                               ;; 028D88 : 1A          ;
-CODE_028D89:          STA.B !_0                           ;; 028D89 : 85 00       ;
+                    + STA.B !_0                           ;; 028D89 : 85 00       ;
 CODE_028D8B:          LDY.W BrokenBlock,X                 ;; 028D8B : BC 78 8B    ;
                       LDA.W !MinExtSpriteXPosLow,X        ;; 028D8E : BD 08 18    ;
                       CLC                                 ;; 028D91 : 18          ;
@@ -1606,9 +1606,9 @@ CODE_028D8B:          LDY.W BrokenBlock,X                 ;; 028D8B : BC 78 8B  
                       LSR A                               ;; 028DAE : 4A          ;
                       TAX                                 ;; 028DAF : AA          ;
                       CPX.B #$0C                          ;; 028DB0 : E0 0C       ;
-                      BCC CODE_028DB6                     ;; 028DB2 : 90 02       ;
+                      BCC +                               ;; 028DB2 : 90 02       ;
                       LDX.B #$0C                          ;; 028DB4 : A2 0C       ;
-CODE_028DB6:          LDA.W WaterSplashTiles,X            ;; 028DB6 : BD 42 8D    ;
+                    + LDA.W WaterSplashTiles,X            ;; 028DB6 : BD 42 8D    ;
                       LDX.W !MinorSpriteProcIndex         ;; 028DB9 : AE 98 16    ;
                       STA.W !OAMTileNo,Y                  ;; 028DBC : 99 02 02    ;
                       LDA.B !SpriteProperties             ;; 028DBF : A5 64       ;
@@ -1621,9 +1621,9 @@ CODE_028DB6:          LDA.W WaterSplashTiles,X            ;; 028DB6 : BD 42 8D  
                       LDA.B #$02                          ;; 028DCA : A9 02       ;
                       STA.W !OAMTileSize,Y                ;; 028DCC : 99 20 04    ;
                       LDA.B !SpriteLock                   ;; 028DCF : A5 9D       ; \ Branch if sprites locked 
-                      BNE Return028DD6                    ;; 028DD1 : D0 03       ; / 
+                      BNE +                               ;; 028DD1 : D0 03       ; / 
                       INC.W !MinExtSpriteXPosSpx,X        ;; 028DD3 : FE 50 18    ;
-Return028DD6:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 RipVanFishZsTiles:    db $F1,$F0,$E1,$E0                  ;; ?QPWZ?               ;
@@ -1631,26 +1631,26 @@ RipVanFishZsTiles:    db $F1,$F0,$E1,$E0                  ;; ?QPWZ?             
 CODE_028DDB:          LDA.B !SpriteLock                   ;; 028DDB : A5 9D       ; \ Branch if sprites locked 
                       BNE CODE_028E20                     ;; 028DDD : D0 41       ; / 
                       LDA.W !MinExtSpriteXPosSpx,X        ;; 028DDF : BD 50 18    ;
-                      BEQ CODE_028DE7                     ;; 028DE2 : F0 03       ;
+                      BEQ +                               ;; 028DE2 : F0 03       ;
                       DEC.W !MinExtSpriteXPosSpx,X        ;; 028DE4 : DE 50 18    ;
-CODE_028DE7:          LDA.W !MinExtSpriteXPosSpx,X        ;; 028DE7 : BD 50 18    ;
+                    + LDA.W !MinExtSpriteXPosSpx,X        ;; 028DE7 : BD 50 18    ;
                       AND.B #$00                          ;; 028DEA : 29 00       ;
-                      BNE CODE_028DFE                     ;; 028DEC : D0 10       ;
+                      BNE +                               ;; 028DEC : D0 10       ;
                       LDA.W !MinExtSpriteXPosSpx,X        ;; 028DEE : BD 50 18    ;
                       INC.W !MinExtSpriteXSpeed,X         ;; 028DF1 : FE 2C 18    ;
                       AND.B #$10                          ;; 028DF4 : 29 10       ;
-                      BNE CODE_028DFE                     ;; 028DF6 : D0 06       ;
+                      BNE +                               ;; 028DF6 : D0 06       ;
                       DEC.W !MinExtSpriteXSpeed,X         ;; 028DF8 : DE 2C 18    ;
                       DEC.W !MinExtSpriteXSpeed,X         ;; 028DFB : DE 2C 18    ;
-CODE_028DFE:          LDA.W !MinExtSpriteXSpeed,X         ;; 028DFE : BD 2C 18    ;
+                    + LDA.W !MinExtSpriteXSpeed,X         ;; 028DFE : BD 2C 18    ;
                       PHA                                 ;; 028E01 : 48          ;
                       LDY.W !MinExtSpriteNumber,X         ;; 028E02 : BC F0 17    ;
                       CPY.B #$09                          ;; 028E05 : C0 09       ;
-                      BNE CODE_028E0F                     ;; 028E07 : D0 06       ;
+                      BNE +                               ;; 028E07 : D0 06       ;
                       EOR.B #$FF                          ;; 028E09 : 49 FF       ;
                       INC A                               ;; 028E0B : 1A          ;
                       STA.W !MinExtSpriteXSpeed,X         ;; 028E0C : 9D 2C 18    ;
-CODE_028E0F:          JSR CODE_02B5BC                     ;; 028E0F : 20 BC B5    ;
+                    + JSR CODE_02B5BC                     ;; 028E0F : 20 BC B5    ;
                       PLA                                 ;; 028E12 : 68          ;
                       STA.W !MinExtSpriteXSpeed,X         ;; 028E13 : 9D 2C 18    ;
                       LDA.W !MinExtSpriteXPosSpx,X        ;; 028E16 : BD 50 18    ;
@@ -1681,7 +1681,7 @@ CODE_028E20:          LDY.W BrokenBlock,X                 ;; 028E20 : BC 78 8B  
                       LDA.W !MinExtSpriteNumber,X         ;; 028E4F : BD F0 17    ;
                       CMP.B #$08                          ;; 028E52 : C9 08       ;
                       LDA.B #$7F                          ;; 028E54 : A9 7F       ;
-                      BCS CODE_028E66                     ;; 028E56 : B0 0E       ;
+                      BCS +                               ;; 028E56 : B0 0E       ;
                       LDA.W !MinExtSpriteXPosSpx,X        ;; 028E58 : BD 50 18    ;
                       LSR A                               ;; 028E5B : 4A          ;
                       LSR A                               ;; 028E5C : 4A          ;
@@ -1691,7 +1691,7 @@ CODE_028E20:          LDY.W BrokenBlock,X                 ;; 028E20 : BC 78 8B  
                       AND.B #$03                          ;; 028E60 : 29 03       ;
                       TAX                                 ;; 028E62 : AA          ;
                       LDA.W RipVanFishZsTiles,X           ;; 028E63 : BD D7 8D    ;
-CODE_028E66:          STA.W !OAMTileNo,Y                  ;; 028E66 : 99 02 02    ;
+                    + STA.W !OAMTileNo,Y                  ;; 028E66 : 99 02 02    ;
                       TYA                                 ;; 028E69 : 98          ;
                       LSR A                               ;; 028E6A : 4A          ;
                       LSR A                               ;; 028E6B : 4A          ;
@@ -1747,13 +1747,13 @@ CODE_028E7E:          DEC.W !MinExtSpriteXPosSpx,X        ;; 028E7E : DE 50 18  
 StarSparkleTiles:     db $66,$6E,$FF,$6D,$6C,$5C          ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_028ED2:          LDA.W !MinExtSpriteXPosSpx,X        ;; 028ED2 : BD 50 18    ;
-                      BNE CODE_028EDA                     ;; 028ED5 : D0 03       ;
+                      BNE +                               ;; 028ED5 : D0 03       ;
 CODE_028ED7:          JMP CODE_028F87                     ;; 028ED7 : 4C 87 8F    ;
                                                           ;;                      ;
-CODE_028EDA:          LDY.B !SpriteLock                   ;; 028EDA : A4 9D       ;
-                      BNE CODE_028EE1                     ;; 028EDC : D0 03       ;
+                    + LDY.B !SpriteLock                   ;; 028EDA : A4 9D       ;
+                      BNE +                               ;; 028EDC : D0 03       ;
                       DEC.W !MinExtSpriteXPosSpx,X        ;; 028EDE : DE 50 18    ;
-CODE_028EE1:          LDY.W BrokenBlock,X                 ;; 028EE1 : BC 78 8B    ;
+                    + LDY.W BrokenBlock,X                 ;; 028EE1 : BC 78 8B    ;
                       LDA.W !MinExtSpriteXPosLow,X        ;; 028EE4 : BD 08 18    ;
                       SEC                                 ;; 028EE7 : 38          ;
                       SBC.B !Layer1XPos                   ;; 028EE8 : E5 1A       ;
@@ -1775,11 +1775,11 @@ CODE_028EE1:          LDY.W BrokenBlock,X                 ;; 028EE1 : BC 78 8B  
                       TAX                                 ;; 028F08 : AA          ;
                       PLA                                 ;; 028F09 : 68          ;
                       CMP.B #$05                          ;; 028F0A : C9 05       ;
-                      BNE CODE_028F11                     ;; 028F0C : D0 03       ;
+                      BNE +                               ;; 028F0C : D0 03       ;
                       INX                                 ;; 028F0E : E8          ;
                       INX                                 ;; 028F0F : E8          ;
                       INX                                 ;; 028F10 : E8          ;
-CODE_028F11:          LDA.W StarSparkleTiles,X            ;; 028F11 : BD CC 8E    ;
+                    + LDA.W StarSparkleTiles,X            ;; 028F11 : BD CC 8E    ;
                       STA.W !OAMTileNo,Y                  ;; 028F14 : 99 02 02    ;
                       LDA.B !SpriteProperties             ;; 028F17 : A5 64       ;
                       ORA.B #$06                          ;; 028F19 : 09 06       ;
@@ -1804,11 +1804,11 @@ CODE_028F2F:          LDA.W !MinExtSpriteXPosLow,X        ;; 028F2F : BD 08 18  
                       LDA.W !MinExtSpriteXPosSpx,X        ;; 028F3B : BD 50 18    ;
                       BEQ CODE_028F87                     ;; 028F3E : F0 47       ;
                       LDY.B !SpriteLock                   ;; 028F40 : A4 9D       ;
-                      BNE CODE_028F4D                     ;; 028F42 : D0 09       ;
+                      BNE +                               ;; 028F42 : D0 09       ;
                       DEC.W !MinExtSpriteXPosSpx,X        ;; 028F44 : DE 50 18    ;
                       JSR CODE_02B5C8                     ;; 028F47 : 20 C8 B5    ;
                       INC.W !MinExtSpriteYSpeed,X         ;; 028F4A : FE 20 18    ;
-CODE_028F4D:          LDY.W BrokenBlock,X                 ;; 028F4D : BC 78 8B    ;
+                    + LDY.W BrokenBlock,X                 ;; 028F4D : BC 78 8B    ;
                       LDA.W !MinExtSpriteXPosLow,X        ;; 028F50 : BD 08 18    ;
                       SEC                                 ;; 028F53 : 38          ;
                       SBC.B !Layer1XPos                   ;; 028F54 : E5 1A       ;
@@ -1848,9 +1848,9 @@ CODE_028F8B:          LDA.B !SpriteLock                   ;; 028F8B : A5 9D     
                       BEQ CODE_028FAB                     ;; 028F93 : F0 16       ;
                       LDY.B #$00                          ;; 028F95 : A0 00       ;
                       LDA.W !MinExtSpriteXSpeed,X         ;; 028F97 : BD 2C 18    ;
-                      BPL CODE_028F9D                     ;; 028F9A : 10 01       ;
+                      BPL +                               ;; 028F9A : 10 01       ;
                       DEY                                 ;; 028F9C : 88          ;
-CODE_028F9D:          CLC                                 ;; 028F9D : 18          ;
+                    + CLC                                 ;; 028F9D : 18          ;
                       ADC.W !MinExtSpriteXPosLow,X        ;; 028F9E : 7D 08 18    ;
                       STA.W !MinExtSpriteXPosLow,X        ;; 028FA1 : 9D 08 18    ;
                       TYA                                 ;; 028FA4 : 98          ;
@@ -1858,9 +1858,9 @@ CODE_028F9D:          CLC                                 ;; 028F9D : 18        
                       STA.W !MinExtSpriteXPosHigh,X       ;; 028FA8 : 9D EA 18    ;
 CODE_028FAB:          LDY.B #$00                          ;; 028FAB : A0 00       ;
                       LDA.W !MinExtSpriteYSpeed,X         ;; 028FAD : BD 20 18    ;
-                      BPL CODE_028FB3                     ;; 028FB0 : 10 01       ;
+                      BPL +                               ;; 028FB0 : 10 01       ;
                       DEY                                 ;; 028FB2 : 88          ;
-CODE_028FB3:          CLC                                 ;; 028FB3 : 18          ;
+                    + CLC                                 ;; 028FB3 : 18          ;
                       ADC.W !MinExtSpriteYPosLow,X        ;; 028FB4 : 7D FC 17    ;
                       STA.W !MinExtSpriteYPosLow,X        ;; 028FB7 : 9D FC 17    ;
                       TYA                                 ;; 028FBA : 98          ;
@@ -1904,10 +1904,10 @@ CODE_028FDD:          LDY.W BrokenBlock,X                 ;; 028FDD : BC 78 8B  
                       LDA.W BrokenBlock2,X                ;; 02900B : BD 84 8B    ;
                       STA.W !OAMTileNo,Y                  ;; 02900E : 99 02 02    ;
                       PLA                                 ;; 029011 : 68          ;
-                      BEQ CODE_029018                     ;; 029012 : F0 04       ;
+                      BEQ +                               ;; 029012 : F0 04       ;
                       LDA.B !TrueFrame                    ;; 029014 : A5 13       ;
                       AND.B #$0E                          ;; 029016 : 29 0E       ;
-CODE_029018:          EOR.W DATA_028B8C,X                 ;; 029018 : 5D 8C 8B    ;
+                    + EOR.W DATA_028B8C,X                 ;; 029018 : 5D 8C 8B    ;
                       ORA.B !SpriteProperties             ;; 02901B : 05 64       ;
                       STA.W !OAMTileAttr,Y                ;; 02901D : 99 03 02    ;
                       LDX.W !MinorSpriteProcIndex         ;; 029020 : AE 98 16    ;
@@ -1921,27 +1921,27 @@ Return02902C:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 CODE_02902D:          LDA.W !MulticoinTimer               ;; 02902D : AD 6B 18    ;
                       CMP.B #$02                          ;; 029030 : C9 02       ;
-                      BCC CODE_02903B                     ;; 029032 : 90 07       ;
+                      BCC +                               ;; 029032 : 90 07       ;
                       LDA.B !SpriteLock                   ;; 029034 : A5 9D       ;
-                      BNE CODE_02903B                     ;; 029036 : D0 03       ;
+                      BNE +                               ;; 029036 : D0 03       ;
                       DEC.W !MulticoinTimer               ;; 029038 : CE 6B 18    ;
-CODE_02903B:          LDX.B #$03                          ;; 02903B : A2 03       ;
-CODE_02903D:          STX.W !MinorSpriteProcIndex         ;; 02903D : 8E 98 16    ;
+                    + LDX.B #$03                          ;; 02903B : A2 03       ;
+                    - STX.W !MinorSpriteProcIndex         ;; 02903D : 8E 98 16    ;
                       JSR CODE_02904D                     ;; 029040 : 20 4D 90    ;
                       JSR CODE_029398                     ;; 029043 : 20 98 93    ;
                       JSR CODE_0296C0                     ;; 029046 : 20 C0 96    ;
                       DEX                                 ;; 029049 : CA          ;
-                      BPL CODE_02903D                     ;; 02904A : 10 F1       ;
+                      BPL -                               ;; 02904A : 10 F1       ;
 Return02904C:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02904D:          LDA.W !BounceSpriteNumber,X         ;; 02904D : BD 99 16    ;
                       BEQ Return02904C                    ;; 029050 : F0 FA       ;
                       LDY.B !SpriteLock                   ;; 029052 : A4 9D       ;
-                      BNE CODE_02905E                     ;; 029054 : D0 08       ;
+                      BNE +                               ;; 029054 : D0 08       ;
                       LDY.W !BounceSpriteTimer,X          ;; 029056 : BC C5 16    ; \ Decrement bounce sprite timer if > 0 
-                      BEQ CODE_02905E                     ;; 029059 : F0 03       ;
+                      BEQ +                               ;; 029059 : F0 03       ;
                       DEC.W !BounceSpriteTimer,X          ;; 02905B : DE C5 16    ;
-CODE_02905E:          JSL ExecutePtr                      ;; 02905E : 22 DF 86 00 ;
+                    + JSL ExecutePtr                      ;; 02905E : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw Return02904C                     ;; ?QPWZ? : 4C 90       ; 00 - Nothing (Bypassed above) 
                       dw BounceBlockSpr                   ;; ?QPWZ? : DE 90       ; 01 - Turn Block without turn 
@@ -1957,10 +1957,10 @@ DATA_029072:          db $13,$00,$00,$ED                  ;; 029072             
 TurnBlockSpr:         LDA.B !SpriteLock                   ;; ?QPWZ? : A5 9D       ; \ Return if sprites locked 
                       BNE Return0290CD                    ;; 029078 : D0 53       ; / 
                       LDA.W !BounceSpriteInit,X           ;; 02907A : BD 9D 16    ; \ Initialize only once 
-                      BNE CODE_029085                     ;; 02907D : D0 06       ;  | (Generate invisible tile sprite) 
+                      BNE +                               ;; 02907D : D0 06       ;  | (Generate invisible tile sprite) 
                       INC.W !BounceSpriteInit,X           ;; 02907F : FE 9D 16    ;  | 
                       JSR InvisSldFromBncSpr              ;; 029082 : 20 B8 91    ; / 
-CODE_029085:          LDA.W !BounceSpriteTimer,X          ;; 029085 : BD C5 16    ;
+                    + LDA.W !BounceSpriteTimer,X          ;; 029085 : BD C5 16    ;
                       BEQ CODE_0290BB                     ;; 029088 : F0 31       ;
                       CMP.B #$01                          ;; 02908A : C9 01       ;
                       BNE CODE_0290A8                     ;; 02908C : D0 1A       ;
@@ -1984,11 +1984,11 @@ CODE_0290A8:          JSR CODE_02B526                     ;; 0290A8 : 20 26 B5  
                       STA.W !BounceSpriteYSpeed,X         ;; 0290B5 : 9D B1 16    ;
                       JSR BounceSprGfx                    ;; 0290B8 : 20 F8 91    ;
 CODE_0290BB:          LDA.W !TurnBlockSpinTimer,X         ;; 0290BB : BD CE 18    ;
-                      BEQ CODE_0290C4                     ;; 0290BE : F0 04       ;
+                      BEQ +                               ;; 0290BE : F0 04       ;
                       DEC.W !TurnBlockSpinTimer,X         ;; 0290C0 : DE CE 18    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0290C4:          LDA.W !BounceSpriteTile,X           ;; 0290C4 : BD C1 16    ;
+                    + LDA.W !BounceSpriteTile,X           ;; 0290C4 : BD C1 16    ;
                       JSR TileFromBounceSpr1              ;; 0290C7 : 20 BA 91    ;
                       STZ.W !BounceSpriteNumber,X         ;; 0290CA : 9E 99 16    ;
 Return0290CD:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -2015,9 +2015,9 @@ BounceBlockSpr:       JSR BounceSprGfx                    ;; ?QPWZ? : 20 F8 91  
                       TAY                                 ;; 0290F8 : A8          ;
                       LDA.W DATA_0290D6,Y                 ;; 0290F9 : B9 D6 90    ;
                       CMP.B #$80                          ;; 0290FC : C9 80       ;
-                      BEQ CODE_029102                     ;; 0290FE : F0 02       ;
+                      BEQ +                               ;; 0290FE : F0 02       ;
                       STA.B !PlayerYSpeed                 ;; 029100 : 85 7D       ;
-CODE_029102:          LDA.W DATA_0290DA,Y                 ;; 029102 : B9 DA 90    ;
+                    + LDA.W DATA_0290DA,Y                 ;; 029102 : B9 DA 90    ;
                       CMP.B #$80                          ;; 029105 : C9 80       ;
                       BEQ CODE_02910B                     ;; 029107 : F0 02       ;
                       STA.B !PlayerXSpeed                 ;; 029109 : 85 7B       ;
@@ -2043,9 +2043,9 @@ CODE_02910B:          JSR CODE_02B526                     ;; 02910B : 20 26 B5  
                       BCS CODE_02915E                     ;; 029138 : B0 24       ;
                       LDA.B #$20                          ;; 02913A : A9 20       ;
                       LDY.W !PlayerRidingYoshi            ;; 02913C : AC 7A 18    ;
-                      BEQ CODE_029143                     ;; 02913F : F0 02       ;
+                      BEQ +                               ;; 02913F : F0 02       ;
                       LDA.B #$30                          ;; 029141 : A9 30       ;
-CODE_029143:          STA.B !_0                           ;; 029143 : 85 00       ;
+                    + STA.B !_0                           ;; 029143 : 85 00       ;
                       LDA.W !BounceSpriteYPosLow,X        ;; 029145 : BD A1 16    ;
                       SEC                                 ;; 029148 : 38          ;
                       SBC.B !_0                           ;; 029149 : E5 00       ;
@@ -2062,7 +2062,7 @@ CODE_02915E:          LDA.W !BounceSpriteTimer,X          ;; 02915E : BD C5 16  
                       LDA.W !BounceSpriteFlags,X          ;; 029163 : BD C9 16    ;
                       AND.B #$03                          ;; 029166 : 29 03       ;
                       CMP.B #$03                          ;; 029168 : C9 03       ;
-                      BNE CODE_029182                     ;; 02916A : D0 16       ;
+                      BNE +                               ;; 02916A : D0 16       ;
                       LDA.B #$A0                          ;; 02916C : A9 A0       ;
                       STA.B !PlayerYSpeed                 ;; 02916E : 85 7D       ;
                       LDA.B !PlayerYPosNext               ;; 029170 : A5 96       ;
@@ -2074,16 +2074,16 @@ CODE_02915E:          LDA.W !BounceSpriteTimer,X          ;; 02915E : BD C5 16  
                       STA.B !PlayerYPosNext+1             ;; 02917B : 85 97       ;
                       LDA.B #$08                          ;; 02917D : A9 08       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 02917F : 8D FC 1D    ; / 
-CODE_029182:          JSR TileFromBounceSpr0              ;; 029182 : 20 9F 91    ;
+                    + JSR TileFromBounceSpr0              ;; 029182 : 20 9F 91    ;
                       LDY.W !BounceSpriteNumber,X         ;; 029185 : BC 99 16    ;
                       CPY.B #$06                          ;; 029188 : C0 06       ;
-                      BCC CODE_029199                     ;; 02918A : 90 0D       ;
+                      BCC +                               ;; 02918A : 90 0D       ;
                       LDA.B #$0B                          ;; 02918C : A9 0B       ; \ Play sound effect 
                       STA.W !SPCIO0                       ;; 02918E : 8D F9 1D    ; / 
                       LDA.W !OnOffSwitch                  ;; 029191 : AD AF 14    ; \ Toggle On/Off 
                       EOR.B #$01                          ;; 029194 : 49 01       ;  | 
                       STA.W !OnOffSwitch                  ;; 029196 : 8D AF 14    ; / 
-CODE_029199:          STZ.W !BounceSpriteNumber,X         ;; 029199 : 9E 99 16    ;
+                    + STZ.W !BounceSpriteNumber,X         ;; 029199 : 9E 99 16    ;
 Return02919C:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -2093,13 +2093,13 @@ TileFromBounceSpr0:   LDA.W !BounceSpriteTile,X           ;; ?QPWZ? : BD C1 16  
                       CMP.B #$0A                          ;; 0291A2 : C9 0A       ;  | 
                       BEQ CODE_0291AA                     ;; 0291A4 : F0 04       ;  | 
                       CMP.B #$0B                          ;; 0291A6 : C9 0B       ;  | 
-                      BNE CODE_0291B6                     ;; 0291A8 : D0 0C       ; / Block to generate = Bounce sprite block to turn into 
+                      BNE +                               ;; 0291A8 : D0 0C       ; / Block to generate = Bounce sprite block to turn into 
 CODE_0291AA:          LDY.W !MulticoinTimer               ;; 0291AA : AC 6B 18    ;
                       CPY.B #$01                          ;; 0291AD : C0 01       ;
-                      BNE CODE_0291B6                     ;; 0291AF : D0 05       ;
+                      BNE +                               ;; 0291AF : D0 05       ;
                       STZ.W !MulticoinTimer               ;; 0291B1 : 9C 6B 18    ;
                       LDA.B #$0D                          ;; 0291B4 : A9 0D       ; Block to generate = Used block 
-CODE_0291B6:          BRA TileFromBounceSpr1              ;; 0291B6 : 80 02       ;
+                    + BRA TileFromBounceSpr1              ;; 0291B6 : 80 02       ;
                                                           ;;                      ;
 InvisSldFromBncSpr:   LDA.B #$09                          ;; ?QPWZ? : A9 09       ; Block to generate = Invisible solid 
 TileFromBounceSpr1:   STA.B !Map16TileGenerate            ;; ?QPWZ? : 85 9C       ; Set block to generate 
@@ -2134,9 +2134,9 @@ BounceSpriteTiles:    db $1C,$40,$6B,$2A,$42,$EA,$8A,$40  ;; ?QPWZ?             
                                                           ;;                      ;
 BounceSprGfx:         LDY.B #$00                          ;; ?QPWZ? : A0 00       ;
                       LDA.W !BounceSpriteFlags,X          ;; 0291FA : BD C9 16    ;
-                      BPL CODE_029201                     ;; 0291FD : 10 02       ;
+                      BPL +                               ;; 0291FD : 10 02       ;
                       LDY.B #$04                          ;; 0291FF : A0 04       ;
-CODE_029201:          LDA.W !Layer1YPos,Y                 ;; 029201 : B9 1C 00    ;
+                    + LDA.W !Layer1YPos,Y                 ;; 029201 : B9 1C 00    ;
                       STA.B !_2                           ;; 029204 : 85 02       ;
                       LDA.W !Layer1XPos,Y                 ;; 029206 : B9 1A 00    ;
                       STA.B !_3                           ;; 029209 : 85 03       ;
@@ -2184,9 +2184,9 @@ CODE_029201:          LDA.W !Layer1YPos,Y                 ;; 029201 : B9 1C 00  
 CODE_029265:          LDA.B #$01                          ;; 029265 : A9 01       ;
                       LDY.W !BounceSpriteFlags,X          ;; 029267 : BC C9 16    ;
                       STY.B !_F                           ;; 02926A : 84 0F       ;
-                      BPL CODE_02926F                     ;; 02926C : 10 01       ;
+                      BPL +                               ;; 02926C : 10 01       ;
                       ASL A                               ;; 02926E : 0A          ;
-CODE_02926F:          AND.B !ScreenMode                   ;; 02926F : 25 5B       ;
+                    + AND.B !ScreenMode                   ;; 02926F : 25 5B       ;
                       BEQ CODE_0292CA                     ;; 029271 : F0 57       ;
                       LDA.W !BounceSpriteYPosLow,X        ;; 029273 : BD A1 16    ;
                       SEC                                 ;; 029276 : 38          ;
@@ -2216,16 +2216,16 @@ CODE_02926F:          AND.B !ScreenMode                   ;; 02926F : 25 5B     
                       LDX.B !_3                           ;; 0292A4 : A6 03       ;
                       LDA.L DATA_00BA80,X                 ;; 0292A6 : BF 80 BA 00 ;
                       LDY.B !_F                           ;; 0292AA : A4 0F       ;
-                      BEQ CODE_0292B2                     ;; 0292AC : F0 04       ;
+                      BEQ +                               ;; 0292AC : F0 04       ;
                       LDA.L DATA_00BA8E,X                 ;; 0292AE : BF 8E BA 00 ;
-CODE_0292B2:          CLC                                 ;; 0292B2 : 18          ;
+                    + CLC                                 ;; 0292B2 : 18          ;
                       ADC.B !_0                           ;; 0292B3 : 65 00       ;
                       STA.B !_5                           ;; 0292B5 : 85 05       ;
                       LDA.L DATA_00BABC,X                 ;; 0292B7 : BF BC BA 00 ;
                       LDY.B !_F                           ;; 0292BB : A4 0F       ;
-                      BEQ CODE_0292C3                     ;; 0292BD : F0 04       ;
+                      BEQ +                               ;; 0292BD : F0 04       ;
                       LDA.L DATA_00BACA,X                 ;; 0292BF : BF CA BA 00 ;
-CODE_0292C3:          ADC.B !_2                           ;; 0292C3 : 65 02       ;
+                    + ADC.B !_2                           ;; 0292C3 : 65 02       ;
                       STA.B !_6                           ;; 0292C5 : 85 06       ;
                       BRA CODE_02931A                     ;; 0292C7 : 80 51       ;
                                                           ;;                      ;
@@ -2257,16 +2257,16 @@ CODE_0292CA:          LDA.W !BounceSpriteYPosLow,X        ;; 0292CA : BD A1 16  
                       LDX.B !_3                           ;; 0292F7 : A6 03       ;
                       LDA.L DATA_00BA60,X                 ;; 0292F9 : BF 60 BA 00 ;
                       LDY.B !_F                           ;; 0292FD : A4 0F       ;
-                      BEQ CODE_029305                     ;; 0292FF : F0 04       ;
+                      BEQ +                               ;; 0292FF : F0 04       ;
                       LDA.L DATA_00BA70,X                 ;; 029301 : BF 70 BA 00 ;
-CODE_029305:          CLC                                 ;; 029305 : 18          ;
+                    + CLC                                 ;; 029305 : 18          ;
                       ADC.B !_0                           ;; 029306 : 65 00       ;
                       STA.B !_5                           ;; 029308 : 85 05       ;
                       LDA.L DATA_00BA9C,X                 ;; 02930A : BF 9C BA 00 ;
                       LDY.B !_F                           ;; 02930E : A4 0F       ;
-                      BEQ CODE_029316                     ;; 029310 : F0 04       ;
+                      BEQ +                               ;; 029310 : F0 04       ;
                       LDA.L DATA_00BAAC,X                 ;; 029312 : BF AC BA 00 ;
-CODE_029316:          ADC.B !_2                           ;; 029316 : 65 02       ;
+                    + ADC.B !_2                           ;; 029316 : 65 02       ;
                       STA.B !_6                           ;; 029318 : 85 06       ;
 CODE_02931A:          LDA.B #$7E                          ;; 02931A : A9 7E       ;
                       STA.B !_7                           ;; 02931C : 85 07       ;
@@ -2275,10 +2275,10 @@ CODE_02931A:          LDA.B #$7E                          ;; 02931A : A9 7E     
                       STA.W !Map16TileNumber              ;; 029323 : 8D 93 16    ;
                       INC.B !_7                           ;; 029326 : E6 07       ;
                       LDA.B [!_5]                         ;; 029328 : A7 05       ;
-                      BNE Return029355                    ;; 02932A : D0 29       ;
+                      BNE +                               ;; 02932A : D0 29       ;
                       LDA.W !Map16TileNumber              ;; 02932C : AD 93 16    ;
                       CMP.B #$2B                          ;; 02932F : C9 2B       ;
-                      BNE Return029355                    ;; 029331 : D0 22       ;
+                      BNE +                               ;; 029331 : D0 22       ;
                       LDA.W !BounceSpriteYPosLow,X        ;; 029333 : BD A1 16    ;
                       PHA                                 ;; 029336 : 48          ;
                       SBC.B #$03                          ;; 029337 : E9 03       ;
@@ -2294,7 +2294,7 @@ CODE_02931A:          LDA.B #$7E                          ;; 02931A : A9 7E     
                       STA.W !BounceSpriteYPosHigh,X       ;; 02934E : 9D A9 16    ;
                       PLA                                 ;; 029351 : 68          ;
                       STA.W !BounceSpriteYPosLow,X        ;; 029352 : 9D A1 16    ;
-Return029355:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 ADDR_029356:          LDY.B #$03                          ;; 029356 : A0 03       ;
 ADDR_029358:          LDA.W !CoinSpriteExists,Y           ;; 029358 : B9 D0 17    ;
@@ -2326,10 +2326,10 @@ Return029391:         RTS                                 ;; ?QPWZ? : 60        
 DATA_029392:          db $F8,$08                          ;; 029392               ;
                                                           ;;                      ;
 CODE_029394:          STZ.W !QuakeSpriteNumber,X          ;; 029394 : 9E CD 16    ;
-Return029397:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    - RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_029398:          LDA.W !QuakeSpriteNumber,X          ;; 029398 : BD CD 16    ;
-                      BEQ Return029397                    ;; 02939B : F0 FA       ;
+                      BEQ -                               ;; 02939B : F0 FA       ;
                       DEC.W !BounceSpriteIntTimer,X       ;; 02939D : DE F8 18    ;
                       BEQ CODE_029394                     ;; 0293A0 : F0 F2       ;
                       LDA.W !BounceSpriteIntTimer,X       ;; 0293A2 : BD F8 18    ;
@@ -2353,27 +2353,27 @@ CODE_0293B0:          STX.W !CurSpriteProcess             ;; 0293B0 : 8E E9 15  
                       LDA.W !SpriteBehindScene,X          ;; 0293CE : BD 32 16    ;
                       PHY                                 ;; 0293D1 : 5A          ;
                       LDY.B !PlayerIsClimbing             ;; 0293D2 : A4 74       ;
-                      BEQ CODE_0293D8                     ;; 0293D4 : F0 02       ;
+                      BEQ +                               ;; 0293D4 : F0 02       ;
                       EOR.B #$01                          ;; 0293D6 : 49 01       ;
-CODE_0293D8:          PLY                                 ;; 0293D8 : 7A          ;
+                    + PLY                                 ;; 0293D8 : 7A          ;
                       EOR.W !PlayerBehindNet              ;; 0293D9 : 4D F9 13    ;
                       BNE CODE_0293F7                     ;; 0293DC : D0 19       ;
                       JSL GetSpriteClippingA              ;; 0293DE : 22 9F B6 03 ;
                       LDA.B !_E                           ;; 0293E2 : A5 0E       ;
                       BEQ CODE_0293EB                     ;; 0293E4 : F0 05       ;
                       JSR CODE_029696                     ;; 0293E6 : 20 96 96    ;
-                      BRA CODE_0293EE                     ;; 0293E9 : 80 03       ;
+                      BRA +                               ;; 0293E9 : 80 03       ;
                                                           ;;                      ;
 CODE_0293EB:          JSR CODE_029663                     ;; 0293EB : 20 63 96    ;
-CODE_0293EE:          JSL CheckForContact                 ;; 0293EE : 22 2B B7 03 ;
+                    + JSL CheckForContact                 ;; 0293EE : 22 2B B7 03 ;
                       BCC CODE_0293F7                     ;; 0293F2 : 90 03       ;
                       JSR CODE_029404                     ;; 0293F4 : 20 04 94    ;
 CODE_0293F7:          LDY.W !MinorSpriteProcIndex         ;; 0293F7 : AC 98 16    ;
                       DEX                                 ;; 0293FA : CA          ;
-                      BMI CODE_029400                     ;; 0293FB : 30 03       ;
+                      BMI +                               ;; 0293FB : 30 03       ;
                       JMP CODE_0293B0                     ;; 0293FD : 4C B0 93    ;
                                                           ;;                      ;
-CODE_029400:          LDX.W !MinorSpriteProcIndex         ;; 029400 : AE 98 16    ;
+                    + LDX.W !MinorSpriteProcIndex         ;; 029400 : AE 98 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_029404:          LDA.B #$08                          ;; 029404 : A9 08       ;
@@ -2382,7 +2382,7 @@ CODE_029404:          LDA.B #$08                          ;; 029404 : A9 08     
                       CMP.B #$81                          ;; 02940B : C9 81       ;
                       BNE CODE_029427                     ;; 02940D : D0 18       ;
                       LDA.B !SpriteTableC2,X              ;; 02940F : B5 C2       ;
-                      BEQ Return029426                    ;; 029411 : F0 13       ;
+                      BEQ +                               ;; 029411 : F0 13       ;
                       STZ.B !SpriteTableC2,X              ;; 029413 : 74 C2       ;
                       LDA.B #$C0                          ;; 029415 : A9 C0       ;
                       STA.B !SpriteYSpeed,X               ;; 029417 : 95 AA       ;
@@ -2391,7 +2391,7 @@ CODE_029404:          LDA.B #$08                          ;; 029404 : A9 08     
                       STZ.W !SpriteMisc157C,X             ;; 02941E : 9E 7C 15    ;
                       LDA.B #$20                          ;; 029421 : A9 20       ;
                       STA.W !SpriteMisc1558,X             ;; 029423 : 9D 58 15    ;
-Return029426:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_029427:          CMP.B #$2D                          ;; 029427 : C9 2D       ;
                       BEQ CODE_029448                     ;; 029429 : F0 1D       ;
@@ -2411,18 +2411,18 @@ CODE_029443:          LDA.B #$FF                          ;; 029443 : A9 FF     
 CODE_029448:          STZ.W !SpriteMisc1558,X             ;; 029448 : 9E 58 15    ;
                       LDA.B !_E                           ;; 02944B : A5 0E       ;
                       CMP.B #$35                          ;; 02944D : C9 35       ;
-                      BEQ CODE_029455                     ;; 02944F : F0 04       ;
+                      BEQ +                               ;; 02944F : F0 04       ;
                       JSL CODE_01AB6F                     ;; 029451 : 22 6F AB 01 ;
-CODE_029455:          LDA.B #$00                          ;; 029455 : A9 00       ;
+                    + LDA.B #$00                          ;; 029455 : A9 00       ;
                       JSL GivePoints                      ;; 029457 : 22 E5 AC 02 ;
                       LDA.B #$02                          ;; 02945B : A9 02       ; \ Sprite status = Killed 
                       STA.W !SpriteStatus,X               ;; 02945D : 9D C8 14    ; / 
                       LDA.B !SpriteNumber,X               ;; 029460 : B5 9E       ;
                       CMP.B #$1E                          ;; 029462 : C9 1E       ;
-                      BNE CODE_02946B                     ;; 029464 : D0 05       ;
+                      BNE +                               ;; 029464 : D0 05       ;
                       LDA.B #$1F                          ;; 029466 : A9 1F       ;
                       STA.W !SpriteMisc1540+9             ;; 029468 : 8D 49 15    ;
-CODE_02946B:          LDA.W !SpriteTweakerB,X             ;; 02946B : BD 62 16    ;
+                    + LDA.W !SpriteTweakerB,X             ;; 02946B : BD 62 16    ;
                       AND.B #$80                          ;; 02946E : 29 80       ;
                       BNE CODE_0294A2                     ;; 029470 : D0 30       ;
                       LDA.W !SpriteTweakerA,X             ;; 029472 : BD 56 16    ; \ Branch if can't be jumped on 
@@ -2448,12 +2448,12 @@ CODE_02946B:          LDA.W !SpriteTweakerB,X             ;; 02946B : BD 62 16  
                       JSL LoadSpriteTables                ;; 02949E : 22 8B F7 07 ;
 CODE_0294A2:          LDA.B #$C0                          ;; 0294A2 : A9 C0       ;
                       LDY.B !_E                           ;; 0294A4 : A4 0E       ;
-                      BEQ CODE_0294B0                     ;; 0294A6 : F0 08       ;
+                      BEQ +                               ;; 0294A6 : F0 08       ;
                       LDA.B #$B0                          ;; 0294A8 : A9 B0       ;
                       CPY.B #$02                          ;; 0294AA : C0 02       ;
-                      BNE CODE_0294B0                     ;; 0294AC : D0 02       ;
+                      BNE +                               ;; 0294AC : D0 02       ;
                       LDA.B #$C0                          ;; 0294AE : A9 C0       ;
-CODE_0294B0:          STA.B !SpriteYSpeed,X               ;; 0294B0 : 95 AA       ;
+                    + STA.B !SpriteYSpeed,X               ;; 0294B0 : 95 AA       ;
                       JSR SubHorzPosBnk2                  ;; 0294B2 : 20 8D 84    ;
                       LDA.W DATA_029392,Y                 ;; 0294B5 : B9 92 93    ;
                       STA.B !SpriteXSpeed,X               ;; 0294B8 : 95 B6       ;
@@ -2471,19 +2471,19 @@ GroundPound:          LDA.B #$30                          ;; ?QPWZ? : A9 30     
                       LDX.B #$09                          ;; 0294CC : A2 09       ; Loop over sprites: 
 KillSprLoopStart:     LDA.W !SpriteStatus,X               ;; ?QPWZ? : BD C8 14    ; \ Skip current sprite if status < 8 
                       CMP.B #$08                          ;; 0294D1 : C9 08       ;  | 
-                      BCC GroundPoundNextSpr              ;; 0294D3 : 90 1B       ; / 
+                      BCC +                               ;; 0294D3 : 90 1B       ; / 
                       LDA.W !SpriteBlockedDirs,X          ;; 0294D5 : BD 88 15    ; \ Skip current sprite if not on ground 
                       AND.B #$04                          ;; 0294D8 : 29 04       ;  | 
-                      BEQ GroundPoundNextSpr              ;; 0294DA : F0 14       ; / 
+                      BEQ +                               ;; 0294DA : F0 14       ; / 
                       LDA.W !SpriteTweakerC,X             ;; 0294DC : BD 6E 16    ; \ Skip current sprite if... 
                       AND.B #$20                          ;; 0294DF : 29 20       ;  | ...can't be killed by cape... 
                       ORA.W !SpriteOnYoshiTongue,X        ;; 0294E1 : 1D D0 15    ;  | ...or sprite being eaten... 
                       ORA.W !SpriteMisc154C,X             ;; 0294E4 : 1D 4C 15    ;  | ...or interaction disabled 
-                      BNE GroundPoundNextSpr              ;; 0294E7 : D0 07       ; / 
+                      BNE +                               ;; 0294E7 : D0 07       ; / 
                       LDA.B #$35                          ;; 0294E9 : A9 35       ;
                       STA.B !_E                           ;; 0294EB : 85 0E       ;
                       JSR CODE_029404                     ;; 0294ED : 20 04 94    ;
-GroundPoundNextSpr:   DEX                                 ;; ?QPWZ? : CA          ;
+                    + DEX                                 ;; ?QPWZ? : CA          ;
                       BPL KillSprLoopStart                ;; 0294F1 : 10 DB       ;
                       PLB                                 ;; 0294F3 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
@@ -2493,16 +2493,16 @@ CODE_0294F5:          LDA.W !CapeInteracts                ;; 0294F5 : AD E8 13  
                       STA.B !_E                           ;; 0294FA : 85 0E       ;
                       LDA.B !TrueFrame                    ;; 0294FC : A5 13       ;
                       LSR A                               ;; 0294FE : 4A          ;
-                      BCC CODE_029507                     ;; 0294FF : 90 06       ;
+                      BCC +                               ;; 0294FF : 90 06       ;
                       JSR CODE_0293AE                     ;; 029501 : 20 AE 93    ;
                       JSR CODE_029631                     ;; 029504 : 20 31 96    ;
-CODE_029507:          JSR CODE_02950B                     ;; 029507 : 20 0B 95    ;
+                    + JSR CODE_02950B                     ;; 029507 : 20 0B 95    ;
 Return02950A:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02950B:          STZ.B !_F                           ;; 02950B : 64 0F       ;
                       JSR CODE_029540                     ;; 02950D : 20 40 95    ;
                       LDA.B !ScreenMode                   ;; 029510 : A5 5B       ;
-                      BPL Return02953B                    ;; 029512 : 10 27       ;
+                      BPL +                               ;; 029512 : 10 27       ;
                       INC.B !_F                           ;; 029514 : E6 0F       ;
                       LDA.W !CapeInteractionXPos          ;; 029516 : AD E9 13    ;
                       CLC                                 ;; 029519 : 18          ;
@@ -2519,7 +2519,7 @@ CODE_02950B:          STZ.B !_F                           ;; 02950B : 64 0F     
                       ADC.B !Layer23YRelPos+1             ;; 029533 : 65 29       ;
                       STA.W !CapeInteractionYPos+1        ;; 029535 : 8D EC 13    ;
                       JSR CODE_029540                     ;; 029538 : 20 40 95    ;
-Return02953B:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02953C:          db $08,$08                          ;; 02953C               ;
@@ -2566,16 +2566,16 @@ CODE_029540:          LDA.B !TrueFrame                    ;; 029540 : A5 13     
                       LDX.B !_3                           ;; 029588 : A6 03       ;
                       LDA.L DATA_00BA80,X                 ;; 02958A : BF 80 BA 00 ;
                       LDY.B !_F                           ;; 02958E : A4 0F       ;
-                      BEQ CODE_029596                     ;; 029590 : F0 04       ;
+                      BEQ +                               ;; 029590 : F0 04       ;
                       LDA.L DATA_00BA8E,X                 ;; 029592 : BF 8E BA 00 ;
-CODE_029596:          CLC                                 ;; 029596 : 18          ;
+                    + CLC                                 ;; 029596 : 18          ;
                       ADC.B !_0                           ;; 029597 : 65 00       ;
                       STA.B !_5                           ;; 029599 : 85 05       ;
                       LDA.L DATA_00BABC,X                 ;; 02959B : BF BC BA 00 ;
                       LDY.B !_F                           ;; 02959F : A4 0F       ;
-                      BEQ CODE_0295A7                     ;; 0295A1 : F0 04       ;
+                      BEQ +                               ;; 0295A1 : F0 04       ;
                       LDA.L DATA_00BACA,X                 ;; 0295A3 : BF CA BA 00 ;
-CODE_0295A7:          ADC.B !_2                           ;; 0295A7 : 65 02       ;
+                    + ADC.B !_2                           ;; 0295A7 : 65 02       ;
                       STA.B !_6                           ;; 0295A9 : 85 06       ;
                       BRA CODE_02960D                     ;; 0295AB : 80 60       ;
                                                           ;;                      ;
@@ -2614,16 +2614,16 @@ CODE_0295AE:          LDA.W !CapeInteractionYPos          ;; 0295AE : AD EB 13  
                       LDX.B !_3                           ;; 0295EA : A6 03       ;
                       LDA.L DATA_00BA60,X                 ;; 0295EC : BF 60 BA 00 ;
                       LDY.B !_F                           ;; 0295F0 : A4 0F       ;
-                      BEQ CODE_0295F8                     ;; 0295F2 : F0 04       ;
+                      BEQ +                               ;; 0295F2 : F0 04       ;
                       LDA.L DATA_00BA70,X                 ;; 0295F4 : BF 70 BA 00 ;
-CODE_0295F8:          CLC                                 ;; 0295F8 : 18          ;
+                    + CLC                                 ;; 0295F8 : 18          ;
                       ADC.B !_0                           ;; 0295F9 : 65 00       ;
                       STA.B !_5                           ;; 0295FB : 85 05       ;
                       LDA.L DATA_00BA9C,X                 ;; 0295FD : BF 9C BA 00 ;
                       LDY.B !_F                           ;; 029601 : A4 0F       ;
-                      BEQ CODE_029609                     ;; 029603 : F0 04       ;
+                      BEQ +                               ;; 029603 : F0 04       ;
                       LDA.L DATA_00BAAC,X                 ;; 029605 : BF AC BA 00 ;
-CODE_029609:          ADC.B !_2                           ;; 029609 : 65 02       ;
+                    + ADC.B !_2                           ;; 029609 : 65 02       ;
                       STA.B !_6                           ;; 02960B : 85 06       ;
 CODE_02960D:          LDA.B #$7E                          ;; 02960D : A9 7E       ;
                       STA.B !_7                           ;; 02960F : 85 07       ;
@@ -2633,28 +2633,28 @@ CODE_02960D:          LDA.B #$7E                          ;; 02960D : A9 7E     
                       LDA.B [!_5]                         ;; 029618 : A7 05       ;
                       JSL CODE_00F545                     ;; 02961A : 22 45 F5 00 ;
                       CMP.B #$00                          ;; 02961E : C9 00       ;
-                      BEQ Return029630                    ;; 029620 : F0 0E       ;
+                      BEQ +                               ;; 029620 : F0 0E       ;
                       LDA.B !_F                           ;; 029622 : A5 0F       ;
                       STA.W !LayerProcessing              ;; 029624 : 8D 33 19    ;
                       LDA.W !Map16TileNumber              ;; 029627 : AD 93 16    ;
                       LDY.B #$00                          ;; 02962A : A0 00       ;
                       JSL CODE_00F160                     ;; 02962C : 22 60 F1 00 ;
-Return029630:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_029631:          LDX.B #$07                          ;; 029631 : A2 07       ;
 CODE_029633:          STX.W !CurSpriteProcess             ;; 029633 : 8E E9 15    ;
                       LDA.W !ExtSpriteNumber,X            ;; 029636 : BD 0B 17    ;
                       CMP.B #$02                          ;; 029639 : C9 02       ;
-                      BCC CODE_029653                     ;; 02963B : 90 16       ;
+                      BCC +                               ;; 02963B : 90 16       ;
                       JSR CODE_02A519                     ;; 02963D : 20 19 A5    ;
                       JSR CODE_029696                     ;; 029640 : 20 96 96    ;
                       JSL CheckForContact                 ;; 029643 : 22 2B B7 03 ;
-                      BCC CODE_029653                     ;; 029647 : 90 0A       ;
+                      BCC +                               ;; 029647 : 90 0A       ;
                       LDA.W !ExtSpriteNumber,X            ;; 029649 : BD 0B 17    ;
                       CMP.B #$12                          ;; 02964C : C9 12       ;
-                      BEQ CODE_029653                     ;; 02964E : F0 03       ;
+                      BEQ +                               ;; 02964E : F0 03       ;
                       JSR CODE_02A4DE                     ;; 029650 : 20 DE A4    ;
-CODE_029653:          DEX                                 ;; 029653 : CA          ;
+                    + DEX                                 ;; 029653 : CA          ;
                       BPL CODE_029633                     ;; 029654 : 10 DD       ;
 Return029656:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -2742,9 +2742,9 @@ CODE_0296E3:          LDA.W !SmokeSpriteTimer,X           ;; 0296E3 : BD CC 17  
                       LDA.W !SmokeSpriteNumber,X          ;; 0296E8 : BD C0 17    ;
                       BMI CODE_0296F1                     ;; 0296EB : 30 04       ;
                       LDA.B !SpriteLock                   ;; 0296ED : A5 9D       ;
-                      BNE CODE_0296F4                     ;; 0296EF : D0 03       ;
+                      BNE +                               ;; 0296EF : D0 03       ;
 CODE_0296F1:          DEC.W !SmokeSpriteTimer,X           ;; 0296F1 : DE CC 17    ;
-CODE_0296F4:          LDA.B !SpriteNumber+7               ;; 0296F4 : A5 A5       ;
+                    + LDA.B !SpriteNumber+7               ;; 0296F4 : A5 A5       ;
                       CMP.B #$A9                          ;; 0296F6 : C9 A9       ;
                       BEQ CODE_02974A                     ;; 0296F8 : F0 50       ;
                       LDA.W !IRQNMICommand                ;; 0296FA : AD 9B 0D    ;
@@ -2766,13 +2766,13 @@ CODE_0296F4:          LDA.B !SpriteNumber+7               ;; 0296F4 : A5 A5     
                       LDA.W !SmokeSpriteTimer,X           ;; 02971E : BD CC 17    ;
                       CMP.B #$08                          ;; 029721 : C9 08       ;
                       LDA.B #$00                          ;; 029723 : A9 00       ;
-                      BCS CODE_02972D                     ;; 029725 : B0 06       ;
+                      BCS +                               ;; 029725 : B0 06       ;
                       ASL A                               ;; 029727 : 0A          ;
                       ASL A                               ;; 029728 : 0A          ;
                       ASL A                               ;; 029729 : 0A          ;
                       ASL A                               ;; 02972A : 0A          ;
                       AND.B #$40                          ;; 02972B : 29 40       ;
-CODE_02972D:          ORA.B !SpriteProperties             ;; 02972D : 05 64       ;
+                    + ORA.B !SpriteProperties             ;; 02972D : 05 64       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02972F : 99 03 03    ;
                       LDA.W !SmokeSpriteTimer,X           ;; 029732 : BD CC 17    ;
                       PHY                                 ;; 029735 : 5A          ;
@@ -2806,13 +2806,13 @@ CODE_02974A:          LDY.W DATA_0296B8,X                 ;; 02974A : BC B8 96  
                       LDA.W !SmokeSpriteTimer,X           ;; 029767 : BD CC 17    ;
                       CMP.B #$08                          ;; 02976A : C9 08       ;
                       LDA.B #$00                          ;; 02976C : A9 00       ;
-                      BCS CODE_029776                     ;; 02976E : B0 06       ;
+                      BCS +                               ;; 02976E : B0 06       ;
                       ASL A                               ;; 029770 : 0A          ;
                       ASL A                               ;; 029771 : 0A          ;
                       ASL A                               ;; 029772 : 0A          ;
                       ASL A                               ;; 029773 : 0A          ;
                       AND.B #$40                          ;; 029774 : 29 40       ;
-CODE_029776:          ORA.B !SpriteProperties             ;; 029776 : 05 64       ;
+                    + ORA.B !SpriteProperties             ;; 029776 : 05 64       ;
                       STA.W !OAMTileAttr,Y                ;; 029778 : 99 03 02    ;
                       LDA.W !SmokeSpriteTimer,X           ;; 02977B : BD CC 17    ;
                       PHY                                 ;; 02977E : 5A          ;
@@ -2836,16 +2836,16 @@ CODE_029793:          STZ.W !SmokeSpriteNumber,X          ;; 029793 : 9E C0 17  
 CODE_029797:          LDA.W !SmokeSpriteTimer,X           ;; 029797 : BD CC 17    ;
                       BEQ CODE_029793                     ;; 02979A : F0 F7       ;
                       LDY.B !SpriteLock                   ;; 02979C : A4 9D       ;
-                      BNE CODE_0297A3                     ;; 02979E : D0 03       ;
+                      BNE +                               ;; 02979E : D0 03       ;
                       DEC.W !SmokeSpriteTimer,X           ;; 0297A0 : DE CC 17    ;
-CODE_0297A3:          BIT.W !IRQNMICommand                ;; 0297A3 : 2C 9B 0D    ;
-                      BVC CODE_0297B2                     ;; 0297A6 : 50 0A       ;
+                    + BIT.W !IRQNMICommand                ;; 0297A3 : 2C 9B 0D    ;
+                      BVC +                               ;; 0297A6 : 50 0A       ;
                       LDA.W !IRQNMICommand                ;; 0297A8 : AD 9B 0D    ;
                       CMP.B #$C1                          ;; 0297AB : C9 C1       ;
-                      BEQ CODE_0297B2                     ;; 0297AD : F0 03       ;
+                      BEQ +                               ;; 0297AD : F0 03       ;
                       JMP CODE_029838                     ;; 0297AF : 4C 38 98    ;
                                                           ;;                      ;
-CODE_0297B2:          LDY.B #$F0                          ;; 0297B2 : A0 F0       ;
+                    + LDY.B #$F0                          ;; 0297B2 : A0 F0       ;
                       LDA.W !SmokeSpriteXPos,X            ;; 0297B4 : BD C8 17    ;
                       SEC                                 ;; 0297B7 : 38          ;
                       SBC.B !Layer1XPos                   ;; 0297B8 : E5 1A       ;
@@ -2888,7 +2888,7 @@ CODE_0297B2:          LDY.B #$F0                          ;; 0297B2 : A0 F0     
                       LDA.B #$7D                          ;; 02980B : A9 7D       ;
                       STA.W !OAMTileNo+4,Y                ;; 02980D : 99 06 02    ;
                       STA.W !OAMTileNo+8,Y                ;; 029810 : 99 0A 02    ;
-                      BRA CODE_029825                     ;; 029813 : 80 10       ;
+                      BRA +                               ;; 029813 : 80 10       ;
                                                           ;;                      ;
 CODE_029815:          LDA.B #$7D                          ;; 029815 : A9 7D       ;
                       STA.W !OAMTileNo,Y                  ;; 029817 : 99 02 02    ;
@@ -2896,7 +2896,7 @@ CODE_029815:          LDA.B #$7D                          ;; 029815 : A9 7D     
                       LDA.B #$7C                          ;; 02981D : A9 7C       ;
                       STA.W !OAMTileNo+4,Y                ;; 02981F : 99 06 02    ;
                       STA.W !OAMTileNo+8,Y                ;; 029822 : 99 0A 02    ;
-CODE_029825:          TYA                                 ;; 029825 : 98          ;
+                    + TYA                                 ;; 029825 : 98          ;
                       LSR A                               ;; 029826 : 4A          ;
                       LSR A                               ;; 029827 : 4A          ;
                       TAY                                 ;; 029828 : A8          ;
@@ -2950,7 +2950,7 @@ CODE_029838:          LDY.B #$90                          ;; 029838 : A0 90     
                       LDA.B #$7D                          ;; 029891 : A9 7D       ;
                       STA.W !OAMTileNo+$104,Y             ;; 029893 : 99 06 03    ;
                       STA.W !OAMTileNo+$108,Y             ;; 029896 : 99 0A 03    ;
-                      BRA CODE_0298AB                     ;; 029899 : 80 10       ;
+                      BRA +                               ;; 029899 : 80 10       ;
                                                           ;;                      ;
 CODE_02989B:          LDA.B #$7D                          ;; 02989B : A9 7D       ;
                       STA.W !OAMTileNo+$100,Y             ;; 02989D : 99 02 03    ;
@@ -2958,7 +2958,7 @@ CODE_02989B:          LDA.B #$7D                          ;; 02989B : A9 7D     
                       LDA.B #$7C                          ;; 0298A3 : A9 7C       ;
                       STA.W !OAMTileNo+$104,Y             ;; 0298A5 : 99 06 03    ;
                       STA.W !OAMTileNo+$108,Y             ;; 0298A8 : 99 0A 03    ;
-CODE_0298AB:          TYA                                 ;; 0298AB : 98          ;
+                    + TYA                                 ;; 0298AB : 98          ;
                       LSR A                               ;; 0298AC : 4A          ;
                       LSR A                               ;; 0298AD : 4A          ;
                       TAY                                 ;; 0298AE : A8          ;
@@ -2990,10 +2990,10 @@ CODE_0298DC:          LDA.W !MinExtSpriteNumber,Y         ;; 0298DC : B9 F0 17  
                       DEY                                 ;; 0298E1 : 88          ;
                       BPL CODE_0298DC                     ;; 0298E2 : 10 F8       ;
                       DEC.W !MinExtSpriteSlotIdx          ;; 0298E4 : CE 5D 18    ;
-                      BPL CODE_0298EE                     ;; 0298E7 : 10 05       ;
+                      BPL +                               ;; 0298E7 : 10 05       ;
                       LDA.B #$0B                          ;; 0298E9 : A9 0B       ;
                       STA.W !MinExtSpriteSlotIdx          ;; 0298EB : 8D 5D 18    ;
-CODE_0298EE:          LDY.W !MinExtSpriteSlotIdx          ;; 0298EE : AC 5D 18    ;
+                    + LDY.W !MinExtSpriteSlotIdx          ;; 0298EE : AC 5D 18    ;
 CODE_0298F1:          LDA.B #$02                          ;; 0298F1 : A9 02       ;
                       STA.W !MinExtSpriteNumber,Y         ;; 0298F3 : 99 F0 17    ;
                       LDA.W !SmokeSpriteYPos,X            ;; 0298F6 : BD C4 17    ;
@@ -3025,21 +3025,21 @@ DATA_029922:          db $66,$66,$64,$62,$62              ;; 029922             
 CODE_029927:          LDA.W !SmokeSpriteTimer,X           ;; 029927 : BD CC 17    ;
                       BNE CODE_029941                     ;; 02992A : D0 15       ;
                       BIT.W !IRQNMICommand                ;; 02992C : 2C 9B 0D    ;
-                      BVC CODE_02993E                     ;; 02992F : 50 0D       ;
+                      BVC +                               ;; 02992F : 50 0D       ;
                       LDA.W !ReznorOAMIndex               ;; 029931 : AD 0F 14    ;
-                      BNE CODE_02993E                     ;; 029934 : D0 08       ;
+                      BNE +                               ;; 029934 : D0 08       ;
                       LDY.W DATA_0296BC,X                 ;; 029936 : BC BC 96    ;
                       LDA.B #$F0                          ;; 029939 : A9 F0       ;
                       STA.W !OAMTileYPos+$100,Y           ;; 02993B : 99 01 03    ;
-CODE_02993E:          JMP CODE_029793                     ;; 02993E : 4C 93 97    ;
+                    + JMP CODE_029793                     ;; 02993E : 4C 93 97    ;
                                                           ;;                      ;
 CODE_029941:          LDY.B !SpriteLock                   ;; 029941 : A4 9D       ;
-                      BNE CODE_02994F                     ;; 029943 : D0 0A       ;
+                      BNE +                               ;; 029943 : D0 0A       ;
                       DEC.W !SmokeSpriteTimer,X           ;; 029945 : DE CC 17    ;
                       AND.B #$07                          ;; 029948 : 29 07       ;
-                      BNE CODE_02994F                     ;; 02994A : D0 03       ;
+                      BNE +                               ;; 02994A : D0 03       ;
                       DEC.W !SmokeSpriteYPos,X            ;; 02994C : DE C4 17    ;
-CODE_02994F:          LDA.B !SpriteNumber+7               ;; 02994F : A5 A5       ;
+                    + LDA.B !SpriteNumber+7               ;; 02994F : A5 A5       ;
                       CMP.B #$A9                          ;; 029951 : C9 A9       ;
                       BEQ CODE_02996C                     ;; 029953 : F0 17       ;
                       LDA.W !ReznorOAMIndex               ;; 029955 : AD 0F 14    ;
@@ -3051,10 +3051,10 @@ CODE_02994F:          LDA.B !SpriteNumber+7               ;; 02994F : A5 A5     
                       AND.B #$40                          ;; 029963 : 29 40       ;
                       BNE CODE_02999F                     ;; 029965 : D0 38       ;
 CODE_029967:          LDY.W DATA_0296BC,X                 ;; 029967 : BC BC 96    ;
-                      BRA CODE_02996F                     ;; 02996A : 80 03       ;
+                      BRA +                               ;; 02996A : 80 03       ;
                                                           ;;                      ;
 CODE_02996C:          LDY.W DATA_0296B8,X                 ;; 02996C : BC B8 96    ;
-CODE_02996F:          LDA.W !SmokeSpriteXPos,X            ;; 02996F : BD C8 17    ;
+                    + LDA.W !SmokeSpriteXPos,X            ;; 02996F : BD C8 17    ;
                       SEC                                 ;; 029972 : 38          ;
                       SBC.B !Layer1XPos                   ;; 029973 : E5 1A       ;
                       STA.W !OAMTileXPos,Y                ;; 029975 : 99 00 02    ;
@@ -3108,9 +3108,9 @@ CODE_02999F:          LDY.W DATA_0296BC,X                 ;; 02999F : BC BC 96  
 CODE_0299D2:          LDX.B #$03                          ;; 0299D2 : A2 03       ;
 CODE_0299D4:          STX.W !CurSpriteProcess             ;; 0299D4 : 8E E9 15    ;
                       LDA.W !CoinSpriteExists,X           ;; 0299D7 : BD D0 17    ;
-                      BEQ CODE_0299DF                     ;; 0299DA : F0 03       ;
+                      BEQ +                               ;; 0299DA : F0 03       ;
                       JSR CODE_0299F1                     ;; 0299DC : 20 F1 99    ;
-CODE_0299DF:          DEX                                 ;; 0299DF : CA          ;
+                    + DEX                                 ;; 0299DF : CA          ;
                       BPL CODE_0299D4                     ;; 0299E0 : 10 F2       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -3122,17 +3122,17 @@ CODE_0299E3:          LDA.B #$00                          ;; 0299E3 : A9 00     
 DATA_0299E9:          db $30,$38,$40,$48,$EC,$EA,$E8,$EC  ;; 0299E9               ;
                                                           ;;                      ;
 CODE_0299F1:          LDA.B !SpriteLock                   ;; 0299F1 : A5 9D       ;
-                      BNE CODE_029A08                     ;; 0299F3 : D0 13       ;
+                      BNE +                               ;; 0299F3 : D0 13       ;
                       JSR CODE_02B58E                     ;; 0299F5 : 20 8E B5    ;
                       LDA.W !CoinSpriteYSpeed,X           ;; 0299F8 : BD D8 17    ;
                       CLC                                 ;; 0299FB : 18          ;
                       ADC.B #$03                          ;; 0299FC : 69 03       ;
                       STA.W !CoinSpriteYSpeed,X           ;; 0299FE : 9D D8 17    ;
                       CMP.B #$20                          ;; 029A01 : C9 20       ;
-                      BMI CODE_029A08                     ;; 029A03 : 30 03       ;
+                      BMI +                               ;; 029A03 : 30 03       ;
                       JMP CODE_029AA8                     ;; 029A05 : 4C A8 9A    ;
                                                           ;;                      ;
-CODE_029A08:          LDA.W !CoinSpriteLayer,X            ;; 029A08 : BD E4 17    ;
+                    + LDA.W !CoinSpriteLayer,X            ;; 029A08 : BD E4 17    ;
                       ASL A                               ;; 029A0B : 0A          ;
                       ASL A                               ;; 029A0C : 0A          ;
                       TAY                                 ;; 029A0D : A8          ;
@@ -3181,13 +3181,13 @@ CODE_029A08:          LDA.W !CoinSpriteLayer,X            ;; 029A08 : BD E4 17  
                       LSR A                               ;; 029A67 : 4A          ;
                       LSR A                               ;; 029A68 : 4A          ;
                       AND.B #$03                          ;; 029A69 : 29 03       ;
-                      BNE CODE_029A71                     ;; 029A6B : D0 04       ;
+                      BNE +                               ;; 029A6B : D0 04       ;
 Return029A6D:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
                       db $EA,$FA,$EA                      ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_029A71:          LDY.B !_F                           ;; 029A71 : A4 0F       ;
+                    + LDY.B !_F                           ;; 029A71 : A4 0F       ;
                       PHX                                 ;; 029A73 : DA          ;
                       TAX                                 ;; 029A74 : AA          ;
                       LDA.B !_0                           ;; 029A75 : A5 00       ;
@@ -3246,33 +3246,33 @@ CODE_029AE5:          LDA.B #$05                          ;; 029AE5 : A9 05     
                       LSR A                               ;; 029AED : 4A          ; carryout = $17E4 % 2 
                       PHP                                 ;; 029AEE : 08          ;
                       LDA.W !CoinSpriteXPosLow,X          ;; 029AEF : BD E0 17    ; get x coordinate low byte 
-                      BCC CODE_029AF6                     ;; 029AF2 : 90 02       ; if carryout == 1 
+                      BCC +                               ;; 029AF2 : 90 02       ; if carryout == 1 
                       SBC.B !Layer23XRelPos               ;; 029AF4 : E5 26       ;   x-coord -= $26 
-CODE_029AF6:          STA.W !SmokeSpriteXPos,Y            ;; 029AF6 : 99 C8 17    ; store x-coord 
+                    + STA.W !SmokeSpriteXPos,Y            ;; 029AF6 : 99 C8 17    ; store x-coord 
                       LDA.W !CoinSpriteYPosLow,X          ;; 029AF9 : BD D4 17    ; get y coordinate low byte 
                       PLP                                 ;; 029AFC : 28          ;
-                      BCC CODE_029B01                     ;; 029AFD : 90 02       ; if carryout == 1 
+                      BCC +                               ;; 029AFD : 90 02       ; if carryout == 1 
                       SBC.B !Layer23YRelPos               ;; 029AFF : E5 28       ;   y-coord -=$28 
-CODE_029B01:          STA.W !SmokeSpriteYPos,Y            ;; 029B01 : 99 C4 17    ; store y-coord 
+                    + STA.W !SmokeSpriteYPos,Y            ;; 029B01 : 99 C4 17    ; store y-coord 
                       LDA.B #$10                          ;; 029B04 : A9 10       ;
                       STA.W !SmokeSpriteTimer,Y           ;; 029B06 : 99 CC 17    ; duration = 10 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_029B0A:          LDX.B #$09                          ;; 029B0A : A2 09       ;
-CODE_029B0C:          STX.W !CurSpriteProcess             ;; 029B0C : 8E E9 15    ;
+                    - STX.W !CurSpriteProcess             ;; 029B0C : 8E E9 15    ;
                       JSR CODE_029B16                     ;; 029B0F : 20 16 9B    ;
                       DEX                                 ;; 029B12 : CA          ;
-                      BPL CODE_029B0C                     ;; 029B13 : 10 F7       ;
+                      BPL -                               ;; 029B13 : 10 F7       ;
 Return029B15:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_029B16:          LDA.W !ExtSpriteNumber,X            ;; 029B16 : BD 0B 17    ;
                       BEQ Return029B15                    ;; 029B19 : F0 FA       ;
                       LDY.B !SpriteLock                   ;; 029B1B : A4 9D       ;
-                      BNE CODE_029B27                     ;; 029B1D : D0 08       ;
+                      BNE +                               ;; 029B1D : D0 08       ;
                       LDY.W !ExtSpriteMisc176F,X          ;; 029B1F : BC 6F 17    ;
-                      BEQ CODE_029B27                     ;; 029B22 : F0 03       ;
+                      BEQ +                               ;; 029B22 : F0 03       ;
                       DEC.W !ExtSpriteMisc176F,X          ;; 029B24 : DE 6F 17    ;
-CODE_029B27:          JSL ExecutePtr                      ;; 029B27 : 22 DF 86 00 ;
+                    + JSL ExecutePtr                      ;; 029B27 : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw Return029B15                     ;; ?QPWZ? : 15 9B       ; 00 - Empty slot 
                       dw SmokePuff                        ;; ?QPWZ? : 4F A3       ; 01 - Puff of smoke 
@@ -3326,9 +3326,9 @@ CODE_029B76:          LDA.B !_0                           ;; 029B76 : A5 00     
                       LSR A                               ;; 029B91 : 4A          ;
                       LSR A                               ;; 029B92 : 4A          ;
                       LDA.B #$A6                          ;; 029B93 : A9 A6       ;
-                      BCC CODE_029B99                     ;; 029B95 : 90 02       ;
+                      BCC +                               ;; 029B95 : 90 02       ;
                       LDA.B #$B6                          ;; 029B97 : A9 B6       ;
-CODE_029B99:          STA.W !OAMTileNo,Y                  ;; 029B99 : 99 02 02    ;
+                    + STA.W !OAMTileNo,Y                  ;; 029B99 : 99 02 02    ;
                       TYA                                 ;; 029B9C : 98          ;
                       LSR A                               ;; 029B9D : 4A          ;
                       LSR A                               ;; 029B9E : 4A          ;
@@ -3342,12 +3342,12 @@ CODE_029BA5:          LDA.B !SpriteLock                   ;; 029BA5 : A5 9D     
                       JSR CODE_02B560                     ;; 029BAF : 20 60 B5    ;
                       LDA.B !TrueFrame                    ;; 029BB2 : A5 13       ;
                       AND.B #$03                          ;; 029BB4 : 29 03       ;
-                      BNE CODE_029BC2                     ;; 029BB6 : D0 0A       ;
+                      BNE +                               ;; 029BB6 : D0 0A       ;
                       LDA.W !ExtSpriteYSpeed,X            ;; 029BB8 : BD 3D 17    ;
                       CMP.B #$18                          ;; 029BBB : C9 18       ;
-                      BPL CODE_029BC2                     ;; 029BBD : 10 03       ;
+                      BPL +                               ;; 029BBD : 10 03       ;
                       INC.W !ExtSpriteYSpeed,X            ;; 029BBF : FE 3D 17    ;
-CODE_029BC2:          LDA.W !ExtSpriteYSpeed,X            ;; 029BC2 : BD 3D 17    ;
+                    + LDA.W !ExtSpriteYSpeed,X            ;; 029BC2 : BD 3D 17    ;
                       BMI Return029BD9                    ;; 029BC5 : 30 12       ;
                       TXA                                 ;; 029BC7 : 8A          ;
                       ASL A                               ;; 029BC8 : 0A          ;
@@ -3356,9 +3356,9 @@ CODE_029BC2:          LDA.W !ExtSpriteYSpeed,X            ;; 029BC2 : BD 3D 17  
                       ADC.B !TrueFrame                    ;; 029BCB : 65 13       ;
                       LDY.B #$08                          ;; 029BCD : A0 08       ;
                       AND.B #$08                          ;; 029BCF : 29 08       ;
-                      BNE CODE_029BD5                     ;; 029BD1 : D0 02       ;
+                      BNE +                               ;; 029BD1 : D0 02       ;
                       LDY.B #$F8                          ;; 029BD3 : A0 F8       ;
-CODE_029BD5:          TYA                                 ;; 029BD5 : 98          ;
+                    + TYA                                 ;; 029BD5 : 98          ;
                       STA.W !ExtSpriteXSpeed,X            ;; 029BD6 : 9D 47 17    ;
 Return029BD9:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -3441,11 +3441,11 @@ SmokeTrail:           JSR CODE_02A1A4                     ;; ?QPWZ? : 20 A4 A1  
                       LDA.W !ExtSpriteMisc176F,X          ;; 029C6B : BD 6F 17    ;
                       BEQ CODE_029C7F                     ;; 029C6E : F0 0F       ;
                       CMP.B #$06                          ;; 029C70 : C9 06       ;
-                      BNE CODE_029C7B                     ;; 029C72 : D0 07       ;
+                      BNE +                               ;; 029C72 : D0 07       ;
                       LDA.W !ExtSpriteXSpeed,X            ;; 029C74 : BD 47 17    ;
                       ASL A                               ;; 029C77 : 0A          ;
                       ROR.W !ExtSpriteXSpeed,X            ;; 029C78 : 7E 47 17    ;
-CODE_029C7B:          JSR CODE_02B554                     ;; 029C7B : 20 54 B5    ;
+                    + JSR CODE_02B554                     ;; 029C7B : 20 54 B5    ;
 Return029C7E:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_029C7F:          STZ.W !ExtSpriteNumber,X            ;; 029C7F : 9E 0B 17    ; Clear extended sprite 
@@ -3460,17 +3460,17 @@ SpinJumpStars:        LDA.W !ExtSpriteMisc176F,X          ;; ?QPWZ? : BD 6F 17  
                       LDA.B #$EF                          ;; 029C93 : A9 EF       ;
                       STA.W !OAMTileNo,Y                  ;; 029C95 : 99 02 02    ;
                       LDA.B !SpriteLock                   ;; 029C98 : A5 9D       ;
-                      BNE Return029CAF                    ;; 029C9A : D0 13       ;
+                      BNE +                               ;; 029C9A : D0 13       ;
                       LDA.W !ExtSpriteMisc176F,X          ;; 029C9C : BD 6F 17    ;
                       LSR A                               ;; 029C9F : 4A          ;
                       LSR A                               ;; 029CA0 : 4A          ;
                       TAY                                 ;; 029CA1 : A8          ;
                       LDA.B !TrueFrame                    ;; 029CA2 : A5 13       ;
                       AND.W DATA_029CB0,Y                 ;; 029CA4 : 39 B0 9C    ;
-                      BNE Return029CAF                    ;; 029CA7 : D0 06       ;
+                      BNE +                               ;; 029CA7 : D0 06       ;
                       JSR CODE_02B554                     ;; 029CA9 : 20 54 B5    ;
                       JSR CODE_02B560                     ;; 029CAC : 20 60 B5    ;
-Return029CAF:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_029CB0:          db $FF,$07,$01,$00,$00              ;; 029CB0               ;
@@ -3480,31 +3480,31 @@ CloudCoin:            LDA.B !SpriteLock                   ;; ?QPWZ? : A5 9D     
                       JSR CODE_02B560                     ;; 029CB9 : 20 60 B5    ;
                       LDA.W !ExtSpriteYSpeed,X            ;; 029CBC : BD 3D 17    ;
                       CMP.B #$30                          ;; 029CBF : C9 30       ;
-                      BPL CODE_029CC9                     ;; 029CC1 : 10 06       ;
+                      BPL +                               ;; 029CC1 : 10 06       ;
                       CLC                                 ;; 029CC3 : 18          ;
                       ADC.B #$02                          ;; 029CC4 : 69 02       ;
                       STA.W !ExtSpriteYSpeed,X            ;; 029CC6 : 9D 3D 17    ;
-CODE_029CC9:          LDA.W !ExtSpriteNumber,X            ;; 029CC9 : BD 0B 17    ;
+                    + LDA.W !ExtSpriteNumber,X            ;; 029CC9 : BD 0B 17    ;
                       CMP.B #$0E                          ;; 029CCC : C9 0E       ;
                       BNE ADDR_029CE3                     ;; 029CCE : D0 13       ;
                       LDY.B #$08                          ;; 029CD0 : A0 08       ;
                       LDA.B !EffFrame                     ;; 029CD2 : A5 14       ;
                       AND.B #$08                          ;; 029CD4 : 29 08       ;
-                      BEQ CODE_029CDA                     ;; 029CD6 : F0 02       ;
+                      BEQ +                               ;; 029CD6 : F0 02       ;
                       LDY.B #$F8                          ;; 029CD8 : A0 F8       ;
-CODE_029CDA:          TYA                                 ;; 029CDA : 98          ;
+                    + TYA                                 ;; 029CDA : 98          ;
                       STA.W !ExtSpriteXSpeed,X            ;; 029CDB : 9D 47 17    ;
                       JSR CODE_02B554                     ;; 029CDE : 20 54 B5    ;
                       BRA CODE_029CF8                     ;; 029CE1 : 80 15       ;
                                                           ;;                      ;
 ADDR_029CE3:          LDA.W !ExtSpriteMisc1765,X          ;; 029CE3 : BD 65 17    ;
-                      BNE ADDR_029CF5                     ;; 029CE6 : D0 0D       ;
+                      BNE +                               ;; 029CE6 : D0 0D       ;
                       JSR CODE_02A56E                     ;; 029CE8 : 20 6E A5    ;
-                      BCC ADDR_029CF5                     ;; 029CEB : 90 08       ;
+                      BCC +                               ;; 029CEB : 90 08       ;
                       LDA.B #$D0                          ;; 029CED : A9 D0       ;
                       STA.W !ExtSpriteYSpeed,X            ;; 029CEF : 9D 3D 17    ;
                       INC.W !ExtSpriteMisc1765,X          ;; 029CF2 : FE 65 17    ;
-ADDR_029CF5:          JSR CODE_02A3F6                     ;; 029CF5 : 20 F6 A3    ;
+                    + JSR CODE_02A3F6                     ;; 029CF5 : 20 F6 A3    ;
 CODE_029CF8:          LDA.W !ExtSpriteYPosLow,X           ;; 029CF8 : BD 15 17    ;
                       SEC                                 ;; 029CFB : 38          ;
                       SBC.B !Layer1YPos                   ;; 029CFC : E5 1C       ;
@@ -3525,7 +3525,7 @@ CODE_029CF8:          LDA.W !ExtSpriteYPosLow,X           ;; 029CF8 : BD 15 17  
                       STA.W !OAMTileXPos,Y                ;; 029D1D : 99 00 02    ;
                       LDA.W !ExtSpriteNumber,X            ;; 029D20 : BD 0B 17    ;
                       CMP.B #$0E                          ;; 029D23 : C9 0E       ;
-                      BNE ADDR_029D45                     ;; 029D25 : D0 1E       ;
+                      BNE +                               ;; 029D25 : D0 1E       ;
                       LDA.B !_1                           ;; 029D27 : A5 01       ;
                       SEC                                 ;; 029D29 : 38          ;
                       SBC.B #$05                          ;; 029D2A : E9 05       ;
@@ -3543,7 +3543,7 @@ CODE_029D36:          ORA.B !SpriteProperties             ;; 029D36 : 05 64     
                       STA.W !OAMTileSize,Y                ;; 029D41 : 99 20 04    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-ADDR_029D45:          LDA.B !_1                           ;; 029D45 : A5 01       ;
+                    + LDA.B !_1                           ;; 029D45 : A5 01       ;
                       STA.W !OAMTileYPos,Y                ;; 029D47 : 99 01 02    ;
                       LDA.B #$C2                          ;; 029D4A : A9 C2       ;
                       STA.W !OAMTileNo,Y                  ;; 029D4C : 99 02 02    ;
@@ -3572,16 +3572,16 @@ UnusedExSprGfxProp:   db $69,$29,$29                      ;; ?QPWZ?             
                                                           ;;                      ;
 UnusedExSprTileSize:  db $00,$00,$02,$02                  ;; ?QPWZ?               ;
                                                           ;;                      ;
-ADDR_029D99:          STZ.W !ExtSpriteNumber,X            ;; 029D99 : 9E 0B 17    ; Clear extended sprite 
+                    - STZ.W !ExtSpriteNumber,X            ;; 029D99 : 9E 0B 17    ; Clear extended sprite 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 UnusedExtendedSpr:    JSR CODE_02A3F6                     ;; ?QPWZ? : 20 F6 A3    ;
                       LDY.W !ExtSpriteXSpeed,X            ;; 029DA0 : BC 47 17    ;
                       LDA.W !SpriteStatus,Y               ;; 029DA3 : B9 C8 14    ;
                       CMP.B #$08                          ;; 029DA6 : C9 08       ;
-                      BNE ADDR_029D99                     ;; 029DA8 : D0 EF       ;
+                      BNE -                               ;; 029DA8 : D0 EF       ;
                       LDA.W !ExtSpriteMisc176F,X          ;; 029DAA : BD 6F 17    ;
-                      BEQ ADDR_029D99                     ;; 029DAD : F0 EA       ;
+                      BEQ -                               ;; 029DAD : F0 EA       ;
                       LSR A                               ;; 029DAF : 4A          ;
                       LSR A                               ;; 029DB0 : 4A          ;
                       NOP                                 ;; 029DB1 : EA          ;
@@ -3640,7 +3640,7 @@ UnusedExtendedSpr:    JSR CODE_02A3F6                     ;; ?QPWZ? : 20 F6 A3  
                       CLC                                 ;; 029E1C : 18          ;
                       ADC.B #$04                          ;; 029E1D : 69 04       ;
                       CMP.B #$08                          ;; 029E1F : C9 08       ;
-                      BCS Return029E35                    ;; 029E21 : B0 12       ;
+                      BCS +                               ;; 029E21 : B0 12       ;
                       LDA.B !_1                           ;; 029E23 : A5 01       ;
                       SEC                                 ;; 029E25 : 38          ;
                       SBC.B !PlayerYPosScrRel             ;; 029E26 : E5 80       ;
@@ -3649,10 +3649,10 @@ UnusedExtendedSpr:    JSR CODE_02A3F6                     ;; ?QPWZ? : 20 F6 A3  
                       CLC                                 ;; 029E2B : 18          ;
                       ADC.B #$10                          ;; 029E2C : 69 10       ;
                       CMP.B #$10                          ;; 029E2E : C9 10       ;
-                      BCS Return029E35                    ;; 029E30 : B0 03       ;
+                      BCS +                               ;; 029E30 : B0 03       ;
                       JMP CODE_02A469                     ;; 029E32 : 4C 69 A4    ;
                                                           ;;                      ;
-Return029E35:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_029E36:          db $08,$00,$F8                      ;; 029E36               ;
@@ -3664,25 +3664,25 @@ LauncherArm:          LDY.B #$00                          ;; ?QPWZ? : A0 00     
                       LDA.W !ExtSpriteMisc176F,X          ;; 029E3F : BD 6F 17    ;
                       BEQ CODE_029E39                     ;; 029E42 : F0 F5       ;
                       CMP.B #$60                          ;; 029E44 : C9 60       ;
-                      BCS CODE_029E4E                     ;; 029E46 : B0 06       ;
+                      BCS +                               ;; 029E46 : B0 06       ;
                       INY                                 ;; 029E48 : C8          ;
                       CMP.B #$30                          ;; 029E49 : C9 30       ;
-                      BCS CODE_029E4E                     ;; 029E4B : B0 01       ;
+                      BCS +                               ;; 029E4B : B0 01       ;
                       INY                                 ;; 029E4D : C8          ;
-CODE_029E4E:          PHY                                 ;; 029E4E : 5A          ;
+                    + PHY                                 ;; 029E4E : 5A          ;
                       LDA.B !SpriteLock                   ;; 029E4F : A5 9D       ;
-                      BNE CODE_029E5C                     ;; 029E51 : D0 09       ;
+                      BNE +                               ;; 029E51 : D0 09       ;
                       LDA.W DATA_029E36,Y                 ;; 029E53 : B9 36 9E    ;
                       STA.W !ExtSpriteYSpeed,X            ;; 029E56 : 9D 3D 17    ;
                       JSR CODE_02B560                     ;; 029E59 : 20 60 B5    ;
-CODE_029E5C:          JSR CODE_02A1A4                     ;; 029E5C : 20 A4 A1    ;
+                    + JSR CODE_02A1A4                     ;; 029E5C : 20 A4 A1    ;
                       LDY.W DATA_02A153,X                 ;; 029E5F : BC 53 A1    ;
                       PLA                                 ;; 029E62 : 68          ;
                       CMP.B #$01                          ;; 029E63 : C9 01       ;
                       LDA.B #$84                          ;; 029E65 : A9 84       ;
-                      BCC CODE_029E6B                     ;; 029E67 : 90 02       ;
+                      BCC +                               ;; 029E67 : 90 02       ;
                       LDA.B #$A4                          ;; 029E69 : A9 A4       ;
-CODE_029E6B:          STA.W !OAMTileNo,Y                  ;; 029E6B : 99 02 02    ;
+                    + STA.W !OAMTileNo,Y                  ;; 029E6B : 99 02 02    ;
                       LDA.W !OAMTileAttr,Y                ;; 029E6E : B9 03 02    ;
                       AND.B #$00                          ;; 029E71 : 29 00       ;
                       ORA.B #$13                          ;; 029E73 : 09 13       ;
@@ -3707,7 +3707,7 @@ LavaSplash:           LDA.B !SpriteLock                   ;; ?QPWZ? : A5 9D     
                       ADC.B #$02                          ;; 029E94 : 69 02       ;
                       STA.W !ExtSpriteYSpeed,X            ;; 029E96 : 9D 3D 17    ;
                       CMP.B #$30                          ;; 029E99 : C9 30       ;
-                      BPL CODE_029EE6                     ;; 029E9B : 10 49       ;
+                      BPL +                               ;; 029E9B : 10 49       ;
 CODE_029E9D:          LDY.W DATA_02A153,X                 ;; 029E9D : BC 53 A1    ;
                       LDA.W !ExtSpriteXPosLow,X           ;; 029EA0 : BD 1F 17    ;
                       SEC                                 ;; 029EA3 : 38          ;
@@ -3715,14 +3715,14 @@ CODE_029E9D:          LDY.W DATA_02A153,X                 ;; 029E9D : BC 53 A1  
                       STA.B !_0                           ;; 029EA6 : 85 00       ;
                       LDA.W !ExtSpriteXPosHigh,X          ;; 029EA8 : BD 33 17    ;
                       SBC.B !Layer1XPos+1                 ;; 029EAB : E5 1B       ;
-                      BNE CODE_029EE6                     ;; 029EAD : D0 37       ;
+                      BNE +                               ;; 029EAD : D0 37       ;
                       LDA.B !_0                           ;; 029EAF : A5 00       ;
                       STA.W !OAMTileXPos,Y                ;; 029EB1 : 99 00 02    ;
                       LDA.W !ExtSpriteYPosLow,X           ;; 029EB4 : BD 15 17    ;
                       SEC                                 ;; 029EB7 : 38          ;
                       SBC.B !Layer1YPos                   ;; 029EB8 : E5 1C       ;
                       CMP.B #$F0                          ;; 029EBA : C9 F0       ;
-                      BCS CODE_029EE6                     ;; 029EBC : B0 28       ;
+                      BCS +                               ;; 029EBC : B0 28       ;
                       STA.W !OAMTileYPos,Y                ;; 029EBE : 99 01 02    ;
                       LDA.W !ExtSpriteMisc176F,X          ;; 029EC1 : BD 6F 17    ;
                       LSR A                               ;; 029EC4 : 4A          ;
@@ -3746,7 +3746,7 @@ CODE_029E9D:          LDY.W DATA_02A153,X                 ;; 029E9D : BC 53 A1  
                       LDX.W !CurSpriteProcess             ;; 029EE2 : AE E9 15    ; X = Sprite index 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_029EE6:          STZ.W !ExtSpriteNumber,X            ;; 029EE6 : 9E 0B 17    ; Clear extended sprite 
+                    + STZ.W !ExtSpriteNumber,X            ;; 029EE6 : 9E 0B 17    ; Clear extended sprite 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -3757,13 +3757,13 @@ WaterBubble:          LDA.B !SpriteLock                   ;; ?QPWZ? : A5 9D     
                       INC.W !ExtSpriteMisc1765,X          ;; 029EF2 : FE 65 17    ;
                       LDA.W !ExtSpriteMisc1765,X          ;; 029EF5 : BD 65 17    ;
                       AND.B #$30                          ;; 029EF8 : 29 30       ;
-                      BEQ CODE_029F08                     ;; 029EFA : F0 0C       ;
+                      BEQ +                               ;; 029EFA : F0 0C       ;
                       DEC.W !ExtSpriteYPosLow,X           ;; 029EFC : DE 15 17    ;
                       LDY.W !ExtSpriteYPosLow,X           ;; 029EFF : BC 15 17    ;
                       INY                                 ;; 029F02 : C8          ;
-                      BNE CODE_029F08                     ;; 029F03 : D0 03       ;
+                      BNE +                               ;; 029F03 : D0 03       ;
                       DEC.W !ExtSpriteYPosHigh,X          ;; 029F05 : DE 29 17    ;
-CODE_029F08:          TXA                                 ;; 029F08 : 8A          ;
+                    + TXA                                 ;; 029F08 : 8A          ;
                       EOR.B !TrueFrame                    ;; 029F09 : 45 13       ;
                       LSR A                               ;; 029F0B : 4A          ;
                       BCS CODE_029F2A                     ;; 029F0C : B0 1C       ;
@@ -3808,20 +3808,20 @@ CODE_029F2A:          LDA.W !ExtSpriteYPosLow,X           ;; 029F2A : BD 15 17  
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 YoshiFireball:        LDA.B !SpriteLock                   ;; ?QPWZ? : A5 9D       ;
-                      BNE CODE_029F6E                     ;; 029F63 : D0 09       ;
+                      BNE +                               ;; 029F63 : D0 09       ;
                       JSR CODE_02B554                     ;; 029F65 : 20 54 B5    ;
                       JSR CODE_02B560                     ;; 029F68 : 20 60 B5    ;
                       JSR ProcessFireball                 ;; 029F6B : 20 AC A0    ;
-CODE_029F6E:          JSR CODE_02A1A4                     ;; 029F6E : 20 A4 A1    ;
+                    + JSR CODE_02A1A4                     ;; 029F6E : 20 A4 A1    ;
                       LDA.B !EffFrame                     ;; 029F71 : A5 14       ;
                       LSR A                               ;; 029F73 : 4A          ;
                       LSR A                               ;; 029F74 : 4A          ;
                       LSR A                               ;; 029F75 : 4A          ;
                       LDY.W DATA_02A153,X                 ;; 029F76 : BC 53 A1    ;
                       LDA.B #$04                          ;; 029F79 : A9 04       ;
-                      BCC CODE_029F7F                     ;; 029F7B : 90 02       ;
+                      BCC +                               ;; 029F7B : 90 02       ;
                       LDA.B #$2B                          ;; 029F7D : A9 2B       ;
-CODE_029F7F:          STA.W !OAMTileNo,Y                  ;; 029F7F : 99 02 02    ;
+                    + STA.W !OAMTileNo,Y                  ;; 029F7F : 99 02 02    ;
                       LDA.W !ExtSpriteXSpeed,X            ;; 029F82 : BD 47 17    ;
                       AND.B #$80                          ;; 029F85 : 29 80       ;
                       EOR.B #$80                          ;; 029F87 : 49 80       ;
@@ -3853,31 +3853,31 @@ MarioFireball:        LDA.B !SpriteLock                   ;; ?QPWZ? : A5 9D     
                       CMP.B !Layer1YPos                   ;; 029FB6 : C5 1C       ;
                       LDA.W !ExtSpriteYPosHigh,X          ;; 029FB8 : BD 29 17    ;
                       SBC.B !Layer1YPos+1                 ;; 029FBB : E5 1D       ;
-                      BEQ CODE_029FC2                     ;; 029FBD : F0 03       ;
+                      BEQ +                               ;; 029FBD : F0 03       ;
                       JMP CODE_02A211                     ;; 029FBF : 4C 11 A2    ;
                                                           ;;                      ;
-CODE_029FC2:          INC.W !ExtSpriteMisc1765,X          ;; 029FC2 : FE 65 17    ;
+                    + INC.W !ExtSpriteMisc1765,X          ;; 029FC2 : FE 65 17    ;
                       JSR ProcessFireball                 ;; 029FC5 : 20 AC A0    ;
                       LDA.W !ExtSpriteYSpeed,X            ;; 029FC8 : BD 3D 17    ;
                       CMP.B #$30                          ;; 029FCB : C9 30       ;
-                      BPL CODE_029FD8                     ;; 029FCD : 10 09       ;
+                      BPL +                               ;; 029FCD : 10 09       ;
                       LDA.W !ExtSpriteYSpeed,X            ;; 029FCF : BD 3D 17    ;
                       CLC                                 ;; 029FD2 : 18          ;
                       ADC.B #$04                          ;; 029FD3 : 69 04       ;
                       STA.W !ExtSpriteYSpeed,X            ;; 029FD5 : 9D 3D 17    ;
-CODE_029FD8:          JSR CODE_02A56E                     ;; 029FD8 : 20 6E A5    ;
+                    + JSR CODE_02A56E                     ;; 029FD8 : 20 6E A5    ;
                       BCC CODE_02A010                     ;; 029FDB : 90 33       ;
                       INC.W !ExtSpriteXPosSpx,X           ;; 029FDD : FE 5B 17    ;
                       LDA.W !ExtSpriteXPosSpx,X           ;; 029FE0 : BD 5B 17    ;
                       CMP.B #$02                          ;; 029FE3 : C9 02       ;
                       BCS CODE_02A042                     ;; 029FE5 : B0 5B       ;
                       LDA.W !ExtSpriteXSpeed,X            ;; 029FE7 : BD 47 17    ;
-                      BPL CODE_029FF3                     ;; 029FEA : 10 07       ;
+                      BPL +                               ;; 029FEA : 10 07       ;
                       LDA.B !_B                           ;; 029FEC : A5 0B       ;
                       EOR.B #$FF                          ;; 029FEE : 49 FF       ;
                       INC A                               ;; 029FF0 : 1A          ;
                       STA.B !_B                           ;; 029FF1 : 85 0B       ;
-CODE_029FF3:          LDA.B !_B                           ;; 029FF3 : A5 0B       ;
+                    + LDA.B !_B                           ;; 029FF3 : A5 0B       ;
                       CLC                                 ;; 029FF5 : 18          ;
                       ADC.B #$04                          ;; 029FF6 : 69 04       ;
                       TAY                                 ;; 029FF8 : A8          ;
@@ -3887,16 +3887,16 @@ CODE_029FF3:          LDA.B !_B                           ;; 029FF3 : A5 0B     
                       SEC                                 ;; 02A002 : 38          ;
                       SBC.W DATA_029FA2,Y                 ;; 02A003 : F9 A2 9F    ;
                       STA.W !ExtSpriteYPosLow,X           ;; 02A006 : 9D 15 17    ;
-                      BCS CODE_02A00E                     ;; 02A009 : B0 03       ;
+                      BCS +                               ;; 02A009 : B0 03       ;
                       DEC.W !ExtSpriteYPosHigh,X          ;; 02A00B : DE 29 17    ;
-CODE_02A00E:          BRA CODE_02A013                     ;; 02A00E : 80 03       ;
+                    + BRA +                               ;; 02A00E : 80 03       ;
                                                           ;;                      ;
 CODE_02A010:          STZ.W !ExtSpriteXPosSpx,X           ;; 02A010 : 9E 5B 17    ;
-CODE_02A013:          LDY.B #$00                          ;; 02A013 : A0 00       ;
+                    + LDY.B #$00                          ;; 02A013 : A0 00       ;
                       LDA.W !ExtSpriteXSpeed,X            ;; 02A015 : BD 47 17    ;
-                      BPL CODE_02A01B                     ;; 02A018 : 10 01       ;
+                      BPL +                               ;; 02A018 : 10 01       ;
                       DEY                                 ;; 02A01A : 88          ;
-CODE_02A01B:          CLC                                 ;; 02A01B : 18          ;
+                    + CLC                                 ;; 02A01B : 18          ;
                       ADC.W !ExtSpriteXPosLow,X           ;; 02A01C : 7D 1F 17    ;
                       STA.W !ExtSpriteXPosLow,X           ;; 02A01F : 9D 1F 17    ;
                       TYA                                 ;; 02A022 : 98          ;
@@ -3909,7 +3909,7 @@ CODE_02A02C:          LDA.B !SpriteNumber+7               ;; 02A02C : A5 A5     
                       LDA.W !IRQNMICommand                ;; 02A032 : AD 9B 0D    ;
                       BPL CODE_02A03B                     ;; 02A035 : 10 04       ;
                       AND.B #$40                          ;; 02A037 : 29 40       ;
-                      BNE ADDR_02A04F                     ;; 02A039 : D0 14       ;
+                      BNE +                               ;; 02A039 : D0 14       ;
 CODE_02A03B:          LDY.W DATA_029FA3,X                 ;; 02A03B : BC A3 9F    ;
                       JSR CODE_02A1A7                     ;; 02A03E : 20 A7 A1    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -3920,7 +3920,7 @@ CODE_02A045:          LDA.B #$01                          ;; 02A045 : A9 01     
                       LDA.B #$0F                          ;; 02A04A : A9 0F       ;
                       JMP CODE_02A4E0                     ;; 02A04C : 4C E0 A4    ;
                                                           ;;                      ;
-ADDR_02A04F:          LDY.W DATA_029FA5,X                 ;; 02A04F : BC A5 9F    ;
+                    + LDY.W DATA_029FA5,X                 ;; 02A04F : BC A5 9F    ;
                       LDA.W !ExtSpriteXSpeed,X            ;; 02A052 : BD 47 17    ;
                       AND.B #$80                          ;; 02A055 : 29 80       ;
                       LSR A                               ;; 02A057 : 4A          ;
@@ -3951,25 +3951,25 @@ ADDR_02A04F:          LDY.W DATA_029FA5,X                 ;; 02A04F : BC A5 9F  
                       ORA.B !SpriteProperties             ;; 02A08C : 05 64       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02A08E : 99 03 03    ;
                       LDX.B !_1                           ;; 02A091 : A6 01       ;
-                      BEQ ADDR_02A09C                     ;; 02A093 : F0 07       ;
+                      BEQ +                               ;; 02A093 : F0 07       ;
                       AND.B #$CF                          ;; 02A095 : 29 CF       ;
                       ORA.B #$10                          ;; 02A097 : 09 10       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02A099 : 99 03 03    ;
-ADDR_02A09C:          TYA                                 ;; 02A09C : 98          ;
+                    + TYA                                 ;; 02A09C : 98          ;
                       LSR A                               ;; 02A09D : 4A          ;
                       LSR A                               ;; 02A09E : 4A          ;
                       TAY                                 ;; 02A09F : A8          ;
                       LDA.B #$00                          ;; 02A0A0 : A9 00       ;
                       STA.W !OAMTileSize+$40,Y            ;; 02A0A2 : 99 60 04    ;
                       LDX.W !CurSpriteProcess             ;; 02A0A5 : AE E9 15    ; X = Sprite index 
-Return02A0A8:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    - RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 ADDR_02A0A9:          JMP CODE_02A211                     ;; 02A0A9 : 4C 11 A2    ;
                                                           ;;                      ;
 ProcessFireball:      TXA                                 ;; ?QPWZ? : 8A          ; \ Return every other frame 
                       EOR.B !TrueFrame                    ;; 02A0AD : 45 13       ;  | 
                       AND.B #$03                          ;; 02A0AF : 29 03       ;  | 
-                      BNE Return02A0A8                    ;; 02A0B1 : D0 F5       ; / 
+                      BNE -                               ;; 02A0B1 : D0 F5       ; / 
                       PHX                                 ;; 02A0B3 : DA          ;
                       TXY                                 ;; 02A0B4 : 9B          ;
                       STY.W !TileGenerateTrackA           ;; 02A0B5 : 8C 5E 18    ; $185E = Y = Extended sprite index 
@@ -3990,12 +3990,12 @@ FireRtLoopStart:      STX.W !CurSpriteProcess             ;; ?QPWZ? : 8E E9 15  
                       BCC FireRtNextSprite                ;; 02A0DF : 90 62       ;
                       LDA.W !ExtSpriteNumber,Y            ;; 02A0E1 : B9 0B 17    ; \ if Yoshi fireball... 
                       CMP.B #$11                          ;; 02A0E4 : C9 11       ;  | 
-                      BEQ CODE_02A0EE                     ;; 02A0E6 : F0 06       ;  | 
+                      BEQ +                               ;; 02A0E6 : F0 06       ;  | 
                       PHX                                 ;; 02A0E8 : DA          ;  | 
                       TYX                                 ;; 02A0E9 : BB          ;  | 
                       JSR CODE_02A045                     ;; 02A0EA : 20 45 A0    ;  | ...? 
                       PLX                                 ;; 02A0ED : FA          ; / 
-CODE_02A0EE:          LDA.W !SpriteTweakerC,X             ;; 02A0EE : BD 6E 16    ; \ Skip sprite if fire killing is disabled 
+                    + LDA.W !SpriteTweakerC,X             ;; 02A0EE : BD 6E 16    ; \ Skip sprite if fire killing is disabled 
                       AND.B #$10                          ;; 02A0F1 : 29 10       ;  | 
                       BNE FireRtNextSprite                ;; 02A0F3 : D0 4E       ; / 
                       LDA.W !SpriteTweakerF,X             ;; 02A0F5 : BD 0F 19    ; \ Branch if takes 1 fireball to kill 
@@ -4033,10 +4033,10 @@ TurnSpriteToCoin:     LDA.B #$03                          ;; ?QPWZ? : A9 03     
                       STA.W !SpriteMisc157C,X             ;; 02A140 : 9D 7C 15    ; / 
 FireRtNextSprite:     LDY.W !TileGenerateTrackA           ;; ?QPWZ? : AC 5E 18    ;
                       DEX                                 ;; 02A146 : CA          ;
-                      BMI CODE_02A14C                     ;; 02A147 : 30 03       ;
+                      BMI +                               ;; 02A147 : 30 03       ;
                       JMP FireRtLoopStart                 ;; 02A149 : 4C BA A0    ;
                                                           ;;                      ;
-CODE_02A14C:          PLX                                 ;; 02A14C : FA          ; $15E9 = Sprite index 
+                    + PLX                                 ;; 02A14C : FA          ; $15E9 = Sprite index 
                       STX.W !CurSpriteProcess             ;; 02A14D : 8E E9 15    ; $15E9 = Sprite index 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -4121,11 +4121,11 @@ CODE_02A1A7:          LDA.W !ExtSpriteXSpeed,X            ;; 02A1A7 : BD 47 17  
                       ORA.B !SpriteProperties             ;; 02A1F4 : 05 64       ;
                       STA.W !OAMTileAttr,Y                ;; 02A1F6 : 99 03 02    ;
                       LDX.B !_1                           ;; 02A1F9 : A6 01       ;
-                      BEQ CODE_02A204                     ;; 02A1FB : F0 07       ;
+                      BEQ +                               ;; 02A1FB : F0 07       ;
                       AND.B #$CF                          ;; 02A1FD : 29 CF       ;
                       ORA.B #$10                          ;; 02A1FF : 09 10       ;
                       STA.W !OAMTileAttr,Y                ;; 02A201 : 99 03 02    ;
-CODE_02A204:          TYA                                 ;; 02A204 : 98          ;
+                    + TYA                                 ;; 02A204 : 98          ;
                       LSR A                               ;; 02A205 : 4A          ;
                       LSR A                               ;; 02A206 : 4A          ;
                       TAY                                 ;; 02A207 : A8          ;
@@ -4150,9 +4150,9 @@ FlameRemnant:         LDA.B !SpriteLock                   ;; ?QPWZ? : A5 9D     
                       BCS CODE_02A22F                     ;; 02A227 : B0 06       ;
                       AND.B #$01                          ;; 02A229 : 29 01       ;
                       BNE Return02A253                    ;; 02A22B : D0 26       ;
-                      BEQ CODE_02A232                     ;; 02A22D : F0 03       ;
+                      BEQ +                               ;; 02A22D : F0 03       ;
 CODE_02A22F:          JSR CODE_02A3F6                     ;; 02A22F : 20 F6 A3    ;
-CODE_02A232:          JSR CODE_02A1A4                     ;; 02A232 : 20 A4 A1    ;
+                    + JSR CODE_02A1A4                     ;; 02A232 : 20 A4 A1    ;
                       LDY.W DATA_02A153,X                 ;; 02A235 : BC 53 A1    ;
                       LDA.W !ExtSpriteMisc1765,X          ;; 02A238 : BD 65 17    ;
                       LSR A                               ;; 02A23B : 4A          ;
@@ -4174,9 +4174,9 @@ Baseball:             LDA.B !SpriteLock                   ;; ?QPWZ? : A5 9D     
                       INC.W !ExtSpriteMisc1765,X          ;; 02A25B : FE 65 17    ;
                       LDA.B !TrueFrame                    ;; 02A25E : A5 13       ;
                       AND.B #$01                          ;; 02A260 : 29 01       ;
-                      BNE CODE_02A267                     ;; 02A262 : D0 03       ;
+                      BNE +                               ;; 02A262 : D0 03       ;
                       INC.W !ExtSpriteMisc1765,X          ;; 02A264 : FE 65 17    ;
-CODE_02A267:          JSR CODE_02A3F6                     ;; 02A267 : 20 F6 A3    ;
+                    + JSR CODE_02A3F6                     ;; 02A267 : 20 F6 A3    ;
 CODE_02A26A:          LDA.W !ExtSpriteNumber,X            ;; 02A26A : BD 0B 17    ;
                       CMP.B #$0D                          ;; 02A26D : C9 0D       ;
                       BNE CODE_02A2C3                     ;; 02A26F : D0 52       ;
@@ -4227,9 +4227,9 @@ CODE_02A2C3:          JSR CODE_02A317                     ;; 02A2C3 : 20 17 A3  
                       LDA.W !OAMTileNo,Y                  ;; 02A2C6 : B9 02 02    ;
                       CMP.B #$26                          ;; 02A2C9 : C9 26       ;
                       LDA.B #$80                          ;; 02A2CB : A9 80       ;
-                      BCS CODE_02A2D1                     ;; 02A2CD : B0 02       ;
+                      BCS +                               ;; 02A2CD : B0 02       ;
                       LDA.B #$82                          ;; 02A2CF : A9 82       ;
-CODE_02A2D1:          STA.W !OAMTileNo,Y                  ;; 02A2D1 : 99 02 02    ;
+                    + STA.W !OAMTileNo,Y                  ;; 02A2D1 : 99 02 02    ;
                       LDA.W !OAMTileAttr,Y                ;; 02A2D4 : B9 03 02    ;
                       AND.B #$F1                          ;; 02A2D7 : 29 F1       ;
                       ORA.B #$02                          ;; 02A2D9 : 09 02       ;
@@ -4246,10 +4246,10 @@ Hammer:               LDA.B !SpriteLock                   ;; ?QPWZ? : A5 9D     
                       JSR CODE_02B560                     ;; 02A2F6 : 20 60 B5    ;
                       LDA.W !ExtSpriteYSpeed,X            ;; 02A2F9 : BD 3D 17    ;
                       CMP.B #$40                          ;; 02A2FC : C9 40       ;
-                      BPL CODE_02A306                     ;; 02A2FE : 10 06       ;
+                      BPL +                               ;; 02A2FE : 10 06       ;
                       INC.W !ExtSpriteYSpeed,X            ;; 02A300 : FE 3D 17    ;
                       INC.W !ExtSpriteYSpeed,X            ;; 02A303 : FE 3D 17    ;
-CODE_02A306:          JSR CODE_02A3F6                     ;; 02A306 : 20 F6 A3    ;
+                    + JSR CODE_02A3F6                     ;; 02A306 : 20 F6 A3    ;
                       INC.W !ExtSpriteMisc1765,X          ;; 02A309 : FE 65 17    ;
 CODE_02A30C:          LDA.W !ExtSpriteNumber,X            ;; 02A30C : BD 0B 17    ;
                       CMP.B #$0B                          ;; 02A30F : C9 0B       ;
@@ -4282,7 +4282,7 @@ CODE_02A317:          JSR CODE_02A1A4                     ;; 02A317 : 20 A4 A1  
                       PLX                                 ;; 02A342 : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02A344:          JMP CODE_02A211                     ;; 02A344 : 4C 11 A2    ;
+                    - JMP CODE_02A211                     ;; 02A344 : 4C 11 A2    ;
                                                           ;;                      ;
                                                           ;;                      ;
 DustCloudTiles:       db $66,$64,$60,$62                  ;; ?QPWZ?               ;
@@ -4290,7 +4290,7 @@ DustCloudTiles:       db $66,$64,$60,$62                  ;; ?QPWZ?             
 DATA_02A34B:          db $00,$40,$C0,$80                  ;; 02A34B               ;
                                                           ;;                      ;
 SmokePuff:            LDA.W !ExtSpriteMisc176F,X          ;; ?QPWZ? : BD 6F 17    ;
-                      BEQ CODE_02A344                     ;; 02A352 : F0 F0       ;
+                      BEQ -                               ;; 02A352 : F0 F0       ;
                       LDA.W !ReznorOAMIndex               ;; 02A354 : AD 0F 14    ;
                       BNE CODE_02A362                     ;; 02A357 : D0 09       ;
                       LDA.W !IRQNMICommand                ;; 02A359 : AD 9B 0D    ;
@@ -4299,9 +4299,9 @@ SmokePuff:            LDA.W !ExtSpriteMisc176F,X          ;; ?QPWZ? : BD 6F 17  
                       BNE ADDR_02A3B1                     ;; 02A360 : D0 4F       ;
 CODE_02A362:          LDY.W DATA_02A153,X                 ;; 02A362 : BC 53 A1    ;
                       CPX.B #$08                          ;; 02A365 : E0 08       ;
-                      BCC CODE_02A36C                     ;; 02A367 : 90 03       ;
+                      BCC +                               ;; 02A367 : 90 03       ;
                       LDY.W DATA_029FA3,X                 ;; 02A369 : BC A3 9F    ;
-CODE_02A36C:          LDA.W !ExtSpriteXPosLow,X           ;; 02A36C : BD 1F 17    ;
+                    + LDA.W !ExtSpriteXPosLow,X           ;; 02A36C : BD 1F 17    ;
                       SEC                                 ;; 02A36F : 38          ;
                       SBC.B !Layer1XPos                   ;; 02A370 : E5 1A       ;
                       CMP.B #$F8                          ;; 02A372 : C9 F8       ;
@@ -4421,7 +4421,7 @@ Return02A468:         RTS                                 ;; ?QPWZ? : 60        
 CODE_02A469:          LDA.W !InvinsibilityTimer           ;; 02A469 : AD 90 14    ; \ Branch if Mario has star 
                       BNE CODE_02A4B5                     ;; 02A46C : D0 47       ; / 
                       LDA.W !PlayerRidingYoshi            ;; 02A46E : AD 7A 18    ;
-                      BEQ CODE_02A4AE                     ;; 02A471 : F0 3B       ;
+                      BEQ +                               ;; 02A471 : F0 3B       ;
 CODE_02A473:          PHX                                 ;; 02A473 : DA          ;
                       LDX.W !CurrentYoshiSlot             ;; 02A474 : AE DF 18    ;
                       LDA.B #$10                          ;; 02A477 : A9 10       ;
@@ -4448,7 +4448,7 @@ CODE_02A473:          PHX                                 ;; 02A473 : DA        
                       PLX                                 ;; 02A4AC : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02A4AE:          JSL HurtMario                       ;; 02A4AE : 22 B7 F5 00 ;
+                    + JSL HurtMario                       ;; 02A4AE : 22 B7 F5 00 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -4571,7 +4571,7 @@ CODE_02A5BC:          JSR CODE_02A611                     ;; 02A5BC : 20 11 A6  
                       LDA.W !Map16TileNumber              ;; 02A5C1 : AD 93 16    ;
                       STA.B !_C                           ;; 02A5C4 : 85 0C       ;
                       LDA.B !ScreenMode                   ;; 02A5C6 : A5 5B       ;
-                      BPL CODE_02A60C                     ;; 02A5C8 : 10 42       ;
+                      BPL +                               ;; 02A5C8 : 10 42       ;
                       INC.B !_F                           ;; 02A5CA : E6 0F       ;
                       LDA.W !ExtSpriteXPosLow,X           ;; 02A5CC : BD 1F 17    ;
                       PHA                                 ;; 02A5CF : 48          ;
@@ -4603,7 +4603,7 @@ CODE_02A5BC:          JSR CODE_02A611                     ;; 02A5BC : 20 11 A6  
                       STA.W !ExtSpriteXPosHigh,X          ;; 02A605 : 9D 33 17    ;
                       PLA                                 ;; 02A608 : 68          ;
                       STA.W !ExtSpriteXPosLow,X           ;; 02A609 : 9D 1F 17    ;
-CODE_02A60C:          LDA.B !_E                           ;; 02A60C : A5 0E       ;
+                    + LDA.B !_E                           ;; 02A60C : A5 0E       ;
                       CMP.B #$01                          ;; 02A60E : C9 01       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -4644,16 +4644,16 @@ CODE_02A611:          LDA.B !_F                           ;; 02A611 : A5 0F     
                       LDX.B !_3                           ;; 02A652 : A6 03       ;
                       LDA.L DATA_00BA80,X                 ;; 02A654 : BF 80 BA 00 ;
                       LDY.B !_F                           ;; 02A658 : A4 0F       ;
-                      BEQ CODE_02A660                     ;; 02A65A : F0 04       ;
+                      BEQ +                               ;; 02A65A : F0 04       ;
                       LDA.L DATA_00BA8E,X                 ;; 02A65C : BF 8E BA 00 ;
-CODE_02A660:          CLC                                 ;; 02A660 : 18          ;
+                    + CLC                                 ;; 02A660 : 18          ;
                       ADC.B !_0                           ;; 02A661 : 65 00       ;
                       STA.B !_5                           ;; 02A663 : 85 05       ;
                       LDA.L DATA_00BABC,X                 ;; 02A665 : BF BC BA 00 ;
                       LDY.B !_F                           ;; 02A669 : A4 0F       ;
-                      BEQ CODE_02A671                     ;; 02A66B : F0 04       ;
+                      BEQ +                               ;; 02A66B : F0 04       ;
                       LDA.L DATA_00BACA,X                 ;; 02A66D : BF CA BA 00 ;
-CODE_02A671:          ADC.B !_2                           ;; 02A671 : 65 02       ;
+                    + ADC.B !_2                           ;; 02A671 : 65 02       ;
                       STA.B !_6                           ;; 02A673 : 85 06       ;
                       BRA CODE_02A6DB                     ;; 02A675 : 80 64       ;
                                                           ;;                      ;
@@ -4696,16 +4696,16 @@ CODE_02A679:          LDA.W !ExtSpriteYPosLow,X           ;; 02A679 : BD 15 17  
                       LDX.B !_3                           ;; 02A6B8 : A6 03       ;
                       LDA.L DATA_00BA60,X                 ;; 02A6BA : BF 60 BA 00 ;
                       LDY.B !_F                           ;; 02A6BE : A4 0F       ;
-                      BEQ CODE_02A6C6                     ;; 02A6C0 : F0 04       ;
+                      BEQ +                               ;; 02A6C0 : F0 04       ;
                       LDA.L DATA_00BA70,X                 ;; 02A6C2 : BF 70 BA 00 ;
-CODE_02A6C6:          CLC                                 ;; 02A6C6 : 18          ;
+                    + CLC                                 ;; 02A6C6 : 18          ;
                       ADC.B !_0                           ;; 02A6C7 : 65 00       ;
                       STA.B !_5                           ;; 02A6C9 : 85 05       ;
                       LDA.L DATA_00BA9C,X                 ;; 02A6CB : BF 9C BA 00 ;
                       LDY.B !_F                           ;; 02A6CF : A4 0F       ;
-                      BEQ CODE_02A6D7                     ;; 02A6D1 : F0 04       ;
+                      BEQ +                               ;; 02A6D1 : F0 04       ;
                       LDA.L DATA_00BAAC,X                 ;; 02A6D3 : BF AC BA 00 ;
-CODE_02A6D7:          ADC.B !_2                           ;; 02A6D7 : 65 02       ;
+                    + ADC.B !_2                           ;; 02A6D7 : 65 02       ;
                       STA.B !_6                           ;; 02A6D9 : 85 06       ;
 CODE_02A6DB:          LDA.B #$7E                          ;; 02A6DB : A9 7E       ;
                       STA.B !_7                           ;; 02A6DD : 85 07       ;
@@ -4773,14 +4773,14 @@ CODE_02A751:          PHB                                 ;; 02A751 : 8B        
                       JSR CODE_02ABF2                     ;; 02A754 : 20 F2 AB    ;
                       JSR CODE_02AC5C                     ;; 02A757 : 20 5C AC    ;
                       LDA.W !IRQNMICommand                ;; 02A75A : AD 9B 0D    ;
-                      BMI CODE_02A763                     ;; 02A75D : 30 04       ;
+                      BMI +                               ;; 02A75D : 30 04       ;
                       JSL CODE_01808C                     ;; 02A75F : 22 8C 80 01 ;
-CODE_02A763:          LDA.W !CarryYoshiThruLvls           ;; 02A763 : AD C1 0D    ;
-                      BEQ CODE_02A771                     ;; 02A766 : F0 09       ;
+                    + LDA.W !CarryYoshiThruLvls           ;; 02A763 : AD C1 0D    ;
+                      BEQ +                               ;; 02A766 : F0 09       ;
                       LDA.W !RemoveYoshiFlag              ;; 02A768 : AD 9B 1B    ;
-                      BNE CODE_02A771                     ;; 02A76B : D0 04       ;
+                      BNE +                               ;; 02A76B : D0 04       ;
                       JSL CODE_00FC7A                     ;; 02A76D : 22 7A FC 00 ;
-CODE_02A771:          PLB                                 ;; 02A771 : AB          ;
+                    + PLB                                 ;; 02A771 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -4829,7 +4829,7 @@ CODE_02A802:          LDY.B !Layer1ScrollDir              ;; 02A802 : A4 55     
                       AND.B #$F0                          ;; 02A80F : 29 F0       ;  | 
                       STA.B !_0                           ;; 02A811 : 85 00       ;  | 
                       LDA.B !Layer1YPos+1                 ;; 02A813 : A5 1D       ;  | 
-                      BRA CODE_02A823                     ;; 02A815 : 80 0C       ; / 
+                      BRA +                               ;; 02A815 : 80 0C       ; / 
                                                           ;;                      ;
 CODE_02A817:          LDA.B !Layer1XPos                   ;; 02A817 : A5 1A       ; \ Horizontal level: 
                       CLC                                 ;; 02A819 : 18          ;  | $00,$01 = Screen boundary X + offset 
@@ -4837,7 +4837,7 @@ CODE_02A817:          LDA.B !Layer1XPos                   ;; 02A817 : A5 1A     
                       AND.B #$F0                          ;; 02A81D : 29 F0       ;  | 
                       STA.B !_0                           ;; 02A81F : 85 00       ;  | 
                       LDA.B !Layer1XPos+1                 ;; 02A821 : A5 1B       ;  | 
-CODE_02A823:          ADC.W DATA_02A7F9,Y                 ;; 02A823 : 79 F9 A7    ;  | 
+                    + ADC.W DATA_02A7F9,Y                 ;; 02A823 : 79 F9 A7    ;  | 
                       BMI Return02A84B                    ;; 02A826 : 30 23       ;  | 
                       STA.B !_1                           ;; 02A828 : 85 01       ; / 
                       LDX.B #$00                          ;; 02A82A : A2 00       ; X = #$00 (Number of sprite in level) 
@@ -4880,7 +4880,7 @@ CODE_02A84C:          BNE Return02A84B                    ;; 02A84C : D0 FD     
                       BCC CODE_02A88C                     ;; 02A868 : 90 22       ; / 
                       LDA.W !Layer1ScrollCmd              ;; ?QPWZ? : AD 3E 14    ;
                       ORA.W !Layer2ScrollCmd              ;; 02A86D : 0D 3F 14    ;
-                      BNE CODE_02A88A                     ;; 02A870 : D0 18       ;
+                      BNE +                               ;; 02A870 : D0 18       ;
                       PHY                                 ;; 02A872 : 5A          ;
                       PHX                                 ;; 02A873 : DA          ;
                       LDA.B !_5                           ;; 02A874 : A5 05       ; \ $143E = Type of scroll sprite 
@@ -4895,7 +4895,7 @@ CODE_02A84C:          BNE Return02A84B                    ;; 02A84C : D0 FD     
                       JSL CODE_05BCD6                     ;; 02A884 : 22 D6 BC 05 ;
                       PLX                                 ;; 02A888 : FA          ;
                       PLY                                 ;; 02A889 : 7A          ;
-CODE_02A88A:          BRA LoadNextSprite                  ;; 02A88A : 80 BA       ;
+                    + BRA LoadNextSprite                  ;; 02A88A : 80 BA       ;
                                                           ;;                      ;
 CODE_02A88C:          CMP.B #$DE                          ;; 02A88C : C9 DE       ; \ Branch if sprite number != 5 Eeries 
                       BNE CODE_02A89C                     ;; 02A88E : D0 0C       ; / 
@@ -4959,11 +4959,11 @@ CODE_02A8DF:          STA.B !_4                           ;; 02A8DF : 85 04     
                       STA.B !_6                           ;; 02A8ED : 85 06       ;
                       LDA.B !_5                           ;; 02A8EF : A5 05       ;
                       CMP.W ReservedSprite1,Y             ;; 02A8F1 : D9 D2 A7    ;
-                      BNE CODE_02A8FE                     ;; 02A8F4 : D0 08       ;
+                      BNE +                               ;; 02A8F4 : D0 08       ;
                       LDX.W SpriteSlotMax1,Y              ;; 02A8F6 : BE 86 A7    ;
                       LDA.W SpriteSlotStart1,Y            ;; 02A8F9 : B9 BF A7    ;
                       STA.B !_6                           ;; 02A8FC : 85 06       ;
-CODE_02A8FE:          LDA.B !_5                           ;; 02A8FE : A5 05       ;
+                    + LDA.B !_5                           ;; 02A8FE : A5 05       ;
                       CMP.W ReservedSprite2,Y             ;; 02A900 : D9 E4 A7    ;
                       BNE CODE_02A916                     ;; 02A903 : D0 11       ;
                       CMP.B #$64                          ;; 02A905 : C9 64       ;
@@ -5009,7 +5009,7 @@ CODE_02A93C:          LDY.B !_3                           ;; 02A93C : A4 03     
                       STA.B !SpriteYPosLow,X              ;; 02A952 : 95 D8       ;  | 
                       LDA.B !_1                           ;; 02A954 : A5 01       ;  | 
                       STA.W !SpriteXPosHigh,X             ;; 02A956 : 9D D4 14    ;  | 
-                      BRA CODE_02A971                     ;; 02A959 : 80 16       ; / 
+                      BRA +                               ;; 02A959 : 80 16       ; / 
                                                           ;;                      ;
 CODE_02A95B:          LDA.B [!SpriteDataPtr],Y            ;; 02A95B : B7 CE       ; Byte format: YYYYEEsy 
                       PHA                                 ;; 02A95D : 48          ; \ Bits 11110000 are low byte of Y position 
@@ -5022,24 +5022,24 @@ CODE_02A95B:          LDA.B [!SpriteDataPtr],Y            ;; 02A95B : B7 CE     
                       STA.B !SpriteXPosLow,X              ;; 02A96A : 95 E4       ;  | 
                       LDA.B !_1                           ;; 02A96C : A5 01       ;  | 
                       STA.W !SpriteYPosHigh,X             ;; 02A96E : 9D E0 14    ; / 
-CODE_02A971:          INY                                 ;; 02A971 : C8          ;
+                    + INY                                 ;; 02A971 : C8          ;
                       INY                                 ;; 02A972 : C8          ;
                       LDA.B !_4                           ;; 02A973 : A5 04       ; \ Sprite status = ?? 
                       STA.W !SpriteStatus,X               ;; 02A975 : 9D C8 14    ; / 
                       CMP.B #$09                          ;; 02A978 : C9 09       ;
                       LDA.B [!SpriteDataPtr],Y            ;; 02A97A : B7 CE       ;KKOOPA STORAGE???               
-                      BCC CODE_02A984                     ;; 02A97C : 90 06       ;NO, IT WAS STATIONARY          
+                      BCC +                               ;; 02A97C : 90 06       ;NO, IT WAS STATIONARY          
                       SEC                                 ;; 02A97E : 38          ;
                       SBC.B #$DA                          ;; 02A97F : E9 DA       ;SUBTRACT DA, FIRST SHELL SPRITE [RED]                
                       CLC                                 ;; 02A981 : 18          ;
                       ADC.B #$04                          ;; 02A982 : 69 04       ;
-CODE_02A984:          PHY                                 ;; 02A984 : 5A          ;
+                    + PHY                                 ;; 02A984 : 5A          ;
                       LDY.W !OWLevelTileSettings+$49      ;; 02A985 : AC EB 1E    ;
                       BPL CODE_02A996                     ;; 02A988 : 10 0C       ;IF POSITIBE, JUST STORE?           
                       CMP.B #$04                          ;; 02A98A : C9 04       ;
-                      BNE CODE_02A990                     ;; 02A98C : D0 02       ;
+                      BNE +                               ;; 02A98C : D0 02       ;
                       LDA.B #$07                          ;; 02A98E : A9 07       ;WHAT?                
-CODE_02A990:          CMP.B #$05                          ;; 02A990 : C9 05       ;
+                    + CMP.B #$05                          ;; 02A990 : C9 05       ;
                       BNE CODE_02A996                     ;; 02A992 : D0 02       ;
                       LDA.B #$06                          ;; 02A994 : A9 06       ;STORING RED KOOPA SHELL TO SPRITENUM                
 CODE_02A996:          STA.B !SpriteNumber,X               ;; 02A996 : 95 9E       ;
@@ -5064,10 +5064,10 @@ CODE_02A996:          STA.B !SpriteNumber,X               ;; 02A996 : 95 9E     
                       AND.B #$F1                          ;; 02A9C0 : 29 F1       ;
                       ORA.B #$02                          ;; 02A9C2 : 09 02       ;
                       STA.W !SpriteOBJAttribute,X         ;; 02A9C4 : 9D F6 15    ;
-                      BRA CODE_02A9CD                     ;; 02A9C7 : 80 04       ;
+                      BRA +                               ;; 02A9C7 : 80 04       ;
                                                           ;;                      ;
 CODE_02A9C9:          JSL InitSpriteTables                ;; 02A9C9 : 22 D2 F7 07 ; Reset sprite tables 
-CODE_02A9CD:          LDA.B #$01                          ;; 02A9CD : A9 01       ; \ Set off screen horizontally 
+                    + LDA.B #$01                          ;; 02A9CD : A9 01       ; \ Set off screen horizontally 
                       STA.W !SpriteOffscreenX,X           ;; 02A9CF : 9D A0 15    ; / 
                       LDA.B #$04                          ;; 02A9D2 : A9 04       ; \ ?? $1FE2,X = #$04 
                       STA.W !SpriteMisc1FE2,X             ;; 02A9D4 : 9D E2 1F    ; / 
@@ -5078,10 +5078,10 @@ CODE_02A9CD:          LDA.B #$01                          ;; 02A9CD : A9 01     
                                                           ;;                      ;
 FindFreeSlotLowPri:   LDA.B #$02                          ;; ?QPWZ? : A9 02       ; \ Number of slots to leave free = 2 
                       STA.B !_E                           ;; 02A9E0 : 85 0E       ;  | 
-                      BRA CODE_02A9E6                     ;; 02A9E2 : 80 02       ; / 
+                      BRA +                               ;; 02A9E2 : 80 02       ; / 
                                                           ;;                      ;
 FindFreeSprSlot:      STZ.B !_E                           ;; ?QPWZ? : 64 0E       ; Number of slots tp leave free = 0 
-CODE_02A9E6:          PHB                                 ;; 02A9E6 : 8B          ;
+                    + PHB                                 ;; 02A9E6 : 8B          ;
                       PHK                                 ;; 02A9E7 : 4B          ;
                       PLB                                 ;; 02A9E8 : AB          ;
                       JSR FindFreeSlotRt                  ;; 02A9E9 : 20 EF A9    ;
@@ -5114,7 +5114,7 @@ DATA_02AA1F:          db $01,$51,$91,$D1,$22,$62,$A2,$73  ;; 02AA1F             
                       db $8C,$CC,$FC,$5D                  ;; ?QPWZ?               ;
                                                           ;;                      ;
                       LDX.B #$0E                          ;; 02AA33 : A2 0E       ; \ Unreachable 
-ADDR_02AA35:          STZ.W !ClusterSpriteMisc1E66,X      ;; 02AA35 : 9E 66 1E    ;  | Loop X = 00 to 0E 
+                    - STZ.W !ClusterSpriteMisc1E66,X      ;; 02AA35 : 9E 66 1E    ;  | Loop X = 00 to 0E 
                       STZ.W !ClusterSpriteMisc0F86,X      ;; 02AA38 : 9E 86 0F    ;
                       LDA.B #$08                          ;; 02AA3B : A9 08       ;
                       STA.W !ClusterSpriteNumber,X        ;; 02AA3D : 9D 92 18    ;
@@ -5135,7 +5135,7 @@ ADDR_02AA35:          STZ.W !ClusterSpriteMisc1E66,X      ;; 02AA35 : 9E 66 1E  
                       AND.B #$01                          ;; 02AA5F : 29 01       ;
                       STA.W !ClusterSpriteYPosHigh,X      ;; 02AA61 : 9D 2A 1E    ;
                       DEX                                 ;; 02AA64 : CA          ;
-                      BPL ADDR_02AA35                     ;; 02AA65 : 10 CE       ;
+                      BPL -                               ;; 02AA65 : 10 CE       ;
                       RTS                                 ;; ?QPWZ? : 60          ; / Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -5144,7 +5144,7 @@ DATA_02AA68:          db $50,$90,$D0,$10                  ;; 02AA68             
 CODE_02AA6C:          LDA.B #$07                          ;; 02AA6C : A9 07       ;
                       STA.W !SpriteStatus+3               ;; 02AA6E : 8D CB 14    ;
                       LDX.B #$03                          ;; 02AA71 : A2 03       ;
-CODE_02AA73:          LDA.B #$05                          ;; 02AA73 : A9 05       ;
+                    - LDA.B #$05                          ;; 02AA73 : A9 05       ;
                       STA.W !ClusterSpriteNumber,X        ;; 02AA75 : 9D 92 18    ;
                       LDA.W DATA_02AA68,X                 ;; 02AA78 : BD 68 AA    ;
                       STA.W !ClusterSpriteXPosLow,X       ;; 02AA7B : 9D 16 1E    ;
@@ -5155,12 +5155,12 @@ CODE_02AA73:          LDA.B #$05                          ;; 02AA73 : A9 05     
                       ASL A                               ;; 02AA85 : 0A          ;
                       STA.W !ClusterSpriteMisc0F4A,X      ;; 02AA86 : 9D 4A 0F    ;
                       DEX                                 ;; 02AA89 : CA          ;
-                      BPL CODE_02AA73                     ;; 02AA8A : 10 E7       ;
+                      BPL -                               ;; 02AA8A : 10 E7       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02AA8D:          STZ.W !BooCloudTimer                ;; 02AA8D : 9C 0A 19    ;
                       LDX.B #$13                          ;; 02AA90 : A2 13       ;
-CODE_02AA92:          LDA.B #$07                          ;; 02AA92 : A9 07       ;
+                    - LDA.B #$07                          ;; 02AA92 : A9 07       ;
                       STA.W !ClusterSpriteNumber,X        ;; 02AA94 : 9D 92 18    ;
                       LDA.W DATA_02AA0B,X                 ;; 02AA97 : BD 0B AA    ;
                       PHA                                 ;; 02AA9A : 48          ;
@@ -5183,16 +5183,16 @@ CODE_02AA92:          LDA.B #$07                          ;; 02AA92 : A9 07     
                       ASL A                               ;; 02AAB5 : 0A          ;
                       STA.W !ClusterSpriteMisc1E7A,X      ;; 02AAB6 : 9D 7A 1E    ;
                       DEX                                 ;; 02AAB9 : CA          ;
-                      BPL CODE_02AA92                     ;; 02AABA : 10 D6       ;
+                      BPL -                               ;; 02AABA : 10 D6       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
-DATA_02AABD:          db $4C,$33,$AA                      ;; 02AABD               ;
+                    - db $4C,$33,$AA                      ;; 02AABD               ;
                                                           ;;                      ;
 CODE_02AAC0:          LDY.B #$01                          ;; 02AAC0 : A0 01       ;
                       STY.W !ActivateClusterSprite        ;; 02AAC2 : 8C B8 18    ;
                       CMP.B #$E4                          ;; 02AAC5 : C9 E4       ;
-                      BEQ DATA_02AABD                     ;; 02AAC7 : F0 F4       ;
+                      BEQ -                               ;; 02AAC7 : F0 F4       ;
                       CMP.B #$E6                          ;; 02AAC9 : C9 E6       ;
                       BEQ CODE_02AA6C                     ;; 02AACB : F0 9F       ;
                       CMP.B #$E5                          ;; 02AACD : C9 E5       ;
@@ -5200,7 +5200,7 @@ CODE_02AAC0:          LDY.B #$01                          ;; 02AAC0 : A0 01     
                       CMP.B #$E2                          ;; 02AAD1 : C9 E2       ;
                       BCS CODE_02AB11                     ;; 02AAD3 : B0 3C       ;
                       LDX.B #$13                          ;; 02AAD5 : A2 13       ;
-CODE_02AAD7:          STZ.W !ClusterSpriteMisc1E66,X      ;; 02AAD7 : 9E 66 1E    ;
+                    - STZ.W !ClusterSpriteMisc1E66,X      ;; 02AAD7 : 9E 66 1E    ;
                       STZ.W !ClusterSpriteMisc0F86,X      ;; 02AADA : 9E 86 0F    ;
                       LDA.B #$03                          ;; 02AADD : A9 03       ;
                       STA.W !ClusterSpriteNumber,X        ;; 02AADF : 9D 92 18    ;
@@ -5222,7 +5222,7 @@ CODE_02AAD7:          STZ.W !ClusterSpriteMisc1E66,X      ;; 02AAD7 : 9E 66 1E  
                       ADC.B #$00                          ;; 02AB05 : 69 00       ;
                       STA.W !ClusterSpriteYPosHigh,X      ;; 02AB07 : 9D 2A 1E    ;
                       DEX                                 ;; 02AB0A : CA          ;
-                      BPL CODE_02AAD7                     ;; 02AB0B : 10 CA       ;
+                      BPL -                               ;; 02AB0B : 10 CA       ;
                       INC.W !BooRingIndex                 ;; 02AB0D : EE BA 18    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -5231,9 +5231,9 @@ CODE_02AB11:          LDY.W !BooRingIndex                 ;; 02AB11 : AC BA 18  
                       BCS Return02AB77                    ;; 02AB16 : B0 5F       ;
                       LDY.B #$01                          ;; 02AB18 : A0 01       ;
                       CMP.B #$E2                          ;; 02AB1A : C9 E2       ;
-                      BEQ CODE_02AB20                     ;; 02AB1C : F0 02       ;
+                      BEQ +                               ;; 02AB1C : F0 02       ;
                       LDY.B #$FF                          ;; 02AB1E : A0 FF       ;
-CODE_02AB20:          STY.B !_F                           ;; 02AB20 : 84 0F       ;
+                    + STY.B !_F                           ;; 02AB20 : 84 0F       ;
                       LDA.B #$09                          ;; 02AB22 : A9 09       ;
                       STA.B !_E                           ;; 02AB24 : 85 0E       ;
                       LDX.B #$13                          ;; 02AB26 : A2 13       ;
@@ -5248,7 +5248,7 @@ CODE_02AB28:          LDA.W !ClusterSpriteNumber,X        ;; 02AB28 : BD 92 18  
                       LDA.B !_F                           ;; 02AB3D : A5 0F       ;
                       STA.W !ClusterSpriteMisc0F4A,X      ;; 02AB3F : 9D 4A 0F    ;
                       STZ.B !_F                           ;; 02AB42 : 64 0F       ;
-                      BEQ CODE_02AB6D                     ;; 02AB44 : F0 27       ;
+                      BEQ +                               ;; 02AB44 : F0 27       ;
                       LDY.B !_3                           ;; 02AB46 : A4 03       ;
                       LDA.B [!SpriteDataPtr],Y            ;; 02AB48 : B7 CE       ;
                       LDY.W !BooRingIndex                 ;; 02AB4A : AC BA 18    ;
@@ -5266,7 +5266,7 @@ CODE_02AB28:          LDA.W !ClusterSpriteNumber,X        ;; 02AB28 : BD 92 18  
                       STA.W !BooRingOffscreen,Y           ;; 02AB65 : 99 BA 0F    ;
                       LDA.B !_2                           ;; 02AB68 : A5 02       ;
                       STA.W !BooRingLoadIndex,Y           ;; 02AB6A : 99 BC 0F    ;
-CODE_02AB6D:          DEC.B !_E                           ;; 02AB6D : C6 0E       ;
+                    + DEC.B !_E                           ;; 02AB6D : C6 0E       ;
                       BMI CODE_02AB74                     ;; 02AB6F : 30 03       ;
 CODE_02AB71:          DEX                                 ;; 02AB71 : CA          ;
                       BPL CODE_02AB28                     ;; 02AB72 : 10 B4       ;
@@ -5283,10 +5283,10 @@ CODE_02AB81:          LDA.W !ShooterNumber,X              ;; 02AB81 : BD 83 17  
                       DEX                                 ;; 02AB86 : CA          ;
                       BPL CODE_02AB81                     ;; 02AB87 : 10 F8       ;
                       DEC.W !ShooterSlotIdx               ;; 02AB89 : CE FF 18    ;
-                      BPL CODE_02AB93                     ;; 02AB8C : 10 05       ;
+                      BPL +                               ;; 02AB8C : 10 05       ;
                       LDA.B #$07                          ;; 02AB8E : A9 07       ;
                       STA.W !ShooterSlotIdx               ;; 02AB90 : 8D FF 18    ;
-CODE_02AB93:          LDX.W !ShooterSlotIdx               ;; 02AB93 : AE FF 18    ;
+                    + LDX.W !ShooterSlotIdx               ;; 02AB93 : AE FF 18    ;
                       LDY.W !ShooterLoadIndex,X           ;; 02AB96 : BC B3 17    ;
                       LDA.B #$00                          ;; 02AB99 : A9 00       ; \ Allow sprite to be reloaded by level loading routine 
                       STA.W !SpriteLoadStatus,Y           ;; 02AB9B : 99 38 19    ; / 
@@ -5309,7 +5309,7 @@ CODE_02AB9E:          LDY.B !_3                           ;; 02AB9E : A4 03     
                       STA.W !ShooterYPosLow,X             ;; 02ABBD : 9D 8B 17    ;
                       LDA.B !_1                           ;; 02ABC0 : A5 01       ;
                       STA.W !ShooterYPosHigh,X            ;; 02ABC2 : 9D 93 17    ;
-                      BRA CODE_02ABDF                     ;; 02ABC5 : 80 18       ;
+                      BRA +                               ;; 02ABC5 : 80 18       ;
                                                           ;;                      ;
 CODE_02ABC7:          LDA.B [!SpriteDataPtr],Y            ;; 02ABC7 : B7 CE       ;
                       PHA                                 ;; 02ABC9 : 48          ;
@@ -5322,7 +5322,7 @@ CODE_02ABC7:          LDA.B [!SpriteDataPtr],Y            ;; 02ABC7 : B7 CE     
                       STA.W !ShooterXPosLow,X             ;; 02ABD7 : 9D 9B 17    ;
                       LDA.B !_1                           ;; 02ABDA : A5 01       ;
                       STA.W !ShooterXPosHigh,X            ;; 02ABDC : 9D A3 17    ;
-CODE_02ABDF:          LDA.B !_2                           ;; 02ABDF : A5 02       ;
+                    + LDA.B !_2                           ;; 02ABDF : A5 02       ;
                       STA.W !ShooterLoadIndex,X           ;; 02ABE1 : 9D B3 17    ;
                       LDA.B #$10                          ;; 02ABE4 : A9 10       ;
                       STA.W !ShooterTimer,X               ;; 02ABE6 : 9D AB 17    ;
@@ -5334,9 +5334,9 @@ CODE_02ABDF:          LDA.B !_2                           ;; 02ABDF : A5 02     
                       JMP LoadSpriteLoopStrt              ;; 02ABEF : 4C 2E A8    ;
                                                           ;;                      ;
 CODE_02ABF2:          LDX.B #$3F                          ;; 02ABF2 : A2 3F       ;
-CODE_02ABF4:          STZ.W !SpriteLoadStatus,X           ;; 02ABF4 : 9E 38 19    ; Allow sprite to be reloaded by level loading routine 
+                    - STZ.W !SpriteLoadStatus,X           ;; 02ABF4 : 9E 38 19    ; Allow sprite to be reloaded by level loading routine 
                       DEX                                 ;; 02ABF7 : CA          ;
-                      BPL CODE_02ABF4                     ;; 02ABF8 : 10 FA       ;
+                      BPL -                               ;; 02ABF8 : 10 FA       ;
                       LDA.B #$FF                          ;; 02ABFA : A9 FF       ;
                       STA.B !_0                           ;; 02ABFC : 85 00       ;
                       LDX.B #$0B                          ;; 02ABFE : A2 0B       ;
@@ -5346,13 +5346,13 @@ CODE_02AC00:          LDA.B #$FF                          ;; 02AC00 : A9 FF     
                       CMP.B #$0B                          ;; 02AC08 : C9 0B       ;
                       BEQ CODE_02AC11                     ;; 02AC0A : F0 05       ;
                       STZ.W !SpriteStatus,X               ;; 02AC0C : 9E C8 14    ;
-                      BRA CODE_02AC13                     ;; 02AC0F : 80 02       ;
+                      BRA +                               ;; 02AC0F : 80 02       ;
                                                           ;;                      ;
 CODE_02AC11:          STX.B !_0                           ;; 02AC11 : 86 00       ;
-CODE_02AC13:          DEX                                 ;; 02AC13 : CA          ;
+                    + DEX                                 ;; 02AC13 : CA          ;
                       BPL CODE_02AC00                     ;; 02AC14 : 10 EA       ;
                       LDX.B !_0                           ;; 02AC16 : A6 00       ;
-                      BMI CODE_02AC48                     ;; 02AC18 : 30 2E       ;
+                      BMI +                               ;; 02AC18 : 30 2E       ;
                       STZ.W !SpriteStatus,X               ;; 02AC1A : 9E C8 14    ;
                       LDA.B #$0B                          ;; 02AC1D : A9 0B       ; \ Sprite status = Being carried 
                       STA.W !SpriteStatus                 ;; 02AC1F : 8D C8 14    ; / 
@@ -5372,11 +5372,11 @@ CODE_02AC13:          DEX                                 ;; 02AC13 : CA        
                       JSL InitSpriteTables                ;; 02AC40 : 22 D2 F7 07 ;
                       PLA                                 ;; 02AC44 : 68          ;
                       STA.W !SpriteOBJAttribute           ;; 02AC45 : 8D F6 15    ;
-CODE_02AC48:          REP #$10                            ;; 02AC48 : C2 10       ; Index (16 bit) 
+                    + REP #$10                            ;; 02AC48 : C2 10       ; Index (16 bit) 
                       LDX.W #$027A                        ;; 02AC4A : A2 7A 02    ;
-CODE_02AC4D:          STZ.W !Map16TileNumber,X            ;; 02AC4D : 9E 93 16    ; clear ram before entering new stage/area 
+                    - STZ.W !Map16TileNumber,X            ;; 02AC4D : 9E 93 16    ; clear ram before entering new stage/area 
                       DEX                                 ;; 02AC50 : CA          ;
-                      BPL CODE_02AC4D                     ;; 02AC51 : 10 FA       ;
+                      BPL -                               ;; 02AC51 : 10 FA       ;
                       SEP #$10                            ;; 02AC53 : E2 10       ; Index (8 bit) 
                       STZ.W !Layer1ScrollCmd              ;; 02AC55 : 9C 3E 14    ;
                       STZ.W !Layer2ScrollCmd              ;; 02AC58 : 9C 3F 14    ;
@@ -5399,7 +5399,7 @@ CODE_02AC5C:          LDA.B !ScreenMode                   ;; 02AC5C : A5 5B     
                       SBC.B #$00                          ;; 02AC73 : E9 00       ;
                       STA.B !Layer1YPos+1                 ;; 02AC75 : 85 1D       ;
                       STZ.W !TileGenerateTrackB           ;; 02AC77 : 9C B6 18    ;
-CODE_02AC7A:          JSR CODE_02A802                     ;; 02AC7A : 20 02 A8    ;
+                    - JSR CODE_02A802                     ;; 02AC7A : 20 02 A8    ;
                       JSR CODE_02A802                     ;; 02AC7D : 20 02 A8    ;
                       LDA.B !Layer1YPos                   ;; 02AC80 : A5 1C       ;
                       CLC                                 ;; 02AC82 : 18          ;
@@ -5411,7 +5411,7 @@ CODE_02AC7A:          JSR CODE_02A802                     ;; 02AC7A : 20 02 A8  
                       INC.W !TileGenerateTrackB           ;; 02AC8D : EE B6 18    ;
                       LDA.W !TileGenerateTrackB           ;; 02AC90 : AD B6 18    ;
                       CMP.B #$20                          ;; 02AC93 : C9 20       ;
-                      BCC CODE_02AC7A                     ;; 02AC95 : 90 E3       ;
+                      BCC -                               ;; 02AC95 : 90 E3       ;
                       PLA                                 ;; 02AC97 : 68          ;
                       STA.B !Layer1YPos+1                 ;; 02AC98 : 85 1D       ;
                       PLA                                 ;; 02AC9A : 68          ;
@@ -5434,7 +5434,7 @@ CODE_02ACA1:          LDA.B !Layer1ScrollDir              ;; 02ACA1 : A5 55     
                       SBC.B #$00                          ;; 02ACB3 : E9 00       ;
                       STA.B !Layer1XPos+1                 ;; 02ACB5 : 85 1B       ;
                       STZ.W !TileGenerateTrackB           ;; 02ACB7 : 9C B6 18    ;
-CODE_02ACBA:          JSR CODE_02A802                     ;; 02ACBA : 20 02 A8    ;
+                    - JSR CODE_02A802                     ;; 02ACBA : 20 02 A8    ;
                       JSR CODE_02A802                     ;; 02ACBD : 20 02 A8    ;
                       LDA.B !Layer1XPos                   ;; 02ACC0 : A5 1A       ;
                       CLC                                 ;; 02ACC2 : 18          ;
@@ -5446,7 +5446,7 @@ CODE_02ACBA:          JSR CODE_02A802                     ;; 02ACBA : 20 02 A8  
                       INC.W !TileGenerateTrackB           ;; 02ACCD : EE B6 18    ;
                       LDA.W !TileGenerateTrackB           ;; 02ACD0 : AD B6 18    ;
                       CMP.B #$20                          ;; 02ACD3 : C9 20       ;
-                      BCC CODE_02ACBA                     ;; 02ACD5 : 90 E3       ;
+                      BCC -                               ;; 02ACD5 : 90 E3       ;
                       PLA                                 ;; 02ACD7 : 68          ;
                       STA.B !Layer1XPos+1                 ;; 02ACD8 : 85 1B       ;
                       PLA                                 ;; 02ACDA : 68          ;
@@ -5457,10 +5457,10 @@ CODE_02ACBA:          JSR CODE_02A802                     ;; 02ACBA : 20 02 A8  
                                                           ;;                      ;
 CODE_02ACE1:          PHX                                 ;; 02ACE1 : DA          ;
                       TYX                                 ;; 02ACE2 : BB          ;
-                      BRA CODE_02ACE6                     ;; 02ACE3 : 80 01       ;
+                      BRA +                               ;; 02ACE3 : 80 01       ;
                                                           ;;                      ;
 GivePoints:           PHX                                 ;; ?QPWZ? : DA          ;  takes sprite type -5 as input in A 
-CODE_02ACE6:          CLC                                 ;; 02ACE6 : 18          ;
+                    + CLC                                 ;; 02ACE6 : 18          ;
                       ADC.B #$05                          ;; 02ACE7 : 69 05       ; Add 5 to sprite type (200,400,1up) 
                       JSL CODE_02ACEF                     ;; 02ACE9 : 22 EF AC 02 ; Set score sprite type/initial position 
                       PLX                                 ;; 02ACED : FA          ;
@@ -5483,14 +5483,14 @@ CODE_02ACEF:          PHY                                 ;; 02ACEF : 5A        
                       SEC                                 ;; 02AD0B : 38          ; \ 
                       SBC.B !Layer1YPos                   ;; 02AD0C : E5 1C       ; | 
                       CMP.B #$F0                          ;; 02AD0E : C9 F0       ; |if (score sprite ypos <1C && >=0C) 
-                      BCC CODE_02AD22                     ;; 02AD10 : 90 10       ; |{ 
+                      BCC +                               ;; 02AD10 : 90 10       ; |{ 
                       LDA.W !ScoreSpriteYPosLow,Y         ;; 02AD12 : B9 E7 16    ; | 
                       ADC.B #$10                          ;; 02AD15 : 69 10       ; | 
                       STA.W !ScoreSpriteYPosLow,Y         ;; 02AD17 : 99 E7 16    ; |  move score sprite down by #$10 
                       LDA.W !ScoreSpriteYPosHigh,Y        ;; 02AD1A : B9 F9 16    ; | 
                       ADC.B #$00                          ;; 02AD1D : 69 00       ; | 
                       STA.W !ScoreSpriteYPosHigh,Y        ;; 02AD1F : 99 F9 16    ; /} 
-CODE_02AD22:          LDA.B !SpriteXPosLow,X              ;; 02AD22 : B5 E4       ; \ 
+                    + LDA.B !SpriteXPosLow,X              ;; 02AD22 : B5 E4       ; \ 
                       STA.W !ScoreSpriteXPosLow,Y         ;; 02AD24 : 99 ED 16    ; /Set score sprite x-position 
                       LDA.W !SpriteYPosHigh,X             ;; 02AD27 : BD E0 14    ; \ 
                       STA.W !ScoreSpriteXPosHigh,Y        ;; 02AD2A : 99 F3 16    ; /Set score sprite x-pos high byte 
@@ -5505,10 +5505,10 @@ CODE_02AD36:          LDA.W !ScoreSpriteNumber,Y          ;; 02AD36 : B9 E1 16  
                       DEY                                 ;; 02AD3B : 88          ;
                       BPL CODE_02AD36                     ;; 02AD3C : 10 F8       ; } 
                       DEC.W !ScoreSpriteSlotIdx           ;; 02AD3E : CE F7 18    ; $18f7--;                   --gives LRU 
-                      BPL CODE_02AD48                     ;; 02AD41 : 10 05       ; if ($18f7 <0) 
+                      BPL +                               ;; 02AD41 : 10 05       ; if ($18f7 <0) 
                       LDA.B #$05                          ;; 02AD43 : A9 05       ;   $18f7=5; 
                       STA.W !ScoreSpriteSlotIdx           ;; 02AD45 : 8D F7 18    ;
-CODE_02AD48:          LDY.W !ScoreSpriteSlotIdx           ;; 02AD48 : AC F7 18    ; return $18f7 in Y; 
+                    + LDY.W !ScoreSpriteSlotIdx           ;; 02AD48 : AC F7 18    ; return $18f7 in Y; 
 Return02AD4B:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -5543,17 +5543,17 @@ ScoreSprGfx:          BIT.W !IRQNMICommand                ;; ?QPWZ? : 2C 9B 0D  
 CODE_02ADB8:          LDX.B #$05                          ;; 02ADB8 : A2 05       ;
 CODE_02ADBA:          STX.W !CurSpriteProcess             ;; 02ADBA : 8E E9 15    ;
                       LDA.W !ScoreSpriteNumber,X          ;; 02ADBD : BD E1 16    ;
-                      BEQ CODE_02ADC5                     ;; 02ADC0 : F0 03       ;
+                      BEQ +                               ;; 02ADC0 : F0 03       ;
                       JSR CODE_02ADC9                     ;; 02ADC2 : 20 C9 AD    ;
-CODE_02ADC5:          DEX                                 ;; 02ADC5 : CA          ;
+                    + DEX                                 ;; 02ADC5 : CA          ;
                       BPL CODE_02ADBA                     ;; 02ADC6 : 10 F2       ;
 Return02ADC8:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02ADC9:          LDA.B !SpriteLock                   ;; 02ADC9 : A5 9D       ;
-                      BEQ CODE_02ADD0                     ;; 02ADCB : F0 03       ;
+                      BEQ +                               ;; 02ADCB : F0 03       ;
                       JMP CODE_02AE5B                     ;; 02ADCD : 4C 5B AE    ;
-CODE_02ADD0:          LDA.W !ScoreSpriteTimer,X           ;; 02ADD0 : BD FF 16    ;
-                      BNE CODE_02ADE4                     ;; 02ADD3 : D0 0F       ;
+                    + LDA.W !ScoreSpriteTimer,X           ;; 02ADD0 : BD FF 16    ;
+                      BNE +                               ;; 02ADD3 : D0 0F       ;
                       STZ.W !ScoreSpriteNumber,X          ;; 02ADD5 : 9E E1 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -5562,7 +5562,7 @@ DATA_02ADD9:          db $01,$02,$03,$05,$05,$0A,$0F,$14  ;; ?QPWZ?             
                                                           ;;                      ;
 DATA_02ADE2:          db $04,$06                          ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_02ADE4:          DEC.W !ScoreSpriteTimer,X           ;; 02ADE4 : DE FF 16    ;
+                    + DEC.W !ScoreSpriteTimer,X           ;; 02ADE4 : DE FF 16    ;
                       CMP.B #$2A                          ;; 02ADE7 : C9 2A       ;
                       BNE CODE_02AE38                     ;; 02ADE9 : D0 4D       ;
                       LDY.W !ScoreSpriteNumber,X          ;; 02ADEB : BC E1 16    ;
@@ -5583,7 +5583,7 @@ CODE_02AE03:          LDA.W DATA_02ADE2-$16,Y             ;; 02AE03 : B9 CC AD  
                       ADC.W !GivePlayerLives              ;; 02AE07 : 6D E4 18    ;
                       STA.W !GivePlayerLives              ;; 02AE0A : 8D E4 18    ;
                       STZ.W !GiveLivesTimer               ;; 02AE0D : 9C E5 18    ;
-                      BRA CODE_02AE35                     ;; 02AE10 : 80 23       ;
+                      BRA +                               ;; 02AE10 : 80 23       ;
                                                           ;;                      ;
 CODE_02AE12:          LDA.W !PlayerTurnLvl                ;; 02AE12 : AD B3 0D    ;
                       ASL A                               ;; 02AE15 : 0A          ;
@@ -5599,7 +5599,7 @@ CODE_02AE12:          LDA.W !PlayerTurnLvl                ;; 02AE12 : AD B3 0D  
                       LDA.W !PlayerScore+2,X              ;; 02AE2D : BD 36 0F    ;
                       ADC.B #$00                          ;; 02AE30 : 69 00       ;
                       STA.W !PlayerScore+2,X              ;; 02AE32 : 9D 36 0F    ;
-CODE_02AE35:          LDX.W !CurSpriteProcess             ;; 02AE35 : AE E9 15    ; X = Sprite index 
+                    + LDX.W !CurSpriteProcess             ;; 02AE35 : AE E9 15    ; X = Sprite index 
 CODE_02AE38:          LDA.W !ScoreSpriteTimer,X           ;; 02AE38 : BD FF 16    ;
                       LSR A                               ;; 02AE3B : 4A          ;
                       LSR A                               ;; 02AE3C : 4A          ;
@@ -5652,9 +5652,9 @@ CODE_02AE5B:          LDA.W !ScoreSpriteLayer,X           ;; 02AE5B : BD 05 17  
                       BNE Return02AEFB                    ;; 02AE99 : D0 60       ;
                       LDY.W DATA_02AD9E,X                 ;; 02AE9B : BC 9E AD    ;
                       BIT.W !IRQNMICommand                ;; 02AE9E : 2C 9B 0D    ;
-                      BVC CODE_02AEA5                     ;; 02AEA1 : 50 02       ;
+                      BVC +                               ;; 02AEA1 : 50 02       ;
                       LDY.B #$04                          ;; 02AEA3 : A0 04       ;
-CODE_02AEA5:          LDA.W !ScoreSpriteYPosLow,X         ;; 02AEA5 : BD E7 16    ;
+                    + LDA.W !ScoreSpriteYPosLow,X         ;; 02AEA5 : BD E7 16    ;
                       SEC                                 ;; 02AEA8 : 38          ;
                       SBC.B !_2                           ;; 02AEA9 : E5 02       ;
                       STA.W !OAMTileYPos,Y                ;; 02AEAB : 99 01 02    ;
@@ -5678,9 +5678,9 @@ CODE_02AEA5:          LDA.W !ScoreSpriteYPosLow,X         ;; 02AEA5 : BD E7 16  
                       LDY.W !ScoreSpriteNumber,X          ;; 02AED3 : BC E1 16    ;
                       CPY.B #$0E                          ;; 02AED6 : C0 0E       ;
                       LDA.B #$08                          ;; 02AED8 : A9 08       ;
-                      BCC CODE_02AEDF                     ;; 02AEDA : 90 03       ;
+                      BCC +                               ;; 02AEDA : 90 03       ;
                       LDA.W DATA_02ADD9-5,Y               ;; 02AEDC : B9 D4 AD    ; Hey, this label might be wrong!
-CODE_02AEDF:          PLY                                 ;; 02AEDF : 7A          ;
+                    + PLY                                 ;; 02AEDF : 7A          ;
                       ORA.B #$30                          ;; 02AEE0 : 09 30       ;
                       STA.W !OAMTileAttr,Y                ;; 02AEE2 : 99 03 02    ;
                       STA.W !OAMTileAttr+4,Y              ;; 02AEE5 : 99 07 02    ;
@@ -5693,10 +5693,10 @@ CODE_02AEDF:          PLY                                 ;; 02AEDF : 7A        
                       STA.W !OAMTileSize+1,Y              ;; 02AEF1 : 99 21 04    ;
                       LDA.W !ScoreSpriteNumber,X          ;; 02AEF4 : BD E1 16    ;
                       CMP.B #$11                          ;; 02AEF7 : C9 11       ;
-                      BCS ADDR_02AEFC                     ;; 02AEF9 : B0 01       ;
+                      BCS +                               ;; 02AEF9 : B0 01       ;
 Return02AEFB:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-ADDR_02AEFC:          LDY.B #$4C                          ;; 02AEFC : A0 4C       ;
+                    + LDY.B #$4C                          ;; 02AEFC : A0 4C       ;
                       LDA.W !ScoreSpriteXPosLow,X         ;; 02AEFE : BD ED 16    ;
                       SEC                                 ;; 02AF01 : 38          ;
                       SBC.B !_4                           ;; 02AF02 : E5 04       ;
@@ -5760,10 +5760,10 @@ CODE_02AF45:          JSL FindFreeSprSlot                 ;; 02AF45 : 22 E4 A9 0
                       LDA.W DATA_02AF30,Y                 ;; 02AF73 : B9 30 AF    ;
                       STA.W !SpriteMisc151C,X             ;; 02AF76 : 9D 1C 15    ;
                       CPY.B #$02                          ;; 02AF79 : C0 02       ;
-                      BNE CODE_02AF82                     ;; 02AF7B : D0 05       ;
+                      BNE +                               ;; 02AF7B : D0 05       ;
                       LDA.B !_2                           ;; 02AF7D : A5 02       ;
                       STA.W !SpriteLoadIndex,X            ;; 02AF7F : 9D 1A 16    ;
-CODE_02AF82:          DEC.B !_4                           ;; 02AF82 : C6 04       ;
+                    + DEC.B !_4                           ;; 02AF82 : C6 04       ;
                       BPL CODE_02AF45                     ;; 02AF84 : 10 BF       ;
 Return02AF86:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -5813,10 +5813,10 @@ CODE_02AFAF:          JSL FindFreeSprSlot                 ;; 02AFAF : 22 E4 A9 0
                       LDA.W EerieGroupState,Y             ;; 02AFE3 : B9 96 AF    ;
                       STA.B !SpriteTableC2,X              ;; 02AFE6 : 95 C2       ;
                       CPY.B #$04                          ;; 02AFE8 : C0 04       ;
-                      BNE CODE_02AFF1                     ;; 02AFEA : D0 05       ;
+                      BNE +                               ;; 02AFEA : D0 05       ;
                       LDA.B !_2                           ;; 02AFEC : A5 02       ;
                       STA.W !SpriteLoadIndex,X            ;; 02AFEE : 9D 1A 16    ;
-CODE_02AFF1:          JSR SubHorzPosBnk2                  ;; 02AFF1 : 20 8D 84    ;
+                    + JSR SubHorzPosBnk2                  ;; 02AFF1 : 20 8D 84    ;
                       LDA.W EerieGroupSpeedX,Y            ;; 02AFF4 : B9 9B AF    ;
                       STA.B !SpriteXSpeed,X               ;; 02AFF7 : 95 B6       ;
                       DEC.B !_4                           ;; 02AFF9 : C6 04       ;
@@ -5824,9 +5824,9 @@ CODE_02AFF1:          JSR SubHorzPosBnk2                  ;; 02AFF1 : 20 8D 84  
 Return02AFFD:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CallGenerator:        LDA.W !CurrentGenerator             ;; ?QPWZ? : AD B9 18    ;
-                      BEQ Return02B02A                    ;; 02B001 : F0 27       ;
+                      BEQ +                               ;; 02B001 : F0 27       ;
                       LDY.B !SpriteLock                   ;; 02B003 : A4 9D       ;
-                      BNE Return02B02A                    ;; 02B005 : D0 23       ;
+                      BNE +                               ;; 02B005 : D0 23       ;
                       DEC A                               ;; 02B007 : 3A          ;
                       JSL ExecutePtr                      ;; 02B008 : 22 DF 86 00 ;
                                                           ;;                      ;
@@ -5846,7 +5846,7 @@ CallGenerator:        LDA.W !CurrentGenerator             ;; ?QPWZ? : AD B9 18  
                       dw GenerateFire                     ;; ?QPWZ? : 36 B0       ; 0D - Bowser statue fire breath, generator      
                       dw TurnOffGenerators                ;; ?QPWZ? : 32 B0       ; 0E - Turn off standard generators              
                                                           ;;                      ;
-Return02B02A:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 TurnOffGen2:          INC.W !SpriteWillAppear             ;; ?QPWZ? : EE BF 18    ;
                       STZ.W !SpriteRespawnTimer           ;; 02B02E : 9C C0 18    ; Don't respawn any sprites 
@@ -5857,9 +5857,9 @@ TurnOffGenerators:    STZ.W !CurrentGenerator             ;; ?QPWZ? : 9C B9 18  
                                                           ;;                      ;
 GenerateFire:         LDA.B !EffFrame                     ;; ?QPWZ? : A5 14       ;
                       AND.B #$7F                          ;; 02B038 : 29 7F       ;
-                      BNE Return02B07B                    ;; 02B03A : D0 3F       ;
+                      BNE +                               ;; 02B03A : D0 3F       ;
                       JSL FindFreeSlotLowPri              ;; 02B03C : 22 DE A9 02 ;
-                      BMI Return02B07B                    ;; 02B040 : 30 39       ;
+                      BMI +                               ;; 02B040 : 30 39       ;
                       TYX                                 ;; 02B042 : BB          ;
                       LDA.B #$17                          ;; 02B043 : A9 17       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 02B045 : 8D FC 1D    ; / 
@@ -5885,13 +5885,13 @@ GenerateFire:         LDA.B !EffFrame                     ;; ?QPWZ? : A5 14     
                       ADC.B #$00                          ;; 02B073 : 69 00       ;
                       STA.W !SpriteYPosHigh,X             ;; 02B075 : 9D E0 14    ;
                       INC.W !SpriteMisc157C,X             ;; 02B078 : FE 7C 15    ;
-Return02B07B:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 GenerateBullet:       LDA.B !EffFrame                     ;; ?QPWZ? : A5 14       ;
                       AND.B #$7F                          ;; 02B07E : 29 7F       ;  | 
-                      BNE Return02B0C8                    ;; 02B080 : D0 46       ; / 
+                      BNE +                               ;; 02B080 : D0 46       ; / 
                       JSL FindFreeSlotLowPri              ;; 02B082 : 22 DE A9 02 ;
-                      BMI Return02B0C8                    ;; 02B086 : 30 40       ;
+                      BMI +                               ;; 02B086 : 30 40       ;
                       LDA.B #$09                          ;; 02B088 : A9 09       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 02B08A : 8D FC 1D    ; / 
                       TYX                                 ;; 02B08D : BB          ;
@@ -5922,7 +5922,7 @@ CODE_02B0BF:          ADC.W DATA_02B1BA,Y                 ;; 02B0BF : 79 BA B1  
                       STA.W !SpriteYPosHigh,X             ;; 02B0C2 : 9D E0 14    ;
                       TYA                                 ;; 02B0C5 : 98          ;
                       STA.B !SpriteTableC2,X              ;; 02B0C6 : 95 C2       ;
-Return02B0C8:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
                       db $04,$08,$04,$03                  ;; 02B0C9               ;
@@ -5941,12 +5941,12 @@ GenMultiBullets:      LDA.B !EffFrame                     ;; ?QPWZ? : A5 14     
                       LDA.W CODE_02B0BD,Y                 ;; 02B0E7 : B9 BD B0    ;
                       LDX.W CODE_02B0BF,Y                 ;; 02B0EA : BE BF B0    ;
                       STA.B !_D                           ;; 02B0ED : 85 0D       ;
-CODE_02B0EF:          PHX                                 ;; 02B0EF : DA          ;
+                    - PHX                                 ;; 02B0EF : DA          ;
                       JSR CODE_02B115                     ;; 02B0F0 : 20 15 B1    ;
                       DEC.B !_D                           ;; 02B0F3 : C6 0D       ;
                       PLX                                 ;; 02B0F5 : FA          ;
                       DEX                                 ;; 02B0F6 : CA          ;
-                      BPL CODE_02B0EF                     ;; 02B0F7 : 10 F6       ;
+                      BPL -                               ;; 02B0F7 : 10 F6       ;
 Return02B0F9:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -5960,7 +5960,7 @@ DATA_02B10C:          db $00,$00,$02,$02,$01,$05,$04,$07  ;; 02B10C             
                       db $06                              ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_02B115:          JSL FindFreeSlotLowPri              ;; 02B115 : 22 DE A9 02 ;
-                      BMI Return02B152                    ;; 02B119 : 30 37       ;
+                      BMI +                               ;; 02B119 : 30 37       ;
                       LDA.B #$1C                          ;; 02B11B : A9 1C       ; \ Sprite = Bullet Bill 
                       STA.W !SpriteNumber,Y               ;; 02B11D : 99 9E 00    ; / 
                       LDA.B #$08                          ;; 02B120 : A9 08       ; \ Sprite status = Normal 
@@ -5984,7 +5984,7 @@ CODE_02B115:          JSL FindFreeSlotLowPri              ;; 02B115 : 22 DE A9 0
                       STA.W !SpriteXPosHigh,Y             ;; 02B149 : 99 D4 14    ;
                       LDA.W DATA_02B10C,X                 ;; 02B14C : BD 0C B1    ;
                       STA.W !SpriteTableC2,Y              ;; 02B14F : 99 C2 00    ;
-Return02B152:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02B153:          db $10,$18,$20,$28                  ;; 02B153               ;
@@ -6017,9 +6017,9 @@ GenerateFish:         LDA.B !EffFrame                     ;; ?QPWZ? : A5 14     
                       TAY                                 ;; 02B18D : A8          ;
                       LDA.W DATA_02B153,Y                 ;; 02B18E : B9 53 B1    ;
                       PLP                                 ;; 02B191 : 28          ;
-                      BPL CODE_02B196                     ;; 02B192 : 10 02       ;
+                      BPL +                               ;; 02B192 : 10 02       ;
                       EOR.B #$FF                          ;; 02B194 : 49 FF       ;
-CODE_02B196:          CLC                                 ;; 02B196 : 18          ;
+                    + CLC                                 ;; 02B196 : 18          ;
                       ADC.B !Layer1XPos                   ;; 02B197 : 65 1A       ;
                       STA.B !SpriteXPosLow,X              ;; 02B199 : 95 E4       ;
                       LDA.B !Layer1XPos+1                 ;; 02B19B : A5 1B       ;
@@ -6030,10 +6030,10 @@ CODE_02B196:          CLC                                 ;; 02B196 : 18        
                       TAY                                 ;; 02B1A7 : A8          ;
                       LDA.W DATA_02B157,Y                 ;; 02B1A8 : B9 57 B1    ;
                       PLP                                 ;; 02B1AB : 28          ;
-                      BPL CODE_02B1B1                     ;; 02B1AC : 10 03       ;
+                      BPL +                               ;; 02B1AC : 10 03       ;
                       EOR.B #$FF                          ;; 02B1AE : 49 FF       ;
                       INC A                               ;; 02B1B0 : 1A          ;
-CODE_02B1B1:          STA.B !SpriteXSpeed,X               ;; 02B1B1 : 95 B6       ;
+                    + STA.B !SpriteXSpeed,X               ;; 02B1B1 : 95 B6       ;
                       LDA.B #$B8                          ;; 02B1B3 : A9 B8       ;
                       STA.B !SpriteYSpeed,X               ;; 02B1B5 : 95 AA       ;
 Return02B1B7:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -6045,9 +6045,9 @@ DATA_02B1BA:          db $FF,$01                          ;; 02B1BA             
                                                           ;;                      ;
 GenSuperKoopa:        LDA.B !EffFrame                     ;; ?QPWZ? : A5 14       ;
                       AND.B #$3F                          ;; 02B1BE : 29 3F       ;
-                      BNE Return02B206                    ;; 02B1C0 : D0 44       ;
+                      BNE +                               ;; 02B1C0 : D0 44       ;
                       JSL FindFreeSlotLowPri              ;; 02B1C2 : 22 DE A9 02 ;
-                      BMI Return02B206                    ;; 02B1C6 : 30 3E       ;
+                      BMI +                               ;; 02B1C6 : 30 3E       ;
                       TYX                                 ;; 02B1C8 : BB          ;
                       LDA.B #$08                          ;; 02B1C9 : A9 08       ; \ Sprite status = Normal 
                       STA.W !SpriteStatus,X               ;; 02B1CB : 9D C8 14    ; / 
@@ -6077,7 +6077,7 @@ GenSuperKoopa:        LDA.B !EffFrame                     ;; ?QPWZ? : A5 14     
                       STA.W !SpriteYPosHigh,X             ;; 02B1FF : 9D E0 14    ;
                       TYA                                 ;; 02B202 : 98          ;
                       STA.W !SpriteMisc157C,X             ;; 02B203 : 9D 7C 15    ;
-Return02B206:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 GenerateBubble:       LDA.B !EffFrame                     ;; ?QPWZ? : A5 14       ;
                       AND.B #$7F                          ;; 02B209 : 29 7F       ;
@@ -6185,9 +6185,9 @@ DATA_02B2D4:          db $10,$F0                          ;; 02B2D4             
                                                           ;;                      ;
 GenerateEerie:        LDA.B !EffFrame                     ;; ?QPWZ? : A5 14       ;
                       AND.B #$3F                          ;; 02B2D8 : 29 3F       ;
-                      BNE Return02B31E                    ;; 02B2DA : D0 42       ;
+                      BNE +                               ;; 02B2DA : D0 42       ;
                       JSL FindFreeSlotLowPri              ;; 02B2DC : 22 DE A9 02 ;
-                      BMI Return02B31E                    ;; 02B2E0 : 30 3C       ;
+                      BMI +                               ;; 02B2E0 : 30 3C       ;
                       TYX                                 ;; 02B2E2 : BB          ;
                       LDA.B #$08                          ;; 02B2E3 : A9 08       ; \ Sprite status = Normal 
                       STA.W !SpriteStatus,X               ;; 02B2E5 : 9D C8 14    ; / 
@@ -6214,7 +6214,7 @@ GenerateEerie:        LDA.B !EffFrame                     ;; ?QPWZ? : A5 14     
                       STA.W !SpriteYPosHigh,X             ;; 02B316 : 9D E0 14    ;
                       LDA.W DATA_02B2D4,Y                 ;; 02B319 : B9 D4 B2    ;
                       STA.B !SpriteXSpeed,X               ;; 02B31C : 95 B6       ;
-Return02B31E:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02B31F:          db $3F,$40,$3F,$3F,$40,$40          ;; 02B31F               ;
@@ -6232,11 +6232,11 @@ GenParaEnemy:         LDA.B !EffFrame                     ;; ?QPWZ? : A5 14     
                       JSL GetRand                         ;; 02B33B : 22 F9 AC 01 ;
                       LSR A                               ;; 02B33F : 4A          ;
                       LDY.W !CurrentGenerator             ;; 02B340 : AC B9 18    ;
-                      BCC CODE_02B348                     ;; 02B343 : 90 03       ;
+                      BCC +                               ;; 02B343 : 90 03       ;
                       INY                                 ;; 02B345 : C8          ;
                       INY                                 ;; 02B346 : C8          ;
                       INY                                 ;; 02B347 : C8          ;
-CODE_02B348:          LDA.W DATA_02B31F-2,Y               ;; 02B348 : B9 1D B3    ;
+                    + LDA.W DATA_02B31F-2,Y               ;; 02B348 : B9 1D B3    ;
                       STA.B !SpriteNumber,X               ;; 02B34B : 95 9E       ;
                       JSL InitSpriteTables                ;; 02B34D : 22 D2 F7 07 ;
                       LDA.B !Layer1YPos                   ;; 02B351 : A5 1C       ;
@@ -6280,9 +6280,9 @@ CODE_02B38D:          STX.W !CurSpriteProcess             ;; 02B38D : 8E E9 15  
                       PHA                                 ;; 02B39A : 48          ;
                       LDA.B !TrueFrame                    ;; 02B39B : A5 13       ;
                       LSR A                               ;; 02B39D : 4A          ;
-                      BCC CODE_02B3A3                     ;; 02B39E : 90 03       ;
+                      BCC +                               ;; 02B39E : 90 03       ;
                       DEC.W !ShooterTimer,X               ;; 02B3A0 : DE AB 17    ;
-CODE_02B3A3:          PLA                                 ;; 02B3A3 : 68          ;
+                    + PLA                                 ;; 02B3A3 : 68          ;
 CODE_02B3A4:          JSR CODE_02B3AB                     ;; 02B3A4 : 20 AB B3    ;
 CODE_02B3A7:          DEX                                 ;; 02B3A7 : CA          ;
                       BPL CODE_02B38D                     ;; 02B3A8 : 10 E3       ;
@@ -6376,34 +6376,34 @@ CODE_02B42D:          LDA.B #$08                          ;; 02B42D : A9 08     
 DATA_02B464:          db $01,$FF                          ;; 02B464               ;
                                                           ;;                      ;
 ShootBullet:          LDA.W !ShooterTimer,X               ;; ?QPWZ? : BD AB 17    ; \ Return if it's not time to generate			        
-                      BNE Return02B4DD                    ;; 02B469 : D0 72       ; /								        
+                      BNE +                               ;; 02B469 : D0 72       ; /								        
                       LDA.B #$60                          ;; 02B46B : A9 60       ; \ Set time till next generation = 60			        
                       STA.W !ShooterTimer,X               ;; 02B46D : 9D AB 17    ; /								        
                       LDA.W !ShooterYPosLow,X             ;; 02B470 : BD 8B 17    ; \ Don't generate if off screen vertically			        
                       CMP.B !Layer1YPos                   ;; 02B473 : C5 1C       ;  |							        
                       LDA.W !ShooterYPosHigh,X            ;; 02B475 : BD 93 17    ;  |							        
                       SBC.B !Layer1YPos+1                 ;; 02B478 : E5 1D       ;  |							        
-                      BNE Return02B4DD                    ;; 02B47A : D0 61       ; /								        
+                      BNE +                               ;; 02B47A : D0 61       ; /								        
                       LDA.W !ShooterXPosLow,X             ;; 02B47C : BD 9B 17    ; \ Don't generate if off screen horizontally		        
                       CMP.B !Layer1XPos                   ;; 02B47F : C5 1A       ;  |							        
                       LDA.W !ShooterXPosHigh,X            ;; 02B481 : BD A3 17    ;  |							        
                       SBC.B !Layer1XPos+1                 ;; 02B484 : E5 1B       ;  |							        
-                      BNE Return02B4DD                    ;; 02B486 : D0 55       ; / 							        
+                      BNE +                               ;; 02B486 : D0 55       ; / 							        
                       LDA.W !ShooterXPosLow,X             ;; 02B488 : BD 9B 17    ; \ ?? something else related to x position of generator??	        
                       SEC                                 ;; 02B48B : 38          ;  | 							        
                       SBC.B !Layer1XPos                   ;; 02B48C : E5 1A       ;  |							        
                       CLC                                 ;; 02B48E : 18          ;  |							        
                       ADC.B #$10                          ;; 02B48F : 69 10       ;  |							        
                       CMP.B #$10                          ;; 02B491 : C9 10       ;  |							        
-                      BCC Return02B4DD                    ;; 02B493 : 90 48       ; /								        
+                      BCC +                               ;; 02B493 : 90 48       ; /								        
                       LDA.B !PlayerXPosNext               ;; 02B495 : A5 94       ; \ Don't fire if mario is next to generator		        
                       SBC.W !ShooterXPosLow,X             ;; 02B497 : FD 9B 17    ;  |							        
                       CLC                                 ;; 02B49A : 18          ;  |							        
                       ADC.B #$11                          ;; 02B49B : 69 11       ;  |							        
                       CMP.B #$22                          ;; 02B49D : C9 22       ;  |							        
-                      BCC Return02B4DD                    ;; 02B49F : 90 3C       ; /								        
+                      BCC +                               ;; 02B49F : 90 3C       ; /								        
                       JSL FindFreeSlotLowPri              ;; 02B4A1 : 22 DE A9 02 ; \ Get an index to an unused sprite slot, return if all slots full 
-                      BMI Return02B4DD                    ;; 02B4A5 : 30 36       ; / After: Y has index of sprite being generated		 
+                      BMI +                               ;; 02B4A5 : 30 36       ; / After: Y has index of sprite being generated		 
                       LDA.B #$09                          ;; ?QPWZ? : A9 09       ; \ Only shoot every #$80 frames 
                       STA.W !SPCIO3                       ;; 02B4A9 : 8D FC 1D    ; / Play sound effect 
                       LDA.B #$01                          ;; 02B4AC : A9 01       ; \ Sprite status = Initialization 
@@ -6426,7 +6426,7 @@ ShootBullet:          LDA.W !ShooterTimer,X               ;; ?QPWZ? : BD AB 17  
                       JSL InitSpriteTables                ;; 02B4D5 : 22 D2 F7 07 ;  | ...and loads in new values for the 6 main sprite tables 
                       PLX                                 ;; 02B4D9 : FA          ; / 							 
                       JSR ShowShooterSmoke                ;; 02B4DA : 20 DE B4    ; Display smoke graphic                                      
-Return02B4DD:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 ShowShooterSmoke:     LDY.B #$03                          ;; ?QPWZ? : A0 03       ; \ Find a free slot to display effect 
 FindFreeSmokeSlot:    LDA.W !SmokeSpriteNumber,Y          ;; ?QPWZ? : B9 C0 17    ;  | 
@@ -6451,9 +6451,9 @@ SetShooterSmoke:      LDA.B #$01                          ;; ?QPWZ? : A9 01     
                       LDA.B !PlayerXPosNext+1             ;; 02B504 : A5 95       ;  |						  
                       SBC.W !ShooterXPosHigh,X            ;; 02B506 : FD A3 17    ;  |						  
                       LDX.B #$00                          ;; 02B509 : A2 00       ;  |						  
-                      BCC CODE_02B50E                     ;; 02B50B : 90 01       ;  |						  
+                      BCC +                               ;; 02B50B : 90 01       ;  |						  
                       INX                                 ;; 02B50D : E8          ; /							  
-CODE_02B50E:          PLA                                 ;; 02B50E : 68          ; \ Set smoke x position from generator position	  
+                    + PLA                                 ;; 02B50E : 68          ; \ Set smoke x position from generator position	  
                       CLC                                 ;; 02B50F : 18          ;  |						  
                       ADC.W ShooterSmokeDispX,X           ;; 02B510 : 7D E9 B4    ;  |						  
                       STA.W !SmokeSpriteXPos,Y            ;; 02B513 : 99 C8 17    ; /   
@@ -6484,10 +6484,10 @@ CODE_02B526:          LDA.W !BounceSpriteYSpeed,X         ;; 02B526 : BD B1 16  
                       LSR A                               ;; 02B53B : 4A          ;
                       CMP.B #$08                          ;; 02B53C : C9 08       ;
                       LDY.B #$00                          ;; 02B53E : A0 00       ;
-                      BCC CODE_02B545                     ;; 02B540 : 90 03       ;
+                      BCC +                               ;; 02B540 : 90 03       ;
                       ORA.B #$F0                          ;; 02B542 : 09 F0       ;
                       DEY                                 ;; 02B544 : 88          ;
-CODE_02B545:          PLP                                 ;; 02B545 : 28          ;
+                    + PLP                                 ;; 02B545 : 28          ;
                       ADC.W !BounceSpriteYPosLow,X        ;; 02B546 : 7D A1 16    ;
                       STA.W !BounceSpriteYPosLow,X        ;; 02B549 : 9D A1 16    ;
                       TYA                                 ;; 02B54C : 98          ;
@@ -6519,10 +6519,10 @@ CODE_02B560:          LDA.W !ExtSpriteYSpeed,X            ;; 02B560 : BD 3D 17  
                       LSR A                               ;; 02B576 : 4A          ;
                       LSR A                               ;; 02B577 : 4A          ;
                       CMP.B #$08                          ;; 02B578 : C9 08       ;
-                      BCC CODE_02B57F                     ;; 02B57A : 90 03       ;
+                      BCC +                               ;; 02B57A : 90 03       ;
                       ORA.B #$F0                          ;; 02B57C : 09 F0       ;
                       DEY                                 ;; 02B57E : 88          ;
-CODE_02B57F:          PLP                                 ;; 02B57F : 28          ;
+                    + PLP                                 ;; 02B57F : 28          ;
                       ADC.W !ExtSpriteYPosLow,X           ;; 02B580 : 7D 15 17    ;
                       STA.W !ExtSpriteYPosLow,X           ;; 02B583 : 9D 15 17    ;
                       TYA                                 ;; 02B586 : 98          ;
@@ -6546,10 +6546,10 @@ CODE_02B58E:          LDA.W !CoinSpriteYSpeed,X           ;; 02B58E : BD D8 17  
                       LSR A                               ;; 02B5A4 : 4A          ;
                       LSR A                               ;; 02B5A5 : 4A          ;
                       CMP.B #$08                          ;; 02B5A6 : C9 08       ;
-                      BCC CODE_02B5AD                     ;; 02B5A8 : 90 03       ;
+                      BCC +                               ;; 02B5A8 : 90 03       ;
                       ORA.B #$F0                          ;; 02B5AA : 09 F0       ;
                       DEY                                 ;; 02B5AC : 88          ;
-CODE_02B5AD:          PLP                                 ;; 02B5AD : 28          ;
+                    + PLP                                 ;; 02B5AD : 28          ;
                       ADC.W !CoinSpriteYPosLow,X          ;; 02B5AE : 7D D4 17    ;
                       STA.W !CoinSpriteYPosLow,X          ;; 02B5B1 : 9D D4 17    ;
                       TYA                                 ;; 02B5B4 : 98          ;
@@ -6580,9 +6580,9 @@ CODE_02B5C8:          LDA.W !MinExtSpriteYSpeed,X         ;; 02B5C8 : BD 20 18  
                       LSR A                               ;; 02B5DC : 4A          ;
                       LSR A                               ;; 02B5DD : 4A          ;
                       CMP.B #$08                          ;; 02B5DE : C9 08       ;
-                      BCC CODE_02B5E4                     ;; 02B5E0 : 90 02       ;
+                      BCC +                               ;; 02B5E0 : 90 02       ;
                       ORA.B #$F0                          ;; 02B5E2 : 09 F0       ;
-CODE_02B5E4:          PLP                                 ;; 02B5E4 : 28          ;
+                    + PLP                                 ;; 02B5E4 : 28          ;
                       ADC.W !MinExtSpriteYPosLow,X        ;; 02B5E5 : 7D FC 17    ;
                       STA.W !MinExtSpriteYPosLow,X        ;; 02B5E8 : 9D FC 17    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -6609,9 +6609,9 @@ PokeyMain:            PHB                                 ;; ?QPWZ? : 8B        
                       LDX.B #$04                          ;; 02B63F : A2 04       ;  | for X=0 to X=4... 
                       LDY.B #$00                          ;; 02B641 : A0 00       ;  | 
 PokeyLoopStart:       LSR A                               ;; ?QPWZ? : 4A          ;  | 
-                      BCC BitNotSet                       ;; 02B644 : 90 01       ;  | 
+                      BCC +                               ;; 02B644 : 90 01       ;  | 
                       INY                                 ;; 02B646 : C8          ;  | ...Increment Y if bit X is set 
-BitNotSet:            DEX                                 ;; ?QPWZ? : CA          ;  | 
+                    + DEX                                 ;; ?QPWZ? : CA          ;  | 
                       BPL PokeyLoopStart                  ;; 02B648 : 10 F9       ;  | 
                       PLX                                 ;; 02B64A : FA          ; / 
                       LDA.W PokeyClipIndex,Y              ;; 02B64B : B9 30 B6    ; \ Update the index into the clipping table 
@@ -6645,25 +6645,25 @@ CODE_02B681:          JSL GenericSprGfxRt2                ;; 02B681 : 22 B2 90 0
                       LDA.B !SpriteTableC2,X              ;; 02B688 : B5 C2       ;
                       CMP.B #$01                          ;; 02B68A : C9 01       ;
                       LDA.B #$8A                          ;; 02B68C : A9 8A       ;
-                      BCC CODE_02B692                     ;; 02B68E : 90 02       ;
+                      BCC +                               ;; 02B68E : 90 02       ;
                       LDA.B #$E8                          ;; 02B690 : A9 E8       ;
-CODE_02B692:          STA.W !OAMTileNo+$100,Y             ;; 02B692 : 99 02 03    ;
+                    + STA.W !OAMTileNo+$100,Y             ;; 02B692 : 99 02 03    ;
                       LDA.W !SpriteStatus,X               ;; 02B695 : BD C8 14    ;
                       CMP.B #$08                          ;; 02B698 : C9 08       ;
-                      BNE Return02B6A6                    ;; 02B69A : D0 0A       ;
+                      BNE +                               ;; 02B69A : D0 0A       ;
                       JSR UpdateYPosNoGrvty               ;; 02B69C : 20 94 D2    ;
                       INC.B !SpriteYSpeed,X               ;; 02B69F : F6 AA       ;
                       INC.B !SpriteYSpeed,X               ;; 02B6A1 : F6 AA       ;
                       JSR SubOffscreen0Bnk2               ;; 02B6A3 : 20 25 D0    ;
-Return02B6A6:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02B6A7:          LDA.B !SpriteTableC2,X              ;; 02B6A7 : B5 C2       ; \ Erase sprite if no segments remain 
-                      BNE PokeyAlive                      ;; 02B6A9 : D0 04       ;  | 
-CODE_02B6AB:          STZ.W !SpriteStatus,X               ;; 02B6AB : 9E C8 14    ;  | 
+                      BNE +                               ;; 02B6A9 : D0 04       ;  | 
+                    - STZ.W !SpriteStatus,X               ;; 02B6AB : 9E C8 14    ;  | 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-PokeyAlive:           CMP.B #$20                          ;; ?QPWZ? : C9 20       ;
-                      BCS CODE_02B6AB                     ;; 02B6B1 : B0 F8       ;
+                    + CMP.B #$20                          ;; ?QPWZ? : C9 20       ;
+                      BCS -                               ;; 02B6B1 : B0 F8       ;
                       LDA.B !SpriteLock                   ;; 02B6B3 : A5 9D       ;
                       BNE CODE_02B726                     ;; 02B6B5 : D0 6F       ;
                       JSR SubOffscreen0Bnk2               ;; 02B6B7 : 20 25 D0    ;
@@ -6671,37 +6671,37 @@ PokeyAlive:           CMP.B #$20                          ;; ?QPWZ? : C9 20     
                       INC.W !SpriteMisc1570,X             ;; 02B6BE : FE 70 15    ;
                       LDA.W !SpriteMisc1570,X             ;; 02B6C1 : BD 70 15    ;
                       AND.B #$7F                          ;; 02B6C4 : 29 7F       ;
-                      BNE CODE_02B6CF                     ;; 02B6C6 : D0 07       ;
+                      BNE +                               ;; 02B6C6 : D0 07       ;
                       JSR CODE_02D4FA                     ;; 02B6C8 : 20 FA D4    ;
                       TYA                                 ;; 02B6CB : 98          ;
                       STA.W !SpriteMisc157C,X             ;; 02B6CC : 9D 7C 15    ;
-CODE_02B6CF:          LDY.W !SpriteMisc157C,X             ;; 02B6CF : BC 7C 15    ;
+                    + LDY.W !SpriteMisc157C,X             ;; 02B6CF : BC 7C 15    ;
                       LDA.W PokeySpeed,Y                  ;; 02B6D2 : B9 63 B6    ;
                       STA.B !SpriteXSpeed,X               ;; 02B6D5 : 95 B6       ;
                       JSR UpdateXPosNoGrvty               ;; 02B6D7 : 20 88 D2    ;
                       JSR UpdateYPosNoGrvty               ;; 02B6DA : 20 94 D2    ;
                       LDA.B !SpriteYSpeed,X               ;; 02B6DD : B5 AA       ;
                       CMP.B #$40                          ;; 02B6DF : C9 40       ;
-                      BPL CODE_02B6E8                     ;; 02B6E1 : 10 05       ;
+                      BPL +                               ;; 02B6E1 : 10 05       ;
                       CLC                                 ;; 02B6E3 : 18          ;
                       ADC.B #$02                          ;; 02B6E4 : 69 02       ;
                       STA.B !SpriteYSpeed,X               ;; 02B6E6 : 95 AA       ;
-CODE_02B6E8:          JSL CODE_019138                     ;; 02B6E8 : 22 38 91 01 ;
+                    + JSL CODE_019138                     ;; 02B6E8 : 22 38 91 01 ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02B6EC : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02B6EF : 29 04       ;  | 
-                      BEQ CODE_02B6F5                     ;; 02B6F1 : F0 02       ; / 
+                      BEQ +                               ;; 02B6F1 : F0 02       ; / 
                       STZ.B !SpriteYSpeed,X               ;; 02B6F3 : 74 AA       ; Sprite Y Speed = 0 
-CODE_02B6F5:          LDA.W !SpriteBlockedDirs,X          ;; 02B6F5 : BD 88 15    ;
+                    + LDA.W !SpriteBlockedDirs,X          ;; 02B6F5 : BD 88 15    ;
                       AND.B #$03                          ;; 02B6F8 : 29 03       ;
-                      BEQ CODE_02B704                     ;; 02B6FA : F0 08       ;
+                      BEQ +                               ;; 02B6FA : F0 08       ;
                       LDA.W !SpriteMisc157C,X             ;; 02B6FC : BD 7C 15    ;
                       EOR.B #$01                          ;; 02B6FF : 49 01       ;
                       STA.W !SpriteMisc157C,X             ;; 02B701 : 9D 7C 15    ;
-CODE_02B704:          JSR CODE_02B7AC                     ;; 02B704 : 20 AC B7    ;
+                    + JSR CODE_02B7AC                     ;; 02B704 : 20 AC B7    ;
                       LDY.B #$00                          ;; 02B707 : A0 00       ;
 CODE_02B709:          LDA.B !SpriteTableC2,X              ;; 02B709 : B5 C2       ;
                       AND.W DATA_02B653,Y                 ;; 02B70B : 39 53 B6    ;
-                      BNE CODE_02B721                     ;; 02B70E : D0 11       ;
+                      BNE +                               ;; 02B70E : D0 11       ;
                       LDA.B !SpriteTableC2,X              ;; 02B710 : B5 C2       ;
                       PHA                                 ;; 02B712 : 48          ;
                       AND.W DATA_02B657,Y                 ;; 02B713 : 39 57 B6    ;
@@ -6711,7 +6711,7 @@ CODE_02B709:          LDA.B !SpriteTableC2,X              ;; 02B709 : B5 C2     
                       AND.W DATA_02B65B,Y                 ;; 02B71A : 39 5B B6    ;
                       ORA.B !_0                           ;; 02B71D : 05 00       ;
                       STA.B !SpriteTableC2,X              ;; 02B71F : 95 C2       ;
-CODE_02B721:          INY                                 ;; 02B721 : C8          ;
+                    + INY                                 ;; 02B721 : C8          ;
                       CPY.B #$04                          ;; 02B722 : C0 04       ;
                       BNE CODE_02B709                     ;; 02B724 : D0 E3       ;
 CODE_02B726:          JSR GetDrawInfo2                    ;; 02B726 : 20 78 D3    ;
@@ -6742,9 +6742,9 @@ CODE_02B74B:          STX.B !_6                           ;; 02B74B : 86 06     
                       TAX                                 ;; 02B757 : AA          ;
                       LDA.B !_7                           ;; 02B758 : A5 07       ;
                       CMP.B #$01                          ;; 02B75A : C9 01       ;
-                      BNE CODE_02B760                     ;; 02B75C : D0 02       ;
+                      BNE +                               ;; 02B75C : D0 02       ;
                       LDX.B #$00                          ;; 02B75E : A2 00       ;
-CODE_02B760:          LDA.B !_0                           ;; 02B760 : A5 00       ;
+                    + LDA.B !_0                           ;; 02B760 : A5 00       ;
                       CLC                                 ;; 02B762 : 18          ;
                       ADC.W PokeyTileDispX,X              ;; 02B763 : 7D 5F B6    ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02B766 : 99 00 03    ;
@@ -6753,12 +6753,12 @@ CODE_02B760:          LDA.B !_0                           ;; 02B760 : A5 00     
                       LSR.B !_2                           ;; 02B76D : 46 02       ;
                       BCC CODE_02B781                     ;; 02B76F : 90 10       ;
                       LSR.B !_4                           ;; 02B771 : 46 04       ;
-                      BCS CODE_02B77B                     ;; 02B773 : B0 06       ;
+                      BCS +                               ;; 02B773 : B0 06       ;
                       PHA                                 ;; 02B775 : 48          ;
                       LDA.B !_3                           ;; 02B776 : A5 03       ;
                       STA.B !_5                           ;; 02B778 : 85 05       ;
                       PLA                                 ;; 02B77A : 68          ;
-CODE_02B77B:          SEC                                 ;; 02B77B : 38          ;
+                    + SEC                                 ;; 02B77B : 38          ;
                       SBC.B !_5                           ;; 02B77C : E5 05       ;
                       STA.W !OAMTileYPos+$100,Y           ;; 02B77E : 99 01 03    ;
 CODE_02B781:          LDA.B !_1                           ;; 02B781 : A5 01       ;
@@ -6768,9 +6768,9 @@ CODE_02B781:          LDA.B !_1                           ;; 02B781 : A5 01     
                       LDA.B !_2                           ;; 02B788 : A5 02       ;
                       LSR A                               ;; 02B78A : 4A          ;
                       LDA.B #$E8                          ;; 02B78B : A9 E8       ;
-                      BCS CODE_02B791                     ;; 02B78D : B0 02       ;
+                      BCS +                               ;; 02B78D : B0 02       ;
                       LDA.B #$8A                          ;; 02B78F : A9 8A       ;
-CODE_02B791:          STA.W !OAMTileNo+$100,Y             ;; 02B791 : 99 02 03    ;
+                    + STA.W !OAMTileNo+$100,Y             ;; 02B791 : 99 02 03    ;
                       LDA.B #$05                          ;; 02B794 : A9 05       ;
                       ORA.B !SpriteProperties             ;; 02B796 : 05 64       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02B798 : 99 03 03    ;
@@ -6808,10 +6808,10 @@ CODE_02B7AE:          TYA                                 ;; 02B7AE : 98        
                       BCS CODE_02B7D6                     ;; 02B7D0 : B0 04       ;
 CODE_02B7D2:          DEY                                 ;; 02B7D2 : 88          ;
                       BPL CODE_02B7AE                     ;; 02B7D3 : 10 D9       ;
-Return02B7D5:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    - RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02B7D6:          LDA.W !SpriteMisc1558,X             ;; 02B7D6 : BD 58 15    ;
-                      BNE Return02B7D5                    ;; 02B7D9 : D0 FA       ;
+                      BNE -                               ;; 02B7D9 : D0 FA       ;
                       LDA.W !SpriteYPosLow,Y              ;; 02B7DB : B9 D8 00    ;
                       SEC                                 ;; 02B7DE : 38          ;
                       SBC.B !SpriteYPosLow,X              ;; 02B7DF : F5 D8       ;
@@ -6824,18 +6824,18 @@ CODE_02B7D6:          LDA.W !SpriteMisc1558,X             ;; 02B7D6 : BD 58 15  
                                                           ;;                      ;
 RemovePokeySgmntRt:   LDY.B #$00                          ;; ?QPWZ? : A0 00       ;
                       CMP.B #$09                          ;; 02B7EF : C9 09       ;
-                      BMI CODE_02B803                     ;; 02B7F1 : 30 10       ;
+                      BMI +                               ;; 02B7F1 : 30 10       ;
                       INY                                 ;; 02B7F3 : C8          ;
                       CMP.B #$19                          ;; 02B7F4 : C9 19       ;
-                      BMI CODE_02B803                     ;; 02B7F6 : 30 0B       ;
+                      BMI +                               ;; 02B7F6 : 30 0B       ;
                       INY                                 ;; 02B7F8 : C8          ;
                       CMP.B #$29                          ;; 02B7F9 : C9 29       ;
-                      BMI CODE_02B803                     ;; 02B7FB : 30 06       ;
+                      BMI +                               ;; 02B7FB : 30 06       ;
                       INY                                 ;; 02B7FD : C8          ;
                       CMP.B #$39                          ;; 02B7FE : C9 39       ;
-                      BMI CODE_02B803                     ;; 02B800 : 30 01       ;
+                      BMI +                               ;; 02B800 : 30 01       ;
                       INY                                 ;; 02B802 : C8          ;
-CODE_02B803:          LDA.B !SpriteTableC2,X              ;; 02B803 : B5 C2       ; \ Take away a segment by unsetting a bit 
+                    + LDA.B !SpriteTableC2,X              ;; 02B803 : B5 C2       ; \ Take away a segment by unsetting a bit 
                       AND.W PokeyUnsetBit,Y               ;; 02B805 : 39 24 B8    ;  | 
                       STA.B !SpriteTableC2,X              ;; 02B808 : 95 C2       ; / 
                       STA.W !SpriteMisc151C,X             ;; 02B80A : 9D 1C 15    ;
@@ -6860,7 +6860,7 @@ PokeyUnsetBit:        db $EF,$F7,$FB,$FD,$FE              ;; ?QPWZ?             
 DATA_02B829:          db $E0,$F0,$F8,$FC,$FE              ;; 02B829               ;
                                                           ;;                      ;
 CODE_02B82E:          JSL FindFreeSprSlot                 ;; 02B82E : 22 E4 A9 02 ; \ Return if no free slots 
-                      BMI Return02B881                    ;; 02B832 : 30 4D       ; / 
+                      BMI +                               ;; 02B832 : 30 4D       ; / 
                       LDA.B #$02                          ;; 02B834 : A9 02       ; \ Sprite status = Killed 
                       STA.W !SpriteStatus,Y               ;; 02B836 : 99 C8 14    ; / 
                       LDA.B #$70                          ;; 02B839 : A9 70       ;
@@ -6893,7 +6893,7 @@ CODE_02B82E:          JSL FindFreeSprSlot                 ;; 02B82E : 22 E4 A9 0
                       STA.W !SpriteMisc1534,Y             ;; 02B878 : 99 34 15    ;
                       LDA.B #$01                          ;; 02B87B : A9 01       ;
                       JSL CODE_02ACE1                     ;; 02B87D : 22 E1 AC 02 ;
-Return02B881:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 TorpedoTedMain:       PHB                                 ;; ?QPWZ? : 8B          ;
                       PHK                                 ;; 02B883 : 4B          ;
@@ -6905,10 +6905,10 @@ TorpedoTedMain:       PHB                                 ;; ?QPWZ? : 8B        
 CODE_02B88A:          LDA.B !SpriteProperties             ;; 02B88A : A5 64       ; \ Save $64 
                       PHA                                 ;; 02B88C : 48          ; / 
                       LDA.W !SpriteMisc1540,X             ;; 02B88D : BD 40 15    ; \ If being launched... 
-                      BEQ CODE_02B896                     ;; 02B890 : F0 04       ;  | ...set $64 = #$10... 
+                      BEQ +                               ;; 02B890 : F0 04       ;  | ...set $64 = #$10... 
                       LDA.B #$10                          ;; 02B892 : A9 10       ;  | ...so it will be drawn behind objects 
                       STA.B !SpriteProperties             ;; 02B894 : 85 64       ; / 
-CODE_02B896:          JSR TorpedoGfxRt                    ;; 02B896 : 20 F7 B8    ; Draw sprite 
+                    + JSR TorpedoGfxRt                    ;; 02B896 : 20 F7 B8    ; Draw sprite 
                       PLA                                 ;; 02B899 : 68          ; \ Restore $64 
                       STA.B !SpriteProperties             ;; 02B89A : 85 64       ; / 
                       LDA.B !SpriteLock                   ;; 02B89C : A5 9D       ; \ Return if sprites locked 
@@ -6916,7 +6916,7 @@ CODE_02B896:          JSR TorpedoGfxRt                    ;; 02B896 : 20 F7 B8  
                       JSR SubOffscreen0Bnk2               ;; 02B8A0 : 20 25 D0    ;
                       JSL SprSpr_MarioSprRts              ;; 02B8A3 : 22 3A 80 01 ;
                       LDA.W !SpriteMisc1540,X             ;; 02B8A7 : BD 40 15    ; \ Branch if not being launched 
-                      BEQ CODE_02B8BC                     ;; 02B8AA : F0 10       ; / 
+                      BEQ +                               ;; 02B8AA : F0 10       ; / 
                       LDA.B #$08                          ;; 02B8AC : A9 08       ; \ Sprite Y speed = #$08 
                       STA.B !SpriteYSpeed,X               ;; 02B8AE : 95 AA       ; / 
                       JSR UpdateYPosNoGrvty               ;; 02B8B0 : 20 94 D2    ; Apply speed to position 
@@ -6929,31 +6929,31 @@ TorpedoMaxSpeed:      db $20,$F0                          ;; ?QPWZ?             
                                                           ;;                      ;
 TorpedoAccel:         db $01,$FF                          ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_02B8BC:          LDA.B !TrueFrame                    ;; 02B8BC : A5 13       ; \ Only increase X speed every 4 frames 
+                    + LDA.B !TrueFrame                    ;; 02B8BC : A5 13       ; \ Only increase X speed every 4 frames 
                       AND.B #$03                          ;; 02B8BE : 29 03       ;  | 
-                      BNE CODE_02B8D2                     ;; 02B8C0 : D0 10       ; / 
+                      BNE +                               ;; 02B8C0 : D0 10       ; / 
                       LDY.W !SpriteMisc157C,X             ;; 02B8C2 : BC 7C 15    ; \ If not at maximum, increase X speed 
                       LDA.B !SpriteXSpeed,X               ;; 02B8C5 : B5 B6       ;  | 
                       CMP.W TorpedoMaxSpeed,Y             ;; 02B8C7 : D9 B8 B8    ;  | 
-                      BEQ CODE_02B8D2                     ;; 02B8CA : F0 06       ;  | 
+                      BEQ +                               ;; 02B8CA : F0 06       ;  | 
                       CLC                                 ;; 02B8CC : 18          ;  | 
                       ADC.W TorpedoAccel,Y                ;; 02B8CD : 79 BA B8    ;  | 
                       STA.B !SpriteXSpeed,X               ;; 02B8D0 : 95 B6       ; / 
-CODE_02B8D2:          JSR UpdateXPosNoGrvty               ;; 02B8D2 : 20 88 D2    ; \ Apply speed to position 
+                    + JSR UpdateXPosNoGrvty               ;; 02B8D2 : 20 88 D2    ; \ Apply speed to position 
                       JSR UpdateYPosNoGrvty               ;; 02B8D5 : 20 94 D2    ; / 
                       LDA.B !SpriteYSpeed,X               ;; 02B8D8 : B5 AA       ; \ If sprite has Y speed... 
-                      BEQ CODE_02B8E4                     ;; 02B8DA : F0 08       ;  | 
+                      BEQ +                               ;; 02B8DA : F0 08       ;  | 
                       LDA.B !TrueFrame                    ;; 02B8DC : A5 13       ;  | ...Decrease Y speed every other frame 
                       AND.B #$01                          ;; 02B8DE : 29 01       ;  | 
-                      BNE CODE_02B8E4                     ;; 02B8E0 : D0 02       ;  | 
+                      BNE +                               ;; 02B8E0 : D0 02       ;  | 
                       DEC.B !SpriteYSpeed,X               ;; 02B8E2 : D6 AA       ; / 
-CODE_02B8E4:          TXA                                 ;; 02B8E4 : 8A          ; \ Run $02B952 every 8 frames 
+                    + TXA                                 ;; 02B8E4 : 8A          ; \ Run $02B952 every 8 frames 
                       CLC                                 ;; 02B8E5 : 18          ;  | 
                       ADC.B !EffFrame                     ;; 02B8E6 : 65 14       ;  | 
                       AND.B #$07                          ;; 02B8E8 : 29 07       ;  | 
-                      BNE Return02B8EF                    ;; 02B8EA : D0 03       ;  | 
+                      BNE +                               ;; 02B8EA : D0 03       ;  | 
                       JSR CODE_02B952                     ;; 02B8EC : 20 52 B9    ; / 
-Return02B8EF:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02B8F0:          db $10                              ;; 02B8F0               ;
@@ -6990,14 +6990,14 @@ TorpedoGfxRt:         JSR GetDrawInfo2                    ;; ?QPWZ? : 20 78 D3  
                       LDA.W !SpriteMisc1540,X             ;; 02B931 : BD 40 15    ;
                       CMP.B #$01                          ;; 02B934 : C9 01       ;
                       LDA.B #$82                          ;; 02B936 : A9 82       ;
-                      BCS CODE_02B944                     ;; 02B938 : B0 0A       ;
+                      BCS +                               ;; 02B938 : B0 0A       ;
                       LDA.B !EffFrame                     ;; 02B93A : A5 14       ;
                       LSR A                               ;; 02B93C : 4A          ;
                       LSR A                               ;; 02B93D : 4A          ;
                       LDA.B #$A0                          ;; 02B93E : A9 A0       ;
-                      BCC CODE_02B944                     ;; 02B940 : 90 02       ;
+                      BCC +                               ;; 02B940 : 90 02       ;
                       LDA.B #$82                          ;; 02B942 : A9 82       ;
-CODE_02B944:          STA.W !OAMTileNo+$104,Y             ;; 02B944 : 99 06 03    ;
+                    + STA.W !OAMTileNo+$104,Y             ;; 02B944 : 99 06 03    ;
                       LDA.B #$01                          ;; 02B947 : A9 01       ;
                       LDY.B #$02                          ;; 02B949 : A0 02       ;
                       JMP CODE_02B7A7                     ;; 02B94B : 4C A7 B7    ;
@@ -7013,10 +7013,10 @@ CODE_02B954:          LDA.W !SmokeSpriteNumber,Y          ;; 02B954 : B9 C0 17  
                       DEY                                 ;; 02B959 : 88          ;
                       BPL CODE_02B954                     ;; 02B95A : 10 F8       ;
                       DEC.W !SmokeSpriteSlotFull          ;; 02B95C : CE E9 18    ;
-                      BPL CODE_02B966                     ;; 02B95F : 10 05       ;
+                      BPL +                               ;; 02B95F : 10 05       ;
                       LDA.B #$03                          ;; 02B961 : A9 03       ;
                       STA.W !SmokeSpriteSlotFull          ;; 02B963 : 8D E9 18    ;
-CODE_02B966:          LDY.W !SmokeSpriteSlotFull          ;; 02B966 : AC E9 18    ;
+                    + LDY.W !SmokeSpriteSlotFull          ;; 02B966 : AC E9 18    ;
 CODE_02B969:          LDA.B !SpriteXPosLow,X              ;; 02B969 : B5 E4       ;
                       STA.B !_0                           ;; 02B96B : 85 00       ;
                       LDA.W !SpriteYPosHigh,X             ;; 02B96D : BD E0 14    ;
@@ -7036,7 +7036,7 @@ CODE_02B969:          LDA.B !SpriteXPosLow,X              ;; 02B969 : B5 E4     
                       PLA                                 ;; 02B989 : 68          ;
                       PLX                                 ;; 02B98A : FA          ;
                       SBC.B !Layer1XPos+1                 ;; 02B98B : E5 1B       ;
-                      BNE Return02B9A3                    ;; 02B98D : D0 14       ;
+                      BNE +                               ;; 02B98D : D0 14       ;
                       LDA.B #$01                          ;; 02B98F : A9 01       ;
                       STA.W !SmokeSpriteNumber,Y          ;; 02B991 : 99 C0 17    ;
                       LDA.B !_2                           ;; 02B994 : A5 02       ;
@@ -7045,7 +7045,7 @@ CODE_02B969:          LDA.B !SpriteXPosLow,X              ;; 02B969 : B5 E4     
                       STA.W !SmokeSpriteYPos,Y            ;; 02B99B : 99 C4 17    ;
                       LDA.B #$0F                          ;; 02B99E : A9 0F       ;
                       STA.W !SmokeSpriteTimer,Y           ;; 02B9A0 : 99 CC 17    ;
-Return02B9A3:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                       STA.B !Map16TileGenerate            ;; ?QPWZ? : 85 9C       ; $9C = tile to generate 
                       LDA.B !SpriteXPosLow,X              ;; 02B9A6 : B5 E4       ; \ $9A = Sprite X position 
@@ -7064,12 +7064,12 @@ CODE_02B9BD:          LDA.B #$02                          ;; 02B9BD : A9 02     
                       LDY.B #$09                          ;; 02B9C2 : A0 09       ;
 CODE_02B9C4:          LDA.W !SpriteStatus,Y               ;; 02B9C4 : B9 C8 14    ;
                       CMP.B #$08                          ;; 02B9C7 : C9 08       ;
-                      BCC CODE_02B9D5                     ;; 02B9C9 : 90 0A       ;
+                      BCC +                               ;; 02B9C9 : 90 0A       ;
                       LDA.W !SpriteTweakerF,Y             ;; 02B9CB : B9 0F 19    ;
                       AND.B #$40                          ;; 02B9CE : 29 40       ;
-                      BNE CODE_02B9D5                     ;; 02B9D0 : D0 03       ;
+                      BNE +                               ;; 02B9D0 : D0 03       ;
                       JSR CODE_02B9D9                     ;; 02B9D2 : 20 D9 B9    ;
-CODE_02B9D5:          DEY                                 ;; 02B9D5 : 88          ;
+                    + DEY                                 ;; 02B9D5 : 88          ;
                       BPL CODE_02B9C4                     ;; 02B9D6 : 10 EC       ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -7115,16 +7115,16 @@ CODE_02B9FA:          STZ.B !_F                           ;; 02B9FA : 64 0F     
                       LDX.B !_5                           ;; 02BA22 : A6 05       ;
                       LDA.L DATA_00BA80,X                 ;; 02BA24 : BF 80 BA 00 ;
                       LDY.B !_F                           ;; 02BA28 : A4 0F       ;
-                      BEQ ADDR_02BA30                     ;; 02BA2A : F0 04       ;
+                      BEQ +                               ;; 02BA2A : F0 04       ;
                       LDA.L DATA_00BA8E,X                 ;; 02BA2C : BF 8E BA 00 ;
-ADDR_02BA30:          CLC                                 ;; 02BA30 : 18          ;
+                    + CLC                                 ;; 02BA30 : 18          ;
                       ADC.B !_4                           ;; 02BA31 : 65 04       ;
                       STA.B !_5                           ;; 02BA33 : 85 05       ;
                       LDA.L DATA_00BABC,X                 ;; 02BA35 : BF BC BA 00 ;
                       LDY.B !_F                           ;; 02BA39 : A4 0F       ;
-                      BEQ ADDR_02BA41                     ;; 02BA3B : F0 04       ;
+                      BEQ +                               ;; 02BA3B : F0 04       ;
                       LDA.L DATA_00BACA,X                 ;; 02BA3D : BF CA BA 00 ;
-ADDR_02BA41:          ADC.B !_A                           ;; 02BA41 : 65 0A       ;
+                    + ADC.B !_A                           ;; 02BA41 : 65 0A       ;
                       STA.B !_6                           ;; 02BA43 : 85 06       ;
                       BRA CODE_02BA92                     ;; 02BA45 : 80 4B       ;
                                                           ;;                      ;
@@ -7154,16 +7154,16 @@ CODE_02BA48:          LDA.B !_1                           ;; 02BA48 : A5 01     
                       LDX.B !_7                           ;; 02BA6F : A6 07       ;
                       LDA.L DATA_00BA60,X                 ;; 02BA71 : BF 60 BA 00 ;
                       LDY.B !_F                           ;; 02BA75 : A4 0F       ;
-                      BEQ CODE_02BA7D                     ;; 02BA77 : F0 04       ;
+                      BEQ +                               ;; 02BA77 : F0 04       ;
                       LDA.L DATA_00BA70,X                 ;; 02BA79 : BF 70 BA 00 ;
-CODE_02BA7D:          CLC                                 ;; 02BA7D : 18          ;
+                    + CLC                                 ;; 02BA7D : 18          ;
                       ADC.B !_4                           ;; 02BA7E : 65 04       ;
                       STA.B !_5                           ;; 02BA80 : 85 05       ;
                       LDA.L DATA_00BA9C,X                 ;; 02BA82 : BF 9C BA 00 ;
                       LDY.B !_F                           ;; 02BA86 : A4 0F       ;
-                      BEQ CODE_02BA8E                     ;; 02BA88 : F0 04       ;
+                      BEQ +                               ;; 02BA88 : F0 04       ;
                       LDA.L DATA_00BAAC,X                 ;; 02BA8A : BF AC BA 00 ;
-CODE_02BA8E:          ADC.B !_D                           ;; 02BA8E : 65 0D       ;
+                    + ADC.B !_D                           ;; 02BA8E : 65 0D       ;
                       STA.B !_6                           ;; 02BA90 : 85 06       ;
 CODE_02BA92:          LDX.W !CurSpriteProcess             ;; 02BA92 : AE E9 15    ; X = Sprite index 
                       LDA.B #$7E                          ;; 02BA95 : A9 7E       ;
@@ -7262,7 +7262,7 @@ CODE_02BB23:          STA.B !_2                           ;; 02BB23 : 85 02     
                       STA.W !OAMTileXPos,Y                ;; 02BB56 : 99 00 02    ;
                       PLA                                 ;; 02BB59 : 68          ;
                       SBC.B !Layer1XPos+1                 ;; 02BB5A : E5 1B       ;
-                      BNE CODE_02BB86                     ;; 02BB5C : D0 28       ;
+                      BNE +                               ;; 02BB5C : D0 28       ;
                       LDA.B !_1                           ;; 02BB5E : A5 01       ;
                       SEC                                 ;; 02BB60 : 38          ;
                       SBC.B !Layer1YPos                   ;; 02BB61 : E5 1C       ;
@@ -7280,7 +7280,7 @@ CODE_02BB23:          STA.B !_2                           ;; 02BB23 : 85 02     
                       TAY                                 ;; 02BB7E : A8          ;
                       LDA.L YoshiWingsSize,X              ;; 02BB7F : BF 1F BB 02 ;
                       STA.W !OAMTileSize,Y                ;; 02BB83 : 99 20 04    ;
-CODE_02BB86:          PLX                                 ;; 02BB86 : FA          ;
+                    + PLX                                 ;; 02BB86 : FA          ;
 Return02BB87:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -7306,20 +7306,20 @@ CODE_02BBB5:          INC.B !SpriteYSpeed,X               ;; 02BBB5 : F6 AA     
 CODE_02BBB7:          TXA                                 ;; 02BBB7 : 8A          ;
                       EOR.B !TrueFrame                    ;; 02BBB8 : 45 13       ;
                       LSR A                               ;; 02BBBA : 4A          ;
-                      BCC CODE_02BBC1                     ;; 02BBBB : 90 04       ;
+                      BCC +                               ;; 02BBBB : 90 04       ;
                       JSL CODE_019138                     ;; 02BBBD : 22 38 91 01 ;
-CODE_02BBC1:          LDA.B !SpriteYSpeed,X               ;; 02BBC1 : B5 AA       ;
+                    + LDA.B !SpriteYSpeed,X               ;; 02BBC1 : B5 AA       ;
                       BMI CODE_02BBFB                     ;; 02BBC3 : 30 36       ;
                       LDA.W !SpriteInLiquid,X             ;; 02BBC5 : BD 4A 16    ;
                       BEQ CODE_02BBFB                     ;; 02BBC8 : F0 31       ;
                       LDA.B !SpriteYSpeed,X               ;; 02BBCA : B5 AA       ;
-                      BEQ CODE_02BBD7                     ;; 02BBCC : F0 09       ;
+                      BEQ +                               ;; 02BBCC : F0 09       ;
                       SEC                                 ;; 02BBCE : 38          ;
                       SBC.B #$08                          ;; 02BBCF : E9 08       ;
                       STA.B !SpriteYSpeed,X               ;; 02BBD1 : 95 AA       ;
-                      BPL CODE_02BBD7                     ;; 02BBD3 : 10 02       ;
+                      BPL +                               ;; 02BBD3 : 10 02       ;
                       STZ.B !SpriteYSpeed,X               ;; 02BBD5 : 74 AA       ; Sprite Y Speed = 0 
-CODE_02BBD7:          LDA.W !SpriteMisc151C,X             ;; 02BBD7 : BD 1C 15    ;
+                    + LDA.W !SpriteMisc151C,X             ;; 02BBD7 : BD 1C 15    ;
                       BNE CODE_02BBF7                     ;; 02BBDA : D0 1B       ;
                       LDA.B !SpriteTableC2,X              ;; 02BBDC : B5 C2       ;
                       LSR A                               ;; 02BBDE : 4A          ;
@@ -7359,10 +7359,10 @@ DolphinTiles3:        db $E8,$A9                          ;; ?QPWZ?             
                                                           ;;                      ;
 CODE_02BC14:          LDA.B !SpriteNumber,X               ;; 02BC14 : B5 9E       ;
                       CMP.B #$43                          ;; 02BC16 : C9 43       ;
-                      BNE CODE_02BC1D                     ;; 02BC18 : D0 03       ;
+                      BNE +                               ;; 02BC18 : D0 03       ;
                       JMP CODE_02BC00                     ;; 02BC1A : 4C 00 BC    ;
                                                           ;;                      ;
-CODE_02BC1D:          JSR GetDrawInfo2                    ;; 02BC1D : 20 78 D3    ;
+                    + JSR GetDrawInfo2                    ;; 02BC1D : 20 78 D3    ;
                       LDA.B !SpriteXSpeed,X               ;; 02BC20 : B5 B6       ;
                       STA.B !_2                           ;; 02BC22 : 85 02       ;
                       LDA.B !_0                           ;; 02BC24 : A5 00       ;
@@ -7376,7 +7376,7 @@ CODE_02BC1D:          JSR GetDrawInfo2                    ;; 02BC1D : 20 78 D3  
                       CLC                                 ;; 02BC34 : 18          ;
                       ADC.B #$08                          ;; 02BC35 : 69 08       ;
                       STA.W !OAMTileXPos+$108,Y           ;; 02BC37 : 99 08 03    ;
-                      BRA CODE_02BC4E                     ;; 02BC3A : 80 12       ;
+                      BRA +                               ;; 02BC3A : 80 12       ;
                                                           ;;                      ;
 CODE_02BC3C:          CLC                                 ;; 02BC3C : 18          ;
                       ADC.B #$18                          ;; 02BC3D : 69 18       ;
@@ -7387,7 +7387,7 @@ CODE_02BC3C:          CLC                                 ;; 02BC3C : 18        
                       SEC                                 ;; 02BC48 : 38          ;
                       SBC.B #$08                          ;; 02BC49 : E9 08       ;
                       STA.W !OAMTileXPos+$108,Y           ;; 02BC4B : 99 08 03    ;
-CODE_02BC4E:          LDA.B !_1                           ;; 02BC4E : A5 01       ;
+                    + LDA.B !_1                           ;; 02BC4E : A5 01       ;
                       STA.W !OAMTileYPos+$100,Y           ;; 02BC50 : 99 01 03    ;
                       STA.W !OAMTileYPos+$104,Y           ;; 02BC53 : 99 05 03    ;
                       STA.W !OAMTileYPos+$108,Y           ;; 02BC56 : 99 09 03    ;
@@ -7408,9 +7408,9 @@ CODE_02BC4E:          LDA.B !_1                           ;; 02BC4E : A5 01     
                       LDA.W !SpriteOBJAttribute,X         ;; 02BC75 : BD F6 15    ;
                       ORA.B !SpriteProperties             ;; 02BC78 : 05 64       ;
                       PLP                                 ;; 02BC7A : 28          ;
-                      BCS CODE_02BC7F                     ;; 02BC7B : B0 02       ;
+                      BCS +                               ;; 02BC7B : B0 02       ;
                       ORA.B #$40                          ;; 02BC7D : 09 40       ;
-CODE_02BC7F:          STA.W !OAMTileAttr+$100,Y           ;; 02BC7F : 99 03 03    ;
+                    + STA.W !OAMTileAttr+$100,Y           ;; 02BC7F : 99 03 03    ;
                       STA.W !OAMTileAttr+$104,Y           ;; 02BC82 : 99 07 03    ;
                       STA.W !OAMTileAttr+$108,Y           ;; 02BC85 : 99 0B 03    ;
                       LDA.B #$02                          ;; 02BC88 : A9 02       ;
@@ -7433,10 +7433,10 @@ WallFollowersMain:    JSL SprSprInteract                  ;; ?QPWZ? : 22 32 80 0
                       JSL GetRand                         ;; 02BCDF : 22 F9 AC 01 ;
                       AND.B #$FF                          ;; 02BCE3 : 29 FF       ;
                       ORA.B !SpriteLock                   ;; 02BCE5 : 05 9D       ;
-                      BNE CODE_02BCEE                     ;; 02BCE7 : D0 05       ;
+                      BNE +                               ;; 02BCE7 : D0 05       ;
                       LDA.B #$0C                          ;; 02BCE9 : A9 0C       ;
                       STA.W !SpriteMisc1558,X             ;; 02BCEB : 9D 58 15    ;
-CODE_02BCEE:          LDA.B !SpriteNumber,X               ;; 02BCEE : B5 9E       ; \ Branch if not Spike Top 
+                    + LDA.B !SpriteNumber,X               ;; 02BCEE : B5 9E       ; \ Branch if not Spike Top 
                       CMP.B #$2E                          ;; 02BCF0 : C9 2E       ;  | 
                       BNE CODE_02BD23                     ;; 02BCF2 : D0 2F       ; / 
                       LDY.B !SpriteTableC2,X              ;; 02BCF4 : B4 C2       ;
@@ -7447,14 +7447,14 @@ CODE_02BCEE:          LDA.B !SpriteNumber,X               ;; 02BCEE : B5 9E     
                       ADC.B #$08                          ;; 02BCFD : 69 08       ;
                       TAY                                 ;; 02BCFF : A8          ;
                       LDA.B #$00                          ;; 02BD00 : A9 00       ;
-                      BRA CODE_02BD0B                     ;; 02BD02 : 80 07       ;
+                      BRA +                               ;; 02BD02 : 80 07       ;
                                                           ;;                      ;
 CODE_02BD04:          LDA.B !EffFrame                     ;; 02BD04 : A5 14       ;
                       LSR A                               ;; 02BD06 : 4A          ;
                       LSR A                               ;; 02BD07 : 4A          ;
                       LSR A                               ;; 02BD08 : 4A          ;
                       AND.B #$01                          ;; 02BD09 : 29 01       ;
-CODE_02BD0B:          CLC                                 ;; 02BD0B : 18          ;
+                    + CLC                                 ;; 02BD0B : 18          ;
                       ADC.W DATA_02BCB7,Y                 ;; 02BD0C : 79 B7 BC    ;
                       STA.W !SpriteMisc1602,X             ;; 02BD0F : 9D 02 16    ;
                       LDA.W !SpriteOBJAttribute,X         ;; 02BD12 : BD F6 15    ;
@@ -7472,13 +7472,13 @@ CODE_02BD23:          CMP.B #$A5                          ;; 02BD23 : C9 A5     
 CODE_02BD2C:          JSR CODE_02BF5C                     ;; 02BD2C : 20 5C BF    ;
 CODE_02BD2F:          LDA.W !SpriteStatus,X               ;; 02BD2F : BD C8 14    ;
                       CMP.B #$08                          ;; 02BD32 : C9 08       ;
-                      BEQ CODE_02BD3F                     ;; 02BD34 : F0 09       ;
+                      BEQ +                               ;; 02BD34 : F0 09       ;
                       STZ.W !SpriteMisc1528,X             ;; 02BD36 : 9E 28 15    ;
                       LDA.B #$FF                          ;; 02BD39 : A9 FF       ;
                       STA.W !SpriteMisc1558,X             ;; 02BD3B : 9D 58 15    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_02BD3F:          LDA.B !SpriteLock                   ;; 02BD3F : A5 9D       ;
+                    + LDA.B !SpriteLock                   ;; 02BD3F : A5 9D       ;
                       BNE Return02BD74                    ;; 02BD41 : D0 31       ;
                       JSR SubOffscreen3Bnk2               ;; 02BD43 : 20 17 D0    ;
                       JSL MarioSprInteract                ;; 02BD46 : 22 DC A7 01 ;
@@ -7515,7 +7515,7 @@ CODE_02BD80:          JSR UpdateXPosNoGrvty               ;; 02BD80 : 20 88 D2  
                       JSL CODE_019138                     ;; 02BD86 : 22 38 91 01 ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02BD8A : BD 88 15    ;
                       AND.B #$0F                          ;; 02BD8D : 29 0F       ;
-                      BEQ Return02BDA6                    ;; 02BD8F : F0 15       ;
+                      BEQ +                               ;; 02BD8F : F0 15       ;
 CODE_02BD91:          LDA.B !SpriteXSpeed,X               ;; 02BD91 : B5 B6       ;
                       EOR.B #$FF                          ;; 02BD93 : 49 FF       ;
                       INC A                               ;; 02BD95 : 1A          ;
@@ -7527,7 +7527,7 @@ CODE_02BD91:          LDA.B !SpriteXSpeed,X               ;; 02BD91 : B5 B6     
                       LDA.B #$40                          ;; 02BD9F : A9 40       ;
                       STA.W !SpriteMisc1540,X             ;; 02BDA1 : 9D 40 15    ;
                       INC.B !SpriteTableC2,X              ;; 02BDA4 : F6 C2       ;
-Return02BDA6:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02BDA7:          LDA.B !SpriteYPosLow,X              ;; 02BDA7 : B5 D8       ;
                       SEC                                 ;; 02BDA9 : 38          ;
@@ -7551,30 +7551,30 @@ CODE_02BDB3:          LDA.W !SpriteMisc1540,X             ;; 02BDB3 : BD 40 15  
                       LDA.B #$38                          ;; 02BDD4 : A9 38       ;
                       LDY.B !SpriteNumber,X               ;; 02BDD6 : B4 9E       ; \ Branch if Wall-follow Urchin 
                       CPY.B #$3C                          ;; 02BDD8 : C0 3C       ;  | 
-                      BEQ CODE_02BDE4                     ;; 02BDDA : F0 08       ; / 
+                      BEQ +                               ;; 02BDDA : F0 08       ; / 
                       LDA.B #$1A                          ;; 02BDDC : A9 1A       ;
                       CPY.B #$A5                          ;; 02BDDE : C0 A5       ;
-                      BNE CODE_02BDE4                     ;; 02BDE0 : D0 02       ;
+                      BNE +                               ;; 02BDE0 : D0 02       ;
                       LSR A                               ;; 02BDE2 : 4A          ;
                       NOP                                 ;; 02BDE3 : EA          ;
-CODE_02BDE4:          STA.W !SpriteMisc1540,X             ;; 02BDE4 : 9D 40 15    ;
+                    + STA.W !SpriteMisc1540,X             ;; 02BDE4 : 9D 40 15    ;
 CODE_02BDE7:          LDA.B #$20                          ;; 02BDE7 : A9 20       ;
                       LDY.B !SpriteNumber,X               ;; 02BDE9 : B4 9E       ; \ Branch if Wall-follow Urchin 
                       CPY.B #$3C                          ;; 02BDEB : C0 3C       ;  | 
-                      BEQ CODE_02BDF7                     ;; 02BDED : F0 08       ; / 
+                      BEQ +                               ;; 02BDED : F0 08       ; / 
                       LDA.B #$10                          ;; 02BDEF : A9 10       ;
                       CPY.B #$A5                          ;; 02BDF1 : C0 A5       ;
-                      BNE CODE_02BDF7                     ;; 02BDF3 : D0 02       ;
+                      BNE +                               ;; 02BDF3 : D0 02       ;
                       LSR A                               ;; 02BDF5 : 4A          ;
                       NOP                                 ;; 02BDF6 : EA          ;
-CODE_02BDF7:          CMP.W !SpriteMisc1540,X             ;; 02BDF7 : DD 40 15    ;
+                    + CMP.W !SpriteMisc1540,X             ;; 02BDF7 : DD 40 15    ;
                       BNE CODE_02BE0E                     ;; 02BDFA : D0 12       ;
                       INC.B !SpriteTableC2,X              ;; 02BDFC : F6 C2       ;
                       LDA.B !SpriteTableC2,X              ;; 02BDFE : B5 C2       ;
                       CMP.B #$04                          ;; 02BE00 : C9 04       ;
-                      BNE CODE_02BE06                     ;; 02BE02 : D0 02       ;
+                      BNE +                               ;; 02BE02 : D0 02       ;
                       STZ.B !SpriteTableC2,X              ;; 02BE04 : 74 C2       ;
-CODE_02BE06:          CMP.B #$08                          ;; 02BE06 : C9 08       ;
+                    + CMP.B #$08                          ;; 02BE06 : C9 08       ;
                       BNE CODE_02BE0E                     ;; 02BE08 : D0 04       ;
                       LDA.B #$04                          ;; 02BE0A : A9 04       ;
                       STA.B !SpriteTableC2,X              ;; 02BE0C : 95 C2       ;
@@ -7601,10 +7601,10 @@ CODE_02BE2F:          LDY.B !SpriteTableC2,X              ;; 02BE2F : B4 C2     
                       STA.B !SpriteXSpeed,X               ;; 02BE39 : 95 B6       ;
                       LDA.B !SpriteNumber,X               ;; 02BE3B : B5 9E       ; \ Branch if not Ground-guided Fuzzball/Sparky 
                       CMP.B #$A5                          ;; 02BE3D : C9 A5       ;  | 
-                      BNE CODE_02BE45                     ;; 02BE3F : D0 04       ; / 
+                      BNE +                               ;; 02BE3F : D0 04       ; / 
                       ASL.B !SpriteXSpeed,X               ;; 02BE41 : 16 B6       ;
                       ASL.B !SpriteYSpeed,X               ;; 02BE43 : 16 AA       ;
-CODE_02BE45:          JSR UpdateXPosNoGrvty               ;; 02BE45 : 20 88 D2    ;
+                    + JSR UpdateXPosNoGrvty               ;; 02BE45 : 20 88 D2    ;
                       JSR UpdateYPosNoGrvty               ;; 02BE48 : 20 94 D2    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -7618,7 +7618,7 @@ CODE_02BE4E:          LDA.B !SpriteNumber,X               ;; 02BE4E : B5 9E     
                       LDY.W !SpriteOAMIndex,X             ;; 02BE58 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.W !SpriteTileset                ;; 02BE5B : AD 2B 19    ;
                       CMP.B #$02                          ;; 02BE5E : C9 02       ;
-                      BNE CODE_02BE79                     ;; 02BE60 : D0 17       ;
+                      BNE +                               ;; 02BE60 : D0 17       ;
                       PHX                                 ;; 02BE62 : DA          ;
                       LDA.B !EffFrame                     ;; 02BE63 : A5 14       ;
                       LSR A                               ;; 02BE65 : 4A          ;
@@ -7633,7 +7633,7 @@ CODE_02BE4E:          LDA.B !SpriteNumber,X               ;; 02BE4E : B5 9E     
                       PLX                                 ;; 02BE77 : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02BE79:          LDA.B #$0A                          ;; 02BE79 : A9 0A       ;
+                    + LDA.B #$0A                          ;; 02BE79 : A9 0A       ;
                       STA.W !OAMTileNo+$100,Y             ;; 02BE7B : 99 02 03    ;
                       LDA.B !EffFrame                     ;; 02BE7E : A5 14       ;
                       AND.B #$0C                          ;; 02BE80 : 29 0C       ;
@@ -7666,7 +7666,7 @@ CODE_02BEB5:          JSR GetDrawInfo2                    ;; 02BEB5 : 20 78 D3  
                       STA.B !_3                           ;; 02BEC4 : 85 03       ;
                       PHX                                 ;; 02BEC6 : DA          ;
                       LDX.B #$03                          ;; 02BEC7 : A2 03       ;
-CODE_02BEC9:          LDA.B !_0                           ;; 02BEC9 : A5 00       ;
+                    - LDA.B !_0                           ;; 02BEC9 : A5 00       ;
                       CLC                                 ;; 02BECB : 18          ;
                       ADC.W DATA_02BE8D,X                 ;; 02BECC : 7D 8D BE    ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02BECF : 99 00 03    ;
@@ -7689,7 +7689,7 @@ CODE_02BEC9:          LDA.B !_0                           ;; 02BEC9 : A5 00     
                       INY                                 ;; 02BEF1 : C8          ;
                       INY                                 ;; 02BEF2 : C8          ;
                       DEX                                 ;; 02BEF3 : CA          ;
-                      BPL CODE_02BEC9                     ;; 02BEF4 : 10 D3       ;
+                      BPL -                               ;; 02BEF4 : 10 D3       ;
                       PLX                                 ;; 02BEF6 : FA          ;
                       LDA.B !_0                           ;; 02BEF7 : A5 00       ;
                       PHA                                 ;; 02BEF9 : 48          ;
@@ -7704,9 +7704,9 @@ CODE_02BEC9:          LDA.B !_0                           ;; 02BEC9 : A5 00     
                       STA.B !_0                           ;; 02BF08 : 85 00       ;
                       LDA.B #$09                          ;; 02BF0A : A9 09       ;
                       LDY.W !SpriteMisc1558,X             ;; 02BF0C : BC 58 15    ;
-                      BEQ CODE_02BF13                     ;; 02BF0F : F0 02       ;
+                      BEQ +                               ;; 02BF0F : F0 02       ;
                       LDA.B #$19                          ;; 02BF11 : A9 19       ;
-CODE_02BF13:          STA.B !_2                           ;; 02BF13 : 85 02       ;
+                    + STA.B !_2                           ;; 02BF13 : 85 02       ;
                       LDA.W !SpriteOAMIndex,X             ;; 02BF15 : BD EA 15    ;
                       SEC                                 ;; 02BF18 : 38          ;
                       SBC.B #$04                          ;; 02BF19 : E9 04       ;
@@ -7743,11 +7743,11 @@ DATA_02BF53:          db $37,$37,$77,$B7,$F7              ;; 02BF53             
 UrchinTiles:          db $C4,$C6,$C8,$C6                  ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_02BF5C:          LDA.W !SpriteMisc163E,X             ;; 02BF5C : BD 3E 16    ;
-                      BNE CODE_02BF69                     ;; 02BF5F : D0 08       ;
+                      BNE +                               ;; 02BF5F : D0 08       ;
                       INC.W !SpriteMisc1528,X             ;; 02BF61 : FE 28 15    ;
                       LDA.B #$0C                          ;; 02BF64 : A9 0C       ;
                       STA.W !SpriteMisc163E,X             ;; 02BF66 : 9D 3E 16    ;
-CODE_02BF69:          LDA.W !SpriteMisc1528,X             ;; 02BF69 : BD 28 15    ;
+                    + LDA.W !SpriteMisc1528,X             ;; 02BF69 : BD 28 15    ;
                       AND.B #$03                          ;; 02BF6C : 29 03       ;
                       TAY                                 ;; 02BF6E : A8          ;
                       LDA.W DATA_02BCD7,Y                 ;; 02BF6F : B9 D7 BC    ;
@@ -7773,13 +7773,13 @@ CODE_02BF84:          LDX.B !_5                           ;; 02BF84 : A6 05     
                       BNE CODE_02BFAC                     ;; 02BFA0 : D0 0A       ;
                       LDA.B #$CA                          ;; 02BFA2 : A9 CA       ;
                       LDX.B !_3                           ;; 02BFA4 : A6 03       ;
-                      BEQ CODE_02BFAA                     ;; 02BFA6 : F0 02       ;
+                      BEQ +                               ;; 02BFA6 : F0 02       ;
                       LDA.B #$CC                          ;; 02BFA8 : A9 CC       ;
-CODE_02BFAA:          BRA CODE_02BFB1                     ;; 02BFAA : 80 05       ;
+                    + BRA +                               ;; 02BFAA : 80 05       ;
                                                           ;;                      ;
 CODE_02BFAC:          LDX.B !_2                           ;; 02BFAC : A6 02       ;
                       LDA.W UrchinTiles,X                 ;; 02BFAE : BD 58 BF    ;
-CODE_02BFB1:          STA.W !OAMTileNo+$100,Y             ;; 02BFB1 : 99 02 03    ;
+                    + STA.W !OAMTileNo+$100,Y             ;; 02BFB1 : 99 02 03    ;
                       INY                                 ;; 02BFB4 : C8          ;
                       INY                                 ;; 02BFB5 : C8          ;
                       INY                                 ;; 02BFB6 : C8          ;
@@ -7797,11 +7797,11 @@ DATA_02BFC8:          db $10,$F0                          ;; 02BFC8             
                                                           ;;                      ;
 DATA_02BFCA:          db $01,$FF                          ;; 02BFCA               ;
                                                           ;;                      ;
-Return02BFCC:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    - RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 RipVanFishMain:       JSL GenericSprGfxRt2                ;; ?QPWZ? : 22 B2 90 01 ;
                       LDA.B !SpriteLock                   ;; 02BFD1 : A5 9D       ;
-                      BNE Return02BFCC                    ;; 02BFD3 : D0 F7       ;
+                      BNE -                               ;; 02BFD3 : D0 F7       ;
                       JSR SubOffscreen0Bnk2               ;; 02BFD5 : 20 25 D0    ;
                       JSL SprSpr_MarioSprRts              ;; 02BFD8 : 22 3A 80 01 ;
                       LDA.B !SpriteXSpeed,X               ;; 02BFDC : B5 B6       ;
@@ -7809,7 +7809,7 @@ RipVanFishMain:       JSL GenericSprGfxRt2                ;; ?QPWZ? : 22 B2 90 0
                       LDA.B !SpriteYSpeed,X               ;; 02BFDF : B5 AA       ;
                       PHA                                 ;; 02BFE1 : 48          ;
                       LDY.W !InvinsibilityTimer           ;; 02BFE2 : AC 90 14    ; \ Branch if Mario doesn't have star 
-                      BEQ CODE_02BFF3                     ;; 02BFE5 : F0 0C       ; / 
+                      BEQ +                               ;; 02BFE5 : F0 0C       ; / 
                       EOR.B #$FF                          ;; 02BFE7 : 49 FF       ;
                       INC A                               ;; 02BFE9 : 1A          ;
                       STA.B !SpriteYSpeed,X               ;; 02BFEA : 95 AA       ;
@@ -7817,7 +7817,7 @@ RipVanFishMain:       JSL GenericSprGfxRt2                ;; ?QPWZ? : 22 B2 90 0
                       EOR.B #$FF                          ;; 02BFEE : 49 FF       ;
                       INC A                               ;; 02BFF0 : 1A          ;
                       STA.B !SpriteXSpeed,X               ;; 02BFF1 : 95 B6       ;
-CODE_02BFF3:          JSR CODE_02C126                     ;; 02BFF3 : 20 26 C1    ;
+                    + JSR CODE_02C126                     ;; 02BFF3 : 20 26 C1    ;
                       JSR UpdateXPosNoGrvty               ;; 02BFF6 : 20 88 D2    ;
                       JSR UpdateYPosNoGrvty               ;; 02BFF9 : 20 94 D2    ;
                       JSL CODE_019138                     ;; 02BFFC : 22 38 91 01 ;
@@ -7828,17 +7828,17 @@ CODE_02BFF3:          JSR CODE_02C126                     ;; 02BFF3 : 20 26 C1  
                       INC.W !SpriteMisc1570,X             ;; 02C006 : FE 70 15    ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02C009 : BD 88 15    ; \ Branch if not touching object 
                       AND.B #$03                          ;; 02C00C : 29 03       ;  | 
-                      BEQ CODE_02C012                     ;; 02C00E : F0 02       ; / 
+                      BEQ +                               ;; 02C00E : F0 02       ; / 
                       STZ.B !SpriteXSpeed,X               ;; 02C010 : 74 B6       ; Sprite X Speed = 0 
-CODE_02C012:          LDA.W !SpriteBlockedDirs,X          ;; 02C012 : BD 88 15    ;
+                    + LDA.W !SpriteBlockedDirs,X          ;; 02C012 : BD 88 15    ;
                       AND.B #$0C                          ;; 02C015 : 29 0C       ;
-                      BEQ CODE_02C01B                     ;; 02C017 : F0 02       ;
+                      BEQ +                               ;; 02C017 : F0 02       ;
                       STZ.B !SpriteYSpeed,X               ;; 02C019 : 74 AA       ; Sprite Y Speed = 0 
-CODE_02C01B:          LDA.W !SpriteInLiquid,X             ;; 02C01B : BD 4A 16    ;
-                      BNE CODE_02C024                     ;; 02C01E : D0 04       ;
+                    + LDA.W !SpriteInLiquid,X             ;; 02C01B : BD 4A 16    ;
+                      BNE +                               ;; 02C01E : D0 04       ;
                       LDA.B #$10                          ;; 02C020 : A9 10       ;
                       STA.B !SpriteYSpeed,X               ;; 02C022 : 95 AA       ;
-CODE_02C024:          LDA.B !SpriteTableC2,X              ;; 02C024 : B5 C2       ;
+                    + LDA.B !SpriteTableC2,X              ;; 02C024 : B5 C2       ;
                       JSL ExecutePtr                      ;; 02C026 : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_02C02E                      ;; ?QPWZ? : 2E C0       ;
@@ -7858,12 +7858,12 @@ CODE_02C02E:          LDA.B #$02                          ;; 02C02E : A9 02     
 CODE_02C042:          DEC.B !SpriteXSpeed,X               ;; 02C042 : D6 B6       ;
 CODE_02C044:          LDA.W !SpriteBlockedDirs,X          ;; 02C044 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02C047 : 29 04       ;  | 
-                      BEQ CODE_02C053                     ;; 02C049 : F0 08       ; / 
+                      BEQ +                               ;; 02C049 : F0 08       ; / 
                       STZ.B !SpriteYSpeed,X               ;; 02C04B : 74 AA       ; Sprite Y Speed = 0 
                       LDA.B !SpriteYPosLow,X              ;; 02C04D : B5 D8       ;
                       AND.B #$F0                          ;; 02C04F : 29 F0       ;
                       STA.B !SpriteYPosLow,X              ;; 02C051 : 95 D8       ;
-CODE_02C053:          JSL CODE_02C0D9                     ;; 02C053 : 22 D9 C0 02 ;
+                    + JSL CODE_02C0D9                     ;; 02C053 : 22 D9 C0 02 ;
                       LDA.W !ChuckIsWhistling             ;; 02C057 : AD FD 18    ;
                       BNE CODE_02C072                     ;; 02C05A : D0 16       ;
                       JSR CODE_02D4FA                     ;; 02C05C : 20 FA D4    ;
@@ -7884,9 +7884,9 @@ CODE_02C072:          INC.B !SpriteTableC2,X              ;; 02C072 : F6 C2     
 CODE_02C07B:          LDY.B #$02                          ;; 02C07B : A0 02       ;
                       LDA.W !SpriteMisc1570,X             ;; 02C07D : BD 70 15    ;
                       AND.B #$30                          ;; 02C080 : 29 30       ;
-                      BNE CODE_02C085                     ;; 02C082 : D0 01       ;
+                      BNE +                               ;; 02C082 : D0 01       ;
                       INY                                 ;; 02C084 : C8          ;
-CODE_02C085:          TYA                                 ;; 02C085 : 98          ;
+                    + TYA                                 ;; 02C085 : 98          ;
                       STA.W !SpriteMisc1602,X             ;; 02C086 : 9D 02 16    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -7901,11 +7901,11 @@ CODE_02C095:          LDA.B !TrueFrame                    ;; 02C095 : A5 13     
                       JSR CODE_02D4FA                     ;; 02C09B : 20 FA D4    ;
                       LDA.B !SpriteXSpeed,X               ;; 02C09E : B5 B6       ;
                       CMP.W DATA_02BFC8,Y                 ;; 02C0A0 : D9 C8 BF    ;
-                      BEQ CODE_02C0AB                     ;; 02C0A3 : F0 06       ;
+                      BEQ +                               ;; 02C0A3 : F0 06       ;
                       CLC                                 ;; 02C0A5 : 18          ;
                       ADC.W DATA_02BFCA,Y                 ;; 02C0A6 : 79 CA BF    ;
                       STA.B !SpriteXSpeed,X               ;; 02C0A9 : 95 B6       ;
-CODE_02C0AB:          JSR CODE_02D50C                     ;; 02C0AB : 20 0C D5    ;
+                    + JSR CODE_02D50C                     ;; 02C0AB : 20 0C D5    ;
                       LDA.B !SpriteYSpeed,X               ;; 02C0AE : B5 AA       ;
                       CMP.W DATA_02BFC8,Y                 ;; 02C0B0 : D9 C8 BF    ;
                       BEQ CODE_02C0BB                     ;; 02C0B3 : F0 06       ;
@@ -7915,9 +7915,9 @@ CODE_02C0AB:          JSR CODE_02D50C                     ;; 02C0AB : 20 0C D5  
 CODE_02C0BB:          LDY.B #$00                          ;; 02C0BB : A0 00       ;
                       LDA.W !SpriteMisc1570,X             ;; 02C0BD : BD 70 15    ;
                       AND.B #$04                          ;; 02C0C0 : 29 04       ;
-                      BEQ CODE_02C0C5                     ;; 02C0C2 : F0 01       ;
+                      BEQ +                               ;; 02C0C2 : F0 01       ;
                       INY                                 ;; 02C0C4 : C8          ;
-CODE_02C0C5:          TYA                                 ;; 02C0C5 : 98          ;
+                    + TYA                                 ;; 02C0C5 : 98          ;
                       STA.W !SpriteMisc1602,X             ;; 02C0C6 : 9D 02 16    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -7926,12 +7926,12 @@ CODE_02C0CA:          STZ.B !SpriteTableC2,X              ;; 02C0CA : 74 C2     
                                                           ;;                      ;
 ADDR_02C0CF:          LDA.B #$08                          ;; 02C0CF : A9 08       ; \ Unreachable 
                       LDY.W !SpriteMisc157C,X             ;; 02C0D1 : BC 7C 15    ;  | A = #$08 or #$09 depending on sprite direction 
-                      BEQ ADDR_02C0D7                     ;; 02C0D4 : F0 01       ;  | 
+                      BEQ +                               ;; 02C0D4 : F0 01       ;  | 
                       INC A                               ;; 02C0D6 : 1A          ; / 
-ADDR_02C0D7:          BRA CODE_02C0DB                     ;; 02C0D7 : 80 02       ;
+                    + BRA +                               ;; 02C0D7 : 80 02       ;
                                                           ;;                      ;
 CODE_02C0D9:          LDA.B #$06                          ;; 02C0D9 : A9 06       ;
-CODE_02C0DB:          TAY                                 ;; 02C0DB : A8          ;
+                    + TAY                                 ;; 02C0DB : A8          ;
                       LDA.W !SpriteOffscreenX,X           ;; 02C0DC : BD A0 15    ; \ Return if sprite is offscreen 
                       ORA.W !SpriteOffscreenVert,X        ;; 02C0DF : 1D 6C 18    ;  | 
                       BNE Return02C125                    ;; 02C0E2 : D0 41       ; / 
@@ -7947,10 +7947,10 @@ CODE_02C0F2:          LDA.W !MinExtSpriteNumber,Y         ;; 02C0F2 : B9 F0 17  
                       DEY                                 ;; 02C0F7 : 88          ;
                       BPL CODE_02C0F2                     ;; 02C0F8 : 10 F8       ;
                       DEC.W !MinExtSpriteSlotIdx          ;; 02C0FA : CE 5D 18    ;
-                      BPL CODE_02C104                     ;; 02C0FD : 10 05       ;
+                      BPL +                               ;; 02C0FD : 10 05       ;
                       LDA.B #$0B                          ;; 02C0FF : A9 0B       ;
                       STA.W !MinExtSpriteSlotIdx          ;; 02C101 : 8D 5D 18    ;
-CODE_02C104:          LDY.W !MinExtSpriteSlotIdx          ;; 02C104 : AC 5D 18    ;
+                    + LDY.W !MinExtSpriteSlotIdx          ;; 02C104 : AC 5D 18    ;
 CODE_02C107:          PLA                                 ;; 02C107 : 68          ;
                       STA.W !MinExtSpriteNumber,Y         ;; 02C108 : 99 F0 17    ;
                       LDA.B !SpriteXPosLow,X              ;; 02C10B : B5 E4       ;
@@ -7969,9 +7969,9 @@ Return02C125:         RTL                                 ;; ?QPWZ? : 6B        
                                                           ;;                      ;
 CODE_02C126:          LDY.B #$00                          ;; 02C126 : A0 00       ;
                       LDA.B !SpriteXSpeed,X               ;; 02C128 : B5 B6       ;
-                      BPL CODE_02C12D                     ;; 02C12A : 10 01       ;
+                      BPL +                               ;; 02C12A : 10 01       ;
                       INY                                 ;; 02C12C : C8          ;
-CODE_02C12D:          TYA                                 ;; 02C12D : 98          ;
+                    + TYA                                 ;; 02C12D : 98          ;
                       STA.W !SpriteMisc157C,X             ;; 02C12E : 9D 7C 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -7983,13 +7983,13 @@ DATA_02C136:          db $05,$0E,$0F,$10                  ;; 02C136             
 CODE_02C13A:          LDA.W !SpriteMisc1558,X             ;; 02C13A : BD 58 15    ;
                       BEQ CODE_02C156                     ;; 02C13D : F0 17       ;
                       CMP.B #$01                          ;; 02C13F : C9 01       ;
-                      BNE CODE_02C150                     ;; 02C141 : D0 0D       ;
+                      BNE +                               ;; 02C141 : D0 0D       ;
                       LDA.B #$30                          ;; 02C143 : A9 30       ;
                       STA.W !SpriteMisc1540,X             ;; 02C145 : 9D 40 15    ;
                       LDA.B #$04                          ;; 02C148 : A9 04       ;
                       STA.W !SpriteMisc1534,X             ;; 02C14A : 9D 34 15    ;
                       STZ.W !SpriteMisc1570,X             ;; 02C14D : 9E 70 15    ;
-CODE_02C150:          LDA.B #$02                          ;; 02C150 : A9 02       ;
+                    + LDA.B #$02                          ;; 02C150 : A9 02       ;
                       STA.W !SpriteMisc151C,X             ;; 02C152 : 9D 1C 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -8006,12 +8006,12 @@ CODE_02C156:          LDA.W !SpriteMisc1540,X             ;; 02C156 : BD 40 15  
                       BNE CODE_02C181                     ;; 02C16F : D0 10       ;
                       LDA.W !SpriteMisc1534,X             ;; 02C171 : BD 34 15    ;
                       AND.B #$0C                          ;; 02C174 : 29 0C       ;
-                      BNE CODE_02C17E                     ;; 02C176 : D0 06       ;
+                      BNE +                               ;; 02C176 : D0 06       ;
                       LDA.B #$40                          ;; 02C178 : A9 40       ;
                       STA.W !SpriteMisc1558,X             ;; 02C17A : 9D 58 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02C17E:          JSR CODE_02C19A                     ;; 02C17E : 20 9A C1    ;
+                    + JSR CODE_02C19A                     ;; 02C17E : 20 9A C1    ;
 CODE_02C181:          LDY.W !SpriteMisc1570,X             ;; 02C181 : BC 70 15    ;
                       LDA.W DATA_02C136,Y                 ;; 02C184 : B9 36 C1    ;
                       STA.W !SpriteMisc1602,X             ;; 02C187 : 9D 02 16    ;
@@ -8028,7 +8028,7 @@ DATA_02C196:          db $00,$FF                          ;; 02C196             
 DATA_02C198:          db $08,$F8                          ;; 02C198               ;
                                                           ;;                      ;
 CODE_02C19A:          JSL FindFreeSprSlot                 ;; 02C19A : 22 E4 A9 02 ; \ Return if no free slots 
-                      BMI Return02C1F2                    ;; 02C19E : 30 52       ; / 
+                      BMI +                               ;; 02C19E : 30 52       ; / 
                       LDA.B #$08                          ;; 02C1A0 : A9 08       ; \ Sprite status = Normal 
                       STA.W !SpriteStatus,Y               ;; 02C1A2 : 99 C8 14    ; / 
                       LDA.B #$48                          ;; 02C1A5 : A9 48       ;
@@ -8064,7 +8064,7 @@ CODE_02C19A:          JSL FindFreeSprSlot                 ;; 02C19A : 22 E4 A9 0
                       STA.W !SpriteYSpeed,Y               ;; 02C1EA : 99 AA 00    ;
                       LDA.B #$2C                          ;; 02C1ED : A9 2C       ;
                       STA.W !SpriteMisc1540,Y             ;; 02C1EF : 99 40 15    ;
-Return02C1F2:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02C1F3:          db $01,$03                          ;; 02C1F3               ;
@@ -8076,20 +8076,20 @@ ChucksMain:           PHB                                 ;; ?QPWZ? : 8B        
                       PHA                                 ;; 02C1FB : 48          ;
                       JSR CODE_02C22C                     ;; 02C1FC : 20 2C C2    ;
                       PLA                                 ;; 02C1FF : 68          ;
-                      BNE CODE_02C211                     ;; 02C200 : D0 0F       ;
+                      BNE +                               ;; 02C200 : D0 0F       ;
                       CMP.W !SpriteMisc187B,X             ;; 02C202 : DD 7B 18    ;
-                      BEQ CODE_02C211                     ;; 02C205 : F0 0A       ;
+                      BEQ +                               ;; 02C205 : F0 0A       ;
                       LDA.W !SpriteMisc163E,X             ;; 02C207 : BD 3E 16    ;
-                      BNE CODE_02C211                     ;; 02C20A : D0 05       ;
+                      BNE +                               ;; 02C20A : D0 05       ;
                       LDA.B #$28                          ;; 02C20C : A9 28       ;
                       STA.W !SpriteMisc163E,X             ;; 02C20E : 9D 3E 16    ;
-CODE_02C211:          PLB                                 ;; 02C211 : AB          ;
+                    + PLB                                 ;; 02C211 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02C213:          db $01,$02,$03,$02                  ;; 02C213               ;
                                                           ;;                      ;
-CODE_02C217:          LDA.B !EffFrame                     ;; 02C217 : A5 14       ;
+                    - LDA.B !EffFrame                     ;; 02C217 : A5 14       ;
                       LSR A                               ;; 02C219 : 4A          ;
                       LSR A                               ;; 02C21A : 4A          ;
                       AND.B #$03                          ;; 02C21B : 29 03       ;
@@ -8106,36 +8106,36 @@ DATA_02C22A:          db $03,$01                          ;; 02C22A             
                                                           ;;                      ;
 CODE_02C22C:          LDA.W !SpriteStatus,X               ;; 02C22C : BD C8 14    ;
                       CMP.B #$08                          ;; 02C22F : C9 08       ;
-                      BNE CODE_02C217                     ;; 02C231 : D0 E4       ;
+                      BNE -                               ;; 02C231 : D0 E4       ;
                       LDA.W !SpriteMisc15AC,X             ;; 02C233 : BD AC 15    ;
-                      BEQ CODE_02C23D                     ;; 02C236 : F0 05       ;
+                      BEQ +                               ;; 02C236 : F0 05       ;
                       LDA.B #$05                          ;; 02C238 : A9 05       ;
                       STA.W !SpriteMisc1602,X             ;; 02C23A : 9D 02 16    ;
-CODE_02C23D:          LDA.W !SpriteBlockedDirs,X          ;; 02C23D : BD 88 15    ; \ Branch if on ground 
+                    + LDA.W !SpriteBlockedDirs,X          ;; 02C23D : BD 88 15    ; \ Branch if on ground 
                       AND.B #$04                          ;; 02C240 : 29 04       ;  | 
-                      BNE CODE_02C253                     ;; 02C242 : D0 0F       ; / 
+                      BNE +                               ;; 02C242 : D0 0F       ; / 
                       LDA.B !SpriteYSpeed,X               ;; 02C244 : B5 AA       ;
-                      BPL CODE_02C253                     ;; 02C246 : 10 0B       ;
+                      BPL +                               ;; 02C246 : 10 0B       ;
                       LDA.B !SpriteTableC2,X              ;; 02C248 : B5 C2       ;
                       CMP.B #$05                          ;; 02C24A : C9 05       ;
-                      BCS CODE_02C253                     ;; 02C24C : B0 05       ;
+                      BCS +                               ;; 02C24C : B0 05       ;
                       LDA.B #$06                          ;; 02C24E : A9 06       ;
                       STA.W !SpriteMisc1602,X             ;; 02C250 : 9D 02 16    ;
-CODE_02C253:          JSR CODE_02C81A                     ;; 02C253 : 20 1A C8    ;
+                    + JSR CODE_02C81A                     ;; 02C253 : 20 1A C8    ;
                       LDA.B !SpriteLock                   ;; 02C256 : A5 9D       ;
-                      BEQ CODE_02C25B                     ;; 02C258 : F0 01       ;
+                      BEQ +                               ;; 02C258 : F0 01       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02C25B:          JSR SubOffscreen0Bnk2               ;; 02C25B : 20 25 D0    ;
+                    + JSR SubOffscreen0Bnk2               ;; 02C25B : 20 25 D0    ;
                       JSR CODE_02C79D                     ;; 02C25E : 20 9D C7    ;
                       JSL SprSprInteract                  ;; 02C261 : 22 32 80 01 ;
                       JSL CODE_019138                     ;; 02C265 : 22 38 91 01 ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02C269 : BD 88 15    ;
                       AND.B #$08                          ;; 02C26C : 29 08       ;
-                      BEQ CODE_02C274                     ;; 02C26E : F0 04       ;
+                      BEQ +                               ;; 02C26E : F0 04       ;
                       LDA.B #$10                          ;; 02C270 : A9 10       ;
                       STA.B !SpriteYSpeed,X               ;; 02C272 : 95 AA       ;
-CODE_02C274:          LDA.W !SpriteBlockedDirs,X          ;; 02C274 : BD 88 15    ; \ Branch if not touching object 
+                    + LDA.W !SpriteBlockedDirs,X          ;; 02C274 : BD 88 15    ; \ Branch if not touching object 
                       AND.B #$03                          ;; 02C277 : 29 03       ;  | 
                       BEQ CODE_02C2F4                     ;; 02C279 : F0 79       ; / 
                       LDA.W !SpriteOffscreenX,X           ;; 02C27B : BD A0 15    ;
@@ -8196,39 +8196,39 @@ CODE_02C2E4:          LDA.W !SpriteBlockedDirs,X          ;; 02C2E4 : BD 88 15  
                       LDA.B #$C0                          ;; 02C2EB : A9 C0       ;
                       STA.B !SpriteYSpeed,X               ;; 02C2ED : 95 AA       ;
                       JSR UpdateYPosNoGrvty               ;; 02C2EF : 20 94 D2    ;
-                      BRA CODE_02C301                     ;; 02C2F2 : 80 0D       ;
+                      BRA +                               ;; 02C2F2 : 80 0D       ;
                                                           ;;                      ;
 CODE_02C2F4:          JSR UpdateXPosNoGrvty               ;; 02C2F4 : 20 88 D2    ;
 CODE_02C2F7:          LDA.W !SpriteBlockedDirs,X          ;; 02C2F7 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02C2FA : 29 04       ;  | 
-                      BEQ CODE_02C301                     ;; 02C2FC : F0 03       ; / 
+                      BEQ +                               ;; 02C2FC : F0 03       ; / 
                       JSR CODE_02C579                     ;; 02C2FE : 20 79 C5    ;
-CODE_02C301:          JSR UpdateYPosNoGrvty               ;; 02C301 : 20 94 D2    ;
+                    + JSR UpdateYPosNoGrvty               ;; 02C301 : 20 94 D2    ;
                       LDY.W !SpriteInLiquid,X             ;; 02C304 : BC 4A 16    ;
                       CPY.B #$01                          ;; 02C307 : C0 01       ;
                       LDY.B #$00                          ;; 02C309 : A0 00       ;
                       LDA.B !SpriteYSpeed,X               ;; 02C30B : B5 AA       ;
-                      BCC CODE_02C31A                     ;; 02C30D : 90 0B       ;
+                      BCC +                               ;; 02C30D : 90 0B       ;
                       INY                                 ;; 02C30F : C8          ;
                       CMP.B #$00                          ;; 02C310 : C9 00       ;
-                      BPL CODE_02C31A                     ;; 02C312 : 10 06       ;
+                      BPL +                               ;; 02C312 : 10 06       ;
                       CMP.B #$E0                          ;; 02C314 : C9 E0       ;
-                      BCS CODE_02C31A                     ;; 02C316 : B0 02       ;
+                      BCS +                               ;; 02C316 : B0 02       ;
                       LDA.B #$E0                          ;; 02C318 : A9 E0       ;
-CODE_02C31A:          CLC                                 ;; 02C31A : 18          ;
+                    + CLC                                 ;; 02C31A : 18          ;
                       ADC.W DATA_02C22A,Y                 ;; 02C31B : 79 2A C2    ;
-                      BMI CODE_02C328                     ;; 02C31E : 30 08       ;
+                      BMI +                               ;; 02C31E : 30 08       ;
                       CMP.W DATA_02C228,Y                 ;; 02C320 : D9 28 C2    ;
-                      BCC CODE_02C328                     ;; 02C323 : 90 03       ;
+                      BCC +                               ;; 02C323 : 90 03       ;
                       LDA.W DATA_02C228,Y                 ;; 02C325 : B9 28 C2    ;
-CODE_02C328:          TAY                                 ;; 02C328 : A8          ;
-                      BMI CODE_02C334                     ;; 02C329 : 30 09       ;
+                    + TAY                                 ;; 02C328 : A8          ;
+                      BMI +                               ;; 02C329 : 30 09       ;
                       LDY.B !SpriteTableC2,X              ;; 02C32B : B4 C2       ;
                       CPY.B #$07                          ;; 02C32D : C0 07       ;
-                      BNE CODE_02C334                     ;; 02C32F : D0 03       ;
+                      BNE +                               ;; 02C32F : D0 03       ;
                       CLC                                 ;; 02C331 : 18          ;
                       ADC.B #$03                          ;; 02C332 : 69 03       ;
-CODE_02C334:          STA.B !SpriteYSpeed,X               ;; 02C334 : 95 AA       ;
+                    + STA.B !SpriteYSpeed,X               ;; 02C334 : 95 AA       ;
                       LDA.B !SpriteTableC2,X              ;; 02C336 : B5 C2       ;
                       JSL ExecutePtr                      ;; 02C338 : 22 DF 86 00 ;
                                                           ;;                      ;
@@ -8249,31 +8249,31 @@ CODE_02C334:          STA.B !SpriteYSpeed,X               ;; 02C334 : 95 AA     
 CODE_02C356:          LDA.B #$03                          ;; 02C356 : A9 03       ;
                       STA.W !SpriteMisc1602,X             ;; 02C358 : 9D 02 16    ;
                       LDA.W !SpriteInLiquid,X             ;; 02C35B : BD 4A 16    ;
-                      BEQ CODE_02C370                     ;; 02C35E : F0 10       ;
+                      BEQ +                               ;; 02C35E : F0 10       ;
                       JSR CODE_02D4FA                     ;; 02C360 : 20 FA D4    ;
                       LDA.B !_F                           ;; 02C363 : A5 0F       ;
                       CLC                                 ;; 02C365 : 18          ;
                       ADC.B #$30                          ;; 02C366 : 69 30       ;
                       CMP.B #$60                          ;; 02C368 : C9 60       ;
-                      BCS CODE_02C370                     ;; 02C36A : B0 04       ;
+                      BCS +                               ;; 02C36A : B0 04       ;
                       LDA.B #$0C                          ;; 02C36C : A9 0C       ;
                       STA.B !SpriteTableC2,X              ;; 02C36E : 95 C2       ;
-CODE_02C370:          JMP CODE_02C556                     ;; 02C370 : 4C 56 C5    ;
+                    + JMP CODE_02C556                     ;; 02C370 : 4C 56 C5    ;
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02C373:          db $05,$05,$05,$02,$02,$06,$06,$06  ;; 02C373               ;
                                                           ;;                      ;
 CODE_02C37B:          LDA.B !EffFrame                     ;; 02C37B : A5 14       ;
                       AND.B #$3F                          ;; 02C37D : 29 3F       ;
-                      BNE CODE_02C386                     ;; 02C37F : D0 05       ;
+                      BNE +                               ;; 02C37F : D0 05       ;
                       LDA.B #$1E                          ;; 02C381 : A9 1E       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 02C383 : 8D FC 1D    ; / 
-CODE_02C386:          LDY.B #$03                          ;; 02C386 : A0 03       ;
+                    + LDY.B #$03                          ;; 02C386 : A0 03       ;
                       LDA.B !EffFrame                     ;; 02C388 : A5 14       ;
                       AND.B #$30                          ;; 02C38A : 29 30       ;
-                      BEQ CODE_02C390                     ;; 02C38C : F0 02       ;
+                      BEQ +                               ;; 02C38C : F0 02       ;
                       LDY.B #$06                          ;; 02C38E : A0 06       ;
-CODE_02C390:          TYA                                 ;; 02C390 : 98          ;
+                    + TYA                                 ;; 02C390 : 98          ;
                       STA.W !SpriteMisc1602,X             ;; 02C391 : 9D 02 16    ;
                       LDA.B !EffFrame                     ;; 02C394 : A5 14       ;
                       LSR A                               ;; 02C396 : 4A          ;
@@ -8289,9 +8289,9 @@ CODE_02C390:          TYA                                 ;; 02C390 : 98        
                       LSR A                               ;; 02C3A6 : 4A          ;
                       LSR A                               ;; 02C3A7 : 4A          ;
                       LDA.B #$09                          ;; 02C3A8 : A9 09       ;
-                      BCC CODE_02C3AF                     ;; 02C3AA : 90 03       ;
+                      BCC +                               ;; 02C3AA : 90 03       ;
                       STA.W !CurrentGenerator             ;; 02C3AC : 8D B9 18    ;
-CODE_02C3AF:          STA.W !ChuckIsWhistling             ;; 02C3AF : 8D FD 18    ;
+                    + STA.W !ChuckIsWhistling             ;; 02C3AF : 8D FD 18    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -8306,37 +8306,37 @@ CODE_02C3CB:          LDA.W !SpriteMisc1534,X             ;; 02C3CB : BD 34 15  
                       BNE CODE_02C43A                     ;; 02C3CE : D0 6A       ;
                       JSR CODE_02D50C                     ;; 02C3D0 : 20 0C D5    ;
                       LDA.B !_E                           ;; 02C3D3 : A5 0E       ;
-                      BPL CODE_02C3E7                     ;; 02C3D5 : 10 10       ;
+                      BPL +                               ;; 02C3D5 : 10 10       ;
                       CMP.B #$D0                          ;; 02C3D7 : C9 D0       ;
-                      BCS CODE_02C3E7                     ;; 02C3D9 : B0 0C       ;
+                      BCS +                               ;; 02C3D9 : B0 0C       ;
                       LDA.B #$C8                          ;; 02C3DB : A9 C8       ;
                       STA.B !SpriteYSpeed,X               ;; 02C3DD : 95 AA       ;
                       LDA.B #$3E                          ;; 02C3DF : A9 3E       ;
                       STA.W !SpriteMisc1540,X             ;; 02C3E1 : 9D 40 15    ;
                       INC.W !SpriteMisc1534,X             ;; 02C3E4 : FE 34 15    ;
-CODE_02C3E7:          LDA.B !TrueFrame                    ;; 02C3E7 : A5 13       ;
+                    + LDA.B !TrueFrame                    ;; 02C3E7 : A5 13       ;
                       AND.B #$07                          ;; 02C3E9 : 29 07       ;
-                      BNE CODE_02C3F5                     ;; 02C3EB : D0 08       ;
+                      BNE +                               ;; 02C3EB : D0 08       ;
                       LDA.W !SpriteMisc1540,X             ;; 02C3ED : BD 40 15    ;
-                      BEQ CODE_02C3F5                     ;; 02C3F0 : F0 03       ;
+                      BEQ +                               ;; 02C3F0 : F0 03       ;
                       INC.W !SpriteMisc1540,X             ;; 02C3F2 : FE 40 15    ;
-CODE_02C3F5:          LDA.B !EffFrame                     ;; 02C3F5 : A5 14       ;
+                    + LDA.B !EffFrame                     ;; 02C3F5 : A5 14       ;
                       AND.B #$3F                          ;; 02C3F7 : 29 3F       ;
-                      BNE CODE_02C3FE                     ;; 02C3F9 : D0 03       ;
+                      BNE +                               ;; 02C3F9 : D0 03       ;
                       JSR CODE_02C556                     ;; 02C3FB : 20 56 C5    ;
-CODE_02C3FE:          LDA.W !SpriteMisc1540,X             ;; 02C3FE : BD 40 15    ;
-                      BNE CODE_02C40C                     ;; 02C401 : D0 09       ;
+                    + LDA.W !SpriteMisc1540,X             ;; 02C3FE : BD 40 15    ;
+                      BNE +                               ;; 02C401 : D0 09       ;
                       LDY.W !SpriteMisc187B,X             ;; 02C403 : BC 7B 18    ;
                       LDA.W DATA_02C3B3,Y                 ;; 02C406 : B9 B3 C3    ;
                       STA.W !SpriteMisc1540,X             ;; 02C409 : 9D 40 15    ;
-CODE_02C40C:          LDA.W !SpriteMisc1540,X             ;; 02C40C : BD 40 15    ;
+                    + LDA.W !SpriteMisc1540,X             ;; 02C40C : BD 40 15    ;
                       CMP.B #$40                          ;; 02C40F : C9 40       ;
-                      BCS CODE_02C419                     ;; 02C411 : B0 06       ;
+                      BCS +                               ;; 02C411 : B0 06       ;
                       LDA.B #$00                          ;; 02C413 : A9 00       ;
                       STA.W !SpriteMisc1602,X             ;; 02C415 : 9D 02 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02C419:          SEC                                 ;; 02C419 : 38          ;
+                    + SEC                                 ;; 02C419 : 38          ;
                       SBC.B #$40                          ;; 02C41A : E9 40       ;
                       LSR A                               ;; 02C41C : 4A          ;
                       LSR A                               ;; 02C41D : 4A          ;
@@ -8358,20 +8358,20 @@ CODE_02C43A:          LDA.W !SpriteMisc1540,X             ;; 02C43A : BD 40 15  
                       BEQ CODE_02C45C                     ;; 02C43D : F0 1D       ;
                       PHA                                 ;; 02C43F : 48          ;
                       CMP.B #$20                          ;; 02C440 : C9 20       ;
-                      BCC CODE_02C44A                     ;; 02C442 : 90 06       ;
+                      BCC +                               ;; 02C442 : 90 06       ;
                       CMP.B #$30                          ;; 02C444 : C9 30       ;
-                      BCS CODE_02C44A                     ;; 02C446 : B0 02       ;
+                      BCS +                               ;; 02C446 : B0 02       ;
                       STZ.B !SpriteYSpeed,X               ;; 02C448 : 74 AA       ; Sprite Y Speed = 0 
-CODE_02C44A:          LSR A                               ;; 02C44A : 4A          ;
+                    + LSR A                               ;; 02C44A : 4A          ;
                       LSR A                               ;; 02C44B : 4A          ;
                       TAY                                 ;; 02C44C : A8          ;
                       LDA.W DATA_02C3BB,Y                 ;; 02C44D : B9 BB C3    ;
                       STA.W !SpriteMisc1602,X             ;; 02C450 : 9D 02 16    ;
                       PLA                                 ;; 02C453 : 68          ;
                       CMP.B #$26                          ;; 02C454 : C9 26       ;
-                      BNE Return02C45B                    ;; 02C456 : D0 03       ;
+                      BNE +                               ;; 02C456 : D0 03       ;
                       JSR CODE_02C466                     ;; 02C458 : 20 66 C4    ;
-Return02C45B:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02C45C:          STZ.W !SpriteMisc1534,X             ;; 02C45C : 9E 34 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -8432,19 +8432,19 @@ CODE_02C4BD:          STZ.W !SpriteMisc1602,X             ;; 02C4BD : 9E 02 16  
                       ADC.B !TrueFrame                    ;; 02C4C4 : 65 13       ;
                       AND.B #$7F                          ;; 02C4C6 : 29 7F       ;
                       CMP.B #$00                          ;; 02C4C8 : C9 00       ;
-                      BNE CODE_02C4D5                     ;; 02C4CA : D0 09       ;
+                      BNE +                               ;; 02C4CA : D0 09       ;
                       PHA                                 ;; 02C4CC : 48          ;
                       JSR CODE_02C556                     ;; 02C4CD : 20 56 C5    ;
                       JSL CODE_03CBB3                     ;; 02C4D0 : 22 B3 CB 03 ;
                       PLA                                 ;; 02C4D4 : 68          ;
-CODE_02C4D5:          CMP.B #$20                          ;; 02C4D5 : C9 20       ;
-                      BCS Return02C4E2                    ;; 02C4D7 : B0 09       ;
+                    + CMP.B #$20                          ;; 02C4D5 : C9 20       ;
+                      BCS +                               ;; 02C4D7 : B0 09       ;
                       LSR A                               ;; 02C4D9 : 4A          ;
                       LSR A                               ;; 02C4DA : 4A          ;
                       TAY                                 ;; 02C4DB : A8          ;
                       LDA.W DATA_02C4B5,Y                 ;; 02C4DC : B9 B5 C4    ;
                       STA.W !SpriteMisc1602,X             ;; 02C4DF : 9D 02 16    ;
-Return02C4E2:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02C4E3:          JSR CODE_02C556                     ;; 02C4E3 : 20 56 C5    ;
                       LDA.B #$06                          ;; 02C4E6 : A9 06       ;
@@ -8454,48 +8454,48 @@ CODE_02C4E3:          JSR CODE_02C556                     ;; 02C4E3 : 20 56 C5  
                       LDY.W !SpriteMisc160E,X             ;; 02C4EE : BC 0E 16    ;
                       BEQ CODE_02C504                     ;; 02C4F1 : F0 11       ;
                       LDA.W !SpriteMisc1FE2,X             ;; 02C4F3 : BD E2 1F    ;
-                      BNE CODE_02C502                     ;; 02C4F6 : D0 0A       ;
+                      BNE +                               ;; 02C4F6 : D0 0A       ;
                       LDA.B #$19                          ;; 02C4F8 : A9 19       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 02C4FA : 8D FC 1D    ; / 
                       LDA.B #$20                          ;; 02C4FD : A9 20       ;
                       STA.W !SpriteMisc1FE2,X             ;; 02C4FF : 9D E2 1F    ;
-CODE_02C502:          LDA.B #$07                          ;; 02C502 : A9 07       ;
+                    + LDA.B #$07                          ;; 02C502 : A9 07       ;
 CODE_02C504:          STA.W !SpriteMisc1602,X             ;; 02C504 : 9D 02 16    ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02C507 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02C50A : 29 04       ;  | 
-                      BEQ Return02C53B                    ;; 02C50C : F0 2D       ; / 
+                      BEQ +                               ;; 02C50C : F0 2D       ; / 
                       STZ.W !SpriteMisc160E,X             ;; 02C50E : 9E 0E 16    ;
                       LDA.B #$04                          ;; 02C511 : A9 04       ;
                       STA.W !SpriteMisc1602,X             ;; 02C513 : 9D 02 16    ;
                       LDA.W !SpriteMisc1540,X             ;; 02C516 : BD 40 15    ;
-                      BNE Return02C53B                    ;; 02C519 : D0 20       ;
+                      BNE +                               ;; 02C519 : D0 20       ;
                       LDA.B #$20                          ;; 02C51B : A9 20       ;
                       STA.W !SpriteMisc1540,X             ;; 02C51D : 9D 40 15    ;
                       LDA.B #$F0                          ;; 02C520 : A9 F0       ;
                       STA.B !SpriteYSpeed,X               ;; 02C522 : 95 AA       ;
                       JSR CODE_02D50C                     ;; 02C524 : 20 0C D5    ;
                       LDA.B !_E                           ;; 02C527 : A5 0E       ;
-                      BPL Return02C53B                    ;; 02C529 : 10 10       ;
+                      BPL +                               ;; 02C529 : 10 10       ;
                       CMP.B #$D0                          ;; 02C52B : C9 D0       ;
-                      BCS Return02C53B                    ;; 02C52D : B0 0C       ;
+                      BCS +                               ;; 02C52D : B0 0C       ;
                       LDA.B #$C0                          ;; 02C52F : A9 C0       ;
                       STA.B !SpriteYSpeed,X               ;; 02C531 : 95 AA       ;
                       INC.W !SpriteMisc160E,X             ;; 02C533 : FE 0E 16    ;
 CODE_02C536:          LDA.B #$08                          ;; 02C536 : A9 08       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 02C538 : 8D FC 1D    ; / 
-Return02C53B:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02C53C:          LDA.B #$06                          ;; 02C53C : A9 06       ;
                       STA.W !SpriteMisc1602,X             ;; 02C53E : 9D 02 16    ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02C541 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02C544 : 29 04       ;  | 
-                      BEQ Return02C555                    ;; 02C546 : F0 0D       ; / 
+                      BEQ +                               ;; 02C546 : F0 0D       ; / 
                       JSR CODE_02C579                     ;; 02C548 : 20 79 C5    ;
                       JSR CODE_02C556                     ;; 02C54B : 20 56 C5    ;
                       LDA.B #$08                          ;; 02C54E : A9 08       ;
                       STA.W !SpriteMisc1540,X             ;; 02C550 : 9D 40 15    ;
                       INC.B !SpriteTableC2,X              ;; 02C553 : F6 C2       ;
-Return02C555:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02C556:          JSR CODE_02D4FA                     ;; 02C556 : 20 FA D4    ;
                       TYA                                 ;; 02C559 : 98          ;
@@ -8510,12 +8510,12 @@ CODE_02C564:          LDA.B #$03                          ;; 02C564 : A9 03     
                       BNE CODE_02C579                     ;; 02C56C : D0 0B       ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02C56E : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02C571 : 29 04       ;  | 
-                      BEQ Return02C57D                    ;; 02C573 : F0 08       ; / 
+                      BEQ +                               ;; 02C573 : F0 08       ; / 
                       LDA.B #$05                          ;; 02C575 : A9 05       ;
                       STA.B !SpriteTableC2,X              ;; 02C577 : 95 C2       ;
 CODE_02C579:          STZ.B !SpriteXSpeed,X               ;; 02C579 : 74 B6       ; Sprite X Speed = 0 
                       STZ.B !SpriteYSpeed,X               ;; 02C57B : 74 AA       ; Sprite Y Speed = 0 
-Return02C57D:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02C57E:          db $10,$F0                          ;; 02C57E               ;
@@ -8529,7 +8529,7 @@ CODE_02C582:          JSR CODE_02C556                     ;; 02C582 : 20 56 C5  
                       BNE CODE_02C5FC                     ;; 02C58C : D0 6E       ;
                       LDA.B !SpriteNumber,X               ;; 02C58E : B5 9E       ;
                       CMP.B #$93                          ;; 02C590 : C9 93       ;
-                      BNE CODE_02C5A7                     ;; 02C592 : D0 13       ;
+                      BNE +                               ;; 02C592 : D0 13       ;
                       JSR CODE_02D4FA                     ;; 02C594 : 20 FA D4    ;
                       LDA.W DATA_02C580,Y                 ;; 02C597 : B9 80 C5    ;
                       STA.B !SpriteXSpeed,X               ;; 02C59A : 95 B6       ;
@@ -8539,7 +8539,7 @@ CODE_02C582:          JSR CODE_02C556                     ;; 02C582 : 20 56 C5  
                       STA.B !SpriteTableC2,X              ;; 02C5A2 : 95 C2       ;
                       JMP CODE_02C536                     ;; 02C5A4 : 4C 36 C5    ;
                                                           ;;                      ;
-CODE_02C5A7:          STZ.B !SpriteTableC2,X              ;; 02C5A7 : 74 C2       ;
+                    + STZ.B !SpriteTableC2,X              ;; 02C5A7 : 74 C2       ;
                       LDA.B #$50                          ;; 02C5A9 : A9 50       ;
                       STA.W !SpriteMisc1540,X             ;; 02C5AB : 9D 40 15    ;
                       LDA.B #$10                          ;; 02C5AE : A9 10       ; \ Play sound effect 
@@ -8583,19 +8583,19 @@ CODE_02C602:          JSR CODE_02D4FA                     ;; 02C602 : 20 FA D4  
                       CLC                                 ;; 02C60B : 18          ;
                       ADC.B #$50                          ;; 02C60C : 69 50       ;
                       CMP.B #$A0                          ;; 02C60E : C9 A0       ;
-                      BCS CODE_02C618                     ;; 02C610 : B0 06       ;
+                      BCS +                               ;; 02C610 : B0 06       ;
                       LDA.B #$40                          ;; 02C612 : A9 40       ;
                       STA.W !SpriteMisc1540,X             ;; 02C614 : 9D 40 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02C618:          LDA.B #$03                          ;; 02C618 : A9 03       ;
+                    + LDA.B #$03                          ;; 02C618 : A9 03       ;
                       STA.W !SpriteMisc1602,X             ;; 02C61A : 9D 02 16    ;
                       LDA.B !TrueFrame                    ;; 02C61D : A5 13       ;
                       AND.B #$3F                          ;; 02C61F : 29 3F       ;
-                      BNE Return02C627                    ;; 02C621 : D0 04       ;
+                      BNE +                               ;; 02C621 : D0 04       ;
                       LDA.B #$E0                          ;; 02C623 : A9 E0       ;
                       STA.B !SpriteYSpeed,X               ;; 02C625 : 95 AA       ;
-Return02C627:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02C628:          LDA.B #$08                          ;; 02C628 : A9 08       ;
                       STA.W !SpriteMisc15AC,X             ;; 02C62A : 9D AC 15    ;
@@ -8612,13 +8612,13 @@ CODE_02C63B:          LDA.B #$03                          ;; 02C63B : A9 03     
                       STZ.W !SpriteMisc187B,X             ;; 02C640 : 9E 7B 18    ;
                       LDA.W !SpriteMisc1540,X             ;; 02C643 : BD 40 15    ;
                       AND.B #$0F                          ;; 02C646 : 29 0F       ;
-                      BNE CODE_02C668                     ;; 02C648 : D0 1E       ;
+                      BNE +                               ;; 02C648 : D0 1E       ;
                       JSR CODE_02D50C                     ;; 02C64A : 20 0C D5    ;
                       LDA.B !_E                           ;; 02C64D : A5 0E       ;
                       CLC                                 ;; 02C64F : 18          ;
                       ADC.B #$28                          ;; 02C650 : 69 28       ;
                       CMP.B #$50                          ;; 02C652 : C9 50       ;
-                      BCS CODE_02C668                     ;; 02C654 : B0 12       ;
+                      BCS +                               ;; 02C654 : B0 12       ;
                       JSR CODE_02C556                     ;; 02C656 : 20 56 C5    ;
                       INC.W !SpriteMisc187B,X             ;; 02C659 : FE 7B 18    ;
 CODE_02C65C:          LDA.B #$02                          ;; 02C65C : A9 02       ;
@@ -8630,7 +8630,7 @@ CODE_02C65C:          LDA.B #$02                          ;; 02C65C : A9 02     
                                                           ;;                      ;
 DATA_02C666:          db $01,$FF                          ;; 02C666               ;
                                                           ;;                      ;
-CODE_02C668:          LDA.W !SpriteMisc1540,X             ;; 02C668 : BD 40 15    ;
+                    + LDA.W !SpriteMisc1540,X             ;; 02C668 : BD 40 15    ;
                       BNE CODE_02C677                     ;; 02C66B : D0 0A       ;
                       LDA.W !SpriteMisc157C,X             ;; 02C66D : BD 7C 15    ;
                       EOR.B #$01                          ;; 02C670 : 49 01       ;
@@ -8647,14 +8647,14 @@ CODE_02C677:          LDA.B !EffFrame                     ;; 02C677 : A5 14     
                       CLC                                 ;; 02C686 : 18          ;
                       ADC.W DATA_02C666,Y                 ;; 02C687 : 79 66 C6    ;
                       CMP.B #$0B                          ;; 02C68A : C9 0B       ;
-                      BCS CODE_02C69B                     ;; 02C68C : B0 0D       ;
+                      BCS +                               ;; 02C68C : B0 0D       ;
                       STA.W !SpriteMisc1594,X             ;; 02C68E : 9D 94 15    ;
 CODE_02C691:          LDY.W !SpriteMisc1594,X             ;; 02C691 : BC 94 15    ;
                       LDA.W DATA_02C62E,Y                 ;; 02C694 : B9 2E C6    ;
                       STA.W !SpriteMisc151C,X             ;; 02C697 : 9D 1C 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02C69B:          INC.W !SpriteMisc1534,X             ;; 02C69B : FE 34 15    ;
+                    + INC.W !SpriteMisc1534,X             ;; 02C69B : FE 34 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -8664,35 +8664,35 @@ DATA_02C6A3:          db $12,$13,$12,$13                  ;; 02C6A3             
                                                           ;;                      ;
 CODE_02C6A7:          LDA.W !SpriteBlockedDirs,X          ;; 02C6A7 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02C6AA : 29 04       ;  | 
-                      BEQ CODE_02C6BA                     ;; 02C6AC : F0 0C       ; / 
+                      BEQ +                               ;; 02C6AC : F0 0C       ; / 
                       LDA.W !SpriteMisc163E,X             ;; 02C6AE : BD 3E 16    ;
                       CMP.B #$01                          ;; 02C6B1 : C9 01       ;
-                      BRA CODE_02C6BA                     ;; 02C6B3 : 80 05       ;
+                      BRA +                               ;; 02C6B3 : 80 05       ;
                                                           ;;                      ;
                       LDA.B #$24                          ;; 02C6B5 : A9 24       ; \ Unreachable 
                       STA.W !SPCIO0                       ;; 02C6B7 : 8D F9 1D    ; / Play sound effect 
-CODE_02C6BA:          JSR CODE_02D50C                     ;; 02C6BA : 20 0C D5    ;
+                    + JSR CODE_02D50C                     ;; 02C6BA : 20 0C D5    ;
                       LDA.B !_E                           ;; 02C6BD : A5 0E       ;
                       CLC                                 ;; 02C6BF : 18          ;
                       ADC.B #$30                          ;; 02C6C0 : 69 30       ;
                       CMP.B #$60                          ;; 02C6C2 : C9 60       ;
-                      BCS CODE_02C6D7                     ;; 02C6C4 : B0 11       ;
+                      BCS +                               ;; 02C6C4 : B0 11       ;
                       JSR CODE_02D4FA                     ;; 02C6C6 : 20 FA D4    ;
                       TYA                                 ;; 02C6C9 : 98          ;
                       CMP.W !SpriteMisc157C,X             ;; 02C6CA : DD 7C 15    ;
-                      BNE CODE_02C6D7                     ;; 02C6CD : D0 08       ;
+                      BNE +                               ;; 02C6CD : D0 08       ;
                       LDA.B #$20                          ;; 02C6CF : A9 20       ;
                       STA.W !SpriteMisc1540,X             ;; 02C6D1 : 9D 40 15    ;
                       STA.W !SpriteMisc187B,X             ;; 02C6D4 : 9D 7B 18    ;
-CODE_02C6D7:          LDA.W !SpriteMisc1540,X             ;; 02C6D7 : BD 40 15    ;
-                      BNE CODE_02C6EC                     ;; 02C6DA : D0 10       ;
+                    + LDA.W !SpriteMisc1540,X             ;; 02C6D7 : BD 40 15    ;
+                      BNE +                               ;; 02C6DA : D0 10       ;
                       STZ.B !SpriteTableC2,X              ;; 02C6DC : 74 C2       ;
                       JSR CODE_02C628                     ;; 02C6DE : 20 28 C6    ;
                       JSL GetRand                         ;; 02C6E1 : 22 F9 AC 01 ;
                       AND.B #$3F                          ;; 02C6E5 : 29 3F       ;
                       ORA.B #$40                          ;; 02C6E7 : 09 40       ;
                       STA.W !SpriteMisc1540,X             ;; 02C6E9 : 9D 40 15    ;
-CODE_02C6EC:          LDY.W !SpriteMisc157C,X             ;; 02C6EC : BC 7C 15    ;
+                    + LDY.W !SpriteMisc157C,X             ;; 02C6EC : BC 7C 15    ;
                       LDA.W DATA_02C639,Y                 ;; 02C6EF : B9 39 C6    ;
                       STA.W !SpriteMisc151C,X             ;; 02C6F2 : 9D 1C 15    ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02C6F5 : BD 88 15    ; \ Branch if not on ground 
@@ -8702,18 +8702,18 @@ CODE_02C6EC:          LDY.W !SpriteMisc157C,X             ;; 02C6EC : BC 7C 15  
                       BEQ CODE_02C70E                     ;; 02C6FF : F0 0D       ;
                       LDA.B !EffFrame                     ;; 02C701 : A5 14       ;
                       AND.B #$07                          ;; 02C703 : 29 07       ;
-                      BNE CODE_02C70C                     ;; 02C705 : D0 05       ;
+                      BNE +                               ;; 02C705 : D0 05       ;
                       LDA.B #$01                          ;; 02C707 : A9 01       ; \ Play sound effect 
                       STA.W !SPCIO0                       ;; 02C709 : 8D F9 1D    ; / 
-CODE_02C70C:          INY                                 ;; 02C70C : C8          ;
+                    + INY                                 ;; 02C70C : C8          ;
                       INY                                 ;; 02C70D : C8          ;
 CODE_02C70E:          LDA.W DATA_02C69F,Y                 ;; 02C70E : B9 9F C6    ;
                       STA.B !SpriteXSpeed,X               ;; 02C711 : 95 B6       ;
 CODE_02C713:          LDA.B !TrueFrame                    ;; 02C713 : A5 13       ;
                       LDY.W !SpriteMisc187B,X             ;; 02C715 : BC 7B 18    ;
-                      BNE CODE_02C71B                     ;; 02C718 : D0 01       ;
+                      BNE +                               ;; 02C718 : D0 01       ;
                       LSR A                               ;; 02C71A : 4A          ;
-CODE_02C71B:          LSR A                               ;; 02C71B : 4A          ;
+                    + LSR A                               ;; 02C71B : 4A          ;
                       AND.B #$03                          ;; 02C71C : 29 03       ;
                       TAY                                 ;; 02C71E : A8          ;
                       LDA.W DATA_02C6A3,Y                 ;; 02C71F : B9 A3 C6    ;
@@ -8723,13 +8723,13 @@ CODE_02C71B:          LSR A                               ;; 02C71B : 4A        
 CODE_02C726:          LDA.B #$03                          ;; 02C726 : A9 03       ;
                       STA.W !SpriteMisc1602,X             ;; 02C728 : 9D 02 16    ;
                       LDA.W !SpriteMisc1540,X             ;; 02C72B : BD 40 15    ;
-                      BNE Return02C73C                    ;; 02C72E : D0 0C       ;
+                      BNE +                               ;; 02C72E : D0 0C       ;
                       JSR CODE_02C628                     ;; 02C730 : 20 28 C6    ;
                       LDA.B #$01                          ;; 02C733 : A9 01       ;
                       STA.B !SpriteTableC2,X              ;; 02C735 : 95 C2       ;
                       LDA.B #$40                          ;; 02C737 : A9 40       ;
                       STA.W !SpriteMisc1540,X             ;; 02C739 : 9D 40 15    ;
-Return02C73C:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02C73D:          db $0A,$0B,$0A,$0C,$0D,$0C          ;; 02C73D               ;
@@ -8749,23 +8749,23 @@ CODE_02C760:          LDA.W DATA_02C73D,Y                 ;; 02C760 : B9 3D C7  
                       STA.W !SpriteMisc1602,X             ;; 02C763 : 9D 02 16    ;
                       LDA.B #$02                          ;; 02C766 : A9 02       ;
                       CPY.B #$05                          ;; 02C768 : C0 05       ;
-                      BNE CODE_02C773                     ;; 02C76A : D0 07       ;
+                      BNE +                               ;; 02C76A : D0 07       ;
                       LDA.B !EffFrame                     ;; 02C76C : A5 14       ;
                       LSR A                               ;; 02C76E : 4A          ;
                       NOP                                 ;; 02C76F : EA          ;
                       AND.B #$02                          ;; 02C770 : 29 02       ;
                       INC A                               ;; 02C772 : 1A          ;
-CODE_02C773:          STA.W !SpriteMisc151C,X             ;; 02C773 : 9D 1C 15    ;
+                    + STA.W !SpriteMisc151C,X             ;; 02C773 : 9D 1C 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02C777:          LDA.B !SpriteNumber,X               ;; 02C777 : B5 9E       ;
                       CMP.B #$94                          ;; 02C779 : C9 94       ;
                       BEQ CODE_02C794                     ;; 02C77B : F0 17       ;
                       CMP.B #$46                          ;; 02C77D : C9 46       ;
-                      BNE CODE_02C785                     ;; 02C77F : D0 04       ;
+                      BNE +                               ;; 02C77F : D0 04       ;
                       LDA.B #$91                          ;; 02C781 : A9 91       ;
                       STA.B !SpriteNumber,X               ;; 02C783 : 95 9E       ;
-CODE_02C785:          LDA.B #$30                          ;; 02C785 : A9 30       ;
+                    + LDA.B #$30                          ;; 02C785 : A9 30       ;
                       STA.W !SpriteMisc1540,X             ;; 02C787 : 9D 40 15    ;
                       LDA.B #$02                          ;; 02C78A : A9 02       ;
                       STA.B !SpriteTableC2,X              ;; 02C78C : 95 C2       ;
@@ -8786,7 +8786,7 @@ CODE_02C79D:          LDA.W !SpriteMisc1564,X             ;; 02C79D : BD 64 15  
                       JSL MarioSprInteract                ;; 02C7A2 : 22 DC A7 01 ;
                       BCC Return02C80F                    ;; 02C7A6 : 90 67       ;
                       LDA.W !InvinsibilityTimer           ;; 02C7A8 : AD 90 14    ; \ Branch if Mario doesn't have star 
-                      BEQ CODE_02C7C4                     ;; 02C7AB : F0 17       ; / 
+                      BEQ +                               ;; 02C7AB : F0 17       ; / 
                       LDA.B #$D0                          ;; 02C7AD : A9 D0       ;
                       STA.B !SpriteYSpeed,X               ;; 02C7AF : 95 AA       ;
 CODE_02C7B1:          STZ.B !SpriteXSpeed,X               ;; 02C7B1 : 74 B6       ; Sprite X Speed = 0 
@@ -8798,7 +8798,7 @@ CODE_02C7B1:          STZ.B !SpriteXSpeed,X               ;; 02C7B1 : 74 B6     
                       JSL GivePoints                      ;; 02C7BF : 22 E5 AC 02 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02C7C4:          JSR CODE_02D50C                     ;; 02C7C4 : 20 0C D5    ;
+                    + JSR CODE_02D50C                     ;; 02C7C4 : 20 0C D5    ;
                       LDA.B !_E                           ;; 02C7C7 : A5 0E       ;
                       CMP.B #$EC                          ;; 02C7C9 : C9 EC       ;
                       BPL CODE_02C810                     ;; 02C7CB : 10 43       ;
@@ -8832,9 +8832,9 @@ CODE_02C7F6:          LDA.B #$28                          ;; 02C7F6 : A9 28     
 Return02C80F:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02C810:          LDA.W !PlayerRidingYoshi            ;; 02C810 : AD 7A 18    ;
-                      BNE Return02C819                    ;; 02C813 : D0 04       ;
+                      BNE +                               ;; 02C813 : D0 04       ;
                       JSL HurtMario                       ;; 02C815 : 22 B7 F5 00 ;
-Return02C819:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02C81A:          JSR GetDrawInfo2                    ;; 02C81A : 20 78 D3    ;
                       JSR CODE_02C88C                     ;; 02C81D : 20 8C C8    ;
@@ -8870,11 +8870,11 @@ CODE_02C88C:          STZ.B !_7                           ;; 02C88C : 64 07     
                       STY.B !_4                           ;; 02C891 : 84 04       ;
                       CPY.B #$09                          ;; 02C893 : C0 09       ;
                       CLC                                 ;; 02C895 : 18          ;
-                      BNE CODE_02C8AB                     ;; 02C896 : D0 13       ;
+                      BNE +                               ;; 02C896 : D0 13       ;
                       LDA.W !SpriteMisc1540,X             ;; 02C898 : BD 40 15    ;
                       SEC                                 ;; 02C89B : 38          ;
                       SBC.B #$20                          ;; 02C89C : E9 20       ;
-                      BCC CODE_02C8AB                     ;; 02C89E : 90 0B       ;
+                      BCC +                               ;; 02C89E : 90 0B       ;
                       PHA                                 ;; 02C8A0 : 48          ;
                       LSR A                               ;; 02C8A1 : 4A          ;
                       LSR A                               ;; 02C8A2 : 4A          ;
@@ -8885,7 +8885,7 @@ CODE_02C88C:          STZ.B !_7                           ;; 02C88C : 64 07     
                       PLA                                 ;; 02C8A8 : 68          ;
                       LSR A                               ;; 02C8A9 : 4A          ;
                       LSR A                               ;; 02C8AA : 4A          ;
-CODE_02C8AB:          LDA.B !_0                           ;; 02C8AB : A5 00       ;
+                    + LDA.B !_0                           ;; 02C8AB : A5 00       ;
                       ADC.B #$00                          ;; 02C8AD : 69 00       ;
                       STA.B !_0                           ;; 02C8AF : 85 00       ;
                       LDA.W !SpriteMisc151C,X             ;; 02C8B1 : BD 1C 15    ;
@@ -8903,10 +8903,10 @@ CODE_02C8AB:          LDA.B !_0                           ;; 02C8AB : A5 00     
                       LDX.B !_4                           ;; 02C8CC : A6 04       ;
                       LDA.W DATA_02C830,X                 ;; 02C8CE : BD 30 C8    ;
                       LDX.B !_3                           ;; 02C8D1 : A6 03       ;
-                      BNE CODE_02C8D8                     ;; 02C8D3 : D0 03       ;
+                      BNE +                               ;; 02C8D3 : D0 03       ;
                       EOR.B #$FF                          ;; 02C8D5 : 49 FF       ;
                       INC A                               ;; 02C8D7 : 1A          ;
-CODE_02C8D8:          CLC                                 ;; 02C8D8 : 18          ;
+                    + CLC                                 ;; 02C8D8 : 18          ;
                       ADC.B !_0                           ;; 02C8D9 : 65 00       ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02C8DB : 99 00 03    ;
                       LDX.B !_4                           ;; 02C8DE : A6 04       ;
@@ -8986,12 +8986,12 @@ DATA_02CA0D:          db $00,$00,$00,$04,$04,$04,$0C,$0C  ;; 02CA0D             
 CODE_02CA27:          STZ.B !_6                           ;; 02CA27 : 64 06       ;
                       LDA.B !_4                           ;; 02CA29 : A5 04       ;
                       LDY.B !_3                           ;; 02CA2B : A4 03       ;
-                      BNE CODE_02CA36                     ;; 02CA2D : D0 07       ;
+                      BNE +                               ;; 02CA2D : D0 07       ;
                       CLC                                 ;; 02CA2F : 18          ;
                       ADC.B #$1A                          ;; 02CA30 : 69 1A       ;
                       LDX.B #$40                          ;; 02CA32 : A2 40       ;
                       STX.B !_6                           ;; 02CA34 : 86 06       ;
-CODE_02CA36:          TAX                                 ;; 02CA36 : AA          ;
+                    + TAX                                 ;; 02CA36 : AA          ;
                       LDY.B !_4                           ;; 02CA37 : A4 04       ;
                       LDA.W DATA_02CA0D,Y                 ;; 02CA39 : B9 0D CA    ;
                       CLC                                 ;; 02CA3C : 18          ;
@@ -9048,17 +9048,17 @@ DATA_02CA9B:          db $00,$02                          ;; 02CA9B             
                                                           ;;                      ;
 CODE_02CA9D:          LDA.B !_4                           ;; 02CA9D : A5 04       ;
                       CMP.B #$14                          ;; 02CA9F : C9 14       ;
-                      BCC CODE_02CAA6                     ;; 02CAA1 : 90 03       ;
+                      BCC +                               ;; 02CAA1 : 90 03       ;
                       JMP CODE_02CB53                     ;; 02CAA3 : 4C 53 CB    ;
                                                           ;;                      ;
-CODE_02CAA6:          CMP.B #$12                          ;; 02CAA6 : C9 12       ;
+                    + CMP.B #$12                          ;; 02CAA6 : C9 12       ;
                       BEQ CODE_02CAFC                     ;; 02CAA8 : F0 52       ;
                       CMP.B #$13                          ;; 02CAAA : C9 13       ;
                       BEQ CODE_02CAFC                     ;; 02CAAC : F0 4E       ;
                       SEC                                 ;; 02CAAE : 38          ;
                       SBC.B #$06                          ;; 02CAAF : E9 06       ;
                       CMP.B #$02                          ;; 02CAB1 : C9 02       ;
-                      BCS Return02CAF9                    ;; 02CAB3 : B0 44       ;
+                      BCS +                               ;; 02CAB3 : B0 44       ;
                       TAX                                 ;; 02CAB5 : AA          ;
                       LDY.B !_5                           ;; 02CAB6 : A4 05       ;
                       LDA.B !_0                           ;; 02CAB8 : A5 00       ;
@@ -9089,7 +9089,7 @@ CODE_02CAA6:          CMP.B #$12                          ;; 02CAA6 : C9 12     
                       STA.W !OAMTileSize+$40,Y            ;; 02CAF0 : 99 60 04    ;
                       STA.W !OAMTileSize+$41,Y            ;; 02CAF3 : 99 61 04    ;
                       LDX.W !CurSpriteProcess             ;; 02CAF6 : AE E9 15    ; X = Sprite index 
-Return02CAF9:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 ChuckGfxProp:         db $47,$07                          ;; ?QPWZ?               ;
@@ -9140,10 +9140,10 @@ CODE_02CB39:          STZ.W !OAMTileSize+$40,X            ;; 02CB39 : 9E 60 04  
 CODE_02CB53:          PHX                                 ;; 02CB53 : DA          ;
                       STA.B !_2                           ;; 02CB54 : 85 02       ;
                       LDY.W !SpriteMisc157C,X             ;; 02CB56 : BC 7C 15    ;
-                      BNE CODE_02CB5E                     ;; 02CB59 : D0 03       ;
+                      BNE +                               ;; 02CB59 : D0 03       ;
                       CLC                                 ;; 02CB5B : 18          ;
                       ADC.B #$06                          ;; 02CB5C : 69 06       ;
-CODE_02CB5E:          TAX                                 ;; 02CB5E : AA          ;
+                    + TAX                                 ;; 02CB5E : AA          ;
                       LDA.B !_5                           ;; 02CB5F : A5 05       ;
                       CLC                                 ;; 02CB61 : 18          ;
                       ADC.B #$08                          ;; 02CB62 : 69 08       ;
@@ -9154,7 +9154,7 @@ CODE_02CB5E:          TAX                                 ;; 02CB5E : AA        
                       STA.W !OAMTileXPos+$100,Y           ;; 02CB6B : 99 00 03    ;
                       LDX.B !_2                           ;; 02CB6E : A6 02       ;
                       LDA.W CODE_02CB39,X                 ;; 02CB70 : BD 39 CB    ;
-                      BEQ CODE_02CB8E                     ;; 02CB73 : F0 19       ;
+                      BEQ +                               ;; 02CB73 : F0 19       ;
                       CLC                                 ;; 02CB75 : 18          ;
                       ADC.B !_1                           ;; 02CB76 : 65 01       ;
                       STA.W !OAMTileYPos+$100,Y           ;; 02CB78 : 99 01 03    ;
@@ -9168,7 +9168,7 @@ CODE_02CB5E:          TAX                                 ;; 02CB5E : AA        
                       LSR A                               ;; 02CB89 : 4A          ;
                       TAX                                 ;; 02CB8A : AA          ;
                       STZ.W !OAMTileSize+$40,X            ;; 02CB8B : 9E 60 04    ;
-CODE_02CB8E:          PLX                                 ;; 02CB8E : FA          ;
+                    + PLX                                 ;; 02CB8E : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -9236,9 +9236,9 @@ Return02CBFB:         RTS                                 ;; ?QPWZ? : 60        
 Return02CBFD:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 WingedCageMain:       LDA.B !SpriteLock                   ;; ?QPWZ? : A5 9D       ; \ If sprites not locked, 
-                      BNE ADDR_02CC05                     ;; 02CC00 : D0 03       ;  | increment sprite frame counter 
+                      BNE +                               ;; 02CC00 : D0 03       ;  | increment sprite frame counter 
                       INC.W !SpriteMisc1570,X             ;; 02CC02 : FE 70 15    ; / 
-ADDR_02CC05:          JSR ADDR_02CCB9                     ;; 02CC05 : 20 B9 CC    ;
+                    + JSR ADDR_02CCB9                     ;; 02CC05 : 20 B9 CC    ;
                       PHX                                 ;; 02CC08 : DA          ;
                       JSL ADDR_00FF32                     ;; 02CC09 : 22 32 FF 00 ;
                       PLX                                 ;; 02CC0D : FA          ;
@@ -9253,13 +9253,13 @@ ADDR_02CC05:          JSR ADDR_02CCB9                     ;; 02CC05 : 20 B9 CC  
                       CMP.B #$01                          ;; 02CC20 : C9 01       ;  | 
                       BCS Return02CBFD                    ;; 02CC22 : B0 D9       ; / 
                       LDA.W !StandingOnCage               ;; 02CC24 : AD B5 18    ;
-                      BEQ ADDR_02CC2D                     ;; 02CC27 : F0 04       ;
+                      BEQ +                               ;; 02CC27 : F0 04       ;
                       JSL ADDR_00FF07                     ;; 02CC29 : 22 07 FF 00 ;
-ADDR_02CC2D:          LDY.B #$00                          ;; 02CC2D : A0 00       ;
+                    + LDY.B #$00                          ;; 02CC2D : A0 00       ;
                       LDA.W !Layer1DYPos                  ;; 02CC2F : AD BC 17    ;
-                      BPL ADDR_02CC35                     ;; 02CC32 : 10 01       ;
+                      BPL +                               ;; 02CC32 : 10 01       ;
                       DEY                                 ;; 02CC34 : 88          ;
-ADDR_02CC35:          CLC                                 ;; 02CC35 : 18          ;
+                    + CLC                                 ;; 02CC35 : 18          ;
                       ADC.B !SpriteYPosLow,X              ;; 02CC36 : 75 D8       ;
                       STA.B !SpriteYPosLow,X              ;; 02CC38 : 95 D8       ;
                       TYA                                 ;; 02CC3A : 98          ;
@@ -9281,36 +9281,36 @@ ADDR_02CC35:          CLC                                 ;; 02CC35 : 18        
                       CLC                                 ;; 02CC5C : 18          ;
                       ADC.W #$0000                        ;; 02CC5D : 69 00 00    ;
                       CMP.B !PlayerXPosNext               ;; 02CC60 : C5 94       ;
-                      BCC ADDR_02CC7F                     ;; 02CC62 : 90 1B       ;
+                      BCC +                               ;; 02CC62 : 90 1B       ;
                       STA.B !PlayerXPosNext               ;; 02CC64 : 85 94       ;
                       LDY.B #$00                          ;; 02CC66 : A0 00       ; \ Mario's X speed = 0 
                       STY.B !PlayerXSpeed                 ;; 02CC68 : 84 7B       ; / 
-                      BRA ADDR_02CC7F                     ;; 02CC6A : 80 13       ;
+                      BRA +                               ;; 02CC6A : 80 13       ;
                                                           ;;                      ;
 ADDR_02CC6C:          CLC                                 ;; 02CC6C : 18          ;
                       ADC.W #$0090                        ;; 02CC6D : 69 90 00    ;
                       CMP.B !PlayerXPosNext               ;; 02CC70 : C5 94       ;
-                      BCS ADDR_02CC7F                     ;; 02CC72 : B0 0B       ;
+                      BCS +                               ;; 02CC72 : B0 0B       ;
                       LDA.B !_0                           ;; 02CC74 : A5 00       ;
                       ADC.W #$0091                        ;; 02CC76 : 69 91 00    ;
                       STA.B !PlayerXPosNext               ;; 02CC79 : 85 94       ;
                       LDY.B #$00                          ;; 02CC7B : A0 00       ;
                       STY.B !PlayerXSpeed                 ;; 02CC7D : 84 7B       ;
-ADDR_02CC7F:          LDA.B !_2                           ;; 02CC7F : A5 02       ;
+                    + LDA.B !_2                           ;; 02CC7F : A5 02       ;
                       LDY.B !PlayerYSpeed                 ;; 02CC81 : A4 7D       ;
                       BPL ADDR_02CC93                     ;; 02CC83 : 10 0E       ;
                       CLC                                 ;; 02CC85 : 18          ;
                       ADC.W #$0020                        ;; 02CC86 : 69 20 00    ;
                       CMP.B !PlayerYPosNext               ;; 02CC89 : C5 96       ;
-                      BCC ADDR_02CCAE                     ;; 02CC8B : 90 21       ;
+                      BCC +                               ;; 02CC8B : 90 21       ;
                       LDY.B #$00                          ;; 02CC8D : A0 00       ;
                       STY.B !PlayerYSpeed                 ;; 02CC8F : 84 7D       ;
-                      BRA ADDR_02CCAE                     ;; 02CC91 : 80 1B       ;
+                      BRA +                               ;; 02CC91 : 80 1B       ;
                                                           ;;                      ;
 ADDR_02CC93:          CLC                                 ;; 02CC93 : 18          ;
                       ADC.W #$0060                        ;; 02CC94 : 69 60 00    ;
                       CMP.B !PlayerYPosNext               ;; 02CC97 : C5 96       ;
-                      BCS ADDR_02CCAE                     ;; 02CC99 : B0 13       ;
+                      BCS +                               ;; 02CC99 : B0 13       ;
                       LDA.B !_2                           ;; 02CC9B : A5 02       ;
                       ADC.W #$0061                        ;; 02CC9D : 69 61 00    ;
                       STA.B !PlayerYPosNext               ;; 02CCA0 : 85 96       ;
@@ -9319,7 +9319,7 @@ ADDR_02CC93:          CLC                                 ;; 02CC93 : 18        
                       LDY.B #$01                          ;; 02CCA6 : A0 01       ;
                       STY.W !StandOnSolidSprite           ;; 02CCA8 : 8C 71 14    ;
                       STY.W !StandingOnCage               ;; 02CCAB : 8C B5 18    ;
-ADDR_02CCAE:          SEP #$20                            ;; 02CCAE : E2 20       ; Accum (8 bit) 
+                    + SEP #$20                            ;; 02CCAE : E2 20       ; Accum (8 bit) 
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -9361,13 +9361,13 @@ ADDR_02CCD0:          LDY.B !_2                           ;; 02CCD0 : A4 02     
                       EOR.B !_8                           ;; 02CCF8 : 45 08       ;
                       LSR A                               ;; 02CCFA : 4A          ;
                       LDA.B #$C6                          ;; 02CCFB : A9 C6       ;
-                      BCC ADDR_02CD01                     ;; 02CCFD : 90 02       ;
+                      BCC +                               ;; 02CCFD : 90 02       ;
                       LDA.B #$81                          ;; 02CCFF : A9 81       ;
-ADDR_02CD01:          STA.W !OAMTileNo+$100,Y             ;; 02CD01 : 99 02 03    ;
+                    + STA.W !OAMTileNo+$100,Y             ;; 02CD01 : 99 02 03    ;
                       LDA.B #$D6                          ;; 02CD04 : A9 D6       ;
-                      BCC ADDR_02CD0A                     ;; 02CD06 : 90 02       ;
+                      BCC +                               ;; 02CD06 : 90 02       ;
                       LDA.B #$D7                          ;; 02CD08 : A9 D7       ;
-ADDR_02CD0A:          STA.W !OAMTileNo+$104,Y             ;; 02CD0A : 99 06 03    ;
+                    + STA.W !OAMTileNo+$104,Y             ;; 02CD0A : 99 06 03    ;
                       LDA.B #$70                          ;; 02CD0D : A9 70       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02CD0F : 99 03 03    ;
                       STA.W !OAMTileAttr+$104,Y           ;; 02CD12 : 99 07 03    ;
@@ -9402,7 +9402,7 @@ DATA_02CD55:          db $0A,$04,$06,$08                  ;; 02CD55             
                                                           ;;                      ;
 CODE_02CD59:          LDA.W !SpriteMisc1540,X             ;; 02CD59 : BD 40 15    ;
                       CMP.B #$5E                          ;; 02CD5C : C9 5E       ;
-                      BNE CODE_02CD7F                     ;; 02CD5E : D0 1F       ;
+                      BNE +                               ;; 02CD5E : D0 1F       ;
                       LDA.B #$1B                          ;; 02CD60 : A9 1B       ; \ Block to generate = #$1B 
                       STA.B !Map16TileGenerate            ;; 02CD62 : 85 9C       ; / 
                       LDA.B !SpriteXPosLow,X              ;; 02CD64 : B5 E4       ;
@@ -9417,7 +9417,7 @@ CODE_02CD59:          LDA.W !SpriteMisc1540,X             ;; 02CD59 : BD 40 15  
                       SBC.B #$00                          ;; 02CD77 : E9 00       ;
                       STA.B !TouchBlockYPos+1             ;; 02CD79 : 85 99       ;
                       JSL GenerateTile                    ;; 02CD7B : 22 B0 BE 00 ;
-CODE_02CD7F:          JSL InvisBlkMainRt                  ;; 02CD7F : 22 4F B4 01 ;
+                    + JSL InvisBlkMainRt                  ;; 02CD7F : 22 4F B4 01 ;
                       JSR GetDrawInfo2                    ;; 02CD83 : 20 78 D3    ;
                       PHX                                 ;; 02CD86 : DA          ;
                       LDX.W !BigSwitchPressTimer          ;; 02CD87 : AE 1E 19    ;
@@ -9436,9 +9436,9 @@ CODE_02CD91:          LDA.B !_0                           ;; 02CD91 : A5 00     
                       STA.W !OAMTileNo+$100,Y             ;; 02CDA6 : 99 02 03    ;
                       LDA.W DATA_02CD4D,X                 ;; 02CDA9 : BD 4D CD    ;
                       CPX.B #$04                          ;; 02CDAC : E0 04       ;
-                      BCS CODE_02CDB2                     ;; 02CDAE : B0 02       ;
+                      BCS +                               ;; 02CDAE : B0 02       ;
                       ORA.B !_2                           ;; 02CDB0 : 05 02       ;
-CODE_02CDB2:          STA.W !OAMTileAttr+$100,Y           ;; 02CDB2 : 99 03 03    ;
+                    + STA.W !OAMTileAttr+$100,Y           ;; 02CDB2 : 99 03 03    ;
                       INY                                 ;; 02CDB5 : C8          ;
                       INY                                 ;; 02CDB6 : C8          ;
                       INY                                 ;; 02CDB7 : C8          ;
@@ -9460,17 +9460,17 @@ PeaBouncerMain:       JSR SubOffscreen0Bnk2               ;; ?QPWZ? : 20 25 D0  
                       LDA.B !SpriteLock                   ;; 02CDD1 : A5 9D       ;
                       BNE Return02CDFE                    ;; 02CDD3 : D0 29       ;
                       LDA.W !SpriteMisc1534,X             ;; 02CDD5 : BD 34 15    ;
-                      BEQ CODE_02CDF1                     ;; 02CDD8 : F0 17       ;
+                      BEQ +                               ;; 02CDD8 : F0 17       ;
                       DEC.W !SpriteMisc1534,X             ;; 02CDDA : DE 34 15    ;
                       BIT.B !byetudlrHold                 ;; 02CDDD : 24 15       ;
-                      BPL CODE_02CDF1                     ;; 02CDDF : 10 10       ;
+                      BPL +                               ;; 02CDDF : 10 10       ;
                       STZ.W !SpriteMisc1534,X             ;; 02CDE1 : 9E 34 15    ;
                       LDY.W !SpriteMisc151C,X             ;; 02CDE4 : BC 1C 15    ;
                       LDA.W DATA_02CDFF,Y                 ;; 02CDE7 : B9 FF CD    ;
                       STA.B !PlayerYSpeed                 ;; 02CDEA : 85 7D       ;
                       LDA.B #$08                          ;; 02CDEC : A9 08       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 02CDEE : 8D FC 1D    ; / 
-CODE_02CDF1:          LDA.W !SpriteMisc1528,X             ;; 02CDF1 : BD 28 15    ;
+                    + LDA.W !SpriteMisc1528,X             ;; 02CDF1 : BD 28 15    ;
                       JSL ExecutePtr                      ;; 02CDF4 : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw Return02CDFE                     ;; ?QPWZ? : FE CD       ;
@@ -9486,22 +9486,22 @@ DATA_02CE07:          db $00,$00,$E8,$E0,$D0,$C8,$C0,$B8  ;; 02CE07             
 CODE_02CE0F:          LDA.W !SpriteMisc1540,X             ;; 02CE0F : BD 40 15    ;
                       BEQ CODE_02CE20                     ;; 02CE12 : F0 0C       ;
                       DEC A                               ;; 02CE14 : 3A          ;
-                      BNE Return02CE1F                    ;; 02CE15 : D0 08       ;
+                      BNE +                               ;; 02CE15 : D0 08       ;
                       INC.W !SpriteMisc1528,X             ;; 02CE17 : FE 28 15    ;
                       LDA.B #$01                          ;; 02CE1A : A9 01       ;
                       STA.W !SpriteMisc157C,X             ;; 02CE1C : 9D 7C 15    ;
-Return02CE1F:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02CE20:          LDA.B !SpriteTableC2,X              ;; 02CE20 : B5 C2       ;
                       BMI CODE_02CE29                     ;; 02CE22 : 30 05       ;
                       CMP.W !SpriteMisc151C,X             ;; 02CE24 : DD 1C 15    ;
-                      BCS CODE_02CE2F                     ;; 02CE27 : B0 06       ;
+                      BCS +                               ;; 02CE27 : B0 06       ;
 CODE_02CE29:          CLC                                 ;; 02CE29 : 18          ;
                       ADC.B #$01                          ;; 02CE2A : 69 01       ;
                       STA.B !SpriteTableC2,X              ;; 02CE2C : 95 C2       ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_02CE2F:          LDA.W !SpriteMisc151C,X             ;; 02CE2F : BD 1C 15    ;
+                    + LDA.W !SpriteMisc151C,X             ;; 02CE2F : BD 1C 15    ;
                       STA.B !SpriteTableC2,X              ;; 02CE32 : 95 C2       ;
                       LDA.B #$08                          ;; 02CE34 : A9 08       ;
                       STA.W !SpriteMisc1540,X             ;; 02CE36 : 9D 40 15    ;
@@ -9526,10 +9526,10 @@ CODE_02CE49:          LDA.W !SpriteMisc151C,X             ;; 02CE49 : BD 1C 15  
                       STA.B !SpriteTableC2,X              ;; 02CE5D : 95 C2       ;
                       BMI Return02CE66                    ;; 02CE5F : 30 05       ;
                       CMP.W !SpriteMisc151C,X             ;; 02CE61 : DD 1C 15    ;
-                      BCS CODE_02CE67                     ;; 02CE64 : B0 01       ;
+                      BCS +                               ;; 02CE64 : B0 01       ;
 Return02CE66:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_02CE67:          LDA.W !SpriteMisc151C,X             ;; 02CE67 : BD 1C 15    ;
+                    + LDA.W !SpriteMisc151C,X             ;; 02CE67 : BD 1C 15    ;
                       STA.B !SpriteTableC2,X              ;; 02CE6A : 95 C2       ;
                       INC.W !SpriteMisc157C,X             ;; 02CE6C : FE 7C 15    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
@@ -9540,10 +9540,10 @@ CODE_02CE70:          LDA.B !SpriteTableC2,X              ;; 02CE70 : B5 C2     
                       STA.B !SpriteTableC2,X              ;; 02CE75 : 95 C2       ;
                       BPL Return02CE7D                    ;; 02CE77 : 10 04       ;
                       CMP.B !_0                           ;; 02CE79 : C5 00       ;
-                      BCC CODE_02CE7E                     ;; 02CE7B : 90 01       ;
+                      BCC +                               ;; 02CE7B : 90 01       ;
 Return02CE7D:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_02CE7E:          LDA.B !_0                           ;; 02CE7E : A5 00       ;
+                    + LDA.B !_0                           ;; 02CE7E : A5 00       ;
                       STA.B !SpriteTableC2,X              ;; 02CE80 : 95 C2       ;
                       INC.W !SpriteMisc157C,X             ;; 02CE82 : FE 7C 15    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
@@ -9576,10 +9576,10 @@ CODE_02CEE0:          JSR GetDrawInfo2                    ;; 02CEE0 : 20 78 D3  
                       STA.B !_5                           ;; 02CEEC : 85 05       ;
                       LDA.B !SpriteTableC2,X              ;; 02CEEE : B5 C2       ;
                       STA.B !_3                           ;; 02CEF0 : 85 03       ;
-                      BPL CODE_02CEF7                     ;; 02CEF2 : 10 03       ;
+                      BPL +                               ;; 02CEF2 : 10 03       ;
                       EOR.B #$FF                          ;; 02CEF4 : 49 FF       ;
                       INC A                               ;; 02CEF6 : 1A          ;
-CODE_02CEF7:          STA.B !_4                           ;; 02CEF7 : 85 04       ;
+                    + STA.B !_4                           ;; 02CEF7 : 85 04       ;
                       LDY.W !SpriteOAMIndex,X             ;; 02CEF9 : BC EA 15    ; Y = Index into sprite OAM 
 CODE_02CEFC:          LDA.B !_4                           ;; 02CEFC : A5 04       ;
                       ASL A                               ;; 02CEFE : 0A          ;
@@ -9590,20 +9590,20 @@ CODE_02CEFC:          LDA.B !_4                           ;; 02CEFC : A5 04     
                       LDA.B !_5                           ;; 02CF05 : A5 05       ;
                       LSR A                               ;; 02CF07 : 4A          ;
                       LDA.W DATA_02CE90,X                 ;; 02CF08 : BD 90 CE    ;
-                      BCC CODE_02CF10                     ;; 02CF0B : 90 03       ;
+                      BCC +                               ;; 02CF0B : 90 03       ;
                       EOR.B #$FF                          ;; 02CF0D : 49 FF       ;
                       INC A                               ;; 02CF0F : 1A          ;
-CODE_02CF10:          STA.B !_8                           ;; 02CF10 : 85 08       ;
+                    + STA.B !_8                           ;; 02CF10 : 85 08       ;
                       CLC                                 ;; 02CF12 : 18          ;
                       ADC.B !_0                           ;; 02CF13 : 65 00       ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02CF15 : 99 00 03    ;
                       LDA.B !_3                           ;; 02CF18 : A5 03       ;
                       ASL A                               ;; 02CF1A : 0A          ;
                       LDA.W DATA_02CEB8,X                 ;; 02CF1B : BD B8 CE    ;
-                      BCC CODE_02CF23                     ;; 02CF1E : 90 03       ;
+                      BCC +                               ;; 02CF1E : 90 03       ;
                       EOR.B #$FF                          ;; 02CF20 : 49 FF       ;
                       INC A                               ;; 02CF22 : 1A          ;
-CODE_02CF23:          STA.B !_9                           ;; 02CF23 : 85 09       ;
+                    + STA.B !_9                           ;; 02CF23 : 85 09       ;
                       CLC                                 ;; 02CF25 : 18          ;
                       ADC.B !_1                           ;; 02CF26 : 65 01       ;
                       STA.W !OAMTileYPos+$100,Y           ;; 02CF28 : 99 01 03    ;
@@ -9621,23 +9621,23 @@ CODE_02CF23:          STA.B !_9                           ;; 02CF23 : 85 09     
                       INY                                 ;; 02CF41 : C8          ;
                       INY                                 ;; 02CF42 : C8          ;
                       DEC.B !_2                           ;; 02CF43 : C6 02       ;
-                      BMI CODE_02CF4A                     ;; 02CF45 : 30 03       ;
+                      BMI +                               ;; 02CF45 : 30 03       ;
                       JMP CODE_02CEFC                     ;; 02CF47 : 4C FC CE    ;
                                                           ;;                      ;
-CODE_02CF4A:          LDY.B #$00                          ;; 02CF4A : A0 00       ;
+                    + LDY.B #$00                          ;; 02CF4A : A0 00       ;
                       LDA.B #$04                          ;; 02CF4C : A9 04       ;
                       JMP CODE_02B7A7                     ;; 02CF4E : 4C A7 B7    ;
                                                           ;;                      ;
-Return02CF51:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    - RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02CF52:          LDA.B !PlayerAnimation              ;; 02CF52 : A5 71       ;
                       CMP.B #$01                          ;; 02CF54 : C9 01       ;
-                      BCS Return02CF51                    ;; 02CF56 : B0 F9       ;
+                      BCS -                               ;; 02CF56 : B0 F9       ;
                       LDA.B !PlayerYPosScrRel+1           ;; 02CF58 : A5 81       ;
                       ORA.B !PlayerXPosScrRel+1           ;; 02CF5A : 05 7F       ;
                       ORA.W !SpriteOffscreenX,X           ;; 02CF5C : 1D A0 15    ;
                       ORA.W !SpriteOffscreenVert,X        ;; 02CF5F : 1D 6C 18    ;
-                      BNE Return02CF51                    ;; 02CF62 : D0 ED       ;
+                      BNE -                               ;; 02CF62 : D0 ED       ;
                       LDA.B !PlayerXPosScrRel             ;; 02CF64 : A5 7E       ;
                       CLC                                 ;; 02CF66 : 18          ;
                       ADC.B #$02                          ;; 02CF67 : 69 02       ;
@@ -9645,9 +9645,9 @@ CODE_02CF52:          LDA.B !PlayerAnimation              ;; 02CF52 : A5 71     
                       LDA.W !PlayerRidingYoshi            ;; 02CF6B : AD 7A 18    ;
                       CMP.B #$01                          ;; 02CF6E : C9 01       ;
                       LDA.B #$10                          ;; 02CF70 : A9 10       ;
-                      BCC CODE_02CF76                     ;; 02CF72 : 90 02       ;
+                      BCC +                               ;; 02CF72 : 90 02       ;
                       LDA.B #$20                          ;; 02CF74 : A9 20       ;
-CODE_02CF76:          CLC                                 ;; 02CF76 : 18          ;
+                    + CLC                                 ;; 02CF76 : 18          ;
                       ADC.B !PlayerYPosScrRel             ;; 02CF77 : 65 80       ;
                       STA.B !_B                           ;; 02CF79 : 85 0B       ;
                       LDA.W !OAMTileXPos+$100,Y           ;; 02CF7B : B9 00 03    ;
@@ -9660,9 +9660,9 @@ CODE_02CF76:          CLC                                 ;; 02CF76 : 18        
                       LDA.B !Powerup                      ;; 02CF88 : A5 19       ;
                       CMP.B #$01                          ;; 02CF8A : C9 01       ;
                       LDA.B #$1A                          ;; 02CF8C : A9 1A       ;
-                      BCS CODE_02CF92                     ;; 02CF8E : B0 02       ;
+                      BCS +                               ;; 02CF8E : B0 02       ;
                       LDA.B #$1C                          ;; 02CF90 : A9 1C       ;
-CODE_02CF92:          STA.B !_F                           ;; 02CF92 : 85 0F       ;
+                    + STA.B !_F                           ;; 02CF92 : 85 0F       ;
                       LDA.W !OAMTileYPos+$100,Y           ;; 02CF94 : B9 01 03    ;
                       SEC                                 ;; 02CF97 : 38          ;
                       SBC.B !_B                           ;; 02CF98 : E5 0B       ;
@@ -9675,9 +9675,9 @@ CODE_02CF92:          STA.B !_F                           ;; 02CF92 : 85 0F     
                       LDA.B #$1F                          ;; 02CFA5 : A9 1F       ;
                       PHX                                 ;; 02CFA7 : DA          ;
                       LDX.W !PlayerRidingYoshi            ;; 02CFA8 : AE 7A 18    ;
-                      BEQ CODE_02CFAF                     ;; 02CFAB : F0 02       ;
+                      BEQ +                               ;; 02CFAB : F0 02       ;
                       LDA.B #$2F                          ;; 02CFAD : A9 2F       ;
-CODE_02CFAF:          STA.B !_F                           ;; 02CFAF : 85 0F       ;
+                    + STA.B !_F                           ;; 02CFAF : 85 0F       ;
                       PLX                                 ;; 02CFB1 : FA          ;
                       LDA.W !OAMTileYPos+$100,Y           ;; 02CFB2 : B9 01 03    ;
                       SEC                                 ;; 02CFB5 : 38          ;
@@ -9700,13 +9700,13 @@ CODE_02CFAF:          STA.B !_F                           ;; 02CFAF : 85 0F     
                       BEQ CODE_02CFEB                     ;; 02CFD5 : F0 14       ;
                       LDA.W !SpriteMisc1540,X             ;; 02CFD7 : BD 40 15    ;
                       CMP.B #$01                          ;; 02CFDA : C9 01       ;
-                      BNE Return02CFEA                    ;; 02CFDC : D0 0C       ;
+                      BNE +                               ;; 02CFDC : D0 0C       ;
                       LDA.B #$08                          ;; 02CFDE : A9 08       ;
                       STA.W !SpriteMisc1534,X             ;; 02CFE0 : 9D 34 15    ;
                       LDY.B !SpriteTableC2,X              ;; 02CFE3 : B4 C2       ;
                       LDA.W DATA_02CE07,Y                 ;; 02CFE5 : B9 07 CE    ;
                       STA.B !PlayerYSpeed                 ;; 02CFE8 : 85 7D       ;
-Return02CFEA:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02CFEB:          STZ.B !PlayerXSpeed                 ;; 02CFEB : 64 7B       ;
                       LDY.B !_2                           ;; 02CFED : A4 02       ;
@@ -9728,17 +9728,17 @@ DATA_02D007:          db $30,$C0,$A0,$C0,$A0,$70,$60,$B0  ;; 02D007             
 DATA_02D00F:          db $01,$FF,$01,$FF,$01,$FF,$01,$FF  ;; 02D00F               ;
                                                           ;;                      ;
 SubOffscreen3Bnk2:    LDA.B #$06                          ;; ?QPWZ? : A9 06       ; \ Entry point of routine determines value of $03 
-                      BRA CODE_02D021                     ;; 02D019 : 80 06       ;  | 
+                      BRA +                               ;; 02D019 : 80 06       ;  | 
                                                           ;;                      ;
 SubOffscreen2Bnk2:    LDA.B #$04                          ;; ?QPWZ? : A9 04       ;  | 
-                      BRA CODE_02D021                     ;; 02D01D : 80 02       ;  | 
+                      BRA +                               ;; 02D01D : 80 02       ;  | 
                                                           ;;                      ;
 SubOffscreen1Bnk2:    LDA.B #$02                          ;; ?QPWZ? : A9 02       ;  | 
-CODE_02D021:          STA.B !_3                           ;; 02D021 : 85 03       ;  | 
-                      BRA CODE_02D027                     ;; 02D023 : 80 02       ;  | 
+                    + STA.B !_3                           ;; 02D021 : 85 03       ;  | 
+                      BRA +                               ;; 02D023 : 80 02       ;  | 
                                                           ;;                      ;
 SubOffscreen0Bnk2:    STZ.B !_3                           ;; ?QPWZ? : 64 03       ; / 
-CODE_02D027:          JSR IsSprOffScreenBnk2              ;; 02D027 : 20 C9 D0    ; \ if sprite is not off screen, return 
+                    + JSR IsSprOffScreenBnk2              ;; 02D027 : 20 C9 D0    ; \ if sprite is not off screen, return 
                       BEQ Return02D090                    ;; 02D02A : F0 64       ; / 
                       LDA.B !ScreenMode                   ;; 02D02C : A5 5B       ; \  vertical level 
                       AND.B #$01                          ;; 02D02E : 29 01       ;  | 
@@ -9774,20 +9774,20 @@ CODE_02D04D:          LDA.B !TrueFrame                    ;; 02D04D : A5 13     
                       SBC.W !SpriteYPosHigh,X             ;; 02D069 : FD E0 14    ;
                       STA.B !_0                           ;; 02D06C : 85 00       ;
                       LSR.B !_1                           ;; 02D06E : 46 01       ;
-                      BCC CODE_02D076                     ;; 02D070 : 90 04       ;
+                      BCC +                               ;; 02D070 : 90 04       ;
                       EOR.B #$80                          ;; 02D072 : 49 80       ;
                       STA.B !_0                           ;; 02D074 : 85 00       ;
-CODE_02D076:          LDA.B !_0                           ;; 02D076 : A5 00       ;
+                    + LDA.B !_0                           ;; 02D076 : A5 00       ;
                       BPL Return02D090                    ;; 02D078 : 10 16       ;
 OffScrEraseSprBnk2:   LDA.W !SpriteStatus,X               ;; ?QPWZ? : BD C8 14    ; \ If sprite status < 8, permanently erase sprite 
                       CMP.B #$08                          ;; 02D07D : C9 08       ;  | 
-                      BCC OffScrKillSprBnk2               ;; 02D07F : 90 0C       ; / 
+                      BCC +                               ;; 02D07F : 90 0C       ; / 
                       LDY.W !SpriteLoadIndex,X            ;; 02D081 : BC 1A 16    ; \ Branch if should permanently erase sprite 
                       CPY.B #$FF                          ;; 02D084 : C0 FF       ;  | 
-                      BEQ OffScrKillSprBnk2               ;; 02D086 : F0 05       ; / 
+                      BEQ +                               ;; 02D086 : F0 05       ; / 
                       LDA.B #$00                          ;; 02D088 : A9 00       ; \ Allow sprite to be reloaded by level loading routine 
                       STA.W !SpriteLoadStatus,Y           ;; 02D08A : 99 38 19    ; / 
-OffScrKillSprBnk2:    STZ.W !SpriteStatus,X               ;; ?QPWZ? : 9E C8 14    ; Erase sprite 
+                    + STZ.W !SpriteStatus,X               ;; ?QPWZ? : 9E C8 14    ; Erase sprite 
 Return02D090:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 VerticalLevelBnk2:    LDA.W !SpriteTweakerD,X             ;; ?QPWZ? : BD 7A 16    ; \ If "process offscreen" flag is set, return 
@@ -9812,10 +9812,10 @@ VerticalLevelBnk2:    LDA.W !SpriteTweakerD,X             ;; ?QPWZ? : BD 7A 16  
                       SBC.W !SpriteXPosHigh,X             ;; 02D0B6 : FD D4 14    ;
                       STA.B !_0                           ;; 02D0B9 : 85 00       ;
                       LDY.B !_1                           ;; 02D0BB : A4 01       ;
-                      BEQ CODE_02D0C3                     ;; 02D0BD : F0 04       ;
+                      BEQ +                               ;; 02D0BD : F0 04       ;
                       EOR.B #$80                          ;; 02D0BF : 49 80       ;
                       STA.B !_0                           ;; 02D0C1 : 85 00       ;
-CODE_02D0C3:          LDA.B !_0                           ;; 02D0C3 : A5 00       ;
+                    + LDA.B !_0                           ;; 02D0C3 : A5 00       ;
                       BPL Return02D090                    ;; 02D0C5 : 10 C9       ;
                       BMI OffScrEraseSprBnk2              ;; 02D0C7 : 30 B1       ;
 IsSprOffScreenBnk2:   LDA.W !SpriteOffscreenX,X           ;; ?QPWZ? : BD A0 15    ;
@@ -9828,15 +9828,15 @@ DATA_02D0D0:          db $14,$FC                          ;; 02D0D0             
 DATA_02D0D2:          db $00,$FF                          ;; 02D0D2               ;
                                                           ;;                      ;
 CODE_02D0D4:          LDA.W !SpriteMisc1564,X             ;; 02D0D4 : BD 64 15    ;
-                      BNE Return02D0E5                    ;; 02D0D7 : D0 0C       ;
+                      BNE +                               ;; 02D0D7 : D0 0C       ;
                       LDA.W !SpriteMisc160E,X             ;; 02D0D9 : BD 0E 16    ;
-                      BPL Return02D0E5                    ;; 02D0DC : 10 07       ;
+                      BPL +                               ;; 02D0DC : 10 07       ;
                       PHB                                 ;; 02D0DE : 8B          ;
                       PHK                                 ;; 02D0DF : 4B          ;
                       PLB                                 ;; 02D0E0 : AB          ;
                       JSR CODE_02D0E6                     ;; 02D0E1 : 20 E6 D0    ;
                       PLB                                 ;; 02D0E4 : AB          ;
-Return02D0E5:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02D0E6:          STZ.B !_F                           ;; 02D0E6 : 64 0F       ;
                       BRA CODE_02D149                     ;; 02D0E8 : 80 5F       ;
@@ -9873,16 +9873,16 @@ CODE_02D0E6:          STZ.B !_F                           ;; 02D0E6 : 64 0F     
                       LDX.B !_3                           ;; 02D123 : A6 03       ;
                       LDA.L DATA_00BA80,X                 ;; 02D125 : BF 80 BA 00 ;
                       LDY.B !_F                           ;; 02D129 : A4 0F       ;
-                      BEQ ADDR_02D131                     ;; 02D12B : F0 04       ;
+                      BEQ +                               ;; 02D12B : F0 04       ;
                       LDA.L DATA_00BA8E,X                 ;; 02D12D : BF 8E BA 00 ;
-ADDR_02D131:          CLC                                 ;; 02D131 : 18          ;
+                    + CLC                                 ;; 02D131 : 18          ;
                       ADC.B !_0                           ;; 02D132 : 65 00       ;
                       STA.B !_5                           ;; 02D134 : 85 05       ;
                       LDA.L DATA_00BABC,X                 ;; 02D136 : BF BC BA 00 ;
                       LDY.B !_F                           ;; 02D13A : A4 0F       ;
-                      BEQ ADDR_02D142                     ;; 02D13C : F0 04       ;
+                      BEQ +                               ;; 02D13C : F0 04       ;
                       LDA.L DATA_00BACA,X                 ;; 02D13E : BF CA BA 00 ;
-ADDR_02D142:          ADC.B !_2                           ;; 02D142 : 65 02       ;
+                    + ADC.B !_2                           ;; 02D142 : 65 02       ;
                       STA.B !_6                           ;; 02D144 : 85 06       ;
                       BRA CODE_02D1AD                     ;; 02D146 : 80 65       ;
                                                           ;;                      ;
@@ -9922,16 +9922,16 @@ CODE_02D149:          LDA.B !SpriteYPosLow,X              ;; 02D149 : B5 D8     
                       LDX.B !_3                           ;; 02D18A : A6 03       ;
                       LDA.L DATA_00BA60,X                 ;; 02D18C : BF 60 BA 00 ;
                       LDY.B !_F                           ;; 02D190 : A4 0F       ;
-                      BEQ CODE_02D198                     ;; 02D192 : F0 04       ;
+                      BEQ +                               ;; 02D192 : F0 04       ;
                       LDA.L DATA_00BA70,X                 ;; 02D194 : BF 70 BA 00 ;
-CODE_02D198:          CLC                                 ;; 02D198 : 18          ;
+                    + CLC                                 ;; 02D198 : 18          ;
                       ADC.B !_0                           ;; 02D199 : 65 00       ;
                       STA.B !_5                           ;; 02D19B : 85 05       ;
                       LDA.L DATA_00BA9C,X                 ;; 02D19D : BF 9C BA 00 ;
                       LDY.B !_F                           ;; 02D1A1 : A4 0F       ;
-                      BEQ CODE_02D1A9                     ;; 02D1A3 : F0 04       ;
+                      BEQ +                               ;; 02D1A3 : F0 04       ;
                       LDA.L DATA_00BAAC,X                 ;; 02D1A5 : BF AC BA 00 ;
-CODE_02D1A9:          ADC.B !_2                           ;; 02D1A9 : 65 02       ;
+                    + ADC.B !_2                           ;; 02D1A9 : 65 02       ;
                       STA.B !_6                           ;; 02D1AB : 85 06       ;
 CODE_02D1AD:          LDA.B #$7E                          ;; 02D1AD : A9 7E       ;
                       STA.B !_7                           ;; 02D1AF : 85 07       ;
@@ -9940,12 +9940,12 @@ CODE_02D1AD:          LDA.B #$7E                          ;; 02D1AD : A9 7E     
                       STA.W !Map16TileNumber              ;; 02D1B6 : 8D 93 16    ;
                       INC.B !_7                           ;; 02D1B9 : E6 07       ;
                       LDA.B [!_5]                         ;; 02D1BB : A7 05       ;
-                      BNE Return02D1F0                    ;; 02D1BD : D0 31       ;
+                      BNE +                               ;; 02D1BD : D0 31       ;
                       LDA.W !Map16TileNumber              ;; 02D1BF : AD 93 16    ;
                       CMP.B #$45                          ;; 02D1C2 : C9 45       ;
-                      BCC Return02D1F0                    ;; 02D1C4 : 90 2A       ;
+                      BCC +                               ;; 02D1C4 : 90 2A       ;
                       CMP.B #$48                          ;; 02D1C6 : C9 48       ;
-                      BCS Return02D1F0                    ;; 02D1C8 : B0 26       ;
+                      BCS +                               ;; 02D1C8 : B0 26       ;
                       SEC                                 ;; 02D1CA : 38          ;
                       SBC.B #$44                          ;; 02D1CB : E9 44       ;
                       STA.W !EatenBerryType               ;; 02D1CD : 8D D6 18    ;
@@ -9963,7 +9963,7 @@ CODE_02D1AD:          LDA.B #$7E                          ;; 02D1AD : A9 7E     
                       LDA.B !PlayerYPosNext+1             ;; 02D1EA : A5 97       ;
                       ADC.B #$00                          ;; 02D1EC : 69 00       ;
                       STA.B !PlayerYPosNext+1             ;; 02D1EE : 85 97       ;
-Return02D1F0:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02D1F1:          db $00,$04                          ;; 02D1F1               ;
@@ -9991,10 +9991,10 @@ CODE_02D214:          LDA.B !byetudlrHold                 ;; 02D214 : A5 15     
                       BNE CODE_02D228                     ;; 02D218 : D0 0E       ;
 CODE_02D21A:          LDA.B !SpriteXSpeed,X               ;; 02D21A : B5 B6       ;
                       BEQ CODE_02D226                     ;; 02D21C : F0 08       ;
-                      BPL CODE_02D224                     ;; 02D21E : 10 04       ;
+                      BPL +                               ;; 02D21E : 10 04       ;
                       INC.B !SpriteXSpeed,X               ;; 02D220 : F6 B6       ;
                       INC.B !SpriteXSpeed,X               ;; 02D222 : F6 B6       ;
-CODE_02D224:          DEC.B !SpriteXSpeed,X               ;; 02D224 : D6 B6       ;
+                    + DEC.B !SpriteXSpeed,X               ;; 02D224 : D6 B6       ;
 CODE_02D226:          BRA CODE_02D247                     ;; 02D226 : 80 1F       ;
                                                           ;;                      ;
 CODE_02D228:          TAY                                 ;; 02D228 : A8          ;
@@ -10019,29 +10019,29 @@ CODE_02D247:          LDY.B #$00                          ;; 02D247 : A0 00     
                       BNE CODE_02D25F                     ;; 02D24D : D0 10       ;
                       LDA.B !byetudlrHold                 ;; 02D24F : A5 15       ;
                       AND.B #$0C                          ;; 02D251 : 29 0C       ;
-                      BEQ CODE_02D26F                     ;; 02D253 : F0 1A       ;
+                      BEQ +                               ;; 02D253 : F0 1A       ;
                       LDY.B #$10                          ;; 02D255 : A0 10       ;
                       AND.B #$08                          ;; 02D257 : 29 08       ;
-                      BEQ CODE_02D26F                     ;; 02D259 : F0 14       ;
+                      BEQ +                               ;; 02D259 : F0 14       ;
                       LDY.B #$F0                          ;; 02D25B : A0 F0       ;
-                      BRA CODE_02D26F                     ;; 02D25D : 80 10       ;
+                      BRA +                               ;; 02D25D : 80 10       ;
                                                           ;;                      ;
 CODE_02D25F:          LDY.B #$F8                          ;; 02D25F : A0 F8       ;
                       LDA.B !byetudlrHold                 ;; 02D261 : A5 15       ;
                       AND.B #$0C                          ;; 02D263 : 29 0C       ;
-                      BEQ CODE_02D26F                     ;; 02D265 : F0 08       ;
+                      BEQ +                               ;; 02D265 : F0 08       ;
                       LDY.B #$F0                          ;; 02D267 : A0 F0       ;
                       AND.B #$08                          ;; 02D269 : 29 08       ;
-                      BNE CODE_02D26F                     ;; 02D26B : D0 02       ;
+                      BNE +                               ;; 02D26B : D0 02       ;
                       LDY.B #$08                          ;; 02D26D : A0 08       ;
-CODE_02D26F:          STY.B !_0                           ;; 02D26F : 84 00       ;
+                    + STY.B !_0                           ;; 02D26F : 84 00       ;
                       LDA.B !SpriteYSpeed,X               ;; 02D271 : B5 AA       ;
                       CMP.B !_0                           ;; 02D273 : C5 00       ;
                       BEQ CODE_02D27F                     ;; 02D275 : F0 08       ;
-                      BPL CODE_02D27D                     ;; 02D277 : 10 04       ;
+                      BPL +                               ;; 02D277 : 10 04       ;
                       INC.B !SpriteYSpeed,X               ;; 02D279 : F6 AA       ;
                       INC.B !SpriteYSpeed,X               ;; 02D27B : F6 AA       ;
-CODE_02D27D:          DEC.B !SpriteYSpeed,X               ;; 02D27D : D6 AA       ;
+                    + DEC.B !SpriteYSpeed,X               ;; 02D27D : D6 AA       ;
 CODE_02D27F:          LDA.B !SpriteXSpeed,X               ;; 02D27F : B5 B6       ;
                       STA.B !PlayerXSpeed                 ;; 02D281 : 85 7B       ;
                       LDA.B !SpriteYSpeed,X               ;; 02D283 : B5 AA       ;
@@ -10073,10 +10073,10 @@ UpdateYPosNoGrvty:    LDA.B !SpriteYSpeed,X               ;; ?QPWZ? : B5 AA     
                       LSR A                               ;; 02D2A9 : 4A          ;  | 
                       LSR A                               ;; 02D2AA : 4A          ; / 
                       CMP.B #$08                          ;; 02D2AB : C9 08       ; \ If speed was negative... 
-                      BCC CODE_02D2B2                     ;; 02D2AD : 90 03       ;  | 
+                      BCC +                               ;; 02D2AD : 90 03       ;  | 
                       ORA.B #$F0                          ;; 02D2AF : 09 F0       ;  | ...set high bits 
                       DEY                                 ;; 02D2B1 : 88          ; / 
-CODE_02D2B2:          PLP                                 ;; 02D2B2 : 28          ;
+                    + PLP                                 ;; 02D2B2 : 28          ;
                       PHA                                 ;; 02D2B3 : 48          ; \ Add to position 
                       ADC.B !SpriteYPosLow,X              ;; 02D2B4 : 75 D8       ;  | 
                       STA.B !SpriteYPosLow,X              ;; 02D2B6 : 95 D8       ;  | 
@@ -10124,30 +10124,30 @@ CODE_02D2FB:          STA.B !_1                           ;; 02D2FB : 85 01     
                       JSR CODE_02D50C                     ;; 02D2FF : 20 0C D5    ;
                       STY.B !_2                           ;; 02D302 : 84 02       ;
                       LDA.B !_E                           ;; 02D304 : A5 0E       ;
-                      BPL CODE_02D30D                     ;; 02D306 : 10 05       ;
+                      BPL +                               ;; 02D306 : 10 05       ;
                       EOR.B #$FF                          ;; 02D308 : 49 FF       ;
                       CLC                                 ;; 02D30A : 18          ;
                       ADC.B #$01                          ;; 02D30B : 69 01       ;
-CODE_02D30D:          STA.B !_C                           ;; 02D30D : 85 0C       ;
+                    + STA.B !_C                           ;; 02D30D : 85 0C       ;
                       JSR CODE_02D4FA                     ;; 02D30F : 20 FA D4    ;
                       STY.B !_3                           ;; 02D312 : 84 03       ;
                       LDA.B !_F                           ;; 02D314 : A5 0F       ;
-                      BPL CODE_02D31D                     ;; 02D316 : 10 05       ;
+                      BPL +                               ;; 02D316 : 10 05       ;
                       EOR.B #$FF                          ;; 02D318 : 49 FF       ;
                       CLC                                 ;; 02D31A : 18          ;
                       ADC.B #$01                          ;; 02D31B : 69 01       ;
-CODE_02D31D:          STA.B !_D                           ;; 02D31D : 85 0D       ;
+                    + STA.B !_D                           ;; 02D31D : 85 0D       ;
                       LDY.B #$00                          ;; 02D31F : A0 00       ;
                       LDA.B !_D                           ;; 02D321 : A5 0D       ;
                       CMP.B !_C                           ;; 02D323 : C5 0C       ;
-                      BCS CODE_02D330                     ;; 02D325 : B0 09       ;
+                      BCS +                               ;; 02D325 : B0 09       ;
                       INY                                 ;; 02D327 : C8          ;
                       PHA                                 ;; 02D328 : 48          ;
                       LDA.B !_C                           ;; 02D329 : A5 0C       ;
                       STA.B !_D                           ;; 02D32B : 85 0D       ;
                       PLA                                 ;; 02D32D : 68          ;
                       STA.B !_C                           ;; 02D32E : 85 0C       ;
-CODE_02D330:          LDA.B #$00                          ;; 02D330 : A9 00       ;
+                    + LDA.B #$00                          ;; 02D330 : A9 00       ;
                       STA.B !_B                           ;; 02D332 : 85 0B       ;
                       STA.B !_0                           ;; 02D334 : 85 00       ;
                       LDX.B !_1                           ;; 02D336 : A6 01       ;
@@ -10155,35 +10155,35 @@ CODE_02D338:          LDA.B !_B                           ;; 02D338 : A5 0B     
                       CLC                                 ;; 02D33A : 18          ;
                       ADC.B !_C                           ;; 02D33B : 65 0C       ;
                       CMP.B !_D                           ;; 02D33D : C5 0D       ;
-                      BCC CODE_02D345                     ;; 02D33F : 90 04       ;
+                      BCC +                               ;; 02D33F : 90 04       ;
                       SBC.B !_D                           ;; 02D341 : E5 0D       ;
                       INC.B !_0                           ;; 02D343 : E6 00       ;
-CODE_02D345:          STA.B !_B                           ;; 02D345 : 85 0B       ;
+                    + STA.B !_B                           ;; 02D345 : 85 0B       ;
                       DEX                                 ;; 02D347 : CA          ;
                       BNE CODE_02D338                     ;; 02D348 : D0 EE       ;
                       TYA                                 ;; 02D34A : 98          ;
-                      BEQ CODE_02D357                     ;; 02D34B : F0 0A       ;
+                      BEQ +                               ;; 02D34B : F0 0A       ;
                       LDA.B !_0                           ;; 02D34D : A5 00       ;
                       PHA                                 ;; 02D34F : 48          ;
                       LDA.B !_1                           ;; 02D350 : A5 01       ;
                       STA.B !_0                           ;; 02D352 : 85 00       ;
                       PLA                                 ;; 02D354 : 68          ;
                       STA.B !_1                           ;; 02D355 : 85 01       ;
-CODE_02D357:          LDA.B !_0                           ;; 02D357 : A5 00       ;
+                    + LDA.B !_0                           ;; 02D357 : A5 00       ;
                       LDY.B !_2                           ;; 02D359 : A4 02       ;
-                      BEQ CODE_02D364                     ;; 02D35B : F0 07       ;
+                      BEQ +                               ;; 02D35B : F0 07       ;
                       EOR.B #$FF                          ;; 02D35D : 49 FF       ;
                       CLC                                 ;; 02D35F : 18          ;
                       ADC.B #$01                          ;; 02D360 : 69 01       ;
                       STA.B !_0                           ;; 02D362 : 85 00       ;
-CODE_02D364:          LDA.B !_1                           ;; 02D364 : A5 01       ;
+                    + LDA.B !_1                           ;; 02D364 : A5 01       ;
                       LDY.B !_3                           ;; 02D366 : A4 03       ;
-                      BEQ CODE_02D371                     ;; 02D368 : F0 07       ;
+                      BEQ +                               ;; 02D368 : F0 07       ;
                       EOR.B #$FF                          ;; 02D36A : 49 FF       ;
                       CLC                                 ;; 02D36C : 18          ;
                       ADC.B #$01                          ;; 02D36D : 69 01       ;
                       STA.B !_1                           ;; 02D36F : 85 01       ;
-CODE_02D371:          PLY                                 ;; 02D371 : 7A          ;
+                    + PLY                                 ;; 02D371 : 7A          ;
                       PLX                                 ;; 02D372 : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -10198,9 +10198,9 @@ GetDrawInfo2:         STZ.W !SpriteOffscreenVert,X        ;; ?QPWZ? : 9E 6C 18  
                       CMP.B !Layer1XPos                   ;; 02D380 : C5 1A       ;
                       LDA.W !SpriteYPosHigh,X             ;; 02D382 : BD E0 14    ;
                       SBC.B !Layer1XPos+1                 ;; 02D385 : E5 1B       ;
-                      BEQ CODE_02D38C                     ;; 02D387 : F0 03       ;
+                      BEQ +                               ;; 02D387 : F0 03       ;
                       INC.W !SpriteOffscreenX,X           ;; 02D389 : FE A0 15    ;
-CODE_02D38C:          LDA.W !SpriteYPosHigh,X             ;; 02D38C : BD E0 14    ;
+                    + LDA.W !SpriteYPosHigh,X             ;; 02D38C : BD E0 14    ;
                       XBA                                 ;; 02D38F : EB          ;
                       LDA.B !SpriteXPosLow,X              ;; 02D390 : B5 E4       ;
                       REP #$20                            ;; 02D392 : C2 20       ; Accum (16 bit) 
@@ -10230,11 +10230,11 @@ CODE_02D3B2:          LDA.B !SpriteYPosLow,X              ;; 02D3B2 : B5 D8     
                       ADC.B #$00                          ;; 02D3C1 : 69 00       ;
                       LSR.B !_0                           ;; 02D3C3 : 46 00       ;
                       SBC.B !Layer1YPos+1                 ;; 02D3C5 : E5 1D       ;
-                      BEQ CODE_02D3D2                     ;; 02D3C7 : F0 09       ;
+                      BEQ +                               ;; 02D3C7 : F0 09       ;
                       LDA.W !SpriteOffscreenVert,X        ;; 02D3C9 : BD 6C 18    ;
                       ORA.W DATA_02D376,Y                 ;; 02D3CC : 19 76 D3    ;
                       STA.W !SpriteOffscreenVert,X        ;; 02D3CF : 9D 6C 18    ;
-CODE_02D3D2:          DEY                                 ;; 02D3D2 : 88          ;
+                    + DEY                                 ;; 02D3D2 : 88          ;
                       BPL CODE_02D3B2                     ;; 02D3D3 : 10 DD       ;
                       LDY.W !SpriteOAMIndex,X             ;; 02D3D5 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B !SpriteXPosLow,X              ;; 02D3D8 : B5 E4       ;
@@ -10257,9 +10257,9 @@ Layer3SmashMain:      JSL CODE_00FF61                     ;; ?QPWZ? : 22 61 FF 0
                       JSR CODE_02D49C                     ;; 02D3F2 : 20 9C D4    ;
                       LDY.B #$00                          ;; 02D3F5 : A0 00       ;
                       LDA.W !Layer1DXPos                  ;; 02D3F7 : AD BD 17    ;
-                      BPL CODE_02D3FD                     ;; 02D3FA : 10 01       ;
+                      BPL +                               ;; 02D3FA : 10 01       ;
                       DEY                                 ;; 02D3FC : 88          ;
-CODE_02D3FD:          CLC                                 ;; 02D3FD : 18          ;
+                    + CLC                                 ;; 02D3FD : 18          ;
                       ADC.B !SpriteXPosLow,X              ;; 02D3FE : 75 E4       ;
                       STA.B !SpriteXPosLow,X              ;; 02D400 : 95 E4       ;
                       TYA                                 ;; 02D402 : 98          ;
@@ -10275,11 +10275,11 @@ CODE_02D3FD:          CLC                                 ;; 02D3FD : 18        
                       dw CODE_02D489                      ;; ?QPWZ? : 89 D4       ;
                                                           ;;                      ;
 CODE_02D419:          LDA.W !SpriteWillAppear             ;; 02D419 : AD BF 18    ;
-                      BEQ CODE_02D422                     ;; 02D41C : F0 04       ;
+                      BEQ +                               ;; 02D41C : F0 04       ;
                       JSR OffScrEraseSprBnk2              ;; 02D41E : 20 7A D0    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02D422:          LDA.W !SpriteMisc1540,X             ;; 02D422 : BD 40 15    ;
+                    + LDA.W !SpriteMisc1540,X             ;; 02D422 : BD 40 15    ;
                       BNE Return02D444                    ;; 02D425 : D0 1D       ;
                       INC.B !SpriteTableC2,X              ;; 02D427 : F6 C2       ;
                       LDA.B #$80                          ;; 02D429 : A9 80       ;
@@ -10296,26 +10296,26 @@ CODE_02D422:          LDA.W !SpriteMisc1540,X             ;; 02D422 : BD 40 15  
 Return02D444:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02D445:          LDA.W !SpriteMisc1540,X             ;; 02D445 : BD 40 15    ;
-                      BEQ CODE_02D452                     ;; 02D448 : F0 08       ;
+                      BEQ +                               ;; 02D448 : F0 08       ;
                       LDA.B #$04                          ;; 02D44A : A9 04       ;
                       STA.B !SpriteYSpeed,X               ;; 02D44C : 95 AA       ;
                       JSR UpdateYPosNoGrvty               ;; 02D44E : 20 94 D2    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_02D452:          INC.B !SpriteTableC2,X              ;; 02D452 : F6 C2       ;
+                    + INC.B !SpriteTableC2,X              ;; 02D452 : F6 C2       ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02D455:          JSR UpdateYPosNoGrvty               ;; 02D455 : 20 94 D2    ;
                       LDA.B !SpriteYSpeed,X               ;; 02D458 : B5 AA       ;
                       BMI CODE_02D460                     ;; 02D45A : 30 04       ;
                       CMP.B #$40                          ;; 02D45C : C9 40       ;
-                      BCS CODE_02D465                     ;; 02D45E : B0 05       ;
+                      BCS +                               ;; 02D45E : B0 05       ;
 CODE_02D460:          CLC                                 ;; 02D460 : 18          ;
                       ADC.B #$07                          ;; 02D461 : 69 07       ;
                       STA.B !SpriteYSpeed,X               ;; 02D463 : 95 AA       ;
-CODE_02D465:          LDA.B !SpriteYPosLow,X              ;; 02D465 : B5 D8       ;
+                    + LDA.B !SpriteYPosLow,X              ;; 02D465 : B5 D8       ;
                       CMP.B #$A0                          ;; 02D467 : C9 A0       ;
-                      BCC Return02D480                    ;; 02D469 : 90 15       ;
+                      BCC +                               ;; 02D469 : 90 15       ;
                       AND.B #$F0                          ;; 02D46B : 29 F0       ;
                       STA.B !SpriteYPosLow,X              ;; 02D46D : 95 D8       ;
                       LDA.B #$50                          ;; 02D46F : A9 50       ; \ Set ground shake timer 
@@ -10325,30 +10325,30 @@ CODE_02D465:          LDA.B !SpriteYPosLow,X              ;; 02D465 : B5 D8     
                       LDA.B #$30                          ;; 02D479 : A9 30       ;
                       STA.W !SpriteMisc1540,X             ;; 02D47B : 9D 40 15    ;
                       INC.B !SpriteTableC2,X              ;; 02D47E : F6 C2       ;
-Return02D480:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02D481:          LDA.W !SpriteMisc1540,X             ;; 02D481 : BD 40 15    ;
-                      BNE Return02D488                    ;; 02D484 : D0 02       ;
+                      BNE +                               ;; 02D484 : D0 02       ;
                       INC.B !SpriteTableC2,X              ;; 02D486 : F6 C2       ;
-Return02D488:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02D489:          LDA.B #$E0                          ;; 02D489 : A9 E0       ;
                       STA.B !SpriteYSpeed,X               ;; 02D48B : 95 AA       ;
                       JSR UpdateYPosNoGrvty               ;; 02D48D : 20 94 D2    ;
                       LDA.B !SpriteYPosLow,X              ;; 02D490 : B5 D8       ;
-                      BNE Return02D49B                    ;; 02D492 : D0 07       ;
+                      BNE +                               ;; 02D492 : D0 07       ;
                       STZ.B !SpriteTableC2,X              ;; 02D494 : 74 C2       ;
                       LDA.B #$A0                          ;; 02D496 : A9 A0       ;
                       STA.W !SpriteMisc1540,X             ;; 02D498 : 9D 40 15    ;
-Return02D49B:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02D49C:          LDA.B #$00                          ;; 02D49C : A9 00       ;
                       LDY.B !Powerup                      ;; 02D49E : A4 19       ;
-                      BEQ CODE_02D4A8                     ;; 02D4A0 : F0 06       ;
+                      BEQ +                               ;; 02D4A0 : F0 06       ;
                       LDY.B !PlayerIsDucking              ;; 02D4A2 : A4 73       ;
-                      BNE CODE_02D4A8                     ;; 02D4A4 : D0 02       ;
+                      BNE +                               ;; 02D4A4 : D0 02       ;
                       LDA.B #$10                          ;; 02D4A6 : A9 10       ;
-CODE_02D4A8:          CLC                                 ;; 02D4A8 : 18          ;
+                    + CLC                                 ;; 02D4A8 : 18          ;
                       ADC.B !SpriteYPosLow,X              ;; 02D4A9 : 75 D8       ;
                       CMP.B !PlayerYPosScrRel             ;; 02D4AB : C5 80       ;
                       BCC CODE_02D4EF                     ;; 02D4AD : 90 40       ;
@@ -10370,22 +10370,22 @@ CODE_02D4A8:          CLC                                 ;; 02D4A8 : 18        
                       SEP #$20                            ;; 02D4CF : E2 20       ; Accum (8 bit) 
                       BCS CODE_02D4E5                     ;; 02D4D1 : B0 12       ;
                       LDA.B !PlayerInAir                  ;; 02D4D3 : A5 72       ;
-                      BNE CODE_02D4DC                     ;; 02D4D5 : D0 05       ;
+                      BNE +                               ;; 02D4D5 : D0 05       ;
                       JSL HurtMario                       ;; 02D4D7 : 22 B7 F5 00 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02D4DC:          STZ.B !PlayerYSpeed                 ;; 02D4DC : 64 7D       ;
+                    + STZ.B !PlayerYSpeed                 ;; 02D4DC : 64 7D       ;
                       LDA.B !SpriteYSpeed,X               ;; 02D4DE : B5 AA       ;
-                      BMI Return02D4E4                    ;; 02D4E0 : 30 02       ;
+                      BMI +                               ;; 02D4E0 : 30 02       ;
                       STA.B !PlayerYSpeed                 ;; 02D4E2 : 85 7D       ;
-Return02D4E4:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02D4E5:          PHP                                 ;; 02D4E5 : 08          ;
                       LDA.B #$08                          ;; 02D4E6 : A9 08       ;
                       PLP                                 ;; 02D4E8 : 28          ;
-                      BPL CODE_02D4ED                     ;; 02D4E9 : 10 02       ;
+                      BPL +                               ;; 02D4E9 : 10 02       ;
                       LDA.B #$F8                          ;; 02D4EB : A9 F8       ;
-CODE_02D4ED:          STA.B !PlayerXSpeed                 ;; 02D4ED : 85 7B       ;
+                    + STA.B !PlayerXSpeed                 ;; 02D4ED : 85 7B       ;
 CODE_02D4EF:          SEP #$20                            ;; 02D4EF : E2 20       ; Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -10399,9 +10399,9 @@ CODE_02D4FA:          LDY.B #$00                          ;; 02D4FA : A0 00     
                       STA.B !_F                           ;; 02D501 : 85 0F       ;
                       LDA.B !PlayerXPosNext+1             ;; 02D503 : A5 95       ;
                       SBC.W !SpriteYPosHigh,X             ;; 02D505 : FD E0 14    ;
-                      BPL Return02D50B                    ;; 02D508 : 10 01       ;
+                      BPL +                               ;; 02D508 : 10 01       ;
                       INY                                 ;; 02D50A : C8          ;
-Return02D50B:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02D50C:          LDY.B #$00                          ;; 02D50C : A0 00       ;
                       LDA.B !PlayerYPosNext               ;; 02D50E : A5 96       ;
@@ -10410,9 +10410,9 @@ CODE_02D50C:          LDY.B #$00                          ;; 02D50C : A0 00     
                       STA.B !_E                           ;; 02D513 : 85 0E       ;
                       LDA.B !PlayerYPosNext+1             ;; 02D515 : A5 97       ;
                       SBC.W !SpriteXPosHigh,X             ;; 02D517 : FD D4 14    ;
-                      BPL Return02D51D                    ;; 02D51A : 10 01       ;
+                      BPL +                               ;; 02D51A : 10 01       ;
                       INY                                 ;; 02D51C : C8          ;
-Return02D51D:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
                       db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;; 02D51E               ;
@@ -10434,15 +10434,15 @@ DATA_02D57F:          db $FF,$13,$14,$15,$16,$17,$18,$19  ;; 02D57F             
 CODE_02D587:          JSR CODE_02D5E4                     ;; 02D587 : 20 E4 D5    ;
                       LDA.W !SpriteStatus,X               ;; 02D58A : BD C8 14    ;
                       CMP.B #$02                          ;; 02D58D : C9 02       ;
-                      BEQ Return02D5A3                    ;; 02D58F : F0 12       ;
+                      BEQ +                               ;; 02D58F : F0 12       ;
                       LDA.B !SpriteLock                   ;; 02D591 : A5 9D       ;
-                      BNE Return02D5A3                    ;; 02D593 : D0 0E       ;
+                      BNE +                               ;; 02D593 : D0 0E       ;
                       JSR SubOffscreen0Bnk2               ;; 02D595 : 20 25 D0    ;
                       LDA.B #$E8                          ;; 02D598 : A9 E8       ;
                       STA.B !SpriteXSpeed,X               ;; 02D59A : 95 B6       ;
                       JSR UpdateXPosNoGrvty               ;; 02D59C : 20 88 D2    ;
                       JSL MarioSprInteract                ;; 02D59F : 22 DC A7 01 ;
-Return02D5A3:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02D5A4:          db $00,$10,$20,$30,$00,$10,$20,$30  ;; 02D5A4               ;
@@ -10457,7 +10457,7 @@ DATA_02D5D4:          db $33,$33,$33,$33,$33,$33,$33,$33  ;; 02D5D4             
 CODE_02D5E4:          JSR GetDrawInfo2                    ;; 02D5E4 : 20 78 D3    ;
                       PHX                                 ;; 02D5E7 : DA          ;
                       LDX.B #$0F                          ;; 02D5E8 : A2 0F       ;
-CODE_02D5EA:          LDA.B !_0                           ;; 02D5EA : A5 00       ;
+                    - LDA.B !_0                           ;; 02D5EA : A5 00       ;
                       CLC                                 ;; 02D5EC : 18          ;
                       ADC.W DATA_02D5A4,X                 ;; 02D5ED : 7D A4 D5    ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02D5F0 : 99 00 03    ;
@@ -10474,7 +10474,7 @@ CODE_02D5EA:          LDA.B !_0                           ;; 02D5EA : A5 00     
                       INY                                 ;; 02D60A : C8          ;
                       INY                                 ;; 02D60B : C8          ;
                       DEX                                 ;; 02D60C : CA          ;
-                      BPL CODE_02D5EA                     ;; 02D60D : 10 DB       ;
+                      BPL -                               ;; 02D60D : 10 DB       ;
                       PLX                                 ;; 02D60F : FA          ;
                       LDY.B #$02                          ;; 02D610 : A0 02       ;
                       LDA.B #$0F                          ;; 02D612 : A9 0F       ;
@@ -10487,10 +10487,10 @@ Banzai_Rotating:      PHB                                 ;; ?QPWZ? : 8B        
                       CMP.B #$9F                          ;; 02D61C : C9 9F       ;
                       BNE CODE_02D625                     ;; 02D61E : D0 05       ;
                       JSR CODE_02D587                     ;; 02D620 : 20 87 D5    ;
-                      BRA CODE_02D628                     ;; 02D623 : 80 03       ;
+                      BRA +                               ;; 02D623 : 80 03       ;
                                                           ;;                      ;
 CODE_02D625:          JSR CODE_02D62A                     ;; 02D625 : 20 2A D6    ;
-CODE_02D628:          PLB                                 ;; 02D628 : AB          ;
+                    + PLB                                 ;; 02D628 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02D62A:          JSR SubOffscreen3Bnk2               ;; 02D62A : 20 17 D0    ;
@@ -10499,14 +10499,14 @@ CODE_02D62A:          JSR SubOffscreen3Bnk2               ;; 02D62A : 20 17 D0  
                       LDA.B !SpriteXPosLow,X              ;; 02D631 : B5 E4       ;
                       LDY.B #$02                          ;; 02D633 : A0 02       ;
                       AND.B #$10                          ;; 02D635 : 29 10       ;
-                      BNE CODE_02D63B                     ;; 02D637 : D0 02       ;
+                      BNE +                               ;; 02D637 : D0 02       ;
                       LDY.B #$FE                          ;; 02D639 : A0 FE       ;
-CODE_02D63B:          TYA                                 ;; 02D63B : 98          ;
+                    + TYA                                 ;; 02D63B : 98          ;
                       LDY.B #$00                          ;; 02D63C : A0 00       ;
                       CMP.B #$00                          ;; 02D63E : C9 00       ;
-                      BPL CODE_02D643                     ;; 02D640 : 10 01       ;
+                      BPL +                               ;; 02D640 : 10 01       ;
                       DEY                                 ;; 02D642 : 88          ;
-CODE_02D643:          CLC                                 ;; 02D643 : 18          ;
+                    + CLC                                 ;; 02D643 : 18          ;
                       ADC.W !SpriteMisc1602,X             ;; 02D644 : 7D 02 16    ;
                       STA.W !SpriteMisc1602,X             ;; 02D647 : 9D 02 16    ;
                       TYA                                 ;; 02D64A : 98          ;
@@ -10541,32 +10541,32 @@ CODE_02D653:          LDA.W !SpriteMisc151C,X             ;; 02D653 : BD 1C 15  
                       STA.W !HW_WRMPYA                    ;; 02D68B : 8D 02 42    ; Multiplicand A
                       LDA.W !SpriteMisc187B,X             ;; 02D68E : BD 7B 18    ;
                       LDY.B !_5                           ;; 02D691 : A4 05       ;
-                      BNE CODE_02D6A3                     ;; 02D693 : D0 0E       ;
+                      BNE +                               ;; 02D693 : D0 0E       ;
                       STA.W !HW_WRMPYB                    ;; 02D695 : 8D 03 42    ; Multplier B
                       JSR CODE_02D800                     ;; 02D698 : 20 00 D8    ;
                       ASL.W !HW_RDMPY                     ;; 02D69B : 0E 16 42    ; Product/Remainder Result (Low Byte)
                       LDA.W !HW_RDMPY+1                   ;; 02D69E : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 02D6A1 : 69 00       ;
-CODE_02D6A3:          LSR.B !_1                           ;; 02D6A3 : 46 01       ;
-                      BCC CODE_02D6AA                     ;; 02D6A5 : 90 03       ;
+                    + LSR.B !_1                           ;; 02D6A3 : 46 01       ;
+                      BCC +                               ;; 02D6A5 : 90 03       ;
                       EOR.B #$FF                          ;; 02D6A7 : 49 FF       ;
                       INC A                               ;; 02D6A9 : 1A          ;
-CODE_02D6AA:          STA.B !_4                           ;; 02D6AA : 85 04       ;
+                    + STA.B !_4                           ;; 02D6AA : 85 04       ;
                       LDA.B !_6                           ;; 02D6AC : A5 06       ;
                       STA.W !HW_WRMPYA                    ;; 02D6AE : 8D 02 42    ; Multiplicand A
                       LDA.W !SpriteMisc187B,X             ;; 02D6B1 : BD 7B 18    ;
                       LDY.B !_7                           ;; 02D6B4 : A4 07       ;
-                      BNE CODE_02D6C6                     ;; 02D6B6 : D0 0E       ;
+                      BNE +                               ;; 02D6B6 : D0 0E       ;
                       STA.W !HW_WRMPYB                    ;; 02D6B8 : 8D 03 42    ; Multplier B
                       JSR CODE_02D800                     ;; 02D6BB : 20 00 D8    ;
                       ASL.W !HW_RDMPY                     ;; 02D6BE : 0E 16 42    ; Product/Remainder Result (Low Byte)
                       LDA.W !HW_RDMPY+1                   ;; 02D6C1 : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 02D6C4 : 69 00       ;
-CODE_02D6C6:          LSR.B !_3                           ;; 02D6C6 : 46 03       ;
-                      BCC CODE_02D6CD                     ;; 02D6C8 : 90 03       ;
+                    + LSR.B !_3                           ;; 02D6C6 : 46 03       ;
+                      BCC +                               ;; 02D6C8 : 90 03       ;
                       EOR.B #$FF                          ;; 02D6CA : 49 FF       ;
                       INC A                               ;; 02D6CC : 1A          ;
-CODE_02D6CD:          STA.B !_6                           ;; 02D6CD : 85 06       ;
+                    + STA.B !_6                           ;; 02D6CD : 85 06       ;
                       LDA.B !SpriteXPosLow,X              ;; 02D6CF : B5 E4       ;
                       PHA                                 ;; 02D6D1 : 48          ;
                       LDA.W !SpriteYPosHigh,X             ;; 02D6D2 : BD E0 14    ;
@@ -10578,9 +10578,9 @@ CODE_02D6CD:          STA.B !_6                           ;; 02D6CD : 85 06     
                       LDY.W !ClusterSpriteMisc0F86,X      ;; 02D6DD : BC 86 0F    ;
                       STZ.B !_0                           ;; 02D6E0 : 64 00       ;
                       LDA.B !_4                           ;; 02D6E2 : A5 04       ;
-                      BPL CODE_02D6E8                     ;; 02D6E4 : 10 02       ;
+                      BPL +                               ;; 02D6E4 : 10 02       ;
                       DEC.B !_0                           ;; 02D6E6 : C6 00       ;
-CODE_02D6E8:          CLC                                 ;; 02D6E8 : 18          ;
+                    + CLC                                 ;; 02D6E8 : 18          ;
                       ADC.B !SpriteXPosLow,X              ;; 02D6E9 : 75 E4       ;
                       STA.B !SpriteXPosLow,X              ;; 02D6EB : 95 E4       ;
                       PHP                                 ;; 02D6ED : 08          ;
@@ -10596,9 +10596,9 @@ CODE_02D6E8:          CLC                                 ;; 02D6E8 : 18        
                       STA.W !SpriteYPosHigh,X             ;; 02D700 : 9D E0 14    ;
                       STZ.B !_1                           ;; 02D703 : 64 01       ;
                       LDA.B !_6                           ;; 02D705 : A5 06       ;
-                      BPL CODE_02D70B                     ;; 02D707 : 10 02       ;
+                      BPL +                               ;; 02D707 : 10 02       ;
                       DEC.B !_1                           ;; 02D709 : C6 01       ;
-CODE_02D70B:          CLC                                 ;; 02D70B : 18          ;
+                    + CLC                                 ;; 02D70B : 18          ;
                       ADC.B !SpriteYPosLow,X              ;; 02D70C : 75 D8       ;
                       STA.B !SpriteYPosLow,X              ;; 02D70E : 95 D8       ;
                       LDA.W !SpriteXPosHigh,X             ;; 02D710 : BD D4 14    ;
@@ -10613,26 +10613,26 @@ CODE_02D70B:          CLC                                 ;; 02D70B : 18        
                       STA.W !SpriteMisc160E,X             ;; 02D726 : 9D 0E 16    ;
                       STA.W !StandOnSolidSprite           ;; 02D729 : 8D 71 14    ;
                       LDA.W !PlayerRidingYoshi            ;; 02D72C : AD 7A 18    ;
-                      BNE CODE_02D74B                     ;; 02D72F : D0 1A       ;
+                      BNE +                               ;; 02D72F : D0 1A       ;
                       PHX                                 ;; 02D731 : DA          ;
                       JSL CODE_00E2BD                     ;; 02D732 : 22 BD E2 00 ;
                       PLX                                 ;; 02D736 : FA          ;
                       LDA.B #$FF                          ;; 02D737 : A9 FF       ;
                       STA.B !PlayerHiddenTiles            ;; 02D739 : 85 78       ;
-                      BRA CODE_02D74B                     ;; 02D73B : 80 0E       ;
+                      BRA +                               ;; 02D73B : 80 0E       ;
                                                           ;;                      ;
 CODE_02D73D:          LDA.W !SpriteMisc160E,X             ;; 02D73D : BD 0E 16    ;
-                      BEQ CODE_02D74B                     ;; 02D740 : F0 09       ;
+                      BEQ +                               ;; 02D740 : F0 09       ;
                       STZ.W !SpriteMisc160E,X             ;; 02D742 : 9E 0E 16    ;
                       PHX                                 ;; 02D745 : DA          ;
                       JSL CODE_00E2BD                     ;; 02D746 : 22 BD E2 00 ;
                       PLX                                 ;; 02D74A : FA          ;
-CODE_02D74B:          JSR CODE_02D848                     ;; 02D74B : 20 48 D8    ;
-                      BRA CODE_02D757                     ;; 02D74E : 80 07       ;
+                    + JSR CODE_02D848                     ;; 02D74B : 20 48 D8    ;
+                      BRA +                               ;; 02D74E : 80 07       ;
                                                           ;;                      ;
 CODE_02D750:          JSL MarioSprInteract                ;; 02D750 : 22 DC A7 01 ;
                       JSR CODE_02D813                     ;; 02D754 : 20 13 D8    ;
-CODE_02D757:          PLA                                 ;; 02D757 : 68          ;
+                    + PLA                                 ;; 02D757 : 68          ;
                       STA.W !SpriteXPosHigh,X             ;; 02D758 : 9D D4 14    ;
                       PLA                                 ;; 02D75B : 68          ;
                       STA.B !SpriteYPosLow,X              ;; 02D75C : 95 D8       ;
@@ -10677,11 +10677,11 @@ CODE_02D757:          PLA                                 ;; 02D757 : 68        
                       TAX                                 ;; 02D7A2 : AA          ;
                       LDA.B #$E8                          ;; 02D7A3 : A9 E8       ;
                       CPX.B #$9E                          ;; 02D7A5 : E0 9E       ;
-                      BEQ CODE_02D7AB                     ;; 02D7A7 : F0 02       ;
+                      BEQ +                               ;; 02D7A7 : F0 02       ;
                       LDA.B #$A2                          ;; 02D7A9 : A9 A2       ;
-CODE_02D7AB:          STA.B !_8                           ;; 02D7AB : 85 08       ;
+                    + STA.B !_8                           ;; 02D7AB : 85 08       ;
                       LDX.B #$01                          ;; 02D7AD : A2 01       ;
-CODE_02D7AF:          LDA.B !_0                           ;; 02D7AF : A5 00       ;
+                    - LDA.B !_0                           ;; 02D7AF : A5 00       ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02D7B1 : 99 00 03    ;
                       LDA.B !_1                           ;; 02D7B4 : A5 01       ;
                       STA.W !OAMTileYPos+$100,Y           ;; 02D7B6 : 99 01 03    ;
@@ -10722,7 +10722,7 @@ CODE_02D7AF:          LDA.B !_0                           ;; 02D7AF : A5 00     
                       INY                                 ;; 02D7F3 : C8          ;
                       INY                                 ;; 02D7F4 : C8          ;
                       DEX                                 ;; 02D7F5 : CA          ;
-                      BPL CODE_02D7AF                     ;; 02D7F6 : 10 B7       ;
+                      BPL -                               ;; 02D7F6 : 10 B7       ;
                       PLX                                 ;; 02D7F8 : FA          ;
                       LDY.B #$02                          ;; 02D7F9 : A0 02       ;
                       LDA.B #$05                          ;; 02D7FB : A9 05       ;
@@ -10746,7 +10746,7 @@ DATA_02D80F:          db $33,$73,$B3,$F3                  ;; 02D80F             
 CODE_02D813:          JSR GetDrawInfo2                    ;; 02D813 : 20 78 D3    ;
                       PHX                                 ;; 02D816 : DA          ;
                       LDX.B #$03                          ;; 02D817 : A2 03       ;
-CODE_02D819:          LDA.B !_0                           ;; 02D819 : A5 00       ;
+                    - LDA.B !_0                           ;; 02D819 : A5 00       ;
                       CLC                                 ;; 02D81B : 18          ;
                       ADC.W DATA_02D807,X                 ;; 02D81C : 7D 07 D8    ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02D81F : 99 00 03    ;
@@ -10763,7 +10763,7 @@ CODE_02D819:          LDA.B !_0                           ;; 02D819 : A5 00     
                       INY                                 ;; 02D839 : C8          ;
                       INY                                 ;; 02D83A : C8          ;
                       DEX                                 ;; 02D83B : CA          ;
-                      BPL CODE_02D819                     ;; 02D83C : 10 DB       ;
+                      BPL -                               ;; 02D83C : 10 DB       ;
                       PLX                                 ;; 02D83E : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -10775,7 +10775,7 @@ WoodPlatformTiles:    db $A2,$60,$61,$62                  ;; ?QPWZ?             
 CODE_02D848:          JSR GetDrawInfo2                    ;; 02D848 : 20 78 D3    ;
                       PHX                                 ;; 02D84B : DA          ;
                       LDX.B #$03                          ;; 02D84C : A2 03       ;
-CODE_02D84E:          LDA.B !_0                           ;; 02D84E : A5 00       ;
+                    - LDA.B !_0                           ;; 02D84E : A5 00       ;
                       CLC                                 ;; 02D850 : 18          ;
                       ADC.W DATA_02D840,X                 ;; 02D851 : 7D 40 D8    ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02D854 : 99 00 03    ;
@@ -10790,15 +10790,15 @@ CODE_02D84E:          LDA.B !_0                           ;; 02D84E : A5 00     
                       INY                                 ;; 02D869 : C8          ;
                       INY                                 ;; 02D86A : C8          ;
                       DEX                                 ;; 02D86B : CA          ;
-                      BPL CODE_02D84E                     ;; 02D86C : 10 E0       ;
+                      BPL -                               ;; 02D86C : 10 E0       ;
                       PLX                                 ;; 02D86E : FA          ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02D870:          PHP                                 ;; 02D870 : 08          ;
-                      BPL CODE_02D876                     ;; 02D871 : 10 03       ;
+                      BPL +                               ;; 02D871 : 10 03       ;
                       EOR.B #$FF                          ;; 02D873 : 49 FF       ;
                       INC A                               ;; 02D875 : 1A          ;
-CODE_02D876:          STA.W !HW_WRDIV+1                   ;; 02D876 : 8D 05 42    ; Dividend (High-Byte)
+                    + STA.W !HW_WRDIV+1                   ;; 02D876 : 8D 05 42    ; Dividend (High-Byte)
                       STZ.W !HW_WRDIV                     ;; 02D879 : 9C 04 42    ; Dividend (Low Byte)
                       LDA.W !SpriteMisc187B,X             ;; 02D87C : BD 7B 18    ;
                       LSR A                               ;; 02D87F : 4A          ;
@@ -10816,10 +10816,10 @@ CODE_02D876:          STA.W !HW_WRDIV+1                   ;; 02D876 : 8D 05 42  
                       ASL.B !_E                           ;; 02D897 : 06 0E       ;
                       ROL A                               ;; 02D899 : 2A          ;
                       PLP                                 ;; 02D89A : 28          ;
-                      BPL Return02D8A0                    ;; 02D89B : 10 03       ;
+                      BPL +                               ;; 02D89B : 10 03       ;
                       EOR.B #$FF                          ;; 02D89D : 49 FF       ;
                       INC A                               ;; 02D89F : 1A          ;
-Return02D8A0:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 BubbleSprTiles1:      db $A8,$CA,$67,$24                  ;; ?QPWZ?               ;
@@ -10859,17 +10859,17 @@ CODE_02D8BB:          LDA.W !SpriteOAMIndex,X             ;; 02D8BB : BD EA 15  
                       ASL A                               ;; 02D8DA : 0A          ;
                       ASL A                               ;; 02D8DB : 0A          ;
                       LDA.W BubbleSprTiles1,X             ;; 02D8DC : BD A1 D8    ;
-                      BCC CODE_02D8E4                     ;; 02D8DF : 90 03       ;
+                      BCC +                               ;; 02D8DF : 90 03       ;
                       LDA.W BubbleSprTiles2,X             ;; 02D8E1 : BD A5 D8    ;
-CODE_02D8E4:          STA.W !OAMTileNo+$100,Y             ;; 02D8E4 : 99 02 03    ;
+                    + STA.W !OAMTileNo+$100,Y             ;; 02D8E4 : 99 02 03    ;
                       PLX                                 ;; 02D8E7 : FA          ;
                       LDA.W !SpriteMisc1534,X             ;; 02D8E8 : BD 34 15    ;
                       CMP.B #$60                          ;; 02D8EB : C9 60       ;
                       BCS CODE_02D8F3                     ;; 02D8ED : B0 04       ;
                       AND.B #$02                          ;; 02D8EF : 29 02       ;
-                      BEQ CODE_02D8F6                     ;; 02D8F1 : F0 03       ;
+                      BEQ +                               ;; 02D8F1 : F0 03       ;
 CODE_02D8F3:          JSR CODE_02D9D6                     ;; 02D8F3 : 20 D6 D9    ;
-CODE_02D8F6:          LDA.W !SpriteStatus,X               ;; 02D8F6 : BD C8 14    ;
+                    + LDA.W !SpriteStatus,X               ;; 02D8F6 : BD C8 14    ;
                       CMP.B #$02                          ;; 02D8F9 : C9 02       ;
                       BNE CODE_02D904                     ;; 02D8FB : D0 07       ;
                       LDA.B #$08                          ;; 02D8FD : A9 08       ; \ Sprite status = Normal 
@@ -10880,14 +10880,14 @@ CODE_02D904:          LDA.B !SpriteLock                   ;; 02D904 : A5 9D     
                       BNE Return02D977                    ;; 02D906 : D0 6F       ;
                       LDA.B !TrueFrame                    ;; 02D908 : A5 13       ;
                       AND.B #$01                          ;; 02D90A : 29 01       ;
-                      BNE CODE_02D91D                     ;; 02D90C : D0 0F       ;
+                      BNE +                               ;; 02D90C : D0 0F       ;
                       DEC.W !SpriteMisc1534,X             ;; 02D90E : DE 34 15    ;
                       LDA.W !SpriteMisc1534,X             ;; 02D911 : BD 34 15    ;
                       CMP.B #$04                          ;; 02D914 : C9 04       ;
-                      BNE CODE_02D91D                     ;; 02D916 : D0 05       ;
+                      BNE +                               ;; 02D916 : D0 05       ;
                       LDA.B #$19                          ;; 02D918 : A9 19       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 02D91A : 8D FC 1D    ; / 
-CODE_02D91D:          LDA.W !SpriteMisc1534,X             ;; 02D91D : BD 34 15    ;
+                    + LDA.W !SpriteMisc1534,X             ;; 02D91D : BD 34 15    ;
                       DEC A                               ;; 02D920 : 3A          ;
                       BEQ CODE_02D978                     ;; 02D921 : F0 55       ;
                       CMP.B #$07                          ;; 02D923 : C9 07       ;
@@ -10901,7 +10901,7 @@ CODE_02D91D:          LDA.W !SpriteMisc1534,X             ;; 02D91D : BD 34 15  
                       STA.B !SpriteXSpeed,X               ;; 02D93A : 95 B6       ;
                       LDA.B !TrueFrame                    ;; 02D93C : A5 13       ;
                       AND.B #$01                          ;; 02D93E : 29 01       ;
-                      BNE CODE_02D958                     ;; 02D940 : D0 16       ;
+                      BNE +                               ;; 02D940 : D0 16       ;
                       LDA.W !SpriteMisc151C,X             ;; 02D942 : BD 1C 15    ;
                       AND.B #$01                          ;; 02D945 : 29 01       ;
                       TAY                                 ;; 02D947 : A8          ;
@@ -10910,9 +10910,9 @@ CODE_02D91D:          LDA.W !SpriteMisc1534,X             ;; 02D91D : BD 34 15  
                       ADC.W BubbleSprGfxProp3,Y           ;; 02D94B : 79 B7 D8    ;
                       STA.B !SpriteYSpeed,X               ;; 02D94E : 95 AA       ;
                       CMP.W BubbleSprGfxProp4,Y           ;; 02D950 : D9 B9 D8    ;
-                      BNE CODE_02D958                     ;; 02D953 : D0 03       ;
+                      BNE +                               ;; 02D953 : D0 03       ;
                       INC.W !SpriteMisc151C,X             ;; 02D955 : FE 1C 15    ;
-CODE_02D958:          LDA.W !SpriteBlockedDirs,X          ;; 02D958 : BD 88 15    ;
+                    + LDA.W !SpriteBlockedDirs,X          ;; 02D958 : BD 88 15    ;
                       BNE CODE_02D96B                     ;; 02D95B : D0 0E       ;
                       JSL SprSprInteract                  ;; 02D95D : 22 32 80 01 ;
                       JSL MarioSprInteract                ;; 02D961 : 22 DC A7 01 ;
@@ -10934,14 +10934,14 @@ CODE_02D978:          LDY.B !SpriteTableC2,X              ;; 02D978 : B4 C2     
                       PLY                                 ;; 02D984 : 7A          ;
                       LDA.B #$20                          ;; 02D985 : A9 20       ;
                       CPY.B #$74                          ;; 02D987 : C0 74       ;
-                      BNE CODE_02D98D                     ;; 02D989 : D0 02       ;
+                      BNE +                               ;; 02D989 : D0 02       ;
                       LDA.B #$04                          ;; 02D98B : A9 04       ;
-CODE_02D98D:          STA.W !SpriteMisc154C,X             ;; 02D98D : 9D 4C 15    ;
+                    + STA.W !SpriteMisc154C,X             ;; 02D98D : 9D 4C 15    ;
                       LDA.B !SpriteNumber,X               ;; 02D990 : B5 9E       ;
                       CMP.B #$0D                          ;; 02D992 : C9 0D       ;
-                      BNE CODE_02D999                     ;; 02D994 : D0 03       ;
+                      BNE +                               ;; 02D994 : D0 03       ;
                       DEC.W !SpriteMisc1540,X             ;; 02D996 : DE 40 15    ;
-CODE_02D999:          JSR CODE_02D4FA                     ;; 02D999 : 20 FA D4    ;
+                    + JSR CODE_02D4FA                     ;; 02D999 : 20 FA D4    ;
                       TYA                                 ;; 02D99C : 98          ;
                       STA.W !SpriteMisc157C,X             ;; 02D99D : 9D 7C 15    ;
 Return02D9A0:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -11008,9 +11008,9 @@ CODE_02D9F8:          PHX                                 ;; 02D9F8 : DA        
                       ORA.B !SpriteProperties             ;; 02DA29 : 05 64       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02DA2B : 99 03 03    ;
                       LDA.B #$64                          ;; 02DA2E : A9 64       ;
-                      BCS CODE_02DA34                     ;; 02DA30 : B0 02       ;
+                      BCS +                               ;; 02DA30 : B0 02       ;
                       LDA.B #$66                          ;; 02DA32 : A9 66       ;
-CODE_02DA34:          STA.W !OAMTileNo+$100,Y             ;; 02DA34 : 99 02 03    ;
+                    + STA.W !OAMTileNo+$100,Y             ;; 02DA34 : 99 02 03    ;
 CODE_02DA37:          PHY                                 ;; 02DA37 : 5A          ;
                       TYA                                 ;; 02DA38 : 98          ;
                       LSR A                               ;; 02DA39 : 4A          ;
@@ -11040,13 +11040,13 @@ Return02DA59:         RTL                                 ;; ?QPWZ? : 6B        
 CODE_02DA5A:          STZ.W !SpriteMisc157C,X             ;; 02DA5A : 9E 7C 15    ;
                       LDA.W !SpriteStatus,X               ;; 02DA5D : BD C8 14    ;
                       CMP.B #$02                          ;; 02DA60 : C9 02       ;
-                      BNE CODE_02DA6E                     ;; 02DA62 : D0 0A       ;
+                      BNE +                               ;; 02DA62 : D0 0A       ;
                       JMP HammerBroGfx                    ;; 02DA64 : 4C FD DA    ;
                                                           ;;                      ;
                                                           ;;                      ;
 HammerFreq:           db $1F,$0F,$0F,$0F,$0F,$0F,$0F      ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_02DA6E:          LDA.B !SpriteLock                   ;; 02DA6E : A5 9D       ;
+                    + LDA.B !SpriteLock                   ;; 02DA6E : A5 9D       ;
                       BNE Return02DAE8                    ;; 02DA70 : D0 76       ;
                       JSL SprSpr_MarioSprRts              ;; 02DA72 : 22 3A 80 01 ;
                       JSR SubOffscreen1Bnk2               ;; 02DA76 : 20 1F D0    ;
@@ -11055,14 +11055,14 @@ CODE_02DA6E:          LDA.B !SpriteLock                   ;; 02DA6E : A5 9D     
                       TAY                                 ;; 02DA7F : A8          ;
                       LDA.B !TrueFrame                    ;; 02DA80 : A5 13       ; \ Increment $1570,x 3 out of every 4 frames 
                       AND.B #$03                          ;; 02DA82 : 29 03       ;  | 
-                      BEQ CODE_02DA89                     ;; 02DA84 : F0 03       ;  | 
+                      BEQ +                               ;; 02DA84 : F0 03       ;  | 
                       INC.W !SpriteMisc1570,X             ;; 02DA86 : FE 70 15    ; / 
-CODE_02DA89:          LDA.W !SpriteMisc1570,X             ;; 02DA89 : BD 70 15    ;
+                    + LDA.W !SpriteMisc1570,X             ;; 02DA89 : BD 70 15    ;
                       ASL A                               ;; 02DA8C : 0A          ;
                       CPY.B #$00                          ;; 02DA8D : C0 00       ;
-                      BEQ CODE_02DA92                     ;; 02DA8F : F0 01       ;
+                      BEQ +                               ;; 02DA8F : F0 01       ;
                       ASL A                               ;; 02DA91 : 0A          ;
-CODE_02DA92:          AND.B #$40                          ;; 02DA92 : 29 40       ;
+                    + AND.B #$40                          ;; 02DA92 : 29 40       ;
                       STA.W !SpriteMisc157C,X             ;; 02DA94 : 9D 7C 15    ;
                       LDA.W !SpriteMisc1570,X             ;; 02DA97 : BD 70 15    ; \ Don't throw if... 
                       AND.W HammerFreq,Y                  ;; 02DA9A : 39 67 DA    ;  | ...not yet time 
@@ -11074,9 +11074,9 @@ CODE_02DA92:          AND.B #$40                          ;; 02DA92 : 29 40     
                       STA.W !SpriteMisc1540,X             ;; 02DAAA : 9D 40 15    ; / 
                       LDY.B #$10                          ;; 02DAAD : A0 10       ; \ $00 = Hammer X speed, 
                       LDA.W !SpriteMisc157C,X             ;; 02DAAF : BD 7C 15    ;  | based on sprite's direction 
-                      BNE CODE_02DAB6                     ;; 02DAB2 : D0 02       ;  | 
+                      BNE +                               ;; 02DAB2 : D0 02       ;  | 
                       LDY.B #$F0                          ;; 02DAB4 : A0 F0       ;  | 
-CODE_02DAB6:          STY.B !_0                           ;; 02DAB6 : 84 00       ; / 
+                    + STY.B !_0                           ;; 02DAB6 : 84 00       ; / 
                       LDY.B #$07                          ;; 02DAB8 : A0 07       ; \ Find a free extended sprite slots 
 CODE_02DABA:          LDA.W !ExtSpriteNumber,Y            ;; 02DABA : B9 0B 17    ;  | 
                       BEQ GenerateHammer                  ;; 02DABD : F0 04       ;  | 
@@ -11127,12 +11127,12 @@ CODE_02DB08:          LDA.B !_0                           ;; 02DB08 : A5 00     
                       ORA.B #$37                          ;; 02DB1E : 09 37       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02DB20 : 99 03 03    ;
                       PLA                                 ;; 02DB23 : 68          ;
-                      BEQ CODE_02DB2A                     ;; 02DB24 : F0 04       ;
+                      BEQ +                               ;; 02DB24 : F0 04       ;
                       INX                                 ;; 02DB26 : E8          ;
                       INX                                 ;; 02DB27 : E8          ;
                       INX                                 ;; 02DB28 : E8          ;
                       INX                                 ;; 02DB29 : E8          ;
-CODE_02DB2A:          LDA.W HammerBroTiles,X              ;; 02DB2A : BD F1 DA    ;
+                    + LDA.W HammerBroTiles,X              ;; 02DB2A : BD F1 DA    ;
                       STA.W !OAMTileNo+$100,Y             ;; 02DB2D : 99 02 03    ;
                       PLX                                 ;; 02DB30 : FA          ;
                       PHY                                 ;; 02DB31 : 5A          ;
@@ -11182,7 +11182,7 @@ CODE_02DB66:          LDA.W !SpriteStatus,Y               ;; 02DB66 : B9 C8 14  
                       BEQ PutHammerBroOnPlat              ;; 02DB72 : F0 05       ;  | 
 CODE_02DB74:          DEY                                 ;; 02DB74 : 88          ;  | 
                       BPL CODE_02DB66                     ;; 02DB75 : 10 EF       ;  | 
-                      BRA CODE_02DB9E                     ;; 02DB77 : 80 25       ; / Branch if no Hammer Brother 
+                      BRA +                               ;; 02DB77 : 80 25       ; / Branch if no Hammer Brother 
                                                           ;;                      ;
 PutHammerBroOnPlat:   TYA                                 ;; ?QPWZ? : 98          ; \ $1594 = index of Hammer Bro 
                       STA.W !SpriteMisc1594,X             ;; 02DB7A : 9D 94 15    ; / 
@@ -11201,7 +11201,7 @@ PutHammerBroOnPlat:   TYA                                 ;; ?QPWZ? : 98        
                       TYX                                 ;; 02DB99 : BB          ;  | 
                       JSR HammerBroGfx                    ;; 02DB9A : 20 FD DA    ;  | 
                       PLX                                 ;; 02DB9D : FA          ; / 
-CODE_02DB9E:          LDA.B !SpriteLock                   ;; 02DB9E : A5 9D       ;
+                    + LDA.B !SpriteLock                   ;; 02DB9E : A5 9D       ;
                       BNE Return02DC0E                    ;; 02DBA0 : D0 6C       ;
                       JSR SubOffscreen1Bnk2               ;; 02DBA2 : 20 1F D0    ;
                       LDA.B !TrueFrame                    ;; 02DBA5 : A5 13       ;
@@ -11215,9 +11215,9 @@ CODE_02DB9E:          LDA.B !SpriteLock                   ;; 02DB9E : A5 9D     
                       ADC.W DATA_02DB54,Y                 ;; 02DBB4 : 79 54 DB    ;
                       STA.B !SpriteXSpeed,X               ;; 02DBB7 : 95 B6       ;
                       CMP.W DATA_02DB56,Y                 ;; 02DBB9 : D9 56 DB    ;
-                      BNE CODE_02DBC1                     ;; 02DBBC : D0 03       ;
+                      BNE +                               ;; 02DBBC : D0 03       ;
                       INC.W !SpriteMisc1534,X             ;; 02DBBE : FE 34 15    ;
-CODE_02DBC1:          LDA.W !SpriteMisc151C,X             ;; 02DBC1 : BD 1C 15    ;
+                    + LDA.W !SpriteMisc151C,X             ;; 02DBC1 : BD 1C 15    ;
                       AND.B #$01                          ;; 02DBC4 : 29 01       ;
                       TAY                                 ;; 02DBC6 : A8          ;
                       LDA.B !SpriteYSpeed,X               ;; 02DBC7 : B5 AA       ;
@@ -11238,9 +11238,9 @@ CODE_02DBD7:          JSR UpdateYPosNoGrvty               ;; 02DBD7 : 20 94 D2  
                       JSR CODE_02D4FA                     ;; 02DBED : 20 FA D4    ;
                       LDA.B !_F                           ;; 02DBF0 : A5 0F       ;
                       CMP.B #$08                          ;; 02DBF2 : C9 08       ;
-                      BMI CODE_02DBF8                     ;; 02DBF4 : 30 02       ;
+                      BMI +                               ;; 02DBF4 : 30 02       ;
                       INC.B !SpriteTableC2,X              ;; 02DBF6 : F6 C2       ;
-CODE_02DBF8:          LDY.W !SpriteMisc1594,X             ;; 02DBF8 : BC 94 15    ;
+                    + LDY.W !SpriteMisc1594,X             ;; 02DBF8 : BC 94 15    ;
                       BMI Return02DC0E                    ;; 02DBFB : 30 11       ;
                       LDA.B #$02                          ;; 02DBFD : A9 02       ; \ Sprite status = Killed 
                       STA.W !SpriteStatus,Y               ;; 02DBFF : 99 C8 14    ; / 
@@ -11290,15 +11290,15 @@ CODE_02DC5D:          STX.B !_6                           ;; 02DC5D : 86 06     
                       PHX                                 ;; 02DC75 : DA          ;
                       LDX.B !_6                           ;; 02DC76 : A6 06       ;
                       CPX.B #$02                          ;; 02DC78 : E0 02       ;
-                      BCS CODE_02DC8A                     ;; 02DC7A : B0 0E       ;
+                      BCS +                               ;; 02DC7A : B0 0E       ;
                       INX                                 ;; 02DC7C : E8          ;
                       CPX.B !_7                           ;; 02DC7D : E4 07       ;
-                      BNE CODE_02DC8A                     ;; 02DC7F : D0 09       ;
+                      BNE +                               ;; 02DC7F : D0 09       ;
                       LDA.W !OAMTileYPos+$100,Y           ;; 02DC81 : B9 01 03    ;
                       SEC                                 ;; 02DC84 : 38          ;
                       SBC.B !_5                           ;; 02DC85 : E5 05       ;
                       STA.W !OAMTileYPos+$100,Y           ;; 02DC87 : 99 01 03    ;
-CODE_02DC8A:          PLX                                 ;; 02DC8A : FA          ;
+                    + PLX                                 ;; 02DC8A : FA          ;
                       LDA.W HmrBroPlatTiles,X             ;; 02DC8B : BD 1F DC    ;
                       STA.W !OAMTileNo+$100,Y             ;; 02DC8E : 99 02 03    ;
                       LDA.W DATA_02DC27,X                 ;; 02DC91 : BD 27 DC    ;
@@ -11338,10 +11338,10 @@ CODE_02DCB7:          JSR SumoBroGfx                      ;; 02DCB7 : 20 3E DE  
                       JSL UpdateSpritePos                 ;; 02DCCC : 22 2A 80 01 ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02DCD0 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02DCD3 : 29 04       ;  | 
-                      BEQ CODE_02DCDB                     ;; 02DCD5 : F0 04       ; / 
+                      BEQ +                               ;; 02DCD5 : F0 04       ; / 
                       STZ.B !SpriteYSpeed,X               ;; 02DCD7 : 74 AA       ; Sprite Y Speed = 0 
                       STZ.B !SpriteXSpeed,X               ;; 02DCD9 : 74 B6       ; Sprite X Speed = 0 
-CODE_02DCDB:          LDA.B !SpriteTableC2,X              ;; 02DCDB : B5 C2       ;
+                    + LDA.B !SpriteTableC2,X              ;; 02DCDB : B5 C2       ;
                       JSL ExecutePtr                      ;; 02DCDD : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_02DCEA                      ;; ?QPWZ? : EA DC       ;
@@ -11354,12 +11354,12 @@ Return02DCE9:         RTS                                 ;; ?QPWZ? : 60        
 CODE_02DCEA:          LDA.B #$01                          ;; 02DCEA : A9 01       ;
                       STA.W !SpriteMisc1602,X             ;; 02DCEC : 9D 02 16    ;
                       LDA.W !SpriteMisc1540,X             ;; 02DCEF : BD 40 15    ;
-                      BNE Return02DCFE                    ;; 02DCF2 : D0 0A       ;
+                      BNE +                               ;; 02DCF2 : D0 0A       ;
                       STZ.W !SpriteMisc1602,X             ;; 02DCF4 : 9E 02 16    ;
                       LDA.B #$03                          ;; 02DCF7 : A9 03       ;
 CODE_02DCF9:          STA.W !SpriteMisc1540,X             ;; 02DCF9 : 9D 40 15    ;
                       INC.B !SpriteTableC2,X              ;; 02DCFC : F6 C2       ;
-Return02DCFE:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02DCFF:          LDA.W !SpriteMisc1540,X             ;; 02DCFF : BD 40 15    ;
                       BNE Return02DD0B                    ;; 02DD02 : D0 07       ;
@@ -11382,10 +11382,10 @@ CODE_02DD0E:          LDA.W !SpriteMisc1558,X             ;; 02DD0E : BD 58 15  
                       INC.W !SpriteMisc1570,X             ;; 02DD20 : FE 70 15    ;
                       LDA.W !SpriteMisc1570,X             ;; 02DD23 : BD 70 15    ;
                       AND.B #$01                          ;; 02DD26 : 29 01       ;
-                      BNE CODE_02DD2F                     ;; 02DD28 : D0 05       ;
+                      BNE +                               ;; 02DD28 : D0 05       ;
                       LDA.B #$20                          ;; 02DD2A : A9 20       ;
                       STA.W !SpriteMisc1558,X             ;; 02DD2C : 9D 58 15    ;
-CODE_02DD2F:          LDA.W !SpriteMisc1570,X             ;; 02DD2F : BD 70 15    ;
+                    + LDA.W !SpriteMisc1570,X             ;; 02DD2F : BD 70 15    ;
                       CMP.B #$03                          ;; 02DD32 : C9 03       ;
                       BNE CODE_02DD3D                     ;; 02DD34 : D0 07       ;
                       STZ.W !SpriteMisc1570,X             ;; 02DD36 : 9E 70 15    ;
@@ -11409,7 +11409,7 @@ CODE_02DD4B:          LDA.B #$03                          ;; 02DD4B : A9 03     
                       PHA                                 ;; 02DD56 : 48          ;
                       LDA.W !SpriteOffscreenX,X           ;; 02DD57 : BD A0 15    ;
                       ORA.W !SpriteOffscreenVert,X        ;; 02DD5A : 1D 6C 18    ;
-                      BNE CODE_02DD6E                     ;; 02DD5D : D0 0F       ;
+                      BNE +                               ;; 02DD5D : D0 0F       ;
                       LDA.B #$30                          ;; 02DD5F : A9 30       ; \ Set ground shake timer 
                       STA.W !ScreenShakeTimer             ;; 02DD61 : 8D 87 18    ; / 
                       LDA.B #$09                          ;; 02DD64 : A9 09       ; \ Play sound effect 
@@ -11417,16 +11417,16 @@ CODE_02DD4B:          LDA.B #$03                          ;; 02DD4B : A9 03     
                       PHY                                 ;; 02DD69 : 5A          ;
                       JSR GenSumoLightning                ;; 02DD6A : 20 8F DD    ;
                       PLY                                 ;; 02DD6D : 7A          ;
-CODE_02DD6E:          PLA                                 ;; 02DD6E : 68          ;
+                    + PLA                                 ;; 02DD6E : 68          ;
 CODE_02DD6F:          CPY.B #$30                          ;; 02DD6F : C0 30       ;
-                      BCC CODE_02DD7D                     ;; 02DD71 : 90 0A       ;
+                      BCC +                               ;; 02DD71 : 90 0A       ;
                       CPY.B #$50                          ;; 02DD73 : C0 50       ;
-                      BCS CODE_02DD7D                     ;; 02DD75 : B0 06       ;
+                      BCS +                               ;; 02DD75 : B0 06       ;
                       INC A                               ;; 02DD77 : 1A          ;
                       CPY.B #$44                          ;; 02DD78 : C0 44       ;
-                      BCS CODE_02DD7D                     ;; 02DD7A : B0 01       ;
+                      BCS +                               ;; 02DD7A : B0 01       ;
                       INC A                               ;; 02DD7C : 1A          ;
-CODE_02DD7D:          STA.W !SpriteMisc1602,X             ;; 02DD7D : 9D 02 16    ;
+                    + STA.W !SpriteMisc1602,X             ;; 02DD7D : 9D 02 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02DD81:          LDA.W !SpriteMisc157C,X             ;; 02DD81 : BD 7C 15    ;
@@ -11437,7 +11437,7 @@ CODE_02DD81:          LDA.W !SpriteMisc157C,X             ;; 02DD81 : BD 7C 15  
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 GenSumoLightning:     JSL FindFreeSprSlot                 ;; ?QPWZ? : 22 E4 A9 02 ; \ Return if no free slots 
-                      BMI Return02DDC5                    ;; 02DD93 : 30 30       ; / 
+                      BMI +                               ;; 02DD93 : 30 30       ; / 
                       LDA.B #$2B                          ;; 02DD95 : A9 2B       ; \ Sprite = Lightning 
                       STA.W !SpriteNumber,Y               ;; 02DD97 : 99 9E 00    ; / 
                       LDA.B #$08                          ;; 02DD9A : A9 08       ; \ Sprite status = Normal 
@@ -11458,7 +11458,7 @@ GenSumoLightning:     JSL FindFreeSprSlot                 ;; ?QPWZ? : 22 E4 A9 0
                       LDA.B #$10                          ;; 02DDBF : A9 10       ; \ $1FE2,x = #$10 
                       STA.W !SpriteMisc1FE2,X             ;; 02DDC1 : 9D E2 1F    ; / Time to not interact with ground?? 
                       PLX                                 ;; 02DDC4 : FA          ;
-Return02DDC5:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 SumoBrosDispX:        db $FF,$07,$FC,$04,$FF,$07,$FC,$04  ;; ?QPWZ?               ;
@@ -11495,12 +11495,12 @@ SumoBroGfx:           JSR GetDrawInfo2                    ;; ?QPWZ? : 20 78 D3  
                       STA.B !_5                           ;; 02DE59 : 85 05       ;
 CODE_02DE5B:          PHX                                 ;; 02DE5B : DA          ;
                       LDA.B !_2                           ;; 02DE5C : A5 02       ;
-                      BEQ CODE_02DE65                     ;; 02DE5E : F0 05       ;
+                      BEQ +                               ;; 02DE5E : F0 05       ;
                       TXA                                 ;; 02DE60 : 8A          ;
                       CLC                                 ;; 02DE61 : 18          ;
                       ADC.B #$18                          ;; 02DE62 : 69 18       ;
                       TAX                                 ;; 02DE64 : AA          ;
-CODE_02DE65:          LDA.B !_0                           ;; 02DE65 : A5 00       ;
+                    + LDA.B !_0                           ;; 02DE65 : A5 00       ;
                       CLC                                 ;; 02DE67 : 18          ;
                       ADC.W SumoBrosDispX,X               ;; 02DE68 : 7D C6 DD    ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02DE6B : 99 00 03    ;
@@ -11513,9 +11513,9 @@ CODE_02DE65:          LDA.B !_0                           ;; 02DE65 : A5 00     
                       STA.W !OAMTileNo+$100,Y             ;; 02DE7B : 99 02 03    ;
                       CMP.B #$66                          ;; 02DE7E : C9 66       ;
                       SEC                                 ;; 02DE80 : 38          ;
-                      BNE CODE_02DE84                     ;; 02DE81 : D0 01       ;
+                      BNE +                               ;; 02DE81 : D0 01       ;
                       CLC                                 ;; 02DE83 : 18          ;
-CODE_02DE84:          LDA.B #$34                          ;; 02DE84 : A9 34       ;
+                    + LDA.B #$34                          ;; 02DE84 : A9 34       ;
                       ADC.B !_2                           ;; 02DE86 : 65 02       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02DE88 : 99 03 03    ;
                       PHY                                 ;; 02DE8B : 5A          ;
@@ -11551,24 +11551,24 @@ CODE_02DEB0:          LDA.W !SpriteMisc1540,X             ;; 02DEB0 : BD 40 15  
                       STA.B !SpriteYSpeed,X               ;; 02DEB7 : 95 AA       ;
                       JSR UpdateYPosNoGrvty               ;; 02DEB9 : 20 94 D2    ;
                       LDA.W !SpriteMisc1FE2,X             ;; 02DEBC : BD E2 1F    ;
-                      BNE CODE_02DEEA                     ;; 02DEBF : D0 29       ;
+                      BNE +                               ;; 02DEBF : D0 29       ;
                       JSL CODE_019138                     ;; 02DEC1 : 22 38 91 01 ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02DEC5 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02DEC8 : 29 04       ;  | 
-                      BEQ CODE_02DEEA                     ;; 02DECA : F0 1E       ; / 
+                      BEQ +                               ;; 02DECA : F0 1E       ; / 
                       LDA.B #$17                          ;; 02DECC : A9 17       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 02DECE : 8D FC 1D    ; / 
                       LDA.B #$22                          ;; 02DED1 : A9 22       ;
                       STA.W !SpriteMisc1540,X             ;; 02DED3 : 9D 40 15    ;
                       LDA.W !SpriteOffscreenX,X           ;; 02DED6 : BD A0 15    ;
                       ORA.W !SpriteOffscreenVert,X        ;; 02DED9 : 1D 6C 18    ;
-                      BNE CODE_02DEEA                     ;; 02DEDC : D0 0C       ;
+                      BNE +                               ;; 02DEDC : D0 0C       ;
                       LDA.B !SpriteXPosLow,X              ;; 02DEDE : B5 E4       ;
                       STA.B !TouchBlockXPos               ;; 02DEE0 : 85 9A       ;
                       LDA.B !SpriteYPosLow,X              ;; 02DEE2 : B5 D8       ;
                       STA.B !TouchBlockYPos               ;; 02DEE4 : 85 98       ;
                       JSL CODE_028A44                     ;; 02DEE6 : 22 44 8A 02 ;
-CODE_02DEEA:          LDA.B #$00                          ;; 02DEEA : A9 00       ;
+                    + LDA.B #$00                          ;; 02DEEA : A9 00       ;
                       JSL GenericSprGfxRt0                ;; 02DEEC : 22 42 80 01 ;
                       LDY.W !SpriteOAMIndex,X             ;; 02DEF0 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.W !OAMTileAttr+$104,Y           ;; 02DEF3 : B9 07 03    ;
@@ -11578,20 +11578,20 @@ CODE_02DEEA:          LDA.B #$00                          ;; 02DEEA : A9 00     
                                                           ;;                      ;
 CODE_02DEFC:          STA.B !_2                           ;; 02DEFC : 85 02       ;
                       CMP.B #$01                          ;; 02DEFE : C9 01       ;
-                      BNE CODE_02DF05                     ;; 02DF00 : D0 03       ;
+                      BNE +                               ;; 02DF00 : D0 03       ;
                       STZ.W !SpriteStatus,X               ;; 02DF02 : 9E C8 14    ;
-CODE_02DF05:          AND.B #$0F                          ;; 02DF05 : 29 0F       ;
+                    + AND.B #$0F                          ;; 02DF05 : 29 0F       ;
                       CMP.B #$01                          ;; 02DF07 : C9 01       ;
-                      BNE Return02DF21                    ;; 02DF09 : D0 16       ;
+                      BNE +                               ;; 02DF09 : D0 16       ;
                       STA.W !ActivateClusterSprite        ;; 02DF0B : 8D B8 18    ;
                       JSR CODE_02DF2C                     ;; 02DF0E : 20 2C DF    ;
                       INC.W !SpriteMisc1570,X             ;; 02DF11 : FE 70 15    ;
                       LDA.W !SpriteMisc1570,X             ;; 02DF14 : BD 70 15    ;
                       CMP.B #$01                          ;; 02DF17 : C9 01       ;
-                      BEQ Return02DF21                    ;; 02DF19 : F0 06       ;
+                      BEQ +                               ;; 02DF19 : F0 06       ;
                       JSR CODE_02DF2C                     ;; 02DF1B : 20 2C DF    ;
                       INC.W !SpriteMisc1570,X             ;; 02DF1E : FE 70 15    ;
-Return02DF21:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02DF22:          db $FC,$0C,$EC,$1C,$DC              ;; 02DF22               ;
@@ -11608,10 +11608,10 @@ CODE_02DF37:          LDA.W !ClusterSpriteNumber,Y        ;; 02DF37 : B9 92 18  
                       DEY                                 ;; 02DF3C : 88          ;
                       BPL CODE_02DF37                     ;; 02DF3D : 10 F8       ;
                       DEC.W !SumoClustOverwrite           ;; 02DF3F : CE 1D 19    ;
-                      BPL CODE_02DF49                     ;; 02DF42 : 10 05       ;
+                      BPL +                               ;; 02DF42 : 10 05       ;
                       LDA.B #$09                          ;; 02DF44 : A9 09       ;
                       STA.W !SumoClustOverwrite           ;; 02DF46 : 8D 1D 19    ;
-CODE_02DF49:          LDY.W !SumoClustOverwrite           ;; 02DF49 : AC 1D 19    ;
+                    + LDY.W !SumoClustOverwrite           ;; 02DF49 : AC 1D 19    ;
 CODE_02DF4C:          PHX                                 ;; 02DF4C : DA          ;
                       LDA.W !SpriteMisc1570,X             ;; 02DF4D : BD 70 15    ;
                       TAX                                 ;; 02DF50 : AA          ;
@@ -11637,10 +11637,10 @@ CODE_02DF4C:          PHX                                 ;; 02DF4C : DA        
                       CMP.B !Layer1XPos                   ;; 02DF7C : C5 1A       ;
                       LDA.W !ClusterSpriteXPosHigh,Y      ;; 02DF7E : B9 3E 1E    ;
                       SBC.B !Layer1XPos+1                 ;; 02DF81 : E5 1B       ;
-                      BNE Return02DF8A                    ;; 02DF83 : D0 05       ;
+                      BNE +                               ;; 02DF83 : D0 05       ;
                       LDA.B #$06                          ;; 02DF85 : A9 06       ;
                       STA.W !ClusterSpriteNumber,Y        ;; 02DF87 : 99 92 18    ;
-Return02DF8A:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 VolcanoLotusMain:     PHB                                 ;; ?QPWZ? : 8B          ;
                       PHK                                 ;; 02DF8C : 4B          ;
@@ -11658,14 +11658,14 @@ CODE_02DF93:          JSR VolcanoLotusGfx                 ;; 02DF93 : 20 0B E0  
                       JSR UpdateYPosNoGrvty               ;; 02DFA4 : 20 94 D2    ;
                       LDA.B !SpriteYSpeed,X               ;; 02DFA7 : B5 AA       ;
                       CMP.B #$40                          ;; 02DFA9 : C9 40       ;
-                      BPL CODE_02DFAF                     ;; 02DFAB : 10 02       ;
+                      BPL +                               ;; 02DFAB : 10 02       ;
                       INC.B !SpriteYSpeed,X               ;; 02DFAD : F6 AA       ;
-CODE_02DFAF:          JSL CODE_019138                     ;; 02DFAF : 22 38 91 01 ;
+                    + JSL CODE_019138                     ;; 02DFAF : 22 38 91 01 ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02DFB3 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02DFB6 : 29 04       ;  | 
-                      BEQ CODE_02DFBC                     ;; 02DFB8 : F0 02       ; / 
+                      BEQ +                               ;; 02DFB8 : F0 02       ; / 
                       STZ.B !SpriteYSpeed,X               ;; 02DFBA : 74 AA       ; Sprite Y Speed = 0 
-CODE_02DFBC:          LDA.B !SpriteTableC2,X              ;; 02DFBC : B5 C2       ;
+                    + LDA.B !SpriteTableC2,X              ;; 02DFBC : B5 C2       ;
                       JSL ExecutePtr                      ;; 02DFBE : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_02DFC9                      ;; ?QPWZ? : C9 DF       ;
@@ -11675,13 +11675,13 @@ CODE_02DFBC:          LDA.B !SpriteTableC2,X              ;; 02DFBC : B5 C2     
 Return02DFC8:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02DFC9:          LDA.W !SpriteMisc1540,X             ;; 02DFC9 : BD 40 15    ;
-                      BNE CODE_02DFD6                     ;; 02DFCC : D0 08       ;
+                      BNE +                               ;; 02DFCC : D0 08       ;
                       LDA.B #$40                          ;; 02DFCE : A9 40       ;
 CODE_02DFD0:          STA.W !SpriteMisc1540,X             ;; 02DFD0 : 9D 40 15    ;
                       INC.B !SpriteTableC2,X              ;; 02DFD3 : F6 C2       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02DFD6:          LSR A                               ;; 02DFD6 : 4A          ;
+                    + LSR A                               ;; 02DFD6 : 4A          ;
                       LSR A                               ;; 02DFD7 : 4A          ;
                       LSR A                               ;; 02DFD8 : 4A          ;
                       AND.B #$01                          ;; 02DFD9 : 29 01       ;
@@ -11699,14 +11699,14 @@ CODE_02DFE8:          LSR A                               ;; 02DFE8 : 4A        
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02DFEF:          LDA.W !SpriteMisc1540,X             ;; 02DFEF : BD 40 15    ;
-                      BNE CODE_02DFFB                     ;; 02DFF2 : D0 07       ;
+                      BNE +                               ;; 02DFF2 : D0 07       ;
                       LDA.B #$80                          ;; 02DFF4 : A9 80       ;
                       JSR CODE_02DFD0                     ;; 02DFF6 : 20 D0 DF    ;
                       STZ.B !SpriteTableC2,X              ;; 02DFF9 : 74 C2       ;
-CODE_02DFFB:          CMP.B #$38                          ;; 02DFFB : C9 38       ;
-                      BNE CODE_02E002                     ;; 02DFFD : D0 03       ;
+                    + CMP.B #$38                          ;; 02DFFB : C9 38       ;
+                      BNE +                               ;; 02DFFD : D0 03       ;
                       JSR CODE_02E079                     ;; 02DFFF : 20 79 E0    ;
-CODE_02E002:          LDA.B #$02                          ;; 02E002 : A9 02       ;
+                    + LDA.B #$02                          ;; 02E002 : A9 02       ;
                       STA.W !SpriteMisc1602,X             ;; 02E004 : 9D 02 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -11745,9 +11745,9 @@ VolcanoLotusGfx:      JSR MushroomScaleGfx                ;; ?QPWZ? : 20 7E E5  
                       LDA.W !SpriteMisc151C,X             ;; 02E050 : BD 1C 15    ;
                       CMP.B #$01                          ;; 02E053 : C9 01       ;
                       LDA.B #$39                          ;; 02E055 : A9 39       ;
-                      BCC CODE_02E05B                     ;; 02E057 : 90 02       ;
+                      BCC +                               ;; 02E057 : 90 02       ;
                       LDA.B #$35                          ;; 02E059 : A9 35       ;
-CODE_02E05B:          STA.W !OAMTileAttr+$108,Y           ;; 02E05B : 99 0B 03    ;
+                    + STA.W !OAMTileAttr+$108,Y           ;; 02E05B : 99 0B 03    ;
                       STA.W !OAMTileAttr+$10C,Y           ;; 02E05E : 99 0F 03    ;
                       LDA.W !SpriteOAMIndex,X             ;; 02E061 : BD EA 15    ;
                       CLC                                 ;; 02E064 : 18          ;
@@ -11847,7 +11847,7 @@ CODE_02E0CD:          JSL LoadSpriteTables                ;; 02E0CD : 22 8B F7 0
                       PLA                                 ;; 02E11F : 68          ;
                       STA.B !SpriteProperties             ;; 02E120 : 85 64       ;
                       LDA.B !SpriteLock                   ;; 02E122 : A5 9D       ;
-                      BNE Return02E158                    ;; 02E124 : D0 32       ;
+                      BNE +                               ;; 02E124 : D0 32       ;
                       JSR SubOffscreen0Bnk2               ;; 02E126 : 20 25 D0    ;
                       JSL SprSpr_MarioSprRts              ;; 02E129 : 22 3A 80 01 ;
                       JSR UpdateYPosNoGrvty               ;; 02E12D : 20 94 D2    ;
@@ -11860,27 +11860,27 @@ CODE_02E0CD:          JSL LoadSpriteTables                ;; 02E0CD : 22 8B F7 0
                                                           ;;                      ;
 CODE_02E13C:          STZ.B !SpriteYSpeed,X               ;; 02E13C : 74 AA       ; Sprite Y Speed = 0 
                       LDA.W !SpriteMisc1540,X             ;; 02E13E : BD 40 15    ;
-                      BNE Return02E158                    ;; 02E141 : D0 15       ;
+                      BNE +                               ;; 02E141 : D0 15       ;
                       JSR CODE_02D4FA                     ;; 02E143 : 20 FA D4    ;
                       LDA.B !_F                           ;; 02E146 : A5 0F       ;
                       CLC                                 ;; 02E148 : 18          ;
                       ADC.B #$1B                          ;; 02E149 : 69 1B       ;
                       CMP.B #$37                          ;; 02E14B : C9 37       ;
-                      BCC Return02E158                    ;; 02E14D : 90 09       ;
+                      BCC +                               ;; 02E14D : 90 09       ;
                       LDA.B #$C0                          ;; 02E14F : A9 C0       ;
                       STA.B !SpriteYSpeed,X               ;; 02E151 : 95 AA       ;
                       INC.B !SpriteTableC2,X              ;; 02E153 : F6 C2       ;
                       STZ.W !SpriteMisc1602,X             ;; 02E155 : 9E 02 16    ;
-Return02E158:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02E159:          LDA.B !SpriteYSpeed,X               ;; 02E159 : B5 AA       ;
                       BMI CODE_02E161                     ;; 02E15B : 30 04       ;
                       CMP.B #$40                          ;; 02E15D : C9 40       ;
-                      BCS CODE_02E166                     ;; 02E15F : B0 05       ;
+                      BCS +                               ;; 02E15F : B0 05       ;
 CODE_02E161:          CLC                                 ;; 02E161 : 18          ;
                       ADC.B #$02                          ;; 02E162 : 69 02       ;
                       STA.B !SpriteYSpeed,X               ;; 02E164 : 95 AA       ;
-CODE_02E166:          INC.W !SpriteMisc1570,X             ;; 02E166 : FE 70 15    ;
+                    + INC.W !SpriteMisc1570,X             ;; 02E166 : FE 70 15    ;
                       LDA.B !SpriteYSpeed,X               ;; 02E169 : B5 AA       ;
                       CMP.B #$F0                          ;; 02E16B : C9 F0       ;
                       BMI Return02E176                    ;; 02E16D : 30 07       ;
@@ -11895,13 +11895,13 @@ CODE_02E177:          INC.W !SpriteMisc151C,X             ;; 02E177 : FE 1C 15  
 CODE_02E17F:          INC.W !SpriteMisc1570,X             ;; 02E17F : FE 70 15    ;
                       LDA.B !EffFrame                     ;; 02E182 : A5 14       ;
                       AND.B #$03                          ;; 02E184 : 29 03       ;
-                      BNE CODE_02E191                     ;; 02E186 : D0 09       ;
+                      BNE +                               ;; 02E186 : D0 09       ;
                       LDA.B !SpriteYSpeed,X               ;; 02E188 : B5 AA       ;
                       CMP.B #$08                          ;; 02E18A : C9 08       ;
-                      BPL CODE_02E191                     ;; 02E18C : 10 03       ;
+                      BPL +                               ;; 02E18C : 10 03       ;
                       INC A                               ;; 02E18E : 1A          ;
                       STA.B !SpriteYSpeed,X               ;; 02E18F : 95 AA       ;
-CODE_02E191:          JSL CODE_019138                     ;; 02E191 : 22 38 91 01 ;
+                    + JSL CODE_019138                     ;; 02E191 : 22 38 91 01 ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02E195 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02E198 : 29 04       ;  | 
                       BEQ Return02E176                    ;; 02E19A : F0 DA       ; / 
@@ -11969,10 +11969,10 @@ CODE_02E21D:          LDA.B !SpriteProperties             ;; 02E21D : A5 64     
                       PHA                                 ;; 02E21F : 48          ;
                       LDA.W !SpriteMisc1540,X             ;; 02E220 : BD 40 15    ;
                       CMP.B #$30                          ;; 02E223 : C9 30       ;
-                      BCC CODE_02E22B                     ;; 02E225 : 90 04       ;
+                      BCC +                               ;; 02E225 : 90 04       ;
                       LDA.B #$10                          ;; 02E227 : A9 10       ;
                       STA.B !SpriteProperties             ;; 02E229 : 85 64       ;
-CODE_02E22B:          LDA.B !Layer1YPos                   ;; 02E22B : A5 1C       ;
+                    + LDA.B !Layer1YPos                   ;; 02E22B : A5 1C       ;
                       PHA                                 ;; 02E22D : 48          ;
                       CLC                                 ;; 02E22E : 18          ;
                       ADC.B #$01                          ;; 02E22F : 69 01       ;
@@ -11984,7 +11984,7 @@ CODE_02E22B:          LDA.B !Layer1YPos                   ;; 02E22B : A5 1C     
                       LDA.W !BluePSwitchTimer             ;; 02E23A : AD AD 14    ;
                       BNE CODE_02E245                     ;; 02E23D : D0 06       ;
                       JSL CoinSprGfx                      ;; 02E23F : 22 41 C6 01 ;
-                      BRA CODE_02E259                     ;; 02E243 : 80 14       ;
+                      BRA +                               ;; 02E243 : 80 14       ;
                                                           ;;                      ;
 CODE_02E245:          JSL GenericSprGfxRt2                ;; 02E245 : 22 B2 90 01 ;
                       LDY.W !SpriteOAMIndex,X             ;; 02E249 : BC EA 15    ; Y = Index into sprite OAM 
@@ -11993,7 +11993,7 @@ CODE_02E245:          JSL GenericSprGfxRt2                ;; 02E245 : 22 B2 90 0
                       LDA.W !OAMTileAttr+$100,Y           ;; 02E251 : B9 03 03    ;
                       AND.B #$3F                          ;; 02E254 : 29 3F       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02E256 : 99 03 03    ;
-CODE_02E259:          PLA                                 ;; 02E259 : 68          ;
+                    + PLA                                 ;; 02E259 : 68          ;
                       STA.B !Layer1YPos+1                 ;; 02E25A : 85 1D       ;
                       PLA                                 ;; 02E25C : 68          ;
                       STA.B !Layer1YPos                   ;; 02E25D : 85 1C       ;
@@ -12010,11 +12010,11 @@ CODE_02E271:          STZ.W !DirectCoinTimer              ;; 02E271 : 9C 0C 19  
                       STZ.W !SpriteStatus,X               ;; 02E274 : 9E C8 14    ;
                       LDA.W !BluePSwitchTimer             ;; 02E277 : AD AD 14    ;
                       ORA.W !SilverPSwitchTimer           ;; 02E27A : 0D AE 14    ;
-                      BNE Return02E287                    ;; 02E27D : D0 08       ;
+                      BNE +                               ;; 02E27D : D0 08       ;
                       LDA.W !MusicBackup                  ;; 02E27F : AD DA 0D    ;
-                      BMI Return02E287                    ;; 02E282 : 30 03       ;
+                      BMI +                               ;; 02E282 : 30 03       ;
                       STA.W !SPCIO2                       ;; 02E284 : 8D FB 1D    ; / Change music 
-Return02E287:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02E288:          LDY.B !SpriteTableC2,X              ;; 02E288 : B4 C2       ;
                       LDA.W DATA_02E1F9,Y                 ;; 02E28A : B9 F9 E1    ;
@@ -12025,16 +12025,16 @@ CODE_02E288:          LDY.B !SpriteTableC2,X              ;; 02E288 : B4 C2     
                       JSR UpdateXPosNoGrvty               ;; 02E297 : 20 88 D2    ;
                       LDA.B !byetudlrHold                 ;; 02E29A : A5 15       ;
                       AND.B #$0F                          ;; 02E29C : 29 0F       ;
-                      BEQ CODE_02E2B0                     ;; 02E29E : F0 10       ;
+                      BEQ +                               ;; 02E29E : F0 10       ;
                       TAY                                 ;; 02E2A0 : A8          ;
                       LDA.W DATA_02E201,Y                 ;; 02E2A1 : B9 01 E2    ;
                       TAY                                 ;; 02E2A4 : A8          ;
                       LDA.W DATA_02E211,Y                 ;; 02E2A5 : B9 11 E2    ;
                       CMP.B !SpriteTableC2,X              ;; 02E2A8 : D5 C2       ;
-                      BEQ CODE_02E2B0                     ;; 02E2AA : F0 04       ;
+                      BEQ +                               ;; 02E2AA : F0 04       ;
                       TYA                                 ;; 02E2AC : 98          ;
                       STA.W !SpriteMisc151C,X             ;; 02E2AD : 9D 1C 15    ;
-CODE_02E2B0:          LDA.B !SpriteYPosLow,X              ;; 02E2B0 : B5 D8       ;
+                    + LDA.B !SpriteYPosLow,X              ;; 02E2B0 : B5 D8       ;
                       AND.B #$0F                          ;; 02E2B2 : 29 0F       ;
                       STA.B !_0                           ;; 02E2B4 : 85 00       ;
                       LDA.B !SpriteXPosLow,X              ;; 02E2B6 : B5 E4       ;
@@ -12070,9 +12070,9 @@ CODE_02E2F3:          LDA.W !SprMap16TouchHorizHigh       ;; 02E2F3 : AD 62 18  
                       BNE CODE_02E2FF                     ;; 02E2F6 : D0 07       ;
                       LDA.W !SprMap16TouchHorizLow        ;; 02E2F8 : AD 60 18    ;
                       CMP.B #$25                          ;; 02E2FB : C9 25       ;
-                      BEQ Return02E302                    ;; 02E2FD : F0 03       ;
+                      BEQ +                               ;; 02E2FD : F0 03       ;
 CODE_02E2FF:          JSR CODE_02E271                     ;; 02E2FF : 20 71 E2    ;
-Return02E302:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 GasBubbleMain:        PHB                                 ;; ?QPWZ? : 8B          ;
                       PHK                                 ;; 02E304 : 4B          ;
@@ -12100,7 +12100,7 @@ CODE_02E311:          JSR GasBubbleGfx                    ;; 02E311 : 20 AA E3  
                       JSR UpdateXPosNoGrvty               ;; 02E327 : 20 88 D2    ;
                       LDA.B !TrueFrame                    ;; 02E32A : A5 13       ;
                       AND.B #$03                          ;; 02E32C : 29 03       ;
-                      BNE CODE_02E344                     ;; 02E32E : D0 14       ;
+                      BNE +                               ;; 02E32E : D0 14       ;
                       LDA.B !SpriteTableC2,X              ;; 02E330 : B5 C2       ;
                       AND.B #$01                          ;; 02E332 : 29 01       ;
                       TAY                                 ;; 02E334 : A8          ;
@@ -12109,9 +12109,9 @@ CODE_02E311:          JSR GasBubbleGfx                    ;; 02E311 : 20 AA E3  
                       ADC.W DATA_02E30D,Y                 ;; 02E338 : 79 0D E3    ;
                       STA.B !SpriteYSpeed,X               ;; 02E33B : 95 AA       ;
                       CMP.W DATA_02E30F,Y                 ;; 02E33D : D9 0F E3    ;
-                      BNE CODE_02E344                     ;; 02E340 : D0 02       ;
+                      BNE +                               ;; 02E340 : D0 02       ;
                       INC.B !SpriteTableC2,X              ;; 02E342 : F6 C2       ;
-CODE_02E344:          JSR UpdateYPosNoGrvty               ;; 02E344 : 20 94 D2    ;
+                    + JSR UpdateYPosNoGrvty               ;; 02E344 : 20 94 D2    ;
                       INC.W !SpriteMisc1570,X             ;; 02E347 : FE 70 15    ;
                       JSR SubOffscreen0Bnk2               ;; 02E34A : 20 25 D0    ;
                       JSL MarioSprInteract                ;; 02E34D : 22 DC A7 01 ;
@@ -12156,12 +12156,12 @@ CODE_02E3C6:          LDA.B !_0                           ;; 02E3C6 : A5 00     
                       PLA                                 ;; 02E3D4 : 68          ;
                       CLC                                 ;; 02E3D5 : 18          ;
                       ADC.B !_2                           ;; 02E3D6 : 65 02       ;
-                      BRA CODE_02E3DE                     ;; 02E3D8 : 80 04       ;
+                      BRA +                               ;; 02E3D8 : 80 04       ;
                                                           ;;                      ;
 CODE_02E3DA:          PLA                                 ;; 02E3DA : 68          ;
                       SEC                                 ;; 02E3DB : 38          ;
                       SBC.B !_2                           ;; 02E3DC : E5 02       ;
-CODE_02E3DE:          STA.W !OAMTileXPos+$100,Y           ;; 02E3DE : 99 00 03    ;
+                    + STA.W !OAMTileXPos+$100,Y           ;; 02E3DE : 99 00 03    ;
                       LDA.B !_1                           ;; 02E3E1 : A5 01       ;
                       CLC                                 ;; 02E3E3 : 18          ;
                       ADC.W DATA_02E362,X                 ;; 02E3E4 : 7D 62 E3    ;
@@ -12172,12 +12172,12 @@ CODE_02E3DE:          STA.W !OAMTileXPos+$100,Y           ;; 02E3DE : 99 00 03  
                       PLA                                 ;; 02E3EF : 68          ;
                       CLC                                 ;; 02E3F0 : 18          ;
                       ADC.B !_3                           ;; 02E3F1 : 65 03       ;
-                      BRA CODE_02E3F9                     ;; 02E3F3 : 80 04       ;
+                      BRA +                               ;; 02E3F3 : 80 04       ;
                                                           ;;                      ;
 CODE_02E3F5:          PLA                                 ;; 02E3F5 : 68          ;
                       SEC                                 ;; 02E3F6 : 38          ;
                       SBC.B !_3                           ;; 02E3F7 : E5 03       ;
-CODE_02E3F9:          STA.W !OAMTileYPos+$100,Y           ;; 02E3F9 : 99 01 03    ;
+                    + STA.W !OAMTileYPos+$100,Y           ;; 02E3F9 : 99 01 03    ;
                       LDA.W DATA_02E372,X                 ;; 02E3FC : BD 72 E3    ;
                       STA.W !OAMTileNo+$100,Y             ;; 02E3FF : 99 02 03    ;
                       LDA.W DATA_02E382,X                 ;; 02E402 : BD 82 E3    ;
@@ -12203,20 +12203,20 @@ ExplodingBlkMain:     PHB                                 ;; ?QPWZ? : 8B        
 CODE_02E41F:          JSL GenericSprGfxRt2                ;; 02E41F : 22 B2 90 01 ;
                       LDA.B !SpriteLock                   ;; 02E423 : A5 9D       ;
                       BNE Return02E462                    ;; 02E425 : D0 3B       ;
-                      BRA CODE_02E42D                     ;; 02E427 : 80 04       ;
+                      BRA +                               ;; 02E427 : 80 04       ;
                                                           ;;                      ;
                       JSL ADDR_02C0CF                     ;; 02E429 : 22 CF C0 02 ; Unreachable instruction 
-CODE_02E42D:          LDY.B #$00                          ;; 02E42D : A0 00       ;
+                    + LDY.B #$00                          ;; 02E42D : A0 00       ;
                       INC.W !SpriteMisc1570,X             ;; 02E42F : FE 70 15    ;
                       LDA.W !SpriteMisc1570,X             ;; 02E432 : BD 70 15    ;
                       AND.B #$40                          ;; 02E435 : 29 40       ;
-                      BEQ CODE_02E444                     ;; 02E437 : F0 0B       ;
+                      BEQ +                               ;; 02E437 : F0 0B       ;
                       LDY.B #$04                          ;; 02E439 : A0 04       ;
                       LDA.W !SpriteMisc1570,X             ;; 02E43B : BD 70 15    ;
                       AND.B #$04                          ;; 02E43E : 29 04       ;
-                      BEQ CODE_02E444                     ;; 02E440 : F0 02       ;
+                      BEQ +                               ;; 02E440 : F0 02       ;
                       LDY.B #$FC                          ;; 02E442 : A0 FC       ;
-CODE_02E444:          STY.B !SpriteXSpeed,X               ;; 02E444 : 94 B6       ;
+                    + STY.B !SpriteXSpeed,X               ;; 02E444 : 94 B6       ;
                       JSR UpdateXPosNoGrvty               ;; 02E446 : 20 88 D2    ;
                       JSL SprSpr_MarioSprRts              ;; 02E449 : 22 3A 80 01 ;
                       JSR CODE_02D4FA                     ;; 02E44D : 20 FA D4    ;
@@ -12294,21 +12294,21 @@ CODE_02E4A5:          JSR SubOffscreen2Bnk2               ;; 02E4A5 : 20 1B D0  
                       STA.W !SpriteYPosHigh,X             ;; 02E4DB : 9D E0 14    ;
                       PLA                                 ;; 02E4DE : 68          ;
                       STA.B !SpriteXPosLow,X              ;; 02E4DF : 95 E4       ;
-                      BCC CODE_02E4EB                     ;; 02E4E1 : 90 08       ;
+                      BCC +                               ;; 02E4E1 : 90 08       ;
                       INC.W !TileGenerateTrackA           ;; 02E4E3 : EE 5E 18    ;
                       LDA.B #$F8                          ;; 02E4E6 : A9 F8       ;
                       JSR CODE_02E559                     ;; 02E4E8 : 20 59 E5    ;
-CODE_02E4EB:          LDA.W !SpriteOAMIndex,X             ;; 02E4EB : BD EA 15    ;
+                    + LDA.W !SpriteOAMIndex,X             ;; 02E4EB : BD EA 15    ;
                       CLC                                 ;; 02E4EE : 18          ;
                       ADC.B #$08                          ;; 02E4EF : 69 08       ;
                       STA.W !SpriteOAMIndex,X             ;; 02E4F1 : 9D EA 15    ;
                       LDY.B #$00                          ;; 02E4F4 : A0 00       ;
                       JSR CODE_02E524                     ;; 02E4F6 : 20 24 E5    ;
-                      BCC CODE_02E503                     ;; 02E4F9 : 90 08       ;
+                      BCC +                               ;; 02E4F9 : 90 08       ;
                       INC.W !TileGenerateTrackA           ;; 02E4FB : EE 5E 18    ;
                       LDA.B #$08                          ;; 02E4FE : A9 08       ;
                       JSR CODE_02E559                     ;; 02E500 : 20 59 E5    ;
-CODE_02E503:          LDA.W !TileGenerateTrackA           ;; 02E503 : AD 5E 18    ;
+                    + LDA.W !TileGenerateTrackA           ;; 02E503 : AD 5E 18    ;
                       BNE Return02E51F                    ;; 02E506 : D0 17       ;
                       LDY.B #$02                          ;; 02E508 : A0 02       ;
                       LDA.B !SpriteYPosLow,X              ;; 02E50A : B5 D8       ;
@@ -12316,9 +12316,9 @@ CODE_02E503:          LDA.W !TileGenerateTrackA           ;; 02E503 : AD 5E 18  
                       BEQ Return02E51F                    ;; 02E50F : F0 0E       ;
                       LDA.W !SpriteXPosHigh,X             ;; 02E511 : BD D4 14    ;
                       SBC.W !SpriteMisc151C,X             ;; 02E514 : FD 1C 15    ;
-                      BMI CODE_02E51B                     ;; 02E517 : 30 02       ;
+                      BMI +                               ;; 02E517 : 30 02       ;
                       LDY.B #$FE                          ;; 02E519 : A0 FE       ;
-CODE_02E51B:          TYA                                 ;; 02E51B : 98          ;
+                    + TYA                                 ;; 02E51B : 98          ;
                       JSR CODE_02E559                     ;; 02E51C : 20 59 E5    ;
 Return02E51F:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -12331,9 +12331,9 @@ CODE_02E524:          LDA.B !SpriteYPosLow,X              ;; 02E524 : B5 D8     
                       LDA.B !SpriteYSpeed,X               ;; 02E52A : B5 AA       ;
                       BEQ CODE_02E54E                     ;; 02E52C : F0 20       ;
                       LDA.B !SpriteYSpeed,X               ;; 02E52E : B5 AA       ;
-                      BPL CODE_02E533                     ;; 02E530 : 10 01       ;
+                      BPL +                               ;; 02E530 : 10 01       ;
                       INY                                 ;; 02E532 : C8          ;
-CODE_02E533:          LDA.W MushrmScaleTiles,Y            ;; 02E533 : B9 20 E5    ;
+                    + LDA.W MushrmScaleTiles,Y            ;; 02E533 : B9 20 E5    ;
                       STA.B !Map16TileGenerate            ;; 02E536 : 85 9C       ; $9C = tile to generate 
                       LDA.B !SpriteXPosLow,X              ;; 02E538 : B5 E4       ; \ $9A = Sprite X position 
                       STA.B !TouchBlockXPos               ;; 02E53A : 85 9A       ;  | for block creation 
@@ -12359,9 +12359,9 @@ CODE_02E559:          LDY.B !SpriteLock                   ;; 02E559 : A4 9D     
                       LDA.W !SpriteXMovement              ;; 02E566 : AD 91 14    ;
                       EOR.B #$FF                          ;; 02E569 : 49 FF       ;
                       INC A                               ;; 02E56B : 1A          ;
-                      BPL CODE_02E56F                     ;; 02E56C : 10 01       ;
+                      BPL +                               ;; 02E56C : 10 01       ;
                       DEY                                 ;; 02E56E : 88          ;
-CODE_02E56F:          CLC                                 ;; 02E56F : 18          ;
+                    + CLC                                 ;; 02E56F : 18          ;
                       ADC.W !SpriteMisc1534,X             ;; 02E570 : 7D 34 15    ;
                       STA.W !SpriteMisc1534,X             ;; 02E573 : 9D 34 15    ;
                       TYA                                 ;; 02E576 : 98          ;
@@ -12407,9 +12407,9 @@ CODE_02E5BC:          JSR SubOffscreen0Bnk2               ;; 02E5BC : 20 25 D0  
                       LDY.B #$10                          ;; 02E5C6 : A0 10       ;
                       LDA.W !SpriteMisc1570,X             ;; 02E5C8 : BD 70 15    ;
                       AND.B #$80                          ;; 02E5CB : 29 80       ;
-                      BNE CODE_02E5D1                     ;; 02E5CD : D0 02       ;
+                      BNE +                               ;; 02E5CD : D0 02       ;
                       LDY.B #$F0                          ;; 02E5CF : A0 F0       ;
-CODE_02E5D1:          TYA                                 ;; 02E5D1 : 98          ;
+                    + TYA                                 ;; 02E5D1 : 98          ;
                       STA.B !SpriteXSpeed,X               ;; 02E5D2 : 95 B6       ;
                       JSR UpdateXPosNoGrvty               ;; 02E5D4 : 20 88 D2    ;
 CODE_02E5D7:          JSR CODE_02E637                     ;; 02E5D7 : 20 37 E6    ;
@@ -12418,14 +12418,14 @@ CODE_02E5D7:          JSR CODE_02E637                     ;; 02E5D7 : 20 37 E6  
                       BEQ CODE_02E5E8                     ;; 02E5E0 : F0 06       ;
                       DEC A                               ;; 02E5E2 : 3A          ;
                       CMP.W !CurSpriteProcess             ;; 02E5E3 : CD E9 15    ;
-                      BNE Return02E5F6                    ;; 02E5E6 : D0 0E       ;
+                      BNE +                               ;; 02E5E6 : D0 0E       ;
 CODE_02E5E8:          JSL MarioSprInteract                ;; 02E5E8 : 22 DC A7 01 ;
                       STZ.W !PlayerDisableObjInt          ;; 02E5EC : 9C 5C 18    ;
-                      BCC Return02E5F6                    ;; 02E5EF : 90 05       ;
+                      BCC +                               ;; 02E5EF : 90 05       ;
                       INX                                 ;; 02E5F1 : E8          ;
                       STX.W !PlayerDisableObjInt          ;; 02E5F2 : 8E 5C 18    ;
                       DEX                                 ;; 02E5F5 : CA          ;
-Return02E5F6:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02E5F7:          LDY.B #$0B                          ;; 02E5F7 : A0 0B       ;
 CODE_02E5F9:          CPY.W !CurSpriteProcess             ;; 02E5F9 : CC E9 15    ;
@@ -12460,7 +12460,7 @@ CODE_02E633:          DEY                                 ;; 02E633 : 88        
 CODE_02E637:          JSR GetDrawInfo2                    ;; 02E637 : 20 78 D3    ;
                       PHX                                 ;; 02E63A : DA          ;
                       LDX.B #$03                          ;; 02E63B : A2 03       ;
-CODE_02E63D:          LDA.B !_0                           ;; 02E63D : A5 00       ;
+                    - LDA.B !_0                           ;; 02E63D : A5 00       ;
                       CLC                                 ;; 02E63F : 18          ;
                       ADC.W DATA_02E666,X                 ;; 02E640 : 7D 66 E6    ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02E643 : 99 00 03    ;
@@ -12475,7 +12475,7 @@ CODE_02E63D:          LDA.B !_0                           ;; 02E63D : A5 00     
                       INY                                 ;; 02E659 : C8          ;
                       INY                                 ;; 02E65A : C8          ;
                       DEX                                 ;; 02E65B : CA          ;
-                      BPL CODE_02E63D                     ;; 02E65C : 10 DF       ;
+                      BPL -                               ;; 02E65C : 10 DF       ;
                       PLX                                 ;; 02E65E : FA          ;
                       LDA.B #$03                          ;; 02E65F : A9 03       ;
                       LDY.B #$02                          ;; 02E661 : A0 02       ;
@@ -12529,7 +12529,7 @@ CODE_02E67A:          JSR GetDrawInfo2                    ;; 02E67A : 20 78 D3  
                       LDY.B #$02                          ;; 02E6BD : A0 02       ;
                       JSR CODE_02B7A7                     ;; 02E6BF : 20 A7 B7    ;
                       LDA.W !SpriteOffscreenX,X           ;; 02E6C2 : BD A0 15    ;
-                      BNE CODE_02E6EB                     ;; 02E6C5 : D0 24       ;
+                      BNE +                               ;; 02E6C5 : D0 24       ;
                       LDY.W !SpriteOAMIndex,X             ;; 02E6C7 : BC EA 15    ; Y = Index into sprite OAM 
                       LDA.B !PlayerXPosScrRel             ;; 02E6CA : A5 7E       ;
                       SEC                                 ;; 02E6CC : 38          ;
@@ -12537,22 +12537,22 @@ CODE_02E67A:          JSR GetDrawInfo2                    ;; 02E67A : 20 78 D3  
                       CLC                                 ;; 02E6D0 : 18          ;
                       ADC.B #$0C                          ;; 02E6D1 : 69 0C       ;
                       CMP.B #$18                          ;; 02E6D3 : C9 18       ;
-                      BCS CODE_02E6EB                     ;; 02E6D5 : B0 14       ;
+                      BCS +                               ;; 02E6D5 : B0 14       ;
                       LDA.B !PlayerYPosScrRel             ;; 02E6D7 : A5 80       ;
                       SEC                                 ;; 02E6D9 : 38          ;
                       SBC.W !OAMTileYPos+$104,Y           ;; 02E6DA : F9 05 03    ;
                       CLC                                 ;; 02E6DD : 18          ;
                       ADC.B #$0C                          ;; 02E6DE : 69 0C       ;
                       CMP.B #$18                          ;; 02E6E0 : C9 18       ;
-                      BCS CODE_02E6EB                     ;; 02E6E2 : B0 07       ;
+                      BCS +                               ;; 02E6E2 : B0 07       ;
                       STZ.W !SpriteMisc151C,X             ;; 02E6E4 : 9E 1C 15    ;
                       JSL CODE_00F388                     ;; 02E6E7 : 22 88 F3 00 ;
-CODE_02E6EB:          PHX                                 ;; 02E6EB : DA          ;
+                    + PHX                                 ;; 02E6EB : DA          ;
                       LDA.B #$38                          ;; 02E6EC : A9 38       ;
                       STA.W !SpriteOAMIndex,X             ;; 02E6EE : 9D EA 15    ;
                       TAY                                 ;; 02E6F1 : A8          ;
                       LDX.B #$07                          ;; 02E6F2 : A2 07       ;
-CODE_02E6F4:          LDA.W !TileGenerateTrackA           ;; 02E6F4 : AD 5E 18    ;
+                    - LDA.W !TileGenerateTrackA           ;; 02E6F4 : AD 5E 18    ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02E6F7 : 99 00 03    ;
                       LDA.W !TileGenerateTrackB           ;; 02E6FA : AD B6 18    ;
                       STA.W !OAMTileYPos+$100,Y           ;; 02E6FD : 99 01 03    ;
@@ -12568,7 +12568,7 @@ CODE_02E6F4:          LDA.W !TileGenerateTrackA           ;; 02E6F4 : AD 5E 18  
                       INY                                 ;; 02E712 : C8          ;
                       INY                                 ;; 02E713 : C8          ;
                       DEX                                 ;; 02E714 : CA          ;
-                      BPL CODE_02E6F4                     ;; 02E715 : 10 DD       ;
+                      BPL -                               ;; 02E715 : 10 DD       ;
                       PLX                                 ;; 02E717 : FA          ;
                       LDA.B #$07                          ;; 02E718 : A9 07       ;
                       LDY.B #$00                          ;; 02E71A : A0 00       ;
@@ -12583,7 +12583,7 @@ SwimJumpFishMain:     PHB                                 ;; ?QPWZ? : 8B        
                                                           ;;                      ;
 CODE_02E727:          JSL GenericSprGfxRt2                ;; 02E727 : 22 B2 90 01 ;
                       LDA.B !SpriteLock                   ;; 02E72B : A5 9D       ;
-                      BNE Return02E74B                    ;; 02E72D : D0 1C       ;
+                      BNE +                               ;; 02E72D : D0 1C       ;
                       JSR SubOffscreen0Bnk2               ;; 02E72F : 20 25 D0    ;
                       JSL SprSpr_MarioSprRts              ;; 02E732 : 22 3A 80 01 ;
                       JSL CODE_019138                     ;; 02E736 : 22 38 91 01 ;
@@ -12596,7 +12596,7 @@ CODE_02E727:          JSL GenericSprGfxRt2                ;; 02E727 : 22 B2 90 0
                       dw CODE_02E74E                      ;; ?QPWZ? : 4E E7       ;
                       dw CODE_02E788                      ;; ?QPWZ? : 88 E7       ;
                                                           ;;                      ;
-Return02E74B:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02E74C:          db $14,$EC                          ;; 02E74C               ;
@@ -12616,9 +12616,9 @@ CODE_02E74E:          LDY.W !SpriteMisc157C,X             ;; 02E74E : BC 7C 15  
                       STA.W !SpriteMisc157C,X             ;; 02E76D : 9D 7C 15    ;
                       LDA.B #$20                          ;; 02E770 : A9 20       ;
                       CPY.B #$03                          ;; 02E772 : C0 03       ;
-                      BEQ CODE_02E778                     ;; 02E774 : F0 02       ;
+                      BEQ +                               ;; 02E774 : F0 02       ;
                       LDA.B #$40                          ;; 02E776 : A9 40       ;
-CODE_02E778:          STA.W !SpriteMisc1540,X             ;; 02E778 : 9D 40 15    ;
+                    + STA.W !SpriteMisc1540,X             ;; 02E778 : 9D 40 15    ;
 Return02E77B:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02E77C:          INC.B !SpriteTableC2,X              ;; 02E77C : F6 C2       ;
@@ -12662,10 +12662,10 @@ ChucksRockMain:       PHB                                 ;; ?QPWZ? : 8B        
 CODE_02E7BD:          LDA.B !SpriteProperties             ;; 02E7BD : A5 64       ;
                       PHA                                 ;; 02E7BF : 48          ;
                       LDA.W !SpriteMisc1540,X             ;; 02E7C0 : BD 40 15    ;
-                      BEQ CODE_02E7C9                     ;; 02E7C3 : F0 04       ;
+                      BEQ +                               ;; 02E7C3 : F0 04       ;
                       LDA.B #$10                          ;; 02E7C5 : A9 10       ;
                       STA.B !SpriteProperties             ;; 02E7C7 : 85 64       ;
-CODE_02E7C9:          JSL GenericSprGfxRt2                ;; 02E7C9 : 22 B2 90 01 ;
+                    + JSL GenericSprGfxRt2                ;; 02E7C9 : 22 B2 90 01 ;
                       PLA                                 ;; 02E7CD : 68          ;
                       STA.B !SpriteProperties             ;; 02E7CE : 85 64       ;
                       LDA.B !SpriteLock                   ;; 02E7D0 : A5 9D       ;
@@ -12683,31 +12683,31 @@ CODE_02E7C9:          JSL GenericSprGfxRt2                ;; 02E7C9 : 22 B2 90 0
                       BNE CODE_02E828                     ;; 02E7ED : D0 39       ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02E7EF : BD 88 15    ; \ Branch if not touching object 
                       AND.B #$03                          ;; 02E7F2 : 29 03       ;  | 
-                      BEQ CODE_02E7FD                     ;; 02E7F4 : F0 07       ; / 
+                      BEQ +                               ;; 02E7F4 : F0 07       ; / 
                       LDA.B !SpriteXSpeed,X               ;; 02E7F6 : B5 B6       ;
                       EOR.B #$FF                          ;; 02E7F8 : 49 FF       ;
                       INC A                               ;; 02E7FA : 1A          ;
                       STA.B !SpriteXSpeed,X               ;; 02E7FB : 95 B6       ;
-CODE_02E7FD:          LDA.W !SpriteBlockedDirs,X          ;; 02E7FD : BD 88 15    ;
+                    + LDA.W !SpriteBlockedDirs,X          ;; 02E7FD : BD 88 15    ;
                       AND.B #$08                          ;; 02E800 : 29 08       ;
-                      BEQ CODE_02E808                     ;; 02E802 : F0 04       ;
+                      BEQ +                               ;; 02E802 : F0 04       ;
                       LDA.B #$10                          ;; 02E804 : A9 10       ;
                       STA.B !SpriteYSpeed,X               ;; 02E806 : 95 AA       ;
-CODE_02E808:          LDA.W !SpriteBlockedDirs,X          ;; 02E808 : BD 88 15    ; \ Branch if not on ground 
+                    + LDA.W !SpriteBlockedDirs,X          ;; 02E808 : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02E80B : 29 04       ;  | 
                       BEQ CODE_02E828                     ;; 02E80D : F0 19       ; / 
                       LDA.B !SpriteYSpeed,X               ;; 02E80F : B5 AA       ;
                       CMP.B #$38                          ;; 02E811 : C9 38       ;
                       LDA.B #$E0                          ;; 02E813 : A9 E0       ;
-                      BCC CODE_02E819                     ;; 02E815 : 90 02       ;
+                      BCC +                               ;; 02E815 : 90 02       ;
                       LDA.B #$D0                          ;; 02E817 : A9 D0       ;
-CODE_02E819:          STA.B !SpriteYSpeed,X               ;; 02E819 : 95 AA       ;
+                    + STA.B !SpriteYSpeed,X               ;; 02E819 : 95 AA       ;
                       LDA.B #$08                          ;; 02E81B : A9 08       ;
                       LDY.W !SpriteSlope,X                ;; 02E81D : BC B8 15    ;
                       BEQ CODE_02E828                     ;; 02E820 : F0 06       ;
-                      BPL CODE_02E826                     ;; 02E822 : 10 02       ;
+                      BPL +                               ;; 02E822 : 10 02       ;
                       LDA.B #$F8                          ;; 02E824 : A9 F8       ;
-CODE_02E826:          STA.B !SpriteXSpeed,X               ;; 02E826 : 95 B6       ;
+                    + STA.B !SpriteXSpeed,X               ;; 02E826 : 95 B6       ;
 CODE_02E828:          JSL SprSpr_MarioSprRts              ;; 02E828 : 22 3A 80 01 ;
 Return02E82C:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -12728,7 +12728,7 @@ GrowingPipeTiles1:    db $00,$14,$00,$02                  ;; ?QPWZ?             
 GrowingPipeTiles2:    db $00,$15,$00,$02                  ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_02E845:          LDA.W !SpriteMisc1534,X             ;; 02E845 : BD 34 15    ;
-                      BMI CODE_02E872                     ;; 02E848 : 30 28       ;
+                      BMI +                               ;; 02E848 : 30 28       ;
                       LDA.B !SpriteYPosLow,X              ;; 02E84A : B5 D8       ;
                       PHA                                 ;; 02E84C : 48          ;
                       SEC                                 ;; 02E84D : 38          ;
@@ -12750,7 +12750,7 @@ CODE_02E845:          LDA.W !SpriteMisc1534,X             ;; 02E845 : BD 34 15  
                       STA.W !SpriteMisc1534,X             ;; 02E86E : 9D 34 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02E872:          JSR CODE_02E902                     ;; 02E872 : 20 02 E9    ;
+                    + JSR CODE_02E902                     ;; 02E872 : 20 02 E9    ;
                       JSR SubOffscreen0Bnk2               ;; 02E875 : 20 25 D0    ;
                       LDA.B !SpriteLock                   ;; 02E878 : A5 9D       ;
                       ORA.W !SpriteOffscreenX,X           ;; 02E87A : 1D A0 15    ;
@@ -12774,12 +12774,12 @@ CODE_02E872:          JSR CODE_02E902                     ;; 02E872 : 20 02 E9  
                                                           ;;                      ;
 CODE_02E8A2:          LDA.W DATA_02E835,Y                 ;; 02E8A2 : B9 35 E8    ;
                       STA.B !SpriteYSpeed,X               ;; 02E8A5 : 95 AA       ;
-                      BEQ CODE_02E8B2                     ;; 02E8A7 : F0 09       ;
+                      BEQ +                               ;; 02E8A7 : F0 09       ;
                       LDA.B !SpriteYPosLow,X              ;; 02E8A9 : B5 D8       ;
                       AND.B #$0F                          ;; 02E8AB : 29 0F       ;
-                      BNE CODE_02E8B2                     ;; 02E8AD : D0 03       ;
+                      BNE +                               ;; 02E8AD : D0 03       ;
                       JSR GrowingPipeGfx                  ;; 02E8AF : 20 BA E8    ;
-CODE_02E8B2:          JSR UpdateYPosNoGrvty               ;; 02E8B2 : 20 94 D2    ;
+                    + JSR UpdateYPosNoGrvty               ;; 02E8B2 : 20 94 D2    ;
 CODE_02E8B5:          JSL InvisBlkMainRt                  ;; 02E8B5 : 22 4F B4 01 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -12845,14 +12845,14 @@ PipeLakituMain:       PHB                                 ;; ?QPWZ? : 8B        
                                                           ;;                      ;
 CODE_02E93D:          LDA.W !SpriteStatus,X               ;; 02E93D : BD C8 14    ;
                       CMP.B #$02                          ;; 02E940 : C9 02       ;
-                      BNE CODE_02E94C                     ;; 02E942 : D0 08       ;
+                      BNE +                               ;; 02E942 : D0 08       ;
                       LDA.B #$02                          ;; 02E944 : A9 02       ;
                       STA.W !SpriteMisc1602,X             ;; 02E946 : 9D 02 16    ;
                       JMP CODE_02E9EC                     ;; 02E949 : 4C EC E9    ;
                                                           ;;                      ;
-CODE_02E94C:          JSR CODE_02E9EC                     ;; 02E94C : 20 EC E9    ;
+                    + JSR CODE_02E9EC                     ;; 02E94C : 20 EC E9    ;
                       LDA.B !SpriteLock                   ;; 02E94F : A5 9D       ;
-                      BNE Return02E985                    ;; 02E951 : D0 32       ;
+                      BNE +                               ;; 02E951 : D0 32       ;
                       STZ.W !SpriteMisc1602,X             ;; 02E953 : 9E 02 16    ;
                       JSR SubOffscreen0Bnk2               ;; 02E956 : 20 25 D0    ;
                       JSL SprSpr_MarioSprRts              ;; 02E959 : 22 3A 80 01 ;
@@ -12866,17 +12866,17 @@ CODE_02E94C:          JSR CODE_02E9EC                     ;; 02E94C : 20 EC E9  
                       dw CODE_02E9D5                      ;; ?QPWZ? : D5 E9       ;
                                                           ;;                      ;
 CODE_02E96D:          LDA.W !SpriteMisc1540,X             ;; 02E96D : BD 40 15    ;
-                      BNE Return02E985                    ;; 02E970 : D0 13       ;
+                      BNE +                               ;; 02E970 : D0 13       ;
                       JSR CODE_02D4FA                     ;; 02E972 : 20 FA D4    ;
                       LDA.B !_F                           ;; 02E975 : A5 0F       ;
                       CLC                                 ;; 02E977 : 18          ;
                       ADC.B #$13                          ;; 02E978 : 69 13       ;
                       CMP.B #$36                          ;; 02E97A : C9 36       ;
-                      BCC Return02E985                    ;; 02E97C : 90 07       ;
+                      BCC +                               ;; 02E97C : 90 07       ;
                       LDA.B #$90                          ;; 02E97E : A9 90       ;
 CODE_02E980:          STA.W !SpriteMisc1540,X             ;; 02E980 : 9D 40 15    ;
                       INC.B !SpriteTableC2,X              ;; 02E983 : F6 C2       ;
-Return02E985:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02E986:          LDA.W !SpriteMisc1540,X             ;; 02E986 : BD 40 15    ;
                       BNE CODE_02E996                     ;; 02E989 : D0 0B       ;
@@ -12887,20 +12887,20 @@ CODE_02E986:          LDA.W !SpriteMisc1540,X             ;; 02E986 : BD 40 15  
                       BRA CODE_02E980                     ;; 02E994 : 80 EA       ;
                                                           ;;                      ;
 CODE_02E996:          CMP.B #$7C                          ;; 02E996 : C9 7C       ;
-                      BCC CODE_02E9A2                     ;; 02E998 : 90 08       ;
+                      BCC +                               ;; 02E998 : 90 08       ;
 CODE_02E99A:          LDA.B #$F8                          ;; 02E99A : A9 F8       ;
 CODE_02E99C:          STA.B !SpriteYSpeed,X               ;; 02E99C : 95 AA       ;
                       JSR UpdateYPosNoGrvty               ;; 02E99E : 20 94 D2    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02E9A2:          CMP.B #$50                          ;; 02E9A2 : C9 50       ;
+                    + CMP.B #$50                          ;; 02E9A2 : C9 50       ;
                       BCS Return02E9B3                    ;; 02E9A4 : B0 0D       ;
                       LDY.B #$00                          ;; 02E9A6 : A0 00       ;
                       LDA.B !TrueFrame                    ;; 02E9A8 : A5 13       ;
                       AND.B #$20                          ;; 02E9AA : 29 20       ;
-                      BEQ CODE_02E9AF                     ;; 02E9AC : F0 01       ;
+                      BEQ +                               ;; 02E9AC : F0 01       ;
                       INY                                 ;; 02E9AE : C8          ;
-CODE_02E9AF:          TYA                                 ;; 02E9AF : 98          ;
+                    + TYA                                 ;; 02E9AF : 98          ;
                       STA.W !SpriteMisc157C,X             ;; 02E9B0 : 9D 7C 15    ;
 Return02E9B3:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -12915,22 +12915,22 @@ CODE_02E9BD:          LDA.W !SpriteMisc1540,X             ;; 02E9BD : BD 40 15  
                       BRA CODE_02E980                     ;; 02E9C4 : 80 BA       ;
                                                           ;;                      ;
 CODE_02E9C6:          CMP.B #$40                          ;; 02E9C6 : C9 40       ;
-                      BNE CODE_02E9CF                     ;; 02E9C8 : D0 05       ;
+                      BNE +                               ;; 02E9C8 : D0 05       ;
                       JSL CODE_01EA19                     ;; 02E9CA : 22 19 EA 01 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02E9CF:          BCS Return02E9D4                    ;; 02E9CF : B0 03       ;
+                    + BCS +                               ;; 02E9CF : B0 03       ;
                       INC.W !SpriteMisc1602,X             ;; 02E9D1 : FE 02 16    ;
-Return02E9D4:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02E9D5:          LDA.W !SpriteMisc1540,X             ;; 02E9D5 : BD 40 15    ;
-                      BNE CODE_02E9E2                     ;; 02E9D8 : D0 08       ;
+                      BNE +                               ;; 02E9D8 : D0 08       ;
                       LDA.B #$50                          ;; 02E9DA : A9 50       ;
                       JSR CODE_02E980                     ;; 02E9DC : 20 80 E9    ;
                       STZ.B !SpriteTableC2,X              ;; 02E9DF : 74 C2       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02E9E2:          LDA.B #$08                          ;; 02E9E2 : A9 08       ;
+                    + LDA.B #$08                          ;; 02E9E2 : A9 08       ;
                       BRA CODE_02E99C                     ;; 02E9E4 : 80 B6       ;
                                                           ;;                      ;
                                                           ;;                      ;
@@ -13053,7 +13053,7 @@ WarpBlocksMain:       PHB                                 ;; ?QPWZ? : 8B        
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02EADA:          JSL MarioSprInteract                ;; 02EADA : 22 DC A7 01 ;
-                      BCC Return02EAF0                    ;; 02EADE : 90 10       ;
+                      BCC +                               ;; 02EADE : 90 10       ;
                       STZ.B !PlayerXSpeed                 ;; 02EAE0 : 64 7B       ;
                       LDA.B !SpriteXPosLow,X              ;; 02EAE2 : B5 E4       ;
                       CLC                                 ;; 02EAE4 : 18          ;
@@ -13062,12 +13062,12 @@ CODE_02EADA:          JSL MarioSprInteract                ;; 02EADA : 22 DC A7 0
                       LDA.W !SpriteYPosHigh,X             ;; 02EAE9 : BD E0 14    ;
                       ADC.B #$00                          ;; 02EAEC : 69 00       ;
                       STA.B !PlayerXPosNext+1             ;; 02EAEE : 85 95       ;
-Return02EAF0:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_02EAF2:          JSL FindFreeSprSlot                 ;; 02EAF2 : 22 E4 A9 02 ; \ Return if no free slots 
-                      BMI Return02EB26                    ;; 02EAF6 : 30 2E       ; / 
+                      BMI +                               ;; 02EAF6 : 30 2E       ; / 
                       LDA.B #$08                          ;; 02EAF8 : A9 08       ; \ Sprite status = Normal 
                       STA.W !SpriteStatus,Y               ;; 02EAFA : 99 C8 14    ; / 
                       LDA.B #$77                          ;; 02EAFD : A9 77       ;
@@ -13086,7 +13086,7 @@ CODE_02EAF2:          JSL FindFreeSprSlot                 ;; 02EAF2 : 22 E4 A9 0
                       STA.W !SpriteMisc154C,X             ;; 02EB1F : 9D 4C 15    ;
                       LDA.B #$D0                          ;; 02EB22 : A9 D0       ;
                       STA.B !SpriteYSpeed,X               ;; 02EB24 : 95 AA       ;
-Return02EB26:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 SuperKoopaMain:       PHB                                 ;; ?QPWZ? : 8B          ;
                       PHK                                 ;; 02EB28 : 4B          ;
@@ -13105,9 +13105,9 @@ CODE_02EB31:          JSR CODE_02ECDE                     ;; 02EB31 : 20 DE EC  
                       LDY.B #$04                          ;; 02EB3B : A0 04       ;
 CODE_02EB3D:          LDA.B !EffFrame                     ;; 02EB3D : A5 14       ;
                       AND.B #$04                          ;; 02EB3F : 29 04       ;
-                      BEQ CODE_02EB44                     ;; 02EB41 : F0 01       ;
+                      BEQ +                               ;; 02EB41 : F0 01       ;
                       INY                                 ;; 02EB43 : C8          ;
-CODE_02EB44:          TYA                                 ;; 02EB44 : 98          ;
+                    + TYA                                 ;; 02EB44 : 98          ;
                       STA.W !SpriteMisc1602,X             ;; 02EB45 : 9D 02 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -13157,9 +13157,9 @@ CODE_02EB8D:          LDA.B !TrueFrame                    ;; 02EB8D : A5 13     
                       CLC                                 ;; 02EB9F : 18          ;
                       ADC.W DATA_02EB8B,Y                 ;; 02EBA0 : 79 8B EB    ;
                       LDY.B !_1                           ;; 02EBA3 : A4 01       ;
-                      BNE CODE_02EBA9                     ;; 02EBA5 : D0 02       ;
+                      BNE +                               ;; 02EBA5 : D0 02       ;
                       STA.B !SpriteXSpeed,X               ;; 02EBA7 : 95 B6       ;
-CODE_02EBA9:          INC.B !_0                           ;; 02EBA9 : E6 00       ;
+                    + INC.B !_0                           ;; 02EBA9 : E6 00       ;
 CODE_02EBAB:          INC.W !SpriteMisc151C,X             ;; 02EBAB : FE 1C 15    ;
                       LDA.W !SpriteMisc151C,X             ;; 02EBAE : BD 1C 15    ;
                       CMP.B #$30                          ;; 02EBB1 : C9 30       ;
@@ -13167,14 +13167,14 @@ CODE_02EBAB:          INC.W !SpriteMisc151C,X             ;; 02EBAB : FE 1C 15  
 CODE_02EBB5:          LDY.B #$00                          ;; 02EBB5 : A0 00       ;
                       LDA.B !TrueFrame                    ;; 02EBB7 : A5 13       ;
                       AND.B #$04                          ;; 02EBB9 : 29 04       ;
-                      BEQ CODE_02EBBE                     ;; 02EBBB : F0 01       ;
+                      BEQ +                               ;; 02EBBB : F0 01       ;
                       INY                                 ;; 02EBBD : C8          ;
-CODE_02EBBE:          TYA                                 ;; 02EBBE : 98          ;
+                    + TYA                                 ;; 02EBBE : 98          ;
                       LDY.B !_0                           ;; 02EBBF : A4 00       ;
-                      BNE CODE_02EBC6                     ;; 02EBC1 : D0 03       ;
+                      BNE +                               ;; 02EBC1 : D0 03       ;
                       CLC                                 ;; 02EBC3 : 18          ;
                       ADC.B #$06                          ;; 02EBC4 : 69 06       ;
-CODE_02EBC6:          STA.W !SpriteMisc1602,X             ;; 02EBC6 : 9D 02 16    ;
+                    + STA.W !SpriteMisc1602,X             ;; 02EBC6 : 9D 02 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02EBCA:          INC.B !SpriteTableC2,X              ;; 02EBCA : F6 C2       ;
@@ -13187,9 +13187,9 @@ CODE_02EBD1:          LDA.B !SpriteYSpeed,X               ;; 02EBD1 : B5 AA     
                       ADC.B #$02                          ;; 02EBD4 : 69 02       ;
                       STA.B !SpriteYSpeed,X               ;; 02EBD6 : 95 AA       ;
                       CMP.B #$14                          ;; 02EBD8 : C9 14       ;
-                      BMI CODE_02EBDE                     ;; 02EBDA : 30 02       ;
+                      BMI +                               ;; 02EBDA : 30 02       ;
                       INC.B !SpriteTableC2,X              ;; 02EBDC : F6 C2       ;
-CODE_02EBDE:          STZ.B !_0                           ;; 02EBDE : 64 00       ;
+                    + STZ.B !_0                           ;; 02EBDE : 64 00       ;
                       JSR CODE_02EBB5                     ;; 02EBE0 : 20 B5 EB    ;
                       INC.W !SpriteMisc1602,X             ;; 02EBE3 : FE 02 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -13205,9 +13205,9 @@ CODE_02EBE7:          LDY.W !SpriteMisc157C,X             ;; 02EBE7 : BC 7C 15  
 CODE_02EBF8:          LDY.B #$02                          ;; 02EBF8 : A0 02       ;
                       LDA.B !TrueFrame                    ;; 02EBFA : A5 13       ;
                       AND.B #$04                          ;; 02EBFC : 29 04       ;
-                      BEQ CODE_02EC01                     ;; 02EBFE : F0 01       ;
+                      BEQ +                               ;; 02EBFE : F0 01       ;
                       INY                                 ;; 02EC00 : C8          ;
-CODE_02EC01:          TYA                                 ;; 02EC01 : 98          ;
+                    + TYA                                 ;; 02EC01 : 98          ;
                       STA.W !SpriteMisc1602,X             ;; 02EC02 : 9D 02 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -13292,7 +13292,7 @@ CODE_02ECF7:          LDA.B !_3                           ;; 02ECF7 : A5 03     
                       TAY                                 ;; 02ED32 : A8          ;
                       LDA.W DATA_02ED39,Y                 ;; 02ED33 : B9 39 ED    ;
                       PLY                                 ;; 02ED36 : 7A          ;
-                      BRA CODE_02ED44                     ;; 02ED37 : 80 0B       ;
+                      BRA +                               ;; 02ED37 : 80 0B       ;
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02ED39:          db $10,$0A                          ;; 02ED39               ;
@@ -13300,18 +13300,18 @@ DATA_02ED39:          db $10,$0A                          ;; 02ED39             
 CODE_02ED3B:          LDA.B !SpriteNumber,X               ;; 02ED3B : B5 9E       ;
                       CMP.B #$72                          ;; 02ED3D : C9 72       ;
                       LDA.B #$08                          ;; 02ED3F : A9 08       ;
-                      BCC CODE_02ED44                     ;; 02ED41 : 90 01       ;
+                      BCC +                               ;; 02ED41 : 90 01       ;
                       LSR A                               ;; 02ED43 : 4A          ;
-CODE_02ED44:          PLX                                 ;; 02ED44 : FA          ;
+                    + PLX                                 ;; 02ED44 : FA          ;
                       PLP                                 ;; 02ED45 : 28          ;
                       ORA.W DATA_02EC96,X                 ;; 02ED46 : 1D 96 EC    ;
                       AND.B #$FD                          ;; 02ED49 : 29 FD       ;
-                      BRA CODE_02ED52                     ;; 02ED4B : 80 05       ;
+                      BRA +                               ;; 02ED4B : 80 05       ;
                                                           ;;                      ;
 CODE_02ED4D:          LDA.W DATA_02EC96,X                 ;; 02ED4D : BD 96 EC    ;
                       ORA.B !_5                           ;; 02ED50 : 05 05       ;
-CODE_02ED52:          ORA.B !SpriteProperties             ;; 02ED52 : 05 64       ;
-                      BCS CODE_02ED5F                     ;; 02ED54 : B0 09       ;
+                    + ORA.B !SpriteProperties             ;; 02ED52 : 05 64       ;
+                      BCS +                               ;; 02ED54 : B0 09       ;
                       PHA                                 ;; 02ED56 : 48          ;
                       TXA                                 ;; 02ED57 : 8A          ;
                       CLC                                 ;; 02ED58 : 18          ;
@@ -13319,7 +13319,7 @@ CODE_02ED52:          ORA.B !SpriteProperties             ;; 02ED52 : 05 64     
                       TAX                                 ;; 02ED5B : AA          ;
                       PLA                                 ;; 02ED5C : 68          ;
                       ORA.B #$40                          ;; 02ED5D : 09 40       ;
-CODE_02ED5F:          STA.W !OAMTileAttr+$100,Y           ;; 02ED5F : 99 03 03    ;
+                    + STA.W !OAMTileAttr+$100,Y           ;; 02ED5F : 99 03 03    ;
                       LDA.B !_0                           ;; 02ED62 : A5 00       ;
                       CLC                                 ;; 02ED64 : 18          ;
                       ADC.W DATA_02EC06,X                 ;; 02ED65 : 7D 06 EC    ;
@@ -13352,7 +13352,7 @@ CODE_02ED8A:          STZ.W !SkullRaftSpeed               ;; 02ED8A : 9C BC 18  
                       LDA.B #$02                          ;; 02ED8F : A9 02       ;
                       STA.B !_0                           ;; 02ED91 : 85 00       ;
 CODE_02ED93:          JSL FindFreeSprSlot                 ;; 02ED93 : 22 E4 A9 02 ; \ Branch if no free slots 
-                      BMI CODE_02EDCB                     ;; 02ED97 : 30 32       ; / 
+                      BMI +                               ;; 02ED97 : 30 32       ; / 
                       LDA.B #$08                          ;; 02ED99 : A9 08       ; \ Sprite status = Normal 
                       STA.W !SpriteStatus,Y               ;; 02ED9B : 99 C8 14    ; / 
                       LDA.B #$61                          ;; 02ED9E : A9 61       ;
@@ -13374,7 +13374,7 @@ CODE_02ED93:          JSL FindFreeSprSlot                 ;; 02ED93 : 22 E4 A9 0
                       TYX                                 ;; 02EDC5 : BB          ;
                       JSL InitSpriteTables                ;; 02EDC6 : 22 D2 F7 07 ;
                       PLX                                 ;; 02EDCA : FA          ;
-CODE_02EDCB:          DEC.B !_0                           ;; 02EDCB : C6 00       ;
+                    + DEC.B !_0                           ;; 02EDCB : C6 00       ;
                       BPL CODE_02ED93                     ;; 02EDCD : 10 C4       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -13393,10 +13393,10 @@ CODE_02EDD8:          LDA.B !SpriteTableC2,X              ;; 02EDD8 : B5 C2     
                       LDY.B #$09                          ;; 02EDE4 : A0 09       ;
 CODE_02EDE6:          LDA.W !SpriteNumber,Y               ;; 02EDE6 : B9 9E 00    ;
                       CMP.B #$61                          ;; 02EDE9 : C9 61       ;SEARCH OUT OTHERS                
-                      BNE CODE_02EDF2                     ;; 02EDEB : D0 05       ;
+                      BNE +                               ;; 02EDEB : D0 05       ;
                       LDA.B #$00                          ;; 02EDED : A9 00       ;ERASE THEM TOO               
                       STA.W !SpriteStatus,Y               ;; 02EDEF : 99 C8 14    ;
-CODE_02EDF2:          DEY                                 ;; 02EDF2 : 88          ;
+                    + DEY                                 ;; 02EDF2 : 88          ;
                       BPL CODE_02EDE6                     ;; 02EDF3 : 10 F1       ;
 Return02EDF5:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -13408,44 +13408,44 @@ CODE_02EDF6:          JSL GenericSprGfxRt2                ;; 02EDF6 : 22 B2 90 0
                       LSR A                               ;; 02EE01 : 4A          ;
                       LSR A                               ;; 02EE02 : 4A          ;
                       LDA.B #$E0                          ;; 02EE03 : A9 E0       ;
-                      BCC CODE_02EE09                     ;; 02EE05 : 90 02       ;
+                      BCC +                               ;; 02EE05 : 90 02       ;
                       LDA.B #$E2                          ;; 02EE07 : A9 E2       ;
-CODE_02EE09:          STA.W !OAMTileNo+$100,Y             ;; 02EE09 : 99 02 03    ;
+                    + STA.W !OAMTileNo+$100,Y             ;; 02EE09 : 99 02 03    ;
                       LDA.W !OAMTileYPos+$100,Y           ;; 02EE0C : B9 01 03    ;
                       CMP.B #$F0                          ;; 02EE0F : C9 F0       ;
-                      BCS CODE_02EE19                     ;; 02EE11 : B0 06       ;
+                      BCS +                               ;; 02EE11 : B0 06       ;
                       CLC                                 ;; 02EE13 : 18          ;
                       ADC.B #$03                          ;; 02EE14 : 69 03       ;
                       STA.W !OAMTileYPos+$100,Y           ;; 02EE16 : 99 01 03    ;
-CODE_02EE19:          LDA.B !SpriteLock                   ;; 02EE19 : A5 9D       ;
+                    + LDA.B !SpriteLock                   ;; 02EE19 : A5 9D       ;
                       BNE Return02EDF5                    ;; 02EE1B : D0 D8       ;
                       STZ.B !_0                           ;; 02EE1D : 64 00       ;
                       LDY.B #$09                          ;; 02EE1F : A0 09       ;
 CODE_02EE21:          LDA.W !SpriteStatus,Y               ;; 02EE21 : B9 C8 14    ;
-                      BEQ CODE_02EE36                     ;; 02EE24 : F0 10       ;
+                      BEQ +                               ;; 02EE24 : F0 10       ;
                       LDA.W !SpriteNumber,Y               ;; 02EE26 : B9 9E 00    ;
                       CMP.B #$61                          ;; 02EE29 : C9 61       ;
-                      BNE CODE_02EE36                     ;; 02EE2B : D0 09       ;
+                      BNE +                               ;; 02EE2B : D0 09       ;
                       LDA.W !SpriteBlockedDirs,Y          ;; 02EE2D : B9 88 15    ;
                       AND.B #$0F                          ;; 02EE30 : 29 0F       ;
-                      BEQ CODE_02EE36                     ;; 02EE32 : F0 02       ;
+                      BEQ +                               ;; 02EE32 : F0 02       ;
                       STA.B !_0                           ;; 02EE34 : 85 00       ;
-CODE_02EE36:          DEY                                 ;; 02EE36 : 88          ;
+                    + DEY                                 ;; 02EE36 : 88          ;
                       BPL CODE_02EE21                     ;; 02EE37 : 10 E8       ;
                       LDA.W !SkullRaftSpeed               ;; 02EE39 : AD BC 18    ;
                       STA.B !SpriteXSpeed,X               ;; 02EE3C : 95 B6       ;
                       LDA.B !SpriteYSpeed,X               ;; 02EE3E : B5 AA       ;
                       CMP.B #$20                          ;; 02EE40 : C9 20       ;
-                      BMI CODE_02EE48                     ;; 02EE42 : 30 04       ;
+                      BMI +                               ;; 02EE42 : 30 04       ;
                       LDA.B #$20                          ;; 02EE44 : A9 20       ;
                       STA.B !SpriteYSpeed,X               ;; 02EE46 : 95 AA       ;
-CODE_02EE48:          JSL UpdateSpritePos                 ;; 02EE48 : 22 2A 80 01 ;
+                    + JSL UpdateSpritePos                 ;; 02EE48 : 22 2A 80 01 ;
                       LDA.W !SpriteBlockedDirs,X          ;; 02EE4C : BD 88 15    ; \ Branch if not on ground 
                       AND.B #$04                          ;; 02EE4F : 29 04       ;  | 
-                      BEQ CODE_02EE57                     ;; 02EE51 : F0 04       ; / 
+                      BEQ +                               ;; 02EE51 : F0 04       ; / 
                       LDA.B #$10                          ;; 02EE53 : A9 10       ;
                       STA.B !SpriteYSpeed,X               ;; 02EE55 : 95 AA       ;
-CODE_02EE57:          JSL MarioSprInteract                ;; 02EE57 : 22 DC A7 01 ;
+                    + JSL MarioSprInteract                ;; 02EE57 : 22 DC A7 01 ;
                       BCC Return02EEA8                    ;; 02EE5B : 90 4B       ;
                       LDA.B !PlayerYSpeed                 ;; 02EE5D : A5 7D       ;
                       BMI Return02EEA8                    ;; 02EE5F : 30 47       ;
@@ -13460,9 +13460,9 @@ CODE_02EE57:          JSL MarioSprInteract                ;; 02EE57 : 22 DC A7 0
                       STZ.B !PlayerInAir                  ;; 02EE75 : 64 72       ;
                       LDA.B #$1C                          ;; 02EE77 : A9 1C       ;
                       LDY.W !PlayerRidingYoshi            ;; 02EE79 : AC 7A 18    ;
-                      BEQ CODE_02EE80                     ;; 02EE7C : F0 02       ;
+                      BEQ +                               ;; 02EE7C : F0 02       ;
                       LDA.B #$2C                          ;; 02EE7E : A9 2C       ;
-CODE_02EE80:          STA.B !_1                           ;; 02EE80 : 85 01       ;
+                    + STA.B !_1                           ;; 02EE80 : 85 01       ;
                       LDA.B !SpriteYPosLow,X              ;; 02EE82 : B5 D8       ;
                       SEC                                 ;; 02EE84 : 38          ;
                       SBC.B !_1                           ;; 02EE85 : E5 01       ;
@@ -13475,9 +13475,9 @@ CODE_02EE80:          STA.B !_1                           ;; 02EE80 : 85 01     
                       BNE Return02EEA8                    ;; 02EE94 : D0 12       ;
                       LDY.B #$00                          ;; 02EE96 : A0 00       ;
                       LDA.W !SpriteXMovement              ;; 02EE98 : AD 91 14    ;
-                      BPL CODE_02EE9E                     ;; 02EE9B : 10 01       ;
+                      BPL +                               ;; 02EE9B : 10 01       ;
                       DEY                                 ;; 02EE9D : 88          ;
-CODE_02EE9E:          CLC                                 ;; 02EE9E : 18          ;
+                    + CLC                                 ;; 02EE9E : 18          ;
                       ADC.B !PlayerXPosNext               ;; 02EE9F : 65 94       ;
                       STA.B !PlayerXPosNext               ;; 02EEA1 : 85 94       ;
                       TYA                                 ;; 02EEA3 : 98          ;
@@ -13498,20 +13498,20 @@ DATA_02EEB1:          db $01,$FF                          ;; 02EEB1             
 DATA_02EEB3:          db $10,$F0                          ;; 02EEB3               ;
                                                           ;;                      ;
 ADDR_02EEB5:          LDA.B !SpriteTableC2,X              ;; 02EEB5 : B5 C2       ;
-                      BNE ADDR_02EEBE                     ;; 02EEB7 : D0 05       ;
+                      BNE +                               ;; 02EEB7 : D0 05       ;
                       INC.B !SpriteTableC2,X              ;; 02EEB9 : F6 C2       ;
                       STZ.W !GameCloudCoinCount           ;; 02EEBB : 9C E3 18    ;
-ADDR_02EEBE:          LDA.B !SpriteLock                   ;; 02EEBE : A5 9D       ;
+                    + LDA.B !SpriteLock                   ;; 02EEBE : A5 9D       ;
                       BNE ADDR_02EF1C                     ;; 02EEC0 : D0 5A       ;
                       LDA.B !EffFrame                     ;; 02EEC2 : A5 14       ;
                       AND.B #$7F                          ;; 02EEC4 : 29 7F       ;
-                      BNE ADDR_02EED5                     ;; 02EEC6 : D0 0D       ;
+                      BNE +                               ;; 02EEC6 : D0 0D       ;
                       LDA.W !SpriteMisc1570,X             ;; 02EEC8 : BD 70 15    ;
                       CMP.B #$0B                          ;; 02EECB : C9 0B       ;
-                      BCS ADDR_02EED5                     ;; 02EECD : B0 06       ;
+                      BCS +                               ;; 02EECD : B0 06       ;
                       INC.W !SpriteMisc1570,X             ;; 02EECF : FE 70 15    ;
                       JSR ADDR_02EF67                     ;; 02EED2 : 20 67 EF    ;
-ADDR_02EED5:          LDA.B !EffFrame                     ;; 02EED5 : A5 14       ;
+                    + LDA.B !EffFrame                     ;; 02EED5 : A5 14       ;
                       AND.B #$01                          ;; 02EED7 : 29 01       ;
                       BNE ADDR_02EF12                     ;; 02EED9 : D0 37       ;
                       LDA.B !SpriteYPosLow,X              ;; 02EEDB : B5 D8       ;
@@ -13527,14 +13527,14 @@ ADDR_02EED5:          LDA.B !EffFrame                     ;; 02EED5 : A5 14     
                       CMP.B !_2                           ;; 02EEF0 : C5 02       ;
                       SEP #$20                            ;; 02EEF2 : E2 20       ; Accum (8 bit) 
                       LDY.B #$00                          ;; 02EEF4 : A0 00       ;
-                      BCC ADDR_02EEF9                     ;; 02EEF6 : 90 01       ;
+                      BCC +                               ;; 02EEF6 : 90 01       ;
                       INY                                 ;; 02EEF8 : C8          ;
-ADDR_02EEF9:          LDA.W !SpriteMisc1570,X             ;; 02EEF9 : BD 70 15    ;
+                    + LDA.W !SpriteMisc1570,X             ;; 02EEF9 : BD 70 15    ;
                       CMP.B #$0B                          ;; 02EEFC : C9 0B       ;
-                      BCC ADDR_02EF05                     ;; 02EEFE : 90 05       ;
+                      BCC +                               ;; 02EEFE : 90 05       ;
                       JSR SubOffscreen0Bnk2               ;; 02EF00 : 20 25 D0    ;
                       LDY.B #$01                          ;; 02EF03 : A0 01       ;
-ADDR_02EF05:          LDA.B !SpriteYSpeed,X               ;; 02EF05 : B5 AA       ;
+                    + LDA.B !SpriteYSpeed,X               ;; 02EF05 : B5 AA       ;
                       CMP.W DATA_02EEB3,Y                 ;; 02EF07 : D9 B3 EE    ;
                       BEQ ADDR_02EF12                     ;; 02EF0A : F0 06       ;
                       CLC                                 ;; 02EF0C : 18          ;
@@ -13652,7 +13652,7 @@ WigglerInit:          PHB                                 ;; ?QPWZ? : 8B        
                       PLB                                 ;; 02EFF4 : AB          ;
                       JSR CODE_02F011                     ;; 02EFF5 : 20 11 F0    ;
                       LDY.B #$7E                          ;; 02EFF8 : A0 7E       ;
-CODE_02EFFA:          LDA.B !SpriteXPosLow,X              ;; 02EFFA : B5 E4       ;
+                    - LDA.B !SpriteXPosLow,X              ;; 02EFFA : B5 E4       ;
                       STA.B [!WigglerSegmentPtr],Y        ;; 02EFFC : 97 D5       ;
                       LDA.B !SpriteYPosLow,X              ;; 02EFFE : B5 D8       ;
                       INY                                 ;; 02F000 : C8          ;
@@ -13660,7 +13660,7 @@ CODE_02EFFA:          LDA.B !SpriteXPosLow,X              ;; 02EFFA : B5 E4     
                       DEY                                 ;; 02F003 : 88          ;
                       DEY                                 ;; 02F004 : 88          ;
                       DEY                                 ;; 02F005 : 88          ;
-                      BPL CODE_02EFFA                     ;; 02F006 : 10 F2       ;
+                      BPL -                               ;; 02F006 : 10 F2       ;
                       JSR CODE_02D4FA                     ;; 02F008 : 20 FA D4    ;
                       TYA                                 ;; 02F00B : 98          ;
                       STA.W !SpriteMisc157C,X             ;; 02F00C : 9D 7C 15    ;
@@ -13693,19 +13693,19 @@ WigglerSpeed:         db $08,$F8,$10,$F0                  ;; ?QPWZ?             
                                                           ;;                      ;
 WigglerMainRt:        JSR CODE_02F011                     ;; ?QPWZ? : 20 11 F0    ;
                       LDA.B !SpriteLock                   ;; 02F038 : A5 9D       ;
-                      BEQ CODE_02F03F                     ;; 02F03A : F0 03       ;
+                      BEQ +                               ;; 02F03A : F0 03       ;
                       JMP CODE_02F0D8                     ;; 02F03C : 4C D8 F0    ;
                                                           ;;                      ;
-CODE_02F03F:          JSL SprSprInteract                  ;; 02F03F : 22 32 80 01 ;
+                    + JSL SprSprInteract                  ;; 02F03F : 22 32 80 01 ;
                       LDA.W !SpriteMisc1540,X             ;; 02F043 : BD 40 15    ;
                       BEQ CODE_02F061                     ;; 02F046 : F0 19       ;
                       CMP.B #$01                          ;; 02F048 : C9 01       ;
                       BNE CODE_02F050                     ;; 02F04A : D0 04       ;
                       LDA.B #$08                          ;; 02F04C : A9 08       ;
-                      BRA CODE_02F052                     ;; 02F04E : 80 02       ;
+                      BRA +                               ;; 02F04E : 80 02       ;
                                                           ;;                      ;
 CODE_02F050:          AND.B #$0E                          ;; 02F050 : 29 0E       ;
-CODE_02F052:          STA.B !_0                           ;; 02F052 : 85 00       ;
+                    + STA.B !_0                           ;; 02F052 : 85 00       ;
                       LDA.W !SpriteOBJAttribute,X         ;; 02F054 : BD F6 15    ;
                       AND.B #$F1                          ;; 02F057 : 29 F1       ;
                       ORA.B !_0                           ;; 02F059 : 05 00       ;
@@ -13717,21 +13717,21 @@ CODE_02F061:          JSR UpdateXPosNoGrvty               ;; 02F061 : 20 88 D2  
                       JSR SubOffscreen0Bnk2               ;; 02F067 : 20 25 D0    ;
                       INC.W !SpriteMisc1570,X             ;; 02F06A : FE 70 15    ;
                       LDA.W !SpriteMisc151C,X             ;; 02F06D : BD 1C 15    ;
-                      BEQ CODE_02F086                     ;; 02F070 : F0 14       ;
+                      BEQ +                               ;; 02F070 : F0 14       ;
                       INC.W !SpriteMisc1570,X             ;; 02F072 : FE 70 15    ;
                       INC.W !SpriteMisc1534,X             ;; 02F075 : FE 34 15    ;
                       LDA.W !SpriteMisc1534,X             ;; 02F078 : BD 34 15    ;
                       AND.B #$3F                          ;; 02F07B : 29 3F       ;
-                      BNE CODE_02F086                     ;; 02F07D : D0 07       ;
+                      BNE +                               ;; 02F07D : D0 07       ;
                       JSR CODE_02D4FA                     ;; 02F07F : 20 FA D4    ;
                       TYA                                 ;; 02F082 : 98          ;
                       STA.W !SpriteMisc157C,X             ;; 02F083 : 9D 7C 15    ;
-CODE_02F086:          LDY.W !SpriteMisc157C,X             ;; 02F086 : BC 7C 15    ;
+                    + LDY.W !SpriteMisc157C,X             ;; 02F086 : BC 7C 15    ;
                       LDA.W !SpriteMisc151C,X             ;; 02F089 : BD 1C 15    ;
-                      BEQ CODE_02F090                     ;; 02F08C : F0 02       ;
+                      BEQ +                               ;; 02F08C : F0 02       ;
                       INY                                 ;; 02F08E : C8          ;
                       INY                                 ;; 02F08F : C8          ;
-CODE_02F090:          LDA.W WigglerSpeed,Y                ;; 02F090 : B9 31 F0    ;
+                    + LDA.W WigglerSpeed,Y                ;; 02F090 : B9 31 F0    ;
                       STA.B !SpriteXSpeed,X               ;; 02F093 : 95 B6       ;
                       INC.B !SpriteYSpeed,X               ;; 02F095 : F6 AA       ;
                       JSL CODE_019138                     ;; 02F097 : 22 38 91 01 ;
@@ -13742,17 +13742,17 @@ CODE_02F090:          LDA.W WigglerSpeed,Y                ;; 02F090 : B9 31 F0  
                       AND.B #$04                          ;; 02F0A5 : 29 04       ;  | 
                       BEQ CODE_02F0AE                     ;; 02F0A7 : F0 05       ; / 
                       JSR CODE_02FFD1                     ;; 02F0A9 : 20 D1 FF    ;
-                      BRA CODE_02F0C3                     ;; 02F0AC : 80 15       ;
+                      BRA +                               ;; 02F0AC : 80 15       ;
                                                           ;;                      ;
 CODE_02F0AE:          LDA.W !SpriteMisc15AC,X             ;; 02F0AE : BD AC 15    ;
-                      BNE CODE_02F0C3                     ;; 02F0B1 : D0 10       ;
+                      BNE +                               ;; 02F0B1 : D0 10       ;
                       LDA.W !SpriteMisc157C,X             ;; 02F0B3 : BD 7C 15    ;
                       EOR.B #$01                          ;; 02F0B6 : 49 01       ;
                       STA.W !SpriteMisc157C,X             ;; 02F0B8 : 9D 7C 15    ;
                       STZ.W !SpriteMisc1602,X             ;; 02F0BB : 9E 02 16    ;
                       LDA.B #$08                          ;; 02F0BE : A9 08       ;
                       STA.W !SpriteMisc15AC,X             ;; 02F0C0 : 9D AC 15    ;
-CODE_02F0C3:          JSR CODE_02F0DB                     ;; 02F0C3 : 20 DB F0    ;
+                    + JSR CODE_02F0DB                     ;; 02F0C3 : 20 DB F0    ;
                       LDA.W !SpriteMisc1602,X             ;; 02F0C6 : BD 02 16    ;
                       INC.W !SpriteMisc1602,X             ;; 02F0C9 : FE 02 16    ;
                       AND.B #$07                          ;; 02F0CC : 29 07       ;
@@ -13825,12 +13825,12 @@ CODE_02F12D:          PHX                                 ;; 02F12D : DA        
                       PHY                                 ;; 02F140 : 5A          ;
                       LDY.W DATA_02F103,X                 ;; 02F141 : BC 03 F1    ;
                       LDA.B !_8                           ;; 02F144 : A5 08       ;
-                      BEQ CODE_02F14D                     ;; 02F146 : F0 05       ;
+                      BEQ +                               ;; 02F146 : F0 05       ;
                       TYA                                 ;; 02F148 : 98          ;
                       LSR A                               ;; 02F149 : 4A          ;
                       AND.B #$FE                          ;; 02F14A : 29 FE       ;
                       TAY                                 ;; 02F14C : A8          ;
-CODE_02F14D:          STY.B !_9                           ;; 02F14D : 84 09       ;
+                    + STY.B !_9                           ;; 02F14D : 84 09       ;
                       LDA.B [!WigglerSegmentPtr],Y        ;; 02F14F : B7 D5       ;
                       PLY                                 ;; 02F151 : 7A          ;
                       SEC                                 ;; 02F152 : 38          ;
@@ -13851,17 +13851,17 @@ CODE_02F14D:          STY.B !_9                           ;; 02F14D : 84 09     
                       PHX                                 ;; 02F16C : DA          ;
                       LDA.B #$8C                          ;; 02F16D : A9 8C       ;
                       CPX.B #$00                          ;; 02F16F : E0 00       ;
-                      BEQ CODE_02F178                     ;; 02F171 : F0 05       ;
+                      BEQ +                               ;; 02F171 : F0 05       ;
                       LDX.B !_6                           ;; 02F173 : A6 06       ;
                       LDA.W WigglerTiles,X                ;; 02F175 : BD 0C F1    ;
-CODE_02F178:          STA.W !OAMTileNo+$100,Y             ;; 02F178 : 99 02 03    ;
+                    + STA.W !OAMTileNo+$100,Y             ;; 02F178 : 99 02 03    ;
                       PLX                                 ;; 02F17B : FA          ;
                       LDA.B !_7                           ;; 02F17C : A5 07       ;
                       ORA.B !SpriteProperties             ;; 02F17E : 05 64       ;
                       LSR.B !_2                           ;; 02F180 : 46 02       ;
-                      BCS CODE_02F186                     ;; 02F182 : B0 02       ;
+                      BCS +                               ;; 02F182 : B0 02       ;
                       ORA.B #$40                          ;; 02F184 : 09 40       ;
-CODE_02F186:          STA.W !OAMTileAttr+$100,Y           ;; 02F186 : 99 03 03    ;
+                    + STA.W !OAMTileAttr+$100,Y           ;; 02F186 : 99 03 03    ;
                       PHY                                 ;; 02F189 : 5A          ;
                       TYA                                 ;; 02F18A : 98          ;
                       LSR A                               ;; 02F18B : 4A          ;
@@ -13894,7 +13894,7 @@ CODE_02F186:          STA.W !OAMTileAttr+$100,Y           ;; 02F186 : 99 03 03  
                       LDA.B #$88                          ;; 02F1BD : A9 88       ;
                       STA.W !OAMTileNo+$100,Y             ;; 02F1BF : 99 02 03    ;
                       LDA.W !OAMTileAttr+$104,Y           ;; 02F1C2 : B9 07 03    ;
-                      BRA CODE_02F1EF                     ;; 02F1C5 : 80 28       ;
+                      BRA +                               ;; 02F1C5 : 80 28       ;
                                                           ;;                      ;
 CODE_02F1C7:          PHX                                 ;; 02F1C7 : DA          ;
                       LDY.W !SpriteOAMIndex,X             ;; 02F1C8 : BC EA 15    ; Y = Index into sprite OAM 
@@ -13914,7 +13914,7 @@ CODE_02F1C7:          PHX                                 ;; 02F1C7 : DA        
                       LDA.W !OAMTileAttr+$104,Y           ;; 02F1E8 : B9 07 03    ;
                       AND.B #$F1                          ;; 02F1EB : 29 F1       ;
                       ORA.B #$0A                          ;; 02F1ED : 09 0A       ;
-CODE_02F1EF:          STA.W !OAMTileAttr+$100,Y           ;; 02F1EF : 99 03 03    ;
+                    + STA.W !OAMTileAttr+$100,Y           ;; 02F1EF : 99 03 03    ;
                       TYA                                 ;; 02F1F2 : 98          ;
                       LSR A                               ;; 02F1F3 : 4A          ;
                       LSR A                               ;; 02F1F4 : 4A          ;
@@ -13955,9 +13955,9 @@ CODE_02F22B:          LDA.W !OAMTileXPos+$104,Y           ;; 02F22B : B9 04 03  
                       SBC.B #$10                          ;; 02F23D : E9 10       ;
                       PHY                                 ;; 02F23F : 5A          ;
                       LDY.W !PlayerRidingYoshi            ;; 02F240 : AC 7A 18    ;
-                      BEQ CODE_02F247                     ;; 02F243 : F0 02       ;
+                      BEQ +                               ;; 02F243 : F0 02       ;
                       SBC.B #$10                          ;; 02F245 : E9 10       ;
-CODE_02F247:          PLY                                 ;; 02F247 : 7A          ;
+                    + PLY                                 ;; 02F247 : 7A          ;
                       CLC                                 ;; 02F248 : 18          ;
                       ADC.B #$0C                          ;; 02F249 : 69 0C       ;
                       CMP.B #$18                          ;; 02F24B : C9 18       ;
@@ -14002,26 +14002,26 @@ ADDR_02F29D:          LDA.B #$02                          ;; 02F29D : A9 02     
                       INC.W !StarKillCounter              ;; 02F2A6 : EE D2 18    ;
                       LDA.W !StarKillCounter              ;; 02F2A9 : AD D2 18    ;
                       CMP.B #$09                          ;; 02F2AC : C9 09       ;
-                      BCC ADDR_02F2B5                     ;; 02F2AE : 90 05       ;
+                      BCC +                               ;; 02F2AE : 90 05       ;
                       LDA.B #$09                          ;; 02F2B0 : A9 09       ;
                       STA.W !StarKillCounter              ;; 02F2B2 : 8D D2 18    ;
-ADDR_02F2B5:          JSL GivePoints                      ;; 02F2B5 : 22 E5 AC 02 ;
+                    + JSL GivePoints                      ;; 02F2B5 : 22 E5 AC 02 ;
                       LDY.W !StarKillCounter              ;; 02F2B9 : AC D2 18    ;
                       CPY.B #$08                          ;; 02F2BC : C0 08       ;
-                      BCS Return02F2C6                    ;; 02F2BE : B0 06       ;
+                      BCS +                               ;; 02F2BE : B0 06       ;
                       LDA.W DATA_02D57F,Y                 ;; 02F2C0 : B9 7F D5    ; \ Play sound effect 
                       STA.W !SPCIO0                       ;; 02F2C3 : 8D F9 1D    ; / 
-Return02F2C6:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02F2C7:          INY                                 ;; 02F2C7 : C8          ;
                       INY                                 ;; 02F2C8 : C8          ;
                       INY                                 ;; 02F2C9 : C8          ;
                       INY                                 ;; 02F2CA : C8          ;
                       DEC.B !_0                           ;; 02F2CB : C6 00       ;
-                      BMI Return02F2D2                    ;; 02F2CD : 30 03       ;
+                      BMI +                               ;; 02F2CD : 30 03       ;
                       JMP CODE_02F22B                     ;; 02F2CF : 4C 2B F2    ;
                                                           ;;                      ;
-Return02F2D2:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02F2D3:          db $00,$08                          ;; 02F2D3               ;
@@ -14063,10 +14063,10 @@ BirdsMain:            PHB                                 ;; ?QPWZ? : 8B        
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_02F317:          LDA.W !SpriteMisc15AC,X             ;; 02F317 : BD AC 15    ;
-                      BEQ CODE_02F321                     ;; 02F31A : F0 05       ;
+                      BEQ +                               ;; 02F31A : F0 05       ;
                       LDA.B #$04                          ;; 02F31C : A9 04       ;
                       STA.W !SpriteMisc1602,X             ;; 02F31E : 9D 02 16    ;
-CODE_02F321:          JSR CODE_02F3EA                     ;; 02F321 : 20 EA F3    ;
+                    + JSR CODE_02F3EA                     ;; 02F321 : 20 EA F3    ;
                       JSR UpdateXPosNoGrvty               ;; 02F324 : 20 88 D2    ;
                       JSR UpdateYPosNoGrvty               ;; 02F327 : 20 94 D2    ;
                       LDA.B !SpriteYSpeed,X               ;; 02F32A : B5 AA       ;
@@ -14105,11 +14105,11 @@ CODE_02F342:          LDY.W !SpriteMisc157C,X             ;; 02F342 : BC 7C 15  
                       CMP.B #$60                          ;; 02F364 : C9 60       ;
                       BCC CODE_02F381                     ;; 02F366 : 90 19       ;
                       LDA.W !SpriteMisc1570,X             ;; 02F368 : BD 70 15    ;
-                      BEQ CODE_02F371                     ;; 02F36B : F0 04       ;
+                      BEQ +                               ;; 02F36B : F0 04       ;
                       DEC.W !SpriteMisc1570,X             ;; 02F36D : DE 70 15    ;
 Return02F370:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02F371:          INC.B !SpriteTableC2,X              ;; 02F371 : F6 C2       ;
+                    + INC.B !SpriteTableC2,X              ;; 02F371 : F6 C2       ;
                       JSL GetRand                         ;; 02F373 : 22 F9 AC 01 ;
                       AND.B #$03                          ;; 02F377 : 29 03       ;
                       TAY                                 ;; 02F379 : A8          ;
@@ -14118,11 +14118,11 @@ CODE_02F371:          INC.B !SpriteTableC2,X              ;; 02F371 : F6 C2     
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02F381:          LDA.W !SpriteMisc154C,X             ;; 02F381 : BD 4C 15    ;
-                      BNE Return02F38E                    ;; 02F384 : D0 08       ;
+                      BNE +                               ;; 02F384 : D0 08       ;
                       JSR CODE_02F3C1                     ;; 02F386 : 20 C1 F3    ;
                       LDA.B #$10                          ;; 02F389 : A9 10       ;
                       STA.W !SpriteMisc154C,X             ;; 02F38B : 9D 4C 15    ;
-Return02F38E:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02F38F:          STZ.B !SpriteYSpeed,X               ;; 02F38F : 74 AA       ; Sprite Y Speed = 0 
                       STZ.B !SpriteXSpeed,X               ;; 02F391 : 74 B6       ; Sprite X Speed = 0 
@@ -14130,12 +14130,12 @@ CODE_02F38F:          STZ.B !SpriteYSpeed,X               ;; 02F38F : 74 AA     
                       LDA.W !SpriteMisc1540,X             ;; 02F396 : BD 40 15    ;
                       BEQ CODE_02F3A3                     ;; 02F399 : F0 08       ;
                       CMP.B #$08                          ;; 02F39B : C9 08       ;
-                      BCS Return02F3A2                    ;; 02F39D : B0 03       ;
+                      BCS +                               ;; 02F39D : B0 03       ;
                       INC.W !SpriteMisc1602,X             ;; 02F39F : FE 02 16    ;
-Return02F3A2:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02F3A3:          LDA.W !SpriteMisc1570,X             ;; 02F3A3 : BD 70 15    ;
-                      BEQ CODE_02F3B7                     ;; 02F3A6 : F0 0F       ;
+                      BEQ +                               ;; 02F3A6 : F0 0F       ;
                       DEC.W !SpriteMisc1570,X             ;; 02F3A8 : DE 70 15    ;
                       JSL GetRand                         ;; 02F3AB : 22 F9 AC 01 ;
                       AND.B #$1F                          ;; 02F3AF : 29 1F       ;
@@ -14143,16 +14143,16 @@ CODE_02F3A3:          LDA.W !SpriteMisc1570,X             ;; 02F3A3 : BD 70 15  
                       STA.W !SpriteMisc1540,X             ;; 02F3B3 : 9D 40 15    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02F3B7:          STZ.B !SpriteTableC2,X              ;; 02F3B7 : 74 C2       ;
+                    + STZ.B !SpriteTableC2,X              ;; 02F3B7 : 74 C2       ;
                       JSL GetRand                         ;; 02F3B9 : 22 F9 AC 01 ;
                       AND.B #$01                          ;; 02F3BD : 29 01       ;
-                      BNE CODE_02F3CE                     ;; 02F3BF : D0 0D       ;
+                      BNE +                               ;; 02F3BF : D0 0D       ;
 CODE_02F3C1:          LDA.W !SpriteMisc157C,X             ;; 02F3C1 : BD 7C 15    ;
                       EOR.B #$01                          ;; 02F3C4 : 49 01       ;
                       STA.W !SpriteMisc157C,X             ;; 02F3C6 : 9D 7C 15    ;
                       LDA.B #$0A                          ;; 02F3C9 : A9 0A       ;
                       STA.W !SpriteMisc15AC,X             ;; 02F3CB : 9D AC 15    ;
-CODE_02F3CE:          JSL GetRand                         ;; 02F3CE : 22 F9 AC 01 ;
+                    + JSL GetRand                         ;; 02F3CE : 22 F9 AC 01 ;
                       AND.B #$03                          ;; 02F3D2 : 29 03       ;
                       CLC                                 ;; 02F3D4 : 18          ;
                       ADC.B #$02                          ;; 02F3D5 : 69 02       ;
@@ -14215,23 +14215,23 @@ CODE_02F434:          INC.W !SpriteMisc1570,X             ;; 02F434 : FE 70 15  
                       LDY.B #$04                          ;; 02F437 : A0 04       ;
                       LDA.W !SpriteMisc1570,X             ;; 02F439 : BD 70 15    ;
                       AND.B #$40                          ;; 02F43C : 29 40       ;
-                      BEQ CODE_02F442                     ;; 02F43E : F0 02       ;
+                      BEQ +                               ;; 02F43E : F0 02       ;
                       LDY.B #$FE                          ;; 02F440 : A0 FE       ;
-CODE_02F442:          STY.B !SpriteXSpeed,X               ;; 02F442 : 94 B6       ;
+                    + STY.B !SpriteXSpeed,X               ;; 02F442 : 94 B6       ;
                       LDA.B #$FC                          ;; 02F444 : A9 FC       ;
                       STA.B !SpriteYSpeed,X               ;; 02F446 : 95 AA       ;
                       JSR UpdateYPosNoGrvty               ;; 02F448 : 20 94 D2    ;
                       LDA.W !SpriteMisc1540,X             ;; 02F44B : BD 40 15    ;
-                      BNE CODE_02F453                     ;; 02F44E : D0 03       ;
+                      BNE +                               ;; 02F44E : D0 03       ;
                       JSR UpdateXPosNoGrvty               ;; 02F450 : 20 88 D2    ;
-CODE_02F453:          JSR CODE_02F47C                     ;; 02F453 : 20 7C F4    ;
+                    + JSR CODE_02F47C                     ;; 02F453 : 20 7C F4    ;
                       LDA.B !SpriteYPosLow,X              ;; 02F456 : B5 D8       ;
                       SEC                                 ;; 02F458 : 38          ;
                       SBC.B !Layer1YPos                   ;; 02F459 : E5 1C       ;
                       CMP.B #$F0                          ;; 02F45B : C9 F0       ;
-                      BNE Return02F462                    ;; 02F45D : D0 03       ;
+                      BNE +                               ;; 02F45D : D0 03       ;
                       STZ.W !SpriteStatus,X               ;; 02F45F : 9E C8 14    ;
-Return02F462:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02F463:          db $03,$04,$05,$04,$05,$06,$05,$06  ;; 02F463               ;
@@ -14241,9 +14241,9 @@ DATA_02F463:          db $03,$04,$05,$04,$05,$06,$05,$06  ;; 02F463             
                                                           ;;                      ;
 CODE_02F47C:          LDA.B !EffFrame                     ;; 02F47C : A5 14       ;
                       AND.B #$0F                          ;; 02F47E : 29 0F       ;
-                      BNE CODE_02F485                     ;; 02F480 : D0 03       ;
+                      BNE +                               ;; 02F480 : D0 03       ;
                       INC.W !SpriteMisc151C,X             ;; 02F482 : FE 1C 15    ;
-CODE_02F485:          LDY.W !SpriteMisc151C,X             ;; 02F485 : BC 1C 15    ;
+                    + LDY.W !SpriteMisc151C,X             ;; 02F485 : BC 1C 15    ;
                       LDA.W DATA_02F463,Y                 ;; 02F488 : B9 63 F4    ;
                       STA.B !_0                           ;; 02F48B : 85 00       ;
                       LDY.W !SpriteOAMIndex,X             ;; 02F48D : BC EA 15    ; Y = Index into sprite OAM 
@@ -14290,10 +14290,10 @@ CODE_02F4D5:          LDA.B #$01                          ;; 02F4D5 : A9 01     
                       STA.W !SideExitEnabled              ;; 02F4D7 : 8D 96 1B    ;
                       LDA.B !SpriteXPosLow,X              ;; 02F4DA : B5 E4       ;
                       AND.B #$10                          ;; 02F4DC : 29 10       ;
-                      BNE Return02F4E6                    ;; 02F4DE : D0 06       ;
+                      BNE +                               ;; 02F4DE : D0 06       ;
                       JSR CODE_02F4EB                     ;; 02F4E0 : 20 EB F4    ;
                       JSR CODE_02F53E                     ;; 02F4E3 : 20 3E F5    ;
-Return02F4E6:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02F4E7:          db $D4,$AB                          ;; 02F4E7               ;
@@ -14313,14 +14313,14 @@ CODE_02F4EB:          LDA.W !SpriteOAMIndex,X             ;; 02F4EB : BD EA 15  
                       STA.W !OAMTileYPos+$104,Y           ;; 02F501 : 99 05 03    ;
                       LDA.B !TrueFrame                    ;; 02F504 : A5 13       ;
                       AND.B #$03                          ;; 02F506 : 29 03       ;
-                      BNE CODE_02F516                     ;; 02F508 : D0 0C       ;
+                      BNE +                               ;; 02F508 : D0 0C       ;
                       PHY                                 ;; 02F50A : 5A          ;
                       JSL GetRand                         ;; 02F50B : 22 F9 AC 01 ;
                       PLY                                 ;; 02F50F : 7A          ;
                       AND.B #$03                          ;; 02F510 : 29 03       ;
-                      BNE CODE_02F516                     ;; 02F512 : D0 02       ;
+                      BNE +                               ;; 02F512 : D0 02       ;
                       INC.B !SpriteTableC2,X              ;; 02F514 : F6 C2       ;
-CODE_02F516:          PHX                                 ;; 02F516 : DA          ;
+                    + PHX                                 ;; 02F516 : DA          ;
                       LDA.B !SpriteTableC2,X              ;; 02F517 : B5 C2       ;
                       AND.B #$01                          ;; 02F519 : 29 01       ;
                       TAX                                 ;; 02F51B : AA          ;
@@ -14343,9 +14343,9 @@ CODE_02F516:          PHX                                 ;; 02F516 : DA        
                                                           ;;                      ;
 CODE_02F53E:          LDA.B !EffFrame                     ;; 02F53E : A5 14       ;
                       AND.B #$3F                          ;; 02F540 : 29 3F       ;
-                      BNE Return02F547                    ;; 02F542 : D0 03       ;
+                      BNE +                               ;; 02F542 : D0 03       ;
                       JSR CODE_02F548                     ;; 02F544 : 20 48 F5    ;
-Return02F547:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02F548:          LDY.B #$09                          ;; 02F548 : A0 09       ;
 CODE_02F54A:          LDA.W !SpriteStatus,Y               ;; 02F54A : B9 C8 14    ;
@@ -14432,9 +14432,9 @@ CODE_02F5DA:          STZ.B !_2                           ;; 02F5DA : 64 02     
                       STA.B !_0                           ;; 02F5E2 : 85 00       ;
                       LDA.W DATA_02F5A8,X                 ;; 02F5E4 : BD A8 F5    ;
                       SBC.B !Layer1XPos+1                 ;; 02F5E7 : E5 1B       ;
-                      BEQ CODE_02F5ED                     ;; 02F5E9 : F0 02       ;
+                      BEQ +                               ;; 02F5E9 : F0 02       ;
                       INC.B !_2                           ;; 02F5EB : E6 02       ;
-CODE_02F5ED:          LDA.B !_0                           ;; 02F5ED : A5 00       ;
+                    + LDA.B !_0                           ;; 02F5ED : A5 00       ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02F5EF : 99 00 03    ;
                       LDA.W DATA_02F5B2,X                 ;; 02F5F2 : BD B2 F5    ;
                       STA.W !OAMTileYPos+$100,Y           ;; 02F5F5 : 99 01 03    ;
@@ -14467,7 +14467,7 @@ DATA_02F631:          db $A9,$69,$A9,$69,$29,$29,$29,$6B  ;; 02F631             
                                                           ;;                      ;
 ADDR_02F639:          LDX.B #$07                          ;; 02F639 : A2 07       ;
                       LDY.B #$B0                          ;; 02F63B : A0 B0       ;
-ADDR_02F63D:          LDA.B #$C0                          ;; 02F63D : A9 C0       ;
+                    - LDA.B #$C0                          ;; 02F63D : A9 C0       ;
                       CLC                                 ;; 02F63F : 18          ;
                       ADC.W DATA_02F619,X                 ;; 02F640 : 7D 19 F6    ;
                       STA.W !OAMTileXPos+$100,Y           ;; 02F643 : 99 00 03    ;
@@ -14492,21 +14492,21 @@ ADDR_02F63D:          LDA.B #$C0                          ;; 02F63D : A9 C0     
                       INY                                 ;; 02F668 : C8          ;
                       INY                                 ;; 02F669 : C8          ;
                       DEX                                 ;; 02F66A : CA          ;
-                      BPL ADDR_02F63D                     ;; 02F66B : 10 D0       ;
+                      BPL -                               ;; 02F66B : 10 D0       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02F66E:          LDA.W !NoYoshiIntroTimer            ;; 02F66E : AD D9 18    ;
-                      BEQ CODE_02F676                     ;; 02F671 : F0 03       ;
+                      BEQ +                               ;; 02F671 : F0 03       ;
                       DEC.W !NoYoshiIntroTimer            ;; 02F673 : CE D9 18    ;
-CODE_02F676:          CMP.B #$B0                          ;; 02F676 : C9 B0       ;
-                      BNE CODE_02F67F                     ;; 02F678 : D0 05       ;
+                    + CMP.B #$B0                          ;; 02F676 : C9 B0       ;
+                      BNE +                               ;; 02F678 : D0 05       ;
                       LDY.B #$0F                          ;; 02F67A : A0 0F       ; \ Play sound effect 
                       STY.W !SPCIO3                       ;; 02F67C : 8C FC 1D    ; / 
-CODE_02F67F:          CMP.B #$01                          ;; 02F67F : C9 01       ;
-                      BNE CODE_02F688                     ;; 02F681 : D0 05       ;
+                    + CMP.B #$01                          ;; 02F67F : C9 01       ;
+                      BNE +                               ;; 02F681 : D0 05       ;
                       LDY.B #$10                          ;; 02F683 : A0 10       ; \ Play sound effect 
                       STY.W !SPCIO3                       ;; 02F685 : 8C FC 1D    ; / 
-CODE_02F688:          CMP.B #$30                          ;; 02F688 : C9 30       ;
+                    + CMP.B #$30                          ;; 02F688 : C9 30       ;
                       BCC CODE_02F69A                     ;; 02F68A : 90 0E       ;
                       CMP.B #$81                          ;; 02F68C : C9 81       ;
                       BCC CODE_02F698                     ;; 02F68E : 90 08       ;
@@ -14530,7 +14530,7 @@ DATA_02F6AC:          db $00,$00,$00,$10,$10,$10,$20,$20  ;; 02F6AC             
                                                           ;;                      ;
 CODE_02F6B8:          LDX.B #$0B                          ;; 02F6B8 : A2 0B       ;
                       LDY.B #$B0                          ;; 02F6BA : A0 B0       ;
-CODE_02F6BC:          LDA.B #$B8                          ;; 02F6BC : A9 B8       ;
+                    - LDA.B #$B8                          ;; 02F6BC : A9 B8       ;
                       CLC                                 ;; 02F6BE : 18          ;
                       ADC.W DATA_02F6A0,X                 ;; 02F6BF : 7D A0 F6    ;
                       STA.W !OAMTileXPos,Y                ;; 02F6C2 : 99 00 02    ;
@@ -14559,7 +14559,7 @@ CODE_02F6BC:          LDA.B #$B8                          ;; 02F6BC : A9 B8     
                       INY                                 ;; 02F6EB : C8          ;
                       INY                                 ;; 02F6EC : C8          ;
                       DEX                                 ;; 02F6ED : CA          ;
-                      BPL CODE_02F6BC                     ;; 02F6EE : 10 CC       ;
+                      BPL -                               ;; 02F6EE : 10 CC       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -14578,17 +14578,17 @@ DATA_02F749:          db $00,$01,$02,$03,$03,$03,$03,$03  ;; 02F749             
                       db $03,$03,$03,$03,$03,$02,$01,$00  ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_02F759:          LDA.W !NoYoshiIntroTimer            ;; 02F759 : AD D9 18    ;
-                      BEQ CODE_02F761                     ;; 02F75C : F0 03       ;
+                      BEQ +                               ;; 02F75C : F0 03       ;
                       DEC.W !NoYoshiIntroTimer            ;; 02F75E : CE D9 18    ;
-CODE_02F761:          CMP.B #$76                          ;; 02F761 : C9 76       ;
-                      BNE CODE_02F76A                     ;; 02F763 : D0 05       ;
+                    + CMP.B #$76                          ;; 02F761 : C9 76       ;
+                      BNE +                               ;; 02F763 : D0 05       ;
                       LDY.B #$0F                          ;; 02F765 : A0 0F       ; \ Play sound effect 
                       STY.W !SPCIO3                       ;; 02F767 : 8C FC 1D    ; / 
-CODE_02F76A:          CMP.B #$08                          ;; 02F76A : C9 08       ;
-                      BNE CODE_02F773                     ;; 02F76C : D0 05       ;
+                    + CMP.B #$08                          ;; 02F76A : C9 08       ;
+                      BNE +                               ;; 02F76C : D0 05       ;
                       LDY.B #$10                          ;; 02F76E : A0 10       ; \ Play sound effect 
                       STY.W !SPCIO3                       ;; 02F770 : 8C FC 1D    ; / 
-CODE_02F773:          LSR A                               ;; 02F773 : 4A          ;
+                    + LSR A                               ;; 02F773 : 4A          ;
                       LSR A                               ;; 02F774 : 4A          ;
                       LSR A                               ;; 02F775 : 4A          ;
                       TAY                                 ;; 02F776 : A8          ;
@@ -14628,9 +14628,9 @@ CODE_02F78C:          STX.B !_2                           ;; 02F78C : 86 02     
                       LDA.B !_3                           ;; 02F7B7 : A5 03       ;
                       CMP.B #$03                          ;; 02F7B9 : C9 03       ;
                       LDA.W DATA_02F719,X                 ;; 02F7BB : BD 19 F7    ;
-                      BCC CODE_02F7C2                     ;; 02F7BE : 90 02       ;
+                      BCC +                               ;; 02F7BE : 90 02       ;
                       EOR.B #$40                          ;; 02F7C0 : 49 40       ;
-CODE_02F7C2:          STA.W !OAMTileAttr+$100,Y           ;; 02F7C2 : 99 03 03    ;
+                    + STA.W !OAMTileAttr+$100,Y           ;; 02F7C2 : 99 03 03    ;
                       TYA                                 ;; 02F7C5 : 98          ;
                       LSR A                               ;; 02F7C6 : 4A          ;
                       LSR A                               ;; 02F7C7 : 4A          ;
@@ -14653,9 +14653,9 @@ CODE_02F7D0:          LDA.B !_0                           ;; 02F7D0 : A5 00     
                       LDA.B !_3                           ;; 02F7EA : A5 03       ;
                       CMP.B #$03                          ;; 02F7EC : C9 03       ;
                       LDA.W DATA_02F719,X                 ;; 02F7EE : BD 19 F7    ;
-                      BCC CODE_02F7F5                     ;; 02F7F1 : 90 02       ;
+                      BCC +                               ;; 02F7F1 : 90 02       ;
                       EOR.B #$40                          ;; 02F7F3 : 49 40       ;
-CODE_02F7F5:          STA.W !OAMTileAttr,Y                ;; 02F7F5 : 99 03 02    ;
+                    + STA.W !OAMTileAttr,Y                ;; 02F7F5 : 99 03 02    ;
                       TYA                                 ;; 02F7F8 : 98          ;
                       LSR A                               ;; 02F7F9 : 4A          ;
                       LSR A                               ;; 02F7FA : 4A          ;
@@ -14663,10 +14663,10 @@ CODE_02F7F5:          STA.W !OAMTileAttr,Y                ;; 02F7F5 : 99 03 02  
                       LDA.B #$02                          ;; 02F7FC : A9 02       ;
                       STA.W !OAMTileSize,Y                ;; 02F7FE : 99 20 04    ;
 CODE_02F801:          DEX                                 ;; 02F801 : CA          ;
-                      BMI Return02F807                    ;; 02F802 : 30 03       ;
+                      BMI +                               ;; 02F802 : 30 03       ;
                       JMP CODE_02F78C                     ;; 02F804 : 4C 8C F7    ;
                                                           ;;                      ;
-Return02F807:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02F808:          PHB                                 ;; 02F808 : 8B          ; Wrapper 
                       PHK                                 ;; 02F809 : 4B          ;
@@ -14678,9 +14678,9 @@ CODE_02F808:          PHB                                 ;; 02F808 : 8B        
 CODE_02F810:          LDX.B #$13                          ;; 02F810 : A2 13       ;
 CODE_02F812:          STX.W !CurSpriteProcess             ;; 02F812 : 8E E9 15    ;
                       LDA.W !ClusterSpriteNumber,X        ;; 02F815 : BD 92 18    ;
-                      BEQ CODE_02F81D                     ;; 02F818 : F0 03       ;
+                      BEQ +                               ;; 02F818 : F0 03       ;
                       JSR CODE_02F821                     ;; 02F81A : 20 21 F8    ;
-CODE_02F81D:          DEX                                 ;; 02F81D : CA          ;
+                    + DEX                                 ;; 02F81D : CA          ;
                       BPL CODE_02F812                     ;; 02F81E : 10 F2       ;
 Return02F820:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -14703,33 +14703,33 @@ DATA_02F839:          db $00,$FF,$02,$0E                  ;; 02F839             
 CODE_02F83D:          LDA.W !BooCloudTimer                ;; 02F83D : AD 0A 19    ;
                       STA.W !TileGenerateTrackA           ;; 02F840 : 8D 5E 18    ;
                       TXY                                 ;; 02F843 : 9B          ;
-                      BNE CODE_02F855                     ;; 02F844 : D0 0F       ;
+                      BNE +                               ;; 02F844 : D0 0F       ;
                       DEC.W !BooCloudTimer                ;; 02F846 : CE 0A 19    ;
                       CMP.B #$00                          ;; 02F849 : C9 00       ;
-                      BNE CODE_02F855                     ;; 02F84B : D0 08       ;
+                      BNE +                               ;; 02F84B : D0 08       ;
                       INC.W !BooRingIndex                 ;; 02F84D : EE BA 18    ;
                       LDY.B #$FF                          ;; 02F850 : A0 FF       ;
                       STY.W !BooCloudTimer                ;; 02F852 : 8C 0A 19    ;
-CODE_02F855:          CMP.B #$00                          ;; 02F855 : C9 00       ;
+                    + CMP.B #$00                          ;; 02F855 : C9 00       ;
                       BNE CODE_02F89E                     ;; 02F857 : D0 45       ;
                       LDA.W !SpriteWillAppear             ;; 02F859 : AD BF 18    ;
-                      BEQ CODE_02F865                     ;; 02F85C : F0 07       ;
+                      BEQ +                               ;; 02F85C : F0 07       ;
                       STZ.W !ClusterSpriteNumber,X        ;; 02F85E : 9E 92 18    ;
                       STZ.W !BooRingIndex                 ;; 02F861 : 9C BA 18    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02F865:          LDA.W !ClusterSpriteMisc1E66,X      ;; 02F865 : BD 66 1E    ;
+                    + LDA.W !ClusterSpriteMisc1E66,X      ;; 02F865 : BD 66 1E    ;
                       STA.B !_0                           ;; 02F868 : 85 00       ;
                       LDA.W !ClusterSpriteMisc1E52,X      ;; 02F86A : BD 52 1E    ;
                       STA.B !_1                           ;; 02F86D : 85 01       ;
                       LDA.W !BooRingIndex                 ;; 02F86F : AD BA 18    ;
                       AND.B #$01                          ;; 02F872 : 29 01       ;
-                      BNE CODE_02F880                     ;; 02F874 : D0 0A       ;
+                      BNE +                               ;; 02F874 : D0 0A       ;
                       LDA.W !ClusterSpriteMisc1E8E,X      ;; 02F876 : BD 8E 1E    ;
                       STA.B !_0                           ;; 02F879 : 85 00       ;
                       LDA.W !ClusterSpriteMisc1E7A,X      ;; 02F87B : BD 7A 1E    ;
                       STA.B !_1                           ;; 02F87E : 85 01       ;
-CODE_02F880:          LDA.B !_0                           ;; 02F880 : A5 00       ;
+                    + LDA.B !_0                           ;; 02F880 : A5 00       ;
                       CLC                                 ;; 02F882 : 18          ;
                       ADC.B !Layer1XPos                   ;; 02F883 : 65 1A       ;
                       STA.W !ClusterSpriteXPosLow,X       ;; 02F885 : 9D 16 1E    ;
@@ -14750,7 +14750,7 @@ CODE_02F89E:          TXA                                 ;; 02F89E : 8A        
                       STA.B !_0                           ;; 02F8A3 : 85 00       ;
                       AND.B #$07                          ;; 02F8A5 : 29 07       ;
                       ORA.B !SpriteLock                   ;; 02F8A7 : 05 9D       ;
-                      BNE CODE_02F8C8                     ;; 02F8A9 : D0 1D       ;
+                      BNE +                               ;; 02F8A9 : D0 1D       ;
                       LDA.B !_0                           ;; 02F8AB : A5 00       ;
                       AND.B #$20                          ;; 02F8AD : 29 20       ;
                       LSR A                               ;; 02F8AF : 4A          ;
@@ -14766,7 +14766,7 @@ CODE_02F89E:          TXA                                 ;; 02F89E : 8A        
                       LDA.W !ClusterSpriteYPosHigh,X      ;; 02F8BF : BD 2A 1E    ;
                       ADC.W DATA_02F839,Y                 ;; 02F8C2 : 79 39 F8    ;
                       STA.W !ClusterSpriteYPosHigh,X      ;; 02F8C5 : 9D 2A 1E    ;
-CODE_02F8C8:          LDY.W !TileGenerateTrackA           ;; 02F8C8 : AC 5E 18    ;
+                    + LDY.W !TileGenerateTrackA           ;; 02F8C8 : AC 5E 18    ;
                       CPY.B #$20                          ;; 02F8CB : C0 20       ;
                       BCC Return02F8FB                    ;; 02F8CD : 90 2C       ;
                       CPY.B #$40                          ;; 02F8CF : C0 40       ;
@@ -14783,15 +14783,15 @@ CODE_02F8D8:          CPY.B #$E0                          ;; 02F8D8 : C0 E0     
                       INC A                               ;; 02F8E1 : 1A          ;
 CODE_02F8E2:          LSR A                               ;; 02F8E2 : 4A          ;
                       LSR A                               ;; 02F8E3 : 4A          ;
-                      BRA CODE_02F8EB                     ;; 02F8E4 : 80 05       ;
+                      BRA +                               ;; 02F8E4 : 80 05       ;
                                                           ;;                      ;
 CODE_02F8E6:          JSR CODE_02FBB0                     ;; 02F8E6 : 20 B0 FB    ;
                       LDA.B #$08                          ;; 02F8E9 : A9 08       ;
-CODE_02F8EB:          STA.W !BooTransparency              ;; 02F8EB : 8D 0B 19    ;
+                    + STA.W !BooTransparency              ;; 02F8EB : 8D 0B 19    ;
                       CPX.B #$00                          ;; 02F8EE : E0 00       ;
-                      BNE CODE_02F8F6                     ;; 02F8F0 : D0 04       ;
+                      BNE +                               ;; 02F8F0 : D0 04       ;
                       JSL CODE_038239                     ;; 02F8F2 : 22 39 82 03 ;
-CODE_02F8F6:          LDA.B #$0F                          ;; 02F8F6 : A9 0F       ;
+                    + LDA.B #$0F                          ;; 02F8F6 : A9 0F       ;
                       JSR CODE_02FD48                     ;; 02F8F8 : 20 48 FD    ;
 Return02F8FB:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -14804,9 +14804,9 @@ DATA_02F90C:          db $03,$03,$03,$03,$02,$01,$00,$00  ;; 02F90C             
 CODE_02F91C:          LDA.W !ClusterSpriteMisc0F4A,X      ;; 02F91C : BD 4A 0F    ;
                       BEQ CODE_02F93C                     ;; 02F91F : F0 1B       ;
                       LDY.B !SpriteLock                   ;; 02F921 : A4 9D       ;
-                      BNE CODE_02F928                     ;; 02F923 : D0 03       ;
+                      BNE +                               ;; 02F923 : D0 03       ;
                       DEC.W !ClusterSpriteMisc0F4A,X      ;; 02F925 : DE 4A 0F    ;
-CODE_02F928:          LSR A                               ;; 02F928 : 4A          ;
+                    + LSR A                               ;; 02F928 : 4A          ;
                       LSR A                               ;; 02F929 : 4A          ;
                       LSR A                               ;; 02F92A : 4A          ;
                       TAY                                 ;; 02F92B : A8          ;
@@ -14846,7 +14846,7 @@ CODE_02F967:          PHX                                 ;; 02F967 : DA        
                       ORA.W !TileGenerateTrackA           ;; 02F96E : 0D 5E 18    ;
                       TAX                                 ;; 02F971 : AA          ;
                       LDA.W DATA_02F8FC,X                 ;; 02F972 : BD FC F8    ;
-                      BMI CODE_02F993                     ;; 02F975 : 30 1C       ;
+                      BMI +                               ;; 02F975 : 30 1C       ;
                       CLC                                 ;; 02F977 : 18          ;
                       ADC.B !_1                           ;; 02F978 : 65 01       ;
                       STA.W !OAMTileYPos+$100,Y           ;; 02F97A : 99 01 03    ;
@@ -14862,7 +14862,7 @@ CODE_02F967:          PHX                                 ;; 02F967 : DA        
                       ORA.B !SpriteProperties             ;; 02F98C : 05 64       ;
                       ORA.B #$05                          ;; 02F98E : 09 05       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02F990 : 99 03 03    ;
-CODE_02F993:          PLX                                 ;; 02F993 : FA          ;
+                    + PLX                                 ;; 02F993 : FA          ;
                       INY                                 ;; 02F994 : C8          ;
                       INY                                 ;; 02F995 : C8          ;
                       INY                                 ;; 02F996 : C8          ;
@@ -14913,11 +14913,11 @@ CODE_02F9AE:          TXA                                 ;; 02F9AE : 8A        
                       LDA.W !InvinsibilityTimer           ;; 02F9F0 : AD 90 14    ; \ Branch if Mario has star 
                       BNE ADDR_02F9A6                     ;; 02F9F3 : D0 B1       ; / 
 CODE_02F9F5:          LDA.W !PlayerRidingYoshi            ;; 02F9F5 : AD 7A 18    ;
-                      BNE CODE_02F9FF                     ;; 02F9F8 : D0 05       ;
+                      BNE +                               ;; 02F9F8 : D0 05       ;
                       JSL HurtMario                       ;; 02F9FA : 22 B7 F5 00 ;
 Return02F9FE:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02F9FF:          JMP CODE_02A473                     ;; 02F9FF : 4C 73 A4    ;
+                    + JMP CODE_02A473                     ;; 02F9FF : 4C 73 A4    ;
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02FA02:          db $03,$07,$07,$07,$0F,$07,$07,$0F  ;; 02FA02               ;
@@ -14928,15 +14928,15 @@ CastleFlameTiles:     db $E2,$E4,$E2,$E4                  ;; ?QPWZ?             
 CastleFlameGfxProp:   db $09,$09,$49,$49                  ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_02FA16:          LDA.B !SpriteLock                   ;; 02FA16 : A5 9D       ;
-                      BNE CODE_02FA2B                     ;; 02FA18 : D0 11       ;
+                      BNE +                               ;; 02FA18 : D0 11       ;
                       JSL GetRand                         ;; 02FA1A : 22 F9 AC 01 ;
                       AND.B #$07                          ;; 02FA1E : 29 07       ;
                       TAY                                 ;; 02FA20 : A8          ;
                       LDA.B !TrueFrame                    ;; 02FA21 : A5 13       ;
                       AND.W DATA_02FA02,Y                 ;; 02FA23 : 39 02 FA    ;
-                      BNE CODE_02FA2B                     ;; 02FA26 : D0 03       ;
+                      BNE +                               ;; 02FA26 : D0 03       ;
                       INC.W !ClusterSpriteMisc0F4A,X      ;; 02FA28 : FE 4A 0F    ;
-CODE_02FA2B:          LDY.W DATA_02FA0A,X                 ;; 02FA2B : BC 0A FA    ;
+                    + LDY.W DATA_02FA0A,X                 ;; 02FA2B : BC 0A FA    ;
                       LDA.W !ClusterSpriteXPosLow,X       ;; 02FA2E : BD 16 1E    ;
                       SEC                                 ;; 02FA31 : 38          ;
                       SBC.B !Layer2XPos                   ;; 02FA32 : E5 1E       ;
@@ -14964,7 +14964,7 @@ CODE_02FA2B:          LDY.W DATA_02FA0A,X                 ;; 02FA2B : BC 0A FA  
                       PLY                                 ;; 02FA5E : 7A          ;
                       LDA.W !OAMTileXPos+$100,Y           ;; 02FA5F : B9 00 03    ;
                       CMP.B #$F0                          ;; 02FA62 : C9 F0       ;
-                      BCC Return02FA83                    ;; 02FA64 : 90 1D       ;
+                      BCC +                               ;; 02FA64 : 90 1D       ;
                       LDA.W !OAMTileXPos+$100,Y           ;; 02FA66 : B9 00 03    ;
                       STA.W !OAMTileXPos+$1EC             ;; 02FA69 : 8D EC 03    ;
                       LDA.W !OAMTileYPos+$100,Y           ;; 02FA6C : B9 01 03    ;
@@ -14975,7 +14975,7 @@ CODE_02FA2B:          LDY.W DATA_02FA0A,X                 ;; 02FA2B : BC 0A FA  
                       STA.W !OAMTileAttr+$1EC             ;; 02FA7B : 8D EF 03    ;
                       LDA.B #$03                          ;; 02FA7E : A9 03       ;
                       STA.W !OAMTileSize+$7B              ;; 02FA80 : 8D 9B 04    ;
-Return02FA83:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02FA84:          db $00                              ;; 02FA84               ;
@@ -14986,18 +14986,18 @@ DATA_02FA85:          db $00,$28,$00,$50,$00,$78,$00,$A0  ;; 02FA85             
                                                           ;;                      ;
 CODE_02FA98:          LDY.W !ClusterSpriteMisc0F86,X      ;; 02FA98 : BC 86 0F    ;
                       LDA.W !BooRingOffscreen,Y           ;; 02FA9B : B9 BA 0F    ;
-                      BEQ CODE_02FAA4                     ;; 02FA9E : F0 04       ;
+                      BEQ +                               ;; 02FA9E : F0 04       ;
                       STZ.W !ClusterSpriteNumber,X        ;; 02FAA0 : 9E 92 18    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_02FAA4:          LDA.B !SpriteLock                   ;; 02FAA4 : A5 9D       ;
+                    + LDA.B !SpriteLock                   ;; 02FAA4 : A5 9D       ;
                       BNE CODE_02FAF0                     ;; 02FAA6 : D0 48       ;
                       LDA.W !ClusterSpriteMisc0F4A,X      ;; 02FAA8 : BD 4A 0F    ;
                       BEQ CODE_02FAF0                     ;; 02FAAB : F0 43       ;
                       STZ.B !_0                           ;; 02FAAD : 64 00       ;
-                      BPL CODE_02FAB3                     ;; 02FAAF : 10 02       ;
+                      BPL +                               ;; 02FAAF : 10 02       ;
                       DEC.B !_0                           ;; 02FAB1 : C6 00       ;
-CODE_02FAB3:          CLC                                 ;; 02FAB3 : 18          ;
+                    + CLC                                 ;; 02FAB3 : 18          ;
                       ADC.W !BooRingAngleLow,Y            ;; 02FAB4 : 79 AE 0F    ;
                       STA.W !BooRingAngleLow,Y            ;; 02FAB7 : 99 AE 0F    ;
                       LDA.W !BooRingAngleHigh,Y           ;; 02FABA : B9 B0 0F    ;
@@ -15060,7 +15060,7 @@ CODE_02FAF0:          PHX                                 ;; 02FAF0 : DA        
                       STA.W !HW_WRMPYA                    ;; 02FB35 : 8D 02 42    ; Multiplicand A
                       LDA.B #$50                          ;; 02FB38 : A9 50       ;
                       LDY.B !_5                           ;; 02FB3A : A4 05       ;
-                      BNE CODE_02FB4D                     ;; 02FB3C : D0 0F       ;
+                      BNE +                               ;; 02FB3C : D0 0F       ;
                       STA.W !HW_WRMPYB                    ;; 02FB3E : 8D 03 42    ; Multplier B
                       NOP                                 ;; 02FB41 : EA          ;
                       NOP                                 ;; 02FB42 : EA          ;
@@ -15069,16 +15069,16 @@ CODE_02FAF0:          PHX                                 ;; 02FAF0 : DA        
                       ASL.W !HW_RDMPY                     ;; 02FB45 : 0E 16 42    ; Product/Remainder Result (Low Byte)
                       LDA.W !HW_RDMPY+1                   ;; 02FB48 : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 02FB4B : 69 00       ;
-CODE_02FB4D:          LSR.B !_1                           ;; 02FB4D : 46 01       ;
-                      BCC CODE_02FB54                     ;; 02FB4F : 90 03       ;
+                    + LSR.B !_1                           ;; 02FB4D : 46 01       ;
+                      BCC +                               ;; 02FB4F : 90 03       ;
                       EOR.B #$FF                          ;; 02FB51 : 49 FF       ;
                       INC A                               ;; 02FB53 : 1A          ;
-CODE_02FB54:          STA.B !_4                           ;; 02FB54 : 85 04       ;
+                    + STA.B !_4                           ;; 02FB54 : 85 04       ;
                       LDA.B !_6                           ;; 02FB56 : A5 06       ;
                       STA.W !HW_WRMPYA                    ;; 02FB58 : 8D 02 42    ; Multiplicand A
                       LDA.B #$50                          ;; 02FB5B : A9 50       ;
                       LDY.B !_7                           ;; 02FB5D : A4 07       ;
-                      BNE CODE_02FB70                     ;; 02FB5F : D0 0F       ;
+                      BNE +                               ;; 02FB5F : D0 0F       ;
                       STA.W !HW_WRMPYB                    ;; 02FB61 : 8D 03 42    ; Multplier B
                       NOP                                 ;; 02FB64 : EA          ;
                       NOP                                 ;; 02FB65 : EA          ;
@@ -15087,18 +15087,18 @@ CODE_02FB54:          STA.B !_4                           ;; 02FB54 : 85 04     
                       ASL.W !HW_RDMPY                     ;; 02FB68 : 0E 16 42    ; Product/Remainder Result (Low Byte)
                       LDA.W !HW_RDMPY+1                   ;; 02FB6B : AD 17 42    ; Product/Remainder Result (High Byte)
                       ADC.B #$00                          ;; 02FB6E : 69 00       ;
-CODE_02FB70:          LSR.B !_3                           ;; 02FB70 : 46 03       ;
-                      BCC CODE_02FB77                     ;; 02FB72 : 90 03       ;
+                    + LSR.B !_3                           ;; 02FB70 : 46 03       ;
+                      BCC +                               ;; 02FB72 : 90 03       ;
                       EOR.B #$FF                          ;; 02FB74 : 49 FF       ;
                       INC A                               ;; 02FB76 : 1A          ;
-CODE_02FB77:          STA.B !_6                           ;; 02FB77 : 85 06       ;
+                    + STA.B !_6                           ;; 02FB77 : 85 06       ;
                       LDX.W !CurSpriteProcess             ;; 02FB79 : AE E9 15    ; X = Sprite index 
                       LDY.W !ClusterSpriteMisc0F86,X      ;; 02FB7C : BC 86 0F    ;
                       STZ.B !_0                           ;; 02FB7F : 64 00       ;
                       LDA.B !_4                           ;; 02FB81 : A5 04       ;
-                      BPL CODE_02FB87                     ;; 02FB83 : 10 02       ;
+                      BPL +                               ;; 02FB83 : 10 02       ;
                       DEC.B !_0                           ;; 02FB85 : C6 00       ;
-CODE_02FB87:          CLC                                 ;; 02FB87 : 18          ;
+                    + CLC                                 ;; 02FB87 : 18          ;
                       ADC.W !BooRingXPosLow,Y             ;; 02FB88 : 79 B2 0F    ;
                       STA.W !ClusterSpriteXPosLow,X       ;; 02FB8B : 9D 16 1E    ;
                       LDA.W !BooRingXPosHigh,Y            ;; 02FB8E : B9 B4 0F    ;
@@ -15106,9 +15106,9 @@ CODE_02FB87:          CLC                                 ;; 02FB87 : 18        
                       STA.W !ClusterSpriteXPosHigh,X      ;; 02FB93 : 9D 3E 1E    ;
                       STZ.B !_1                           ;; 02FB96 : 64 01       ;
                       LDA.B !_6                           ;; 02FB98 : A5 06       ;
-                      BPL CODE_02FB9E                     ;; 02FB9A : 10 02       ;
+                      BPL +                               ;; 02FB9A : 10 02       ;
                       DEC.B !_1                           ;; 02FB9C : C6 01       ;
-CODE_02FB9E:          CLC                                 ;; 02FB9E : 18          ;
+                    + CLC                                 ;; 02FB9E : 18          ;
                       ADC.W !BooRingYPosLow,Y             ;; 02FB9F : 79 B6 0F    ;
                       STA.W !ClusterSpriteYPosLow,X       ;; 02FBA2 : 9D 02 1E    ;
                       LDA.W !BooRingYPosHigh,Y            ;; 02FBA5 : B9 B8 0F    ;
@@ -15118,9 +15118,9 @@ CODE_02FB9E:          CLC                                 ;; 02FB9E : 18        
 CODE_02FBB0:          TXA                                 ;; 02FBB0 : 8A          ;
                       EOR.B !TrueFrame                    ;; 02FBB1 : 45 13       ;
                       AND.B #$03                          ;; 02FBB3 : 29 03       ;
-                      BNE Return02FBBA                    ;; 02FBB5 : D0 03       ;
+                      BNE +                               ;; 02FBB5 : D0 03       ;
                       JSR CODE_02FE71                     ;; 02FBB7 : 20 71 FE    ;
-Return02FBBA:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_02FBBB:          db $01,$FF                          ;; 02FBBB               ;
@@ -15130,19 +15130,19 @@ DATA_02FBBD:          db $08,$F8                          ;; 02FBBD             
 BooRingTiles:         db $88,$8C,$A8,$8E,$AA,$AE,$88,$8C  ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_02FBC7:          CPX.B #$00                          ;; 02FBC7 : E0 00       ;
-                      BEQ CODE_02FBCE                     ;; 02FBC9 : F0 03       ;
+                      BEQ +                               ;; 02FBC9 : F0 03       ;
                       JMP CODE_02FC41                     ;; 02FBCB : 4C 41 FC    ;
                                                           ;;                      ;
-CODE_02FBCE:          LDA.B !TrueFrame                    ;; 02FBCE : A5 13       ;
+                    + LDA.B !TrueFrame                    ;; 02FBCE : A5 13       ;
                       AND.B #$07                          ;; 02FBD0 : 29 07       ;
                       ORA.B !SpriteLock                   ;; 02FBD2 : 05 9D       ;
                       BNE CODE_02FC3E                     ;; 02FBD4 : D0 68       ;
                       JSL GetRand                         ;; 02FBD6 : 22 F9 AC 01 ;
                       AND.B #$1F                          ;; 02FBDA : 29 1F       ;
                       CMP.B #$14                          ;; 02FBDC : C9 14       ;
-                      BCC CODE_02FBE2                     ;; 02FBDE : 90 02       ;
+                      BCC +                               ;; 02FBDE : 90 02       ;
                       SBC.B #$14                          ;; 02FBE0 : E9 14       ;
-CODE_02FBE2:          TAX                                 ;; 02FBE2 : AA          ;
+                    + TAX                                 ;; 02FBE2 : AA          ;
                       LDA.W !ClusterSpriteMisc0F86,X      ;; 02FBE3 : BD 86 0F    ;
                       BNE CODE_02FC3E                     ;; 02FBE6 : D0 56       ;
                       INC.W !ClusterSpriteMisc0F86,X      ;; 02FBE8 : FE 86 0F    ;
@@ -15185,30 +15185,30 @@ CODE_02FBE2:          TAX                                 ;; 02FBE2 : AA        
                       STA.W !ClusterSpriteMisc1E66,X      ;; 02FC3B : 9D 66 1E    ;
 CODE_02FC3E:          LDX.W !CurSpriteProcess             ;; 02FC3E : AE E9 15    ; X = Sprite index 
 CODE_02FC41:          LDA.B !SpriteLock                   ;; 02FC41 : A5 9D       ;
-                      BNE CODE_02FC4D                     ;; 02FC43 : D0 08       ;
+                      BNE +                               ;; 02FC43 : D0 08       ;
                       LDA.W !ClusterSpriteMisc0F9A,X      ;; 02FC45 : BD 9A 0F    ;
-                      BEQ CODE_02FC4D                     ;; 02FC48 : F0 03       ;
+                      BEQ +                               ;; 02FC48 : F0 03       ;
                       DEC.W !ClusterSpriteMisc0F9A,X      ;; 02FC4A : DE 9A 0F    ;
-CODE_02FC4D:          LDA.W !ClusterSpriteMisc0F86,X      ;; 02FC4D : BD 86 0F    ;
-                      BNE CODE_02FC55                     ;; 02FC50 : D0 03       ;
+                    + LDA.W !ClusterSpriteMisc0F86,X      ;; 02FC4D : BD 86 0F    ;
+                      BNE +                               ;; 02FC50 : D0 03       ;
                       JMP CODE_02FCE2                     ;; 02FC52 : 4C E2 FC    ;
                                                           ;;                      ;
-CODE_02FC55:          LDA.B !SpriteLock                   ;; 02FC55 : A5 9D       ;
+                    + LDA.B !SpriteLock                   ;; 02FC55 : A5 9D       ;
                       BNE CODE_02FC8D                     ;; 02FC57 : D0 34       ;
                       LDA.W !ClusterSpriteMisc0F9A,X      ;; 02FC59 : BD 9A 0F    ;
-                      BNE CODE_02FC78                     ;; 02FC5C : D0 1A       ;
+                      BNE +                               ;; 02FC5C : D0 1A       ;
                       JSR CODE_02FF98                     ;; 02FC5E : 20 98 FF    ;
                       JSR CODE_02FFA3                     ;; 02FC61 : 20 A3 FF    ;
                       TXA                                 ;; 02FC64 : 8A          ;
                       EOR.B !TrueFrame                    ;; 02FC65 : 45 13       ;
                       AND.B #$03                          ;; 02FC67 : 29 03       ;
-                      BNE CODE_02FC78                     ;; 02FC69 : D0 0D       ;
+                      BNE +                               ;; 02FC69 : D0 0D       ;
                       JSR CODE_02FE71                     ;; 02FC6B : 20 71 FE    ;
                       LDA.W !ClusterSpriteMisc1E52,X      ;; 02FC6E : BD 52 1E    ;
                       CMP.B #$E1                          ;; 02FC71 : C9 E1       ;
-                      BMI CODE_02FC78                     ;; 02FC73 : 30 03       ;
+                      BMI +                               ;; 02FC73 : 30 03       ;
                       DEC.W !ClusterSpriteMisc1E52,X      ;; 02FC75 : DE 52 1E    ;
-CODE_02FC78:          LDA.W !ClusterSpriteYPosLow,X       ;; 02FC78 : BD 02 1E    ;
+                    + LDA.W !ClusterSpriteYPosLow,X       ;; 02FC78 : BD 02 1E    ;
                       AND.B #$FC                          ;; 02FC7B : 29 FC       ;
                       CMP.W !ClusterSpriteMisc0F72,X      ;; 02FC7D : DD 72 0F    ;
                       BNE CODE_02FC8D                     ;; 02FC80 : D0 0B       ;
@@ -15265,10 +15265,10 @@ CODE_02FCE2:          LDA.B !SpriteLock                   ;; 02FCE2 : A5 9D     
                       CMP.B #$08                          ;; 02FCE9 : C9 08       ;
                       BEQ CODE_02FD46                     ;; 02FCEB : F0 59       ;
                       LDA.W !ClusterSpriteMisc0F9A,X      ;; 02FCED : BD 9A 0F    ;
-                      BNE CODE_02FD1A                     ;; 02FCF0 : D0 28       ;
+                      BNE +                               ;; 02FCF0 : D0 28       ;
                       LDA.B !TrueFrame                    ;; 02FCF2 : A5 13       ;
                       AND.B #$01                          ;; 02FCF4 : 29 01       ;
-                      BNE CODE_02FD1A                     ;; 02FCF6 : D0 22       ;
+                      BNE +                               ;; 02FCF6 : D0 22       ;
                       LDA.W !ClusterSpriteMisc0F4A,X      ;; 02FCF8 : BD 4A 0F    ;
                       AND.B #$01                          ;; 02FCFB : 29 01       ;
                       TAY                                 ;; 02FCFD : A8          ;
@@ -15277,13 +15277,13 @@ CODE_02FCE2:          LDA.B !SpriteLock                   ;; 02FCE2 : A5 9D     
                       ADC.W DATA_02FBBB,Y                 ;; 02FD02 : 79 BB FB    ;
                       STA.W !ClusterSpriteMisc1E66,X      ;; 02FD05 : 9D 66 1E    ;
                       CMP.W DATA_02FBBD,Y                 ;; 02FD08 : D9 BD FB    ;
-                      BNE CODE_02FD1A                     ;; 02FD0B : D0 0D       ;
+                      BNE +                               ;; 02FD0B : D0 0D       ;
                       INC.W !ClusterSpriteMisc0F4A,X      ;; 02FD0D : FE 4A 0F    ;
                       LDA.W !RandomNumber                 ;; 02FD10 : AD 8D 14    ;
                       AND.B #$FF                          ;; 02FD13 : 29 FF       ;
                       ORA.B #$3F                          ;; 02FD15 : 09 3F       ;
                       STA.W !ClusterSpriteMisc0F9A,X      ;; 02FD17 : 9D 9A 0F    ;
-CODE_02FD1A:          JSR CODE_02FF98                     ;; 02FD1A : 20 98 FF    ;
+                    + JSR CODE_02FF98                     ;; 02FD1A : 20 98 FF    ;
                       TXA                                 ;; 02FD1D : 8A          ;
                       EOR.B !TrueFrame                    ;; 02FD1E : 45 13       ;
                       AND.B #$03                          ;; 02FD20 : 29 03       ;
@@ -15296,10 +15296,10 @@ CODE_02FD1A:          JSR CODE_02FF98                     ;; 02FD1A : 20 98 FF  
                       ASL A                               ;; 02FD2B : 0A          ;
                       ADC.B !TrueFrame                    ;; 02FD2C : 65 13       ;
                       AND.B #$40                          ;; 02FD2E : 29 40       ;
-                      BEQ CODE_02FD36                     ;; 02FD30 : F0 04       ;
+                      BEQ +                               ;; 02FD30 : F0 04       ;
                       LDY.B #$FF                          ;; 02FD32 : A0 FF       ;
                       DEC.B !_0                           ;; 02FD34 : C6 00       ;
-CODE_02FD36:          TYA                                 ;; 02FD36 : 98          ;
+                    + TYA                                 ;; 02FD36 : 98          ;
                       CLC                                 ;; 02FD37 : 18          ;
                       ADC.W !ClusterSpriteYPosLow,X       ;; 02FD38 : 7D 02 1E    ;
                       STA.W !ClusterSpriteYPosLow,X       ;; 02FD3B : 9D 02 1E    ;
@@ -15335,9 +15335,9 @@ CODE_02FD48:          STA.B !_2                           ;; 02FD48 : 85 02     
                       LDA.W !ClusterSpriteMisc1E66,X      ;; 02FD77 : BD 66 1E    ;
                       ASL A                               ;; 02FD7A : 0A          ;
                       LDA.B #$00                          ;; 02FD7B : A9 00       ;
-                      BCS CODE_02FD81                     ;; 02FD7D : B0 02       ;
+                      BCS +                               ;; 02FD7D : B0 02       ;
                       LDA.B #$40                          ;; 02FD7F : A9 40       ;
-CODE_02FD81:          ORA.B #$31                          ;; 02FD81 : 09 31       ;
+                    + ORA.B #$31                          ;; 02FD81 : 09 31       ;
                       ORA.B !_2                           ;; 02FD83 : 05 02       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02FD85 : 99 03 03    ;
                       TYA                                 ;; 02FD88 : 98          ;
@@ -15348,7 +15348,7 @@ CODE_02FD81:          ORA.B #$31                          ;; 02FD81 : 09 31     
                       STA.W !OAMTileSize+$40,Y            ;; 02FD8E : 99 60 04    ;
                       LDA.W !ClusterSpriteNumber,X        ;; 02FD91 : BD 92 18    ;
                       CMP.B #$08                          ;; 02FD94 : C9 08       ;
-                      BNE Return02FDB7                    ;; 02FD96 : D0 1F       ;
+                      BNE +                               ;; 02FD96 : D0 1F       ;
                       LDY.W DATA_02FF50,X                 ;; 02FD98 : BC 50 FF    ;
                       LDA.B !EffFrame                     ;; 02FD9B : A5 14       ;
                       LSR A                               ;; 02FD9D : 4A          ;
@@ -15365,7 +15365,7 @@ CODE_02FD81:          ORA.B #$31                          ;; 02FD81 : 09 31     
                       LDA.B #$37                          ;; 02FDB1 : A9 37       ;
                       STA.W !OAMTileAttr+$100,Y           ;; 02FDB3 : 99 03 03    ;
                       PLX                                 ;; 02FDB6 : FA          ;
-Return02FDB7:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 BatCeilingTiles:      db $AE,$AE,$C0,$EB                  ;; ?QPWZ?               ;
@@ -15373,41 +15373,41 @@ BatCeilingTiles:      db $AE,$AE,$C0,$EB                  ;; ?QPWZ?             
 CODE_02FDBC:          JSR CODE_02FFA3                     ;; 02FDBC : 20 A3 FF    ;
                       LDA.W !ClusterSpriteMisc1E52,X      ;; 02FDBF : BD 52 1E    ;
                       CMP.B #$40                          ;; 02FDC2 : C9 40       ;
-                      BPL CODE_02FDCC                     ;; 02FDC4 : 10 06       ;
+                      BPL +                               ;; 02FDC4 : 10 06       ;
                       CLC                                 ;; 02FDC6 : 18          ;
                       ADC.B #$03                          ;; 02FDC7 : 69 03       ;
                       STA.W !ClusterSpriteMisc1E52,X      ;; 02FDC9 : 9D 52 1E    ;
-CODE_02FDCC:          LDA.W !ClusterSpriteYPosHigh,X      ;; 02FDCC : BD 2A 1E    ;
-                      BEQ CODE_02FDE0                     ;; 02FDCF : F0 0F       ;
+                    + LDA.W !ClusterSpriteYPosHigh,X      ;; 02FDCC : BD 2A 1E    ;
+                      BEQ +                               ;; 02FDCF : F0 0F       ;
                       LDA.W !ClusterSpriteYPosLow,X       ;; 02FDD1 : BD 02 1E    ;
                       CMP.B #$80                          ;; 02FDD4 : C9 80       ;
-                      BCC CODE_02FDE0                     ;; 02FDD6 : 90 08       ;
+                      BCC +                               ;; 02FDD6 : 90 08       ;
                       AND.B #$F0                          ;; 02FDD8 : 29 F0       ;
                       STA.W !ClusterSpriteYPosLow,X       ;; 02FDDA : 9D 02 1E    ;
                       STZ.W !ClusterSpriteMisc1E52,X      ;; 02FDDD : 9E 52 1E    ;
-CODE_02FDE0:          TXA                                 ;; 02FDE0 : 8A          ;
+                    + TXA                                 ;; 02FDE0 : 8A          ;
                       EOR.B !TrueFrame                    ;; 02FDE1 : 45 13       ;
                       LSR A                               ;; 02FDE3 : 4A          ;
                       BCC CODE_02FE48                     ;; 02FDE4 : 90 62       ;
                       LDA.W !ClusterSpriteMisc1E52,X      ;; 02FDE6 : BD 52 1E    ;
-                      BNE CODE_02FE10                     ;; 02FDE9 : D0 25       ;
+                      BNE +                               ;; 02FDE9 : D0 25       ;
                       LDA.W !ClusterSpriteMisc1E66,X      ;; 02FDEB : BD 66 1E    ;
                       CLC                                 ;; 02FDEE : 18          ;
                       ADC.W !ClusterSpriteXPosLow,X       ;; 02FDEF : 7D 16 1E    ;
                       STA.W !ClusterSpriteXPosLow,X       ;; 02FDF2 : 9D 16 1E    ;
                       LDA.W !ClusterSpriteXPosLow,X       ;; 02FDF5 : BD 16 1E    ;
                       EOR.W !ClusterSpriteMisc1E66,X      ;; 02FDF8 : 5D 66 1E    ;
-                      BPL CODE_02FE10                     ;; 02FDFB : 10 13       ;
+                      BPL +                               ;; 02FDFB : 10 13       ;
                       LDA.W !ClusterSpriteXPosLow,X       ;; 02FDFD : BD 16 1E    ;
                       CLC                                 ;; 02FE00 : 18          ;
                       ADC.B #$20                          ;; 02FE01 : 69 20       ;
                       CMP.B #$30                          ;; 02FE03 : C9 30       ;
-                      BCS CODE_02FE10                     ;; 02FE05 : B0 09       ;
+                      BCS +                               ;; 02FE05 : B0 09       ;
                       LDA.W !ClusterSpriteMisc1E66,X      ;; 02FE07 : BD 66 1E    ;
                       EOR.B #$FF                          ;; 02FE0A : 49 FF       ;
                       INC A                               ;; 02FE0C : 1A          ;
                       STA.W !ClusterSpriteMisc1E66,X      ;; 02FE0D : 9D 66 1E    ;
-CODE_02FE10:          LDA.B !PlayerXPosNext               ;; 02FE10 : A5 94       ;
+                    + LDA.B !PlayerXPosNext               ;; 02FE10 : A5 94       ;
                       SEC                                 ;; 02FE12 : 38          ;
                       SBC.W !ClusterSpriteXPosLow,X       ;; 02FE13 : FD 16 1E    ;
                       CLC                                 ;; 02FE16 : 18          ;
@@ -15416,11 +15416,11 @@ CODE_02FE10:          LDA.B !PlayerXPosNext               ;; 02FE10 : A5 94     
                       BCS CODE_02FE48                     ;; 02FE1B : B0 2B       ;
                       LDA.B #$20                          ;; 02FE1D : A9 20       ;
                       LDY.B !PlayerIsDucking              ;; 02FE1F : A4 73       ;
-                      BNE CODE_02FE29                     ;; 02FE21 : D0 06       ;
+                      BNE +                               ;; 02FE21 : D0 06       ;
                       LDY.B !Powerup                      ;; 02FE23 : A4 19       ;
-                      BEQ CODE_02FE29                     ;; 02FE25 : F0 02       ;
+                      BEQ +                               ;; 02FE25 : F0 02       ;
                       LDA.B #$30                          ;; 02FE27 : A9 30       ;
-CODE_02FE29:          STA.B !_0                           ;; 02FE29 : 85 00       ;
+                    + STA.B !_0                           ;; 02FE29 : 85 00       ;
                       LDA.B !PlayerYPosNext               ;; 02FE2B : A5 96       ;
                       SEC                                 ;; 02FE2D : 38          ;
                       SBC.W !ClusterSpriteYPosLow,X       ;; 02FE2E : FD 02 1E    ;
@@ -15456,10 +15456,10 @@ CODE_02FE48:          LDY.W DATA_02FF64,X                 ;; 02FE48 : BC 64 FF  
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_02FE71:          LDA.B #$14                          ;; 02FE71 : A9 14       ;
-                      BRA CODE_02FE77                     ;; 02FE73 : 80 02       ;
+                      BRA +                               ;; 02FE73 : 80 02       ;
                                                           ;;                      ;
                       LDA.B #$0C                          ;; 02FE75 : A9 0C       ; Unreachable instruction 
-CODE_02FE77:          STA.B !_2                           ;; 02FE77 : 85 02       ;
+                    + STA.B !_2                           ;; 02FE77 : 85 02       ;
                       STZ.B !_3                           ;; 02FE79 : 64 03       ;
                       LDA.W !ClusterSpriteXPosLow,X       ;; 02FE7B : BD 16 1E    ;
                       STA.B !_0                           ;; 02FE7E : 85 00       ;
@@ -15483,9 +15483,9 @@ CODE_02FE77:          STA.B !_2                           ;; 02FE77 : 85 02     
                       REP #$20                            ;; 02FEA4 : C2 20       ; Accum (16 bit) 
                       LDA.W #$0014                        ;; 02FEA6 : A9 14 00    ;
                       LDY.B !Powerup                      ;; 02FEA9 : A4 19       ;
-                      BEQ CODE_02FEB0                     ;; 02FEAB : F0 03       ;
+                      BEQ +                               ;; 02FEAB : F0 03       ;
                       LDA.W #$0020                        ;; 02FEAD : A9 20 00    ;
-CODE_02FEB0:          STA.B !_4                           ;; 02FEB0 : 85 04       ;
+                    + STA.B !_4                           ;; 02FEB0 : 85 04       ;
                       LDA.B !PlayerYPosNext               ;; 02FEB2 : A5 96       ;
                       SEC                                 ;; 02FEB4 : 38          ;
                       SBC.B !_2                           ;; 02FEB5 : E5 02       ;
@@ -15533,17 +15533,17 @@ DATA_02FECB:          db $01,$FF                          ;; 02FECB             
                       SBC.W !ClusterSpriteXPosHigh,X      ;; 02FEFD : FD 3E 1E    ;
                       STA.B !_0                           ;; 02FF00 : 85 00       ;
                       LSR.B !_1                           ;; 02FF02 : 46 01       ;
-                      BCC ADDR_02FF0A                     ;; 02FF04 : 90 04       ;
+                      BCC +                               ;; 02FF04 : 90 04       ;
                       EOR.B #$80                          ;; 02FF06 : 49 80       ;
                       STA.B !_0                           ;; 02FF08 : 85 00       ;
-ADDR_02FF0A:          LDA.B !_0                           ;; 02FF0A : A5 00       ;
+                    + LDA.B !_0                           ;; 02FF0A : A5 00       ;
                       BPL Return02FF1D                    ;; 02FF0C : 10 0F       ;
 ADDR_02FF0E:          LDY.W !ClusterSpriteMisc0F86,X      ;; 02FF0E : BC 86 0F    ;
                       CPY.B #$FF                          ;; 02FF11 : C0 FF       ;
-                      BEQ ADDR_02FF1A                     ;; 02FF13 : F0 05       ;
+                      BEQ +                               ;; 02FF13 : F0 05       ;
                       LDA.B #$00                          ;; 02FF15 : A9 00       ; \ Allow sprite to be reloaded by level loading routine 
                       STA.W !SpriteLoadStatus,Y           ;; 02FF17 : 99 38 19    ; / 
-ADDR_02FF1A:          STZ.W !ClusterSpriteNumber,X        ;; 02FF1A : 9E 92 18    ;
+                    + STZ.W !ClusterSpriteNumber,X        ;; 02FF1A : 9E 92 18    ;
 Return02FF1D:         RTS                                 ;; ?QPWZ? : 60          ; / Return 
                                                           ;;                      ;
 ADDR_02FF1E:          LDA.B !TrueFrame                    ;; 02FF1E : A5 13       ; \ Unreachable, called from above routine 
@@ -15565,10 +15565,10 @@ ADDR_02FF1E:          LDA.B !TrueFrame                    ;; 02FF1E : A5 13     
                       SBC.W !ClusterSpriteYPosHigh,X      ;; 02FF3D : FD 2A 1E    ;
                       STA.B !_0                           ;; 02FF40 : 85 00       ;
                       LDY.B !_1                           ;; 02FF42 : A4 01       ;
-                      BEQ ADDR_02FF4A                     ;; 02FF44 : F0 04       ;
+                      BEQ +                               ;; 02FF44 : F0 04       ;
                       EOR.B #$80                          ;; 02FF46 : 49 80       ;
                       STA.B !_0                           ;; 02FF48 : 85 00       ;
-ADDR_02FF4A:          LDA.B !_0                           ;; 02FF4A : A5 00       ;
+                    + LDA.B !_0                           ;; 02FF4A : A5 00       ;
                       BPL Return02FF1D                    ;; 02FF4C : 10 CF       ;
                       BMI ADDR_02FF0E                     ;; 02FF4E : 30 BE       ; / 
                                                           ;;                      ;
@@ -15621,10 +15621,10 @@ CODE_02FFA3:          LDA.W !ClusterSpriteMisc1E52,X      ;; 02FFA3 : BD 52 1E  
                       LSR A                               ;; 02FFB8 : 4A          ;
                       CMP.B #$08                          ;; 02FFB9 : C9 08       ;
                       LDY.B #$00                          ;; 02FFBB : A0 00       ;
-                      BCC CODE_02FFC2                     ;; 02FFBD : 90 03       ;
+                      BCC +                               ;; 02FFBD : 90 03       ;
                       ORA.B #$F0                          ;; 02FFBF : 09 F0       ;
                       DEY                                 ;; 02FFC1 : 88          ;
-CODE_02FFC2:          PLP                                 ;; 02FFC2 : 28          ;
+                    + PLP                                 ;; 02FFC2 : 28          ;
                       ADC.W !ClusterSpriteYPosLow,X       ;; 02FFC3 : 7D 02 1E    ;
                       STA.W !ClusterSpriteYPosLow,X       ;; 02FFC6 : 9D 02 1E    ;
                       TYA                                 ;; 02FFC9 : 98          ;
@@ -15636,9 +15636,9 @@ CODE_02FFD1:          LDA.W !SpriteBlockedDirs,X          ;; 02FFD1 : BD 88 15  
                       BMI ADDR_02FFDD                     ;; 02FFD4 : 30 07       ;
                       LDA.B #$00                          ;; 02FFD6 : A9 00       ;
                       LDY.W !SpriteSlope,X                ;; 02FFD8 : BC B8 15    ;
-                      BEQ CODE_02FFDF                     ;; 02FFDB : F0 02       ;
+                      BEQ +                               ;; 02FFDB : F0 02       ;
 ADDR_02FFDD:          LDA.B #$18                          ;; 02FFDD : A9 18       ;
-CODE_02FFDF:          STA.B !SpriteYSpeed,X               ;; 02FFDF : 95 AA       ;
+                    + STA.B !SpriteYSpeed,X               ;; 02FFDF : 95 AA       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;

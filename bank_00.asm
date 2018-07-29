@@ -1,4 +1,4 @@
-ORG $008000                                               ;;                      ;
+                      ORG $008000                         ;;                      ;
                                                           ;;                      ;
 I_RESET:              SEI                                 ;; 008000 : 78          ; Disable interrupts 
                       STZ.W !HW_NMITIMEN                  ;; 008001 : 9C 00 42    ; Clear NMI and V/H Count, disable joypad ; NMI, V/H Count, and Joypad Enable
@@ -21,7 +21,7 @@ I_RESET:              SEI                                 ;; 008000 : 78        
                       STA.L !OAMResetRoutine              ;; 00802A : 8F 00 80 7F ;  | 
                       LDX.W #$017D                        ;; 00802E : A2 7D 01    ;  | 
                       LDY.W #$03FD                        ;; 008031 : A0 FD 03    ;  | 
-CODE_008034:          LDA.W #$008D                        ;; 008034 : A9 8D 00    ;  | 
+                    - LDA.W #$008D                        ;; 008034 : A9 8D 00    ;  | 
                       STA.L !OAMResetRoutine+2,X          ;; 008037 : 9F 02 80 7F ;  | 
                       TYA                                 ;; 00803B : 98          ;  | 
                       STA.L !OAMResetRoutine+3,X          ;; 00803C : 9F 03 80 7F ;  |Create routine in RAM 
@@ -31,7 +31,7 @@ CODE_008034:          LDA.W #$008D                        ;; 008034 : A9 8D 00  
                       DEX                                 ;; 008045 : CA          ;  | 
                       DEX                                 ;; 008046 : CA          ;  | 
                       DEX                                 ;; 008047 : CA          ;  | 
-                      BPL CODE_008034                     ;; 008048 : 10 EA       ;  | 
+                      BPL -                               ;; 008048 : 10 EA       ;  | 
                       SEP #$30                            ;; 00804A : E2 30       ;  | ; Index (8 bit) Accum (8 bit) 
                       LDA.B #$6B                          ;; 00804C : A9 6B       ;  | 
                       STA.L !OAMResetRoutine+$182         ;; 00804E : 8F 82 81 7F ; / 
@@ -44,20 +44,20 @@ CODE_008034:          LDA.W #$008D                        ;; 008034 : A9 8D 00  
                       LDA.B #$03                          ;; 008064 : A9 03       ; \ Set OAM Size and Data Area Designation to x03 
                       STA.W !HW_OBJSEL                    ;; 008066 : 8D 01 21    ; /  ; OAM Size and Data Area Designation
                       INC.B !LagFlag                      ;; 008069 : E6 10       ; Skip the following loop 
-CODE_00806B:          LDA.B !LagFlag                      ;; 00806B : A5 10       ;  |Loop until the interrupt routine sets $10 
-                      BEQ CODE_00806B                     ;; 00806D : F0 FC       ; / to a non-zero value. 
+                    - LDA.B !LagFlag                      ;; 00806B : A5 10       ;  |Loop until the interrupt routine sets $10 
+                      BEQ -                               ;; 00806D : F0 FC       ; / to a non-zero value. 
                       CLI                                 ;; 00806F : 58          ; Enable interrupts 
                       INC.B !TrueFrame                    ;; 008070 : E6 13       ; Increase frame number 
                       JSR GetGameMode                     ;; 008072 : 20 22 93    ; The actual game 
                       STZ.B !LagFlag                      ;; 008075 : 64 10       ; \ Wait for interrupt 
-                      BRA CODE_00806B                     ;; 008077 : 80 F2       ; /  
+                      BRA -                               ;; 008077 : 80 F2       ; /  
                                                           ;;                      ;
 SPC700UploadLoop:     PHP                                 ;; ?QPWZ? : 08          ;
                       REP #$30                            ;; 00807A : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDY.W #$0000                        ;; 00807C : A0 00 00    ;
                       LDA.W #$BBAA                        ;; 00807F : A9 AA BB    ;
-CODE_008082:          CMP.W !HW_APUIO0                    ;; 008082 : CD 40 21    ; APU I/O Port
-                      BNE CODE_008082                     ;; 008085 : D0 FB       ;
+                    - CMP.W !HW_APUIO0                    ;; 008082 : CD 40 21    ; APU I/O Port
+                      BNE -                               ;; 008085 : D0 FB       ;
                       SEP #$20                            ;; 008087 : E2 20       ; Accum (8 bit) 
                       LDA.B #$CC                          ;; 008089 : A9 CC       ; Load byte to start transfer 
                       BRA CODE_0080B3                     ;; 00808B : 80 26       ;
@@ -72,18 +72,18 @@ CODE_008095:          XBA                                 ;; 008095 : EB        
                       LDA.B [!_0],Y                       ;; 008096 : B7 00       ;
                       INY                                 ;; 008098 : C8          ;
                       XBA                                 ;; 008099 : EB          ;
-CODE_00809A:          CMP.W !HW_APUIO0                    ;; 00809A : CD 40 21    ; APU I/O Port
-                      BNE CODE_00809A                     ;; 00809D : D0 FB       ;
+                    - CMP.W !HW_APUIO0                    ;; 00809A : CD 40 21    ; APU I/O Port
+                      BNE -                               ;; 00809D : D0 FB       ;
                       INC A                               ;; 00809F : 1A          ;
 CODE_0080A0:          REP #$20                            ;; 0080A0 : C2 20       ; Accum (16 bit) 
                       STA.W !HW_APUIO0                    ;; 0080A2 : 8D 40 21    ; APU I/O Port
                       SEP #$20                            ;; 0080A5 : E2 20       ; Accum (8 bit) 
                       DEX                                 ;; 0080A7 : CA          ;
                       BNE CODE_008095                     ;; 0080A8 : D0 EB       ;
-CODE_0080AA:          CMP.W !HW_APUIO0                    ;; 0080AA : CD 40 21    ; APU I/O Port
-                      BNE CODE_0080AA                     ;; 0080AD : D0 FB       ;
-CODE_0080AF:          ADC.B #$03                          ;; 0080AF : 69 03       ;
-                      BEQ CODE_0080AF                     ;; 0080B1 : F0 FC       ;
+                    - CMP.W !HW_APUIO0                    ;; 0080AA : CD 40 21    ; APU I/O Port
+                      BNE -                               ;; 0080AD : D0 FB       ;
+                    - ADC.B #$03                          ;; 0080AF : 69 03       ;
+                      BEQ -                               ;; 0080B1 : F0 FC       ;
 CODE_0080B3:          PHA                                 ;; 0080B3 : 48          ;
                       REP #$20                            ;; 0080B4 : C2 20       ; Accum (16 bit) 
                       LDA.B [!_0],Y                       ;; 0080B6 : B7 00       ;
@@ -102,8 +102,8 @@ CODE_0080B3:          PHA                                 ;; 0080B3 : 48        
                       ADC.B #$7F                          ;; 0080CD : 69 7F       ;
                       PLA                                 ;; 0080CF : 68          ;
                       STA.W !HW_APUIO0                    ;; 0080D0 : 8D 40 21    ; APU I/O Port
-CODE_0080D3:          CMP.W !HW_APUIO0                    ;; 0080D3 : CD 40 21    ; APU I/O Port
-                      BNE CODE_0080D3                     ;; 0080D6 : D0 FB       ;
+                    - CMP.W !HW_APUIO0                    ;; 0080D3 : CD 40 21    ; APU I/O Port
+                      BNE -                               ;; 0080D6 : D0 FB       ;
                       BVS CODE_00808D                     ;; 0080D8 : 70 B3       ;
                       STZ.W !HW_APUIO0                    ;; 0080DA : 9C 40 21    ; APU I/O Port
                       STZ.W !HW_APUIO1                    ;; 0080DD : 9C 41 21    ; APU I/O Port
@@ -141,11 +141,11 @@ StrtSPCMscUpld:       LDA.B #$FF                          ;; ?QPWZ? : A9 FF     
                       STA.W !HW_APUIO1                    ;; 00811F : 8D 41 21    ; APU I/O Port
                       JSR UploadDataToSPC                 ;; 008122 : 20 F7 80    ;
                       LDX.B #$03                          ;; 008125 : A2 03       ;
-SPC700ZeroLoop:       STZ.W !HW_APUIO0,X                  ;; ?QPWZ? : 9E 40 21    ;
+                    - STZ.W !HW_APUIO0,X                  ;; ?QPWZ? : 9E 40 21    ;
                       STZ.W !SPCIO0,X                     ;; 00812A : 9E F9 1D    ;
                       STZ.W !Empty1DFD,X                  ;; 00812D : 9E FD 1D    ;
                       DEX                                 ;; 008130 : CA          ;
-                      BPL SPC700ZeroLoop                  ;; 008131 : 10 F4       ;
+                      BPL -                               ;; 008131 : 10 F4       ;
 Return008133:         RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_008134:          LDA.W !BonusGameActivate            ;; 008134 : AD 25 14    ;
@@ -188,11 +188,11 @@ I_NMI:                SEI                                 ;; 00816A : 78        
                       BNE CODE_008186                     ;; 00817C : D0 08       ;  | 
                       LDY.W !HW_APUIO2                    ;; 00817E : AC 42 21    ;  | ; APU I/O Port
                       CPY.W !LastUsedMusic                ;; 008181 : CC FF 1D    ;  |Update SPC700 I/O port 2 
-                      BNE CODE_00818F                     ;; 008184 : D0 09       ;  | 
+                      BNE +                               ;; 008184 : D0 09       ;  | 
 CODE_008186:          STA.W !HW_APUIO2                    ;; 008186 : 8D 42 21    ;  | ; APU I/O Port
                       STA.W !LastUsedMusic                ;; 008189 : 8D FF 1D    ;  | 
                       STZ.W !SPCIO2                       ;; 00818C : 9C FB 1D    ;  | 
-CODE_00818F:          LDA.W !SPCIO0                       ;; 00818F : AD F9 1D    ; \  
+                    + LDA.W !SPCIO0                       ;; 00818F : AD F9 1D    ; \  
                       STA.W !HW_APUIO0                    ;; 008192 : 8D 40 21    ;  | ; APU I/O Port
                       LDA.W !SPCIO1                       ;; 008195 : AD FA 1D    ;  | 
                       STA.W !HW_APUIO1                    ;; 008198 : 8D 41 21    ;  |Update SPC700 I/O ports 0, 1 and 3 ; APU I/O Port
@@ -213,10 +213,10 @@ CODE_00818F:          LDA.W !SPCIO0                       ;; 00818F : AD F9 1D  
                       LDA.B !ColorAddition                ;; 0081C1 : A5 44       ;
                       STA.W !HW_CGSWSEL                   ;; 0081C3 : 8D 30 21    ; Initial Settings for Color Addition
                       LDA.W !IRQNMICommand                ;; 0081C6 : AD 9B 0D    ; \  
-                      BPL CODE_0081CE                     ;; 0081C9 : 10 03       ;  |If in a "Special level", 
+                      BPL +                               ;; 0081C9 : 10 03       ;  |If in a "Special level", 
                       JMP CODE_0082C4                     ;; 0081CB : 4C C4 82    ;  |jump to $82C4 
                                                           ;;                      ;
-CODE_0081CE:          LDA.B !ColorSettings                ;; 0081CE : A5 40       ; \ Get the CGADSUB byte... 
+                    + LDA.B !ColorSettings                ;; 0081CE : A5 40       ; \ Get the CGADSUB byte... 
                       AND.B #$FB                          ;; 0081D0 : 29 FB       ;  |Get the Add/Subtract Select and Enable part... 
                       STA.W !HW_CGADSUB                   ;; 0081D2 : 8D 31 21    ; / ...and store it to the A/SSaE register... ; Add/Subtract Select and Enable
                       LDA.B #$09                          ;; 0081D5 : A9 09       ; \ 8x8 tiles, Graphics mode 1 
@@ -233,9 +233,9 @@ CODE_0081E7:          INC.B !LagFlag                      ;; 0081E7 : E6 10     
                       LDA.W !IRQNMICommand                ;; 0081EC : AD 9B 0D    ;
                       LSR A                               ;; 0081EF : 4A          ;
                       BNE CODE_008222                     ;; 0081F0 : D0 30       ;
-                      BCS CODE_0081F7                     ;; 0081F2 : B0 03       ;
+                      BCS +                               ;; 0081F2 : B0 03       ;
                       JSR DrawStatusBar                   ;; 0081F4 : 20 AC 8D    ;
-CODE_0081F7:          LDA.W !CutsceneID                   ;; 0081F7 : AD C6 13    ; \  
+                    + LDA.W !CutsceneID                   ;; 0081F7 : AD C6 13    ; \  
                       CMP.B #$08                          ;; 0081FA : C9 08       ;  |If the current cutscene isn't the ending, 
                       BNE CODE_008209                     ;; 0081FC : D0 0B       ; / branch to $8209 
                       LDA.W !CreditsUpdateBG              ;; 0081FE : AD FE 1F    ; \  
@@ -263,13 +263,13 @@ CODE_008222:          LDA.W !OverworldProcess             ;; 008222 : AD D9 13  
                       CPY.B #$04                          ;; 00822E : C0 04       ;
                       BCS CODE_008237                     ;; 008230 : B0 05       ;
                       JSR CODE_00A529                     ;; 008232 : 20 29 A5    ;
-                      BRA CODE_008243                     ;; 008235 : 80 0C       ;
+                      BRA +                               ;; 008235 : 80 0C       ;
                                                           ;;                      ;
 CODE_008237:          JSR CODE_00A4E3                     ;; 008237 : 20 E3 A4    ;
                       JSR MarioGFXDMA                     ;; 00823A : 20 00 A3    ;
 CODE_00823D:          JSR LoadScrnImage                   ;; 00823D : 20 D2 85    ;
                       JSR DoSomeSpriteDMA                 ;; 008240 : 20 49 84    ;
-CODE_008243:          JSR ControllerUpdate                ;; 008243 : 20 50 86    ;
+                    + JSR ControllerUpdate                ;; 008243 : 20 50 86    ;
 NMINotSpecialLv:      LDA.B !Layer1XPos                   ;; ?QPWZ? : A5 1A       ; \  
                       STA.W !HW_BG1HOFS                   ;; 008248 : 8D 0D 21    ;  |Set BG 1 Horizontal Scroll Offset ; BG 1 Horizontal Scroll Offset
                       LDA.B !Layer1XPos+1                 ;; 00824B : A5 1B       ;  |to X position of screen boundry  
@@ -294,7 +294,7 @@ NMINotSpecialLv:      LDA.B !Layer1XPos                   ;; ?QPWZ? : A5 1A     
 CODE_00827A:          LDA.B #$81                          ;; 00827A : A9 81       ;
                       LDY.W !CutsceneID                   ;; 00827C : AC C6 13    ; \  
                       CPY.B #$08                          ;; 00827F : C0 08       ;  |If not playing ending movie, branch to $82A1 
-                      BNE CODE_0082A1                     ;; 008281 : D0 1E       ; /  
+                      BNE +                               ;; 008281 : D0 1E       ; /  
                       LDY.W !Brightness                   ;; 008283 : AC AE 0D    ; \  
                       STY.W !HW_INIDISP                   ;; 008286 : 8C 00 21    ; / Set brightness to $0DAE ; Screen Display Register
                       LDY.W !HDMAEnable                   ;; 008289 : AC 9F 0D    ; \  
@@ -307,7 +307,7 @@ CODE_008294:          LDA.W !HW_TIMEUP                    ;; 008294 : AD 11 42  
                       STZ.W !HW_VTIME+1                   ;; 00829A : 9C 0A 42    ; /  ; V-Count Timer MSB (Bit 0)
                       STZ.B !IRQType                      ;; 00829D : 64 11       ;
                       LDA.B #$A1                          ;; 00829F : A9 A1       ;
-CODE_0082A1:          STA.W !HW_NMITIMEN                  ;; 0082A1 : 8D 00 42    ; NMI, V/H Count, and Joypad Enable
+                    + STA.W !HW_NMITIMEN                  ;; 0082A1 : 8D 00 42    ; NMI, V/H Count, and Joypad Enable
                       STZ.W !HW_BG3HOFS                   ;; 0082A4 : 9C 11 21    ; \  ; BG 3 Horizontal Scroll Offset- Write twice register
                       STZ.W !HW_BG3HOFS                   ;; 0082A7 : 9C 11 21    ;  |Set Layer 3 horizontal and vertical ; BG 3 Horizontal Scroll Offset
                       STZ.W !HW_BG3VOFS                   ;; 0082AA : 9C 12 21    ;  |scroll to x00 ; BG 3 Vertical Scroll Offset ; Write twice register
@@ -339,9 +339,9 @@ CODE_0082D4:          JSR CODE_00A436                     ;; 0082D4 : 20 36 A4  
                       JSR CODE_0098A9                     ;; 0082DF : 20 A9 98    ;
                       LDA.W !IRQNMICommand                ;; 0082E2 : AD 9B 0D    ;
                       LSR A                               ;; 0082E5 : 4A          ;
-                      BCS CODE_0082EB                     ;; 0082E6 : B0 03       ;
+                      BCS +                               ;; 0082E6 : B0 03       ;
 CODE_0082E8:          JSR DrawStatusBar                   ;; 0082E8 : 20 AC 8D    ;
-CODE_0082EB:          JSR CODE_00A488                     ;; 0082EB : 20 88 A4    ;
+                    + JSR CODE_00A488                     ;; 0082EB : 20 88 A4    ;
                       JSR LoadScrnImage                   ;; 0082EE : 20 D2 85    ;
                       JSR DoSomeSpriteDMA                 ;; 0082F1 : 20 49 84    ;
                       JSR ControllerUpdate                ;; 0082F4 : 20 50 86    ;
@@ -380,7 +380,7 @@ CODE_0082F7:          LDA.B #$09                          ;; 0082F7 : A9 09     
                       JSR SETL1SCROLL                     ;; 008342 : 20 16 84    ;
                       LDA.W !IRQNMICommand                ;; 008345 : AD 9B 0D    ;
                       LSR A                               ;; 008348 : 4A          ;
-                      BCC CODE_00835C                     ;; 008349 : 90 11       ;
+                      BCC +                               ;; 008349 : 90 11       ;
                       LDA.W !Brightness                   ;; 00834B : AD AE 0D    ;
                       STA.W !HW_INIDISP                   ;; 00834E : 8D 00 21    ; Screen Display Register
                       LDA.W !HDMAEnable                   ;; 008351 : AD 9F 0D    ;
@@ -388,17 +388,17 @@ CODE_0082F7:          LDA.B #$09                          ;; 0082F7 : A9 09     
                       LDA.B #$81                          ;; 008357 : A9 81       ;
                       JMP CODE_0083F3                     ;; 008359 : 4C F3 83    ;
                                                           ;;                      ;
-CODE_00835C:          LDY.B #$24                          ;; 00835C : A0 24       ;
+                    + LDY.B #$24                          ;; 00835C : A0 24       ;
                       BIT.W !IRQNMICommand                ;; 00835E : 2C 9B 0D    ;
-                      BVC CODE_008371                     ;; 008361 : 50 0E       ;
+                      BVC +                               ;; 008361 : 50 0E       ;
                       LDA.W !ActiveBoss                   ;; 008363 : AD FC 13    ;
                       ASL A                               ;; 008366 : 0A          ;
                       TAX                                 ;; 008367 : AA          ;
                       LDA.W DATA_00F8E8,X                 ;; 008368 : BD E8 F8    ;
                       CMP.B #$2A                          ;; 00836B : C9 2A       ;
-                      BNE CODE_008371                     ;; 00836D : D0 02       ;
+                      BNE +                               ;; 00836D : D0 02       ;
                       LDY.B #$2D                          ;; 00836F : A0 2D       ;
-CODE_008371:          JMP CODE_008294                     ;; 008371 : 4C 94 82    ;
+                    + JMP CODE_008294                     ;; 008371 : 4C 94 82    ;
                                                           ;;                      ;
 I_IRQ:                SEI                                 ;; 008374 : 78          ; Set Interrupt flag so routine can start 
                       PHP                                 ;; 008375 : 08          ; \ Save A/X/Y/P/B 
@@ -414,7 +414,7 @@ I_IRQ:                SEI                                 ;; 008374 : 78        
                       BPL CODE_0083B2                     ;; 008383 : 10 2D       ; If "Timer IRQ" is clear, skip the next code block 
                       LDA.B #$81                          ;; 008385 : A9 81       ;
                       LDY.W !IRQNMICommand                ;; 008387 : AC 9B 0D    ;
-                      BMI CODE_0083BA                     ;; 00838A : 30 2E       ; If Bit 7 (negative flag) is set, branch to a different IRQ mode 
+                      BMI +                               ;; 00838A : 30 2E       ; If Bit 7 (negative flag) is set, branch to a different IRQ mode 
 IRQNMIEnding:         STA.W !HW_NMITIMEN                  ;; ?QPWZ? : 8D 00 42    ; Enable NMI Interrupt and Automatic Joypad reading ; NMI, V/H Count, and Joypad Enable
                       LDY.B #$1F                          ;; 00838F : A0 1F       ;
                       JSR WaitForHBlank                   ;; 008391 : 20 3B 84    ;
@@ -438,7 +438,7 @@ CODE_0083B2:          REP #$30                            ;; 0083B2 : C2 30     
                       PLP                                 ;; 0083B8 : 28          ; / 
                       RTI                                 ;; ?QPWZ? : 40          ; And Return 
                                                           ;;                      ;
-CODE_0083BA:          BIT.W !IRQNMICommand                ;; 0083BA : 2C 9B 0D    ; Get bit 6 of $0D9B ; Index (8 bit) Accum (8 bit) 
+                    + BIT.W !IRQNMICommand                ;; 0083BA : 2C 9B 0D    ; Get bit 6 of $0D9B ; Index (8 bit) Accum (8 bit) 
                       BVC CODE_0083E3                     ;; 0083BD : 50 24       ; If clear, skip the next code section 
                       LDY.B !IRQType                      ;; 0083BF : A4 11       ; \Skip if $11 = 0 
                       BEQ CODE_0083D0                     ;; 0083C1 : F0 0D       ; / 
@@ -499,10 +499,10 @@ SETL1SCROLL:          LDA.B #$59                          ;; ?QPWZ? : A9 59     
 CODE_008439:          LDY.B #$20                          ;; 008439 : A0 20       ; <<- Could this be just to waste time? 
 WaitForHBlank:        BIT.W !HW_HVBJOY                    ;; ?QPWZ? : 2C 12 42    ; So... LDY gets set with 20 if there is a H-Blank...? ; H/V Blank Flags and Joypad Status
                       BVS CODE_008439                     ;; 00843E : 70 F9       ; if in H-Blank, make Y #$20 and try again 
-CODE_008440:          BIT.W !HW_HVBJOY                    ;; 008440 : 2C 12 42    ; Now wait until not in H-Blank ; H/V Blank Flags and Joypad Status
-                      BVC CODE_008440                     ;; 008443 : 50 FB       ;
-CODE_008445:          DEY                                 ;; 008445 : 88          ;  |Y = 0 
-                      BNE CODE_008445                     ;; 008446 : D0 FD       ; / ...wait a second... why didn't they just do LDY #$00? ...waste more time? 
+                    - BIT.W !HW_HVBJOY                    ;; 008440 : 2C 12 42    ; Now wait until not in H-Blank ; H/V Blank Flags and Joypad Status
+                      BVC -                               ;; 008443 : 50 FB       ;
+                    - DEY                                 ;; 008445 : 88          ;  |Y = 0 
+                      BNE -                               ;; 008446 : D0 FD       ; / ...wait a second... why didn't they just do LDY #$00? ...waste more time? 
                       RTS                                 ;; ?QPWZ? : 60          ; return 
                                                           ;;                      ;
 DoSomeSpriteDMA:      STZ.W !HW_DMAPARAM                  ;; ?QPWZ? : 9C 00 43    ; Parameters for DMA Transfer
@@ -530,7 +530,7 @@ DATA_008475:          db $00,$00,$08,$00,$10,$00,$18,$00  ;; 008475             
                       db $60,$00,$68,$00,$70,$00,$78      ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_008494:          LDY.B #$1E                          ;; 008494 : A0 1E       ;
-CODE_008496:          LDX.W DATA_008475,Y                 ;; 008496 : BE 75 84    ;
+                    - LDX.W DATA_008475,Y                 ;; 008496 : BE 75 84    ;
                       LDA.W !OAMTileSize+3,X              ;; 008499 : BD 23 04    ;
                       ASL A                               ;; 00849C : 0A          ;
                       ASL A                               ;; 00849D : 0A          ;
@@ -555,7 +555,7 @@ CODE_008496:          LDX.W DATA_008475,Y                 ;; 008496 : BE 75 84  
                       STA.W !OAMTileBitSize+1,Y           ;; 0084C0 : 99 01 04    ;
                       DEY                                 ;; 0084C3 : 88          ;
                       DEY                                 ;; 0084C4 : 88          ;
-                      BPL CODE_008496                     ;; 0084C5 : 10 CF       ;
+                      BPL -                               ;; 0084C5 : 10 CF       ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_0084C8:          PHB                                 ;; 0084C8 : 8B          ; Wrapper 
@@ -662,12 +662,12 @@ LoadScrnImage:        LDY.B !StripeImage                  ;; ?QPWZ? : A4 12     
                       STA.B !_2                           ;; 0085E1 : 85 02       ; /  
                       JSR CODE_00871E                     ;; 0085E3 : 20 1E 87    ;
                       LDA.B !StripeImage                  ;; 0085E6 : A5 12       ;
-                      BNE CODE_0085F7                     ;; 0085E8 : D0 0D       ;
+                      BNE +                               ;; 0085E8 : D0 0D       ;
                       STA.L !DynStripeImgSize             ;; 0085EA : 8F 7B 83 7F ;
                       STA.L !DynStripeImgSize+1           ;; 0085EE : 8F 7C 83 7F ;
                       DEC A                               ;; 0085F2 : 3A          ;
                       STA.L !DynamicStripeImage           ;; 0085F3 : 8F 7D 83 7F ;
-CODE_0085F7:          STZ.B !StripeImage                  ;; 0085F7 : 64 12       ; Do not reload the same thing next frame 
+                    + STZ.B !StripeImage                  ;; 0085F7 : 64 12       ; Do not reload the same thing next frame 
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_0085FA:          JSR TurnOffIO                       ;; 0085FA : 20 7D 93    ;
@@ -678,10 +678,10 @@ CODE_0085FA:          JSR TurnOffIO                       ;; 0085FA : 20 7D 93  
                       LDA.B #$50                          ;; 008607 : A9 50       ; \ Set "Address for VRAM Read/Write (High Byte)" to x50 
                       STA.W !HW_VMADD+1                   ;; 008609 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00860C : A2 06       ;
-CODE_00860E:          LDA.W DATA_008649,X                 ;; 00860E : BD 49 86    ;
+                    - LDA.W DATA_008649,X                 ;; 00860E : BD 49 86    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 008611 : 9D 10 43    ;
                       DEX                                 ;; 008614 : CA          ;
-                      BPL CODE_00860E                     ;; 008615 : 10 F7       ;
+                      BPL -                               ;; 008615 : 10 F7       ;
                       LDY.B #$02                          ;; 008617 : A0 02       ; DMA something to VRAM, my guess is a tilemap... 
                       STY.W !HW_MDMAEN                    ;; 008619 : 8C 0B 42    ; Regular DMA Channel Enable
                       LDA.B #$38                          ;; 00861C : A9 38       ;
@@ -692,10 +692,10 @@ CODE_00860E:          LDA.W DATA_008649,X                 ;; 00860E : BD 49 86  
                       LDA.B #$50                          ;; 008628 : A9 50       ;  | 
                       STA.W !HW_VMADD+1                   ;; 00862A : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00862D : A2 06       ; And Repeat the DMA 
-CODE_00862F:          LDA.W DATA_008649,X                 ;; 00862F : BD 49 86    ;
+                    - LDA.W DATA_008649,X                 ;; 00862F : BD 49 86    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 008632 : 9D 10 43    ;
                       DEX                                 ;; 008635 : CA          ;
-                      BPL CODE_00862F                     ;; 008636 : 10 F7       ;
+                      BPL -                               ;; 008636 : 10 F7       ;
                       LDA.B #$19                          ;; 008638 : A9 19       ; \but change desination address to $2119 
                       STA.W !HW_DMAREG+$10                ;; 00863A : 8D 11 43    ; / ; B Address
                       STY.W !HW_MDMAEN                    ;; 00863D : 8C 0B 42    ; Start DMA ; Regular DMA Channel Enable
@@ -737,9 +737,9 @@ ControllerUpdate:     LDA.W !HW_CNTRL1                    ;; ?QPWZ? : AD 18 42  
                       STA.W !byetudlrP2Frame              ;; 00869A : 8D A7 0D    ;  | 
                       STY.W !byetudlrP2Mask               ;; 00869D : 8C AB 0D    ; /  
                       LDX.W !ControllersPresent           ;; 0086A0 : AE A0 0D    ; \  
-                      BPL CODE_0086A8                     ;; 0086A3 : 10 03       ;  |If $0DA0 is positive, set X to $0DA0 
+                      BPL +                               ;; 0086A3 : 10 03       ;  |If $0DA0 is positive, set X to $0DA0 
                       LDX.W !PlayerTurnLvl                ;; 0086A5 : AE B3 0D    ;  |Otherwise, set X to current character 
-CODE_0086A8:          LDA.W !axlr0000P1Hold,X             ;; 0086A8 : BD A4 0D    ; \  
+                    + LDA.W !axlr0000P1Hold,X             ;; 0086A8 : BD A4 0D    ; \  
                       AND.B #$C0                          ;; 0086AB : 29 C0       ;  | 
                       ORA.W !byetudlrP1Hold,X             ;; 0086AD : 1D A2 0D    ;  | 
                       STA.B !byetudlrHold                 ;; 0086B0 : 85 15       ;  | 
@@ -756,10 +756,10 @@ CODE_0086A8:          LDA.W !axlr0000P1Hold,X             ;; 0086A8 : BD A4 0D  
 CODE_0086C7:          REP #$30                            ;; 0086C7 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDX.W #$0062                        ;; 0086C9 : A2 62 00    ;
                       LDA.W #$0202                        ;; 0086CC : A9 02 02    ;
-CODE_0086CF:          STA.W !OAMTileSize,X                ;; 0086CF : 9D 20 04    ;
+                    - STA.W !OAMTileSize,X                ;; 0086CF : 9D 20 04    ;
                       DEX                                 ;; 0086D2 : CA          ;
                       DEX                                 ;; 0086D3 : CA          ;
-                      BPL CODE_0086CF                     ;; 0086D4 : 10 F9       ;
+                      BPL -                               ;; 0086D4 : 10 F9       ;
                       SEP #$30                            ;; 0086D6 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDA.B #$F0                          ;; 0086D8 : A9 F0       ;
                       JSL !OAMResetRoutine+$12E           ;; 0086DA : 22 2E 81 7F ;
@@ -806,11 +806,11 @@ CODE_00871E:          REP #$10                            ;; 00871E : C2 10     
                       STA.W !HW_DMAADDR+$12               ;; 008720 : 8D 14 43    ; A Address Bank
                       LDY.W #$0000                        ;; 008723 : A0 00 00    ; Set index to 0 
 CODE_008726:          LDA.B [!_0],Y                       ;; 008726 : B7 00       ; \ Read line header byte 1 
-                      BPL CODE_00872D                     ;; 008728 : 10 03       ;  |If the byte & %10000000 is true, 
+                      BPL +                               ;; 008728 : 10 03       ;  |If the byte & %10000000 is true, 
                       SEP #$30                            ;; 00872A : E2 30       ;  |Set A,X,Y to 8 bit and return ; Index (8 bit) Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ;  | 
                                                           ;;                      ;
-CODE_00872D:          STA.B !_4                           ;; 00872D : 85 04       ; Store byte in !_4  ; Index(16 bit) 
+                    + STA.B !_4                           ;; 00872D : 85 04       ; Store byte in !_4  ; Index(16 bit) 
                       INY                                 ;; 00872F : C8          ; Move onto the next byte 
                       LDA.B [!_0],Y                       ;; 008730 : B7 00       ; Read line header byte 2 
                       STA.B !_3                           ;; 008732 : 85 03       ; Store byte in $03 
@@ -846,7 +846,7 @@ CODE_00872D:          STA.B !_4                           ;; 00872D : 85 04     
                       STA.W !HW_DMAADDR+$10               ;; 008766 : 8D 12 43    ; A Address (Low Byte)
                       STX.W !HW_DMACNT+$10                ;; 008769 : 8E 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDA.B !_5                           ;; 00876C : A5 05       ;
-                      BEQ CODE_008795                     ;; 00876E : F0 25       ;
+                      BEQ +                               ;; 00876E : F0 25       ;
                       SEP #$20                            ;; 008770 : E2 20       ; 8 bit A ; Accum (8 bit) 
                       LDA.B !_7                           ;; 008772 : A5 07       ;
                       STA.W !HW_VMAINC                    ;; 008774 : 8D 15 21    ; VRAM Address Increment Value
@@ -863,7 +863,7 @@ CODE_00872D:          STA.B !_4                           ;; 00872D : 85 04     
                       STA.W !HW_DMAADDR+$10               ;; 00878C : 8D 12 43    ; A Address (Low Byte)
                       STX.W !HW_DMACNT+$10                ;; 00878F : 8E 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDX.W #$0002                        ;; 008792 : A2 02 00    ;
-CODE_008795:          STX.B !_3                           ;; 008795 : 86 03       ;
+                    + STX.B !_3                           ;; 008795 : 86 03       ;
                       TYA                                 ;; 008797 : 98          ;
                       CLC                                 ;; 008798 : 18          ;
                       ADC.B !_3                           ;; 008799 : 65 03       ;
@@ -878,25 +878,25 @@ CODE_008795:          STX.B !_3                           ;; 008795 : 86 03     
                                                           ;;                      ;
 CODE_0087AD:          SEP #$30                            ;; 0087AD : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDA.W !Layer1VramAddr               ;; 0087AF : AD E4 1B    ; \  
-                      BNE CODE_0087B7                     ;; 0087B2 : D0 03       ;  |If Layer 1 has to be updated, 
+                      BNE +                               ;; 0087B2 : D0 03       ;  |If Layer 1 has to be updated, 
                       JMP CODE_0088DD                     ;; 0087B4 : 4C DD 88    ;  |jump to $88DD 
                                                           ;;                      ;
-CODE_0087B7:          LDA.B !ScreenMode                   ;; 0087B7 : A5 5B       ; \  
+                    + LDA.B !ScreenMode                   ;; 0087B7 : A5 5B       ; \  
                       AND.B #$01                          ;; 0087B9 : 29 01       ;  | 
-                      BEQ CODE_0087C0                     ;; 0087BB : F0 03       ;  |If on a vertical level, 
+                      BEQ +                               ;; 0087BB : F0 03       ;  |If on a vertical level, 
                       JMP CODE_008849                     ;; 0087BD : 4C 49 88    ;  |jump to $8849 
                                                           ;;                      ;
-CODE_0087C0:          LDY.B #$81                          ;; 0087C0 : A0 81       ; \ Set "VRAM Address Increment Value" to x81 
+                    + LDY.B #$81                          ;; 0087C0 : A0 81       ; \ Set "VRAM Address Increment Value" to x81 
                       STY.W !HW_VMAINC                    ;; 0087C2 : 8C 15 21    ; /  ; VRAM Address Increment Value
                       LDA.W !Layer1VramAddr+1             ;; 0087C5 : AD E5 1B    ;
                       STA.W !HW_VMADD                     ;; 0087C8 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer1VramAddr               ;; 0087CB : AD E4 1B    ;
                       STA.W !HW_VMADD+1                   ;; 0087CE : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0087D1 : A2 06       ;
-CODE_0087D3:          LDA.W DATA_008A16,X                 ;; 0087D3 : BD 16 8A    ;
+                    - LDA.W DATA_008A16,X                 ;; 0087D3 : BD 16 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 0087D6 : 9D 10 43    ;
                       DEX                                 ;; 0087D9 : CA          ;
-                      BPL CODE_0087D3                     ;; 0087DA : 10 F7       ;
+                      BPL -                               ;; 0087DA : 10 F7       ;
                       LDA.B #$02                          ;; 0087DC : A9 02       ; \ Enable DMA channel 1 
                       STA.W !HW_MDMAEN                    ;; 0087DE : 8D 0B 42    ; /  ; Regular DMA Channel Enable
                       STY.W !HW_VMAINC                    ;; 0087E1 : 8C 15 21    ; VRAM Address Increment Value
@@ -907,10 +907,10 @@ CODE_0087D3:          LDA.W DATA_008A16,X                 ;; 0087D3 : BD 16 8A  
                       ADC.B #$08                          ;; 0087EE : 69 08       ;
                       STA.W !HW_VMADD+1                   ;; 0087F0 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0087F3 : A2 06       ;
-CODE_0087F5:          LDA.W DATA_008A1D,X                 ;; 0087F5 : BD 1D 8A    ;
+                    - LDA.W DATA_008A1D,X                 ;; 0087F5 : BD 1D 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 0087F8 : 9D 10 43    ;
                       DEX                                 ;; 0087FB : CA          ;
-                      BPL CODE_0087F5                     ;; 0087FC : 10 F7       ;
+                      BPL -                               ;; 0087FC : 10 F7       ;
                       LDA.B #$02                          ;; 0087FE : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 008800 : 8D 0B 42    ; \ Enable DMA channel 1 ; Regular DMA Channel Enable
                       STY.W !HW_VMAINC                    ;; 008803 : 8C 15 21    ; /  ; VRAM Address Increment Value
@@ -920,10 +920,10 @@ CODE_0087F5:          LDA.W DATA_008A1D,X                 ;; 0087F5 : BD 1D 8A  
                       LDA.W !Layer1VramAddr               ;; 00880D : AD E4 1B    ;
                       STA.W !HW_VMADD+1                   ;; 008810 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008813 : A2 06       ;
-CODE_008815:          LDA.W DATA_008A24,X                 ;; 008815 : BD 24 8A    ;
+                    - LDA.W DATA_008A24,X                 ;; 008815 : BD 24 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 008818 : 9D 10 43    ;
                       DEX                                 ;; 00881B : CA          ;
-                      BPL CODE_008815                     ;; 00881C : 10 F7       ;
+                      BPL -                               ;; 00881C : 10 F7       ;
                       LDA.B #$02                          ;; 00881E : A9 02       ; \ Enable DMA channel 1 
                       STA.W !HW_MDMAEN                    ;; 008820 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
                       STY.W !HW_VMAINC                    ;; 008823 : 8C 15 21    ; VRAM Address Increment Value
@@ -935,10 +935,10 @@ CODE_008815:          LDA.W DATA_008A24,X                 ;; 008815 : BD 24 8A  
                       ADC.B #$08                          ;; 008831 : 69 08       ;
                       STA.W !HW_VMADD+1                   ;; 008833 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008836 : A2 06       ;
-CODE_008838:          LDA.W DATA_008A2B,X                 ;; 008838 : BD 2B 8A    ;
+                    - LDA.W DATA_008A2B,X                 ;; 008838 : BD 2B 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 00883B : 9D 10 43    ;
                       DEX                                 ;; 00883E : CA          ;
-                      BPL CODE_008838                     ;; 00883F : 10 F7       ;
+                      BPL -                               ;; 00883F : 10 F7       ;
                       LDA.B #$02                          ;; 008841 : A9 02       ; \ Enable DMA channel 1 
                       STA.W !HW_MDMAEN                    ;; 008843 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
                       JMP CODE_0088DD                     ;; 008846 : 4C DD 88    ;
@@ -950,10 +950,10 @@ CODE_008849:          LDY.B #$80                          ;; 008849 : A0 80     
                       LDA.W !Layer1VramAddr               ;; 008854 : AD E4 1B    ;
                       STA.W !HW_VMADD+1                   ;; 008857 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00885A : A2 06       ;
-CODE_00885C:          LDA.W DATA_008A16,X                 ;; 00885C : BD 16 8A    ;
+                    - LDA.W DATA_008A16,X                 ;; 00885C : BD 16 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 00885F : 9D 10 43    ;
                       DEX                                 ;; 008862 : CA          ;
-                      BPL CODE_00885C                     ;; 008863 : 10 F7       ;
+                      BPL -                               ;; 008863 : 10 F7       ;
                       LDA.B #$02                          ;; 008865 : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 008867 : 8D 0B 42    ; Regular DMA Channel Enable
                       STY.W !HW_VMAINC                    ;; 00886A : 8C 15 21    ; VRAM Address Increment Value
@@ -964,10 +964,10 @@ CODE_00885C:          LDA.W DATA_008A16,X                 ;; 00885C : BD 16 8A  
                       ADC.B #$04                          ;; 008877 : 69 04       ;
                       STA.W !HW_VMADD+1                   ;; 008879 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00887C : A2 06       ;
-CODE_00887E:          LDA.W DATA_008A1D,X                 ;; 00887E : BD 1D 8A    ;
+                    - LDA.W DATA_008A1D,X                 ;; 00887E : BD 1D 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 008881 : 9D 10 43    ;
                       DEX                                 ;; 008884 : CA          ;
-                      BPL CODE_00887E                     ;; 008885 : 10 F7       ;
+                      BPL -                               ;; 008885 : 10 F7       ;
                       LDA.B #$40                          ;; 008887 : A9 40       ;
                       STA.W !HW_DMACNT+$10                ;; 008889 : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDA.B #$02                          ;; 00888C : A9 02       ;
@@ -980,10 +980,10 @@ CODE_00887E:          LDA.W DATA_008A1D,X                 ;; 00887E : BD 1D 8A  
                       LDA.W !Layer1VramAddr               ;; 00889D : AD E4 1B    ;
                       STA.W !HW_VMADD+1                   ;; 0088A0 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0088A3 : A2 06       ;
-CODE_0088A5:          LDA.W DATA_008A24,X                 ;; 0088A5 : BD 24 8A    ;
+                    - LDA.W DATA_008A24,X                 ;; 0088A5 : BD 24 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 0088A8 : 9D 10 43    ;
                       DEX                                 ;; 0088AB : CA          ;
-                      BPL CODE_0088A5                     ;; 0088AC : 10 F7       ;
+                      BPL -                               ;; 0088AC : 10 F7       ;
                       LDA.B #$02                          ;; 0088AE : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 0088B0 : 8D 0B 42    ; Regular DMA Channel Enable
                       STY.W !HW_VMAINC                    ;; 0088B3 : 8C 15 21    ; VRAM Address Increment Value
@@ -996,10 +996,10 @@ CODE_0088A5:          LDA.W DATA_008A24,X                 ;; 0088A5 : BD 24 8A  
                       ADC.B #$04                          ;; 0088C3 : 69 04       ;
                       STA.W !HW_VMADD+1                   ;; 0088C5 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0088C8 : A2 06       ;
-CODE_0088CA:          LDA.W DATA_008A2B,X                 ;; 0088CA : BD 2B 8A    ;
+                    - LDA.W DATA_008A2B,X                 ;; 0088CA : BD 2B 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 0088CD : 9D 10 43    ;
                       DEX                                 ;; 0088D0 : CA          ;
-                      BPL CODE_0088CA                     ;; 0088D1 : 10 F7       ;
+                      BPL -                               ;; 0088D1 : 10 F7       ;
                       LDA.B #$40                          ;; 0088D3 : A9 40       ;
                       STA.W !HW_DMACNT+$10                ;; 0088D5 : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDA.B #$02                          ;; 0088D8 : A9 02       ;
@@ -1007,25 +1007,25 @@ CODE_0088CA:          LDA.W DATA_008A2B,X                 ;; 0088CA : BD 2B 8A  
 CODE_0088DD:          LDA.B #$00                          ;; 0088DD : A9 00       ;
                       STA.W !Layer1VramAddr               ;; 0088DF : 8D E4 1B    ;
                       LDA.W !Layer2VramAddr               ;; 0088E2 : AD E6 1C    ;
-                      BNE CODE_0088EA                     ;; 0088E5 : D0 03       ;
+                      BNE +                               ;; 0088E5 : D0 03       ;
                       JMP CODE_008A10                     ;; 0088E7 : 4C 10 8A    ;
                                                           ;;                      ;
-CODE_0088EA:          LDA.B !ScreenMode                   ;; 0088EA : A5 5B       ;
+                    + LDA.B !ScreenMode                   ;; 0088EA : A5 5B       ;
                       AND.B #$02                          ;; 0088EC : 29 02       ;
-                      BEQ CODE_0088F3                     ;; 0088EE : F0 03       ;
+                      BEQ +                               ;; 0088EE : F0 03       ;
                       JMP CODE_00897C                     ;; 0088F0 : 4C 7C 89    ;
                                                           ;;                      ;
-CODE_0088F3:          LDY.B #$81                          ;; 0088F3 : A0 81       ;
+                    + LDY.B #$81                          ;; 0088F3 : A0 81       ;
                       STY.W !HW_VMAINC                    ;; 0088F5 : 8C 15 21    ; VRAM Address Increment Value
                       LDA.W !Layer2VramAddr+1             ;; 0088F8 : AD E7 1C    ;
                       STA.W !HW_VMADD                     ;; 0088FB : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Layer2VramAddr               ;; 0088FE : AD E6 1C    ;
                       STA.W !HW_VMADD+1                   ;; 008901 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008904 : A2 06       ;
-CODE_008906:          LDA.W DATA_008A32,X                 ;; 008906 : BD 32 8A    ;
+                    - LDA.W DATA_008A32,X                 ;; 008906 : BD 32 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 008909 : 9D 10 43    ;
                       DEX                                 ;; 00890C : CA          ;
-                      BPL CODE_008906                     ;; 00890D : 10 F7       ;
+                      BPL -                               ;; 00890D : 10 F7       ;
                       LDA.B #$02                          ;; 00890F : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 008911 : 8D 0B 42    ; Regular DMA Channel Enable
                       STY.W !HW_VMAINC                    ;; 008914 : 8C 15 21    ; VRAM Address Increment Value
@@ -1036,10 +1036,10 @@ CODE_008906:          LDA.W DATA_008A32,X                 ;; 008906 : BD 32 8A  
                       ADC.B #$08                          ;; 008921 : 69 08       ;
                       STA.W !HW_VMADD+1                   ;; 008923 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008926 : A2 06       ;
-CODE_008928:          LDA.W DATA_008A39,X                 ;; 008928 : BD 39 8A    ;
+                    - LDA.W DATA_008A39,X                 ;; 008928 : BD 39 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 00892B : 9D 10 43    ;
                       DEX                                 ;; 00892E : CA          ;
-                      BPL CODE_008928                     ;; 00892F : 10 F7       ;
+                      BPL -                               ;; 00892F : 10 F7       ;
                       LDA.B #$02                          ;; 008931 : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 008933 : 8D 0B 42    ; Regular DMA Channel Enable
                       STY.W !HW_VMAINC                    ;; 008936 : 8C 15 21    ; VRAM Address Increment Value
@@ -1049,10 +1049,10 @@ CODE_008928:          LDA.W DATA_008A39,X                 ;; 008928 : BD 39 8A  
                       LDA.W !Layer2VramAddr               ;; 008940 : AD E6 1C    ;
                       STA.W !HW_VMADD+1                   ;; 008943 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008946 : A2 06       ;
-CODE_008948:          LDA.W DATA_008A40,X                 ;; 008948 : BD 40 8A    ;
+                    - LDA.W DATA_008A40,X                 ;; 008948 : BD 40 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 00894B : 9D 10 43    ;
                       DEX                                 ;; 00894E : CA          ;
-                      BPL CODE_008948                     ;; 00894F : 10 F7       ;
+                      BPL -                               ;; 00894F : 10 F7       ;
                       LDA.B #$02                          ;; 008951 : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 008953 : 8D 0B 42    ; Regular DMA Channel Enable
                       STY.W !HW_VMAINC                    ;; 008956 : 8C 15 21    ; VRAM Address Increment Value
@@ -1064,10 +1064,10 @@ CODE_008948:          LDA.W DATA_008A40,X                 ;; 008948 : BD 40 8A  
                       ADC.B #$08                          ;; 008964 : 69 08       ;
                       STA.W !HW_VMADD+1                   ;; 008966 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008969 : A2 06       ;
-CODE_00896B:          LDA.W DATA_008A47,X                 ;; 00896B : BD 47 8A    ;
+                    - LDA.W DATA_008A47,X                 ;; 00896B : BD 47 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 00896E : 9D 10 43    ;
                       DEX                                 ;; 008971 : CA          ;
-                      BPL CODE_00896B                     ;; 008972 : 10 F7       ;
+                      BPL -                               ;; 008972 : 10 F7       ;
                       LDA.B #$02                          ;; 008974 : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 008976 : 8D 0B 42    ; Regular DMA Channel Enable
                       JMP CODE_008A10                     ;; 008979 : 4C 10 8A    ;
@@ -1079,10 +1079,10 @@ CODE_00897C:          LDY.B #$80                          ;; 00897C : A0 80     
                       LDA.W !Layer2VramAddr               ;; 008987 : AD E6 1C    ;
                       STA.W !HW_VMADD+1                   ;; 00898A : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00898D : A2 06       ;
-CODE_00898F:          LDA.W DATA_008A32,X                 ;; 00898F : BD 32 8A    ;
+                    - LDA.W DATA_008A32,X                 ;; 00898F : BD 32 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 008992 : 9D 10 43    ;
                       DEX                                 ;; 008995 : CA          ;
-                      BPL CODE_00898F                     ;; 008996 : 10 F7       ;
+                      BPL -                               ;; 008996 : 10 F7       ;
                       LDA.B #$02                          ;; 008998 : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 00899A : 8D 0B 42    ; Regular DMA Channel Enable
                       STY.W !HW_VMAINC                    ;; 00899D : 8C 15 21    ; VRAM Address Increment Value
@@ -1093,10 +1093,10 @@ CODE_00898F:          LDA.W DATA_008A32,X                 ;; 00898F : BD 32 8A  
                       ADC.B #$04                          ;; 0089AA : 69 04       ;
                       STA.W !HW_VMADD+1                   ;; 0089AC : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0089AF : A2 06       ;
-CODE_0089B1:          LDA.W DATA_008A39,X                 ;; 0089B1 : BD 39 8A    ;
+                    - LDA.W DATA_008A39,X                 ;; 0089B1 : BD 39 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 0089B4 : 9D 10 43    ;
                       DEX                                 ;; 0089B7 : CA          ;
-                      BPL CODE_0089B1                     ;; 0089B8 : 10 F7       ;
+                      BPL -                               ;; 0089B8 : 10 F7       ;
                       LDA.B #$40                          ;; 0089BA : A9 40       ;
                       STA.W !HW_DMACNT+$10                ;; 0089BC : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDA.B #$02                          ;; 0089BF : A9 02       ;
@@ -1109,10 +1109,10 @@ CODE_0089B1:          LDA.W DATA_008A39,X                 ;; 0089B1 : BD 39 8A  
                       LDA.W !Layer2VramAddr               ;; 0089D0 : AD E6 1C    ;
                       STA.W !HW_VMADD+1                   ;; 0089D3 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0089D6 : A2 06       ;
-CODE_0089D8:          LDA.W DATA_008A40,X                 ;; 0089D8 : BD 40 8A    ;
+                    - LDA.W DATA_008A40,X                 ;; 0089D8 : BD 40 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 0089DB : 9D 10 43    ;
                       DEX                                 ;; 0089DE : CA          ;
-                      BPL CODE_0089D8                     ;; 0089DF : 10 F7       ;
+                      BPL -                               ;; 0089DF : 10 F7       ;
                       LDA.B #$02                          ;; 0089E1 : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 0089E3 : 8D 0B 42    ; Regular DMA Channel Enable
                       STY.W !HW_VMAINC                    ;; 0089E6 : 8C 15 21    ; VRAM Address Increment Value
@@ -1125,10 +1125,10 @@ CODE_0089D8:          LDA.W DATA_008A40,X                 ;; 0089D8 : BD 40 8A  
                       ADC.B #$04                          ;; 0089F6 : 69 04       ;
                       STA.W !HW_VMADD+1                   ;; 0089F8 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 0089FB : A2 06       ;
-CODE_0089FD:          LDA.W DATA_008A47,X                 ;; 0089FD : BD 47 8A    ;
+                    - LDA.W DATA_008A47,X                 ;; 0089FD : BD 47 8A    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 008A00 : 9D 10 43    ;
                       DEX                                 ;; 008A03 : CA          ;
-                      BPL CODE_0089FD                     ;; 008A04 : 10 F7       ;
+                      BPL -                               ;; 008A04 : 10 F7       ;
                       LDA.B #$40                          ;; 008A06 : A9 40       ;
                       STA.W !HW_DMACNT+$10                ;; 008A08 : 8D 15 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       LDA.B #$02                          ;; 008A0B : A9 02       ;
@@ -1232,10 +1232,10 @@ CODE_008AE8:          LDA.B !Mode7Angle                   ;; 008AE8 : A5 36     
                       TAX                                 ;; 008AFD : AA          ;
                       JSR CODE_008B2B                     ;; 008AFE : 20 2B 8B    ;
                       CPY.W #$0004                        ;; 008B01 : C0 04 00    ;
-                      BCC CODE_008B0A                     ;; 008B04 : 90 04       ;
+                      BCC +                               ;; 008B04 : 90 04       ;
                       EOR.W #$FFFF                        ;; 008B06 : 49 FF FF    ;
                       INC A                               ;; 008B09 : 1A          ;
-CODE_008B0A:          STA.B !Mode7ParamB                  ;; 008B0A : 85 30       ;
+                    + STA.B !Mode7ParamB                  ;; 008B0A : 85 30       ;
                       TXA                                 ;; 008B0C : 8A          ;
                       EOR.W #$00FE                        ;; 008B0D : 49 FE 00    ;
                       CLC                                 ;; 008B10 : 18          ;
@@ -1246,18 +1246,18 @@ CODE_008B0A:          STA.B !Mode7ParamB                  ;; 008B0A : 85 30     
                       DEY                                 ;; 008B1B : 88          ;
                       DEY                                 ;; 008B1C : 88          ;
                       CPY.W #$0004                        ;; 008B1D : C0 04 00    ;
-                      BCS CODE_008B26                     ;; 008B20 : B0 04       ;
+                      BCS +                               ;; 008B20 : B0 04       ;
                       EOR.W #$FFFF                        ;; 008B22 : 49 FF FF    ;
                       INC A                               ;; 008B25 : 1A          ;
-CODE_008B26:          STA.B !Mode7ParamA                  ;; 008B26 : 85 2E       ;
+                    + STA.B !Mode7ParamA                  ;; 008B26 : 85 2E       ;
                       SEP #$30                            ;; 008B28 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_008B2B:          SEP #$20                            ;; 008B2B : E2 20       ; Accum (8 bit) 
                       LDA.W DATA_008B58,X                 ;; 008B2D : BD 58 8B    ;
-                      BEQ CODE_008B34                     ;; 008B30 : F0 02       ;
+                      BEQ +                               ;; 008B30 : F0 02       ;
                       LDA.B !_0                           ;; 008B32 : A5 00       ;
-CODE_008B34:          STA.B !_1                           ;; 008B34 : 85 01       ;
+                    + STA.B !_1                           ;; 008B34 : 85 01       ;
                       LDA.W DATA_008B57,X                 ;; 008B36 : BD 57 8B    ;
                       STA.W !HW_WRMPYA                    ;; 008B39 : 8D 02 42    ; Multiplicand A
                       LDA.B !_0                           ;; 008B3C : A5 00       ;
@@ -1345,10 +1345,10 @@ GM04DoDMA:            LDA.B #$80                          ;; ?QPWZ? : A9 80     
                       LDA.B #$50                          ;; 008D09 : A9 50       ;  | 
                       STA.W !HW_VMADD+1                   ;; 008D0B : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008D0E : A2 06       ;
-CODE_008D10:          LDA.W DATA_008D90,X                 ;; 008D10 : BD 90 8D    ;
+                    - LDA.W DATA_008D90,X                 ;; 008D10 : BD 90 8D    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 008D13 : 9D 10 43    ; Load up the DMA regs 
                       DEX                                 ;; 008D16 : CA          ; DMA Source = 8C:8118 (...) 
-                      BPL CODE_008D10                     ;; 008D17 : 10 F7       ; Dest = $2118, Transfer: #$08 bytes 
+                      BPL -                               ;; 008D17 : 10 F7       ; Dest = $2118, Transfer: #$08 bytes 
                       LDA.B #$02                          ;; 008D19 : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 008D1B : 8D 0B 42    ; Do the DMA ; Regular DMA Channel Enable
                       LDA.B #$80                          ;; 008D1E : A9 80       ; \ Set VRAM mode = same as above 
@@ -1358,10 +1358,10 @@ CODE_008D10:          LDA.W DATA_008D90,X                 ;; 008D10 : BD 90 8D  
                       LDA.B #$50                          ;; 008D28 : A9 50       ;  | 
                       STA.W !HW_VMADD+1                   ;; 008D2A : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008D2D : A2 06       ; \ Set up more DMA 
-CODE_008D2F:          LDA.W DATA_008D97,X                 ;; 008D2F : BD 97 8D    ;  |Dest = $2100 
+                    - LDA.W DATA_008D97,X                 ;; 008D2F : BD 97 8D    ;  |Dest = $2100 
                       STA.W !HW_DMAPARAM+$10,X            ;; 008D32 : 9D 10 43    ;  |Fixed source address = $89:1801 (Lunar Address: 7E:1801) 
                       DEX                                 ;; 008D35 : CA          ;  |#$808C bytes to transfer 
-                      BPL CODE_008D2F                     ;; 008D36 : 10 F7       ; /Type = One reg write once 
+                      BPL -                               ;; 008D36 : 10 F7       ; /Type = One reg write once 
                       LDA.B #$02                          ;; 008D38 : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 008D3A : 8D 0B 42    ; Start DMA ; Regular DMA Channel Enable
                       LDA.B #$80                          ;; 008D3D : A9 80       ; \prep VRAM for another write 
@@ -1371,10 +1371,10 @@ CODE_008D2F:          LDA.W DATA_008D97,X                 ;; 008D2F : BD 97 8D  
                       LDA.B #$50                          ;; 008D47 : A9 50       ;  | 
                       STA.W !HW_VMADD+1                   ;; 008D49 : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008D4C : A2 06       ; \ Load up DMA again 
-CODE_008D4E:          LDA.W DATA_008D9E,X                 ;; 008D4E : BD 9E 8D    ;  |Dest = $2118 
+                    - LDA.W DATA_008D9E,X                 ;; 008D4E : BD 9E 8D    ;  |Dest = $2118 
                       STA.W !HW_DMAPARAM+$10,X            ;; 008D51 : 9D 10 43    ;  |Source Address = $39:8CC1 
                       DEX                                 ;; 008D54 : CA          ;  |Size = #$0100 bytes 
-                      BPL CODE_008D4E                     ;; 008D55 : 10 F7       ; /Type = Two reg write once 
+                      BPL -                               ;; 008D55 : 10 F7       ; /Type = Two reg write once 
                       LDA.B #$02                          ;; 008D57 : A9 02       ; \Start Transfer 
                       STA.W !HW_MDMAEN                    ;; 008D59 : 8D 0B 42    ; / ; Regular DMA Channel Enable
                       LDA.B #$80                          ;; 008D5C : A9 80       ; \ 
@@ -1384,20 +1384,20 @@ CODE_008D4E:          LDA.W DATA_008D9E,X                 ;; 008D4E : BD 9E 8D  
                       LDA.B #$50                          ;; 008D66 : A9 50       ;  | 
                       STA.W !HW_VMADD+1                   ;; 008D68 : 8D 17 21    ; / ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008D6B : A2 06       ; \Last DMA... 
-CODE_008D6D:          LDA.W DATA_008DA5,X                 ;; 008D6D : BD A5 8D    ;  |Reg = $2118 Type = Two reg write once 
+                    - LDA.W DATA_008DA5,X                 ;; 008D6D : BD A5 8D    ;  |Reg = $2118 Type = Two reg write once 
                       STA.W !HW_DMAPARAM+$10,X            ;; 008D70 : 9D 10 43    ;  |Source Address = $08:8CF7 
                       DEX                                 ;; 008D73 : CA          ;  |Size = #$9C00 bytes (o_o) 
-                      BPL CODE_008D6D                     ;; 008D74 : 10 F7       ; / 
+                      BPL -                               ;; 008D74 : 10 F7       ; / 
                       LDA.B #$02                          ;; 008D76 : A9 02       ; \Transfer 
                       STA.W !HW_MDMAEN                    ;; 008D78 : 8D 0B 42    ; / ; Regular DMA Channel Enable
                       LDX.B #$36                          ;; 008D7B : A2 36       ; \Copy some data into RAM 
                       LDY.B #$6C                          ;; 008D7D : A0 6C       ;  | 
-CODE_008D7F:          LDA.W DATA_008C89,Y                 ;; 008D7F : B9 89 8C    ;  | 
+                    - LDA.W DATA_008C89,Y                 ;; 008D7F : B9 89 8C    ;  | 
                       STA.W !StatusBar,X                  ;; 008D82 : 9D F9 0E    ;  | 59
                       DEY                                 ;; 008D85 : 88          ;  | 
                       DEY                                 ;; 008D86 : 88          ;  | 
                       DEX                                 ;; 008D87 : CA          ;  | 
-                      BPL CODE_008D7F                     ;; 008D88 : 10 F5       ; / 
+                      BPL -                               ;; 008D88 : 10 F5       ; / 
                       LDA.B #$28                          ;; 008D8A : A9 28       ;
                       STA.W !InGameTimerFrames            ;; 008D8C : 8D 30 0F    ; #$28 -> Timer frame counter 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -1417,10 +1417,10 @@ DrawStatusBar:        STZ.W !HW_VMAINC                    ;; ?QPWZ? : 9C 15 21  
                       LDA.B #$50                          ;; 008DB4 : A9 50       ;  | 
                       STA.W !HW_VMADD+1                   ;; 008DB6 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008DB9 : A2 06       ; \  
-CODE_008DBB:          LDA.W DMAdata_StBr1,X               ;; 008DBB : BD E7 8D    ;  |Load settings from DMAdata_StBr1 into DMA channel 1 
+                    - LDA.W DMAdata_StBr1,X               ;; 008DBB : BD E7 8D    ;  |Load settings from DMAdata_StBr1 into DMA channel 1 
                       STA.W !HW_DMAPARAM+$10,X            ;; 008DBE : 9D 10 43    ;  | 
                       DEX                                 ;; 008DC1 : CA          ;  | 
-                      BPL CODE_008DBB                     ;; 008DC2 : 10 F7       ; /  
+                      BPL -                               ;; 008DC2 : 10 F7       ; /  
                       LDA.B #$02                          ;; 008DC4 : A9 02       ; \ Activate DMA channel 1 
                       STA.W !HW_MDMAEN                    ;; 008DC6 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
                       STZ.W !HW_VMAINC                    ;; 008DC9 : 9C 15 21    ; Set VRAM Address Increment Value to x00 ; VRAM Address Increment Value
@@ -1429,10 +1429,10 @@ CODE_008DBB:          LDA.W DMAdata_StBr1,X               ;; 008DBB : BD E7 8D  
                       LDA.B #$50                          ;; 008DD1 : A9 50       ;  | 
                       STA.W !HW_VMADD+1                   ;; 008DD3 : 8D 17 21    ; /  ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 008DD6 : A2 06       ; \  
-CODE_008DD8:          LDA.W DMAdata_StBr2,X               ;; 008DD8 : BD EE 8D    ;  |Load settings from DMAdata_StBr2 into DMA channel 1 
+                    - LDA.W DMAdata_StBr2,X               ;; 008DD8 : BD EE 8D    ;  |Load settings from DMAdata_StBr2 into DMA channel 1 
                       STA.W !HW_DMAPARAM+$10,X            ;; 008DDB : 9D 10 43    ;  | 
                       DEX                                 ;; 008DDE : CA          ;  | 
-                      BPL CODE_008DD8                     ;; 008DDF : 10 F7       ; /  
+                      BPL -                               ;; 008DDF : 10 F7       ; /  
                       LDA.B #$02                          ;; 008DE1 : A9 02       ; \ Activate DMA channel 1 
                       STA.W !HW_MDMAEN                    ;; 008DE3 : 8D 0B 42    ; /  ; Regular DMA Channel Enable
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -1478,14 +1478,14 @@ CODE_008E3F:          DEC.W !InGameTimerHundreds,X        ;; 008E3F : DE 31 0F  
                       DEX                                 ;; 008E49 : CA          ;
                       BPL CODE_008E3F                     ;; 008E4A : 10 F3       ;
 CODE_008E4C:          LDA.W !InGameTimerHundreds          ;; 008E4C : AD 31 0F    ; \  
-                      BNE CODE_008E60                     ;; 008E4F : D0 0F       ;  | 
+                      BNE +                               ;; 008E4F : D0 0F       ;  | 
                       LDA.W !InGameTimerTens              ;; 008E51 : AD 32 0F    ;  | 
                       AND.W !InGameTimerOnes              ;; 008E54 : 2D 33 0F    ;  |If time is 99, 
                       CMP.B #$09                          ;; 008E57 : C9 09       ;  |speed up the music 
-                      BNE CODE_008E60                     ;; 008E59 : D0 05       ;  | 
+                      BNE +                               ;; 008E59 : D0 05       ;  | 
                       LDA.B #$FF                          ;; 008E5B : A9 FF       ;  | 
                       STA.W !SPCIO0                       ;; 008E5D : 8D F9 1D    ;  | 
-CODE_008E60:          LDA.W !InGameTimerHundreds          ;; 008E60 : AD 31 0F    ; \  
+                    + LDA.W !InGameTimerHundreds          ;; 008E60 : AD 31 0F    ; \  
                       ORA.W !InGameTimerTens              ;; 008E63 : 0D 32 0F    ;  | 
                       ORA.W !InGameTimerOnes              ;; 008E66 : 0D 33 0F    ;  |If time is 0, 
                       BNE CODE_008E6F                     ;; 008E69 : D0 04       ;  |JSL to $00F606 
@@ -1516,7 +1516,7 @@ CODE_008E97:          LDA.W !PlayerScore+2,X              ;; 008E97 : BD 36 0F  
                       SBC.W #$423F                        ;; 008EA4 : E9 3F 42    ;
                       LDA.B !_0                           ;; 008EA7 : A5 00       ;
                       SBC.W #$000F                        ;; 008EA9 : E9 0F 00    ;
-                      BCC CODE_008EBF                     ;; 008EAC : 90 11       ;
+                      BCC +                               ;; 008EAC : 90 11       ;
                       SEP #$20                            ;; 008EAE : E2 20       ; 8 bit A ; Accum (8 bit) 
                       LDA.B #$0F                          ;; 008EB0 : A9 0F       ;
                       STA.W !PlayerScore+2,X              ;; 008EB2 : 9D 36 0F    ;
@@ -1524,7 +1524,7 @@ CODE_008E97:          LDA.W !PlayerScore+2,X              ;; 008E97 : BD 36 0F  
                       STA.W !PlayerScore+1,X              ;; 008EB7 : 9D 35 0F    ;
                       LDA.B #$3F                          ;; 008EBA : A9 3F       ;
                       STA.W !PlayerScore,X                ;; 008EBC : 9D 34 0F    ;
-CODE_008EBF:          SEP #$20                            ;; 008EBF : E2 20       ; 8 bit A ; Accum (8 bit) 
+                    + SEP #$20                            ;; 008EBF : E2 20       ; 8 bit A ; Accum (8 bit) 
                       DEX                                 ;; 008EC1 : CA          ;
                       DEX                                 ;; 008EC2 : CA          ;
                       DEX                                 ;; 008EC3 : CA          ;
@@ -1568,47 +1568,47 @@ CODE_008F0E:          LDA.W !StatusBar+$30,X              ;; 008F0E : BD 29 0F  
                       CPX.B #$06                          ;; 008F19 : E0 06       ;  | 
                       BNE CODE_008F0E                     ;; 008F1B : D0 F1       ; /  
 CODE_008F1D:          LDA.W !CoinAdder                    ;; 008F1D : AD CC 13    ; \ If Coin increase isn't x00, 
-                      BEQ CODE_008F3B                     ;; 008F20 : F0 19       ; / branch to $8F3B 
+                      BEQ +                               ;; 008F20 : F0 19       ; / branch to $8F3B 
                       DEC.W !CoinAdder                    ;; 008F22 : CE CC 13    ; Decrease "Coin increase" 
                       INC.W !PlayerCoins                  ;; 008F25 : EE BF 0D    ; Increase coins by 1 
                       LDA.W !PlayerCoins                  ;; 008F28 : AD BF 0D    ; \  
                       CMP.B #$64                          ;; 008F2B : C9 64       ;  |If coins<100, branch to $8F3B 
-                      BCC CODE_008F3B                     ;; 008F2D : 90 0C       ; /  
+                      BCC +                               ;; 008F2D : 90 0C       ; /  
                       INC.W !GivePlayerLives              ;; 008F2F : EE E4 18    ; Increase lives by 1 
                       LDA.W !PlayerCoins                  ;; 008F32 : AD BF 0D    ; \  
                       SEC                                 ;; 008F35 : 38          ;  |Decrease coins by 100 
                       SBC.B #$64                          ;; 008F36 : E9 64       ;  | 
                       STA.W !PlayerCoins                  ;; 008F38 : 8D BF 0D    ; /  
-CODE_008F3B:          LDA.W !PlayerLives                  ;; 008F3B : AD BE 0D    ; \ If amount of lives is negative, 
-                      BMI CODE_008F49                     ;; 008F3E : 30 09       ; / branch to $8F49 
+                    + LDA.W !PlayerLives                  ;; 008F3B : AD BE 0D    ; \ If amount of lives is negative, 
+                      BMI +                               ;; 008F3E : 30 09       ; / branch to $8F49 
                       CMP.B #$62                          ;; 008F40 : C9 62       ; \ If amount of lives is less than 98, 
-                      BCC CODE_008F49                     ;; 008F42 : 90 05       ; / branch to $8F49 
+                      BCC +                               ;; 008F42 : 90 05       ; / branch to $8F49 
                       LDA.B #$62                          ;; 008F44 : A9 62       ; \ Set amount of lives to 98 
                       STA.W !PlayerLives                  ;; 008F46 : 8D BE 0D    ; /  
-CODE_008F49:          LDA.W !PlayerLives                  ;; 008F49 : AD BE 0D    ; \  
+                    + LDA.W !PlayerLives                  ;; 008F49 : AD BE 0D    ; \  
                       INC A                               ;; 008F4C : 1A          ;  |Get amount of lives in decimal 
                       JSR HexToDec                        ;; 008F4D : 20 45 90    ; /  
                       TXY                                 ;; 008F50 : 9B          ; \  
-                      BNE CODE_008F55                     ;; 008F51 : D0 02       ;  |If 10s is 0, replace with space 
+                      BNE +                               ;; 008F51 : D0 02       ;  |If 10s is 0, replace with space 
                       LDX.B #$FC                          ;; 008F53 : A2 FC       ;  | 
-CODE_008F55:          STX.W !StatusBar+$1D                ;; 008F55 : 8E 16 0F    ; \ Write lives to status bar 
+                    + STX.W !StatusBar+$1D                ;; 008F55 : 8E 16 0F    ; \ Write lives to status bar 
                       STA.W !StatusBar+$1E                ;; 008F58 : 8D 17 0F    ; /  
                       LDX.W !PlayerTurnLvl                ;; 008F5B : AE B3 0D    ; \ Get bonus stars 
                       LDA.W !PlayerBonusStars,X           ;; 008F5E : BD 48 0F    ; /  
                       CMP.B #$64                          ;; 008F61 : C9 64       ; \ If bonus stars is less than 100, 
-                      BCC CODE_008F73                     ;; 008F63 : 90 0E       ; / branch to $8F73 
+                      BCC +                               ;; 008F63 : 90 0E       ; / branch to $8F73 
                       LDA.B #$FF                          ;; 008F65 : A9 FF       ; \ Start bonus game when the level ends 
                       STA.W !BonusGameActivate            ;; 008F67 : 8D 25 14    ; /  
                       LDA.W !PlayerBonusStars,X           ;; 008F6A : BD 48 0F    ; \  
                       SEC                                 ;; 008F6D : 38          ;  |Subtract bonus stars by 100 
                       SBC.B #$64                          ;; 008F6E : E9 64       ;  | 
                       STA.W !PlayerBonusStars,X           ;; 008F70 : 9D 48 0F    ; /  
-CODE_008F73:          LDA.W !PlayerCoins                  ;; 008F73 : AD BF 0D    ; \ Get amount of coins in decimal 
+                    + LDA.W !PlayerCoins                  ;; 008F73 : AD BF 0D    ; \ Get amount of coins in decimal 
                       JSR HexToDec                        ;; 008F76 : 20 45 90    ; /  
                       TXY                                 ;; 008F79 : 9B          ; \ 
-                      BNE CODE_008F7E                     ;; 008F7A : D0 02       ;  |If 10s is 0, replace with space 
+                      BNE +                               ;; 008F7A : D0 02       ;  |If 10s is 0, replace with space 
                       LDX.B #$FC                          ;; 008F7C : A2 FC       ;  | 
-CODE_008F7E:          STA.W !StatusBar+$1B                ;; 008F7E : 8D 14 0F    ; \ Write coins to status bar 
+                    + STA.W !StatusBar+$1B                ;; 008F7E : 8D 14 0F    ; \ Write coins to status bar 
                       STX.W !StatusBar+$1A                ;; 008F81 : 8E 13 0F    ; /  
                       SEP #$20                            ;; 008F84 : E2 20       ; 8 bit A ; Accum (8 bit) 
                       LDX.W !PlayerTurnLvl                ;; 008F86 : AE B3 0D    ; Load Character into X 
@@ -1643,22 +1643,22 @@ CODE_008FAF:          LDA.W !StatusBar+$25,X              ;; 008FAF : BD 1E 0F  
                       LDA.W !PlayerTurnLvl                ;; 008FC8 : AD B3 0D    ;
                       BEQ CODE_008FD8                     ;; 008FCB : F0 0B       ;
                       LDX.B #$04                          ;; 008FCD : A2 04       ;
-CODE_008FCF:          LDA.W DATA_008DF5,X                 ;; 008FCF : BD F5 8D    ;
+                    - LDA.W DATA_008DF5,X                 ;; 008FCF : BD F5 8D    ;
                       STA.W !StatusBar,X                  ;; 008FD2 : 9D F9 0E    ;
                       DEX                                 ;; 008FD5 : CA          ;
-                      BPL CODE_008FCF                     ;; 008FD6 : 10 F7       ;
+                      BPL -                               ;; 008FD6 : 10 F7       ;
 CODE_008FD8:          LDA.W !DragonCoinsShown             ;; 008FD8 : AD 22 14    ;
                       CMP.B #$05                          ;; 008FDB : C9 05       ;
-                      BCC CODE_008FE1                     ;; 008FDD : 90 02       ;
+                      BCC +                               ;; 008FDD : 90 02       ;
                       LDA.B #$00                          ;; 008FDF : A9 00       ;
-CODE_008FE1:          DEC A                               ;; 008FE1 : 3A          ;
+                    + DEC A                               ;; 008FE1 : 3A          ;
                       STA.B !_0                           ;; 008FE2 : 85 00       ;
                       LDX.B #$00                          ;; 008FE4 : A2 00       ;
 CODE_008FE6:          LDY.B #$FC                          ;; 008FE6 : A0 FC       ;
                       LDA.B !_0                           ;; 008FE8 : A5 00       ;
-                      BMI CODE_008FEE                     ;; 008FEA : 30 02       ;
+                      BMI +                               ;; 008FEA : 30 02       ;
                       LDY.B #$2E                          ;; 008FEC : A0 2E       ;
-CODE_008FEE:          TYA                                 ;; 008FEE : 98          ;
+                    + TYA                                 ;; 008FEE : 98          ;
                       STA.W !StatusBar+6,X                ;; 008FEF : 9D FF 0E    ;
                       DEC.B !_0                           ;; 008FF2 : C6 00       ;
                       INX                                 ;; 008FF4 : E8          ;
@@ -1737,20 +1737,20 @@ CODE_00906D:          INX                                 ;; 00906D : E8        
                                                           ;;                      ;
 CODE_009079:          LDY.B #$E0                          ;; 009079 : A0 E0       ;
                       BIT.W !IRQNMICommand                ;; 00907B : 2C 9B 0D    ;
-                      BVC CODE_00908E                     ;; 00907E : 50 0E       ;
+                      BVC +                               ;; 00907E : 50 0E       ;
                       LDY.B #$00                          ;; 009080 : A0 00       ;
                       LDA.W !IRQNMICommand                ;; 009082 : AD 9B 0D    ;
                       CMP.B #$C1                          ;; 009085 : C9 C1       ;
-                      BEQ CODE_00908E                     ;; 009087 : F0 05       ;
+                      BEQ +                               ;; 009087 : F0 05       ;
                       LDA.B #$F0                          ;; 009089 : A9 F0       ;
                       STA.W !OAMTileYPos,Y                ;; 00908B : 99 01 02    ;
-CODE_00908E:          STY.B !_1                           ;; 00908E : 84 01       ;
+                    + STY.B !_1                           ;; 00908E : 84 01       ;
                       LDY.W !PlayerItembox                ;; 009090 : AC C2 0D    ;
                       BEQ Return0090D0                    ;; 009093 : F0 3B       ;
                       LDA.W DATA_008E01,Y                 ;; 009095 : B9 01 8E    ;
                       STA.B !_0                           ;; 009098 : 85 00       ;
                       CPY.B #$03                          ;; 00909A : C0 03       ;
-                      BNE CODE_0090AB                     ;; 00909C : D0 0D       ;
+                      BNE +                               ;; 00909C : D0 0D       ;
                       LDA.B !TrueFrame                    ;; 00909E : A5 13       ;
                       LSR A                               ;; 0090A0 : 4A          ;
                       AND.B #$03                          ;; 0090A1 : 29 03       ;
@@ -1759,7 +1759,7 @@ CODE_00908E:          STY.B !_1                           ;; 00908E : 84 01     
                       LDA.W DATA_008DFE,Y                 ;; 0090A5 : B9 FE 8D    ;
                       PLY                                 ;; 0090A8 : 7A          ;
                       STA.B !_0                           ;; 0090A9 : 85 00       ;
-CODE_0090AB:          LDY.B !_1                           ;; 0090AB : A4 01       ;
+                    + LDY.B !_1                           ;; 0090AB : A4 01       ;
                       LDA.B #$78                          ;; 0090AD : A9 78       ;
                       STA.W !OAMTileXPos,Y                ;; 0090AF : 99 00 02    ;
                       LDA.B #$0F                          ;; 0090B2 : A9 0F       ;
@@ -1815,35 +1815,35 @@ CODE_00919B:          LDA.B !PlayerAnimation              ;; 00919B : A5 71     
                       CMP.B #$0A                          ;; 00919D : C9 0A       ;
                       BNE CODE_0091A6                     ;; 00919F : D0 05       ;
                       JSR CODE_00C593                     ;; 0091A1 : 20 93 C5    ;
-                      BRA Return0091B0                    ;; 0091A4 : 80 0A       ;
+                      BRA +                               ;; 0091A4 : 80 0A       ;
                                                           ;;                      ;
 CODE_0091A6:          LDA.W !SublevelCount                ;; 0091A6 : AD 1A 14    ;
-                      BNE Return0091B0                    ;; 0091A9 : D0 05       ;
+                      BNE +                               ;; 0091A9 : D0 05       ;
                       LDA.B #$1E                          ;; 0091AB : A9 1E       ;
                       STA.W !GreenStarBlockCoins          ;; 0091AD : 8D C0 0D    ;
-Return0091B0:         RTS                                 ;; ?QPWZ? : 60          ;
+                    + RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_0091B1:          JSR CODE_00A82D                     ;; 0091B1 : 20 2D A8    ;
                       LDX.B #$00                          ;; 0091B4 : A2 00       ;
                       LDA.B #$B0                          ;; 0091B6 : A9 B0       ;
                       LDY.W !BonusGameActivate            ;; 0091B8 : AC 25 14    ;
-                      BEQ CODE_0091CA                     ;; 0091BB : F0 0D       ;
+                      BEQ +                               ;; 0091BB : F0 0D       ;
                       STZ.W !InGameTimerHundreds          ;; 0091BD : 9C 31 0F    ; \  
                       STZ.W !InGameTimerTens              ;; 0091C0 : 9C 32 0F    ;  |Set timer to 000 
                       STZ.W !InGameTimerOnes              ;; 0091C3 : 9C 33 0F    ; /  
                       LDX.B #$26                          ;; 0091C6 : A2 26       ;
                       LDA.B #$A4                          ;; 0091C8 : A9 A4       ;
-CODE_0091CA:          STA.B !_0                           ;; 0091CA : 85 00       ;
+                    + STA.B !_0                           ;; 0091CA : 85 00       ;
                       STZ.B !_1                           ;; 0091CC : 64 01       ;
                       LDY.B #$70                          ;; 0091CE : A0 70       ;
 CODE_0091D0:          JSR CODE_0091E9                     ;; 0091D0 : 20 E9 91    ;
                       INX                                 ;; 0091D3 : E8          ;
                       CPX.B #$08                          ;; 0091D4 : E0 08       ;
-                      BNE CODE_0091DF                     ;; 0091D6 : D0 07       ;
+                      BNE +                               ;; 0091D6 : D0 07       ;
                       LDA.W !PlayerTurnLvl                ;; 0091D8 : AD B3 0D    ;
-                      BEQ CODE_0091DF                     ;; 0091DB : F0 02       ;
+                      BEQ +                               ;; 0091DB : F0 02       ;
                       LDX.B #$0E                          ;; 0091DD : A2 0E       ;
-CODE_0091DF:          TYA                                 ;; 0091DF : 98          ;
+                    + TYA                                 ;; 0091DF : 98          ;
                       SEC                                 ;; 0091E0 : 38          ;
                       SBC.B #$08                          ;; 0091E1 : E9 08       ;
                       TAY                                 ;; 0091E3 : A8          ;
@@ -1860,9 +1860,9 @@ CODE_0091E9:          LDA.W DATA_009139,X                 ;; 0091E9 : BD 39 91  
                       SEC                                 ;; 0091FD : 38          ;
                       SBC.B #$08                          ;; 0091FE : E9 08       ;
                       STA.B !_0                           ;; 009200 : 85 00       ;
-                      BCS CODE_009206                     ;; 009202 : B0 02       ;
+                      BCS +                               ;; 009202 : B0 02       ;
                       DEC.B !_1                           ;; 009204 : C6 01       ;
-CODE_009206:          PHY                                 ;; 009206 : 5A          ;
+                    + PHY                                 ;; 009206 : 5A          ;
                       TYA                                 ;; 009207 : 98          ;
                       LSR A                               ;; 009208 : 4A          ;
                       LSR A                               ;; 009209 : 4A          ;
@@ -1873,7 +1873,7 @@ CODE_009206:          PHY                                 ;; 009206 : 5A        
                       STA.W !OAMTileSize+$43,Y            ;; 009212 : 99 63 04    ;
                       PLY                                 ;; 009215 : 7A          ;
                       LDA.W DATA_0090D1,X                 ;; 009216 : BD D1 90    ;
-                      BMI Return00922E                    ;; 009219 : 30 13       ;
+                      BMI +                               ;; 009219 : 30 13       ;
                       STA.W !OAMTileNo+$108,Y             ;; 00921B : 99 0A 03    ;
                       LDA.W DATA_009105,X                 ;; 00921E : BD 05 91    ;
                       STA.W !OAMTileNo+$10C,Y             ;; 009221 : 99 0E 03    ;
@@ -1881,16 +1881,16 @@ CODE_009206:          PHY                                 ;; 009206 : 5A        
                       STA.W !OAMTileYPos+$108,Y           ;; 009226 : 99 09 03    ;
                       LDA.B #$70                          ;; 009229 : A9 70       ;
                       STA.W !OAMTileYPos+$10C,Y           ;; 00922B : 99 0D 03    ;
-Return00922E:         RTS                                 ;; ?QPWZ? : 60          ;
+                    + RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_00922F:          STZ.W !MainPalette                  ;; 00922F : 9C 03 07    ;
                       STZ.W !MainPalette+1                ;; 009232 : 9C 04 07    ;
                       STZ.W !HW_CGADD                     ;; 009235 : 9C 21 21    ; Set "Address for CG-RAM Write" to 0 ; Address for CG-RAM Write
                       LDX.B #$06                          ;; 009238 : A2 06       ;
-CODE_00923A:          LDA.W DATA_009249,X                 ;; 00923A : BD 49 92    ;
+                    - LDA.W DATA_009249,X                 ;; 00923A : BD 49 92    ;
                       STA.W !HW_DMAPARAM+$20,X            ;; 00923D : 9D 20 43    ;
                       DEX                                 ;; 009240 : CA          ;
-                      BPL CODE_00923A                     ;; 009241 : 10 F7       ;
+                      BPL -                               ;; 009241 : 10 F7       ;
                       LDA.B #$04                          ;; 009243 : A9 04       ;
                       STA.W !HW_MDMAEN                    ;; 009245 : 8D 0B 42    ; Regular DMA Channel Enable
                       RTS                                 ;; ?QPWZ? : 60          ;
@@ -1899,21 +1899,21 @@ CODE_00923A:          LDA.W DATA_009249,X                 ;; 00923A : BD 49 92  
 DATA_009249:          db $00,$22,$03,$07,$00,$00,$02      ;; 009249               ;
                                                           ;;                      ;
 CODE_009250:          LDX.B #$04                          ;; 009250 : A2 04       ;
-CODE_009252:          LDA.W DATA_009277,X                 ;; 009252 : BD 77 92    ;
+                    - LDA.W DATA_009277,X                 ;; 009252 : BD 77 92    ;
                       STA.W !HW_DMAPARAM+$70,X            ;; 009255 : 9D 70 43    ;
                       DEX                                 ;; 009258 : CA          ;
-                      BPL CODE_009252                     ;; 009259 : 10 F7       ;
+                      BPL -                               ;; 009259 : 10 F7       ;
                       LDA.B #$00                          ;; 00925B : A9 00       ;
                       STA.W !HW_HDMABANK+$70              ;; 00925D : 8D 77 43    ; Data Bank (H-DMA)
 CODE_009260:          STZ.W !HDMAEnable                   ;; 009260 : 9C 9F 0D    ; Disable all HDMA channels 
 CODE_009263:          REP #$10                            ;; 009263 : C2 10       ; 16 bit A ; Index (16 bit) 
                       LDX.W #$01BE                        ;; 009265 : A2 BE 01    ; \  
                       LDA.B #$FF                          ;; 009268 : A9 FF       ;  | 
-CODE_00926A:          STA.W !WindowTable,X                ;; 00926A : 9D A0 04    ;  |Clear "HDMA table for windowing effects" 
+                    - STA.W !WindowTable,X                ;; 00926A : 9D A0 04    ;  |Clear "HDMA table for windowing effects" 
                       STZ.W !WindowTable+1,X              ;; 00926D : 9E A1 04    ;  |...hang on again.  It clears one set of RAM here, but not the same 
                       DEX                                 ;; 009270 : CA          ;  | 
                       DEX                                 ;; 009271 : CA          ;  | 
-                      BPL CODE_00926A                     ;; 009272 : 10 F6       ; /  
+                      BPL -                               ;; 009272 : 10 F6       ; /  
                       SEP #$10                            ;; 009274 : E2 10       ; \ Set A to 8bit and return ; Index (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; /  
                                                           ;;                      ;
@@ -1927,13 +1927,13 @@ CODE_009283:          JSR CODE_009263                     ;; 009283 : 20 63 92  
                       BCS CODE_0092A0                     ;; 00928A : B0 14       ;
                       REP #$10                            ;; 00928C : C2 10       ; Index (16 bit) 
                       LDX.W #$01BE                        ;; 00928E : A2 BE 01    ;
-WindowHDMAenable:     STZ.W !WindowTable,X                ;; ?QPWZ? : 9E A0 04    ; out? 
+                    - STZ.W !WindowTable,X                ;; ?QPWZ? : 9E A0 04    ; out? 
                       LDA.B #$FF                          ;; 009294 : A9 FF       ; *note to self: ctrl+insert, not shift+insert* 
                       STA.W !WindowTable+1,X              ;; 009296 : 9D A1 04    ; ...  This is, uh, strange.  It pastes $00FF into the $04A0,x table 
                       INX                                 ;; 009299 : E8          ; instead of $FF00 o_O 
                       INX                                 ;; 00929A : E8          ;
                       CPX.W #$01C0                        ;; 00929B : E0 C0 01    ;
-                      BCC WindowHDMAenable                ;; 00929E : 90 F1       ;
+                      BCC -                               ;; 00929E : 90 F1       ;
 CODE_0092A0:          LDA.B #$80                          ;; 0092A0 : A9 80       ;  Enable channel 7 in HDMA, disable all other HDMA channels 
                       STA.W !HDMAEnable                   ;; 0092A2 : 8D 9F 0D    ;  $7E:0D9F - H-DMA Channel Enable RAM Mirror 
                       SEP #$10                            ;; 0092A5 : E2 10       ; Index (8 bit) 
@@ -1942,7 +1942,7 @@ CODE_0092A0:          LDA.B #$80                          ;; 0092A0 : A9 80     
 CODE_0092A8:          JSR CODE_009263                     ;; 0092A8 : 20 63 92    ; these are somewhat the same subroutine, but also not >_> 
                       REP #$10                            ;; 0092AB : C2 10       ; Index (16 bit) 
                       LDX.W #$0198                        ;; 0092AD : A2 98 01    ;
-                      BRA WindowHDMAenable                ;; 0092B0 : 80 DF       ;
+                      BRA -                               ;; 0092B0 : 80 DF       ;
                                                           ;;                      ;
 CODE_0092B2:          LDA.B #$58                          ;; 0092B2 : A9 58       ; Index (8 bit) 
                       STA.W !WindowTable                  ;; 0092B4 : 8D A0 04    ;
@@ -1952,14 +1952,14 @@ CODE_0092B2:          LDA.B #$58                          ;; 0092B2 : A9 58     
                       STZ.W !WindowTable+$13              ;; 0092C0 : 9C B3 04    ;
                       STZ.W !WindowTable+$1D              ;; 0092C3 : 9C BD 04    ;
                       LDX.B #$04                          ;; 0092C6 : A2 04       ;
-CODE_0092C8:          LDA.W DATA_009313,X                 ;; 0092C8 : BD 13 93    ;
+                    - LDA.W DATA_009313,X                 ;; 0092C8 : BD 13 93    ;
                       STA.W !HW_DMAPARAM+$50,X            ;; 0092CB : 9D 50 43    ;
                       LDA.W DATA_009318,X                 ;; 0092CE : BD 18 93    ;
                       STA.W !HW_DMAPARAM+$60,X            ;; 0092D1 : 9D 60 43    ;
                       LDA.W DATA_00931D,X                 ;; 0092D4 : BD 1D 93    ;
                       STA.W !HW_DMAPARAM+$70,X            ;; 0092D7 : 9D 70 43    ;
                       DEX                                 ;; 0092DA : CA          ;
-                      BPL CODE_0092C8                     ;; 0092DB : 10 EB       ;
+                      BPL -                               ;; 0092DB : 10 EB       ;
                       LDA.B #$00                          ;; 0092DD : A9 00       ;
                       STA.W !HW_HDMABANK+$50              ;; 0092DF : 8D 57 43    ; Data Bank (H-DMA)
                       STA.W !HW_HDMABANK+$60              ;; 0092E2 : 8D 67 43    ; Data Bank (H-DMA)
@@ -1969,7 +1969,7 @@ CODE_0092C8:          LDA.W DATA_009313,X                 ;; 0092C8 : BD 13 93  
 CODE_0092ED:          REP #$30                            ;; 0092ED : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDY.W #$0008                        ;; 0092EF : A0 08 00    ;
                       LDX.W #$0014                        ;; 0092F2 : A2 14 00    ;
-CODE_0092F5:          LDA.W !Layer1XPos,Y                 ;; 0092F5 : B9 1A 00    ;
+                    - LDA.W !Layer1XPos,Y                 ;; 0092F5 : B9 1A 00    ;
                       STA.W !WindowTable+1,X              ;; 0092F8 : 9D A1 04    ;
                       STA.W !WindowTable+4,X              ;; 0092FB : 9D A4 04    ;
                       LDA.W !NextLayer1XPos,Y             ;; 0092FE : B9 62 14    ;
@@ -1982,7 +1982,7 @@ CODE_0092F5:          LDA.W !Layer1XPos,Y                 ;; 0092F5 : B9 1A 00  
                       DEY                                 ;; 00930B : 88          ;
                       DEY                                 ;; 00930C : 88          ;
                       DEY                                 ;; 00930D : 88          ;
-                      BPL CODE_0092F5                     ;; 00930E : 10 E5       ;
+                      BPL -                               ;; 00930E : 10 E5       ;
                       SEP #$30                            ;; 009310 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
@@ -2055,7 +2055,7 @@ CODE_009391:          JSR CODE_0085FA                     ;; 009391 : 20 FA 85  
                       JSR CODE_00A993                     ;; 009397 : 20 93 A9    ;
                       LDY.B #$0C                          ;; 00939A : A0 0C       ; \ Load Nintendo Presents logo 
                       LDX.B #$03                          ;; 00939C : A2 03       ;  | 
-CODE_00939E:          LDA.W NintendoPos,X                 ;; 00939E : BD 89 93    ;  | 
+                    - LDA.W NintendoPos,X                 ;; 00939E : BD 89 93    ;  | 
                       STA.W !OAMTileXPos,Y                ;; 0093A1 : 99 00 02    ;  | 
                       LDA.B #$70                          ;; 0093A4 : A9 70       ;  |   <-Y position of logo 
                       STA.W !OAMTileYPos,Y                ;; 0093A6 : 99 01 02    ;  | 
@@ -2068,7 +2068,7 @@ CODE_00939E:          LDA.W NintendoPos,X                 ;; 00939E : BD 89 93  
                       DEY                                 ;; 0093B6 : 88          ;  | 
                       DEY                                 ;; 0093B7 : 88          ;  | 
                       DEX                                 ;; 0093B8 : CA          ;  | 
-                      BPL CODE_00939E                     ;; 0093B9 : 10 E3       ; /  
+                      BPL -                               ;; 0093B9 : 10 E3       ; /  
                       LDA.B #$AA                          ;; 0093BB : A9 AA       ; \ Related to making the sprites 16x16? 
                       STA.W !OAMTileBitSize               ;; 0093BD : 8D 00 04    ; /  
                       LDA.B #$01                          ;; 0093C0 : A9 01       ; \ Play "Bing" sound? 
@@ -2112,13 +2112,13 @@ Return00941A:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 CODE_00941B:          JSR SetUp0DA0GM4                    ;; 00941B : 20 74 9A    ;
                       JSR CODE_009CBE                     ;; 00941E : 20 BE 9C    ;
-                      BEQ CODE_00942E                     ;; 009421 : F0 0B       ;
+                      BEQ +                               ;; 009421 : F0 0B       ;
                       LDA.B #$EC                          ;; 009423 : A9 EC       ;
                       JSR CODE_009440                     ;; 009425 : 20 40 94    ;
                       INC.W !GameMode                     ;; 009428 : EE 00 01    ;
                       JMP CODE_009C9F                     ;; 00942B : 4C 9F 9C    ;
                                                           ;;                      ;
-CODE_00942E:          DEC.W !VariousPromptTimer           ;; 00942E : CE F5 1D    ;
+                    + DEC.W !VariousPromptTimer           ;; 00942E : CE F5 1D    ;
                       BNE Return00941A                    ;; 009431 : D0 E7       ;
                       INC.W !VariousPromptTimer           ;; 009433 : EE F5 1D    ;
                       LDA.W !SpotlightSize                ;; 009436 : AD 33 14    ;
@@ -2166,7 +2166,7 @@ CODE_009468:          JSR CODE_0085FA                     ;; 009468 : 20 FA 85  
                       JSR CODE_009260                     ;; 0094A7 : 20 60 92    ;
                       INC.W !ObjectTileset                ;; 0094AA : EE 31 19    ;
                       INC.W !SpriteTileset                ;; 0094AD : EE 2B 19    ;
-                      BRA CODE_0094D7                     ;; 0094B0 : 80 25       ;
+                      BRA +                               ;; 0094B0 : 80 25       ;
                                                           ;;                      ;
 CODE_0094B2:          LDA.B #$15                          ;; 0094B2 : A9 15       ;
                       STA.W !SPCIO2                       ;; 0094B4 : 8D FB 1D    ;
@@ -2183,13 +2183,13 @@ CODE_0094B2:          LDA.B #$15                          ;; 0094B2 : A9 15     
                       STA.B !PlayerYPosNext               ;; 0094D0 : 85 96       ;
                       SEP #$20                            ;; 0094D2 : E2 20       ; Accum (8 bit) 
                       INC.W !IsCarryingItem               ;; 0094D4 : EE 8F 14    ;
-CODE_0094D7:          JSR UploadSpriteGFX                 ;; 0094D7 : 20 DA A9    ;
+                    + JSR UploadSpriteGFX                 ;; 0094D7 : 20 DA A9    ;
                       JSR LoadPalette                     ;; 0094DA : 20 ED AB    ;
                       JSR CODE_00922F                     ;; 0094DD : 20 2F 92    ;
                       LDX.B #$0B                          ;; 0094E0 : A2 0B       ;
-CODE_0094E2:          STZ.B !Layer1XPos,X                 ;; 0094E2 : 74 1A       ;
+                    - STZ.B !Layer1XPos,X                 ;; 0094E2 : 74 1A       ;
                       DEX                                 ;; 0094E4 : CA          ;
-                      BPL CODE_0094E2                     ;; 0094E5 : 10 FB       ;
+                      BPL -                               ;; 0094E5 : 10 FB       ;
                       LDA.B #$20                          ;; 0094E7 : A9 20       ;
                       STA.B !SpriteProperties             ;; 0094E9 : 85 64       ;
                       JSR CODE_00A635                     ;; 0094EB : 20 35 A6    ;
@@ -2213,9 +2213,9 @@ CODE_0094FD:          JSL !OAMResetRoutine                ;; 0094FD : 22 00 80 7
                       LDA.W !CutsceneID                   ;; 009516 : AD C6 13    ;  | 
                       INC A                               ;; 009519 : 1A          ;  | 
                       CMP.B #$09                          ;; 00951A : C9 09       ;  | 
-                      BCC ADDR_009520                     ;; 00951C : 90 02       ;  | 
+                      BCC +                               ;; 00951C : 90 02       ;  | 
                       LDA.B #$01                          ;; 00951E : A9 01       ;  | 
-ADDR_009520:          STA.W !CutsceneID                   ;; 009520 : 8D C6 13    ;  | 
+                    + STA.W !CutsceneID                   ;; 009520 : 8D C6 13    ;  | 
 ADDR_009523:          LDA.B #$18                          ;; 009523 : A9 18       ;  | 
                       STA.W !GameMode                     ;; 009525 : 8D 00 01    ;  | 
                       RTS                                 ;; ?QPWZ? : 60          ; / 
@@ -2254,12 +2254,12 @@ CODE_00955E:          LDY.B #$2F                          ;; 00955E : A0 2F     
                       LDA.W #$4600                        ;; 00956B : A9 00 46    ;
                       STA.W !HW_VMADD                     ;; 00956E : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDX.W #$0200                        ;; 009571 : A2 00 02    ;
-CODE_009574:          LDA.B [!_0]                         ;; 009574 : A7 00       ;
+                    - LDA.B [!_0]                         ;; 009574 : A7 00       ;
                       STA.W !HW_VMDATA                    ;; 009576 : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       INC.B !_0                           ;; 009579 : E6 00       ;
                       INC.B !_0                           ;; 00957B : E6 00       ;
                       DEX                                 ;; 00957D : CA          ;
-                      BNE CODE_009574                     ;; 00957E : D0 F4       ;
+                      BNE -                               ;; 00957E : D0 F4       ;
                       SEP #$30                            ;; 009580 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
@@ -2296,13 +2296,13 @@ CODE_0095C1:          JSR CODE_0085FA                     ;; 0095C1 : 20 FA 85  
                       BNE CODE_0095E0                     ;; 0095D7 : D0 07       ;
                       LDA.B #$13                          ;; 0095D9 : A9 13       ;
                       STA.W !SpriteTileset                ;; 0095DB : 8D 2B 19    ;
-                      BRA CODE_0095E9                     ;; 0095DE : 80 09       ;
+                      BRA +                               ;; 0095DE : 80 09       ;
                                                           ;;                      ;
 CODE_0095E0:          CMP.B #$0C                          ;; 0095E0 : C9 0C       ;
-                      BNE CODE_0095E9                     ;; 0095E2 : D0 05       ;
+                      BNE +                               ;; 0095E2 : D0 05       ;
                       LDA.B #$17                          ;; 0095E4 : A9 17       ;
                       STA.W !SpriteTileset                ;; 0095E6 : 8D 2B 19    ;
-CODE_0095E9:          JSR UploadSpriteGFX                 ;; 0095E9 : 20 DA A9    ;
+                    + JSR UploadSpriteGFX                 ;; 0095E9 : 20 DA A9    ;
                       JSR LoadPalette                     ;; 0095EC : 20 ED AB    ;
                       JSL CODE_05809E                     ;; 0095EF : 22 9E 80 05 ;
                       JSR CODE_00A5F9                     ;; 0095F3 : 20 F9 A5    ;
@@ -2311,12 +2311,12 @@ CODE_0095E9:          JSR UploadSpriteGFX                 ;; 0095E9 : 20 DA A9  
                       CMP.B #$0C                          ;; 0095FD : C9 0C       ;
                       BNE CODE_009612                     ;; 0095FF : D0 11       ;
                       LDX.B #$0B                          ;; 009601 : A2 0B       ;
-CODE_009603:          LDA.W BowserEndPalette,X            ;; 009603 : BD C0 B3    ;
+                    - LDA.W BowserEndPalette,X            ;; 009603 : BD C0 B3    ;
                       STA.W !MainPalette+$104,X           ;; 009606 : 9D 07 08    ;
                       LDA.W DATA_00B3CC,X                 ;; 009609 : BD CC B3    ;
                       STA.W !MainPalette+$124,X           ;; 00960C : 9D 27 08    ;
                       DEX                                 ;; 00960F : CA          ;
-                      BPL CODE_009603                     ;; 009610 : 10 F1       ;
+                      BPL -                               ;; 009610 : 10 F1       ;
 CODE_009612:          JSR CODE_00922F                     ;; 009612 : 20 2F 92    ;
                       JSR CODE_0092B2                     ;; 009615 : 20 B2 92    ;
                       JSR LoadScrnImage                   ;; 009618 : 20 D2 85    ;
@@ -2347,14 +2347,14 @@ CODE_00963D:          JSR CODE_0085FA                     ;; 00963D : 20 FA 85  
                       JSR UploadSpriteGFX                 ;; 009658 : 20 DA A9    ;
                       JSR LoadPalette                     ;; 00965B : 20 ED AB    ;
                       LDX.B #$0B                          ;; 00965E : A2 0B       ;
-CODE_009660:          LDA.W TheEndPalettes,X              ;; 009660 : BD 0E B7    ;
+                    - LDA.W TheEndPalettes,X              ;; 009660 : BD 0E B7    ;
                       STA.W !MainPalette+$1A4,X           ;; 009663 : 9D A7 08    ;
                       LDA.W DATA_00B71A,X                 ;; 009666 : BD 1A B7    ;
                       STA.W !MainPalette+$1C4,X           ;; 009669 : 9D C7 08    ;
                       LDA.W DATA_00B726,X                 ;; 00966C : BD 26 B7    ;
                       STA.W !MainPalette+$1E4,X           ;; 00966F : 9D E7 08    ;
                       DEX                                 ;; 009672 : CA          ;
-                      BPL CODE_009660                     ;; 009673 : 10 EB       ;
+                      BPL -                               ;; 009673 : 10 EB       ;
                       JSR CODE_00922F                     ;; 009675 : 20 2F 92    ;
                       LDA.B #$D5                          ;; 009678 : A9 D5       ;
                       STA.B !StripeImage                  ;; 00967A : 85 12       ;
@@ -2373,46 +2373,46 @@ CODE_00968E:          JSR CODE_0085FA                     ;; 00968E : 20 FA 85  
                       LDA.W !SublevelCount                ;; 009696 : AD 1A 14    ;
                       ORA.W !ShowMarioStart               ;; 009699 : 0D 1D 14    ;
                       ORA.W !OverworldOverride            ;; 00969C : 0D 09 01    ;
-                      BNE CODE_0096AB                     ;; 00969F : D0 0A       ;
+                      BNE +                               ;; 00969F : D0 0A       ;
                       LDA.W !OverworldLayer1Tile          ;; 0096A1 : AD C1 13    ;
                       CMP.B #$56                          ;; 0096A4 : C9 56       ;
-                      BEQ CODE_0096AB                     ;; 0096A6 : F0 03       ;
+                      BEQ +                               ;; 0096A6 : F0 03       ;
 CODE_0096A8:          JSR CODE_0091B1                     ;; 0096A8 : 20 B1 91    ;
-CODE_0096AB:          JMP CODE_0093CA                     ;; 0096AB : 4C CA 93    ;
+                    + JMP CODE_0093CA                     ;; 0096AB : 4C CA 93    ;
                                                           ;;                      ;
 CODE_0096AE:          STZ.W !HW_NMITIMEN                  ;; 0096AE : 9C 00 42    ; NMI, V/H Count, and Joypad Enable
                       JSR ClearStack                      ;; 0096B1 : 20 4E 8A    ;
                       LDX.B #$07                          ;; 0096B4 : A2 07       ;
                       LDA.B #$FF                          ;; 0096B6 : A9 FF       ;
-CODE_0096B8:          STA.W !SpriteGFXFile,X              ;; 0096B8 : 9D 01 01    ;
+                    - STA.W !SpriteGFXFile,X              ;; 0096B8 : 9D 01 01    ;
                       DEX                                 ;; 0096BB : CA          ;
-                      BPL CODE_0096B8                     ;; 0096BC : 10 FA       ;
+                      BPL -                               ;; 0096BC : 10 FA       ;
                       LDA.W !OverworldOverride            ;; 0096BE : AD 09 01    ;
-                      BNE CODE_0096CB                     ;; 0096C1 : D0 08       ;
+                      BNE +                               ;; 0096C1 : D0 08       ;
                       JSR UploadMusicBank1                ;; 0096C3 : 20 0E 81    ;
                       LDA.B #$01                          ;; 0096C6 : A9 01       ; \ Set title screen music 
                       STA.W !SPCIO2                       ;; 0096C8 : 8D FB 1D    ; / 
-CODE_0096CB:          LDA.B #$EB                          ;; 0096CB : A9 EB       ;
+                    + LDA.B #$EB                          ;; 0096CB : A9 EB       ;
                       LDY.B #$00                          ;; 0096CD : A0 00       ;
 CODE_0096CF:          STA.W !OverworldOverride            ;; 0096CF : 8D 09 01    ;
                       STY.W !OWPlayerSubmap               ;; 0096D2 : 8C 11 1F    ;
 CODE_0096D5:          STZ.W !HW_NMITIMEN                  ;; 0096D5 : 9C 00 42    ; NMI, V/H Count, and Joypad Enable
                       JSR NoButtons                       ;; 0096D8 : 20 2D F6    ;
                       LDA.W !SublevelCount                ;; 0096DB : AD 1A 14    ;
-                      BNE CODE_0096E9                     ;; 0096DE : D0 09       ;
+                      BNE +                               ;; 0096DE : D0 09       ;
                       LDA.W !ShowMarioStart               ;; 0096E0 : AD 1D 14    ;
-                      BEQ CODE_0096E9                     ;; 0096E3 : F0 04       ;
+                      BEQ +                               ;; 0096E3 : F0 04       ;
                       JSL CODE_04DC09                     ;; 0096E5 : 22 09 DC 04 ;
-CODE_0096E9:          STZ.W !Layer3ScrollType             ;; 0096E9 : 9C D5 13    ;
+                    + STZ.W !Layer3ScrollType             ;; 0096E9 : 9C D5 13    ;
                       STZ.W !OverworldProcess             ;; 0096EC : 9C D9 13    ;
                       LDA.B #$50                          ;; 0096EF : A9 50       ;
                       STA.W !DrumrollTimer                ;; 0096F1 : 8D D6 13    ;
                       JSL CODE_05D796                     ;; 0096F4 : 22 96 D7 05 ;
                       LDX.B #$07                          ;; 0096F8 : A2 07       ;
-CODE_0096FA:          LDA.B !Layer1XPos,X                 ;; 0096FA : B5 1A       ;
+                    - LDA.B !Layer1XPos,X                 ;; 0096FA : B5 1A       ;
                       STA.W !NextLayer1XPos,X             ;; 0096FC : 9D 62 14    ;
                       DEX                                 ;; 0096FF : CA          ;
-                      BPL CODE_0096FA                     ;; 009700 : 10 F8       ;
+                      BPL -                               ;; 009700 : 10 F8       ;
                       JSR CODE_008134                     ;; 009702 : 20 34 81    ;
                       JSR CODE_00A635                     ;; 009705 : 20 35 A6    ;
                       LDA.B #$20                          ;; 009708 : A9 20       ;
@@ -2432,9 +2432,9 @@ CODE_009728:          LDA.W !MusicBackup                  ;; 009728 : AD DA 0D  
                       BCS CODE_00973B                     ;; 00972D : B0 0C       ;
                       LDY.W !IRQNMICommand                ;; 00972F : AC 9B 0D    ;
                       CPY.B #$C1                          ;; 009732 : C0 C1       ;
-                      BNE CODE_009738                     ;; 009734 : D0 02       ;
+                      BNE +                               ;; 009734 : D0 02       ;
                       LDA.B #$16                          ;; 009736 : A9 16       ;
-CODE_009738:          STA.W !SPCIO2                       ;; 009738 : 8D FB 1D    ;
+                    + STA.W !SPCIO2                       ;; 009738 : 8D FB 1D    ;
 CODE_00973B:          AND.B #$BF                          ;; 00973B : 29 BF       ;
                       STA.W !MusicBackup                  ;; 00973D : 8D DA 0D    ;
 CODE_009740:          STZ.W !Brightness                   ;; 009740 : 9C AE 0D    ;
@@ -2461,11 +2461,11 @@ CODE_009759:          JSL !OAMResetRoutine                ;; 009759 : 22 00 80 7
                       ORA.W !SavedPlayerLives+1           ;; 009772 : 0D B5 0D    ;
                       BPL CODE_009788                     ;; 009775 : 10 11       ;
                       LDX.B #$0C                          ;; 009777 : A2 0C       ;
-CODE_009779:          STZ.W !AllDragonCoinsCollected,X    ;; 009779 : 9E 2F 1F    ;
+                    - STZ.W !AllDragonCoinsCollected,X    ;; 009779 : 9E 2F 1F    ;
                       STZ.W !_6,X                         ;; 00977C : 9E 06 00    ; OOF
                       STZ.W !MoonCollected,X              ;; 00977F : 9E EE 1F    ;
                       DEX                                 ;; 009782 : CA          ;
-                      BPL CODE_009779                     ;; 009783 : 10 F4       ;
+                      BPL -                               ;; 009783 : 10 F4       ;
                       INC.W !ShowContinueEnd              ;; 009785 : EE C9 13    ;
 CODE_009788:          JMP CODE_009E62                     ;; 009788 : 4C 62 9E    ;
                                                           ;;                      ;
@@ -2479,7 +2479,7 @@ CODE_00978E:          STA.W !GameOverAnimation            ;; 00978E : 8D 3C 14  
                       LDX.W !DeathMessage                 ;; 009798 : AE 3B 14    ;
                       LDY.B #$48                          ;; 00979B : A0 48       ;
 CODE_00979D:          CPY.B #$28                          ;; 00979D : C0 28       ;
-                      BNE CODE_0097AE                     ;; 00979F : D0 0D       ;
+                      BNE +                               ;; 00979F : D0 0D       ;
                       LDA.B #$78                          ;; 0097A1 : A9 78       ;
                       SEC                                 ;; 0097A3 : 38          ;
                       SBC.W !GameOverAnimation            ;; 0097A4 : ED 3C 14    ;
@@ -2487,7 +2487,7 @@ CODE_00979D:          CPY.B #$28                          ;; 00979D : C0 28     
                       ROL A                               ;; 0097A9 : 2A          ;
                       EOR.B #$01                          ;; 0097AA : 49 01       ;
                       STA.B !_1                           ;; 0097AC : 85 01       ;
-CODE_0097AE:          JSR CODE_0091E9                     ;; 0097AE : 20 E9 91    ;
+                    + JSR CODE_0091E9                     ;; 0097AE : 20 E9 91    ;
                       INX                                 ;; 0097B1 : E8          ;
                       TYA                                 ;; 0097B2 : 98          ;
                       SEC                                 ;; 0097B3 : 38          ;
@@ -2516,15 +2516,15 @@ CODE_0097BC:          LDA.B #$0F                          ;; 0097BC : A9 0F     
                       BCC CODE_0097F1                     ;; 0097E9 : 90 06       ;
                       BNE CODE_00983B                     ;; 0097EB : D0 4E       ;
                       LDA.B #$18                          ;; 0097ED : A9 18       ;
-                      BRA CODE_0097FC                     ;; 0097EF : 80 0B       ;
+                      BRA +                               ;; 0097EF : 80 0B       ;
                                                           ;;                      ;
 CODE_0097F1:          LDA.B #$03                          ;; 0097F1 : A9 03       ;
                       STA.W !PlayerBehindNet              ;; 0097F3 : 8D F9 13    ;
                       LDA.B #$C8                          ;; 0097F6 : A9 C8       ;
                       STA.B !OAMAddress                   ;; 0097F8 : 85 3F       ;
                       LDA.B #$12                          ;; 0097FA : A9 12       ;
-CODE_0097FC:          DEC.W !ObjectTileset                ;; 0097FC : CE 31 19    ;
-                      BRA CODE_00983D                     ;; 0097FF : 80 3C       ;
+                    + DEC.W !ObjectTileset                ;; 0097FC : CE 31 19    ;
+                      BRA +                               ;; 0097FF : 80 3C       ;
                                                           ;;                      ;
 CODE_009801:          JSR CODE_00ADD9                     ;; 009801 : 20 D9 AD    ;
                       JSR CODE_0092A8                     ;; 009804 : 20 A8 92    ;
@@ -2550,7 +2550,7 @@ CODE_009801:          JSR CODE_00ADD9                     ;; 009801 : 20 D9 AD  
                       STA.B !Mode7YPos                    ;; 009837 : 85 3C       ;
                       SEP #$20                            ;; 009839 : E2 20       ; Accum (8 bit) 
 CODE_00983B:          LDA.B #$13                          ;; 00983B : A9 13       ;
-CODE_00983D:          STA.W !SpriteTileset                ;; 00983D : 8D 2B 19    ;
+                    + STA.W !SpriteTileset                ;; 00983D : 8D 2B 19    ;
                       JSR UploadSpriteGFX                 ;; 009840 : 20 DA A9    ;
                       LDA.B #$11                          ;; 009843 : A9 11       ;
                       STA.W !HW_TMW                       ;; 009845 : 8D 2E 21    ; Window Mask Designation for Main Screen
@@ -2577,10 +2577,10 @@ CODE_009860:          JSL CODE_00E2BD                     ;; 009860 : 22 BD E2 0
                                                           ;;                      ;
 CODE_00987D:          JSR CODE_008ACD                     ;; 00987D : 20 CD 8A    ;
                       BIT.W !IRQNMICommand                ;; 009880 : 2C 9B 0D    ;
-                      BVC CODE_009888                     ;; 009883 : 50 03       ;
+                      BVC +                               ;; 009883 : 50 03       ;
                       JMP CODE_009A52                     ;; 009885 : 4C 52 9A    ;
                                                           ;;                      ;
-CODE_009888:          JSL !OAMResetRoutine                ;; 009888 : 22 00 80 7F ;
+                    + JSL !OAMResetRoutine                ;; 009888 : 22 00 80 7F ;
                       JSL CODE_03C0C6                     ;; 00988C : 22 C6 C0 03 ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
@@ -2591,7 +2591,7 @@ DATA_009891:          db $9E,$12,$1E,$12,$9E,$11,$1E,$11  ;; 009891             
                                                           ;;                      ;
 CODE_0098A9:          LDA.W !IRQNMICommand                ;; 0098A9 : AD 9B 0D    ; \  
                       LSR A                               ;; 0098AC : 4A          ;  |If "Special level" is even, 
-                      BCS CODE_0098E1                     ;; 0098AD : B0 32       ; / branch to $98E1 
+                      BCS +                               ;; 0098AD : B0 32       ; / branch to $98E1 
                       LDA.B !EffFrame                     ;; 0098AF : A5 14       ;
                       LSR A                               ;; 0098B1 : 4A          ;
                       LSR A                               ;; 0098B2 : 4A          ;
@@ -2613,13 +2613,13 @@ CODE_0098A9:          LDA.W !IRQNMICommand                ;; 0098A9 : AD 9B 0D  
                       LDY.B #$04                          ;; 0098DB : A0 04       ;
                       STY.W !HW_MDMAEN                    ;; 0098DD : 8C 0B 42    ; Regular DMA Channel Enable
                       CLC                                 ;; 0098E0 : 18          ;
-CODE_0098E1:          REP #$20                            ;; 0098E1 : C2 20       ; 16 bit A ; Accum (16 bit) 
+                    + REP #$20                            ;; 0098E1 : C2 20       ; 16 bit A ; Accum (16 bit) 
                       LDA.W #$0004                        ;; 0098E3 : A9 04 00    ;
                       LDY.B #$06                          ;; 0098E6 : A0 06       ;
-                      BCC CODE_0098EF                     ;; 0098E8 : 90 05       ;
+                      BCC +                               ;; 0098E8 : 90 05       ;
                       LDA.W #$0008                        ;; 0098EA : A9 08 00    ;
                       LDY.B #$16                          ;; 0098ED : A0 16       ;
-CODE_0098EF:          STA.B !_0                           ;; 0098EF : 85 00       ;
+                    + STA.B !_0                           ;; 0098EF : 85 00       ;
                       LDA.W #$C680                        ;; 0098F1 : A9 80 C6    ;
                       STA.B !_2                           ;; 0098F4 : 85 02       ;
                       STZ.W !HW_VMAINC                    ;; 0098F6 : 9C 15 21    ; VRAM Address Increment Value
@@ -2628,7 +2628,7 @@ CODE_0098EF:          STA.B !_0                           ;; 0098EF : 85 00     
                       LDX.B #$7E                          ;; 0098FF : A2 7E       ;
                       STX.W !HW_DMAADDR+$22               ;; 009901 : 8E 24 43    ; A Address Bank
                       LDX.B #$04                          ;; 009904 : A2 04       ;
-CODE_009906:          LDA.W DATA_009891,Y                 ;; 009906 : B9 91 98    ;
+                    - LDA.W DATA_009891,Y                 ;; 009906 : B9 91 98    ;
                       STA.W !HW_VMADD                     ;; 009909 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.B !_2                           ;; 00990C : A5 02       ;
                       STA.W !HW_DMAADDR+$20               ;; 00990E : 8D 22 43    ; A Address (Low Byte)
@@ -2640,7 +2640,7 @@ CODE_009906:          LDA.W DATA_009891,Y                 ;; 009906 : B9 91 98  
                       STX.W !HW_MDMAEN                    ;; 00991B : 8E 0B 42    ; Regular DMA Channel Enable
                       DEY                                 ;; 00991E : 88          ;
                       DEY                                 ;; 00991F : 88          ;
-                      BPL CODE_009906                     ;; 009920 : 10 E4       ;
+                      BPL -                               ;; 009920 : 10 E4       ;
                       SEP #$20                            ;; 009922 : E2 20       ; 8 bit A ; Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
@@ -2663,23 +2663,23 @@ CODE_009925:          STZ.B !PlayerYPosNext+1             ;; 009925 : 64 97     
                       LSR A                               ;; 00994E : 4A          ;
                       LDX.B #$C0                          ;; 00994F : A2 C0       ;
                       LDA.B #$A0                          ;; 009951 : A9 A0       ;
-                      BCC CODE_00995B                     ;; 009953 : 90 06       ;
+                      BCC +                               ;; 009953 : 90 06       ;
                       STZ.W !HorizLayer1Setting           ;; 009955 : 9C 11 14    ;
                       JMP CODE_009A17                     ;; 009958 : 4C 17 9A    ;
                                                           ;;                      ;
-CODE_00995B:          REP #$30                            ;; 00995B : C2 30       ; Index (16 bit) Accum (16 bit) 
+                    + REP #$30                            ;; 00995B : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDA.W !ActiveBoss                   ;; 00995D : AD FC 13    ;
                       AND.W #$00FF                        ;; 009960 : 29 FF 00    ;
                       ASL A                               ;; 009963 : 0A          ;
                       TAX                                 ;; 009964 : AA          ;
                       LDY.W #$02C0                        ;; 009965 : A0 C0 02    ;
                       LDA.W DATA_00F8E8,X                 ;; 009968 : BD E8 F8    ;
-                      BPL CODE_009970                     ;; 00996B : 10 03       ;
+                      BPL +                               ;; 00996B : 10 03       ;
                       LDY.W #$FB80                        ;; 00996D : A0 80 FB    ;
-CODE_009970:          CMP.W #$0012                        ;; 009970 : C9 12 00    ;
-                      BNE CODE_009978                     ;; 009973 : D0 03       ;
+                    + CMP.W #$0012                        ;; 009970 : C9 12 00    ;
+                      BNE +                               ;; 009973 : D0 03       ;
                       LDY.W #$0320                        ;; 009975 : A0 20 03    ;
-CODE_009978:          STY.B !_0                           ;; 009978 : 84 00       ;
+                    + STY.B !_0                           ;; 009978 : 84 00       ;
                       LDX.W #$0000                        ;; 00997A : A2 00 00    ;
                       LDA.W #$C05A                        ;; 00997D : A9 5A C0    ;
 CODE_009980:          STA.L !DynamicStripeImage,X         ;; 009980 : 9F 7D 83 7F ;
@@ -2698,7 +2698,7 @@ CODE_009980:          STA.L !DynamicStripeImage,X         ;; 009980 : 9F 7D 83 7
                       STA.L !DynamicStripeImage+$86,X     ;; 00999E : 9F 03 84 7F ;
                       STA.L !DynamicStripeImage+$10A,X    ;; 0099A2 : 9F 87 84 7F ;
                       LDY.W #$0010                        ;; 0099A6 : A0 10 00    ;
-CODE_0099A9:          LDA.W #$38A2                        ;; 0099A9 : A9 A2 38    ;
+                    - LDA.W #$38A2                        ;; 0099A9 : A9 A2 38    ;
                       STA.L !DynamicStripeImage+4,X       ;; 0099AC : 9F 81 83 7F ;
                       INC A                               ;; 0099B0 : 1A          ;
                       STA.L !DynamicStripeImage+6,X       ;; 0099B1 : 9F 83 83 7F ;
@@ -2727,17 +2727,17 @@ CODE_0099A9:          LDA.W #$38A2                        ;; 0099A9 : A9 A2 38  
                       INX                                 ;; 0099F1 : E8          ;
                       INX                                 ;; 0099F2 : E8          ;
                       DEY                                 ;; 0099F3 : 88          ;
-                      BNE CODE_0099A9                     ;; 0099F4 : D0 B3       ;
+                      BNE -                               ;; 0099F4 : D0 B3       ;
                       TXA                                 ;; 0099F6 : 8A          ;
                       CLC                                 ;; 0099F7 : 18          ;
                       ADC.W #$014C                        ;; 0099F8 : 69 4C 01    ;
                       TAX                                 ;; 0099FB : AA          ;
                       LDA.W #$C05E                        ;; 0099FC : A9 5E C0    ;
                       CPX.W #$0318                        ;; 0099FF : E0 18 03    ;
-                      BCS CODE_009A07                     ;; 009A02 : B0 03       ;
+                      BCS +                               ;; 009A02 : B0 03       ;
                       JMP CODE_009980                     ;; 009A04 : 4C 80 99    ;
                                                           ;;                      ;
-CODE_009A07:          LDA.W #$00FF                        ;; 009A07 : A9 FF 00    ;
+                    + LDA.W #$00FF                        ;; 009A07 : A9 FF 00    ;
                       STA.L !DynamicStripeImage,X         ;; 009A0A : 9F 7D 83 7F ;
                       SEP #$30                            ;; 009A0E : E2 30       ; Index (8 bit) Accum (8 bit) 
                       JSR LoadScrnImage                   ;; 009A10 : 20 D2 85    ;
@@ -2749,23 +2749,23 @@ CODE_009A17:          STA.B !PlayerYPosNext               ;; 009A17 : 85 96     
                                                           ;;                      ;
 CODE_009A1F:          LDY.B #$10                          ;; 009A1F : A0 10       ;
                       LDA.B #$32                          ;; 009A21 : A9 32       ;
-CODE_009A23:          STA.L !Map16TilesLow,X              ;; 009A23 : 9F 00 C8 7E ;
+                    - STA.L !Map16TilesLow,X              ;; 009A23 : 9F 00 C8 7E ;
                       STA.L !Map16TilesLow+$1B0,X         ;; 009A27 : 9F B0 C9 7E ;
                       STA.L !Map16TilesHigh,X             ;; 009A2B : 9F 00 C8 7F ;
                       STA.L !Map16TilesHigh+$1B0,X        ;; 009A2F : 9F B0 C9 7F ;
                       INX                                 ;; 009A33 : E8          ;
                       DEY                                 ;; 009A34 : 88          ;
-                      BNE CODE_009A23                     ;; 009A35 : D0 EC       ;
+                      BNE -                               ;; 009A35 : D0 EC       ;
                       CPX.B #$C0                          ;; 009A37 : E0 C0       ;
                       BNE Return009A4D                    ;; 009A39 : D0 12       ;
                       LDX.B #$D0                          ;; 009A3B : A2 D0       ;
 CODE_009A3D:          LDY.B #$10                          ;; 009A3D : A0 10       ;
                       LDA.B #$05                          ;; 009A3F : A9 05       ;
-CODE_009A41:          STA.L !Map16TilesLow,X              ;; 009A41 : 9F 00 C8 7E ;
+                    - STA.L !Map16TilesLow,X              ;; 009A41 : 9F 00 C8 7E ;
                       STA.L !Map16TilesLow+$1B0,X         ;; 009A45 : 9F B0 C9 7E ;
                       INX                                 ;; 009A49 : E8          ;
                       DEY                                 ;; 009A4A : 88          ;
-                      BNE CODE_009A41                     ;; 009A4B : D0 F4       ;
+                      BNE -                               ;; 009A4B : D0 F4       ;
 Return009A4D:         RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
                                                           ;;                      ;
@@ -2773,17 +2773,17 @@ Return009A4D:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 CODE_009A52:          LDA.W !IRQNMICommand                ;; 009A52 : AD 9B 0D    ;
                       LSR A                               ;; 009A55 : 4A          ;
-                      BCS CODE_009A6F                     ;; 009A56 : B0 17       ;
+                      BCS +                               ;; 009A56 : B0 17       ;
                       JSL CODE_00F6DB                     ;; 009A58 : 22 DB F6 00 ;
                       JSL CODE_05BC00                     ;; 009A5C : 22 00 BC 05 ;
                       LDA.W !ActiveBoss                   ;; 009A60 : AD FC 13    ;
                       CMP.B #$04                          ;; 009A63 : C9 04       ;
-                      BEQ CODE_009A6F                     ;; 009A65 : F0 08       ;
+                      BEQ +                               ;; 009A65 : F0 08       ;
                       JSR CODE_0086C7                     ;; 009A67 : 20 C7 86    ;
                       JSL CODE_02827D                     ;; 009A6A : 22 7D 82 02 ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
-CODE_009A6F:          JSL !OAMResetRoutine                ;; 009A6F : 22 00 80 7F ;
+                    + JSL !OAMResetRoutine                ;; 009A6F : 22 00 80 7F ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 SetUp0DA0GM4:         LDA.W !HW_JOY1                      ;; ?QPWZ? : AD 16 40    ; \Read old-style controller register for player 1 
@@ -2793,9 +2793,9 @@ SetUp0DA0GM4:         LDA.W !HW_JOY1                      ;; ?QPWZ? : AD 16 40  
                       AND.B #$03                          ;; 009A7C : 29 03       ; AND A with #$03 
                       BEQ CODE_009A87                     ;; 009A7E : F0 07       ; If A AND #$03 = 0 Then STA $0DA0 (A=0) 
                       CMP.B #$03                          ;; 009A80 : C9 03       ;
-                      BNE CODE_009A86                     ;; 009A82 : D0 02       ;
+                      BNE +                               ;; 009A82 : D0 02       ;
                       ORA.B #$80                          ;; 009A84 : 09 80       ;
-CODE_009A86:          DEC A                               ;; 009A86 : 3A          ;
+                    + DEC A                               ;; 009A86 : 3A          ;
 CODE_009A87:          STA.W !ControllersPresent           ;; 009A87 : 8D A0 0D    ;
                       RTS                                 ;; ?QPWZ? : 60          ; *yawn* 
                                                           ;;                      ;
@@ -2860,13 +2860,13 @@ CODE_009AEA:          PLA                                 ;; 009AEA : 68        
                       TAY                                 ;; 009B03 : A8          ;
                       TXA                                 ;; 009B04 : 8A          ;
                       ADC.W DATA_009AC8-1,Y               ;; 009B05 : 79 C7 9A    ;
-                      BPL CODE_009B0D                     ;; 009B08 : 10 03       ;
+                      BPL +                               ;; 009B08 : 10 03       ;
                       LDA.B !GraphicsCompPtr              ;; 009B0A : A5 8A       ;
                       DEC A                               ;; 009B0C : 3A          ;
-CODE_009B0D:          CMP.B !GraphicsCompPtr              ;; 009B0D : C5 8A       ;
-                      BCC CODE_009B13                     ;; 009B0F : 90 02       ;
+                    + CMP.B !GraphicsCompPtr              ;; 009B0D : C5 8A       ;
+                      BCC +                               ;; 009B0F : 90 02       ;
 CODE_009B11:          LDA.B #$00                          ;; 009B11 : A9 00       ;
-CODE_009B13:          STA.W !BlinkCursorPos               ;; 009B13 : 8D 92 1B    ;
+                    + STA.W !BlinkCursorPos               ;; 009B13 : 8D 92 1B    ;
 Return009B16:         RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
                                                           ;;                      ;
@@ -2879,13 +2879,13 @@ CODE_009B1A:          REP #$20                            ;; 009B1A : C2 20     
                       LDA.B !byetudlrFrame                ;; 009B24 : A5 16       ; Accum (8 bit) 
                       ORA.B !axlr0000Frame                ;; 009B26 : 05 18       ;
                       AND.B #$40                          ;; 009B28 : 29 40       ;
-                      BEQ CODE_009B38                     ;; 009B2A : F0 0C       ;
+                      BEQ +                               ;; 009B2A : F0 0C       ;
 CODE_009B2C:          DEC.W !GameMode                     ;; 009B2C : CE 00 01    ;
                       DEC.W !GameMode                     ;; 009B2F : CE 00 01    ;
                       JSR CODE_009B11                     ;; 009B32 : 20 11 9B    ;
                       JMP CODE_009CB0                     ;; 009B35 : 4C B0 9C    ;
                                                           ;;                      ;
-CODE_009B38:          LDY.B #$08                          ;; 009B38 : A0 08       ;
+                    + LDY.B #$08                          ;; 009B38 : A0 08       ;
                       JSR CODE_009AD0                     ;; 009B3A : 20 D0 9A    ;
                       CPX.B #$03                          ;; 009B3D : E0 03       ;
                       BNE CODE_009B6D                     ;; 009B3F : D0 2C       ;
@@ -2900,11 +2900,11 @@ CODE_009B43:          LSR.W !SaveFileDelete               ;; 009B43 : 4E DE 0D  
                       TAX                                 ;; 009B52 : AA          ;
                       LDY.W #$008F                        ;; 009B53 : A0 8F 00    ;
                       LDA.B #$00                          ;; 009B56 : A9 00       ;
-CODE_009B58:          STA.L !SaveData,X                   ;; 009B58 : 9F 00 00 70 ;
+                    - STA.L !SaveData,X                   ;; 009B58 : 9F 00 00 70 ;
                       STA.L !SaveDataBackup,X             ;; 009B5C : 9F AD 01 70 ;
                       INX                                 ;; 009B60 : E8          ;
                       DEY                                 ;; 009B61 : 88          ;
-                      BNE CODE_009B58                     ;; 009B62 : D0 F4       ;
+                      BNE -                               ;; 009B62 : D0 F4       ;
                       SEP #$10                            ;; 009B64 : E2 10       ; Index (8 bit) 
                       PLY                                 ;; 009B66 : 7A          ;
 CODE_009B67:          DEY                                 ;; 009B67 : 88          ;
@@ -2940,10 +2940,10 @@ CODE_009B91:          LDY.B #$0C                          ;; 009B91 : A0 0C     
 CODE_009B9A:          LDY.B #$00                          ;; 009B9A : A0 00       ;
                       JSR CODE_009AD0                     ;; 009B9C : 20 D0 9A    ;
                       TXA                                 ;; 009B9F : 8A          ;
-                      BNE ADDR_009BA5                     ;; 009BA0 : D0 03       ;
+                      BNE +                               ;; 009BA0 : D0 03       ;
                       JMP CODE_009E17                     ;; 009BA2 : 4C 17 9E    ;
                                                           ;;                      ;
-ADDR_009BA5:          JMP CODE_009C89                     ;; 009BA5 : 4C 89 9C    ;
+                    + JMP CODE_009C89                     ;; 009BA5 : 4C 89 9C    ;
                                                           ;;                      ;
 CODE_009BA8:          PHB                                 ;; 009BA8 : 8B          ; Wrapper 
                       PHK                                 ;; 009BA9 : 4B          ;
@@ -2955,12 +2955,12 @@ CODE_009BA8:          PHB                                 ;; 009BA8 : 8B        
 CODE_009BB0:          LDY.B #$06                          ;; 009BB0 : A0 06       ;
                       JSR CODE_009AD0                     ;; 009BB2 : 20 D0 9A    ;
                       TXA                                 ;; 009BB5 : 8A          ;
-                      BNE CODE_009BC4                     ;; 009BB6 : D0 0C       ;
+                      BNE +                               ;; 009BB6 : D0 0C       ;
                       STZ.W !SPCIO3                       ;; 009BB8 : 9C FC 1D    ;
                       LDA.B #$05                          ;; 009BBB : A9 05       ;
                       STA.W !SPCIO0                       ;; 009BBD : 8D F9 1D    ;
                       JSL CODE_009BC9                     ;; 009BC0 : 22 C9 9B 00 ;
-CODE_009BC4:          JSL CODE_009C13                     ;; 009BC4 : 22 13 9C 00 ;
+                    + JSL CODE_009C13                     ;; 009BC4 : 22 13 9C 00 ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_009BC9:          PHB                                 ;; 009BC9 : 8B          ;
@@ -2979,9 +2979,9 @@ CODE_009BDE:          LDA.W !SaveDataBuffer,Y             ;; 009BDE : B9 49 1F  
                       CLC                                 ;; 009BE5 : 18          ;
                       ADC.B !GraphicsCompPtr              ;; 009BE6 : 65 8A       ;
                       STA.B !GraphicsCompPtr              ;; 009BE8 : 85 8A       ;
-                      BCC CODE_009BEE                     ;; 009BEA : 90 02       ;
+                      BCC +                               ;; 009BEA : 90 02       ;
                       INC.B !GraphicsCompPtr+1            ;; 009BEC : E6 8B       ;
-CODE_009BEE:          INX                                 ;; 009BEE : E8          ;
+                    + INX                                 ;; 009BEE : E8          ;
                       INY                                 ;; 009BEF : C8          ;
                       CPY.W #$008D                        ;; 009BF0 : C0 8D 00    ;
                       BCC CODE_009BDE                     ;; 009BF3 : 90 E9       ;
@@ -3027,25 +3027,25 @@ GAMEMODE_07:          JSR SetUp0DA0GM4                    ;; ?QPWZ? : 20 74 9A  
                       JSR NoButtons                       ;; 009C6C : 20 2D F6    ; Zero controller RAM mirror 
                       LDX.W !TitleInputIndex              ;; 009C6F : AE F4 1D    ; (Unknown byte) -> X 
                       DEC.W !VariousPromptTimer           ;; 009C72 : CE F5 1D    ; Decrement $1DF5 (unknown byte) 
-                      BNE CODE_009C82                     ;; 009C75 : D0 0B       ; if !=  0 branch forward 
+                      BNE +                               ;; 009C75 : D0 0B       ; if !=  0 branch forward 
                       LDA.W ItrCntrlrSqnc,X               ;; 009C77 : BD 20 9C    ; Load $00/9C20,$1DF4 
                       STA.W !VariousPromptTimer           ;; 009C7A : 8D F5 1D    ; And store to $1DF5 
                       INX                                 ;; 009C7D : E8          ;
                       INX                                 ;; 009C7E : E8          ; $1DF4+=2 
                       STX.W !TitleInputIndex              ;; 009C7F : 8E F4 1D    ;
-CODE_009C82:          LDA.W ItrCntrlrSqnc-3,X             ;; 009C82 : BD 1D 9C    ; With the +=2 above, this is effectively LDA $9C20,$1DF4 
+                    + LDA.W ItrCntrlrSqnc-3,X             ;; 009C82 : BD 1D 9C    ; With the +=2 above, this is effectively LDA $9C20,$1DF4 
                       CMP.B #$FF                          ;; 009C85 : C9 FF       ;
-                      BNE CODE_009C8F                     ;; 009C87 : D0 06       ;
+                      BNE +                               ;; 009C87 : D0 06       ;
 CODE_009C89:          LDY.B #$02                          ;; 009C89 : A0 02       ; If = #$FF, switch to game mode #$02... 
 CODE_009C8B:          STY.W !GameMode                     ;; 009C8B : 8C 00 01    ;
                       RTS                                 ;; ?QPWZ? : 60          ; ...And finish 
                                                           ;;                      ;
-CODE_009C8F:          AND.B #$DF                          ;; 009C8F : 29 DF       ;
+                    + AND.B #$DF                          ;; 009C8F : 29 DF       ;
                       STA.B !byetudlrHold                 ;; 009C91 : 85 15       ; Write to controller RAM byte 01 
                       CMP.W ItrCntrlrSqnc-3,X             ;; 009C93 : DD 1D 9C    ;
-                      BNE CODE_009C9A                     ;; 009C96 : D0 02       ;
+                      BNE +                               ;; 009C96 : D0 02       ;
                       AND.B #$9F                          ;; 009C98 : 29 9F       ;
-CODE_009C9A:          STA.B !byetudlrFrame                ;; 009C9A : 85 16       ; Write to byte 01, Just-pressed variant 
+                    + STA.B !byetudlrFrame                ;; 009C9A : 85 16       ; Write to byte 01, Just-pressed variant 
                       JMP CODE_00A1DA                     ;; 009C9C : 4C DA A1    ; Jump to another section of this routine 
                                                           ;;                      ;
 CODE_009C9F:          JSL !OAMResetRoutine                ;; 009C9F : 22 00 80 7F ; IIRC, this contains a lot of STZ instructions 
@@ -3062,11 +3062,11 @@ CODE_009CB0:          LDA.B #$E9                          ;; 009CB0 : A9 E9     
                                                           ;;                      ;
 CODE_009CBE:          LDA.B !axlr0000Hold                 ;; 009CBE : A5 17       ;
                       AND.B #$C0                          ;; 009CC0 : 29 C0       ;
-                      BNE Return009CCA                    ;; 009CC2 : D0 06       ;
+                      BNE +                               ;; 009CC2 : D0 06       ;
                       LDA.B !byetudlrHold                 ;; 009CC4 : A5 15       ;
                       AND.B #$F0                          ;; 009CC6 : 29 F0       ;
-                      BNE Return009CCA                    ;; 009CC8 : D0 00       ;
-Return009CCA:         RTS                                 ;; ?QPWZ? : 60          ;
+                      BNE +                               ;; 009CC8 : D0 00       ;
+                    + RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_009CCB:          db $00,$00,$01                      ;; 009CCB               ;
@@ -3081,19 +3081,19 @@ CODE_009CD1:          REP #$20                            ;; 009CD1 : C2 20     
                       JSR CODE_009ACB                     ;; 009CDD : 20 CB 9A    ;
                       INC.W !GameMode                     ;; 009CE0 : EE 00 01    ;
                       CPX.B #$03                          ;; 009CE3 : E0 03       ;
-                      BNE CODE_009CEF                     ;; 009CE5 : D0 08       ;
+                      BNE +                               ;; 009CE5 : D0 08       ;
                       STZ.W !SaveFileDelete               ;; 009CE7 : 9C DE 0D    ;
                       LDX.B #$00                          ;; 009CEA : A2 00       ;
                       JMP CODE_009D3A                     ;; 009CEC : 4C 3A 9D    ;
                                                           ;;                      ;
-CODE_009CEF:          STX.W !SaveFile                     ;; 009CEF : 8E 0A 01    ; Index (16 bit) Accum (8 bit) 
+                    + STX.W !SaveFile                     ;; 009CEF : 8E 0A 01    ; Index (16 bit) Accum (8 bit) 
                       JSR CODE_009DB5                     ;; 009CF2 : 20 B5 9D    ;
                       BNE CODE_009D22                     ;; 009CF5 : D0 2B       ;
                       PHX                                 ;; 009CF7 : DA          ;
                       STZ.W !OverworldOverride            ;; 009CF8 : 9C 09 01    ;
                       LDA.B #$8F                          ;; 009CFB : A9 8F       ;
                       STA.B !_0                           ;; 009CFD : 85 00       ;
-CODE_009CFF:          LDA.L !SaveData,X                   ;; 009CFF : BF 00 00 70 ;
+                    - LDA.L !SaveData,X                   ;; 009CFF : BF 00 00 70 ;
                       PHX                                 ;; 009D03 : DA          ;
                       TYX                                 ;; 009D04 : BB          ;
                       STA.L !SaveData,X                   ;; 009D05 : 9F 00 00 70 ;
@@ -3101,15 +3101,15 @@ CODE_009CFF:          LDA.L !SaveData,X                   ;; 009CFF : BF 00 00 7
                       INX                                 ;; 009D0A : E8          ;
                       INY                                 ;; 009D0B : C8          ;
                       DEC.B !_0                           ;; 009D0C : C6 00       ;
-                      BNE CODE_009CFF                     ;; 009D0E : D0 EF       ;
+                      BNE -                               ;; 009D0E : D0 EF       ;
                       PLX                                 ;; 009D10 : FA          ;
                       LDY.W #$0000                        ;; 009D11 : A0 00 00    ;
-CODE_009D14:          LDA.L !SaveData,X                   ;; 009D14 : BF 00 00 70 ;
+                    - LDA.L !SaveData,X                   ;; 009D14 : BF 00 00 70 ;
                       STA.W !SaveDataBuffer,Y             ;; 009D18 : 99 49 1F    ;
                       INX                                 ;; 009D1B : E8          ;
                       INY                                 ;; 009D1C : C8          ;
                       CPY.W #$008D                        ;; 009D1D : C0 8D 00    ;
-                      BCC CODE_009D14                     ;; 009D20 : 90 F2       ;
+                      BCC -                               ;; 009D20 : 90 F2       ;
 CODE_009D22:          SEP #$10                            ;; 009D22 : E2 10       ; Index (8 bit) 
                       LDY.B #$12                          ;; 009D24 : A0 12       ; \ Draw 1 PLAYER GAME/2 PLAYER GAME text 
                       INC.W !GameMode                     ;; 009D26 : EE 00 01    ;  |Increase Game Mode 
@@ -3126,7 +3126,7 @@ CODE_009D38:          LDX.B #$CB                          ;; 009D38 : A2 CB     
 CODE_009D3A:          STZ.B !_5                           ;; 009D3A : 64 05       ;
 CODE_009D3C:          REP #$10                            ;; 009D3C : C2 10       ; Index (16 bit) 
                       LDY.W #$0000                        ;; 009D3E : A0 00 00    ;
-CODE_009D41:          LDA.L DATA_05B6FE,X                 ;; 009D41 : BF FE B6 05 ; X =  read index 
+                    - LDA.L DATA_05B6FE,X                 ;; 009D41 : BF FE B6 05 ; X =  read index 
                       PHX                                 ;; 009D45 : DA          ; Y = write index 
                       TYX                                 ;; 009D46 : BB          ;
                       STA.L !DynamicStripeImage,X         ;; 009D47 : 9F 7D 83 7F ; Layer 3-related table 
@@ -3134,7 +3134,7 @@ CODE_009D41:          LDA.L DATA_05B6FE,X                 ;; 009D41 : BF FE B6 0
                       INX                                 ;; 009D4C : E8          ;
                       INY                                 ;; 009D4D : C8          ;
                       CPY.W #$00CC                        ;; 009D4E : C0 CC 00    ; If not at end of loop, continue 
-                      BNE CODE_009D41                     ;; 009D51 : D0 EE       ;
+                      BNE -                               ;; 009D51 : D0 EE       ;
                       SEP #$10                            ;; 009D53 : E2 10       ; Index (8 bit) 
                       LDA.B #$84                          ;; 009D55 : A9 84       ;
                       STA.B !_0                           ;; 009D57 : 85 00       ;
@@ -3150,28 +3150,28 @@ CODE_009D5B:          STX.B !_4                           ;; 009D5B : 86 04     
                       BCC CODE_009D76                     ;; 009D6E : 90 06       ;
                       LDY.B #$87                          ;; 009D70 : A0 87       ;
                       LDA.B #$88                          ;; 009D72 : A9 88       ;
-                      BRA CODE_009D7A                     ;; 009D74 : 80 04       ;
+                      BRA +                               ;; 009D74 : 80 04       ;
                                                           ;;                      ;
 CODE_009D76:          JSR HexToDec                        ;; 009D76 : 20 45 90    ;
                       TXY                                 ;; 009D79 : 9B          ;
-CODE_009D7A:          LDX.B !_0                           ;; 009D7A : A6 00       ;
+                    + LDX.B !_0                           ;; 009D7A : A6 00       ;
                       STA.L !DynamicStripeImage+4,X       ;; 009D7C : 9F 81 83 7F ;
                       TYA                                 ;; 009D80 : 98          ;
-                      BNE CODE_009D85                     ;; 009D81 : D0 02       ;
+                      BNE +                               ;; 009D81 : D0 02       ;
                       LDY.B #$FC                          ;; 009D83 : A0 FC       ;
-CODE_009D85:          TYA                                 ;; 009D85 : 98          ;
+                    + TYA                                 ;; 009D85 : 98          ;
                       STA.L !DynamicStripeImage+2,X       ;; 009D86 : 9F 7F 83 7F ;
                       LDA.B #$38                          ;; 009D8A : A9 38       ;
                       STA.L !DynamicStripeImage+3,X       ;; 009D8C : 9F 80 83 7F ;
                       STA.L !DynamicStripeImage+5,X       ;; 009D90 : 9F 82 83 7F ;
                       REP #$20                            ;; 009D94 : C2 20       ; Accum (16 bit) 
                       LDY.B #$03                          ;; 009D96 : A0 03       ;
-CODE_009D98:          LDA.W #$38FC                        ;; 009D98 : A9 FC 38    ;
+                    - LDA.W #$38FC                        ;; 009D98 : A9 FC 38    ;
                       STA.L !DynamicStripeImage+6,X       ;; 009D9B : 9F 83 83 7F ;
                       INX                                 ;; 009D9F : E8          ;
                       INX                                 ;; 009DA0 : E8          ;
                       DEY                                 ;; 009DA1 : 88          ;
-                      BNE CODE_009D98                     ;; 009DA2 : D0 F4       ;
+                      BNE -                               ;; 009DA2 : D0 F4       ;
                       SEP #$20                            ;; 009DA4 : E2 20       ; Accum (8 bit) 
 CODE_009DA6:          SEP #$10                            ;; 009DA6 : E2 10       ; Index (8 bit) 
                       LDA.B !_0                           ;; 009DA8 : A5 00       ;
@@ -3201,9 +3201,9 @@ CODE_009DD1:          LDA.L !SaveData,X                   ;; 009DD1 : BF 00 00 7
                       CLC                                 ;; 009DD5 : 18          ;
                       ADC.B !GraphicsCompPtr              ;; 009DD6 : 65 8A       ;
                       STA.B !GraphicsCompPtr              ;; 009DD8 : 85 8A       ;
-                      BCC CODE_009DDE                     ;; 009DDA : 90 02       ;
+                      BCC +                               ;; 009DDA : 90 02       ;
                       INC.B !GraphicsCompPtr+1            ;; 009DDC : E6 8B       ;
-CODE_009DDE:          INX                                 ;; 009DDE : E8          ;
+                    + INX                                 ;; 009DDE : E8          ;
                       DEY                                 ;; 009DDF : 88          ;
                       BNE CODE_009DD1                     ;; 009DE0 : D0 EF       ;
                       REP #$20                            ;; 009DE2 : C2 20       ; Accum (16 bit) 
@@ -3225,11 +3225,11 @@ CODE_009DF7:          SEP #$20                            ;; 009DF7 : E2 20     
 CODE_009DFA:          LDA.B !byetudlrFrame                ;; 009DFA : A5 16       ; Index (8 bit) 
                       ORA.B !axlr0000Frame                ;; 009DFC : 05 18       ;
                       AND.B #$40                          ;; 009DFE : 29 40       ;
-                      BEQ CODE_009E08                     ;; 009E00 : F0 06       ;
+                      BEQ +                               ;; 009E00 : F0 06       ;
                       DEC.W !GameMode                     ;; 009E02 : CE 00 01    ;
                       JMP CODE_009B2C                     ;; 009E05 : 4C 2C 9B    ;
                                                           ;;                      ;
-CODE_009E08:          LDY.B #$04                          ;; 009E08 : A0 04       ;
+                    + LDY.B #$04                          ;; 009E08 : A0 04       ;
                       JSR CODE_009ACB                     ;; 009E0A : 20 CB 9A    ;
                       STX.W !IsTwoPlayerGame              ;; 009E0D : 8E B2 0D    ;
                       JSR CODE_00A195                     ;; 009E10 : 20 95 A1    ;
@@ -3240,9 +3240,9 @@ CODE_009E17:          LDA.B #$80                          ;; 009E17 : A9 80     
                       STA.W !SavedPlayerLives+1           ;; 009E1E : 8D B5 0D    ;
                       LDX.W !IsTwoPlayerGame              ;; 009E21 : AE B2 0D    ;
                       LDA.B #$04                          ;; 009E24 : A9 04       ;
-CODE_009E26:          STA.W !SavedPlayerLives,X           ;; 009E26 : 9D B4 0D    ;
+                    - STA.W !SavedPlayerLives,X           ;; 009E26 : 9D B4 0D    ;
                       DEX                                 ;; 009E29 : CA          ;
-                      BPL CODE_009E26                     ;; 009E2A : 10 FA       ;
+                      BPL -                               ;; 009E2A : 10 FA       ;
                       STA.W !PlayerLives                  ;; 009E2C : 8D BE 0D    ;
                       STZ.W !PlayerCoins                  ;; 009E2F : 9C BF 0D    ;
                       STZ.W !CarryYoshiThruLvls           ;; 009E32 : 9C C1 0D    ;
@@ -3281,9 +3281,9 @@ CODE_009E82:          LDX.W !BlinkCursorPos               ;; 009E82 : AE 92 1B  
                       LDA.W !BlinkCursorTimer             ;; 009E89 : AD 91 1B    ;
                       EOR.B #$1F                          ;; 009E8C : 49 1F       ;
                       AND.B #$18                          ;; 009E8E : 29 18       ;
-                      BNE CODE_009E94                     ;; 009E90 : D0 02       ;
+                      BNE +                               ;; 009E90 : D0 02       ;
                       LDX.B #$00                          ;; 009E92 : A2 00       ;
-CODE_009E94:          STX.B !_0                           ;; 009E94 : 86 00       ;
+                    + STX.B !_0                           ;; 009E94 : 86 00       ;
                       LDA.L !DynStripeImgSize             ;; 009E96 : AF 7B 83 7F ;
                       TAX                                 ;; 009E9A : AA          ;
                       REP #$20                            ;; 009E9B : C2 20       ; Accum (16 bit) 
@@ -3301,9 +3301,9 @@ CODE_009EA7:          XBA                                 ;; 009EA7 : EB        
                       STA.L !DynamicStripeImage+2,X       ;; 009EB5 : 9F 7F 83 7F ;
                       LDA.W #$38FC                        ;; 009EB9 : A9 FC 38    ;
                       LSR.B !_0                           ;; 009EBC : 46 00       ;
-                      BCC CODE_009EC3                     ;; 009EBE : 90 03       ;
+                      BCC +                               ;; 009EBE : 90 03       ;
                       LDA.W #$3D2E                        ;; 009EC0 : A9 2E 3D    ;
-CODE_009EC3:          STA.L !DynamicStripeImage+4,X       ;; 009EC3 : 9F 81 83 7F ;
+                    + STA.L !DynamicStripeImage+4,X       ;; 009EC3 : 9F 81 83 7F ;
                       PLA                                 ;; 009EC7 : 68          ;
                       INX                                 ;; 009EC8 : E8          ;
                       INX                                 ;; 009EC9 : E8          ;
@@ -3331,21 +3331,21 @@ TBL_009EF0:           db $01,$01,$02,$00,$02,$00,$68,$00  ;; 009EF0             
                       db $07,$00,$06,$00,$07,$00          ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_WRITEOW:         LDX.B #$8D                          ;; ?QPWZ? : A2 8D       ; Index (8 bit) 
-CODE_009F08:          STZ.W !SaveDataBuffer-1,X           ;; 009F08 : 9E 48 1F    ;
+                    - STZ.W !SaveDataBuffer-1,X           ;; 009F08 : 9E 48 1F    ;
                       DEX                                 ;; 009F0B : CA          ;
-                      BNE CODE_009F08                     ;; 009F0C : D0 FA       ;
+                      BNE -                               ;; 009F0C : D0 FA       ;
                       LDX.B #$0E                          ;; 009F0E : A2 0E       ;
-CODE_009F10:          LDY.W TBL_009EE0,X                  ;; 009F10 : BC E0 9E    ; \ 
+                    - LDY.W TBL_009EE0,X                  ;; 009F10 : BC E0 9E    ; \ 
                       LDA.W DATA_009EE1,X                 ;; 009F13 : BD E1 9E    ; |Write overworld settings to OW L1 table 
                       STA.W !SaveDataBuffer,Y             ;; 009F16 : 99 49 1F    ; / 
                       DEX                                 ;; 009F19 : CA          ;
                       DEX                                 ;; 009F1A : CA          ;
-                      BPL CODE_009F10                     ;; 009F1B : 10 F3       ;
+                      BPL -                               ;; 009F1B : 10 F3       ;
                       LDX.B #$15                          ;; 009F1D : A2 15       ;
-CODE_009F1F:          LDA.W TBL_009EF0,X                  ;; 009F1F : BD F0 9E    ;
+                    - LDA.W TBL_009EF0,X                  ;; 009F1F : BD F0 9E    ;
                       STA.W !SaveDataBufferSubmap,X       ;; 009F22 : 9D B8 1F    ; <- This probably means that the table above ends at 1FB7 
                       DEX                                 ;; 009F25 : CA          ;
-                      BPL CODE_009F1F                     ;; 009F26 : 10 F7       ;
+                      BPL -                               ;; 009F26 : 10 F7       ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 KeepModeActive:       LDA.B #$01                          ;; ?QPWZ? : A9 01       ;
@@ -3372,12 +3372,12 @@ CODE_009F4C:          LDA.W !Brightness                   ;; 009F4C : AD AE 0D  
                       ADC.W DATA_009F2F,Y                 ;; 009F50 : 79 2F 9F    ; / 
                       STA.W !Brightness                   ;; 009F53 : 8D AE 0D    ; Store back to brightness RAM byte 
                       CMP.W DATA_009F33,Y                 ;; 009F56 : D9 33 9F    ;
-                      BNE CODE_009F66                     ;; 009F59 : D0 0B       ;
+                      BNE +                               ;; 009F59 : D0 0B       ;
 GM__Mosaic:           INC.W !GameMode                     ;; ?QPWZ? : EE 00 01    ; Game Mode += 1 
                       LDA.W !MosaicDirection              ;; 009F5E : AD AF 0D    ; \  
                       EOR.B #$01                          ;; 009F61 : 49 01       ;  |$0DAF = $0DAF XOR 1 
                       STA.W !MosaicDirection              ;; 009F63 : 8D AF 0D    ; /  
-CODE_009F66:          LDA.B #$03                          ;; 009F66 : A9 03       ; \  
+                    + LDA.B #$03                          ;; 009F66 : A9 03       ; \  
                       ORA.W !MosaicSize                   ;; 009F68 : 0D B0 0D    ;  |Set mosaic size to $0DB0, enable mosaic on Layer 1 and 2. 
                       STA.W !HW_MOSAIC                    ;; 009F6B : 8D 06 21    ; /  ; Mosaic Size and BG Enable
 Return009F6E:         RTS                                 ;; ?QPWZ? : 60          ; I think we're done here 
@@ -3421,9 +3421,9 @@ CODE_009FB8:          LDA.W !ObjectTileset                ;; 009FB8 : AD 31 19  
                       JSR CODE_00A045                     ;; 009FD6 : 20 45 A0    ;
                       LDA.B #$70                          ;; 009FD9 : A9 70       ;
                       PLP                                 ;; 009FDB : 28          ;
-                      BEQ CODE_009FE0                     ;; 009FDC : F0 02       ;
+                      BEQ +                               ;; 009FDC : F0 02       ;
                       LDA.B #$40                          ;; 009FDE : A9 40       ;
-CODE_009FE0:          STA.B !Layer3YPos                   ;; 009FE0 : 85 24       ;
+                    + STA.B !Layer3YPos                   ;; 009FE0 : 85 24       ;
                       STZ.B !Layer3YPos+1                 ;; 009FE2 : 64 25       ;
                       JSL CODE_05BC72                     ;; 009FE4 : 22 72 BC 05 ;
                       BRA CODE_00A01B                     ;; 009FE8 : 80 31       ;
@@ -3445,10 +3445,10 @@ CODE_009FFA:          REP #$20                            ;; 009FFA : C2 20     
                       BRA CODE_00A017                     ;; 00A005 : 80 10       ;
                                                           ;;                      ;
 CODE_00A007:          LDX.B #$07                          ;; 00A007 : A2 07       ;
-CODE_00A009:          LDA.W DATA_00B66C,X                 ;; 00A009 : BD 6C B6    ;
+                    - LDA.W DATA_00B66C,X                 ;; 00A009 : BD 6C B6    ;
                       STA.W !MainPalette+$18,X            ;; 00A00C : 9D 1B 07    ;
                       DEX                                 ;; 00A00F : CA          ;
-                      BPL CODE_00A009                     ;; 00A010 : 10 F7       ;
+                      BPL -                               ;; 00A010 : 10 F7       ;
 CODE_00A012:          INC.W !Layer3ScrollType             ;; 00A012 : EE D5 13    ;
                       LDA.B #$D0                          ;; 00A015 : A9 D0       ;
 CODE_00A017:          STA.B !Layer3YPos                   ;; 00A017 : 85 24       ;
@@ -3456,7 +3456,7 @@ CODE_00A017:          STA.B !Layer3YPos                   ;; 00A017 : 85 24     
 CODE_00A01B:          LDA.B #$04                          ;; 00A01B : A9 04       ;
                       TRB.B !ColorSettings                ;; 00A01D : 14 40       ;
 CODE_00A01F:          LDA.W !Layer3Setting                ;; 00A01F : AD E3 1B    ;
-                      BEQ Return00A044                    ;; 00A022 : F0 20       ;
+                      BEQ +                               ;; 00A022 : F0 20       ;
                       DEC A                               ;; 00A024 : 3A          ;
                       CLC                                 ;; 00A025 : 18          ;
                       ADC.B !_0                           ;; 00A026 : 65 00       ;
@@ -3472,17 +3472,17 @@ CODE_00A01F:          LDA.W !Layer3Setting                ;; 00A01F : AD E3 1B  
                       LDA.L Layer3Ptr+2,X                 ;; 00A03B : BF 02 90 05 ;
                       STA.B !_2                           ;; 00A03F : 85 02       ;
                       JSR CODE_00871E                     ;; 00A041 : 20 1E 87    ;
-Return00A044:         RTS                                 ;; ?QPWZ? : 60          ;
+                    + RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_00A045:          REP #$30                            ;; 00A045 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDX.W #$0100                        ;; 00A047 : A2 00 01    ;
 CODE_00A04A:          LDY.W #$0058                        ;; 00A04A : A0 58 00    ;
                       LDA.W #$0000                        ;; 00A04D : A9 00 00    ;
-CODE_00A050:          STA.L !OWLayer1VramBuffer-$100,X    ;; 00A050 : 9F 00 E3 7E ;
+                    - STA.L !OWLayer1VramBuffer-$100,X    ;; 00A050 : 9F 00 E3 7E ;
                       INX                                 ;; 00A054 : E8          ;
                       INX                                 ;; 00A055 : E8          ;
                       DEY                                 ;; 00A056 : 88          ;
-                      BNE CODE_00A050                     ;; 00A057 : D0 F7       ;
+                      BNE -                               ;; 00A057 : D0 F7       ;
                       TXA                                 ;; 00A059 : 8A          ;
                       CLC                                 ;; 00A05A : 18          ;
                       ADC.W #$0100                        ;; 00A05B : 69 00 01    ;
@@ -3503,11 +3503,11 @@ DATA_00A079:          db $00,$00,$D8,$FF,$80,$00,$28,$01  ;; 00A079             
                                                           ;;                      ;
 CODE_00A087:          JSR TurnOffIO                       ;; 00A087 : 20 7D 93    ;
                       LDA.W !EnteringStarWarp             ;; 00A08A : AD 9C 1B    ;
-                      BEQ CODE_00A093                     ;; 00A08D : F0 04       ;
+                      BEQ +                               ;; 00A08D : F0 04       ;
                       JSL CODE_04853B                     ;; 00A08F : 22 3B 85 04 ;
-CODE_00A093:          JSR Clear_1A_13D3                   ;; 00A093 : 20 A6 A1    ;
+                    + JSR Clear_1A_13D3                   ;; 00A093 : 20 A6 A1    ;
                       LDA.W !OverworldOverride            ;; 00A096 : AD 09 01    ;
-                      BEQ CODE_00A0B0                     ;; 00A099 : F0 15       ;
+                      BEQ +                               ;; 00A099 : F0 15       ;
                       LDA.B #$B0                          ;; 00A09B : A9 B0       ;
                       STA.W !VariousPromptTimer           ;; 00A09D : 8D F5 1D    ;
                       STZ.W !OWPlayerSubmap               ;; 00A0A0 : 9C 11 1F    ;
@@ -3517,23 +3517,23 @@ CODE_00A093:          JSR Clear_1A_13D3                   ;; 00A093 : 20 A6 A1  
                       STA.W !GameMode                     ;; 00A0AA : 8D 00 01    ;
                       JMP Mode04Finish                    ;; 00A0AD : 4C F7 93    ;
                                                           ;;                      ;
-CODE_00A0B0:          JSR CODE_0085FA                     ;; 00A0B0 : 20 FA 85    ;
+                    + JSR CODE_0085FA                     ;; 00A0B0 : 20 FA 85    ;
                       JSR UploadMusicBank1                ;; 00A0B3 : 20 0E 81    ;
                       JSR SetUpScreen                     ;; 00A0B6 : 20 79 8A    ;
                       STZ.W !MusicBackup                  ;; 00A0B9 : 9C DA 0D    ;
                       LDX.W !PlayerTurnLvl                ;; 00A0BC : AE B3 0D    ;
                       LDA.W !PlayerLives                  ;; 00A0BF : AD BE 0D    ;
-                      BPL CODE_00A0C7                     ;; 00A0C2 : 10 03       ;
+                      BPL +                               ;; 00A0C2 : 10 03       ;
                       INC.W !OverworldPromptProcess       ;; 00A0C4 : EE 87 1B    ;
-CODE_00A0C7:          STA.W !SavedPlayerLives,X           ;; 00A0C7 : 9D B4 0D    ;
+                    + STA.W !SavedPlayerLives,X           ;; 00A0C7 : 9D B4 0D    ;
                       LDA.B !Powerup                      ;; 00A0CA : A5 19       ;
                       STA.W !SavedPlayerPowerup,X         ;; 00A0CC : 9D B8 0D    ;
                       LDA.W !PlayerCoins                  ;; 00A0CF : AD BF 0D    ;
                       STA.W !SavedPlayerCoins,X           ;; 00A0D2 : 9D B6 0D    ;
                       LDA.W !CarryYoshiThruLvls           ;; 00A0D5 : AD C1 0D    ;
-                      BEQ CODE_00A0DD                     ;; 00A0D8 : F0 03       ;
+                      BEQ +                               ;; 00A0D8 : F0 03       ;
                       LDA.W !YoshiColor                   ;; 00A0DA : AD C7 13    ;
-CODE_00A0DD:          STA.W !SavedPlayerYoshi,X           ;; 00A0DD : 9D BA 0D    ;
+                    + STA.W !SavedPlayerYoshi,X           ;; 00A0DD : 9D BA 0D    ;
                       LDA.W !PlayerItembox                ;; 00A0E0 : AD C2 0D    ;
                       STA.W !SavedPlayerItembox,X         ;; 00A0E3 : 9D BC 0D    ;
                       LDA.B #$03                          ;; 00A0E6 : A9 03       ;
@@ -3544,11 +3544,11 @@ CODE_00A0DD:          STA.W !SavedPlayerYoshi,X           ;; 00A0DD : 9D BA 0D  
                       BEQ CODE_00A11B                     ;; 00A0F1 : F0 28       ;
                       JSR CODE_00A195                     ;; 00A0F3 : 20 95 A1    ;
                       LDA.W !ExitsCompleted               ;; 00A0F6 : AD 2E 1F    ;
-                      BNE CODE_00A101                     ;; 00A0F9 : D0 06       ;
+                      BNE +                               ;; 00A0F9 : D0 06       ;
                       JSR CODE_009C89                     ;; 00A0FB : 20 89 9C    ;
                       JMP CODE_0093F4                     ;; 00A0FE : 4C F4 93    ;
                                                           ;;                      ;
-CODE_00A101:          JSL CODE_04DAAD                     ;; 00A101 : 22 AD DA 04 ;
+                    + JSL CODE_04DAAD                     ;; 00A101 : 22 AD DA 04 ;
                       REP #$20                            ;; 00A105 : C2 20       ; Accum (16 bit) 
                       LDA.W #$318C                        ;; 00A107 : A9 8C 31    ;
                       STA.W !BackgroundColor              ;; 00A10A : 8D 01 07    ;
@@ -3599,33 +3599,33 @@ CODE_00A11B:          LDY.B #$02                          ;; 00A11B : A0 02     
                       REP #$10                            ;; 00A17E : C2 10       ; Index (16 bit) 
                       LDX.W #$01BE                        ;; 00A180 : A2 BE 01    ;
                       LDA.B #$FF                          ;; 00A183 : A9 FF       ;
-CODE_00A185:          STZ.W !WindowTable,X                ;; 00A185 : 9E A0 04    ;
+                    - STZ.W !WindowTable,X                ;; 00A185 : 9E A0 04    ;
                       STA.W !WindowTable+1,X              ;; 00A188 : 9D A1 04    ;
                       DEX                                 ;; 00A18B : CA          ;
                       DEX                                 ;; 00A18C : CA          ;
-                      BPL CODE_00A185                     ;; 00A18D : 10 F6       ;
+                      BPL -                               ;; 00A18D : 10 F6       ;
                       JSR CODE_0092A0                     ;; 00A18F : 20 A0 92    ;
                       JMP CODE_0093F4                     ;; 00A192 : 4C F4 93    ;
                                                           ;;                      ;
 CODE_00A195:          REP #$10                            ;; 00A195 : C2 10       ; Index (16 bit) 
                       LDX.W #$008C                        ;; 00A197 : A2 8C 00    ;
-CODE_00A19A:          LDA.W !SaveDataBuffer,X             ;; 00A19A : BD 49 1F    ;
+                    - LDA.W !SaveDataBuffer,X             ;; 00A19A : BD 49 1F    ;
                       STA.W !OWLevelTileSettings,X        ;; 00A19D : 9D A2 1E    ;
                       DEX                                 ;; 00A1A0 : CA          ;
-                      BPL CODE_00A19A                     ;; 00A1A1 : 10 F7       ;
+                      BPL -                               ;; 00A1A1 : 10 F7       ;
                       SEP #$10                            ;; 00A1A3 : E2 10       ; Index (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 Clear_1A_13D3:        REP #$10                            ;; ?QPWZ? : C2 10       ; 16 bit X,Y ; Index (16 bit) 
                       SEP #$20                            ;; 00A1A8 : E2 20       ; 8 bit A ; Accum (8 bit) 
                       LDX.W #$00BD                        ;; 00A1AA : A2 BD 00    ; \  
-CODE_00A1AD:          STZ.B !Layer1XPos,X                 ;; 00A1AD : 74 1A       ;  |Clear RAM addresses $1A-$D7 
+                    - STZ.B !Layer1XPos,X                 ;; 00A1AD : 74 1A       ;  |Clear RAM addresses $1A-$D7 
                       DEX                                 ;; 00A1AF : CA          ;  | 
-                      BPL CODE_00A1AD                     ;; 00A1B0 : 10 FB       ; /  
+                      BPL -                               ;; 00A1B0 : 10 FB       ; /  
                       LDX.W #$07CE                        ;; 00A1B2 : A2 CE 07    ; \  
-CODE_00A1B5:          STZ.W !PauseTimer,X                 ;; 00A1B5 : 9E D3 13    ;  |Clear RAM addresses $13D3-$1BA1 
+                    - STZ.W !PauseTimer,X                 ;; 00A1B5 : 9E D3 13    ;  |Clear RAM addresses $13D3-$1BA1 
                       DEX                                 ;; 00A1B8 : CA          ;  | 
-                      BPL CODE_00A1B5                     ;; 00A1B9 : 10 FA       ; /  
+                      BPL -                               ;; 00A1B9 : 10 FA       ; /  
                       SEP #$10                            ;; 00A1BB : E2 10       ; 16 bit X,Y ; Index (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -3643,31 +3643,31 @@ GrndShakeDispYHi:     db $FF,$00,$00,$00                  ;; ?QPWZ?             
                       db $12,$22,$12,$02                  ;; 00A1D6               ;
                                                           ;;                      ;
 CODE_00A1DA:          LDA.W !MessageBoxTrigger            ;; 00A1DA : AD 26 14    ;
-                      BEQ CODE_00A1E4                     ;; 00A1DD : F0 05       ;
+                      BEQ +                               ;; 00A1DD : F0 05       ;
                       JSL CODE_05B10C                     ;; 00A1DF : 22 0C B1 05 ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
-CODE_00A1E4:          LDA.W !BonusGameActivate            ;; 00A1E4 : AD 25 14    ;
-                      BEQ CODE_00A200                     ;; 00A1E7 : F0 17       ;
+                    + LDA.W !BonusGameActivate            ;; 00A1E4 : AD 25 14    ;
+                      BEQ +                               ;; 00A1E7 : F0 17       ;
                       LDA.W !BonusFinishTimer             ;; 00A1E9 : AD AB 14    ;
-                      BEQ CODE_00A200                     ;; 00A1EC : F0 12       ;
+                      BEQ +                               ;; 00A1EC : F0 12       ;
                       CMP.B #$40                          ;; 00A1EE : C9 40       ;
-                      BCS CODE_00A200                     ;; 00A1F0 : B0 0E       ;
+                      BCS +                               ;; 00A1F0 : B0 0E       ;
                       JSR NoButtons                       ;; 00A1F2 : 20 2D F6    ;
                       CMP.B #$1C                          ;; 00A1F5 : C9 1C       ;
-                      BCS CODE_00A200                     ;; 00A1F7 : B0 07       ;
+                      BCS +                               ;; 00A1F7 : B0 07       ;
                       JSR SetMarioPeaceImg                ;; 00A1F9 : 20 31 CA    ;
                       LDA.B #$0D                          ;; 00A1FC : A9 0D       ;
                       STA.B !PlayerAnimation              ;; 00A1FE : 85 71       ;
-CODE_00A200:          ORA.B !PlayerAnimation              ;; 00A200 : 05 71       ;
+                    + ORA.B !PlayerAnimation              ;; 00A200 : 05 71       ;
                       ORA.W !EndLevelTimer                ;; 00A202 : 0D 93 14    ;
-                      BEQ CODE_00A211                     ;; 00A205 : F0 0A       ;
+                      BEQ +                               ;; 00A205 : F0 0A       ;
                       LDA.B #$04                          ;; 00A207 : A9 04       ;
                       TRB.B !byetudlrHold                 ;; 00A209 : 14 15       ;
                       LDA.B #$40                          ;; 00A20B : A9 40       ;
                       TRB.B !byetudlrFrame                ;; 00A20D : 14 16       ;
                       TRB.B !axlr0000Frame                ;; 00A20F : 14 18       ;
-CODE_00A211:          LDA.W !PauseTimer                   ;; 00A211 : AD D3 13    ;
+                    + LDA.W !PauseTimer                   ;; 00A211 : AD D3 13    ;
                       BEQ CODE_00A21B                     ;; 00A214 : F0 05       ;
                       DEC.W !PauseTimer                   ;; 00A216 : CE D3 13    ;
                       BRA CODE_00A242                     ;; 00A219 : 80 27       ;
@@ -3686,9 +3686,9 @@ CODE_00A21B:          LDA.B !byetudlrFrame                ;; 00A21B : A5 16     
                       LDA.W !PauseFlag                    ;; 00A233 : AD D4 13    ;
                       EOR.B #$01                          ;; 00A236 : 49 01       ;
                       STA.W !PauseFlag                    ;; 00A238 : 8D D4 13    ;
-                      BEQ CODE_00A23F                     ;; 00A23B : F0 02       ;
+                      BEQ +                               ;; 00A23B : F0 02       ;
                       LDY.B #$11                          ;; 00A23D : A0 11       ;
-CODE_00A23F:          STY.W !SPCIO0                       ;; 00A23F : 8C F9 1D    ;
+                    + STY.W !SPCIO0                       ;; 00A23F : 8C F9 1D    ;
 CODE_00A242:          LDA.W !PauseFlag                    ;; 00A242 : AD D4 13    ;
                       BEQ CODE_00A28A                     ;; 00A245 : F0 43       ;
                       BRA CODE_00A25B                     ;; 00A247 : 80 12       ;
@@ -3716,9 +3716,9 @@ CODE_00A270:          LDA.B #$80                          ;; 00A270 : A9 80     
                                                           ;;                      ;
                       LDA.B #$01                          ;; 00A274 : A9 01       ; \ Unreachable 
                       BIT.B !byetudlrHold                 ;; 00A276 : 24 15       ;  | Debug: Beat level with Start+Select 
-                      BPL ADDR_00A27B                     ;; 00A278 : 10 01       ;  | 
+                      BPL +                               ;; 00A278 : 10 01       ;  | 
                       INC A                               ;; 00A27A : 1A          ; / 
-ADDR_00A27B:          STA.W !MidwayFlag                   ;; 00A27B : 8D CE 13    ;
+                    + STA.W !MidwayFlag                   ;; 00A27B : 8D CE 13    ;
 CODE_00A27E:          STA.W !OWLevelExitMode              ;; 00A27E : 8D D5 0D    ;
                       INC.W !CreditsScreenNumber          ;; 00A281 : EE E9 1D    ;
                       LDA.B #$0B                          ;; 00A284 : A9 0B       ;
@@ -3726,11 +3726,11 @@ CODE_00A27E:          STA.W !OWLevelExitMode              ;; 00A27E : 8D D5 0D  
 Return00A289:         RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_00A28A:          LDA.W !IRQNMICommand                ;; 00A28A : AD 9B 0D    ;
-                      BPL CODE_00A295                     ;; 00A28D : 10 06       ;
+                      BPL +                               ;; 00A28D : 10 06       ;
                       JSR CODE_00987D                     ;; 00A28F : 20 7D 98    ;
                       JMP CODE_00A2A9                     ;; 00A292 : 4C A9 A2    ;
                                                           ;;                      ;
-CODE_00A295:          JSL !OAMResetRoutine                ;; 00A295 : 22 00 80 7F ;
+                    + JSL !OAMResetRoutine                ;; 00A295 : 22 00 80 7F ;
                       JSL CODE_00F6DB                     ;; 00A299 : 22 DB F6 00 ;
                       JSL CODE_05BC00                     ;; 00A29D : 22 00 BC 05 ;
                       JSL CODE_0586F1                     ;; 00A2A1 : 22 F1 86 05 ;
@@ -3742,7 +3742,7 @@ CODE_00A2A9:          LDA.B !Layer1YPos                   ;; 00A2A9 : A5 1C     
                       STZ.W !ScreenShakeYOffset           ;; 00A2AF : 9C 88 18    ; \ Reset amout to shift level 
                       STZ.W !ScreenShakeYOffset+1         ;; 00A2B2 : 9C 89 18    ; / 
                       LDA.W !ScreenShakeTimer             ;; 00A2B5 : AD 87 18    ; \ If shake ground timer is set 
-                      BEQ CODE_00A2D5                     ;; 00A2B8 : F0 1B       ;  | 
+                      BEQ +                               ;; 00A2B8 : F0 1B       ;  | 
                       DEC.W !ScreenShakeTimer             ;; 00A2BA : CE 87 18    ;  | Decrement timer 
                       AND.B #$03                          ;; 00A2BD : 29 03       ;  | 
                       TAY                                 ;; 00A2BF : A8          ;  | 
@@ -3755,7 +3755,7 @@ CODE_00A2A9:          LDA.B !Layer1YPos                   ;; 00A2A9 : A5 1C     
                       STA.W !ScreenShakeYOffset+1         ;; 00A2CE : 8D 89 18    ;  | 
                       ADC.B !Layer1YPos+1                 ;; 00A2D1 : 65 1D       ;  | 
                       STA.B !Layer1YPos+1                 ;; 00A2D3 : 85 1D       ; / 
-CODE_00A2D5:          JSR CODE_008E1A                     ;; 00A2D5 : 20 1A 8E    ;
+                    + JSR CODE_008E1A                     ;; 00A2D5 : 20 1A 8E    ;
                       JSL CODE_00E2BD                     ;; 00A2D8 : 22 BD E2 00 ;
                       JSR CODE_00A2F3                     ;; 00A2DC : 20 F3 A2    ;
                       JSR CODE_00C47E                     ;; 00A2DF : 20 7E C4    ;
@@ -3778,7 +3778,7 @@ CODE_00A2F3:          REP #$20                            ;; 00A2F3 : C2 20     
 MarioGFXDMA:          REP #$20                            ;; ?QPWZ? : C2 20       ; 16 bit A ; Accum (16 bit) 
                       LDX.B #$04                          ;; 00A302 : A2 04       ; We're using DMA channel 2 
                       LDY.W !PlayerGfxTileCount           ;; 00A304 : AC 84 0D    ;
-                      BEQ CODE_00A328                     ;; 00A307 : F0 1F       ;
+                      BEQ +                               ;; 00A307 : F0 1F       ;
                       LDY.B #$86                          ;; 00A309 : A0 86       ; \ Set Address for CG-RAM Write to x86 
                       STY.W !HW_CGADD                     ;; 00A30B : 8C 21 21    ; / ; Address for CG-RAM Write
                       LDA.W #$2200                        ;; 00A30E : A9 00 22    ;
@@ -3790,7 +3790,7 @@ MarioGFXDMA:          REP #$20                            ;; ?QPWZ? : C2 20     
                       LDA.W #$0014                        ;; 00A31F : A9 14 00    ; \ x14 bytes will be transferred 
                       STA.W !HW_DMACNT+$20                ;; 00A322 : 8D 25 43    ; / ; Number Bytes to Transfer (Low Byte) (DMA)
                       STX.W !HW_MDMAEN                    ;; 00A325 : 8E 0B 42    ; Transfer the colors ; Regular DMA Channel Enable
-CODE_00A328:          LDY.B #$80                          ;; 00A328 : A0 80       ; \ Set VRAM Address Increment Value to x80 
+                    + LDY.B #$80                          ;; 00A328 : A0 80       ; \ Set VRAM Address Increment Value to x80 
                       STY.W !HW_VMAINC                    ;; 00A32A : 8C 15 21    ; / ; VRAM Address Increment Value
                       LDA.W #$1801                        ;; 00A32D : A9 01 18    ;
                       STA.W !HW_DMAPARAM+$20              ;; 00A330 : 8D 20 43    ; Parameters for DMA Transfer
@@ -3806,7 +3806,7 @@ CODE_00A328:          LDY.B #$80                          ;; 00A328 : A0 80     
                       LDA.W #$6000                        ;; 00A34D : A9 00 60    ; \ Set Address for VRAM Read/Write to x6000 
                       STA.W !HW_VMADD                     ;; 00A350 : 8D 16 21    ; / ; Address for VRAM Read/Write (Low Byte)
                       LDX.B #$00                          ;; 00A353 : A2 00       ;
-CODE_00A355:          LDA.W !DynGfxTilePtr,X              ;; 00A355 : BD 85 0D    ; \ Get address of graphics to copy 
+                    - LDA.W !DynGfxTilePtr,X              ;; 00A355 : BD 85 0D    ; \ Get address of graphics to copy 
                       STA.W !HW_DMAADDR+$20               ;; 00A358 : 8D 22 43    ; / ; A Address (Low Byte)
                       LDA.W #$0040                        ;; 00A35B : A9 40 00    ; \ x40 bytes will be transferred 
                       STA.W !HW_DMACNT+$20                ;; 00A35E : 8D 25 43    ; / ; Number Bytes to Transfer (Low Byte) (DMA)
@@ -3815,11 +3815,11 @@ CODE_00A355:          LDA.W !DynGfxTilePtr,X              ;; 00A355 : BD 85 0D  
                       INX                                 ;; 00A366 : E8          ; \ Move to next address 
                       INX                                 ;; 00A367 : E8          ; /  
                       CPX.W !PlayerGfxTileCount           ;; 00A368 : EC 84 0D    ; \ Repeat last segment while X<$0D84 
-                      BCC CODE_00A355                     ;; 00A36B : 90 E8       ; /  
+                      BCC -                               ;; 00A36B : 90 E8       ; /  
                       LDA.W #$6100                        ;; 00A36D : A9 00 61    ; \ Set Address for VRAM Read/Write to x6100 
                       STA.W !HW_VMADD                     ;; 00A370 : 8D 16 21    ; / ; Address for VRAM Read/Write (Low Byte)
                       LDX.B #$00                          ;; 00A373 : A2 00       ;
-CODE_00A375:          LDA.W !DynGfxTilePtr+$0A,X          ;; 00A375 : BD 8F 0D    ; \ Get address of graphics to copy 
+                    - LDA.W !DynGfxTilePtr+$0A,X          ;; 00A375 : BD 8F 0D    ; \ Get address of graphics to copy 
                       STA.W !HW_DMAADDR+$20               ;; 00A378 : 8D 22 43    ; / ; A Address (Low Byte)
                       LDA.W #$0040                        ;; 00A37B : A9 40 00    ; \ x40 bytes will be transferred 
                       STA.W !HW_DMACNT+$20                ;; 00A37E : 8D 25 43    ; / ; Number Bytes to Transfer (Low Byte) (DMA)
@@ -3828,7 +3828,7 @@ CODE_00A375:          LDA.W !DynGfxTilePtr+$0A,X          ;; 00A375 : BD 8F 0D  
                       INX                                 ;; 00A386 : E8          ; \ Move to next address 
                       INX                                 ;; 00A387 : E8          ; /  
                       CPX.W !PlayerGfxTileCount           ;; 00A388 : EC 84 0D    ; \ Repeat last segment while X<$0D84 
-                      BCC CODE_00A375                     ;; 00A38B : 90 E8       ; /  
+                      BCC -                               ;; 00A38B : 90 E8       ; /  
                       SEP #$20                            ;; 00A38D : E2 20       ; 8 bit A ; Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -3841,22 +3841,22 @@ CODE_00A390:          REP #$20                            ;; 00A390 : C2 20     
                       STY.W !HW_DMAADDR+$22               ;; 00A39F : 8C 24 43    ; A Address Bank
                       LDX.B #$04                          ;; 00A3A2 : A2 04       ;
                       LDA.W !Gfx33DestAddrC               ;; 00A3A4 : AD 80 0D    ;
-                      BEQ CODE_00A3BB                     ;; 00A3A7 : F0 12       ;
+                      BEQ +                               ;; 00A3A7 : F0 12       ;
                       STA.W !HW_VMADD                     ;; 00A3A9 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Gfx33SrcAddrC                ;; 00A3AC : AD 7A 0D    ;
                       STA.W !HW_DMAADDR+$20               ;; 00A3AF : 8D 22 43    ; A Address (Low Byte)
                       LDA.W #$0080                        ;; 00A3B2 : A9 80 00    ;
                       STA.W !HW_DMACNT+$20                ;; 00A3B5 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       STX.W !HW_MDMAEN                    ;; 00A3B8 : 8E 0B 42    ; Regular DMA Channel Enable
-CODE_00A3BB:          LDA.W !Gfx33DestAddrB               ;; 00A3BB : AD 7E 0D    ;
-                      BEQ CODE_00A3D2                     ;; 00A3BE : F0 12       ;
+                    + LDA.W !Gfx33DestAddrB               ;; 00A3BB : AD 7E 0D    ;
+                      BEQ +                               ;; 00A3BE : F0 12       ;
                       STA.W !HW_VMADD                     ;; 00A3C0 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       LDA.W !Gfx33SrcAddrB                ;; 00A3C3 : AD 78 0D    ;
                       STA.W !HW_DMAADDR+$20               ;; 00A3C6 : 8D 22 43    ; A Address (Low Byte)
                       LDA.W #$0080                        ;; 00A3C9 : A9 80 00    ;
                       STA.W !HW_DMACNT+$20                ;; 00A3CC : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       STX.W !HW_MDMAEN                    ;; 00A3CF : 8E 0B 42    ; Regular DMA Channel Enable
-CODE_00A3D2:          LDA.W !Gfx33DestAddrA               ;; 00A3D2 : AD 7C 0D    ;
+                    + LDA.W !Gfx33DestAddrA               ;; 00A3D2 : AD 7C 0D    ;
                       BEQ CODE_00A418                     ;; 00A3D5 : F0 41       ;
                       STA.W !HW_VMADD                     ;; 00A3D7 : 8D 16 21    ; Address for VRAM Read/Write (Low Byte)
                       CMP.W #$0800                        ;; 00A3DA : C9 00 08    ;
@@ -3898,7 +3898,7 @@ CODE_00A41E:          STA.W !HW_CGADD                     ;; 00A41E : 8D 21 21  
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_00A436:          LDA.W !MarioStartFlag               ;; 00A436 : AD 35 19    ;
-                      BEQ Return00A47E                    ;; 00A439 : F0 43       ;
+                      BEQ +                               ;; 00A439 : F0 43       ;
                       STZ.W !MarioStartFlag               ;; 00A43B : 9C 35 19    ;
                       REP #$20                            ;; 00A43E : C2 20       ; 16 bit A ; Accum (16 bit) 
                       LDY.B #$80                          ;; 00A440 : A0 80       ;
@@ -3923,7 +3923,7 @@ CODE_00A436:          LDA.W !MarioStartFlag               ;; 00A436 : AD 35 19  
                       STA.W !HW_DMACNT+$20                ;; 00A476 : 8D 25 43    ; Number Bytes to Transfer (Low Byte) (DMA)
                       STX.W !HW_MDMAEN                    ;; 00A479 : 8E 0B 42    ; Regular DMA Channel Enable
                       SEP #$20                            ;; 00A47C : E2 20       ; 8 bit A ; Accum (8 bit) 
-Return00A47E:         RTS                                 ;; ?QPWZ? : 60          ;
+                    + RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_00A47F:          db $82                              ;; 00A47F               ;
@@ -3969,11 +3969,11 @@ CODE_00A4A0:          LDA.B [!_0],Y                       ;; 00A4A0 : B7 00     
 CODE_00A4CF:          SEP #$10                            ;; 00A4CF : E2 10       ; Index (8 bit) 
                       JSR CODE_00AE47                     ;; 00A4D1 : 20 47 AE    ;
                       LDA.W !PaletteIndexTable            ;; 00A4D4 : AD 80 06    ;
-                      BNE CODE_00A4DF                     ;; 00A4D7 : D0 06       ;
+                      BNE +                               ;; 00A4D7 : D0 06       ;
                       STZ.W !DynPaletteIndex              ;; 00A4D9 : 9C 81 06    ;
                       STZ.W !DynPaletteTable              ;; 00A4DC : 9C 82 06    ;
-CODE_00A4DF:          STZ.W !PaletteIndexTable            ;; 00A4DF : 9C 80 06    ;
-Return00A4E2:         RTS                                 ;; ?QPWZ? : 60          ;
+                    + STZ.W !PaletteIndexTable            ;; 00A4DF : 9C 80 06    ;
+                    - RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_00A4E3:          REP #$10                            ;; 00A4E3 : C2 10       ; Index (16 bit) 
                       LDA.B #$80                          ;; 00A4E5 : A9 80       ;
@@ -3992,7 +3992,7 @@ CODE_00A4E3:          REP #$10                            ;; 00A4E3 : C2 10     
                       SEP #$10                            ;; 00A50A : E2 10       ; Index (8 bit) 
                       LDA.W !OverworldProcess             ;; 00A50C : AD D9 13    ;
                       CMP.B #$0A                          ;; 00A50F : C9 0A       ;
-                      BEQ Return00A4E2                    ;; 00A511 : F0 CF       ;
+                      BEQ -                               ;; 00A511 : F0 CF       ;
                       LDA.B #$6D                          ;; 00A513 : A9 6D       ;
                       JSR CODE_00A41C                     ;; 00A515 : 20 1C A4    ;
                       LDA.B #$10                          ;; 00A518 : A9 10       ;
@@ -4013,19 +4013,19 @@ CODE_00A529:          LDA.B #$80                          ;; 00A529 : A9 80     
                       ADC.W DATA_00A521,Y                 ;; 00A534 : 79 21 A5    ;
                       STA.W !HW_VMADD+1                   ;; 00A537 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00A53A : A2 06       ;
-CODE_00A53C:          LDA.W DATA_00A586,X                 ;; 00A53C : BD 86 A5    ;
+                    - LDA.W DATA_00A586,X                 ;; 00A53C : BD 86 A5    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 00A53F : 9D 10 43    ;
                       DEX                                 ;; 00A542 : CA          ;
-                      BPL CODE_00A53C                     ;; 00A543 : 10 F7       ;
+                      BPL -                               ;; 00A543 : 10 F7       ;
                       LDA.W !PlayerTurnOW                 ;; 00A545 : AD D6 0D    ;
                       LSR A                               ;; 00A548 : 4A          ;
                       LSR A                               ;; 00A549 : 4A          ;
                       TAX                                 ;; 00A54A : AA          ;
                       LDA.W !OWPlayerSubmap,X             ;; 00A54B : BD 11 1F    ;
-                      BEQ CODE_00A555                     ;; 00A54E : F0 05       ;
+                      BEQ +                               ;; 00A54E : F0 05       ;
                       LDA.B #$60                          ;; 00A550 : A9 60       ;
                       STA.W !HW_DMAADDR+$11               ;; 00A552 : 8D 13 43    ; A Address (High Byte)
-CODE_00A555:          LDA.W !HW_DMAADDR+$11               ;; 00A555 : AD 13 43    ; A Address (High Byte)
+                    + LDA.W !HW_DMAADDR+$11               ;; 00A555 : AD 13 43    ; A Address (High Byte)
                       CLC                                 ;; 00A558 : 18          ;
                       ADC.W DATA_00A525,Y                 ;; 00A559 : 79 25 A5    ;
                       STA.W !HW_DMAADDR+$11               ;; 00A55C : 8D 13 43    ; A Address (High Byte)
@@ -4039,10 +4039,10 @@ CODE_00A555:          LDA.W !HW_DMAADDR+$11               ;; 00A555 : AD 13 43  
                       ADC.W DATA_00A521,Y                 ;; 00A56F : 79 21 A5    ;
                       STA.W !HW_VMADD+1                   ;; 00A572 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                          ;; 00A575 : A2 06       ;
-CODE_00A577:          LDA.W DATA_00A58D,X                 ;; 00A577 : BD 8D A5    ;
+                    - LDA.W DATA_00A58D,X                 ;; 00A577 : BD 8D A5    ;
                       STA.W !HW_DMAPARAM+$10,X            ;; 00A57A : 9D 10 43    ;
                       DEX                                 ;; 00A57D : CA          ;
-                      BPL CODE_00A577                     ;; 00A57E : 10 F7       ;
+                      BPL -                               ;; 00A57E : 10 F7       ;
                       LDA.B #$02                          ;; 00A580 : A9 02       ;
                       STA.W !HW_MDMAEN                    ;; 00A582 : 8D 0B 42    ; Regular DMA Channel Enable
                       RTS                                 ;; ?QPWZ? : 60          ;
@@ -4068,7 +4068,7 @@ GM04Load:             JSR CODE_0085FA                     ;; ?QPWZ? : 20 FA 85  
                       LDA.W !IRQNMICommand                ;; 00A5AF : AD 9B 0D    ;
                       BPL CODE_00A5B9                     ;; 00A5B2 : 10 05       ;
                       JSR CODE_0097BC                     ;; 00A5B4 : 20 BC 97    ; Working on this routine 
-                      BRA CODE_00A5CF                     ;; 00A5B7 : 80 16       ;
+                      BRA +                               ;; 00A5B7 : 80 16       ;
                                                           ;;                      ;
 CODE_00A5B9:          JSR UploadSpriteGFX                 ;; 00A5B9 : 20 DA A9    ;
                       JSR LoadPalette                     ;; 00A5BC : 20 ED AB    ;
@@ -4077,7 +4077,7 @@ CODE_00A5B9:          JSR UploadSpriteGFX                 ;; 00A5B9 : 20 DA A9  
                       JSR CODE_00A5F9                     ;; 00A5C6 : 20 F9 A5    ;
                       JSR CODE_009260                     ;; 00A5C9 : 20 60 92    ;
                       JSR CODE_009860                     ;; 00A5CC : 20 60 98    ;
-CODE_00A5CF:          JSR CODE_00922F                     ;; 00A5CF : 20 2F 92    ;
+                    + JSR CODE_00922F                     ;; 00A5CF : 20 2F 92    ;
                       JSR KeepModeActive                  ;; 00A5D2 : 20 29 9F    ;
                       JSR CODE_008E1A                     ;; 00A5D5 : 20 1A 8E    ;
                       REP #$30                            ;; 00A5D8 : C2 30       ; Index (16 bit) Accum (16 bit) 
@@ -4096,12 +4096,12 @@ CODE_00A5CF:          JSR CODE_00922F                     ;; 00A5CF : 20 2F 92  
                                                           ;;                      ;
 CODE_00A5F9:          LDA.B #$E7                          ;; 00A5F9 : A9 E7       ;
                       TRB.B !EffFrame                     ;; 00A5FB : 14 14       ;
-CODE_00A5FD:          JSL CODE_05BB39                     ;; 00A5FD : 22 39 BB 05 ;
+                    - JSL CODE_05BB39                     ;; 00A5FD : 22 39 BB 05 ;
                       JSR CODE_00A390                     ;; 00A601 : 20 90 A3    ;
                       INC.B !EffFrame                     ;; 00A604 : E6 14       ;
                       LDA.B !EffFrame                     ;; 00A606 : A5 14       ;
                       AND.B #$07                          ;; 00A608 : 29 07       ;
-                      BNE CODE_00A5FD                     ;; 00A60A : D0 F1       ;
+                      BNE -                               ;; 00A60A : D0 F1       ;
                       RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
                                                           ;;                      ;
@@ -4121,10 +4121,10 @@ CODE_00A635:          LDA.W !BluePSwitchTimer             ;; 00A635 : AD AD 14  
                       LDA.W !InvinsibilityTimer           ;; 00A640 : AD 90 14    ; \ Branch if Mario doesn't have star 
                       BEQ CODE_00A660                     ;; 00A643 : F0 1B       ; / 
                       LDA.W !MusicBackup                  ;; 00A645 : AD DA 0D    ;
-                      BPL CODE_00A64F                     ;; 00A648 : 10 05       ;
+                      BPL +                               ;; 00A648 : 10 05       ;
 CODE_00A64A:          LDA.W !MusicBackup                  ;; 00A64A : AD DA 0D    ;
                       AND.B #$7F                          ;; 00A64D : 29 7F       ;
-CODE_00A64F:          ORA.B #$40                          ;; 00A64F : 09 40       ;
+                    + ORA.B #$40                          ;; 00A64F : 09 40       ;
                       STA.W !MusicBackup                  ;; 00A651 : 8D DA 0D    ;
                       STZ.W !BluePSwitchTimer             ;; 00A654 : 9C AD 14    ; Zero out POW timer 
                       STZ.W !SilverPSwitchTimer           ;; 00A657 : 9C AE 14    ; Zero out silver POW timer 
@@ -4135,16 +4135,16 @@ CODE_00A660:          LDA.W !BonusRoomBlocks              ;; 00A660 : AD F4 13  
                       ORA.W !BonusRoomBlocks+2            ;; 00A666 : 0D F6 13    ;
                       ORA.W !BonusRoomBlocks+3            ;; 00A669 : 0D F7 13    ;
                       ORA.W !BonusRoomBlocks+4            ;; 00A66C : 0D F8 13    ;
-                      BEQ CODE_00A674                     ;; 00A66F : F0 03       ;
+                      BEQ +                               ;; 00A66F : F0 03       ;
                       STA.W !DidPlayBonusGame             ;; 00A671 : 8D 1B 14    ;
-CODE_00A674:          LDX.B #$23                          ;; 00A674 : A2 23       ;
-CODE_00A676:          STZ.B !Map16HighPtr+2,X             ;; 00A676 : 74 70       ;
+                    + LDX.B #$23                          ;; 00A674 : A2 23       ;
+                    - STZ.B !Map16HighPtr+2,X             ;; 00A676 : 74 70       ;
                       DEX                                 ;; 00A678 : CA          ;
-                      BNE CODE_00A676                     ;; 00A679 : D0 FB       ;
+                      BNE -                               ;; 00A679 : D0 FB       ;
                       LDX.B #$37                          ;; 00A67B : A2 37       ;
-CODE_00A67D:          STZ.W !OverworldProcess,X           ;; 00A67D : 9E D9 13    ;
+                    - STZ.W !OverworldProcess,X           ;; 00A67D : 9E D9 13    ;
                       DEX                                 ;; 00A680 : CA          ;
-                      BNE CODE_00A67D                     ;; 00A681 : D0 FA       ;
+                      BNE -                               ;; 00A681 : D0 FA       ;
                       ASL.W !UnusedStarCounter            ;; 00A683 : 0E CB 13    ;
                       STZ.W !KickingTimer                 ;; 00A686 : 9C 9A 14    ;
                       STZ.W !PickUpItemTimer              ;; 00A689 : 9C 98 14    ;
@@ -4180,9 +4180,9 @@ CODE_00A6C7:          STX.B !PlayerAnimation              ;; 00A6C7 : 86 71     
                                                           ;;                      ;
 CODE_00A6CC:          LDA.B !Layer1YPos                   ;; 00A6CC : A5 1C       ;
                       CMP.B #$C0                          ;; 00A6CE : C9 C0       ;
-                      BEQ CODE_00A6D5                     ;; 00A6D0 : F0 03       ;
+                      BEQ +                               ;; 00A6D0 : F0 03       ;
                       INC.W !VerticalScrollEnabled        ;; 00A6D2 : EE F1 13    ;
-CODE_00A6D5:          LDA.W !LevelEntranceType            ;; 00A6D5 : AD 2A 19    ;
+                    + LDA.W !LevelEntranceType            ;; 00A6D5 : AD 2A 19    ;
                       BEQ CODE_00A6E0                     ;; 00A6D8 : F0 06       ;
                       CMP.B #$05                          ;; 00A6DA : C9 05       ;
                       BNE CODE_00A716                     ;; 00A6DC : D0 38       ;
@@ -4192,7 +4192,7 @@ CODE_00A6E0:          STY.B !PlayerDirection              ;; 00A6E0 : 84 76     
                       STA.B !PlayerInAir                  ;; 00A6E4 : 85 72       ;
                       STZ.B !SpriteLock                   ;; 00A6E6 : 64 9D       ;
                       LDA.W !KeyholeTimer                 ;; 00A6E8 : AD 34 14    ;
-                      BEQ CODE_00A704                     ;; 00A6EB : F0 17       ;
+                      BEQ +                               ;; 00A6EB : F0 17       ;
                       LDA.W !MusicBackup                  ;; 00A6ED : AD DA 0D    ;
                       ORA.B #$7F                          ;; 00A6F0 : 09 7F       ;
                       STA.W !MusicBackup                  ;; 00A6F2 : 8D DA 0D    ;
@@ -4203,15 +4203,15 @@ CODE_00A6E0:          STY.B !PlayerDirection              ;; 00A6E0 : 84 76     
                       CLC                                 ;; 00A6FE : 18          ;
                       ADC.B #$10                          ;; 00A6FF : 69 10       ;
                       STA.W !KeyholeYPos                  ;; 00A701 : 8D 38 14    ;
-CODE_00A704:          LDA.W !YoshiHeavenFlag              ;; 00A704 : AD 95 1B    ;
-                      BEQ Return00A715                    ;; 00A707 : F0 0C       ;
+                    + LDA.W !YoshiHeavenFlag              ;; 00A704 : AD 95 1B    ;
+                      BEQ +                               ;; 00A707 : F0 0C       ;
                       LDA.B #$08                          ;; 00A709 : A9 08       ; \ Animation = Rise off screen, 
                       STA.B !PlayerAnimation              ;; 00A70B : 85 71       ; / for Yoshi Wing bonus stage 
                       LDA.B #$A0                          ;; 00A70D : A9 A0       ;
                       STA.B !PlayerYPosNext               ;; 00A70F : 85 96       ;
                       LDA.B #$90                          ;; 00A711 : A9 90       ; \ Set upward speed, #$90 
                       STA.B !PlayerYSpeed                 ;; 00A713 : 85 7D       ; / 
-Return00A715:         RTS                                 ;; ?QPWZ? : 60          ;
+                    + RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_00A716:          CMP.B #$06                          ;; 00A716 : C9 06       ;
                       BCC CODE_00A740                     ;; 00A718 : 90 26       ;
@@ -4250,15 +4250,15 @@ CODE_00A740:          CLC                                 ;; 00A740 : 18        
                       LDX.B #$06                          ;; 00A75A : A2 06       ;
                       CPY.B #$07                          ;; 00A75C : C0 07       ;
                       LDY.B #$1E                          ;; 00A75E : A0 1E       ;
-                      BCC CODE_00A76A                     ;; 00A760 : 90 08       ;
+                      BCC +                               ;; 00A760 : 90 08       ;
                       LDY.B #$0F                          ;; 00A762 : A0 0F       ;
                       LDA.B !Powerup                      ;; 00A764 : A5 19       ;
-                      BEQ CODE_00A76A                     ;; 00A766 : F0 02       ;
+                      BEQ +                               ;; 00A766 : F0 02       ;
 CODE_00A768:          LDY.B #$1C                          ;; 00A768 : A0 1C       ; \ Set downward speed, #$1C 
-CODE_00A76A:          STY.B !PlayerYSpeed                 ;; 00A76A : 84 7D       ; / 
+                    + STY.B !PlayerYSpeed                 ;; 00A76A : 84 7D       ; / 
                       JSR CODE_00A6C7                     ;; 00A76C : 20 C7 A6    ;
                       LDA.W !PlayerRidingYoshi            ;; 00A76F : AD 7A 18    ;
-                      BEQ Return00A795                    ;; 00A772 : F0 21       ;
+                      BEQ +                               ;; 00A772 : F0 21       ;
                       LDX.B !PlayerPipeAction             ;; 00A774 : A6 89       ;
                       LDA.B !PipeTimer                    ;; 00A776 : A5 88       ;
                       CLC                                 ;; 00A778 : 18          ;
@@ -4277,7 +4277,7 @@ CODE_00A76A:          STY.B !PlayerYSpeed                 ;; 00A76A : 84 7D     
                       ADC.W DATA_00A611,X                 ;; 00A78E : 7D 11 A6    ;
                       STA.B !PlayerYPosNext               ;; 00A791 : 85 96       ;
                       SEP #$20                            ;; 00A793 : E2 20       ; Accum (8 bit) 
-Return00A795:         RTS                                 ;; ?QPWZ? : 60          ;
+                    + RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
 CODE_00A796:          REP #$20                            ;; 00A796 : C2 20       ; Accum (16 bit) 
                       LDY.W !VertLayer2Setting            ;; 00A798 : AC 14 14    ;
@@ -4292,10 +4292,10 @@ CODE_00A796:          REP #$20                            ;; 00A796 : C2 20     
 CODE_00A7A7:          LDA.B !Layer1YPos                   ;; 00A7A7 : A5 1C       ;
                       LSR A                               ;; 00A7A9 : 4A          ;
                       DEY                                 ;; 00A7AA : 88          ;
-                      BEQ CODE_00A7AF                     ;; 00A7AB : F0 02       ;
+                      BEQ +                               ;; 00A7AB : F0 02       ;
                       LSR A                               ;; 00A7AD : 4A          ;
                       LSR A                               ;; 00A7AE : 4A          ;
-CODE_00A7AF:          EOR.W #$FFFF                        ;; 00A7AF : 49 FF FF    ;
+                    + EOR.W #$FFFF                        ;; 00A7AF : 49 FF FF    ;
                       INC A                               ;; 00A7B2 : 1A          ;
                       CLC                                 ;; 00A7B3 : 18          ;
                       ADC.B !Layer2YPos                   ;; 00A7B4 : 65 20       ;
@@ -4348,30 +4348,30 @@ CODE_00A82D:          LDY.B #$0F                          ;; 00A82D : A0 0F     
                       JSL CODE_00BA28                     ;; 00A82F : 22 28 BA 00 ;
                       LDA.W !BonusGameActivate            ;; 00A833 : AD 25 14    ;
                       REP #$30                            ;; 00A836 : C2 30       ; Index (16 bit) Accum (16 bit) 
-                      BEQ CODE_00A842                     ;; 00A838 : F0 08       ;
+                      BEQ +                               ;; 00A838 : F0 08       ;
                       LDA.B !_0                           ;; 00A83A : A5 00       ;
                       CLC                                 ;; 00A83C : 18          ;
                       ADC.W #$0030                        ;; 00A83D : 69 30 00    ;
                       STA.B !_0                           ;; 00A840 : 85 00       ;
-CODE_00A842:          LDX.W #$0000                        ;; 00A842 : A2 00 00    ;
+                    + LDX.W #$0000                        ;; 00A842 : A2 00 00    ;
 CODE_00A845:          LDY.W #$0008                        ;; 00A845 : A0 08 00    ;
-CODE_00A848:          LDA.B [!_0]                         ;; 00A848 : A7 00       ;
+                    - LDA.B [!_0]                         ;; 00A848 : A7 00       ;
                       STA.L !MarioStartGraphics,X         ;; 00A84A : 9F 7B 97 7F ;
                       INX                                 ;; 00A84E : E8          ;
                       INX                                 ;; 00A84F : E8          ;
                       INC.B !_0                           ;; 00A850 : E6 00       ;
                       INC.B !_0                           ;; 00A852 : E6 00       ;
                       DEY                                 ;; 00A854 : 88          ;
-                      BNE CODE_00A848                     ;; 00A855 : D0 F1       ;
+                      BNE -                               ;; 00A855 : D0 F1       ;
                       LDY.W #$0008                        ;; 00A857 : A0 08 00    ;
-CODE_00A85A:          LDA.B [!_0]                         ;; 00A85A : A7 00       ;
+                    - LDA.B [!_0]                         ;; 00A85A : A7 00       ;
                       AND.W #$00FF                        ;; 00A85C : 29 FF 00    ;
                       STA.L !MarioStartGraphics,X         ;; 00A85F : 9F 7B 97 7F ;
                       INX                                 ;; 00A863 : E8          ;
                       INX                                 ;; 00A864 : E8          ;
                       INC.B !_0                           ;; 00A865 : E6 00       ;
                       DEY                                 ;; 00A867 : 88          ;
-                      BNE CODE_00A85A                     ;; 00A868 : D0 F0       ;
+                      BNE -                               ;; 00A868 : D0 F0       ;
                       CPX.W #$0300                        ;; 00A86A : E0 00 03    ;
                       BCC CODE_00A845                     ;; 00A86D : 90 D6       ;
                       SEP #$30                            ;; 00A86F : E2 30       ; Index (8 bit) Accum (8 bit) 
@@ -4384,28 +4384,28 @@ CODE_00A85A:          LDA.B [!_0]                         ;; 00A85A : A7 00     
                       STA.B !_1                           ;; 00A881 : 85 01       ;
                       LDX.W #$0000                        ;; 00A883 : A2 00 00    ;
 CODE_00A886:          LDY.W #$0008                        ;; 00A886 : A0 08 00    ;
-CODE_00A889:          LDA.B [!_0]                         ;; 00A889 : A7 00       ;
+                    - LDA.B [!_0]                         ;; 00A889 : A7 00       ;
                       STA.W !GfxDecompSP1,X               ;; 00A88B : 9D F6 0B    ;
                       INX                                 ;; 00A88E : E8          ;
                       INX                                 ;; 00A88F : E8          ;
                       INC.B !_0                           ;; 00A890 : E6 00       ;
                       INC.B !_0                           ;; 00A892 : E6 00       ;
                       DEY                                 ;; 00A894 : 88          ;
-                      BNE CODE_00A889                     ;; 00A895 : D0 F2       ;
+                      BNE -                               ;; 00A895 : D0 F2       ;
                       LDY.W #$0008                        ;; 00A897 : A0 08 00    ;
-CODE_00A89A:          LDA.B [!_0]                         ;; 00A89A : A7 00       ;
+                    - LDA.B [!_0]                         ;; 00A89A : A7 00       ;
                       AND.W #$00FF                        ;; 00A89C : 29 FF 00    ;
                       STA.W !GfxDecompSP1,X               ;; 00A89F : 9D F6 0B    ;
                       INX                                 ;; 00A8A2 : E8          ;
                       INX                                 ;; 00A8A3 : E8          ;
                       INC.B !_0                           ;; 00A8A4 : E6 00       ;
                       DEY                                 ;; 00A8A6 : 88          ;
-                      BNE CODE_00A89A                     ;; 00A8A7 : D0 F1       ;
+                      BNE -                               ;; 00A8A7 : D0 F1       ;
                       CPX.W #$00C0                        ;; 00A8A9 : E0 C0 00    ;
-                      BNE CODE_00A8B3                     ;; 00A8AC : D0 05       ;
+                      BNE +                               ;; 00A8AC : D0 05       ;
                       LDA.W #$B570                        ;; 00A8AE : A9 70 B5    ;
                       STA.B !_0                           ;; 00A8B1 : 85 00       ;
-CODE_00A8B3:          CPX.W #$0180                        ;; 00A8B3 : E0 80 01    ;
+                    + CPX.W #$0180                        ;; 00A8B3 : E0 80 01    ;
                       BCC CODE_00A886                     ;; 00A8B6 : 90 CE       ;
                       SEP #$30                            ;; 00A8B8 : E2 30       ; Index (8 bit) Accum (8 bit) 
                       LDA.B #$01                          ;; 00A8BA : A9 01       ;
@@ -4454,12 +4454,12 @@ CODE_00A9A3:          LDA.B !_E                           ;; 00A9A3 : A5 0E     
                       REP #$30                            ;; 00A9AA : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDX.W #$03FF                        ;; 00A9AC : A2 FF 03    ;
                       LDY.W #$0000                        ;; 00A9AF : A0 00 00    ;
-CODE_00A9B2:          LDA.B [!_0],Y                       ;; 00A9B2 : B7 00       ;
+                    - LDA.B [!_0],Y                       ;; 00A9B2 : B7 00       ;
                       STA.W !HW_VMDATA                    ;; 00A9B4 : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       INY                                 ;; 00A9B7 : C8          ;
                       INY                                 ;; 00A9B8 : C8          ;
                       DEX                                 ;; 00A9B9 : CA          ;
-                      BPL CODE_00A9B2                     ;; 00A9BA : 10 F6       ;
+                      BPL -                               ;; 00A9BA : 10 F6       ;
                       SEP #$30                            ;; 00A9BC : E2 30       ; Index (8 bit) Accum (8 bit) 
                       INC.B !_E                           ;; 00A9BE : E6 0E       ;
                       DEC.B !_F                           ;; 00A9C0 : C6 0F       ;
@@ -4483,11 +4483,11 @@ UploadSpriteGFX:      LDA.B #$80                          ;; ?QPWZ? : A9 80     
                       ASL A                               ;; 00A9E4 : 0A          ; \ 
                       ASL A                               ;; 00A9E5 : 0A          ;  }4A -> Y 
                       TAY                                 ;; 00A9E6 : A8          ; / 
-CODE_00A9E7:          LDA.W SPRITEGFXLIST,Y               ;; 00A9E7 : B9 C3 A8    ;  | 
+                    - LDA.W SPRITEGFXLIST,Y               ;; 00A9E7 : B9 C3 A8    ;  | 
                       STA.B !_4,X                         ;; 00A9EA : 95 04       ;  | 
                       INY                                 ;; 00A9EC : C8          ;  | 
                       DEX                                 ;; 00A9ED : CA          ;  | 
-                      BPL CODE_00A9E7                     ;; 00A9EE : 10 F7       ; / 
+                      BPL -                               ;; 00A9EE : 10 F7       ; / 
                       LDA.B #$03                          ;; 00A9F0 : A9 03       ; #$03 -> A -> $0F 
                       STA.B !_F                           ;; 00A9F2 : 85 0F       ;
 GFXTransferLoop:      LDX.B !_F                           ;; ?QPWZ? : A6 0F       ; $0F -> X 
@@ -4497,15 +4497,15 @@ GFXTransferLoop:      LDX.B !_F                           ;; ?QPWZ? : A6 0F     
                       LDY.B !_4,X                         ;; 00A9FF : B4 04       ; Y is possibly which GFX file 
                       LDA.W !SpriteGFXFile,X              ;; 00AA01 : BD 01 01    ; to upload to a section in VRAM, used in 
                       CMP.B !_4,X                         ;; 00AA04 : D5 04       ; the subroutine $00:BA28 
-                      BEQ DontUploadSpr                   ;; 00AA06 : F0 03       ; don't upload when it''s not needed 
+                      BEQ +                               ;; 00AA06 : F0 03       ; don't upload when it''s not needed 
                       JSR UploadGFXFile                   ;; 00AA08 : 20 6B AA    ; JSR to a JSL... 
-DontUploadSpr:        DEC.B !_F                           ;; ?QPWZ? : C6 0F       ; Decrement $0F 
+                    + DEC.B !_F                           ;; ?QPWZ? : C6 0F       ; Decrement $0F 
                       BPL GFXTransferLoop                 ;; 00AA0D : 10 E5       ; if >= #$00, continue transfer 
                       LDX.B #$03                          ;; 00AA0F : A2 03       ; \ 
-UpdtCrrntSpritGFX:    LDA.B !_4,X                         ;; ?QPWZ? : B5 04       ;  |Update $0101-$0104 to reflect the new sprite GFX 
+                    - LDA.B !_4,X                         ;; ?QPWZ? : B5 04       ;  |Update $0101-$0104 to reflect the new sprite GFX 
                       STA.W !SpriteGFXFile,X              ;; 00AA13 : 9D 01 01    ;  |That's loaded now. 
                       DEX                                 ;; 00AA16 : CA          ;  | 
-                      BPL UpdtCrrntSpritGFX               ;; 00AA17 : 10 F8       ; / 
+                      BPL -                               ;; 00AA17 : 10 F8       ; / 
                       LDA.W !ObjectTileset                ;; 00AA19 : AD 31 19    ; LDA Tileset 
                       CMP.B #$FE                          ;; 00AA1C : C9 FE       ;
                       BCS SetallFGBG80                    ;; 00AA1E : B0 3B       ; Branch to a routine that uploads file #$80 to every slot in FG/BG 
@@ -4514,11 +4514,11 @@ UpdtCrrntSpritGFX:    LDA.B !_4,X                         ;; ?QPWZ? : B5 04     
                       ASL A                               ;; 00AA25 : 0A          ; one, I'm guessing this does 
                       ASL A                               ;; 00AA26 : 0A          ; object/BG GFX. 
                       TAY                                 ;; 00AA27 : A8          ; 4A -> Y 
-PrepLoadFGBG:         LDA.W OBJECTGFXLIST,Y               ;; ?QPWZ? : B9 2B A9    ; FG/BG GFX table 
+                    - LDA.W OBJECTGFXLIST,Y               ;; ?QPWZ? : B9 2B A9    ; FG/BG GFX table 
                       STA.B !_4,X                         ;; 00AA2B : 95 04       ;
                       INY                                 ;; 00AA2D : C8          ;
                       DEX                                 ;; 00AA2E : CA          ;
-                      BPL PrepLoadFGBG                    ;; 00AA2F : 10 F7       ; FG/Bg to upload -> $04 - $07 
+                      BPL -                               ;; 00AA2F : 10 F7       ; FG/Bg to upload -> $04 - $07 
                       LDA.B #$03                          ;; 00AA31 : A9 03       ;
                       STA.B !_F                           ;; 00AA33 : 85 0F       ; #$03 -> $0F 
 CODE_00AA35:          LDX.B !_F                           ;; 00AA35 : A6 0F       ; $0F -> X 
@@ -4528,35 +4528,35 @@ CODE_00AA35:          LDX.B !_F                           ;; 00AA35 : A6 0F     
                       LDY.B !_4,X                         ;; 00AA40 : B4 04       ;
                       LDA.W !BackgroundGFXFile,X          ;; 00AA42 : BD 05 01    ; Check to see if the file to be uploaded already 
                       CMP.B !_4,X                         ;; 00AA45 : D5 04       ; exists in the slot in VRAM - if so, 
-                      BEQ NoUploadFGBG                    ;; 00AA47 : F0 03       ; don't bother uploading it again. 
+                      BEQ +                               ;; 00AA47 : F0 03       ; don't bother uploading it again. 
                       JSR UploadGFXFile                   ;; 00AA49 : 20 6B AA    ; Upload the GFX file 
-NoUploadFGBG:         DEC.B !_F                           ;; ?QPWZ? : C6 0F       ; Next GFX file 
+                    + DEC.B !_F                           ;; ?QPWZ? : C6 0F       ; Next GFX file 
                       BPL CODE_00AA35                     ;; 00AA4E : 10 E5       ;
                       LDX.B #$03                          ;; 00AA50 : A2 03       ;
-UpdateCurrentFGBG:    LDA.B !_4,X                         ;; ?QPWZ? : B5 04       ;
+                    - LDA.B !_4,X                         ;; ?QPWZ? : B5 04       ;
                       STA.W !BackgroundGFXFile,X          ;; 00AA54 : 9D 05 01    ;
                       DEX                                 ;; 00AA57 : CA          ;
-                      BPL UpdateCurrentFGBG               ;; 00AA58 : 10 F8       ;
+                      BPL -                               ;; 00AA58 : 10 F8       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return from uploading the GFX 
                                                           ;;                      ;
-SetallFGBG80:         BEQ NoUpdateVRAM80                  ;; ?QPWZ? : F0 03       ; If zero flag set, don't update the tileset 
+SetallFGBG80:         BEQ +                               ;; ?QPWZ? : F0 03       ; If zero flag set, don't update the tileset 
                       JSR CODE_00AB42                     ;; 00AA5D : 20 42 AB    ;
-NoUpdateVRAM80:       LDX.B #$03                          ;; ?QPWZ? : A2 03       ;
+                    + LDX.B #$03                          ;; ?QPWZ? : A2 03       ;
                       LDA.B #$80                          ;; 00AA62 : A9 80       ; my guess is that it gets called in the same set of routines 
-Store80:              STA.W !BackgroundGFXFile,X          ;; ?QPWZ? : 9D 05 01    ;
+                    - STA.W !BackgroundGFXFile,X          ;; ?QPWZ? : 9D 05 01    ;
                       DEX                                 ;; 00AA67 : CA          ;
-                      BPL Store80                         ;; 00AA68 : 10 FA       ;
+                      BPL -                               ;; 00AA68 : 10 FA       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 UploadGFXFile:        JSL CODE_00BA28                     ;; ?QPWZ? : 22 28 BA 00 ;
                       CPY.B #$01                          ;; 00AA6F : C0 01       ;
-                      BNE SkipSpecial                     ;; 00AA71 : D0 0D       ;
+                      BNE +                               ;; 00AA71 : D0 0D       ;
                       LDA.W !OWLevelTileSettings+$49      ;; 00AA73 : AD EB 1E    ;
-                      BPL SkipSpecial                     ;; 00AA76 : 10 08       ; handle the post-special world graphics and koopa color swap. 
+                      BPL +                               ;; 00AA76 : 10 08       ; handle the post-special world graphics and koopa color swap. 
                       LDY.B #$31                          ;; 00AA78 : A0 31       ;
                       JSL CODE_00BA28                     ;; 00AA7A : 22 28 BA 00 ;
                       LDY.B #$01                          ;; 00AA7E : A0 01       ;
-SkipSpecial:          REP #$20                            ;; ?QPWZ? : C2 20       ; A = 16bit ; Accum (16 bit) 
+                    + REP #$20                            ;; ?QPWZ? : C2 20       ; A = 16bit ; Accum (16 bit) 
                       LDA.W #$0000                        ;; 00AA82 : A9 00 00    ;
                       LDX.W !ObjectTileset                ;; 00AA85 : AE 31 19    ; LDX Tileset 
                       CPX.B #$11                          ;; 00AA88 : E0 11       ; CPX #$11 
@@ -4565,17 +4565,17 @@ SkipSpecial:          REP #$20                            ;; ?QPWZ? : C2 20     
                       BEQ JumpTo_____                     ;; 00AA8E : F0 06       ;
 CODE_00AA90:          CPY.B #$1E                          ;; 00AA90 : C0 1E       ; If Y = #$1E then 
                       BEQ JumpTo_____                     ;; 00AA92 : F0 02       ; JMP otherwise 
-                      BNE CODE_00AA99                     ;; 00AA94 : D0 03       ; don't JMP 
+                      BNE +                               ;; 00AA94 : D0 03       ; don't JMP 
 JumpTo_____:          JMP FilterSomeRAM                   ;; ?QPWZ? : 4C 02 AB    ;
                                                           ;;                      ;
-CODE_00AA99:          STA.B !_A                           ;; 00AA99 : 85 0A       ;
+                    + STA.B !_A                           ;; 00AA99 : 85 0A       ;
                       LDA.W #$FFFF                        ;; 00AA9B : A9 FF FF    ;
                       CPY.B #$01                          ;; 00AA9E : C0 01       ;
-                      BEQ CODE_00AAA9                     ;; 00AAA0 : F0 07       ;
+                      BEQ +                               ;; 00AAA0 : F0 07       ;
                       CPY.B #$17                          ;; 00AAA2 : C0 17       ;
-                      BEQ CODE_00AAA9                     ;; 00AAA4 : F0 03       ;
+                      BEQ +                               ;; 00AAA4 : F0 03       ;
                       LDA.W #$0000                        ;; 00AAA6 : A9 00 00    ;
-CODE_00AAA9:          STA.W !GfxBppConvertFlag            ;; 00AAA9 : 8D BC 1B    ;
+                    + STA.W !GfxBppConvertFlag            ;; 00AAA9 : 8D BC 1B    ;
                       LDY.B #$7F                          ;; 00AAAC : A0 7F       ;
 CODE_00AAAE:          LDA.W !GfxBppConvertFlag            ;; 00AAAE : AD BC 1B    ;
                       BEQ CODE_00AACD                     ;; 00AAB1 : F0 1A       ;
@@ -4592,7 +4592,7 @@ CODE_00AABE:          CPY.B #$6E                          ;; 00AABE : C0 6E     
 CODE_00AAC8:          LDA.W #$0000                        ;; 00AAC8 : A9 00 00    ;
                       STA.B !_A                           ;; 00AACB : 85 0A       ;
 CODE_00AACD:          LDX.B #$07                          ;; 00AACD : A2 07       ;
-CODE_00AACF:          LDA.B [!_0]                         ;; 00AACF : A7 00       ;
+                    - LDA.B [!_0]                         ;; 00AACF : A7 00       ;
                       STA.W !HW_VMDATA                    ;; 00AAD1 : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       XBA                                 ;; 00AAD4 : EB          ;
                       ORA.B [!_0]                         ;; 00AAD5 : 07 00       ;
@@ -4600,9 +4600,9 @@ CODE_00AACF:          LDA.B [!_0]                         ;; 00AACF : A7 00     
                       INC.B !_0                           ;; 00AADA : E6 00       ;
                       INC.B !_0                           ;; 00AADC : E6 00       ;
                       DEX                                 ;; 00AADE : CA          ;
-                      BPL CODE_00AACF                     ;; 00AADF : 10 EE       ;
+                      BPL -                               ;; 00AADF : 10 EE       ;
                       LDX.B #$07                          ;; 00AAE1 : A2 07       ;
-CODE_00AAE3:          LDA.B [!_0]                         ;; 00AAE3 : A7 00       ;
+                    - LDA.B [!_0]                         ;; 00AAE3 : A7 00       ;
                       AND.W #$00FF                        ;; 00AAE5 : 29 FF 00    ;
                       STA.B !_C                           ;; 00AAE8 : 85 0C       ;
                       LDA.B [!_0]                         ;; 00AAEA : A7 00       ;
@@ -4613,7 +4613,7 @@ CODE_00AAE3:          LDA.B [!_0]                         ;; 00AAE3 : A7 00     
                       STA.W !HW_VMDATA                    ;; 00AAF4 : 8D 18 21    ; Data for VRAM Write (Low Byte)
                       INC.B !_0                           ;; 00AAF7 : E6 00       ;
                       DEX                                 ;; 00AAF9 : CA          ;
-                      BPL CODE_00AAE3                     ;; 00AAFA : 10 E7       ;
+                      BPL -                               ;; 00AAFA : 10 E7       ;
                       DEY                                 ;; 00AAFC : 88          ;
                       BPL CODE_00AAAE                     ;; 00AAFD : 10 AF       ;
                       SEP #$20                            ;; 00AAFF : E2 20       ; Accum (8 bit) 
@@ -4623,9 +4623,9 @@ FilterSomeRAM:        LDA.W #$FF00                        ;; ?QPWZ? : A9 00 FF  
                       STA.B !_A                           ;; 00AB05 : 85 0A       ;
                       LDY.B #$7F                          ;; 00AB07 : A0 7F       ;
 Upload____ToVRAM:     CPY.B #$08                          ;; ?QPWZ? : C0 08       ; \Completely pointless code. 
-                      BCS CODE_00AB0D                     ;; 00AB0B : B0 00       ; /(Why not just NOPing it out, Nintendo?) 
-CODE_00AB0D:          LDX.B #$07                          ;; 00AB0D : A2 07       ;
-AddressWrite1:        LDA.B [!_0]                         ;; ?QPWZ? : A7 00       ; \ Okay, so take [$00], store 
+                      BCS +                               ;; 00AB0B : B0 00       ; /(Why not just NOPing it out, Nintendo?) 
+                    + LDX.B #$07                          ;; 00AB0D : A2 07       ;
+                    - LDA.B [!_0]                         ;; ?QPWZ? : A7 00       ; \ Okay, so take [$00], store 
                       STA.W !HW_VMDATA                    ;; 00AB11 : 8D 18 21    ;  |it to VRAM, then bitwise ; Data for VRAM Write (Low Byte)
                       XBA                                 ;; 00AB14 : EB          ;  |OR the high and low bytes together 
                       ORA.B [!_0]                         ;; 00AB15 : 07 00       ;  |store in both bytes of A 
@@ -4633,9 +4633,9 @@ AddressWrite1:        LDA.B [!_0]                         ;; ?QPWZ? : A7 00     
                       INC.B !_0                           ;; 00AB1A : E6 00       ; \Increment $7E:0000 by 2 
                       INC.B !_0                           ;; 00AB1C : E6 00       ; / 
                       DEX                                 ;; 00AB1E : CA          ; \And continue on another 7 times (or 8 times total) 
-                      BPL AddressWrite1                   ;; 00AB1F : 10 EE       ; / 
+                      BPL -                               ;; 00AB1F : 10 EE       ; / 
                       LDX.B #$07                          ;; 00AB21 : A2 07       ; hm..  It's like a FOR Y{FOR X{ } } thing ...yeah... 
-AddressWrite2:        LDA.B [!_0]                         ;; ?QPWZ? : A7 00       ;
+                    - LDA.B [!_0]                         ;; ?QPWZ? : A7 00       ;
                       AND.W #$00FF                        ;; 00AB25 : 29 FF 00    ; A normal byte becomes 2 anti-compressed bytes. 
                       STA.B !_C                           ;; 00AB28 : 85 0C       ; I'm going up, to try and find out what's supposed to set $00-$02 for this routine. 
                       LDA.B [!_0]                         ;; 00AB2A : A7 00       ; AHA, check $00/BA28.  It writes a RAM address to $00-$02, $7EAD00 
@@ -4646,7 +4646,7 @@ AddressWrite2:        LDA.B [!_0]                         ;; ?QPWZ? : A7 00     
                       STA.W !HW_VMDATA                    ;; 00AB34 : 8D 18 21    ; Okay... WHAT THE HELL? ; Data for VRAM Write (Low Byte)
                       INC.B !_0                           ;; 00AB37 : E6 00       ; I'll have nightmares about this routine for a few years. :( 
                       DEX                                 ;; 00AB39 : CA          ;
-                      BPL AddressWrite2                   ;; 00AB3A : 10 E7       ; Ouch. 
+                      BPL -                               ;; 00AB3A : 10 E7       ; Ouch. 
                       DEY                                 ;; 00AB3C : 88          ;
                       BPL Upload____ToVRAM                ;; 00AB3D : 10 CA       ;
                       SEP #$20                            ;; 00AB3F : E2 20       ; Accum (8 bit) 
@@ -4657,7 +4657,7 @@ CODE_00AB42:          LDY.B #$27                          ;; 00AB42 : A0 27     
                       REP #$10                            ;; 00AB48 : C2 10       ; Index (16 bit) 
                       LDY.W #$0000                        ;; 00AB4A : A0 00 00    ;
                       LDX.W #$03FF                        ;; 00AB4D : A2 FF 03    ;
-CODE_00AB50:          LDA.B [!_0],Y                       ;; 00AB50 : B7 00       ;
+                    - LDA.B [!_0],Y                       ;; 00AB50 : B7 00       ;
                       STA.B !_F                           ;; 00AB52 : 85 0F       ;
                       JSR CODE_00ABC4                     ;; 00AB54 : 20 C4 AB    ;
                       LDA.B !_4                           ;; 00AB57 : A5 04       ;
@@ -4703,11 +4703,11 @@ CODE_00AB50:          LDA.B [!_0],Y                       ;; 00AB50 : B7 00     
                       STA.W $2119                         ;; 00ABB1 : 8D 19 21    ; Data for VRAM Write (High Byte)
                       INY                                 ;; 00ABB4 : C8          ;
                       DEX                                 ;; 00ABB5 : CA          ;
-                      BPL CODE_00AB50                     ;; 00ABB6 : 10 98       ;
+                      BPL -                               ;; 00ABB6 : 10 98       ;
                       LDX.W #$2000                        ;; 00ABB8 : A2 00 20    ;
-CODE_00ABBB:          STZ.W $2119                         ;; 00ABBB : 9C 19 21    ; Data for VRAM Write (High Byte)
+                    - STZ.W $2119                         ;; 00ABBB : 9C 19 21    ; Data for VRAM Write (High Byte)
                       DEX                                 ;; 00ABBE : CA          ;
-                      BNE CODE_00ABBB                     ;; 00ABBF : D0 FA       ;
+                      BNE -                               ;; 00ABBF : D0 FA       ;
                       SEP #$10                            ;; 00ABC1 : E2 10       ; Index (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -4833,26 +4833,26 @@ LoadPalette:          REP #$30                            ;; ?QPWZ? : C2 30     
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 LoadCol8Pal:          LDY.W #$0007                        ;; ?QPWZ? : A0 07 00    ; Index (16 bit) Accum (16 bit) 
-CODE_00ACF0:          LDA.B !_4                           ;; 00ACF0 : A5 04       ;
+                    - LDA.B !_4                           ;; 00ACF0 : A5 04       ;
                       STA.W !MainPalette,X                ;; 00ACF2 : 9D 03 07    ;
                       TXA                                 ;; 00ACF5 : 8A          ;
                       CLC                                 ;; 00ACF6 : 18          ;
                       ADC.W #$0020                        ;; 00ACF7 : 69 20 00    ;
                       TAX                                 ;; 00ACFA : AA          ;
                       DEY                                 ;; 00ACFB : 88          ;
-                      BPL CODE_00ACF0                     ;; 00ACFC : 10 F2       ;
+                      BPL -                               ;; 00ACFC : 10 F2       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 LoadColors:           LDX.B !_4                           ;; ?QPWZ? : A6 04       ;
                       LDY.B !_6                           ;; 00AD01 : A4 06       ;
-CODE_00AD03:          LDA.B (!_0)                         ;; 00AD03 : B2 00       ;
+                    - LDA.B (!_0)                         ;; 00AD03 : B2 00       ;
                       STA.W !MainPalette,X                ;; 00AD05 : 9D 03 07    ;
                       INC.B !_0                           ;; 00AD08 : E6 00       ;
                       INC.B !_0                           ;; 00AD0A : E6 00       ;
                       INX                                 ;; 00AD0C : E8          ;
                       INX                                 ;; 00AD0D : E8          ;
                       DEY                                 ;; 00AD0E : 88          ;
-                      BPL CODE_00AD03                     ;; 00AD0F : 10 F2       ;
+                      BPL -                               ;; 00AD0F : 10 F2       ;
                       LDA.B !_4                           ;; 00AD11 : A5 04       ;
                       CLC                                 ;; 00AD13 : 18          ;
                       ADC.W #$0020                        ;; 00AD14 : 69 20 00    ;
@@ -4867,9 +4867,9 @@ DATA_00AD1E:          db $01,$00,$03,$04,$03,$05,$02      ;; 00AD1E             
 CODE_00AD25:          REP #$30                            ;; 00AD25 : C2 30       ; Index (16 bit) Accum (16 bit) 
                       LDY.W #$B3D8                        ;; 00AD27 : A0 D8 B3    ;
                       LDA.W !OWLevelTileSettings+$48      ;; 00AD2A : AD EA 1E    ;
-                      BPL CODE_00AD32                     ;; 00AD2D : 10 03       ;
+                      BPL +                               ;; 00AD2D : 10 03       ;
                       LDY.W #$B732                        ;; 00AD2F : A0 32 B7    ;
-CODE_00AD32:          STY.B !_0                           ;; 00AD32 : 84 00       ;
+                    + STY.B !_0                           ;; 00AD32 : 84 00       ;
                       LDA.W !ObjectTileset                ;; 00AD34 : AD 31 19    ;
                       AND.W #$000F                        ;; 00AD37 : 29 0F 00    ;
                       DEC A                               ;; 00AD3A : 3A          ;
@@ -5038,11 +5038,11 @@ DATA_00AEF7:          db $00,$80,$00,$40,$00,$20,$00,$10  ;; 00AEF7             
 CODE_00AF17:          LDY.W !EndLevelTimer                ;; 00AF17 : AC 93 14    ;
                       LDA.B !TrueFrame                    ;; 00AF1A : A5 13       ;
                       LSR A                               ;; 00AF1C : 4A          ;
-                      BCC CODE_00AF25                     ;; 00AF1D : 90 06       ;
+                      BCC +                               ;; 00AF1D : 90 06       ;
                       DEY                                 ;; 00AF1F : 88          ;
-                      BEQ CODE_00AF25                     ;; 00AF20 : F0 03       ;
+                      BEQ +                               ;; 00AF20 : F0 03       ;
                       STY.W !EndLevelTimer                ;; 00AF22 : 8C 93 14    ;
-CODE_00AF25:          CPY.B #$A0                          ;; 00AF25 : C0 A0       ;
+                    + CPY.B #$A0                          ;; 00AF25 : C0 A0       ;
                       BCS CODE_00AF35                     ;; 00AF27 : B0 0C       ;
                       LDA.B #$04                          ;; 00AF29 : A9 04       ;
                       TRB.B !ColorSettings                ;; 00AF2B : 14 40       ;
@@ -5061,7 +5061,7 @@ CODE_00AF35:          LDA.B !TrueFrame                    ;; 00AF35 : A5 13     
                       LDX.W #$00EE                        ;; 00AF4B : A2 EE 00    ;
 CODE_00AF4E:          LDA.W #$0007                        ;; 00AF4E : A9 07 00    ;
                       STA.B !_0                           ;; 00AF51 : 85 00       ;
-CODE_00AF53:          LDA.W !CopyPalette,X                ;; 00AF53 : BD 05 09    ;
+                    - LDA.W !CopyPalette,X                ;; 00AF53 : BD 05 09    ;
                       STA.B !_2                           ;; 00AF56 : 85 02       ;
                       LDA.W !MainPalette,X                ;; 00AF58 : BD 03 07    ;
                       JSR CODE_00AFC0                     ;; 00AF5B : 20 C0 AF    ;
@@ -5070,14 +5070,14 @@ CODE_00AF53:          LDA.W !CopyPalette,X                ;; 00AF53 : BD 05 09  
                       DEX                                 ;; 00AF63 : CA          ;
                       DEX                                 ;; 00AF64 : CA          ;
                       DEC.B !_0                           ;; 00AF65 : C6 00       ;
-                      BNE CODE_00AF53                     ;; 00AF67 : D0 EA       ;
+                      BNE -                               ;; 00AF67 : D0 EA       ;
                       TXA                                 ;; 00AF69 : 8A          ;
                       SEC                                 ;; 00AF6A : 38          ;
                       SBC.W #$0012                        ;; 00AF6B : E9 12 00    ;
                       TAX                                 ;; 00AF6E : AA          ;
                       BPL CODE_00AF4E                     ;; 00AF6F : 10 DD       ;
                       LDX.W #$0004                        ;; 00AF71 : A2 04 00    ;
-CODE_00AF74:          LDA.W !CopyPalette+$1A,X            ;; 00AF74 : BD 1F 09    ;
+                    - LDA.W !CopyPalette+$1A,X            ;; 00AF74 : BD 1F 09    ;
                       STA.B !_2                           ;; 00AF77 : 85 02       ;
                       LDA.W !MainPalette+$1A,X            ;; 00AF79 : BD 1D 07    ;
                       JSR CODE_00AFC0                     ;; 00AF7C : 20 C0 AF    ;
@@ -5085,7 +5085,7 @@ CODE_00AF74:          LDA.W !CopyPalette+$1A,X            ;; 00AF74 : BD 1F 09  
                       STA.W !CopyPalette+$1A,X            ;; 00AF81 : 9D 1F 09    ;
                       DEX                                 ;; 00AF84 : CA          ;
                       DEX                                 ;; 00AF85 : CA          ;
-                      BPL CODE_00AF74                     ;; 00AF86 : 10 EC       ;
+                      BPL -                               ;; 00AF86 : 10 EC       ;
                       LDA.W !BackgroundColor              ;; 00AF88 : AD 01 07    ;
                       STA.B !_2                           ;; 00AF8B : 85 02       ;
                       LDA.W !CopyBGColor                  ;; 00AF8D : AD 03 09    ;
@@ -5140,12 +5140,12 @@ CODE_00AFDF:          PHY                                 ;; 00AFDF : 5A        
                       LDA.W DATA_00AE77,Y                 ;; 00AFE6 : B9 77 AE    ;
                       PLY                                 ;; 00AFE9 : 7A          ;
                       AND.B !_E                           ;; 00AFEA : 25 0E       ;
-                      BEQ CODE_00AFF9                     ;; 00AFEC : F0 0B       ;
+                      BEQ +                               ;; 00AFEC : F0 0B       ;
                       LDA.W DATA_00AE6B,Y                 ;; 00AFEE : B9 6B AE    ;
                       BIT.W !EndLevelTimer                ;; 00AFF1 : 2C 93 14    ;
-                      BPL CODE_00AFF9                     ;; 00AFF4 : 10 03       ;
+                      BPL +                               ;; 00AFF4 : 10 03       ;
                       LDA.W DATA_00AE71,Y                 ;; 00AFF6 : B9 71 AE    ;
-CODE_00AFF9:          CLC                                 ;; 00AFF9 : 18          ;
+                    + CLC                                 ;; 00AFF9 : 18          ;
                       ADC.B !_2                           ;; 00AFFA : 65 02       ;
                       AND.W DATA_00AE65,Y                 ;; 00AFFC : 39 65 AE    ;
                       TSB.B !_4                           ;; 00AFFF : 04 04       ;
@@ -5160,7 +5160,7 @@ CODE_00B006:          PHB                                 ;; 00B006 : 8B        
                       JSR CODE_00AFA3                     ;; 00B009 : 20 A3 AF    ;
                       LDX.W #$006E                        ;; 00B00C : A2 6E 00    ;
 CODE_00B00F:          LDY.W #$0008                        ;; 00B00F : A0 08 00    ;
-CODE_00B012:          LDA.W !CopyPalette+2,X              ;; 00B012 : BD 07 09    ;
+                    - LDA.W !CopyPalette+2,X              ;; 00B012 : BD 07 09    ;
                       STA.B !_2                           ;; 00B015 : 85 02       ;
                       LDA.W !MainPalette+$80,X            ;; 00B017 : BD 83 07    ;
                       PHY                                 ;; 00B01A : 5A          ;
@@ -5175,7 +5175,7 @@ CODE_00B012:          LDA.W !CopyPalette+2,X              ;; 00B012 : BD 07 09  
                       DEX                                 ;; 00B02D : CA          ;
                       DEX                                 ;; 00B02E : CA          ;
                       DEY                                 ;; 00B02F : 88          ;
-                      BNE CODE_00B012                     ;; 00B030 : D0 E0       ;
+                      BNE -                               ;; 00B030 : D0 E0       ;
                       TXA                                 ;; 00B032 : 8A          ;
                       SEC                                 ;; 00B033 : 38          ;
                       SBC.W #$0010                        ;; 00B034 : E9 10 00    ;
@@ -5195,17 +5195,17 @@ CODE_00B03E:          JSR CODE_00AF35                     ;; 00B03E : 20 35 AF  
                       LDA.W !PlayerPalletePtr             ;; 00B04E : AD 82 0D    ;
                       STA.B !_0                           ;; 00B051 : 85 00       ;
                       LDY.W #$0014                        ;; 00B053 : A0 14 00    ;
-CODE_00B056:          LDA.B [!_0],Y                       ;; 00B056 : B7 00       ;
+                    - LDA.B [!_0],Y                       ;; 00B056 : B7 00       ;
                       STA.W !CopyPalette+$10C,Y           ;; 00B058 : 99 11 0A    ;
                       DEY                                 ;; 00B05B : 88          ;
                       DEY                                 ;; 00B05C : 88          ;
-                      BPL CODE_00B056                     ;; 00B05D : 10 F7       ;
+                      BPL -                               ;; 00B05D : 10 F7       ;
                       LDA.W #$81EE                        ;; 00B05F : A9 EE 81    ;
                       STA.W !CopyPalette+$100             ;; 00B062 : 8D 05 0A    ;
                       LDX.W #$00CE                        ;; 00B065 : A2 CE 00    ;
 CODE_00B068:          LDA.W #$0007                        ;; 00B068 : A9 07 00    ;
                       STA.B !_0                           ;; 00B06B : 85 00       ;
-CODE_00B06D:          LDA.W !CopyPalette+$120,X           ;; 00B06D : BD 25 0A    ;
+                    - LDA.W !CopyPalette+$120,X           ;; 00B06D : BD 25 0A    ;
                       STA.B !_2                           ;; 00B070 : 85 02       ;
                       LDA.W !MainPalette+$120,X           ;; 00B072 : BD 23 08    ;
                       JSR CODE_00AFC0                     ;; 00B075 : 20 C0 AF    ;
@@ -5214,7 +5214,7 @@ CODE_00B06D:          LDA.W !CopyPalette+$120,X           ;; 00B06D : BD 25 0A  
                       DEX                                 ;; 00B07D : CA          ;
                       DEX                                 ;; 00B07E : CA          ;
                       DEC.B !_0                           ;; 00B07F : C6 00       ;
-                      BNE CODE_00B06D                     ;; 00B081 : D0 EA       ;
+                      BNE -                               ;; 00B081 : D0 EA       ;
                       TXA                                 ;; 00B083 : 8A          ;
                       SEC                                 ;; 00B084 : 38          ;
                       SBC.W #$0012                        ;; 00B085 : E9 12 00    ;
@@ -5512,14 +5512,14 @@ CODE_00B888:          REP #$10                            ;; 00B888 : C2 10     
                       STA.B !GraphicsUncompPtr            ;; 00B8A8 : 85 8D       ; /  
                       LDX.W #$23FF                        ;; 00B8AA : A2 FF 23    ;
 CODE_00B8AD:          LDY.W #$0008                        ;; 00B8AD : A0 08 00    ;
-CODE_00B8B0:          LDA.L !MarioGraphics,X              ;; 00B8B0 : BF 00 20 7E ;
+                    - LDA.L !MarioGraphics,X              ;; 00B8B0 : BF 00 20 7E ;
                       AND.W #$00FF                        ;; 00B8B4 : 29 FF 00    ;
                       STA.B [!GraphicsUncompPtr]          ;; 00B8B7 : 87 8D       ;
                       DEX                                 ;; 00B8B9 : CA          ;
                       DEC.B !GraphicsUncompPtr            ;; 00B8BA : C6 8D       ;
                       DEC.B !GraphicsUncompPtr            ;; 00B8BC : C6 8D       ;
                       DEY                                 ;; 00B8BE : 88          ;
-                      BNE CODE_00B8B0                     ;; 00B8BF : D0 EF       ;
+                      BNE -                               ;; 00B8BF : D0 EF       ;
                       LDY.W #$0008                        ;; 00B8C1 : A0 08 00    ;
 CODE_00B8C4:          DEX                                 ;; 00B8C4 : CA          ;
                       LDA.L !MarioGraphics,X              ;; 00B8C5 : BF 00 20 7E ;
@@ -5539,11 +5539,11 @@ CODE_00B8DE:          REP #$10                            ;; 00B8DE : C2 10     
                       LDY.W #$0000                        ;; 00B8E0 : A0 00 00    ; \  
 CODE_00B8E3:          JSR ReadByte                        ;; 00B8E3 : 20 83 B9    ;  | 
                       CMP.B #$FF                          ;; 00B8E6 : C9 FF       ;  |If the next byte is xFF, return. 
-                      BNE CODE_00B8ED                     ;; 00B8E8 : D0 03       ;  |Compressed graphics files ends with xFF IIRC 
+                      BNE +                               ;; 00B8E8 : D0 03       ;  |Compressed graphics files ends with xFF IIRC 
                       SEP #$10                            ;; 00B8EA : E2 10       ;  | ; Index (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; /  
                                                           ;;                      ;
-CODE_00B8ED:          STA.B !GraphicsUncompPtr+2          ;; 00B8ED : 85 8F       ;
+                    + STA.B !GraphicsUncompPtr+2          ;; 00B8ED : 85 8F       ;
                       AND.B #$E0                          ;; 00B8EF : 29 E0       ;
                       CMP.B #$E0                          ;; 00B8F1 : C9 E0       ;
                       BEQ CODE_00B8FF                     ;; 00B8F3 : F0 0A       ;
@@ -5551,7 +5551,7 @@ CODE_00B8ED:          STA.B !GraphicsUncompPtr+2          ;; 00B8ED : 85 8F     
                       LDA.B !GraphicsUncompPtr+2          ;; 00B8F6 : A5 8F       ;
                       REP #$20                            ;; 00B8F8 : C2 20       ; Accum (16 bit) 
                       AND.W #$001F                        ;; 00B8FA : 29 1F 00    ;
-                      BRA CODE_00B911                     ;; 00B8FD : 80 12       ;
+                      BRA +                               ;; 00B8FD : 80 12       ;
                                                           ;;                      ;
 CODE_00B8FF:          LDA.B !GraphicsUncompPtr+2          ;; 00B8FF : A5 8F       ; Accum (8 bit) 
                       ASL A                               ;; 00B901 : 0A          ;
@@ -5564,7 +5564,7 @@ CODE_00B8FF:          LDA.B !GraphicsUncompPtr+2          ;; 00B8FF : A5 8F     
                       XBA                                 ;; 00B90B : EB          ;
                       JSR ReadByte                        ;; 00B90C : 20 83 B9    ;
                       REP #$20                            ;; 00B90F : C2 20       ; Accum (16 bit) 
-CODE_00B911:          INC A                               ;; 00B911 : 1A          ;
+                    + INC A                               ;; 00B911 : 1A          ;
                       STA.B !GraphicsUncompPtr            ;; 00B912 : 85 8D       ;
                       SEP #$20                            ;; 00B914 : E2 20       ; Accum (8 bit) 
                       PLA                                 ;; 00B916 : 68          ;
@@ -5576,11 +5576,11 @@ CODE_00B911:          INC A                               ;; 00B911 : 1A        
                       BPL CODE_00B94C                     ;; 00B91F : 10 2B       ;
                       JSR ReadByte                        ;; 00B921 : 20 83 B9    ;
                       LDX.B !GraphicsUncompPtr            ;; 00B924 : A6 8D       ;
-CODE_00B926:          STA.B [!_0],Y                       ;; 00B926 : 97 00       ;
+                    - STA.B [!_0],Y                       ;; 00B926 : 97 00       ;
                       INC A                               ;; 00B928 : 1A          ;
                       INY                                 ;; 00B929 : C8          ;
                       DEX                                 ;; 00B92A : CA          ;
-                      BNE CODE_00B926                     ;; 00B92B : D0 F9       ;
+                      BNE -                               ;; 00B92B : D0 F9       ;
                       JMP CODE_00B8E3                     ;; 00B92D : 4C E3 B8    ;
                                                           ;;                      ;
 CODE_00B930:          JSR ReadByte                        ;; 00B930 : 20 83 B9    ;
@@ -5594,10 +5594,10 @@ CODE_00B930:          JSR ReadByte                        ;; 00B930 : 20 83 B9  
                                                           ;;                      ;
 CODE_00B93F:          JSR ReadByte                        ;; 00B93F : 20 83 B9    ;
                       LDX.B !GraphicsUncompPtr            ;; 00B942 : A6 8D       ;
-CODE_00B944:          STA.B [!_0],Y                       ;; 00B944 : 97 00       ;
+                    - STA.B [!_0],Y                       ;; 00B944 : 97 00       ;
                       INY                                 ;; 00B946 : C8          ;
                       DEX                                 ;; 00B947 : CA          ;
-                      BNE CODE_00B944                     ;; 00B948 : D0 FA       ;
+                      BNE -                               ;; 00B948 : D0 FA       ;
                       BRA CODE_00B8E3                     ;; 00B94A : 80 97       ;
                                                           ;;                      ;
 CODE_00B94C:          JSR ReadByte                        ;; 00B94C : 20 83 B9    ;
@@ -5620,7 +5620,7 @@ CODE_00B966:          JSR ReadByte                        ;; 00B966 : 20 83 B9  
                       XBA                                 ;; 00B969 : EB          ;
                       JSR ReadByte                        ;; 00B96A : 20 83 B9    ;
                       TAX                                 ;; 00B96D : AA          ;
-CODE_00B96E:          PHY                                 ;; 00B96E : 5A          ;
+                    - PHY                                 ;; 00B96E : 5A          ;
                       TXY                                 ;; 00B96F : 9B          ;
                       LDA.B [!_0],Y                       ;; 00B970 : B7 00       ;
                       TYX                                 ;; 00B972 : BB          ;
@@ -5631,16 +5631,16 @@ CODE_00B96E:          PHY                                 ;; 00B96E : 5A        
                       REP #$20                            ;; 00B978 : C2 20       ; Accum (16 bit) 
                       DEC.B !GraphicsUncompPtr            ;; 00B97A : C6 8D       ;
                       SEP #$20                            ;; 00B97C : E2 20       ; Accum (8 bit) 
-                      BNE CODE_00B96E                     ;; 00B97E : D0 EE       ;
+                      BNE -                               ;; 00B97E : D0 EE       ;
                       JMP CODE_00B8E3                     ;; 00B980 : 4C E3 B8    ;
                                                           ;;                      ;
 ReadByte:             LDA.B [!GraphicsCompPtr]            ;; ?QPWZ? : A7 8A       ; Read the byte ; Index (16 bit) 
                       LDX.B !GraphicsCompPtr              ;; 00B985 : A6 8A       ; \ Go to next byte 
                       INX                                 ;; 00B987 : E8          ;  | 
-                      BNE CODE_00B98F                     ;; 00B988 : D0 05       ;  |   \  
+                      BNE +                               ;; 00B988 : D0 05       ;  |   \  
                       LDX.W #$8000                        ;; 00B98A : A2 00 80    ;  |    |Handle bank crossing 
                       INC.B !GraphicsCompPtr+2            ;; 00B98D : E6 8C       ;  |   /  
-CODE_00B98F:          STX.B !GraphicsCompPtr              ;; 00B98F : 86 8A       ; /  
+                    + STX.B !GraphicsCompPtr              ;; 00B98F : 86 8A       ; /  
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -5960,10 +5960,10 @@ GenerateTile:         PHP                                 ;; ?QPWZ? : 08        
                       PHX                                 ;; 00BEB3 : DA          ;
                       LDA.B !Map16TileGenerate            ;; 00BEB4 : A5 9C       ;
                       AND.W #$00FF                        ;; 00BEB6 : 29 FF 00    ;
-                      BNE CODE_00BEBE                     ;; 00BEB9 : D0 03       ;
+                      BNE +                               ;; 00BEB9 : D0 03       ;
 ADDR_00BEBB:          JMP CODE_00BFB9                     ;; 00BEBB : 4C B9 BF    ;
                                                           ;;                      ;
-CODE_00BEBE:          LDA.B !TouchBlockXPos               ;; 00BEBE : A5 9A       ;
+                    + LDA.B !TouchBlockXPos               ;; 00BEBE : A5 9A       ;
                       STA.B !_C                           ;; 00BEC0 : 85 0C       ;
                       LDA.B !TouchBlockYPos               ;; 00BEC2 : A5 98       ;
                       STA.B !_E                           ;; 00BEC4 : 85 0E       ;
@@ -5972,12 +5972,12 @@ CODE_00BEBE:          LDA.B !TouchBlockXPos               ;; 00BEBE : A5 9A     
                       LDA.B !ScreenMode                   ;; 00BECB : A5 5B       ;
                       STA.B !_9                           ;; 00BECD : 85 09       ;
                       LDA.W !LayerProcessing              ;; 00BECF : AD 33 19    ;
-                      BEQ CODE_00BED6                     ;; 00BED2 : F0 02       ;
+                      BEQ +                               ;; 00BED2 : F0 02       ;
                       LSR.B !_9                           ;; 00BED4 : 46 09       ;
-CODE_00BED6:          LDY.B !_E                           ;; 00BED6 : A4 0E       ;
+                    + LDY.B !_E                           ;; 00BED6 : A4 0E       ;
                       LDA.B !_9                           ;; 00BED8 : A5 09       ;
                       AND.B #$01                          ;; 00BEDA : 29 01       ;
-                      BEQ CODE_00BEEC                     ;; 00BEDC : F0 0E       ;
+                      BEQ +                               ;; 00BEDC : F0 0E       ;
                       LDA.B !TouchBlockXPos+1             ;; 00BEDE : A5 9B       ;
                       STA.B !_0                           ;; 00BEE0 : 85 00       ;
                       LDA.B !TouchBlockYPos+1             ;; 00BEE2 : A5 99       ;
@@ -5985,7 +5985,7 @@ CODE_00BED6:          LDY.B !_E                           ;; 00BED6 : A4 0E     
                       LDA.B !_0                           ;; 00BEE6 : A5 00       ;
                       STA.B !TouchBlockYPos+1             ;; 00BEE8 : 85 99       ;
                       LDY.B !_C                           ;; 00BEEA : A4 0C       ;
-CODE_00BEEC:          CPY.W #$0200                        ;; 00BEEC : C0 00 02    ;
+                    + CPY.W #$0200                        ;; 00BEEC : C0 00 02    ;
                       BCS ADDR_00BEBB                     ;; 00BEEF : B0 CA       ;
                       LDA.W !LayerProcessing              ;; 00BEF1 : AD 33 19    ;
                       ASL A                               ;; 00BEF4 : 0A          ;
@@ -6023,14 +6023,14 @@ CODE_00BEEC:          CPY.W #$0200                        ;; 00BEEC : C0 00 02  
                       STA.B !Map16HighPtr+2               ;; 00BF2F : 85 70       ;
                       LDA.B !_9                           ;; 00BF31 : A5 09       ;
                       AND.B #$01                          ;; 00BF33 : 29 01       ;
-                      BEQ CODE_00BF41                     ;; 00BF35 : F0 0A       ;
+                      BEQ +                               ;; 00BF35 : F0 0A       ;
                       LDA.B !TouchBlockYPos+1             ;; 00BF37 : A5 99       ;
                       LSR A                               ;; 00BF39 : 4A          ;
                       LDA.B !TouchBlockXPos+1             ;; 00BF3A : A5 9B       ;
                       AND.B #$01                          ;; 00BF3C : 29 01       ;
                       JMP CODE_00BF46                     ;; 00BF3E : 4C 46 BF    ;
                                                           ;;                      ;
-CODE_00BF41:          LDA.B !TouchBlockXPos+1             ;; 00BF41 : A5 9B       ;
+                    + LDA.B !TouchBlockXPos+1             ;; 00BF41 : A5 9B       ;
                       LSR A                               ;; 00BF43 : 4A          ;
                       LDA.B !TouchBlockYPos+1             ;; 00BF44 : A5 99       ;
 CODE_00BF46:          ROL A                               ;; 00BF46 : 2A          ;
@@ -6039,11 +6039,11 @@ CODE_00BF46:          ROL A                               ;; 00BF46 : 2A        
                       ORA.B #$20                          ;; 00BF49 : 09 20       ;
                       STA.B !_4                           ;; 00BF4B : 85 04       ;
                       CPX.W #$0000                        ;; 00BF4D : E0 00 00    ;
-                      BEQ CODE_00BF57                     ;; 00BF50 : F0 05       ;
+                      BEQ +                               ;; 00BF50 : F0 05       ;
                       CLC                                 ;; 00BF52 : 18          ;
                       ADC.B #$10                          ;; 00BF53 : 69 10       ;
                       STA.B !_4                           ;; 00BF55 : 85 04       ;
-CODE_00BF57:          LDA.B !TouchBlockYPos               ;; 00BF57 : A5 98       ;
+                    + LDA.B !TouchBlockYPos               ;; 00BF57 : A5 98       ;
                       AND.B #$F0                          ;; 00BF59 : 29 F0       ;
                       CLC                                 ;; 00BF5B : 18          ;
                       ASL A                               ;; 00BF5C : 0A          ;
@@ -6163,11 +6163,11 @@ CODE_00C00D:          REP #$30                            ;; 00C00D : C2 30     
                       STA.B !_4                           ;; 00C02A : 85 04       ;
                       LDA.B !TouchBlockYPos               ;; 00C02C : A5 98       ;
                       AND.W #$0100                        ;; 00C02E : 29 00 01    ;
-                      BEQ CODE_00C03A                     ;; 00C031 : F0 07       ;
+                      BEQ +                               ;; 00C031 : F0 07       ;
                       LDA.B !_4                           ;; 00C033 : A5 04       ;
                       ORA.W #$0002                        ;; 00C035 : 09 02 00    ;
                       STA.B !_4                           ;; 00C038 : 85 04       ;
-CODE_00C03A:          LDA.W !ItemMemorySetting            ;; 00C03A : AD BE 13    ;
+                    + LDA.W !ItemMemorySetting            ;; 00C03A : AD BE 13    ;
                       AND.W #$000F                        ;; 00C03D : 29 0F 00    ;
                       ASL A                               ;; 00C040 : 0A          ;
                       TAX                                 ;; 00C041 : AA          ;
@@ -6259,9 +6259,9 @@ CODE_00C0C4:          REP #$30                            ;; 00C0C4 : C2 30     
 CODE_00C0FB:          LDA.B !ScreenMode                   ;; 00C0FB : A5 5B       ;
                       STA.B !_0                           ;; 00C0FD : 85 00       ;
                       LDA.W !LayerProcessing              ;; 00C0FF : AD 33 19    ;
-                      BEQ CODE_00C106                     ;; 00C102 : F0 02       ;
+                      BEQ +                               ;; 00C102 : F0 02       ;
                       LSR.B !_0                           ;; 00C104 : 46 00       ;
-CODE_00C106:          LDA.B !_0                           ;; 00C106 : A5 00       ;
+                    + LDA.B !_0                           ;; 00C106 : A5 00       ;
                       AND.W #$0001                        ;; 00C108 : 29 01 00    ;
                       BNE CODE_00C127                     ;; 00C10B : D0 1A       ;
                       LDA.B !_8                           ;; 00C10D : A5 08       ;
@@ -6364,9 +6364,9 @@ CODE_00C1AC:          JSR CODE_00C00D                     ;; 00C1AC : 20 0D C0  
                       LDA.B !ScreenMode                   ;; 00C1DF : A5 5B       ;
                       STA.B !_0                           ;; 00C1E1 : 85 00       ;
                       LDA.W !LayerProcessing              ;; 00C1E3 : AD 33 19    ;
-                      BEQ CODE_00C1EA                     ;; 00C1E6 : F0 02       ;
+                      BEQ +                               ;; 00C1E6 : F0 02       ;
                       LSR.B !_0                           ;; 00C1E8 : 46 00       ;
-CODE_00C1EA:          LDA.B !_0                           ;; 00C1EA : A5 00       ;
+                    + LDA.B !_0                           ;; 00C1EA : A5 00       ;
                       AND.W #$0001                        ;; 00C1EC : 29 01 00    ;
                       BNE CODE_00C20B                     ;; 00C1EF : D0 1A       ;
                       LDA.B !_8                           ;; 00C1F1 : A5 08       ;
@@ -6488,7 +6488,7 @@ CODE_00C334:          INC.B !_7                           ;; 00C334 : E6 07     
                       LDA.L !DynStripeImgSize             ;; 00C35D : AF 7B 83 7F ;
                       TAX                                 ;; 00C361 : AA          ;
                       LDY.W #$0005                        ;; 00C362 : A0 05 00    ;
-CODE_00C365:          SEP #$20                            ;; 00C365 : E2 20       ; Accum (8 bit) 
+                    - SEP #$20                            ;; 00C365 : E2 20       ; Accum (8 bit) 
                       LDA.B !_6                           ;; 00C367 : A5 06       ;
                       STA.L !DynamicStripeImage,X         ;; 00C369 : 9F 7D 83 7F ;
                       LDA.B !_7                           ;; 00C36D : A5 07       ;
@@ -6510,20 +6510,20 @@ CODE_00C365:          SEP #$20                            ;; 00C365 : E2 20     
                       ADC.W #$0010                        ;; 00C390 : 69 10 00    ;
                       TAX                                 ;; 00C393 : AA          ;
                       DEY                                 ;; 00C394 : 88          ;
-                      BPL CODE_00C365                     ;; 00C395 : 10 CE       ;
+                      BPL -                               ;; 00C395 : 10 CE       ;
                       LDA.L !DynStripeImgSize             ;; 00C397 : AF 7B 83 7F ;
                       TAX                                 ;; 00C39B : AA          ;
                       LDY.W #$0000                        ;; 00C39C : A0 00 00    ;
 CODE_00C39F:          LDA.W #$0005                        ;; 00C39F : A9 05 00    ;
                       STA.B !_0                           ;; 00C3A2 : 85 00       ;
-CODE_00C3A4:          LDA.B [!_2],Y                       ;; 00C3A4 : B7 02       ;
+                    - LDA.B [!_2],Y                       ;; 00C3A4 : B7 02       ;
                       STA.L !DynamicStripeImage+4,X       ;; 00C3A6 : 9F 81 83 7F ;
                       INY                                 ;; 00C3AA : C8          ;
                       INY                                 ;; 00C3AB : C8          ;
                       INX                                 ;; 00C3AC : E8          ;
                       INX                                 ;; 00C3AD : E8          ;
                       DEC.B !_0                           ;; 00C3AE : C6 00       ;
-                      BPL CODE_00C3A4                     ;; 00C3B0 : 10 F2       ;
+                      BPL -                               ;; 00C3B0 : 10 F2       ;
                       TXA                                 ;; 00C3B2 : 8A          ;
                       CLC                                 ;; 00C3B3 : 18          ;
                       ADC.W #$0004                        ;; 00C3B4 : 69 04 00    ;
@@ -6570,7 +6570,7 @@ CODE_00C3D1:          REP #$30                            ;; 00C3D1 : C2 30     
                       LDA.B #$25                          ;; 00C405 : A9 25       ;
                       STA.B [!Map16LowPtr],Y              ;; 00C407 : 97 6B       ;
                       LDY.W #$0003                        ;; 00C409 : A0 03 00    ;
-CODE_00C40C:          LDA.B !_6                           ;; 00C40C : A5 06       ;
+                    - LDA.B !_6                           ;; 00C40C : A5 06       ;
                       STA.L !DynamicStripeImage,X         ;; 00C40E : 9F 7D 83 7F ;
                       LDA.B !_7                           ;; 00C412 : A5 07       ;
                       STA.L !DynamicStripeImage+1,X       ;; 00C414 : 9F 7E 83 7F ;
@@ -6594,7 +6594,7 @@ CODE_00C40C:          LDA.B !_6                           ;; 00C40C : A5 06     
                       ADC.B #$00                          ;; 00C43E : 69 00       ;
                       STA.B !_6                           ;; 00C440 : 85 06       ;
                       DEY                                 ;; 00C442 : 88          ;
-                      BPL CODE_00C40C                     ;; 00C443 : 10 C7       ;
+                      BPL -                               ;; 00C443 : 10 C7       ;
                       LDA.B #$FF                          ;; 00C445 : A9 FF       ;
                       STA.L !DynamicStripeImage,X         ;; 00C447 : 9F 7D 83 7F ;
                       REP #$20                            ;; 00C44B : C2 20       ; Accum (16 bit) 
@@ -6616,10 +6616,10 @@ DATA_00C478:          db $30,$33,$33,$30,$01,$00          ;; 00C478             
                                                           ;;                      ;
 CODE_00C47E:          STZ.B !PlayerHiddenTiles            ;; 00C47E : 64 78       ; Index (8 bit) Accum (8 bit) 
                       LDA.W !UnusedStarCounter            ;; 00C480 : AD CB 13    ;
-                      BPL CODE_00C48C                     ;; 00C483 : 10 07       ;
+                      BPL +                               ;; 00C483 : 10 07       ;
                       JSL CODE_01C580                     ;; 00C485 : 22 80 C5 01 ;
                       STZ.W !UnusedStarCounter            ;; 00C489 : 9C CB 13    ;
-CODE_00C48C:          LDY.W !KeyholeTimer                 ;; 00C48C : AC 34 14    ;
+                    + LDY.W !KeyholeTimer                 ;; 00C48C : AC 34 14    ;
                       BEQ CODE_00C4BA                     ;; 00C48F : F0 29       ;
                       STY.W !PlayerIsFrozen               ;; 00C491 : 8C FB 13    ;
                       STY.B !SpriteLock                   ;; 00C494 : 84 9D       ;
@@ -6632,14 +6632,14 @@ CODE_00C48C:          LDY.W !KeyholeTimer                 ;; 00C48C : AC 34 14  
                       INC.W !KeyholeDirection             ;; 00C4A4 : EE 35 14    ;
                       TXA                                 ;; 00C4A7 : 8A          ;
                       LSR A                               ;; 00C4A8 : 4A          ;
-                      BCC CODE_00C4F8                     ;; 00C4A9 : 90 4D       ;
+                      BCC +                               ;; 00C4A9 : 90 4D       ;
                       JSR CODE_00FCEC                     ;; 00C4AB : 20 EC FC    ;
                       LDA.B #$02                          ;; 00C4AE : A9 02       ;
                       LDY.B #$0B                          ;; 00C4B0 : A0 0B       ;
                       JSR CODE_00C9FE                     ;; 00C4B2 : 20 FE C9    ;
                       LDY.B #$00                          ;; 00C4B5 : A0 00       ;
 CODE_00C4B7:          STY.W !KeyholeTimer                 ;; 00C4B7 : 8C 34 14    ;
-CODE_00C4BA:          BRA CODE_00C4F8                     ;; 00C4BA : 80 3C       ;
+CODE_00C4BA:          BRA +                               ;; 00C4BA : 80 3C       ;
                                                           ;;                      ;
 CODE_00C4BC:          CLC                                 ;; 00C4BC : 18          ;
                       ADC.W DATA_00C474,X                 ;; 00C4BD : 7D 74 C4    ;
@@ -6670,18 +6670,18 @@ CODE_00C4BC:          CLC                                 ;; 00C4BC : 18        
                       ADC.B #$10                          ;; 00C4F1 : 69 10       ;
                       STA.B !_1                           ;; 00C4F3 : 85 01       ;
                       JSR CODE_00CA88                     ;; 00C4F5 : 20 88 CA    ;
-CODE_00C4F8:          LDA.W !PlayerIsFrozen               ;; 00C4F8 : AD FB 13    ;
-                      BEQ CODE_00C500                     ;; 00C4FB : F0 03       ;
+                    + LDA.W !PlayerIsFrozen               ;; 00C4F8 : AD FB 13    ;
+                      BEQ +                               ;; 00C4FB : F0 03       ;
                       JMP CODE_00C58F                     ;; 00C4FD : 4C 8F C5    ;
                                                           ;;                      ;
-CODE_00C500:          LDA.B !SpriteLock                   ;; 00C500 : A5 9D       ; \ Branch if sprites locked 
+                    + LDA.B !SpriteLock                   ;; 00C500 : A5 9D       ; \ Branch if sprites locked 
                       BNE CODE_00C569                     ;; 00C502 : D0 65       ; / 
                       INC.B !EffFrame                     ;; 00C504 : E6 14       ;
                       LDX.B #$13                          ;; 00C506 : A2 13       ;
 CODE_00C508:          LDA.W !ColorFadeTimer,X             ;; 00C508 : BD 95 14    ;
-                      BEQ CODE_00C510                     ;; 00C50B : F0 03       ;
+                      BEQ +                               ;; 00C50B : F0 03       ;
                       DEC.W !ColorFadeTimer,X             ;; 00C50D : DE 95 14    ;
-CODE_00C510:          DEX                                 ;; 00C510 : CA          ;
+                    + DEX                                 ;; 00C510 : CA          ;
                       BNE CODE_00C508                     ;; 00C511 : D0 F5       ;
                       LDA.B !EffFrame                     ;; 00C513 : A5 14       ;
                       AND.B #$03                          ;; 00C515 : 29 03       ;
@@ -6690,35 +6690,35 @@ CODE_00C510:          DEX                                 ;; 00C510 : CA        
                       BEQ CODE_00C533                     ;; 00C51C : F0 15       ;
                       LDA.W !BonusFinishTimer             ;; 00C51E : AD AB 14    ;
                       CMP.B #$44                          ;; 00C521 : C9 44       ;
-                      BNE CODE_00C52A                     ;; 00C523 : D0 05       ;
+                      BNE +                               ;; 00C523 : D0 05       ;
                       LDY.B #$14                          ;; 00C525 : A0 14       ;
                       STY.W !SPCIO2                       ;; 00C527 : 8C FB 1D    ; / Change music 
-CODE_00C52A:          CMP.B #$01                          ;; 00C52A : C9 01       ;
+                    + CMP.B #$01                          ;; 00C52A : C9 01       ;
                       BNE CODE_00C533                     ;; 00C52C : D0 05       ;
                       LDY.B #$0B                          ;; 00C52E : A0 0B       ;
                       STY.W !GameMode                     ;; 00C530 : 8C 00 01    ;
 CODE_00C533:          LDY.W !BluePSwitchTimer             ;; 00C533 : AC AD 14    ;
                       CPY.W !SilverPSwitchTimer           ;; 00C536 : CC AE 14    ;
-                      BCS CODE_00C53E                     ;; 00C539 : B0 03       ;
+                      BCS +                               ;; 00C539 : B0 03       ;
                       LDY.W !SilverPSwitchTimer           ;; 00C53B : AC AE 14    ;
-CODE_00C53E:          LDA.W !MusicBackup                  ;; 00C53E : AD DA 0D    ;
-                      BMI CODE_00C54F                     ;; 00C541 : 30 0C       ;
+                    + LDA.W !MusicBackup                  ;; 00C53E : AD DA 0D    ;
+                      BMI +                               ;; 00C541 : 30 0C       ;
                       CPY.B #$01                          ;; 00C543 : C0 01       ;
-                      BNE CODE_00C54F                     ;; 00C545 : D0 08       ;
+                      BNE +                               ;; 00C545 : D0 08       ;
                       LDY.W !DirectCoinTimer              ;; 00C547 : AC 0C 19    ;
-                      BNE CODE_00C54F                     ;; 00C54A : D0 03       ;
+                      BNE +                               ;; 00C54A : D0 03       ;
                       STA.W !SPCIO2                       ;; 00C54C : 8D FB 1D    ; / Change music 
-CODE_00C54F:          CMP.B #$FF                          ;; 00C54F : C9 FF       ;
-                      BEQ CODE_00C55C                     ;; 00C551 : F0 09       ;
+                    + CMP.B #$FF                          ;; 00C54F : C9 FF       ;
+                      BEQ +                               ;; 00C551 : F0 09       ;
                       CPY.B #$1E                          ;; 00C553 : C0 1E       ;
-                      BNE CODE_00C55C                     ;; 00C555 : D0 05       ;
+                      BNE +                               ;; 00C555 : D0 05       ;
                       LDA.B #$24                          ;; 00C557 : A9 24       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 00C559 : 8D FC 1D    ; / 
-CODE_00C55C:          LDX.B #$06                          ;; 00C55C : A2 06       ;
+                    + LDX.B #$06                          ;; 00C55C : A2 06       ;
 CODE_00C55E:          LDA.W !EmptyTimer14A8,X             ;; 00C55E : BD A8 14    ;
-                      BEQ CODE_00C566                     ;; 00C561 : F0 03       ;
+                      BEQ +                               ;; 00C561 : F0 03       ;
                       DEC.W !EmptyTimer14A8,X             ;; 00C563 : DE A8 14    ;
-CODE_00C566:          DEX                                 ;; 00C566 : CA          ;
+                    + DEX                                 ;; 00C566 : CA          ;
                       BNE CODE_00C55E                     ;; 00C567 : D0 F5       ;
 CODE_00C569:          JSR CODE_00C593                     ;; 00C569 : 20 93 C5    ;
                       LDA.B !byetudlrFrame                ;; 00C56C : A5 16       ;
@@ -6731,9 +6731,9 @@ CODE_00C569:          JSR CODE_00C593                     ;; 00C569 : 20 93 C5  
                       LDA.B !Powerup                      ;; 00C578 : A5 19       ; \ Unreachable 
                       INC A                               ;; 00C57A : 1A          ;  | Debug: Cycle through powerups 
                       CMP.B #$04                          ;; 00C57B : C9 04       ;  | 
-                      BCC ADDR_00C581                     ;; 00C57D : 90 02       ;  | 
+                      BCC +                               ;; 00C57D : 90 02       ;  | 
                       LDA.B #$00                          ;; 00C57F : A9 00       ;  | 
-ADDR_00C581:          STA.B !Powerup                      ;; 00C581 : 85 19       ;  | 
+                    + STA.B !Powerup                      ;; 00C581 : 85 19       ;  | 
                       BRA CODE_00C58F                     ;; 00C583 : 80 0A       ; / 
                                                           ;;                      ;
 CODE_00C585:          PHB                                 ;; 00C585 : 8B          ;
@@ -6770,11 +6770,11 @@ UnknownAniB:          STZ.W !PlayerOverworldPose          ;; ?QPWZ? : 9C DE 13  
                       JSL CODE_0CAB13                     ;; 00C5C0 : 22 13 AB 0C ;
                       LDA.W !GameMode                     ;; 00C5C4 : AD 00 01    ;
                       CMP.B #$14                          ;; 00C5C7 : C9 14       ;
-                      BEQ CODE_00C5D1                     ;; 00C5C9 : F0 06       ;
+                      BEQ +                               ;; 00C5C9 : F0 06       ;
                       JMP CODE_00C95B                     ;; 00C5CB : 4C 5B C9    ;
                                                           ;;                      ;
 CODE_00C5CE:          STZ.W !HDMAEnable                   ;; 00C5CE : 9C 9F 0D    ;
-CODE_00C5D1:          LDA.B #$01                          ;; 00C5D1 : A9 01       ;
+                    + LDA.B #$01                          ;; 00C5D1 : A9 01       ;
                       STA.W !MessageBoxExpand             ;; 00C5D3 : 8D 88 1B    ;
                       LDA.B #$07                          ;; 00C5D6 : A9 07       ;
                       STA.W !LevelLoadObject              ;; 00C5D8 : 8D 28 19    ;
@@ -6859,18 +6859,18 @@ CODE_00C72E:          STY.B !PlayerXSpeed                 ;; 00C72E : 84 7B     
 CODE_00C730:          STX.B !PlayerYSpeed                 ;; 00C730 : 86 7D       ;
                       LDX.B #$01                          ;; 00C732 : A2 01       ; \ Play sound effect 
                       STX.W !SPCIO0                       ;; 00C734 : 8E F9 1D    ; / 
-                      BRA CODE_00C73D                     ;; 00C737 : 80 04       ;
+                      BRA +                               ;; 00C737 : 80 04       ;
                                                           ;;                      ;
 CODE_00C739:          STZ.B !PlayerInAir                  ;; 00C739 : 64 72       ;
                       LDA.B #$58                          ;; 00C73B : A9 58       ;
-CODE_00C73D:          STA.B !PlayerYPosNext               ;; 00C73D : 85 96       ;
+                    + STA.B !PlayerYPosNext               ;; 00C73D : 85 96       ;
 CODE_00C73F:          LDX.W !CutsceneID                   ;; 00C73F : AE C6 13    ;
                       LDA.B !GraphicsUncompPtr+2          ;; 00C742 : A5 8F       ;
                       CLC                                 ;; 00C744 : 18          ;
                       ADC.W DATA_00C6DF,X                 ;; 00C745 : 7D DF C6    ;
                       TAX                                 ;; 00C748 : AA          ;
                       LDA.B !PipeTimer                    ;; 00C749 : A5 88       ;
-                      BNE CODE_00C764                     ;; 00C74B : D0 17       ;
+                      BNE +                               ;; 00C74B : D0 17       ;
                       INC.B !GraphicsUncompPtr+2          ;; 00C74D : E6 8F       ;
                       INC.B !GraphicsUncompPtr+2          ;; 00C74F : E6 8F       ;
                       INX                                 ;; 00C751 : E8          ;
@@ -6879,19 +6879,19 @@ CODE_00C73F:          LDX.W !CutsceneID                   ;; 00C73F : AE C6 13  
                       STA.B !PipeTimer                    ;; 00C756 : 85 88       ;
                       LDA.W DATA_00C5E8,X                 ;; 00C758 : BD E8 C5    ;
                       CMP.B #$2D                          ;; 00C75B : C9 2D       ;
-                      BNE CODE_00C764                     ;; 00C75D : D0 05       ;
+                      BNE +                               ;; 00C75D : D0 05       ;
                       LDA.B #$1E                          ;; 00C75F : A9 1E       ; \ Play sound effect 
                       STA.W !SPCIO0                       ;; 00C761 : 8D F9 1D    ; / 
-CODE_00C764:          LDA.W DATA_00C5E8,X                 ;; 00C764 : BD E8 C5    ;
+                    + LDA.W DATA_00C5E8,X                 ;; 00C764 : BD E8 C5    ;
                       CMP.B #$FF                          ;; 00C767 : C9 FF       ;
-                      BNE CODE_00C76E                     ;; 00C769 : D0 03       ;
+                      BNE +                               ;; 00C769 : D0 03       ;
                       JMP Return00C7F8                    ;; 00C76B : 4C F8 C7    ;
                                                           ;;                      ;
-CODE_00C76E:          PHA                                 ;; 00C76E : 48          ;
+                    + PHA                                 ;; 00C76E : 48          ;
                       AND.B #$10                          ;; 00C76F : 29 10       ;
-                      BEQ CODE_00C777                     ;; 00C771 : F0 04       ;
+                      BEQ +                               ;; 00C771 : F0 04       ;
                       JSL CODE_0CD4A4                     ;; 00C773 : 22 A4 D4 0C ;
-CODE_00C777:          PLA                                 ;; 00C777 : 68          ;
+                    + PLA                                 ;; 00C777 : 68          ;
                       TAY                                 ;; 00C778 : A8          ;
                       AND.B #$20                          ;; 00C779 : 29 20       ;
                       BNE CODE_00C789                     ;; 00C77B : D0 0C       ;
@@ -6972,16 +6972,16 @@ YoshiWingsAni:        JSR NoButtons                       ;; ?QPWZ? : 20 2D F6  
                       LDA.B !PlayerYSpeed                 ;; 00C807 : A5 7D       ; \ Branch if Mario has downward speed 
                       BPL CODE_00C80F                     ;; 00C809 : 10 04       ; / 
                       CMP.B #$90                          ;; 00C80B : C9 90       ; \ Branch if Y speed < #$90 
-                      BCC CODE_00C814                     ;; 00C80D : 90 05       ; / 
+                      BCC +                               ;; 00C80D : 90 05       ; / 
 CODE_00C80F:          SEC                                 ;; 00C80F : 38          ; \ Y Speed -= #$0D 
                       SBC.B #$0D                          ;; 00C810 : E9 0D       ;  | 
                       STA.B !PlayerYSpeed                 ;; 00C812 : 85 7D       ; / 
-CODE_00C814:          LDA.B #$02                          ;; 00C814 : A9 02       ;
+                    + LDA.B #$02                          ;; 00C814 : A9 02       ;
                       LDY.B !PlayerXSpeed                 ;; 00C816 : A4 7B       ;
                       BEQ CODE_00C827                     ;; 00C818 : F0 0D       ;
-                      BMI CODE_00C81E                     ;; 00C81A : 30 02       ;
+                      BMI +                               ;; 00C81A : 30 02       ;
                       LDA.B #$FE                          ;; 00C81C : A9 FE       ;
-CODE_00C81E:          CLC                                 ;; 00C81E : 18          ;
+                    + CLC                                 ;; 00C81E : 18          ;
                       ADC.B !PlayerXSpeed                 ;; 00C81F : 65 7B       ;
                       STA.B !PlayerXSpeed                 ;; 00C821 : 85 7B       ;
                       BVC CODE_00C827                     ;; 00C823 : 50 02       ;
@@ -6992,15 +6992,15 @@ CODE_00C827:          JSR CODE_00DC2D                     ;; 00C827 : 20 2D DC  
                       LDA.B !PlayerYPosScrRel             ;; 00C82F : A5 80       ;
                       CMP.W DATA_00C7F9,Y                 ;; 00C831 : D9 F9 C7    ;
                       SEP #$20                            ;; 00C834 : E2 20       ; Accum (8 bit) 
-                      BPL Instr00C845                     ;; 00C836 : 10 0D       ;
+                      BPL +                               ;; 00C836 : 10 0D       ;
                       STZ.B !PlayerAnimation              ;; 00C838 : 64 71       ;
                       TYA                                 ;; 00C83A : 98          ;
-                      BNE Instr00C845                     ;; 00C83B : D0 08       ;
+                      BNE +                               ;; 00C83B : D0 08       ;
                       INY                                 ;; 00C83D : C8          ;
                       INY                                 ;; 00C83E : C8          ;
                       STY.W !YoshiHeavenFlag              ;; 00C83F : 8C 95 1B    ;
                       JSR CODE_00D273                     ;; 00C842 : 20 73 D2    ;
-Instr00C845:          JMP CODE_00CD8F                     ;; 00C845 : 4C 8F CD    ;
+                    + JMP CODE_00CD8F                     ;; 00C845 : 4C 8F CD    ;
                                                           ;;                      ;
 DATA_00C848:          db $01,$5F,$00,$30,$08,$30,$00,$20  ;; 00C848               ;
                       db $40,$01,$00,$30,$01,$80,$FF,$01  ;; ?QPWZ?               ;
@@ -7014,62 +7014,62 @@ EnterCastleAni:       STZ.W !SpinjumpFireball             ;; ?QPWZ? : 9C E2 13  
                       BMI CODE_00C889                     ;; 00C879 : 30 0E       ;
                       BVS ADDR_00C883                     ;; 00C87B : 70 06       ;
                       JSL CODE_02F57C                     ;; 00C87D : 22 7C F5 02 ;
-                      BRA CODE_00C88D                     ;; 00C881 : 80 0A       ;
+                      BRA +                               ;; 00C881 : 80 0A       ;
                                                           ;;                      ;
 ADDR_00C883:          JSL ADDR_02F58C                     ;; 00C883 : 22 8C F5 02 ;
-                      BRA CODE_00C88D                     ;; 00C887 : 80 04       ;
+                      BRA +                               ;; 00C887 : 80 04       ;
                                                           ;;                      ;
 CODE_00C889:          JSL CODE_02F584                     ;; 00C889 : 22 84 F5 02 ;
-CODE_00C88D:          LDX.B !PipeTimer                    ;; 00C88D : A6 88       ;
+                    + LDX.B !PipeTimer                    ;; 00C88D : A6 88       ;
                       LDA.B !byetudlrFrame                ;; 00C88F : A5 16       ;
                       ORA.B !axlr0000Frame                ;; 00C891 : 05 18       ;
                       JSR NoButtons                       ;; 00C893 : 20 2D F6    ;
                       BMI CODE_00C8FB                     ;; 00C896 : 30 63       ;
                       STZ.W !PlayerOverworldPose          ;; 00C898 : 9C DE 13    ;
                       DEC.B !PlayerPipeAction             ;; 00C89B : C6 89       ;
-                      BNE CODE_00C8A8                     ;; 00C89D : D0 09       ;
+                      BNE +                               ;; 00C89D : D0 09       ;
                       INX                                 ;; 00C89F : E8          ;
                       INX                                 ;; 00C8A0 : E8          ;
                       STX.B !PipeTimer                    ;; 00C8A1 : 86 88       ;
                       LDA.W DATA_00C848-1,X               ;; 00C8A3 : BD 47 C8    ;
                       STA.B !PlayerPipeAction             ;; 00C8A6 : 85 89       ;
-CODE_00C8A8:          LDA.W DATA_00C848-2,X               ;; 00C8A8 : BD 46 C8    ;
+                    + LDA.W DATA_00C848-2,X               ;; 00C8A8 : BD 46 C8    ;
                       CMP.B #$FF                          ;; 00C8AB : C9 FF       ;
                       BEQ CODE_00C8FB                     ;; 00C8AD : F0 4C       ;
                       AND.B #$DF                          ;; 00C8AF : 29 DF       ;
                       STA.B !byetudlrHold                 ;; 00C8B1 : 85 15       ;
                       CMP.W DATA_00C848-2,X               ;; 00C8B3 : DD 46 C8    ;
-                      BEQ CODE_00C8BC                     ;; 00C8B6 : F0 04       ;
+                      BEQ +                               ;; 00C8B6 : F0 04       ;
                       LDY.B #$80                          ;; 00C8B8 : A0 80       ;
                       STY.B !axlr0000Frame                ;; 00C8BA : 84 18       ;
-CODE_00C8BC:          ASL A                               ;; 00C8BC : 0A          ;
+                    + ASL A                               ;; 00C8BC : 0A          ;
                       BPL CODE_00C8D1                     ;; 00C8BD : 10 12       ;
                       JSR NoButtons                       ;; 00C8BF : 20 2D F6    ;
                       LDY.B #$B0                          ;; 00C8C2 : A0 B0       ;
                       LDX.W !ObjectTileset                ;; 00C8C4 : AE 31 19    ;
                       BIT.W DATA_00A625,X                 ;; 00C8C7 : 3C 25 A6    ;
-                      BMI CODE_00C8CE                     ;; 00C8CA : 30 02       ;
+                      BMI +                               ;; 00C8CA : 30 02       ;
                       LDY.B #$7F                          ;; 00C8CC : A0 7F       ;
-CODE_00C8CE:          STY.W !NoYoshiIntroTimer            ;; 00C8CE : 8C D9 18    ;
+                    + STY.W !NoYoshiIntroTimer            ;; 00C8CE : 8C D9 18    ;
 CODE_00C8D1:          JSR CODE_00DC2D                     ;; 00C8D1 : 20 2D DC    ;
                       LDA.B #$24                          ;; 00C8D4 : A9 24       ;
                       STA.B !PlayerInAir                  ;; 00C8D6 : 85 72       ;
                       LDA.B #$6F                          ;; 00C8D8 : A9 6F       ;
                       LDY.W !PlayerRidingYoshi            ;; 00C8DA : AC 7A 18    ;
-                      BEQ CODE_00C8E1                     ;; 00C8DD : F0 02       ;
+                      BEQ +                               ;; 00C8DD : F0 02       ;
                       LDA.B #$5F                          ;; 00C8DF : A9 5F       ;
-CODE_00C8E1:          LDX.W !ObjectTileset                ;; 00C8E1 : AE 31 19    ;
+                    + LDX.W !ObjectTileset                ;; 00C8E1 : AE 31 19    ;
                       BIT.W DATA_00A625,X                 ;; 00C8E4 : 3C 25 A6    ;
-                      BVC CODE_00C8EC                     ;; 00C8E7 : 50 03       ;
+                      BVC +                               ;; 00C8E7 : 50 03       ;
                       SEC                                 ;; 00C8E9 : 38          ;
                       SBC.B #$10                          ;; 00C8EA : E9 10       ;
-CODE_00C8EC:          CMP.B !PlayerYPosNext               ;; 00C8EC : C5 96       ;
-                      BCS CODE_00C8F8                     ;; 00C8EE : B0 08       ;
+                    + CMP.B !PlayerYPosNext               ;; 00C8EC : C5 96       ;
+                      BCS +                               ;; 00C8EE : B0 08       ;
                       INC A                               ;; 00C8F0 : 1A          ;
                       STA.B !PlayerYPosNext               ;; 00C8F1 : 85 96       ;
                       STZ.B !PlayerInAir                  ;; 00C8F3 : 64 72       ;
                       STZ.W !SpinJumpFlag                 ;; 00C8F5 : 9C 0D 14    ;
-CODE_00C8F8:          JMP CODE_00CD82                     ;; 00C8F8 : 4C 82 CD    ;
+                    + JMP CODE_00CD82                     ;; 00C8F8 : 4C 82 CD    ;
                                                           ;;                      ;
 CODE_00C8FB:          INC.W !ShowMarioStart               ;; 00C8FB : EE 1D 14    ;
                       LDA.B #$0F                          ;; 00C8FE : A9 0F       ;
@@ -7094,9 +7094,9 @@ CODE_00C915:          JSR NoButtons                       ;; 00C915 : 20 2D F6  
                       ORA.W !SwitchPalaceColor            ;; 00C929 : 0D D2 13    ;
                       BEQ CODE_00C96B                     ;; 00C92C : F0 3D       ;
                       LDA.B !PlayerInAir                  ;; 00C92E : A5 72       ;
-                      BEQ CODE_00C935                     ;; 00C930 : F0 03       ;
+                      BEQ +                               ;; 00C930 : F0 03       ;
                       JSR CODE_00CCE0                     ;; 00C932 : 20 E0 CC    ;
-CODE_00C935:          LDA.W !SwitchPalaceColor            ;; 00C935 : AD D2 13    ;
+                    + LDA.W !SwitchPalaceColor            ;; 00C935 : AD D2 13    ;
                       BNE CODE_00C948                     ;; 00C938 : D0 0E       ;
                       JSR CODE_00B03E                     ;; 00C93A : 20 3E B0    ;
                       LDA.W !ColorFadeTimer               ;; 00C93D : AD 95 14    ;
@@ -7111,12 +7111,12 @@ CODE_00C948:          LDY.B #$01                          ;; 00C948 : A0 01     
                       DEC.W !EndLevelTimer                ;; 00C951 : CE 93 14    ;
                       BNE Return00C96A                    ;; 00C954 : D0 14       ;
                       LDA.W !SwitchPalaceColor            ;; 00C956 : AD D2 13    ;
-                      BNE CODE_00C962                     ;; 00C959 : D0 07       ;
+                      BNE +                               ;; 00C959 : D0 07       ;
 CODE_00C95B:          LDY.B #$0B                          ;; 00C95B : A0 0B       ;
                       LDA.B #$01                          ;; 00C95D : A9 01       ;
                       JMP CODE_00C9FE                     ;; 00C95F : 4C FE C9    ;
                                                           ;;                      ;
-CODE_00C962:          LDA.B #$A0                          ;; 00C962 : A9 A0       ;
+                    + LDA.B #$A0                          ;; 00C962 : A9 A0       ;
                       STA.W !VariousPromptTimer           ;; 00C964 : 8D F5 1D    ;
                       INC.W !MessageBoxTrigger            ;; 00C967 : EE 26 14    ;
 Return00C96A:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -7126,17 +7126,17 @@ CODE_00C96B:          JSR CODE_00AF17                     ;; 00C96B : 20 17 AF  
                       BNE CODE_00C9AF                     ;; 00C971 : D0 3C       ;
                       LDA.W !EndLevelTimer                ;; 00C973 : AD 93 14    ;
                       CMP.B #$28                          ;; 00C976 : C9 28       ;
-                      BCC CODE_00C984                     ;; 00C978 : 90 0A       ;
+                      BCC +                               ;; 00C978 : 90 0A       ;
                       LDA.B #$01                          ;; 00C97A : A9 01       ;
                       STA.B !PlayerDirection              ;; 00C97C : 85 76       ;
                       STA.B !byetudlrHold                 ;; 00C97E : 85 15       ;
                       LDA.B #$05                          ;; 00C980 : A9 05       ;
                       STA.B !PlayerXSpeed                 ;; 00C982 : 85 7B       ;
-CODE_00C984:          LDA.B !PlayerInAir                  ;; 00C984 : A5 72       ;
-                      BEQ CODE_00C98B                     ;; 00C986 : F0 03       ;
+                    + LDA.B !PlayerInAir                  ;; 00C984 : A5 72       ;
+                      BEQ +                               ;; 00C986 : F0 03       ;
                       JSR CODE_00D76B                     ;; 00C988 : 20 6B D7    ;
-CODE_00C98B:          LDA.B !PlayerXSpeed                 ;; 00C98B : A5 7B       ;
-                      BNE Instr00C9A4                     ;; 00C98D : D0 15       ;
+                    + LDA.B !PlayerXSpeed                 ;; 00C98B : A5 7B       ;
+                      BNE +                               ;; 00C98D : D0 15       ;
                       STZ.W !HorizLayer1Setting           ;; 00C98F : 9C 11 14    ;
                       JSR CODE_00CA3E                     ;; 00C992 : 20 3E CA    ;
                       INC.W !ShowPeaceSign                ;; 00C995 : EE 99 1B    ;
@@ -7145,7 +7145,7 @@ CODE_00C98B:          LDA.B !PlayerXSpeed                 ;; 00C98B : A5 7B     
                       ASL A                               ;; 00C99D : 0A          ;
                       STA.W !ColorFadeDir                 ;; 00C99E : 8D 94 14    ;
                       STZ.W !ColorFadeTimer               ;; 00C9A1 : 9C 95 14    ;
-Instr00C9A4:          JMP CODE_00CD24                     ;; 00C9A4 : 4C 24 CD    ;
+                    + JMP CODE_00CD24                     ;; 00C9A4 : 4C 24 CD    ;
                                                           ;;                      ;
 DATA_00C9A7:          db $25,$07,$40,$0E,$20,$1A,$34,$32  ;; 00C9A7               ;
                                                           ;;                      ;
@@ -7153,10 +7153,10 @@ CODE_00C9AF:          JSR SetMarioPeaceImg                ;; 00C9AF : 20 31 CA  
                       LDA.W !PlayerPeaceSign              ;; 00C9B2 : AD 92 14    ;
                       BEQ CODE_00C9C2                     ;; 00C9B5 : F0 0B       ;
                       DEC.W !PlayerPeaceSign              ;; 00C9B7 : CE 92 14    ;
-                      BNE Return00C9C1                    ;; 00C9BA : D0 05       ;
+                      BNE +                               ;; 00C9BA : D0 05       ;
                       LDA.B #$11                          ;; 00C9BC : A9 11       ;
                       STA.W !SPCIO2                       ;; 00C9BE : 8D FB 1D    ; / Change music 
-Return00C9C1:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00C9C2:          JSR CODE_00CA44                     ;; 00C9C2 : 20 44 CA    ;
                       LDA.B #$01                          ;; 00C9C5 : A9 01       ;
@@ -7167,13 +7167,13 @@ CODE_00C9C2:          JSR CODE_00CA44                     ;; 00C9C2 : 20 44 CA  
                       LDA.W !SecretGoalTape               ;; 00C9D1 : AD 1C 14    ; \ Branch if Goal Tape extra bits == #$02 
                       INC A                               ;; 00C9D4 : 1A          ;  | (never happens) 
                       CMP.B #$03                          ;; 00C9D5 : C9 03       ;  | 
-                      BNE CODE_00C9DF                     ;; 00C9D7 : D0 06       ; / 
+                      BNE +                               ;; 00C9D7 : D0 06       ; / 
                       LDA.B #$01                          ;; 00C9D9 : A9 01       ; \ Unreachable 
                       STA.W !OWPlayerSubmap               ;; 00C9DB : 8D 11 1F    ;  | Set submap to be Yoshi's Island 
                       LSR A                               ;; 00C9DE : 4A          ; / 
-CODE_00C9DF:          LDY.B #$0C                          ;; 00C9DF : A0 0C       ;
+                    + LDY.B #$0C                          ;; 00C9DF : A0 0C       ;
                       LDX.W !BonusGameActivate            ;; 00C9E1 : AE 25 14    ;
-                      BEQ CODE_00C9F8                     ;; 00C9E4 : F0 12       ;
+                      BEQ +                               ;; 00C9E4 : F0 12       ;
                       LDX.B #$FF                          ;; 00C9E6 : A2 FF       ;
                       STX.W !BonusGameActivate            ;; 00C9E8 : 8E 25 14    ;
                       LDX.B #$F0                          ;; 00C9EB : A2 F0       ;
@@ -7181,7 +7181,7 @@ CODE_00C9DF:          LDY.B #$0C                          ;; 00C9DF : A0 0C     
                       STZ.W !EndLevelTimer                ;; 00C9F0 : 9C 93 14    ;
                       STZ.W !MusicBackup                  ;; 00C9F3 : 9C DA 0D    ;
                       LDY.B #$10                          ;; 00C9F6 : A0 10       ;
-CODE_00C9F8:          STZ.W !Brightness                   ;; 00C9F8 : 9C AE 0D    ;
+                    + STZ.W !Brightness                   ;; 00C9F8 : 9C AE 0D    ;
                       STZ.W !MosaicDirection              ;; 00C9FB : 9C AF 0D    ;
 CODE_00C9FE:          STA.W !OWLevelExitMode              ;; 00C9FE : 8D D5 0D    ; Store secret/normal exit info 
                       LDA.W !CutsceneID                   ;; 00CA01 : AD C6 13    ;
@@ -7189,9 +7189,9 @@ CODE_00C9FE:          STA.W !OWLevelExitMode              ;; 00C9FE : 8D D5 0D  
                       LDX.B #$08                          ;; 00CA06 : A2 08       ;
                       LDA.W !TranslevelNo                 ;; 00CA08 : AD BF 13    ;
                       CMP.B #$13                          ;; 00CA0B : C9 13       ;
-                      BNE CODE_00CA12                     ;; 00CA0D : D0 03       ;
+                      BNE +                               ;; 00CA0D : D0 03       ;
                       INC.W !OWLevelExitMode              ;; 00CA0F : EE D5 0D    ;
-CODE_00CA12:          CMP.B #$31                          ;; 00CA12 : C9 31       ;
+                    + CMP.B #$31                          ;; 00CA12 : C9 31       ;
                       BEQ CODE_00CA20                     ;; 00CA14 : F0 0A       ;
 CODE_00CA16:          CMP.W DATA_00C9A7-1,X               ;; 00CA16 : DD A6 C9    ;
                       BEQ CODE_00CA20                     ;; 00CA19 : F0 05       ;
@@ -7209,9 +7209,9 @@ Return00CA30:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 SetMarioPeaceImg:     LDA.B #$26                          ;; ?QPWZ? : A9 26       ; \ Mario's image = Peace Sign, or 
                       LDY.W !PlayerRidingYoshi            ;; 00CA33 : AC 7A 18    ;  | 
-                      BEQ CODE_00CA3A                     ;; 00CA36 : F0 02       ;  | 
+                      BEQ +                               ;; 00CA36 : F0 02       ;  | 
                       LDA.B #$14                          ;; 00CA38 : A9 14       ;  | Mario's image = Peace Sign on Yoshi 
-CODE_00CA3A:          STA.W !PlayerPose                   ;; 00CA3A : 8D E0 13    ; / 
+                    + STA.W !PlayerPose                   ;; 00CA3A : 8D E0 13    ; / 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00CA3E:          LDA.B #$F0                          ;; 00CA3E : A9 F0       ;
@@ -7219,10 +7219,10 @@ CODE_00CA3E:          LDA.B #$F0                          ;; 00CA3E : A9 F0     
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00CA44:          LDA.W !SpotlightSize                ;; 00CA44 : AD 33 14    ;
-                      BNE CODE_00CA4A                     ;; 00CA47 : D0 01       ;
+                      BNE +                               ;; 00CA47 : D0 01       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_00CA4A:          JSR CODE_00CA61                     ;; 00CA4A : 20 61 CA    ;
+                    + JSR CODE_00CA61                     ;; 00CA4A : 20 61 CA    ;
                       LDA.B #$FC                          ;; 00CA4D : A9 FC       ;
                       JSR CODE_00CA6D                     ;; 00CA4F : 20 6D CA    ;
                       LDA.B #$33                          ;; 00CA52 : A9 33       ;
@@ -7250,9 +7250,9 @@ CODE_00CA6D:          CLC                                 ;; 00CA6D : 18        
                       STA.B !_0                           ;; 00CA79 : 85 00       ;
                       LDA.B #$18                          ;; 00CA7B : A9 18       ;
                       LDY.B !Powerup                      ;; 00CA7D : A4 19       ;
-                      BEQ CODE_00CA83                     ;; 00CA7F : F0 02       ;
+                      BEQ +                               ;; 00CA7F : F0 02       ;
                       LDA.B #$10                          ;; 00CA81 : A9 10       ;
-CODE_00CA83:          CLC                                 ;; 00CA83 : 18          ;
+                    + CLC                                 ;; 00CA83 : 18          ;
                       ADC.B !PlayerYPosScrRel             ;; 00CA84 : 65 80       ;
                       STA.B !_1                           ;; 00CA86 : 85 01       ;
 CODE_00CA88:          REP #$30                            ;; 00CA88 : C2 30       ; 16 bit A ; Index (16 bit) Accum (16 bit) 
@@ -7270,11 +7270,11 @@ CODE_00CA96:          LDA.B !_1                           ;; 00CA96 : A5 01     
                       STA.W !WindowTable,X                ;; 00CA9F : 9D A0 04    ;
                       STZ.W !WindowTable+1,X              ;; 00CAA2 : 9E A1 04    ;
                       CPY.W #$01C0                        ;; 00CAA5 : C0 C0 01    ;
-                      BCS CODE_00CAB1                     ;; 00CAA8 : B0 07       ;
+                      BCS +                               ;; 00CAA8 : B0 07       ;
                       STA.W !WindowTable,Y                ;; 00CAAA : 99 A0 04    ;
                       INC A                               ;; 00CAAD : 1A          ;
                       STA.W !WindowTable+1,Y              ;; 00CAAE : 99 A1 04    ;
-CODE_00CAB1:          INX                                 ;; 00CAB1 : E8          ;
+                    + INX                                 ;; 00CAB1 : E8          ;
                       INX                                 ;; 00CAB2 : E8          ;
                       DEY                                 ;; 00CAB3 : 88          ;
                       DEY                                 ;; 00CAB4 : 88          ;
@@ -7286,15 +7286,15 @@ CODE_00CAB1:          INX                                 ;; 00CAB1 : E8        
 CODE_00CABD:          JSR CODE_00CC14                     ;; 00CABD : 20 14 CC    ;
                       CLC                                 ;; 00CAC0 : 18          ;
                       ADC.B !_0                           ;; 00CAC1 : 65 00       ;
-                      BCC CODE_00CAC7                     ;; 00CAC3 : 90 02       ;
+                      BCC +                               ;; 00CAC3 : 90 02       ;
                       LDA.B #$FF                          ;; 00CAC5 : A9 FF       ;
-CODE_00CAC7:          STA.W !WindowTable+1,X              ;; 00CAC7 : 9D A1 04    ;
+                    + STA.W !WindowTable+1,X              ;; 00CAC7 : 9D A1 04    ;
                       LDA.B !_0                           ;; 00CACA : A5 00       ;
                       SEC                                 ;; 00CACC : 38          ;
                       SBC.B !_2                           ;; 00CACD : E5 02       ;
-                      BCS CODE_00CAD3                     ;; 00CACF : B0 02       ;
+                      BCS +                               ;; 00CACF : B0 02       ;
                       LDA.B #$00                          ;; 00CAD1 : A9 00       ;
-CODE_00CAD3:          STA.W !WindowTable,X                ;; 00CAD3 : 9D A0 04    ;
+                    + STA.W !WindowTable,X                ;; 00CAD3 : 9D A0 04    ;
                       CPY.W #$01E0                        ;; 00CAD6 : C0 E0 01    ;
                       BCS CODE_00CAFE                     ;; 00CAD9 : B0 23       ;
                       LDA.B !_7                           ;; 00CADB : A5 07       ;
@@ -7306,9 +7306,9 @@ CODE_00CAD3:          STA.W !WindowTable,X                ;; 00CAD3 : 9D A0 04  
                                                           ;;                      ;
 CODE_00CAE7:          LDA.B !_3                           ;; 00CAE7 : A5 03       ;
                       ADC.B !_0                           ;; 00CAE9 : 65 00       ;
-                      BCC CODE_00CAEF                     ;; 00CAEB : 90 02       ;
+                      BCC +                               ;; 00CAEB : 90 02       ;
                       LDA.B #$FF                          ;; 00CAED : A9 FF       ;
-CODE_00CAEF:          STA.W !WindowTable+1,Y              ;; 00CAEF : 99 A1 04    ;
+                    + STA.W !WindowTable+1,Y              ;; 00CAEF : 99 A1 04    ;
                       LDA.B !_0                           ;; 00CAF2 : A5 00       ;
                       SEC                                 ;; 00CAF4 : 38          ;
                       SBC.B !_3                           ;; 00CAF5 : E5 03       ;
@@ -7409,16 +7409,16 @@ DATA_00CC5C:          db $00,$00,$00,$00,$02,$00,$06,$00  ;; 00CC5C             
                                                           ;;                      ;
 ResetAni:             LDA.B !axlr0000Hold                 ;; ?QPWZ? : A5 17       ;
                       AND.B #$20                          ;; 00CC6A : 29 20       ;
-                      BEQ CODE_00CC81                     ;; 00CC6C : F0 13       ;
+                      BEQ +                               ;; 00CC6C : F0 13       ;
                       LDA.B !axlr0000Frame                ;; 00CC6E : A5 18       ;
                       CMP.B #$80                          ;; 00CC70 : C9 80       ;
-                      BNE CODE_00CC81                     ;; 00CC72 : D0 0D       ;
+                      BNE +                               ;; 00CC72 : D0 0D       ;
                       INC.W !DebugFreeRoam                ;; 00CC74 : EE 01 1E    ;
                       LDA.W !DebugFreeRoam                ;; 00CC77 : AD 01 1E    ;
                       CMP.B #$03                          ;; 00CC7A : C9 03       ;
-                      BCC CODE_00CC81                     ;; 00CC7C : 90 03       ;
+                      BCC +                               ;; 00CC7C : 90 03       ;
                       STZ.W !DebugFreeRoam                ;; 00CC7E : 9C 01 1E    ;
-CODE_00CC81:          LDA.W !DebugFreeRoam                ;; 00CC81 : AD 01 1E    ;
+                    + LDA.W !DebugFreeRoam                ;; 00CC81 : AD 01 1E    ;
                       BRA CODE_00CCBB                     ;; 00CC84 : 80 35       ; Change to BEQ to enable debug code below 
                                                           ;;                      ;
                       LSR A                               ;; 00CC86 : 4A          ; \ Unreachable 
@@ -7435,9 +7435,9 @@ CODE_00CC81:          LDA.W !DebugFreeRoam                ;; 00CC81 : AD 01 1E  
                       AND.B #$0C                          ;; 00CC9B : 29 0C       ;  | 
                       LDX.B #$02                          ;; 00CC9D : A2 02       ;  | 
 ADDR_00CC9F:          BIT.B !byetudlrHold                 ;; 00CC9F : 24 15       ;  | 
-                      BVC ADDR_00CCA5                     ;; 00CCA1 : 50 02       ;  | 
+                      BVC +                               ;; 00CCA1 : 50 02       ;  | 
                       ORA.B #$02                          ;; 00CCA3 : 09 02       ;  | 
-ADDR_00CCA5:          TAY                                 ;; 00CCA5 : A8          ;  | 
+                    + TAY                                 ;; 00CCA5 : A8          ;  | 
                       REP #$20                            ;; 00CCA6 : C2 20       ;  | Accum (16 bit) ; Accum (16 bit) 
                       LDA.B !PlayerXPosNext,X             ;; 00CCA8 : B5 94       ;  | 
                       CLC                                 ;; 00CCAA : 18          ;  | 
@@ -7450,10 +7450,10 @@ ADDR_00CCB3:          LDA.B #$70                          ;; 00CCB3 : A9 70     
                       STA.W !PlayerPMeter                 ;; 00CCB5 : 8D E4 13    ;
                       STA.W !TakeoffTimer                 ;; 00CCB8 : 8D 9F 14    ;
 CODE_00CCBB:          LDA.W !EndLevelTimer                ;; 00CCBB : AD 93 14    ;
-                      BEQ CODE_00CCC3                     ;; 00CCBE : F0 03       ;
+                      BEQ +                               ;; 00CCBE : F0 03       ;
                       JMP CODE_00C915                     ;; 00CCC0 : 4C 15 C9    ;
                                                           ;;                      ;
-CODE_00CCC3:          JSR CODE_00CDDD                     ;; 00CCC3 : 20 DD CD    ;
+                    + JSR CODE_00CDDD                     ;; 00CCC3 : 20 DD CD    ;
                       LDA.B !SpriteLock                   ;; 00CCC6 : A5 9D       ; \ Branch if sprites locked 
                       BNE Return00CCDF                    ;; 00CCC8 : D0 15       ; / 
                       STZ.W !CapeInteracts                ;; 00CCCA : 9C E8 13    ;
@@ -7490,29 +7490,29 @@ CODE_00CCE0:          LDA.W !IRQNMICommand                ;; 00CCE0 : AD 9B 0D  
                       STA.W !KeyholeYPos                  ;; 00CD11 : 8D 38 14    ;
                       STA.W !BrSwingYDist                 ;; 00CD14 : 8D B6 14    ;
                       JSR CODE_00F9C9                     ;; 00CD17 : 20 C9 F9    ;
-                      BRA CODE_00CD1F                     ;; 00CD1A : 80 03       ;
+                      BRA +                               ;; 00CD1A : 80 03       ;
                                                           ;;                      ;
 CODE_00CD1C:          JSR CODE_00DC2D                     ;; 00CD1C : 20 2D DC    ; Accum (8 bit) 
-CODE_00CD1F:          JSR CODE_00F8F2                     ;; 00CD1F : 20 F2 F8    ;
+                    + JSR CODE_00F8F2                     ;; 00CD1F : 20 F2 F8    ;
                       BRA CODE_00CD36                     ;; 00CD22 : 80 12       ;
                                                           ;;                      ;
 CODE_00CD24:          LDA.B !PlayerYSpeed                 ;; 00CD24 : A5 7D       ; \ Branch if Mario has downward speed 
-                      BPL CODE_00CD30                     ;; 00CD26 : 10 08       ; / 
+                      BPL +                               ;; 00CD26 : 10 08       ; / 
                       LDA.B !PlayerBlockedDir             ;; 00CD28 : A5 77       ;
                       AND.B #$08                          ;; 00CD2A : 29 08       ;
-                      BEQ CODE_00CD30                     ;; 00CD2C : F0 02       ;
+                      BEQ +                               ;; 00CD2C : F0 02       ;
                       STZ.B !PlayerYSpeed                 ;; 00CD2E : 64 7D       ; Y speed = 0 
-CODE_00CD30:          JSR CODE_00DC2D                     ;; 00CD30 : 20 2D DC    ;
+                    + JSR CODE_00DC2D                     ;; 00CD30 : 20 2D DC    ;
                       JSR CODE_00E92B                     ;; 00CD33 : 20 2B E9    ;
 CODE_00CD36:          JSR CODE_00F595                     ;; 00CD36 : 20 95 F5    ;
 CODE_00CD39:          STZ.W !PlayerTurningPose            ;; 00CD39 : 9C DD 13    ;
                       LDY.W !PBalloonInflating            ;; 00CD3C : AC F3 13    ;
                       BNE CODE_00CD95                     ;; 00CD3F : D0 54       ;
                       LDA.W !PlayerClimbingRope           ;; 00CD41 : AD BE 18    ;
-                      BEQ CODE_00CD4A                     ;; 00CD44 : F0 04       ;
+                      BEQ +                               ;; 00CD44 : F0 04       ;
                       LDA.B #$1F                          ;; 00CD46 : A9 1F       ;
                       STA.B !GraphicsCompPtr+1            ;; 00CD48 : 85 8B       ;
-CODE_00CD4A:          LDA.B !PlayerIsClimbing             ;; 00CD4A : A5 74       ;
+                    + LDA.B !PlayerIsClimbing             ;; 00CD4A : A5 74       ;
                       BNE CODE_00CD72                     ;; 00CD4C : D0 24       ;
                       LDA.W !IsCarryingItem               ;; 00CD4E : AD 8F 14    ;
                       ORA.W !PlayerRidingYoshi            ;; 00CD51 : 0D 7A 18    ;
@@ -7550,31 +7550,31 @@ CODE_00CD8F:          LDY.W !PlayerRidingYoshi            ;; 00CD8F : AC 7A 18  
                                                           ;;                      ;
 CODE_00CD95:          LDA.B #$42                          ;; 00CD95 : A9 42       ;
                       LDX.B !Powerup                      ;; 00CD97 : A6 19       ;
-                      BEQ CODE_00CD9D                     ;; 00CD99 : F0 02       ;
+                      BEQ +                               ;; 00CD99 : F0 02       ;
                       LDA.B #$43                          ;; 00CD9B : A9 43       ;
-CODE_00CD9D:          DEY                                 ;; 00CD9D : 88          ;
-                      BEQ CODE_00CDA5                     ;; 00CD9E : F0 05       ;
+                    + DEY                                 ;; 00CD9D : 88          ;
+                      BEQ +                               ;; 00CD9E : F0 05       ;
                       STY.W !PBalloonInflating            ;; 00CDA0 : 8C F3 13    ;
                       LDA.B #$0F                          ;; 00CDA3 : A9 0F       ; \ Mario's image = Going down tube 
-CODE_00CDA5:          STA.W !PlayerPose                   ;; 00CDA5 : 8D E0 13    ; / 
+                    + STA.W !PlayerPose                   ;; 00CDA5 : 8D E0 13    ; / 
 CODE_00CDA8:          RTS                                 ;; 00CDA8 : 60          ;
                                                           ;;                      ;
                                                           ;;                      ;
                       db $20,$21,$27,$28                  ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_00CDAD:          LDX.W !YoshiTongueTimer             ;; 00CDAD : AE A3 14    ;
-                      BEQ CODE_00CDBA                     ;; 00CDB0 : F0 08       ;
+                      BEQ +                               ;; 00CDB0 : F0 08       ;
                       LDY.B #$03                          ;; 00CDB2 : A0 03       ;
                       CPX.B #$0C                          ;; 00CDB4 : E0 0C       ;
-                      BCS CODE_00CDBA                     ;; 00CDB6 : B0 02       ;
+                      BCS +                               ;; 00CDB6 : B0 02       ;
                       LDY.B #$04                          ;; 00CDB8 : A0 04       ;
-CODE_00CDBA:          LDA.W CODE_00CDA8,Y                 ;; 00CDBA : B9 A8 CD    ;
+                    + LDA.W CODE_00CDA8,Y                 ;; 00CDBA : B9 A8 CD    ;
                       DEY                                 ;; 00CDBD : 88          ;
-                      BNE CODE_00CDC6                     ;; 00CDBE : D0 06       ;
+                      BNE +                               ;; 00CDBE : D0 06       ;
                       LDY.B !PlayerIsDucking              ;; 00CDC0 : A4 73       ;
-                      BEQ CODE_00CDC6                     ;; 00CDC2 : F0 02       ;
+                      BEQ +                               ;; 00CDC2 : F0 02       ;
                       LDA.B #$1D                          ;; 00CDC4 : A9 1D       ; \ Mario's image = Picking up object 
-CODE_00CDC6:          STA.W !PlayerPose                   ;; 00CDC6 : 8D E0 13    ; / 
+                    + STA.W !PlayerPose                   ;; 00CDC6 : 8D E0 13    ; / 
                       LDA.W !YoshiHasWingsEvt             ;; 00CDC9 : AD 1E 14    ; \ Check Yoshi wing ability address for #$01, 
                       CMP.B #$01                          ;; 00CDCC : C9 01       ; / but this is an impossible value 
                       BNE Return00CDDC                    ;; 00CDCE : D0 0C       ; \ Unreachable/unused code 
@@ -7623,18 +7623,18 @@ CODE_00CDF6:          LDA.B !axlr0000Hold                 ;; 00CDF6 : A5 17     
                       INC.W !CameraIsScrolling            ;; 00CE27 : EE FD 13    ;
                       LDA.B #$00                          ;; 00CE2A : A9 00       ;
                       CPX.B #$02                          ;; 00CE2C : E0 02       ;
-                      BNE CODE_00CE33                     ;; 00CE2E : D0 03       ;
+                      BNE +                               ;; 00CE2E : D0 03       ;
                       LDA.B !LastScreenHoriz              ;; 00CE30 : A5 5E       ;
                       DEC A                               ;; 00CE32 : 3A          ;
-CODE_00CE33:          REP #$20                            ;; 00CE33 : C2 20       ; Accum (16 bit) 
+                    + REP #$20                            ;; 00CE33 : C2 20       ; Accum (16 bit) 
                       XBA                                 ;; 00CE35 : EB          ;
                       AND.W #$FF00                        ;; 00CE36 : 29 00 FF    ;
                       CMP.B !Layer1XPos                   ;; 00CE39 : C5 1A       ;
                       SEP #$20                            ;; 00CE3B : E2 20       ; Accum (8 bit) 
-                      BEQ CODE_00CE44                     ;; 00CE3D : F0 05       ;
+                      BEQ +                               ;; 00CE3D : F0 05       ;
                       LDY.B #$0E                          ;; 00CE3F : A0 0E       ; \ Play sound effect 
                       STY.W !SPCIO3                       ;; 00CE41 : 8C FC 1D    ; / 
-CODE_00CE44:          TXA                                 ;; 00CE44 : 8A          ;
+                    + TXA                                 ;; 00CE44 : 8A          ;
                       STA.W !CameraScrollDir              ;; 00CE45 : 8D FE 13    ;
 CODE_00CE48:          TAY                                 ;; 00CE48 : A8          ;
 CODE_00CE49:          STZ.W !CameraScrollTimer            ;; 00CE49 : 9C 01 14    ;
@@ -7650,10 +7650,10 @@ CODE_00CE4C:          LDX.B #$00                          ;; 00CE4C : A2 00     
                       ADC.W DATA_00F6BF,Y                 ;; 00CE5F : 79 BF F6    ;
                       LDY.W !CameraScrollPlayerDir        ;; 00CE62 : AC FF 13    ;
                       CMP.W DATA_00F6B3,Y                 ;; 00CE65 : D9 B3 F6    ;
-                      BNE CODE_00CE70                     ;; 00CE68 : D0 06       ;
+                      BNE +                               ;; 00CE68 : D0 06       ;
                       STX.W !CameraScrollDir              ;; 00CE6A : 8E FE 13    ;
 CODE_00CE6D:          STX.W !CameraIsScrolling            ;; 00CE6D : 8E FD 13    ;
-CODE_00CE70:          STA.W !CameraMoveTrigger            ;; 00CE70 : 8D 2A 14    ;
+                    + STA.W !CameraMoveTrigger            ;; 00CE70 : 8D 2A 14    ;
                       STX.W !CameraProperMove             ;; 00CE73 : 8E 00 14    ;
                       SEP #$20                            ;; 00CE76 : E2 20       ; Accum (8 bit) 
 CODE_00CE78:          RTS                                 ;; 00CE78 : 60          ;
@@ -7706,10 +7706,10 @@ MrioNtInWtr:          TXA                                 ;; ?QPWZ? : 8A        
                       LDX.B #$02                          ;; 00CEEC : A2 02       ; X = #$02 
                       BRA CODE_00CF0A                     ;; 00CEEE : 80 1A       ; Branch to $CF04 
                                                           ;;                      ;
-CODE_00CEF0:          BPL CODE_00CEF5                     ;; 00CEF0 : 10 03       ; \  
+CODE_00CEF0:          BPL +                               ;; 00CEF0 : 10 03       ; \  
                       EOR.B #$FF                          ;; 00CEF2 : 49 FF       ;  |A = abs(A) 
                       INC A                               ;; 00CEF4 : 1A          ;  | 
-CODE_00CEF5:          LSR A                               ;; 00CEF5 : 4A          ; \  
+                    + LSR A                               ;; 00CEF5 : 4A          ; \  
                       LSR A                               ;; 00CEF6 : 4A          ;  |Divide a by 8 
                       LSR A                               ;; 00CEF7 : 4A          ; /  
                       TAY                                 ;; 00CEF8 : A8          ; Y = A 
@@ -7717,17 +7717,17 @@ CODE_00CEF5:          LSR A                               ;; 00CEF5 : 4A        
                       TAY                                 ;; 00CEFC : A8          ; Load Y with this table 
 CODE_00CEFD:          INX                                 ;; 00CEFD : E8          ; \  
                       CPX.B #$03                          ;; 00CEFE : E0 03       ;  | 
-                      BCS CODE_00CF04                     ;; 00CF00 : B0 02       ;  |If X is < #$02 and != #$FF <- counting the INX 
+                      BCS +                               ;; 00CF00 : B0 02       ;  |If X is < #$02 and != #$FF <- counting the INX 
                       LDX.B #$05                          ;; 00CF02 : A2 05       ;  |then X = #$05 
-CODE_00CF04:          CPX.B #$07                          ;; 00CF04 : E0 07       ; \  
+                    + CPX.B #$07                          ;; 00CF04 : E0 07       ; \  
                       BCC CODE_00CF0A                     ;; 00CF06 : 90 02       ;  |If X is greater than or equal to #$07 then X = #$03 
                       LDX.B #$03                          ;; 00CF08 : A2 03       ;  | 
 CODE_00CF0A:          STX.W !PlayerCapePose               ;; 00CF0A : 8E DF 13    ; And X goes right back into $13DF (cape image) after being modified 
                       TYA                                 ;; 00CF0D : 98          ; Now Y goes back into A 
                       LDY.B !PlayerInWater                ;; 00CF0E : A4 75       ; \  
-                      BEQ CODE_00CF13                     ;; 00CF10 : F0 01       ;  |If mario is in water then A = 2A 
+                      BEQ +                               ;; 00CF10 : F0 01       ;  |If mario is in water then A = 2A 
                       ASL A                               ;; 00CF12 : 0A          ;  | 
-CODE_00CF13:          STA.W !CapeAniTimer                 ;; 00CF13 : 8D A2 14    ; A -> $14A2 (do we know this byte yet?) no. 
+                    + STA.W !CapeAniTimer                 ;; 00CF13 : 8D A2 14    ; A -> $14A2 (do we know this byte yet?) no. 
 lbl14A2Not0:          LDA.W !SpinJumpFlag                 ;; ?QPWZ? : AD 0D 14    ; A = Spin Jump Flag 
                       ORA.W !CapeSpinTimer                ;; 00CF19 : 0D A6 14    ;
                       BEQ CODE_00CF4E                     ;; 00CF1C : F0 30       ; If $140D OR $14A6 = 0 then branch to $CF4E 
@@ -7737,22 +7737,22 @@ lbl14A2Not0:          LDA.W !SpinJumpFlag                 ;; ?QPWZ? : AD 0D 14  
                       TAX                                 ;; 00CF24 : AA          ;  | 
                       TAY                                 ;; 00CF25 : A8          ; /  
                       LDA.B !PlayerInAir                  ;; 00CF26 : A5 72       ; \ If on ground branch down 
-                      BEQ CODE_00CF2F                     ;; 00CF28 : F0 05       ; /  
+                      BEQ +                               ;; 00CF28 : F0 05       ; /  
                       LDA.B !PlayerYSpeed                 ;; 00CF2A : A5 7D       ; \ If Mario moving upwards branch down 
-                      BMI CODE_00CF2F                     ;; 00CF2C : 30 01       ; /  
+                      BMI +                               ;; 00CF2C : 30 01       ; /  
                       INY                                 ;; 00CF2E : C8          ; Y = Y + 1 
-CODE_00CF2F:          LDA.W DATA_00CEA9,Y                 ;; 00CF2F : B9 A9 CE    ; \ After loading from this table, 
+                    + LDA.W DATA_00CEA9,Y                 ;; 00CF2F : B9 A9 CE    ; \ After loading from this table, 
                       STA.W !PlayerCapePose               ;; 00CF32 : 8D DF 13    ; / Store A in cape image 
                       LDA.B !Powerup                      ;; 00CF35 : A5 19       ; A = Mario's powerup status 
-                      BEQ CODE_00CF3A                     ;; 00CF37 : F0 01       ; \  
+                      BEQ +                               ;; 00CF37 : F0 01       ; \  
                       INX                                 ;; 00CF39 : E8          ;  |If not small, increase X 
-CODE_00CF3A:          LDA.W DATA_00CEA1,X                 ;; 00CF3A : BD A1 CE    ; \ Load from another table 
+                    + LDA.W DATA_00CEA1,X                 ;; 00CF3A : BD A1 CE    ; \ Load from another table 
                       STA.B !PlayerDirection              ;; 00CF3D : 85 76       ; / store to Mario's Direction 
                       LDY.B !Powerup                      ;; 00CF3F : A4 19       ; \  
                       CPY.B #$02                          ;; 00CF41 : C0 02       ;  | 
-                      BNE CODE_00CF48                     ;; 00CF43 : D0 03       ;  |If Mario has cape, JSR 
+                      BNE +                               ;; 00CF43 : D0 03       ;  |If Mario has cape, JSR 
                       JSR CODE_00D044                     ;; 00CF45 : 20 44 D0    ;  |to possibly the graphics handler 
-CODE_00CF48:          LDA.W DATA_00CE99,X                 ;; 00CF48 : BD 99 CE    ; \ Load from a table again 
+                    + LDA.W DATA_00CE99,X                 ;; 00CF48 : BD 99 CE    ; \ Load from a table again 
                       JMP CODE_00D01A                     ;; 00CF4B : 4C 1A D0    ; / And jump 
                                                           ;;                      ;
 CODE_00CF4E:          LDA.W !PlayerSlopePose              ;; 00CF4E : AD ED 13    ; \ If $13ED is #$01 - #$7F then 
@@ -7768,9 +7768,9 @@ CODE_00CF4E:          LDA.W !PlayerSlopePose              ;; 00CF4E : AD ED 13  
                                                           ;;                      ;
 CODE_00CF62:          LDA.B #$3C                          ;; 00CF62 : A9 3C       ; \ Select Case $148F 
                       LDY.W !IsCarryingItem               ;; 00CF64 : AC 8F 14    ;  |Case 0:A = #$3C 
-                      BEQ CODE_00CF6B                     ;; 00CF67 : F0 02       ;  |Case Else: A = #$1D 
+                      BEQ +                               ;; 00CF67 : F0 02       ;  |Case Else: A = #$1D 
                       LDA.B #$1D                          ;; 00CF69 : A9 1D       ;  |End Select 
-CODE_00CF6B:          LDY.B !PlayerIsDucking              ;; 00CF6B : A4 73       ; \ If Ducking while jumping 
+                    + LDY.B !PlayerIsDucking              ;; 00CF6B : A4 73       ; \ If Ducking while jumping 
                       BNE CODE_00CF85                     ;; 00CF6D : D0 16       ; / Branch to $CF85 
                       LDA.W !ShootFireTimer               ;; 00CF6F : AD 9C 14    ; \ If (Unknown) = 0 
                       BEQ CODE_00CF7E                     ;; 00CF72 : F0 0A       ; / Branch to $CF7E 
@@ -7782,10 +7782,10 @@ CODE_00CF6B:          LDY.B !PlayerIsDucking              ;; 00CF6B : A4 73     
                                                           ;;                      ;
 CODE_00CF7E:          LDA.B #$0E                          ;; 00CF7E : A9 0E       ; A = #$0E 
                       LDY.W !KickingTimer                 ;; 00CF80 : AC 9A 14    ; \ If Time to show Mario's current pose is 00, 
-                      BEQ CODE_00CF88                     ;; 00CF83 : F0 03       ;  | Don't jump to $D01A 
+                      BEQ +                               ;; 00CF83 : F0 03       ;  | Don't jump to $D01A 
 CODE_00CF85:          JMP CODE_00D01A                     ;; 00CF85 : 4C 1A D0    ;  | 
                                                           ;;                      ;
-CODE_00CF88:          LDA.B #$1D                          ;; 00CF88 : A9 1D       ; A = #$1D 
+                    + LDA.B #$1D                          ;; 00CF88 : A9 1D       ; A = #$1D 
                       LDY.W !PickUpItemTimer              ;; 00CF8A : AC 98 14    ; \ If $1499 != 0 then Jump to $D01A 
                       BNE CODE_00CF85                     ;; 00CF8D : D0 F6       ; /  
                       LDA.B #$0F                          ;; 00CF8F : A9 0F       ; A = #$0F 
@@ -7799,9 +7799,9 @@ CODE_00CF88:          LDA.B #$1D                          ;; 00CF88 : A9 1D     
                       LDY.W !RunTakeoffTimer              ;; 00CFA1 : AC A0 14    ; \ If $14A0 != 0 then 
                       BNE CODE_00CFBC                     ;; 00CFA4 : D0 16       ; / Skip down 
                       LDY.W !FlightPhase                  ;; 00CFA6 : AC 07 14    ; Spaghetticode(tm) 
-                      BEQ CODE_00CFAE                     ;; 00CFA9 : F0 03       ;
+                      BEQ +                               ;; 00CFA9 : F0 03       ;
                       LDA.W CODE_00CE78,Y                 ;; 00CFAB : B9 78 CE    ;
-CODE_00CFAE:          LDY.W !IsCarryingItem               ;; 00CFAE : AC 8F 14    ; \ If Mario isn't holding something, 
+                    + LDY.W !IsCarryingItem               ;; 00CFAE : AC 8F 14    ; \ If Mario isn't holding something, 
                       BEQ CODE_00D01A                     ;; 00CFB1 : F0 67       ;  |branch to $D01A 
                       LDA.B #$09                          ;; 00CFB3 : A9 09       ;  |Otherwise, set A to #$09 and 
                       BRA CODE_00D01A                     ;; 00CFB5 : 80 63       ; / branch to $D01A 
@@ -7833,10 +7833,10 @@ CODE_00CFE3:          LDA.W !PlayerWalkingPose            ;; 00CFE3 : AD DB 13  
                       LDY.W !PlayerAniTimer               ;; 00CFE6 : AC 96 14    ; \ If Mario is hurt (flashing), 
                       BNE CODE_00D003                     ;; 00CFE9 : D0 18       ; / branch to $D003 
                       DEC A                               ;; 00CFEB : 3A          ; A = A - 1 
-                      BPL CODE_00CFF3                     ;; 00CFEC : 10 05       ; \If bit 7 is clear, 
+                      BPL +                               ;; 00CFEC : 10 05       ; \If bit 7 is clear, 
                       LDY.B !Powerup                      ;; 00CFEE : A4 19       ;  | Load amount of walking frames 
                       LDA.W NumWalkingFrames,Y            ;; 00CFF0 : B9 78 DC    ;  | for current powerup 
-CODE_00CFF3:          XBA                                 ;; 00CFF3 : EB          ; \ >>-This code puts together an index to a table further down-<< 
+                    + XBA                                 ;; 00CFF3 : EB          ; \ >>-This code puts together an index to a table further down-<< 
                       TXA                                 ;; 00CFF4 : 8A          ;  |-\ Above Line: "Push" frame amount 
                       LSR A                               ;; 00CFF5 : 4A          ;  |  |A = X / 8 
                       LSR A                               ;; 00CFF6 : 4A          ;  |  | 
@@ -7859,17 +7859,17 @@ CODE_00D014:          CPX.B #$2F                          ;; 00D014 : E0 2F     
                       BCC CODE_00D01A                     ;; 00D016 : 90 02       ;  |If X is greater than #$2F, add #$04 
                       ADC.B #$03                          ;; 00D018 : 69 03       ; / <-Carry is always set here, adding #$01 to (#$03 + A) 
 CODE_00D01A:          LDY.W !WallrunningType              ;; 00D01A : AC E3 13    ; \ If Mario isn't rotated 45 degrees (triangle 
-                      BEQ MarioAnimNo45                   ;; 00D01D : F0 11       ; / block), branch to $D030 
+                      BEQ +                               ;; 00D01D : F0 11       ; / block), branch to $D030 
                       TYA                                 ;; 00D01F : 98          ; \ Y AND #$01 -> Mario's Direction RAM Byte 
                       AND.B #$01                          ;; 00D020 : 29 01       ;  | 
                       STA.B !PlayerDirection              ;; 00D022 : 85 76       ; /  
                       LDA.B #$10                          ;; 00D024 : A9 10       ; \  
                       CPY.B #$06                          ;; 00D026 : C0 06       ;  |If Y < 6 then 
-                      BCC MarioAnimNo45                   ;; 00D028 : 90 06       ;  |    A = #13DB + $11 
+                      BCC +                               ;; 00D028 : 90 06       ;  |    A = #13DB + $11 
                       LDA.W !PlayerWalkingPose            ;; 00D02A : AD DB 13    ;  |Else 
                       CLC                                 ;; 00D02D : 18          ;  |    A = #$10 
                       ADC.B #$11                          ;; 00D02E : 69 11       ;  |End If 
-MarioAnimNo45:        STA.W !PlayerPose                   ;; ?QPWZ? : 8D E0 13    ; Store in Current animation frame 
+                    + STA.W !PlayerPose                   ;; ?QPWZ? : 8D E0 13    ; Store in Current animation frame 
                       RTL                                 ;; ?QPWZ? : 6B          ; And Finish 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -7923,9 +7923,9 @@ CODE_00D081:          CMP.B #$03                          ;; 00D081 : C9 03     
                       TAY                                 ;; 00D09F : A8          ;
                       LDA.W !SpinjumpFireball             ;; 00D0A0 : AD E2 13    ;
                       AND.B #$10                          ;; 00D0A3 : 29 10       ;
-                      BEQ CODE_00D0A8                     ;; 00D0A5 : F0 01       ;
+                      BEQ +                               ;; 00D0A5 : F0 01       ;
                       INY                                 ;; 00D0A7 : C8          ;
-CODE_00D0A8:          STY.B !PlayerDirection              ;; 00D0A8 : 84 76       ;
+                    + STY.B !PlayerDirection              ;; 00D0A8 : 84 76       ;
 CODE_00D0AA:          JSR ShootFireball                   ;; 00D0AA : 20 A8 FE    ; haha, I read this as "FEAR" at first 
 Return00D0AD:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -7937,16 +7937,16 @@ MarioDeathAni:        STZ.B !Powerup                      ;; ?QPWZ? : 64 19     
                       STA.W !PlayerPose                   ;; 00D0BA : 8D E0 13    ; / Set Mario image to death image 
                       LDA.B !TrueFrame                    ;; 00D0BD : A5 13       ; \  
                       AND.B #$03                          ;; 00D0BF : 29 03       ;  |Decrease "Death fall timer" every four frames 
-                      BNE CODE_00D0C6                     ;; 00D0C1 : D0 03       ;  | 
+                      BNE +                               ;; 00D0C1 : D0 03       ;  | 
                       DEC.W !PlayerAniTimer               ;; 00D0C3 : CE 96 14    ;  | 
-CODE_00D0C6:          LDA.W !PlayerAniTimer               ;; 00D0C6 : AD 96 14    ; \ If Death fall timer isn't #$00, 
+                    + LDA.W !PlayerAniTimer               ;; 00D0C6 : AD 96 14    ; \ If Death fall timer isn't #$00, 
                       BNE DeathNotDone                    ;; 00D0C9 : D0 3D       ; / branch to $D108 
                       LDA.B #$80                          ;; 00D0CB : A9 80       ;
                       STA.W !OWLevelExitMode              ;; 00D0CD : 8D D5 0D    ;
                       LDA.W !RemoveYoshiFlag              ;; 00D0D0 : AD 9B 1B    ;
-                      BNE CODE_00D0D8                     ;; 00D0D3 : D0 03       ;
+                      BNE +                               ;; 00D0D3 : D0 03       ;
                       STZ.W !CarryYoshiThruLvls           ;; 00D0D5 : 9C C1 0D    ; Set reserve item to 0 
-CODE_00D0D8:          DEC.W !PlayerLives                  ;; 00D0D8 : CE BE 0D    ; Decrease amount of lifes 
+                    + DEC.W !PlayerLives                  ;; 00D0D8 : CE BE 0D    ; Decrease amount of lifes 
                       BPL DeathNotGameOver                ;; 00D0DB : 10 09       ; If not Game Over, branch to $D0E6 
                       LDA.B #$0A                          ;; 00D0DD : A9 0A       ;
                       STA.W !SPCIO2                       ;; 00D0DF : 8D FB 1D    ; / Change music 
@@ -7957,7 +7957,7 @@ DeathNotGameOver:     LDY.B #$0B                          ;; ?QPWZ? : A0 0B     
                       LDA.W !InGameTimerHundreds          ;; 00D0E8 : AD 31 0F    ; \  
                       ORA.W !InGameTimerTens              ;; 00D0EB : 0D 32 0F    ;  |If time isn't zero, 
                       ORA.W !InGameTimerOnes              ;; 00D0EE : 0D 33 0F    ;  |branch to $D104 
-                      BNE DeathNotTimeUp                  ;; 00D0F1 : D0 11       ; /  
+                      BNE +                               ;; 00D0F1 : D0 11       ; /  
                       LDX.B #$1D                          ;; 00D0F3 : A2 1D       ; Set X (Death message) to x1D (Time Up) 
 DeathShowMessage:     STX.W !DeathMessage                 ;; ?QPWZ? : 8E 3B 14    ; Store X in Death message 
                       LDA.B #$C0                          ;; 00D0F8 : A9 C0       ; \ Set Death message animation to xC0 
@@ -7965,11 +7965,11 @@ DeathShowMessage:     STX.W !DeathMessage                 ;; ?QPWZ? : 8E 3B 14  
                       LDA.B #$FF                          ;; 00D0FD : A9 FF       ; \ Set Death message timer to xFF 
                       STA.W !GameOverTimer                ;; 00D0FF : 8D 3D 14    ; / 
                       LDY.B #$15                          ;; 00D102 : A0 15       ; Set Y (game mode) to x15 (Fade to Game Over) 
-DeathNotTimeUp:       STY.W !GameMode                     ;; ?QPWZ? : 8C 00 01    ; Store Y in Game Mode 
+                    + STY.W !GameMode                     ;; ?QPWZ? : 8C 00 01    ; Store Y in Game Mode 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 DeathNotDone:         CMP.B #$26                          ;; ?QPWZ? : C9 26       ; \ If Death fall timer >= x26, 
-                      BCS DeathNotDoneEnd                 ;; 00D10A : B0 10       ; / return 
+                      BCS +                               ;; 00D10A : B0 10       ; / return 
                       STZ.B !PlayerXSpeed                 ;; 00D10C : 64 7B       ; Set Mario X speed to 0 
                       JSR CODE_00DC2D                     ;; 00D10E : 20 2D DC    ;
                       JSR CODE_00D92E                     ;; 00D111 : 20 2E D9    ;
@@ -7978,7 +7978,7 @@ DeathNotDone:         CMP.B #$26                          ;; ?QPWZ? : C9 26     
                       LSR A                               ;; 00D117 : 4A          ;  |Flip death image every four frames 
                       AND.B #$01                          ;; 00D118 : 29 01       ;  | 
                       STA.B !PlayerDirection              ;; 00D11A : 85 76       ; /  
-DeathNotDoneEnd:      RTS                                 ;; ?QPWZ? : 60          ;
+                    + RTS                                 ;; ?QPWZ? : 60          ;
                                                           ;;                      ;
                                                           ;;                      ;
 GrowingAniImgs:       db $00,$3D,$00,$3D,$00,$3D,$46,$3D  ;; ?QPWZ?               ;
@@ -7992,9 +7992,9 @@ CODE_00D130:          TAY                                 ;; 00D130 : A8        
                       LDA.W GrowingAniImgs,Y              ;; 00D131 : B9 1D D1    ; \ Set Mario's image 
                       STA.W !PlayerPose                   ;; 00D134 : 8D E0 13    ; / 
 CODE_00D137:          LDA.W !PlayerAniTimer               ;; 00D137 : AD 96 14    ;
-                      BEQ Return00D13F                    ;; 00D13A : F0 03       ;
+                      BEQ +                               ;; 00D13A : F0 03       ;
                       DEC.W !PlayerAniTimer               ;; 00D13C : CE 96 14    ;
-Return00D13F:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00D140:          LDA.B #$7F                          ;; 00D140 : A9 7F       ;
                       STA.W !IFrameTimer                  ;; 00D142 : 8D 97 14    ;
@@ -8014,12 +8014,12 @@ CODE_00D156:          INC.B !Powerup                      ;; 00D156 : E6 19     
 CODE_00D158:          LDA.B #$00                          ;; 00D158 : A9 00       ;
                       STA.B !PlayerAnimation              ;; 00D15A : 85 71       ;
                       STZ.B !SpriteLock                   ;; 00D15C : 64 9D       ;
-Return00D15E:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    - RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CapeAni:              LDA.B #$7F                          ;; ?QPWZ? : A9 7F       ;
                       STA.B !PlayerHiddenTiles            ;; 00D161 : 85 78       ;
                       DEC.W !PlayerAniTimer               ;; 00D163 : CE 96 14    ;
-                      BNE Return00D15E                    ;; 00D166 : D0 F6       ;
+                      BNE -                               ;; 00D166 : D0 F6       ;
                       LDA.B !Powerup                      ;; 00D168 : A5 19       ;
                       LSR A                               ;; 00D16A : 4A          ;
                       BEQ CODE_00D140                     ;; 00D16B : F0 D3       ;
@@ -8027,13 +8027,13 @@ CapeAni:              LDA.B #$7F                          ;; ?QPWZ? : A9 7F     
 FlowerAni:            LDA.W !PlayerSlopePose              ;; ?QPWZ? : AD ED 13    ;
                       AND.B #$80                          ;; 00D172 : 29 80       ;
                       ORA.W !FlightPhase                  ;; 00D174 : 0D 07 14    ;
-                      BEQ CODE_00D187                     ;; 00D177 : F0 0E       ;
+                      BEQ +                               ;; 00D177 : F0 0E       ;
                       STZ.W !FlightPhase                  ;; 00D179 : 9C 07 14    ;
                       LDA.W !PlayerSlopePose              ;; 00D17C : AD ED 13    ;
                       AND.B #$7F                          ;; 00D17F : 29 7F       ;
                       STA.W !PlayerSlopePose              ;; 00D181 : 8D ED 13    ;
                       STZ.W !PlayerPose                   ;; 00D184 : 9C E0 13    ;
-CODE_00D187:          DEC.W !CyclePaletteTimer            ;; 00D187 : CE 9B 14    ;
+                    + DEC.W !CyclePaletteTimer            ;; 00D187 : CE 9B 14    ;
                       BEQ CODE_00D158                     ;; 00D18A : F0 CC       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -8052,10 +8052,10 @@ DoorPipeAni:          JSR NoButtons                       ;; ?QPWZ? : 20 2D F6  
                       JSL CODE_00CFBC                     ;; 00D1A1 : 22 BC CF 00 ;
                       JSR CODE_00D1F4                     ;; 00D1A5 : 20 F4 D1    ;
                       LDA.W !PlayerRidingYoshi            ;; 00D1A8 : AD 7A 18    ;
-                      BEQ CODE_00D1B2                     ;; 00D1AB : F0 05       ;
+                      BEQ +                               ;; 00D1AB : F0 05       ;
                       LDA.B #$29                          ;; 00D1AD : A9 29       ; \ Mario's image = Entering horizontal pipe on Yoshi 
                       STA.W !PlayerPose                   ;; 00D1AF : 8D E0 13    ; / 
-CODE_00D1B2:          REP #$20                            ;; 00D1B2 : C2 20       ; Accum (16 bit) 
+                    + REP #$20                            ;; 00D1B2 : C2 20       ; Accum (16 bit) 
                       LDA.B !PlayerYPosNext               ;; 00D1B4 : A5 96       ;
                       SEC                                 ;; 00D1B6 : 38          ;
                       SBC.W #$0008                        ;; 00D1B7 : E9 08 00    ;
@@ -8069,28 +8069,28 @@ CODE_00D1B2:          REP #$20                            ;; 00D1B2 : C2 20     
                       INY                                 ;; 00D1C8 : C8          ;
                       LDA.W DATA_00D192,Y                 ;; 00D1C9 : B9 92 D1    ;
                       LDX.W !IsCarryingItem               ;; 00D1CC : AE 8F 14    ;
-                      BEQ CODE_00D1DB                     ;; 00D1CF : F0 0A       ;
+                      BEQ +                               ;; 00D1CF : F0 0A       ;
                       EOR.B #$1C                          ;; 00D1D1 : 49 1C       ;
                       DEC.W !FaceScreenTimer              ;; 00D1D3 : CE 99 14    ;
-                      BPL CODE_00D1DB                     ;; 00D1D6 : 10 03       ;
+                      BPL +                               ;; 00D1D6 : 10 03       ;
                       INC.W !FaceScreenTimer              ;; 00D1D8 : EE 99 14    ;
-CODE_00D1DB:          LDX.B !PipeTimer                    ;; 00D1DB : A6 88       ;
+                    + LDX.B !PipeTimer                    ;; 00D1DB : A6 88       ;
                       CPX.B #$1D                          ;; 00D1DD : E0 1D       ;
                       BCS CODE_00D1F0                     ;; 00D1DF : B0 0F       ;
                       CPY.B #$03                          ;; 00D1E1 : C0 03       ;
-                      BCC CODE_00D1ED                     ;; 00D1E3 : 90 08       ;
+                      BCC +                               ;; 00D1E3 : 90 08       ;
                       REP #$20                            ;; 00D1E5 : C2 20       ; Accum (16 bit) 
                       INC.B !PlayerYPosNext               ;; 00D1E7 : E6 96       ;
                       INC.B !PlayerYPosNext               ;; 00D1E9 : E6 96       ;
                       SEP #$20                            ;; 00D1EB : E2 20       ; Accum (8 bit) 
-CODE_00D1ED:          LDA.W DATA_00D193,Y                 ;; 00D1ED : B9 93 D1    ;
+                    + LDA.W DATA_00D193,Y                 ;; 00D1ED : B9 93 D1    ;
 CODE_00D1F0:          STA.B !PlayerHiddenTiles            ;; 00D1F0 : 85 78       ;
                       BRA CODE_00D22D                     ;; 00D1F2 : 80 39       ;
                                                           ;;                      ;
 CODE_00D1F4:          LDA.W !CapeAniTimer                 ;; 00D1F4 : AD A2 14    ;
-                      BEQ CODE_00D1FC                     ;; 00D1F7 : F0 03       ;
+                      BEQ +                               ;; 00D1F7 : F0 03       ;
                       DEC.W !CapeAniTimer                 ;; 00D1F9 : CE A2 14    ;
-CODE_00D1FC:          JMP CODE_00D137                     ;; 00D1FC : 4C 37 D1    ;
+                    + JMP CODE_00D137                     ;; 00D1FC : 4C 37 D1    ;
                                                           ;;                      ;
                                                           ;;                      ;
 PipeCntrBoundryX:     db $0A,$06                          ;; ?QPWZ?               ;
@@ -8108,9 +8108,9 @@ VertPipeAni:          JSR NoButtons                       ;; ?QPWZ? : 20 2D F6  
                       AND.B #$0F                          ;; 00D216 : 29 0F       ;  | 
                       CMP.W PipeCntrBoundryX,Y            ;; 00D218 : D9 FF D1    ;  | 
                       BEQ CODE_00D228                     ;; 00D21B : F0 0B       ;  | 
-                      BPL CODE_00D220                     ;; 00D21D : 10 01       ;  | 
+                      BPL +                               ;; 00D21D : 10 01       ;  | 
                       INX                                 ;; 00D21F : E8          ;  | 
-CODE_00D220:          LDA.B !PlayerXPosNext               ;; 00D220 : A5 94       ;  | ...adjust Mario's X postion 
+                    + LDA.B !PlayerXPosNext               ;; 00D220 : A5 94       ;  | ...adjust Mario's X postion 
                       CLC                                 ;; 00D222 : 18          ;  | 
                       ADC.W PipeCntringSpeed,X            ;; 00D223 : 7D 01 D2    ;  | 
                       STA.B !PlayerXPosNext               ;; 00D226 : 85 94       ; / 
@@ -8127,17 +8127,17 @@ CODE_00D22D:          LDA.B #$40                          ;; 00D22D : A9 40     
                       AND.B #$03                          ;; 00D23E : 29 03       ;
                       TAY                                 ;; 00D240 : A8          ;
                       DEC.B !PipeTimer                    ;; 00D241 : C6 88       ;
-                      BNE CODE_00D24E                     ;; 00D243 : D0 09       ;
-                      BCS CODE_00D24E                     ;; 00D245 : B0 07       ;
+                      BNE +                               ;; 00D243 : D0 09       ;
+                      BCS +                               ;; 00D245 : B0 07       ;
                       LDA.B #$7F                          ;; 00D247 : A9 7F       ;
                       STA.B !PlayerHiddenTiles            ;; 00D249 : 85 78       ;
                       INC.W !DrawYoshiInPipe              ;; 00D24B : EE 05 14    ;
-CODE_00D24E:          LDA.B !PlayerXSpeed                 ;; 00D24E : A5 7B       ; \ If Mario has no speed... 
+                    + LDA.B !PlayerXSpeed                 ;; 00D24E : A5 7B       ; \ If Mario has no speed... 
                       ORA.B !PlayerYSpeed                 ;; 00D250 : 05 7D       ;  | 
-                      BNE CODE_00D259                     ;; 00D252 : D0 05       ;  | 
+                      BNE +                               ;; 00D252 : D0 05       ;  | 
                       LDA.B #$04                          ;; 00D254 : A9 04       ;  | ...play sound effect 
                       STA.W !SPCIO0                       ;; 00D256 : 8D F9 1D    ; / 
-CODE_00D259:          LDA.W PipeSpeedX,Y                  ;; 00D259 : B9 8D D1    ; \ Set X speed 
+                    + LDA.W PipeSpeedX,Y                  ;; 00D259 : B9 8D D1    ; \ Set X speed 
                       STA.B !PlayerXSpeed                 ;; 00D25C : 85 7B       ; / 
                       LDA.W PipeSpeedY,Y                  ;; 00D25E : B9 8F D1    ; \ Set Y speed 
                       STA.B !PlayerYSpeed                 ;; 00D261 : 85 7D       ; / 
@@ -8169,19 +8169,19 @@ PipeCannonAni:        JSR NoButtons                       ;; ?QPWZ? : 20 2D F6  
                       STA.B !PlayerInAir                  ;; 00D291 : 85 72       ;
                       JSR CODE_00CD8B                     ;; 00D293 : 20 8B CD    ;
                       DEC.B !PipeTimer                    ;; 00D296 : C6 88       ;
-                      BNE CODE_00D29D                     ;; 00D298 : D0 03       ;
+                      BNE +                               ;; 00D298 : D0 03       ;
                       JMP CODE_00D26A                     ;; 00D29A : 4C 6A D2    ;
                                                           ;;                      ;
-CODE_00D29D:          LDA.B !PipeTimer                    ;; 00D29D : A5 88       ;
+                    + LDA.B !PipeTimer                    ;; 00D29D : A5 88       ;
                       CMP.B #$18                          ;; 00D29F : C9 18       ;
                       BCC CODE_00D2AA                     ;; 00D2A1 : 90 07       ;
-                      BNE CODE_00D2B2                     ;; 00D2A3 : D0 0D       ;
+                      BNE +                               ;; 00D2A3 : D0 0D       ;
                       LDA.B #$09                          ;; 00D2A5 : A9 09       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 00D2A7 : 8D FC 1D    ; / 
 CODE_00D2AA:          STZ.W !PlayerBehindNet              ;; 00D2AA : 9C F9 13    ;
                       STZ.W !YoshiInPipeSetting           ;; 00D2AD : 9C 19 14    ;
                       STZ.B !SpriteLock                   ;; 00D2B0 : 64 9D       ; Set sprites not locked 
-CODE_00D2B2:          LDA.B #$40                          ;; 00D2B2 : A9 40       ; \ X speed = #$40 
+                    + LDA.B #$40                          ;; 00D2B2 : A9 40       ; \ X speed = #$40 
                       STA.B !PlayerXSpeed                 ;; 00D2B4 : 85 7B       ; / 
                       LDA.B #$C0                          ;; 00D2B6 : A9 C0       ; \ Y speed = #$C0 
                       STA.B !PlayerYSpeed                 ;; 00D2B8 : 85 7D       ; / 
@@ -8308,18 +8308,18 @@ DATA_00D5EE:          db $68,$70                          ;; 00D5EE             
 DATA_00D5F0:          db $1C,$0C                          ;; 00D5F0               ;
                                                           ;;                      ;
 CODE_00D5F2:          LDA.B !PlayerInAir                  ;; 00D5F2 : A5 72       ;
-                      BEQ CODE_00D5F9                     ;; 00D5F4 : F0 03       ;
+                      BEQ +                               ;; 00D5F4 : F0 03       ;
                       JMP CODE_00D682                     ;; 00D5F6 : 4C 82 D6    ;
                                                           ;;                      ;
-CODE_00D5F9:          STZ.B !PlayerIsDucking              ;; 00D5F9 : 64 73       ;
+                    + STZ.B !PlayerIsDucking              ;; 00D5F9 : 64 73       ;
                       LDA.W !PlayerSlopePose              ;; 00D5FB : AD ED 13    ;
-                      BNE CODE_00D60B                     ;; 00D5FE : D0 0B       ;
+                      BNE +                               ;; 00D5FE : D0 0B       ;
                       LDA.B !byetudlrHold                 ;; 00D600 : A5 15       ;
                       AND.B #$04                          ;; 00D602 : 29 04       ;
-                      BEQ CODE_00D60B                     ;; 00D604 : F0 05       ;
+                      BEQ +                               ;; 00D604 : F0 05       ;
                       STA.B !PlayerIsDucking              ;; 00D606 : 85 73       ;
                       STZ.W !CapeInteracts                ;; 00D608 : 9C E8 13    ;
-CODE_00D60B:          LDA.W !StandOnSolidSprite           ;; 00D60B : AD 71 14    ;
+                    + LDA.W !StandOnSolidSprite           ;; 00D60B : AD 71 14    ;
                       CMP.B #$02                          ;; 00D60E : C9 02       ;
                       BEQ CODE_00D61E                     ;; 00D610 : F0 0C       ;
                       LDA.B !PlayerBlockedDir             ;; 00D612 : A5 77       ;
@@ -8331,17 +8331,17 @@ CODE_00D60B:          LDA.W !StandOnSolidSprite           ;; 00D60B : AD 71 14  
 CODE_00D61E:          LDA.B !PlayerIsDucking              ;; 00D61E : A5 73       ;
                       BEQ CODE_00D682                     ;; 00D620 : F0 60       ;
                       LDA.B !PlayerXSpeed                 ;; 00D622 : A5 7B       ;
-                      BEQ CODE_00D62D                     ;; 00D624 : F0 07       ;
+                      BEQ +                               ;; 00D624 : F0 07       ;
                       LDA.B !LevelIsSlippery              ;; 00D626 : A5 86       ;
-                      BNE CODE_00D62D                     ;; 00D628 : D0 03       ;
+                      BNE +                               ;; 00D628 : D0 03       ;
                       JSR CODE_00FE4A                     ;; 00D62A : 20 4A FE    ;
-CODE_00D62D:          JMP CODE_00D764                     ;; 00D62D : 4C 64 D7    ;
+                    + JMP CODE_00D764                     ;; 00D62D : 4C 64 D7    ;
                                                           ;;                      ;
 CODE_00D630:          LDA.B !PlayerXSpeed                 ;; 00D630 : A5 7B       ;
-                      BPL CODE_00D637                     ;; 00D632 : 10 03       ;
+                      BPL +                               ;; 00D632 : 10 03       ;
                       EOR.B #$FF                          ;; 00D634 : 49 FF       ;
                       INC A                               ;; 00D636 : 1A          ;
-CODE_00D637:          LSR A                               ;; 00D637 : 4A          ;
+                    + LSR A                               ;; 00D637 : 4A          ;
                       LSR A                               ;; 00D638 : 4A          ;
                       AND.B #$FE                          ;; 00D639 : 29 FE       ;
                       TAX                                 ;; 00D63B : AA          ;
@@ -8359,21 +8359,21 @@ CODE_00D637:          LSR A                               ;; 00D637 : 4A        
                       LDA.W !PlayerRidingYoshi            ;; 00D656 : AD 7A 18    ;
                       BNE CODE_00D682                     ;; 00D659 : D0 27       ;
                       INX                                 ;; 00D65B : E8          ;
-                      BRA CODE_00D663                     ;; 00D65C : 80 05       ;
+                      BRA +                               ;; 00D65C : 80 05       ;
                                                           ;;                      ;
 CODE_00D65E:          LDA.B #$01                          ;; 00D65E : A9 01       ; \ Play sound effect 
                       STA.W !SPCIO1                       ;; 00D660 : 8D FA 1D    ; / 
-CODE_00D663:          LDA.W DATA_00D2BD,X                 ;; 00D663 : BD BD D2    ;
+                    + LDA.W DATA_00D2BD,X                 ;; 00D663 : BD BD D2    ;
                       STA.B !PlayerYSpeed                 ;; 00D666 : 85 7D       ;
                       LDA.B #$0B                          ;; 00D668 : A9 0B       ;
                       LDY.W !PlayerPMeter                 ;; 00D66A : AC E4 13    ;
                       CPY.B #$70                          ;; 00D66D : C0 70       ;
                       BCC CODE_00D67D                     ;; 00D66F : 90 0C       ;
                       LDA.W !TakeoffTimer                 ;; 00D671 : AD 9F 14    ;
-                      BNE CODE_00D67B                     ;; 00D674 : D0 05       ;
+                      BNE +                               ;; 00D674 : D0 05       ;
                       LDA.B #$50                          ;; 00D676 : A9 50       ;
                       STA.W !TakeoffTimer                 ;; 00D678 : 8D 9F 14    ;
-CODE_00D67B:          LDA.B #$0C                          ;; 00D67B : A9 0C       ;
+                    + LDA.B #$0C                          ;; 00D67B : A9 0C       ;
 CODE_00D67D:          STA.B !PlayerInAir                  ;; 00D67D : 85 72       ;
                       STZ.W !PlayerSlopePose              ;; 00D67F : 9C ED 13    ;
 CODE_00D682:          LDA.W !PlayerSlopePose              ;; 00D682 : AD ED 13    ;
@@ -8382,10 +8382,10 @@ CODE_00D682:          LDA.W !PlayerSlopePose              ;; 00D682 : AD ED 13  
                       AND.B #$03                          ;; 00D689 : 29 03       ;
                       BNE CODE_00D6B1                     ;; 00D68B : D0 24       ;
 CODE_00D68D:          LDA.W !PlayerSlopePose              ;; 00D68D : AD ED 13    ;
-                      BEQ CODE_00D6AE                     ;; 00D690 : F0 1C       ;
+                      BEQ +                               ;; 00D690 : F0 1C       ;
 CODE_00D692:          JSR CODE_00FE4A                     ;; 00D692 : 20 4A FE    ;
                       LDA.W !CurrentSlope                 ;; 00D695 : AD EE 13    ;
-                      BEQ CODE_00D6AE                     ;; 00D698 : F0 14       ;
+                      BEQ +                               ;; 00D698 : F0 14       ;
                       JSR CODE_00D968                     ;; 00D69A : 20 68 D9    ;
                       LDA.W !SlopeType                    ;; 00D69D : AD E1 13    ;
                       LSR A                               ;; 00D6A0 : 4A          ;
@@ -8399,7 +8399,7 @@ CODE_00D692:          JSR CODE_00FE4A                     ;; 00D692 : 20 4A FE  
                       TAY                                 ;; 00D6AA : A8          ;
                       JMP CODE_00D742                     ;; 00D6AB : 4C 42 D7    ;
                                                           ;;                      ;
-CODE_00D6AE:          JMP CODE_00D764                     ;; 00D6AE : 4C 64 D7    ;
+                    + JMP CODE_00D764                     ;; 00D6AE : 4C 64 D7    ;
                                                           ;;                      ;
 CODE_00D6B1:          STZ.W !PlayerSlopePose              ;; 00D6B1 : 9C ED 13    ;
                       AND.B #$01                          ;; 00D6B4 : 29 01       ;
@@ -8441,11 +8441,11 @@ CODE_00D6EC:          STA.B !_1                           ;; 00D6EC : 85 01     
                       LDA.W !SkidTurnTimer                ;; 00D6FD : AD A1 14    ;
                       BNE CODE_00D713                     ;; 00D700 : D0 11       ;
                       LDA.B !LevelIsSlippery              ;; 00D702 : A5 86       ;
-                      BNE CODE_00D70E                     ;; 00D704 : D0 08       ;
+                      BNE +                               ;; 00D704 : D0 08       ;
                       LDA.B #$0D                          ;; 00D706 : A9 0D       ;
                       STA.W !PlayerTurningPose            ;; 00D708 : 8D DD 13    ;
                       JSR CODE_00FE4A                     ;; 00D70B : 20 4A FE    ;
-CODE_00D70E:          TXA                                 ;; 00D70E : 8A          ;
+                    + TXA                                 ;; 00D70E : 8A          ;
                       CLC                                 ;; 00D70F : 18          ;
                       ADC.B #$90                          ;; 00D710 : 69 90       ;
                       TAX                                 ;; 00D712 : AA          ;
@@ -8456,10 +8456,10 @@ CODE_00D713:          LDY.B #$00                          ;; 00D713 : A0 00     
                       INX                                 ;; 00D71A : E8          ;
                       INY                                 ;; 00D71B : C8          ;
                       LDA.B !PlayerXSpeed                 ;; 00D71C : A5 7B       ;
-                      BPL CODE_00D723                     ;; 00D71E : 10 03       ;
+                      BPL +                               ;; 00D71E : 10 03       ;
                       EOR.B #$FF                          ;; 00D720 : 49 FF       ;
                       INC A                               ;; 00D722 : 1A          ;
-CODE_00D723:          CMP.B #$23                          ;; 00D723 : C9 23       ;
+                    + CMP.B #$23                          ;; 00D723 : C9 23       ;
                       BMI CODE_00D737                     ;; 00D725 : 30 10       ;
                       LDA.B !PlayerInAir                  ;; 00D727 : A5 72       ;
                       BNE CODE_00D732                     ;; 00D729 : D0 07       ;
@@ -8485,11 +8485,11 @@ CODE_00D742:          LDA.B !PlayerXSpeed                 ;; 00D742 : A5 7B     
                       REP #$20                            ;; 00D74F : C2 20       ; Accum (16 bit) 
                       LDA.W MarioAccel_,X                 ;; 00D751 : BD 45 D3    ;
                       LDY.B !LevelIsSlippery              ;; 00D754 : A4 86       ;
-                      BEQ CODE_00D75F                     ;; 00D756 : F0 07       ;
+                      BEQ +                               ;; 00D756 : F0 07       ;
                       LDY.B !PlayerInAir                  ;; 00D758 : A4 72       ;
-                      BNE CODE_00D75F                     ;; 00D75A : D0 03       ;
+                      BNE +                               ;; 00D75A : D0 03       ;
                       LDA.W DATA_00D43D,X                 ;; 00D75C : BD 3D D4    ;
-CODE_00D75F:          CLC                                 ;; 00D75F : 18          ;
+                    + CLC                                 ;; 00D75F : 18          ;
                       ADC.B !PlayerXPosSpx                ;; 00D760 : 65 7A       ;
                       BRA CODE_00D7A0                     ;; 00D762 : 80 3C       ;
                                                           ;;                      ;
@@ -8504,27 +8504,27 @@ CODE_00D76B:          LDA.W !SlopeType                    ;; 00D76B : AD E1 13  
 CODE_00D772:          LDA.B !PlayerXSpeed                 ;; 00D772 : A5 7B       ;
                       SEC                                 ;; 00D774 : 38          ;
                       SBC.W DATA_00D5CA,X                 ;; 00D775 : FD CA D5    ;
-                      BPL CODE_00D77C                     ;; 00D778 : 10 02       ;
+                      BPL +                               ;; 00D778 : 10 02       ;
                       INY                                 ;; 00D77A : C8          ;
                       INY                                 ;; 00D77B : C8          ;
-CODE_00D77C:          LDA.W !EndLevelTimer                ;; 00D77C : AD 93 14    ;
+                    + LDA.W !EndLevelTimer                ;; 00D77C : AD 93 14    ;
                       ORA.B !PlayerInAir                  ;; 00D77F : 05 72       ;
                       REP #$20                            ;; 00D781 : C2 20       ; Accum (16 bit) 
                       BNE CODE_00D78C                     ;; 00D783 : D0 07       ;
                       LDA.W DATA_00D309,Y                 ;; 00D785 : B9 09 D3    ;
                       BIT.B !LevelIsWater                 ;; 00D788 : 24 85       ;
-                      BMI CODE_00D78F                     ;; 00D78A : 30 03       ;
+                      BMI +                               ;; 00D78A : 30 03       ;
 CODE_00D78C:          LDA.W DATA_00D2CD,Y                 ;; 00D78C : B9 CD D2    ;
-CODE_00D78F:          CLC                                 ;; 00D78F : 18          ;
+                    + CLC                                 ;; 00D78F : 18          ;
                       ADC.B !PlayerXPosSpx                ;; 00D790 : 65 7A       ;
                       STA.B !PlayerXPosSpx                ;; 00D792 : 85 7A       ;
                       SEC                                 ;; 00D794 : 38          ;
                       SBC.W DATA_00D5C9,X                 ;; 00D795 : FD C9 D5    ;
                       EOR.W DATA_00D2CD,Y                 ;; 00D798 : 59 CD D2    ;
-                      BMI CODE_00D7A2                     ;; 00D79B : 30 05       ;
+                      BMI +                               ;; 00D79B : 30 05       ;
                       LDA.W DATA_00D5C9,X                 ;; 00D79D : BD C9 D5    ;
 CODE_00D7A0:          STA.B !PlayerXPosSpx                ;; 00D7A0 : 85 7A       ;
-CODE_00D7A2:          SEP #$20                            ;; 00D7A2 : E2 20       ; Accum (8 bit) 
+                    + SEP #$20                            ;; 00D7A2 : E2 20       ; Accum (8 bit) 
 Return00D7A4:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -8564,10 +8564,10 @@ CODE_00D7FF:          STZ.W !PlayerSlopePose              ;; 00D7FF : 9C ED 13  
                       LDA.B !PlayerYSpeed                 ;; 00D808 : A5 7D       ;
                       BMI CODE_00D811                     ;; 00D80A : 30 05       ;
                       LDA.W !TakeoffTimer                 ;; 00D80C : AD 9F 14    ;
-                      BNE CODE_00D814                     ;; 00D80F : D0 03       ;
+                      BNE +                               ;; 00D80F : D0 03       ;
 CODE_00D811:          JMP CODE_00D8CD                     ;; 00D811 : 4C CD D8    ;
                                                           ;;                      ;
-CODE_00D814:          STZ.B !PlayerIsDucking              ;; 00D814 : 64 73       ;
+                    + STZ.B !PlayerIsDucking              ;; 00D814 : 64 73       ;
                       LDA.B #$0B                          ;; 00D816 : A9 0B       ;
                       STA.B !PlayerInAir                  ;; 00D818 : 85 72       ;
                       STZ.W !MaxStageOfFlight             ;; 00D81A : 9C 09 14    ;
@@ -8576,9 +8576,9 @@ CODE_00D814:          STZ.B !PlayerIsDucking              ;; 00D814 : 64 73     
                       BRA CODE_00D85B                     ;; 00D822 : 80 37       ;
                                                           ;;                      ;
 CODE_00D824:          CPY.B #$02                          ;; 00D824 : C0 02       ;
-                      BCC CODE_00D82B                     ;; 00D826 : 90 03       ;
+                      BCC +                               ;; 00D826 : 90 03       ;
                       JSR CODE_00D94F                     ;; 00D828 : 20 4F D9    ;
-CODE_00D82B:          LDX.W !NextFlightPhase              ;; 00D82B : AE 08 14    ;
+                    + LDX.W !NextFlightPhase              ;; 00D82B : AE 08 14    ;
                       CPX.B #$04                          ;; 00D82E : E0 04       ;
                       BEQ CODE_00D856                     ;; 00D830 : F0 24       ;
                       LDX.B #$03                          ;; 00D832 : A2 03       ;
@@ -8596,17 +8596,17 @@ CODE_00D82B:          LDX.W !NextFlightPhase              ;; 00D82B : AE 08 14  
                                                           ;;                      ;
 CODE_00D849:          LSR A                               ;; 00D849 : 4A          ;
                       LDY.B !PlayerDirection              ;; 00D84A : A4 76       ;
-                      BEQ CODE_00D850                     ;; 00D84C : F0 02       ;
+                      BEQ +                               ;; 00D84C : F0 02       ;
                       EOR.B #$01                          ;; 00D84E : 49 01       ;
-CODE_00D850:          TAX                                 ;; 00D850 : AA          ;
+                    + TAX                                 ;; 00D850 : AA          ;
                       CPX.W !NextFlightPhase              ;; 00D851 : EC 08 14    ;
                       BNE CODE_00D85B                     ;; 00D854 : D0 05       ;
 CODE_00D856:          LDA.W !CapePumpTimer                ;; 00D856 : AD A4 14    ;
                       BNE CODE_00D87E                     ;; 00D859 : D0 23       ;
 CODE_00D85B:          BIT.B !byetudlrHold                 ;; 00D85B : 24 15       ;
-                      BVS CODE_00D861                     ;; 00D85D : 70 02       ;
+                      BVS +                               ;; 00D85D : 70 02       ;
                       LDX.B #$04                          ;; 00D85F : A2 04       ;
-CODE_00D861:          LDA.W !FlightPhase                  ;; 00D861 : AD 07 14    ;
+                    + LDA.W !FlightPhase                  ;; 00D861 : AD 07 14    ;
                       CMP.W DATA_00D7D4,X                 ;; 00D864 : DD D4 D7    ;
                       BEQ CODE_00D87E                     ;; 00D867 : F0 15       ;
                       CLC                                 ;; 00D869 : 18          ;
@@ -8615,23 +8615,23 @@ CODE_00D861:          LDA.W !FlightPhase                  ;; 00D861 : AD 07 14  
                       LDA.B #$08                          ;; 00D870 : A9 08       ;
                       LDY.W !MaxStageOfFlight             ;; 00D872 : AC 09 14    ;
                       CPY.B #$C8                          ;; 00D875 : C0 C8       ;
-                      BNE CODE_00D87B                     ;; 00D877 : D0 02       ;
+                      BNE +                               ;; 00D877 : D0 02       ;
                       LDA.B #$02                          ;; 00D879 : A9 02       ;
-CODE_00D87B:          STA.W !CapePumpTimer                ;; 00D87B : 8D A4 14    ;
+                    + STA.W !CapePumpTimer                ;; 00D87B : 8D A4 14    ;
 CODE_00D87E:          STX.W !NextFlightPhase              ;; 00D87E : 8E 08 14    ;
                       LDY.W !FlightPhase                  ;; 00D881 : AC 07 14    ;
                       BEQ CODE_00D8CD                     ;; 00D884 : F0 47       ;
                       LDA.B !PlayerYSpeed                 ;; 00D886 : A5 7D       ;
                       BPL CODE_00D892                     ;; 00D888 : 10 08       ;
                       CMP.B #$C8                          ;; 00D88A : C9 C8       ;
-                      BCS CODE_00D89A                     ;; 00D88C : B0 0C       ;
+                      BCS +                               ;; 00D88C : B0 0C       ;
                       LDA.B #$C8                          ;; 00D88E : A9 C8       ;
-                      BRA CODE_00D89A                     ;; 00D890 : 80 08       ;
+                      BRA +                               ;; 00D890 : 80 08       ;
                                                           ;;                      ;
 CODE_00D892:          CMP.W DATA_00D7C8,Y                 ;; 00D892 : D9 C8 D7    ;
-                      BCC CODE_00D89A                     ;; 00D895 : 90 03       ;
+                      BCC +                               ;; 00D895 : 90 03       ;
                       LDA.W DATA_00D7C8,Y                 ;; 00D897 : B9 C8 D7    ;
-CODE_00D89A:          PHA                                 ;; 00D89A : 48          ;
+                    + PHA                                 ;; 00D89A : 48          ;
                       CPY.B #$01                          ;; 00D89B : C0 01       ;
                       BNE CODE_00D8C6                     ;; 00D89D : D0 27       ;
                       LDX.W !MaxStageOfFlight             ;; 00D89F : AE 09 14    ;
@@ -8640,13 +8640,13 @@ CODE_00D89A:          PHA                                 ;; 00D89A : 48        
                       BMI CODE_00D8AF                     ;; 00D8A6 : 30 07       ;
                       LDA.B #$09                          ;; 00D8A8 : A9 09       ; \ Play sound effect 
                       STA.W !SPCIO0                       ;; 00D8AA : 8D F9 1D    ; / 
-                      BRA CODE_00D8B9                     ;; 00D8AD : 80 0A       ;
+                      BRA +                               ;; 00D8AD : 80 0A       ;
                                                           ;;                      ;
 CODE_00D8AF:          CMP.W !MaxStageOfFlight             ;; 00D8AF : CD 09 14    ;
-                      BCS CODE_00D8B9                     ;; 00D8B2 : B0 05       ;
+                      BCS +                               ;; 00D8B2 : B0 05       ;
                       STX.B !PlayerYSpeed                 ;; 00D8B4 : 86 7D       ;
                       STZ.W !MaxStageOfFlight             ;; 00D8B6 : 9C 09 14    ;
-CODE_00D8B9:          LDX.B !PlayerDirection              ;; 00D8B9 : A6 76       ;
+                    + LDX.B !PlayerDirection              ;; 00D8B9 : A6 76       ;
                       LDA.B !PlayerXSpeed                 ;; 00D8BB : A5 7B       ;
                       BEQ CODE_00D8C4                     ;; 00D8BD : F0 05       ;
                       EOR.W DATA_00D535,X                 ;; 00D8BF : 5D 35 D5    ;
@@ -8668,9 +8668,9 @@ CODE_00D8CD:          LDA.B !PlayerInAir                  ;; 00D8CD : A5 72     
                       BEQ CODE_00D8E7                     ;; 00D8DC : F0 09       ; / 
                       LDY.B #$02                          ;; 00D8DE : A0 02       ; \ Branch if not Caped Mario 
                       CPY.B !Powerup                      ;; 00D8E0 : C4 19       ;  | 
-                      BEQ CODE_00D8E5                     ;; 00D8E2 : F0 01       ; / 
+                      BEQ +                               ;; 00D8E2 : F0 01       ; / 
                       INX                                 ;; 00D8E4 : E8          ; X= #$01 
-CODE_00D8E5:          BRA CODE_00D8FF                     ;; 00D8E5 : 80 18       ;
+                    + BRA CODE_00D8FF                     ;; 00D8E5 : 80 18       ;
                                                           ;;                      ;
 CODE_00D8E7:          LDA.B !Powerup                      ;; 00D8E7 : A5 19       ; \ Branch if not Caped Mario 
                       CMP.B #$02                          ;; 00D8E9 : C9 02       ;  | 
@@ -8700,17 +8700,17 @@ CODE_00D91B:          LDA.W DATA_00D7B9,Y                 ;; 00D91B : B9 B9 D7  
                       BEQ CODE_00D94C                     ;; 00D920 : F0 2A       ;
                       BMI CODE_00D94C                     ;; 00D922 : 30 28       ;
 CODE_00D924:          CPY.B #$02                          ;; 00D924 : C0 02       ;
-                      BEQ CODE_00D930                     ;; 00D926 : F0 08       ;
+                      BEQ +                               ;; 00D926 : F0 08       ;
 CODE_00D928:          LDY.B #$01                          ;; 00D928 : A0 01       ;
                       LDA.B !byetudlrHold                 ;; 00D92A : A5 15       ;
-                      BMI CODE_00D930                     ;; 00D92C : 30 02       ;
+                      BMI +                               ;; 00D92C : 30 02       ;
 CODE_00D92E:          LDY.B #$00                          ;; 00D92E : A0 00       ;
-CODE_00D930:          LDA.B !PlayerYSpeed                 ;; 00D930 : A5 7D       ; \ If Mario's Y speed is negative (up), 
+                    + LDA.B !PlayerYSpeed                 ;; 00D930 : A5 7D       ; \ If Mario's Y speed is negative (up), 
                       BMI CODE_00D948                     ;; 00D932 : 30 14       ; / branch to $D948 
                       CMP.W DATA_00D7AF,Y                 ;; 00D934 : D9 AF D7    ;
-                      BCC CODE_00D93C                     ;; 00D937 : 90 03       ;
+                      BCC +                               ;; 00D937 : 90 03       ;
                       LDA.W DATA_00D7AF,Y                 ;; 00D939 : B9 AF D7    ;
-CODE_00D93C:          LDX.B !PlayerInAir                  ;; 00D93C : A6 72       ;
+                    + LDX.B !PlayerInAir                  ;; 00D93C : A6 72       ;
                       BEQ CODE_00D948                     ;; 00D93E : F0 08       ;
                       CPX.B #$0B                          ;; 00D940 : E0 0B       ;
                       BNE CODE_00D948                     ;; 00D942 : D0 04       ;
@@ -8723,29 +8723,29 @@ CODE_00D94C:          STA.B !PlayerYSpeed                 ;; 00D94C : 85 7D     
                                                           ;;                      ;
 CODE_00D94F:          STZ.W !Empty_140A                   ;; 00D94F : 9C 0A 14    ;
                       LDA.B !PlayerYSpeed                 ;; 00D952 : A5 7D       ;
-                      BPL CODE_00D958                     ;; 00D954 : 10 02       ;
+                      BPL +                               ;; 00D954 : 10 02       ;
                       LDA.B #$00                          ;; 00D956 : A9 00       ;
-CODE_00D958:          LSR A                               ;; 00D958 : 4A          ;
+                    + LSR A                               ;; 00D958 : 4A          ;
                       LSR A                               ;; 00D959 : 4A          ;
                       LSR A                               ;; 00D95A : 4A          ;
                       TAY                                 ;; 00D95B : A8          ;
                       LDA.W DATA_00D7D9,Y                 ;; 00D95C : B9 D9 D7    ;
                       CMP.W !MaxStageOfFlight             ;; 00D95F : CD 09 14    ;
-                      BPL Return00D967                    ;; 00D962 : 10 03       ;
+                      BPL +                               ;; 00D962 : 10 03       ;
                       STA.W !MaxStageOfFlight             ;; 00D964 : 8D 09 14    ;
-Return00D967:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00D968:          LDY.B #$00                          ;; 00D968 : A0 00       ;
 CODE_00D96A:          LDA.W !PlayerPMeter                 ;; 00D96A : AD E4 13    ;
                       CLC                                 ;; 00D96D : 18          ;
                       ADC.W DATA_00D5EB,Y                 ;; 00D96E : 79 EB D5    ;
-                      BPL CODE_00D975                     ;; 00D971 : 10 02       ;
+                      BPL +                               ;; 00D971 : 10 02       ;
                       LDA.B #$00                          ;; 00D973 : A9 00       ;
-CODE_00D975:          CMP.B #$70                          ;; 00D975 : C9 70       ;
-                      BCC CODE_00D97C                     ;; 00D977 : 90 03       ;
+                    + CMP.B #$70                          ;; 00D975 : C9 70       ;
+                      BCC +                               ;; 00D977 : 90 03       ;
                       INY                                 ;; 00D979 : C8          ;
                       LDA.B #$70                          ;; 00D97A : A9 70       ;
-CODE_00D97C:          STA.W !PlayerPMeter                 ;; 00D97C : 8D E4 13    ;
+                    + STA.W !PlayerPMeter                 ;; 00D97C : 8D E4 13    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -8773,32 +8773,32 @@ CODE_00D988:          STZ.W !PlayerSlopePose              ;; 00D988 : 9C ED 13  
                                                           ;;                      ;
 CODE_00D9AF:          LDA.B !byetudlrHold                 ;; 00D9AF : A5 15       ;
                       AND.B #$04                          ;; 00D9B1 : 29 04       ;
-                      BEQ CODE_00D9BD                     ;; 00D9B3 : F0 08       ;
+                      BEQ +                               ;; 00D9B3 : F0 08       ;
 CODE_00D9B5:          JSR CODE_00DAA9                     ;; 00D9B5 : 20 A9 DA    ;
                       TYA                                 ;; 00D9B8 : 98          ;
                       CLC                                 ;; 00D9B9 : 18          ;
                       ADC.B #$08                          ;; 00D9BA : 69 08       ;
                       TAY                                 ;; 00D9BC : A8          ;
-CODE_00D9BD:          INY                                 ;; 00D9BD : C8          ;
+                    + INY                                 ;; 00D9BD : C8          ;
                       LDA.W !PlayerCanJumpWater           ;; 00D9BE : AD FA 13    ;
-                      BNE CODE_00D9CC                     ;; 00D9C1 : D0 09       ;
+                      BNE +                               ;; 00D9C1 : D0 09       ;
                       DEY                                 ;; 00D9C3 : 88          ;
                       LDA.B !EffFrame                     ;; 00D9C4 : A5 14       ;
                       AND.B #$03                          ;; 00D9C6 : 29 03       ;
-                      BNE CODE_00D9CC                     ;; 00D9C8 : D0 02       ;
+                      BNE +                               ;; 00D9C8 : D0 02       ;
                       DEY                                 ;; 00D9CA : 88          ;
                       DEY                                 ;; 00D9CB : 88          ;
-CODE_00D9CC:          TYA                                 ;; 00D9CC : 98          ;
+                    + TYA                                 ;; 00D9CC : 98          ;
                       BMI CODE_00D9D7                     ;; 00D9CD : 30 08       ;
                       CMP.B #$10                          ;; 00D9CF : C9 10       ;
-                      BCC CODE_00D9DD                     ;; 00D9D1 : 90 0A       ;
+                      BCC +                               ;; 00D9D1 : 90 0A       ;
                       LDA.B #$10                          ;; 00D9D3 : A9 10       ;
-                      BRA CODE_00D9DD                     ;; 00D9D5 : 80 06       ;
+                      BRA +                               ;; 00D9D5 : 80 06       ;
                                                           ;;                      ;
 CODE_00D9D7:          CMP.B #$F0                          ;; 00D9D7 : C9 F0       ;
-                      BCS CODE_00D9DD                     ;; 00D9D9 : B0 02       ;
+                      BCS +                               ;; 00D9D9 : B0 02       ;
                       LDA.B #$F0                          ;; 00D9DB : A9 F0       ;
-CODE_00D9DD:          STA.B !PlayerYSpeed                 ;; 00D9DD : 85 7D       ;
+                    + STA.B !PlayerYSpeed                 ;; 00D9DD : 85 7D       ;
                       LDY.B #$80                          ;; 00D9DF : A0 80       ;
                       LDA.B !byetudlrHold                 ;; 00D9E1 : A5 15       ;
                       AND.B #$03                          ;; 00D9E3 : 29 03       ;
@@ -8813,21 +8813,21 @@ CODE_00D9EB:          LDA.B !byetudlrFrame                ;; 00D9EB : A5 16     
                       BNE CODE_00DA0B                     ;; 00D9F4 : D0 15       ;
                       JSR CODE_00DAA9                     ;; 00D9F6 : 20 A9 DA    ;
                       LDA.B !PlayerInAir                  ;; 00D9F9 : A5 72       ;
-                      BNE CODE_00DA06                     ;; 00D9FB : D0 09       ;
+                      BNE +                               ;; 00D9FB : D0 09       ;
                       LDA.B #$0B                          ;; 00D9FD : A9 0B       ;
                       STA.B !PlayerInAir                  ;; 00D9FF : 85 72       ;
                       STZ.W !PlayerSlopePose              ;; 00DA01 : 9C ED 13    ;
                       LDY.B #$F0                          ;; 00DA04 : A0 F0       ;
-CODE_00DA06:          TYA                                 ;; 00DA06 : 98          ;
+                    + TYA                                 ;; 00DA06 : 98          ;
                       SEC                                 ;; 00DA07 : 38          ;
                       SBC.B #$20                          ;; 00DA08 : E9 20       ;
                       TAY                                 ;; 00DA0A : A8          ;
 CODE_00DA0B:          LDA.B !EffFrame                     ;; 00DA0B : A5 14       ;
                       AND.B #$03                          ;; 00DA0D : 29 03       ;
-                      BNE CODE_00DA13                     ;; 00DA0F : D0 02       ;
+                      BNE +                               ;; 00DA0F : D0 02       ;
                       INY                                 ;; 00DA11 : C8          ;
                       INY                                 ;; 00DA12 : C8          ;
-CODE_00DA13:          LDA.B !byetudlrHold                 ;; 00DA13 : A5 15       ;
+                    + LDA.B !byetudlrHold                 ;; 00DA13 : A5 15       ;
                       AND.B #$0C                          ;; 00DA15 : 29 0C       ;
                       LSR A                               ;; 00DA17 : 4A          ;
                       LSR A                               ;; 00DA18 : 4A          ;
@@ -8835,14 +8835,14 @@ CODE_00DA13:          LDA.B !byetudlrHold                 ;; 00DA13 : A5 15     
                       TYA                                 ;; 00DA1A : 98          ;
                       BMI CODE_00DA25                     ;; 00DA1B : 30 08       ;
                       CMP.B #$40                          ;; 00DA1D : C9 40       ;
-                      BCC CODE_00DA2D                     ;; 00DA1F : 90 0C       ;
+                      BCC +                               ;; 00DA1F : 90 0C       ;
                       LDA.B #$40                          ;; 00DA21 : A9 40       ;
-                      BRA CODE_00DA2D                     ;; 00DA23 : 80 08       ;
+                      BRA +                               ;; 00DA23 : 80 08       ;
                                                           ;;                      ;
 CODE_00DA25:          CMP.W DATA_00D984,X                 ;; 00DA25 : DD 84 D9    ;
-                      BCS CODE_00DA2D                     ;; 00DA28 : B0 03       ;
+                      BCS +                               ;; 00DA28 : B0 03       ;
                       LDA.W DATA_00D984,X                 ;; 00DA2A : BD 84 D9    ;
-CODE_00DA2D:          STA.B !PlayerYSpeed                 ;; 00DA2D : 85 7D       ;
+                    + STA.B !PlayerYSpeed                 ;; 00DA2D : 85 7D       ;
                       LDA.B !PlayerInAir                  ;; 00DA2F : A5 72       ;
                       BNE CODE_00DA40                     ;; 00DA31 : D0 0D       ;
                       LDA.B !byetudlrHold                 ;; 00DA33 : A5 15       ;
@@ -8866,48 +8866,48 @@ CODE_00DA48:          STY.B !_0                           ;; 00DA48 : 84 00     
                       PLA                                 ;; 00DA52 : 68          ;
                       ORA.B !_0                           ;; 00DA53 : 05 00       ;
                       LDY.W !Layer3TideSetting            ;; 00DA55 : AC 03 14    ;
-                      BEQ CODE_00DA5D                     ;; 00DA58 : F0 03       ;
+                      BEQ +                               ;; 00DA58 : F0 03       ;
                       CLC                                 ;; 00DA5A : 18          ;
                       ADC.B #$04                          ;; 00DA5B : 69 04       ;
-CODE_00DA5D:          TAY                                 ;; 00DA5D : A8          ;
+                    + TAY                                 ;; 00DA5D : A8          ;
                       LDA.B !PlayerInAir                  ;; 00DA5E : A5 72       ;
-                      BEQ CODE_00DA64                     ;; 00DA60 : F0 02       ;
+                      BEQ +                               ;; 00DA60 : F0 02       ;
                       INY                                 ;; 00DA62 : C8          ;
                       INY                                 ;; 00DA63 : C8          ;
-CODE_00DA64:          JSR CODE_00D742                     ;; 00DA64 : 20 42 D7    ;
+                    + JSR CODE_00D742                     ;; 00DA64 : 20 42 D7    ;
                       BRA CODE_00DA7C                     ;; 00DA67 : 80 13       ;
                                                           ;;                      ;
 CODE_00DA69:          LDY.B #$00                          ;; 00DA69 : A0 00       ;
                       TYX                                 ;; 00DA6B : BB          ;
                       LDA.W !Layer3TideSetting            ;; 00DA6C : AD 03 14    ;
-                      BEQ CODE_00DA79                     ;; 00DA6F : F0 08       ;
+                      BEQ +                               ;; 00DA6F : F0 08       ;
                       LDX.B #$1E                          ;; 00DA71 : A2 1E       ;
                       LDA.B !PlayerInAir                  ;; 00DA73 : A5 72       ;
-                      BNE CODE_00DA79                     ;; 00DA75 : D0 02       ;
+                      BNE +                               ;; 00DA75 : D0 02       ;
                       INX                                 ;; 00DA77 : E8          ;
                       INX                                 ;; 00DA78 : E8          ;
-CODE_00DA79:          JSR CODE_00D772                     ;; 00DA79 : 20 72 D7    ;
+                    + JSR CODE_00D772                     ;; 00DA79 : 20 72 D7    ;
 CODE_00DA7C:          JSR CODE_00D062                     ;; 00DA7C : 20 62 D0    ;
                       JSL CODE_00CEB1                     ;; 00DA7F : 22 B1 CE 00 ;
                       LDA.W !CapeSpinTimer                ;; 00DA83 : AD A6 14    ;
                       BNE Return00DA8C                    ;; 00DA86 : D0 04       ;
                       LDA.B !PlayerInAir                  ;; 00DA88 : A5 72       ;
-                      BNE CODE_00DA8D                     ;; 00DA8A : D0 01       ;
+                      BNE +                               ;; 00DA8A : D0 01       ;
 Return00DA8C:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_00DA8D:          LDA.B #$18                          ;; 00DA8D : A9 18       ;
+                    + LDA.B #$18                          ;; 00DA8D : A9 18       ;
                       LDY.W !ShootFireTimer               ;; 00DA8F : AC 9C 14    ;
-                      BNE CODE_00DA9F                     ;; 00DA92 : D0 0B       ;
+                      BNE +                               ;; 00DA92 : D0 0B       ;
                       LDA.W !PlayerAniTimer               ;; 00DA94 : AD 96 14    ;
                       LSR A                               ;; 00DA97 : 4A          ;
                       LSR A                               ;; 00DA98 : 4A          ;
                       AND.B #$03                          ;; 00DA99 : 29 03       ;
                       TAY                                 ;; 00DA9B : A8          ;
                       LDA.W DATA_00D980,Y                 ;; 00DA9C : B9 80 D9    ;
-CODE_00DA9F:          LDY.W !IsCarryingItem               ;; 00DA9F : AC 8F 14    ;
-                      BEQ CODE_00DAA5                     ;; 00DAA2 : F0 01       ;
+                    + LDY.W !IsCarryingItem               ;; 00DA9F : AC 8F 14    ;
+                      BEQ +                               ;; 00DAA2 : F0 01       ;
                       INC A                               ;; 00DAA4 : 1A          ;
-CODE_00DAA5:          STA.W !PlayerPose                   ;; 00DAA5 : 8D E0 13    ;
+                    + STA.W !PlayerPose                   ;; 00DAA5 : 8D E0 13    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00DAA9:          LDA.B #$0E                          ;; 00DAA9 : A9 0E       ; \ Play sound effect 
@@ -8948,18 +8948,18 @@ CODE_00DB17:          STZ.B !PlayerInAir                  ;; 00DB17 : 64 72     
                       LDY.W !NetDoorTimer                 ;; 00DB21 : AC 9D 14    ;
                       BEQ CODE_00DB7D                     ;; 00DB24 : F0 57       ;
                       LDA.W !NetDoorPlayerXOffset         ;; 00DB26 : AD 78 18    ;
-                      BPL CODE_00DB2E                     ;; 00DB29 : 10 03       ;
+                      BPL +                               ;; 00DB29 : 10 03       ;
                       EOR.B #$FF                          ;; 00DB2B : 49 FF       ;
                       INC A                               ;; 00DB2D : 1A          ;
-CODE_00DB2E:          TAX                                 ;; 00DB2E : AA          ;
+                    + TAX                                 ;; 00DB2E : AA          ;
                       CPY.B #$1E                          ;; 00DB2F : C0 1E       ;
                       BCC CODE_00DB45                     ;; 00DB31 : 90 12       ;
                       LDA.W DATA_00DADF,X                 ;; 00DB33 : BD DF DA    ;
                       BIT.W !NetDoorPlayerXOffset         ;; 00DB36 : 2C 78 18    ;
-                      BPL CODE_00DB3E                     ;; 00DB39 : 10 03       ;
+                      BPL +                               ;; 00DB39 : 10 03       ;
                       EOR.B #$FF                          ;; 00DB3B : 49 FF       ;
                       INC A                               ;; 00DB3D : 1A          ;
-CODE_00DB3E:          STA.B !PlayerXSpeed                 ;; 00DB3E : 85 7B       ;
+                    + STA.B !PlayerXSpeed                 ;; 00DB3E : 85 7B       ;
                       STZ.B !PlayerXPosSpx                ;; 00DB40 : 64 7A       ;
                       STZ.W !PlayerXSpeedFPSpx            ;; 00DB42 : 9C DA 13    ;
 CODE_00DB45:          TXA                                 ;; 00DB45 : 8A          ;
@@ -8967,15 +8967,15 @@ CODE_00DB45:          TXA                                 ;; 00DB45 : 8A        
                       TAX                                 ;; 00DB47 : AA          ;
                       LDA.W !NetDoorPlayerXOffset         ;; 00DB48 : AD 78 18    ;
                       CPY.B #$08                          ;; 00DB4B : C0 08       ;
-                      BCS CODE_00DB51                     ;; 00DB4D : B0 02       ;
+                      BCS +                               ;; 00DB4D : B0 02       ;
                       EOR.B #$80                          ;; 00DB4F : 49 80       ;
-CODE_00DB51:          ASL A                               ;; 00DB51 : 0A          ;
+                    + ASL A                               ;; 00DB51 : 0A          ;
                       REP #$20                            ;; 00DB52 : C2 20       ; Accum (16 bit) 
                       LDA.W DATA_00DAF1,X                 ;; 00DB54 : BD F1 DA    ;
-                      BCS CODE_00DB5D                     ;; 00DB57 : B0 04       ;
+                      BCS +                               ;; 00DB57 : B0 04       ;
                       EOR.W #$FFFF                        ;; 00DB59 : 49 FF FF    ;
                       INC A                               ;; 00DB5C : 1A          ;
-CODE_00DB5D:          CLC                                 ;; 00DB5D : 18          ;
+                    + CLC                                 ;; 00DB5D : 18          ;
                       ADC.B !PlayerXPosSpx                ;; 00DB5E : 65 7A       ;
                       STA.B !PlayerXPosSpx                ;; 00DB60 : 85 7A       ;
                       SEP #$20                            ;; 00DB62 : E2 20       ; Accum (8 bit) 
@@ -8986,9 +8986,9 @@ CODE_00DB5D:          CLC                                 ;; 00DB5D : 18        
                       TAY                                 ;; 00DB6B : A8          ;
                       LDA.W DATA_00DABD,Y                 ;; 00DB6C : B9 BD DA    ;
                       BIT.W !NetDoorPlayerXOffset         ;; 00DB6F : 2C 78 18    ;
-                      BMI CODE_00DB76                     ;; 00DB72 : 30 02       ;
+                      BMI +                               ;; 00DB72 : 30 02       ;
                       EOR.B #$01                          ;; 00DB74 : 49 01       ;
-CODE_00DB76:          STA.B !PlayerDirection              ;; 00DB76 : 85 76       ;
+                    + STA.B !PlayerDirection              ;; 00DB76 : 85 76       ;
                       LDA.W DATA_00DACD,Y                 ;; 00DB78 : B9 CD DA    ;
                       BRA CODE_00DB92                     ;; 00DB7B : 80 15       ;
                                                           ;;                      ;
@@ -8996,7 +8996,7 @@ CODE_00DB7D:          STZ.B !PlayerXSpeed                 ;; 00DB7D : 64 7B     
                       STZ.B !PlayerXPosSpx                ;; 00DB7F : 64 7A       ;
                       LDX.W !PlayerBehindNet              ;; 00DB81 : AE F9 13    ;
                       LDA.W !PunchNetTimer                ;; 00DB84 : AD 9E 14    ;
-                      BEQ CODE_00DB96                     ;; 00DB87 : F0 0D       ;
+                      BEQ +                               ;; 00DB87 : F0 0D       ;
                       TXA                                 ;; 00DB89 : 8A          ;
                       INC A                               ;; 00DB8A : 1A          ;
                       INC A                               ;; 00DB8B : 1A          ;
@@ -9005,7 +9005,7 @@ CODE_00DB7D:          STZ.B !PlayerXSpeed                 ;; 00DB7D : 64 7B     
 CODE_00DB92:          STA.W !PlayerPose                   ;; 00DB92 : 8D E0 13    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_00DB96:          LDY.B !PlayerInWater                ;; 00DB96 : A4 75       ; Mario is in Water flag 
+                    + LDY.B !PlayerInWater                ;; 00DB96 : A4 75       ; Mario is in Water flag 
                       BIT.B !byetudlrFrame                ;; 00DB98 : 24 16       ;
                       BPL CODE_00DBAC                     ;; 00DB9A : 10 10       ;
                       LDA.B #$0B                          ;; 00DB9C : A9 0B       ;
@@ -9016,9 +9016,9 @@ CODE_00DB96:          LDY.B !PlayerInWater                ;; 00DB96 : A4 75     
                       STA.W !SPCIO1                       ;; 00DBA7 : 8D FA 1D    ; / 
                       BRA CODE_00DC00                     ;; 00DBAA : 80 54       ;
                                                           ;;                      ;
-CODE_00DBAC:          BVC CODE_00DBCA                     ;; 00DBAC : 50 1C       ;
+CODE_00DBAC:          BVC +                               ;; 00DBAC : 50 1C       ;
                       LDA.B !PlayerIsClimbing             ;; 00DBAE : A5 74       ;
-                      BPL CODE_00DBCA                     ;; 00DBB0 : 10 18       ;
+                      BPL +                               ;; 00DBB0 : 10 18       ;
                       LDA.B #$01                          ;; 00DBB2 : A9 01       ; \ Play sound effect 
                       STA.W !SPCIO0                       ;; 00DBB4 : 8D F9 1D    ; / 
                       STX.W !NetDoorDirIndex              ;; 00DBB7 : 8E F0 13    ;
@@ -9031,7 +9031,7 @@ CODE_00DBAC:          BVC CODE_00DBCA                     ;; 00DBAC : 50 1C     
                       STA.B !PlayerDirection              ;; 00DBC3 : 85 76       ; Mario's Direction 
                       LDA.B #$08                          ;; 00DBC5 : A9 08       ;
                       STA.W !PunchNetTimer                ;; 00DBC7 : 8D 9E 14    ;
-CODE_00DBCA:          LDA.W ClimbingImgs,X                ;; 00DBCA : BD DB DA    ;
+                    + LDA.W ClimbingImgs,X                ;; 00DBCA : BD DB DA    ;
                       STA.W !PlayerPose                   ;; 00DBCD : 8D E0 13    ; Store A in Mario image 
                       LDA.B !byetudlrHold                 ;; 00DBD0 : A5 15       ;
                       AND.B #$03                          ;; 00DBD2 : 29 03       ;
@@ -9068,21 +9068,21 @@ CODE_00DC03:          INY                                 ;; 00DC03 : C8        
                       AND.B #$02                          ;; 00DC07 : 29 02       ;
                       BEQ CODE_00DC16                     ;; 00DC09 : F0 0B       ;
 CODE_00DC0B:          LDA.B !PlayerIsClimbing             ;; 00DC0B : A5 74       ;
-                      BMI CODE_00DC11                     ;; 00DC0D : 30 02       ;
+                      BMI +                               ;; 00DC0D : 30 02       ;
                       STZ.B !PlayerXSpeed                 ;; 00DC0F : 64 7B       ;
-CODE_00DC11:          LDA.W DATA_00DAB7,Y                 ;; 00DC11 : B9 B7 DA    ;
+                    + LDA.W DATA_00DAB7,Y                 ;; 00DC11 : B9 B7 DA    ;
                       STA.B !PlayerYSpeed                 ;; 00DC14 : 85 7D       ;
 CODE_00DC16:          ORA.B !PlayerXSpeed                 ;; 00DC16 : 05 7B       ;
-                      BEQ Return00DC2C                    ;; 00DC18 : F0 12       ;
+                      BEQ +                               ;; 00DC18 : F0 12       ;
                       LDA.W !PlayerAniTimer               ;; 00DC1A : AD 96 14    ;
                       ORA.B #$08                          ;; 00DC1D : 09 08       ;
                       STA.W !PlayerAniTimer               ;; 00DC1F : 8D 96 14    ;
                       AND.B #$07                          ;; 00DC22 : 29 07       ;
-                      BNE Return00DC2C                    ;; 00DC24 : D0 06       ;
+                      BNE +                               ;; 00DC24 : D0 06       ;
                       LDA.B !PlayerDirection              ;; 00DC26 : A5 76       ;
                       EOR.B #$01                          ;; 00DC28 : 49 01       ;
                       STA.B !PlayerDirection              ;; 00DC2A : 85 76       ;
-Return00DC2C:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00DC2D:          LDA.B !PlayerYSpeed                 ;; 00DC2D : A5 7D       ; \ Store Mario's Y speed in $8A 
                       STA.B !GraphicsCompPtr              ;; 00DC2F : 85 8A       ; /  
@@ -9090,10 +9090,10 @@ CODE_00DC2D:          LDA.B !PlayerYSpeed                 ;; 00DC2D : A5 7D     
                       BEQ CODE_00DC40                     ;; 00DC34 : F0 0A       ;
                       LSR A                               ;; 00DC36 : 4A          ;
                       LDA.B !PlayerXSpeed                 ;; 00DC37 : A5 7B       ;
-                      BCC CODE_00DC3E                     ;; 00DC39 : 90 03       ;
+                      BCC +                               ;; 00DC39 : 90 03       ;
                       EOR.B #$FF                          ;; 00DC3B : 49 FF       ;
                       INC A                               ;; 00DC3D : 1A          ;
-CODE_00DC3E:          STA.B !PlayerYSpeed                 ;; 00DC3E : 85 7D       ;
+                    + STA.B !PlayerYSpeed                 ;; 00DC3E : 85 7D       ;
 CODE_00DC40:          LDX.B #$00                          ;; 00DC40 : A2 00       ;
                       JSR CODE_00DC4F                     ;; 00DC42 : 20 4F DC    ;
                       LDX.B #$02                          ;; 00DC45 : A2 02       ;
@@ -9119,9 +9119,9 @@ CODE_00DC4F:          LDA.B !PlayerXSpeed,X               ;; 00DC4F : B5 7B     
                       LSR A                               ;; 00DC64 : 4A          ;
                       AND.W #$000F                        ;; 00DC65 : 29 0F 00    ;
                       CMP.W #$0008                        ;; 00DC68 : C9 08 00    ;
-                      BCC CODE_00DC70                     ;; 00DC6B : 90 03       ;
+                      BCC +                               ;; 00DC6B : 90 03       ;
                       ORA.W #$FFF0                        ;; 00DC6D : 09 F0 FF    ;
-CODE_00DC70:          PLP                                 ;; 00DC70 : 28          ;
+                    + PLP                                 ;; 00DC70 : 28          ;
                       ADC.B !PlayerXPosNext,X             ;; 00DC71 : 75 94       ;
                       STA.B !PlayerXPosNext,X             ;; 00DC73 : 95 94       ;
                       SEP #$20                            ;; 00DC75 : E2 20       ; Accum (8 bit) 
@@ -9364,20 +9364,20 @@ CODE_00E2BD:          PHB                                 ;; 00E2BD : 8B        
                       PLB                                 ;; 00E2BF : AB          ;
                       LDA.B !PlayerHiddenTiles            ;; 00E2C0 : A5 78       ;
                       CMP.B #$FF                          ;; 00E2C2 : C9 FF       ;
-                      BEQ CODE_00E2CA                     ;; 00E2C4 : F0 04       ;
+                      BEQ +                               ;; 00E2C4 : F0 04       ;
                       JSL CODE_01EA70                     ;; 00E2C6 : 22 70 EA 01 ;
-CODE_00E2CA:          LDY.W !CyclePaletteTimer            ;; 00E2CA : AC 9B 14    ;
+                    + LDY.W !CyclePaletteTimer            ;; 00E2CA : AC 9B 14    ;
                       BNE CODE_00E308                     ;; 00E2CD : D0 39       ;
                       LDY.W !InvinsibilityTimer           ;; 00E2CF : AC 90 14    ; \ Branch if Mario doesn't have star 
                       BEQ CODE_00E314                     ;; 00E2D2 : F0 40       ; / 
                       LDA.B !PlayerHiddenTiles            ;; 00E2D4 : A5 78       ;
                       CMP.B #$FF                          ;; 00E2D6 : C9 FF       ;
-                      BEQ CODE_00E2E3                     ;; 00E2D8 : F0 09       ;
+                      BEQ +                               ;; 00E2D8 : F0 09       ;
                       LDA.B !EffFrame                     ;; 00E2DA : A5 14       ;
                       AND.B #$03                          ;; 00E2DC : 29 03       ;
-                      BNE CODE_00E2E3                     ;; 00E2DE : D0 03       ;
+                      BNE +                               ;; 00E2DE : D0 03       ;
                       DEC.W !InvinsibilityTimer           ;; 00E2E0 : CE 90 14    ; Decrease star timer 
-CODE_00E2E3:          LDA.B !TrueFrame                    ;; 00E2E3 : A5 13       ;
+                    + LDA.B !TrueFrame                    ;; 00E2E3 : A5 13       ;
                       CPY.B #$1E                          ;; 00E2E5 : C0 1E       ;
                       BCC CODE_00E30A                     ;; 00E2E7 : 90 21       ;
                       BNE CODE_00E30C                     ;; 00E2E9 : D0 21       ;
@@ -9390,9 +9390,9 @@ CODE_00E2E3:          LDA.B !TrueFrame                    ;; 00E2E3 : A5 13     
                       LDA.W !BluePSwitchTimer             ;; 00E2F8 : AD AD 14    ;
                       ORA.W !SilverPSwitchTimer           ;; 00E2FB : 0D AE 14    ;
                       ORA.W !DirectCoinTimer              ;; 00E2FE : 0D 0C 19    ;
-                      BEQ CODE_00E305                     ;; 00E301 : F0 02       ;
+                      BEQ +                               ;; 00E301 : F0 02       ;
                       LDX.B #$0E                          ;; 00E303 : A2 0E       ;
-CODE_00E305:          STX.W !SPCIO2                       ;; 00E305 : 8E FB 1D    ; / Change music 
+                    + STX.W !SPCIO2                       ;; 00E305 : 8E FB 1D    ; / Change music 
 CODE_00E308:          LDA.B !TrueFrame                    ;; 00E308 : A5 13       ;
 CODE_00E30A:          LSR A                               ;; 00E30A : 4A          ;
                       LSR A                               ;; 00E30B : 4A          ;
@@ -9401,12 +9401,12 @@ CODE_00E30C:          AND.B #$03                          ;; 00E30C : 29 03     
                       INC A                               ;; 00E30F : 1A          ;
                       INC A                               ;; 00E310 : 1A          ;
                       INC A                               ;; 00E311 : 1A          ;
-                      BRA CODE_00E31A                     ;; 00E312 : 80 06       ;
+                      BRA +                               ;; 00E312 : 80 06       ;
                                                           ;;                      ;
 CODE_00E314:          LDA.B !Powerup                      ;; 00E314 : A5 19       ;
                       ASL A                               ;; 00E316 : 0A          ;
                       ORA.W !PlayerTurnLvl                ;; 00E317 : 0D B3 0D    ;
-CODE_00E31A:          ASL A                               ;; 00E31A : 0A          ;
+                    + ASL A                               ;; 00E31A : 0A          ;
                       TAY                                 ;; 00E31B : A8          ;
                       REP #$20                            ;; 00E31C : C2 20       ; Accum (16 bit) 
                       LDA.W DATA_00E2A2,Y                 ;; 00E31E : B9 A2 E2    ;
@@ -9420,9 +9420,9 @@ CODE_00E31A:          ASL A                               ;; 00E31A : 0A        
                       LDY.B !Powerup                      ;; 00E333 : A4 19       ;
                       BEQ CODE_00E33B                     ;; 00E335 : F0 04       ;
                       CPX.B #$13                          ;; 00E337 : E0 13       ;
-                      BNE CODE_00E33D                     ;; 00E339 : D0 02       ;
+                      BNE +                               ;; 00E339 : D0 02       ;
 CODE_00E33B:          EOR.B #$01                          ;; 00E33B : 49 01       ;
-CODE_00E33D:          LSR A                               ;; 00E33D : 4A          ;
+                    + LSR A                               ;; 00E33D : 4A          ;
 CODE_00E33E:          REP #$20                            ;; 00E33E : C2 20       ; Accum (16 bit) 
                       LDA.B !PlayerXPosNext               ;; 00E340 : A5 94       ;
                       SBC.B !Layer1XPos                   ;; 00E342 : E5 1A       ;
@@ -9434,20 +9434,20 @@ CODE_00E33E:          REP #$20                            ;; 00E33E : C2 20     
                       LDY.B !Powerup                      ;; 00E34F : A4 19       ;
                       CPY.B #$01                          ;; 00E351 : C0 01       ;
                       LDY.B #$01                          ;; 00E353 : A0 01       ;
-                      BCS CODE_00E359                     ;; 00E355 : B0 02       ;
+                      BCS +                               ;; 00E355 : B0 02       ;
                       DEC A                               ;; 00E357 : 3A          ;
                       DEY                                 ;; 00E358 : 88          ;
-CODE_00E359:          CPX.B #$0A                          ;; 00E359 : E0 0A       ;
-                      BCS CODE_00E360                     ;; 00E35B : B0 03       ;
+                    + CPX.B #$0A                          ;; 00E359 : E0 0A       ;
+                      BCS +                               ;; 00E35B : B0 03       ;
                       CPY.W !PlayerWalkingPose            ;; 00E35D : CC DB 13    ;
-CODE_00E360:          SBC.B !Layer1YPos                   ;; 00E360 : E5 1C       ;
+                    + SBC.B !Layer1YPos                   ;; 00E360 : E5 1C       ;
                       CPX.B #$1C                          ;; 00E362 : E0 1C       ;
-                      BNE CODE_00E369                     ;; 00E364 : D0 03       ;
+                      BNE +                               ;; 00E364 : D0 03       ;
                       ADC.W #$0001                        ;; 00E366 : 69 01 00    ;
-CODE_00E369:          STA.B !PlayerYPosScrRel             ;; 00E369 : 85 80       ;
+                    + STA.B !PlayerYPosScrRel             ;; 00E369 : 85 80       ;
                       SEP #$20                            ;; 00E36B : E2 20       ; Accum (8 bit) 
                       LDA.W !IFrameTimer                  ;; 00E36D : AD 97 14    ;
-                      BEQ CODE_00E385                     ;; 00E370 : F0 13       ;
+                      BEQ +                               ;; 00E370 : F0 13       ;
                       LSR A                               ;; 00E372 : 4A          ;
                       LSR A                               ;; 00E373 : 4A          ;
                       LSR A                               ;; 00E374 : 4A          ;
@@ -9456,21 +9456,21 @@ CODE_00E369:          STA.B !PlayerYPosScrRel             ;; 00E369 : 85 80     
                       AND.W !IFrameTimer                  ;; 00E379 : 2D 97 14    ;
                       ORA.B !SpriteLock                   ;; 00E37C : 05 9D       ;
                       ORA.W !PlayerIsFrozen               ;; 00E37E : 0D FB 13    ;
-                      BNE CODE_00E385                     ;; 00E381 : D0 02       ;
+                      BNE +                               ;; 00E381 : D0 02       ;
                       PLB                                 ;; 00E383 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_00E385:          LDA.B #$C8                          ;; 00E385 : A9 C8       ;
+                    + LDA.B #$C8                          ;; 00E385 : A9 C8       ;
                       CPX.B #$43                          ;; 00E387 : E0 43       ;
-                      BNE CODE_00E38D                     ;; 00E389 : D0 02       ;
+                      BNE +                               ;; 00E389 : D0 02       ;
                       LDA.B #$E8                          ;; 00E38B : A9 E8       ;
-CODE_00E38D:          STA.B !_4                           ;; 00E38D : 85 04       ;
+                    + STA.B !_4                           ;; 00E38D : 85 04       ;
                       CPX.B #$29                          ;; 00E38F : E0 29       ;
-                      BNE CODE_00E399                     ;; 00E391 : D0 06       ;
+                      BNE +                               ;; 00E391 : D0 06       ;
                       LDA.B !Powerup                      ;; 00E393 : A5 19       ;
-                      BNE CODE_00E399                     ;; 00E395 : D0 02       ;
+                      BNE +                               ;; 00E395 : D0 02       ;
                       LDX.B #$20                          ;; 00E397 : A2 20       ;
-CODE_00E399:          LDA.W DATA_00DCEC,X                 ;; 00E399 : BD EC DC    ;
+                    + LDA.W DATA_00DCEC,X                 ;; 00E399 : BD EC DC    ;
                       ORA.B !PlayerDirection              ;; 00E39C : 05 76       ;
                       TAY                                 ;; 00E39E : A8          ;
                       LDA.W DATA_00DD32,Y                 ;; 00E39F : B9 32 DD    ;
@@ -9478,9 +9478,9 @@ CODE_00E399:          LDA.W DATA_00DCEC,X                 ;; 00E399 : BD EC DC  
                       LDY.B !Powerup                      ;; 00E3A4 : A4 19       ;
                       LDA.W !PlayerPose                   ;; 00E3A6 : AD E0 13    ;
                       CMP.B #$3D                          ;; 00E3A9 : C9 3D       ;
-                      BCS CODE_00E3B0                     ;; 00E3AB : B0 03       ;
+                      BCS +                               ;; 00E3AB : B0 03       ;
                       ADC.W TilesetIndex,Y                ;; 00E3AD : 79 16 DF    ;
-CODE_00E3B0:          TAY                                 ;; 00E3B0 : A8          ;
+                    + TAY                                 ;; 00E3B0 : A8          ;
                       LDA.W TileExpansion_,Y              ;; 00E3B1 : B9 1A DF    ;
                       STA.B !_6                           ;; 00E3B4 : 85 06       ;
                       LDA.W DATA_00E00C,Y                 ;; 00E3B6 : B9 0C E0    ;
@@ -9489,9 +9489,9 @@ CODE_00E3B0:          TAY                                 ;; 00E3B0 : A8        
                       STA.B !_B                           ;; 00E3BE : 85 0B       ;
                       LDA.B !SpriteProperties             ;; 00E3C0 : A5 64       ;
                       LDX.W !PlayerBehindNet              ;; 00E3C2 : AE F9 13    ;
-                      BEQ CODE_00E3CA                     ;; 00E3C5 : F0 03       ;
+                      BEQ +                               ;; 00E3C5 : F0 03       ;
                       LDA.W DATA_00E2B9,X                 ;; 00E3C7 : BD B9 E2    ;
-CODE_00E3CA:          LDY.W DATA_00E2B2,X                 ;; 00E3CA : BC B2 E2    ;
+                    + LDY.W DATA_00E2B2,X                 ;; 00E3CA : BC B2 E2    ;
                       LDX.B !PlayerDirection              ;; 00E3CD : A6 76       ;
                       ORA.W MarioPalIndex,X               ;; 00E3CF : 1D 8C E1    ;
                       STA.W !OAMTileAttr+$100,Y           ;; 00E3D2 : 99 03 03    ;
@@ -9502,9 +9502,9 @@ CODE_00E3CA:          LDY.W DATA_00E2B2,X                 ;; 00E3CA : BC B2 E2  
                       STA.W !OAMTileAttr+$FC,Y            ;; 00E3E1 : 99 FF 02    ;
                       LDX.B !_4                           ;; 00E3E4 : A6 04       ;
                       CPX.B #$E8                          ;; 00E3E6 : E0 E8       ;
-                      BNE CODE_00E3EC                     ;; 00E3E8 : D0 02       ;
+                      BNE +                               ;; 00E3E8 : D0 02       ;
                       EOR.B #$40                          ;; 00E3EA : 49 40       ;
-CODE_00E3EC:          STA.W !OAMTileAttr+$108,Y           ;; 00E3EC : 99 0B 03    ;
+                    + STA.W !OAMTileAttr+$108,Y           ;; 00E3EC : 99 0B 03    ;
                       JSR CODE_00E45D                     ;; 00E3EF : 20 5D E4    ;
                       JSR CODE_00E45D                     ;; 00E3F2 : 20 5D E4    ;
                       JSR CODE_00E45D                     ;; 00E3F5 : 20 5D E4    ;
@@ -9534,19 +9534,19 @@ CODE_00E3EC:          STA.W !OAMTileAttr+$108,Y           ;; 00E3EC : 99 0B 03  
                       LDA.W DATA_00E23A,Y                 ;; 00E428 : B9 3A E2    ;
                       STA.B !_C                           ;; 00E42B : 85 0C       ;
                       LDA.W DATA_00E266,Y                 ;; 00E42D : B9 66 E2    ;
-                      BRA CODE_00E435                     ;; 00E430 : 80 03       ;
+                      BRA +                               ;; 00E430 : 80 03       ;
                                                           ;;                      ;
 CODE_00E432:          LDA.W DATA_00E1D6,X                 ;; 00E432 : BD D6 E1    ;
-CODE_00E435:          ORA.B !PlayerDirection              ;; 00E435 : 05 76       ;
+                    + ORA.B !PlayerDirection              ;; 00E435 : 05 76       ;
                       TAY                                 ;; 00E437 : A8          ;
                       LDA.W DATA_00E21A,Y                 ;; 00E438 : B9 1A E2    ;
                       STA.B !_5                           ;; 00E43B : 85 05       ;
                       PLY                                 ;; 00E43D : 7A          ;
                       LDA.W DATA_00E1D4,X                 ;; 00E43E : BD D4 E1    ;
                       TSB.B !PlayerHiddenTiles            ;; 00E441 : 04 78       ;
-                      BMI CODE_00E448                     ;; 00E443 : 30 03       ;
+                      BMI +                               ;; 00E443 : 30 03       ;
                       JSR CODE_00E45D                     ;; 00E445 : 20 5D E4    ;
-CODE_00E448:          LDX.W !PlayerBehindNet              ;; 00E448 : AE F9 13    ;
+                    + LDX.W !PlayerBehindNet              ;; 00E448 : AE F9 13    ;
                       LDY.W DATA_00E2B6,X                 ;; 00E44B : BC B6 E2    ;
                       JSR CODE_00E45D                     ;; 00E44E : 20 5D E4    ;
                       LDA.B !_E                           ;; 00E451 : A5 0E       ;
@@ -9557,10 +9557,10 @@ CODE_00E458:          JSR CODE_00F636                     ;; 00E458 : 20 36 F6  
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_00E45D:          LSR.B !PlayerHiddenTiles            ;; 00E45D : 46 78       ;
-                      BCS CODE_00E49F                     ;; 00E45F : B0 3E       ;
+                      BCS +                               ;; 00E45F : B0 3E       ;
                       LDX.B !_6                           ;; 00E461 : A6 06       ;
                       LDA.W Mario8x8Tiles,X               ;; 00E463 : BD DA DF    ;
-                      BMI CODE_00E49F                     ;; 00E466 : 30 37       ;
+                      BMI +                               ;; 00E466 : 30 37       ;
                       STA.W !OAMTileNo+$100,Y             ;; 00E468 : 99 02 03    ;
                       LDX.B !_5                           ;; 00E46B : A6 05       ;
                       REP #$20                            ;; 00E46D : C2 20       ; Accum (16 bit) 
@@ -9573,7 +9573,7 @@ CODE_00E45D:          LSR.B !PlayerHiddenTiles            ;; 00E45D : 46 78     
                       CMP.W #$0100                        ;; 00E47A : C9 00 01    ;
                       PLA                                 ;; 00E47D : 68          ;
                       SEP #$20                            ;; 00E47E : E2 20       ; Accum (8 bit) 
-                      BCS CODE_00E49F                     ;; 00E480 : B0 1D       ;
+                      BCS +                               ;; 00E480 : B0 1D       ;
                       STA.W !OAMTileYPos+$100,Y           ;; 00E482 : 99 01 03    ;
                       REP #$20                            ;; 00E485 : C2 20       ; Accum (16 bit) 
                       LDA.B !PlayerXPosScrRel             ;; 00E487 : A5 7E       ;
@@ -9585,11 +9585,11 @@ CODE_00E45D:          LSR.B !PlayerHiddenTiles            ;; 00E45D : 46 78     
                       CMP.W #$0200                        ;; 00E492 : C9 00 02    ;
                       PLA                                 ;; 00E495 : 68          ;
                       SEP #$20                            ;; 00E496 : E2 20       ; Accum (8 bit) 
-                      BCS CODE_00E49F                     ;; 00E498 : B0 05       ;
+                      BCS +                               ;; 00E498 : B0 05       ;
                       STA.W !OAMTileXPos+$100,Y           ;; 00E49A : 99 00 03    ;
                       XBA                                 ;; 00E49D : EB          ;
                       LSR A                               ;; 00E49E : 4A          ;
-CODE_00E49F:          PHP                                 ;; 00E49F : 08          ;
+                    + PHP                                 ;; 00E49F : 08          ;
                       TYA                                 ;; 00E4A0 : 98          ;
                       LSR A                               ;; 00E4A1 : 4A          ;
                       LSR A                               ;; 00E4A2 : 4A          ;
@@ -9787,7 +9787,7 @@ CODE_00E938:          LDA.W !PlayerIsOnGround             ;; 00E938 : AD EF 13  
                       LDA.B !PlayerInAir                  ;; 00E940 : A5 72       ;
                       STA.B !GraphicsUncompPtr+2          ;; 00E942 : 85 8F       ;
                       LDA.B !ScreenMode                   ;; 00E944 : A5 5B       ;
-                      BPL CODE_00E978                     ;; 00E946 : 10 30       ;
+                      BPL +                               ;; 00E946 : 10 30       ;
                       AND.B #$82                          ;; 00E948 : 29 82       ;
                       STA.B !GraphicsUncompPtr+1          ;; 00E94A : 85 8E       ;
                       LDA.B #$01                          ;; 00E94C : A9 01       ;
@@ -9813,7 +9813,7 @@ CODE_00E938:          LDA.W !PlayerIsOnGround             ;; 00E938 : AD EF 13  
                       SBC.B !Layer23YRelPos               ;; 00E972 : E5 28       ;
                       STA.B !PlayerYPosNext               ;; 00E974 : 85 96       ;
                       SEP #$20                            ;; 00E976 : E2 20       ; Accum (8 bit) 
-CODE_00E978:          ASL.W !PlayerIsOnGround             ;; 00E978 : 0E EF 13    ;
+                    + ASL.W !PlayerIsOnGround             ;; 00E978 : 0E EF 13    ;
                       LDA.B !ScreenMode                   ;; 00E97B : A5 5B       ;
                       AND.B #$41                          ;; 00E97D : 29 41       ;
                       STA.B !GraphicsUncompPtr+1          ;; 00E97F : 85 8E       ;
@@ -9855,7 +9855,7 @@ CODE_00E9C8:          SEP #$20                            ;; 00E9C8 : E2 20     
                       BEQ CODE_00E9FB                     ;; 00E9CA : F0 2F       ;
                       BPL CODE_00E9FB                     ;; 00E9CC : 10 2D       ;
                       LDA.W !HorizLayer1Setting           ;; 00E9CE : AD 11 14    ;
-                      BNE CODE_00E9F6                     ;; 00E9D1 : D0 23       ;
+                      BNE +                               ;; 00E9D1 : D0 23       ;
                       LDA.B #$80                          ;; 00E9D3 : A9 80       ;
                       TSB.B !PlayerBlockedDir             ;; 00E9D5 : 04 77       ;
                       REP #$20                            ;; 00E9D7 : C2 20       ; Accum (16 bit) 
@@ -9869,12 +9869,12 @@ CODE_00E9C8:          SEP #$20                            ;; 00E9C8 : E2 20     
                       SEC                                 ;; 00E9E4 : 38          ;
                       SBC.B !PlayerXSpeed                 ;; 00E9E5 : E5 7B       ;
                       EOR.W DATA_00E90E,Y                 ;; 00E9E7 : 59 0E E9    ;
-                      BMI CODE_00E9F6                     ;; 00E9EA : 30 0A       ;
+                      BMI +                               ;; 00E9EA : 30 0A       ;
                       LDA.B !_0                           ;; 00E9EC : A5 00       ;
                       STA.B !PlayerXSpeed                 ;; 00E9EE : 85 7B       ;
                       LDA.W !Layer1ScrollXPosUpd          ;; 00E9F0 : AD 4E 14    ;
                       STA.W !PlayerXSpeedFPSpx            ;; 00E9F3 : 8D DA 13    ;
-CODE_00E9F6:          LDA.W DATA_00E90A,Y                 ;; 00E9F6 : B9 0A E9    ;
+                    + LDA.W DATA_00E90A,Y                 ;; 00E9F6 : B9 0A E9    ;
                       TSB.B !PlayerBlockedDir             ;; 00E9F9 : 04 77       ;
 CODE_00E9FB:          LDA.B !PlayerBlockedDir             ;; 00E9FB : A5 77       ;
                       AND.B #$1C                          ;; 00E9FD : 29 1C       ;
@@ -9887,7 +9887,7 @@ CODE_00EA08:          JSR CODE_00F629                     ;; 00EA08 : 20 29 F6  
                                                           ;;                      ;
 CODE_00EA0D:          LDA.B !PlayerBlockedDir             ;; 00EA0D : A5 77       ;
                       AND.B #$03                          ;; 00EA0F : 29 03       ;
-                      BEQ CODE_00EA34                     ;; 00EA11 : F0 21       ;
+                      BEQ +                               ;; 00EA11 : F0 21       ;
                       AND.B #$02                          ;; 00EA13 : 29 02       ;
                       TAY                                 ;; 00EA15 : A8          ;
                       REP #$20                            ;; 00EA16 : C2 20       ; Accum (16 bit) 
@@ -9897,20 +9897,20 @@ CODE_00EA0D:          LDA.B !PlayerBlockedDir             ;; 00EA0D : A5 77     
                       STA.B !PlayerXPosNext               ;; 00EA1E : 85 94       ;
                       SEP #$20                            ;; 00EA20 : E2 20       ; Accum (8 bit) 
                       LDA.B !PlayerBlockedDir             ;; 00EA22 : A5 77       ;
-                      BMI CODE_00EA34                     ;; 00EA24 : 30 0E       ;
+                      BMI +                               ;; 00EA24 : 30 0E       ;
                       LDA.B #$03                          ;; 00EA26 : A9 03       ;
                       STA.W !PlayerPoseLenTimer           ;; 00EA28 : 8D E5 13    ;
                       LDA.B !PlayerXSpeed                 ;; 00EA2B : A5 7B       ;
                       EOR.W DATA_00E90D,Y                 ;; 00EA2D : 59 0D E9    ;
-                      BPL CODE_00EA34                     ;; 00EA30 : 10 02       ;
+                      BPL +                               ;; 00EA30 : 10 02       ;
 CODE_00EA32:          STZ.B !PlayerXSpeed                 ;; 00EA32 : 64 7B       ;
-CODE_00EA34:          LDA.W !PlayerBehindNet              ;; 00EA34 : AD F9 13    ;
+                    + LDA.W !PlayerBehindNet              ;; 00EA34 : AD F9 13    ;
                       CMP.B #$01                          ;; 00EA37 : C9 01       ;
-                      BNE CODE_00EA42                     ;; 00EA39 : D0 07       ;
+                      BNE +                               ;; 00EA39 : D0 07       ;
                       LDA.B !GraphicsCompPtr+1            ;; 00EA3B : A5 8B       ;
-                      BNE CODE_00EA42                     ;; 00EA3D : D0 03       ;
+                      BNE +                               ;; 00EA3D : D0 03       ;
                       STZ.W !PlayerBehindNet              ;; 00EA3F : 9C F9 13    ;
-CODE_00EA42:          STZ.W !PlayerCanJumpWater           ;; 00EA42 : 9C FA 13    ;
+                    + STZ.W !PlayerCanJumpWater           ;; 00EA42 : 9C FA 13    ;
                       LDA.B !LevelIsWater                 ;; 00EA45 : A5 85       ;
                       BNE CODE_00EA5E                     ;; 00EA47 : D0 15       ;
                       LSR.B !GraphicsCompPtr              ;; 00EA49 : 46 8A       ;
@@ -9933,22 +9933,22 @@ CODE_00EA65:          LSR.B !GraphicsCompPtr              ;; 00EA65 : 46 8A     
                       BEQ Return00EAA5                    ;; 00EA6B : F0 38       ;
                       LDA.B #$FC                          ;; 00EA6D : A9 FC       ;
                       CMP.B !PlayerYSpeed                 ;; 00EA6F : C5 7D       ;
-                      BMI CODE_00EA75                     ;; 00EA71 : 30 02       ;
+                      BMI +                               ;; 00EA71 : 30 02       ;
                       STA.B !PlayerYSpeed                 ;; 00EA73 : 85 7D       ;
-CODE_00EA75:          INC.W !PlayerCanJumpWater           ;; 00EA75 : EE FA 13    ;
+                    + INC.W !PlayerCanJumpWater           ;; 00EA75 : EE FA 13    ;
                       LDA.B !byetudlrHold                 ;; 00EA78 : A5 15       ;
                       AND.B #$88                          ;; 00EA7A : 29 88       ;
                       CMP.B #$88                          ;; 00EA7C : C9 88       ;
                       BNE CODE_00EA62                     ;; 00EA7E : D0 E2       ;
                       LDA.B !axlr0000Hold                 ;; 00EA80 : A5 17       ;
-                      BPL CODE_00EA92                     ;; 00EA82 : 10 0E       ;
+                      BPL +                               ;; 00EA82 : 10 0E       ;
                       LDA.W !IsCarryingItem               ;; 00EA84 : AD 8F 14    ;
-                      BNE CODE_00EA92                     ;; 00EA87 : D0 09       ;
+                      BNE +                               ;; 00EA87 : D0 09       ;
                       INC A                               ;; 00EA89 : 1A          ;
                       STA.W !SpinJumpFlag                 ;; 00EA8A : 8D 0D 14    ;
                       LDA.B #$04                          ;; 00EA8D : A9 04       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 00EA8F : 8D FC 1D    ; / 
-CODE_00EA92:          LDA.B !PlayerBlockedDir             ;; 00EA92 : A5 77       ;
+                    + LDA.B !PlayerBlockedDir             ;; 00EA92 : A5 77       ;
                       AND.B #$08                          ;; 00EA94 : 29 08       ;
                       BNE CODE_00EA62                     ;; 00EA96 : D0 CA       ;
                       JSR CODE_00FDA5                     ;; 00EA98 : 20 A5 FD    ;
@@ -9984,10 +9984,10 @@ CODE_00EADB:          LDA.B !PlayerYPosNext               ;; 00EADB : A5 96     
                       AND.B #$0F                          ;; 00EADD : 29 0F       ;
                       STA.B !PlayerYPosInBlock            ;; 00EADF : 85 90       ;
                       LDA.W !WallrunningType              ;; 00EAE1 : AD E3 13    ;
-                      BNE CODE_00EAE9                     ;; 00EAE4 : D0 03       ;
+                      BNE +                               ;; 00EAE4 : D0 03       ;
                       JMP CODE_00EB77                     ;; 00EAE6 : 4C 77 EB    ;
                                                           ;;                      ;
-CODE_00EAE9:          AND.B #$01                          ;; 00EAE9 : 29 01       ;
+                    + AND.B #$01                          ;; 00EAE9 : 29 01       ;
                       TAY                                 ;; 00EAEB : A8          ;
                       LDA.B !PlayerXSpeed                 ;; 00EAEC : A5 7B       ;
                       SEC                                 ;; 00EAEE : 38          ;
@@ -10017,17 +10017,17 @@ CODE_00EB19:          LDA.B !PlayerXPosNext               ;; 00EB19 : A5 94     
                                                           ;;                      ;
 CODE_00EB22:          LDX.B #$60                          ;; 00EB22 : A2 60       ;
                       TYA                                 ;; 00EB24 : 98          ;
-                      BEQ CODE_00EB29                     ;; 00EB25 : F0 02       ;
+                      BEQ +                               ;; 00EB25 : F0 02       ;
                       LDX.B #$66                          ;; 00EB27 : A2 66       ;
-CODE_00EB29:          JSR CODE_00EFE8                     ;; 00EB29 : 20 E8 EF    ;
+                    + JSR CODE_00EFE8                     ;; 00EB29 : 20 E8 EF    ;
                       LDA.B !Powerup                      ;; 00EB2C : A5 19       ;
                       BNE CODE_00EB34                     ;; 00EB2E : D0 04       ;
                       INX                                 ;; 00EB30 : E8          ;
                       INX                                 ;; 00EB31 : E8          ;
-                      BRA CODE_00EB37                     ;; 00EB32 : 80 03       ;
+                      BRA +                               ;; 00EB32 : 80 03       ;
                                                           ;;                      ;
 CODE_00EB34:          JSR CODE_00EFE8                     ;; 00EB34 : 20 E8 EF    ;
-CODE_00EB37:          JSR CODE_00F44D                     ;; 00EB37 : 20 4D F4    ;
+                    + JSR CODE_00F44D                     ;; 00EB37 : 20 4D F4    ;
                       BNE CODE_00EB19                     ;; 00EB3A : D0 DD       ;
                       LDA.B #$02                          ;; 00EB3C : A9 02       ;
                       TRB.W !WallrunningType              ;; 00EB3E : 1C E3 13    ;
@@ -10048,9 +10048,9 @@ CODE_00EB48:          LDA.W DATA_00EABB,Y                 ;; 00EB48 : B9 BB EA  
                       STA.B !PlayerXPosNext               ;; 00EB58 : 85 94       ;
                       LDA.W #$0008                        ;; 00EB5A : A9 08 00    ;
                       LDY.B !Powerup                      ;; 00EB5D : A4 19       ;
-                      BEQ CODE_00EB64                     ;; 00EB5F : F0 03       ;
+                      BEQ +                               ;; 00EB5F : F0 03       ;
                       LDA.W #$0010                        ;; 00EB61 : A9 10 00    ;
-CODE_00EB64:          CLC                                 ;; 00EB64 : 18          ;
+                    + CLC                                 ;; 00EB64 : 18          ;
                       ADC.B !PlayerYPosNext               ;; 00EB65 : 65 96       ;
                       STA.B !PlayerYPosNext               ;; 00EB67 : 85 96       ;
                       SEP #$20                            ;; 00EB69 : E2 20       ; Accum (8 bit) 
@@ -10063,17 +10063,17 @@ Return00EB76:         RTS                                 ;; ?QPWZ? : 60        
                                                           ;;                      ;
 CODE_00EB77:          LDX.B #$00                          ;; 00EB77 : A2 00       ;
                       LDA.B !Powerup                      ;; 00EB79 : A5 19       ;
-                      BEQ CODE_00EB83                     ;; 00EB7B : F0 06       ;
+                      BEQ +                               ;; 00EB7B : F0 06       ;
                       LDA.B !PlayerIsDucking              ;; 00EB7D : A5 73       ;
-                      BNE CODE_00EB83                     ;; 00EB7F : D0 02       ;
+                      BNE +                               ;; 00EB7F : D0 02       ;
                       LDX.B #$18                          ;; 00EB81 : A2 18       ;
-CODE_00EB83:          LDA.W !PlayerRidingYoshi            ;; 00EB83 : AD 7A 18    ;
-                      BEQ CODE_00EB8D                     ;; 00EB86 : F0 05       ;
+                    + LDA.W !PlayerRidingYoshi            ;; 00EB83 : AD 7A 18    ;
+                      BEQ +                               ;; 00EB86 : F0 05       ;
                       TXA                                 ;; 00EB88 : 8A          ;
                       CLC                                 ;; 00EB89 : 18          ;
                       ADC.B #$30                          ;; 00EB8A : 69 30       ;
                       TAX                                 ;; 00EB8C : AA          ;
-CODE_00EB8D:          LDA.B !PlayerXPosNext               ;; 00EB8D : A5 94       ;
+                    + LDA.B !PlayerXPosNext               ;; 00EB8D : A5 94       ;
                       AND.B #$0F                          ;; 00EB8F : 29 0F       ;
                       TAY                                 ;; 00EB91 : A8          ;
                       CLC                                 ;; 00EB92 : 18          ;
@@ -10082,12 +10082,12 @@ CODE_00EB8D:          LDA.B !PlayerXPosNext               ;; 00EB8D : A5 94     
                       STA.B !PlayerXPosInBlock            ;; 00EB97 : 85 92       ;
                       STZ.B !PlayerBlockXSide             ;; 00EB99 : 64 93       ;
                       CPY.B #$08                          ;; 00EB9B : C0 08       ;
-                      BCC CODE_00EBA5                     ;; 00EB9D : 90 06       ;
+                      BCC +                               ;; 00EB9D : 90 06       ;
                       TXA                                 ;; 00EB9F : 8A          ;
                       ADC.B #$0B                          ;; 00EBA0 : 69 0B       ;
                       TAX                                 ;; 00EBA2 : AA          ;
                       INC.B !PlayerBlockXSide             ;; 00EBA3 : E6 93       ;
-CODE_00EBA5:          LDA.B !PlayerYPosInBlock            ;; 00EBA5 : A5 90       ;
+                    + LDA.B !PlayerYPosInBlock            ;; 00EBA5 : A5 90       ;
                       CLC                                 ;; 00EBA7 : 18          ;
                       ADC.W DATA_00E8A4,X                 ;; 00EBA8 : 7D A4 E8    ;
                       AND.B #$0F                          ;; 00EBAB : 29 0F       ;
@@ -10112,11 +10112,11 @@ CODE_00EBC9:          INX                                 ;; 00EBC9 : E8        
                       TYA                                 ;; 00EBCD : 98          ;
                       LDY.B #$00                          ;; 00EBCE : A0 00       ;
                       CMP.B #$1E                          ;; 00EBD0 : C9 1E       ;
-                      BEQ CODE_00EBDA                     ;; 00EBD2 : F0 06       ;
+                      BEQ +                               ;; 00EBD2 : F0 06       ;
                       CMP.B #$52                          ;; 00EBD4 : C9 52       ;
-                      BEQ CODE_00EBDA                     ;; 00EBD6 : F0 02       ;
+                      BEQ +                               ;; 00EBD6 : F0 02       ;
                       LDY.B #$02                          ;; 00EBD8 : A0 02       ;
-CODE_00EBDA:          JMP CODE_00EC6F                     ;; 00EBDA : 4C 6F EC    ;
+                    + JMP CODE_00EC6F                     ;; 00EBDA : 4C 6F EC    ;
                                                           ;;                      ;
 CODE_00EBDD:          CPY.B #$9C                          ;; 00EBDD : C0 9C       ;
                       BNE CODE_00EBE8                     ;; 00EBDF : D0 07       ;
@@ -10175,13 +10175,13 @@ CODE_00EC46:          CPY.B #$11                          ;; 00EC46 : C0 11     
                       BCS CODE_00EC8A                     ;; 00EC4C : B0 3C       ;
 CODE_00EC4E:          LDA.B !PlayerDirection              ;; 00EC4E : A5 76       ;
                       CMP.B !PlayerBlockXSide             ;; 00EC50 : C5 93       ;
-                      BEQ CODE_00EC5F                     ;; 00EC52 : F0 0B       ;
+                      BEQ +                               ;; 00EC52 : F0 0B       ;
                       JSR CODE_00F3C4                     ;; 00EC54 : 20 C4 F3    ;
                       PHX                                 ;; 00EC57 : DA          ;
                       JSR CODE_00F267                     ;; 00EC58 : 20 67 F2    ;
                       LDY.W !Map16TileNumber              ;; 00EC5B : AC 93 16    ; Current MAP16 tile number 
                       PLX                                 ;; 00EC5E : FA          ;
-CODE_00EC5F:          LDA.B #$03                          ;; 00EC5F : A9 03       ;
+                    + LDA.B #$03                          ;; 00EC5F : A9 03       ;
                       STA.W !PlayerPoseLenTimer           ;; 00EC61 : 8D E5 13    ;
                       LDY.B !PlayerBlockXSide             ;; 00EC64 : A4 93       ;
                       LDA.B !PlayerXPosNext               ;; 00EC66 : A5 94       ;
@@ -10209,10 +10209,10 @@ CODE_00EC8A:          JSR CODE_00F44D                     ;; 00EC8A : 20 4D F4  
                       CMP.B #$21                          ;; 00EC9B : C9 21       ;
                       BCC CODE_00ECA3                     ;; 00EC9D : 90 04       ;
                       CMP.B #$25                          ;; 00EC9F : C9 25       ;
-                      BCC CODE_00ECA6                     ;; 00ECA1 : 90 03       ;
+                      BCC +                               ;; 00ECA1 : 90 03       ;
 CODE_00ECA3:          JMP CODE_00ED4A                     ;; 00ECA3 : 4C 4A ED    ;
                                                           ;;                      ;
-CODE_00ECA6:          SEC                                 ;; 00ECA6 : 38          ;
+                    + SEC                                 ;; 00ECA6 : 38          ;
                       SBC.B #$04                          ;; 00ECA7 : E9 04       ;
                       LDY.B #$00                          ;; 00ECA9 : A0 00       ;
                       JSL CODE_00F17F                     ;; 00ECAB : 22 7F F1 00 ;
@@ -10282,14 +10282,14 @@ CODE_00ED0F:          CLC                                 ;; 00ED0F : 18        
                       BRA CODE_00ED3B                     ;; 00ED26 : 80 13       ;
                                                           ;;                      ;
 CODE_00ED28:          LDY.B !PlayerInAir                  ;; 00ED28 : A4 72       ;
-                      BEQ CODE_00ED37                     ;; 00ED2A : F0 0B       ;
+                      BEQ +                               ;; 00ED2A : F0 0B       ;
                       EOR.B #$FF                          ;; 00ED2C : 49 FF       ;
                       CLC                                 ;; 00ED2E : 18          ;
                       ADC.B !PlayerYPosNext               ;; 00ED2F : 65 96       ;
                       STA.B !PlayerYPosNext               ;; 00ED31 : 85 96       ;
-                      BCC CODE_00ED37                     ;; 00ED33 : 90 02       ;
+                      BCC +                               ;; 00ED33 : 90 02       ;
                       INC.B !PlayerYPosNext+1             ;; 00ED35 : E6 97       ;
-CODE_00ED37:          LDA.B #$08                          ;; 00ED37 : A9 08       ;
+                    + LDA.B #$08                          ;; 00ED37 : A9 08       ;
                       TSB.B !PlayerBlockedDir             ;; 00ED39 : 04 77       ;
 CODE_00ED3B:          LDA.B !PlayerYSpeed                 ;; 00ED3B : A5 7D       ;
                       BPL CODE_00ED4A                     ;; 00ED3D : 10 0B       ;
@@ -10299,22 +10299,22 @@ CODE_00ED3B:          LDA.B !PlayerYSpeed                 ;; 00ED3B : A5 7D     
                       INC A                               ;; 00ED46 : 1A          ;
                       STA.W !SPCIO0                       ;; 00ED47 : 8D F9 1D    ; / Play sound effect 
 CODE_00ED4A:          JSR CODE_00F44D                     ;; 00ED4A : 20 4D F4    ;
-                      BNE CODE_00ED52                     ;; 00ED4D : D0 03       ;
+                      BNE +                               ;; 00ED4D : D0 03       ;
                       JMP CODE_00EDDB                     ;; 00ED4F : 4C DB ED    ;
                                                           ;;                      ;
-CODE_00ED52:          CPY.B #$6E                          ;; 00ED52 : C0 6E       ;
-                      BCS CODE_00ED5E                     ;; 00ED54 : B0 08       ;
+                    + CPY.B #$6E                          ;; 00ED52 : C0 6E       ;
+                      BCS +                               ;; 00ED54 : B0 08       ;
                       LDA.B #$03                          ;; 00ED56 : A9 03       ;
                       JSR CODE_00F3E9                     ;; 00ED58 : 20 E9 F3    ;
                       JMP CODE_00EDF7                     ;; 00ED5B : 4C F7 ED    ;
                                                           ;;                      ;
-CODE_00ED5E:          CPY.B #$D8                          ;; 00ED5E : C0 D8       ;
+                    + CPY.B #$D8                          ;; 00ED5E : C0 D8       ;
                       BCC CODE_00ED86                     ;; 00ED60 : 90 24       ;
                       CPY.B #$FB                          ;; 00ED62 : C0 FB       ;
-                      BCC CODE_00ED69                     ;; 00ED64 : 90 03       ;
+                      BCC +                               ;; 00ED64 : 90 03       ;
                       JMP CODE_00F629                     ;; 00ED66 : 4C 29 F6    ;
                                                           ;;                      ;
-CODE_00ED69:          REP #$20                            ;; 00ED69 : C2 20       ; Accum (16 bit) 
+                    + REP #$20                            ;; 00ED69 : C2 20       ; Accum (16 bit) 
                       LDA.B !TouchBlockYPos               ;; 00ED6B : A5 98       ;
                       SEC                                 ;; 00ED6D : 38          ;
                       SBC.W #$0010                        ;; 00ED6E : E9 10 00    ;
@@ -10355,9 +10355,9 @@ CODE_00ED95:          TYA                                 ;; 00ED95 : 98        
                       LDA.B !PlayerYPosInBlock            ;; 00EDAE : A5 90       ;
                       SEC                                 ;; 00EDB0 : 38          ;
                       SBC.W DATA_00E632,X                 ;; 00EDB1 : FD 32 E6    ;
-                      BPL CODE_00EDB9                     ;; 00EDB4 : 10 03       ;
+                      BPL +                               ;; 00EDB4 : 10 03       ;
                       INC.W !PlayerIsOnGround             ;; 00EDB6 : EE EF 13    ;
-CODE_00EDB9:          SEP #$10                            ;; 00EDB9 : E2 10       ; Index (8 bit) 
+                    + SEP #$10                            ;; 00EDB9 : E2 10       ; Index (8 bit) 
                       PLX                                 ;; 00EDBB : FA          ;
                       PLY                                 ;; 00EDBC : 7A          ;
                       CMP.W DATA_00E51C,Y                 ;; 00EDBD : D9 1C E5    ;
@@ -10366,12 +10366,12 @@ CODE_00EDB9:          SEP #$10                            ;; 00EDB9 : E2 10     
                       STZ.B !PlayerYPosInBlock            ;; 00EDC4 : 64 90       ;
                       JSR CODE_00F005                     ;; 00EDC6 : 20 05 F0    ;
                       CPY.B #$1C                          ;; 00EDC9 : C0 1C       ;
-                      BCC CODE_00EDD5                     ;; 00EDCB : 90 08       ;
+                      BCC +                               ;; 00EDCB : 90 08       ;
                       LDA.B #$08                          ;; 00EDCD : A9 08       ;
                       STA.W !SkidTurnTimer                ;; 00EDCF : 8D A1 14    ;
                       JMP CODE_00EED1                     ;; 00EDD2 : 4C D1 EE    ;
                                                           ;;                      ;
-CODE_00EDD5:          JSR CODE_00EFBC                     ;; 00EDD5 : 20 BC EF    ;
+                    + JSR CODE_00EFBC                     ;; 00EDD5 : 20 BC EF    ;
                       JMP CODE_00EE85                     ;; 00EDD8 : 4C 85 EE    ;
                                                           ;;                      ;
 CODE_00EDDB:          CPY.B #$05                          ;; 00EDDB : C0 05       ;
@@ -10407,14 +10407,14 @@ CODE_00EE11:          LDA.B !PlayerYPosInBlock            ;; 00EE11 : A5 90     
                       STA.B !PlayerBlockMoveY             ;; 00EE19 : 85 91       ;
                       BCC CODE_00EE3A                     ;; 00EE1B : 90 1D       ;
 CODE_00EE1D:          LDA.W !StandOnSolidSprite           ;; 00EE1D : AD 71 14    ; \ If Mario isn't on a sprite platform, 
-                      BEQ CODE_00EE2D                     ;; 00EE20 : F0 0B       ; / branch to $EE2D 
+                      BEQ +                               ;; 00EE20 : F0 0B       ; / branch to $EE2D 
                       LDA.B !PlayerYSpeed                 ;; 00EE22 : A5 7D       ; \ If Mario is moving up, 
-                      BMI CODE_00EE2D                     ;; 00EE24 : 30 07       ; / branch to $EE2D 
+                      BMI +                               ;; 00EE24 : 30 07       ; / branch to $EE2D 
                       STZ.B !GraphicsUncompPtr+1          ;; 00EE26 : 64 8E       ;
                       LDY.B #$20                          ;; 00EE28 : A0 20       ;
                       JMP CODE_00EEE1                     ;; 00EE2A : 4C E1 EE    ;
                                                           ;;                      ;
-CODE_00EE2D:          LDA.B !PlayerBlockedDir             ;; 00EE2D : A5 77       ; \  
+                    + LDA.B !PlayerBlockedDir             ;; 00EE2D : A5 77       ; \  
                       AND.B #$04                          ;; 00EE2F : 29 04       ;  |If Mario is on an edge or in air, 
                       ORA.B !PlayerInAir                  ;; 00EE31 : 05 72       ;  |branch to $EE39 
                       BNE Return00EE39                    ;; 00EE33 : D0 04       ; /  
@@ -10454,9 +10454,9 @@ CODE_00EE57:          JSR CODE_00F267                     ;; 00EE57 : 20 67 F2  
                       BRA CODE_00EE1D                     ;; 00EE76 : 80 A5       ;
                                                           ;;                      ;
 CODE_00EE78:          CMP.B #$32                          ;; 00EE78 : C9 32       ; \ If block isn't "Brown block", 
-                      BNE CODE_00EE7F                     ;; 00EE7A : D0 03       ; / branch to $EE7F 
+                      BNE +                               ;; 00EE7A : D0 03       ; / branch to $EE7F 
                       STZ.W !BlockSnakeActive             ;; 00EE7C : 9C 09 19    ;
-CODE_00EE7F:          JSL CODE_00F120                     ;; 00EE7F : 22 20 F1 00 ;
+                    + JSL CODE_00F120                     ;; 00EE7F : 22 20 F1 00 ;
 CODE_00EE83:          LDY.B #$20                          ;; 00EE83 : A0 20       ;
 CODE_00EE85:          LDA.B !PlayerYSpeed                 ;; 00EE85 : A5 7D       ; \ If Mario isn't moving up, 
                       BPL CODE_00EE8F                     ;; 00EE87 : 10 06       ; / branch to $EE8F 
@@ -10531,10 +10531,10 @@ CODE_00EF05:          LDX.W DATA_00E4B9,Y                 ;; 00EF05 : BE B9 E4  
                       BPL CODE_00EF31                     ;; 00EF1A : 10 15       ;
                       STX.W !PlayerPoseLenTimer           ;; 00EF1C : 8E E5 13    ;
                       LDA.B !PlayerXSpeed                 ;; 00EF1F : A5 7B       ;
-                      BPL CODE_00EF26                     ;; 00EF21 : 10 03       ;
+                      BPL +                               ;; 00EF21 : 10 03       ;
                       EOR.B #$FF                          ;; 00EF23 : 49 FF       ;
                       INC A                               ;; 00EF25 : 1A          ;
-CODE_00EF26:          CMP.B #$28                          ;; 00EF26 : C9 28       ;
+                    + CMP.B #$28                          ;; 00EF26 : C9 28       ;
                       BCC CODE_00EF2F                     ;; 00EF28 : 90 05       ;
                       LDA.W DATA_00E4FB,Y                 ;; 00EF2A : B9 FB E4    ;
                       BRA CODE_00EF60                     ;; 00EF2D : 80 31       ;
@@ -10542,18 +10542,18 @@ CODE_00EF26:          CMP.B #$28                          ;; 00EF26 : C9 28     
 CODE_00EF2F:          LDY.B #$20                          ;; 00EF2F : A0 20       ;
 CODE_00EF31:          LDA.B !PlayerYSpeed                 ;; 00EF31 : A5 7D       ;
                       CMP.W DATA_00E4DA,Y                 ;; 00EF33 : D9 DA E4    ;
-                      BCC CODE_00EF3B                     ;; 00EF36 : 90 03       ;
+                      BCC +                               ;; 00EF36 : 90 03       ;
 CODE_00EF38:          LDA.W DATA_00E4DA,Y                 ;; 00EF38 : B9 DA E4    ;
-CODE_00EF3B:          LDX.B !GraphicsUncompPtr+1          ;; 00EF3B : A6 8E       ;
+                    + LDX.B !GraphicsUncompPtr+1          ;; 00EF3B : A6 8E       ;
                       BPL CODE_00EF60                     ;; 00EF3D : 10 21       ;
                       INC.W !Layer2Touched                ;; 00EF3F : EE 0E 14    ;
                       PHA                                 ;; 00EF42 : 48          ;
                       REP #$20                            ;; 00EF43 : C2 20       ; Accum (16 bit) 
                       LDA.W !Layer2DYPos                  ;; 00EF45 : AD BE 17    ;
                       AND.W #$FF00                        ;; 00EF48 : 29 00 FF    ;
-                      BPL CODE_00EF50                     ;; 00EF4B : 10 03       ;
+                      BPL +                               ;; 00EF4B : 10 03       ;
                       ORA.W #$00FF                        ;; 00EF4D : 09 FF 00    ;
-CODE_00EF50:          XBA                                 ;; 00EF50 : EB          ;
+                    + XBA                                 ;; 00EF50 : EB          ;
                       EOR.W #$FFFF                        ;; 00EF51 : 49 FF FF    ;
                       INC A                               ;; 00EF54 : 1A          ;
                       CLC                                 ;; 00EF55 : 18          ;
@@ -10565,9 +10565,9 @@ CODE_00EF50:          XBA                                 ;; 00EF50 : EB        
                       ADC.B #$28                          ;; 00EF5E : 69 28       ;
 CODE_00EF60:          STA.B !PlayerYSpeed                 ;; 00EF60 : 85 7D       ;
                       TAX                                 ;; 00EF62 : AA          ;
-                      BPL CODE_00EF68                     ;; 00EF63 : 10 03       ;
+                      BPL +                               ;; 00EF63 : 10 03       ;
                       INC.W !PlayerIsOnGround             ;; 00EF65 : EE EF 13    ;
-CODE_00EF68:          STZ.W !StandingOnCage               ;; 00EF68 : 9C B5 18    ;
+                    + STZ.W !StandingOnCage               ;; 00EF68 : 9C B5 18    ;
                       STZ.B !PlayerInAir                  ;; 00EF6B : 64 72       ;
                       STZ.B !PlayerIsClimbing             ;; 00EF6D : 64 74       ;
                       STZ.W !BouncingOnBoard              ;; 00EF6F : 9C 06 14    ;
@@ -10577,15 +10577,15 @@ CODE_00EF68:          STZ.W !StandingOnCage               ;; 00EF68 : 9C B5 18  
                       LDY.W !FlightPhase                  ;; 00EF79 : AC 07 14    ;
                       BNE CODE_00EF99                     ;; 00EF7C : D0 1B       ;
                       LDA.W !PlayerRidingYoshi            ;; 00EF7E : AD 7A 18    ;
-                      BEQ CODE_00EF95                     ;; 00EF81 : F0 12       ;
+                      BEQ +                               ;; 00EF81 : F0 12       ;
                       LDA.B !GraphicsUncompPtr+2          ;; 00EF83 : A5 8F       ;
-                      BEQ CODE_00EF95                     ;; 00EF85 : F0 0E       ;
+                      BEQ +                               ;; 00EF85 : F0 0E       ;
                       LDA.W !YoshiCanStomp                ;; 00EF87 : AD E7 18    ; \ If Yoshi has stomp ability, 
-                      BEQ CODE_00EF95                     ;; 00EF8A : F0 09       ;  | 
+                      BEQ +                               ;; 00EF8A : F0 09       ;  | 
                       JSL YoshiStompRoutine               ;; 00EF8C : 22 BF 86 02 ;  | Run routine 
                       LDA.B #$25                          ;; 00EF90 : A9 25       ;  | Play sound effect 
                       STA.W !SPCIO3                       ;; 00EF92 : 8D FC 1D    ; / 
-CODE_00EF95:          STZ.W !SpriteStompCounter           ;; 00EF95 : 9C 97 16    ;
+                    + STZ.W !SpriteStompCounter           ;; 00EF95 : 9C 97 16    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00EF99:          STZ.W !SpriteStompCounter           ;; 00EF99 : 9C 97 16    ;
@@ -10594,23 +10594,23 @@ CODE_00EF99:          STZ.W !SpriteStompCounter           ;; 00EF99 : 9C 97 16  
                       BCS CallGroundPound                 ;; 00EFA1 : B0 0B       ;
                       LDA.B !Powerup                      ;; 00EFA3 : A5 19       ;
                       CMP.B #$02                          ;; 00EFA5 : C9 02       ;
-                      BNE Return00EFAD                    ;; 00EFA7 : D0 04       ;
+                      BNE +                               ;; 00EFA7 : D0 04       ;
                       SEC                                 ;; 00EFA9 : 38          ;
                       ROR.W !PlayerSlopePose              ;; 00EFAA : 6E ED 13    ;
-Return00EFAD:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CallGroundPound:      LDA.B !GraphicsUncompPtr+2          ;; ?QPWZ? : A5 8F       ;
-                      BEQ Return00EFBB                    ;; 00EFB0 : F0 09       ;
+                      BEQ +                               ;; 00EFB0 : F0 09       ;
                       JSL GroundPound                     ;; 00EFB2 : 22 C1 94 02 ;
                       LDA.B #$09                          ;; 00EFB6 : A9 09       ; \ Play sound effect 
                       STA.W !SPCIO3                       ;; 00EFB8 : 8D FC 1D    ; / 
-Return00EFBB:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00EFBC:          LDX.W !Map16TileNumber              ;; 00EFBC : AE 93 16    ;
                       CPX.B #$CE                          ;; 00EFBF : E0 CE       ;
-                      BCC Return00EFE7                    ;; 00EFC1 : 90 24       ;
+                      BCC +                               ;; 00EFC1 : 90 24       ;
                       CPX.B #$D2                          ;; 00EFC3 : E0 D2       ;
-                      BCS Return00EFE7                    ;; 00EFC5 : B0 20       ;
+                      BCS +                               ;; 00EFC5 : B0 20       ;
                       TXA                                 ;; 00EFC7 : 8A          ;
                       SEC                                 ;; 00EFC8 : 38          ;
                       SBC.B #$CC                          ;; 00EFC9 : E9 CC       ;
@@ -10618,7 +10618,7 @@ CODE_00EFBC:          LDX.W !Map16TileNumber              ;; 00EFBC : AE 93 16  
                       TAX                                 ;; 00EFCC : AA          ;
 CODE_00EFCD:          LDA.B !TrueFrame                    ;; 00EFCD : A5 13       ;
                       AND.B #$03                          ;; 00EFCF : 29 03       ;
-                      BNE Return00EFE7                    ;; 00EFD1 : D0 14       ;
+                      BNE +                               ;; 00EFD1 : D0 14       ;
                       REP #$20                            ;; 00EFD3 : C2 20       ; Accum (16 bit) 
                       LDA.B !PlayerXPosNext               ;; 00EFD5 : A5 94       ;
                       CLC                                 ;; 00EFD7 : 18          ;
@@ -10629,16 +10629,16 @@ CODE_00EFCD:          LDA.B !TrueFrame                    ;; 00EFCD : A5 13     
                       ADC.W DATA_00E91F,X                 ;; 00EFE0 : 7D 1F E9    ;
                       STA.B !PlayerYPosNext               ;; 00EFE3 : 85 96       ;
                       SEP #$20                            ;; 00EFE5 : E2 20       ; Accum (8 bit) 
-Return00EFE7:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00EFE8:          JSR CODE_00F44D                     ;; 00EFE8 : 20 4D F4    ;
-                      BNE ADDR_00EFF0                     ;; 00EFEB : D0 03       ;
+                      BNE +                               ;; 00EFEB : D0 03       ;
                       JMP CODE_00F309                     ;; 00EFED : 4C 09 F3    ;
                                                           ;;                      ;
-ADDR_00EFF0:          CPY.B #$11                          ;; 00EFF0 : C0 11       ;
-                      BCC Return00F004                    ;; 00EFF2 : 90 10       ;
+                    + CPY.B #$11                          ;; 00EFF0 : C0 11       ;
+                      BCC +                               ;; 00EFF2 : 90 10       ;
                       CPY.B #$6E                          ;; 00EFF4 : C0 6E       ;
-                      BCS Return00F004                    ;; 00EFF6 : B0 0C       ;
+                      BCS +                               ;; 00EFF6 : B0 0C       ;
                       TYA                                 ;; 00EFF8 : 98          ;
                       LDY.B #$00                          ;; 00EFF9 : A0 00       ;
                       JSL CODE_00F160                     ;; 00EFFB : 22 60 F1 00 ;
@@ -10646,7 +10646,7 @@ ADDR_00EFF0:          CPY.B #$11                          ;; 00EFF0 : C0 11     
                       PLA                                 ;; 00F000 : 68          ;
                       JMP ADDR_00EB42                     ;; 00F001 : 4C 42 EB    ;
                                                           ;;                      ;
-Return00F004:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00F005:          TYA                                 ;; 00F005 : 98          ;
                       SEC                                 ;; 00F006 : 38          ;
@@ -10659,12 +10659,12 @@ CODE_00F005:          TYA                                 ;; 00F005 : 98        
                       TAX                                 ;; 00F013 : AA          ;
                       LSR A                               ;; 00F014 : 4A          ;
                       LDA.B !PlayerXPosInBlock            ;; 00F015 : A5 92       ;
-                      BCC CODE_00F01B                     ;; 00F017 : 90 02       ;
+                      BCC +                               ;; 00F017 : 90 02       ;
                       EOR.B #$0F                          ;; 00F019 : 49 0F       ;
-CODE_00F01B:          CMP.B #$08                          ;; 00F01B : C9 08       ;
+                    + CMP.B #$08                          ;; 00F01B : C9 08       ;
                       BCS Return00F04C                    ;; 00F01D : B0 2D       ;
                       LDA.W !PlayerRidingYoshi            ;; 00F01F : AD 7A 18    ;
-                      BEQ CODE_00F035                     ;; 00F022 : F0 11       ;
+                      BEQ +                               ;; 00F022 : F0 11       ;
                       LDA.B #$08                          ;; 00F024 : A9 08       ;
                       STA.W !SPCIO3                       ;; 00F026 : 8D FC 1D    ; / Play sound effect 
                       LDA.B #$80                          ;; 00F029 : A9 80       ;
@@ -10674,7 +10674,7 @@ CODE_00F01B:          CMP.B #$08                          ;; 00F01B : C9 08     
                       PLA                                 ;; 00F031 : 68          ;
                       JMP CODE_00EE35                     ;; 00F032 : 4C 35 EE    ;
                                                           ;;                      ;
-CODE_00F035:          LDA.B !PlayerXSpeed                 ;; 00F035 : A5 7B       ;
+                    + LDA.B !PlayerXSpeed                 ;; 00F035 : A5 7B       ;
                       SEC                                 ;; 00F037 : 38          ;
                       SBC.W DATA_00EAB9,X                 ;; 00F038 : FD B9 EA    ;
                       EOR.W DATA_00EAB9,X                 ;; 00F03B : 5D B9 EA    ;
@@ -10777,10 +10777,10 @@ CODE_00F160:          SEC                                 ;; 00F160 : 38        
                       LDA.L DATA_00A625,X                 ;; 00F16C : BF 25 A6 00 ;
                       PLX                                 ;; 00F170 : FA          ;
                       AND.B #$03                          ;; 00F171 : 29 03       ;
-                      BEQ CODE_00F176                     ;; 00F173 : F0 01       ;
+                      BEQ +                               ;; 00F173 : F0 01       ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_00F176:          XBA                                 ;; 00F176 : EB          ;
+                    + XBA                                 ;; 00F176 : EB          ;
                       SBC.B #$59                          ;; 00F177 : E9 59       ;
                       CMP.B #$02                          ;; 00F179 : C9 02       ;
                       BCS Return00F1F8                    ;; 00F17B : B0 7B       ;
@@ -10828,10 +10828,10 @@ CODE_00F1C9:          LDY.W !InvinsibilityTimer           ;; 00F1C9 : AC 90 14  
 CODE_00F1CE:          LDA.B #$06                          ;; 00F1CE : A9 06       ;
 CODE_00F1D0:          STA.B !_5                           ;; 00F1D0 : 85 05       ;
                       CMP.B #$05                          ;; 00F1D2 : C9 05       ;
-                      BNE CODE_00F1DA                     ;; 00F1D4 : D0 04       ;
+                      BNE +                               ;; 00F1D4 : D0 04       ;
                       LDA.B #$16                          ;; 00F1D6 : A9 16       ;
                       STA.B !_7                           ;; 00F1D8 : 85 07       ;
-CODE_00F1DA:          TAY                                 ;; 00F1DA : A8          ;
+                    + TAY                                 ;; 00F1DA : A8          ;
                       LDA.B #$0F                          ;; 00F1DB : A9 0F       ;
                       TRB.B !TouchBlockXPos               ;; 00F1DD : 14 9A       ;
                       TRB.B !TouchBlockYPos               ;; 00F1DF : 14 98       ;
@@ -10839,7 +10839,7 @@ CODE_00F1DA:          TAY                                 ;; 00F1DA : A8        
                       BNE CODE_00F1EC                     ;; 00F1E3 : D0 07       ;
                       LDY.W !ObjectTileset                ;; 00F1E5 : AC 31 19    ;
                       CPY.B #$04                          ;; 00F1E8 : C0 04       ;
-                      BEQ CODE_00F1F9                     ;; 00F1EA : F0 0D       ;
+                      BEQ +                               ;; 00F1EA : F0 0D       ;
 CODE_00F1EC:          PHB                                 ;; 00F1EC : 8B          ;
                       LDA.B #$02                          ;; 00F1ED : A9 02       ;
                       PHA                                 ;; 00F1EF : 48          ;
@@ -10850,7 +10850,7 @@ CODE_00F1F6:          PLX                                 ;; 00F1F6 : FA        
                       CLC                                 ;; 00F1F7 : 18          ;
 Return00F1F8:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
-CODE_00F1F9:          LDA.B !TouchBlockYPos+1             ;; 00F1F9 : A5 99       ;
+                    + LDA.B !TouchBlockYPos+1             ;; 00F1F9 : A5 99       ;
                       LSR A                               ;; 00F1FB : 4A          ;
                       LDA.B !TouchBlockYPos               ;; 00F1FC : A5 98       ;
                       AND.B #$C0                          ;; 00F1FE : 29 C0       ;
@@ -10879,9 +10879,9 @@ CODE_00F220:          LDA.B #$17                          ;; 00F220 : A9 17     
 CODE_00F226:          LDA.W !DidPlayBonusGame             ;; 00F226 : AD 1B 14    ;
                       BNE CODE_00F236                     ;; 00F229 : D0 0B       ;
                       TXA                                 ;; 00F22B : 8A          ;
-                      BEQ CODE_00F230                     ;; 00F22C : F0 02       ;
+                      BEQ +                               ;; 00F22C : F0 02       ;
                       LDA.B #$02                          ;; 00F22E : A9 02       ;
-CODE_00F230:          EOR.B #$03                          ;; 00F230 : 49 03       ;
+                    + EOR.B #$03                          ;; 00F230 : 49 03       ;
                       AND.B !TrueFrame                    ;; 00F232 : 25 13       ;
                       BNE CODE_00F220                     ;; 00F234 : D0 EA       ;
 CODE_00F236:          LDA.B #$2A                          ;; 00F236 : A9 2A       ;
@@ -10898,7 +10898,7 @@ CODE_00F236:          LDA.B #$2A                          ;; 00F236 : A9 2A     
                       LDX.B #$07                          ;; 00F249 : A2 07       ;
                       LDA.W !PBalloonInflating,Y          ;; 00F24B : B9 F3 13    ;
 CODE_00F24E:          LSR A                               ;; 00F24E : 4A          ;
-                      BCS CODE_00F261                     ;; 00F24F : B0 10       ;
+                      BCS +                               ;; 00F24F : B0 10       ;
                       PHA                                 ;; 00F251 : 48          ;
                       LDA.B #$0D                          ;; 00F252 : A9 0D       ; \ Block to generate = Used block 
                       STA.B !Map16TileGenerate            ;; 00F254 : 85 9C       ; / 
@@ -10906,7 +10906,7 @@ CODE_00F24E:          LSR A                               ;; 00F24E : 4A        
                       STA.B !TouchBlockXPos               ;; 00F25A : 85 9A       ;
                       JSL GenerateTile                    ;; 00F25C : 22 B0 BE 00 ;
                       PLA                                 ;; 00F260 : 68          ;
-CODE_00F261:          DEX                                 ;; 00F261 : CA          ;
+                    + DEX                                 ;; 00F261 : CA          ;
                       BPL CODE_00F24E                     ;; 00F262 : 10 EA       ;
                       JMP CODE_00F1F6                     ;; 00F264 : 4C F6 F1    ;
                                                           ;;                      ;
@@ -10921,11 +10921,11 @@ CODE_00F267:          CPY.B #$2E                          ;; 00F267 : C0 2E     
                       PHA                                 ;; 00F279 : 48          ;
                       PLB                                 ;; 00F27A : AB          ;
                       JSL CODE_02862F                     ;; 00F27B : 22 2F 86 02 ;
-                      BMI CODE_00F289                     ;; 00F27F : 30 08       ;
+                      BMI +                               ;; 00F27F : 30 08       ;
                       LDA.B #$02                          ;; 00F281 : A9 02       ; \ Block to generate = #$02 
                       STA.B !Map16TileGenerate            ;; 00F283 : 85 9C       ; / 
                       JSL GenerateTile                    ;; 00F285 : 22 B0 BE 00 ;
-CODE_00F289:          PHK                                 ;; 00F289 : 4B          ;
+                    + PHK                                 ;; 00F289 : 4B          ;
                       PLB                                 ;; 00F28A : AB          ;
 Return00F28B:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -10938,22 +10938,22 @@ CODE_00F28C:          TYA                                 ;; 00F28C : 98        
                       BEQ CODE_00F2A8                     ;; 00F297 : F0 0F       ;
                       INC A                               ;; 00F299 : 1A          ;
                       CMP.W !OneUpCheckpoints             ;; 00F29A : CD 21 14    ;
-                      BEQ Return00F2BF                    ;; 00F29D : F0 20       ;
+                      BEQ +                               ;; 00F29D : F0 20       ;
                       LDA.W !OneUpCheckpoints             ;; 00F29F : AD 21 14    ;
                       CMP.B #$04                          ;; 00F2A2 : C9 04       ;
-                      BCS Return00F2BF                    ;; 00F2A4 : B0 19       ;
+                      BCS +                               ;; 00F2A4 : B0 19       ;
                       LDA.B #$FF                          ;; 00F2A6 : A9 FF       ;
 CODE_00F2A8:          INC A                               ;; 00F2A8 : 1A          ;
                       STA.W !OneUpCheckpoints             ;; 00F2A9 : 8D 21 14    ;
                       CMP.B #$04                          ;; 00F2AC : C9 04       ;
-                      BNE Return00F2BF                    ;; 00F2AE : D0 0F       ;
+                      BNE +                               ;; 00F2AE : D0 0F       ;
                       PHX                                 ;; 00F2B0 : DA          ;
                       JSL TriggerInivis1Up                ;; 00F2B1 : 22 D9 C2 03 ;
                       JSR CODE_00F3B2                     ;; 00F2B5 : 20 B2 F3    ;
                       ORA.W !Checkpoint1upCollected,Y     ;; 00F2B8 : 19 3C 1F    ;
                       STA.W !Checkpoint1upCollected,Y     ;; 00F2BB : 99 3C 1F    ;
                       PLX                                 ;; 00F2BE : FA          ;
-Return00F2BF:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00F2C0:          LDA.B #$01                          ;; 00F2C0 : A9 01       ;
 CODE_00F2C2:          CPY.B #$06                          ;; 00F2C2 : C0 06       ;
@@ -10968,13 +10968,13 @@ CODE_00F2C9:          CPY.B #$38                          ;; 00F2C9 : C0 38     
                       JSL GenerateTile                    ;; 00F2D1 : 22 B0 BE 00 ;
                       JSR CODE_00FD5A                     ;; 00F2D5 : 20 5A FD    ;
                       LDA.W !DisableMidway                ;; 00F2D8 : AD CD 13    ;
-                      BEQ CODE_00F2E0                     ;; 00F2DB : F0 03       ;
+                      BEQ +                               ;; 00F2DB : F0 03       ;
                       JSR CODE_00CA2B                     ;; 00F2DD : 20 2B CA    ;
-CODE_00F2E0:          LDA.B !Powerup                      ;; 00F2E0 : A5 19       ;
-                      BNE CODE_00F2E8                     ;; 00F2E2 : D0 04       ;
+                    + LDA.B !Powerup                      ;; 00F2E0 : A5 19       ;
+                      BNE +                               ;; 00F2E2 : D0 04       ;
                       LDA.B #$01                          ;; 00F2E4 : A9 01       ;
                       STA.B !Powerup                      ;; 00F2E6 : 85 19       ;
-CODE_00F2E8:          LDA.B #$05                          ;; 00F2E8 : A9 05       ;
+                    + LDA.B #$05                          ;; 00F2E8 : A9 05       ;
                       STA.W !SPCIO0                       ;; 00F2EA : 8D F9 1D    ; / Play sound effect 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -10986,9 +10986,9 @@ CODE_00F2EE:          CPY.B #$06                          ;; 00F2EE : C0 06     
                       BCS CODE_00F309                     ;; 00F2F8 : B0 0F       ;
                       ORA.B #$80                          ;; 00F2FA : 09 80       ;
 CODE_00F2FC:          CMP.B #$01                          ;; 00F2FC : C9 01       ;
-                      BNE CODE_00F302                     ;; 00F2FE : D0 02       ;
+                      BNE +                               ;; 00F2FE : D0 02       ;
                       ORA.B #$18                          ;; 00F300 : 09 18       ;
-CODE_00F302:          TSB.B !GraphicsCompPtr+1            ;; 00F302 : 04 8B       ;
+                    + TSB.B !GraphicsCompPtr+1            ;; 00F302 : 04 8B       ;
                       LDA.B !PlayerBlockXSide             ;; 00F304 : A5 93       ;
                       STA.B !GraphicsCompPtr+2            ;; 00F306 : 85 8C       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -11023,22 +11023,22 @@ CODE_00F33F:          JSL CODE_00F377                     ;; 00F33F : 22 77 F3 0
                       INC.W !DragonCoinsShown             ;; 00F343 : EE 22 14    ;
                       LDA.W !DragonCoinsShown             ;; 00F346 : AD 22 14    ;
                       CMP.B #$05                          ;; 00F349 : C9 05       ;
-                      BCC CODE_00F358                     ;; 00F34B : 90 0B       ;
+                      BCC +                               ;; 00F34B : 90 0B       ;
                       PHX                                 ;; 00F34D : DA          ;
                       JSR CODE_00F3B2                     ;; 00F34E : 20 B2 F3    ;
                       ORA.W !AllDragonCoinsCollected,Y    ;; 00F351 : 19 2F 1F    ;
                       STA.W !AllDragonCoinsCollected,Y    ;; 00F354 : 99 2F 1F    ;
                       PLX                                 ;; 00F357 : FA          ;
-CODE_00F358:          LDA.B #$1C                          ;; 00F358 : A9 1C       ;
+                    + LDA.B #$1C                          ;; 00F358 : A9 1C       ;
                       STA.W !SPCIO0                       ;; 00F35A : 8D F9 1D    ; / Play sound effect 
                       LDA.B #$01                          ;; 00F35D : A9 01       ;
                       JSL CODE_05B330                     ;; 00F35F : 22 30 B3 05 ;
                       LDY.B #$18                          ;; 00F363 : A0 18       ;
-                      BRA CODE_00F36D                     ;; 00F365 : 80 06       ;
+                      BRA +                               ;; 00F365 : 80 06       ;
                                                           ;;                      ;
 CODE_00F367:          JSL CODE_05B34A                     ;; 00F367 : 22 4A B3 05 ;
 CODE_00F36B:          LDY.B #$01                          ;; 00F36B : A0 01       ; \ Block to generate = #$01 
-CODE_00F36D:          STY.B !Map16TileGenerate            ;; 00F36D : 84 9C       ; / 
+                    + STY.B !Map16TileGenerate            ;; 00F36D : 84 9C       ; / 
                       JSL GenerateTile                    ;; 00F36F : 22 B0 BE 00 ;
                       JSR CODE_00FD5A                     ;; 00F373 : 20 5A FD    ;
 Return00F376:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -11048,9 +11048,9 @@ CODE_00F377:          LDA.W !DragonCoinsCollected         ;; 00F377 : AD 20 14  
                       CLC                                 ;; 00F37D : 18          ;
                       ADC.B #$09                          ;; 00F37E : 69 09       ;
                       CMP.B #$0D                          ;; 00F380 : C9 0D       ;
-                      BCC CODE_00F386                     ;; 00F382 : 90 02       ;
+                      BCC +                               ;; 00F382 : 90 02       ;
                       LDA.B #$0D                          ;; 00F384 : A9 0D       ;
-CODE_00F386:          BRA CODE_00F38A                     ;; 00F386 : 80 02       ;
+                    + BRA CODE_00F38A                     ;; 00F386 : 80 02       ;
                                                           ;;                      ;
 CODE_00F388:          LDA.B #$0D                          ;; 00F388 : A9 0D       ;
 CODE_00F38A:          PHA                                 ;; 00F38A : 48          ;
@@ -11085,17 +11085,17 @@ CODE_00F3B2:          LDA.W !TranslevelNo                 ;; 00F3B2 : AD BF 13  
 CODE_00F3C4:          CPY.B #$3F                          ;; 00F3C4 : C0 3F       ;
                       BNE Return00F376                    ;; 00F3C6 : D0 AE       ;
                       LDY.B !GraphicsUncompPtr+2          ;; 00F3C8 : A4 8F       ;
-                      BEQ CODE_00F3CF                     ;; 00F3CA : F0 03       ;
+                      BEQ +                               ;; 00F3CA : F0 03       ;
                       JMP CODE_00F43F                     ;; 00F3CC : 4C 3F F4    ;
                                                           ;;                      ;
-CODE_00F3CF:          PHX                                 ;; 00F3CF : DA          ;
+                    + PHX                                 ;; 00F3CF : DA          ;
                       TAX                                 ;; 00F3D0 : AA          ;
                       LDA.B !PlayerXPosNext               ;; 00F3D1 : A5 94       ;
                       TXY                                 ;; 00F3D3 : 9B          ;
-                      BEQ CODE_00F3D9                     ;; 00F3D4 : F0 03       ;
+                      BEQ +                               ;; 00F3D4 : F0 03       ;
                       EOR.B #$FF                          ;; 00F3D6 : 49 FF       ;
                       INC A                               ;; 00F3D8 : 1A          ;
-CODE_00F3D9:          AND.B #$0F                          ;; 00F3D9 : 29 0F       ;
+                    + AND.B #$0F                          ;; 00F3D9 : 29 0F       ;
                       ASL A                               ;; 00F3DB : 0A          ;
                       CLC                                 ;; 00F3DC : 18          ;
                       ADC.B #$20                          ;; 00F3DD : 69 20       ;
@@ -11123,9 +11123,9 @@ CODE_00F3E9:          XBA                                 ;; 00F3E9 : EB        
                       TAX                                 ;; 00F3FE : AA          ;
                       LDA.B #$20                          ;; 00F3FF : A9 20       ;
                       LDY.W !PlayerRidingYoshi            ;; 00F401 : AC 7A 18    ;
-                      BEQ CODE_00F408                     ;; 00F404 : F0 02       ;
+                      BEQ +                               ;; 00F404 : F0 02       ;
                       LDA.B #$30                          ;; 00F406 : A9 30       ;
-CODE_00F408:          LDY.B #$06                          ;; 00F408 : A0 06       ;
+                    + LDY.B #$06                          ;; 00F408 : A0 06       ;
 CODE_00F40A:          STA.B !PipeTimer                    ;; 00F40A : 85 88       ;
                       LDA.B !byetudlrHold                 ;; 00F40C : A5 15       ;
                       AND.W DATA_00F3E5,X                 ;; 00F40E : 3D E5 F3    ;
@@ -11137,15 +11137,15 @@ CODE_00F40A:          STA.B !PipeTimer                    ;; 00F40A : 85 88     
                       TXA                                 ;; 00F41B : 8A          ;
                       LSR A                               ;; 00F41C : 4A          ;
                       TAX                                 ;; 00F41D : AA          ;
-                      BNE CODE_00F430                     ;; 00F41E : D0 10       ;
+                      BNE +                               ;; 00F41E : D0 10       ;
                       LDA.W !IsCarryingItem               ;; 00F420 : AD 8F 14    ;
-                      BEQ CODE_00F430                     ;; 00F423 : F0 0B       ;
+                      BEQ +                               ;; 00F423 : F0 0B       ;
                       LDA.B !PlayerDirection              ;; 00F425 : A5 76       ;
                       EOR.B #$01                          ;; 00F427 : 49 01       ;
                       STA.B !PlayerDirection              ;; 00F429 : 85 76       ;
                       LDA.B #$08                          ;; 00F42B : A9 08       ;
                       STA.W !FaceScreenTimer              ;; 00F42D : 8D 99 14    ;
-CODE_00F430:          INX                                 ;; 00F430 : E8          ;
+                    + INX                                 ;; 00F430 : E8          ;
                       STX.W !YoshiInPipeSetting           ;; 00F431 : 8E 19 14    ;
                       STY.B !PlayerAnimation              ;; 00F434 : 84 71       ;
                       JSR NoButtons                       ;; 00F436 : 20 2D F6    ;
@@ -11180,10 +11180,10 @@ CODE_00F465:          SEP #$20                            ;; 00F465 : E2 20     
                       STZ.W !SwitchPalacePressed          ;; 00F467 : 9C 23 14    ;
                       PHX                                 ;; 00F46A : DA          ;
                       LDA.B !GraphicsUncompPtr+1          ;; 00F46B : A5 8E       ;
-                      BPL CODE_00F472                     ;; 00F46D : 10 03       ;
+                      BPL +                               ;; 00F46D : 10 03       ;
                       JMP CODE_00F4EC                     ;; 00F46F : 4C EC F4    ;
                                                           ;;                      ;
-CODE_00F472:          BNE CODE_00F4A6                     ;; 00F472 : D0 32       ;
+                    + BNE CODE_00F4A6                     ;; 00F472 : D0 32       ;
                       REP #$20                            ;; 00F474 : C2 20       ; Accum (16 bit) 
                       LDA.B !TouchBlockYPos               ;; 00F476 : A5 98       ;
                       CMP.W #$01B0                        ;; 00F478 : C9 B0 01    ;
@@ -11345,17 +11345,17 @@ CODE_00F595:          REP #$20                            ;; 00F595 : C2 20     
                       CLC                                 ;; 00F59A : 18          ;
                       ADC.B !Layer1YPos                   ;; 00F59B : 65 1C       ;
                       CMP.B !PlayerYPosNext               ;; 00F59D : C5 96       ;
-                      BMI CODE_00F5A3                     ;; 00F59F : 30 02       ;
+                      BMI +                               ;; 00F59F : 30 02       ;
                       STA.B !PlayerYPosNext               ;; 00F5A1 : 85 96       ;
-CODE_00F5A3:          SEP #$20                            ;; 00F5A3 : E2 20       ; Accum (8 bit) 
+                    + SEP #$20                            ;; 00F5A3 : E2 20       ; Accum (8 bit) 
                       LDA.B !PlayerYPosScrRel+1           ;; 00F5A5 : A5 81       ;
                       DEC A                               ;; 00F5A7 : 3A          ;
                       BMI Return00F5B6                    ;; 00F5A8 : 30 0C       ;
                       LDA.W !YoshiHeavenFlag              ;; 00F5AA : AD 95 1B    ;
-                      BEQ CODE_00F5B2                     ;; 00F5AD : F0 03       ;
+                      BEQ +                               ;; 00F5AD : F0 03       ;
                       JMP CODE_00C95B                     ;; 00F5AF : 4C 5B C9    ;
                                                           ;;                      ;
-CODE_00F5B2:          JSL CODE_00F60A                     ;; 00F5B2 : 22 0A F6 00 ;
+                    + JSL CODE_00F60A                     ;; 00F5B2 : 22 0A F6 00 ;
 Return00F5B6:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 HurtMario:            LDA.B !PlayerAnimation              ;; ?QPWZ? : A5 71       ; \ Return if animation sequence activated 
@@ -11366,13 +11366,13 @@ HurtMario:            LDA.B !PlayerAnimation              ;; ?QPWZ? : A5 71     
                       BNE Return00F628                    ;; 00F5C4 : D0 62       ; / ...return 
                       STZ.W !GameCloudCoinCount           ;; 00F5C6 : 9C E3 18    ;
                       LDA.W !WallrunningType              ;; 00F5C9 : AD E3 13    ;
-                      BEQ CODE_00F5D5                     ;; 00F5CC : F0 07       ;
+                      BEQ +                               ;; 00F5CC : F0 07       ;
                       PHB                                 ;; 00F5CE : 8B          ;
                       PHK                                 ;; 00F5CF : 4B          ;
                       PLB                                 ;; 00F5D0 : AB          ;
                       JSR ADDR_00EB42                     ;; 00F5D1 : 20 42 EB    ;
                       PLB                                 ;; 00F5D4 : AB          ;
-CODE_00F5D5:          LDA.B !Powerup                      ;; 00F5D5 : A5 19       ; \ If Mario is small, kill him 
+                    + LDA.B !Powerup                      ;; 00F5D5 : A5 19       ; \ If Mario is small, kill him 
                       BEQ KillMario                       ;; 00F5D7 : F0 2D       ; / 
                       CMP.B #$02                          ;; 00F5D9 : C9 02       ; \ Branch if not Caped Mario 
                       BNE PowerDown                       ;; 00F5DB : D0 16       ; / 
@@ -11393,7 +11393,7 @@ PowerDown:            LDY.B #$04                          ;; ?QPWZ? : A0 04     
                       STA.B !PlayerAnimation              ;; 00F5FE : 85 71       ; / 
                       STZ.B !Powerup                      ;; 00F600 : 64 19       ; Mario status = Small 
                       LDA.B #$2F                          ;; 00F602 : A9 2F       ;
-                      BRA CODE_00F61D                     ;; 00F604 : 80 17       ;
+                      BRA +                               ;; 00F604 : 80 17       ;
                                                           ;;                      ;
 KillMario:            LDA.B #$90                          ;; ?QPWZ? : A9 90       ; \ Mario Y speed = #$90 
                       STA.B !PlayerYSpeed                 ;; 00F608 : 85 7D       ; / 
@@ -11405,7 +11405,7 @@ CODE_00F60A:          LDA.B #$09                          ;; 00F60A : A9 09     
                       STA.B !PlayerAnimation              ;; 00F616 : 85 71       ; / 
                       STZ.W !SpinJumpFlag                 ;; 00F618 : 9C 0D 14    ; Spin jump flag = 0 
                       LDA.B #$30                          ;; 00F61B : A9 30       ;
-CODE_00F61D:          STA.W !PlayerAniTimer               ;; 00F61D : 8D 96 14    ; Set hurt frame timer 
+                    + STA.W !PlayerAniTimer               ;; 00F61D : 8D 96 14    ; Set hurt frame timer 
                       STA.B !SpriteLock                   ;; 00F620 : 85 9D       ; set lock sprite timer 
 CODE_00F622:          STZ.W !FlightPhase                  ;; 00F622 : 9C 07 14    ; Cape status = 0 
                       STZ.W !Empty188A                    ;; 00F625 : 9C 8A 18    ;
@@ -11423,9 +11423,9 @@ CODE_00F636:          REP #$20                            ;; 00F636 : C2 20     
                       LDA.B !_9                           ;; 00F63A : A5 09       ;
                       ORA.W #$0800                        ;; 00F63C : 09 00 08    ;
                       CMP.B !_9                           ;; 00F63F : C5 09       ;
-                      BEQ CODE_00F644                     ;; 00F641 : F0 01       ;
+                      BEQ +                               ;; 00F641 : F0 01       ;
                       CLC                                 ;; 00F643 : 18          ;
-CODE_00F644:          AND.W #$F700                        ;; 00F644 : 29 00 F7    ;
+                    + AND.W #$F700                        ;; 00F644 : 29 00 F7    ;
                       ROR A                               ;; 00F647 : 6A          ;
                       LSR A                               ;; 00F648 : 4A          ;
                       ADC.W #$2000                        ;; 00F649 : 69 00 20    ;
@@ -11437,9 +11437,9 @@ CODE_00F644:          AND.W #$F700                        ;; 00F644 : 29 00 F7  
                       LDA.B !_A                           ;; 00F658 : A5 0A       ;
                       ORA.W #$0800                        ;; 00F65A : 09 00 08    ;
                       CMP.B !_A                           ;; 00F65D : C5 0A       ;
-                      BEQ CODE_00F662                     ;; 00F65F : F0 01       ;
+                      BEQ +                               ;; 00F65F : F0 01       ;
                       CLC                                 ;; 00F661 : 18          ;
-CODE_00F662:          AND.W #$F700                        ;; 00F662 : 29 00 F7    ;
+                    + AND.W #$F700                        ;; 00F662 : 29 00 F7    ;
                       ROR A                               ;; 00F665 : 6A          ;
                       LSR A                               ;; 00F666 : 4A          ;
                       ADC.W #$2000                        ;; 00F667 : 69 00 20    ;
@@ -11510,10 +11510,10 @@ CODE_00F6DB:          PHB                                 ;; 00F6DB : 8B        
                       STA.B !Layer2YPos                   ;; 00F703 : 85 20       ;
                       LDA.B !ScreenMode                   ;; 00F705 : A5 5B       ;
                       LSR A                               ;; 00F707 : 4A          ;
-                      BCC CODE_00F70D                     ;; 00F708 : 90 03       ;
+                      BCC +                               ;; 00F708 : 90 03       ;
                       JMP CODE_00F75C                     ;; 00F70A : 4C 5C F7    ;
                                                           ;;                      ;
-CODE_00F70D:          LDA.W #$00C0                        ;; 00F70D : A9 C0 00    ;
+                    + LDA.W #$00C0                        ;; 00F70D : A9 C0 00    ;
                       JSR CODE_00F7F4                     ;; 00F710 : 20 F4 F7    ;
                       LDY.W !HorizLayer1Setting           ;; 00F713 : AC 11 14    ;
                       BEQ CODE_00F75A                     ;; 00F716 : F0 42       ;
@@ -11523,9 +11523,9 @@ CODE_00F70D:          LDA.W #$00C0                        ;; 00F70D : A9 C0 00  
                       SBC.B !Layer1XPos                   ;; 00F71D : E5 1A       ;
                       STA.B !_0                           ;; 00F71F : 85 00       ;
                       CMP.W !CameraMoveTrigger            ;; 00F721 : CD 2A 14    ;
-                      BPL CODE_00F728                     ;; 00F724 : 10 02       ;
+                      BPL +                               ;; 00F724 : 10 02       ;
                       LDY.B #$00                          ;; 00F726 : A0 00       ;
-CODE_00F728:          STY.B !Layer1ScrollDir              ;; 00F728 : 84 55       ;
+                    + STY.B !Layer1ScrollDir              ;; 00F728 : 84 55       ;
                       STY.B !Layer2ScrollDir              ;; 00F72A : 84 56       ;
                       SEC                                 ;; 00F72C : 38          ;
                       SBC.W !CameraLeftBuffer,Y           ;; 00F72D : F9 2C 14    ;
@@ -11537,16 +11537,16 @@ CODE_00F728:          STY.B !Layer1ScrollDir              ;; 00F728 : 84 55     
                       LDA.B !_2                           ;; 00F73C : A5 02       ;
                       CLC                                 ;; 00F73E : 18          ;
                       ADC.B !Layer1XPos                   ;; 00F73F : 65 1A       ;
-                      BPL CODE_00F746                     ;; 00F741 : 10 03       ;
+                      BPL +                               ;; 00F741 : 10 03       ;
                       LDA.W #$0000                        ;; 00F743 : A9 00 00    ;
-CODE_00F746:          STA.B !Layer1XPos                   ;; 00F746 : 85 1A       ;
+                    + STA.B !Layer1XPos                   ;; 00F746 : 85 1A       ;
                       LDA.B !LastScreenHoriz              ;; 00F748 : A5 5E       ;
                       DEC A                               ;; 00F74A : 3A          ;
                       XBA                                 ;; 00F74B : EB          ;
                       AND.W #$FF00                        ;; 00F74C : 29 00 FF    ;
-                      BPL CODE_00F754                     ;; 00F74F : 10 03       ;
+                      BPL +                               ;; 00F74F : 10 03       ;
                       LDA.W #$0080                        ;; 00F751 : A9 80 00    ;
-CODE_00F754:          CMP.B !Layer1XPos                   ;; 00F754 : C5 1A       ;
+                    + CMP.B !Layer1XPos                   ;; 00F754 : C5 1A       ;
                       BPL CODE_00F75A                     ;; 00F756 : 10 02       ;
                       STA.B !Layer1XPos                   ;; 00F758 : 85 1A       ;
 CODE_00F75A:          BRA CODE_00F79D                     ;; 00F75A : 80 41       ;
@@ -11564,9 +11564,9 @@ CODE_00F75C:          LDA.B !LastScreenVert               ;; 00F75C : A5 5F     
                       SBC.B !Layer1XPos                   ;; 00F770 : E5 1A       ;
                       STA.B !_0                           ;; 00F772 : 85 00       ;
                       CMP.W !CameraMoveTrigger            ;; 00F774 : CD 2A 14    ;
-                      BMI CODE_00F77B                     ;; 00F777 : 30 02       ;
+                      BMI +                               ;; 00F777 : 30 02       ;
                       LDY.B #$02                          ;; 00F779 : A0 02       ;
-CODE_00F77B:          SEC                                 ;; 00F77B : 38          ;
+                    + SEC                                 ;; 00F77B : 38          ;
                       SBC.W !CameraLeftBuffer,Y           ;; 00F77C : F9 2C 14    ;
                       STA.B !_2                           ;; 00F77F : 85 02       ;
                       EOR.W DATA_00F6A3,Y                 ;; 00F781 : 59 A3 F6    ;
@@ -11575,32 +11575,32 @@ CODE_00F77B:          SEC                                 ;; 00F77B : 38        
                       LDA.B !_2                           ;; 00F789 : A5 02       ;
                       CLC                                 ;; 00F78B : 18          ;
                       ADC.B !Layer1XPos                   ;; 00F78C : 65 1A       ;
-                      BPL CODE_00F793                     ;; 00F78E : 10 03       ;
+                      BPL +                               ;; 00F78E : 10 03       ;
                       LDA.W #$0000                        ;; 00F790 : A9 00 00    ;
-CODE_00F793:          CMP.W #$0101                        ;; 00F793 : C9 01 01    ;
-                      BMI CODE_00F79B                     ;; 00F796 : 30 03       ;
+                    + CMP.W #$0101                        ;; 00F793 : C9 01 01    ;
+                      BMI +                               ;; 00F796 : 30 03       ;
                       LDA.W #$0100                        ;; 00F798 : A9 00 01    ;
-CODE_00F79B:          STA.B !Layer1XPos                   ;; 00F79B : 85 1A       ;
+                    + STA.B !Layer1XPos                   ;; 00F79B : 85 1A       ;
 CODE_00F79D:          LDY.W !HorizLayer2Setting           ;; 00F79D : AC 13 14    ;
                       BEQ CODE_00F7AA                     ;; 00F7A0 : F0 08       ;
                       LDA.B !Layer1XPos                   ;; 00F7A2 : A5 1A       ;
                       DEY                                 ;; 00F7A4 : 88          ;
-                      BEQ CODE_00F7A8                     ;; 00F7A5 : F0 01       ;
+                      BEQ +                               ;; 00F7A5 : F0 01       ;
                       LSR A                               ;; 00F7A7 : 4A          ;
-CODE_00F7A8:          STA.B !Layer2XPos                   ;; 00F7A8 : 85 1E       ;
+                    + STA.B !Layer2XPos                   ;; 00F7A8 : 85 1E       ;
 CODE_00F7AA:          LDY.W !VertLayer2Setting            ;; 00F7AA : AC 14 14    ;
                       BEQ CODE_00F7C2                     ;; 00F7AD : F0 13       ;
                       LDA.B !Layer1YPos                   ;; 00F7AF : A5 1C       ;
                       DEY                                 ;; 00F7B1 : 88          ;
-                      BEQ CODE_00F7BC                     ;; 00F7B2 : F0 08       ;
+                      BEQ +                               ;; 00F7B2 : F0 08       ;
                       LSR A                               ;; 00F7B4 : 4A          ;
                       DEY                                 ;; 00F7B5 : 88          ;
-                      BEQ CODE_00F7BC                     ;; 00F7B6 : F0 04       ;
+                      BEQ +                               ;; 00F7B6 : F0 04       ;
                       LSR A                               ;; 00F7B8 : 4A          ;
                       LSR A                               ;; 00F7B9 : 4A          ;
                       LSR A                               ;; 00F7BA : 4A          ;
                       LSR A                               ;; 00F7BB : 4A          ;
-CODE_00F7BC:          CLC                                 ;; 00F7BC : 18          ;
+                    + CLC                                 ;; 00F7BC : 18          ;
                       ADC.W !BackgroundVertOffset         ;; 00F7BD : 6D 17 14    ;
                       STA.B !Layer2YPos                   ;; 00F7C0 : 85 20       ;
 CODE_00F7C2:          SEP #$20                            ;; 00F7C2 : E2 20       ; Accum (8 bit) 
@@ -11621,36 +11621,36 @@ CODE_00F7C2:          SEP #$20                            ;; 00F7C2 : E2 20     
                       SBC.W !NextLayer2YPos               ;; 00F7E2 : ED 68 14    ;
                       STA.W !Layer2DYPos                  ;; 00F7E5 : 8D BE 17    ;
                       LDX.B #$07                          ;; 00F7E8 : A2 07       ;
-CODE_00F7EA:          LDA.B !Layer1XPos,X                 ;; 00F7EA : B5 1A       ;
+                    - LDA.B !Layer1XPos,X                 ;; 00F7EA : B5 1A       ;
                       STA.W !NextLayer1XPos,X             ;; 00F7EC : 9D 62 14    ;
                       DEX                                 ;; 00F7EF : CA          ;
-                      BPL CODE_00F7EA                     ;; 00F7F0 : 10 F8       ;
+                      BPL -                               ;; 00F7F0 : 10 F8       ;
                       PLB                                 ;; 00F7F2 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_00F7F4:          LDX.W !VertLayer1Setting            ;; 00F7F4 : AE 12 14    ;
-                      BNE CODE_00F7FA                     ;; 00F7F7 : D0 01       ;
+                      BNE +                               ;; 00F7F7 : D0 01       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_00F7FA:          STA.B !_4                           ;; 00F7FA : 85 04       ; Accum (16 bit) 
+                    + STA.B !_4                           ;; 00F7FA : 85 04       ; Accum (16 bit) 
                       LDY.B #$00                          ;; 00F7FC : A0 00       ;
                       LDA.B !PlayerYPosNext               ;; 00F7FE : A5 96       ;
                       SEC                                 ;; 00F800 : 38          ;
                       SBC.B !Layer1YPos                   ;; 00F801 : E5 1C       ;
                       STA.B !_0                           ;; 00F803 : 85 00       ;
                       CMP.W #$0070                        ;; 00F805 : C9 70 00    ;
-                      BMI CODE_00F80C                     ;; 00F808 : 30 02       ;
+                      BMI +                               ;; 00F808 : 30 02       ;
                       LDY.B #$02                          ;; 00F80A : A0 02       ;
-CODE_00F80C:          STY.B !Layer1ScrollDir              ;; 00F80C : 84 55       ;
+                    + STY.B !Layer1ScrollDir              ;; 00F80C : 84 55       ;
                       STY.B !Layer2ScrollDir              ;; 00F80E : 84 56       ;
                       SEC                                 ;; 00F810 : 38          ;
                       SBC.W DATA_00F69F,Y                 ;; 00F811 : F9 9F F6    ;
                       STA.B !_2                           ;; 00F814 : 85 02       ;
                       EOR.W DATA_00F6A3,Y                 ;; 00F816 : 59 A3 F6    ;
-                      BMI CODE_00F81F                     ;; 00F819 : 30 04       ;
+                      BMI +                               ;; 00F819 : 30 04       ;
                       LDY.B #$02                          ;; 00F81B : A0 02       ;
                       STZ.B !_2                           ;; 00F81D : 64 02       ;
-CODE_00F81F:          LDA.B !_2                           ;; 00F81F : A5 02       ;
+                    + LDA.B !_2                           ;; 00F81F : A5 02       ;
                       BMI CODE_00F82A                     ;; 00F821 : 30 07       ;
                       LDX.B #$00                          ;; 00F823 : A2 00       ;
                       STX.W !ScreenScrollAtWill           ;; 00F825 : 8E 04 14    ;
@@ -11659,7 +11659,7 @@ CODE_00F81F:          LDA.B !_2                           ;; 00F81F : A5 02     
 CODE_00F82A:          SEP #$20                            ;; 00F82A : E2 20       ; Accum (8 bit) 
                       LDA.W !WallrunningType              ;; 00F82C : AD E3 13    ;
                       CMP.B #$06                          ;; 00F82F : C9 06       ;
-                      BCS CODE_00F845                     ;; 00F831 : B0 12       ;
+                      BCS +                               ;; 00F831 : B0 12       ;
                       LDA.W !YoshiHasWingsGfx             ;; 00F833 : AD 10 14    ; \ If winged Yoshi... 
                       LSR A                               ;; 00F836 : 4A          ;  | 
                       ORA.W !TakeoffTimer                 ;; 00F837 : 0D 9F 14    ;
@@ -11667,7 +11667,7 @@ CODE_00F82A:          SEP #$20                            ;; 00F82A : E2 20     
                       ORA.W !PBalloonInflating            ;; 00F83C : 0D F3 13    ;
                       ORA.W !PlayerInCloud                ;; 00F83F : 0D C2 18    ;
                       ORA.W !BouncingOnBoard              ;; 00F842 : 0D 06 14    ;
-CODE_00F845:          TAX                                 ;; 00F845 : AA          ;
+                    + TAX                                 ;; 00F845 : AA          ;
                       REP #$20                            ;; 00F846 : C2 20       ; Accum (16 bit) 
                       BNE CODE_00F869                     ;; 00F848 : D0 1F       ;
                       LDX.W !PlayerRidingYoshi            ;; 00F84A : AE 7A 18    ;
@@ -11701,14 +11701,14 @@ CODE_00F883:          SEC                                 ;; 00F883 : 38        
                       EOR.W DATA_00F6A7,Y                 ;; 00F887 : 59 A7 F6    ;
                       ASL A                               ;; 00F88A : 0A          ;
                       LDA.B !_2                           ;; 00F88B : A5 02       ;
-                      BCS CODE_00F892                     ;; 00F88D : B0 03       ;
+                      BCS +                               ;; 00F88D : B0 03       ;
                       LDA.W DATA_00F6A7,Y                 ;; 00F88F : B9 A7 F6    ;
-CODE_00F892:          CLC                                 ;; 00F892 : 18          ;
+                    + CLC                                 ;; 00F892 : 18          ;
                       ADC.B !Layer1YPos                   ;; 00F893 : 65 1C       ;
                       CMP.W DATA_00F6AD,Y                 ;; 00F895 : D9 AD F6    ;
-                      BPL CODE_00F89D                     ;; 00F898 : 10 03       ;
+                      BPL +                               ;; 00F898 : 10 03       ;
                       LDA.W DATA_00F6AD,Y                 ;; 00F89A : B9 AD F6    ;
-CODE_00F89D:          STA.B !Layer1YPos                   ;; 00F89D : 85 1C       ;
+                    + STA.B !Layer1YPos                   ;; 00F89D : 85 1C       ;
                       LDA.B !_4                           ;; 00F89F : A5 04       ;
                       CMP.B !Layer1YPos                   ;; 00F8A1 : C5 1C       ;
                       BPL Return00F8AA                    ;; 00F8A3 : 10 05       ;
@@ -11724,9 +11724,9 @@ CODE_00F8AB:          LDY.W !CameraIsScrolling            ;; 00F8AB : AC FD 13  
                       LDY.B #$08                          ;; 00F8B7 : A0 08       ;
                       LDA.W !CameraMoveTrigger            ;; 00F8B9 : AD 2A 14    ;
                       CMP.W DATA_00F6B3,X                 ;; 00F8BC : DD B3 F6    ;
-                      BPL CODE_00F8C3                     ;; 00F8BF : 10 02       ;
+                      BPL +                               ;; 00F8BF : 10 02       ;
                       LDY.B #$0A                          ;; 00F8C1 : A0 0A       ;
-CODE_00F8C3:          LDA.W DATA_00F6BF,Y                 ;; 00F8C3 : B9 BF F6    ;
+                    + LDA.W DATA_00F6BF,Y                 ;; 00F8C3 : B9 BF F6    ;
                       EOR.B !_2                           ;; 00F8C6 : 45 02       ;
                       BPL Return00F8DE                    ;; 00F8C8 : 10 14       ;
                       LDA.W DATA_00F6BF,X                 ;; 00F8CA : BD BF F6    ;
@@ -11756,18 +11756,18 @@ CODE_00F8F2:          JSR CODE_00EAA6                     ;; 00F8F2 : 20 A6 EA  
                       TAX                                 ;; 00F901 : AA          ;
                       PHX                                 ;; 00F902 : DA          ;
                       LDY.B !PlayerYSpeed                 ;; 00F903 : A4 7D       ;
-                      BPL CODE_00F91E                     ;; 00F905 : 10 17       ;
+                      BPL +                               ;; 00F905 : 10 17       ;
                       REP #$20                            ;; 00F907 : C2 20       ; Accum (16 bit) 
                       LDA.B !PlayerYPosNext               ;; 00F909 : A5 96       ;
                       CMP.W DATA_00F8E8,X                 ;; 00F90B : DD E8 F8    ;
-                      BPL CODE_00F91E                     ;; 00F90E : 10 0E       ;
+                      BPL +                               ;; 00F90E : 10 0E       ;
                       LDA.W DATA_00F8E8,X                 ;; 00F910 : BD E8 F8    ;
                       STA.B !PlayerYPosNext               ;; 00F913 : 85 96       ;
                       SEP #$20                            ;; 00F915 : E2 20       ; Accum (8 bit) 
                       STZ.B !PlayerYSpeed                 ;; 00F917 : 64 7D       ;
                       LDA.B #$01                          ;; 00F919 : A9 01       ;
                       STA.W !SPCIO0                       ;; 00F91B : 8D F9 1D    ; / Play sound effect 
-CODE_00F91E:          SEP #$20                            ;; 00F91E : E2 20       ; Accum (8 bit) 
+                    + SEP #$20                            ;; 00F91E : E2 20       ; Accum (8 bit) 
                       PLX                                 ;; 00F920 : FA          ;
                       LDA.W DATA_00F8E8,X                 ;; 00F921 : BD E8 F8    ;
                       CMP.B #$2A                          ;; 00F924 : C9 2A       ;
@@ -11778,8 +11778,8 @@ CODE_00F91E:          SEP #$20                            ;; 00F91E : E2 20     
                       AND.W #$00FF                        ;; 00F92F : 29 FF 00    ;
                       INC A                               ;; 00F932 : 1A          ;
                       CMP.B !PlayerXPosNext               ;; 00F933 : C5 94       ;
-                      BEQ CODE_00F94A                     ;; 00F935 : F0 13       ;
-                      BMI CODE_00F94A                     ;; 00F937 : 30 11       ;
+                      BEQ +                               ;; 00F935 : F0 13       ;
+                      BMI +                               ;; 00F937 : 30 11       ;
                       LDA.W !SpriteMisc1534+9             ;; 00F939 : AD 3D 15    ;
                       AND.W #$00FF                        ;; 00F93C : 29 FF 00    ;
                       STA.B !_0                           ;; 00F93F : 85 00       ;
@@ -11788,22 +11788,22 @@ CODE_00F91E:          SEP #$20                            ;; 00F91E : E2 20     
                       CLC                                 ;; 00F944 : 18          ;
                       ADC.W #$000F                        ;; 00F945 : 69 0F 00    ;
                       CMP.B !_0                           ;; 00F948 : C5 00       ;
-CODE_00F94A:          JMP CODE_00E9C8                     ;; 00F94A : 4C C8 E9    ;
+                    + JMP CODE_00E9C8                     ;; 00F94A : 4C C8 E9    ;
                                                           ;;                      ;
 Return00F94D:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00F94E:          LDY.B #$00                          ;; 00F94E : A0 00       ;
                       LDA.B !PlayerYSpeed                 ;; 00F950 : A5 7D       ;
-                      BPL CODE_00F957                     ;; 00F952 : 10 03       ;
+                      BPL +                               ;; 00F952 : 10 03       ;
                       JMP CODE_00F997                     ;; 00F954 : 4C 97 F9    ;
                                                           ;;                      ;
-CODE_00F957:          JSR CODE_00F9A8                     ;; 00F957 : 20 A8 F9    ;
-                      BCS CODE_00F962                     ;; 00F95A : B0 06       ;
+                    + JSR CODE_00F9A8                     ;; 00F957 : 20 A8 F9    ;
+                      BCS +                               ;; 00F95A : B0 06       ;
                       JSR CODE_00EE1D                     ;; 00F95C : 20 1D EE    ;
                       JMP CODE_00F997                     ;; 00F95F : 4C 97 F9    ;
                                                           ;;                      ;
-CODE_00F962:          LDA.B !PlayerInAir                  ;; 00F962 : A5 72       ;
-                      BEQ CODE_00F983                     ;; 00F964 : F0 1D       ;
+                    + LDA.B !PlayerInAir                  ;; 00F962 : A5 72       ;
+                      BEQ +                               ;; 00F964 : F0 1D       ;
                       REP #$20                            ;; 00F966 : C2 20       ; Accum (16 bit) 
                       LDA.W !BrSwingPlatXPos              ;; 00F968 : AD B8 14    ;
                       AND.W #$00FF                        ;; 00F96B : 29 FF 00    ;
@@ -11814,7 +11814,7 @@ CODE_00F962:          LDA.B !PlayerInAir                  ;; 00F962 : A5 72     
                       STA.W !BrSwingYDist                 ;; 00F97A : 8D B6 14    ;
                       STA.W !KeyholeYPos                  ;; 00F97D : 8D 38 14    ;
                       JSR CODE_00F9C9                     ;; 00F980 : 20 C9 F9    ;
-CODE_00F983:          LDA.B !Mode7Angle                   ;; 00F983 : A5 36       ; Accum (8 bit) 
+                    + LDA.B !Mode7Angle                   ;; 00F983 : A5 36       ; Accum (8 bit) 
                       CLC                                 ;; 00F985 : 18          ;
                       ADC.B #$48                          ;; 00F986 : 69 48       ;
                       LSR A                               ;; 00F988 : 4A          ;
@@ -11830,9 +11830,9 @@ CODE_00F997:          REP #$20                            ;; 00F997 : C2 20     
                       LDA.B !PlayerYPosScrRel             ;; 00F999 : A5 80       ;
                       CMP.W #$00AE                        ;; 00F99B : C9 AE 00    ;
                       SEP #$20                            ;; 00F99E : E2 20       ; Accum (8 bit) 
-                      BMI CODE_00F9A5                     ;; 00F9A0 : 30 03       ;
+                      BMI +                               ;; 00F9A0 : 30 03       ;
                       JSR CODE_00F629                     ;; 00F9A2 : 20 29 F6    ;
-CODE_00F9A5:          JMP CODE_00E98C                     ;; 00F9A5 : 4C 8C E9    ;
+                    + JMP CODE_00E98C                     ;; 00F9A5 : 4C 8C E9    ;
                                                           ;;                      ;
 CODE_00F9A8:          REP #$20                            ;; 00F9A8 : C2 20       ; Accum (16 bit) 
                       LDA.B !PlayerXPosNext               ;; 00F9AA : A5 94       ;
@@ -11881,9 +11881,9 @@ CODE_00F9C9:          LDA.B !Mode7Angle                   ;; 00F9C9 : A5 36     
                       db $FF,$FF,$FF                      ;; ?QPWZ?               ;
                                                           ;;                      ;
                       LDX.B #$0B                          ;; 00FA10 : A2 0B       ; \ Unreachable 
-ADDR_00FA12:          STZ.W !SpriteStatus,X               ;; 00FA12 : 9E C8 14    ;  | Clear out sprite status table 
+                    - STZ.W !SpriteStatus,X               ;; 00FA12 : 9E C8 14    ;  | Clear out sprite status table 
                       DEX                                 ;; 00FA15 : CA          ;  | 
-                      BPL ADDR_00FA12                     ;; 00FA16 : 10 FA       ;  | 
+                      BPL -                               ;; 00FA16 : 10 FA       ;  | 
                       RTL                                 ;; ?QPWZ? : 6B          ; / 
                                                           ;;                      ;
 CODE_00FA19:          LDY.B #$32                          ;; 00FA19 : A0 32       ;
@@ -11902,9 +11902,9 @@ CODE_00FA19:          LDY.B #$32                          ;; 00FA19 : A0 32     
                       ASL A                               ;; 00FA2F : 0A          ;
                       ASL A                               ;; 00FA30 : 0A          ;
                       STA.B !_1                           ;; 00FA31 : 85 01       ;
-                      BCC CODE_00FA37                     ;; 00FA33 : 90 02       ;
+                      BCC +                               ;; 00FA33 : 90 02       ;
                       INC.B !_6                           ;; 00FA35 : E6 06       ;
-CODE_00FA37:          LDA.B !_C                           ;; 00FA37 : A5 0C       ;
+                    + LDA.B !_C                           ;; 00FA37 : A5 0C       ;
                       AND.B #$0F                          ;; 00FA39 : 29 0F       ;
                       STA.B !_0                           ;; 00FA3B : 85 00       ;
                       LDA.B !_A                           ;; 00FA3D : A5 0A       ;
@@ -11981,9 +11981,9 @@ LvlEndNextSprite:     DEY                                 ;; ?QPWZ? : 88        
                       BPL LvlEndSprLoopStrt               ;; 00FAD2 : 10 BD       ; / 
                       LDY.B #$07                          ;; 00FAD4 : A0 07       ; \ 
                       LDA.B #$00                          ;; 00FAD6 : A9 00       ;  | Clear out all extended sprites 
-CODE_00FAD8:          STA.W !ExtSpriteNumber,Y            ;; 00FAD8 : 99 0B 17    ;  | 
+                    - STA.W !ExtSpriteNumber,Y            ;; 00FAD8 : 99 0B 17    ;  | 
                       DEY                                 ;; 00FADB : 88          ;  | 
-                      BPL CODE_00FAD8                     ;; 00FADC : 10 FA       ; / 
+                      BPL -                               ;; 00FADC : 10 FA       ; / 
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -11996,12 +11996,12 @@ DATA_00FAFB:          db $FF,$74,$75,$76,$77              ;; 00FAFB             
                                                           ;;                      ;
 LvlEndPowerUp:        LDX.B !Powerup                      ;; ?QPWZ? : A6 19       ; X = Mario's power up status 
                       LDA.W !InvinsibilityTimer           ;; 00FB02 : AD 90 14    ; \ If Mario has star, X = #$04.  However this never happens as $1490 is cleared earlier 
-                      BEQ CODE_00FB09                     ;; 00FB05 : F0 02       ;  | Otherwise Mario could get a star from carrying a sprite past the goal. 
+                      BEQ +                               ;; 00FB05 : F0 02       ;  | Otherwise Mario could get a star from carrying a sprite past the goal. 
                       LDX.B #$04                          ;; 00FB07 : A2 04       ; / Unreachable instruction 
-CODE_00FB09:          LDA.W !PlayerRidingYoshi            ;; 00FB09 : AD 7A 18    ; \ If Mario on Yoshi, X = #$05 
-                      BEQ CODE_00FB10                     ;; 00FB0C : F0 02       ;  | 
+                    + LDA.W !PlayerRidingYoshi            ;; 00FB09 : AD 7A 18    ; \ If Mario on Yoshi, X = #$05 
+                      BEQ +                               ;; 00FB0C : F0 02       ;  | 
                       LDX.B #$05                          ;; 00FB0E : A2 05       ; / 
-CODE_00FB10:          LDA.W !SpriteNumber,Y               ;; 00FB10 : B9 9E 00    ; \ If Spring Board, X += #$07 
+                    + LDA.W !SpriteNumber,Y               ;; 00FB10 : B9 9E 00    ; \ If Spring Board, X += #$07 
                       CMP.B #$2F                          ;; 00FB13 : C9 2F       ;  | 
                       BEQ CODE_00FB2D                     ;; 00FB15 : F0 16       ; / 
                       CMP.B #$3E                          ;; 00FB17 : C9 3E       ; \ If P Switch, X += #$07 
@@ -12009,7 +12009,7 @@ CODE_00FB10:          LDA.W !SpriteNumber,Y               ;; 00FB10 : B9 9E 00  
                       CMP.B #$80                          ;; 00FB1B : C9 80       ; \ If Key, X += #$0E 
                       BEQ ADDR_00FB28                     ;; 00FB1D : F0 09       ; / 
                       CMP.B #$2D                          ;; 00FB1F : C9 2D       ; \ If Baby Yoshi, X += #$15 
-                      BNE CODE_00FB32                     ;; 00FB21 : D0 0F       ; / 
+                      BNE +                               ;; 00FB21 : D0 0F       ; / 
                       TXA                                 ;; 00FB23 : 8A          ;
                       CLC                                 ;; 00FB24 : 18          ;
                       ADC.B #$07                          ;; 00FB25 : 69 07       ;
@@ -12022,27 +12022,27 @@ CODE_00FB2D:          TXA                                 ;; 00FB2D : 8A        
                       CLC                                 ;; 00FB2E : 18          ;
                       ADC.B #$07                          ;; 00FB2F : 69 07       ;
                       TAX                                 ;; 00FB31 : AA          ;
-CODE_00FB32:          LDA.L DATA_00FADF,X                 ;; 00FB32 : BF DF FA 00 ;
+                    + LDA.L DATA_00FADF,X                 ;; 00FB32 : BF DF FA 00 ;
                       LDX.W !PlayerItembox                ;; 00FB36 : AE C2 0D    ;
                       CMP.L DATA_00FAFB,X                 ;; 00FB39 : DF FB FA 00 ;
-                      BNE CODE_00FB41                     ;; 00FB3D : D0 02       ;
+                      BNE +                               ;; 00FB3D : D0 02       ;
                       LDA.B #$78                          ;; 00FB3F : A9 78       ;
-CODE_00FB41:          STZ.B !_F                           ;; 00FB41 : 64 0F       ;
+                    + STZ.B !_F                           ;; 00FB41 : 64 0F       ;
                       CMP.B #$E0                          ;; 00FB43 : C9 E0       ;
-                      BCC LvlEndStoreSpr                  ;; 00FB45 : 90 0E       ;
+                      BCC +                               ;; 00FB45 : 90 0E       ;
                       PHA                                 ;; 00FB47 : 48          ;
                       AND.B #$0F                          ;; 00FB48 : 29 0F       ;
                       STA.B !_F                           ;; 00FB4A : 85 0F       ;
                       PLA                                 ;; 00FB4C : 68          ;
                       CMP.B #$F0                          ;; 00FB4D : C9 F0       ;
                       LDA.B #$78                          ;; 00FB4F : A9 78       ;
-                      BCS LvlEndStoreSpr                  ;; 00FB51 : B0 02       ;
+                      BCS +                               ;; 00FB51 : B0 02       ;
                       LDA.B #$78                          ;; 00FB53 : A9 78       ;
-LvlEndStoreSpr:       STA.W !SpriteNumber,Y               ;; ?QPWZ? : 99 9E 00    ;
+                    + STA.W !SpriteNumber,Y               ;; ?QPWZ? : 99 9E 00    ;
                       CMP.B #$76                          ;; 00FB58 : C9 76       ;
-                      BNE CODE_00FB5F                     ;; 00FB5A : D0 03       ;
+                      BNE +                               ;; 00FB5A : D0 03       ;
                       INC.W !UnusedStarCounter            ;; 00FB5C : EE CB 13    ;
-CODE_00FB5F:          TYX                                 ;; 00FB5F : BB          ;
+                    + TYX                                 ;; 00FB5F : BB          ;
                       JSL InitSpriteTables                ;; 00FB60 : 22 D2 F7 07 ;
                       LDA.B !_F                           ;; 00FB64 : A5 0F       ;
                       STA.W !SpriteMisc1594,Y             ;; 00FB66 : 99 94 15    ;
@@ -12085,9 +12085,9 @@ LvlEndSprCoins:       PHB                                 ;; ?QPWZ? : 8B        
                                                           ;;                      ;
 LvlEndSprCoinsRt:     LDY.B #$00                          ;; ?QPWZ? : A0 00       ;
                       LDA.W !Layer1DXPos                  ;; 00FBB6 : AD BD 17    ;
-                      BPL CODE_00FBBC                     ;; 00FBB9 : 10 01       ;
+                      BPL +                               ;; 00FBB9 : 10 01       ;
                       DEY                                 ;; 00FBBB : 88          ;
-CODE_00FBBC:          CLC                                 ;; 00FBBC : 18          ;
+                    + CLC                                 ;; 00FBBC : 18          ;
                       ADC.B !SpriteXPosLow,X              ;; 00FBBD : 75 E4       ;
                       STA.B !SpriteXPosLow,X              ;; 00FBBF : 95 E4       ;
                       TYA                                 ;; 00FBC1 : 98          ;
@@ -12096,10 +12096,10 @@ CODE_00FBBC:          CLC                                 ;; 00FBBC : 18        
                       LDA.W !SpriteMisc1540,X             ;; 00FBC8 : BD 40 15    ;
                       BEQ CODE_00FBF0                     ;; 00FBCB : F0 23       ;
                       CMP.B #$01                          ;; 00FBCD : C9 01       ;
-                      BNE CODE_00FBD5                     ;; 00FBCF : D0 04       ;
+                      BNE +                               ;; 00FBCF : D0 04       ;
                       LDA.B #$D0                          ;; 00FBD1 : A9 D0       ;
                       STA.B !SpriteYSpeed,X               ;; 00FBD3 : 95 AA       ;
-CODE_00FBD5:          PHX                                 ;; 00FBD5 : DA          ;
+                    + PHX                                 ;; 00FBD5 : DA          ;
                       LDA.B #$04                          ;; 00FBD6 : A9 04       ; \ Use Palette A 
                       STA.W !SpriteOBJAttribute,X         ;; 00FBD8 : 9D F6 15    ; / 
                       JSL GenericSprGfxRt2                ;; 00FBDB : 22 B2 90 01 ;
@@ -12123,9 +12123,9 @@ CODE_00FBF0:          INC.W !SpriteMisc1570,X             ;; 00FBF0 : FE 70 15  
                       JSL CODE_05B34A                     ;; 00FC01 : 22 4A B3 05 ;
                       LDA.W !SilverCoinsCollected         ;; 00FC05 : AD DD 18    ;
                       CMP.B #$0D                          ;; 00FC08 : C9 0D       ;
-                      BCC CODE_00FC0E                     ;; 00FC0A : 90 02       ;
+                      BCC +                               ;; 00FC0A : 90 02       ;
                       LDA.B #$0D                          ;; 00FC0C : A9 0D       ;
-CODE_00FC0E:          JSL GivePoints                      ;; 00FC0E : 22 E5 AC 02 ;
+                    + JSL GivePoints                      ;; 00FC0E : 22 E5 AC 02 ;
                       LDA.W !SilverCoinsCollected         ;; 00FC12 : AD DD 18    ;
                       CLC                                 ;; 00FC15 : 18          ;
                       ADC.B #$02                          ;; 00FC16 : 69 02       ;
@@ -12149,7 +12149,7 @@ ADDR_00FC25:          LDA.W !SpriteStatus,Y               ;; 00FC25 : B9 C8 14  
                       ORA.B #$0A                          ;; 00FC40 : 09 0A       ;
                       STA.W !SpriteOBJAttribute,Y         ;; 00FC42 : 99 F6 15    ;
                       LDA.W !PlayerRidingYoshi            ;; 00FC45 : AD 7A 18    ;
-                      BNE Return00FC72                    ;; 00FC48 : D0 28       ;
+                      BNE +                               ;; 00FC48 : D0 28       ;
                       LDA.B !Layer1XPos                   ;; 00FC4A : A5 1A       ;
                       SEC                                 ;; 00FC4C : 38          ;
                       SBC.B #$10                          ;; 00FC4D : E9 10       ;
@@ -12167,7 +12167,7 @@ ADDR_00FC25:          LDA.W !SpriteStatus,Y               ;; 00FC25 : B9 C8 14  
                       STA.W !SpriteMisc157C,Y             ;; 00FC6A : 99 7C 15    ;
                       LDA.B #$10                          ;; 00FC6D : A9 10       ;
                       STA.W !SpriteXSpeed,Y               ;; 00FC6F : 99 B6 00    ;
-Return00FC72:         RTL                                 ;; ?QPWZ? : 6B          ; Return 
+                    + RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 ADDR_00FC73:          DEY                                 ;; 00FC73 : 88          ;
                       BPL ADDR_00FC25                     ;; 00FC74 : 10 AF       ;
@@ -12178,16 +12178,16 @@ CODE_00FC7A:          LDA.B #$02                          ;; 00FC7A : A9 02     
                       STA.W !SPCIO1                       ;; 00FC7C : 8D FA 1D    ; / Play sound effect 
                       LDX.B #$00                          ;; 00FC7F : A2 00       ;
                       LDA.W !DisableBonusSprite           ;; 00FC81 : AD 94 1B    ;
-                      BNE CODE_00FC98                     ;; 00FC84 : D0 12       ;
+                      BNE +                               ;; 00FC84 : D0 12       ;
                       LDX.B #$05                          ;; 00FC86 : A2 05       ;
                       LDA.W !SpriteMemorySetting          ;; 00FC88 : AD 92 16    ;
                       CMP.B #$0A                          ;; 00FC8B : C9 0A       ;
-                      BEQ CODE_00FC98                     ;; 00FC8D : F0 09       ;
+                      BEQ +                               ;; 00FC8D : F0 09       ;
                       JSL FindFreeSprSlot                 ;; 00FC8F : 22 E4 A9 02 ; \ X = First free sprite slot, #$03 if none free 
                       TYX                                 ;; 00FC93 : BB          ;  | 
-                      BPL CODE_00FC98                     ;; 00FC94 : 10 02       ;  | 
+                      BPL +                               ;; 00FC94 : 10 02       ;  | 
                       LDX.B #$03                          ;; 00FC96 : A2 03       ; / 
-CODE_00FC98:          LDA.B #$08                          ;; 00FC98 : A9 08       ; \ Status = Normal 
+                    + LDA.B #$08                          ;; 00FC98 : A9 08       ; \ Status = Normal 
                       STA.W !SpriteStatus,X               ;; 00FC9A : 9D C8 14    ; / 
                       LDA.B #$35                          ;; 00FC9D : A9 35       ; \ Sprite = Yoshi 
                       STA.B !SpriteNumber,X               ;; 00FC9F : 95 9E       ; / 
@@ -12210,10 +12210,10 @@ CODE_00FC98:          LDA.B #$08                          ;; 00FC98 : A9 08     
                       LDA.W !YoshiColor                   ;; 00FCC5 : AD C7 13    ; \ Set Yoshi palette 
                       STA.W !SpriteOBJAttribute,X         ;; 00FCC8 : 9D F6 15    ; / 
                       LDA.W !YoshiHeavenFlag              ;; 00FCCB : AD 95 1B    ;
-                      BEQ CODE_00FCD5                     ;; 00FCCE : F0 05       ;
+                      BEQ +                               ;; 00FCCE : F0 05       ;
                       LDA.B #$06                          ;; 00FCD0 : A9 06       ;
                       STA.W !SpriteOBJAttribute,X         ;; 00FCD2 : 9D F6 15    ;
-CODE_00FCD5:          INC.W !PlayerRidingYoshi            ;; 00FCD5 : EE 7A 18    ;
+                    + INC.W !PlayerRidingYoshi            ;; 00FCD5 : EE 7A 18    ;
                       INC.B !SpriteTableC2,X              ;; 00FCD8 : F6 C2       ;
                       LDA.B !PlayerDirection              ;; 00FCDA : A5 76       ;
                       EOR.B #$01                          ;; 00FCDC : 49 01       ;
@@ -12225,9 +12225,9 @@ CODE_00FCD5:          INC.W !PlayerRidingYoshi            ;; 00FCD5 : EE 7A 18  
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_00FCEC:          LDX.B #$0B                          ;; 00FCEC : A2 0B       ;
-CODE_00FCEE:          STZ.W !SpriteStatus,X               ;; 00FCEE : 9E C8 14    ;
+                    - STZ.W !SpriteStatus,X               ;; 00FCEE : 9E C8 14    ;
                       DEX                                 ;; 00FCF1 : CA          ;
-                      BPL CODE_00FCEE                     ;; 00FCF2 : 10 FA       ;
+                      BPL -                               ;; 00FCF2 : 10 FA       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_00FCF5:          LDA.B #$A0                          ;; 00FCF5 : A9 A0       ;
@@ -12243,9 +12243,9 @@ CODE_00FCF5:          LDA.B #$A0                          ;; 00FCF5 : A9 A0     
 CODE_00FD08:          LDY.B #$3F                          ;; 00FD08 : A0 3F       ;
                       LDA.B !byetudlrHold                 ;; 00FD0A : A5 15       ;
                       AND.B #$83                          ;; 00FD0C : 29 83       ;
-                      BNE CODE_00FD12                     ;; 00FD0E : D0 02       ;
+                      BNE +                               ;; 00FD0E : D0 02       ;
                       LDY.B #$7F                          ;; 00FD10 : A0 7F       ;
-CODE_00FD12:          TYA                                 ;; 00FD12 : 98          ;
+                    + TYA                                 ;; 00FD12 : 98          ;
                       AND.B !EffFrame                     ;; 00FD13 : 25 14       ;
                       ORA.B !SpriteLock                   ;; 00FD15 : 05 9D       ;
                       BNE Return00FD23                    ;; 00FD17 : D0 0A       ;
@@ -12273,9 +12273,9 @@ CODE_00FD26:          LDA.B #$12                          ;; 00FD26 : A9 12     
                       BEQ CODE_00FD47                     ;; 00FD3F : F0 06       ;
                       LDA.B #$04                          ;; 00FD41 : A9 04       ;
                       LDY.B !PlayerIsDucking              ;; 00FD43 : A4 73       ;
-                      BEQ CODE_00FD49                     ;; 00FD45 : F0 02       ;
+                      BEQ +                               ;; 00FD45 : F0 02       ;
 CODE_00FD47:          LDA.B #$0C                          ;; 00FD47 : A9 0C       ;
-CODE_00FD49:          CLC                                 ;; 00FD49 : 18          ;
+                    + CLC                                 ;; 00FD49 : 18          ;
                       ADC.B !PlayerYPosNext               ;; 00FD4A : 65 96       ;
                       STA.W !ExtSpriteYPosLow,X           ;; 00FD4C : 9D 15 17    ;
                       LDA.B !PlayerYPosNext+1             ;; 00FD4F : A5 97       ;
@@ -12303,7 +12303,7 @@ CODE_00FD6B:          LDA.B #$05                          ;; 00FD6B : A9 05     
                       AND.B #$F0                          ;; 00FD79 : 29 F0       ;
                       STA.W !SmokeSpriteYPos,Y            ;; 00FD7B : 99 C4 17    ;
                       LDA.W !LayerProcessing              ;; 00FD7E : AD 33 19    ;
-                      BEQ CODE_00FD97                     ;; 00FD81 : F0 14       ;
+                      BEQ +                               ;; 00FD81 : F0 14       ;
                       LDA.B !TouchBlockXPos               ;; 00FD83 : A5 9A       ;
                       SEC                                 ;; 00FD85 : 38          ;
                       SBC.B !Layer23XRelPos               ;; 00FD86 : E5 26       ;
@@ -12314,7 +12314,7 @@ CODE_00FD6B:          LDA.B #$05                          ;; 00FD6B : A9 05     
                       SBC.B !Layer23YRelPos               ;; 00FD90 : E5 28       ;
                       AND.B #$F0                          ;; 00FD92 : 29 F0       ;
                       STA.W !SmokeSpriteYPos,Y            ;; 00FD94 : 99 C4 17    ;
-CODE_00FD97:          LDA.B #$10                          ;; 00FD97 : A9 10       ;
+                    + LDA.B #$10                          ;; 00FD97 : A9 10       ;
                       STA.W !SmokeSpriteTimer,Y           ;; 00FD99 : 99 CC 17    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -12334,13 +12334,13 @@ CODE_00FDB3:          INY                                 ;; 00FDB3 : C8        
 CODE_00FDB4:          PHX                                 ;; 00FDB4 : DA          ;
                       LDX.B #$00                          ;; 00FDB5 : A2 00       ;
                       LDA.B !Powerup                      ;; 00FDB7 : A5 19       ;
-                      BEQ CODE_00FDBC                     ;; 00FDB9 : F0 01       ;
+                      BEQ +                               ;; 00FDB9 : F0 01       ;
                       INX                                 ;; 00FDBB : E8          ;
-CODE_00FDBC:          LDA.W !PlayerRidingYoshi            ;; 00FDBC : AD 7A 18    ;
-                      BEQ CODE_00FDC3                     ;; 00FDBF : F0 02       ;
+                    + LDA.W !PlayerRidingYoshi            ;; 00FDBC : AD 7A 18    ;
+                      BEQ +                               ;; 00FDBF : F0 02       ;
                       INX                                 ;; 00FDC1 : E8          ;
                       INX                                 ;; 00FDC2 : E8          ;
-CODE_00FDC3:          LDA.B !PlayerYPosNext               ;; 00FDC3 : A5 96       ;
+                    + LDA.B !PlayerYPosNext               ;; 00FDC3 : A5 96       ;
                       CLC                                 ;; 00FDC5 : 18          ;
                       ADC.W DATA_00FD9D,X                 ;; 00FDC6 : 7D 9D FD    ;
                       PHP                                 ;; 00FDC9 : 08          ;
@@ -12366,9 +12366,9 @@ CODE_00FDC3:          LDA.B !PlayerYPosNext               ;; 00FDC3 : A5 96     
                       BMI Return00FE0D                    ;; 00FDF4 : 30 17       ;
                       STZ.B !PlayerYSpeed                 ;; 00FDF6 : 64 7D       ;
                       LDY.B !PlayerInAir                  ;; 00FDF8 : A4 72       ;
-                      BEQ CODE_00FDFE                     ;; 00FDFA : F0 02       ;
+                      BEQ +                               ;; 00FDFA : F0 02       ;
                       STZ.B !PlayerXSpeed                 ;; 00FDFC : 64 7B       ;
-CODE_00FDFE:          LDY.B #$03                          ;; 00FDFE : A0 03       ;
+                    + LDY.B #$03                          ;; 00FDFE : A0 03       ;
                       LDA.B !Powerup                      ;; 00FE00 : A5 19       ;
                       BNE CODE_00FE05                     ;; 00FE02 : D0 01       ;
                       DEY                                 ;; 00FE04 : 88          ;
@@ -12438,9 +12438,9 @@ CODE_00FE72:          LDA.B #$03                          ;; 00FE72 : A9 03     
                       ADC.B #$1A                          ;; 00FE80 : 69 1A       ;
                       PHX                                 ;; 00FE82 : DA          ;
                       LDX.W !PlayerRidingYoshi            ;; 00FE83 : AE 7A 18    ;
-                      BEQ CODE_00FE8A                     ;; 00FE86 : F0 02       ;
+                      BEQ +                               ;; 00FE86 : F0 02       ;
                       ADC.B #$10                          ;; 00FE88 : 69 10       ;
-CODE_00FE8A:          STA.W !SmokeSpriteYPos,Y            ;; 00FE8A : 99 C4 17    ;
+                    + STA.W !SmokeSpriteYPos,Y            ;; 00FE8A : 99 C4 17    ;
                       PLX                                 ;; 00FE8D : FA          ;
                       LDA.B #$13                          ;; 00FE8E : A9 13       ;
                       STA.W !SmokeSpriteTimer,Y           ;; 00FE90 : 99 CC 17    ;
@@ -12475,14 +12475,14 @@ CODE_00FEB5:          LDA.B #$06                          ;; 00FEB5 : A9 06     
                       LDA.W DATA_00FE94,Y                 ;; 00FECB : B9 94 FE    ;
                       STA.W !ExtSpriteXSpeed,X            ;; 00FECE : 9D 47 17    ;
                       LDA.W !PlayerRidingYoshi            ;; 00FED1 : AD 7A 18    ;
-                      BEQ CODE_00FEDF                     ;; 00FED4 : F0 09       ;
+                      BEQ +                               ;; 00FED4 : F0 09       ;
                       INY                                 ;; 00FED6 : C8          ;
                       INY                                 ;; 00FED7 : C8          ;
                       LDA.W !PlayerDuckingOnYoshi         ;; 00FED8 : AD DC 18    ;
-                      BEQ CODE_00FEDF                     ;; 00FEDB : F0 02       ;
+                      BEQ +                               ;; 00FEDB : F0 02       ;
                       INY                                 ;; 00FEDD : C8          ;
                       INY                                 ;; 00FEDE : C8          ;
-CODE_00FEDF:          LDA.B !PlayerXPosNext               ;; 00FEDF : A5 94       ;
+                    + LDA.B !PlayerXPosNext               ;; 00FEDF : A5 94       ;
                       CLC                                 ;; 00FEE1 : 18          ;
                       ADC.W DATA_00FE96,Y                 ;; 00FEE2 : 79 96 FE    ;
                       STA.W !ExtSpriteXPosLow,X           ;; 00FEE5 : 9D 1F 17    ;
@@ -12503,17 +12503,17 @@ CODE_00FEDF:          LDA.B !PlayerXPosNext               ;; 00FEDF : A5 94     
 ADDR_00FF07:          REP #$20                            ;; 00FF07 : C2 20       ; Accum (16 bit) 
                       LDA.W !Layer1DYPos                  ;; 00FF09 : AD BC 17    ;
                       AND.W #$FF00                        ;; 00FF0C : 29 00 FF    ;
-                      BPL ADDR_00FF14                     ;; 00FF0F : 10 03       ;
+                      BPL +                               ;; 00FF0F : 10 03       ;
                       ORA.W #$00FF                        ;; 00FF11 : 09 FF 00    ;
-ADDR_00FF14:          XBA                                 ;; 00FF14 : EB          ;
+                    + XBA                                 ;; 00FF14 : EB          ;
                       CLC                                 ;; 00FF15 : 18          ;
                       ADC.B !PlayerXPosNext               ;; 00FF16 : 65 94       ;
                       STA.B !PlayerXPosNext               ;; 00FF18 : 85 94       ;
                       LDA.W !LoadingLevelNumber           ;; 00FF1A : AD BB 17    ;
                       AND.W #$FF00                        ;; 00FF1D : 29 00 FF    ;
-                      BPL ADDR_00FF25                     ;; 00FF20 : 10 03       ;
+                      BPL +                               ;; 00FF20 : 10 03       ;
                       ORA.W #$00FF                        ;; 00FF22 : 09 FF 00    ;
-ADDR_00FF25:          XBA                                 ;; 00FF25 : EB          ;
+                    + XBA                                 ;; 00FF25 : EB          ;
                       EOR.W #$FFFF                        ;; 00FF26 : 49 FF FF    ;
                       INC A                               ;; 00FF29 : 1A          ;
                       CLC                                 ;; 00FF2A : 18          ;
@@ -12555,9 +12555,9 @@ CODE_00FF61:          LDA.W !SpriteYPosHigh,X             ;; 00FF61 : BD E0 14  
                       CMP.W #$FF00                        ;; 00FF69 : C9 00 FF    ;
                       BMI CODE_00FF73                     ;; 00FF6C : 30 05       ;
                       CMP.W #$0100                        ;; 00FF6E : C9 00 01    ;
-                      BMI CODE_00FF76                     ;; 00FF71 : 30 03       ;
+                      BMI +                               ;; 00FF71 : 30 03       ;
 CODE_00FF73:          LDA.W #$0100                        ;; 00FF73 : A9 00 01    ;
-CODE_00FF76:          STA.B !Layer3XPos                   ;; 00FF76 : 85 22       ;
+                    + STA.B !Layer3XPos                   ;; 00FF76 : 85 22       ;
                       SEP #$20                            ;; 00FF78 : E2 20       ; Accum (8 bit) 
                       LDA.W !SpriteXPosHigh,X             ;; 00FF7A : BD D4 14    ;
                       XBA                                 ;; 00FF7D : EB          ;

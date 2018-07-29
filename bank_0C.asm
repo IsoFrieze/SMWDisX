@@ -1,4 +1,4 @@
-ORG $0C8000                                               ;;                      ;
+                      ORG $0C8000                         ;;                      ;
                                                           ;;                      ;
 DATA_0C8000:          db $71,$71,$71,$71,$71,$71,$6E,$11  ;; 0C8000               ;
                       db $43,$43,$43,$11,$68,$3D,$69,$69  ;; ?QPWZ?               ;
@@ -655,12 +655,12 @@ CODE_0C93AD:          PHB                                 ;; 0C93AD : 8B        
                       PHK                                 ;; 0C93AE : 4B          ;
                       PLB                                 ;; 0C93AF : AB          ;
                       DEC.W !Layer3ScrollYSpeed+1         ;; 0C93B0 : CE 5B 14    ;
-                      BNE CODE_0C93BF                     ;; 0C93B3 : D0 0A       ;
+                      BNE +                               ;; 0C93B3 : D0 0A       ;
                       LDA.B #$23                          ;; 0C93B5 : A9 23       ;
                       STA.W !GameMode                     ;; 0C93B7 : 8D 00 01    ;
                       LDA.B #$FF                          ;; 0C93BA : A9 FF       ;
                       STA.W !CreditsScreenNumber          ;; 0C93BC : 8D E9 1D    ;
-CODE_0C93BF:          PLB                                 ;; 0C93BF : AB          ;
+                    + PLB                                 ;; 0C93BF : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -684,15 +684,15 @@ CODE_0C93E2:          LDA.W !LevelLoadObject              ;; 0C93E2 : AD 28 19  
                       LDY.W #$0000                        ;; 0C93F8 : A0 00 00    ;
                       LDX.B !Layer2DataPtr                ;; 0C93FB : A6 68       ;
                       CPX.W #$E8FE                        ;; 0C93FD : E0 FE E8    ;
-                      BCC CODE_0C9405                     ;; 0C9400 : 90 03       ;
+                      BCC +                               ;; 0C9400 : 90 03       ;
                       LDY.W #$0001                        ;; 0C9402 : A0 01 00    ;
-CODE_0C9405:          LDX.W #$0000                        ;; 0C9405 : A2 00 00    ;
+                    + LDX.W #$0000                        ;; 0C9405 : A2 00 00    ;
                       TYA                                 ;; 0C9408 : 98          ;
-CODE_0C9409:          STA.L !Layer2TilemapHigh,X          ;; 0C9409 : 9F 00 BD 7E ;
+                    - STA.L !Layer2TilemapHigh,X          ;; 0C9409 : 9F 00 BD 7E ;
                       STA.L !Layer2TilemapHigh+$200,X     ;; 0C940D : 9F 00 BF 7E ;
                       INX                                 ;; 0C9411 : E8          ;
                       CPX.W #$0200                        ;; 0C9412 : E0 00 02    ;
-                      BNE CODE_0C9409                     ;; 0C9415 : D0 F2       ;
+                      BNE -                               ;; 0C9415 : D0 F2       ;
                       LDA.B #$0C                          ;; 0C9417 : A9 0C       ;
                       STA.B !Layer2DataPtr+2              ;; 0C9419 : 85 6A       ;
                       LDX.W #$B900                        ;; 0C941B : A2 00 B9    ;
@@ -736,10 +736,10 @@ CODE_0C945B:          LDY.B !_3                           ;; 0C945B : A4 03     
                       INY                                 ;; 0C9470 : C8          ;
                       STY.B !_3                           ;; 0C9471 : 84 03       ;
                       LDY.B !_5                           ;; 0C9473 : A4 05       ;
-CODE_0C9475:          STA.B [!_D],Y                       ;; 0C9475 : 97 0D       ;
+                    - STA.B [!_D],Y                       ;; 0C9475 : 97 0D       ;
                       INY                                 ;; 0C9477 : C8          ;
                       DEC.B !_7                           ;; 0C9478 : C6 07       ;
-                      BPL CODE_0C9475                     ;; 0C947A : 10 F9       ;
+                      BPL -                               ;; 0C947A : 10 F9       ;
                       STY.B !_5                           ;; 0C947C : 84 05       ;
                       BRA CODE_0C9492                     ;; 0C947E : 80 12       ;
                                                           ;;                      ;
@@ -765,7 +765,7 @@ CODE_0C9492:          LDY.B !_3                           ;; 0C9492 : A4 03     
                       LDA.W #$9100                        ;; 0C94A3 : A9 00 91    ;
                       STA.B !_0                           ;; 0C94A6 : 85 00       ;
                       LDX.W #$0000                        ;; 0C94A8 : A2 00 00    ;
-CODE_0C94AB:          LDA.B !_0                           ;; 0C94AB : A5 00       ;
+                    - LDA.B !_0                           ;; 0C94AB : A5 00       ;
                       STA.W !Map16Pointers,X              ;; 0C94AD : 9D BE 0F    ;
                       LDA.B !_0                           ;; 0C94B0 : A5 00       ;
                       CLC                                 ;; 0C94B2 : 18          ;
@@ -774,7 +774,7 @@ CODE_0C94AB:          LDA.B !_0                           ;; 0C94AB : A5 00     
                       INX                                 ;; 0C94B8 : E8          ;
                       INX                                 ;; 0C94B9 : E8          ;
                       CPX.W #$0400                        ;; 0C94BA : E0 00 04    ;
-                      BNE CODE_0C94AB                     ;; 0C94BD : D0 EC       ;
+                      BNE -                               ;; 0C94BD : D0 EC       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0C94C0:          SEP #$20                            ;; 0C94C0 : E2 20       ; Accum (8 bit) 
@@ -870,10 +870,10 @@ CODE_0C9567:          SEP #$30                            ;; 0C9567 : E2 30     
                       LDA.B #$30                          ;; 0C9576 : A9 30       ;
                       STA.W !HW_VMADD+1                   ;; 0C9578 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDY.B #$06                          ;; 0C957B : A0 06       ;
-CODE_0C957D:          LDA.W DATA_0C9559,Y                 ;; 0C957D : B9 59 95    ;
+                    - LDA.W DATA_0C9559,Y                 ;; 0C957D : B9 59 95    ;
                       STA.W !HW_DMAPARAM+$10,Y            ;; 0C9580 : 99 10 43    ;
                       DEY                                 ;; 0C9583 : 88          ;
-                      BPL CODE_0C957D                     ;; 0C9584 : 10 F7       ;
+                      BPL -                               ;; 0C9584 : 10 F7       ;
                       LDA.W !LevelLoadObject              ;; 0C9586 : AD 28 19    ;
                       ASL A                               ;; 0C9589 : 0A          ;
                       ASL A                               ;; 0C958A : 0A          ;
@@ -889,10 +889,10 @@ CODE_0C957D:          LDA.W DATA_0C9559,Y                 ;; 0C957D : B9 59 95  
                       LDA.B #$34                          ;; 0C95A1 : A9 34       ;
                       STA.W !HW_VMADD+1                   ;; 0C95A3 : 8D 17 21    ; Address for VRAM Read/Write (High Byte)
                       LDY.B #$06                          ;; 0C95A6 : A0 06       ;
-CODE_0C95A8:          LDA.W DATA_0C9560,Y                 ;; 0C95A8 : B9 60 95    ;
+                    - LDA.W DATA_0C9560,Y                 ;; 0C95A8 : B9 60 95    ;
                       STA.W !HW_DMAPARAM+$10,Y            ;; 0C95AB : 99 10 43    ;
                       DEY                                 ;; 0C95AE : 88          ;
-                      BPL CODE_0C95A8                     ;; 0C95AF : 10 F7       ;
+                      BPL -                               ;; 0C95AF : 10 F7       ;
                       LDA.W !LevelLoadObject              ;; 0C95B1 : AD 28 19    ;
                       ASL A                               ;; 0C95B4 : 0A          ;
                       ASL A                               ;; 0C95B5 : 0A          ;
@@ -1207,12 +1207,12 @@ CODE_0C9EB1:          REP #$30                            ;; 0C9EB1 : C2 30     
                       STA.L !DynamicStripeImage+1,X       ;; 0C9EC5 : 9F 7E 83 7F ;
                       INX                                 ;; 0C9EC9 : E8          ;
                       INX                                 ;; 0C9ECA : E8          ;
-CODE_0C9ECB:          LDA.W DATA_0C9EAC,Y                 ;; 0C9ECB : B9 AC 9E    ;
+                    - LDA.W DATA_0C9EAC,Y                 ;; 0C9ECB : B9 AC 9E    ;
                       STA.L !DynamicStripeImage,X         ;; 0C9ECE : 9F 7D 83 7F ;
                       INX                                 ;; 0C9ED2 : E8          ;
                       INY                                 ;; 0C9ED3 : C8          ;
                       CPY.W #$0005                        ;; 0C9ED4 : C0 05 00    ;
-                      BNE CODE_0C9ECB                     ;; 0C9ED7 : D0 F2       ;
+                      BNE -                               ;; 0C9ED7 : D0 F2       ;
                       REP #$20                            ;; 0C9ED9 : C2 20       ; Accum (16 bit) 
                       DEX                                 ;; 0C9EDB : CA          ;
                       TXA                                 ;; 0C9EDC : 8A          ;
@@ -1250,7 +1250,7 @@ CODE_0C9ECB:          LDA.W DATA_0C9EAC,Y                 ;; 0C9ECB : B9 AC 9E  
                       INX                                 ;; 0C9F22 : E8          ;
                       INX                                 ;; 0C9F23 : E8          ;
                       REP #$20                            ;; 0C9F24 : C2 20       ; Accum (16 bit) 
-CODE_0C9F26:          LDA.W DATA_0C95C7,Y                 ;; 0C9F26 : B9 C7 95    ;
+                    - LDA.W DATA_0C95C7,Y                 ;; 0C9F26 : B9 C7 95    ;
                       STA.L !DynamicStripeImage,X         ;; 0C9F29 : 9F 7D 83 7F ;
                       INX                                 ;; 0C9F2D : E8          ;
                       INX                                 ;; 0C9F2E : E8          ;
@@ -1258,7 +1258,7 @@ CODE_0C9F26:          LDA.W DATA_0C95C7,Y                 ;; 0C9F26 : B9 C7 95  
                       INY                                 ;; 0C9F30 : C8          ;
                       DEC.B !_0                           ;; 0C9F31 : C6 00       ;
                       DEC.B !_0                           ;; 0C9F33 : C6 00       ;
-                      BPL CODE_0C9F26                     ;; 0C9F35 : 10 EF       ;
+                      BPL -                               ;; 0C9F35 : 10 EF       ;
                       LDA.W #$00FF                        ;; 0C9F37 : A9 FF 00    ;
                       STA.L !DynamicStripeImage,X         ;; 0C9F3A : 9F 7D 83 7F ;
                       TXA                                 ;; 0C9F3E : 8A          ;
@@ -1270,11 +1270,11 @@ CODE_0C9F43:          REP #$20                            ;; 0C9F43 : C2 20     
                       ADC.W #$0020                        ;; 0C9F4A : 69 20 00    ;
                       STA.B !Layer1DataPtr                ;; 0C9F4D : 85 65       ;
                       AND.W #$03FF                        ;; 0C9F4F : 29 FF 03    ;
-                      BNE Return0C9F5B                    ;; 0C9F52 : D0 07       ;
+                      BNE +                               ;; 0C9F52 : D0 07       ;
                       LDA.B !Layer1DataPtr                ;; 0C9F54 : A5 65       ;
                       EOR.W #$0C00                        ;; 0C9F56 : 49 00 0C    ;
                       STA.B !Layer1DataPtr                ;; 0C9F59 : 85 65       ;
-Return0C9F5B:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_0C9F5C:          db $C0,$00,$80,$01,$40,$02,$00,$03  ;; 0C9F5C               ;
@@ -1291,7 +1291,7 @@ CODE_0C9F6A:          REP #$20                            ;; 0C9F6A : C2 20     
                       STA.B !Layer2XPos,X                 ;; 0C9F7D : 95 1E       ;
                       LDA.B !Layer3YPos                   ;; 0C9F7F : A5 24       ;
                       CMP.W #$0559                        ;; 0C9F81 : C9 59 05    ;
-                      BCS CODE_0C9FAC                     ;; 0C9F84 : B0 26       ;
+                      BCS +                               ;; 0C9F84 : B0 26       ;
                       LDX.B #$02                          ;; 0C9F86 : A2 02       ;
                       LDA.W #$0040                        ;; 0C9F88 : A9 40 00    ;
                       STA.W !Layer1ScrollXSpeed,X         ;; 0C9F8B : 9D 46 14    ;
@@ -1301,27 +1301,27 @@ CODE_0C9F6A:          REP #$20                            ;; 0C9F6A : C2 20     
                       JSR CODE_0C9FCB                     ;; 0C9F94 : 20 CB 9F    ;
                       LDA.B !_0,X                         ;; 0C9F97 : B5 00       ;
                       CMP.B !_4                           ;; 0C9F99 : C5 04       ;
-                      BEQ CODE_0C9FAC                     ;; 0C9F9B : F0 0F       ;
+                      BEQ +                               ;; 0C9F9B : F0 0F       ;
                       STA.B !Layer3YPos                   ;; 0C9F9D : 85 24       ;
                       LDA.B !Layer3YPos                   ;; 0C9F9F : A5 24       ;
                       AND.W #$0007                        ;; 0C9FA1 : 29 07 00    ;
                       CMP.W #$0001                        ;; 0C9FA4 : C9 01 00    ;
-                      BNE CODE_0C9FAC                     ;; 0C9FA7 : D0 03       ;
+                      BNE +                               ;; 0C9FA7 : D0 03       ;
                       JSR CODE_0C9EB1                     ;; 0C9FA9 : 20 B1 9E    ;
-CODE_0C9FAC:          LDX.B #$0C                          ;; 0C9FAC : A2 0C       ;
+                    + LDX.B #$0C                          ;; 0C9FAC : A2 0C       ;
 CODE_0C9FAE:          LDA.B !Layer3YPos                   ;; 0C9FAE : A5 24       ;
                       CMP.W DATA_0C9F5C,X                 ;; 0C9FB0 : DD 5C 9F    ;
                       BEQ CODE_0C9FBB                     ;; 0C9FB3 : F0 06       ;
                       DEX                                 ;; 0C9FB5 : CA          ;
                       DEX                                 ;; 0C9FB6 : CA          ;
                       BPL CODE_0C9FAE                     ;; 0C9FB7 : 10 F5       ;
-                      BRA CODE_0C9FC6                     ;; 0C9FB9 : 80 0B       ;
+                      BRA +                               ;; 0C9FB9 : 80 0B       ;
                                                           ;;                      ;
 CODE_0C9FBB:          LDA.W !MessageBoxExpand             ;; 0C9FBB : AD 88 1B    ;
                       AND.W #$00FF                        ;; 0C9FBE : 29 FF 00    ;
-                      BNE CODE_0C9FC6                     ;; 0C9FC1 : D0 03       ;
+                      BNE +                               ;; 0C9FC1 : D0 03       ;
                       INC.W !MessageBoxExpand             ;; 0C9FC3 : EE 88 1B    ;
-CODE_0C9FC6:          SEP #$20                            ;; 0C9FC6 : E2 20       ; Accum (8 bit) 
+                    + SEP #$20                            ;; 0C9FC6 : E2 20       ; Accum (8 bit) 
                       BRL CODE_0C9FEA                     ;; 0C9FC8 : 82 1F 00    ;
 CODE_0C9FCB:          LDA.W !Layer1ScrollXPosUpd,X        ;; 0C9FCB : BD 4E 14    ; Accum (16 bit) 
                       AND.W #$00FF                        ;; 0C9FCE : 29 FF 00    ;
@@ -1329,9 +1329,9 @@ CODE_0C9FCB:          LDA.W !Layer1ScrollXPosUpd,X        ;; 0C9FCB : BD 4E 14  
                       ADC.W !Layer1ScrollXSpeed,X         ;; 0C9FD2 : 7D 46 14    ;
                       STA.W !Layer1ScrollXPosUpd,X        ;; 0C9FD5 : 9D 4E 14    ;
                       AND.W #$FF00                        ;; 0C9FD8 : 29 00 FF    ;
-                      BPL CODE_0C9FE0                     ;; 0C9FDB : 10 03       ;
+                      BPL +                               ;; 0C9FDB : 10 03       ;
                       ORA.W #$00FF                        ;; 0C9FDD : 09 FF 00    ;
-CODE_0C9FE0:          XBA                                 ;; 0C9FE0 : EB          ;
+                    + XBA                                 ;; 0C9FE0 : EB          ;
                       CLC                                 ;; 0C9FE1 : 18          ;
                       ADC.B !_0,X                         ;; 0C9FE2 : 75 00       ;
                       STA.B !_0,X                         ;; 0C9FE4 : 95 00       ;
@@ -1391,13 +1391,13 @@ CODE_0CA051:          PHB                                 ;; 0CA051 : 8B        
                       PHK                                 ;; 0CA052 : 4B          ;
                       PLB                                 ;; 0CA053 : AB          ;
                       LDX.B #$0E                          ;; 0CA054 : A2 0E       ;
-CODE_0CA056:          STZ.W !CreditsSprYPosSpx,X          ;; 0CA056 : 9E 23 0B    ;
+                    - STZ.W !CreditsSprYPosSpx,X          ;; 0CA056 : 9E 23 0B    ;
                       STZ.W !CreditsSprXPosSpx,X          ;; 0CA059 : 9E 32 0B    ;
                       DEX                                 ;; 0CA05C : CA          ;
-                      BPL CODE_0CA056                     ;; 0CA05D : 10 F7       ;
+                      BPL -                               ;; 0CA05D : 10 F7       ;
                       LDX.B #$0D                          ;; 0CA05F : A2 0D       ;
                       LDY.B #$06                          ;; 0CA061 : A0 06       ;
-CODE_0CA063:          LDA.W DATA_0CA04A,Y                 ;; 0CA063 : B9 4A A0    ;
+                    - LDA.W DATA_0CA04A,Y                 ;; 0CA063 : B9 4A A0    ;
                       STA.W !CreditsSprYPosLow,X          ;; 0CA066 : 9D 41 0B    ;
                       STZ.W !CreditsSprYPosHigh,X         ;; 0CA069 : 9E 5F 0B    ;
                       LDA.W DATA_0CA043,Y                 ;; 0CA06C : B9 43 A0    ;
@@ -1410,7 +1410,7 @@ CODE_0CA063:          LDA.W DATA_0CA04A,Y                 ;; 0CA063 : B9 4A A0  
                       DEY                                 ;; 0CA080 : 88          ;
                       DEX                                 ;; 0CA081 : CA          ;
                       CPX.B #$06                          ;; 0CA082 : E0 06       ;
-                      BNE CODE_0CA063                     ;; 0CA084 : D0 DD       ;
+                      BNE -                               ;; 0CA084 : D0 DD       ;
                       STZ.B !PlayerDirection              ;; 0CA086 : 64 76       ;
                       LDA.B #$E2                          ;; 0CA088 : A9 E2       ;
                       STA.W !MessageBoxTimer              ;; 0CA08A : 8D 89 1B    ;
@@ -1441,7 +1441,7 @@ CODE_0CA0E3:          LDA.B #$10                          ;; 0CA0E3 : A9 10     
                       LDY.B #$00                          ;; 0CA0EF : A0 00       ;
 CODE_0CA0F1:          LDA.W DATA_0CA08F,Y                 ;; 0CA0F1 : B9 8F A0    ;
                       CMP.B #$FF                          ;; 0CA0F4 : C9 FF       ;
-                      BEQ CODE_0CA11A                     ;; 0CA0F6 : F0 22       ;
+                      BEQ +                               ;; 0CA0F6 : F0 22       ;
                       STA.W !OAMTileNo+$100,X             ;; 0CA0F8 : 9D 02 03    ;
                       LDA.W DATA_0CA0B9,Y                 ;; 0CA0FB : B9 B9 A0    ;
                       STA.W !OAMTileAttr+$100,X           ;; 0CA0FE : 9D 03 03    ;
@@ -1461,19 +1461,19 @@ CODE_0CA0F1:          LDA.W DATA_0CA08F,Y                 ;; 0CA0F1 : B9 8F A0  
                       INX                                 ;; 0CA117 : E8          ;
                       INX                                 ;; 0CA118 : E8          ;
                       INX                                 ;; 0CA119 : E8          ;
-CODE_0CA11A:          LDA.B !_0                           ;; 0CA11A : A5 00       ;
+                    + LDA.B !_0                           ;; 0CA11A : A5 00       ;
                       CLC                                 ;; 0CA11C : 18          ;
                       ADC.B #$10                          ;; 0CA11D : 69 10       ;
                       STA.B !_0                           ;; 0CA11F : 85 00       ;
                       CMP.B #$F0                          ;; 0CA121 : C9 F0       ;
-                      BNE CODE_0CA130                     ;; 0CA123 : D0 0B       ;
+                      BNE +                               ;; 0CA123 : D0 0B       ;
                       LDA.B !_2                           ;; 0CA125 : A5 02       ;
                       STA.B !_0                           ;; 0CA127 : 85 00       ;
                       LDA.B !_1                           ;; 0CA129 : A5 01       ;
                       CLC                                 ;; 0CA12B : 18          ;
                       ADC.B #$10                          ;; 0CA12C : 69 10       ;
                       STA.B !_1                           ;; 0CA12E : 85 01       ;
-CODE_0CA130:          INY                                 ;; 0CA130 : C8          ;
+                    + INY                                 ;; 0CA130 : C8          ;
                       CPY.B #$2A                          ;; 0CA131 : C0 2A       ;
                       BNE CODE_0CA0F1                     ;; 0CA133 : D0 BC       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -1512,7 +1512,7 @@ CODE_0CA159:          REP #$20                            ;; 0CA159 : C2 20     
                       STA.B !_A                           ;; 0CA17F : 85 0A       ;
                       SEP #$20                            ;; 0CA181 : E2 20       ; Accum (8 bit) 
 CODE_0CA183:          LDA.B !_1                           ;; 0CA183 : A5 01       ;
-                      BNE CODE_0CA1AB                     ;; 0CA185 : D0 24       ;
+                      BNE +                               ;; 0CA185 : D0 24       ;
                       LDA.W DATA_0CA136,Y                 ;; 0CA187 : B9 36 A1    ;
                       STA.W !OAMTileNo+$100,X             ;; 0CA18A : 9D 02 03    ;
                       LDA.B #$35                          ;; 0CA18D : A9 35       ;
@@ -1533,7 +1533,7 @@ CODE_0CA183:          LDA.B !_1                           ;; 0CA183 : A5 01     
                       INX                                 ;; 0CA1A8 : E8          ;
                       INX                                 ;; 0CA1A9 : E8          ;
                       INX                                 ;; 0CA1AA : E8          ;
-CODE_0CA1AB:          REP #$20                            ;; 0CA1AB : C2 20       ; Accum (16 bit) 
+                    + REP #$20                            ;; 0CA1AB : C2 20       ; Accum (16 bit) 
                       LDA.B !_0                           ;; 0CA1AD : A5 00       ;
                       CLC                                 ;; 0CA1AF : 18          ;
                       ADC.W #$0010                        ;; 0CA1B0 : 69 10 00    ;
@@ -1542,7 +1542,7 @@ CODE_0CA1AB:          REP #$20                            ;; 0CA1AB : C2 20     
                       TYA                                 ;; 0CA1B7 : 98          ;
                       AND.B #$07                          ;; 0CA1B8 : 29 07       ;
                       CMP.B #$03                          ;; 0CA1BA : C9 03       ;
-                      BNE CODE_0CA1CD                     ;; 0CA1BC : D0 0F       ;
+                      BNE +                               ;; 0CA1BC : D0 0F       ;
                       LDA.B !_2                           ;; 0CA1BE : A5 02       ;
                       STA.B !_0                           ;; 0CA1C0 : 85 00       ;
                       LDA.B !_3                           ;; 0CA1C2 : A5 03       ;
@@ -1551,7 +1551,7 @@ CODE_0CA1AB:          REP #$20                            ;; 0CA1AB : C2 20     
                       CLC                                 ;; 0CA1C8 : 18          ;
                       ADC.B #$10                          ;; 0CA1C9 : 69 10       ;
                       STA.B !_8                           ;; 0CA1CB : 85 08       ;
-CODE_0CA1CD:          INY                                 ;; 0CA1CD : C8          ;
+                    + INY                                 ;; 0CA1CD : C8          ;
                       TYA                                 ;; 0CA1CE : 98          ;
                       AND.B #$07                          ;; 0CA1CF : 29 07       ;
                       BNE CODE_0CA183                     ;; 0CA1D1 : D0 B0       ;
@@ -1586,7 +1586,7 @@ CODE_0CA1F6:          LDA.B #$60                          ;; 0CA1F6 : A9 60     
                       JSR CODE_0CA764                     ;; 0CA20F : 20 64 A7    ;
                       JSR CODE_0CA7B4                     ;; 0CA212 : 20 B4 A7    ;
                       LDA.W !Layer1ScrollType             ;; 0CA215 : AD 42 14    ;
-                      BNE CODE_0CA22D                     ;; 0CA218 : D0 13       ;
+                      BNE +                               ;; 0CA218 : D0 13       ;
                       LDA.B !SpriteXPosLow                ;; 0CA21A : A5 E4       ;
                       STA.B !_0                           ;; 0CA21C : 85 00       ;
                       LDA.B #$9F                          ;; 0CA21E : A9 9F       ;
@@ -1596,7 +1596,7 @@ CODE_0CA1F6:          LDA.B #$60                          ;; 0CA1F6 : A9 60     
                       LDA.B #$01                          ;; 0CA226 : A9 01       ;
                       STA.B !_E                           ;; 0CA228 : 85 0E       ;
                       JSR CODE_0CAA15                     ;; 0CA22A : 20 15 AA    ;
-CODE_0CA22D:          STZ.B !_1                           ;; 0CA22D : 64 01       ;
+                    + STZ.B !_1                           ;; 0CA22D : 64 01       ;
                       LDA.W !CreditsSprXPosLow            ;; 0CA22F : AD 50 0B    ;
                       CLC                                 ;; 0CA232 : 18          ;
                       ADC.B #$10                          ;; 0CA233 : 69 10       ;
@@ -1650,13 +1650,13 @@ CODE_0CA24F:          LDA.B #$F8                          ;; 0CA24F : A9 F8     
                       LDA.B #$9F                          ;; 0CA29F : A9 9F       ;
                       STA.B !_2                           ;; 0CA2A1 : 85 02       ;
                       DEC.W !Layer1ScrollXPosUpd          ;; 0CA2A3 : CE 4E 14    ;
-                      BPL CODE_0CA2B5                     ;; 0CA2A6 : 10 0D       ;
+                      BPL +                               ;; 0CA2A6 : 10 0D       ;
                       LDA.B #$06                          ;; 0CA2A8 : A9 06       ;
                       STA.W !Layer1ScrollXPosUpd          ;; 0CA2AA : 8D 4E 14    ;
                       LDA.W !Layer1ScrollXPosUpd+1        ;; 0CA2AD : AD 4F 14    ;
                       EOR.B #$01                          ;; 0CA2B0 : 49 01       ;
                       STA.W !Layer1ScrollXPosUpd+1        ;; 0CA2B2 : 8D 4F 14    ;
-CODE_0CA2B5:          LDA.W !Layer1ScrollXPosUpd+1        ;; 0CA2B5 : AD 4F 14    ;
+                    + LDA.W !Layer1ScrollXPosUpd+1        ;; 0CA2B5 : AD 4F 14    ;
                       CLC                                 ;; 0CA2B8 : 18          ;
                       ADC.B #$03                          ;; 0CA2B9 : 69 03       ;
                       ASL A                               ;; 0CA2BB : 0A          ;
@@ -1683,11 +1683,11 @@ CODE_0CA2E4:          CPX.B #$0B                          ;; 0CA2E4 : E0 0B     
                       BCC CODE_0CA2EF                     ;; 0CA2E6 : 90 07       ;
                       LDA.W !CreditsSprXPosLow+$0B        ;; 0CA2E8 : AD 5B 0B    ;
                       CMP.B #$98                          ;; 0CA2EB : C9 98       ;
-                      BEQ CODE_0CA2F7                     ;; 0CA2ED : F0 08       ;
+                      BEQ +                               ;; 0CA2ED : F0 08       ;
 CODE_0CA2EF:          LDA.B #$F8                          ;; 0CA2EF : A9 F8       ;
                       STA.W !CreditsSprXSpeed,X           ;; 0CA2F1 : 9D 14 0B    ;
                       JSR CODE_0CA74F                     ;; 0CA2F4 : 20 4F A7    ;
-CODE_0CA2F7:          DEX                                 ;; 0CA2F7 : CA          ;
+                    + DEX                                 ;; 0CA2F7 : CA          ;
                       CPX.B #$06                          ;; 0CA2F8 : E0 06       ;
                       BNE CODE_0CA2E4                     ;; 0CA2FA : D0 E8       ;
 CODE_0CA2FC:          SEP #$20                            ;; 0CA2FC : E2 20       ; Accum (8 bit) 
@@ -1712,12 +1712,12 @@ CODE_0CA315:          LDX.B #$01                          ;; 0CA315 : A2 01     
                       JSR CODE_0CA721                     ;; 0CA320 : 20 21 A7    ;
                       LDA.W !CreditsSprYPosLow,X          ;; 0CA323 : BD 41 0B    ;
                       CMP.B #$9F                          ;; 0CA326 : C9 9F       ;
-                      BCC CODE_0CA334                     ;; 0CA328 : 90 0A       ;
+                      BCC +                               ;; 0CA328 : 90 0A       ;
                       LDA.B #$F0                          ;; 0CA32A : A9 F0       ;
                       STA.W !CreditsSprYSpeed,X           ;; 0CA32C : 9D 05 0B    ;
                       LDA.B #$9F                          ;; 0CA32F : A9 9F       ;
                       STA.W !CreditsSprYPosLow,X          ;; 0CA331 : 9D 41 0B    ;
-CODE_0CA334:          LDY.B #$00                          ;; 0CA334 : A0 00       ;
+                    + LDY.B #$00                          ;; 0CA334 : A0 00       ;
                       LDA.W !CreditsSprYSpeed+1           ;; 0CA336 : AD 06 0B    ;
                       BPL CODE_0CA349                     ;; 0CA339 : 10 0E       ;
                       CMP.B #$F4                          ;; 0CA33B : C9 F4       ;
@@ -1736,9 +1736,9 @@ CODE_0CA349:          CMP.B #$0C                          ;; 0CA349 : C9 0C     
                       LDY.B #$02                          ;; 0CA353 : A0 02       ;
 CODE_0CA355:          STY.W !Layer3ScrollXSpeed           ;; 0CA355 : 8C 58 14    ;
                       LDA.W !CreditsJumpingYoshi          ;; 0CA358 : AD 57 14    ;
-                      BEQ Return0CA3B3                    ;; 0CA35B : F0 56       ;
+                      BEQ +                               ;; 0CA35B : F0 56       ;
                       CMP.B #$01                          ;; 0CA35D : C9 01       ;
-                      BNE Return0CA3B3                    ;; 0CA35F : D0 52       ;
+                      BNE +                               ;; 0CA35F : D0 52       ;
                       LDA.B #$18                          ;; 0CA361 : A9 18       ;
                       STA.B !_0                           ;; 0CA363 : 85 00       ;
                       STZ.B !_1                           ;; 0CA365 : 64 01       ;
@@ -1779,7 +1779,7 @@ CODE_0CA355:          STY.W !Layer3ScrollXSpeed           ;; 0CA355 : 8C 58 14  
                       LDA.B #$00                          ;; 0CA3AC : A9 00       ;
                       STA.B !_E                           ;; 0CA3AE : 85 0E       ;
                       JSR CODE_0CAA15                     ;; 0CA3B0 : 20 15 AA    ;
-Return0CA3B3:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_0CA3B4:          db $40,$50,$60,$70,$80,$90,$A0      ;; 0CA3B4               ;
@@ -1819,7 +1819,7 @@ CODE_0CA3C9:          PHB                                 ;; 0CA3C9 : 8B        
                       STA.W !SPCIO2                       ;; 0CA40D : 8D FB 1D    ; / Change music 
                       LDX.B #$0D                          ;; 0CA410 : A2 0D       ;
                       LDY.B #$06                          ;; 0CA412 : A0 06       ;
-CODE_0CA414:          LDA.W DATA_0CA3BB,Y                 ;; 0CA414 : B9 BB A3    ;
+                    - LDA.W DATA_0CA3BB,Y                 ;; 0CA414 : B9 BB A3    ;
                       STA.W !CreditsSprYPosLow,X          ;; 0CA417 : 9D 41 0B    ;
                       STZ.W !CreditsSprYPosHigh,X         ;; 0CA41A : 9E 5F 0B    ;
                       LDA.W DATA_0CA3B4,Y                 ;; 0CA41D : B9 B4 A3    ;
@@ -1832,7 +1832,7 @@ CODE_0CA414:          LDA.W DATA_0CA3BB,Y                 ;; 0CA414 : B9 BB A3  
                       DEY                                 ;; 0CA431 : 88          ;
                       DEX                                 ;; 0CA432 : CA          ;
                       CPX.B #$06                          ;; 0CA433 : E0 06       ;
-                      BNE CODE_0CA414                     ;; 0CA435 : D0 DD       ;
+                      BNE -                               ;; 0CA435 : D0 DD       ;
                       PLB                                 ;; 0CA437 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -1844,13 +1844,13 @@ CODE_0CA43C:          LDA.W !Layer3ScrollXSpeed           ;; 0CA43C : AD 58 14  
                       BCS CODE_0CA45C                     ;; 0CA441 : B0 19       ;
                       JSR CODE_0CA315                     ;; 0CA443 : 20 15 A3    ;
                       LDA.W !Layer3ScrollXSpeed           ;; 0CA446 : AD 58 14    ;
-                      BNE CODE_0CA457                     ;; 0CA449 : D0 0C       ;
+                      BNE +                               ;; 0CA449 : D0 0C       ;
                       LDA.W !CreditsSprYPosLow+1          ;; 0CA44B : AD 42 0B    ;
                       CMP.B #$9F                          ;; 0CA44E : C9 9F       ;
-                      BNE CODE_0CA457                     ;; 0CA450 : D0 05       ;
+                      BNE +                               ;; 0CA450 : D0 05       ;
                       LDA.B #$08                          ;; 0CA452 : A9 08       ;
                       STA.W !Layer3ScrollXSpeed           ;; 0CA454 : 8D 58 14    ;
-CODE_0CA457:          LDY.B #$00                          ;; 0CA457 : A0 00       ;
+                    + LDY.B #$00                          ;; 0CA457 : A0 00       ;
                       BRL CODE_0CA510                     ;; 0CA459 : 82 B4 00    ;
 CODE_0CA45C:          DEC.W !Layer3ScrollXSpeed+1         ;; 0CA45C : CE 59 14    ;
                       BPL CODE_0CA478                     ;; 0CA45F : 10 17       ;
@@ -1894,7 +1894,7 @@ CODE_0CA478:          LDA.W !Layer3ScrollXSpeed           ;; 0CA478 : AD 58 14  
                       TAY                                 ;; 0CA4AD : A8          ;
                       LDX.B #$F0                          ;; 0CA4AE : A2 F0       ;
                       JSR CODE_0CA821                     ;; 0CA4B0 : 20 21 A8    ;
-                      BRL CODE_0CA4E9                     ;; 0CA4B3 : 82 33 00    ;
+                      BRL +                               ;; 0CA4B3 : 82 33 00    ;
 CODE_0CA4B6:          LDA.B #$18                          ;; 0CA4B6 : A9 18       ;
                       STA.B !_0                           ;; 0CA4B8 : 85 00       ;
                       STZ.B !_1                           ;; 0CA4BA : 64 01       ;
@@ -1923,7 +1923,7 @@ CODE_0CA4B6:          LDA.B #$18                          ;; 0CA4B6 : A9 18     
                       TAY                                 ;; 0CA4E3 : A8          ;
                       LDX.B #$D8                          ;; 0CA4E4 : A2 D8       ;
                       JSR CODE_0CA99E                     ;; 0CA4E6 : 20 9E A9    ;
-CODE_0CA4E9:          LDA.W !Layer3ScrollXSpeed           ;; 0CA4E9 : AD 58 14    ;
+                    + LDA.W !Layer3ScrollXSpeed           ;; 0CA4E9 : AD 58 14    ;
                       AND.B #$03                          ;; 0CA4EC : 29 03       ;
                       TAY                                 ;; 0CA4EE : A8          ;
                       LDA.W DATA_0CA439,Y                 ;; 0CA4EF : B9 39 A4    ;
@@ -2018,10 +2018,10 @@ CODE_0CA5B6:          STZ.W !CreditsSprXPosHigh+2         ;; 0CA5B6 : 9C 70 0B  
                       LDA.B #$0B                          ;; 0CA5C1 : A9 0B       ;
                       STA.W !SPCIO2                       ;; 0CA5C3 : 8D FB 1D    ; / Change music 
                       INC.W !Layer1ScrollType             ;; 0CA5C6 : EE 42 14    ;
-                      BRA CODE_0CA5CE                     ;; 0CA5C9 : 80 03       ;
+                      BRA +                               ;; 0CA5C9 : 80 03       ;
                                                           ;;                      ;
 CODE_0CA5CB:          JSR CODE_0CA5DE                     ;; 0CA5CB : 20 DE A5    ;
-CODE_0CA5CE:          JSR CODE_0CA4B6                     ;; 0CA5CE : 20 B6 A4    ;
+                    + JSR CODE_0CA4B6                     ;; 0CA5CE : 20 B6 A4    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -2038,9 +2038,9 @@ CODE_0CA5E5:          LDA.W !CreditsSprYSpeed,X           ;; 0CA5E5 : BD 05 0B  
                       CLC                                 ;; 0CA5E8 : 18          ;
                       ADC.B #$06                          ;; 0CA5E9 : 69 06       ;
                       CMP.B #$70                          ;; 0CA5EB : C9 70       ;
-                      BEQ CODE_0CA5F2                     ;; 0CA5ED : F0 03       ;
+                      BEQ +                               ;; 0CA5ED : F0 03       ;
                       STA.W !CreditsSprYSpeed,X           ;; 0CA5EF : 9D 05 0B    ;
-CODE_0CA5F2:          TXA                                 ;; 0CA5F2 : 8A          ;
+                    + TXA                                 ;; 0CA5F2 : 8A          ;
                       SEC                                 ;; 0CA5F3 : 38          ;
                       SBC.B #$03                          ;; 0CA5F4 : E9 03       ;
                       TAY                                 ;; 0CA5F6 : A8          ;
@@ -2054,17 +2054,17 @@ CODE_0CA5F2:          TXA                                 ;; 0CA5F2 : 8A        
                       LDA.W !CreditsSprYPosLow+3          ;; 0CA608 : AD 44 0B    ;
                       AND.B #$F0                          ;; 0CA60B : 29 F0       ;
                       CMP.B #$F0                          ;; 0CA60D : C9 F0       ;
-                      BNE CODE_0CA614                     ;; 0CA60F : D0 03       ;
+                      BNE +                               ;; 0CA60F : D0 03       ;
                       STZ.W !Layer3ScrollXPosUpd          ;; 0CA611 : 9C 5C 14    ;
-CODE_0CA614:          LDX.B #$00                          ;; 0CA614 : A2 00       ;
+                    + LDX.B #$00                          ;; 0CA614 : A2 00       ;
                       LDY.B #$06                          ;; 0CA616 : A0 06       ;
 CODE_0CA618:          LDA.W !CreditsSprXPosHigh,Y         ;; 0CA618 : B9 6E 0B    ;
-                      BNE CODE_0CA655                     ;; 0CA61B : D0 38       ;
+                      BNE +                               ;; 0CA61B : D0 38       ;
                       LDA.W !CreditsSprYPosHigh,Y         ;; 0CA61D : B9 5F 0B    ;
-                      BNE CODE_0CA655                     ;; 0CA620 : D0 33       ;
+                      BNE +                               ;; 0CA620 : D0 33       ;
                       LDA.W !CreditsSprYPosLow,Y          ;; 0CA622 : B9 41 0B    ;
                       CMP.B #$F0                          ;; 0CA625 : C9 F0       ;
-                      BCS CODE_0CA655                     ;; 0CA627 : B0 2C       ;
+                      BCS +                               ;; 0CA627 : B0 2C       ;
                       LDA.W !CreditsSprXPosLow,Y          ;; 0CA629 : B9 50 0B    ;
                       STA.W !OAMTileXPos,X                ;; 0CA62C : 9D 00 02    ;
                       LDA.W !CreditsSprYPosLow,Y          ;; 0CA62F : B9 41 0B    ;
@@ -2090,7 +2090,7 @@ CODE_0CA618:          LDA.W !CreditsSprXPosHigh,Y         ;; 0CA618 : B9 6E 0B  
                       INX                                 ;; 0CA652 : E8          ;
                       INX                                 ;; 0CA653 : E8          ;
                       INX                                 ;; 0CA654 : E8          ;
-CODE_0CA655:          DEY                                 ;; 0CA655 : 88          ;
+                    + DEY                                 ;; 0CA655 : 88          ;
                       CPY.B #$02                          ;; 0CA656 : C0 02       ;
                       BNE CODE_0CA618                     ;; 0CA658 : D0 BE       ;
 Return0CA65A:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -2103,12 +2103,12 @@ CODE_0CA65B:          LDX.B #$02                          ;; 0CA65B : A2 02     
                       JSR CODE_0CA74F                     ;; 0CA666 : 20 4F A7    ;
                       LDA.W !CreditsSprXPosLow,X          ;; 0CA669 : BD 50 0B    ;
                       CMP.B #$F8                          ;; 0CA66C : C9 F8       ;
-                      BCC CODE_0CA67A                     ;; 0CA66E : 90 0A       ;
+                      BCC +                               ;; 0CA66E : 90 0A       ;
                       INC.W !Layer1ScrollType             ;; 0CA670 : EE 42 14    ;
                       LDA.B #$F0                          ;; 0CA673 : A9 F0       ;
                       STA.W !Layer3ScrollXPosUpd+1        ;; 0CA675 : 8D 5D 14    ;
                       LDA.B #$00                          ;; 0CA678 : A9 00       ;
-CODE_0CA67A:          STA.B !_0                           ;; 0CA67A : 85 00       ;
+                    + STA.B !_0                           ;; 0CA67A : 85 00       ;
                       STA.B !_2                           ;; 0CA67C : 85 02       ;
                       STA.B !_4                           ;; 0CA67E : 85 04       ;
                       STZ.B !_1                           ;; 0CA680 : 64 01       ;
@@ -2121,16 +2121,16 @@ CODE_0CA67A:          STA.B !_0                           ;; 0CA67A : 85 00     
                       LDX.B #$50                          ;; 0CA68E : A2 50       ;
                       JSR CODE_0CA159                     ;; 0CA690 : 20 59 A1    ;
                       DEC.W !Layer3ScrollXSpeed+1         ;; 0CA693 : CE 59 14    ;
-                      BPL CODE_0CA6AC                     ;; 0CA696 : 10 14       ;
+                      BPL +                               ;; 0CA696 : 10 14       ;
                       LDA.B #$06                          ;; 0CA698 : A9 06       ;
                       STA.W !Layer3ScrollXSpeed+1         ;; 0CA69A : 8D 59 14    ;
                       DEC.W !Layer3ScrollXSpeed           ;; 0CA69D : CE 58 14    ;
                       LDA.W !Layer3ScrollXSpeed           ;; 0CA6A0 : AD 58 14    ;
                       CMP.B #$07                          ;; 0CA6A3 : C9 07       ;
-                      BNE CODE_0CA6AC                     ;; 0CA6A5 : D0 05       ;
+                      BNE +                               ;; 0CA6A5 : D0 05       ;
                       LDA.B #$08                          ;; 0CA6A7 : A9 08       ;
                       STA.W !Layer3ScrollXSpeed           ;; 0CA6A9 : 8D 58 14    ;
-CODE_0CA6AC:          JSR CODE_0CA478                     ;; 0CA6AC : 20 78 A4    ;
+                    + JSR CODE_0CA478                     ;; 0CA6AC : 20 78 A4    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CA6B0:          JSR CODE_0CA146                     ;; 0CA6B0 : 20 46 A1    ;
@@ -2181,11 +2181,11 @@ CODE_0CA6B0:          JSR CODE_0CA146                     ;; 0CA6B0 : 20 46 A1  
                       JSR CODE_0CA821                     ;; 0CA70D : 20 21 A8    ;
                       DEC.W !Layer3ScrollXPosUpd+1        ;; 0CA710 : CE 5D 14    ;
                       LDA.W !Layer3ScrollXPosUpd+1        ;; 0CA713 : AD 5D 14    ;
-                      BNE Return0CA720                    ;; 0CA716 : D0 08       ;
+                      BNE +                               ;; 0CA716 : D0 08       ;
                       INC.W !GameMode                     ;; 0CA718 : EE 00 01    ;
                       LDA.B #$40                          ;; 0CA71B : A9 40       ;
                       STA.W !Layer3ScrollYSpeed+1         ;; 0CA71D : 8D 5B 14    ;
-Return0CA720:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CA721:          LDA.W !CreditsSprYSpeed,X           ;; 0CA721 : BD 05 0B    ;
                       ASL A                               ;; 0CA724 : 0A          ;
@@ -2203,10 +2203,10 @@ CODE_0CA721:          LDA.W !CreditsSprYSpeed,X           ;; 0CA721 : BD 05 0B  
                       LSR A                               ;; 0CA736 : 4A          ;
                       CMP.B #$08                          ;; 0CA737 : C9 08       ;
                       LDY.B #$00                          ;; 0CA739 : A0 00       ;
-                      BCC CODE_0CA740                     ;; 0CA73B : 90 03       ;
+                      BCC +                               ;; 0CA73B : 90 03       ;
                       ORA.B #$F0                          ;; 0CA73D : 09 F0       ;
                       DEY                                 ;; 0CA73F : 88          ;
-CODE_0CA740:          PLP                                 ;; 0CA740 : 28          ;
+                    + PLP                                 ;; 0CA740 : 28          ;
                       ADC.W !CreditsSprYPosLow,X          ;; 0CA741 : 7D 41 0B    ;
                       STA.W !CreditsSprYPosLow,X          ;; 0CA744 : 9D 41 0B    ;
                       TYA                                 ;; 0CA747 : 98          ;
@@ -2231,12 +2231,12 @@ CODE_0CA75A:          PHB                                 ;; 0CA75A : 8B        
                       PLB                                 ;; 0CA763 : AB          ;
 CODE_0CA764:          STZ.W !PlayerBehindNet              ;; 0CA764 : 9C F9 13    ;
                       LDA.W !PlayerAniTimer               ;; 0CA767 : AD 96 14    ;
-                      BEQ CODE_0CA76F                     ;; 0CA76A : F0 03       ;
+                      BEQ +                               ;; 0CA76A : F0 03       ;
                       DEC.W !PlayerAniTimer               ;; 0CA76C : CE 96 14    ;
-CODE_0CA76F:          LDA.W !CapeAniTimer                 ;; 0CA76F : AD A2 14    ;
-                      BEQ Return0CA777                    ;; 0CA772 : F0 03       ;
+                    + LDA.W !CapeAniTimer                 ;; 0CA76F : AD A2 14    ;
+                      BEQ +                               ;; 0CA772 : F0 03       ;
                       DEC.W !CapeAniTimer                 ;; 0CA774 : CE A2 14    ;
-Return0CA777:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CA778:          LDX.B #$00                          ;; 0CA778 : A2 00       ;
                       STX.W !CurSpriteProcess             ;; 0CA77A : 8E E9 15    ;
@@ -2255,14 +2255,14 @@ CODE_0CA778:          LDX.B #$00                          ;; 0CA778 : A2 00     
                       CLC                                 ;; 0CA799 : 18          ;
                       ADC.B #$38                          ;; 0CA79A : 69 38       ;
                       STA.W !ScrollLayerIndex             ;; 0CA79C : 8D 56 14    ;
-                      BCC CODE_0CA7AF                     ;; 0CA79F : 90 0E       ;
+                      BCC +                               ;; 0CA79F : 90 0E       ;
                       LDA.W !SpriteMisc1602               ;; 0CA7A1 : AD 02 16    ;
                       INC A                               ;; 0CA7A4 : 1A          ;
                       STA.W !SpriteMisc1602               ;; 0CA7A5 : 8D 02 16    ;
                       CMP.B #$03                          ;; 0CA7A8 : C9 03       ;
-                      BCC CODE_0CA7AF                     ;; 0CA7AA : 90 03       ;
+                      BCC +                               ;; 0CA7AA : 90 03       ;
                       STZ.W !SpriteMisc1602               ;; 0CA7AC : 9C 02 16    ;
-CODE_0CA7AF:          LDA.B #$01                          ;; 0CA7AF : A9 01       ;
+                    + LDA.B #$01                          ;; 0CA7AF : A9 01       ;
                       STA.W !YoshiIsLoose                 ;; 0CA7B1 : 8D E2 18    ;
 CODE_0CA7B4:          JSL CODE_00E2BD                     ;; 0CA7B4 : 22 BD E2 00 ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -2295,11 +2295,11 @@ CODE_0CA821:          REP #$30                            ;; 0CA821 : C2 30     
                       TYA                                 ;; 0CA828 : 98          ;
                       AND.W #$00FF                        ;; 0CA829 : 29 FF 00    ;
                       CMP.W #$0028                        ;; 0CA82C : C9 28 00    ;
-                      BCC CODE_0CA836                     ;; 0CA82F : 90 05       ;
+                      BCC +                               ;; 0CA82F : 90 05       ;
                       TXA                                 ;; 0CA831 : 8A          ;
                       ORA.W #$0100                        ;; 0CA832 : 09 00 01    ;
                       TAX                                 ;; 0CA835 : AA          ;
-CODE_0CA836:          SEP #$20                            ;; 0CA836 : E2 20       ; Accum (8 bit) 
+                    + SEP #$20                            ;; 0CA836 : E2 20       ; Accum (8 bit) 
                       LDA.B #$01                          ;; 0CA838 : A9 01       ;
                       STA.B !_4                           ;; 0CA83A : 85 04       ;
 CODE_0CA83C:          LDA.B !_1                           ;; 0CA83C : A5 01       ;
@@ -2311,10 +2311,10 @@ CODE_0CA83C:          LDA.B !_1                           ;; 0CA83C : A5 01     
                       CLC                                 ;; 0CA849 : 18          ;
                       ADC.B #$08                          ;; 0CA84A : 69 08       ;
                       STA.W !OAMTileXPos,X                ;; 0CA84C : 9D 00 02    ;
-                      BCC CODE_0CA855                     ;; 0CA84F : 90 04       ;
+                      BCC +                               ;; 0CA84F : 90 04       ;
                       LDA.B #$01                          ;; 0CA851 : A9 01       ;
                       STA.B !_A                           ;; 0CA853 : 85 0A       ;
-CODE_0CA855:          LDA.B !_2                           ;; 0CA855 : A5 02       ;
+                    + LDA.B !_2                           ;; 0CA855 : A5 02       ;
                       STA.W !OAMTileYPos,X                ;; 0CA857 : 9D 01 02    ;
                       STA.W !OAMTileYPos+4,X              ;; 0CA85A : 9D 05 02    ;
                       LDA.W DATA_0CA7B9,Y                 ;; 0CA85D : B9 B9 A7    ;
@@ -2362,7 +2362,7 @@ CODE_0CA8A5:          LDA.W !CreditsSprYSpeed,X           ;; 0CA8A5 : BD 05 0B  
                       JSR CODE_0CA721                     ;; 0CA8AF : 20 21 A7    ;
                       LDA.W !CreditsSprYPosLow,X          ;; 0CA8B2 : BD 41 0B    ;
                       CMP.B !_E                           ;; 0CA8B5 : C5 0E       ;
-                      BCC CODE_0CA8CB                     ;; 0CA8B7 : 90 12       ;
+                      BCC +                               ;; 0CA8B7 : 90 12       ;
                       STZ.W !CreditsSprYPosSpx,X          ;; 0CA8B9 : 9E 23 0B    ;
                       LDA.B #$F6                          ;; 0CA8BC : A9 F6       ;
                       STA.W !CreditsSprYSpeed,X           ;; 0CA8BE : 9D 05 0B    ;
@@ -2370,7 +2370,7 @@ CODE_0CA8A5:          LDA.W !CreditsSprYSpeed,X           ;; 0CA8A5 : BD 05 0B  
                       STA.W !GfxDecompOWAni,X             ;; 0CA8C3 : 9D F6 0A    ;
                       LDA.B !_E                           ;; 0CA8C6 : A5 0E       ;
                       STA.W !CreditsSprYPosLow,X          ;; 0CA8C8 : 9D 41 0B    ;
-CODE_0CA8CB:          DEX                                 ;; 0CA8CB : CA          ;
+                    + DEX                                 ;; 0CA8CB : CA          ;
                       CPX.B #$06                          ;; 0CA8CC : E0 06       ;
                       BNE CODE_0CA8A5                     ;; 0CA8CE : D0 D5       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -2400,7 +2400,7 @@ CODE_0CA8E6:          LDA.W !CreditsSprXPosHigh,Y         ;; 0CA8E6 : B9 6E 0B  
                       STA.W !OAMTileNo,X                  ;; 0CA907 : 9D 02 02    ;
                       LDA.B #$21                          ;; 0CA90A : A9 21       ;
                       STA.W !OAMTileAttr,X                ;; 0CA90C : 9D 03 02    ;
-                      BRA CODE_0CA923                     ;; 0CA90F : 80 12       ;
+                      BRA +                               ;; 0CA90F : 80 12       ;
                                                           ;;                      ;
 CODE_0CA911:          PHY                                 ;; 0CA911 : 5A          ;
                       TYA                                 ;; 0CA912 : 98          ;
@@ -2412,7 +2412,7 @@ CODE_0CA911:          PHY                                 ;; 0CA911 : 5A        
                       LDA.W DATA_0CA8D8,Y                 ;; 0CA91C : B9 D8 A8    ;
                       STA.W !OAMTileAttr,X                ;; 0CA91F : 9D 03 02    ;
                       PLY                                 ;; 0CA922 : 7A          ;
-CODE_0CA923:          TXA                                 ;; 0CA923 : 8A          ;
+                    + TXA                                 ;; 0CA923 : 8A          ;
                       LSR A                               ;; 0CA924 : 4A          ;
                       LSR A                               ;; 0CA925 : 4A          ;
                       TAX                                 ;; 0CA926 : AA          ;
@@ -2495,9 +2495,9 @@ CODE_0CA9AA:          LDA.W DATA_0CA96A,Y                 ;; 0CA9AA : B9 6A A9  
                       LDY.B #$02                          ;; 0CA9EC : A0 02       ;
                       LDA.B !_4                           ;; 0CA9EE : A5 04       ;
                       AND.B #$02                          ;; 0CA9F0 : 29 02       ;
-                      BNE CODE_0CA9F6                     ;; 0CA9F2 : D0 02       ;
+                      BNE +                               ;; 0CA9F2 : D0 02       ;
                       LDY.B #$00                          ;; 0CA9F4 : A0 00       ;
-CODE_0CA9F6:          TYA                                 ;; 0CA9F6 : 98          ;
+                    + TYA                                 ;; 0CA9F6 : 98          ;
                       STA.W !OAMTileSize,X                ;; 0CA9F7 : 9D 20 04    ;
                       STA.W !OAMTileSize+1,X              ;; 0CA9FA : 9D 21 04    ;
                       PLX                                 ;; 0CA9FD : FA          ;
@@ -2582,7 +2582,7 @@ CODE_0CAADF:          PHB                                 ;; 0CAADF : 8B        
                       PLB                                 ;; 0CAAE1 : AB          ;
                       LDX.B #$00                          ;; 0CAAE2 : A2 00       ;
                       TXY                                 ;; 0CAAE4 : 9B          ;
-CODE_0CAAE5:          LDA.W DATA_0CAA53,Y                 ;; 0CAAE5 : B9 53 AA    ;
+                    - LDA.W DATA_0CAA53,Y                 ;; 0CAAE5 : B9 53 AA    ;
                       STA.W !OAMTileXPos,X                ;; 0CAAE8 : 9D 00 02    ;
                       LDA.W DATA_0CAA54,Y                 ;; 0CAAEB : B9 54 AA    ;
                       STA.W !OAMTileYPos,X                ;; 0CAAEE : 9D 01 02    ;
@@ -2604,7 +2604,7 @@ CODE_0CAAE5:          LDA.W DATA_0CAA53,Y                 ;; 0CAAE5 : B9 53 AA  
                       INX                                 ;; 0CAB0B : E8          ;
                       TXY                                 ;; 0CAB0C : 9B          ;
                       CPY.B #$8C                          ;; 0CAB0D : C0 8C       ;
-                      BNE CODE_0CAAE5                     ;; 0CAB0F : D0 D4       ;
+                      BNE -                               ;; 0CAB0F : D0 D4       ;
                       PLB                                 ;; 0CAB11 : AB          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
@@ -2661,9 +2661,9 @@ CODE_0CAB6B:          REP #$20                            ;; 0CAB6B : C2 20     
                       LDY.B #$E0                          ;; 0CAB6F : A0 E0       ;
                       LDA.W #$00FF                        ;; 0CAB71 : A9 FF 00    ;
 CODE_0CAB74:          CPX.W !MessageBoxTimer              ;; 0CAB74 : EC 89 1B    ;
-                      BCC CODE_0CAB7C                     ;; 0CAB77 : 90 03       ;
+                      BCC +                               ;; 0CAB77 : 90 03       ;
                       LDA.W #$FF00                        ;; 0CAB79 : A9 00 FF    ;
-CODE_0CAB7C:          STA.W !WindowTable,X                ;; 0CAB7C : 9D A0 04    ;
+                    + STA.W !WindowTable,X                ;; 0CAB7C : 9D A0 04    ;
                       STA.W !WindowTable+$DE,Y            ;; 0CAB7F : 99 7E 05    ;
                       INX                                 ;; 0CAB82 : E8          ;
                       INX                                 ;; 0CAB83 : E8          ;
@@ -2721,14 +2721,14 @@ CODE_0CABB2:          SEP #$30                            ;; 0CABB2 : E2 30     
                       STA.B !_8                           ;; 0CABFF : 85 08       ;
 CODE_0CAC01:          LDX.B !_4                           ;; 0CAC01 : A6 04       ;
                       LDY.W #$0005                        ;; 0CAC03 : A0 05 00    ;
-CODE_0CAC06:          LDA.B [!_0]                         ;; 0CAC06 : A7 00       ;
+                    - LDA.B [!_0]                         ;; 0CAC06 : A7 00       ;
                       STA.W !DynPaletteTable+2,X          ;; 0CAC08 : 9D 84 06    ;
                       INC.B !_0                           ;; 0CAC0B : E6 00       ;
                       INC.B !_0                           ;; 0CAC0D : E6 00       ;
                       INX                                 ;; 0CAC0F : E8          ;
                       INX                                 ;; 0CAC10 : E8          ;
                       DEY                                 ;; 0CAC11 : 88          ;
-                      BPL CODE_0CAC06                     ;; 0CAC12 : 10 F2       ;
+                      BPL -                               ;; 0CAC12 : 10 F2       ;
                       LDA.B !_4                           ;; 0CAC14 : A5 04       ;
                       CLC                                 ;; 0CAC16 : 18          ;
                       ADC.W #$000E                        ;; 0CAC17 : 69 0E 00    ;
@@ -2797,9 +2797,9 @@ CODE_0CAD8C:          PHB                                 ;; 0CAD8C : 8B        
                       LDX.B #$FF                          ;; 0CAD92 : A2 FF       ;
                       LDA.W !CreditsScreenNumber          ;; 0CAD94 : AD E9 1D    ;
                       CMP.B #$0C                          ;; 0CAD97 : C9 0C       ;
-                      BNE CODE_0CAD9D                     ;; 0CAD99 : D0 02       ;
+                      BNE +                               ;; 0CAD99 : D0 02       ;
                       LDX.B #$0C                          ;; 0CAD9B : A2 0C       ;
-CODE_0CAD9D:          ASL A                               ;; 0CAD9D : 0A          ;
+                    + ASL A                               ;; 0CAD9D : 0A          ;
                       TAY                                 ;; 0CAD9E : A8          ;
                       LDA.B #$0C                          ;; 0CAD9F : A9 0C       ;
                       STA.B !Layer1DataPtr+2              ;; 0CADA1 : 85 67       ;
@@ -2858,7 +2858,7 @@ CODE_0CADF6:          PHB                                 ;; 0CADF6 : 8B        
                       LDY.B #$00                          ;; 0CAE29 : A0 00       ;
                       LDA.L !DynStripeImgSize             ;; 0CAE2B : AF 7B 83 7F ;
                       TAX                                 ;; 0CAE2F : AA          ;
-CODE_0CAE30:          REP #$20                            ;; 0CAE30 : C2 20       ; Accum (16 bit) 
+                    - REP #$20                            ;; 0CAE30 : C2 20       ; Accum (16 bit) 
                       LDA.B [!_0],Y                       ;; 0CAE32 : B7 00       ;
                       STA.L !DynamicStripeImage,X         ;; 0CAE34 : 9F 7D 83 7F ;
                       INY                                 ;; 0CAE38 : C8          ;
@@ -2866,7 +2866,7 @@ CODE_0CAE30:          REP #$20                            ;; 0CAE30 : C2 20     
                       INX                                 ;; 0CAE3A : E8          ;
                       INX                                 ;; 0CAE3B : E8          ;
                       CMP.W #$FFFF                        ;; 0CAE3C : C9 FF FF    ;
-                      BNE CODE_0CAE30                     ;; 0CAE3F : D0 EF       ;
+                      BNE -                               ;; 0CAE3F : D0 EF       ;
                       TXA                                 ;; 0CAE41 : 8A          ;
                       STA.L !DynStripeImgSize             ;; 0CAE42 : 8F 7B 83 7F ;
                       SEP #$20                            ;; 0CAE46 : E2 20       ; Accum (8 bit) 
@@ -2895,7 +2895,7 @@ CODE_0CAE48:          PLX                                 ;; 0CAE48 : FA        
                       STZ.W !NextLayer1XPos               ;; 0CAE7D : 9C 62 14    ;
                       STZ.W !NextLayer2XPos               ;; 0CAE80 : 9C 66 14    ;
                       STZ.W !Layer3HorizOffset            ;; 0CAE83 : 9C 6A 14    ;
-                      BRA CODE_0CAEA3                     ;; 0CAE86 : 80 1B       ;
+                      BRA +                               ;; 0CAE86 : 80 1B       ;
                                                           ;;                      ;
 CODE_0CAE88:          LDA.W #$FF00                        ;; 0CAE88 : A9 00 FF    ;
                       STA.B !Layer1XPos                   ;; 0CAE8B : 85 1A       ;
@@ -2907,7 +2907,7 @@ CODE_0CAE88:          LDA.W #$FF00                        ;; 0CAE88 : A9 00 FF  
                       STA.B !Layer2XPos                   ;; 0CAE9B : 85 1E       ;
                       LDA.W #$0080                        ;; 0CAE9D : A9 80 00    ;
                       STA.W !NextLayer2XPos               ;; 0CAEA0 : 8D 66 14    ;
-CODE_0CAEA3:          LDA.W #$00FF                        ;; 0CAEA3 : A9 FF 00    ;
+                    + LDA.W #$00FF                        ;; 0CAEA3 : A9 FF 00    ;
                       STA.W !Layer3ScrollYSpeed+1         ;; 0CAEA6 : 8D 5B 14    ;
                       SEP #$20                            ;; 0CAEA9 : E2 20       ; Accum (8 bit) 
                       PLB                                 ;; 0CAEAB : AB          ;
@@ -2916,20 +2916,20 @@ CODE_0CAEA3:          LDA.W #$00FF                        ;; 0CAEA3 : A9 FF 00  
 CODE_0CAEAD:          SEP #$20                            ;; 0CAEAD : E2 20       ; Accum (8 bit) 
                       LDA.W !CreditsScreenNumber          ;; 0CAEAF : AD E9 1D    ;
                       CMP.B #$0C                          ;; 0CAEB2 : C9 0C       ;
-                      BNE CODE_0CAEBC                     ;; 0CAEB4 : D0 06       ;
+                      BNE +                               ;; 0CAEB4 : D0 06       ;
                       DEC.W !Layer3ScrollYSpeed+1         ;; 0CAEB6 : CE 5B 14    ;
                       JMP CODE_0CAEF8                     ;; 0CAEB9 : 4C F8 AE    ;
                                                           ;;                      ;
-CODE_0CAEBC:          REP #$20                            ;; 0CAEBC : C2 20       ; Accum (16 bit) 
+                    + REP #$20                            ;; 0CAEBC : C2 20       ; Accum (16 bit) 
                       LDA.B !Layer1XPos                   ;; 0CAEBE : A5 1A       ;
                       CMP.W !NextLayer1XPos               ;; 0CAEC0 : CD 62 14    ;
-                      BNE CODE_0CAED0                     ;; 0CAEC3 : D0 0B       ;
+                      BNE +                               ;; 0CAEC3 : D0 0B       ;
                       LDA.W !Layer3ScrollYSpeed+1         ;; 0CAEC5 : AD 5B 14    ;
-                      BEQ CODE_0CAED0                     ;; 0CAEC8 : F0 06       ;
+                      BEQ +                               ;; 0CAEC8 : F0 06       ;
                       DEC.W !Layer3ScrollYSpeed+1         ;; 0CAECA : CE 5B 14    ;
                       JMP CODE_0CAF0C                     ;; 0CAECD : 4C 0C AF    ;
                                                           ;;                      ;
-CODE_0CAED0:          LDA.B !Layer1XPos                   ;; 0CAED0 : A5 1A       ;
+                    + LDA.B !Layer1XPos                   ;; 0CAED0 : A5 1A       ;
                       CLC                                 ;; 0CAED2 : 18          ;
                       ADC.W #$0002                        ;; 0CAED3 : 69 02 00    ;
                       STA.B !Layer1XPos                   ;; 0CAED6 : 85 1A       ;
@@ -3185,9 +3185,9 @@ CODE_0CB5BC:          LDA.B #$00                          ;; 0CB5BC : A9 00     
                       LDY.B #$20                          ;; 0CB5BF : A0 20       ;
                       LDA.W !CreditsScreenNumber          ;; 0CB5C1 : AD E9 1D    ;
                       CMP.B #$05                          ;; 0CB5C4 : C9 05       ;
-                      BNE CODE_0CB5CA                     ;; 0CB5C6 : D0 02       ;
+                      BNE +                               ;; 0CB5C6 : D0 02       ;
                       LDY.B #$30                          ;; 0CB5C8 : A0 30       ;
-CODE_0CB5CA:          STY.B !_0                           ;; 0CB5CA : 84 00       ;
+                    + STY.B !_0                           ;; 0CB5CA : 84 00       ;
                       ASL A                               ;; 0CB5CC : 0A          ;
                       REP #$10                            ;; 0CB5CD : C2 10       ; Index (16 bit) 
                       TAY                                 ;; 0CB5CF : A8          ;
@@ -3199,9 +3199,9 @@ CODE_0CB5DB:          PHY                                 ;; 0CB5DB : 5A        
                       LDY.B !Layer1XPos                   ;; 0CB5DC : A4 1A       ;
                       LDA.W DATA_0CAF14,X                 ;; 0CB5DE : BD 14 AF    ;
                       AND.B #$20                          ;; 0CB5E1 : 29 20       ;
-                      BEQ CODE_0CB5E8                     ;; 0CB5E3 : F0 03       ;
+                      BEQ +                               ;; 0CB5E3 : F0 03       ;
                       LDY.W !NextLayer1XPos               ;; 0CB5E5 : AC 62 14    ;
-CODE_0CB5E8:          STY.B !_3                           ;; 0CB5E8 : 84 03       ;
+                    + STY.B !_3                           ;; 0CB5E8 : 84 03       ;
                       PLY                                 ;; 0CB5EA : 7A          ;
                       LDA.W DATA_0CAF11,X                 ;; 0CB5EB : BD 11 AF    ;
                       CMP.B #$FF                          ;; 0CB5EE : C9 FF       ;
@@ -3943,11 +3943,11 @@ DATA_0CC92D:          db $53,$44,$00,$1B,$03,$39,$48,$39  ;; 0CC92D             
                       db $FF                              ;; ?QPWZ?               ;
                                                           ;;                      ;
 CODE_0CC94E:          LDA.W !Layer2ScrollType             ;; 0CC94E : AD 43 14    ;
-                      BEQ Return0CC97D                    ;; 0CC951 : F0 2A       ;
+                      BEQ +                               ;; 0CC951 : F0 2A       ;
                       DEC.W !Layer2ScrollType             ;; 0CC953 : CE 43 14    ;
                       LDA.W !Layer2ScrollType             ;; 0CC956 : AD 43 14    ;
                       AND.B #$1F                          ;; 0CC959 : 29 1F       ;
-                      BNE Return0CC97D                    ;; 0CC95B : D0 20       ;
+                      BNE +                               ;; 0CC95B : D0 20       ;
                       LDA.W !CutsceneID                   ;; 0CC95D : AD C6 13    ;
                       DEC A                               ;; 0CC960 : 3A          ;
                       ASL A                               ;; 0CC961 : 0A          ;
@@ -3969,7 +3969,7 @@ CODE_0CC94E:          LDA.W !Layer2ScrollType             ;; 0CC94E : AD 43 14  
                       CLC                                 ;; 0CC978 : 18          ;
                       ADC.B #$21                          ;; 0CC979 : 69 21       ;
                       STA.B !StripeImage                  ;; 0CC97B : 85 12       ;
-Return0CC97D:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CC97E:          PHB                                 ;; 0CC97E : 8B          ;
                       PHK                                 ;; 0CC97F : 4B          ;
@@ -3982,11 +3982,11 @@ CODE_0CC97E:          PHB                                 ;; 0CC97E : 8B        
                                                           ;;                      ;
 CODE_0CC98C:          LDA.B !TrueFrame                    ;; 0CC98C : A5 13       ;
                       AND.B #$03                          ;; 0CC98E : 29 03       ;
-                      BNE CODE_0CC99A                     ;; 0CC990 : D0 08       ;
+                      BNE +                               ;; 0CC990 : D0 08       ;
                       LDA.W !Layer2ScrollYSpeed+1         ;; 0CC992 : AD 4D 14    ;
-                      BEQ CODE_0CC99A                     ;; 0CC995 : F0 03       ;
+                      BEQ +                               ;; 0CC995 : F0 03       ;
                       DEC.W !Layer2ScrollYSpeed+1         ;; 0CC997 : CE 4D 14    ;
-CODE_0CC99A:          JSR CODE_0CD803                     ;; 0CC99A : 20 03 D8    ;
+                    + JSR CODE_0CD803                     ;; 0CC99A : 20 03 D8    ;
                       LDA.W !CutsceneID                   ;; 0CC99D : AD C6 13    ;
                       DEC A                               ;; 0CC9A0 : 3A          ;
                       JSL ExecutePtr                      ;; 0CC9A1 : 22 DF 86 00 ;
@@ -4040,13 +4040,13 @@ CODE_0CC9E0:          JSR CODE_0CCB5B                     ;; 0CC9E0 : 20 5B CB  
                                                           ;;                      ;
 CODE_0CCA04:          JSR CODE_0CCB5B                     ;; 0CCA04 : 20 5B CB    ;
                       LDA.W !Layer1ScrollType             ;; 0CCA07 : AD 42 14    ;
-                      BNE CODE_0CCA11                     ;; 0CCA0A : D0 05       ;
+                      BNE +                               ;; 0CCA0A : D0 05       ;
                       LDY.B #$04                          ;; 0CCA0C : A0 04       ;
                       STY.W !Layer2ScrollTimer            ;; 0CCA0E : 8C 45 14    ;
-CODE_0CCA11:          CMP.B #$07                          ;; 0CCA11 : C9 07       ;
-                      BNE CODE_0CCA18                     ;; 0CCA13 : D0 03       ;
+                    + CMP.B #$07                          ;; 0CCA11 : C9 07       ;
+                      BNE +                               ;; 0CCA13 : D0 03       ;
                       JSR CODE_0CCF49                     ;; 0CCA15 : 20 49 CF    ;
-CODE_0CCA18:          LDA.W !Layer1ScrollType             ;; 0CCA18 : AD 42 14    ;
+                    + LDA.W !Layer1ScrollType             ;; 0CCA18 : AD 42 14    ;
                       JSL ExecutePtr                      ;; 0CCA1B : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_0CCB1C                      ;; ?QPWZ? : 1C CB       ;
@@ -4062,9 +4062,9 @@ CODE_0CCA2F:          JSR CODE_0CD65B                     ;; 0CCA2F : 20 5B D6  
                       JSR CODE_0CCACE                     ;; 0CCA32 : 20 CE CA    ;
                       LDA.W !Layer1ScrollType             ;; 0CCA35 : AD 42 14    ;
                       CMP.B #$03                          ;; 0CCA38 : C9 03       ;
-                      BEQ CODE_0CCA3F                     ;; 0CCA3A : F0 03       ;
+                      BEQ +                               ;; 0CCA3A : F0 03       ;
                       JSR CODE_0CD3A6                     ;; 0CCA3C : 20 A6 D3    ;
-CODE_0CCA3F:          JSR CODE_0CD3F4                     ;; 0CCA3F : 20 F4 D3    ;
+                    + JSR CODE_0CD3F4                     ;; 0CCA3F : 20 F4 D3    ;
                       LDA.W !Layer1ScrollType             ;; 0CCA42 : AD 42 14    ;
                       JSL ExecutePtr                      ;; 0CCA45 : 22 DF 86 00 ;
                                                           ;;                      ;
@@ -4075,14 +4075,14 @@ CODE_0CCA3F:          JSR CODE_0CD3F4                     ;; 0CCA3F : 20 F4 D3  
                                                           ;;                      ;
 CODE_0CCA51:          JSR CODE_0CD6EC                     ;; 0CCA51 : 20 EC D6    ;
                       LDA.W !Layer1ScrollTimer            ;; 0CCA54 : AD 44 14    ;
-                      BEQ CODE_0CCA67                     ;; 0CCA57 : F0 0E       ;
+                      BEQ +                               ;; 0CCA57 : F0 0E       ;
                       LDX.B #$30                          ;; 0CCA59 : A2 30       ;
                       LDA.B #$B0                          ;; 0CCA5B : A9 B0       ;
                       STA.B !_0                           ;; 0CCA5D : 85 00       ;
                       LDA.B #$68                          ;; 0CCA5F : A9 68       ;
                       STA.W !CreditsSprXPosLow+1          ;; 0CCA61 : 8D 51 0B    ;
                       JSR CODE_0CCAFD                     ;; 0CCA64 : 20 FD CA    ;
-CODE_0CCA67:          LDA.W !Layer1ScrollType             ;; 0CCA67 : AD 42 14    ;
+                    + LDA.W !Layer1ScrollType             ;; 0CCA67 : AD 42 14    ;
                       JSL ExecutePtr                      ;; 0CCA6A : 22 DF 86 00 ;
                                                           ;;                      ;
                       dw CODE_0CD0C9                      ;; ?QPWZ? : C9 D0       ;
@@ -4110,7 +4110,7 @@ CODE_0CCA8F:          LDA.W !Layer2ScrollXSpeed           ;; 0CCA8F : AD 4A 14  
                       BEQ Return0CCACD                    ;; 0CCA92 : F0 39       ;
                       LDY.B #$00                          ;; 0CCA94 : A0 00       ;
                       TYX                                 ;; 0CCA96 : BB          ;
-CODE_0CCA97:          LDA.W DATA_0CCA83,Y                 ;; 0CCA97 : B9 83 CA    ;
+                    - LDA.W DATA_0CCA83,Y                 ;; 0CCA97 : B9 83 CA    ;
                       STA.W !OAMTileXPos+$1E0,X           ;; 0CCA9A : 9D E0 03    ;
                       LDA.W DATA_0CCA84,Y                 ;; 0CCA9D : B9 84 CA    ;
                       STA.W !OAMTileYPos+$1E0,X           ;; 0CCAA0 : 9D E1 03    ;
@@ -4138,7 +4138,7 @@ CODE_0CCA97:          LDA.W DATA_0CCA83,Y                 ;; 0CCA97 : B9 83 CA  
                       INX                                 ;; 0CCAC7 : E8          ;
                       TXY                                 ;; 0CCAC8 : 9B          ;
                       CPY.B #$0C                          ;; 0CCAC9 : C0 0C       ;
-                      BNE CODE_0CCA97                     ;; 0CCACB : D0 CA       ;
+                      BNE -                               ;; 0CCACB : D0 CA       ;
 Return0CCACD:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CCACE:          LDA.W !Layer1ScrollType             ;; 0CCACE : AD 42 14    ;
@@ -4152,12 +4152,12 @@ CODE_0CCADD:          LDA.W !Layer1ScrollTimer            ;; 0CCADD : AD 44 14  
                       BEQ Return0CCAFC                    ;; 0CCAE0 : F0 1A       ;
                       LDA.W !CreditsSprXPosLow+1          ;; 0CCAE2 : AD 51 0B    ;
                       CMP.B #$5C                          ;; 0CCAE5 : C9 5C       ;
-                      BCC CODE_0CCAF3                     ;; 0CCAE7 : 90 0A       ;
+                      BCC +                               ;; 0CCAE7 : 90 0A       ;
                       LDX.B #$01                          ;; 0CCAE9 : A2 01       ;
                       LDA.B #$F0                          ;; 0CCAEB : A9 F0       ;
                       STA.W !CreditsSprXSpeed,X           ;; 0CCAED : 9D 14 0B    ;
                       JSR CODE_0CD368                     ;; 0CCAF0 : 20 68 D3    ;
-CODE_0CCAF3:          LDX.B #$30                          ;; 0CCAF3 : A2 30       ;
+                    + LDX.B #$30                          ;; 0CCAF3 : A2 30       ;
                       LDA.B #$AB                          ;; 0CCAF5 : A9 AB       ;
                       STA.B !_0                           ;; 0CCAF7 : 85 00       ;
                       BRL CODE_0CCAFD                     ;; 0CCAF9 : 82 01 00    ;
@@ -4192,9 +4192,9 @@ CODE_0CCB30:          LDX.B #$00                          ;; 0CCB30 : A2 00     
                       LDY.B #$30                          ;; 0CCB32 : A0 30       ;
                       LDA.W !CutsceneID                   ;; 0CCB34 : AD C6 13    ;
                       DEC A                               ;; 0CCB37 : 3A          ;
-                      BNE CODE_0CCB3C                     ;; 0CCB38 : D0 02       ;
+                      BNE +                               ;; 0CCB38 : D0 02       ;
                       LDY.B #$18                          ;; 0CCB3A : A0 18       ;
-CODE_0CCB3C:          TYA                                 ;; 0CCB3C : 98          ;
+                    + TYA                                 ;; 0CCB3C : 98          ;
                       STA.W !CreditsSprXSpeed,X           ;; 0CCB3D : 9D 14 0B    ;
                       JSR CODE_0CD368                     ;; 0CCB40 : 20 68 D3    ;
                       DEC.W !Layer2ScrollCmd              ;; 0CCB43 : CE 3F 14    ;
@@ -4208,9 +4208,9 @@ CODE_0CCB55:          JSR CODE_0CCBFA                     ;; 0CCB55 : 20 FA CB  
                       BRL CODE_0CCB80                     ;; 0CCB58 : 82 25 00    ;
 CODE_0CCB5B:          LDY.B #$E0                          ;; 0CCB5B : A0 E0       ;
                       LDA.W !Layer1ScrollCmd              ;; 0CCB5D : AD 3E 14    ;
-                      BEQ CODE_0CCB64                     ;; 0CCB60 : F0 02       ;
+                      BEQ +                               ;; 0CCB60 : F0 02       ;
                       LDY.B #$E2                          ;; 0CCB62 : A0 E2       ;
-CODE_0CCB64:          STY.W !OAMTileNo                    ;; 0CCB64 : 8C 02 02    ;
+                    + STY.W !OAMTileNo                    ;; 0CCB64 : 8C 02 02    ;
                       LDA.B #$39                          ;; 0CCB67 : A9 39       ;
                       STA.W !OAMTileAttr                  ;; 0CCB69 : 8D 03 02    ;
                       LDA.B #$50                          ;; 0CCB6C : A9 50       ;
@@ -4226,15 +4226,15 @@ DATA_0CCB7C:          db $86,$87,$96,$97                  ;; 0CCB7C             
                                                           ;;                      ;
 CODE_0CCB80:          LDX.B #$60                          ;; 0CCB80 : A2 60       ;
                       LDA.W !Layer1ScrollCmd              ;; 0CCB82 : AD 3E 14    ;
-                      BEQ CODE_0CCB8A                     ;; 0CCB85 : F0 03       ;
+                      BEQ +                               ;; 0CCB85 : F0 03       ;
                       LDX.W !CreditsSprXPosLow            ;; 0CCB87 : AE 50 0B    ;
-CODE_0CCB8A:          STX.B !_0                           ;; 0CCB8A : 86 00       ;
+                    + STX.B !_0                           ;; 0CCB8A : 86 00       ;
                       LDA.B #$67                          ;; 0CCB8C : A9 67       ;
                       STA.B !_1                           ;; 0CCB8E : 85 01       ;
                       LDX.B #$14                          ;; 0CCB90 : A2 14       ;
 CODE_0CCB92:          LDA.B !_0                           ;; 0CCB92 : A5 00       ;
                       CMP.B #$B0                          ;; 0CCB94 : C9 B0       ;
-                      BCS CODE_0CCBB5                     ;; 0CCB96 : B0 1D       ;
+                      BCS +                               ;; 0CCB96 : B0 1D       ;
                       STA.W !OAMTileXPos+$180,X           ;; 0CCB98 : 9D 80 03    ;
                       LDA.B !_1                           ;; 0CCB9B : A5 01       ;
                       STA.W !OAMTileYPos+$180,X           ;; 0CCB9D : 9D 81 03    ;
@@ -4250,7 +4250,7 @@ CODE_0CCB92:          LDA.B !_0                           ;; 0CCB92 : A5 00     
                       LDA.B #$02                          ;; 0CCBAF : A9 02       ;
                       STA.W !OAMTileSize+$60,X            ;; 0CCBB1 : 9D 80 04    ;
                       PLX                                 ;; 0CCBB4 : FA          ;
-CODE_0CCBB5:          LDA.B !_0                           ;; 0CCBB5 : A5 00       ;
+                    + LDA.B !_0                           ;; 0CCBB5 : A5 00       ;
                       CLC                                 ;; 0CCBB7 : 18          ;
                       ADC.B #$10                          ;; 0CCBB8 : 69 10       ;
                       STA.B !_0                           ;; 0CCBBA : 85 00       ;
@@ -4275,9 +4275,9 @@ CODE_0CCBD8:          STA.W !OAMTileXPos+$180,X           ;; 0CCBD8 : 9D 80 03  
                       STA.W !OAMTileYPos+$180,X           ;; 0CCBDD : 9D 81 03    ;
                       LDY.B #$85                          ;; 0CCBE0 : A0 85       ;
                       LDA.W !Layer1ScrollBits             ;; 0CCBE2 : AD 40 14    ;
-                      BEQ CODE_0CCBE9                     ;; 0CCBE5 : F0 02       ;
+                      BEQ +                               ;; 0CCBE5 : F0 02       ;
                       LDY.B #$95                          ;; 0CCBE7 : A0 95       ;
-CODE_0CCBE9:          TYA                                 ;; 0CCBE9 : 98          ;
+                    + TYA                                 ;; 0CCBE9 : 98          ;
                       STA.W !OAMTileNo+$180,X             ;; 0CCBEA : 9D 82 03    ;
                       LDA.B #$35                          ;; 0CCBED : A9 35       ;
                       STA.W !OAMTileAttr+$180,X           ;; 0CCBEF : 9D 83 03    ;
@@ -4318,14 +4318,14 @@ CODE_0CCC08:          LDA.B !_0                           ;; 0CCC08 : A5 00     
                       STA.B !_0                           ;; 0CCC2E : 85 00       ;
                       TYA                                 ;; 0CCC30 : 98          ;
                       AND.B #$01                          ;; 0CCC31 : 29 01       ;
-                      BNE CODE_0CCC40                     ;; 0CCC33 : D0 0B       ;
+                      BNE +                               ;; 0CCC33 : D0 0B       ;
                       LDA.B !_2                           ;; 0CCC35 : A5 02       ;
                       STA.B !_0                           ;; 0CCC37 : 85 00       ;
                       LDA.B !_1                           ;; 0CCC39 : A5 01       ;
                       CLC                                 ;; 0CCC3B : 18          ;
                       ADC.B #$08                          ;; 0CCC3C : 69 08       ;
                       STA.B !_1                           ;; 0CCC3E : 85 01       ;
-CODE_0CCC40:          INX                                 ;; 0CCC40 : E8          ;
+                    + INX                                 ;; 0CCC40 : E8          ;
                       INX                                 ;; 0CCC41 : E8          ;
                       INX                                 ;; 0CCC42 : E8          ;
                       INX                                 ;; 0CCC43 : E8          ;
@@ -4359,7 +4359,7 @@ CODE_0CCC51:          LDA.B !TrueFrame                    ;; 0CCC51 : A5 13     
                       INC.W !Layer1ScrollType             ;; 0CCC7C : EE 42 14    ;
                       BRL CODE_0CCC9A                     ;; 0CCC7F : 82 18 00    ;
 CODE_0CCC82:          DEC.W !Layer2ScrollCmd              ;; 0CCC82 : CE 3F 14    ;
-                      BPL CODE_0CCC97                     ;; 0CCC85 : 10 10       ;
+                      BPL +                               ;; 0CCC85 : 10 10       ;
                       LDA.W !Layer1ScrollBits             ;; 0CCC87 : AD 40 14    ;
                       INC A                               ;; 0CCC8A : 1A          ;
                       AND.B #$03                          ;; 0CCC8B : 29 03       ;
@@ -4367,7 +4367,7 @@ CODE_0CCC82:          DEC.W !Layer2ScrollCmd              ;; 0CCC82 : CE 3F 14  
                       TAX                                 ;; 0CCC90 : AA          ;
                       LDA.W DATA_0CCC49,X                 ;; 0CCC91 : BD 49 CC    ;
                       STA.W !Layer2ScrollCmd              ;; 0CCC94 : 8D 3F 14    ;
-CODE_0CCC97:          JSR CODE_0CCCB6                     ;; 0CCC97 : 20 B6 CC    ;
+                    + JSR CODE_0CCCB6                     ;; 0CCC97 : 20 B6 CC    ;
 CODE_0CCC9A:          LDX.B #$1C                          ;; 0CCC9A : A2 1C       ;
                       BRL CODE_0CCBFC                     ;; 0CCC9C : 82 5D FF    ;
                                                           ;;                      ;
@@ -4384,9 +4384,9 @@ CODE_0CCCB6:          LDA.W !Layer1ScrollBits             ;; 0CCCB6 : AD 40 14  
                       STA.B !_8                           ;; 0CCCBE : 85 08       ;
                       LDY.B #$A0                          ;; 0CCCC0 : A0 A0       ;
                       CPX.B #$00                          ;; 0CCCC2 : E0 00       ;
-                      BNE CODE_0CCCC8                     ;; 0CCCC4 : D0 02       ;
+                      BNE +                               ;; 0CCCC4 : D0 02       ;
                       LDY.B #$A8                          ;; 0CCCC6 : A0 A8       ;
-CODE_0CCCC8:          STY.B !_0                           ;; 0CCCC8 : 84 00       ;
+                    + STY.B !_0                           ;; 0CCCC8 : 84 00       ;
                       STY.B !_4                           ;; 0CCCCA : 84 04       ;
                       LDA.B #$57                          ;; 0CCCCC : A9 57       ;
                       STA.B !_2                           ;; 0CCCCE : 85 02       ;
@@ -4397,11 +4397,11 @@ CODE_0CCCD2:          LDY.B !_8                           ;; 0CCCD2 : A4 08     
                       STA.W !OAMTileNo+4,X                ;; 0CCCD9 : 9D 06 02    ;
                       LDY.B #$35                          ;; 0CCCDC : A0 35       ;
                       LDA.W !Layer1ScrollBits             ;; 0CCCDE : AD 40 14    ;
-                      BMI CODE_0CCCE9                     ;; 0CCCE1 : 30 06       ;
+                      BMI +                               ;; 0CCCE1 : 30 06       ;
                       AND.B #$02                          ;; 0CCCE3 : 29 02       ;
-                      BEQ CODE_0CCCE9                     ;; 0CCCE5 : F0 02       ;
+                      BEQ +                               ;; 0CCCE5 : F0 02       ;
                       LDY.B #$39                          ;; 0CCCE7 : A0 39       ;
-CODE_0CCCE9:          TYA                                 ;; 0CCCE9 : 98          ;
+                    + TYA                                 ;; 0CCCE9 : 98          ;
                       STA.W !OAMTileAttr+4,X              ;; 0CCCEA : 9D 07 02    ;
                       LDA.B !_0                           ;; 0CCCED : A5 00       ;
                       STA.W !OAMTileXPos+4,X              ;; 0CCCEF : 9D 04 02    ;
@@ -4425,14 +4425,14 @@ CODE_0CCD02:          INC.B !_8                           ;; 0CCD02 : E6 08     
                       INX                                 ;; 0CCD0D : E8          ;
                       INX                                 ;; 0CCD0E : E8          ;
                       CPX.B #$0C                          ;; 0CCD0F : E0 0C       ;
-                      BNE CODE_0CCD1E                     ;; 0CCD11 : D0 0B       ;
+                      BNE +                               ;; 0CCD11 : D0 0B       ;
                       LDA.B !_4                           ;; 0CCD13 : A5 04       ;
                       STA.B !_0                           ;; 0CCD15 : 85 00       ;
                       LDA.B !_2                           ;; 0CCD17 : A5 02       ;
                       CLC                                 ;; 0CCD19 : 18          ;
                       ADC.B #$10                          ;; 0CCD1A : 69 10       ;
                       STA.B !_2                           ;; 0CCD1C : 85 02       ;
-CODE_0CCD1E:          CPX.B #$18                          ;; 0CCD1E : E0 18       ;
+                    + CPX.B #$18                          ;; 0CCD1E : E0 18       ;
                       BNE CODE_0CCCD2                     ;; 0CCD20 : D0 B0       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
@@ -4457,14 +4457,14 @@ CODE_0CCD31:          STA.W !CreditsSprYPosLow,X          ;; 0CCD31 : 9D 41 0B  
                       LDA.W !CreditsSprYPosLow,X          ;; 0CCD4B : BD 41 0B    ;
                       STA.B !Layer1YPos                   ;; 0CCD4E : 85 1C       ;
                       CMP.B #$FD                          ;; 0CCD50 : C9 FD       ;
-                      BNE CODE_0CCD59                     ;; 0CCD52 : D0 05       ;
+                      BNE +                               ;; 0CCD52 : D0 05       ;
                       LDA.B #$01                          ;; 0CCD54 : A9 01       ;
                       STA.W !Layer1ScrollTimer            ;; 0CCD56 : 8D 44 14    ;
-CODE_0CCD59:          LDA.B !Layer1YPos                   ;; 0CCD59 : A5 1C       ;
+                    + LDA.B !Layer1YPos                   ;; 0CCD59 : A5 1C       ;
                       CMP.B #$E8                          ;; 0CCD5B : C9 E8       ;
-                      BNE CODE_0CCD62                     ;; 0CCD5D : D0 03       ;
+                      BNE +                               ;; 0CCD5D : D0 03       ;
                       JSR CODE_0CD5C9                     ;; 0CCD5F : 20 C9 D5    ;
-CODE_0CCD62:          LDA.B !Layer1YPos                   ;; 0CCD62 : A5 1C       ;
+                    + LDA.B !Layer1YPos                   ;; 0CCD62 : A5 1C       ;
                       CMP.B #$C0                          ;; 0CCD64 : C9 C0       ;
                       BNE CODE_0CCD75                     ;; 0CCD66 : D0 0D       ;
                       LDA.B #$22                          ;; 0CCD68 : A9 22       ;
@@ -4484,26 +4484,26 @@ CODE_0CCD85:          LDA.W !CreditsSprYPosLow,X          ;; 0CCD85 : BD 41 0B  
                       CMP.B #$78                          ;; 0CCD88 : C9 78       ;
                       BNE CODE_0CCD91                     ;; 0CCD8A : D0 05       ;
                       INC.W !Layer1ScrollType             ;; 0CCD8C : EE 42 14    ;
-                      BRA CODE_0CCD9E                     ;; 0CCD8F : 80 0D       ;
+                      BRA +                               ;; 0CCD8F : 80 0D       ;
                                                           ;;                      ;
 CODE_0CCD91:          JSR CODE_0CD33A                     ;; 0CCD91 : 20 3A D3    ;
 CODE_0CCD94:          LDX.B #$00                          ;; 0CCD94 : A2 00       ;
                       LDA.B #$04                          ;; 0CCD96 : A9 04       ;
                       STA.W !CreditsSprXSpeed,X           ;; 0CCD98 : 9D 14 0B    ;
                       JSR CODE_0CD368                     ;; 0CCD9B : 20 68 D3    ;
-CODE_0CCD9E:          BRL CODE_0CCE2A                     ;; 0CCD9E : 82 89 00    ;
+                    + BRL CODE_0CCE2A                     ;; 0CCD9E : 82 89 00    ;
 CODE_0CCDA1:          LDA.B !TrueFrame                    ;; 0CCDA1 : A5 13       ;
                       AND.B #$03                          ;; 0CCDA3 : 29 03       ;
-                      BNE CODE_0CCDB9                     ;; 0CCDA5 : D0 12       ;
+                      BNE +                               ;; 0CCDA5 : D0 12       ;
                       LDA.W !Layer1ScrollXSpeed+1         ;; 0CCDA7 : AD 47 14    ;
                       CLC                                 ;; 0CCDAA : 18          ;
                       ADC.B #$02                          ;; 0CCDAB : 69 02       ;
                       STA.W !Layer1ScrollXSpeed+1         ;; 0CCDAD : 8D 47 14    ;
                       CMP.B #$80                          ;; 0CCDB0 : C9 80       ;
-                      BCC CODE_0CCDB9                     ;; 0CCDB2 : 90 05       ;
+                      BCC +                               ;; 0CCDB2 : 90 05       ;
                       LDA.B #$7F                          ;; 0CCDB4 : A9 7F       ;
                       STA.W !Layer1ScrollXSpeed+1         ;; 0CCDB6 : 8D 47 14    ;
-CODE_0CCDB9:          LDX.B #$00                          ;; 0CCDB9 : A2 00       ;
+                    + LDX.B #$00                          ;; 0CCDB9 : A2 00       ;
                       LDA.B !Layer1YPos                   ;; 0CCDBB : A5 1C       ;
                       STA.W !CreditsSprYPosLow,X          ;; 0CCDBD : 9D 41 0B    ;
                       LDA.B !Layer1YPos+1                 ;; 0CCDC0 : A5 1D       ;
@@ -4514,18 +4514,18 @@ CODE_0CCDB9:          LDX.B #$00                          ;; 0CCDB9 : A2 00     
                       LDA.W !CreditsSprYPosLow,X          ;; 0CCDCE : BD 41 0B    ;
                       BEQ CODE_0CCDD7                     ;; 0CCDD1 : F0 04       ;
                       CMP.B #$20                          ;; 0CCDD3 : C9 20       ;
-                      BCS CODE_0CCDDA                     ;; 0CCDD5 : B0 03       ;
+                      BCS +                               ;; 0CCDD5 : B0 03       ;
 CODE_0CCDD7:          JSR CODE_0CD283                     ;; 0CCDD7 : 20 83 D2    ;
-CODE_0CCDDA:          LDA.W !CreditsSprYPosHigh,X         ;; 0CCDDA : BD 5F 0B    ;
+                    + LDA.W !CreditsSprYPosHigh,X         ;; 0CCDDA : BD 5F 0B    ;
                       STA.B !Layer1YPos+1                 ;; 0CCDDD : 85 1D       ;
                       LDA.W !CreditsSprYPosLow,X          ;; 0CCDDF : BD 41 0B    ;
                       STA.B !Layer1YPos                   ;; 0CCDE2 : 85 1C       ;
-                      BEQ CODE_0CCDEF                     ;; 0CCDE4 : F0 09       ;
+                      BEQ +                               ;; 0CCDE4 : F0 09       ;
                       CMP.B #$20                          ;; 0CCDE6 : C9 20       ;
-                      BCC CODE_0CCDEF                     ;; 0CCDE8 : 90 05       ;
+                      BCC +                               ;; 0CCDE8 : 90 05       ;
                       LDA.B #$08                          ;; 0CCDEA : A9 08       ;
                       STA.W !CreditsSprYSpeed+1           ;; 0CCDEC : 8D 06 0B    ;
-CODE_0CCDEF:          LDA.W !CreditsSprYPosLow,X          ;; 0CCDEF : BD 41 0B    ;
+                    + LDA.W !CreditsSprYPosLow,X          ;; 0CCDEF : BD 41 0B    ;
                       BEQ CODE_0CCE02                     ;; 0CCDF2 : F0 0E       ;
                       CMP.B #$A8                          ;; 0CCDF4 : C9 A8       ;
                       BCC CODE_0CCE02                     ;; 0CCDF6 : 90 0A       ;
@@ -4566,25 +4566,25 @@ CODE_0CCE2A:          JSR CODE_0CCE48                     ;; 0CCE2A : 20 48 CE  
 DATA_0CCE40:          db $80,$81,$82,$83,$83,$82,$81,$80  ;; 0CCE40               ;
                                                           ;;                      ;
 CODE_0CCE48:          DEC.W !Layer2ScrollCmd              ;; 0CCE48 : CE 3F 14    ;
-                      BPL CODE_0CCE5A                     ;; 0CCE4B : 10 0D       ;
+                      BPL +                               ;; 0CCE4B : 10 0D       ;
                       LDA.B #$05                          ;; 0CCE4D : A9 05       ;
                       STA.W !Layer2ScrollCmd              ;; 0CCE4F : 8D 3F 14    ;
                       LDA.W !Layer1ScrollBits             ;; 0CCE52 : AD 40 14    ;
                       EOR.B #$01                          ;; 0CCE55 : 49 01       ;
                       STA.W !Layer1ScrollBits             ;; 0CCE57 : 8D 40 14    ;
-CODE_0CCE5A:          LDA.B #$98                          ;; 0CCE5A : A9 98       ;
+                    + LDA.B #$98                          ;; 0CCE5A : A9 98       ;
                       STA.B !_0                           ;; 0CCE5C : 85 00       ;
                       LDY.B #$21                          ;; 0CCE5E : A0 21       ;
                       LDA.W !Layer1ScrollBits             ;; 0CCE60 : AD 40 14    ;
-                      BEQ CODE_0CCE67                     ;; 0CCE63 : F0 02       ;
+                      BEQ +                               ;; 0CCE63 : F0 02       ;
                       LDY.B #$61                          ;; 0CCE65 : A0 61       ;
-CODE_0CCE67:          STY.B !_4                           ;; 0CCE67 : 84 04       ;
+                    + STY.B !_4                           ;; 0CCE67 : 84 04       ;
                       LDA.W !Layer1ScrollBits             ;; 0CCE69 : AD 40 14    ;
                       ASL A                               ;; 0CCE6C : 0A          ;
                       ASL A                               ;; 0CCE6D : 0A          ;
                       TAY                                 ;; 0CCE6E : A8          ;
                       LDX.B #$00                          ;; 0CCE6F : A2 00       ;
-CODE_0CCE71:          LDA.B !_0                           ;; 0CCE71 : A5 00       ;
+                    - LDA.B !_0                           ;; 0CCE71 : A5 00       ;
                       STA.W !OAMTileXPos+4,X              ;; 0CCE73 : 9D 04 02    ;
                       LDA.W !CreditsSprYPosLow+1          ;; 0CCE76 : AD 42 0B    ;
                       STA.W !OAMTileYPos+4,X              ;; 0CCE79 : 9D 05 02    ;
@@ -4610,7 +4610,7 @@ CODE_0CCE71:          LDA.B !_0                           ;; 0CCE71 : A5 00     
                       INX                                 ;; 0CCE9C : E8          ;
                       INX                                 ;; 0CCE9D : E8          ;
                       CPX.B #$10                          ;; 0CCE9E : E0 10       ;
-                      BNE CODE_0CCE71                     ;; 0CCEA0 : D0 CF       ;
+                      BNE -                               ;; 0CCEA0 : D0 CF       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -4649,11 +4649,11 @@ CODE_0CCEE2:          LDA.W !Layer1ScrollBits             ;; 0CCEE2 : AD 40 14  
                       BCS CODE_0CCF0F                     ;; 0CCEE7 : B0 26       ;
                       LDA.B !TrueFrame                    ;; 0CCEE9 : A5 13       ;
                       AND.B #$01                          ;; 0CCEEB : 29 01       ;
-                      BEQ CODE_0CCEF7                     ;; 0CCEED : F0 08       ;
+                      BEQ +                               ;; 0CCEED : F0 08       ;
                       LDA.W !Layer1ScrollBits             ;; 0CCEEF : AD 40 14    ;
                       EOR.B #$01                          ;; 0CCEF2 : 49 01       ;
                       STA.W !Layer1ScrollBits             ;; 0CCEF4 : 8D 40 14    ;
-CODE_0CCEF7:          LDX.B #$02                          ;; 0CCEF7 : A2 02       ;
+                    + LDX.B #$02                          ;; 0CCEF7 : A2 02       ;
                       JSR CODE_0CD33A                     ;; 0CCEF9 : 20 3A D3    ;
                       JSR CODE_0CD368                     ;; 0CCEFC : 20 68 D3    ;
                       LDA.W !CreditsSprYPosLow+2          ;; 0CCEFF : AD 43 0B    ;
@@ -4676,10 +4676,10 @@ CODE_0CCF0F:          DEC.W !Layer2ScrollCmd              ;; 0CCF0F : CE 3F 14  
                       LDA.W DATA_0CCEDB,X                 ;; 0CCF22 : BD DB CE    ;
                       STA.W !Layer2ScrollCmd              ;; 0CCF25 : 8D 3F 14    ;
                       CPX.B #$01                          ;; 0CCF28 : E0 01       ;
-                      BNE CODE_0CCF31                     ;; 0CCF2A : D0 05       ;
+                      BNE +                               ;; 0CCF2A : D0 05       ;
                       LDA.B #$08                          ;; 0CCF2C : A9 08       ;
                       STA.W !SPCIO0                       ;; 0CCF2E : 8D F9 1D    ; / Play sound effect 
-CODE_0CCF31:          CPX.B #$06                          ;; 0CCF31 : E0 06       ;
+                    + CPX.B #$06                          ;; 0CCF31 : E0 06       ;
                       BNE CODE_0CCF38                     ;; 0CCF33 : D0 03       ;
                       JSR CODE_0CD5C6                     ;; 0CCF35 : 20 C6 D5    ;
 CODE_0CCF38:          BRL CODE_0CCF49                     ;; 0CCF38 : 82 0E 00    ;
@@ -4690,7 +4690,7 @@ DATA_0CCF42:          db $25,$25,$23,$23,$23,$23,$23      ;; 0CCF42             
                                                           ;;                      ;
 CODE_0CCF49:          LDY.W !Layer1ScrollBits             ;; 0CCF49 : AC 40 14    ;
                       CPY.B #$FF                          ;; 0CCF4C : C0 FF       ;
-                      BEQ Return0CCF71                    ;; 0CCF4E : F0 21       ;
+                      BEQ +                               ;; 0CCF4E : F0 21       ;
                       LDX.B #$04                          ;; 0CCF50 : A2 04       ;
                       LDA.W !CreditsSprXPosLow+2          ;; 0CCF52 : AD 52 0B    ;
                       STA.W !OAMTileXPos,X                ;; 0CCF55 : 9D 00 02    ;
@@ -4705,7 +4705,7 @@ CODE_0CCF49:          LDY.W !Layer1ScrollBits             ;; 0CCF49 : AC 40 14  
                       LSR A                               ;; 0CCF6C : 4A          ;
                       TAX                                 ;; 0CCF6D : AA          ;
                       STZ.W !OAMTileSize,X                ;; 0CCF6E : 9E 20 04    ;
-Return0CCF71:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CCF72:          DEC.W !Layer2ScrollCmd              ;; 0CCF72 : CE 3F 14    ;
                       BPL CODE_0CCF8B                     ;; 0CCF75 : 10 14       ;
@@ -4752,23 +4752,23 @@ CODE_0CCFC5:          LDA.W !Layer2ScrollTimer            ;; 0CCFC5 : AD 45 14  
                       BEQ CODE_0CCFD3                     ;; 0CCFCA : F0 07       ;
                       LDA.B #$08                          ;; 0CCFCC : A9 08       ;
                       STA.W !Layer2ScrollCmd              ;; 0CCFCE : 8D 3F 14    ;
-                      BRA CODE_0CCFDB                     ;; 0CCFD1 : 80 08       ;
+                      BRA +                               ;; 0CCFD1 : 80 08       ;
                                                           ;;                      ;
 CODE_0CCFD3:          DEC.W !Layer2ScrollCmd              ;; 0CCFD3 : CE 3F 14    ;
-                      BPL CODE_0CCFDB                     ;; 0CCFD6 : 10 03       ;
+                      BPL +                               ;; 0CCFD6 : 10 03       ;
                       INC.W !Layer1ScrollType             ;; 0CCFD8 : EE 42 14    ;
-CODE_0CCFDB:          BRL CODE_0CCF90                     ;; 0CCFDB : 82 B2 FF    ;
+                    + BRL CODE_0CCF90                     ;; 0CCFDB : 82 B2 FF    ;
 CODE_0CCFDE:          LDA.W !Layer2ScrollType             ;; 0CCFDE : AD 43 14    ;
                       ORA.W !Layer2ScrollYSpeed+1         ;; 0CCFE1 : 0D 4D 14    ;
-                      BNE Return0CCFF6                    ;; 0CCFE4 : D0 10       ;
+                      BNE +                               ;; 0CCFE4 : D0 10       ;
                       LDA.B !byetudlrFrame                ;; 0CCFE6 : A5 16       ;
                       ORA.B !axlr0000Frame                ;; 0CCFE8 : 05 18       ;
                       AND.B #$C0                          ;; 0CCFEA : 29 C0       ;
-                      BEQ Return0CCFF6                    ;; 0CCFEC : F0 08       ;
+                      BEQ +                               ;; 0CCFEC : F0 08       ;
                       STZ.W !Layer1ScrollType             ;; 0CCFEE : 9C 42 14    ;
                       LDA.B #$0B                          ;; 0CCFF1 : A9 0B       ;
                       STA.W !GameMode                     ;; 0CCFF3 : 8D 00 01    ;
-Return0CCFF6:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CCFF7:          LDA.W !Layer2ScrollType             ;; 0CCFF7 : AD 43 14    ;
                       BEQ Return0CD002                    ;; 0CCFFA : F0 06       ;
@@ -4789,9 +4789,9 @@ CODE_0CD003:          LDA.W !Layer1ScrollCmd              ;; 0CD003 : AD 3E 14  
                                                           ;;                      ;
 CODE_0CD019:          LDA.W !Layer2ScrollCmd              ;; 0CD019 : AD 3F 14    ;
                       AND.B #$F8                          ;; 0CD01C : 29 F8       ;
-                      BEQ CODE_0CD023                     ;; 0CD01E : F0 03       ;
+                      BEQ +                               ;; 0CD01E : F0 03       ;
                       JSR CODE_0CD069                     ;; 0CD020 : 20 69 D0    ;
-CODE_0CD023:          JSR CODE_0CD283                     ;; 0CD023 : 20 83 D2    ;
+                    + JSR CODE_0CD283                     ;; 0CD023 : 20 83 D2    ;
                       DEC.W !Layer2ScrollCmd              ;; 0CD026 : CE 3F 14    ;
                       BPL CODE_0CD046                     ;; 0CD029 : 10 1B       ;
                       STZ.W !Layer1ScrollCmd              ;; 0CD02B : 9C 3E 14    ;
@@ -4857,14 +4857,14 @@ CODE_0CD07D:          LDA.B !_0                           ;; 0CD07D : A5 00     
                       STA.B !_0                           ;; 0CD0A1 : 85 00       ;
                       INY                                 ;; 0CD0A3 : C8          ;
                       CPY.B #$02                          ;; 0CD0A4 : C0 02       ;
-                      BNE CODE_0CD0B3                     ;; 0CD0A6 : D0 0B       ;
+                      BNE +                               ;; 0CD0A6 : D0 0B       ;
                       LDA.B !_2                           ;; 0CD0A8 : A5 02       ;
                       STA.B !_0                           ;; 0CD0AA : 85 00       ;
                       LDA.B !_1                           ;; 0CD0AC : A5 01       ;
                       CLC                                 ;; 0CD0AE : 18          ;
                       ADC.B #$08                          ;; 0CD0AF : 69 08       ;
                       STA.B !_1                           ;; 0CD0B1 : 85 01       ;
-CODE_0CD0B3:          INX                                 ;; 0CD0B3 : E8          ;
+                    + INX                                 ;; 0CD0B3 : E8          ;
                       INX                                 ;; 0CD0B4 : E8          ;
                       INX                                 ;; 0CD0B5 : E8          ;
                       INX                                 ;; 0CD0B6 : E8          ;
@@ -4874,13 +4874,13 @@ CODE_0CD0B3:          INX                                 ;; 0CD0B3 : E8        
                                                           ;;                      ;
 CODE_0CD0BC:          LDA.W !Layer1ScrollCmd              ;; 0CD0BC : AD 3E 14    ;
                       CMP.B #$01                          ;; 0CD0BF : C9 01       ;
-                      BNE CODE_0CD0C6                     ;; 0CD0C1 : D0 03       ;
+                      BNE +                               ;; 0CD0C1 : D0 03       ;
                       INC.W !Layer1ScrollType             ;; 0CD0C3 : EE 42 14    ;
-CODE_0CD0C6:          BRL CODE_0CCF90                     ;; 0CD0C6 : 82 C7 FE    ;
+                    + BRL CODE_0CCF90                     ;; 0CD0C6 : 82 C7 FE    ;
 CODE_0CD0C9:          LDA.W !Layer1ScrollCmd              ;; 0CD0C9 : AD 3E 14    ;
-                      BEQ Return0CD0D1                    ;; 0CD0CC : F0 03       ;
+                      BEQ +                               ;; 0CD0CC : F0 03       ;
                       JSR CODE_0CD5C6                     ;; 0CD0CE : 20 C6 D5    ;
-Return0CD0D1:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CD0D2:          LDA.W !Layer1ScrollCmd              ;; 0CD0D2 : AD 3E 14    ;
                       CMP.B #$01                          ;; 0CD0D5 : C9 01       ;
@@ -4912,13 +4912,13 @@ CODE_0CD108:          LDA.W !Layer1ScrollCmd              ;; 0CD108 : AD 3E 14  
                       BNE Return0CD16E                    ;; 0CD10D : D0 5F       ;
                       DEC.W !Layer1ScrollXSpeed+1         ;; 0CD10F : CE 47 14    ;
                       LDA.W !Layer1ScrollXSpeed+1         ;; 0CD112 : AD 47 14    ;
-                      BMI CODE_0CD11E                     ;; 0CD115 : 30 07       ;
+                      BMI +                               ;; 0CD115 : 30 07       ;
                       CMP.B #$24                          ;; 0CD117 : C9 24       ;
-                      BCC CODE_0CD11E                     ;; 0CD119 : 90 03       ;
+                      BCC +                               ;; 0CD119 : 90 03       ;
                       JSR CODE_0CD069                     ;; 0CD11B : 20 69 D0    ;
-CODE_0CD11E:          LDA.W !Layer1ScrollXSpeed+1         ;; 0CD11E : AD 47 14    ;
+                    + LDA.W !Layer1ScrollXSpeed+1         ;; 0CD11E : AD 47 14    ;
                       CMP.B #$C8                          ;; 0CD121 : C9 C8       ;
-                      BNE CODE_0CD133                     ;; 0CD123 : D0 0E       ;
+                      BNE +                               ;; 0CD123 : D0 0E       ;
                       LDA.B #$40                          ;; 0CD125 : A9 40       ;
                       STA.W !Layer2ScrollCmd              ;; 0CD127 : 8D 3F 14    ;
                       LDA.B #$1A                          ;; 0CD12A : A9 1A       ;
@@ -4926,7 +4926,7 @@ CODE_0CD11E:          LDA.W !Layer1ScrollXSpeed+1         ;; 0CD11E : AD 47 14  
                       INC.W !Layer1ScrollType             ;; 0CD12F : EE 42 14    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0CD133:          LDX.B #$00                          ;; 0CD133 : A2 00       ;
+                    + LDX.B #$00                          ;; 0CD133 : A2 00       ;
                       LDA.B !Layer1YPos                   ;; 0CD135 : A5 1C       ;
                       STA.W !CreditsSprYPosLow,X          ;; 0CD137 : 9D 41 0B    ;
                       LDA.B !Layer1YPos+1                 ;; 0CD13A : A5 1D       ;
@@ -4960,7 +4960,7 @@ CODE_0CD16F:          LDA.B !TrueFrame                    ;; 0CD16F : A5 13     
                       SBC.W #$0001                        ;; 0CD17A : E9 01 00    ;
                       STA.B !Layer2YPos                   ;; 0CD17D : 85 20       ;
                       SEP #$20                            ;; 0CD17F : E2 20       ; Accum (8 bit) 
-                      BRA CODE_0CD18F                     ;; 0CD181 : 80 0C       ;
+                      BRA +                               ;; 0CD181 : 80 0C       ;
                                                           ;;                      ;
 CODE_0CD183:          REP #$20                            ;; 0CD183 : C2 20       ; Accum (16 bit) 
                       LDA.B !Layer2YPos                   ;; 0CD185 : A5 20       ;
@@ -4968,18 +4968,18 @@ CODE_0CD183:          REP #$20                            ;; 0CD183 : C2 20     
                       ADC.W #$0001                        ;; 0CD188 : 69 01 00    ;
                       STA.B !Layer2YPos                   ;; 0CD18B : 85 20       ;
                       SEP #$20                            ;; 0CD18D : E2 20       ; Accum (8 bit) 
-CODE_0CD18F:          DEC.W !Layer2ScrollCmd              ;; 0CD18F : CE 3F 14    ;
-                      BPL Return0CD19B                    ;; 0CD192 : 10 07       ;
+                    + DEC.W !Layer2ScrollCmd              ;; 0CD18F : CE 3F 14    ;
+                      BPL +                               ;; 0CD192 : 10 07       ;
                       STZ.B !Layer2YPos                   ;; 0CD194 : 64 20       ;
                       STZ.B !Layer2YPos+1                 ;; 0CD196 : 64 21       ;
                       INC.W !Layer1ScrollType             ;; 0CD198 : EE 42 14    ;
-Return0CD19B:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CD19C:          LDA.W !Layer1ScrollCmd              ;; 0CD19C : AD 3E 14    ;
                       CMP.B #$03                          ;; 0CD19F : C9 03       ;
-                      BNE Return0CD1A6                    ;; 0CD1A1 : D0 03       ;
+                      BNE +                               ;; 0CD1A1 : D0 03       ;
                       JSR CODE_0CD5C6                     ;; 0CD1A3 : 20 C6 D5    ;
-Return0CD1A6:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_0CD1A7:          db $20,$B3,$00,$0F,$C0,$01,$C1,$01  ;; 0CD1A7               ;
@@ -4994,11 +4994,11 @@ CODE_0CD1D0:          LDY.B #$28                          ;; 0CD1D0 : A0 28     
                       CLC                                 ;; 0CD1D3 : 18          ;
                       ADC.L !DynStripeImgSize             ;; 0CD1D4 : 6F 7B 83 7F ;
                       TAX                                 ;; 0CD1D8 : AA          ;
-CODE_0CD1D9:          LDA.W DATA_0CD1A7,Y                 ;; 0CD1D9 : B9 A7 D1    ;
+                    - LDA.W DATA_0CD1A7,Y                 ;; 0CD1D9 : B9 A7 D1    ;
                       STA.L !DynamicStripeImage,X         ;; 0CD1DC : 9F 7D 83 7F ;
                       DEX                                 ;; 0CD1E0 : CA          ;
                       DEY                                 ;; 0CD1E1 : 88          ;
-                      BPL CODE_0CD1D9                     ;; 0CD1E2 : 10 F5       ;
+                      BPL -                               ;; 0CD1E2 : 10 F5       ;
                       LDA.B #$28                          ;; 0CD1E4 : A9 28       ;
                       CLC                                 ;; 0CD1E6 : 18          ;
                       ADC.L !DynStripeImgSize             ;; 0CD1E7 : 6F 7B 83 7F ;
@@ -5025,11 +5025,11 @@ CODE_0CD22D:          LDA.L !DynStripeImgSize             ;; 0CD22D : AF 7B 83 7
                       CLC                                 ;; 0CD236 : 18          ;
                       ADC.L !DynStripeImgSize             ;; 0CD237 : 6F 7B 83 7F ;
                       TAX                                 ;; 0CD23B : AA          ;
-CODE_0CD23C:          LDA.W DATA_0CD1F0,Y                 ;; 0CD23C : B9 F0 D1    ;
+                    - LDA.W DATA_0CD1F0,Y                 ;; 0CD23C : B9 F0 D1    ;
                       STA.L !DynamicStripeImage,X         ;; 0CD23F : 9F 7D 83 7F ;
                       DEX                                 ;; 0CD243 : CA          ;
                       DEY                                 ;; 0CD244 : 88          ;
-                      BPL CODE_0CD23C                     ;; 0CD245 : 10 F5       ;
+                      BPL -                               ;; 0CD245 : 10 F5       ;
                       LDA.B #$0C                          ;; 0CD247 : A9 0C       ;
                       CLC                                 ;; 0CD249 : 18          ;
                       ADC.L !DynStripeImgSize             ;; 0CD24A : 6F 7B 83 7F ;
@@ -5054,20 +5054,20 @@ CODE_0CD23C:          LDA.W DATA_0CD1F0,Y                 ;; 0CD23C : B9 F0 D1  
                       STA.L !DynamicStripeImage+6,X       ;; 0CD273 : 9F 83 83 7F ;
                       SEP #$20                            ;; 0CD277 : E2 20       ; Accum (8 bit) 
                       CPY.B #$1C                          ;; 0CD279 : C0 1C       ;
-                      BNE Return0CD282                    ;; 0CD27B : D0 05       ;
+                      BNE +                               ;; 0CD27B : D0 05       ;
                       LDA.B #$01                          ;; 0CD27D : A9 01       ;
                       STA.W !Layer1ScrollTimer            ;; 0CD27F : 8D 44 14    ;
-Return0CD282:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CD283:          REP #$20                            ;; 0CD283 : C2 20       ; Accum (16 bit) 
                       LDA.B !TrueFrame                    ;; 0CD285 : A5 13       ;
                       AND.W #$0001                        ;; 0CD287 : 29 01 00    ;
                       BEQ CODE_0CD290                     ;; 0CD28A : F0 04       ;
                       INC.B !Layer1XPos                   ;; 0CD28C : E6 1A       ;
-                      BRA CODE_0CD292                     ;; 0CD28E : 80 02       ;
+                      BRA +                               ;; 0CD28E : 80 02       ;
                                                           ;;                      ;
 CODE_0CD290:          DEC.B !Layer1XPos                   ;; 0CD290 : C6 1A       ;
-CODE_0CD292:          SEP #$20                            ;; 0CD292 : E2 20       ; Accum (8 bit) 
+                    + SEP #$20                            ;; 0CD292 : E2 20       ; Accum (8 bit) 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CD295:          LDA.B #$1A                          ;; 0CD295 : A9 1A       ;
@@ -5101,10 +5101,10 @@ CODE_0CD2D0:          LDA.B #$03                          ;; 0CD2D0 : A9 03     
                       JSR CODE_0CCBFA                     ;; 0CD2E0 : 20 FA CB    ;
                       BRL CODE_0CCF72                     ;; 0CD2E3 : 82 8C FC    ;
 CODE_0CD2E6:          DEC.W !Layer2ScrollCmd              ;; 0CD2E6 : CE 3F 14    ;
-                      BMI CODE_0CD2EC                     ;; 0CD2E9 : 30 01       ;
+                      BMI +                               ;; 0CD2E9 : 30 01       ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0CD2EC:          JSR CODE_0CD373                     ;; 0CD2EC : 20 73 D3    ;
+                    + JSR CODE_0CD373                     ;; 0CD2EC : 20 73 D3    ;
                       LDA.B #$0F                          ;; 0CD2EF : A9 0F       ;
                       STA.W !CreditsSprYPosLow+2          ;; 0CD2F1 : 8D 43 0B    ;
                       STZ.W !CreditsSprYPosHigh+2         ;; 0CD2F4 : 9C 61 0B    ;
@@ -5149,10 +5149,10 @@ CODE_0CD33A:          LDA.W !CreditsSprYSpeed,X           ;; 0CD33A : BD 05 0B  
                       LSR A                               ;; 0CD34F : 4A          ;
                       CMP.B #$08                          ;; 0CD350 : C9 08       ;
                       LDY.B #$00                          ;; 0CD352 : A0 00       ;
-                      BCC CODE_0CD359                     ;; 0CD354 : 90 03       ;
+                      BCC +                               ;; 0CD354 : 90 03       ;
                       ORA.B #$F0                          ;; 0CD356 : 09 F0       ;
                       DEY                                 ;; 0CD358 : 88          ;
-CODE_0CD359:          PLP                                 ;; 0CD359 : 28          ;
+                    + PLP                                 ;; 0CD359 : 28          ;
                       ADC.W !CreditsSprYPosLow,X          ;; 0CD35A : 7D 41 0B    ;
                       STA.W !CreditsSprYPosLow,X          ;; 0CD35D : 9D 41 0B    ;
                       TYA                                 ;; 0CD360 : 98          ;
@@ -5227,11 +5227,11 @@ CODE_0CD3F6:          LDA.W !CastleCutExSprSlot,X         ;; 0CD3F6 : BD 8C 0B  
                       LDA.W !CreditsSprYSpeed,X           ;; 0CD3FB : BD 05 0B    ;
                       BMI CODE_0CD404                     ;; 0CD3FE : 30 04       ;
                       CMP.B #$40                          ;; 0CD400 : C9 40       ;
-                      BCS CODE_0CD40B                     ;; 0CD402 : B0 07       ;
+                      BCS +                               ;; 0CD402 : B0 07       ;
 CODE_0CD404:          CLC                                 ;; 0CD404 : 18          ;
                       ADC.W !CastleCutExSprAccel,X        ;; 0CD405 : 7D 7D 0B    ;
                       STA.W !CreditsSprYSpeed,X           ;; 0CD408 : 9D 05 0B    ;
-CODE_0CD40B:          JSR CODE_0CD33A                     ;; 0CD40B : 20 3A D3    ;
+                    + JSR CODE_0CD33A                     ;; 0CD40B : 20 3A D3    ;
                       JSR CODE_0CD368                     ;; 0CD40E : 20 68 D3    ;
                       LDA.W !CreditsSprYPosLow,X          ;; 0CD411 : BD 41 0B    ;
                       CMP.B #$80                          ;; 0CD414 : C9 80       ;
@@ -5240,17 +5240,17 @@ CODE_0CD40B:          JSR CODE_0CD33A                     ;; 0CD40B : 20 3A D3  
 CODE_0CD41B:          DEX                                 ;; 0CD41B : CA          ;
                       CPX.B #$03                          ;; 0CD41C : E0 03       ;
                       BNE CODE_0CD3F6                     ;; 0CD41E : D0 D6       ;
-                      BRL CODE_0CD425                     ;; 0CD420 : 82 02 00    ;
+                      BRL +                               ;; 0CD420 : 82 02 00    ;
                                                           ;;                      ;
 DATA_0CD423:          db $3C,$3D                          ;; 0CD423               ;
                                                           ;;                      ;
-CODE_0CD425:          LDY.B #$0E                          ;; 0CD425 : A0 0E       ;
+                    + LDY.B #$0E                          ;; 0CD425 : A0 0E       ;
                       LDX.B #$14                          ;; 0CD427 : A2 14       ;
 CODE_0CD429:          LDA.W !CastleCutExSprSlot,Y         ;; 0CD429 : B9 8C 0B    ;
-                      BEQ CODE_0CD45A                     ;; 0CD42C : F0 2C       ;
+                      BEQ +                               ;; 0CD42C : F0 2C       ;
                       LDA.W !CreditsSprXPosLow,Y          ;; 0CD42E : B9 50 0B    ;
                       CMP.B #$50                          ;; 0CD431 : C9 50       ;
-                      BCC CODE_0CD45A                     ;; 0CD433 : 90 25       ;
+                      BCC +                               ;; 0CD433 : 90 25       ;
                       STA.W !OAMTileXPos,X                ;; 0CD435 : 9D 00 02    ;
                       LDA.W !CreditsSprYPosLow,Y          ;; 0CD438 : B9 41 0B    ;
                       STA.W !OAMTileYPos,X                ;; 0CD43B : 9D 01 02    ;
@@ -5271,7 +5271,7 @@ CODE_0CD429:          LDA.W !CastleCutExSprSlot,Y         ;; 0CD429 : B9 8C 0B  
                       TAX                                 ;; 0CD455 : AA          ;
                       STZ.W !OAMTileSize,X                ;; 0CD456 : 9E 20 04    ;
                       PLX                                 ;; 0CD459 : FA          ;
-CODE_0CD45A:          INX                                 ;; 0CD45A : E8          ;
+                    + INX                                 ;; 0CD45A : E8          ;
                       INX                                 ;; 0CD45B : E8          ;
                       INX                                 ;; 0CD45C : E8          ;
                       INX                                 ;; 0CD45D : E8          ;
@@ -5295,9 +5295,9 @@ CODE_0CD4A4:          PHB                                 ;; 0CD4A4 : 8B        
                       PLB                                 ;; 0CD4A6 : AB          ;
                       LDX.B #$00                          ;; 0CD4A7 : A2 00       ;
                       LDA.B !Powerup                      ;; 0CD4A9 : A5 19       ;
-                      BNE CODE_0CD4AF                     ;; 0CD4AB : D0 02       ;
+                      BNE +                               ;; 0CD4AB : D0 02       ;
                       LDX.B #$08                          ;; 0CD4AD : A2 08       ;
-CODE_0CD4AF:          STX.B !_2                           ;; 0CD4AF : 86 02       ;
+                    + STX.B !_2                           ;; 0CD4AF : 86 02       ;
                       LDX.B #$40                          ;; 0CD4B1 : A2 40       ;
                       LDA.B #$02                          ;; 0CD4B3 : A9 02       ;
                       STA.B !_0                           ;; 0CD4B5 : 85 00       ;
@@ -5307,7 +5307,7 @@ CODE_0CD4AF:          STX.B !_2                           ;; 0CD4AF : 86 02     
                       TAY                                 ;; 0CD4BC : A8          ;
 CODE_0CD4BD:          LDA.W DATA_0CD484,Y                 ;; 0CD4BD : B9 84 D4    ;
                       CMP.B #$80                          ;; 0CD4C0 : C9 80       ;
-                      BEQ CODE_0CD4ED                     ;; 0CD4C2 : F0 29       ;
+                      BEQ +                               ;; 0CD4C2 : F0 29       ;
                       CLC                                 ;; 0CD4C4 : 18          ;
                       ADC.B !PlayerXPosNext               ;; 0CD4C5 : 65 94       ;
                       STA.W !OAMTileXPos,X                ;; 0CD4C7 : 9D 00 02    ;
@@ -5332,7 +5332,7 @@ CODE_0CD4BD:          LDA.W DATA_0CD484,Y                 ;; 0CD4BD : B9 84 D4  
                       INX                                 ;; 0CD4EA : E8          ;
                       INX                                 ;; 0CD4EB : E8          ;
                       INX                                 ;; 0CD4EC : E8          ;
-CODE_0CD4ED:          INY                                 ;; 0CD4ED : C8          ;
+                    + INY                                 ;; 0CD4ED : C8          ;
                       DEC.B !_0                           ;; 0CD4EE : C6 00       ;
                       BPL CODE_0CD4BD                     ;; 0CD4F0 : 10 CB       ;
                       PLB                                 ;; 0CD4F2 : AB          ;
@@ -5360,9 +5360,9 @@ CODE_0CD502:          LDX.B #$02                          ;; 0CD502 : A2 02     
                                                           ;;                      ;
 CODE_0CD51B:          LDX.B #$00                          ;; 0CD51B : A2 00       ;
                       LDA.B !Powerup                      ;; 0CD51D : A5 19       ;
-                      BNE CODE_0CD523                     ;; 0CD51F : D0 02       ;
+                      BNE +                               ;; 0CD51F : D0 02       ;
                       LDX.B #$08                          ;; 0CD521 : A2 08       ;
-CODE_0CD523:          STX.B !_0                           ;; 0CD523 : 86 00       ;
+                    + STX.B !_0                           ;; 0CD523 : 86 00       ;
                       LDX.B #$34                          ;; 0CD525 : A2 34       ;
                       LDA.B #$04                          ;; 0CD527 : A9 04       ;
                       CLC                                 ;; 0CD529 : 18          ;
@@ -5414,9 +5414,9 @@ CODE_0CD564:          LDX.B #$03                          ;; 0CD564 : A2 03     
 CODE_0CD585:          LDX.B #$0F                          ;; 0CD585 : A2 0F       ;
                       LDY.B #$0C                          ;; 0CD587 : A0 0C       ;
                       LDA.B !Powerup                      ;; 0CD589 : A5 19       ;
-                      BNE CODE_0CD58F                     ;; 0CD58B : D0 02       ;
+                      BNE +                               ;; 0CD58B : D0 02       ;
                       LDX.B #$13                          ;; 0CD58D : A2 13       ;
-CODE_0CD58F:          STX.B !_0                           ;; 0CD58F : 86 00       ;
+                    + STX.B !_0                           ;; 0CD58F : 86 00       ;
                       STY.B !_1                           ;; 0CD591 : 84 01       ;
                       LDX.B #$34                          ;; 0CD593 : A2 34       ;
                       LDA.W !CreditsSprXPosLow+3          ;; 0CD595 : AD 53 0B    ;
@@ -5488,9 +5488,9 @@ CODE_0CD65B:          LDA.W !Layer2ScrollXSpeed           ;; 0CD65B : AD 4A 14  
                                                           ;;                      ;
 CODE_0CD66B:          DEC.W !Layer2ScrollTimer            ;; 0CD66B : CE 45 14    ;
                       CMP.B #$F0                          ;; 0CD66E : C9 F0       ;
-                      BCC CODE_0CD674                     ;; 0CD670 : 90 02       ;
+                      BCC +                               ;; 0CD670 : 90 02       ;
                       LDA.B #$0F                          ;; 0CD672 : A9 0F       ;
-CODE_0CD674:          AND.B #$0F                          ;; 0CD674 : 29 0F       ;
+                    + AND.B #$0F                          ;; 0CD674 : 29 0F       ;
                       CLC                                 ;; 0CD676 : 18          ;
                       ADC.B #$03                          ;; 0CD677 : 69 03       ;
                       TAX                                 ;; 0CD679 : AA          ;
@@ -5499,9 +5499,9 @@ CODE_0CD674:          AND.B #$0F                          ;; 0CD674 : 29 0F     
 CODE_0CD680:          LDY.B #$00                          ;; 0CD680 : A0 00       ;
                       LDA.W DATA_0CD5E9,X                 ;; 0CD682 : BD E9 D5    ;
                       LSR A                               ;; 0CD685 : 4A          ;
-                      BCC CODE_0CD68A                     ;; 0CD686 : 90 02       ;
+                      BCC +                               ;; 0CD686 : 90 02       ;
                       LDY.B #$30                          ;; 0CD688 : A0 30       ;
-CODE_0CD68A:          ASL A                               ;; 0CD68A : 0A          ;
+                    + ASL A                               ;; 0CD68A : 0A          ;
                       STA.W !OAMTileNo+$FC,Y              ;; 0CD68B : 99 FE 02    ;
                       LDA.B !PlayerDirection              ;; 0CD68E : A5 76       ;
                       LSR A                               ;; 0CD690 : 4A          ;
@@ -5513,18 +5513,18 @@ CODE_0CD68A:          ASL A                               ;; 0CD68A : 0A        
                       ASL A                               ;; 0CD69A : 0A          ;
                       TAX                                 ;; 0CD69B : AA          ;
                       LDA.B !Powerup                      ;; 0CD69C : A5 19       ;
-                      BEQ CODE_0CD6A1                     ;; 0CD69E : F0 01       ;
+                      BEQ +                               ;; 0CD69E : F0 01       ;
                       INX                                 ;; 0CD6A0 : E8          ;
-CODE_0CD6A1:          LDA.B !PlayerYPosNext               ;; 0CD6A1 : A5 96       ;
+                    + LDA.B !PlayerYPosNext               ;; 0CD6A1 : A5 96       ;
                       CLC                                 ;; 0CD6A3 : 18          ;
                       ADC.W DATA_0CD635,X                 ;; 0CD6A4 : 7D 35 D6    ;
                       STA.W !OAMTileYPos+$FC,Y            ;; 0CD6A7 : 99 FD 02    ;
                       LDA.W DATA_0CD60F,X                 ;; 0CD6AA : BD 0F D6    ;
                       LDX.B !PlayerDirection              ;; 0CD6AD : A6 76       ;
-                      BNE CODE_0CD6B4                     ;; 0CD6AF : D0 03       ;
+                      BNE +                               ;; 0CD6AF : D0 03       ;
                       EOR.B #$FF                          ;; 0CD6B1 : 49 FF       ;
                       INC A                               ;; 0CD6B3 : 1A          ;
-CODE_0CD6B4:          CLC                                 ;; 0CD6B4 : 18          ;
+                    + CLC                                 ;; 0CD6B4 : 18          ;
                       ADC.B !PlayerXPosNext               ;; 0CD6B5 : 65 94       ;
                       STA.W !OAMTileXPos+$FC,Y            ;; 0CD6B7 : 99 FC 02    ;
                       TYA                                 ;; 0CD6BA : 98          ;
@@ -5557,17 +5557,17 @@ CODE_0CD6EC:          LDA.W !Layer2ScrollXSpeed           ;; 0CD6EC : AD 4A 14  
                       BEQ Return0CD751                    ;; 0CD6F0 : F0 5F       ;
                       LDY.B #$04                          ;; 0CD6F2 : A0 04       ;
                       LDA.B #$02                          ;; 0CD6F4 : A9 02       ;
-CODE_0CD6F6:          STA.W !OAMTileSize+$50,Y            ;; 0CD6F6 : 99 70 04    ;
+                    - STA.W !OAMTileSize+$50,Y            ;; 0CD6F6 : 99 70 04    ;
                       DEY                                 ;; 0CD6F9 : 88          ;
-                      BPL CODE_0CD6F6                     ;; 0CD6FA : 10 FA       ;
+                      BPL -                               ;; 0CD6FA : 10 FA       ;
                       LDA.W !Layer1ScrollXSpeed           ;; 0CD6FC : AD 46 14    ;
                       BNE CODE_0CD752                     ;; 0CD6FF : D0 51       ;
                       LDA.W !PlayerWalkingPose            ;; 0CD701 : AD DB 13    ;
                       ASL A                               ;; 0CD704 : 0A          ;
                       LDY.B !Powerup                      ;; 0CD705 : A4 19       ;
-                      BEQ CODE_0CD70A                     ;; 0CD707 : F0 01       ;
+                      BEQ +                               ;; 0CD707 : F0 01       ;
                       INC A                               ;; 0CD709 : 1A          ;
-CODE_0CD70A:          TAY                                 ;; 0CD70A : A8          ;
+                    + TAY                                 ;; 0CD70A : A8          ;
                       LDA.W DATA_0CD6C4,Y                 ;; 0CD70B : B9 C4 D6    ;
                       STA.B !_0                           ;; 0CD70E : 85 00       ;
                       LDA.W DATA_0CD6CA,Y                 ;; 0CD710 : B9 CA D6    ;
@@ -5587,10 +5587,10 @@ CODE_0CD720:          TXA                                 ;; 0CD720 : 8A        
                       CLC                                 ;; 0CD726 : 18          ;
                       ADC.W DATA_0CD6D0,X                 ;; 0CD727 : 7D D0 D6    ;
                       BIT.B !_2                           ;; 0CD72A : 24 02       ;
-                      BVC CODE_0CD731                     ;; 0CD72C : 50 03       ;
+                      BVC +                               ;; 0CD72C : 50 03       ;
                       EOR.B #$FF                          ;; 0CD72E : 49 FF       ;
                       INC A                               ;; 0CD730 : 1A          ;
-CODE_0CD731:          CLC                                 ;; 0CD731 : 18          ;
+                    + CLC                                 ;; 0CD731 : 18          ;
                       ADC.B !PlayerXPosNext               ;; 0CD732 : 65 94       ;
                       STA.W !OAMTileXPos+$140,Y           ;; 0CD734 : 99 40 03    ;
                       LDA.B !_1                           ;; 0CD737 : A5 01       ;
@@ -5608,14 +5608,14 @@ CODE_0CD731:          CLC                                 ;; 0CD731 : 18        
 Return0CD751:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CD752:          AND.B #$07                          ;; 0CD752 : 29 07       ;
-                      BNE CODE_0CD759                     ;; 0CD754 : D0 03       ;
+                      BNE +                               ;; 0CD754 : D0 03       ;
                       JSR CODE_0CD22D                     ;; 0CD756 : 20 2D D2    ;
-CODE_0CD759:          LDY.B #$25                          ;; 0CD759 : A0 25       ;
+                    + LDY.B #$25                          ;; 0CD759 : A0 25       ;
                       LDA.W !Layer1ScrollXSpeed           ;; 0CD75B : AD 46 14    ;
                       CMP.B #$4C                          ;; 0CD75E : C9 4C       ;
-                      BCC CODE_0CD764                     ;; 0CD760 : 90 02       ;
+                      BCC +                               ;; 0CD760 : 90 02       ;
                       LDY.B #$38                          ;; 0CD762 : A0 38       ; \ Mario's image = Ducking, back to camera 
-CODE_0CD764:          STY.W !PlayerPose                   ;; 0CD764 : 8C E0 13    ; / 
+                    + STY.W !PlayerPose                   ;; 0CD764 : 8C E0 13    ; / 
                       LDY.B #$00                          ;; 0CD767 : A0 00       ;
                       DEC A                               ;; 0CD769 : 3A          ;
                       STA.B !_0                           ;; 0CD76A : 85 00       ;
@@ -5630,9 +5630,9 @@ CODE_0CD76E:          STA.W !OAMTileNo+$140,Y             ;; 0CD76E : 99 42 03  
                       CLC                                 ;; 0CD780 : 18          ;
                       ADC.B #$10                          ;; 0CD781 : 69 10       ;
                       CMP.B #$68                          ;; 0CD783 : C9 68       ;
-                      BCC CODE_0CD789                     ;; 0CD785 : 90 02       ;
+                      BCC +                               ;; 0CD785 : 90 02       ;
                       LDA.B #$68                          ;; 0CD787 : A9 68       ;
-CODE_0CD789:          STA.B !_0                           ;; 0CD789 : 85 00       ;
+                    + STA.B !_0                           ;; 0CD789 : 85 00       ;
                       INY                                 ;; 0CD78B : C8          ;
                       INY                                 ;; 0CD78C : C8          ;
                       INY                                 ;; 0CD78D : C8          ;
@@ -5645,20 +5645,20 @@ CODE_0CD789:          STA.B !_0                           ;; 0CD789 : 85 00     
                       CMP.W DATA_0CD6E0,X                 ;; 0CD79B : DD E0 D6    ;
                       BNE CODE_0CD7DE                     ;; 0CD79E : D0 3E       ;
                       LDA.W !Layer1ScrollYSpeed+1         ;; 0CD7A0 : AD 49 14    ;
-                      BEQ CODE_0CD7A9                     ;; 0CD7A3 : F0 04       ;
+                      BEQ +                               ;; 0CD7A3 : F0 04       ;
                       DEC.W !Layer1ScrollYSpeed+1         ;; 0CD7A5 : CE 49 14    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0CD7A9:          TXA                                 ;; 0CD7A9 : 8A          ;
+                    + TXA                                 ;; 0CD7A9 : 8A          ;
                       BEQ CODE_0CD7C9                     ;; 0CD7AA : F0 1D       ;
                       LSR A                               ;; 0CD7AC : 4A          ;
                       BCS CODE_0CD7C9                     ;; 0CD7AD : B0 1A       ;
                       LDA.B !TrueFrame                    ;; 0CD7AF : A5 13       ;
                       AND.B #$04                          ;; 0CD7B1 : 29 04       ;
-                      BEQ CODE_0CD7BA                     ;; 0CD7B3 : F0 05       ;
+                      BEQ +                               ;; 0CD7B3 : F0 05       ;
                       LDA.B #$39                          ;; 0CD7B5 : A9 39       ; \ Mario's image = Standing, back to camera 
                       STA.W !PlayerPose                   ;; 0CD7B7 : 8D E0 13    ; / 
-CODE_0CD7BA:          LDA.B !PlayerXPosNext               ;; 0CD7BA : A5 94       ;
+                    + LDA.B !PlayerXPosNext               ;; 0CD7BA : A5 94       ;
                       CMP.W DATA_0CD6E5,X                 ;; 0CD7BC : DD E5 D6    ;
                       BEQ CODE_0CD7C9                     ;; 0CD7BF : F0 08       ;
                       INC A                               ;; 0CD7C1 : 1A          ;
@@ -5669,16 +5669,16 @@ CODE_0CD7BA:          LDA.B !PlayerXPosNext               ;; 0CD7BA : A5 94     
                                                           ;;                      ;
 CODE_0CD7C9:          INC.W !Layer2ScrollTimer            ;; 0CD7C9 : EE 45 14    ;
                       CPX.B #$06                          ;; 0CD7CC : E0 06       ;
-                      BCC CODE_0CD7D4                     ;; 0CD7CE : 90 04       ;
+                      BCC +                               ;; 0CD7CE : 90 04       ;
                       STZ.W !Layer1ScrollXSpeed           ;; 0CD7D0 : 9C 46 14    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0CD7D4:          TXA                                 ;; 0CD7D4 : 8A          ;
+                    + TXA                                 ;; 0CD7D4 : 8A          ;
                       LSR A                               ;; 0CD7D5 : 4A          ;
-                      BCS Return0CD7DD                    ;; 0CD7D6 : B0 05       ;
+                      BCS +                               ;; 0CD7D6 : B0 05       ;
                       LDA.B #$0F                          ;; 0CD7D8 : A9 0F       ;
                       STA.W !SPCIO0                       ;; 0CD7DA : 8D F9 1D    ; / Play sound effect 
-Return0CD7DD:         RTS                                 ;; ?QPWZ? : 60          ; Return 
+                    + RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0CD7DE:          CLC                                 ;; 0CD7DE : 18          ;
                       ADC.W DATA_0CD6D9,X                 ;; 0CD7DF : 7D D9 D6    ;
@@ -5704,9 +5704,9 @@ CODE_0CD803:          LDX.W !Layer2ScrollXSpeed           ;; 0CD803 : AE 4A 14  
                       BRA CODE_0CD84F                     ;; 0CD810 : 80 3D       ;
                                                           ;;                      ;
 CODE_0CD812:          LDY.B !Powerup                      ;; 0CD812 : A4 19       ;
-                      BEQ CODE_0CD818                     ;; 0CD814 : F0 02       ;
+                      BEQ +                               ;; 0CD814 : F0 02       ;
                       LDY.B #$01                          ;; 0CD816 : A0 01       ;
-CODE_0CD818:          LDA.B !PlayerXPosNext               ;; 0CD818 : A5 94       ;
+                    + LDA.B !PlayerXPosNext               ;; 0CD818 : A5 94       ;
                       CLC                                 ;; 0CD81A : 18          ;
                       ADC.W DATA_0CD7EB,Y                 ;; 0CD81B : 79 EB D7    ;
                       STA.W !Layer2ScrollYSpeed           ;; 0CD81E : 8D 4C 14    ;
@@ -5726,12 +5726,12 @@ CODE_0CD818:          LDA.B !PlayerXPosNext               ;; 0CD818 : A5 94     
                       STZ.W !IsCarryingItem               ;; 0CD83A : 9C 8F 14    ;
 CODE_0CD83D:          LDA.B #$05                          ;; 0CD83D : A9 05       ;
                       CMP.B !PlayerXPosNext               ;; 0CD83F : C5 94       ;
-                      BCC CODE_0CD84C                     ;; 0CD841 : 90 09       ;
+                      BCC +                               ;; 0CD841 : 90 09       ;
                       STA.B !PlayerXPosNext               ;; 0CD843 : 85 94       ;
                       LDA.B !PlayerXSpeed                 ;; 0CD845 : A5 7B       ;
-                      BMI CODE_0CD84C                     ;; 0CD847 : 30 03       ;
+                      BMI +                               ;; 0CD847 : 30 03       ;
 CODE_0CD849:          INC.W !Layer2ScrollXSpeed           ;; 0CD849 : EE 4A 14    ;
-CODE_0CD84C:          INC.W !Layer2ScrollXSpeed+1         ;; 0CD84C : EE 4B 14    ;
+                    + INC.W !Layer2ScrollXSpeed+1         ;; 0CD84C : EE 4B 14    ;
 CODE_0CD84F:          LDA.W !Layer2ScrollXSpeed+1         ;; 0CD84F : AD 4B 14    ;
                       AND.B #$0F                          ;; 0CD852 : 29 0F       ;
                       TAY                                 ;; 0CD854 : A8          ;
