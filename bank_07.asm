@@ -3994,10 +3994,10 @@ DATA_07F1AA:          db $01,$02,$03,$04,$05,$06,$07,$08  ;; 07F1AA             
                       db $17,$18,$19,$20,$21,$22,$23,$24  ;; ?QPWZ?               ;
                       db $25,$26,$27,$28,$29,$30,$40,$50  ;; ?QPWZ?               ;
                                                           ;;                      ;
-CODE_07F1CA:          LDA.W $1540,X                       ;; 07F1CA : BD 40 15    ;
+CODE_07F1CA:          LDA.W !SpriteMisc1540,X             ;; 07F1CA : BD 40 15    ;
                       STA.B !_4                           ;; 07F1CD : 85 04       ;
                       STZ.B !_2                           ;; 07F1CF : 64 02       ;
-                      LDA.W $1594,X                       ;; 07F1D1 : BD 94 15    ;
+                      LDA.W !SpriteMisc1594,X             ;; 07F1D1 : BD 94 15    ;
                       LSR A                               ;; 07F1D4 : 4A          ;
                       LSR A                               ;; 07F1D5 : 4A          ;
                       TAX                                 ;; 07F1D6 : AA          ;
@@ -4067,19 +4067,19 @@ CODE_07F22A:          STA.W !OAMTileNo,Y                  ;; 07F22A : 99 02 02  
                       INX                                 ;; 07F247 : E8          ;
                       BRA CODE_07F200                     ;; 07F248 : 80 B6       ;
                                                           ;;                      ;
-CODE_07F24A:          LDX.W $15E9                         ;; 07F24A : AE E9 15    ; X = Sprite index 
+CODE_07F24A:          LDX.W !CurSpriteProcess             ;; 07F24A : AE E9 15    ; X = Sprite index 
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
 DATA_07F24E:          db $66,$66,$6E,$FF                  ;; 07F24E               ;
                                                           ;;                      ;
 CODE_07F252:          PHX                                 ;; 07F252 : DA          ;
-                      LDA.W $1594,X                       ;; 07F253 : BD 94 15    ;
+                      LDA.W !SpriteMisc1594,X             ;; 07F253 : BD 94 15    ;
                       LSR A                               ;; 07F256 : 4A          ;
                       LSR A                               ;; 07F257 : 4A          ;
                       TAX                                 ;; 07F258 : AA          ;
                       LDA.L DATA_07F1AA,X                 ;; 07F259 : BF AA F1 07 ;
-                      STA.W $1900                         ;; 07F25D : 8D 00 19    ;
+                      STA.W !BonusStarsGained             ;; 07F25D : 8D 00 19    ;
                       PLX                                 ;; 07F260 : FA          ;
                       CMP.B #$50                          ;; 07F261 : C9 50       ;
                       BNE Return07F26B                    ;; 07F263 : D0 06       ;
@@ -4250,42 +4250,42 @@ Sprite190FVals:       db $00,$00,$00,$00,$A0,$A0,$A0,$A0  ;; ?QPWZ?             
                       db $47,$45,$00,$00,$41,$41,$FF,$40  ;; ?QPWZ?               ;
                       db $40                              ;; ?QPWZ?               ;
                                                           ;;                      ;
-ZeroSpriteTables:     STZ.W $164A,X                       ;; ?QPWZ? : 9E 4A 16    ;
-                      STZ.W $1632,X                       ;; 07F725 : 9E 32 16    ;
+ZeroSpriteTables:     STZ.W !SpriteInLiquid,X             ;; ?QPWZ? : 9E 4A 16    ;
+                      STZ.W !SpriteBehindScene,X          ;; 07F725 : 9E 32 16    ;
                       STZ.B !SpriteTableC2,X              ;; 07F728 : 74 C2       ;
-                      STZ.W $151C,X                       ;; 07F72A : 9E 1C 15    ;
-                      STZ.W $1528,X                       ;; 07F72D : 9E 28 15    ;
-                      STZ.W $1534,X                       ;; 07F730 : 9E 34 15    ;
-                      STZ.W $157C,X                       ;; 07F733 : 9E 7C 15    ;
-                      STZ.W $1588,X                       ;; 07F736 : 9E 88 15    ;
-                      STZ.W $15C4,X                       ;; 07F739 : 9E C4 15    ;
-                      STZ.W $1602,X                       ;; 07F73C : 9E 02 16    ;
-                      STZ.W $1540,X                       ;; 07F73F : 9E 40 15    ;
-                      STZ.W $154C,X                       ;; 07F742 : 9E 4C 15    ;
-                      STZ.W $1558,X                       ;; 07F745 : 9E 58 15    ;
-                      STZ.W $1564,X                       ;; 07F748 : 9E 64 15    ;
-                      STZ.W $1FE2,X                       ;; 07F74B : 9E E2 1F    ;
-                      STZ.W $1626,X                       ;; 07F74E : 9E 26 16    ;
-                      STZ.W $1570,X                       ;; 07F751 : 9E 70 15    ;
+                      STZ.W !SpriteMisc151C,X             ;; 07F72A : 9E 1C 15    ;
+                      STZ.W !SpriteMisc1528,X             ;; 07F72D : 9E 28 15    ;
+                      STZ.W !SpriteMisc1534,X             ;; 07F730 : 9E 34 15    ;
+                      STZ.W !SpriteMisc157C,X             ;; 07F733 : 9E 7C 15    ;
+                      STZ.W !SpriteBlockedDirs,X          ;; 07F736 : 9E 88 15    ;
+                      STZ.W !SpriteWayOffscreenX,X        ;; 07F739 : 9E C4 15    ;
+                      STZ.W !SpriteMisc1602,X             ;; 07F73C : 9E 02 16    ;
+                      STZ.W !SpriteMisc1540,X             ;; 07F73F : 9E 40 15    ;
+                      STZ.W !SpriteMisc154C,X             ;; 07F742 : 9E 4C 15    ;
+                      STZ.W !SpriteMisc1558,X             ;; 07F745 : 9E 58 15    ;
+                      STZ.W !SpriteMisc1564,X             ;; 07F748 : 9E 64 15    ;
+                      STZ.W !SpriteMisc1FE2,X             ;; 07F74B : 9E E2 1F    ;
+                      STZ.W !SpriteMisc1626,X             ;; 07F74E : 9E 26 16    ;
+                      STZ.W !SpriteMisc1570,X             ;; 07F751 : 9E 70 15    ;
                       STZ.B !SpriteXSpeed,X               ;; 07F754 : 74 B6       ; Sprite X Speed = 0 
-                      STZ.W $14F8,X                       ;; 07F756 : 9E F8 14    ;
+                      STZ.W !SpriteXPosSpx,X              ;; 07F756 : 9E F8 14    ;
                       STZ.B !SpriteYSpeed,X               ;; 07F759 : 74 AA       ; Sprite Y Speed = 0 
-                      STZ.W $14EC,X                       ;; 07F75B : 9E EC 14    ;
-                      STZ.W $15DC,X                       ;; 07F75E : 9E DC 15    ;
-                      STZ.W $15D0,X                       ;; 07F761 : 9E D0 15    ;
-                      STZ.W $163E,X                       ;; 07F764 : 9E 3E 16    ;
-                      STZ.W $1656,X                       ;; 07F767 : 9E 56 16    ;
-                      STZ.W $1662,X                       ;; 07F76A : 9E 62 16    ;
-                      STZ.W $166E,X                       ;; 07F76D : 9E 6E 16    ;
-                      STZ.W $167A,X                       ;; 07F770 : 9E 7A 16    ;
-                      STZ.W $1686,X                       ;; 07F773 : 9E 86 16    ;
-                      STZ.W $187B,X                       ;; 07F776 : 9E 7B 18    ;
-                      STZ.W $160E,X                       ;; 07F779 : 9E 0E 16    ;
-                      STZ.W $1594,X                       ;; 07F77C : 9E 94 15    ;
-                      STZ.W $1504,X                       ;; 07F77F : 9E 04 15    ;
-                      STZ.W $1FD6,X                       ;; 07F782 : 9E D6 1F    ;
+                      STZ.W !SpriteYPosSpx,X              ;; 07F75B : 9E EC 14    ;
+                      STZ.W !SpriteDisableObjInt,X        ;; 07F75E : 9E DC 15    ;
+                      STZ.W !SpriteOnYoshiTongue,X        ;; 07F761 : 9E D0 15    ;
+                      STZ.W !SpriteMisc163E,X             ;; 07F764 : 9E 3E 16    ;
+                      STZ.W !SpriteTweakerA,X             ;; 07F767 : 9E 56 16    ;
+                      STZ.W !SpriteTweakerB,X             ;; 07F76A : 9E 62 16    ;
+                      STZ.W !SpriteTweakerC,X             ;; 07F76D : 9E 6E 16    ;
+                      STZ.W !SpriteTweakerD,X             ;; 07F770 : 9E 7A 16    ;
+                      STZ.W !SpriteTweakerE,X             ;; 07F773 : 9E 86 16    ;
+                      STZ.W !SpriteMisc187B,X             ;; 07F776 : 9E 7B 18    ;
+                      STZ.W !SpriteMisc160E,X             ;; 07F779 : 9E 0E 16    ;
+                      STZ.W !SpriteMisc1594,X             ;; 07F77C : 9E 94 15    ;
+                      STZ.W !SpriteMisc1504,X             ;; 07F77F : 9E 04 15    ;
+                      STZ.W !SpriteMisc1FD6,X             ;; 07F782 : 9E D6 1F    ;
                       LDA.B #$01                          ;; 07F785 : A9 01       ;
-                      STA.W $15A0,X                       ;; 07F787 : 9D A0 15    ;
+                      STA.W !SpriteOffscreenX,X           ;; 07F787 : 9D A0 15    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 LoadSpriteTables:     PHY                                 ;; ?QPWZ? : 5A          ;
@@ -4295,7 +4295,7 @@ LoadSpriteTables:     PHY                                 ;; ?QPWZ? : 5A        
                       LDA.L Sprite166EVals,X              ;; 07F790 : BF FE F3 07 ;
                       AND.B #$0F                          ;; 07F794 : 29 0F       ;
                       PLX                                 ;; 07F796 : FA          ;
-                      STA.W $15F6,X                       ;; 07F797 : 9D F6 15    ;
+                      STA.W !SpriteOBJAttribute,X         ;; 07F797 : 9D F6 15    ;
                       JSL LoadTweakerBytes                ;; 07F79A : 22 A0 F7 07 ;
                       PLY                                 ;; 07F79E : 7A          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
@@ -4305,17 +4305,17 @@ LoadTweakerBytes:     PHY                                 ;; ?QPWZ? : 5A        
                       TXY                                 ;; 07F7A2 : 9B          ;
                       LDX.B !SpriteNumber,Y               ;; 07F7A3 : B6 9E       ;
                       LDA.L Sprite1656Vals,X              ;; 07F7A5 : BF 6C F2 07 ;
-                      STA.W $1656,Y                       ;; 07F7A9 : 99 56 16    ;
+                      STA.W !SpriteTweakerA,Y             ;; 07F7A9 : 99 56 16    ;
                       LDA.L Sprite1662Vals,X              ;; 07F7AC : BF 35 F3 07 ;
-                      STA.W $1662,Y                       ;; 07F7B0 : 99 62 16    ;
+                      STA.W !SpriteTweakerB,Y             ;; 07F7B0 : 99 62 16    ;
                       LDA.L Sprite166EVals,X              ;; 07F7B3 : BF FE F3 07 ;
-                      STA.W $166E,Y                       ;; 07F7B7 : 99 6E 16    ;
+                      STA.W !SpriteTweakerC,Y             ;; 07F7B7 : 99 6E 16    ;
                       LDA.L Sprite167AVals,X              ;; 07F7BA : BF C7 F4 07 ;
-                      STA.W $167A,Y                       ;; 07F7BE : 99 7A 16    ;
+                      STA.W !SpriteTweakerD,Y             ;; 07F7BE : 99 7A 16    ;
                       LDA.L Sprite1686Vals,X              ;; 07F7C1 : BF 90 F5 07 ;
-                      STA.W $1686,Y                       ;; 07F7C5 : 99 86 16    ;
+                      STA.W !SpriteTweakerE,Y             ;; 07F7C5 : 99 86 16    ;
                       LDA.L Sprite190FVals,X              ;; 07F7C8 : BF 59 F6 07 ;
-                      STA.W $190F,Y                       ;; 07F7CC : 99 0F 19    ;
+                      STA.W !SpriteTweakerF,Y             ;; 07F7CC : 99 0F 19    ;
                       PLX                                 ;; 07F7CF : FA          ;
                       PLY                                 ;; 07F7D0 : 7A          ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
@@ -4477,37 +4477,37 @@ CODE_07FC3E:          JSL CODE_07FC47                     ;; 07FC3E : 22 47 FC 0
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_07FC47:          LDY.B #$07                          ;; 07FC47 : A0 07       ; \ Find a free extended sprite slot 
-CODE_07FC49:          LDA.W $170B,Y                       ;; 07FC49 : B9 0B 17    ;  | 
+CODE_07FC49:          LDA.W !ExtSpriteNumber,Y            ;; 07FC49 : B9 0B 17    ;  | 
                       BEQ CODE_07FC52                     ;; 07FC4C : F0 04       ;  | 
                       DEY                                 ;; 07FC4E : 88          ;  | 
                       BPL CODE_07FC49                     ;; 07FC4F : 10 F8       ;  | 
                       RTL                                 ;; ?QPWZ? : 6B          ; / Return if no free slots 
                                                           ;;                      ;
 CODE_07FC52:          LDA.B #$10                          ;; 07FC52 : A9 10       ; \ Extended sprite = Spin jump stars 
-                      STA.W $170B,Y                       ;; 07FC54 : 99 0B 17    ; / 
+                      STA.W !ExtSpriteNumber,Y            ;; 07FC54 : 99 0B 17    ; / 
                       PHX                                 ;; 07FC57 : DA          ;
-                      LDX.W $15E9                         ;; 07FC58 : AE E9 15    ; X = Sprite index 
+                      LDX.W !CurSpriteProcess             ;; 07FC58 : AE E9 15    ; X = Sprite index 
                       LDA.B !SpriteYPosLow,X              ;; 07FC5B : B5 D8       ;
                       CLC                                 ;; 07FC5D : 18          ;
                       ADC.B #$04                          ;; 07FC5E : 69 04       ;
-                      STA.W $1715,Y                       ;; 07FC60 : 99 15 17    ;
-                      LDA.W $14D4,X                       ;; 07FC63 : BD D4 14    ;
+                      STA.W !ExtSpriteYPosLow,Y           ;; 07FC60 : 99 15 17    ;
+                      LDA.W !SpriteXPosHigh,X             ;; 07FC63 : BD D4 14    ;
                       ADC.B #$00                          ;; 07FC66 : 69 00       ;
-                      STA.W $1729,Y                       ;; 07FC68 : 99 29 17    ;
+                      STA.W !ExtSpriteYPosHigh,Y          ;; 07FC68 : 99 29 17    ;
                       LDA.B !SpriteXPosLow,X              ;; 07FC6B : B5 E4       ;
                       CLC                                 ;; 07FC6D : 18          ;
                       ADC.B #$04                          ;; 07FC6E : 69 04       ;
-                      STA.W $171F,Y                       ;; 07FC70 : 99 1F 17    ;
-                      LDA.W $14E0,X                       ;; 07FC73 : BD E0 14    ;
+                      STA.W !ExtSpriteXPosLow,Y           ;; 07FC70 : 99 1F 17    ;
+                      LDA.W !SpriteYPosHigh,X             ;; 07FC73 : BD E0 14    ;
                       ADC.B #$00                          ;; 07FC76 : 69 00       ;
-                      STA.W $1733,Y                       ;; 07FC78 : 99 33 17    ;
+                      STA.W !ExtSpriteXPosHigh,Y          ;; 07FC78 : 99 33 17    ;
                       PLX                                 ;; 07FC7B : FA          ;
                       LDA.L DATA_07FC33,X                 ;; 07FC7C : BF 33 FC 07 ;
-                      STA.W $1747,Y                       ;; 07FC80 : 99 47 17    ;
+                      STA.W !ExtSpriteXSpeed,Y            ;; 07FC80 : 99 47 17    ;
                       LDA.L DATA_07FC37,X                 ;; 07FC83 : BF 37 FC 07 ;
-                      STA.W $173D,Y                       ;; 07FC87 : 99 3D 17    ;
+                      STA.W !ExtSpriteYSpeed,Y            ;; 07FC87 : 99 3D 17    ;
                       LDA.B #$17                          ;; 07FC8A : A9 17       ;
-                      STA.W $176F,Y                       ;; 07FC8C : 99 6F 17    ;
+                      STA.W !ExtSpriteMisc176F,Y          ;; 07FC8C : 99 6F 17    ;
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;

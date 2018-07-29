@@ -1328,7 +1328,7 @@ CODE_0DA40F:          SEP #$30                            ;; 0DA40F : E2 30     
                       RTL                                 ;; ?QPWZ? : 6B          ; Return 
                                                           ;;                      ;
 CODE_0DA415:          SEP #$30                            ;; 0DA415 : E2 30       ; Index (8 bit) Accum (8 bit) 
-                      LDA.W $1931                         ;; 0DA417 : AD 31 19    ;
+                      LDA.W !ObjectTileset                ;; 0DA417 : AD 31 19    ;
                       JSL ExecutePtrLong                  ;; 0DA41A : 22 FA 86 00 ;
                                                           ;;                      ;
                       dl CODE_0DA44B                      ;; ?QPWZ? : 4B A4 0D    ;
@@ -1432,19 +1432,19 @@ CODE_0DA512:          LDY.B #$00                          ;; 0DA512 : A0 00     
                       AND.B #$1F                          ;; 0DA527 : 29 1F       ;
                       TAX                                 ;; 0DA529 : AA          ;
                       LDA.B !LvlLoadObjNo                 ;; 0DA52A : A5 5A       ;
-                      STA.W $19B8,X                       ;; 0DA52C : 9D B8 19    ;
+                      STA.W !ExitTableLow,X               ;; 0DA52C : 9D B8 19    ;
                       LDA.B !_B                           ;; 0DA52F : A5 0B       ;
                       AND.B #$01                          ;; 0DA531 : 29 01       ;
-                      STA.W $19D8,X                       ;; 0DA533 : 9D D8 19    ;
+                      STA.W !ExitTableHigh,X              ;; 0DA533 : 9D D8 19    ;
                       LDA.B !_B                           ;; 0DA536 : A5 0B       ;
                       LSR A                               ;; 0DA538 : 4A          ;
-                      STA.W $1B93                         ;; 0DA539 : 8D 93 1B    ;
+                      STA.W !UseSecondaryExit             ;; 0DA539 : 8D 93 1B    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DA53D:          LDA.B !_A                           ;; 0DA53D : A5 0A       ;
                       AND.B #$1F                          ;; 0DA53F : 29 1F       ;
-                      STA.W $1928                         ;; 0DA541 : 8D 28 19    ;
-                      STA.W $1BA1                         ;; 0DA544 : 8D A1 1B    ;
+                      STA.W !LevelLoadObject              ;; 0DA541 : 8D 28 19    ;
+                      STA.W !LevelLoadObjectTile          ;; 0DA544 : 8D A1 1B    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -1464,23 +1464,23 @@ CODE_0DA57F:          STA.B !_0                           ;; 0DA57F : 85 00     
                       BCC CODE_0DA5B1                     ;; 0DA583 : 90 2C       ;
                       CPX.B #$1D                          ;; 0DA585 : E0 1D       ;
                       BCS CODE_0DA5B1                     ;; 0DA587 : B0 28       ;
-                      LDA.W $13BF                         ;; 0DA589 : AD BF 13    ;
+                      LDA.W !TranslevelNo                 ;; 0DA589 : AD BF 13    ;
                       LSR A                               ;; 0DA58C : 4A          ;
                       LSR A                               ;; 0DA58D : 4A          ;
                       LSR A                               ;; 0DA58E : 4A          ;
                       TAY                                 ;; 0DA58F : A8          ;
-                      LDA.W $13BF                         ;; 0DA590 : AD BF 13    ;
+                      LDA.W !TranslevelNo                 ;; 0DA590 : AD BF 13    ;
                       AND.B #$07                          ;; 0DA593 : 29 07       ;
                       TAX                                 ;; 0DA595 : AA          ;
                       LDA.B !_0                           ;; 0DA596 : A5 00       ;
                       CMP.B #$08                          ;; 0DA598 : C9 08       ;
                       BNE CODE_0DA5A7                     ;; 0DA59A : D0 0B       ;
-                      LDA.W $1FEE,Y                       ;; 0DA59C : B9 EE 1F    ;
+                      LDA.W !MoonCollected,Y              ;; 0DA59C : B9 EE 1F    ;
                       AND.L DATA_0DA8A6,X                 ;; 0DA59F : 3F A6 A8 0D ;
                       BEQ CODE_0DA5B1                     ;; 0DA5A3 : F0 0C       ;
                       BRA Return0DA5B0                    ;; 0DA5A5 : 80 09       ;
                                                           ;;                      ;
-CODE_0DA5A7:          LDA.W $1F3C,Y                       ;; 0DA5A7 : B9 3C 1F    ;
+CODE_0DA5A7:          LDA.W !Checkpoint1upCollected,Y     ;; 0DA5A7 : B9 3C 1F    ;
                       AND.L DATA_0DA8A6,X                 ;; 0DA5AA : 3F A6 A8 0D ;
                       BEQ CODE_0DA5B1                     ;; 0DA5AE : F0 01       ;
 Return0DA5B0:         RTS                                 ;; ?QPWZ? : 60          ; Return 
@@ -1519,7 +1519,7 @@ CODE_0DA5F0:          TXA                                 ;; 0DA5F0 : 8A        
                       PHA                                 ;; 0DA5F1 : 48          ;
                       TYA                                 ;; 0DA5F2 : 98          ;
                       PHA                                 ;; 0DA5F3 : 48          ;
-                      LDX.W $13BE                         ;; 0DA5F4 : AE BE 13    ;
+                      LDX.W !ItemMemorySetting            ;; 0DA5F4 : AE BE 13    ;
                       LDA.B #$F8                          ;; 0DA5F7 : A9 F8       ;
                       CLC                                 ;; 0DA5F9 : 18          ;
                       ADC.L DATA_0DA8AE,X                 ;; 0DA5FA : 7F AE A8 0D ;
@@ -1527,7 +1527,7 @@ CODE_0DA5F0:          TXA                                 ;; 0DA5F0 : 8A        
                       LDA.B #$19                          ;; 0DA600 : A9 19       ;
                       ADC.L DATA_0DA8B1,X                 ;; 0DA602 : 7F B1 A8 0D ;
                       STA.B !_9                           ;; 0DA606 : 85 09       ;
-                      LDA.W $1BA1                         ;; 0DA608 : AD A1 1B    ;
+                      LDA.W !LevelLoadObjectTile          ;; 0DA608 : AD A1 1B    ;
                       ASL A                               ;; 0DA60B : 0A          ;
                       ASL A                               ;; 0DA60C : 0A          ;
                       STA.B !_E                           ;; 0DA60D : 85 0E       ;
@@ -1603,11 +1603,11 @@ CODE_0DA673:          LDY.B !LevelLoadPos                 ;; 0DA673 : A4 57     
                       JSR Sta1To6ePointer                 ;; 0DA68A : 20 08 AA    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0DA68E:          LDX.W $13BF                         ;; 0DA68E : AE BF 13    ;
-                      LDA.L $001EA2,X                     ;; 0DA691 : BF A2 1E 00 ;
+CODE_0DA68E:          LDX.W !TranslevelNo                 ;; 0DA68E : AE BF 13    ;
+                      LDA.L !OWLevelTileSettings,X        ;; 0DA691 : BF A2 1E 00 ;
                       AND.B #$40                          ;; 0DA695 : 29 40       ;
                       BNE Return0DA6B0                    ;; 0DA697 : D0 17       ;
-                      LDA.W $13CE                         ;; 0DA699 : AD CE 13    ;
+                      LDA.W !MidwayFlag                   ;; 0DA699 : AD CE 13    ;
                       BNE Return0DA6B0                    ;; 0DA69C : D0 12       ;
                       LDY.B !LevelLoadPos                 ;; 0DA69E : A4 57       ;
                       DEY                                 ;; 0DA6A0 : 88          ;
@@ -1631,8 +1631,8 @@ CODE_0DA6BA:          LDA.B !_4                           ;; 0DA6BA : A5 04     
                       LDA.B !_5                           ;; 0DA6C0 : A5 05       ;
                       STA.B !Map16LowPtr+1                ;; 0DA6C2 : 85 6C       ;
                       STA.B !Map16HighPtr+1               ;; 0DA6C4 : 85 6F       ;
-                      LDA.W $1928                         ;; 0DA6C6 : AD 28 19    ;
-                      STA.W $1BA1                         ;; 0DA6C9 : 8D A1 1B    ;
+                      LDA.W !LevelLoadObject              ;; 0DA6C6 : AD 28 19    ;
+                      STA.W !LevelLoadObjectTile          ;; 0DA6C9 : 8D A1 1B    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
                                                           ;;                      ;
@@ -1880,7 +1880,7 @@ CODE_0DA8D8:          CPX.B #$04                          ;; 0DA8D8 : E0 04     
                       PHA                                 ;; 0DA8DD : 48          ;
                       TYA                                 ;; 0DA8DE : 98          ;
                       PHA                                 ;; 0DA8DF : 48          ;
-                      LDX.W $13BE                         ;; 0DA8E0 : AE BE 13    ;
+                      LDX.W !ItemMemorySetting            ;; 0DA8E0 : AE BE 13    ;
                       LDA.B #$F8                          ;; 0DA8E3 : A9 F8       ;
                       CLC                                 ;; 0DA8E5 : 18          ;
                       ADC.L DATA_0DA8AE,X                 ;; 0DA8E6 : 7F AE A8 0D ;
@@ -1888,7 +1888,7 @@ CODE_0DA8D8:          CPX.B #$04                          ;; 0DA8D8 : E0 04     
                       LDA.B #$19                          ;; 0DA8EC : A9 19       ;
                       ADC.L DATA_0DA8B1,X                 ;; 0DA8EE : 7F B1 A8 0D ;
                       STA.B !_9                           ;; 0DA8F2 : 85 09       ;
-                      LDA.W $1BA1                         ;; 0DA8F4 : AD A1 1B    ;
+                      LDA.W !LevelLoadObjectTile          ;; 0DA8F4 : AD A1 1B    ;
                       ASL A                               ;; 0DA8F7 : 0A          ;
                       ASL A                               ;; 0DA8F8 : 0A          ;
                       STA.B !_E                           ;; 0DA8F9 : 85 0E       ;
@@ -1955,7 +1955,7 @@ CODE_0DA95D:          INY                                 ;; 0DA95D : C8        
                       ADC.B #$01                          ;; 0DA96E : 69 01       ;
                       STA.B !Map16LowPtr+1                ;; 0DA970 : 85 6C       ;
                       STA.B !Map16HighPtr+1               ;; 0DA972 : 85 6F       ;
-                      INC.W $1BA1                         ;; 0DA974 : EE A1 1B    ;
+                      INC.W !LevelLoadObjectTile          ;; 0DA974 : EE A1 1B    ;
                       LDA.B !LevelLoadPos                 ;; 0DA977 : A5 57       ;
                       AND.B #$F0                          ;; 0DA979 : 29 F0       ;
                       TAY                                 ;; 0DA97B : A8          ;
@@ -2025,7 +2025,7 @@ CODE_0DA9D6:          LDA.B !Map16LowPtr                  ;; 0DA9D6 : A5 6B     
                       STA.B !Map16LowPtr+1                ;; 0DA9E5 : 85 6C       ;
                       STA.B !Map16HighPtr+1               ;; 0DA9E7 : 85 6F       ;
                       STA.B !_5                           ;; 0DA9E9 : 85 05       ;
-                      DEC.W $1BA1                         ;; 0DA9EB : CE A1 1B    ;
+                      DEC.W !LevelLoadObjectTile          ;; 0DA9EB : CE A1 1B    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 CODE_0DA9EF:          LDA.B !Map16LowPtr                  ;; 0DA9EF : A5 6B       ;
@@ -2039,7 +2039,7 @@ CODE_0DA9EF:          LDA.B !Map16LowPtr                  ;; 0DA9EF : A5 6B     
                       STA.B !Map16LowPtr+1                ;; 0DA9FE : 85 6C       ;
                       STA.B !Map16HighPtr+1               ;; 0DAA00 : 85 6F       ;
                       STA.B !_5                           ;; 0DAA02 : 85 05       ;
-                      INC.W $1BA1                         ;; 0DAA04 : EE A1 1B    ;
+                      INC.W !LevelLoadObjectTile          ;; 0DAA04 : EE A1 1B    ;
                       RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
 Sta1To6ePointer:      LDA.B #$01                          ;; ?QPWZ? : A9 01       ;
@@ -3128,18 +3128,18 @@ CODE_0DB2BB:          STY.B !LevelLoadPos                 ;; 0DB2BB : 84 57     
                                                           ;;                      ;
 Return0DB2C9:         RTS                                 ;; ?QPWZ? : 60          ; Return 
                                                           ;;                      ;
-CODE_0DB2CA:          LDA.W $13BF                         ;; 0DB2CA : AD BF 13    ;
+CODE_0DB2CA:          LDA.W !TranslevelNo                 ;; 0DB2CA : AD BF 13    ;
                       LSR A                               ;; 0DB2CD : 4A          ;
                       LSR A                               ;; 0DB2CE : 4A          ;
                       LSR A                               ;; 0DB2CF : 4A          ;
                       TAY                                 ;; 0DB2D0 : A8          ;
-                      LDA.W $13BF                         ;; 0DB2D1 : AD BF 13    ;
+                      LDA.W !TranslevelNo                 ;; 0DB2D1 : AD BF 13    ;
                       AND.B #$07                          ;; 0DB2D4 : 29 07       ;
                       TAX                                 ;; 0DB2D6 : AA          ;
-                      LDA.W $1F2F,Y                       ;; 0DB2D7 : B9 2F 1F    ;
+                      LDA.W !AllDragonCoinsCollected,Y    ;; 0DB2D7 : B9 2F 1F    ;
                       AND.L DATA_0DA8A6,X                 ;; 0DB2DA : 3F A6 A8 0D ;
                       BNE Return0DB2C9                    ;; 0DB2DE : D0 E9       ;
-                      LDX.W $13BE                         ;; 0DB2E0 : AE BE 13    ;
+                      LDX.W !ItemMemorySetting            ;; 0DB2E0 : AE BE 13    ;
                       LDA.B #$F8                          ;; 0DB2E3 : A9 F8       ;
                       CLC                                 ;; 0DB2E5 : 18          ;
                       ADC.L DATA_0DA8AE,X                 ;; 0DB2E6 : 7F AE A8 0D ;
@@ -3147,7 +3147,7 @@ CODE_0DB2CA:          LDA.W $13BF                         ;; 0DB2CA : AD BF 13  
                       LDA.B #$19                          ;; 0DB2EC : A9 19       ;
                       ADC.L DATA_0DA8B1,X                 ;; 0DB2EE : 7F B1 A8 0D ;
                       STA.B !_9                           ;; 0DB2F2 : 85 09       ;
-                      LDA.W $1BA1                         ;; 0DB2F4 : AD A1 1B    ;
+                      LDA.W !LevelLoadObjectTile          ;; 0DB2F4 : AD A1 1B    ;
                       ASL A                               ;; 0DB2F7 : 0A          ;
                       ASL A                               ;; 0DB2F8 : 0A          ;
                       STA.B !_E                           ;; 0DB2F9 : 85 0E       ;
@@ -3197,7 +3197,7 @@ ADDR_0DB34A:          TYA                                 ;; 0DB34A : 98        
                       PHA                                 ;; 0DB34B : 48          ;
                       TXA                                 ;; 0DB34C : 8A          ;
                       PHA                                 ;; 0DB34D : 48          ;
-                      LDX.W $13BE                         ;; 0DB34E : AE BE 13    ;
+                      LDX.W !ItemMemorySetting            ;; 0DB34E : AE BE 13    ;
                       LDA.B #$F8                          ;; 0DB351 : A9 F8       ;
                       CLC                                 ;; 0DB353 : 18          ;
                       ADC.L DATA_0DA8AE,X                 ;; 0DB354 : 7F AE A8 0D ;
@@ -3205,7 +3205,7 @@ ADDR_0DB34A:          TYA                                 ;; 0DB34A : 98        
                       LDA.B #$19                          ;; 0DB35A : A9 19       ;
                       ADC.L DATA_0DA8B1,X                 ;; 0DB35C : 7F B1 A8 0D ;
                       STA.B !_9                           ;; 0DB360 : 85 09       ;
-                      LDA.W $1BA1                         ;; 0DB362 : AD A1 1B    ;
+                      LDA.W !LevelLoadObjectTile          ;; 0DB362 : AD A1 1B    ;
                       ASL A                               ;; 0DB365 : 0A          ;
                       ASL A                               ;; 0DB366 : 0A          ;
                       STA.B !_E                           ;; 0DB367 : 85 0E       ;
@@ -3508,7 +3508,7 @@ DATA_0DB589:          db $6A,$6B                          ;; 0DB589             
                                                           ;;                      ;
 CODE_0DB58B:          LDX.B #$00                          ;; 0DB58B : A2 00       ;
 CODE_0DB58D:          LDY.B !LevelLoadPos                 ;; 0DB58D : A4 57       ;
-                      LDA.W $1F27,X                       ;; 0DB58F : BD 27 1F    ;
+                      LDA.W !SwitchBlockFlags,X           ;; 0DB58F : BD 27 1F    ;
                       BNE CODE_0DB59E                     ;; 0DB592 : D0 0A       ;
                       JSR StzTo6ePointer                  ;; 0DB594 : 20 0D AA    ;
                       LDA.L DATA_0DB589,X                 ;; 0DB597 : BF 89 B5 0D ;
@@ -3950,7 +3950,7 @@ CODE_0DB930:          LDA.B !_0                           ;; 0DB930 : A5 00     
 CODE_0DB937:          JSR StzTo6ePointer                  ;; 0DB937 : 20 0D AA    ;
                       LDA.L DATA_0DB91A,X                 ;; 0DB93A : BF 1A B9 0D ;
                       STA.B !_F                           ;; 0DB93E : 85 0F       ;
-                      LDA.W $1F29,X                       ;; 0DB940 : BD 29 1F    ;
+                      LDA.W !SwitchBlockFlags+2,X         ;; 0DB940 : BD 29 1F    ;
                       BEQ CODE_0DB94E                     ;; 0DB943 : F0 09       ;
                       JSR Sta1To6ePointer                 ;; 0DB945 : 20 08 AA    ;
                       LDA.L DATA_0DB91C,X                 ;; 0DB948 : BF 1C B9 0D ;
@@ -7529,7 +7529,7 @@ CODE_0DEC8E:          LDY.B !LevelLoadPos                 ;; 0DEC8E : A4 57     
                       SEC                                 ;; 0DEC92 : 38          ;
                       SBC.B #$8A                          ;; 0DEC93 : E9 8A       ;
                       TAX                                 ;; 0DEC95 : AA          ;
-                      LDA.L $001F27,X                     ;; 0DEC96 : BF 27 1F 00 ;
+                      LDA.L !SwitchBlockFlags,X           ;; 0DEC96 : BF 27 1F 00 ;
                       BNE Return0DECC0                    ;; 0DEC9A : D0 24       ;
                       TXA                                 ;; 0DEC9C : 8A          ;
                       ASL A                               ;; 0DEC9D : 0A          ;
