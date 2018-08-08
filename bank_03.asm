@@ -834,14 +834,14 @@ CODE_03873A:          JSR GetDrawInfoBnk3                 ;;873A|----/----\----;
                                                           ;;                   ;
 MegaMoleSpeed:        db $10,$F0                          ;;876E|----/----\----;
                                                           ;;                   ;
-MegaMole:             JSR MegaMoleGfxRt                   ;;8770|----/----\----; Graphics routine		       
-                      LDA.W !SpriteStatus,X               ;;8773|----/----\----; \ 			       
-                      CMP.B #$08                          ;;8776|----/----\----;  | If status != 8, return	       
-                      BNE Return038733                    ;;8778|----/----\----; /				       
+MegaMole:             JSR MegaMoleGfxRt                   ;;8770|----/----\----; Graphics routine       
+                      LDA.W !SpriteStatus,X               ;;8773|----/----\----; \        
+                      CMP.B #$08                          ;;8776|----/----\----;  | If status != 8, return       
+                      BNE Return038733                    ;;8778|----/----\----; /       
                       JSR SubOffscreen3Bnk3               ;;877A|----/----\----; Handle off screen situation      
                       LDY.W !SpriteMisc157C,X             ;;877D|----/----\----; \ Set x speed based on direction 
-                      LDA.W MegaMoleSpeed,Y               ;;8780|----/----\----;  |			       
-                      STA.B !SpriteXSpeed,X               ;;8783|----/----\----; /				       
+                      LDA.W MegaMoleSpeed,Y               ;;8780|----/----\----;  |       
+                      STA.B !SpriteXSpeed,X               ;;8783|----/----\----; /       
                       LDA.B !SpriteLock                   ;;8785|----/----\----; \ If sprites locked, return      
                       BNE Return038733                    ;;8787|----/----\----; /                                
                       LDA.W !SpriteBlockedDirs,X          ;;8789|----/----\----;
@@ -863,19 +863,19 @@ MegaMoleInAir:        PLA                                 ;;87A3|----/----\----;
                     + LDA.W !SpriteMisc1540,X             ;;87AB|----/----\----;
                       BEQ MegaMoleOnGround                ;;87AE|----/----\----;
                       STZ.B !SpriteYSpeed,X               ;;87B0|----/----\----; Sprite Y Speed = 0 
-MegaMoleOnGround:     LDY.W !SpriteMisc15AC,X             ;;87B2|----/----\----; \								   
-                      LDA.W !SpriteBlockedDirs,X          ;;87B5|----/----\----; | If Mega Mole is in contact with an object...		   
-                      AND.B #$03                          ;;87B8|----/----\----; |								   
-                      BEQ CODE_0387CD                     ;;87BA|----/----\----; |								   
+MegaMoleOnGround:     LDY.W !SpriteMisc15AC,X             ;;87B2|----/----\----; \   
+                      LDA.W !SpriteBlockedDirs,X          ;;87B5|----/----\----; | If Mega Mole is in contact with an object...   
+                      AND.B #$03                          ;;87B8|----/----\----; |   
+                      BEQ CODE_0387CD                     ;;87BA|----/----\----; |   
                       CPY.B #$00                          ;;87BC|----/----\----; |    ... and timer hasn't been set (time until flip == 0)... 
-                      BNE +                               ;;87BE|----/----\----; |								   
-                      LDA.B #$10                          ;;87C0|----/----\----; |    ... set time until flip				   
-                      STA.W !SpriteMisc15AC,X             ;;87C2|----/----\----; /								   
-                    + LDA.W !SpriteMisc157C,X             ;;87C5|----/----\----; \ Flip the temp direction status				   
-                      EOR.B #$01                          ;;87C8|----/----\----; |								   
-                      STA.W !SpriteMisc157C,X             ;;87CA|----/----\----; /								   
-CODE_0387CD:          CPY.B #$00                          ;;87CD|----/----\----; \ If time until flip == 0...				   
-                      BNE +                               ;;87CF|----/----\----; |								   
+                      BNE +                               ;;87BE|----/----\----; |   
+                      LDA.B #$10                          ;;87C0|----/----\----; |    ... set time until flip   
+                      STA.W !SpriteMisc15AC,X             ;;87C2|----/----\----; /   
+                    + LDA.W !SpriteMisc157C,X             ;;87C5|----/----\----; \ Flip the temp direction status   
+                      EOR.B #$01                          ;;87C8|----/----\----; |   
+                      STA.W !SpriteMisc157C,X             ;;87CA|----/----\----; /   
+CODE_0387CD:          CPY.B #$00                          ;;87CD|----/----\----; \ If time until flip == 0...   
+                      BNE +                               ;;87CF|----/----\----; |   
                       LDA.W !SpriteMisc157C,X             ;;87D1|----/----\----; |    ...update the direction status used by the gfx routine  
                       STA.W !SpriteMisc151C,X             ;;87D4|----/----\----; /                                                            
                     + JSL MarioSprInteract                ;;87D7|----/----\----; Check for mario/Mega Mole contact 
@@ -886,37 +886,37 @@ CODE_0387CD:          CPY.B #$00                          ;;87CD|----/----\----;
                       BPL MegaMoleContact                 ;;87E4|----/----\----;
                       LDA.B !PlayerYSpeed                 ;;87E6|----/----\----;
                       BMI Return03882A                    ;;87E8|----/----\----;
-                      LDA.B #$01                          ;;87EA|----/----\----; \ Set "on sprite" flag				     
-                      STA.W !StandOnSolidSprite           ;;87EC|----/----\----; /							     
-                      LDA.B #$06                          ;;87EF|----/----\----; \ Set riding Mega Mole				     
-                      STA.W !SpriteMisc154C,X             ;;87F1|----/----\----; / 						     
-                      STZ.B !PlayerYSpeed                 ;;87F4|----/----\----; Y speed = 0					     
-                      LDA.B #$D6                          ;;87F6|----/----\----; \							     
+                      LDA.B #$01                          ;;87EA|----/----\----; \ Set "on sprite" flag     
+                      STA.W !StandOnSolidSprite           ;;87EC|----/----\----; /     
+                      LDA.B #$06                          ;;87EF|----/----\----; \ Set riding Mega Mole     
+                      STA.W !SpriteMisc154C,X             ;;87F1|----/----\----; /      
+                      STZ.B !PlayerYSpeed                 ;;87F4|----/----\----; Y speed = 0     
+                      LDA.B #$D6                          ;;87F6|----/----\----; \     
                       LDY.W !PlayerRidingYoshi            ;;87F8|----/----\----; | Mario's y position += C6 or D6 depending if on yoshi 
-                      BEQ +                               ;;87FB|----/----\----; |							     
-                      LDA.B #$C6                          ;;87FD|----/----\----; |							     
-                    + CLC                                 ;;87FF|----/----\----; |							     
-                      ADC.B !SpriteYPosLow,X              ;;8800|----/----\----; |							     
-                      STA.B !PlayerYPosNext               ;;8802|----/----\----; |							     
-                      LDA.W !SpriteXPosHigh,X             ;;8804|----/----\----; |							     
-                      ADC.B #$FF                          ;;8807|----/----\----; |							     
-                      STA.B !PlayerYPosNext+1             ;;8809|----/----\----; /							     
-                      LDY.B #$00                          ;;880B|----/----\----; \ 						     
-                      LDA.W !SpriteXMovement              ;;880D|----/----\----; | $1491 == 01 or FF, depending on direction	     
-                      BPL +                               ;;8810|----/----\----; | Set mario's new x position			     
-                      DEY                                 ;;8812|----/----\----; |							     
-                    + CLC                                 ;;8813|----/----\----; |							     
-                      ADC.B !PlayerXPosNext               ;;8814|----/----\----; |							     
-                      STA.B !PlayerXPosNext               ;;8816|----/----\----; |							     
-                      TYA                                 ;;8818|----/----\----; |							     
-                      ADC.B !PlayerXPosNext+1             ;;8819|----/----\----; |							     
-                      STA.B !PlayerXPosNext+1             ;;881B|----/----\----;  /							   
+                      BEQ +                               ;;87FB|----/----\----; |     
+                      LDA.B #$C6                          ;;87FD|----/----\----; |     
+                    + CLC                                 ;;87FF|----/----\----; |     
+                      ADC.B !SpriteYPosLow,X              ;;8800|----/----\----; |     
+                      STA.B !PlayerYPosNext               ;;8802|----/----\----; |     
+                      LDA.W !SpriteXPosHigh,X             ;;8804|----/----\----; |     
+                      ADC.B #$FF                          ;;8807|----/----\----; |     
+                      STA.B !PlayerYPosNext+1             ;;8809|----/----\----; /     
+                      LDY.B #$00                          ;;880B|----/----\----; \      
+                      LDA.W !SpriteXMovement              ;;880D|----/----\----; | $1491 == 01 or FF, depending on direction     
+                      BPL +                               ;;8810|----/----\----; | Set mario's new x position     
+                      DEY                                 ;;8812|----/----\----; |     
+                    + CLC                                 ;;8813|----/----\----; |     
+                      ADC.B !PlayerXPosNext               ;;8814|----/----\----; |     
+                      STA.B !PlayerXPosNext               ;;8816|----/----\----; |     
+                      TYA                                 ;;8818|----/----\----; |     
+                      ADC.B !PlayerXPosNext+1             ;;8819|----/----\----; |     
+                      STA.B !PlayerXPosNext+1             ;;881B|----/----\----;  /   
                       RTS                                 ;;881D|----/----\----; Return 
                                                           ;;                   ;
-MegaMoleContact:      LDA.W !SpriteMisc154C,X             ;;881E|----/----\----; \ If riding Mega Mole...				     
-                      ORA.W !SpriteOnYoshiTongue,X        ;;8821|----/----\----; |   ...or Mega Mole being eaten...		     
-                      BNE Return03882A                    ;;8824|----/----\----; /   ...return					     
-                      JSL HurtMario                       ;;8826|----/----\----; Hurt mario					     
+MegaMoleContact:      LDA.W !SpriteMisc154C,X             ;;881E|----/----\----; \ If riding Mega Mole...     
+                      ORA.W !SpriteOnYoshiTongue,X        ;;8821|----/----\----; |   ...or Mega Mole being eaten...     
+                      BNE Return03882A                    ;;8824|----/----\----; /   ...return     
+                      JSL HurtMario                       ;;8826|----/----\----; Hurt mario     
 Return03882A:         RTS                                 ;;882A|----/----\----; Return 
                                                           ;;                   ;
                                                           ;;                   ;
@@ -926,60 +926,60 @@ MegaMoleTileDispY:    db $F0,$F0,$00,$00                  ;;8833|----/----\----;
 MegaMoleTiles:        db $C6,$C8,$E6,$E8,$CA,$CC,$EA,$EC  ;;8837|----/----\----;
                                                           ;;                   ;
 MegaMoleGfxRt:        JSR GetDrawInfoBnk3                 ;;883F|----/----\----;
-                      LDA.W !SpriteMisc151C,X             ;;8842|----/----\----; \ $02 = direction						      
-                      STA.B !_2                           ;;8845|----/----\----; / 							      
-                      LDA.B !EffFrame                     ;;8847|----/----\----; \ 							      
-                      LSR A                               ;;8849|----/----\----; |								      
-                      LSR A                               ;;884A|----/----\----; |								      
-                      NOP                                 ;;884B|----/----\----; |								      
-                      CLC                                 ;;884C|----/----\----; |								      
-                      ADC.W !CurSpriteProcess             ;;884D|----/----\----; |								      
-                      AND.B #$01                          ;;8850|----/----\----; |								      
-                      ASL A                               ;;8852|----/----\----; |								      
-                      ASL A                               ;;8853|----/----\----; |								      
-                      STA.B !_3                           ;;8854|----/----\----; | $03 = index to frame start (0 or 4)			      
-                      PHX                                 ;;8856|----/----\----; /								      
-                      LDX.B #$03                          ;;8857|----/----\----; Run loop 4 times, cuz 4 tiles per frame			      
-MegaMoleGfxLoopSt:    PHX                                 ;;8859|----/----\----; Push, current tile					      
-                      LDA.B !_2                           ;;885A|----/----\----; \								      
-                      BNE +                               ;;885C|----/----\----; | If facing right, index to frame end += 4		      
-                      INX                                 ;;885E|----/----\----; |								      
-                      INX                                 ;;885F|----/----\----; |								      
-                      INX                                 ;;8860|----/----\----; |								      
-                      INX                                 ;;8861|----/----\----; /								      
+                      LDA.W !SpriteMisc151C,X             ;;8842|----/----\----; \ $02 = direction      
+                      STA.B !_2                           ;;8845|----/----\----; /       
+                      LDA.B !EffFrame                     ;;8847|----/----\----; \       
+                      LSR A                               ;;8849|----/----\----; |      
+                      LSR A                               ;;884A|----/----\----; |      
+                      NOP                                 ;;884B|----/----\----; |      
+                      CLC                                 ;;884C|----/----\----; |      
+                      ADC.W !CurSpriteProcess             ;;884D|----/----\----; |      
+                      AND.B #$01                          ;;8850|----/----\----; |      
+                      ASL A                               ;;8852|----/----\----; |      
+                      ASL A                               ;;8853|----/----\----; |      
+                      STA.B !_3                           ;;8854|----/----\----; | $03 = index to frame start (0 or 4)      
+                      PHX                                 ;;8856|----/----\----; /      
+                      LDX.B #$03                          ;;8857|----/----\----; Run loop 4 times, cuz 4 tiles per frame      
+MegaMoleGfxLoopSt:    PHX                                 ;;8859|----/----\----; Push, current tile      
+                      LDA.B !_2                           ;;885A|----/----\----; \      
+                      BNE +                               ;;885C|----/----\----; | If facing right, index to frame end += 4      
+                      INX                                 ;;885E|----/----\----; |      
+                      INX                                 ;;885F|----/----\----; |      
+                      INX                                 ;;8860|----/----\----; |      
+                      INX                                 ;;8861|----/----\----; /      
                     + LDA.B !_0                           ;;8862|----/----\----; \ Tile x position = sprite x location ($00) + tile displacement 
-                      CLC                                 ;;8864|----/----\----; |								      
-                      ADC.W MegaMoleTileDispX,X           ;;8865|----/----\----; |								      
-                      STA.W !OAMTileXPos+$100,Y           ;;8868|----/----\----; /								      
-                      PLX                                 ;;886B|----/----\----; \ Pull, X = index to frame end				      
-                      LDA.B !_1                           ;;886C|----/----\----; |								      
+                      CLC                                 ;;8864|----/----\----; |      
+                      ADC.W MegaMoleTileDispX,X           ;;8865|----/----\----; |      
+                      STA.W !OAMTileXPos+$100,Y           ;;8868|----/----\----; /      
+                      PLX                                 ;;886B|----/----\----; \ Pull, X = index to frame end      
+                      LDA.B !_1                           ;;886C|----/----\----; |      
                       CLC                                 ;;886E|----/----\----; | Tile y position = sprite y location ($01) + tile displacement 
-                      ADC.W MegaMoleTileDispY,X           ;;886F|----/----\----; |						    
-                      STA.W !OAMTileYPos+$100,Y           ;;8872|----/----\----; /						    
-                      PHX                                 ;;8875|----/----\----; \ Set current tile			    
-                      TXA                                 ;;8876|----/----\----; | X = index of frame start + current tile	    
-                      CLC                                 ;;8877|----/----\----; |						    
-                      ADC.B !_3                           ;;8878|----/----\----; |						    
-                      TAX                                 ;;887A|----/----\----; |						    
-                      LDA.W MegaMoleTiles,X               ;;887B|----/----\----; |						    
-                      STA.W !OAMTileNo+$100,Y             ;;887E|----/----\----; /						    
-                      LDA.B #$01                          ;;8881|----/----\----; Tile properties xyppccct, format		    
-                      LDX.B !_2                           ;;8883|----/----\----; \ If direction == 0...			    
-                      BNE +                               ;;8885|----/----\----; |						    
-                      ORA.B #$40                          ;;8887|----/----\----; /    ...flip tile				    
-                    + ORA.B !SpriteProperties             ;;8889|----/----\----; Add in tile priority of level		    
-                      STA.W !OAMTileAttr+$100,Y           ;;888B|----/----\----; Store tile properties			    
-                      PLX                                 ;;888E|----/----\----; \ Pull, current tile			    
+                      ADC.W MegaMoleTileDispY,X           ;;886F|----/----\----; |    
+                      STA.W !OAMTileYPos+$100,Y           ;;8872|----/----\----; /    
+                      PHX                                 ;;8875|----/----\----; \ Set current tile    
+                      TXA                                 ;;8876|----/----\----; | X = index of frame start + current tile    
+                      CLC                                 ;;8877|----/----\----; |    
+                      ADC.B !_3                           ;;8878|----/----\----; |    
+                      TAX                                 ;;887A|----/----\----; |    
+                      LDA.W MegaMoleTiles,X               ;;887B|----/----\----; |    
+                      STA.W !OAMTileNo+$100,Y             ;;887E|----/----\----; /    
+                      LDA.B #$01                          ;;8881|----/----\----; Tile properties xyppccct, format    
+                      LDX.B !_2                           ;;8883|----/----\----; \ If direction == 0...    
+                      BNE +                               ;;8885|----/----\----; |    
+                      ORA.B #$40                          ;;8887|----/----\----; /    ...flip tile    
+                    + ORA.B !SpriteProperties             ;;8889|----/----\----; Add in tile priority of level    
+                      STA.W !OAMTileAttr+$100,Y           ;;888B|----/----\----; Store tile properties    
+                      PLX                                 ;;888E|----/----\----; \ Pull, current tile    
                       INY                                 ;;888F|----/----\----; | Increase index to sprite tile map ($300)... 
                       INY                                 ;;8890|----/----\----; |    ...we wrote 4 bytes    
                       INY                                 ;;8891|----/----\----; |    ...so increment 4 times 
                       INY                                 ;;8892|----/----\----; |     
-                      DEX                                 ;;8893|----/----\----; | Go to next tile of frame and loop	    
+                      DEX                                 ;;8893|----/----\----; | Go to next tile of frame and loop    
                       BPL MegaMoleGfxLoopSt               ;;8894|----/----\----; /                                             
-                      PLX                                 ;;8896|----/----\----; Pull, X = sprite index			    
+                      PLX                                 ;;8896|----/----\----; Pull, X = sprite index    
                       LDY.B #$02                          ;;8897|----/----\----; \ Will write 02 to $0460 (all 16x16 tiles) 
-                      LDA.B #$03                          ;;8899|----/----\----; | A = number of tiles drawn - 1		    
-                      JSL FinishOAMWrite                  ;;889B|----/----\----; / Don't draw if offscreen			    
+                      LDA.B #$03                          ;;8899|----/----\----; | A = number of tiles drawn - 1    
+                      JSL FinishOAMWrite                  ;;889B|----/----\----; / Don't draw if offscreen    
                       RTS                                 ;;889F|----/----\----; Return 
                                                           ;;                   ;
                                                           ;;                   ;
@@ -2476,123 +2476,123 @@ WoodSpikeGfx:         JSR GetDrawInfoBnk3                 ;;94CF|----/----\----;
                                                           ;;                   ;
 RexSpeed:             db $08,$F8,$10,$F0                  ;;9513|----/----\----;
                                                           ;;                   ;
-RexMainRt:            JSR RexGfxRt                        ;;9517|----/----\----; Draw Rex gfx							        
-                      LDA.W !SpriteStatus,X               ;;951A|----/----\----; \ If Rex status != 8...						        
-                      CMP.B #$08                          ;;951D|----/----\----;  |   ... not (killed with spin jump [4] or star [2])		        
-                      BNE RexReturn                       ;;951F|----/----\----; /    ... return							        
-                      LDA.B !SpriteLock                   ;;9521|----/----\----; \ If sprites locked...						        
-                      BNE RexReturn                       ;;9523|----/----\----; /    ... return							        
-                      LDA.W !SpriteMisc1558,X             ;;9525|----/----\----; \ If Rex not defeated (timer to show remains > 0)...		        
-                      BEQ RexAlive                        ;;9528|----/----\----; /    ... goto RexAlive						        
-                      STA.W !SpriteOnYoshiTongue,X        ;;952A|----/----\----; \ 								        
-                      DEC A                               ;;952D|----/----\----;  |   If Rex remains don't disappear next frame...			        
-                      BNE RexReturn                       ;;952E|----/----\----; /    ... return							        
+RexMainRt:            JSR RexGfxRt                        ;;9517|----/----\----; Draw Rex gfx        
+                      LDA.W !SpriteStatus,X               ;;951A|----/----\----; \ If Rex status != 8...        
+                      CMP.B #$08                          ;;951D|----/----\----;  |   ... not (killed with spin jump [4] or star [2])        
+                      BNE RexReturn                       ;;951F|----/----\----; /    ... return        
+                      LDA.B !SpriteLock                   ;;9521|----/----\----; \ If sprites locked...        
+                      BNE RexReturn                       ;;9523|----/----\----; /    ... return        
+                      LDA.W !SpriteMisc1558,X             ;;9525|----/----\----; \ If Rex not defeated (timer to show remains > 0)...        
+                      BEQ RexAlive                        ;;9528|----/----\----; /    ... goto RexAlive        
+                      STA.W !SpriteOnYoshiTongue,X        ;;952A|----/----\----; \         
+                      DEC A                               ;;952D|----/----\----;  |   If Rex remains don't disappear next frame...        
+                      BNE RexReturn                       ;;952E|----/----\----; /    ... return        
                       STZ.W !SpriteStatus,X               ;;9530|----/----\----; This is the last frame to show remains, so set Rex status = 0 
 RexReturn:            RTS                                 ;;9533|----/----\----; Return 
                                                           ;;                   ;
-RexAlive:             JSR SubOffscreen0Bnk3               ;;9534|----/----\----; Only process Rex while on screen		    
+RexAlive:             JSR SubOffscreen0Bnk3               ;;9534|----/----\----; Only process Rex while on screen    
                       INC.W !SpriteMisc1570,X             ;;9537|----/----\----; Increment number of frames Rex has been on sc 
-                      LDA.W !SpriteMisc1570,X             ;;953A|----/----\----; \ Calculate which frame to show:		    
-                      LSR A                               ;;953D|----/----\----;  | 					    
-                      LSR A                               ;;953E|----/----\----;  | 					    
-                      LDY.B !SpriteTableC2,X              ;;953F|----/----\----;  | Number of hits determines if smushed	    
-                      BEQ CODE_03954A                     ;;9541|----/----\----;  |						    
-                      AND.B #$01                          ;;9543|----/----\----;  | Update every 8 cycles if smushed	    
-                      CLC                                 ;;9545|----/----\----;  |						    
-                      ADC.B #$03                          ;;9546|----/----\----;  | Show smushed frame			    
-                      BRA +                               ;;9548|----/----\----;  |						    
+                      LDA.W !SpriteMisc1570,X             ;;953A|----/----\----; \ Calculate which frame to show:    
+                      LSR A                               ;;953D|----/----\----;  |     
+                      LSR A                               ;;953E|----/----\----;  |     
+                      LDY.B !SpriteTableC2,X              ;;953F|----/----\----;  | Number of hits determines if smushed    
+                      BEQ CODE_03954A                     ;;9541|----/----\----;  |    
+                      AND.B #$01                          ;;9543|----/----\----;  | Update every 8 cycles if smushed    
+                      CLC                                 ;;9545|----/----\----;  |    
+                      ADC.B #$03                          ;;9546|----/----\----;  | Show smushed frame    
+                      BRA +                               ;;9548|----/----\----;  |    
                                                           ;;                   ;
-CODE_03954A:          LSR A                               ;;954A|----/----\----;  | 					    
-                      AND.B #$01                          ;;954B|----/----\----;  | Update every 16 cycles if normal	    
-                    + STA.W !SpriteMisc1602,X             ;;954D|----/----\----; / Write frame to show			    
-                      LDA.W !SpriteBlockedDirs,X          ;;9550|----/----\----; \  If sprite is not on ground...		    
-                      AND.B #$04                          ;;9553|----/----\----;  |    ...(4 = on ground) ...		    
-                      BEQ RexInAir                        ;;9555|----/----\----; /     ...goto IN_AIR			    
-                      LDA.B #$10                          ;;9557|----/----\----; \  Y speed = 10				    
-                      STA.B !SpriteYSpeed,X               ;;9559|----/----\----; /						    
+CODE_03954A:          LSR A                               ;;954A|----/----\----;  |     
+                      AND.B #$01                          ;;954B|----/----\----;  | Update every 16 cycles if normal    
+                    + STA.W !SpriteMisc1602,X             ;;954D|----/----\----; / Write frame to show    
+                      LDA.W !SpriteBlockedDirs,X          ;;9550|----/----\----; \  If sprite is not on ground...    
+                      AND.B #$04                          ;;9553|----/----\----;  |    ...(4 = on ground) ...    
+                      BEQ RexInAir                        ;;9555|----/----\----; /     ...goto IN_AIR    
+                      LDA.B #$10                          ;;9557|----/----\----; \  Y speed = 10    
+                      STA.B !SpriteYSpeed,X               ;;9559|----/----\----; /    
                       LDY.W !SpriteMisc157C,X             ;;955B|----/----\----; Load, y = Rex direction, as index for speed   
-                      LDA.B !SpriteTableC2,X              ;;955E|----/----\----; \ If hits on Rex == 0...			    
-                      BEQ +                               ;;9560|----/----\----; /    ...goto DONT_ADJUST_SPEED		    
-                      INY                                 ;;9562|----/----\----; \ Increment y twice...			    
+                      LDA.B !SpriteTableC2,X              ;;955E|----/----\----; \ If hits on Rex == 0...    
+                      BEQ +                               ;;9560|----/----\----; /    ...goto DONT_ADJUST_SPEED    
+                      INY                                 ;;9562|----/----\----; \ Increment y twice...    
                       INY                                 ;;9563|----/----\----; /    ...in order to get speed for smushed Rex 
-                    + LDA.W RexSpeed,Y                    ;;9564|----/----\----; \ Load x speed from ROM...		    
-                      STA.B !SpriteXSpeed,X               ;;9567|----/----\----; /    ...and store it			    
-RexInAir:             LDA.W !SpriteMisc1FE2,X             ;;9569|----/----\----; \ If time to show half-smushed Rex > 0...	    
-                      BNE +                               ;;956C|----/----\----; /    ...goto HALF_SMUSHED			    
-                      JSL UpdateSpritePos                 ;;956E|----/----\----; Update position based on speed values	    
+                    + LDA.W RexSpeed,Y                    ;;9564|----/----\----; \ Load x speed from ROM...    
+                      STA.B !SpriteXSpeed,X               ;;9567|----/----\----; /    ...and store it    
+RexInAir:             LDA.W !SpriteMisc1FE2,X             ;;9569|----/----\----; \ If time to show half-smushed Rex > 0...    
+                      BNE +                               ;;956C|----/----\----; /    ...goto HALF_SMUSHED    
+                      JSL UpdateSpritePos                 ;;956E|----/----\----; Update position based on speed values    
                     + LDA.W !SpriteBlockedDirs,X          ;;9572|----/----\----; \ If Rex is touching the side of an object... 
-                      AND.B #$03                          ;;9575|----/----\----;  |					        
-                      BEQ +                               ;;9577|----/----\----;  |					        
-                      LDA.W !SpriteMisc157C,X             ;;9579|----/----\----;  |					        
-                      EOR.B #$01                          ;;957C|----/----\----;  |    ... change Rex direction	        
-                      STA.W !SpriteMisc157C,X             ;;957E|----/----\----; /					        
-                    + JSL SprSprInteract                  ;;9581|----/----\----; Interact with other sprites	        
+                      AND.B #$03                          ;;9575|----/----\----;  |        
+                      BEQ +                               ;;9577|----/----\----;  |        
+                      LDA.W !SpriteMisc157C,X             ;;9579|----/----\----;  |        
+                      EOR.B #$01                          ;;957C|----/----\----;  |    ... change Rex direction        
+                      STA.W !SpriteMisc157C,X             ;;957E|----/----\----; /        
+                    + JSL SprSprInteract                  ;;9581|----/----\----; Interact with other sprites        
                       JSL MarioSprInteract                ;;9585|----/----\----; Check for mario/Rex contact 
-                      BCC NoRexContact                    ;;9589|----/----\----; (carry set = mario/Rex contact)	        
-                      LDA.W !InvinsibilityTimer           ;;958B|----/----\----; \ If mario star timer > 0 ...	        
-                      BNE RexStarKill                     ;;958E|----/----\----; /    ... goto HAS_STAR		        
+                      BCC NoRexContact                    ;;9589|----/----\----; (carry set = mario/Rex contact)        
+                      LDA.W !InvinsibilityTimer           ;;958B|----/----\----; \ If mario star timer > 0 ...        
+                      BNE RexStarKill                     ;;958E|----/----\----; /    ... goto HAS_STAR        
                       LDA.W !SpriteMisc154C,X             ;;9590|----/----\----; \ If Rex invincibility timer > 0 ...      
-                      BNE NoRexContact                    ;;9593|----/----\----; /    ... goto NO_CONTACT		        
-                      LDA.B #$08                          ;;9595|----/----\----; \ Rex invincibility timer = $08	        
-                      STA.W !SpriteMisc154C,X             ;;9597|----/----\----; /					        
-                      LDA.B !PlayerYSpeed                 ;;959A|----/----\----; \  If mario's y speed < 10 ...	        
-                      CMP.B #$10                          ;;959C|----/----\----;  |   ... Rex will hurt mario	        
-                      BMI RexWins                         ;;959E|----/----\----; /    				        
-                      JSR RexPoints                       ;;95A0|----/----\----; Give mario points			        
-                      JSL BoostMarioSpeed                 ;;95A3|----/----\----; Set mario speed			        
-                      JSL DisplayContactGfx               ;;95A7|----/----\----; Display contact graphic		        
-                      LDA.W !SpinJumpFlag                 ;;95AB|----/----\----; \  If mario is spin jumping...	        
-                      ORA.W !PlayerRidingYoshi            ;;95AE|----/----\----;  |    ... or on yoshi ...		        
-                      BNE RexSpinKill                     ;;95B1|----/----\----; /     ... goto SPIN_KILL		        
-                      INC.B !SpriteTableC2,X              ;;95B3|----/----\----; Increment Rex hit counter		        
-                      LDA.B !SpriteTableC2,X              ;;95B5|----/----\----; \  If Rex hit counter == 2	        
-                      CMP.B #$02                          ;;95B7|----/----\----;  |   				        
-                      BNE +                               ;;95B9|----/----\----;  |				        
+                      BNE NoRexContact                    ;;9593|----/----\----; /    ... goto NO_CONTACT        
+                      LDA.B #$08                          ;;9595|----/----\----; \ Rex invincibility timer = $08        
+                      STA.W !SpriteMisc154C,X             ;;9597|----/----\----; /        
+                      LDA.B !PlayerYSpeed                 ;;959A|----/----\----; \  If mario's y speed < 10 ...        
+                      CMP.B #$10                          ;;959C|----/----\----;  |   ... Rex will hurt mario        
+                      BMI RexWins                         ;;959E|----/----\----; /            
+                      JSR RexPoints                       ;;95A0|----/----\----; Give mario points        
+                      JSL BoostMarioSpeed                 ;;95A3|----/----\----; Set mario speed        
+                      JSL DisplayContactGfx               ;;95A7|----/----\----; Display contact graphic        
+                      LDA.W !SpinJumpFlag                 ;;95AB|----/----\----; \  If mario is spin jumping...        
+                      ORA.W !PlayerRidingYoshi            ;;95AE|----/----\----;  |    ... or on yoshi ...        
+                      BNE RexSpinKill                     ;;95B1|----/----\----; /     ... goto SPIN_KILL        
+                      INC.B !SpriteTableC2,X              ;;95B3|----/----\----; Increment Rex hit counter        
+                      LDA.B !SpriteTableC2,X              ;;95B5|----/----\----; \  If Rex hit counter == 2        
+                      CMP.B #$02                          ;;95B7|----/----\----;  |           
+                      BNE +                               ;;95B9|----/----\----;  |        
                       LDA.B #$20                          ;;95BB|----/----\----;  |    ... time to show defeated Rex = $20 
                       STA.W !SpriteMisc1558,X             ;;95BD|----/----\----; / 
                       RTS                                 ;;95C0|----/----\----; Return 
                                                           ;;                   ;
                     + LDA.B #$0C                          ;;95C1|----/----\----; \ Time to show semi-squashed Rex = $0C 
-                      STA.W !SpriteMisc1FE2,X             ;;95C3|----/----\----; /					     
+                      STA.W !SpriteMisc1FE2,X             ;;95C3|----/----\----; /     
                       STZ.W !SpriteTweakerB,X             ;;95C6|----/----\----; Change clipping area for squashed Rex  
                       RTS                                 ;;95C9|----/----\----; Return 
                                                           ;;                   ;
-RexWins:              LDA.W !IFrameTimer                  ;;95CA|----/----\----; \ If mario is invincible...	  
-                      ORA.W !PlayerRidingYoshi            ;;95CD|----/----\----;  |  ... or mario on yoshi...	  
-                      BNE NoRexContact                    ;;95D0|----/----\----; /   ... return			  
-                      JSR SubHorzPosBnk3                  ;;95D2|----/----\----; \  Set new Rex direction		  
-                      TYA                                 ;;95D5|----/----\----;  |  				  
-                      STA.W !SpriteMisc157C,X             ;;95D6|----/----\----; /					  
-                      JSL HurtMario                       ;;95D9|----/----\----; Hurt mario			  
+RexWins:              LDA.W !IFrameTimer                  ;;95CA|----/----\----; \ If mario is invincible...  
+                      ORA.W !PlayerRidingYoshi            ;;95CD|----/----\----;  |  ... or mario on yoshi...  
+                      BNE NoRexContact                    ;;95D0|----/----\----; /   ... return  
+                      JSR SubHorzPosBnk3                  ;;95D2|----/----\----; \  Set new Rex direction  
+                      TYA                                 ;;95D5|----/----\----;  |    
+                      STA.W !SpriteMisc157C,X             ;;95D6|----/----\----; /  
+                      JSL HurtMario                       ;;95D9|----/----\----; Hurt mario  
 NoRexContact:         RTS                                 ;;95DD|----/----\----; Return 
                                                           ;;                   ;
 RexSpinKill:          LDA.B #$04                          ;;95DE|----/----\----; \ Rex status = 4 (being killed by spin jump)   
-                      STA.W !SpriteStatus,X               ;;95E0|----/----\----; /   					     
-                      LDA.B #$1F                          ;;95E3|----/----\----; \ Set spin jump animation timer		     
-                      STA.W !SpriteMisc1540,X             ;;95E5|----/----\----; /						     
-                      JSL CODE_07FC3B                     ;;95E8|----/----\----; Show star animation			     
+                      STA.W !SpriteStatus,X               ;;95E0|----/----\----; /        
+                      LDA.B #$1F                          ;;95E3|----/----\----; \ Set spin jump animation timer     
+                      STA.W !SpriteMisc1540,X             ;;95E5|----/----\----; /     
+                      JSL CODE_07FC3B                     ;;95E8|----/----\----; Show star animation     
                       LDA.B #$08                          ;;95EC|----/----\----; \ 
                       STA.W !SPCIO0                       ;;95EE|----/----\----; / Play sound effect 
                       RTS                                 ;;95F1|----/----\----; Return 
                                                           ;;                   ;
-RexStarKill:          LDA.B #$02                          ;;95F2|----/----\----; \ Rex status = 2 (being killed by star)			   
-                      STA.W !SpriteStatus,X               ;;95F4|----/----\----; /								   
-                      LDA.B #$D0                          ;;95F7|----/----\----; \ Set y speed						   
-                      STA.B !SpriteYSpeed,X               ;;95F9|----/----\----; /								   
-                      JSR SubHorzPosBnk3                  ;;95FB|----/----\----; Get new Rex direction					   
-                      LDA.W RexKilledSpeed,Y              ;;95FE|----/----\----; \ Set x speed based on Rex direction			   
-                      STA.B !SpriteXSpeed,X               ;;9601|----/----\----; /								   
-                      INC.W !StarKillCounter              ;;9603|----/----\----; Increment number consecutive enemies killed		   
-                      LDA.W !StarKillCounter              ;;9606|----/----\----; \								   
-                      CMP.B #$08                          ;;9609|----/----\----;  | If consecutive enemies stomped >= 8, reset to 8		   
-                      BCC +                               ;;960B|----/----\----;  |								   
-                      LDA.B #$08                          ;;960D|----/----\----;  |								   
-                      STA.W !StarKillCounter              ;;960F|----/----\----; /   							   
-                    + JSL GivePoints                      ;;9612|----/----\----; Give mario points						   
-                      LDY.W !StarKillCounter              ;;9616|----/----\----; \ 							   
-                      CPY.B #$08                          ;;9619|----/----\----;  | If consecutive enemies stomped < 8 ...			   
-                      BCS +                               ;;961B|----/----\----;  |								   
-                      LDA.W DATA_038000-1,Y               ;;961D|----/----\----;  |    ... play sound effect				   
+RexStarKill:          LDA.B #$02                          ;;95F2|----/----\----; \ Rex status = 2 (being killed by star)   
+                      STA.W !SpriteStatus,X               ;;95F4|----/----\----; /   
+                      LDA.B #$D0                          ;;95F7|----/----\----; \ Set y speed   
+                      STA.B !SpriteYSpeed,X               ;;95F9|----/----\----; /   
+                      JSR SubHorzPosBnk3                  ;;95FB|----/----\----; Get new Rex direction   
+                      LDA.W RexKilledSpeed,Y              ;;95FE|----/----\----; \ Set x speed based on Rex direction   
+                      STA.B !SpriteXSpeed,X               ;;9601|----/----\----; /   
+                      INC.W !StarKillCounter              ;;9603|----/----\----; Increment number consecutive enemies killed   
+                      LDA.W !StarKillCounter              ;;9606|----/----\----; \   
+                      CMP.B #$08                          ;;9609|----/----\----;  | If consecutive enemies stomped >= 8, reset to 8   
+                      BCC +                               ;;960B|----/----\----;  |   
+                      LDA.B #$08                          ;;960D|----/----\----;  |   
+                      STA.W !StarKillCounter              ;;960F|----/----\----; /      
+                    + JSL GivePoints                      ;;9612|----/----\----; Give mario points   
+                      LDY.W !StarKillCounter              ;;9616|----/----\----; \    
+                      CPY.B #$08                          ;;9619|----/----\----;  | If consecutive enemies stomped < 8 ...   
+                      BCS +                               ;;961B|----/----\----;  |   
+                      LDA.W DATA_038000-1,Y               ;;961D|----/----\----;  |    ... play sound effect   
                       STA.W !SPCIO0                       ;;9620|----/----\----; / Play sound effect 
                     + RTS                                 ;;9623|----/----\----; Return 
                                                           ;;                   ;
@@ -2607,19 +2607,19 @@ RexPoints:            PHY                                 ;;9628|----/----\----;
                       LDA.W !SpriteStompCounter           ;;9629|----/----\----;
                       CLC                                 ;;962C|----/----\----;
                       ADC.W !SpriteMisc1626,X             ;;962D|----/----\----;
-                      INC.W !SpriteStompCounter           ;;9630|----/----\----; Increase consecutive enemies stomped		       
-                      TAY                                 ;;9633|----/----\----;  							     
-                      INY                                 ;;9634|----/----\----;  							     
-                      CPY.B #$08                          ;;9635|----/----\----; \ If consecutive enemies stomped >= 8 ...		       
-                      BCS +                               ;;9637|----/----\----; /    ... don't play sound 			       
+                      INC.W !SpriteStompCounter           ;;9630|----/----\----; Increase consecutive enemies stomped       
+                      TAY                                 ;;9633|----/----\----;       
+                      INY                                 ;;9634|----/----\----;       
+                      CPY.B #$08                          ;;9635|----/----\----; \ If consecutive enemies stomped >= 8 ...       
+                      BCS +                               ;;9637|----/----\----; /    ... don't play sound        
                       LDA.W DATA_038000-1,Y               ;;9639|----/----\----; \  
                       STA.W !SPCIO0                       ;;963C|----/----\----; / Play sound effect 
-                    + TYA                                 ;;963F|----/----\----; \							       
+                    + TYA                                 ;;963F|----/----\----; \       
                       CMP.B #$08                          ;;9640|----/----\----;  | If consecutive enemies stomped >= 8, reset to 8       
-                      BCC +                               ;;9642|----/----\----;  |						       
-                      LDA.B #$08                          ;;9644|----/----\----; /							       
-                    + JSL GivePoints                      ;;9646|----/----\----; Give mario points					       
-                      PLY                                 ;;964A|----/----\----;  							     
+                      BCC +                               ;;9642|----/----\----;  |       
+                      LDA.B #$08                          ;;9644|----/----\----; /       
+                    + JSL GivePoints                      ;;9646|----/----\----; Give mario points       
+                      PLY                                 ;;964A|----/----\----;       
                       RTS                                 ;;964B|----/----\----; Return 
                                                           ;;                   ;
                                                           ;;                   ;
@@ -2634,67 +2634,67 @@ RexTiles:             db $8A,$AA,$8A,$AC,$8A,$AA,$8C,$8C  ;;9670|----/----\----;
                                                           ;;                   ;
 RexGfxProp:           db $47,$07                          ;;967C|----/----\----;
                                                           ;;                   ;
-RexGfxRt:             LDA.W !SpriteMisc1558,X             ;;967E|----/----\----; \ If time to show Rex remains > 0...							  
-                      BEQ +                               ;;9681|----/----\----;  |												  
-                      LDA.B #$05                          ;;9683|----/----\----;  |    ...set Rex frame = 5 (fully squashed)						  
-                      STA.W !SpriteMisc1602,X             ;;9685|----/----\----; /												  
-                    + LDA.W !SpriteMisc1FE2,X             ;;9688|----/----\----; \ If time to show half smushed Rex > 0...							  
-                      BEQ +                               ;;968B|----/----\----;  |												  
-                      LDA.B #$02                          ;;968D|----/----\----;  |    ...set Rex frame = 2 (half smushed)							  
-                      STA.W !SpriteMisc1602,X             ;;968F|----/----\----; /												  
+RexGfxRt:             LDA.W !SpriteMisc1558,X             ;;967E|----/----\----; \ If time to show Rex remains > 0...  
+                      BEQ +                               ;;9681|----/----\----;  |  
+                      LDA.B #$05                          ;;9683|----/----\----;  |    ...set Rex frame = 5 (fully squashed)  
+                      STA.W !SpriteMisc1602,X             ;;9685|----/----\----; /  
+                    + LDA.W !SpriteMisc1FE2,X             ;;9688|----/----\----; \ If time to show half smushed Rex > 0...  
+                      BEQ +                               ;;968B|----/----\----;  |  
+                      LDA.B #$02                          ;;968D|----/----\----;  |    ...set Rex frame = 2 (half smushed)  
+                      STA.W !SpriteMisc1602,X             ;;968F|----/----\----; /  
                     + JSR GetDrawInfoBnk3                 ;;9692|----/----\----; Y = index to sprite tile map, $00 = sprite x, $01 = sprite y 
-                      LDA.W !SpriteMisc1602,X             ;;9695|----/----\----; \												  
-                      ASL A                               ;;9698|----/----\----;  | $03 = index to frame start (frame to show * 2 tile per frame)				  
-                      STA.B !_3                           ;;9699|----/----\----; /												  
-                      LDA.W !SpriteMisc157C,X             ;;969B|----/----\----; \ $02 = sprite direction									  
-                      STA.B !_2                           ;;969E|----/----\----; /												  
-                      PHX                                 ;;96A0|----/----\----; Push sprite index										  
-                      LDX.B #$01                          ;;96A1|----/----\----; Loop counter = (number of tiles per frame) - 1						  
-RexGfxLoopStart:      PHX                                 ;;96A3|----/----\----; Push current tile number									  
-                      TXA                                 ;;96A4|----/----\----; \ X = index to horizontal displacement							  
-                      ORA.B !_3                           ;;96A5|----/----\----; / get index of tile (index to first tile of frame + current tile number)			  
-                      PHA                                 ;;96A7|----/----\----; Push index of current tile								  
-                      LDX.B !_2                           ;;96A8|----/----\----; \ If facing right...									  
-                      BNE +                               ;;96AA|----/----\----;  |												  
-                      CLC                                 ;;96AC|----/----\----;  |    											  
-                      ADC.B #$0C                          ;;96AD|----/----\----; /    ...use row 2 of horizontal tile displacement table					  
-                    + TAX                                 ;;96AF|----/----\----; \ 											  
-                      LDA.B !_0                           ;;96B0|----/----\----;  | Tile x position = sprite x location ($00) + tile displacement				  
-                      CLC                                 ;;96B2|----/----\----;  |												  
-                      ADC.W RexTileDispX,X                ;;96B3|----/----\----;  |												  
-                      STA.W !OAMTileXPos+$100,Y           ;;96B6|----/----\----; /												  
-                      PLX                                 ;;96B9|----/----\----; \ Pull, X = index to vertical displacement and tilemap					  
-                      LDA.B !_1                           ;;96BA|----/----\----;  | Tile y position = sprite y location ($01) + tile displacement				  
-                      CLC                                 ;;96BC|----/----\----;  |												  
-                      ADC.W RexTileDispY,X                ;;96BD|----/----\----;  |												  
-                      STA.W !OAMTileYPos+$100,Y           ;;96C0|----/----\----; /												  
-                      LDA.W RexTiles,X                    ;;96C3|----/----\----; \ Store tile										  
-                      STA.W !OAMTileNo+$100,Y             ;;96C6|----/----\----; / 											  
-                      LDX.B !_2                           ;;96C9|----/----\----; \												  
-                      LDA.W RexGfxProp,X                  ;;96CB|----/----\----;  | Get tile properties using sprite direction						  
+                      LDA.W !SpriteMisc1602,X             ;;9695|----/----\----; \  
+                      ASL A                               ;;9698|----/----\----;  | $03 = index to frame start (frame to show * 2 tile per frame)  
+                      STA.B !_3                           ;;9699|----/----\----; /  
+                      LDA.W !SpriteMisc157C,X             ;;969B|----/----\----; \ $02 = sprite direction  
+                      STA.B !_2                           ;;969E|----/----\----; /  
+                      PHX                                 ;;96A0|----/----\----; Push sprite index  
+                      LDX.B #$01                          ;;96A1|----/----\----; Loop counter = (number of tiles per frame) - 1  
+RexGfxLoopStart:      PHX                                 ;;96A3|----/----\----; Push current tile number  
+                      TXA                                 ;;96A4|----/----\----; \ X = index to horizontal displacement  
+                      ORA.B !_3                           ;;96A5|----/----\----; / get index of tile (index to first tile of frame + current tile number)  
+                      PHA                                 ;;96A7|----/----\----; Push index of current tile  
+                      LDX.B !_2                           ;;96A8|----/----\----; \ If facing right...  
+                      BNE +                               ;;96AA|----/----\----;  |  
+                      CLC                                 ;;96AC|----/----\----;  |      
+                      ADC.B #$0C                          ;;96AD|----/----\----; /    ...use row 2 of horizontal tile displacement table  
+                    + TAX                                 ;;96AF|----/----\----; \   
+                      LDA.B !_0                           ;;96B0|----/----\----;  | Tile x position = sprite x location ($00) + tile displacement  
+                      CLC                                 ;;96B2|----/----\----;  |  
+                      ADC.W RexTileDispX,X                ;;96B3|----/----\----;  |  
+                      STA.W !OAMTileXPos+$100,Y           ;;96B6|----/----\----; /  
+                      PLX                                 ;;96B9|----/----\----; \ Pull, X = index to vertical displacement and tilemap  
+                      LDA.B !_1                           ;;96BA|----/----\----;  | Tile y position = sprite y location ($01) + tile displacement  
+                      CLC                                 ;;96BC|----/----\----;  |  
+                      ADC.W RexTileDispY,X                ;;96BD|----/----\----;  |  
+                      STA.W !OAMTileYPos+$100,Y           ;;96C0|----/----\----; /  
+                      LDA.W RexTiles,X                    ;;96C3|----/----\----; \ Store tile  
+                      STA.W !OAMTileNo+$100,Y             ;;96C6|----/----\----; /   
+                      LDX.B !_2                           ;;96C9|----/----\----; \  
+                      LDA.W RexGfxProp,X                  ;;96CB|----/----\----;  | Get tile properties using sprite direction  
                       ORA.B !SpriteProperties             ;;96CE|----/----\----;  | Level properties 
-                      STA.W !OAMTileAttr+$100,Y           ;;96D0|----/----\----; / Store tile properties									  
-                      TYA                                 ;;96D3|----/----\----; \ Get index to sprite property map ($460)...						  
-                      LSR A                               ;;96D4|----/----\----;  |    ...we use the sprite OAM index...							  
-                      LSR A                               ;;96D5|----/----\----;  |    ...and divide by 4 because a 16x16 tile is 4 8x8 tiles				  
-                      LDX.B !_3                           ;;96D6|----/----\----;  | If index of frame start is > 0A 							  
-                      CPX.B #$0A                          ;;96D8|----/----\----;  |												  
+                      STA.W !OAMTileAttr+$100,Y           ;;96D0|----/----\----; / Store tile properties  
+                      TYA                                 ;;96D3|----/----\----; \ Get index to sprite property map ($460)...  
+                      LSR A                               ;;96D4|----/----\----;  |    ...we use the sprite OAM index...  
+                      LSR A                               ;;96D5|----/----\----;  |    ...and divide by 4 because a 16x16 tile is 4 8x8 tiles  
+                      LDX.B !_3                           ;;96D6|----/----\----;  | If index of frame start is > 0A   
+                      CPX.B #$0A                          ;;96D8|----/----\----;  |  
                       TAX                                 ;;96DA|----/----\----;  | 
-                      LDA.B #$00                          ;;96DB|----/----\----;  |     ...show only an 8x8 tile			   
-                      BCS +                               ;;96DD|----/----\----;  |							   
-                      LDA.B #$02                          ;;96DF|----/----\----;  | Else show a full 16 x 16 tile			   
-                    + STA.W !OAMTileSize+$40,X            ;;96E1|----/----\----; /							   
+                      LDA.B #$00                          ;;96DB|----/----\----;  |     ...show only an 8x8 tile   
+                      BCS +                               ;;96DD|----/----\----;  |   
+                      LDA.B #$02                          ;;96DF|----/----\----;  | Else show a full 16 x 16 tile   
+                    + STA.W !OAMTileSize+$40,X            ;;96E1|----/----\----; /   
                       PLX                                 ;;96E4|----/----\----; \ Pull, X = current tile of the frame we're drawing  
-                      INY                                 ;;96E5|----/----\----;  | Increase index to sprite tile map ($300)...	   
-                      INY                                 ;;96E6|----/----\----;  |    ...we wrote 4 times...			   
-                      INY                                 ;;96E7|----/----\----;  |    ...so increment 4 times			  
+                      INY                                 ;;96E5|----/----\----;  | Increase index to sprite tile map ($300)...   
+                      INY                                 ;;96E6|----/----\----;  |    ...we wrote 4 times...   
+                      INY                                 ;;96E7|----/----\----;  |    ...so increment 4 times  
                       INY                                 ;;96E8|----/----\----;  | 
-                      DEX                                 ;;96E9|----/----\----;  | Go to next tile of frame and loop		   
-                      BPL RexGfxLoopStart                 ;;96EA|----/----\----; / 						   
-                      PLX                                 ;;96EC|----/----\----; Pull, X = sprite index				   
-                      LDY.B #$FF                          ;;96ED|----/----\----; \ FF because we already wrote size to $0460    		   
-                      LDA.B #$01                          ;;96EF|----/----\----;  | A = number of tiles drawn - 1			   
-                      JSL FinishOAMWrite                  ;;96F1|----/----\----; / Don't draw if offscreen				   
+                      DEX                                 ;;96E9|----/----\----;  | Go to next tile of frame and loop   
+                      BPL RexGfxLoopStart                 ;;96EA|----/----\----; /    
+                      PLX                                 ;;96EC|----/----\----; Pull, X = sprite index   
+                      LDY.B #$FF                          ;;96ED|----/----\----; \ FF because we already wrote size to $0460       
+                      LDA.B #$01                          ;;96EF|----/----\----;  | A = number of tiles drawn - 1   
+                      JSL FinishOAMWrite                  ;;96F1|----/----\----; / Don't draw if offscreen   
                       RTS                                 ;;96F5|----/----\----; Return 
                                                           ;;                   ;
 Fishbone:             JSR FishboneGfx                     ;;96F6|----/----\----;
@@ -2985,21 +2985,21 @@ CODE_039910:          LDA.W !SpriteStatus,X               ;;9910|----/----\----;
                       BEQ +                               ;;9915|----/----\----;
                       JMP DrawReznor                      ;;9917|----/----\----;
                                                           ;;                   ;
-                    + TXA                                 ;;991A|----/----\----; \ Load Y with Reznor number (0-3)				  
-                      AND.B #$03                          ;;991B|----/----\----;  |							  
-                      TAY                                 ;;991D|----/----\----; /								  
-                      LDA.B !Mode7Angle                   ;;991E|----/----\----; \								  
-                      CLC                                 ;;9920|----/----\----;  |							  
-                      ADC.W ReznorStartPosLo,Y            ;;9921|----/----\----;  |							  
-                      STA.B !_0                           ;;9924|----/----\----;  | $01,00 = 0-1FF, position Reznors on the circle		  
-                      LDA.B !Mode7Angle+1                 ;;9926|----/----\----;  |							  
-                      ADC.W ReznorStartPosHi,Y            ;;9928|----/----\----;  |							  
-                      AND.B #$01                          ;;992B|----/----\----;  |							  
-                      STA.B !_1                           ;;992D|----/----\----; /								  
+                    + TXA                                 ;;991A|----/----\----; \ Load Y with Reznor number (0-3)  
+                      AND.B #$03                          ;;991B|----/----\----;  |  
+                      TAY                                 ;;991D|----/----\----; /  
+                      LDA.B !Mode7Angle                   ;;991E|----/----\----; \  
+                      CLC                                 ;;9920|----/----\----;  |  
+                      ADC.W ReznorStartPosLo,Y            ;;9921|----/----\----;  |  
+                      STA.B !_0                           ;;9924|----/----\----;  | $01,00 = 0-1FF, position Reznors on the circle  
+                      LDA.B !Mode7Angle+1                 ;;9926|----/----\----;  |  
+                      ADC.W ReznorStartPosHi,Y            ;;9928|----/----\----;  |  
+                      AND.B #$01                          ;;992B|----/----\----;  |  
+                      STA.B !_1                           ;;992D|----/----\----; /  
                       REP #$30                            ;;992F|----/----\----; \   Index (16 bit) Accum (16 bit)  ; Index (16 bit) Accum (16 bit) 
                       LDA.B !_0                           ;;9931|----/----\----;  | Make Reznors turn clockwise rather than counter clockwise 
-                      EOR.W #$01FF                        ;;9933|----/----\----;  | ($01,00 = -1 * $01,00)					 							  
-                      INC A                               ;;9936|----/----\----;  |							  
+                      EOR.W #$01FF                        ;;9933|----/----\----;  | ($01,00 = -1 * $01,00)   
+                      INC A                               ;;9936|----/----\----;  |  
                       STA.B !_0                           ;;9937|----/----\----; /                                                           
                       CLC                                 ;;9939|----/----\----;
                       ADC.W #$0080                        ;;993A|----/----\----;
@@ -3118,44 +3118,44 @@ CODE_039910:          LDA.W !SpriteStatus,X               ;;9910|----/----\----;
                       ORA.W !SpriteMisc1558,X             ;;9A19|----/----\----; Firing 
                       ORA.W !SpriteMisc15AC,X             ;;9A1C|----/----\----; Turning 
                       BNE +                               ;;9A1F|----/----\----;
-                      LDA.W !SpriteMisc157C,X             ;;9A21|----/----\----; \ if direction has changed since last frame...		   
-                      PHA                                 ;;9A24|----/----\----;  |							   
-                      JSR SubHorzPosBnk3                  ;;9A25|----/----\----;  |							   
-                      TYA                                 ;;9A28|----/----\----;  |							   
-                      STA.W !SpriteMisc157C,X             ;;9A29|----/----\----;  |							   
-                      PLA                                 ;;9A2C|----/----\----;  |							   
-                      CMP.W !SpriteMisc157C,X             ;;9A2D|----/----\----;  |							   
-                      BEQ +                               ;;9A30|----/----\----;  |							   
-                      LDA.B #$0A                          ;;9A32|----/----\----;  | ...set time to show turning graphic = 0A		   
-                      STA.W !SpriteMisc15AC,X             ;;9A34|----/----\----; /								   
-                    + LDA.W !SpriteMisc154C,X             ;;9A37|----/----\----; \ If disable interaction timer > 0, just draw Reznor	   
-                      BNE DrawReznor                      ;;9A3A|----/----\----; /								   
-                      JSL MarioSprInteract                ;;9A3C|----/----\----; \ Interact with mario					   
-                      BCC DrawReznor                      ;;9A40|----/----\----; / If no contact, just draw Reznor				   
-                      LDA.B #$08                          ;;9A42|----/----\----; \ Disable interaction timer = 08				   
+                      LDA.W !SpriteMisc157C,X             ;;9A21|----/----\----; \ if direction has changed since last frame...   
+                      PHA                                 ;;9A24|----/----\----;  |   
+                      JSR SubHorzPosBnk3                  ;;9A25|----/----\----;  |   
+                      TYA                                 ;;9A28|----/----\----;  |   
+                      STA.W !SpriteMisc157C,X             ;;9A29|----/----\----;  |   
+                      PLA                                 ;;9A2C|----/----\----;  |   
+                      CMP.W !SpriteMisc157C,X             ;;9A2D|----/----\----;  |   
+                      BEQ +                               ;;9A30|----/----\----;  |   
+                      LDA.B #$0A                          ;;9A32|----/----\----;  | ...set time to show turning graphic = 0A   
+                      STA.W !SpriteMisc15AC,X             ;;9A34|----/----\----; /   
+                    + LDA.W !SpriteMisc154C,X             ;;9A37|----/----\----; \ If disable interaction timer > 0, just draw Reznor   
+                      BNE DrawReznor                      ;;9A3A|----/----\----; /   
+                      JSL MarioSprInteract                ;;9A3C|----/----\----; \ Interact with mario   
+                      BCC DrawReznor                      ;;9A40|----/----\----; / If no contact, just draw Reznor   
+                      LDA.B #$08                          ;;9A42|----/----\----; \ Disable interaction timer = 08   
                       STA.W !SpriteMisc154C,X             ;;9A44|----/----\----; / (eg. after hitting Reznor, or getting bounced by platform) 
-                      LDA.B !PlayerYPosNext               ;;9A47|----/----\----; \ Compare y positions to see if mario hit Reznor		   
-                      SEC                                 ;;9A49|----/----\----;  |							   
-                      SBC.B !SpriteYPosLow,X              ;;9A4A|----/----\----;  |							   
-                      CMP.B #$ED                          ;;9A4C|----/----\----;  |							   
-                      BMI HitReznor                       ;;9A4E|----/----\----; /								   
-                      CMP.B #$F2                          ;;9A50|----/----\----; \ See if mario hit side of the platform			   
-                      BMI HitPlatSide                     ;;9A52|----/----\----;  |							   
-                      LDA.B !PlayerYSpeed                 ;;9A54|----/----\----;  |							   
-                      BPL HitPlatSide                     ;;9A56|----/----\----; /								   
+                      LDA.B !PlayerYPosNext               ;;9A47|----/----\----; \ Compare y positions to see if mario hit Reznor   
+                      SEC                                 ;;9A49|----/----\----;  |   
+                      SBC.B !SpriteYPosLow,X              ;;9A4A|----/----\----;  |   
+                      CMP.B #$ED                          ;;9A4C|----/----\----;  |   
+                      BMI HitReznor                       ;;9A4E|----/----\----; /   
+                      CMP.B #$F2                          ;;9A50|----/----\----; \ See if mario hit side of the platform   
+                      BMI HitPlatSide                     ;;9A52|----/----\----;  |   
+                      LDA.B !PlayerYSpeed                 ;;9A54|----/----\----;  |   
+                      BPL HitPlatSide                     ;;9A56|----/----\----; /   
                       LDA.B #$29                          ;;9A58|----/----\----; ??Something about boosting mario on platform?? 
-                      STA.W !SpriteTweakerB,X             ;;9A5A|----/----\----;  								   
-                      LDA.B #$0F                          ;;9A5D|----/----\----; \ Time to bounce platform = 0F				   
-                      STA.W !SpriteMisc1564,X             ;;9A5F|----/----\----; /								   
-                      LDA.B #$10                          ;;9A62|----/----\----; \ Set mario's y speed to rebound down off platform	   
-                      STA.B !PlayerYSpeed                 ;;9A64|----/----\----; /								   
+                      STA.W !SpriteTweakerB,X             ;;9A5A|----/----\----;     
+                      LDA.B #$0F                          ;;9A5D|----/----\----; \ Time to bounce platform = 0F   
+                      STA.W !SpriteMisc1564,X             ;;9A5F|----/----\----; /   
+                      LDA.B #$10                          ;;9A62|----/----\----; \ Set mario's y speed to rebound down off platform   
+                      STA.B !PlayerYSpeed                 ;;9A64|----/----\----; /   
                       LDA.B #$01                          ;;9A66|----/----\----; \ 
                       STA.W !SPCIO0                       ;;9A68|----/----\----; / Play sound effect 
                       BRA DrawReznor                      ;;9A6B|----/----\----;
                                                           ;;                   ;
-HitPlatSide:          JSR SubHorzPosBnk3                  ;;9A6D|----/----\----; \ Set mario to bounce back				   
-                      LDA.W ReboundSpeedX,Y               ;;9A70|----/----\----;  | (hit side of platform?)				   
-                      STA.B !PlayerXSpeed                 ;;9A73|----/----\----;  |							   
+HitPlatSide:          JSR SubHorzPosBnk3                  ;;9A6D|----/----\----; \ Set mario to bounce back   
+                      LDA.W ReboundSpeedX,Y               ;;9A70|----/----\----;  | (hit side of platform?)   
+                      STA.B !PlayerXSpeed                 ;;9A73|----/----\----;  |   
                       BRA DrawReznor                      ;;9A75|----/----\----; /                                                            
                                                           ;;                   ;
 HitReznor:            JSL HurtMario                       ;;9A77|----/----\----; Hurt Mario 
@@ -3170,45 +3170,45 @@ DrawReznor:           STZ.W !SpriteMisc1602,X             ;;9A7B|----/----\----;
                       STA.W !SpriteMisc157C,X             ;;9A8D|----/----\----;
                     + LDA.B #$02                          ;;9A90|----/----\----; \ Set turning image 
                       STA.W !SpriteMisc1602,X             ;;9A92|----/----\----; / 
-ReznorNoTurning:      LDA.W !SpriteMisc1558,X             ;;9A95|----/----\----; \ Shoot fire if "time to show firing image" == 20	        
-                      BEQ ReznorNoFiring                  ;;9A98|----/----\----;  |						        
+ReznorNoTurning:      LDA.W !SpriteMisc1558,X             ;;9A95|----/----\----; \ Shoot fire if "time to show firing image" == 20        
+                      BEQ ReznorNoFiring                  ;;9A98|----/----\----;  |        
                       CMP.B #$20                          ;;9A9A|----/----\----;  | (shows image for 20 frames after the fireball is shot) 
-                      BNE +                               ;;9A9C|----/----\----;  |						        
-                      JSR ReznorFireRt                    ;;9A9E|----/----\----; /							        
-                    + LDA.B #$01                          ;;9AA1|----/----\----; \ Set firing image				        
-                      STA.W !SpriteMisc1602,X             ;;9AA3|----/----\----; /							        
+                      BNE +                               ;;9A9C|----/----\----;  |        
+                      JSR ReznorFireRt                    ;;9A9E|----/----\----; /        
+                    + LDA.B #$01                          ;;9AA1|----/----\----; \ Set firing image        
+                      STA.W !SpriteMisc1602,X             ;;9AA3|----/----\----; /        
 ReznorNoFiring:       JSR ReznorGfxRt                     ;;9AA6|----/----\----; Draw Reznor                                               
                       PLA                                 ;;9AA9|----/----\----;
                       STA.W !SpriteMisc157C,X             ;;9AAA|----/----\----;
-                      LDA.B !SpriteLock                   ;;9AAD|----/----\----; \ If sprites locked, or mario already killed the Reznor on the platform, return		   
-                      ORA.W !SpriteMisc151C,X             ;;9AAF|----/----\----;  |											   
-                      BNE +                               ;;9AB2|----/----\----; /												   
-                      LDA.W !SpriteMisc1564,X             ;;9AB4|----/----\----; \ If time to bounce platform != 0C, return						   
-                      CMP.B #$0C                          ;;9AB7|----/----\----;  | (causes delay between start of boucing platform and killing Reznor)			   
-                      BNE +                               ;;9AB9|----/----\----; /												   
+                      LDA.B !SpriteLock                   ;;9AAD|----/----\----; \ If sprites locked, or mario already killed the Reznor on the platform, return   
+                      ORA.W !SpriteMisc151C,X             ;;9AAF|----/----\----;  |   
+                      BNE +                               ;;9AB2|----/----\----; /   
+                      LDA.W !SpriteMisc1564,X             ;;9AB4|----/----\----; \ If time to bounce platform != 0C, return   
+                      CMP.B #$0C                          ;;9AB7|----/----\----;  | (causes delay between start of boucing platform and killing Reznor)   
+                      BNE +                               ;;9AB9|----/----\----; /   
                       LDA.B #$03                          ;;9ABB|----/----\----; \ 
                       STA.W !SPCIO0                       ;;9ABD|----/----\----; / Play sound effect 
-                      STZ.W !SpriteMisc1558,X             ;;9AC0|----/----\----; Prevent from throwing fire after death							   
-                      INC.W !SpriteMisc151C,X             ;;9AC3|----/----\----; Record a hit on Reznor									   
-                      JSL FindFreeSprSlot                 ;;9AC6|----/----\----; \ Load Y with a free sprite index for dead Reznor						   
-                      BMI +                               ;;9ACA|----/----\----; / Return if no free index									   
-                      LDA.B #$02                          ;;9ACC|----/----\----; \ Set status to being killed								   
-                      STA.W !SpriteStatus,Y               ;;9ACE|----/----\----; /												   
-                      LDA.B #$A9                          ;;9AD1|----/----\----; \ Sprite to use for dead Reznor								   
-                      STA.W !SpriteNumber,Y               ;;9AD3|----/----\----; /												   
-                      LDA.B !SpriteXPosLow,X              ;;9AD6|----/----\----; \ Transfer x position to dead Reznor							   
-                      STA.W !SpriteXPosLow,Y              ;;9AD8|----/----\----;  |											   
-                      LDA.W !SpriteYPosHigh,X             ;;9ADB|----/----\----;  |											   
-                      STA.W !SpriteYPosHigh,Y             ;;9ADE|----/----\----; /												   
-                      LDA.B !SpriteYPosLow,X              ;;9AE1|----/----\----; \ Transfer y position to dead Reznor							   
-                      STA.W !SpriteYPosLow,Y              ;;9AE3|----/----\----;  |											   
-                      LDA.W !SpriteXPosHigh,X             ;;9AE6|----/----\----;  |											   
-                      STA.W !SpriteXPosHigh,Y             ;;9AE9|----/----\----; /												   
-                      PHX                                 ;;9AEC|----/----\----; \ 											   
-                      TYX                                 ;;9AED|----/----\----;  | Before: X must have index of sprite being generated					   
+                      STZ.W !SpriteMisc1558,X             ;;9AC0|----/----\----; Prevent from throwing fire after death   
+                      INC.W !SpriteMisc151C,X             ;;9AC3|----/----\----; Record a hit on Reznor   
+                      JSL FindFreeSprSlot                 ;;9AC6|----/----\----; \ Load Y with a free sprite index for dead Reznor   
+                      BMI +                               ;;9ACA|----/----\----; / Return if no free index   
+                      LDA.B #$02                          ;;9ACC|----/----\----; \ Set status to being killed   
+                      STA.W !SpriteStatus,Y               ;;9ACE|----/----\----; /   
+                      LDA.B #$A9                          ;;9AD1|----/----\----; \ Sprite to use for dead Reznor   
+                      STA.W !SpriteNumber,Y               ;;9AD3|----/----\----; /   
+                      LDA.B !SpriteXPosLow,X              ;;9AD6|----/----\----; \ Transfer x position to dead Reznor   
+                      STA.W !SpriteXPosLow,Y              ;;9AD8|----/----\----;  |   
+                      LDA.W !SpriteYPosHigh,X             ;;9ADB|----/----\----;  |   
+                      STA.W !SpriteYPosHigh,Y             ;;9ADE|----/----\----; /   
+                      LDA.B !SpriteYPosLow,X              ;;9AE1|----/----\----; \ Transfer y position to dead Reznor   
+                      STA.W !SpriteYPosLow,Y              ;;9AE3|----/----\----;  |   
+                      LDA.W !SpriteXPosHigh,X             ;;9AE6|----/----\----;  |   
+                      STA.W !SpriteXPosHigh,Y             ;;9AE9|----/----\----; /   
+                      PHX                                 ;;9AEC|----/----\----; \    
+                      TYX                                 ;;9AED|----/----\----;  | Before: X must have index of sprite being generated   
                       JSL InitSpriteTables                ;;9AEE|----/----\----; /  Routine clears all old sprite values and loads in new values for the 6 main sprite tables 
-                      LDA.B #$C0                          ;;9AF2|----/----\----; \ Set y speed for Reznor's bounce off the platform					   
-                      STA.B !SpriteYSpeed,X               ;;9AF4|----/----\----; /												   
+                      LDA.B #$C0                          ;;9AF2|----/----\----; \ Set y speed for Reznor's bounce off the platform   
+                      STA.B !SpriteYSpeed,X               ;;9AF4|----/----\----; /   
                       PLX                                 ;;9AF6|----/----\----; pull, X = sprite index                                                                       
                     + RTS                                 ;;9AF7|----/----\----; Return 
                                                           ;;                   ;
@@ -3267,16 +3267,16 @@ ReznorTiles:          db $40,$42,$60,$62,$44,$46,$64,$66  ;;9B5D|----/----\----;
 ReznorPal:            db $3F,$3F,$3F,$3F,$3F,$3F,$3F,$3F  ;;9B69|----/----\----;
                       db $7F,$3F,$7F,$3F                  ;;9B71|----/----\----;
                                                           ;;                   ;
-ReznorGfxRt:          LDA.W !SpriteMisc151C,X             ;;9B75|----/----\----; \ if the reznor is dead, only draw the platform			  
-                      BNE DrawReznorPlats                 ;;9B78|----/----\----; /									  
+ReznorGfxRt:          LDA.W !SpriteMisc151C,X             ;;9B75|----/----\----; \ if the reznor is dead, only draw the platform  
+                      BNE DrawReznorPlats                 ;;9B78|----/----\----; /  
                       JSR GetDrawInfoBnk3                 ;;9B7A|----/----\----; after: Y = index to sprite tile map, $00 = sprite x, $01 = sprite y 
-                      LDA.W !SpriteMisc1602,X             ;;9B7D|----/----\----; \ $03 = index to frame start (frame to show * 4 tiles per frame)	  
-                      ASL A                               ;;9B80|----/----\----;  | 								  
-                      ASL A                               ;;9B81|----/----\----;  |								  
-                      STA.B !_3                           ;;9B82|----/----\----; /									  
-                      LDA.W !SpriteMisc157C,X             ;;9B84|----/----\----; \ $02 = direction index						  
-                      ASL A                               ;;9B87|----/----\----;  |								  
-                      ASL A                               ;;9B88|----/----\----;  |								  
+                      LDA.W !SpriteMisc1602,X             ;;9B7D|----/----\----; \ $03 = index to frame start (frame to show * 4 tiles per frame)  
+                      ASL A                               ;;9B80|----/----\----;  |   
+                      ASL A                               ;;9B81|----/----\----;  |  
+                      STA.B !_3                           ;;9B82|----/----\----; /  
+                      LDA.W !SpriteMisc157C,X             ;;9B84|----/----\----; \ $02 = direction index  
+                      ASL A                               ;;9B87|----/----\----;  |  
+                      ASL A                               ;;9B88|----/----\----;  |  
                       STA.B !_2                           ;;9B89|----/----\----; /                                                                   
                       PHX                                 ;;9B8B|----/----\----;
                       LDX.B #$03                          ;;9B8C|----/----\----;
@@ -3300,25 +3300,25 @@ RznrGfxLoopStart:     PHX                                 ;;9B8E|----/----\----;
                       TXA                                 ;;9BAD|----/----\----;
                       ORA.B !_3                           ;;9BAE|----/----\----;
                       TAX                                 ;;9BB0|----/----\----;
-                      LDA.W ReznorTiles,X                 ;;9BB1|----/----\----; \ set tile					  
-                      STA.W !OAMTileNo+$100,Y             ;;9BB4|----/----\----; /							  
-                      LDA.W ReznorPal,X                   ;;9BB7|----/----\----; \ set palette/properties				  
-                      CPX.B #$08                          ;;9BBA|----/----\----;  | if turning, don't flip				  
-                      BCS +                               ;;9BBC|----/----\----;  | 						  
-                      LDX.B !_2                           ;;9BBE|----/----\----;  | if direction = 0, don't flip			  
-                      BNE +                               ;;9BC0|----/----\----;  |						  
-                      EOR.B #$40                          ;;9BC2|----/----\----;  |						  
-                    + STA.W !OAMTileAttr+$100,Y           ;;9BC4|----/----\----; /							  
+                      LDA.W ReznorTiles,X                 ;;9BB1|----/----\----; \ set tile  
+                      STA.W !OAMTileNo+$100,Y             ;;9BB4|----/----\----; /  
+                      LDA.W ReznorPal,X                   ;;9BB7|----/----\----; \ set palette/properties  
+                      CPX.B #$08                          ;;9BBA|----/----\----;  | if turning, don't flip  
+                      BCS +                               ;;9BBC|----/----\----;  |   
+                      LDX.B !_2                           ;;9BBE|----/----\----;  | if direction = 0, don't flip  
+                      BNE +                               ;;9BC0|----/----\----;  |  
+                      EOR.B #$40                          ;;9BC2|----/----\----;  |  
+                    + STA.W !OAMTileAttr+$100,Y           ;;9BC4|----/----\----; /  
                       PLX                                 ;;9BC7|----/----\----; \ pull, X = current tile of the frame we're drawing 
-                      INY                                 ;;9BC8|----/----\----;  | Increase index to sprite tile map ($300)...	  
-                      INY                                 ;;9BC9|----/----\----;  |    ...we wrote 4 bytes...			  
-                      INY                                 ;;9BCA|----/----\----;  |    ...so increment 4 times			  
-                      INY                                 ;;9BCB|----/----\----;  |    						  
-                      DEX                                 ;;9BCC|----/----\----;  | Go to next tile of frame and loop		  
-                      BPL RznrGfxLoopStart                ;;9BCD|----/----\----; / 						  
-                      PLX                                 ;;9BCF|----/----\----; \							  
-                      LDY.B #$02                          ;;9BD0|----/----\----;  | Y = 02 (All 16x16 tiles)			  
-                      LDA.B #$03                          ;;9BD2|----/----\----;  | A = number of tiles drawn - 1			  
+                      INY                                 ;;9BC8|----/----\----;  | Increase index to sprite tile map ($300)...  
+                      INY                                 ;;9BC9|----/----\----;  |    ...we wrote 4 bytes...  
+                      INY                                 ;;9BCA|----/----\----;  |    ...so increment 4 times  
+                      INY                                 ;;9BCB|----/----\----;  |      
+                      DEX                                 ;;9BCC|----/----\----;  | Go to next tile of frame and loop  
+                      BPL RznrGfxLoopStart                ;;9BCD|----/----\----; /   
+                      PLX                                 ;;9BCF|----/----\----; \  
+                      LDY.B #$02                          ;;9BD0|----/----\----;  | Y = 02 (All 16x16 tiles)  
+                      LDA.B #$03                          ;;9BD2|----/----\----;  | A = number of tiles drawn - 1  
                       JSL FinishOAMWrite                  ;;9BD4|----/----\----; / Don't draw if offscreen                           
                       LDA.W !SpriteStatus,X               ;;9BD8|----/----\----;
                       CMP.B #$02                          ;;9BDB|----/----\----;
@@ -3352,13 +3352,13 @@ ReznorPlatGfxRt:      LDA.W !SpriteOAMIndex,X             ;;9BEB|----/----\----;
                       STA.W !OAMTileYPos+$100,Y           ;;9C13|----/----\----;
                       STA.W !OAMTileYPos+$104,Y           ;;9C16|----/----\----;
                       LDA.B #$4E                          ;;9C19|----/----\----; \ Tile of reznor platform...     
-                      STA.W !OAMTileNo+$100,Y             ;;9C1B|----/----\----;  | ...store left side	       
-                      STA.W !OAMTileNo+$104,Y             ;;9C1E|----/----\----; /  ...store right side	       
+                      STA.W !OAMTileNo+$100,Y             ;;9C1B|----/----\----;  | ...store left side       
+                      STA.W !OAMTileNo+$104,Y             ;;9C1E|----/----\----; /  ...store right side       
                       LDA.B #$33                          ;;9C21|----/----\----; \ Palette of reznor platform...  
-                      STA.W !OAMTileAttr+$100,Y           ;;9C23|----/----\----;  |			       
-                      ORA.B #$40                          ;;9C26|----/----\----;  | ...flip right side	       
-                      STA.W !OAMTileAttr+$104,Y           ;;9C28|----/----\----; /				       
-                      LDY.B #$02                          ;;9C2B|----/----\----; \				       
+                      STA.W !OAMTileAttr+$100,Y           ;;9C23|----/----\----;  |       
+                      ORA.B #$40                          ;;9C26|----/----\----;  | ...flip right side       
+                      STA.W !OAMTileAttr+$104,Y           ;;9C28|----/----\----; /       
+                      LDY.B #$02                          ;;9C2B|----/----\----; \       
                       LDA.B #$01                          ;;9C2D|----/----\----;  | A = number of tiles drawn - 1 
                       JSL FinishOAMWrite                  ;;9C2F|----/----\----; / Don't draw if offscreen        
                       RTS                                 ;;9C33|----/----\----; Return 
@@ -7338,13 +7338,13 @@ Return03C347:         RTS                                 ;;C347|----/----\----;
 NinjiSpeedY:          db $D0,$C0,$B0,$D0                  ;;C348|----/----\----;
                                                           ;;                   ;
 Ninji:                JSL GenericSprGfxRt2                ;;C34C|----/----\----; Draw sprite uing the routine for sprites <= 53 
-                      LDA.B !SpriteLock                   ;;C350|----/----\----; \ Return if sprites locked			 
-                      BNE Return03C38F                    ;;C352|----/----\----; /						 
-                      JSR SubHorzPosBnk3                  ;;C354|----/----\----; \ Always face mario				 
-                      TYA                                 ;;C357|----/----\----;  |						 
-                      STA.W !SpriteMisc157C,X             ;;C358|----/----\----; /						 
-                      JSR SubOffscreen0Bnk3               ;;C35B|----/----\----; Only process while onscreen			 
-                      JSL SprSpr_MarioSprRts              ;;C35E|----/----\----; Interact with mario				 
+                      LDA.B !SpriteLock                   ;;C350|----/----\----; \ Return if sprites locked 
+                      BNE Return03C38F                    ;;C352|----/----\----; / 
+                      JSR SubHorzPosBnk3                  ;;C354|----/----\----; \ Always face mario 
+                      TYA                                 ;;C357|----/----\----;  | 
+                      STA.W !SpriteMisc157C,X             ;;C358|----/----\----; / 
+                      JSR SubOffscreen0Bnk3               ;;C35B|----/----\----; Only process while onscreen 
+                      JSL SprSpr_MarioSprRts              ;;C35E|----/----\----; Interact with mario 
                       JSL UpdateSpritePos                 ;;C362|----/----\----; Update position based on speed values       
                       LDA.W !SpriteBlockedDirs,X          ;;C366|----/----\----; \ Branch if not on ground 
                       AND.B #$04                          ;;C369|----/----\----;  | 

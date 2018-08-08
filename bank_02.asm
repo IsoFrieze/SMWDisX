@@ -6375,56 +6375,56 @@ CODE_02B42D:          LDA.B #$08                          ;;B42D|----/----\----;
                                                           ;;                   ;
 DATA_02B464:          db $01,$FF                          ;;B464|----/----\----;
                                                           ;;                   ;
-ShootBullet:          LDA.W !ShooterTimer,X               ;;B466|----/----\----; \ Return if it's not time to generate			        
-                      BNE +                               ;;B469|----/----\----; /								        
-                      LDA.B #$60                          ;;B46B|----/----\----; \ Set time till next generation = 60			        
-                      STA.W !ShooterTimer,X               ;;B46D|----/----\----; /								        
-                      LDA.W !ShooterYPosLow,X             ;;B470|----/----\----; \ Don't generate if off screen vertically			        
-                      CMP.B !Layer1YPos                   ;;B473|----/----\----;  |							        
-                      LDA.W !ShooterYPosHigh,X            ;;B475|----/----\----;  |							        
-                      SBC.B !Layer1YPos+1                 ;;B478|----/----\----;  |							        
-                      BNE +                               ;;B47A|----/----\----; /								        
-                      LDA.W !ShooterXPosLow,X             ;;B47C|----/----\----; \ Don't generate if off screen horizontally		        
-                      CMP.B !Layer1XPos                   ;;B47F|----/----\----;  |							        
-                      LDA.W !ShooterXPosHigh,X            ;;B481|----/----\----;  |							        
-                      SBC.B !Layer1XPos+1                 ;;B484|----/----\----;  |							        
-                      BNE +                               ;;B486|----/----\----; / 							        
-                      LDA.W !ShooterXPosLow,X             ;;B488|----/----\----; \ ?? something else related to x position of generator??	        
-                      SEC                                 ;;B48B|----/----\----;  | 							        
-                      SBC.B !Layer1XPos                   ;;B48C|----/----\----;  |							        
-                      CLC                                 ;;B48E|----/----\----;  |							        
-                      ADC.B #$10                          ;;B48F|----/----\----;  |							        
-                      CMP.B #$10                          ;;B491|----/----\----;  |							        
-                      BCC +                               ;;B493|----/----\----; /								        
-                      LDA.B !PlayerXPosNext               ;;B495|----/----\----; \ Don't fire if mario is next to generator		        
-                      SBC.W !ShooterXPosLow,X             ;;B497|----/----\----;  |							        
-                      CLC                                 ;;B49A|----/----\----;  |							        
-                      ADC.B #$11                          ;;B49B|----/----\----;  |							        
-                      CMP.B #$22                          ;;B49D|----/----\----;  |							        
-                      BCC +                               ;;B49F|----/----\----; /								        
+ShootBullet:          LDA.W !ShooterTimer,X               ;;B466|----/----\----; \ Return if it's not time to generate        
+                      BNE +                               ;;B469|----/----\----; /        
+                      LDA.B #$60                          ;;B46B|----/----\----; \ Set time till next generation = 60        
+                      STA.W !ShooterTimer,X               ;;B46D|----/----\----; /        
+                      LDA.W !ShooterYPosLow,X             ;;B470|----/----\----; \ Don't generate if off screen vertically        
+                      CMP.B !Layer1YPos                   ;;B473|----/----\----;  |        
+                      LDA.W !ShooterYPosHigh,X            ;;B475|----/----\----;  |        
+                      SBC.B !Layer1YPos+1                 ;;B478|----/----\----;  |        
+                      BNE +                               ;;B47A|----/----\----; /        
+                      LDA.W !ShooterXPosLow,X             ;;B47C|----/----\----; \ Don't generate if off screen horizontally        
+                      CMP.B !Layer1XPos                   ;;B47F|----/----\----;  |        
+                      LDA.W !ShooterXPosHigh,X            ;;B481|----/----\----;  |        
+                      SBC.B !Layer1XPos+1                 ;;B484|----/----\----;  |        
+                      BNE +                               ;;B486|----/----\----; /         
+                      LDA.W !ShooterXPosLow,X             ;;B488|----/----\----; \ ?? something else related to x position of generator??        
+                      SEC                                 ;;B48B|----/----\----;  |         
+                      SBC.B !Layer1XPos                   ;;B48C|----/----\----;  |        
+                      CLC                                 ;;B48E|----/----\----;  |        
+                      ADC.B #$10                          ;;B48F|----/----\----;  |        
+                      CMP.B #$10                          ;;B491|----/----\----;  |        
+                      BCC +                               ;;B493|----/----\----; /        
+                      LDA.B !PlayerXPosNext               ;;B495|----/----\----; \ Don't fire if mario is next to generator        
+                      SBC.W !ShooterXPosLow,X             ;;B497|----/----\----;  |        
+                      CLC                                 ;;B49A|----/----\----;  |        
+                      ADC.B #$11                          ;;B49B|----/----\----;  |        
+                      CMP.B #$22                          ;;B49D|----/----\----;  |        
+                      BCC +                               ;;B49F|----/----\----; /        
                       JSL FindFreeSlotLowPri              ;;B4A1|----/----\----; \ Get an index to an unused sprite slot, return if all slots full 
-                      BMI +                               ;;B4A5|----/----\----; / After: Y has index of sprite being generated		 
+                      BMI +                               ;;B4A5|----/----\----; / After: Y has index of sprite being generated 
                       LDA.B #$09                          ;;B4A7|----/----\----; \ Only shoot every #$80 frames 
                       STA.W !SPCIO3                       ;;B4A9|----/----\----; / Play sound effect 
                       LDA.B #$01                          ;;B4AC|----/----\----; \ Sprite status = Initialization 
                       STA.W !SpriteStatus,Y               ;;B4AE|----/----\----; / 
                       LDA.B #$1C                          ;;B4B1|----/----\----; \ New sprite = Bullet Bill 
-                      STA.W !SpriteNumber,Y               ;;B4B3|----/----\----; /								 
-                      LDA.W !ShooterXPosLow,X             ;;B4B6|----/----\----; \ Set x position for new sprite				 
-                      STA.W !SpriteXPosLow,Y              ;;B4B9|----/----\----;  |							 
-                      LDA.W !ShooterXPosHigh,X            ;;B4BC|----/----\----;  |							 
-                      STA.W !SpriteYPosHigh,Y             ;;B4BF|----/----\----; /								 
-                      LDA.W !ShooterYPosLow,X             ;;B4C2|----/----\----; \ Set y position for new sprite				 
-                      SEC                                 ;;B4C5|----/----\----;  | (y position of generator - 1)				 
-                      SBC.B #$01                          ;;B4C6|----/----\----;  |							 
-                      STA.W !SpriteYPosLow,Y              ;;B4C8|----/----\----;  |							 
-                      LDA.W !ShooterYPosHigh,X            ;;B4CB|----/----\----;  |							 
-                      SBC.B #$00                          ;;B4CE|----/----\----;  |							 
-                      STA.W !SpriteXPosHigh,Y             ;;B4D0|----/----\----; /								 
-                      PHX                                 ;;B4D3|----/----\----; \ Before: X must have index of sprite being generated	 
-                      TYX                                 ;;B4D4|----/----\----;  | Routine clears *all* old sprite values...		 
+                      STA.W !SpriteNumber,Y               ;;B4B3|----/----\----; / 
+                      LDA.W !ShooterXPosLow,X             ;;B4B6|----/----\----; \ Set x position for new sprite 
+                      STA.W !SpriteXPosLow,Y              ;;B4B9|----/----\----;  | 
+                      LDA.W !ShooterXPosHigh,X            ;;B4BC|----/----\----;  | 
+                      STA.W !SpriteYPosHigh,Y             ;;B4BF|----/----\----; / 
+                      LDA.W !ShooterYPosLow,X             ;;B4C2|----/----\----; \ Set y position for new sprite 
+                      SEC                                 ;;B4C5|----/----\----;  | (y position of generator - 1) 
+                      SBC.B #$01                          ;;B4C6|----/----\----;  | 
+                      STA.W !SpriteYPosLow,Y              ;;B4C8|----/----\----;  | 
+                      LDA.W !ShooterYPosHigh,X            ;;B4CB|----/----\----;  | 
+                      SBC.B #$00                          ;;B4CE|----/----\----;  | 
+                      STA.W !SpriteXPosHigh,Y             ;;B4D0|----/----\----; / 
+                      PHX                                 ;;B4D3|----/----\----; \ Before: X must have index of sprite being generated 
+                      TYX                                 ;;B4D4|----/----\----;  | Routine clears *all* old sprite values... 
                       JSL InitSpriteTables                ;;B4D5|----/----\----;  | ...and loads in new values for the 6 main sprite tables 
-                      PLX                                 ;;B4D9|----/----\----; / 							 
+                      PLX                                 ;;B4D9|----/----\----; /  
                       JSR ShowShooterSmoke                ;;B4DA|----/----\----; Display smoke graphic                                      
                     + RTS                                 ;;B4DD|----/----\----; Return 
                                                           ;;                   ;
@@ -6438,24 +6438,24 @@ FindFreeSmokeSlot:    LDA.W !SmokeSpriteNumber,Y          ;;B4E0|----/----\----;
                                                           ;;                   ;
 ShooterSmokeDispX:    db $F4,$0C                          ;;B4E9|----/----\----;
                                                           ;;                   ;
-SetShooterSmoke:      LDA.B #$01                          ;;B4EB|----/----\----; \ Set effect graphic to smoke graphic		  
-                      STA.W !SmokeSpriteNumber,Y          ;;B4ED|----/----\----; /							  
-                      LDA.W !ShooterYPosLow,X             ;;B4F0|----/----\----; \ Smoke y position = generator y position		  
-                      STA.W !SmokeSpriteYPos,Y            ;;B4F3|----/----\----; /							  
-                      LDA.B #$1B                          ;;B4F6|----/----\----; \ Set time to show smoke				  
-                      STA.W !SmokeSpriteTimer,Y           ;;B4F8|----/----\----; /							  
+SetShooterSmoke:      LDA.B #$01                          ;;B4EB|----/----\----; \ Set effect graphic to smoke graphic  
+                      STA.W !SmokeSpriteNumber,Y          ;;B4ED|----/----\----; /  
+                      LDA.W !ShooterYPosLow,X             ;;B4F0|----/----\----; \ Smoke y position = generator y position  
+                      STA.W !SmokeSpriteYPos,Y            ;;B4F3|----/----\----; /  
+                      LDA.B #$1B                          ;;B4F6|----/----\----; \ Set time to show smoke  
+                      STA.W !SmokeSpriteTimer,Y           ;;B4F8|----/----\----; /  
                       LDA.W !ShooterXPosLow,X             ;;B4FB|----/----\----; \ Load generator x position and store it for later  
-                      PHA                                 ;;B4FE|----/----\----; /							  
+                      PHA                                 ;;B4FE|----/----\----; /  
                       LDA.B !PlayerXPosNext               ;;B4FF|----/----\----; \ Determine which side of the generator mario is on 
-                      CMP.W !ShooterXPosLow,X             ;;B501|----/----\----;  |						  
-                      LDA.B !PlayerXPosNext+1             ;;B504|----/----\----;  |						  
-                      SBC.W !ShooterXPosHigh,X            ;;B506|----/----\----;  |						  
-                      LDX.B #$00                          ;;B509|----/----\----;  |						  
-                      BCC +                               ;;B50B|----/----\----;  |						  
-                      INX                                 ;;B50D|----/----\----; /							  
-                    + PLA                                 ;;B50E|----/----\----; \ Set smoke x position from generator position	  
-                      CLC                                 ;;B50F|----/----\----;  |						  
-                      ADC.W ShooterSmokeDispX,X           ;;B510|----/----\----;  |						  
+                      CMP.W !ShooterXPosLow,X             ;;B501|----/----\----;  |  
+                      LDA.B !PlayerXPosNext+1             ;;B504|----/----\----;  |  
+                      SBC.W !ShooterXPosHigh,X            ;;B506|----/----\----;  |  
+                      LDX.B #$00                          ;;B509|----/----\----;  |  
+                      BCC +                               ;;B50B|----/----\----;  |  
+                      INX                                 ;;B50D|----/----\----; /  
+                    + PLA                                 ;;B50E|----/----\----; \ Set smoke x position from generator position  
+                      CLC                                 ;;B50F|----/----\----;  |  
+                      ADC.W ShooterSmokeDispX,X           ;;B510|----/----\----;  |  
                       STA.W !SmokeSpriteXPos,Y            ;;B513|----/----\----; /   
                       LDX.W !CurSpriteProcess             ;;B516|----/----\----; X = Sprite index 
                       RTS                                 ;;B519|----/----\----; Return 

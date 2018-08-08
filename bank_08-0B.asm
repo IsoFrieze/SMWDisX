@@ -1,6 +1,6 @@
                       check bankcross off                 ;;                   ;
                                                           ;;                   ;
-					  ORG $088000                         ;;                   ;
+                      ORG $088000                         ;;                   ;
                                                           ;;                   ;
 GFX32:                                                    ;;                   ; (due to asar bug, labels must be on separate lines here...)
                       incbin "gfx/GFX32_compressed.bin"   ;;8000|----/----\----; Mario Graphics
