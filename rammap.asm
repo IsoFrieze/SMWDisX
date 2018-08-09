@@ -1,5 +1,7 @@
 incsrc "hardware_registers.asm"
 
+; WORK RAM
+
 ; scratch ram
 ; used for many various purposes
 !_0 = $7E0000
@@ -869,9 +871,109 @@ incsrc "hardware_registers.asm"
 ; 7F9C7B - 7FC7FF unused
 !Map16TilesHigh = $7FC800
 
+; SAVE RAM
+
 !SaveData = $700000
 !SaveDataChecksum = $70008C
 !SaveDataBackup = $7001AD
 ; 70035A - 7007FF unused
 
+; AUDIO RAM
 
+!SPCInEdge = $00
+!SPCOutBuffer = $04
+!SPCInBuffer = $08
+!ARam_0C = $0C
+!ARam_0E = $0E
+!ARam_10 = $10
+!ARam_11 = $11
+!ARam_12 = $12
+!ARam_13 = $13
+!ARam_14 = $14
+!ARam_15 = $15
+!PitchValue = $16
+!SFX1DF9PhrasePtr = $18
+!SFX1DFCPhrasePtr = $1A
+!ARam_1C = $1C
+!ChannelsMuted = $1D
+!ARam_2E = $2E
+!ARam_2F = $2F
+!VoPhrasePtr = $30
+!BlockPtr = $40
+!MusicLoopCounter = $42
+!MasterTranspose = $43
+!SPCTimer = $44
+!CurrentChannel2 = $46
+!ARam_47 = $47
+!CurrentChannel = $48
+!ARam_49 = $49
+!MasterTempo = $50
+!TempoSetTimer = $52
+!TempoSetVal = $53
+!ARam_56 = $56
+!MasterVolume = $57
+!VolFadeTimer = $58
+!VolFadeVal = $59
+!ARam_5A = $5A
+!ARam_5C = $5C
+!ARam_60 = $60
+!EchoVolLeft = $61
+!EchoVolRight = $63
+!ARam_65 = $65
+!ARam_67 = $67
+!ARam_69 = $69
+!ARam_6A = $6A
+!VoTimers = $70
+!VoPanFade = $80
+!VoPitchSlide = $90
+!VoVibrato = $A0
+!ARam_B0 = $B0
+!VoInstrument = $C0
+!SPCCONTROL = $00F1
+!DSPDATA = $00F2
+!DSPADDR = $00F3
+!SNESIO0 = $00F4
+!SNESIO1 = $00F5
+!SNESIO2 = $00F6
+!SNESIO3 = $00F7
+!TIMER0 = $00FA
+!COUNTER0 = $00FD
+!NoteLength = $0100
+!ARam_0110 = $0110
+!ARam_0200 = $0200
+!ARam_0210 = $0210
+!ARam_0240 = $0240
+!ARam_0250 = $0250
+!ARam_0260 = $0260
+!ARam_0280 = $0280
+!ARam_0290 = $0290
+!ARam_02A0 = $02A0
+!ARam_02B0 = $02B0
+!ARam_02C0 = $02C0
+!ARam_02D0 = $02D0
+!ARam_02FF = $02FF
+!ARam_0300 = $0300
+!ARam_0320 = $0320
+!ARam_0330 = $0330
+!ARam_0340 = $0340
+!ARam_0350 = $0350
+!ARam_0360 = $0360
+!ARam_0370 = $0370
+!ARam_0380 = $0380
+!ARam_0381 = $0381
+!ARam_0382 = $0382
+!ARam_0383 = $0383
+!ARam_0384 = $0384
+!ARam_0385 = $0385
+!ARam_0386 = $0386
+!ARam_0387 = $0387
+!ARam_0388 = $0388
+!ARam_0389 = $0389
+!ARam_03E0 = $03E0
+!ARam_03F0 = $03F0
+!SPCEngine = $000500
+!MusicData = $1360
+!SoundEffectTable = $005570
+!SamplePtrTable = $8000
+!SampleTable = $8100
+!MusicData = $1360
