@@ -5,6 +5,7 @@
 
 
 lorom
+math pri on
 incsrc "rammap.asm"
 
 ; version to assemble

@@ -141,6 +141,7 @@ incsrc "hardware_registers.asm"
 !BackgroundGFXFile = $7E0105
 !OverworldOverride = $7E0109
 !SaveFile = $7E010A
+; $7E010B - $7E01FF used as stack
 !OAMTileXPos = $7E0200
 !OAMTileYPos = $7E0201
 !OAMTileNo = $7E0202
@@ -872,3 +873,5 @@ incsrc "hardware_registers.asm"
 !SaveDataChecksum = $70008C
 !SaveDataBackup = $7001AD
 ; 70035A - 7007FF unused
+
+

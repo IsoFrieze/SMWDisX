@@ -112,30 +112,30 @@ CODE_0080B3:          PHA                                 ;;80B3|----/----\----;
                       PLP                                 ;;80E6|----/----\----;
                       RTS                                 ;;80E7|----/----\----;
                                                           ;;                   ;
-UploadSPCEngine:      LDA.B #$00                          ;;80E8|----/----\----; \ this address (0E:8000) is the start of the SPC engine 
+UploadSPCEngine:      LDA.B #SPC700Engine                 ;;80E8|----/----\----; \ this address (0E:8000) is the start of the SPC engine 
                       STA.W !_0                           ;;80EA|----/----\----;  | instrument settings/sound effect data 
-                      LDA.B #$80                          ;;80ED|----/----\----;  | AND the code used for all music banks. 
+                      LDA.B #SPC700Engine>>8              ;;80ED|----/----\----;  | AND the code used for all music banks. 
                       STA.W !_1                           ;;80EF|----/----\----;  | 
-                      LDA.B #$0E                          ;;80F2|----/----\----;  | 
+                      LDA.B #SPC700Engine>>16             ;;80F2|----/----\----;  | 
                       STA.W !_2                           ;;80F4|----/----\----; /  
 UploadDataToSPC:      SEI                                 ;;80F7|----/----\----;
                       JSR SPC700UploadLoop                ;;80F8|----/----\----;
                       CLI                                 ;;80FB|----/----\----;
                       RTS                                 ;;80FC|----/----\----;
                                                           ;;                   ;
-UploadSamples:        LDA.B #$00                          ;;80FD|----/----\----; \    Index (8 bit) ; Index (8 bit) 
+UploadSamples:        LDA.B #MusicSamples                 ;;80FD|----/----\----; \    Index (8 bit) ; Index (8 bit) 
                       STA.W !_0                           ;;80FF|----/----\----;  | 
-                      LDA.B #$80                          ;;8102|----/----\----;  |Loads The Address 0F:8000 to 00-02 (SAMPLE DATA + PTRS)
+                      LDA.B #MusicSamples>>8              ;;8102|----/----\----;  |Loads The Address 0F:8000 to 00-02 (SAMPLE DATA + PTRS)
                       STA.W !_1                           ;;8104|----/----\----;  |[SPC Sample Pointers/Data ROM Address, this is] 
-                      LDA.B #$0F                          ;;8107|----/----\----;  | 
+                      LDA.B #MusicSamples>>16             ;;8107|----/----\----;  | 
                       STA.W !_2                           ;;8109|----/----\----; /  
                       BRA StrtSPCMscUpld                  ;;810C|----/----\----;
                                                           ;;                   ;
-UploadMusicBank1:     LDA.B #$B1                          ;;810E|----/----\----; \ 
+UploadMusicBank1:     LDA.B #MusicBank1                   ;;810E|----/----\----; \ 
                       STA.W !_0                           ;;8110|----/----\----;  | 
-                      LDA.B #$98                          ;;8113|----/----\----;  |Loads the Bank 1 music data (Map) to 00-02 
+                      LDA.B #MusicBank1>>8                ;;8113|----/----\----;  |Loads the Bank 1 music data (Map) to 00-02 
                       STA.W !_1                           ;;8115|----/----\----;  | ($0E:98B1) 
-                      LDA.B #$0E                          ;;8118|----/----\----;  | 
+                      LDA.B #MusicBank1>>16               ;;8118|----/----\----;  | 
                       STA.W !_2                           ;;811A|----/----\----; /  
 StrtSPCMscUpld:       LDA.B #$FF                          ;;811D|----/----\----;
                       STA.W !HW_APUIO1                    ;;811F|----/----\----; APU I/O Port
@@ -156,19 +156,19 @@ CODE_008134:          LDA.W !BonusGameActivate            ;;8134|----/----\----;
                       ORA.W !SublevelCount                ;;8140|----/----\----;
                       ORA.W !ShowMarioStart               ;;8143|----/----\----;
                       BNE Return008133                    ;;8146|----/----\----;
-UploadMusicBank2:     LDA.B #$D6                          ;;8148|----/----\----; \ 
+UploadMusicBank2:     LDA.B #MusicBank2                   ;;8148|----/----\----; \ 
                       STA.W !_0                           ;;814A|----/----\----;  |Loads the Bank 2 music address(Levels) 
-                      LDA.B #$AE                          ;;814D|----/----\----;  | (0E:AED6) 
+                      LDA.B #MusicBank2>>8                ;;814D|----/----\----;  | (0E:AED6) 
                       STA.W !_1                           ;;814F|----/----\----;  | 
-                      LDA.B #$0E                          ;;8152|----/----\----;  | 
+                      LDA.B #MusicBank2>>16               ;;8152|----/----\----;  | 
                       STA.W !_2                           ;;8154|----/----\----; / 
                       BRA StrtSPCMscUpld                  ;;8157|----/----\----;
                                                           ;;                   ;
-UploadMusicBank3:     LDA.B #$00                          ;;8159|----/----\----; \ 
+UploadMusicBank3:     LDA.B #MusicBank3                   ;;8159|----/----\----; \ 
                       STA.W !_0                           ;;815B|----/----\----;  |Bank 3 music(Ending) ROM address 
-                      LDA.B #$E4                          ;;815E|----/----\----;  | 
+                      LDA.B #MusicBank3>>8                ;;815E|----/----\----;  | 
                       STA.W !_1                           ;;8160|----/----\----;  | ($03:E400) 
-                      LDA.B #$03                          ;;8163|----/----\----;  | 
+                      LDA.B #MusicBank3>>16               ;;8163|----/----\----;  | 
                       STA.W !_2                           ;;8165|----/----\----; / 
                       BRA StrtSPCMscUpld                  ;;8168|----/----\----;
                                                           ;;                   ;
@@ -1319,24 +1319,27 @@ DATA_008B58:          db $00,$03,$00,$06,$00,$09,$00,$0C  ;;8B58|----/----\----;
                       db $BC,$BC,$3C,$BD,$3C,$BE,$3C,$BF  ;;8C68|----/----\----;
                       db $3C,$C0,$3C,$B7,$BC,$C1,$3C,$B9  ;;8C70|----/----\----;
                       db $3C,$C2,$3C,$C2,$BC,$B7,$3C,$C0  ;;8C78|----/----\----;
-                      db $FC,$3A,$38,$3B,$38,$3B,$38,$3A  ;;8C80|----/----\----;
-                      db $78                              ;;8C88|----/----\----;
+                      db $FC                              ;;8C80|----/----\----;
                                                           ;;                   ;
-DATA_008C89:          db $30,$28,$31,$28,$32,$28,$33,$28  ;;8C89|----/----\----;
+StatusBarRow1:        db $3A,$38,$3B,$38,$3B,$38,$3A,$78  ;;8C81|----/----\----;
+                                                          ;;                   ;
+StatusBarRow2:        db $30,$28,$31,$28,$32,$28,$33,$28  ;;8C89|----/----\----;
                       db $34,$28,$FC,$38,$FC,$3C,$FC,$3C  ;;8C91|----/----\----;
                       db $FC,$3C,$FC,$3C,$FC,$38,$FC,$38  ;;8C99|----/----\----;
                       db $4A,$38,$FC,$38,$FC,$38,$4A,$78  ;;8CA1|----/----\----;
                       db $FC,$38,$3D,$3C,$3E,$3C,$3F,$3C  ;;8CA9|----/----\----;
                       db $FC,$38,$FC,$38,$FC,$38,$2E,$3C  ;;8CB1|----/----\----;
                       db $26,$38,$FC,$38,$FC,$38,$00,$38  ;;8CB9|----/----\----;
-                      db $26,$38,$FC,$38,$00,$38,$FC,$38  ;;8CC1|----/----\----;
+                                                          ;;                   ;
+StatusBarRow3:        db $26,$38,$FC,$38,$00,$38,$FC,$38  ;;8CC1|----/----\----;
                       db $FC,$38,$FC,$38,$64,$28,$26,$38  ;;8CC9|----/----\----;
                       db $FC,$38,$FC,$38,$FC,$38,$4A,$38  ;;8CD1|----/----\----;
                       db $FC,$38,$FC,$38,$4A,$78,$FC,$38  ;;8CD9|----/----\----;
                       db $FE,$3C,$FE,$3C,$00,$3C,$FC,$38  ;;8CE1|----/----\----;
                       db $FC,$38,$FC,$38,$FC,$38,$FC,$38  ;;8CE9|----/----\----;
-                      db $FC,$38,$FC,$38,$00,$38,$3A,$B8  ;;8CF1|----/----\----;
-                      db $3B,$B8,$3B,$B8,$3A,$F8          ;;8CF9|----/----\----;
+                      db $FC,$38,$FC,$38,$00,$38          ;;8CF1|----/----\----;
+                                                          ;;                   ;
+StatusBarRow4:        db $3A,$B8,$3B,$B8,$3B,$B8,$3A,$F8  ;;8CF7|----/----\----;
                                                           ;;                   ;
 GM04DoDMA:            LDA.B #$80                          ;;8CFF|----/----\----; More DMA ; Accum (8 bit) 
                       STA.W !HW_VMAINC                    ;;8D01|----/----\----; Increment when $2119 accessed ; VRAM Address Increment Value
@@ -1392,7 +1395,7 @@ GM04DoDMA:            LDA.B #$80                          ;;8CFF|----/----\----;
                       STA.W !HW_MDMAEN                    ;;8D78|----/----\----; / ; Regular DMA Channel Enable
                       LDX.B #$36                          ;;8D7B|----/----\----; \Copy some data into RAM 
                       LDY.B #$6C                          ;;8D7D|----/----\----;  | 
-                    - LDA.W DATA_008C89,Y                 ;;8D7F|----/----\----;  | 
+                    - LDA.W StatusBarRow2,Y               ;;8D7F|----/----\----;  | 
                       STA.W !StatusBar,X                  ;;8D82|----/----\----;  | 59
                       DEY                                 ;;8D85|----/----\----;  | 
                       DEY                                 ;;8D86|----/----\----;  | 
@@ -1403,13 +1406,21 @@ GM04DoDMA:            LDA.B #$80                          ;;8CFF|----/----\----;
                       RTS                                 ;;8D8F|----/----\----; Return 
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_008D90:          db $01,$18,$81,$8C,$00,$08,$00      ;;8D90|----/----\----;
+DATA_008D90:          db $01,$18                          ;;8D90|----/----\----;
+                      dl StatusBarRow1                    ;;8D92|----/----\----;
+                      dw $0008                            ;;8D95|----/----\----;
                                                           ;;                   ;
-DATA_008D97:          db $01,$18,$89,$8C,$00,$38,$00      ;;8D97|----/----\----;
+DATA_008D97:          db $01,$18                          ;;8D97|----/----\----;
+                      dl StatusBarRow2                    ;;8D99|----/----\----;
+                      dw $0038                            ;;8D9C|----/----\----;
                                                           ;;                   ;
-DATA_008D9E:          db $01,$18,$C1,$8C,$00,$36,$00      ;;8D9E|----/----\----;
+DATA_008D9E:          db $01,$18                          ;;8D9E|----/----\----;
+                      dl StatusBarRow3                    ;;8DA0|----/----\----;
+                      dw $0036                            ;;8DA3|----/----\----;
                                                           ;;                   ;
-DATA_008DA5:          db $01,$18,$F7,$8C,$00,$08,$00      ;;8DA5|----/----\----;
+DATA_008DA5:          db $01,$18                          ;;8DA5|----/----\----;
+                      dl StatusBarRow4                    ;;8DA7|----/----\----;
+                      dw $0008                            ;;8DAA|----/----\----;
                                                           ;;                   ;
 DrawStatusBar:        STZ.W !HW_VMAINC                    ;;8DAC|----/----\----; Set VRAM Address Increment Value to x00 ; VRAM Address Increment Value
                       LDA.B #$42                          ;;8DAF|----/----\----; \  
@@ -1438,9 +1449,13 @@ DrawStatusBar:        STZ.W !HW_VMAINC                    ;;8DAC|----/----\----;
                       RTS                                 ;;8DE6|----/----\----; Return 
                                                           ;;                   ;
                                                           ;;                   ;
-DMAdata_StBr1:        db $00,$18,$F9,$0E,$00,$1C,$00      ;;8DE7|----/----\----;
+DMAdata_StBr1:        db $00,$18                          ;;8DE7|----/----\----;
+                      dl !StatusBar&$FFFF                 ;;8DE9|----/----\----;
+                      dw $001C                            ;;8DEC|----/----\----;
                                                           ;;                   ;
-DMAdata_StBr2:        db $00,$18,$15,$0F,$00,$1B,$00      ;;8DEE|----/----\----;
+DMAdata_StBr2:        db $00,$18                          ;;8DEE|----/----\----;
+                      dl !StatusBar+$1C&$FFFF             ;;8DF0|----/----\----;
+                      dw $001B                            ;;8DF3|----/----\----;
                                                           ;;                   ;
 DATA_008DF5:          db $40,$41,$42,$43                  ;;8DF5|----/----\----;
                                                           ;;                   ;
@@ -5642,7 +5657,6 @@ ReadByte:             LDA.B [!GraphicsCompPtr]            ;;B983|----/----\----;
                       INC.B !GraphicsCompPtr+2            ;;B98D|----/----\----;  |   /  
                     + STX.B !GraphicsCompPtr              ;;B98F|----/----\----; /  
                       RTS                                 ;;B991|----/----\----; Return 
-                                                          ;;                   ;
                                                           ;;                   ;
 GFXFilesLow:          db GFX00                            ;;B992|----/----\----;
                       db GFX01                            ;;B993|----/----\----;
