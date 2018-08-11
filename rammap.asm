@@ -972,7 +972,7 @@ incsrc "hardware_registers.asm"
 !ARam_03E0 = $03E0
 !ARam_03F0 = $03F0
 !SPCEngine = $000500
-!MusicData = $1360
+!MusicData = $001360
 !SoundEffectTable = $005570
 !SamplePtrTable = $8000
 !SampleTable = $8100
