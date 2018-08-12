@@ -9623,7 +9623,7 @@ CODE_03E01B:          DEC.W !LightningTimer               ;;E01B|----/----\----;
                       ASL A                               ;;E029|----/----\----;
                       TAX                                 ;;E02A|----/----\----;
                       REP #$20                            ;;E02B|----/----\----; Accum (16 bit) 
-                      LDA.L DATA_00B5DE,X                 ;;E02D|----/----\----;
+                      LDA.L OverworldLightning,X          ;;E02D|----/----\----;
 CODE_03E031:          STA.W !DynPaletteTable+2,Y          ;;E031|----/----\----;
                       SEP #$20                            ;;E034|----/----\----; Accum (8 bit) 
 CODE_03E036:          LDX.W !BowserPalette                ;;E036|----/----\----;
@@ -9631,7 +9631,7 @@ CODE_03E036:          LDX.W !BowserPalette                ;;E036|----/----\----;
                       TAX                                 ;;E03D|----/----\----;
                       LDA.B #$0E                          ;;E03E|----/----\----;
                       STA.B !_0                           ;;E040|----/----\----;
-                    - LDA.L DATA_00B69E,X                 ;;E042|----/----\----;
+                    - LDA.L BowserColors,X                ;;E042|----/----\----;
                       STA.W !DynPaletteTable+4,Y          ;;E046|----/----\----;
                       INX                                 ;;E049|----/----\----;
                       INY                                 ;;E04A|----/----\----;

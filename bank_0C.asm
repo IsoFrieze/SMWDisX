@@ -2702,9 +2702,9 @@ CODE_0CABB2:          SEP #$30                            ;;ABB2|----/----\----;
                       AND.W #$000F                        ;;ABD2|----/----\----;
                       ASL A                               ;;ABD5|----/----\----;
                       TAX                                 ;;ABD6|----/----\----;
-                      LDA.L Palettes_,X                   ;;ABD7|----/----\----;
+                      LDA.L BackAreaColors,X              ;;ABD7|----/----\----;
                       STA.W !BackgroundColor              ;;ABDB|----/----\----;
-                      LDA.W #$B0B0                        ;;ABDE|----/----\----;
+                      LDA.W #BackgroundPalettes           ;;ABDE|----/----\----;
                       STA.B !_0                           ;;ABE1|----/----\----;
                       LDA.W DATA_0CABAB,Y                 ;;ABE3|----/----\----;
                       AND.W #$000F                        ;;ABE6|----/----\----;
@@ -4353,7 +4353,7 @@ CODE_0CCC51:          LDA.B !TrueFrame                    ;;CC51|----/----\----;
                       ASL A                               ;;CC6F|----/----\----;
                       TAX                                 ;;CC70|----/----\----;
                       REP #$20                            ;;CC71|----/----\----; Accum (16 bit) 
-                      LDA.L Palettes_,X                   ;;CC73|----/----\----;
+                      LDA.L BackAreaColors,X              ;;CC73|----/----\----;
                       STA.W !BackgroundColor              ;;CC77|----/----\----;
                       SEP #$20                            ;;CC7A|----/----\----; Accum (8 bit) 
                       INC.W !Layer1ScrollType             ;;CC7C|----/----\----;
