@@ -875,6 +875,8 @@ incsrc "hardware_registers.asm"
 
 !SaveData = $700000
 !SaveDataChecksum = $70008C
+!SaveDataFile2 = $70008F
+!SaveDataFile3 = $70011E
 !SaveDataBackup = $7001AD
 ; 70035A - 7007FF unused
 

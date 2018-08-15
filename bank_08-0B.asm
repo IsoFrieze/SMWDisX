@@ -2,110 +2,217 @@
                                                           ;;                   ;
                       ORG $088000                         ;;                   ;
                                                           ;;                   ;
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
 GFX32:                                                    ;;                   ; (due to asar bug, labels must be on separate lines here...)
-                      incbin "gfx/GFX32_compressed.bin"   ;;8000|----/----\----; Mario Graphics
+                      incbin "gfx/j/GFX32_comp.bin"       ;;8000|----/----\----; Mario Graphics
 GFX33:                                                    ;;                   ;
-                      incbin "gfx/GFX33_compressed.bin"   ;;BFC0|----/----\----; Animated Tile Graphics
+                      incbin "gfx/j/GFX33_comp.bin"       ;;BFC0|----/----\----; Animated Tile Graphics
 GFX00:                                                    ;;                   ;
-                      incbin "gfx/GFX00_compressed.bin"   ;;D9F9|----/----\----; Nintendo Presents, Powerups
+                      incbin "gfx/j/GFX00_comp.bin"       ;;D9F9|----/----\----; Nintendo Presents, Powerups
 GFX01:                                                    ;;                   ;
-                      incbin "gfx/GFX01_compressed.bin"   ;;E231|----/----\----; Koopa, Goomba
+                      incbin "gfx/j/GFX01_comp.bin"       ;;E231|----/----\----; Koopa, Goomba
 GFX02:                                                    ;;                   ;
-                      incbin "gfx/GFX02_compressed.bin"   ;;ECBB|----/----\----; Spiny, Lakitu
+                      incbin "gfx/j/GFX02_comp.bin"       ;;ECBB|----/----\----; Spiny, Lakitu
 GFX03:                                                    ;;                   ;
-                      incbin "gfx/GFX03_compressed.bin"   ;;F552|----/----\----; Thwomp, Magikoopa
+                      incbin "gfx/j/GFX03_comp.bin"       ;;F552|----/----\----; Thwomp, Magikoopa
 GFX04:                                                    ;;                   ;
-                      incbin "gfx/GFX04_compressed.bin"   ;;FF7D|----/----\----; Buzzy Beetle, Blargg
+                      incbin "gfx/j/GFX04_comp.bin"       ;;FF7D|----/----\----; Buzzy Beetle, Blargg
 GFX05:                                                    ;;                   ;
-                      incbin "gfx/GFX05_compressed.bin"   ;;8963|----/----\----; Chainsaw, Diggin Chuck
+                      incbin "gfx/j/GFX05_comp.bin"       ;;8963|----/----\----; Chainsaw, Diggin Chuck
 GFX06:                                                    ;;                   ;
-                      incbin "gfx/GFX06_compressed.bin"   ;;936C|----/----\----; Urchin, Dolphin
+                      incbin "gfx/j/GFX06_comp.bin"       ;;936C|----/----\----; Urchin, Dolphin
 GFX07:                                                    ;;                   ;
-                      incbin "gfx/GFX07_compressed.bin"   ;;9D10|----/----\----; Ghost House Tiles
+                      incbin "gfx/j/GFX07_comp.bin"       ;;9D10|----/----\----; Ghost House Tiles
 GFX08:                                                    ;;                   ;
-                      incbin "gfx/GFX08_compressed.bin"   ;;A657|----/----\----; Yoshi's House Tiles
+                      incbin "gfx/j/GFX08_comp.bin"       ;;A657|----/----\----; Yoshi's House Tiles
 GFX09:                                                    ;;                   ;
-                      incbin "gfx/GFX09_compressed.bin"   ;;AFA1|----/----\----; Sumo Bro, Pokey
+                      incbin "gfx/j/GFX09_comp.bin"       ;;AFA1|----/----\----; Sumo Bro, Pokey
 GFX0A:                                                    ;;                   ;
-                      incbin "gfx/GFX0A_compressed.bin"   ;;BA15|----/----\----; Wendy, Lemmy
+                      incbin "gfx/j/GFX0A_comp.bin"       ;;BA15|----/----\----; Wendy, Lemmy
 GFX0B:                                                    ;;                   ;
-                      incbin "gfx/GFX0B_compressed.bin"   ;;C39C|----/----\----; Roy, Morton, Ludwig
+                      incbin "gfx/j/GFX0B_comp.bin"       ;;C39C|----/----\----; Roy, Morton, Ludwig
 GFX0C:                                                    ;;                   ;
-                      incbin "gfx/GFX0C_compressed.bin"   ;;CD63|----/----\----; Cave, Ghost House Background
+                      incbin "gfx/j/GFX0C_comp.bin"       ;;CD63|----/----\----; Cave, Ghost House Background
 GFX0D:                                                    ;;                   ;
-                      incbin "gfx/GFX0D_compressed.bin"   ;;D5D2|----/----\----; Peach, Water Background
+                      incbin "gfx/j/GFX0D_comp.bin"       ;;D5D2|----/----\----; Peach, Water Background
 GFX0E:                                                    ;;                   ;
-                      incbin "gfx/GFX0E_compressed.bin"   ;;DDCB|----/----\----; Ninji, Disco Ball
+                      incbin "gfx/j/GFX0E_comp.bin"       ;;DDCB|----/----\----; Ninji, Disco Ball
 GFX0F:                                                    ;;                   ;
-                      incbin "gfx/GFX0F_compressed.bin"   ;;E6E5|----/----\----; Mario Start, Credits
+                      incbin "gfx/j/GFX0F_comp.bin"       ;;E6E5|----/----\----; Mario Start, Credits
 GFX10:                                                    ;;                   ;
-                      incbin "gfx/GFX10_compressed.bin"   ;;EF1E|----/----\----; Overworld Mario
+                      incbin "gfx/j/GFX10_comp.bin"       ;;EF1E|----/----\----; Overworld Mario
 GFX11:                                                    ;;                   ;
-                      incbin "gfx/GFX11_compressed.bin"   ;;F7AF|----/----\----; Big Boo, Eerie
+                      incbin "gfx/j/GFX11_comp.bin"       ;;F7AF|----/----\----; Big Boo, Eerie
 GFX12:                                                    ;;                   ;
-                      incbin "gfx/GFX12_compressed.bin"   ;;FFBD|----/----\----; Dry Bones, Grinder
+                      incbin "gfx/j/GFX12_comp.bin"       ;;FFBD|----/----\----; Dry Bones, Grinder
 GFX13:                                                    ;;                   ;
-                      incbin "gfx/GFX13_compressed.bin"   ;;8910|----/----\----; Hammer Bro, Chargin Chuck
+                      incbin "gfx/j/GFX13_comp.bin"       ;;8910|----/----\----; Hammer Bro, Chargin Chuck
 GFX14:                                                    ;;                   ;
-                      incbin "gfx/GFX14_compressed.bin"   ;;9348|----/----\----; Pipe Tiles, Overworld Animation
+                      incbin "gfx/j/GFX14_comp.bin"       ;;9348|----/----\----; Pipe Tiles, Overworld Animation
 GFX15:                                                    ;;                   ;
-                      incbin "gfx/GFX15_compressed.bin"   ;;9AE8|----/----\----; Grassy Tiles
+                      incbin "gfx/j/GFX15_comp.bin"       ;;9AE8|----/----\----; Grassy Tiles
 GFX16:                                                    ;;                   ;
-                      incbin "gfx/GFX16_compressed.bin"   ;;A374|----/----\----; Rope Tiles
+                      incbin "gfx/j/GFX16_comp.bin"       ;;A374|----/----\----; Rope Tiles
 GFX17:                                                    ;;                   ;
-                      incbin "gfx/GFX17_compressed.bin"   ;;A9B4|----/----\----; Bush, Diagonal Pipe Tiles
+                      incbin "gfx/j/GFX17_comp.bin"       ;;A9B4|----/----\----; Bush, Diagonal Pipe Tiles
 GFX18:                                                    ;;                   ;
-                      incbin "gfx/GFX18_compressed.bin"   ;;B2AD|----/----\----; Castle Tiles
+                      incbin "gfx/j/GFX18_comp.bin"       ;;B2AD|----/----\----; Castle Tiles
 GFX19:                                                    ;;                   ;
-                      incbin "gfx/GFX19_compressed.bin"   ;;BBE4|----/----\----; Forest, Hills Background
+                      incbin "gfx/j/GFX19_comp.bin"       ;;BBE4|----/----\----; Forest, Hills Background
 GFX1A:                                                    ;;                   ;
-                      incbin "gfx/GFX1A_compressed.bin"   ;;C380|----/----\----; Cave Tiles
+                      incbin "gfx/j/GFX1A_comp.bin"       ;;C380|----/----\----; Cave Tiles
 GFX1B:                                                    ;;                   ;
-                      incbin "gfx/GFX1B_compressed.bin"   ;;CC66|----/----\----; Blue Pillars, Castle Background
+                      incbin "gfx/j/GFX1B_comp.bin"       ;;CC66|----/----\----; Blue Pillars, Castle Background
 GFX1C:                                                    ;;                   ;
-                      incbin "gfx/GFX1C_compressed.bin"   ;;D47E|----/----\----; Overworld Tiles
+                      incbin "gfx/j/GFX1C_comp.bin"       ;;D47E|----/----\----; Overworld Tiles
 GFX1D:                                                    ;;                   ;
-                      incbin "gfx/GFX1D_compressed.bin"   ;;DC88|----/----\----; Overworld Tiles
+                      incbin "gfx/j/GFX1D_comp.bin"       ;;DC88|----/----\----; Overworld Tiles
 GFX1E:                                                    ;;                   ;
-                      incbin "gfx/GFX1E_compressed.bin"   ;;E67F|----/----\----; Overworld Level Icons
+                      incbin "gfx/j/GFX1E_comp.bin"       ;;E67F|----/----\----; Overworld Level Icons
 GFX1F:                                                    ;;                   ;
-                      incbin "gfx/GFX1F_compressed.bin"   ;;EE43|----/----\----; Cloud, Forest Tiles
+                      incbin "gfx/j/GFX1F_comp.bin"       ;;EE43|----/----\----; Cloud, Forest Tiles
 GFX20:                                                    ;;                   ;
-                      incbin "gfx/GFX20_compressed.bin"   ;;F6A1|----/----\----; Rex, Mega Mole
+                      incbin "gfx/j/GFX20_comp.bin"       ;;F6A1|----/----\----; Rex, Mega Mole
 GFX21:                                                    ;;                   ;
-                      incbin "gfx/GFX21_compressed.bin"   ;;FF65|----/----\----; Bowser
+                      incbin "gfx/j/GFX21_comp.bin"       ;;FF65|----/----\----; Bowser
 GFX22:                                                    ;;                   ;
-                      incbin "gfx/GFX22_compressed.bin"   ;;88CD|----/----\----; Peach, Ludwig Background
+                      incbin "gfx/j/GFX22_comp.bin"       ;;88CD|----/----\----; Peach, Ludwig Background
 GFX23:                                                    ;;                   ;
-                      incbin "gfx/GFX23_compressed.bin"   ;;91CA|----/----\----; Dino Torch, Dino Rhino
+                      incbin "gfx/j/GFX23_comp.bin"       ;;91CA|----/----\----; Dino Torch, Dino Rhino
 GFX24:                                                    ;;                   ;
-                      incbin "gfx/GFX24_compressed.bin"   ;;9AE5|----/----\----; Mechakoopa, Bowser Fire
+                      incbin "gfx/j/GFX24_comp.bin"       ;;9AE5|----/----\----; Mechakoopa, Bowser Fire
 GFX25:                                                    ;;                   ;
-                      incbin "gfx/GFX25_compressed.bin"   ;;A3B5|----/----\----; Iggy, Larry, Reznor
+                      incbin "gfx/j/GFX25_comp.bin"       ;;A3B5|----/----\----; Iggy, Larry, Reznor
 GFX26:                                                    ;;                   ;
-                      incbin "gfx/GFX26_compressed.bin"   ;;AE21|----/----\----; Credits Yoshi
+                      incbin "gfx/j/GFX26_comp.bin"       ;;AE21|----/----\----; Credits Yoshi
 GFX27:                                                    ;;                   ;
-                      incbin "gfx/GFX27_compressed.bin"   ;;B744|----/----\----; Iggy Platform, Reznor Background
+                      incbin "gfx/j/GFX27_comp.bin"       ;;B744|----/----\----; Iggy Platform, Reznor Background
 GFX28:                                                    ;;                   ;
-                      incbin "gfx/GFX28_compressed.bin"   ;;C06C|----/----\----; HUD Letters
+                      incbin "gfx/j/GFX28_comp.bin"       ;;C06C|----/----\----; HUD Letters
 GFX29:                                                    ;;                   ;
-                      incbin "gfx/GFX29_compressed.bin"   ;;C6A3|----/----\----; Title Screen
+                      incbin "gfx/j/GFX29_comp.bin"       ;;C6A3|----/----\----; Title Screen
 GFX2A:                                                    ;;                   ;
-                      incbin "gfx/GFX2A_compressed.bin"   ;;CB7B|----/----\----; Message Box Letters
+                      incbin "gfx/j/GFX2A_comp.bin"       ;;CB7B|----/----\----; Message Box Letters
 GFX2B:                                                    ;;                   ;
-                      incbin "gfx/GFX2B_compressed.bin"   ;;D0F0|----/----\----; Castle Crusher
+                      incbin "gfx/j/GFX2B_comp.bin"       ;;D0F0|----/----\----; Castle Crusher
 GFX2C:                                                    ;;                   ;
-                      incbin "gfx/GFX2C_compressed.bin"   ;;D7B9|----/----\----; Castle Cutscene Tiles
+                      incbin "gfx/j/GFX2C_comp.bin"       ;;D7B9|----/----\----; Castle Cutscene Tiles
 GFX2D:                                                    ;;                   ;
-                      incbin "gfx/GFX2D_compressed.bin"   ;;E006|----/----\----; Castle Cutscene Objects
+                      incbin "gfx/j/GFX2D_comp.bin"       ;;E006|----/----\----; Castle Cutscene Objects
 GFX2E:                                                    ;;                   ;
-                      incbin "gfx/GFX2E_compressed.bin"   ;;E936|----/----\----; Credits Thank You
+                      incbin "gfx/j/GFX2E_comp.bin"       ;;E936|----/----\----; Credits Thank You
 GFX2F:                                                    ;;                   ;
-                      incbin "gfx/GFX2F_compressed.bin"   ;;F185|----/----\----; Credits Letters
+                      incbin "gfx/j/GFX2F_comp.bin"       ;;F185|----/----\----; Credits Letters
 GFX30:                                                    ;;                   ;
-                      incbin "gfx/GFX30_compressed.bin"   ;;F3BB|----/----\----; Mario & Luigi The End
+                      incbin "gfx/j/GFX30_comp.bin"       ;;F3BB|----/----\----; Mario & Luigi The End
 GFX31:                                                    ;;                   ;
-                      incbin "gfx/GFX31_compressed.bin"   ;;F800|----/----\----; Special Beaten Enemies
+                      incbin "gfx/j/GFX31_comp.bin"       ;;F800|----/----\----; Special Beaten Enemies
+                   else                         ;<  ELSE  ;;-------------------; U, E0, & E1
+GFX32:                                                    ;;                   ; (due to asar bug, labels must be on separate lines here...)
+                      incbin "gfx/u/GFX32_comp.bin"       ;;8000     /----\----; Mario Graphics
+GFX33:                                                    ;;                   ;
+                      incbin "gfx/u/GFX33_comp.bin"       ;;BFC0     /----\----; Animated Tile Graphics
+GFX00:                                                    ;;                   ;
+                      incbin "gfx/u/GFX00_comp.bin"       ;;D9F9     /----\----; Nintendo Presents, Powerups
+GFX01:                                                    ;;                   ;
+                      incbin "gfx/u/GFX01_comp.bin"       ;;E231     /----\----; Koopa, Goomba
+GFX02:                                                    ;;                   ;
+                      incbin "gfx/u/GFX02_comp.bin"       ;;ECBB     /----\----; Spiny, Lakitu
+GFX03:                                                    ;;                   ;
+                      incbin "gfx/u/GFX03_comp.bin"       ;;F552     /----\----; Thwomp, Magikoopa
+GFX04:                                                    ;;                   ;
+                      incbin "gfx/u/GFX04_comp.bin"       ;;FF7D     /----\----; Buzzy Beetle, Blargg
+GFX05:                                                    ;;                   ;
+                      incbin "gfx/u/GFX05_comp.bin"       ;;8963     /----\----; Chainsaw, Diggin Chuck
+GFX06:                                                    ;;                   ;
+                      incbin "gfx/u/GFX06_comp.bin"       ;;936C     /----\----; Urchin, Dolphin
+GFX07:                                                    ;;                   ;
+                      incbin "gfx/u/GFX07_comp.bin"       ;;9D10     /----\----; Ghost House Tiles
+GFX08:                                                    ;;                   ;
+                      incbin "gfx/u/GFX08_comp.bin"       ;;A657     /----\----; Yoshi's House Tiles
+GFX09:                                                    ;;                   ;
+                      incbin "gfx/u/GFX09_comp.bin"       ;;AFA1     /----\----; Sumo Bro, Pokey
+GFX0A:                                                    ;;                   ;
+                      incbin "gfx/u/GFX0A_comp.bin"       ;;BA15     /----\----; Wendy, Lemmy
+GFX0B:                                                    ;;                   ;
+                      incbin "gfx/u/GFX0B_comp.bin"       ;;C39C     /----\----; Roy, Morton, Ludwig
+GFX0C:                                                    ;;                   ;
+                      incbin "gfx/u/GFX0C_comp.bin"       ;;CD63     /----\----; Cave, Ghost House Background
+GFX0D:                                                    ;;                   ;
+                      incbin "gfx/u/GFX0D_comp.bin"       ;;D5D2     /----\----; Peach, Water Background
+GFX0E:                                                    ;;                   ;
+                      incbin "gfx/u/GFX0E_comp.bin"       ;;DDCB     /----\----; Ninji, Disco Ball
+GFX0F:                                                    ;;                   ;
+                      incbin "gfx/u/GFX0F_comp.bin"       ;;E6E5     /----\----; Mario Start, Credits
+GFX10:                                                    ;;                   ;
+                      incbin "gfx/u/GFX10_comp.bin"       ;;EF1E     /----\----; Overworld Mario
+GFX11:                                                    ;;                   ;
+                      incbin "gfx/u/GFX11_comp.bin"       ;;F7AF     /----\----; Big Boo, Eerie
+GFX12:                                                    ;;                   ;
+                      incbin "gfx/u/GFX12_comp.bin"       ;;FFBD     /----\----; Dry Bones, Grinder
+GFX13:                                                    ;;                   ;
+                      incbin "gfx/u/GFX13_comp.bin"       ;;8910     /----\----; Hammer Bro, Chargin Chuck
+GFX14:                                                    ;;                   ;
+                      incbin "gfx/u/GFX14_comp.bin"       ;;9348     /----\----; Pipe Tiles, Overworld Animation
+GFX15:                                                    ;;                   ;
+                      incbin "gfx/u/GFX15_comp.bin"       ;;9AE8     /----\----; Grassy Tiles
+GFX16:                                                    ;;                   ;
+                      incbin "gfx/u/GFX16_comp.bin"       ;;A374     /----\----; Rope Tiles
+GFX17:                                                    ;;                   ;
+                      incbin "gfx/u/GFX17_comp.bin"       ;;A9B4     /----\----; Bush, Diagonal Pipe Tiles
+GFX18:                                                    ;;                   ;
+                      incbin "gfx/u/GFX18_comp.bin"       ;;B2AD     /----\----; Castle Tiles
+GFX19:                                                    ;;                   ;
+                      incbin "gfx/u/GFX19_comp.bin"       ;;BBE4     /----\----; Forest, Hills Background
+GFX1A:                                                    ;;                   ;
+                      incbin "gfx/u/GFX1A_comp.bin"       ;;C380     /----\----; Cave Tiles
+GFX1B:                                                    ;;                   ;
+                      incbin "gfx/u/GFX1B_comp.bin"       ;;CC66     /----\----; Blue Pillars, Castle Background
+GFX1C:                                                    ;;                   ;
+                      incbin "gfx/u/GFX1C_comp.bin"       ;;D47E     /----\----; Overworld Tiles
+GFX1D:                                                    ;;                   ;
+                      incbin "gfx/u/GFX1D_comp.bin"       ;;DC88     /----\----; Overworld Tiles
+GFX1E:                                                    ;;                   ;
+                      incbin "gfx/u/GFX1E_comp.bin"       ;;E67F     /----\----; Overworld Level Icons
+GFX1F:                                                    ;;                   ;
+                      incbin "gfx/u/GFX1F_comp.bin"       ;;EE43     /----\----; Cloud, Forest Tiles
+GFX20:                                                    ;;                   ;
+                      incbin "gfx/u/GFX20_comp.bin"       ;;F6A1     /----\----; Rex, Mega Mole
+GFX21:                                                    ;;                   ;
+                      incbin "gfx/u/GFX21_comp.bin"       ;;FF65     /----\----; Bowser
+GFX22:                                                    ;;                   ;
+                      incbin "gfx/u/GFX22_comp.bin"       ;;88CD     /----\----; Peach, Ludwig Background
+GFX23:                                                    ;;                   ;
+                      incbin "gfx/u/GFX23_comp.bin"       ;;91CA     /----\----; Dino Torch, Dino Rhino
+GFX24:                                                    ;;                   ;
+                      incbin "gfx/u/GFX24_comp.bin"       ;;9AE5     /----\----; Mechakoopa, Bowser Fire
+GFX25:                                                    ;;                   ;
+                      incbin "gfx/u/GFX25_comp.bin"       ;;A3B5     /----\----; Iggy, Larry, Reznor
+GFX26:                                                    ;;                   ;
+                      incbin "gfx/u/GFX26_comp.bin"       ;;AE21     /----\----; Credits Yoshi
+GFX27:                                                    ;;                   ;
+                      incbin "gfx/u/GFX27_comp.bin"       ;;B744     /----\----; Iggy Platform, Reznor Background
+GFX28:                                                    ;;                   ;
+                      incbin "gfx/u/GFX28_comp.bin"       ;;C06C     /----\----; HUD Letters
+GFX29:                                                    ;;                   ;
+                      incbin "gfx/u/GFX29_comp.bin"       ;;C6A3     /----\----; Title Screen
+GFX2A:                                                    ;;                   ;
+                      incbin "gfx/u/GFX2A_comp.bin"       ;;CB7B     /----\----; Message Box Letters
+GFX2B:                                                    ;;                   ;
+                      incbin "gfx/u/GFX2B_comp.bin"       ;;D0F0     /----\----; Castle Crusher
+GFX2C:                                                    ;;                   ;
+                      incbin "gfx/u/GFX2C_comp.bin"       ;;D7B9     /----\----; Castle Cutscene Tiles
+GFX2D:                                                    ;;                   ;
+                      incbin "gfx/u/GFX2D_comp.bin"       ;;E006     /----\----; Castle Cutscene Objects
+GFX2E:                                                    ;;                   ;
+                      incbin "gfx/u/GFX2E_comp.bin"       ;;E936     /----\----; Credits Thank You
+GFX2F:                                                    ;;                   ;
+                      incbin "gfx/u/GFX2F_comp.bin"       ;;F185     /----\----; Credits Letters
+GFX30:                                                    ;;                   ;
+                      incbin "gfx/u/GFX30_comp.bin"       ;;F3BB     /----\----; Mario & Luigi The End
+GFX31:                                                    ;;                   ;
+                      incbin "gfx/u/GFX31_comp.bin"       ;;F800     /----\----; Special Beaten Enemies
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                                                           ;;                   ;
                       padbyte $FF : pad $8C8000           ;;FD0D|----/----\----; asar bug thinks its FastROM when bankcross check is disabled
                                                           ;;                   ;

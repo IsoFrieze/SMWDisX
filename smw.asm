@@ -3,6 +3,45 @@
 ; by Dotsarecool
 ;========================
 
+macro BorW(cmd, addr)
+    if !_VER == 0
+        <cmd>.B <addr>
+    else
+        <cmd>.W <addr>
+    endif
+endmacro
+
+macro WorB(cmd, addr)
+    if !_VER == 0
+        <cmd>.W <addr>
+    else
+        <cmd>.B <addr>
+    endif
+endmacro
+
+macro WorL_X(cmd, addr)
+    if !_VER == 0
+        <cmd>.W <addr>,X
+    else
+        <cmd>.L <addr>,X
+    endif
+endmacro
+
+macro LorW_X(cmd, addr)
+    if !_VER == 0
+        <cmd>.L <addr>,X
+    else
+        <cmd>.W <addr>,X
+    endif
+endmacro
+
+macro LorW(cmd, addr)
+    if !_VER == 0
+        <cmd>.L <addr>
+    else
+        <cmd>.W <addr>
+    endif
+endmacro
 
 lorom
 math pri on
@@ -13,7 +52,7 @@ incsrc "rammap.asm"
 ; 1 = North American
 ; 2 = PAL 1.0
 ; 3 = PAL 1.1
-!_VER = 1
+!_VER = 0
                                                           ;                   ;
                       incsrc "bank_00.asm"                ;                   ;
                       incsrc "bank_01.asm"                ;                   ;
@@ -55,23 +94,40 @@ MaskROMVersion:       db $01                              ;              \FFDB; 
                                                           ;                   ;
 Checksum:             dw $0000,$FFFF                      ;FFDC|FFDC/FFDC\FFDC; asar does this on its own
                                                           ;                   ;
-                   if !_VER <= 1                ;\   IF   ;+++++++++++++++++++; J & U
-NativeVectors:        dw $FFFF                            ;FFE0|FFE0          ;
-                      dw $FFFF                            ;FFE2|FFE2          ;
-                      dw I_EMPTY                          ;FFE4|FFE4          ;
-                      dw $FFFF                            ;FFE6|FFE6          ;
-                      dw I_EMPTY                          ;FFE8|FFE8          ;
-                      dw I_NMI                            ;FFEA|FFEA          ;
-                      dw I_RESET                          ;FFEC|FFEC          ;
-                      dw I_IRQ                            ;FFEE|FFEE          ;
-EmulationVectors:     dw $FFFF                            ;FFF0|FFF0          ;
-                      dw $FFFF                            ;FFF2|FFF2          ;
-                      dw I_EMPTY                          ;FFF4|FFF4          ;
-                      dw I_EMPTY                          ;FFF6|FFF6          ;
-                      dw I_EMPTY                          ;FFF8|FFF8          ;
-                      dw I_EMPTY                          ;FFFA|FFFA          ;
-                      dw I_RESET                          ;FFFC|FFFC          ;
-                      dw I_EMPTY                          ;FFFE|FFFE          ;
+                   if !_VER == 0                ;\   IF   ;+++++++++++++++++++; J
+NativeVectors:        dw $FFFF                            ;    |FFE0          ;
+                      dw $FFFF                            ;    |FFE2          ;
+                      dw I_EMPTY                          ;    |FFE4          ;
+                      dw $50B2                            ;    |FFE6          ;
+                      dw I_EMPTY                          ;    |FFE8          ;
+                      dw I_NMI                            ;    |FFEA          ;
+                      dw I_RESET                          ;    |FFEC          ;
+                      dw I_IRQ                            ;    |FFEE          ;
+EmulationVectors:     dw $FFFF                            ;    |FFF0          ;
+                      dw $FFFF                            ;    |FFF2          ;
+                      dw I_EMPTY                          ;    |FFF4          ;
+                      dw I_EMPTY                          ;    |FFF6          ;
+                      dw I_EMPTY                          ;    |FFF8          ;
+                      dw I_EMPTY                          ;    |FFFA          ;
+                      dw I_RESET                          ;    |FFFC          ;
+                      dw I_EMPTY                          ;    |FFFE          ;
+                   elseif !_VER == 1            ;< ELSEIF ;-------------------; U
+NativeVectors:        dw $FFFF                            ;FFE0               ;
+                      dw $FFFF                            ;FFE2               ;
+                      dw I_EMPTY                          ;FFE4               ;
+                      dw $FFFF                            ;FFE6               ;
+                      dw I_EMPTY                          ;FFE8               ;
+                      dw I_NMI                            ;FFEA               ;
+                      dw I_RESET                          ;FFEC               ;
+                      dw I_IRQ                            ;FFEE               ;
+EmulationVectors:     dw $FFFF                            ;FFF0               ;
+                      dw $FFFF                            ;FFF2               ;
+                      dw I_EMPTY                          ;FFF4               ;
+                      dw I_EMPTY                          ;FFF6               ;
+                      dw I_EMPTY                          ;FFF8               ;
+                      dw I_EMPTY                          ;FFFA               ;
+                      dw I_RESET                          ;FFFC               ;
+                      dw I_EMPTY                          ;FFFE               ;
                    elseif !_VER == 2            ;< ELSEIF ;-------------------; E0
 NativeVectors:        dw $0000                            ;         /FFE0     ;
                       dw $0001                            ;         /FFE2     ;

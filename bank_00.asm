@@ -1,142 +1,142 @@
                       ORG $008000                         ;;                   ;
                                                           ;;                   ;
-I_RESET:              SEI                                 ;;8000|----/----\----; Disable interrupts 
-                      STZ.W !HW_NMITIMEN                  ;;8001|----/----\----; Clear NMI and V/H Count, disable joypad ; NMI, V/H Count, and Joypad Enable
-                      STZ.W !HW_HDMAEN                    ;;8004|----/----\----; Disable HDMA ; H-DMA Channel Enable
-                      STZ.W !HW_MDMAEN                    ;;8007|----/----\----; Disable DMA ; Regular DMA Channel Enable
-                      STZ.W !HW_APUIO0                    ;;800A|----/----\----; \ ; APU I/O Port
-                      STZ.W !HW_APUIO1                    ;;800D|----/----\----;  |Clear APU I/O ports 1-4 ; APU I/O Port
-                      STZ.W !HW_APUIO2                    ;;8010|----/----\----;  | ; APU I/O Port
-                      STZ.W !HW_APUIO3                    ;;8013|----/----\----; / ; APU I/O Port
-                      LDA.B #$80                          ;;8016|----/----\----; \ Turn off screen 
-                      STA.W !HW_INIDISP                   ;;8018|----/----\----; / ; Screen Display Register
-                      CLC                                 ;;801B|----/----\----; \ Turn off emulation mode 
-                      XCE                                 ;;801C|----/----\----; /  
-                      REP #$38                            ;;801D|----/----\----; 16 bit A,X,Y, Decimal mode off ; Index (16 bit) Accum (16 bit) 
-                      LDA.W #$0000                        ;;801F|----/----\----; \ Set direct page 
-                      TCD                                 ;;8022|----/----\----; /  
-                      LDA.W #$01FF                        ;;8023|----/----\----; \ Set stack location 
-                      TCS                                 ;;8026|----/----\----; /  
-                      LDA.W #$F0A9                        ;;8027|----/----\----; \  
-                      STA.L !OAMResetRoutine              ;;802A|----/----\----;  | 
-                      LDX.W #$017D                        ;;802E|----/----\----;  | 
-                      LDY.W #$03FD                        ;;8031|----/----\----;  | 
-                    - LDA.W #$008D                        ;;8034|----/----\----;  | 
-                      STA.L !OAMResetRoutine+2,X          ;;8037|----/----\----;  | 
-                      TYA                                 ;;803B|----/----\----;  | 
-                      STA.L !OAMResetRoutine+3,X          ;;803C|----/----\----;  |Create routine in RAM 
-                      SEC                                 ;;8040|----/----\----;  | 
-                      SBC.W #$0004                        ;;8041|----/----\----;  | 
-                      TAY                                 ;;8044|----/----\----;  | 
-                      DEX                                 ;;8045|----/----\----;  | 
-                      DEX                                 ;;8046|----/----\----;  | 
-                      DEX                                 ;;8047|----/----\----;  | 
-                      BPL -                               ;;8048|----/----\----;  | 
-                      SEP #$30                            ;;804A|----/----\----;  | ; Index (8 bit) Accum (8 bit) 
-                      LDA.B #$6B                          ;;804C|----/----\----;  | 
-                      STA.L !OAMResetRoutine+$182         ;;804E|----/----\----; / 
-                      JSR UploadSPCEngine                 ;;8052|----/----\----; SPC700 Bank 02 + Main code upload handler 
-                      STZ.W !GameMode                     ;;8055|----/----\----; Set game mode to 0 
-                      STZ.W !OverworldOverride            ;;8058|----/----\----; Set secondary game mode to 0 
-                      JSR ClearStack                      ;;805B|----/----\----;
-                      JSR UploadSamples                   ;;805E|----/----\----;
-                      JSR CODE_009250                     ;;8061|----/----\----;
-                      LDA.B #$03                          ;;8064|----/----\----; \ Set OAM Size and Data Area Designation to x03 
-                      STA.W !HW_OBJSEL                    ;;8066|----/----\----; /  ; OAM Size and Data Area Designation
-                      INC.B !LagFlag                      ;;8069|----/----\----; Skip the following loop 
-                    - LDA.B !LagFlag                      ;;806B|----/----\----;  |Loop until the interrupt routine sets $10 
-                      BEQ -                               ;;806D|----/----\----; / to a non-zero value. 
-                      CLI                                 ;;806F|----/----\----; Enable interrupts 
-                      INC.B !TrueFrame                    ;;8070|----/----\----; Increase frame number 
-                      JSR GetGameMode                     ;;8072|----/----\----; The actual game 
-                      STZ.B !LagFlag                      ;;8075|----/----\----; \ Wait for interrupt 
-                      BRA -                               ;;8077|----/----\----; /  
+I_RESET:              SEI                                 ;;8000|8000/----\----; Disable interrupts 
+                      STZ.W !HW_NMITIMEN                  ;;8001|8001/----\----; Clear NMI and V/H Count, disable joypad ; NMI, V/H Count, and Joypad Enable
+                      STZ.W !HW_HDMAEN                    ;;8004|8004/----\----; Disable HDMA ; H-DMA Channel Enable
+                      STZ.W !HW_MDMAEN                    ;;8007|8007/----\----; Disable DMA ; Regular DMA Channel Enable
+                      STZ.W !HW_APUIO0                    ;;800A|800A/----\----; \ ; APU I/O Port
+                      STZ.W !HW_APUIO1                    ;;800D|800D/----\----;  |Clear APU I/O ports 1-4 ; APU I/O Port
+                      STZ.W !HW_APUIO2                    ;;8010|8010/----\----;  | ; APU I/O Port
+                      STZ.W !HW_APUIO3                    ;;8013|8013/----\----; / ; APU I/O Port
+                      LDA.B #$80                          ;;8016|8016/----\----; \ Turn off screen 
+                      STA.W !HW_INIDISP                   ;;8018|8018/----\----; / ; Screen Display Register
+                      CLC                                 ;;801B|801B/----\----; \ Turn off emulation mode 
+                      XCE                                 ;;801C|801C/----\----; /  
+                      REP #$38                            ;;801D|801D/----\----; 16 bit A,X,Y, Decimal mode off ; Index (16 bit) Accum (16 bit) 
+                      LDA.W #$0000                        ;;801F|801F/----\----; \ Set direct page 
+                      TCD                                 ;;8022|8022/----\----; /  
+                      LDA.W #$01FF                        ;;8023|8023/----\----; \ Set stack location 
+                      TCS                                 ;;8026|8026/----\----; /  
+                      LDA.W #$F0A9                        ;;8027|8027/----\----; \  
+                      STA.L !OAMResetRoutine              ;;802A|802A/----\----;  | 
+                      LDX.W #$017D                        ;;802E|802E/----\----;  | 
+                      LDY.W #$03FD                        ;;8031|8031/----\----;  | 
+                    - LDA.W #$008D                        ;;8034|8034/----\----;  | 
+                      STA.L !OAMResetRoutine+2,X          ;;8037|8037/----\----;  | 
+                      TYA                                 ;;803B|803B/----\----;  | 
+                      STA.L !OAMResetRoutine+3,X          ;;803C|803C/----\----;  |Create routine in RAM 
+                      SEC                                 ;;8040|8040/----\----;  | 
+                      SBC.W #$0004                        ;;8041|8041/----\----;  | 
+                      TAY                                 ;;8044|8044/----\----;  | 
+                      DEX                                 ;;8045|8045/----\----;  | 
+                      DEX                                 ;;8046|8046/----\----;  | 
+                      DEX                                 ;;8047|8047/----\----;  | 
+                      BPL -                               ;;8048|8048/----\----;  | 
+                      SEP #$30                            ;;804A|804A/----\----;  | ; Index (8 bit) Accum (8 bit) 
+                      LDA.B #$6B                          ;;804C|804C/----\----;  | 
+                      STA.L !OAMResetRoutine+$182         ;;804E|804E/----\----; / 
+                      JSR UploadSPCEngine                 ;;8052|8052/----\----; SPC700 Bank 02 + Main code upload handler 
+                      STZ.W !GameMode                     ;;8055|8055/----\----; Set game mode to 0 
+                      STZ.W !OverworldOverride            ;;8058|8058/----\----; Set secondary game mode to 0 
+                      JSR ClearStack                      ;;805B|805B/----\----;
+                      JSR UploadSamples                   ;;805E|805E/----\----;
+                      JSR CODE_009250                     ;;8061|8061/----\----;
+                      LDA.B #$03                          ;;8064|8064/----\----; \ Set OAM Size and Data Area Designation to x03 
+                      STA.W !HW_OBJSEL                    ;;8066|8066/----\----; /  ; OAM Size and Data Area Designation
+                      INC.B !LagFlag                      ;;8069|8069/----\----; Skip the following loop 
+                    - LDA.B !LagFlag                      ;;806B|806B/----\----;  |Loop until the interrupt routine sets $10 
+                      BEQ -                               ;;806D|806D/----\----; / to a non-zero value. 
+                      CLI                                 ;;806F|806F/----\----; Enable interrupts 
+                      INC.B !TrueFrame                    ;;8070|8070/----\----; Increase frame number 
+                      JSR GetGameMode                     ;;8072|8072/----\----; The actual game 
+                      STZ.B !LagFlag                      ;;8075|8075/----\----; \ Wait for interrupt 
+                      BRA -                               ;;8077|8077/----\----; /  
                                                           ;;                   ;
-SPC700UploadLoop:     PHP                                 ;;8079|----/----\----;
-                      REP #$30                            ;;807A|----/----\----; Index (16 bit) Accum (16 bit) 
-                      LDY.W #$0000                        ;;807C|----/----\----;
-                      LDA.W #$BBAA                        ;;807F|----/----\----;
-                    - CMP.W !HW_APUIO0                    ;;8082|----/----\----; APU I/O Port
-                      BNE -                               ;;8085|----/----\----;
-                      SEP #$20                            ;;8087|----/----\----; Accum (8 bit) 
-                      LDA.B #$CC                          ;;8089|----/----\----; Load byte to start transfer 
-                      BRA CODE_0080B3                     ;;808B|----/----\----;
+SPC700UploadLoop:     PHP                                 ;;8079|8079/----\----;
+                      REP #$30                            ;;807A|807A/----\----; Index (16 bit) Accum (16 bit) 
+                      LDY.W #$0000                        ;;807C|807C/----\----;
+                      LDA.W #$BBAA                        ;;807F|807F/----\----;
+                    - CMP.W !HW_APUIO0                    ;;8082|8082/----\----; APU I/O Port
+                      BNE -                               ;;8085|8085/----\----;
+                      SEP #$20                            ;;8087|8087/----\----; Accum (8 bit) 
+                      LDA.B #$CC                          ;;8089|8089/----\----; Load byte to start transfer 
+                      BRA CODE_0080B3                     ;;808B|808B/----\----;
                                                           ;;                   ;
-CODE_00808D:          LDA.B [!_0],Y                       ;;808D|----/----\----;
-                      INY                                 ;;808F|----/----\----;
-                      XBA                                 ;;8090|----/----\----;
-                      LDA.B #$00                          ;;8091|----/----\----;
-                      BRA CODE_0080A0                     ;;8093|----/----\----;
+CODE_00808D:          LDA.B [!_0],Y                       ;;808D|808D/----\----;
+                      INY                                 ;;808F|808F/----\----;
+                      XBA                                 ;;8090|8090/----\----;
+                      LDA.B #$00                          ;;8091|8091/----\----;
+                      BRA CODE_0080A0                     ;;8093|8093/----\----;
                                                           ;;                   ;
-CODE_008095:          XBA                                 ;;8095|----/----\----;
-                      LDA.B [!_0],Y                       ;;8096|----/----\----;
-                      INY                                 ;;8098|----/----\----;
-                      XBA                                 ;;8099|----/----\----;
-                    - CMP.W !HW_APUIO0                    ;;809A|----/----\----; APU I/O Port
-                      BNE -                               ;;809D|----/----\----;
-                      INC A                               ;;809F|----/----\----;
-CODE_0080A0:          REP #$20                            ;;80A0|----/----\----; Accum (16 bit) 
-                      STA.W !HW_APUIO0                    ;;80A2|----/----\----; APU I/O Port
-                      SEP #$20                            ;;80A5|----/----\----; Accum (8 bit) 
-                      DEX                                 ;;80A7|----/----\----;
-                      BNE CODE_008095                     ;;80A8|----/----\----;
-                    - CMP.W !HW_APUIO0                    ;;80AA|----/----\----; APU I/O Port
-                      BNE -                               ;;80AD|----/----\----;
-                    - ADC.B #$03                          ;;80AF|----/----\----;
-                      BEQ -                               ;;80B1|----/----\----;
-CODE_0080B3:          PHA                                 ;;80B3|----/----\----;
-                      REP #$20                            ;;80B4|----/----\----; Accum (16 bit) 
-                      LDA.B [!_0],Y                       ;;80B6|----/----\----;
-                      INY                                 ;;80B8|----/----\----;
-                      INY                                 ;;80B9|----/----\----;
-                      TAX                                 ;;80BA|----/----\----;
-                      LDA.B [!_0],Y                       ;;80BB|----/----\----;
-                      INY                                 ;;80BD|----/----\----;
-                      INY                                 ;;80BE|----/----\----;
-                      STA.W !HW_APUIO2                    ;;80BF|----/----\----; APU I/O Port
-                      SEP #$20                            ;;80C2|----/----\----; Accum (8 bit) 
-                      CPX.W #$0001                        ;;80C4|----/----\----;
-                      LDA.B #$00                          ;;80C7|----/----\----;
-                      ROL A                               ;;80C9|----/----\----;
-                      STA.W !HW_APUIO1                    ;;80CA|----/----\----; APU I/O Port
-                      ADC.B #$7F                          ;;80CD|----/----\----;
-                      PLA                                 ;;80CF|----/----\----;
-                      STA.W !HW_APUIO0                    ;;80D0|----/----\----; APU I/O Port
-                    - CMP.W !HW_APUIO0                    ;;80D3|----/----\----; APU I/O Port
-                      BNE -                               ;;80D6|----/----\----;
-                      BVS CODE_00808D                     ;;80D8|----/----\----;
-                      STZ.W !HW_APUIO0                    ;;80DA|----/----\----; APU I/O Port
-                      STZ.W !HW_APUIO1                    ;;80DD|----/----\----; APU I/O Port
-                      STZ.W !HW_APUIO2                    ;;80E0|----/----\----; APU I/O Port
-                      STZ.W !HW_APUIO3                    ;;80E3|----/----\----; APU I/O Port
-                      PLP                                 ;;80E6|----/----\----;
-                      RTS                                 ;;80E7|----/----\----;
+CODE_008095:          XBA                                 ;;8095|8095/----\----;
+                      LDA.B [!_0],Y                       ;;8096|8096/----\----;
+                      INY                                 ;;8098|8098/----\----;
+                      XBA                                 ;;8099|8099/----\----;
+                    - CMP.W !HW_APUIO0                    ;;809A|809A/----\----; APU I/O Port
+                      BNE -                               ;;809D|809D/----\----;
+                      INC A                               ;;809F|809F/----\----;
+CODE_0080A0:          REP #$20                            ;;80A0|80A0/----\----; Accum (16 bit) 
+                      STA.W !HW_APUIO0                    ;;80A2|80A2/----\----; APU I/O Port
+                      SEP #$20                            ;;80A5|80A5/----\----; Accum (8 bit) 
+                      DEX                                 ;;80A7|80A7/----\----;
+                      BNE CODE_008095                     ;;80A8|80A8/----\----;
+                    - CMP.W !HW_APUIO0                    ;;80AA|80AA/----\----; APU I/O Port
+                      BNE -                               ;;80AD|80AD/----\----;
+                    - ADC.B #$03                          ;;80AF|80AF/----\----;
+                      BEQ -                               ;;80B1|80B1/----\----;
+CODE_0080B3:          PHA                                 ;;80B3|80B3/----\----;
+                      REP #$20                            ;;80B4|80B4/----\----; Accum (16 bit) 
+                      LDA.B [!_0],Y                       ;;80B6|80B6/----\----;
+                      INY                                 ;;80B8|80B8/----\----;
+                      INY                                 ;;80B9|80B9/----\----;
+                      TAX                                 ;;80BA|80BA/----\----;
+                      LDA.B [!_0],Y                       ;;80BB|80BB/----\----;
+                      INY                                 ;;80BD|80BD/----\----;
+                      INY                                 ;;80BE|80BE/----\----;
+                      STA.W !HW_APUIO2                    ;;80BF|80BF/----\----; APU I/O Port
+                      SEP #$20                            ;;80C2|80C2/----\----; Accum (8 bit) 
+                      CPX.W #$0001                        ;;80C4|80C4/----\----;
+                      LDA.B #$00                          ;;80C7|80C7/----\----;
+                      ROL A                               ;;80C9|80C9/----\----;
+                      STA.W !HW_APUIO1                    ;;80CA|80CA/----\----; APU I/O Port
+                      ADC.B #$7F                          ;;80CD|80CD/----\----;
+                      PLA                                 ;;80CF|80CF/----\----;
+                      STA.W !HW_APUIO0                    ;;80D0|80D0/----\----; APU I/O Port
+                    - CMP.W !HW_APUIO0                    ;;80D3|80D3/----\----; APU I/O Port
+                      BNE -                               ;;80D6|80D6/----\----;
+                      BVS CODE_00808D                     ;;80D8|80D8/----\----;
+                      STZ.W !HW_APUIO0                    ;;80DA|80DA/----\----; APU I/O Port
+                      STZ.W !HW_APUIO1                    ;;80DD|80DD/----\----; APU I/O Port
+                      STZ.W !HW_APUIO2                    ;;80E0|80E0/----\----; APU I/O Port
+                      STZ.W !HW_APUIO3                    ;;80E3|80E3/----\----; APU I/O Port
+                      PLP                                 ;;80E6|80E6/----\----;
+                      RTS                                 ;;80E7|80E7/----\----;
                                                           ;;                   ;
-UploadSPCEngine:      LDA.B #SPC700Engine                 ;;80E8|----/----\----; \ this address (0E:8000) is the start of the SPC engine 
-                      STA.W !_0                           ;;80EA|----/----\----;  | instrument settings/sound effect data 
-                      LDA.B #SPC700Engine>>8              ;;80ED|----/----\----;  | AND the code used for all music banks. 
-                      STA.W !_1                           ;;80EF|----/----\----;  | 
-                      LDA.B #SPC700Engine>>16             ;;80F2|----/----\----;  | 
-                      STA.W !_2                           ;;80F4|----/----\----; /  
-UploadDataToSPC:      SEI                                 ;;80F7|----/----\----;
-                      JSR SPC700UploadLoop                ;;80F8|----/----\----;
-                      CLI                                 ;;80FB|----/----\----;
-                      RTS                                 ;;80FC|----/----\----;
+UploadSPCEngine:      LDA.B #SPC700Engine                 ;;80E8|80E8/----\----; \ this address (0E:8000) is the start of the SPC engine
+                      %BorW(STA, !_0)                     ;;80EA|80EA/----\----;  | instrument settings/sound effect data 
+                      LDA.B #SPC700Engine>>8              ;;80ED|80EC/----\----;  | AND the code used for all music banks. 
+                      %BorW(STA, !_1)                     ;;80EF|80EE/----\----;  | 
+                      LDA.B #SPC700Engine>>16             ;;80F2|80F0/----\----;  | 
+                      %BorW(STA, !_2)                     ;;80F4|80F2/----\----; /  
+UploadDataToSPC:      SEI                                 ;;80F7|80F4/----\----;
+                      JSR SPC700UploadLoop                ;;80F8|80F5/----\----;
+                      CLI                                 ;;80FB|80F8/----\----;
+                      RTS                                 ;;80FC|80F9/----\----;
                                                           ;;                   ;
 UploadSamples:        LDA.B #MusicSamples                 ;;80FD|----/----\----; \    Index (8 bit) ; Index (8 bit) 
-                      STA.W !_0                           ;;80FF|----/----\----;  | 
+                      %BorW(STA, !_0)                     ;;80FF|----/----\----;  | 
                       LDA.B #MusicSamples>>8              ;;8102|----/----\----;  |Loads The Address 0F:8000 to 00-02 (SAMPLE DATA + PTRS)
-                      STA.W !_1                           ;;8104|----/----\----;  |[SPC Sample Pointers/Data ROM Address, this is] 
+                      %BorW(STA, !_1)                     ;;8104|----/----\----;  |[SPC Sample Pointers/Data ROM Address, this is] 
                       LDA.B #MusicSamples>>16             ;;8107|----/----\----;  | 
-                      STA.W !_2                           ;;8109|----/----\----; /  
+                      %BorW(STA, !_2)                     ;;8109|----/----\----; /  
                       BRA StrtSPCMscUpld                  ;;810C|----/----\----;
                                                           ;;                   ;
 UploadMusicBank1:     LDA.B #MusicBank1                   ;;810E|----/----\----; \ 
-                      STA.W !_0                           ;;8110|----/----\----;  | 
+                      %BorW(STA, !_0)                     ;;8110|----/----\----;  | 
                       LDA.B #MusicBank1>>8                ;;8113|----/----\----;  |Loads the Bank 1 music data (Map) to 00-02 
-                      STA.W !_1                           ;;8115|----/----\----;  | ($0E:98B1) 
+                      %BorW(STA, !_1)                     ;;8115|----/----\----;  | ($0E:98B1) 
                       LDA.B #MusicBank1>>16               ;;8118|----/----\----;  | 
-                      STA.W !_2                           ;;811A|----/----\----; /  
+                      %BorW(STA, !_2)                     ;;811A|----/----\----; /  
 StrtSPCMscUpld:       LDA.B #$FF                          ;;811D|----/----\----;
                       STA.W !HW_APUIO1                    ;;811F|----/----\----; APU I/O Port
                       JSR UploadDataToSPC                 ;;8122|----/----\----;
@@ -157,19 +157,19 @@ CODE_008134:          LDA.W !BonusGameActivate            ;;8134|----/----\----;
                       ORA.W !ShowMarioStart               ;;8143|----/----\----;
                       BNE Return008133                    ;;8146|----/----\----;
 UploadMusicBank2:     LDA.B #MusicBank2                   ;;8148|----/----\----; \ 
-                      STA.W !_0                           ;;814A|----/----\----;  |Loads the Bank 2 music address(Levels) 
+                      %BorW(STA, !_0)                     ;;814A|----/----\----;  |Loads the Bank 2 music address(Levels) 
                       LDA.B #MusicBank2>>8                ;;814D|----/----\----;  | (0E:AED6) 
-                      STA.W !_1                           ;;814F|----/----\----;  | 
+                      %BorW(STA, !_1)                     ;;814F|----/----\----;  | 
                       LDA.B #MusicBank2>>16               ;;8152|----/----\----;  | 
-                      STA.W !_2                           ;;8154|----/----\----; / 
+                      %BorW(STA, !_2)                     ;;8154|----/----\----; / 
                       BRA StrtSPCMscUpld                  ;;8157|----/----\----;
                                                           ;;                   ;
 UploadMusicBank3:     LDA.B #MusicBank3                   ;;8159|----/----\----; \ 
-                      STA.W !_0                           ;;815B|----/----\----;  |Bank 3 music(Ending) ROM address 
+                      %BorW(STA, !_0)                     ;;815B|----/----\----;  |Bank 3 music(Ending) ROM address 
                       LDA.B #MusicBank3>>8                ;;815E|----/----\----;  | 
-                      STA.W !_1                           ;;8160|----/----\----;  | ($03:E400) 
+                      %BorW(STA, !_1)                     ;;8160|----/----\----;  | ($03:E400) 
                       LDA.B #MusicBank3>>16               ;;8163|----/----\----;  | 
-                      STA.W !_2                           ;;8165|----/----\----; / 
+                      %BorW(STA, !_2)                     ;;8165|----/----\----; / 
                       BRA StrtSPCMscUpld                  ;;8168|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
@@ -510,7 +510,7 @@ DoSomeSpriteDMA:      STZ.W !HW_DMAPARAM                  ;;8449|----/----\----;
                       STZ.W !HW_OAMADD                    ;;844E|----/----\----; OAM address ; Address for Accessing OAM
                       LDA.W #$0004                        ;;8451|----/----\----;
                       STA.W !HW_DMAREG                    ;;8454|----/----\----; Dest. address = $2104 (data write to OAM) ; B Address
-                      LDA.W #$0002                        ;;8457|----/----\----;
+                      LDA.W #!OAMTileXPos>>8&$FF          ;;8457|----/----\----;
                       STA.W !HW_DMAADDR+1                 ;;845A|----/----\----; Source address = $00:0200  ; A Address (High Byte)
                       LDA.W #$0220                        ;;845D|----/----\----;
                       STA.W !HW_DMACNT                    ;;8460|----/----\----; $0220 bytes to transfer ; Number Bytes to Transfer (Low Byte) (DMA)
@@ -524,10 +524,11 @@ DoSomeSpriteDMA:      STZ.W !HW_DMAPARAM                  ;;8449|----/----\----;
                       RTS                                 ;;8474|----/----\----; Return 
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_008475:          db $00,$00,$08,$00,$10,$00,$18,$00  ;;8475|----/----\----;
-                      db $20,$00,$28,$00,$30,$00,$38,$00  ;;847D|----/----\----;
-                      db $40,$00,$48,$00,$50,$00,$58,$00  ;;8485|----/----\----;
-                      db $60,$00,$68,$00,$70,$00,$78      ;;848D|----/----\----;
+DATA_008475:          dw $0000,$0008,$0010,$0018          ;;8475|----/----\----;
+                      dw $0020,$0028,$0030,$0038          ;;847D|----/----\----;
+                      dw $0040,$0048,$0050,$0058          ;;8485|----/----\----;
+                      dw $0060,$0068,$0070                ;;848D|----/----\----;
+                      db $78                              ;;8493|----/----\----;
                                                           ;;                   ;
 CODE_008494:          LDY.B #$1E                          ;;8494|----/----\----;
                     - LDX.W DATA_008475,Y                 ;;8496|----/----\----;
@@ -558,107 +559,140 @@ CODE_008494:          LDY.B #$1E                          ;;8494|----/----\----;
                       BPL -                               ;;84C5|----/----\----;
                       RTS                                 ;;84C7|----/----\----;
                                                           ;;                   ;
-CODE_0084C8:          PHB                                 ;;84C8|----/----\----; Wrapper 
-                      PHK                                 ;;84C9|----/----\----;
-                      PLB                                 ;;84CA|----/----\----;
-                      JSR LoadScrnImage                   ;;84CB|----/----\----;
-                      PLB                                 ;;84CE|----/----\----;
-                      RTL                                 ;;84CF|----/----\----;
+                   if !_VER != 0                ;\   IF   ;;+++++++++++++++++++; U, E0, & E1
+CODE_0084C8:          PHB                                 ;;84C8     /----\----; Wrapper 
+                      PHK                                 ;;84C9     /----\----;
+                      PLB                                 ;;84CA     /----\----;
+                      JSR LoadScrnImage                   ;;84CB     /----\----;
+                      PLB                                 ;;84CE     /----\----;
+                      RTL                                 ;;84CF     /----\----;
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                                                           ;;                   ;
                                                           ;;                   ;
-ImagePointers:        dl !DynamicStripeImage              ;;84D0|----/----\----; Not used? 
-                      dl DATA_05B375                      ;;84D3|----/----\----; Title screen 
-                      dl DATA_04A400                      ;;84D6|----/----\----; OW border 
-                      dl DATA_05B0FF                      ;;84D9|----/----\----;
-                      dl DATA_05B91C                      ;;84DC|----/----\----; CONTINUE/END 
-                      dl DATA_0CB800                      ;;84DF|----/----\----;
-                      dl DATA_05B872                      ;;84E2|----/----\----; 1 PLAYER GAME/2 PLAYER GAME 
-                      dl DATA_04819F                      ;;84E5|----/----\----; OW scroll arrows 
-                      dl DATA_0481E0                      ;;84E8|----/----\----; Remove OW scroll arrows 
-                      dl DATA_04F499                      ;;84EB|----/----\----;
-                      dl DATA_05B8C7                      ;;84EE|----/----\----; CONTINUE AND SAVE 
-                      dl DATA_0CBFF1                      ;;84F1|----/----\----;
-                      dl DATA_0CBFC3                      ;;84F4|----/----\----; Cutscene 1 text: Line 7 
-                      dl DATA_0CBF8E                      ;;84F7|----/----\----; Cutscene 1 text: Line 6 
-                      dl DATA_0CBF59                      ;;84FA|----/----\----; Cutscene 1 text: Line 5 
-                      dl DATA_0CBF24                      ;;84FD|----/----\----; Cutscene 1 text: Line 4 
-                      dl DATA_0CBEEF                      ;;8500|----/----\----; Cutscene 1 text: Line 3 
-                      dl DATA_0CBEBA                      ;;8503|----/----\----; Cutscene 1 text: Line 2 
-                      dl DATA_0CBE85                      ;;8506|----/----\----; Cutscene 1 text: Line 1 
-                      dl DATA_0CC165                      ;;8509|----/----\----; Cutscene 2 text: Line 8 
-                      dl DATA_0CC130                      ;;850C|----/----\----; Cutscene 2 text: Line 7 
-                      dl DATA_0CC0FB                      ;;850F|----/----\----; Cutscene 2 text: Line 6 
-                      dl DATA_0CC0C6                      ;;8512|----/----\----;
-                      dl DATA_0CC091                      ;;8515|----/----\----; ...etc... 
-                      dl DATA_0CC05C                      ;;8518|----/----\----;
-                      dl DATA_0CC027                      ;;851B|----/----\----;
-                      dl DATA_0CBFF2                      ;;851E|----/----\----;
-                      dl DATA_0CBFF1                      ;;8521|----/----\----;
-                      dl DATA_0CC2CE                      ;;8524|----/----\----;
-                      dl DATA_0CC299                      ;;8527|----/----\----;
-                      dl DATA_0CC264                      ;;852A|----/----\----;
-                      dl DATA_0CC22F                      ;;852D|----/----\----;
-                      dl DATA_0CC1FA                      ;;8530|----/----\----;
-                      dl DATA_0CC1C5                      ;;8533|----/----\----;
-                      dl DATA_0CC190                      ;;8536|----/----\----;
-                      dl DATA_0CC46C                      ;;8539|----/----\----;
-                      dl DATA_0CC437                      ;;853C|----/----\----;
-                      dl DATA_0CC402                      ;;853F|----/----\----;
-                      dl DATA_0CC3CD                      ;;8542|----/----\----;
-                      dl DATA_0CC398                      ;;8545|----/----\----;
-                      dl DATA_0CC363                      ;;8548|----/----\----;
-                      dl DATA_0CC32E                      ;;854B|----/----\----;
-                      dl DATA_0CC2F9                      ;;854E|----/----\----;
-                      dl DATA_0CBFF1                      ;;8551|----/----\----;
-                      dl DATA_0CC5DD                      ;;8554|----/----\----;
-                      dl DATA_0CC5A8                      ;;8557|----/----\----;
-                      dl DATA_0CC573                      ;;855A|----/----\----;
-                      dl DATA_0CC53E                      ;;855D|----/----\----;
-                      dl DATA_0CC509                      ;;8560|----/----\----;
-                      dl DATA_0CC4D4                      ;;8563|----/----\----;
-                      dl DATA_0CC49F                      ;;8566|----/----\----;
-                      dl DATA_0CC785                      ;;8569|----/----\----;
-                      dl DATA_0CC750                      ;;856C|----/----\----;
-                      dl DATA_0CC71B                      ;;856F|----/----\----;
-                      dl DATA_0CC6E6                      ;;8572|----/----\----;
-                      dl DATA_0CC6B1                      ;;8575|----/----\----;
-                      dl DATA_0CC67C                      ;;8578|----/----\----;
-                      dl DATA_0CC647                      ;;857B|----/----\----;
-                      dl DATA_0CC612                      ;;857E|----/----\----;
-                      dl DATA_0CC92D                      ;;8581|----/----\----;
-                      dl DATA_0CC8F8                      ;;8584|----/----\----;
-                      dl DATA_0CC8C3                      ;;8587|----/----\----;
-                      dl DATA_0CC88E                      ;;858A|----/----\----;
-                      dl DATA_0CC859                      ;;858D|----/----\----;
-                      dl DATA_0CC824                      ;;8590|----/----\----;
-                      dl DATA_0CC7EF                      ;;8593|----/----\----;
-                      dl DATA_0CC7BA                      ;;8596|----/----\----;
-                      dl DATA_0CBA56                      ;;8599|----/----\----; Cutscene border, cave ground 
-                      dl DATA_0CBBB9                      ;;859C|----/----\----;
-                      dl DATA_0CB9BF                      ;;859F|----/----\----;
-                      dl DATA_0C9380                      ;;85A2|----/----\----;
-                      dl DATA_0CB636                      ;;85A5|----/----\----; Ending: THE END 
-                      dl DATA_0DF300                      ;;85A8|----/----\----; Ending: Enemies: Lakitu 
-                      dl DATA_0DF42D                      ;;85AB|----/----\----; Ending: Enemies: Hammer Bro. 
-                      dl DATA_0DF572                      ;;85AE|----/----\----; Ending: Enemies: Pokey 
-                      dl DATA_0DF66B                      ;;85B1|----/----\----; Ending: Enemies: Rex 
-                      dl DATA_0DF742                      ;;85B4|----/----\----; Ending: Enemies: Dino-Rhino 
-                      dl DATA_0DF837                      ;;85B7|----/----\----; Ending: Enemies: Blargg 
-                      dl DATA_0DF8FA                      ;;85BA|----/----\----; Ending: Enemies: Urchin 
-                      dl DATA_0DF9CD                      ;;85BD|----/----\----; Ending: Enemies: Boo 
-                      dl DATA_0DFA98                      ;;85C0|----/----\----; Ending: Enemies: Dry Bones 
-                      dl DATA_0DFB73                      ;;85C3|----/----\----; Ending: Enemies: Grinder 
-                      dl DATA_0DFC58                      ;;85C6|----/----\----; Ending: Enemies: Reznor 
-                      dl DATA_0DFCD5                      ;;85C9|----/----\----; Ending: Enemies: Mechakoopa 
-                      dl DATA_0DFD5C                      ;;85CC|----/----\----; Ending: Enemies: Bowser 
-                      dl DATA_0CBD02                      ;;85CF|----/----\----;
-                                                          ;;                   ;
+StripeImages:         dl !DynamicStripeImage              ;;84D0|----/----\----; 00 - Pointer to dynamic stripe image loader
+                      dl TitleScreenStripe                ;;84D3|----/----\----; 03 - Title screen 
+                      dl OWBorderStripe                   ;;84D6|----/----\----; 06 - OW border 
+                      dl ClearMessageStripe               ;;84D9|----/----\----; 09 - Blank space to clear a message box
+                      dl ContinueEndStripe                ;;84DC|----/----\----; 0C - CONTINUE/END 
+                      dl LudwigCutBGStripe                ;;84DF|----/----\----; 0F - Ludwig Castle Cutscene BG
+                      dl PlayerSelectStripe               ;;84E2|----/----\----; 12 - 1 PLAYER GAME/2 PLAYER GAME 
+                      dl OWScrollArrowStripe              ;;84E5|----/----\----; 15 - OW scroll arrows 
+                      dl OWScrollEraseStripe              ;;84E8|----/----\----; 18 - Remove OW scroll arrows 
+                      dl ClearOWBoxStripe                 ;;84EB|----/----\----; 1B - Blank space to clear overworld boxes
+                      dl ContinueSaveStripe               ;;84EE|----/----\----; 1E - CONTINUE AND SAVE 
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
+CutMessageStripes:    dl C1Message4Stripe                 ;;    |----          ; 21 - tabidatsunodearimashita.
+                      dl C1Message3Stripe                 ;;    |----          ; 24 - nisareta nakamaotasukedashi doonatsuheiyae
+                      dl C1Message2Stripe                 ;;    |----          ; 27 - taoshita mariotachiwa kuppanomahoude tamago
+                      dl C1Message1Stripe                 ;;    |----          ; 2A - Yoosutaatouno oshirode saishonokokuppao
+                      dl C2Message4Stripe                 ;;    |----          ; 2D - eteiruka? piichihimenounmeiya ikani!?
+                      dl C2Message3Stripe                 ;;    |----          ; 30 - hetosusundeiku!konosaki donnawanagamachikama
+                      dl C2Message2Stripe                 ;;    |----          ; 33 - doonatsuheiyakara chikanosekaino baniradoomu
+                      dl C2Message1Stripe                 ;;    |----          ; 36 - mariotachiwa nibanmenokokuppamo yattsukete
+                      dl C3Message4Stripe                 ;;    |----          ; 39 - shitara donnatabini narunodearouka!
+                      dl C3Message3Stripe                 ;;    |----          ; 3C - moshimo midoriyaakanosuitchio totteinaito
+                      dl C3Message2Stripe                 ;;    |----          ; 3F - hotto hitoiki. shikashikoosuwa kewashikunaru
+                      dl C3Message1Stripe                 ;;    |----          ; 42 - mariotachiwa sanbanmenokokuppamo yattsukete
+                      dl C4Message4Stripe                 ;;    |----          ; 45 - ginomori!hatashitemorionukerukotogadekirunoka?
+                      dl C4Message3Stripe                 ;;    |----          ; 48 - nazootokanaito derukotogadekinaitoiu fushi
+                      dl C4Message2Stripe                 ;;    |----          ; 4B - tachiwa korekara mayoinomorinihaitteiku!?
+                      dl C4Message1Stripe                 ;;    |----          ; 4E - yonbanmenokokuppamo nantokakuriaa mario
+                      dl C5Message4Stripe                 ;;    |----          ; 51 - pai. tsuginarutatakaino hojimarihajimarii!
+                      dl C5Message3Stripe                 ;;    |----          ; 54 - chokoreetouwa nazonokoosuto doragondeip
+                      dl C5Message2Stripe                 ;;    |----          ; 57 - to morionukerukotogadekita. daga konosakino
+                      dl C5Message1Stripe                 ;;    |----          ; 5A - mariotachiwa gobanmenokokuppaoyattsuke yat
+                      dl C6Message4Stripe                 ;;    |----          ; 5D - izoge mario! ganbare ruiji!
+                      dl C6Message3Stripe                 ;;    |----          ; 60 - iriguchiohirakutameno kagigaarurashii.
+                      dl C6Message2Stripe                 ;;    |----          ; 63 - konosakino chinbotsusenniwa kuppanotanino
+                      dl C6Message1Stripe                 ;;    |----          ; 66 - rokubanmenokokuppaotaoshitamariotachi!
+                      dl C7Message4Stripe                 ;;    |----          ; 69 - randoniheiwaotorimodosukotogadekirunoka?
+                      dl C7Message3Stripe                 ;;    |----          ; 6C - bujinipiichihimeotasukedashi konokyouryuu
+                      dl C7Message2Stripe                 ;;    |----          ; 6F - piichihimega torawareteiru kuppajounomi
+                      dl C7Message1Stripe                 ;;    |----          ; 72 - tsuini saigonokokuppaotaoshita! nokosuwa
+                   else                         ;<  ELSE  ;;-------------------; U, E0, & E1
+CutMessageStripes:    dl BlankStripe                      ;;84F1     /----\----; 21 - *empty*
+                      dl C1Message7Stripe                 ;;84F4     /----\----; 24 - travel to Donut Land.
+                      dl C1Message6Stripe                 ;;84F7     /----\----; 27 - Together, they now
+                      dl C1Message5Stripe                 ;;84FA     /----\----; 2A - still trapped in an egg.
+                      dl C1Message4Stripe                 ;;84FD     /----\----; 2D - Yoshi's friend who is
+                      dl C1Message3Stripe                 ;;8500     /----\----; 30 - castle #1 and rescued
+                      dl C1Message2Stripe                 ;;8503     /----\----; 33 - demented Iggy Koopa in
+                      dl C1Message1Stripe                 ;;8506     /----\----; 36 - Mario has defeated the
+                      dl C2Message8Stripe                 ;;8509     /----\----; 39 - Princess Toadstool?
+                      dl C2Message7Stripe                 ;;850C     /----\----; 3C - What will become of
+                      dl C2Message6Stripe                 ;;850F     /----\----; 3F - Mario in this new world?
+                      dl C2Message5Stripe                 ;;8512     /----\----; 42 - Dome. What traps await
+                      dl C2Message4Stripe                 ;;8515     /----\----; 45 - the underground Vanilla
+                      dl C2Message3Stripe                 ;;8518     /----\----; 48 - memory. The next area is
+                      dl C2Message2Stripe                 ;;851B     /----\----; 4B - castle #2 is now just a
+                      dl C2Message1Stripe                 ;;851E     /----\----; 4E - Morton Koopa Jr. of
+                      dl BlankStripe                      ;;8521     /----\----; 51 - *empty*
+                      dl C3Message7Stripe                 ;;8524     /----\----; 54 - Green Switches yet?
+                      dl C3Message6Stripe                 ;;8527     /----\----; 57 - you found the Red and
+                      dl C3Message5Stripe                 ;;852A     /----\----; 5A - more difficult. Have
+                      dl C3Message4Stripe                 ;;852D     /----\----; 5D - starting to get much
+                      dl C3Message3Stripe                 ;;8530     /----\----; 60 - #3. Mario's quest is
+                      dl C3Message2Stripe                 ;;8533     /----\----; 63 - Lemmy Koopa of castle
+                      dl C3Message1Stripe                 ;;8536     /----\----; 66 - Mario has triumphed over
+                      dl C4Message8Stripe                 ;;8539     /----\----; 69 - this perplexing forest.
+                      dl C4Message7Stripe                 ;;853C     /----\----; 6C - to solve the puzzle of
+                      dl C4Message6Stripe                 ;;853F     /----\----; 6F - Mario must use his brain
+                      dl C4Message5Stripe                 ;;8542     /----\----; 72 - Illusion lies ahead.
+                      dl C4Message4Stripe                 ;;8545     /----\----; 75 - are over. The Forest of
+                      dl C4Message3Stripe                 ;;8548     /----\----; 78 - symphonies in castle #4
+                      dl C4Message2Stripe                 ;;854B     /----\----; 7B - of composing Koopa
+                      dl C4Message1Stripe                 ;;854E     /----\----; 7E - Ludwig von Koopa's days
+                      dl BlankStripe                      ;;8551     /----\----; 81 - *empty*
+                      dl C5Message7Stripe                 ;;8554     /----\----; 84 - tasty) Chocolate Island!
+                      dl C5Message6Stripe                 ;;8557     /----\----; 87 - the dangerous (but
+                      dl C5Message5Stripe                 ;;855A     /----\----; 8A - castle #5. Onward to
+                      dl C5Message4Stripe                 ;;855D     /----\----; 8D - end to Roy Koopa of
+                      dl C5Message3Stripe                 ;;8560     /----\----; 90 - Illusion and has put an
+                      dl C5Message2Stripe                 ;;8563     /----\----; 93 - through the Forest of
+                      dl C5Message1Stripe                 ;;8566     /----\----; 96 - Mario found his way
+                      dl C6Message8Stripe                 ;;8569     /----\----; 99 - to the Valley of Bowser.
+                      dl C6Message7Stripe                 ;;856C     /----\----; 9C - appears to be a gateway
+                      dl C6Message6Stripe                 ;;856F     /----\----; 9F - is a sunken ship that
+                      dl C6Message5Stripe                 ;;8572     /----\----; A2 - now before him. There
+                      dl C6Message4Stripe                 ;;8575     /----\----; A5 - the challenge that is
+                      dl C6Message3Stripe                 ;;8578     /----\----; A8 - song. Mario must meet
+                      dl C6Message2Stripe                 ;;857B     /----\----; AB - #6 has sung her last
+                      dl C6Message1Stripe                 ;;857E     /----\----; AE - Wendy O. Koopa in castle
+                      dl C7Message8Stripe                 ;;8581     /----\----; B1 - Dinosaur Land?
+                      dl C7Message7Stripe                 ;;8584     /----\----; B4 - restore peace to
+                      dl C7Message6Stripe                 ;;8587     /----\----; B7 - Can Mario rescue her and
+                      dl C7Message5Stripe                 ;;858A     /----\----; BA - Toadstool is being held.
+                      dl C7Message4Stripe                 ;;858D     /----\----; BD - Castle where Princess
+                      dl C7Message3Stripe                 ;;8590     /----\----; C0 - that is left is Bowser's
+                      dl C7Message2Stripe                 ;;8593     /----\----; C3 - Koopa in castle #7. All
+                      dl C7Message1Stripe                 ;;8596     /----\----; C6 - Mario has defeated Larry
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
+OtherStripes:         dl LemmyCutBGStripe                 ;;8599|----/----\----; J75/UC9 - Lemmy, Larry Castle Cutscene BG
+                      dl WendyCutBGStripe                 ;;859C|----/----\----; J78/UCC - Wendy Castle Cutscene BG
+                      dl CutsceneCastleStripe             ;;859F|----/----\----; J7B/UCF - Castle Cutscene Castle
+                      dl EraseAllStripe                   ;;85A2|----/----\----; J7E/UD2 - Blank space to clear all of layers 1 and 2
+                      dl TheEndStripe                     ;;85A5|----/----\----; J81/UD5 - Ending: THE END 
+                      dl EnemyNameStripe00                ;;85A8|----/----\----; J84/UD8 - Ending: Enemies: Lakitu 
+                      dl EnemyNameStripe01                ;;85AB|----/----\----; J87/UDB - Ending: Enemies: Hammer Bro. 
+                      dl EnemyNameStripe02                ;;85AE|----/----\----; J8A/UDE - Ending: Enemies: Pokey 
+                      dl EnemyNameStripe03                ;;85B1|----/----\----; J8D/UE1 - Ending: Enemies: Rex 
+                      dl EnemyNameStripe04                ;;85B4|----/----\----; J90/UE4 - Ending: Enemies: Dino-Rhino 
+                      dl EnemyNameStripe05                ;;85B7|----/----\----; J93/UE7 - Ending: Enemies: Blargg 
+                      dl EnemyNameStripe06                ;;85BA|----/----\----; J96/UEA - Ending: Enemies: Urchin 
+                      dl EnemyNameStripe07                ;;85BD|----/----\----; J99/UED - Ending: Enemies: Boo 
+                      dl EnemyNameStripe08                ;;85C0|----/----\----; J9C/UF0 - Ending: Enemies: Dry Bones 
+                      dl EnemyNameStripe09                ;;85C3|----/----\----; J9F/UF3 - Ending: Enemies: Grinder 
+                      dl EnemyNameStripe0A                ;;85C6|----/----\----; JA2/UF6 - Ending: Enemies: Reznor 
+                      dl EnemyNameStripe0B                ;;85C9|----/----\----; JA5/UF9 - Ending: Enemies: Mechakoopa 
+                      dl EnemyNameStripe0C                ;;85CC|----/----\----; JA8/UFC - Ending: Enemies: Bowser 
+                      dl IggyCutBGStripe                  ;;85CF|----/----\----; JAB/UFF - Iggy, Morton, Roy Castle Cutscene BG
+                                                          ;;                   ;  
 LoadScrnImage:        LDY.B !StripeImage                  ;;85D2|----/----\----; 12 = Image loader 
-                      LDA.W ImagePointers,Y               ;;85D4|----/----\----; \  
+                      LDA.W StripeImages,Y                ;;85D4|----/----\----; \  
                       STA.B !_0                           ;;85D7|----/----\----;  | 
-                      LDA.W ImagePointers+1,Y             ;;85D9|----/----\----;  |Load pointer 
+                      LDA.W StripeImages+1,Y              ;;85D9|----/----\----;  |Load pointer 
                       STA.B !_1                           ;;85DC|----/----\----;  | 
-                      LDA.W ImagePointers+2,Y             ;;85DE|----/----\----;  | 
+                      LDA.W StripeImages+2,Y              ;;85DE|----/----\----;  | 
                       STA.B !_2                           ;;85E1|----/----\----; /  
                       JSR CODE_00871E                     ;;85E3|----/----\----;
                       LDA.B !StripeImage                  ;;85E6|----/----\----;
@@ -704,7 +738,9 @@ CODE_0085FA:          JSR TurnOffIO                       ;;85FA|----/----\----;
                       JMP DoSomeSpriteDMA                 ;;8646|----/----\----; Jump to the next part of this routine 
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_008649:          db $08,$18,$00,$00,$00,$00,$10      ;;8649|----/----\----;
+DATA_008649:          db $08,$18                          ;;8649|----/----\----;
+                      dl $000000                          ;;864B|----/----\----;
+                      dw $1000                            ;;864E|----/----\----;
                                                           ;;                   ;
 ControllerUpdate:     LDA.W !HW_CNTRL1                    ;;8650|----/----\----; \  ; Joypad 1Data (Low Byte)
                       AND.B #$F0                          ;;8653|----/----\----;  | 
@@ -1138,21 +1174,37 @@ CODE_008A10:          LDA.B #$00                          ;;8A10|----/----\----;
                       RTL                                 ;;8A15|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_008A16:          db $01,$18,$E6,$1B,$00,$40,$00      ;;8A16|----/----\----;
+DATA_008A16:          db $01,$18                          ;;8A16|----/----\----;
+                      dl !Layer1VramBuffer&$FFFF          ;;8A18|----/----\----;
+                      dw $0040                            ;;8A1B|----/----\----;
                                                           ;;                   ;
-DATA_008A1D:          db $01,$18,$26,$1C,$00,$2C,$00      ;;8A1D|----/----\----;
+DATA_008A1D:          db $01,$18                          ;;8A1D|----/----\----;
+                      dl !Layer1VramBuffer+$40&$FFFF      ;;8A1F|----/----\----;
+                      dw $002C                            ;;8A22|----/----\----;
                                                           ;;                   ;
-DATA_008A24:          db $01,$18,$66,$1C,$00,$40,$00      ;;8A24|----/----\----;
+DATA_008A24:          db $01,$18                          ;;8A24|----/----\----;
+                      dl !Layer1VramBuffer+$80&$FFFF      ;;8A26|----/----\----;
+                      dw $0040                            ;;8A29|----/----\----;
                                                           ;;                   ;
-DATA_008A2B:          db $01,$18,$A6,$1C,$00,$2C,$00      ;;8A2B|----/----\----;
+DATA_008A2B:          db $01,$18                          ;;8A2B|----/----\----;
+                      dl !Layer1VramBuffer+$C0&$FFFF      ;;8A2D|----/----\----;
+                      dw $002C                            ;;8A30|----/----\----;
                                                           ;;                   ;
-DATA_008A32:          db $01,$18,$E8,$1C,$00,$40,$00      ;;8A32|----/----\----;
+DATA_008A32:          db $01,$18                          ;;8A32|----/----\----;
+                      dl !Layer2VramBuffer&$FFFF          ;;8A34|----/----\----;
+                      dw $0040                            ;;8A37|----/----\----;
                                                           ;;                   ;
-DATA_008A39:          db $01,$18,$28,$1D,$00,$2C,$00      ;;8A39|----/----\----;
+DATA_008A39:          db $01,$18                          ;;8A39|----/----\----;
+                      dl !Layer2VramBuffer+$40&$FFFF      ;;8A3B|----/----\----;
+                      dw $002C                            ;;8A3E|----/----\----;
                                                           ;;                   ;
-DATA_008A40:          db $01,$18,$68,$1D,$00,$40,$00      ;;8A40|----/----\----;
+DATA_008A40:          db $01,$18                          ;;8A40|----/----\----;
+                      dl !Layer2VramBuffer+$80&$FFFF      ;;8A42|----/----\----;
+                      dw $0040                            ;;8A45|----/----\----;
                                                           ;;                   ;
-DATA_008A47:          db $01,$18,$A8,$1D,$00,$2C,$00      ;;8A47|----/----\----;
+DATA_008A47:          db $01,$18                          ;;8A47|----/----\----;
+                      dl !Layer2VramBuffer+$C0&$FFFF      ;;8A49|----/----\----;
+                      dw $002C                            ;;8A4C|----/----\----;
                                                           ;;                   ;
 ClearStack:           REP #$30                            ;;8A4E|----/----\----; Index (16 bit) Accum (16 bit) 
                       LDX.W #$1FFE                        ;;8A50|----/----\----;
@@ -1199,9 +1251,10 @@ SetUpScreen:          STZ.W !HW_SETINI                    ;;8A79|----/----\----;
                       RTS                                 ;;8AB3|----/----\----; Return 
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_008AB4:          db $00,$00,$FE,$00,$00,$00,$FE,$00  ;;8AB4|----/----\----;
-DATA_008ABC:          db $00,$00,$02,$00,$00,$00,$02,$00  ;;8ABC|----/----\----;
-                      db $00,$00,$00,$01,$FF,$FF,$00,$10  ;;8AC4|----/----\----;
+DATA_008AB4:          dw $0000,$00FE,$0000,$00FE          ;;8AB4|----/----\----;
+DATA_008ABC:          dw $0000,$0002,$0000,$0002          ;;8ABC|----/----\----;
+                                                          ;;                   ;
+                      db $00,$00,$00,$01,$FF,$FF,$00,$10  ;;8AC4|----/----\----; unused table?
                       db $F0                              ;;8ACC|----/----\----;
                                                           ;;                   ;
 CODE_008ACD:          LDA.B !Mode7YScale                  ;;8ACD|----/----\----;
@@ -1254,7 +1307,7 @@ CODE_008AE8:          LDA.B !Mode7Angle                   ;;8AE8|----/----\----;
                       RTS                                 ;;8B2A|----/----\----;
                                                           ;;                   ;
 CODE_008B2B:          SEP #$20                            ;;8B2B|----/----\----; Accum (8 bit) 
-                      LDA.W DATA_008B58,X                 ;;8B2D|----/----\----;
+                      LDA.W DATA_008B57+1,X               ;;8B2D|----/----\----;
                       BEQ +                               ;;8B30|----/----\----;
                       LDA.B !_0                           ;;8B32|----/----\----;
                     + STA.B !_1                           ;;8B34|----/----\----;
@@ -1279,46 +1332,45 @@ CODE_008B2B:          SEP #$20                            ;;8B2B|----/----\----;
                       LSR A                               ;;8B55|----/----\----;
                       RTS                                 ;;8B56|----/----\----;
                                                           ;;                   ;
-DATA_008B57:          db $00                              ;;8B57|----/----\----;
+DATA_008B57:          dw $0000,$0003,$0006,$0009          ;;8B57|----/----\----;
+                      dw $000C,$000F,$0012,$0015          ;;8B5F|----/----\----;
+                      dw $0019,$001C,$001F,$0022          ;;8B67|----/----\----;
+                      dw $0025,$0028,$002B,$002E          ;;8B6F|----/----\----;
+                      dw $0031,$0035,$0038,$003B          ;;8B77|----/----\----;
+                      dw $003E,$0041,$0044,$0047          ;;8B7F|----/----\----;
+                      dw $004A,$004D,$0050,$0053          ;;8B87|----/----\----;
+                      dw $0056,$0059,$005C,$005F          ;;8B8F|----/----\----;
+                      dw $0061,$0064,$0067,$006A          ;;8B97|----/----\----;
+                      dw $006D,$0070,$0073,$0075          ;;8B9F|----/----\----;
+                      dw $0078,$007B,$007E,$0080          ;;8BA7|----/----\----;
+                      dw $0083,$0086,$0088,$008B          ;;8BAF|----/----\----;
+                      dw $008E,$0090,$0093,$0095          ;;8BB7|----/----\----;
+                      dw $0098,$009B,$009D,$009F          ;;8BBF|----/----\----;
+                      dw $00A2,$00A4,$00A7,$00A9          ;;8BC7|----/----\----;
+                      dw $00AB,$00AE,$00B0,$00B2          ;;8BCF|----/----\----;
+                      dw $00B5,$00B7,$00B9,$00BB          ;;8BD7|----/----\----;
+                      dw $00BD,$00BF,$00C1,$00C3          ;;8BDF|----/----\----;
+                      dw $00C5,$00C7,$00C9,$00CB          ;;8BE7|----/----\----;
+                      dw $00CD,$00CF,$00D1,$00D3          ;;8BEF|----/----\----;
+                      dw $00D4,$00D6,$00D8,$00D9          ;;8BF7|----/----\----;
+                      dw $00DB,$00DD,$00DE,$00E0          ;;8CFF|----/----\----;
+                      dw $00E1,$00E3,$00E4,$00E6          ;;8C07|----/----\----;
+                      dw $00E7,$00E8,$00EA,$00EB          ;;8C0F|----/----\----;
+                      dw $00EC,$00ED,$00EE,$00EF          ;;8C17|----/----\----;
+                      dw $00F1,$00F2,$00F3,$00F4          ;;8C1F|----/----\----;
+                      dw $00F4,$00F5,$00F6,$00F7          ;;8C27|----/----\----;
+                      dw $00F8,$00F9,$00F9,$00FA          ;;8C2F|----/----\----;
+                      dw $00FB,$00FB,$00FC,$00FC          ;;8C37|----/----\----;
+                      dw $00FD,$00FD,$00FE,$00FE          ;;8C3F|----/----\----;
+                      dw $00FE,$00FF,$00FF,$00FF          ;;8C47|----/----\----;
+                      dw $00FF,$00FF,$00FF,$00FF          ;;8C4F|----/----\----;
+                      dw $0100                            ;;8C57|----/----\----;
                                                           ;;                   ;
-DATA_008B58:          db $00,$03,$00,$06,$00,$09,$00,$0C  ;;8B58|----/----\----;
-                      db $00,$0F,$00,$12,$00,$15,$00,$19  ;;8B60|----/----\----;
-                      db $00,$1C,$00,$1F,$00,$22,$00,$25  ;;8B68|----/----\----;
-                      db $00,$28,$00,$2B,$00,$2E,$00,$31  ;;8B70|----/----\----;
-                      db $00,$35,$00,$38,$00,$3B,$00,$3E  ;;8B78|----/----\----;
-                      db $00,$41,$00,$44,$00,$47,$00,$4A  ;;8B80|----/----\----;
-                      db $00,$4D,$00,$50,$00,$53,$00,$56  ;;8B88|----/----\----;
-                      db $00,$59,$00,$5C,$00,$5F,$00,$61  ;;8B90|----/----\----;
-                      db $00,$64,$00,$67,$00,$6A,$00,$6D  ;;8B98|----/----\----;
-                      db $00,$70,$00,$73,$00,$75,$00,$78  ;;8BA0|----/----\----;
-                      db $00,$7B,$00,$7E,$00,$80,$00,$83  ;;8BA8|----/----\----;
-                      db $00,$86,$00,$88,$00,$8B,$00,$8E  ;;8BB0|----/----\----;
-                      db $00,$90,$00,$93,$00,$95,$00,$98  ;;8BB8|----/----\----;
-                      db $00,$9B,$00,$9D,$00,$9F,$00,$A2  ;;8BC0|----/----\----;
-                      db $00,$A4,$00,$A7,$00,$A9,$00,$AB  ;;8BC8|----/----\----;
-                      db $00,$AE,$00,$B0,$00,$B2,$00,$B5  ;;8BD0|----/----\----;
-                      db $00,$B7,$00,$B9,$00,$BB,$00,$BD  ;;8BD8|----/----\----;
-                      db $00,$BF,$00,$C1,$00,$C3,$00,$C5  ;;8BE0|----/----\----;
-                      db $00,$C7,$00,$C9,$00,$CB,$00,$CD  ;;8BE8|----/----\----;
-                      db $00,$CF,$00,$D1,$00,$D3,$00,$D4  ;;8BF0|----/----\----;
-                      db $00,$D6,$00,$D8,$00,$D9,$00,$DB  ;;8BF8|----/----\----;
-                      db $00,$DD,$00,$DE,$00,$E0,$00,$E1  ;;8C00|----/----\----;
-                      db $00,$E3,$00,$E4,$00,$E6,$00,$E7  ;;8C08|----/----\----;
-                      db $00,$E8,$00,$EA,$00,$EB,$00,$EC  ;;8C10|----/----\----;
-                      db $00,$ED,$00,$EE,$00,$EF,$00,$F1  ;;8C18|----/----\----;
-                      db $00,$F2,$00,$F3,$00,$F4,$00,$F4  ;;8C20|----/----\----;
-                      db $00,$F5,$00,$F6,$00,$F7,$00,$F8  ;;8C28|----/----\----;
-                      db $00,$F9,$00,$F9,$00,$FA,$00,$FB  ;;8C30|----/----\----;
-                      db $00,$FB,$00,$FC,$00,$FC,$00,$FD  ;;8C38|----/----\----;
-                      db $00,$FD,$00,$FE,$00,$FE,$00,$FE  ;;8C40|----/----\----;
-                      db $00,$FF,$00,$FF,$00,$FF,$00,$FF  ;;8C48|----/----\----;
-                      db $00,$FF,$00,$FF,$00,$FF,$00,$00  ;;8C50|----/----\----;
-                      db $01,$B7,$3C,$B7,$BC,$B8,$3C,$B9  ;;8C58|----/----\----;
-                      db $3C,$BA,$3C,$BB,$3C,$BA,$3C,$BA  ;;8C60|----/----\----;
-                      db $BC,$BC,$3C,$BD,$3C,$BE,$3C,$BF  ;;8C68|----/----\----;
-                      db $3C,$C0,$3C,$B7,$BC,$C1,$3C,$B9  ;;8C70|----/----\----;
-                      db $3C,$C2,$3C,$C2,$BC,$B7,$3C,$C0  ;;8C78|----/----\----;
-                      db $FC                              ;;8C80|----/----\----;
+TallNumbers:          db $B7,$3C,$B7,$BC,$B8,$3C,$B9,$3C  ;;8C59|----/----\----;
+                      db $BA,$3C,$BB,$3C,$BA,$3C,$BA,$BC  ;;8C61|----/----\----;
+                      db $BC,$3C,$BD,$3C,$BE,$3C,$BF,$3C  ;;8C69|----/----\----;
+                      db $C0,$3C,$B7,$BC,$C1,$3C,$B9,$3C  ;;8C71|----/----\----;
+                      db $C2,$3C,$C2,$BC,$B7,$3C,$C0,$FC  ;;8C79|----/----\----;
                                                           ;;                   ;
 StatusBarRow1:        db $3A,$38,$3B,$38,$3B,$38,$3A,$78  ;;8C81|----/----\----;
                                                           ;;                   ;
@@ -1454,19 +1506,22 @@ DMAdata_StBr2:        db $00,$18                          ;;8DEE|----/----\----;
                       dl !StatusBar+$1C&$FFFF             ;;8DF0|----/----\----;
                       dw $001B                            ;;8DF3|----/----\----;
                                                           ;;                   ;
-DATA_008DF5:          db $40,$41,$42,$43                  ;;8DF5|----/----\----;
+DATA_008DF5:          db $40,$41,$42,$43,$44              ;;8DF5|----/----\----; "LUIGI"
                                                           ;;                   ;
-DATA_008DF9:          db $44,$24,$26,$48,$0E              ;;8DF9|----/----\----;
+DATA_008DFA:          db $24,$26,$48,$0E                  ;;8DFA|----/----\----; item box item OBJ numbers
+DATA_008DFE:          db $00,$02,$04,$02                  ;;8DFE|----/----\----; star item box palettes
+DATA_008E02:          db $08,$0A,$00,$04                  ;;8E02|----/----\----; item box item palettes
                                                           ;;                   ;
-DATA_008DFE:          db $00,$02,$04                      ;;8DFE|----/----\----;
-                                                          ;;                   ;
-DATA_008E01:          db $02,$08,$0A,$00,$04              ;;8E01|----/----\----;
-                                                          ;;                   ;
-DATA_008E06:          db $B7                              ;;8E06|----/----\----;
-                                                          ;;                   ;
-DATA_008E07:          db $C3,$B8,$B9,$BA,$BB,$BA,$BF,$BC  ;;8E07|----/----\----;
-                      db $BD,$BE,$BF,$C0,$C3,$C1,$B9,$C2  ;;8E0F|----/----\----;
-                      db $C4,$B7,$C5                      ;;8E17|----/----\----;
+DATA_008E06:          db $B7,$C3                          ;;8E06|----/----\----; Tall numbers for status bar
+                      db $B8,$B9                          ;;8E08|----/----\----;
+                      db $BA,$BB                          ;;8E0A|----/----\----;
+                      db $BA,$BF                          ;;8E0C|----/----\----;
+                      db $BC,$BD                          ;;8E0E|----/----\----;
+                      db $BE,$BF                          ;;8E10|----/----\----;
+                      db $C0,$C3                          ;;8E12|----/----\----;
+                      db $C1,$B9                          ;;8E14|----/----\----;
+                      db $C2,$C4                          ;;8E16|----/----\----;
+                      db $B7,$C5                          ;;8E18|----/----\----;
                                                           ;;                   ;
 CODE_008E1A:          LDA.W !EndLevelTimer                ;;8E1A|----/----\----; \  
                       ORA.B !SpriteLock                   ;;8E1D|----/----\----;  |If level is ending or sprites are locked, 
@@ -1646,7 +1701,7 @@ CODE_008FAF:          LDA.W !StatusBar+$25,X              ;;8FAF|----/----\----;
                       TAY                                 ;;8FB3|----/----\----;
                       LDA.W DATA_008E06,Y                 ;;8FB4|----/----\----;
                       STA.W !StatusBar+$0A,X              ;;8FB7|----/----\----;
-                      LDA.W DATA_008E07,Y                 ;;8FBA|----/----\----;
+                      LDA.W DATA_008E06+1,Y               ;;8FBA|----/----\----;
                       STA.W !StatusBar+$25,X              ;;8FBD|----/----\----;
                       INX                                 ;;8FC0|----/----\----;
                       CPX.B #$02                          ;;8FC1|----/----\----;
@@ -1679,21 +1734,22 @@ CODE_008FE6:          LDY.B #$FC                          ;;8FE6|----/----\----;
                       RTS                                 ;;8FF9|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_008FFA:          db $01,$00                          ;;8FFA|----/----\----;
-                                                          ;;                   ;
-DATA_008FFC:          db $A0,$86,$00,$00,$10,$27,$00,$00  ;;8FFC|----/----\----;
-                      db $E8,$03,$00,$00,$64,$00,$00,$00  ;;9004|----/----\----;
-                      db $0A,$00,$00,$00,$01,$00          ;;900C|----/----\----;
+ScorePlaces:          dw $0001,$86A0                      ;;8FFA|----/----\----; "100000"
+                      dw $0000,$2710                      ;;8FFE|----/----\----; "10000"
+                      dw $0000,$03E8                      ;;9002|----/----\----; "1000"
+                      dw $0000,$0064                      ;;9006|----/----\----; "100"
+                      dw $0000,$000A                      ;;900A|----/----\----; "10"
+                      dw $0000,$0001                      ;;900E|----/----\----; "1"
                                                           ;;                   ;
 CODE_009012:          SEP #$20                            ;;9012|----/----\----; 8 bit A ; Accum (8 bit) 
                       STZ.W !StatusBar+$1C,X              ;;9014|----/----\----;
 CODE_009017:          REP #$20                            ;;9017|----/----\----; 16 bit A ; Accum (16 bit) 
                       LDA.B !_2                           ;;9019|----/----\----;
                       SEC                                 ;;901B|----/----\----;
-                      SBC.W DATA_008FFC,Y                 ;;901C|----/----\----;
+                      SBC.W ScorePlaces+2,Y               ;;901C|----/----\----;
                       STA.B !_6                           ;;901F|----/----\----;
                       LDA.B !_0                           ;;9021|----/----\----;
-                      SBC.W DATA_008FFA,Y                 ;;9023|----/----\----;
+                      SBC.W ScorePlaces,Y                 ;;9023|----/----\----;
                       STA.B !_4                           ;;9026|----/----\----;
                       BCC CODE_009039                     ;;9028|----/----\----;
                       LDA.B !_6                           ;;902A|----/----\----;
@@ -1728,7 +1784,7 @@ CODE_009051:          SEP #$20                            ;;9051|----/----\----;
 CODE_009056:          REP #$20                            ;;9056|----/----\----; Accum (16 bit) 
                       LDA.B !_2                           ;;9058|----/----\----;
                       SEC                                 ;;905A|----/----\----;
-                      SBC.W DATA_008FFC,Y                 ;;905B|----/----\----;
+                      SBC.W ScorePlaces+2,Y               ;;905B|----/----\----;
                       STA.B !_6                           ;;905E|----/----\----;
                       BCC CODE_00906D                     ;;9060|----/----\----;
                       LDA.B !_6                           ;;9062|----/----\----;
@@ -1759,7 +1815,7 @@ CODE_009079:          LDY.B #$E0                          ;;9079|----/----\----;
                     + STY.B !_1                           ;;908E|----/----\----;
                       LDY.W !PlayerItembox                ;;9090|----/----\----;
                       BEQ Return0090D0                    ;;9093|----/----\----;
-                      LDA.W DATA_008E01,Y                 ;;9095|----/----\----;
+                      LDA.W DATA_008E02-1,Y               ;;9095|----/----\----;
                       STA.B !_0                           ;;9098|----/----\----;
                       CPY.B #$03                          ;;909A|----/----\----;
                       BNE +                               ;;909C|----/----\----;
@@ -1780,7 +1836,7 @@ CODE_009079:          LDY.B #$E0                          ;;9079|----/----\----;
                       ORA.B !_0                           ;;90B9|----/----\----;
                       STA.W !OAMTileAttr,Y                ;;90BB|----/----\----;
                       LDX.W !PlayerItembox                ;;90BE|----/----\----;
-                      LDA.W DATA_008DF9,X                 ;;90C1|----/----\----;
+                      LDA.W DATA_008DFA-1,X               ;;90C1|----/----\----;
                       STA.W !OAMTileNo,Y                  ;;90C4|----/----\----;
                       TYA                                 ;;90C7|----/----\----;
                       LSR A                               ;;90C8|----/----\----;
@@ -1791,37 +1847,65 @@ CODE_009079:          LDY.B #$E0                          ;;9079|----/----\----;
 Return0090D0:         RTS                                 ;;90D0|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_0090D1:          db $00,$FF,$4D,$4C,$03,$4D,$5D,$FF  ;;90D1|----/----\----;
-                      db $03,$00,$4C,$03,$04,$15,$00,$02  ;;90D9|----/----\----;
-                      db $00,$4A,$4E,$FF,$4C,$4B,$4A,$03  ;;90E1|----/----\----;
-                      db $5F,$05,$04,$03,$02,$00,$FF,$01  ;;90E9|----/----\----;
-                      db $4A,$5F,$05,$04,$00,$4D,$5D,$03  ;;90F1|----/----\----;
-                      db $02,$01,$00,$FF,$5B,$14,$5F,$01  ;;90F9|----/----\----;
-                      db $5E,$FF,$FF,$FF                  ;;9101|----/----\----;
+TitleTextTileTop:     db $00,$FF,$4D,$4C,$03,$4D,$5D,$FF  ;;90D1|----/----\----; "MARIO START!" top
+                      db $03,$00,$4C,$03,$04,$15          ;;90D9|----/----\----;
                                                           ;;                   ;
-DATA_009105:          db $10,$FF,$00,$5C,$13,$00,$5D,$FF  ;;9105|----/----\----;
-                      db $03,$00,$5C,$13,$14,$15,$00,$12  ;;910D|----/----\----;
-                      db $00,$03,$5E,$FF,$5C,$4B,$5A,$03  ;;9115|----/----\----;
-                      db $5F,$05,$14,$13,$12,$10,$FF,$11  ;;911D|----/----\----;
-                      db $03,$5F,$05,$14,$00,$00,$5D,$03  ;;9125|----/----\----;
-                      db $12,$11,$10,$FF,$5B,$01,$5F,$01  ;;912D|----/----\----;
-                      db $5E,$FF,$FF,$FF                  ;;9135|----/----\----;
+                      db $00,$02,$00,$4A,$4E,$FF          ;;90DF|----/----\----; "LUIGI" top
                                                           ;;                   ;
-DATA_009139:          db $34,$00,$34,$34,$34,$34,$30,$00  ;;9139|----/----\----;
-                      db $34,$34,$34,$34,$74,$34,$34,$34  ;;9141|----/----\----;
-                      db $34,$34,$34,$00,$34,$34,$34,$34  ;;9149|----/----\----;
-                      db $34,$34,$34,$34,$34,$34,$00,$34  ;;9151|----/----\----;
-                      db $34,$34,$34,$34,$34,$34,$34,$34  ;;9159|----/----\----;
-                      db $34,$34,$34,$34,$34,$34,$34,$34  ;;9161|----/----\----;
-                      db $34                              ;;9169|----/----\----;
+                      db $4C,$4B,$4A,$03,$5F,$05,$04,$03  ;;90E5|----/----\----; "GAME OVER" top
+                      db $02                              ;;90ED|----/----\----;
                                                           ;;                   ;
-DATA_00916A:          db $34,$00,$B4,$34,$34,$B4,$F0,$00  ;;916A|----/----\----;
-                      db $B4,$B4,$34,$34,$74,$B4,$B4,$34  ;;9172|----/----\----;
-                      db $B4,$B4,$34,$00,$34,$B4,$34,$B4  ;;917A|----/----\----;
-                      db $B4,$B4,$34,$34,$34,$34,$00,$34  ;;9182|----/----\----;
-                      db $B4,$B4,$B4,$34,$B4,$B4,$B4,$B4  ;;918A|----/----\----;
-                      db $34,$34,$34,$34,$F4,$B4,$F4,$B4  ;;9192|----/----\----;
-                      db $B4                              ;;919A|----/----\----;
+                      db $00,$FF,$01,$4A,$5F,$05,$04,$00  ;;90EE|----/----\----; "TIME UP" top
+                      db $4D                              ;;90F6|----/----\----;
+                                                          ;;                   ;
+                      db $5D,$03,$02,$01,$00,$FF,$5B,$14  ;;90F7|----/----\----; "BONUS GAME" top
+                      db $5F,$01,$5E                      ;;90FF|----/----\----;
+                                                          ;;                   ;
+                      db $FF,$FF,$FF                      ;;9102|----/----\----;
+                                                          ;;                   ;
+TitleTextTileBottom:  db $10,$FF,$00,$5C,$13,$00,$5D,$FF  ;;90D1|----/----\----; "MARIO START!" bottom
+                      db $03,$00,$5C,$13,$14,$15          ;;90D9|----/----\----;
+                                                          ;;                   ;
+                      db $00,$12,$00,$03,$5E,$FF          ;;90DF|----/----\----; "LUIGI" bottom
+                                                          ;;                   ;
+                      db $5C,$4B,$5A,$03,$5F,$05,$14,$13  ;;90E5|----/----\----; "GAME OVER" bottom
+                      db $12                              ;;90ED|----/----\----;
+                                                          ;;                   ;
+                      db $10,$FF,$11,$03,$5F,$05,$14,$00  ;;90EE|----/----\----; "TIME UP" bottom
+                      db $00                              ;;90F6|----/----\----;
+                                                          ;;                   ;
+                      db $5D,$03,$12,$11,$10,$FF,$5B,$01  ;;90F7|----/----\----; "BONUS GAME" bottom
+                      db $5F,$01,$5E                      ;;90FF|----/----\----;
+                                                          ;;                   ;
+                      db $FF,$FF,$FF                      ;;9102|----/----\----;
+                                                          ;;                   ;
+TitleTextPropTop:     db $34,$00,$34,$34,$34,$34,$30,$00  ;;90D1|----/----\----; "MARIO START!" top
+                      db $34,$34,$34,$34,$74,$34          ;;90D9|----/----\----;
+                                                          ;;                   ;
+                      db $34,$34,$34,$34,$34,$00          ;;90DF|----/----\----; "LUIGI" top
+                                                          ;;                   ;
+                      db $34,$34,$34,$34,$34,$34,$34,$34  ;;90E5|----/----\----; "GAME OVER" top
+                      db $34                              ;;90ED|----/----\----;
+                                                          ;;                   ;
+                      db $34,$00,$34,$34,$34,$34,$34,$34  ;;90EE|----/----\----; "TIME UP" top
+                      db $34                              ;;90F6|----/----\----;
+                                                          ;;                   ;
+                      db $34,$34,$34,$34,$34,$34,$34,$34  ;;90F7|----/----\----; "BONUS GAME" top
+                      db $34,$34,$34                      ;;90FF|----/----\----;
+                                                          ;;                   ;
+TitleTextPropBottom:  db $34,$00,$B4,$34,$34,$B4,$F0,$00  ;;90D1|----/----\----; "MARIO START!" bottom
+                      db $B4,$B4,$34,$34,$74,$B4          ;;90D9|----/----\----;
+                                                          ;;                   ;
+                      db $B4,$34,$B4,$B4,$34,$00          ;;90DF|----/----\----; "LUIGI" bottom
+                                                          ;;                   ;
+                      db $34,$B4,$34,$B4,$B4,$B4,$34,$34  ;;90E5|----/----\----; "GAME OVER" bottom
+                      db $34                              ;;90ED|----/----\----;
+                                                          ;;                   ;
+                      db $34,$00,$34,$B4,$B4,$B4,$34,$B4  ;;90EE|----/----\----; "TIME UP" bottom
+                      db $B4                              ;;90F6|----/----\----;
+                                                          ;;                   ;
+                      db $B4,$B4,$34,$34,$34,$34,$F4,$B4  ;;90F7|----/----\----; "BONUS GAME" bottom
+                      db $F4,$B4,$B4                      ;;90FF|----/----\----;
                                                           ;;                   ;
 CODE_00919B:          LDA.B !PlayerAnimation              ;;919B|----/----\----;
                       CMP.B #$0A                          ;;919D|----/----\----;
@@ -1862,9 +1946,9 @@ CODE_0091D0:          JSR CODE_0091E9                     ;;91D0|----/----\----;
                       BNE CODE_0091D0                     ;;91E4|----/----\----;
                       JMP CODE_008494                     ;;91E6|----/----\----;
                                                           ;;                   ;
-CODE_0091E9:          LDA.W DATA_009139,X                 ;;91E9|----/----\----;
+CODE_0091E9:          LDA.W TitleTextPropTop,X            ;;91E9|----/----\----;
                       STA.W !OAMTileAttr+$108,Y           ;;91EC|----/----\----;
-                      LDA.W DATA_00916A,X                 ;;91EF|----/----\----;
+                      LDA.W TitleTextPropBottom,X         ;;91EF|----/----\----;
                       STA.W !OAMTileAttr+$10C,Y           ;;91F2|----/----\----;
                       LDA.B !_0                           ;;91F5|----/----\----;
                       STA.W !OAMTileXPos+$108,Y           ;;91F7|----/----\----;
@@ -1884,10 +1968,10 @@ CODE_0091E9:          LDA.W DATA_009139,X                 ;;91E9|----/----\----;
                       STA.W !OAMTileSize+$42,Y            ;;920F|----/----\----;
                       STA.W !OAMTileSize+$43,Y            ;;9212|----/----\----;
                       PLY                                 ;;9215|----/----\----;
-                      LDA.W DATA_0090D1,X                 ;;9216|----/----\----;
+                      LDA.W TitleTextTileTop,X            ;;9216|----/----\----;
                       BMI +                               ;;9219|----/----\----;
                       STA.W !OAMTileNo+$108,Y             ;;921B|----/----\----;
-                      LDA.W DATA_009105,X                 ;;921E|----/----\----;
+                      LDA.W TitleTextTileBottom,X         ;;921E|----/----\----;
                       STA.W !OAMTileNo+$10C,Y             ;;9221|----/----\----;
                       LDA.B #$68                          ;;9224|----/----\----;
                       STA.W !OAMTileYPos+$108,Y           ;;9226|----/----\----;
@@ -1908,7 +1992,9 @@ CODE_00922F:          STZ.W !MainPalette                  ;;922F|----/----\----;
                       RTS                                 ;;9248|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_009249:          db $00,$22,$03,$07,$00,$00,$02      ;;9249|----/----\----;
+DATA_009249:          db $00,$22                          ;;9249|----/----\----;
+                      dl !MainPalette&$FFFF               ;;924B|----/----\----;
+                      dw $0200                            ;;924E|----/----\----;
                                                           ;;                   ;
 CODE_009250:          LDX.B #$04                          ;;9250|----/----\----;
                     - LDA.W DATA_009277,X                 ;;9252|----/----\----;
@@ -1930,8 +2016,14 @@ CODE_009263:          REP #$10                            ;;9263|----/----\----;
                       RTS                                 ;;9276|----/----\----; /  
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_009277:          db $41,$26,$7C,$92,$00,$F0,$A0,$04  ;;9277|----/----\----;
-                      db $F0,$80,$05,$00                  ;;927F|----/----\----;
+DATA_009277:          db $41,$26                          ;;9277|----/----\----;
+                      dl DATA_00927C                      ;;9279|----/----\----;
+                                                          ;;                   ;
+DATA_00927C:          db $F0                              ;;927C|----/----\----;
+                      db $A0,$04                          ;;927D|----/----\----;
+                      db $F0                              ;;927F|----/----\----;
+                      db $80,$05                          ;;9280|----/----\----;
+                      db $00                              ;;9282|----/----\----;
                                                           ;;                   ;
 CODE_009283:          JSR CODE_009263                     ;;9283|----/----\----;
                       LDA.W !IRQNMICommand                ;;9286|----/----\----;
@@ -1999,11 +2091,14 @@ CODE_0092ED:          REP #$30                            ;;92ED|----/----\----;
                       RTS                                 ;;9312|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_009313:          db $02,$0D,$A0,$04,$00              ;;9313|----/----\----;
+DATA_009313:          db $02,$0D                          ;;9313|----/----\----;
+                      dl !WindowTable&$FFFF               ;;9315|----/----\----;
                                                           ;;                   ;
-DATA_009318:          db $02,$0F,$AA,$04,$00              ;;9318|----/----\----;
+DATA_009318:          db $02,$0F                          ;;9318|----/----\----;
+                      dl !WindowTable+$0A&$FFFF           ;;931A|----/----\----;
                                                           ;;                   ;
-DATA_00931D:          db $02,$11,$B4,$04,$00              ;;931D|----/----\----;
+DATA_00931D:          db $02,$11                          ;;931D|----/----\----;
+                      dl !WindowTable+$14&$FFFF           ;;931F|----/----\----;
                                                           ;;                   ;
 GetGameMode:          LDA.W !GameMode                     ;;9322|----/----\----; Load game mode 
                       JSL ExecutePtr                      ;;9325|----/----\----;
@@ -2059,7 +2154,6 @@ TurnOffIO:            STZ.W !HW_NMITIMEN                  ;;937D|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
 NintendoPos:          db $60,$70,$80,$90                  ;;9389|----/----\----;
-                                                          ;;                   ;
 NintendoTile:         db $02,$04,$06,$08                  ;;938D|----/----\----; Nintendo Presents tilemap 
                                                           ;;                   ;
 CODE_009391:          JSR CODE_0085FA                     ;;9391|----/----\----;
@@ -2147,10 +2241,17 @@ CODE_009443:          JSR CODE_00CA61                     ;;9443|----/----\----;
                       JMP CODE_00CA88                     ;;944E|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-CutsceneBgColor:      db $02,$00,$04,$01,$00,$06,$04      ;;9451|----/----\----;
+CutsceneBgColor:      db $02,$00,$04,$01,$00,$06,$04,$03  ;;9451|----/----\----;
                                                           ;;                   ;
-CutsceneCastlePal:    db $03,$06,$05,$06,$03,$03,$06,$06  ;;9458|----/----\----; Castle palette to use for cutscenes ; Purpose of first byte is unknown 
-DATA_009460:          db $03,$FF,$FF,$C9,$0F,$FF,$CC,$C9  ;;9460|----/----\----;
+CutsceneCastlePal:    db $06,$05,$06,$03,$03,$06,$06,$03  ;;9459|----/----\----; Castle palette to use for cutscenes ; Purpose of first byte is unknown 
+                                                          ;;                   ;
+CutsceneBackground:   db OtherStripes-StripeImages+$36    ;;9461|----/----\----;
+                      db OtherStripes-StripeImages+$36    ;;9462|----/----\----;
+                      db OtherStripes-StripeImages        ;;9463|----/----\----;
+                      db OtherStripes-OtherStripes+$0F    ;;9464|----/----\----;
+                      db OtherStripes-StripeImages+$36    ;;9465|----/----\----;
+                      db OtherStripes-StripeImages+3      ;;9466|----/----\----;
+                      db OtherStripes-StripeImages        ;;9467|----/----\----;
                                                           ;;                   ;
 CODE_009468:          JSR CODE_0085FA                     ;;9468|----/----\----;
                       JSR Clear_1A_13D3                   ;;946B|----/----\----;
@@ -2162,7 +2263,7 @@ CODE_009468:          JSR CODE_0085FA                     ;;9468|----/----\----;
                       STA.W !SpriteTileset                ;;947B|----/----\----;
                       LDA.W CutsceneBgColor-1,X           ;;947E|----/----\----;
                       STA.W !BackAreaColor                ;;9481|----/----\----;
-                      LDA.W CutsceneCastlePal,X           ;;9484|----/----\----;
+                      LDA.W CutsceneCastlePal-1,X         ;;9484|----/----\----;
                       STA.W !BackgroundPalette            ;;9487|----/----\----;
                       STZ.W !SpritePalette                ;;948A|----/----\----;
                       LDA.B #$01                          ;;948D|----/----\----;
@@ -2170,7 +2271,7 @@ CODE_009468:          JSR CODE_0085FA                     ;;9468|----/----\----;
                       CPX.B #$08                          ;;9492|----/----\----;
                       BNE CODE_0094B2                     ;;9494|----/----\----;
                       JSR CODE_00955E                     ;;9496|----/----\----;
-                      LDA.B #$D2                          ;;9499|----/----\----;
+                      LDA.B #OtherStripes-StripeImages+9  ;;9499|----/----\----;
                       STA.B !StripeImage                  ;;949B|----/----\----;
                       JSR LoadScrnImage                   ;;949D|----/----\----;
                       JSR UploadMusicBank3                ;;94A0|----/----\----;
@@ -2182,10 +2283,10 @@ CODE_009468:          JSR CODE_0085FA                     ;;9468|----/----\----;
                                                           ;;                   ;
 CODE_0094B2:          LDA.B #$15                          ;;94B2|----/----\----;
                       STA.W !SPCIO2                       ;;94B4|----/----\----;
-                      LDA.W DATA_009460,X                 ;;94B7|----/----\----;
+                      LDA.W CutsceneBackground-1,X        ;;94B7|----/----\----;
                       STA.B !StripeImage                  ;;94BA|----/----\----;
                       JSR LoadScrnImage                   ;;94BC|----/----\----;
-                      LDA.B #$CF                          ;;94BF|----/----\----;
+                      LDA.B #OtherStripes-StripeImages+6  ;;94BF|----/----\----;
                       STA.B !StripeImage                  ;;94C1|----/----\----;
                       JSR LoadScrnImage                   ;;94C3|----/----\----;
                       REP #$20                            ;;94C6|----/----\----; Accum (16 bit) 
@@ -2368,7 +2469,7 @@ CODE_00963D:          JSR CODE_0085FA                     ;;963D|----/----\----;
                       DEX                                 ;;9672|----/----\----;
                       BPL -                               ;;9673|----/----\----;
                       JSR CODE_00922F                     ;;9675|----/----\----;
-                      LDA.B #$D5                          ;;9678|----/----\----;
+                      LDA.B #OtherStripes-StripeImages+$0C;;9678|----/----\----;
                       STA.B !StripeImage                  ;;967A|----/----\----;
                       JSR LoadScrnImage                   ;;967C|----/----\----;
                       JSL CODE_0CAADF                     ;;967F|----/----\----;
@@ -2474,7 +2575,11 @@ CODE_009759:          JSL !OAMResetRoutine                ;;9759|----/----\----;
                       BPL CODE_009788                     ;;9775|----/----\----;
                       LDX.B #$0C                          ;;9777|----/----\----;
                     - STZ.W !AllDragonCoinsCollected,X    ;;9779|----/----\----;
-                      STZ.W !_6,X                         ;;977C|----/----\----; OOF
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
+                      STZ.W !Checkpoint1upCollected,X     ;;    |----          ; it was correct...
+                   else                         ;<  ELSE  ;;-------------------; U, E0, & E1
+                      STZ.W !_6,X                         ;;977C     /----\----; then they f'd it up
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                       STZ.W !MoonCollected,X              ;;977F|----/----\----;
                       DEX                                 ;;9782|----/----\----;
                       BPL -                               ;;9783|----/----\----;
@@ -2597,9 +2702,9 @@ CODE_00987D:          JSR CODE_008ACD                     ;;987D|----/----\----;
                       RTS                                 ;;9890|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_009891:          db $9E,$12,$1E,$12,$9E,$11,$1E,$11  ;;9891|----/----\----;
-                      db $1E,$16,$9E,$15,$1E,$15,$9E,$14  ;;9899|----/----\----;
-                      db $1E,$14,$9E,$13,$1E,$13,$9E,$16  ;;98A1|----/----\----;
+DATA_009891:          dw $129E,$121E,$119E,$111E          ;;9891|----/----\----;
+                      dw $161E,$159E,$151E,$149E          ;;9899|----/----\----;
+                      dw $141E,$139E,$131E,$169E          ;;98A1|----/----\----;
                                                           ;;                   ;
 CODE_0098A9:          LDA.W !IRQNMICommand                ;;98A9|----/----\----; \  
                       LSR A                               ;;98AC|----/----\----;  |If "Special level" is even, 
@@ -2928,7 +3033,11 @@ CODE_009B6D:          STX.W !BlinkCursorPos               ;;9B6D|----/----\----;
                       ORA.W !SaveFileDelete               ;;9B73|----/----\----;
                       STA.W !SaveFileDelete               ;;9B76|----/----\----;
                       STA.B !_5                           ;;9B79|----/----\----;
-                      LDX.B #$00                          ;;9B7B|----/----\----;
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
+                      LDY.B #$0C                          ;;    |----          ;
+                   else                         ;<  ELSE  ;;-------------------; U, E0, & E1
+                      LDX.B #$00                          ;;9B7B     /----\----;
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                       JMP CODE_009D3C                     ;;9B7D|----/----\----;
                                                           ;;                   ;
 CODE_009B80:          PHB                                 ;;9B80|----/----\----; Wrapper 
@@ -3021,17 +3130,15 @@ CODE_009C13:          INC.W !OverworldPromptProcess       ;;9C13|----/----\----;
                       RTL                                 ;;9C1E|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-                      db $41                              ;;9C1F|----/----\----;
-                                                          ;;                   ;
-ItrCntrlrSqnc:        db $0F,$C1,$30,$00,$10,$42,$20,$41  ;;9C20|----/----\----;
-                      db $70,$81,$11,$00,$80,$82,$0C,$00  ;;9C28|----/----\----;
-                      db $30,$C1,$30,$41,$60,$C1,$10,$00  ;;9C30|----/----\----;
-                      db $40,$01,$30,$E1,$01,$00,$60,$41  ;;9C38|----/----\----;
-                      db $4E,$80,$10,$00,$30,$41,$58,$00  ;;9C40|----/----\----;
-                      db $20,$60,$01,$00,$30,$60,$01,$00  ;;9C48|----/----\----;
-                      db $30,$60,$01,$00,$30,$60,$01,$00  ;;9C50|----/----\----;
-                      db $30,$60,$01,$00,$30,$41,$1A,$C1  ;;9C58|----/----\----;
-                      db $30,$00,$30,$FF                  ;;9C60|----/----\----;
+ItrCntrlrSqnc:        db $41,$0F,$C1,$30,$00,$10,$42,$20  ;;9C1F|----/----\----;
+                      db $41,$70,$81,$11,$00,$80,$82,$0C  ;;9C27|----/----\----;
+                      db $00,$30,$C1,$30,$41,$60,$C1,$10  ;;9C2F|----/----\----;
+                      db $00,$40,$01,$30,$E1,$01,$00,$60  ;;9C37|----/----\----;
+                      db $41,$4E,$80,$10,$00,$30,$41,$58  ;;9C3F|----/----\----;
+                      db $00,$20,$60,$01,$00,$30,$60,$01  ;;9C47|----/----\----;
+                      db $00,$30,$60,$01,$00,$30,$60,$01  ;;9C4F|----/----\----;
+                      db $00,$30,$60,$01,$00,$30,$41,$1A  ;;9C57|----/----\----;
+                      db $C1,$30,$00,$30,$FF              ;;9C5F|----/----\----;
                                                           ;;                   ;
 GAMEMODE_07:          JSR SetUp0DA0GM4                    ;;9C64|----/----\----;
                       JSR CODE_009CBE                     ;;9C67|----/----\----;
@@ -3040,12 +3147,12 @@ GAMEMODE_07:          JSR SetUp0DA0GM4                    ;;9C64|----/----\----;
                       LDX.W !TitleInputIndex              ;;9C6F|----/----\----; (Unknown byte) -> X 
                       DEC.W !VariousPromptTimer           ;;9C72|----/----\----; Decrement $1DF5 (unknown byte) 
                       BNE +                               ;;9C75|----/----\----; if !=  0 branch forward 
-                      LDA.W ItrCntrlrSqnc,X               ;;9C77|----/----\----; Load $00/9C20,$1DF4 
+                      LDA.W ItrCntrlrSqnc+1,X             ;;9C77|----/----\----; Load $00/9C20,$1DF4 
                       STA.W !VariousPromptTimer           ;;9C7A|----/----\----; And store to $1DF5 
                       INX                                 ;;9C7D|----/----\----;
                       INX                                 ;;9C7E|----/----\----; $1DF4+=2 
                       STX.W !TitleInputIndex              ;;9C7F|----/----\----;
-                    + LDA.W ItrCntrlrSqnc-3,X             ;;9C82|----/----\----; With the +=2 above, this is effectively LDA $9C20,$1DF4 
+                    + LDA.W ItrCntrlrSqnc-2,X             ;;9C82|----/----\----; With the +=2 above, this is effectively LDA $9C20,$1DF4 
                       CMP.B #$FF                          ;;9C85|----/----\----;
                       BNE +                               ;;9C87|----/----\----;
 CODE_009C89:          LDY.B #$02                          ;;9C89|----/----\----; If = #$FF, switch to game mode #$02... 
@@ -3054,7 +3161,7 @@ CODE_009C8B:          STY.W !GameMode                     ;;9C8B|----/----\----;
                                                           ;;                   ;
                     + AND.B #$DF                          ;;9C8F|----/----\----;
                       STA.B !byetudlrHold                 ;;9C91|----/----\----; Write to controller RAM byte 01 
-                      CMP.W ItrCntrlrSqnc-3,X             ;;9C93|----/----\----;
+                      CMP.W ItrCntrlrSqnc-2,X             ;;9C93|----/----\----;
                       BNE +                               ;;9C96|----/----\----;
                       AND.B #$9F                          ;;9C98|----/----\----;
                     + STA.B !byetudlrFrame                ;;9C9A|----/----\----; Write to byte 01, Just-pressed variant 
@@ -3065,11 +3172,21 @@ CODE_009C9F:          JSL !OAMResetRoutine                ;;9C9F|----/----\----;
                       STA.W !HW_TM                        ;;9CA5|----/----\----; Zero something related to PPU ; Background and Object Enable
                       LDA.B #$13                          ;;9CA8|----/----\----;
                       STA.W !HW_TS                        ;;9CAA|----/----\----; Sub Screen Designation
-                      STZ.W !HDMAEnable                   ;;9CAD|----/----\----; Disable all HDMA 
-CODE_009CB0:          LDA.B #$E9                          ;;9CB0|----/----\----;
-                      STA.W !OverworldOverride            ;;9CB2|----/----\----; #$E9 -> Uknown RAM byte 
-                      JSR CODE_WRITEOW                    ;;9CB5|----/----\----;
-                      JSR CODE_009D38                     ;;9CB8|----/----\----; -> here 
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
+CODE_009CB0:          LDA.B #$E9                          ;;    |----          ;
+                      STA.W !OverworldOverride            ;;    |----          ; 
+                      JSR CODE_WRITEOW                    ;;    |----          ;
+                      LDY.B #$0E                          ;;    |----          ;
+                      JSR CODE_009D3A                     ;;    |----          ; 
+                      LDA.B #$FF                          ;;    |----          ;
+                      STA.L !DynamicStripeImage+$9C       ;;    |----          ;
+                   else                         ;<  ELSE  ;;-------------------; U, E0, & E1
+                      STZ.W !HDMAEnable                   ;;9CAD     /----\----; Disable all HDMA 
+CODE_009CB0:          LDA.B #$E9                          ;;9CB0     /----\----;
+                      STA.W !OverworldOverride            ;;9CB2     /----\----; #$E9 -> Uknown RAM byte 
+                      JSR CODE_WRITEOW                    ;;9CB5     /----\----;
+                      JSR CODE_009D38                     ;;9CB8     /----\----; -> here 
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                       JMP CODE_009417                     ;;9CBB|----/----\----; Increase the Game mode and return (at jump point) 
                                                           ;;                   ;
 CODE_009CBE:          LDA.B !axlr0000Hold                 ;;9CBE|----/----\----;
@@ -3081,9 +3198,13 @@ CODE_009CBE:          LDA.B !axlr0000Hold                 ;;9CBE|----/----\----;
                     + RTS                                 ;;9CCA|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_009CCB:          db $00,$00,$01                      ;;9CCB|----/----\----;
+DATA_009CCB:          db !SaveData>>8                     ;;9CCB|----/----\----;
+                      db !SaveDataFile2>>8                ;;9CCC|----/----\----;
+                      db !SaveDataFile3>>8                ;;9CCD|----/----\----;
                                                           ;;                   ;
-DATA_009CCE:          db $00,$8F,$1E                      ;;9CCE|----/----\----;
+DATA_009CCE:          db !SaveData                        ;;9CCE|----/----\----;
+                      db !SaveDataFile2                   ;;9CCF|----/----\----;
+                      db !SaveDataFile3                   ;;9CD0|----/----\----;
                                                           ;;                   ;
 CODE_009CD1:          REP #$20                            ;;9CD1|----/----\----; 16 bit A ; Accum (16 bit) 
                       LDA.W #$7393                        ;;9CD3|----/----\----;
@@ -3095,7 +3216,11 @@ CODE_009CD1:          REP #$20                            ;;9CD1|----/----\----;
                       CPX.B #$03                          ;;9CE3|----/----\----;
                       BNE +                               ;;9CE5|----/----\----;
                       STZ.W !SaveFileDelete               ;;9CE7|----/----\----;
-                      LDX.B #$00                          ;;9CEA|----/----\----;
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
+                      LDY.B #$0C                          ;;    |----          ;
+                   else                         ;<  ELSE  ;;-------------------; U, E0, & E1
+                      LDX.B #$00                          ;;9D2B     /----\----;
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                       JMP CODE_009D3A                     ;;9CEC|----/----\----;
                                                           ;;                   ;
                     + STX.W !SaveFile                     ;;9CEF|----/----\----; Index (16 bit) Accum (8 bit) 
@@ -3134,21 +3259,35 @@ CODE_009D30:          STA.W !BackgroundColor              ;;9D30|----/----\----;
                       SEP #$20                            ;;9D35|----/----\----; 8 bit A ; Accum (8 bit) 
                       RTS                                 ;;9D37|----/----\----;
                                                           ;;                   ;
-CODE_009D38:          LDX.B #$CB                          ;;9D38|----/----\----;
-CODE_009D3A:          STZ.B !_5                           ;;9D3A|----/----\----;
-CODE_009D3C:          REP #$10                            ;;9D3C|----/----\----; Index (16 bit) 
-                      LDY.W #$0000                        ;;9D3E|----/----\----;
-                    - LDA.L DATA_05B6FE,X                 ;;9D41|----/----\----; X =  read index 
-                      PHX                                 ;;9D45|----/----\----; Y = write index 
-                      TYX                                 ;;9D46|----/----\----;
-                      STA.L !DynamicStripeImage,X         ;;9D47|----/----\----; Layer 3-related table 
-                      PLX                                 ;;9D4B|----/----\----;
-                      INX                                 ;;9D4C|----/----\----;
-                      INY                                 ;;9D4D|----/----\----;
-                      CPY.W #$00CC                        ;;9D4E|----/----\----; If not at end of loop, continue 
-                      BNE -                               ;;9D51|----/----\----;
-                      SEP #$10                            ;;9D53|----/----\----; Index (8 bit) 
-                      LDA.B #$84                          ;;9D55|----/----\----;
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
+DATA_009CD2:          db $D4,$31,$FC,$38,$9D,$31,$FC,$38  ;;    |----          ;
+                      db $8D,$31,$FC,$38,$FC,$38,$FC,$38  ;;    |----          ;
+                                                          ;;    |----          ;
+CODE_009D3A:          STZ.B !_5                           ;;    |----          ;
+CODE_009D3C:          STY.B !_6                           ;;    |----          ; Index (16 bit) 
+                      LDX.B #$B0                          ;;    |----          ;
+                    - LDA.L DATA_05B6FE-1,X               ;;    |----          ; X =  read index 
+                      STA.L !DynamicStripeImage-1,X       ;;    |----          ; Layer 3-related table 
+                      DEX                                 ;;    |----          ;
+                      BNE -                               ;;    |----          ;
+                      LDA.B #$76                          ;;    |----          ;
+                   else                         ;<  ELSE  ;;-------------------; U, E0, & E1
+CODE_009D38:          LDX.B #$CB                          ;;9D38     /----\----;
+CODE_009D3A:          STZ.B !_5                           ;;9D3A     /----\----;
+CODE_009D3C:          REP #$10                            ;;9D3C     /----\----; Index (16 bit) 
+                      LDY.W #$0000                        ;;9D3E     /----\----;
+                    - LDA.L DATA_05B6FE,X                 ;;9D41     /----\----; X =  read index 
+                      PHX                                 ;;9D45     /----\----; Y = write index 
+                      TYX                                 ;;9D46     /----\----;
+                      STA.L !DynamicStripeImage,X         ;;9D47     /----\----; Layer 3-related table 
+                      PLX                                 ;;9D4B     /----\----;
+                      INX                                 ;;9D4C     /----\----;
+                      INY                                 ;;9D4D     /----\----;
+                      CPY.W #$00CC                        ;;9D4E     /----\----; If not at end of loop, continue 
+                      BNE -                               ;;9D51     /----\----;
+                      SEP #$10                            ;;9D53     /----\----; Index (8 bit) 
+                      LDA.B #$84                          ;;9D55     /----\----;
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                       STA.B !_0                           ;;9D57|----/----\----;
                       LDX.B #$02                          ;;9D59|----/----\----;
 CODE_009D5B:          STX.B !_4                           ;;9D5B|----/----\----;
@@ -3158,11 +3297,13 @@ CODE_009D5B:          STX.B !_4                           ;;9D5B|----/----\----;
                       BNE CODE_009DA6                     ;;9D64|----/----\----;
                       LDA.L !SaveDataChecksum,X           ;;9D66|----/----\----;
                       SEP #$10                            ;;9D6A|----/----\----; Index (8 bit) 
-                      CMP.B #$60                          ;;9D6C|----/----\----;
-                      BCC CODE_009D76                     ;;9D6E|----/----\----;
-                      LDY.B #$87                          ;;9D70|----/----\----;
-                      LDA.B #$88                          ;;9D72|----/----\----;
-                      BRA +                               ;;9D74|----/----\----;
+                   if !_VER != 0                ;\   IF   ;;+++++++++++++++++++; U, E0, & E1
+                      CMP.B #$60                          ;;9D6C     /----\----;
+                      BCC CODE_009D76                     ;;9D6E     /----\----;
+                      LDY.B #$87                          ;;9D70     /----\----;
+                      LDA.B #$88                          ;;9D72     /----\----;
+                      BRA +                               ;;9D74     /----\----;
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                                                           ;;                   ;
 CODE_009D76:          JSR HexToDec                        ;;9D76|----/----\----;
                       TXY                                 ;;9D79|----/----\----;
@@ -3177,18 +3318,38 @@ CODE_009D76:          JSR HexToDec                        ;;9D76|----/----\----;
                       STA.L !DynamicStripeImage+3,X       ;;9D8C|----/----\----;
                       STA.L !DynamicStripeImage+5,X       ;;9D90|----/----\----;
                       REP #$20                            ;;9D94|----/----\----; Accum (16 bit) 
-                      LDY.B #$03                          ;;9D96|----/----\----;
-                    - LDA.W #$38FC                        ;;9D98|----/----\----;
-                      STA.L !DynamicStripeImage+6,X       ;;9D9B|----/----\----;
-                      INX                                 ;;9D9F|----/----\----;
-                      INX                                 ;;9DA0|----/----\----;
-                      DEY                                 ;;9DA1|----/----\----;
-                      BNE -                               ;;9DA2|----/----\----;
-                      SEP #$20                            ;;9DA4|----/----\----; Accum (8 bit) 
-CODE_009DA6:          SEP #$10                            ;;9DA6|----/----\----; Index (8 bit) 
-                      LDA.B !_0                           ;;9DA8|----/----\----;
-                      SEC                                 ;;9DAA|----/----\----;
-                      SBC.B #$24                          ;;9DAB|----/----\----;
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
+                      LDA.W #$38FC                        ;;    |----          ;
+                      STA.L !DynamicStripeImage+$12,X     ;;    |----          ;
+                      LDY.B !_6                           ;;    |----          ;
+                    - LDA.W DATA_009CD2,Y                 ;;    |----          ;
+                      STA.L !DynamicStripeImage+6,X       ;;    |----          ;
+                      INX                                 ;;    |----          ;
+                      INX                                 ;;    |----          ;
+                      DEY                                 ;;    |----          ;
+                      DEY                                 ;;    |----          ;
+                      DEY                                 ;;    |----          ;
+                      DEY                                 ;;    |----          ;
+                      BPL -                               ;;    |----          ;
+                      SEP #$20                            ;;    |----          ; Accum (8 bit) 
+CODE_009DA6:          SEP #$10                            ;;    |----          ; Index (8 bit) 
+                      LDA.B !_0                           ;;    |----          ;
+                      SEC                                 ;;    |----          ;
+                      SBC.B #$2A                          ;;    |----          ;
+                   else                         ;<  ELSE  ;;-------------------; U, E0, & E1
+                      LDY.B #$03                          ;;9D96     /----\----;
+                    - LDA.W #$38FC                        ;;9D98     /----\----;
+                      STA.L !DynamicStripeImage+6,X       ;;9D9B     /----\----;
+                      INX                                 ;;9D9F     /----\----;
+                      INX                                 ;;9DA0     /----\----;
+                      DEY                                 ;;9DA1     /----\----;
+                      BNE -                               ;;9DA2     /----\----;
+                      SEP #$20                            ;;9DA4     /----\----; Accum (8 bit) 
+CODE_009DA6:          SEP #$10                            ;;9DA6     /----\----; Index (8 bit) 
+                      LDA.B !_0                           ;;9DA8     /----\----;
+                      SEC                                 ;;9DAA     /----\----;
+                      SBC.B #$24                          ;;9DAB     /----\----;
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                       STA.B !_0                           ;;9DAD|----/----\----;
                       LDX.B !_4                           ;;9DAF|----/----\----;
                       DEX                                 ;;9DB1|----/----\----;
@@ -3278,11 +3439,16 @@ CODE_009E62:          JSR KeepModeActive                  ;;9E62|----/----\----;
                       LDY.B #$0B                          ;;9E65|----/----\----;
                       JMP CODE_009C8B                     ;;9E67|----/----\----;
                                                           ;;                   ;
-DATA_009E6A:          db $02,$00,$04,$00,$02,$00,$02,$00  ;;9E6A|----/----\----;
-                      db $04,$00                          ;;9E72|----/----\----;
+DATA_009E6A:          dw $0002,$0004,$0002,$0002          ;;9E6A|----/----\----;
+                      dw $0004                            ;;9E72|----/----\----;
                                                           ;;                   ;
-DATA_009E74:          db $CB,$51,$E8,$51,$08,$52,$C4,$51  ;;9E74|----/----\----;
-                      db $E5,$51                          ;;9E7C|----/----\----;
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
+DATA_009E74:          dw $51CC,$5208,$5228,$5208          ;;    |----          ;
+                      dw $5208                            ;;    |----          ;
+                   else                         ;<  ELSE  ;;-------------------; U, E0, & E1
+DATA_009E74:          dw $51CB,$51E8,$5208,$51C4          ;;9E74     /----\----;
+                      dw $51E5                            ;;9E7C     /----\----;
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                                                           ;;                   ;
 DATA_009E7E:          db $01,$02,$04,$08                  ;;9E7E|----/----\----;
                                                           ;;                   ;
@@ -3331,10 +3497,14 @@ CODE_009ED4:          TXA                                 ;;9ED4|----/----\----;
                       STA.L !DynamicStripeImage,X         ;;9EDB|----/----\----;
                       RTS                                 ;;9EDF|----/----\----;
                                                           ;;                   ;
-TBL_009EE0:           db $28                              ;;9EE0|----/----\----;
-                                                          ;;                   ;
-DATA_009EE1:          db $03,$4D,$01,$52,$01,$53,$01,$5B  ;;9EE1|----/----\----;
-                      db $08,$5C,$02,$57,$04,$30,$01      ;;9EE9|----/----\----;
+TBL_009EE0:           db $28,$03                          ;;9EE0|----/----\----;
+                      db $4D,$01                          ;;9EE2|----/----\----;
+                      db $52,$01                          ;;9EE4|----/----\----;
+                      db $53,$01                          ;;9EE6|----/----\----;
+                      db $5B,$08                          ;;9EE8|----/----\----;
+                      db $5C,$02                          ;;9EEA|----/----\----;
+                      db $57,$04                          ;;9EEC|----/----\----;
+                      db $30,$01                          ;;9EEE|----/----\----;
                                                           ;;                   ;
 TBL_009EF0:           db $01,$01,$02,$00,$02,$00,$68,$00  ;;9EF0|----/----\----;
                       db $78,$00,$68,$00,$78,$00,$06,$00  ;;9EF8|----/----\----;
@@ -3346,7 +3516,7 @@ CODE_WRITEOW:         LDX.B #$8D                          ;;9F06|----/----\----;
                       BNE -                               ;;9F0C|----/----\----;
                       LDX.B #$0E                          ;;9F0E|----/----\----;
                     - LDY.W TBL_009EE0,X                  ;;9F10|----/----\----; \ 
-                      LDA.W DATA_009EE1,X                 ;;9F13|----/----\----; |Write overworld settings to OW L1 table 
+                      LDA.W TBL_009EE0+1,X                ;;9F13|----/----\----; |Write overworld settings to OW L1 table 
                       STA.W !SaveDataBuffer,Y             ;;9F16|----/----\----; / 
                       DEX                                 ;;9F19|----/----\----;
                       DEX                                 ;;9F1A|----/----\----;
@@ -3363,10 +3533,9 @@ CODE_009F2B:          STA.W !KeepModeActive               ;;9F2B|----/----\----;
                       RTS                                 ;;9F2E|----/----\----;
                                                           ;;                   ;
 DATA_009F2F:          db $01,$FF                          ;;9F2F|----/----\----;
-                                                          ;;                   ;
 DATA_009F31:          db $F0,$10                          ;;9F31|----/----\----;
-                                                          ;;                   ;
-DATA_009F33:          db $0F,$00,$00,$F0                  ;;9F33|----/----\----;
+DATA_009F33:          db $0F,$00                          ;;9F33|----/----\----;
+                      db $00,$F0                          ;;9F35|----/----\----;
                                                           ;;                   ;
 TmpFade:              DEC.W !KeepModeActive               ;;9F37|----/----\----; \If 0DB1 = 0 Then Exit Ssub 
                       BPL Return009F6E                    ;;9F3A|----/----\----; /Decrease it either way. 
@@ -3403,12 +3572,22 @@ CODE_009F7C:          DEC.W !KeepModeActive               ;;9F7C|----/----\----;
                       JSR CODE_009F2B                     ;;9F83|----/----\----;
                       BRA CODE_009F77                     ;;9F86|----/----\----;
                                                           ;;                   ;
-DATA_009F88:          db $01,$02,$C0,$01,$80,$81,$01,$02  ;;9F88|----/----\----;
-                      db $C0,$01,$02,$81,$01,$02,$80,$01  ;;9F90|----/----\----;
-                      db $02,$81,$01,$02,$81,$01,$02,$C0  ;;9F98|----/----\----;
-                      db $01,$02,$C0,$01,$02,$81,$01,$02  ;;9FA0|----/----\----;
-                      db $80,$01,$02,$80,$01,$02,$80,$01  ;;9FA8|----/----\----;
-                      db $02,$81,$01,$02,$81,$01,$02,$80  ;;9FB0|----/----\----;
+DATA_009F88:          db $01,$02,$C0                      ;;9F88|----/----\----;
+                      db $01,$80,$81                      ;;9F8B|----/----\----;
+                      db $01,$02,$C0                      ;;9F8E|----/----\----;
+                      db $01,$02,$81                      ;;9F91|----/----\----;
+                      db $01,$02,$80                      ;;9F94|----/----\----;
+                      db $01,$02,$81                      ;;9F97|----/----\----;
+                      db $01,$02,$81                      ;;9F9A|----/----\----;
+                      db $01,$02,$C0                      ;;9F9D|----/----\----;
+                      db $01,$02,$C0                      ;;9FA0|----/----\----;
+                      db $01,$02,$81                      ;;9FA3|----/----\----;
+                      db $01,$02,$80                      ;;9FA6|----/----\----;
+                      db $01,$02,$80                      ;;9FA9|----/----\----;
+                      db $01,$02,$80                      ;;9FAC|----/----\----;
+                      db $01,$02,$81                      ;;9FAF|----/----\----;
+                      db $01,$02,$81                      ;;9FB2|----/----\----;
+                      db $01,$02,$80                      ;;9FB5|----/----\----;
                                                           ;;                   ;
 CODE_009FB8:          LDA.W !ObjectTileset                ;;9FB8|----/----\----; \  
                       ASL A                               ;;9FBB|----/----\----;  |Get (Tileset*3), store in $00 
@@ -3503,11 +3682,11 @@ CODE_00A04A:          LDY.W #$0058                        ;;A04A|----/----\----;
                       RTS                                 ;;A06A|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_00A06B:          db $00,$00,$EF,$FF,$EF,$FF,$EF,$FF  ;;A06B|----/----\----;
-                      db $F0,$00,$F0,$00,$F0,$00          ;;A073|----/----\----;
+DATA_00A06B:          dw $0000,$FFEF,$FFEF,$FFEF          ;;A06B|----/----\----;
+                      dw $00F0,$00F0,$00F0                ;;A073|----/----\----;
                                                           ;;                   ;
-DATA_00A079:          db $00,$00,$D8,$FF,$80,$00,$28,$01  ;;A079|----/----\----;
-                      db $D8,$FF,$80,$00,$28,$01          ;;A081|----/----\----;
+DATA_00A079:          dw $0000,$FFD8,$0080,$0128          ;;A079|----/----\----;
+                      dw $FFD8,$0080,$0128                ;;A081|----/----\----;
                                                           ;;                   ;
 CODE_00A087:          JSR TurnOffIO                       ;;A087|----/----\----;
                       LDA.W !EnteringStarWarp             ;;A08A|----/----\----;
@@ -3934,19 +4113,17 @@ CODE_00A436:          LDA.W !MarioStartFlag               ;;A436|----/----\----;
                     + RTS                                 ;;A47E|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_00A47F:          db $82                              ;;A47F|----/----\----;
-                                                          ;;                   ;
-DATA_00A480:          db $06                              ;;A480|----/----\----;
-                                                          ;;                   ;
-DATA_00A481:          db $00,$05,$09,$00,$03,$07,$00      ;;A481|----/----\----;
+DATA_00A47F:          dl !DynPaletteTable&$FFFF           ;;A47F|----/----\----;
+                      dl !CopyPalette&$FFFF               ;;A482|----/----\----;
+                      dl !MainPalette&$FFFF               ;;A485|----/----\----;
                                                           ;;                   ;
 CODE_00A488:          LDY.W !PaletteIndexTable            ;;A488|----/----\----;
-                      LDX.W DATA_00A481,Y                 ;;A48B|----/----\----;
+                      LDX.W DATA_00A47F+2,Y               ;;A48B|----/----\----;
                       STX.B !_2                           ;;A48E|----/----\----;
                       STZ.B !_1                           ;;A490|----/----\----;
                       STZ.B !_0                           ;;A492|----/----\----;
                       STZ.B !_4                           ;;A494|----/----\----;
-                      LDA.W DATA_00A480,Y                 ;;A496|----/----\----;
+                      LDA.W DATA_00A47F+1,Y               ;;A496|----/----\----;
                       XBA                                 ;;A499|----/----\----;
                       LDA.W DATA_00A47F,Y                 ;;A49A|----/----\----;
                       REP #$10                            ;;A49D|----/----\----; Index (16 bit) 
@@ -4010,7 +4187,6 @@ CODE_00A4E3:          REP #$10                            ;;A4E3|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
 DATA_00A521:          db $00,$04,$08,$0C                  ;;A521|----/----\----;
-                                                          ;;                   ;
 DATA_00A525:          db $00,$08,$10,$18                  ;;A525|----/----\----;
                                                           ;;                   ;
 CODE_00A529:          LDA.B #$80                          ;;A529|----/----\----;
@@ -4056,9 +4232,13 @@ CODE_00A529:          LDA.B #$80                          ;;A529|----/----\----;
                       RTS                                 ;;A585|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_00A586:          db $01,$18,$00,$40,$7F,$00,$08      ;;A586|----/----\----;
+DATA_00A586:          db $01,$18                          ;;A586|----/----\----;
+                      dl !OWLayer2Tilemap                 ;;A586|----/----\----;
+                      dw $0800                            ;;A586|----/----\----;
                                                           ;;                   ;
-DATA_00A58D:          db $01,$18,$00,$E4,$7E,$00,$08      ;;A58D|----/----\----;
+DATA_00A58D:          db $01,$18                          ;;A58D|----/----\----;
+                      dl !OWLayer1VramBuffer              ;;A58D|----/----\----;
+                      dw $0800                            ;;A58D|----/----\----;
                                                           ;;                   ;
 CODE_00A594:          PHB                                 ;;A594|----/----\----; Wrapper 
                       PHK                                 ;;A595|----/----\----;
@@ -4113,10 +4293,8 @@ CODE_00A5F9:          LDA.B #$E7                          ;;A5F9|----/----\----;
                       RTS                                 ;;A60C|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_00A60D:          db $00,$01,$01,$01                  ;;A60D|----/----\----;
-                                                          ;;                   ;
-DATA_00A611:          db $0D,$00,$F3,$FF,$FE,$FF,$FE,$FF  ;;A611|----/----\----;
-                      db $00,$00,$00,$00                  ;;A619|----/----\----;
+DATA_00A60D:          dw $0100,$0101,$000D,$FFF3          ;;A60D|----/----\----;
+                      dw $FFFE,$FFFE,$0000,$0000          ;;A615|----/----\----;
                                                           ;;                   ;
 DATA_00A61D:          db $0A,$00,$00,$00,$1A,$1A,$0A,$0A  ;;A61D|----/----\----;
 DATA_00A625:          db $00,$80,$40,$00,$01,$02,$40,$00  ;;A625|----/----\----;
@@ -4282,7 +4460,7 @@ CODE_00A768:          LDY.B #$1C                          ;;A768|----/----\----;
                       STA.B !PlayerXPosNext               ;;A789|----/----\----;
                       LDA.B !PlayerYPosNext               ;;A78B|----/----\----;
                       CLC                                 ;;A78D|----/----\----;
-                      ADC.W DATA_00A611,X                 ;;A78E|----/----\----;
+                      ADC.W DATA_00A60D+4,X               ;;A78E|----/----\----;
                       STA.B !PlayerYPosNext               ;;A791|----/----\----;
                       SEP #$20                            ;;A793|----/----\----; Accum (8 bit) 
                     + RTS                                 ;;A795|----/----\----;
@@ -4320,9 +4498,9 @@ CODE_00A7C2:          REP #$20                            ;;A7C2|----/----\----;
                       STA.W !HW_VMADD                     ;;A7CC|----/----\----; Address for VRAM Read/Write (Low Byte)
                       LDA.W #$1801                        ;;A7CF|----/----\----;
                       STA.W !HW_DMAPARAM+$20              ;;A7D2|----/----\----; Parameters for DMA Transfer
-                      LDA.W #$977B                        ;;A7D5|----/----\----;
+                      LDA.W #!MarioStartGraphics          ;;A7D5|----/----\----;
                       STA.W !HW_DMAADDR+$20               ;;A7D8|----/----\----; A Address (Low Byte)
-                      LDX.B #$7F                          ;;A7DB|----/----\----;
+                      LDX.B #!MarioStartGraphics>>16      ;;A7DB|----/----\----;
                       STX.W !HW_DMAADDR+$22               ;;A7DD|----/----\----; A Address Bank
                       LDA.W #$00C0                        ;;A7E0|----/----\----;
                       STA.W !HW_DMACNT+$20                ;;A7E3|----/----\----; Number Bytes to Transfer (Low Byte) (DMA)
@@ -4330,21 +4508,21 @@ CODE_00A7C2:          REP #$20                            ;;A7C2|----/----\----;
                       STX.W !HW_MDMAEN                    ;;A7E8|----/----\----; Regular DMA Channel Enable
                       LDA.W #$6100                        ;;A7EB|----/----\----;
                       STA.W !HW_VMADD                     ;;A7EE|----/----\----; Address for VRAM Read/Write (Low Byte)
-                      LDA.W #$983B                        ;;A7F1|----/----\----;
+                      LDA.W #!MarioStartGraphics+$C0      ;;A7F1|----/----\----;
                       STA.W !HW_DMAADDR+$20               ;;A7F4|----/----\----; A Address (Low Byte)
                       LDA.W #$00C0                        ;;A7F7|----/----\----;
                       STA.W !HW_DMACNT+$20                ;;A7FA|----/----\----; Number Bytes to Transfer (Low Byte) (DMA)
                       STX.W !HW_MDMAEN                    ;;A7FD|----/----\----; Regular DMA Channel Enable
                       LDA.W #$64A0                        ;;A800|----/----\----;
                       STA.W !HW_VMADD                     ;;A803|----/----\----; Address for VRAM Read/Write (Low Byte)
-                      LDA.W #$98FB                        ;;A806|----/----\----;
+                      LDA.W #!MarioStartGraphics+$180     ;;A806|----/----\----;
                       STA.W !HW_DMAADDR+$20               ;;A809|----/----\----; A Address (Low Byte)
                       LDA.W #$00C0                        ;;A80C|----/----\----;
                       STA.W !HW_DMACNT+$20                ;;A80F|----/----\----; Number Bytes to Transfer (Low Byte) (DMA)
                       STX.W !HW_MDMAEN                    ;;A812|----/----\----; Regular DMA Channel Enable
                       LDA.W #$65A0                        ;;A815|----/----\----;
                       STA.W !HW_VMADD                     ;;A818|----/----\----; Address for VRAM Read/Write (Low Byte)
-                      LDA.W #$99BB                        ;;A81B|----/----\----;
+                      LDA.W #!MarioStartGraphics+$240     ;;A81B|----/----\----;
                       STA.W !HW_DMAADDR+$20               ;;A81E|----/----\----; A Address (Low Byte)
                       LDA.W #$00C0                        ;;A821|----/----\----;
                       STA.W !HW_DMACNT+$20                ;;A824|----/----\----; Number Bytes to Transfer (Low Byte) (DMA)
@@ -4422,32 +4600,58 @@ CODE_00A886:          LDY.W #$0008                        ;;A886|----/----\----;
                       RTS                                 ;;A8C2|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
-SPRITEGFXLIST:        db $00,$01,$13,$02,$00,$01,$12,$03  ;;A8C3|----/----\----; Forest ; Castle 
-                      db $00,$01,$13,$05,$00,$01,$13,$04  ;;A8CB|----/----\----; Mushroom ; Underground 
-                      db $00,$01,$13,$06,$00,$01,$13,$09  ;;A8D3|----/----\----; Water ; Pokey 
-                      db $00,$01,$13,$04,$00,$01,$06,$11  ;;A8DB|----/----\----; Underground 2 ; Ghost House 
-                      db $00,$01,$13,$20,$00,$01,$13,$0F  ;;A8E3|----/----\----; Banzai Bill ; Yoshi's House 
-                      db $00,$01,$13,$23,$00,$01,$0D,$14  ;;A8EB|----/----\----; Dino-Rhino ; Switch Palace 
-                      db $00,$01,$24,$0E,$00,$01,$0A,$22  ;;A8F3|----/----\----; Mechakoopa ; Wendy/Lemmy 
-                      db $00,$01,$13,$0E,$00,$01,$13,$14  ;;A8FB|----/----\----; Ninji ; Unused 
-                      db $00,$00,$00,$08,$10,$0F,$1C,$1D  ;;A903|----/----\----;
-                      db $00,$01,$24,$22,$00,$01,$25,$22  ;;A90B|----/----\----;
-                      db $00,$22,$13,$2D,$00,$01,$0F,$22  ;;A913|----/----\----;
-                      db $00,$26,$2E,$22,$21,$0B,$25,$0A  ;;A91B|----/----\----;
-                      db $00,$0D,$24,$22,$2C,$30,$2D,$0E  ;;A923|----/----\----;
-OBJECTGFXLIST:        db $14,$17,$19,$15,$14,$17,$1B,$18  ;;A92B|----/----\----; Normal 1 ; Castle 1 
-                      db $14,$17,$1B,$16,$14,$17,$0C,$1A  ;;A933|----/----\----; Rope 1 ; Underground 1 
-                      db $14,$17,$1B,$08,$14,$17,$0C,$07  ;;A93B|----/----\----; Switch Palace 1 ; Ghost House 1 
-                      db $14,$17,$0C,$16,$14,$17,$1B,$15  ;;A943|----/----\----; Rope 2 ; Normal 2 
-                      db $14,$17,$19,$16,$14,$17,$0D,$1A  ;;A94B|----/----\----; Rope 3 ; Underground 2 
-                      db $14,$17,$1B,$08,$14,$17,$1B,$18  ;;A953|----/----\----; Switch Palace 2 ; Castle 2 
-                      db $14,$17,$19,$1F,$14,$17,$0D,$07  ;;A95B|----/----\----; Cloud/Forest ; Ghost House 2 
-                      db $14,$17,$19,$1A,$14,$17,$14,$14  ;;A963|----/----\----; Underground 2 
-                      db $0E,$0F,$17,$17,$1C,$1D,$08,$1E  ;;A96B|----/----\----;
-                      db $1C,$1D,$08,$1E,$1C,$1D,$08,$1E  ;;A973|----/----\----;
-                      db $1C,$1D,$08,$1E,$1C,$1D,$08,$1E  ;;A97B|----/----\----;
-                      db $1C,$1D,$08,$1E,$1C,$1D,$08,$1E  ;;A983|----/----\----;
-                      db $14,$17,$19,$2C,$19,$17,$1B,$18  ;;A98B|----/----\----;
+SPRITEGFXLIST:        db $00,$01,$13,$02                  ;;A8C3|----/----\----; Forest
+                      db $00,$01,$12,$03                  ;;A8C7|----/----\----; Castle 
+                      db $00,$01,$13,$05                  ;;A8CB|----/----\----; Mushroom
+                      db $00,$01,$13,$04                  ;;A8CF|----/----\----; Underground 
+                      db $00,$01,$13,$06                  ;;A8D3|----/----\----; Water
+                      db $00,$01,$13,$09                  ;;A8D7|----/----\----; Pokey 
+                      db $00,$01,$13,$04                  ;;A8DB|----/----\----; Underground 2
+                      db $00,$01,$06,$11                  ;;A8DF|----/----\----; Ghost House 
+                      db $00,$01,$13,$20                  ;;A8E3|----/----\----; Banzai Bill
+                      db $00,$01,$13,$0F                  ;;A8E7|----/----\----; Yoshi's House 
+                      db $00,$01,$13,$23                  ;;A8EB|----/----\----; Dino-Rhino
+                      db $00,$01,$0D,$14                  ;;A8EF|----/----\----; Switch Palace 
+                      db $00,$01,$24,$0E                  ;;A8F3|----/----\----; Mechakoopa
+                      db $00,$01,$0A,$22                  ;;A8F7|----/----\----; Wendy/Lemmy 
+                      db $00,$01,$13,$0E                  ;;A8FB|----/----\----; Ninji
+                      db $00,$01,$13,$14                  ;;A8FF|----/----\----; Unused 
+                      db $00,$00,$00,$08                  ;;A903|----/----\----;
+                      db $10,$0F,$1C,$1D                  ;;A907|----/----\----;
+                      db $00,$01,$24,$22                  ;;A90B|----/----\----;
+                      db $00,$01,$25,$22                  ;;A90F|----/----\----;
+                      db $00,$22,$13,$2D                  ;;A913|----/----\----;
+                      db $00,$01,$0F,$22                  ;;A917|----/----\----;
+                      db $00,$26,$2E,$22                  ;;A91B|----/----\----;
+                      db $21,$0B,$25,$0A                  ;;A91F|----/----\----;
+                      db $00,$0D,$24,$22                  ;;A923|----/----\----;
+                      db $2C,$30,$2D,$0E                  ;;A927|----/----\----;
+OBJECTGFXLIST:        db $14,$17,$19,$15                  ;;A92B|----/----\----; Normal 1
+                      db $14,$17,$1B,$18                  ;;A92F|----/----\----; Castle 1 
+                      db $14,$17,$1B,$16                  ;;A933|----/----\----; Rope 1
+                      db $14,$17,$0C,$1A                  ;;A937|----/----\----; Underground 1 
+                      db $14,$17,$1B,$08                  ;;A93B|----/----\----; Switch Palace 1
+                      db $14,$17,$0C,$07                  ;;A93F|----/----\----; Ghost House 1 
+                      db $14,$17,$0C,$16                  ;;A943|----/----\----; Rope 2
+                      db $14,$17,$1B,$15                  ;;A947|----/----\----; Normal 2 
+                      db $14,$17,$19,$16                  ;;A94B|----/----\----; Rope 3
+                      db $14,$17,$0D,$1A                  ;;A94F|----/----\----; Underground 2 
+                      db $14,$17,$1B,$08                  ;;A953|----/----\----; Switch Palace 2
+                      db $14,$17,$1B,$18                  ;;A957|----/----\----; Castle 2 
+                      db $14,$17,$19,$1F                  ;;A95B|----/----\----; Cloud/Forest
+                      db $14,$17,$0D,$07                  ;;A95F|----/----\----; Ghost House 2 
+                      db $14,$17,$19,$1A                  ;;A963|----/----\----; Underground 2 
+                      db $14,$17,$14,$14                  ;;A967|----/----\----;
+                      db $0E,$0F,$17,$17                  ;;A96B|----/----\----;
+                      db $1C,$1D,$08,$1E                  ;;A96F|----/----\----;
+                      db $1C,$1D,$08,$1E                  ;;A973|----/----\----;
+                      db $1C,$1D,$08,$1E                  ;;A977|----/----\----;
+                      db $1C,$1D,$08,$1E                  ;;A97B|----/----\----;
+                      db $1C,$1D,$08,$1E                  ;;A97F|----/----\----;
+                      db $1C,$1D,$08,$1E                  ;;A983|----/----\----;
+                      db $1C,$1D,$08,$1E                  ;;A987|----/----\----;
+                      db $14,$17,$19,$2C                  ;;A98B|----/----\----;
+                      db $19,$17,$1B,$18                  ;;A98F|----/----\----;
                                                           ;;                   ;
 CODE_00A993:          STZ.W !HW_VMADD                     ;;A993|----/----\----; \  ; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$40                          ;;A996|----/----\----;  |Set "Address for VRAM Read/Write" to x4000 
@@ -4481,7 +4685,6 @@ CODE_00A9A3:          LDA.B !_E                           ;;A9A3|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
 DATA_00A9D2:          db $78,$70,$68,$60                  ;;A9D2|----/----\----;
-                                                          ;;                   ;
 DATA_00A9D6:          db $18,$10,$08,$00                  ;;A9D6|----/----\----;
                                                           ;;                   ;
 UploadSpriteGFX:      LDA.B #$80                          ;;A9DA|----/----\----; Decompression as well? 
@@ -4996,7 +5199,6 @@ CODE_00AE15:          LDA.B #$02                          ;;AE15|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
 DATA_00AE41:          db $00,$05,$0A                      ;;AE41|----/----\----;
-                                                          ;;                   ;
 DATA_00AE44:          db $20,$40,$80                      ;;AE44|----/----\----;
                                                           ;;                   ;
 CODE_00AE47:          LDX.B #$02                          ;;AE47|----/----\----;
@@ -5017,32 +5219,33 @@ CODE_00AE57:          SEP #$20                            ;;AE57|----/----\----;
                       RTS                                 ;;AE64|----/----\----; Return 
                                                           ;;                   ;
                                                           ;;                   ;
-DATA_00AE65:          db $1F,$00,$E0,$03,$00,$7C          ;;AE65|----/----\----;
+DATA_00AE65:          dw $001F,$03E0,$7C00                ;;AE65|----/----\----;
                                                           ;;                   ;
-DATA_00AE6B:          db $FF,$FF,$E0,$FF,$00,$FC          ;;AE6B|----/----\----;
+DATA_00AE6B:          dw $FFFF,$FFE0,$FC00                ;;AE6B|----/----\----;
                                                           ;;                   ;
-DATA_00AE71:          db $01,$00,$20,$00,$00,$04          ;;AE71|----/----\----;
+DATA_00AE71:          dw $0001,$0020,$0400                ;;AE71|----/----\----;
                                                           ;;                   ;
-DATA_00AE77:          db $00,$00,$00,$00,$01,$00,$00,$00  ;;AE77|----/----\----;
-                      db $00,$80,$00,$80,$20,$80,$00,$04  ;;AE7F|----/----\----;
-                      db $80,$80,$80,$80,$08,$82,$40,$10  ;;AE87|----/----\----;
-                      db $20,$84,$20,$84,$44,$88,$10,$22  ;;AE8F|----/----\----;
-                      db $88,$88,$88,$88,$22,$91,$88,$44  ;;AE97|----/----\----;
-                      db $48,$92,$48,$92,$92,$A4,$24,$49  ;;AE9F|----/----\----;
-                      db $A4,$A4,$A4,$A4,$49,$A9,$94,$52  ;;AEA7|----/----\----;
-                      db $AA,$AA,$94,$52,$AA,$AA,$54,$55  ;;AEAF|----/----\----;
-                      db $AA,$AA,$AA,$AA,$AA,$D5,$AA,$AA  ;;AEB7|----/----\----;
-                      db $AA,$D5,$AA,$D5,$B5,$D6,$6A,$AD  ;;AEBF|----/----\----;
-                      db $DA,$DA,$DA,$DA,$6D,$DB,$DA,$B6  ;;AEC7|----/----\----;
-                      db $B6,$ED,$B6,$ED,$DD,$EE,$76,$BB  ;;AECF|----/----\----;
-                      db $EE,$EE,$EE,$EE,$BB,$F7,$EE,$DD  ;;AED7|----/----\----;
-                      db $DE,$FB,$DE,$FB,$F7,$FD,$BE,$EF  ;;AEDF|----/----\----;
-                      db $FE,$FE,$FE,$FE,$DF,$FF,$FE,$FB  ;;AEE7|----/----\----;
-                      db $FE,$FF,$FE,$FF,$FF,$FF,$FE,$FF  ;;AEEF|----/----\----;
-DATA_00AEF7:          db $00,$80,$00,$40,$00,$20,$00,$10  ;;AEF7|----/----\----;
-                      db $00,$08,$00,$04,$00,$02,$00,$01  ;;AEFF|----/----\----;
-                      db $80,$00,$40,$00,$20,$00,$10,$00  ;;AF07|----/----\----;
-                      db $08,$00,$04,$00,$02,$00,$01,$00  ;;AF0F|----/----\----;
+DATA_00AE77:          dw $0000,$0000,$0001,$0000          ;;AE77|----/----\----;
+                      dw $8000,$8000,$8020,$0400          ;;AE7F|----/----\----;
+                      dw $8080,$8080,$8208,$1040          ;;AE87|----/----\----;
+                      dw $8420,$8420,$8844,$2210          ;;AE8F|----/----\----;
+                      dw $8888,$8888,$9122,$4488          ;;AE97|----/----\----;
+                      dw $9248,$9248,$A492,$4924          ;;AE9F|----/----\----;
+                      dw $A4A4,$A4A4,$A949,$5294          ;;AEA7|----/----\----;
+                      dw $AAAA,$5294,$AAAA,$5554          ;;AEAF|----/----\----;
+                      dw $AAAA,$AAAA,$D5AA,$AAAA          ;;AEB7|----/----\----;
+                      dw $D5AA,$D5AA,$D6B5,$AD6A          ;;AEBF|----/----\----;
+                      dw $DADA,$DADA,$DB6D,$B6DA          ;;AEC7|----/----\----;
+                      dw $EDB6,$EDB6,$EEDD,$BB76          ;;AECF|----/----\----;
+                      dw $EEEE,$EEEE,$F7BB,$DDEE          ;;AED7|----/----\----;
+                      dw $FBDE,$FBDE,$FDF7,$EFBE          ;;AEDF|----/----\----;
+                      dw $FEFE,$FEFE,$FFDF,$FBFE          ;;AEE7|----/----\----;
+                      dw $FFFE,$FFFE,$FFFF,$FFFE          ;;AEEF|----/----\----;
+                                                          ;;                   ;
+DATA_00AEF7:          dw $8000,$4000,$2000,$1000          ;;AEF7|----/----\----;
+                      dw $0800,$0400,$0200,$0100          ;;AEFF|----/----\----;
+                      dw $0080,$0040,$0020,$0010          ;;AF07|----/----\----;
+                      dw $0008,$0004,$0002,$0001          ;;AF0F|----/----\----;
                                                           ;;                   ;
 CODE_00AF17:          LDY.W !EndLevelTimer                ;;AF17|----/----\----;
                       LDA.B !TrueFrame                    ;;AF1A|----/----\----;
@@ -5236,6 +5439,9 @@ Return00B090:         RTS                                 ;;B090|----/----\----;
                                                           ;;                   ;
                       db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;B091|----/----\----;
                       db $FF,$FF,$FF,$FF,$FF,$FF,$FF      ;;B099|----/----\----;
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
+                      db $FF,$FF                          ;     |----          ;
+                   endif                        ;/ ENDIF  ;;-------------------;
                                                           ;;                   ;
 BackAreaColors:       dw $5B9F,$6FFB,$5D80,$0000          ;;B0A0|----/----\----; back area colors
                       dw $1D22,$24C3,$7393,$7FFF          ;;B0A8|----/----\----;
@@ -5365,36 +5571,44 @@ PlayerColors:         dw $635F,$581D,$000A,$391F          ;;B2C8|----/----\----;
                       dw $0DDF,$03FF                      ;;B314|----/----\----;
                                                           ;;                   ;
 SpriteColors:         dw $0000,$24C5,$2D49,$2DAD          ;;B318|----/----\----; Sprite Palette 0
-                      dw $2253,$3F18,$2523,$35C4          ;;B320|----/----\----;
-                      dw $3E25,$4686,$4EE7,$401F          ;;B328|----/----\----;
+                      dw $2253,$3F18                      ;;B320|----/----\----;
+                      dw $2523,$35C4,$3E25,$4686          ;;B324|----/----\----;
+                      dw $4EE7,$401F                      ;;B32C|----/----\----;
                                                           ;;                   ;
                       dw $0000,$41C6,$7354,$7FFA          ;;B330|----/----\----; Sprite Palette 1
-                      dw $7FFD,$6D08,$0000,$3434          ;;B338|----/----\----;
-                      dw $443A,$659F,$0116,$027F          ;;B340|----/----\----;
+                      dw $7FFD,$6D08                      ;;B338|----/----\----;
+                      dw $0000,$3434,$443A,$659F          ;;B33C|----/----\----;
+                      dw $0116,$027F                      ;;B344|----/----\----;
                                                           ;;                   ;
                       dw $0000,$24C5,$2D49,$2DAD          ;;B348|----/----\----; Sprite Palette 2
-                      dw $2253,$3F18,$0000,$2DAE          ;;B350|----/----\----;
-                      dw $3E32,$4AB6,$52F9,$2CF3          ;;B358|----/----\----;
+                      dw $2253,$3F18                      ;;B350|----/----\----;
+                      dw $0000,$2DAE,$3E32,$4AB6          ;;B354|----/----\----;
+                      dw $52F9,$2CF3                      ;;B35C|----/----\----;
                                                           ;;                   ;
                       dw $0000,$516B,$4E6D,$4FB3          ;;B360|----/----\----; Sprite Palette 3
-                      dw $30BF,$371D,$2E32,$4A0D          ;;B368|----/----\----;
-                      dw $1088,$214A,$296D,$3DCF          ;;B370|----/----\----;
+                      dw $30BF,$371D                      ;;B368|----/----\----;
+                      dw $2E32,$4A0D,$1088,$214A          ;;B36C|----/----\----;
+                      dw $296D,$3DCF                      ;;B374|----/----\----;
                                                           ;;                   ;
                       dw $0000,$2940,$3DE0,$5280          ;;B378|----/----\----; Sprite Palette 4
-                      dw $00B7,$023F,$0000,$39CE          ;;B380|----/----\----;
-                      dw $5294,$6318,$00B7,$023F          ;;B388|----/----\----;
+                      dw $00B7,$023F                      ;;B380|----/----\----;
+                      dw $0000,$39CE,$5294,$6318          ;;B384|----/----\----;
+                      dw $00B7,$023F                      ;;B38C|----/----\----;
                                                           ;;                   ;
                       dw $0000,$7E70,$7ED3,$7F36          ;;B390|----/----\----; Sprite Palette 5
-                      dw $7F99,$401F,$0000,$39CE          ;;B398|----/----\----;
-                      dw $5294,$6318,$739C,$2C5F          ;;B3A0|----/----\----;
+                      dw $7F99,$401F                      ;;B398|----/----\----;
+                      dw $0000,$39CE,$5294,$6318          ;;B39C|----/----\----;
+                      dw $739C,$2C5F                      ;;B3A4|----/----\----;
                                                           ;;                   ;
                       dw $0000,$4EDF,$5ADE,$66BD          ;;B3A8|----/----\----; Sprite Palette 6
-                      dw $727C,$401F,$0000,$7FF5          ;;B3B0|----/----\----;
-                      dw $7FF7,$7FF9,$7FFC,$7FFF          ;;B3B8|----/----\----;
+                      dw $727C,$401F                      ;;B3B0|----/----\----;
+                      dw $0000,$7FF5,$7FF7,$7FF9          ;;B3B4|----/----\----;
+                      dw $7FFC,$7FFF                      ;;B3BC|----/----\----;
                                                           ;;                   ;
                       dw $0000,$63FB,$030C,$020B          ;;B3C0|----/----\----; Sprite Palette 7
-                      dw $1535,$1A5F,$0000,$3434          ;;B3C8|----/----\----;
-                      dw $443A,$659F,$0116,$027F          ;;B3D0|----/----\----;
+                      dw $1535,$1A5F                      ;;B3C8|----/----\----;
+                      dw $0000,$3434,$443A,$659F          ;;B3CC|----/----\----;
+                      dw $0116,$027F                      ;;B3D4|----/----\----;
                                                           ;;                   ;
 OverworldColors:      dw $0000,$1228,$12A8,$1348          ;;B3D8|----/----\----; Yoshi's Island
                       dw $327B,$5BBF,$7D60                ;;B3E0|----/----\----;
@@ -5734,6 +5948,9 @@ CODE_00B963:          JMP CODE_00B8E3                     ;;B963|----/----\----;
 CODE_00B966:          JSR ReadByte                        ;;B966|----/----\----;
                       XBA                                 ;;B969|----/----\----;
                       JSR ReadByte                        ;;B96A|----/----\----;
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
+                      XBA                                 ;;    |----          ; ThinkingFace
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                       TAX                                 ;;B96D|----/----\----;
                     - PHY                                 ;;B96E|----/----\----;
                       TXY                                 ;;B96F|----/----\----;
@@ -5935,131 +6152,390 @@ CODE_00BA28:          PHB                                 ;;BA28|----/----\----;
                                                           ;;                   ;
                       db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;BA4D|----/----\----;
                       db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;BA55|----/----\----;
-                      db $FF,$FF,$FF                      ;;BA5D|----/----\----;
+                      db $FF,$FF                          ;;BA5D|----/----\----;
+                   if !_VER != 0                ;\   IF   ;;+++++++++++++++++++; U, E0, & E1
+                      db $FF                              ;;BA5F     /----\----;
+                   endif                        ;/ ENDIF  ;;-------------------;
                                                           ;;                   ;
-DATA_00BA60:          db $00,$B0,$60,$10,$C0,$70,$20,$D0  ;;BA60|----/----\----;
-                      db $80,$30,$E0,$90,$40,$F0,$A0,$50  ;;BA68|----/----\----;
-DATA_00BA70:          db $00,$B0,$60,$10,$C0,$70,$20,$D0  ;;BA70|----/----\----;
-                      db $80,$30,$E0,$90,$40,$F0,$A0,$50  ;;BA78|----/----\----;
-DATA_00BA80:          db $00,$00,$00,$00,$00,$00,$00,$00  ;;BA80|----/----\----;
-                      db $00,$00,$00,$00,$00,$00          ;;BA88|----/----\----;
+DATA_00BA60:          db !Map16TilesLow                   ;;BA60|----/----\----;
+                      db !Map16TilesLow+$1B0              ;;BA61|----/----\----;
+                      db !Map16TilesLow+$360              ;;BA62|----/----\----;
+                      db !Map16TilesLow+$510              ;;BA63|----/----\----;
+                      db !Map16TilesLow+$6C0              ;;BA64|----/----\----;
+                      db !Map16TilesLow+$870              ;;BA65|----/----\----;
+                      db !Map16TilesLow+$A20              ;;BA66|----/----\----;
+                      db !Map16TilesLow+$BD0              ;;BA67|----/----\----;
+                      db !Map16TilesLow+$D80              ;;BA68|----/----\----;
+                      db !Map16TilesLow+$F30              ;;BA69|----/----\----;
+                      db !Map16TilesLow+$10E0             ;;BA6A|----/----\----;
+                      db !Map16TilesLow+$1290             ;;BA6B|----/----\----;
+                      db !Map16TilesLow+$1440             ;;BA6C|----/----\----;
+                      db !Map16TilesLow+$15F0             ;;BA6D|----/----\----;
+                      db !Map16TilesLow+$17A0             ;;BA6E|----/----\----;
+                      db !Map16TilesLow+$1950             ;;BA6F|----/----\----;
+DATA_00BA70:          db !Map16TilesLow+$1B00             ;;BA70|----/----\----;
+                      db !Map16TilesLow+$1CB0             ;;BA71|----/----\----;
+                      db !Map16TilesLow+$1E60             ;;BA72|----/----\----;
+                      db !Map16TilesLow+$2010             ;;BA73|----/----\----;
+                      db !Map16TilesLow+$21C0             ;;BA74|----/----\----;
+                      db !Map16TilesLow+$2370             ;;BA75|----/----\----;
+                      db !Map16TilesLow+$2520             ;;BA76|----/----\----;
+                      db !Map16TilesLow+$26D0             ;;BA77|----/----\----;
+                      db !Map16TilesLow+$2880             ;;BA78|----/----\----;
+                      db !Map16TilesLow+$2A30             ;;BA79|----/----\----;
+                      db !Map16TilesLow+$2BE0             ;;BA7A|----/----\----;
+                      db !Map16TilesLow+$2D90             ;;BA7B|----/----\----;
+                      db !Map16TilesLow+$2F40             ;;BA7C|----/----\----;
+                      db !Map16TilesLow+$30F0             ;;BA7D|----/----\----;
+                      db !Map16TilesLow+$32A0             ;;BA7E|----/----\----;
+                      db !Map16TilesLow+$3450             ;;BA7F|----/----\----;
                                                           ;;                   ;
-DATA_00BA8E:          db $00,$00,$00,$00,$00,$00,$00,$00  ;;BA8E|----/----\----;
-                      db $00,$00,$00,$00,$00,$00          ;;BA96|----/----\----;
+DATA_00BA80:          db !Map16TilesLow                   ;;BA80|----/----\----;
+                      db !Map16TilesLow+$200              ;;BA81|----/----\----;
+                      db !Map16TilesLow+$400              ;;BA82|----/----\----;
+                      db !Map16TilesLow+$600              ;;BA83|----/----\----;
+                      db !Map16TilesLow+$800              ;;BA84|----/----\----;
+                      db !Map16TilesLow+$A00              ;;BA85|----/----\----;
+                      db !Map16TilesLow+$C00              ;;BA86|----/----\----;
+                      db !Map16TilesLow+$E00              ;;BA87|----/----\----;
+                      db !Map16TilesLow+$1000             ;;BA88|----/----\----;
+                      db !Map16TilesLow+$1200             ;;BA89|----/----\----;
+                      db !Map16TilesLow+$1400             ;;BA8A|----/----\----;
+                      db !Map16TilesLow+$1600             ;;BA8B|----/----\----;
+                      db !Map16TilesLow+$1800             ;;BA8C|----/----\----;
+                      db !Map16TilesLow+$1A00             ;;BA8D|----/----\----;
+DATA_00BA8E:          db !Map16TilesLow+$1C00             ;;BA8E|----/----\----;
+                      db !Map16TilesLow+$1E00             ;;BA8F|----/----\----;
+                      db !Map16TilesLow+$2000             ;;BA90|----/----\----;
+                      db !Map16TilesLow+$2200             ;;BA91|----/----\----;
+                      db !Map16TilesLow+$2400             ;;BA92|----/----\----;
+                      db !Map16TilesLow+$2600             ;;BA93|----/----\----;
+                      db !Map16TilesLow+$2800             ;;BA94|----/----\----;
+                      db !Map16TilesLow+$2A00             ;;BA95|----/----\----;
+                      db !Map16TilesLow+$2C00             ;;BA96|----/----\----;
+                      db !Map16TilesLow+$2E00             ;;BA97|----/----\----;
+                      db !Map16TilesLow+$3000             ;;BA98|----/----\----;
+                      db !Map16TilesLow+$3200             ;;BA99|----/----\----;
+                      db !Map16TilesLow+$3400             ;;BA9A|----/----\----;
+                      db !Map16TilesLow+$3600             ;;BA9B|----/----\----;
                                                           ;;                   ;
-DATA_00BA9C:          db $C8,$C9,$CB,$CD,$CE,$D0,$D2,$D3  ;;BA9C|----/----\----;
-                      db $D5,$D7,$D8,$DA,$DC,$DD,$DF,$E1  ;;BAA4|----/----\----;
-DATA_00BAAC:          db $E3,$E4,$E6,$E8,$E9,$EB,$ED,$EE  ;;BAAC|----/----\----;
-                      db $F0,$F2,$F3,$F5,$F7,$F8,$FA,$FC  ;;BAB4|----/----\----;
-DATA_00BABC:          db $C8,$CA,$CC,$CE,$D0,$D2,$D4,$D6  ;;BABC|----/----\----;
-                      db $D8,$DA,$DC,$DE,$E0,$E2          ;;BAC4|----/----\----;
+DATA_00BA9C:          db !Map16TilesLow>>8                ;;BA9C|----/----\----;
+                      db !Map16TilesLow+$1B0>>8           ;;BA9D|----/----\----;
+                      db !Map16TilesLow+$360>>8           ;;BA9E|----/----\----;
+                      db !Map16TilesLow+$510>>8           ;;BA9F|----/----\----;
+                      db !Map16TilesLow+$6C0>>8           ;;BAA0|----/----\----;
+                      db !Map16TilesLow+$870>>8           ;;BAA1|----/----\----;
+                      db !Map16TilesLow+$A20>>8           ;;BAA2|----/----\----;
+                      db !Map16TilesLow+$BD0>>8           ;;BAA3|----/----\----;
+                      db !Map16TilesLow+$D80>>8           ;;BAA4|----/----\----;
+                      db !Map16TilesLow+$F30>>8           ;;BAA5|----/----\----;
+                      db !Map16TilesLow+$10E0>>8          ;;BAA6|----/----\----;
+                      db !Map16TilesLow+$1290>>8          ;;BAA7|----/----\----;
+                      db !Map16TilesLow+$1440>>8          ;;BAA8|----/----\----;
+                      db !Map16TilesLow+$15F0>>8          ;;BAA9|----/----\----;
+                      db !Map16TilesLow+$17A0>>8          ;;BAAA|----/----\----;
+                      db !Map16TilesLow+$1950>>8          ;;BAAB|----/----\----;
+DATA_00BAAC:          db !Map16TilesLow+$1B00>>8          ;;BAAC|----/----\----;
+                      db !Map16TilesLow+$1CB0>>8          ;;BAAD|----/----\----;
+                      db !Map16TilesLow+$1E60>>8          ;;BAAE|----/----\----;
+                      db !Map16TilesLow+$2010>>8          ;;BAAF|----/----\----;
+                      db !Map16TilesLow+$21C0>>8          ;;BAB0|----/----\----;
+                      db !Map16TilesLow+$2370>>8          ;;BAB1|----/----\----;
+                      db !Map16TilesLow+$2520>>8          ;;BAB2|----/----\----;
+                      db !Map16TilesLow+$26D0>>8          ;;BAB3|----/----\----;
+                      db !Map16TilesLow+$2880>>8          ;;BAB4|----/----\----;
+                      db !Map16TilesLow+$2A30>>8          ;;BAB5|----/----\----;
+                      db !Map16TilesLow+$2BE0>>8          ;;BAB6|----/----\----;
+                      db !Map16TilesLow+$2D90>>8          ;;BAB7|----/----\----;
+                      db !Map16TilesLow+$2F40>>8          ;;BAB8|----/----\----;
+                      db !Map16TilesLow+$30F0>>8          ;;BAB9|----/----\----;
+                      db !Map16TilesLow+$32A0>>8          ;;BABA|----/----\----;
+                      db !Map16TilesLow+$3450>>8          ;;BABB|----/----\----;
                                                           ;;                   ;
-DATA_00BACA:          db $E4,$E6,$E8,$EA,$EC,$EE,$F0,$F2  ;;BACA|----/----\----;
-                      db $F4,$F6,$F8,$FA,$FC,$FE          ;;BAD2|----/----\----;
+DATA_00BABC:          db !Map16TilesLow>>8                ;;BABC|----/----\----;
+                      db !Map16TilesLow+$200>>8           ;;BABD|----/----\----;
+                      db !Map16TilesLow+$400>>8           ;;BABE|----/----\----;
+                      db !Map16TilesLow+$600>>8           ;;BABF|----/----\----;
+                      db !Map16TilesLow+$800>>8           ;;BAC0|----/----\----;
+                      db !Map16TilesLow+$A00>>8           ;;BAC1|----/----\----;
+                      db !Map16TilesLow+$C00>>8           ;;BAC2|----/----\----;
+                      db !Map16TilesLow+$E00>>8           ;;BAC3|----/----\----;
+                      db !Map16TilesLow+$1000>>8          ;;BAC4|----/----\----;
+                      db !Map16TilesLow+$1200>>8          ;;BAC5|----/----\----;
+                      db !Map16TilesLow+$1400>>8          ;;BAC6|----/----\----;
+                      db !Map16TilesLow+$1600>>8          ;;BAC7|----/----\----;
+                      db !Map16TilesLow+$1800>>8          ;;BAC8|----/----\----;
+                      db !Map16TilesLow+$1A00>>8          ;;BAC9|----/----\----;
+DATA_00BACA:          db !Map16TilesLow+$1C00>>8          ;;BACA|----/----\----;
+                      db !Map16TilesLow+$1E00>>8          ;;BACB|----/----\----;
+                      db !Map16TilesLow+$2000>>8          ;;BACC|----/----\----;
+                      db !Map16TilesLow+$2200>>8          ;;BACD|----/----\----;
+                      db !Map16TilesLow+$2400>>8          ;;BACE|----/----\----;
+                      db !Map16TilesLow+$2600>>8          ;;BACF|----/----\----;
+                      db !Map16TilesLow+$2800>>8          ;;BAD0|----/----\----;
+                      db !Map16TilesLow+$2A00>>8          ;;BAD1|----/----\----;
+                      db !Map16TilesLow+$2C00>>8          ;;BAD2|----/----\----;
+                      db !Map16TilesLow+$2E00>>8          ;;BAD3|----/----\----;
+                      db !Map16TilesLow+$3000>>8          ;;BAD4|----/----\----;
+                      db !Map16TilesLow+$3200>>8          ;;BAD5|----/----\----;
+                      db !Map16TilesLow+$3400>>8          ;;BAD6|----/----\----;
+                      db !Map16TilesLow+$3600>>8          ;;BAD7|----/----\----;
                                                           ;;                   ;
-DATA_00BAD8:          db $00,$C8,$7E,$B0,$C9,$7E,$60,$CB  ;;BAD8|----/----\----;
-                      db $7E,$10,$CD,$7E,$C0,$CE,$7E,$70  ;;BAE0|----/----\----;
-                      db $D0,$7E,$20,$D2,$7E,$D0,$D3,$7E  ;;BAE8|----/----\----;
-                      db $80,$D5,$7E,$30,$D7,$7E,$E0,$D8  ;;BAF0|----/----\----;
-                      db $7E,$90,$DA,$7E,$40,$DC,$7E,$F0  ;;BAF8|----/----\----;
-                      db $DD,$7E,$A0,$DF,$7E,$50,$E1,$7E  ;;BB00|----/----\----;
-DATA_00BB08:          db $00,$E3,$7E,$B0,$E4,$7E,$60,$E6  ;;BB08|----/----\----;
-                      db $7E,$10,$E8,$7E,$C0,$E9,$7E,$70  ;;BB10|----/----\----;
-                      db $EB,$7E,$20,$ED,$7E,$D0,$EE,$7E  ;;BB18|----/----\----;
-                      db $80,$F0,$7E,$30,$F2,$7E,$E0,$F3  ;;BB20|----/----\----;
-                      db $7E,$90,$F5,$7E,$40,$F7,$7E,$F0  ;;BB28|----/----\----;
-                      db $F8,$7E,$A0,$FA,$7E,$50,$FC,$7E  ;;BB30|----/----\----;
-DATA_00BB38:          db $00,$C8,$7E,$00,$CA,$7E,$00,$CC  ;;BB38|----/----\----;
-                      db $7E,$00,$CE,$7E,$00,$D0,$7E,$00  ;;BB40|----/----\----;
-                      db $D2,$7E,$00,$D4,$7E,$00,$D6,$7E  ;;BB48|----/----\----;
-                      db $00,$D8,$7E,$00,$DA,$7E,$00,$DC  ;;BB50|----/----\----;
-                      db $7E,$00,$DE,$7E,$00,$E0,$7E,$00  ;;BB58|----/----\----;
-                      db $E2,$7E                          ;;BB60|----/----\----;
+DATA_00BAD8:          dl !Map16TilesLow                   ;;BAD8|----/----\----;
+                      dl !Map16TilesLow+$1B0              ;;BADB|----/----\----;
+                      dl !Map16TilesLow+$360              ;;BADE|----/----\----;
+                      dl !Map16TilesLow+$510              ;;BAE1|----/----\----;
+                      dl !Map16TilesLow+$6C0              ;;BAE4|----/----\----;
+                      dl !Map16TilesLow+$870              ;;BAE7|----/----\----;
+                      dl !Map16TilesLow+$A20              ;;BAEA|----/----\----;
+                      dl !Map16TilesLow+$BD0              ;;BAED|----/----\----;
+                      dl !Map16TilesLow+$D80              ;;BAF0|----/----\----;
+                      dl !Map16TilesLow+$F30              ;;BAF3|----/----\----;
+                      dl !Map16TilesLow+$10E0             ;;BAF6|----/----\----;
+                      dl !Map16TilesLow+$1290             ;;BAF9|----/----\----;
+                      dl !Map16TilesLow+$1440             ;;BAFC|----/----\----;
+                      dl !Map16TilesLow+$15F0             ;;BAFF|----/----\----;
+                      dl !Map16TilesLow+$17A0             ;;BB02|----/----\----;
+                      dl !Map16TilesLow+$1950             ;;BB05|----/----\----;
                                                           ;;                   ;
-DATA_00BB62:          db $00,$E3,$7E,$B0,$E4,$7E,$60,$E6  ;;BB62|----/----\----;
-                      db $7E,$10,$E8,$7E,$C0,$E9,$7E,$70  ;;BB6A|----/----\----;
-                      db $EB,$7E,$20,$ED,$7E,$D0,$EE,$7E  ;;BB72|----/----\----;
-                      db $80,$F0,$7E,$30,$F2,$7E,$E0,$F3  ;;BB7A|----/----\----;
-                      db $7E,$90,$F5,$7E,$40,$F7,$7E,$F0  ;;BB82|----/----\----;
-                      db $F8,$7E,$A0,$FA,$7E,$50,$FC,$7E  ;;BB8A|----/----\----;
-DATA_00BB92:          db $00,$C8,$7E,$B0,$C9,$7E,$60,$CB  ;;BB92|----/----\----;
-                      db $7E,$10,$CD,$7E,$C0,$CE,$7E,$70  ;;BB9A|----/----\----;
-                      db $D0,$7E,$20,$D2,$7E,$D0,$D3,$7E  ;;BBA2|----/----\----;
-                      db $80,$D5,$7E,$30,$D7,$7E,$E0,$D8  ;;BBAA|----/----\----;
-                      db $7E,$90,$DA,$7E,$40,$DC,$7E,$F0  ;;BBB2|----/----\----;
-                      db $DD,$7E,$A0,$DF,$7E,$50,$E1,$7E  ;;BBBA|----/----\----;
-DATA_00BBC2:          db $00,$E4,$7E,$00,$E6,$7E,$00,$E8  ;;BBC2|----/----\----;
-                      db $7E,$00,$EA,$7E,$00,$EC,$7E,$00  ;;BBCA|----/----\----;
-                      db $EE,$7E,$00,$F0,$7E,$00,$F2,$7E  ;;BBD2|----/----\----;
-                      db $00,$F4,$7E,$00,$F6,$7E,$00,$F8  ;;BBDA|----/----\----;
-                      db $7E,$00,$FA,$7E,$00,$FC,$7E,$00  ;;BBE2|----/----\----;
-                      db $FE,$7E                          ;;BBEA|----/----\----;
+DATA_00BB08:          dl !Map16TilesLow+$1B00             ;;BB08|----/----\----;
+                      dl !Map16TilesLow+$1CB0             ;;BB0B|----/----\----;
+                      dl !Map16TilesLow+$1E60             ;;BB0E|----/----\----;
+                      dl !Map16TilesLow+$2010             ;;BB11|----/----\----;
+                      dl !Map16TilesLow+$21C0             ;;BB14|----/----\----;
+                      dl !Map16TilesLow+$2370             ;;BB17|----/----\----;
+                      dl !Map16TilesLow+$2520             ;;BB1A|----/----\----;
+                      dl !Map16TilesLow+$26D0             ;;BB1D|----/----\----;
+                      dl !Map16TilesLow+$2880             ;;BB20|----/----\----;
+                      dl !Map16TilesLow+$2A30             ;;BB23|----/----\----;
+                      dl !Map16TilesLow+$2BE0             ;;BB26|----/----\----;
+                      dl !Map16TilesLow+$2D90             ;;BB29|----/----\----;
+                      dl !Map16TilesLow+$2F40             ;;BB2C|----/----\----;
+                      dl !Map16TilesLow+$30F0             ;;BB2F|----/----\----;
+                      dl !Map16TilesLow+$32A0             ;;BB32|----/----\----;
+                      dl !Map16TilesLow+$3450             ;;BB35|----/----\----;
                                                           ;;                   ;
-DATA_00BBEC:          db $00,$C8,$7E,$00,$CA,$7E,$00,$CC  ;;BBEC|----/----\----;
-                      db $7E,$00,$CE,$7E,$00,$D0,$7E,$00  ;;BBF4|----/----\----;
-                      db $D2,$7E,$00,$D4,$7E,$00,$D6,$7E  ;;BBFC|----/----\----;
-                      db $00,$D8,$7E,$00,$DA,$7E,$00,$DC  ;;BC04|----/----\----;
-                      db $7E,$00,$DE,$7E,$00,$E0,$7E,$00  ;;BC0C|----/----\----;
-                      db $E2,$7E                          ;;BC14|----/----\----;
+DATA_00BB38:          dl !Map16TilesLow                   ;;BB38|----/----\----;
+                      dl !Map16TilesLow+$200              ;;BB3B|----/----\----;
+                      dl !Map16TilesLow+$400              ;;BB3E|----/----\----;
+                      dl !Map16TilesLow+$600              ;;BB41|----/----\----;
+                      dl !Map16TilesLow+$800              ;;BB44|----/----\----;
+                      dl !Map16TilesLow+$A00              ;;BB47|----/----\----;
+                      dl !Map16TilesLow+$C00              ;;BB4A|----/----\----;
+                      dl !Map16TilesLow+$E00              ;;BB4D|----/----\----;
+                      dl !Map16TilesLow+$1000             ;;BB50|----/----\----;
+                      dl !Map16TilesLow+$1200             ;;BB53|----/----\----;
+                      dl !Map16TilesLow+$1400             ;;BB56|----/----\----;
+                      dl !Map16TilesLow+$1600             ;;BB59|----/----\----;
+                      dl !Map16TilesLow+$1800             ;;BB5C|----/----\----;
+                      dl !Map16TilesLow+$1A00             ;;BB5F|----/----\----;
                                                           ;;                   ;
-DATA_00BC16:          db $00,$E4,$7E,$00,$E6,$7E,$00,$E8  ;;BC16|----/----\----;
-                      db $7E,$00,$EA,$7E,$00,$EC,$7E,$00  ;;BC1E|----/----\----;
-                      db $EE,$7E,$00,$F0,$7E,$00,$F2,$7E  ;;BC26|----/----\----;
-                      db $00,$F4,$7E,$00,$F6,$7E,$00,$F8  ;;BC2E|----/----\----;
-                      db $7E,$00,$FA,$7E,$00,$FC,$7E,$00  ;;BC36|----/----\----;
-                      db $FE,$7E                          ;;BC3E|----/----\----;
+DATA_00BB62:          dl !Map16TilesLow+$1B00             ;;BB62|----/----\----;
+                      dl !Map16TilesLow+$1CB0             ;;BB65|----/----\----;
+                      dl !Map16TilesLow+$1E60             ;;BB68|----/----\----;
+                      dl !Map16TilesLow+$2010             ;;BB6B|----/----\----;
+                      dl !Map16TilesLow+$21C0             ;;BB6E|----/----\----;
+                      dl !Map16TilesLow+$2370             ;;BB71|----/----\----;
+                      dl !Map16TilesLow+$2520             ;;BB74|----/----\----;
+                      dl !Map16TilesLow+$26D0             ;;BB77|----/----\----;
+                      dl !Map16TilesLow+$2880             ;;BB7A|----/----\----;
+                      dl !Map16TilesLow+$2A30             ;;BB7D|----/----\----;
+                      dl !Map16TilesLow+$2BE0             ;;BB80|----/----\----;
+                      dl !Map16TilesLow+$2D90             ;;BB83|----/----\----;
+                      dl !Map16TilesLow+$2F40             ;;BB86|----/----\----;
+                      dl !Map16TilesLow+$30F0             ;;BB89|----/----\----;
+                      dl !Map16TilesLow+$32A0             ;;BB8C|----/----\----;
+                      dl !Map16TilesLow+$3450             ;;BB8F|----/----\----;
                                                           ;;                   ;
-DATA_00BC40:          db $00,$C8,$7F,$B0,$C9,$7F,$60,$CB  ;;BC40|----/----\----;
-                      db $7F,$10,$CD,$7F,$C0,$CE,$7F,$70  ;;BC48|----/----\----;
-                      db $D0,$7F,$20,$D2,$7F,$D0,$D3,$7F  ;;BC50|----/----\----;
-                      db $80,$D5,$7F,$30,$D7,$7F,$E0,$D8  ;;BC58|----/----\----;
-                      db $7F,$90,$DA,$7F,$40,$DC,$7F,$F0  ;;BC60|----/----\----;
-                      db $DD,$7F,$A0,$DF,$7F,$50,$E1,$7F  ;;BC68|----/----\----;
-DATA_00BC70:          db $00,$E3,$7F,$B0,$E4,$7F,$60,$E6  ;;BC70|----/----\----;
-                      db $7F,$10,$E8,$7F,$C0,$E9,$7F,$70  ;;BC78|----/----\----;
-                      db $EB,$7F,$20,$ED,$7F,$D0,$EE,$7F  ;;BC80|----/----\----;
-                      db $80,$F0,$7F,$30,$F2,$7F,$E0,$F3  ;;BC88|----/----\----;
-                      db $7F,$90,$F5,$7F,$40,$F7,$7F,$F0  ;;BC90|----/----\----;
-                      db $F8,$7F,$A0,$FA,$7F,$50,$FC,$7F  ;;BC98|----/----\----;
-DATA_00BCA0:          db $00,$C8,$7F,$00,$CA,$7F,$00,$CC  ;;BCA0|----/----\----;
-                      db $7F,$00,$CE,$7F,$00,$D0,$7F,$00  ;;BCA8|----/----\----;
-                      db $D2,$7F,$00,$D4,$7F,$00,$D6,$7F  ;;BCB0|----/----\----;
-                      db $00,$D8,$7F,$00,$DA,$7F,$00,$DC  ;;BCB8|----/----\----;
-                      db $7F,$00,$DE,$7F,$00,$E0,$7F,$00  ;;BCC0|----/----\----;
-                      db $E2,$7F                          ;;BCC8|----/----\----;
+DATA_00BB92:          dl !Map16TilesLow                   ;;BB92|----/----\----;
+                      dl !Map16TilesLow+$1B0              ;;BB95|----/----\----;
+                      dl !Map16TilesLow+$360              ;;BB98|----/----\----;
+                      dl !Map16TilesLow+$510              ;;BB9B|----/----\----;
+                      dl !Map16TilesLow+$6C0              ;;BB9E|----/----\----;
+                      dl !Map16TilesLow+$870              ;;BBA1|----/----\----;
+                      dl !Map16TilesLow+$A20              ;;BBA4|----/----\----;
+                      dl !Map16TilesLow+$BD0              ;;BBA7|----/----\----;
+                      dl !Map16TilesLow+$D80              ;;BBAA|----/----\----;
+                      dl !Map16TilesLow+$F30              ;;BBAD|----/----\----;
+                      dl !Map16TilesLow+$10E0             ;;BBB0|----/----\----;
+                      dl !Map16TilesLow+$1290             ;;BBB3|----/----\----;
+                      dl !Map16TilesLow+$1440             ;;BBB6|----/----\----;
+                      dl !Map16TilesLow+$15F0             ;;BBB9|----/----\----;
+                      dl !Map16TilesLow+$17A0             ;;BBBC|----/----\----;
+                      dl !Map16TilesLow+$1950             ;;BBBF|----/----\----;
                                                           ;;                   ;
-DATA_00BCCA:          db $00,$E3,$7F,$B0,$E4,$7F,$60,$E6  ;;BCCA|----/----\----;
-                      db $7F,$10,$E8,$7F,$C0,$E9,$7F,$70  ;;BCD2|----/----\----;
-                      db $EB,$7F,$20,$ED,$7F,$D0,$EE,$7F  ;;BCDA|----/----\----;
-                      db $80,$F0,$7F,$30,$F2,$7F,$E0,$F3  ;;BCE2|----/----\----;
-                      db $7F,$90,$F5,$7F,$40,$F7,$7F,$F0  ;;BCEA|----/----\----;
-                      db $F8,$7F,$A0,$FA,$7F,$50,$FC,$7F  ;;BCF2|----/----\----;
-DATA_00BCFA:          db $00,$C8,$7F,$B0,$C9,$7F,$60,$CB  ;;BCFA|----/----\----;
-                      db $7F,$10,$CD,$7F,$C0,$CE,$7F,$70  ;;BD02|----/----\----;
-                      db $D0,$7F,$20,$D2,$7F,$D0,$D3,$7F  ;;BD0A|----/----\----;
-                      db $80,$D5,$7F,$30,$D7,$7F,$E0,$D8  ;;BD12|----/----\----;
-                      db $7F,$90,$DA,$7F,$40,$DC,$7F,$F0  ;;BD1A|----/----\----;
-                      db $DD,$7F,$A0,$DF,$7F,$50,$E1,$7F  ;;BD22|----/----\----;
-DATA_00BD2A:          db $00,$E4,$7F,$00,$E6,$7F,$00,$E8  ;;BD2A|----/----\----;
-                      db $7F,$00,$EA,$7F,$00,$EC,$7F,$00  ;;BD32|----/----\----;
-                      db $EE,$7F,$00,$F0,$7F,$00,$F2,$7F  ;;BD3A|----/----\----;
-                      db $00,$F4,$7F,$00,$F6,$7F,$00,$F8  ;;BD42|----/----\----;
-                      db $7F,$00,$FA,$7F,$00,$FC,$7F,$00  ;;BD4A|----/----\----;
-                      db $FE,$7F                          ;;BD52|----/----\----;
+DATA_00BBC2:          dl !Map16TilesLow+$1C00             ;;BBC2|----/----\----;
+                      dl !Map16TilesLow+$1E00             ;;BBC5|----/----\----;
+                      dl !Map16TilesLow+$2000             ;;BBC8|----/----\----;
+                      dl !Map16TilesLow+$2200             ;;BBCB|----/----\----;
+                      dl !Map16TilesLow+$2400             ;;BBCE|----/----\----;
+                      dl !Map16TilesLow+$2600             ;;BBD1|----/----\----;
+                      dl !Map16TilesLow+$2800             ;;BBD4|----/----\----;
+                      dl !Map16TilesLow+$2A00             ;;BBD7|----/----\----;
+                      dl !Map16TilesLow+$2C00             ;;BBDA|----/----\----;
+                      dl !Map16TilesLow+$2E00             ;;BBDD|----/----\----;
+                      dl !Map16TilesLow+$3000             ;;BBE0|----/----\----;
+                      dl !Map16TilesLow+$3200             ;;BBE3|----/----\----;
+                      dl !Map16TilesLow+$3400             ;;BBE6|----/----\----;
+                      dl !Map16TilesLow+$3600             ;;BBE9|----/----\----;
                                                           ;;                   ;
-DATA_00BD54:          db $00,$C8,$7F,$00,$CA,$7F,$00,$CC  ;;BD54|----/----\----;
-                      db $7F,$00,$CE,$7F,$00,$D0,$7F,$00  ;;BD5C|----/----\----;
-                      db $D2,$7F,$00,$D4,$7F,$00,$D6,$7F  ;;BD64|----/----\----;
-                      db $00,$D8,$7F,$00,$DA,$7F,$00,$DC  ;;BD6C|----/----\----;
-                      db $7F,$00,$DE,$7F,$00,$E0,$7F,$00  ;;BD74|----/----\----;
-                      db $E2,$7F                          ;;BD7C|----/----\----;
+DATA_00BBEC:          dl !Map16TilesLow                   ;;BBEC|----/----\----;
+                      dl !Map16TilesLow+$200              ;;BBEF|----/----\----;
+                      dl !Map16TilesLow+$400              ;;BBF2|----/----\----;
+                      dl !Map16TilesLow+$600              ;;BBF5|----/----\----;
+                      dl !Map16TilesLow+$800              ;;BBF8|----/----\----;
+                      dl !Map16TilesLow+$A00              ;;BBFB|----/----\----;
+                      dl !Map16TilesLow+$C00              ;;BBFE|----/----\----;
+                      dl !Map16TilesLow+$E00              ;;BC01|----/----\----;
+                      dl !Map16TilesLow+$1000             ;;BC04|----/----\----;
+                      dl !Map16TilesLow+$1200             ;;BC07|----/----\----;
+                      dl !Map16TilesLow+$1400             ;;BC0A|----/----\----;
+                      dl !Map16TilesLow+$1600             ;;BC0D|----/----\----;
+                      dl !Map16TilesLow+$1800             ;;BC10|----/----\----;
+                      dl !Map16TilesLow+$1A00             ;;BC13|----/----\----;
                                                           ;;                   ;
-DATA_00BD7E:          db $00,$E4,$7F,$00,$E6,$7F,$00,$E8  ;;BD7E|----/----\----;
-                      db $7F,$00,$EA,$7F,$00,$EC,$7F,$00  ;;BD86|----/----\----;
-                      db $EE,$7F,$00,$F0,$7F,$00,$F2,$7F  ;;BD8E|----/----\----;
-                      db $00,$F4,$7F,$00,$F6,$7F,$00,$F8  ;;BD96|----/----\----;
-                      db $7F,$00,$FA,$7F,$00,$FC,$7F,$00  ;;BD9E|----/----\----;
-                      db $FE,$7F                          ;;BDA6|----/----\----;
+DATA_00BC16:          dl !Map16TilesLow+$1C00             ;;BC16|----/----\----;
+                      dl !Map16TilesLow+$1E00             ;;BC19|----/----\----;
+                      dl !Map16TilesLow+$2000             ;;BC1C|----/----\----;
+                      dl !Map16TilesLow+$2200             ;;BC1F|----/----\----;
+                      dl !Map16TilesLow+$2400             ;;BC22|----/----\----;
+                      dl !Map16TilesLow+$2600             ;;BC25|----/----\----;
+                      dl !Map16TilesLow+$2800             ;;BC28|----/----\----;
+                      dl !Map16TilesLow+$2A00             ;;BC2B|----/----\----;
+                      dl !Map16TilesLow+$2C00             ;;BC2E|----/----\----;
+                      dl !Map16TilesLow+$2E00             ;;BC31|----/----\----;
+                      dl !Map16TilesLow+$3000             ;;BC34|----/----\----;
+                      dl !Map16TilesLow+$3200             ;;BC37|----/----\----;
+                      dl !Map16TilesLow+$3400             ;;BC3A|----/----\----;
+                      dl !Map16TilesLow+$3600             ;;BC3D|----/----\----;
+                                                          ;;                   ;
+DATA_00BC40:          dl !Map16TilesHigh                  ;;BC40|----/----\----;
+                      dl !Map16TilesHigh+$1B0             ;;BC43|----/----\----;
+                      dl !Map16TilesHigh+$360             ;;BC46|----/----\----;
+                      dl !Map16TilesHigh+$510             ;;BC49|----/----\----;
+                      dl !Map16TilesHigh+$6C0             ;;BC4C|----/----\----;
+                      dl !Map16TilesHigh+$870             ;;BC4F|----/----\----;
+                      dl !Map16TilesHigh+$A20             ;;BC52|----/----\----;
+                      dl !Map16TilesHigh+$BD0             ;;BC55|----/----\----;
+                      dl !Map16TilesHigh+$D80             ;;BC58|----/----\----;
+                      dl !Map16TilesHigh+$F30             ;;BC5B|----/----\----;
+                      dl !Map16TilesHigh+$10E0            ;;BC5E|----/----\----;
+                      dl !Map16TilesHigh+$1290            ;;BC61|----/----\----;
+                      dl !Map16TilesHigh+$1440            ;;BC64|----/----\----;
+                      dl !Map16TilesHigh+$15F0            ;;BC67|----/----\----;
+                      dl !Map16TilesHigh+$17A0            ;;BC6A|----/----\----;
+                      dl !Map16TilesHigh+$1950            ;;BC6D|----/----\----;
+                                                          ;;                   ;
+DATA_00BC70:          dl !Map16TilesHigh+$1B00            ;;BC70|----/----\----;
+                      dl !Map16TilesHigh+$1CB0            ;;BC73|----/----\----;
+                      dl !Map16TilesHigh+$1E60            ;;BC76|----/----\----;
+                      dl !Map16TilesHigh+$2010            ;;BC79|----/----\----;
+                      dl !Map16TilesHigh+$21C0            ;;BC7C|----/----\----;
+                      dl !Map16TilesHigh+$2370            ;;BC7F|----/----\----;
+                      dl !Map16TilesHigh+$2520            ;;BC82|----/----\----;
+                      dl !Map16TilesHigh+$26D0            ;;BC85|----/----\----;
+                      dl !Map16TilesHigh+$2880            ;;BC88|----/----\----;
+                      dl !Map16TilesHigh+$2A30            ;;BC8B|----/----\----;
+                      dl !Map16TilesHigh+$2BE0            ;;BC8E|----/----\----;
+                      dl !Map16TilesHigh+$2D90            ;;BC91|----/----\----;
+                      dl !Map16TilesHigh+$2F40            ;;BC94|----/----\----;
+                      dl !Map16TilesHigh+$30F0            ;;BC97|----/----\----;
+                      dl !Map16TilesHigh+$32A0            ;;BC9A|----/----\----;
+                      dl !Map16TilesHigh+$3450            ;;BC9D|----/----\----;
+                                                          ;;                   ;
+DATA_00BCA0:          dl !Map16TilesHigh                  ;;BCA0|----/----\----;
+                      dl !Map16TilesHigh+$200             ;;BCA3|----/----\----;
+                      dl !Map16TilesHigh+$400             ;;BCA6|----/----\----;
+                      dl !Map16TilesHigh+$600             ;;BCA9|----/----\----;
+                      dl !Map16TilesHigh+$800             ;;BCAC|----/----\----;
+                      dl !Map16TilesHigh+$A00             ;;BCAF|----/----\----;
+                      dl !Map16TilesHigh+$C00             ;;BCB2|----/----\----;
+                      dl !Map16TilesHigh+$E00             ;;BCB5|----/----\----;
+                      dl !Map16TilesHigh+$1000            ;;BCB8|----/----\----;
+                      dl !Map16TilesHigh+$1200            ;;BCBB|----/----\----;
+                      dl !Map16TilesHigh+$1400            ;;BCBE|----/----\----;
+                      dl !Map16TilesHigh+$1600            ;;BCC1|----/----\----;
+                      dl !Map16TilesHigh+$1800            ;;BCC4|----/----\----;
+                      dl !Map16TilesHigh+$1A00            ;;BCC7|----/----\----;
+                                                          ;;                   ;
+DATA_00BCCA:          dl !Map16TilesHigh+$1B00            ;;BCCA|----/----\----;
+                      dl !Map16TilesHigh+$1CB0            ;;BCCD|----/----\----;
+                      dl !Map16TilesHigh+$1E60            ;;BCD0|----/----\----;
+                      dl !Map16TilesHigh+$2010            ;;BCD3|----/----\----;
+                      dl !Map16TilesHigh+$21C0            ;;BCD6|----/----\----;
+                      dl !Map16TilesHigh+$2370            ;;BCD9|----/----\----;
+                      dl !Map16TilesHigh+$2520            ;;BCDC|----/----\----;
+                      dl !Map16TilesHigh+$26D0            ;;BCDF|----/----\----;
+                      dl !Map16TilesHigh+$2880            ;;BCE2|----/----\----;
+                      dl !Map16TilesHigh+$2A30            ;;BCE5|----/----\----;
+                      dl !Map16TilesHigh+$2BE0            ;;BCE8|----/----\----;
+                      dl !Map16TilesHigh+$2D90            ;;BCEB|----/----\----;
+                      dl !Map16TilesHigh+$2F40            ;;BCEE|----/----\----;
+                      dl !Map16TilesHigh+$30F0            ;;BCF1|----/----\----;
+                      dl !Map16TilesHigh+$32A0            ;;BCF4|----/----\----;
+                      dl !Map16TilesHigh+$3450            ;;BCF7|----/----\----;
+                                                          ;;                   ;
+DATA_00BCFA:          dl !Map16TilesHigh                  ;;BCFA|----/----\----;
+                      dl !Map16TilesHigh+$1B0             ;;BCFD|----/----\----;
+                      dl !Map16TilesHigh+$360             ;;BD00|----/----\----;
+                      dl !Map16TilesHigh+$510             ;;BD03|----/----\----;
+                      dl !Map16TilesHigh+$6C0             ;;BD06|----/----\----;
+                      dl !Map16TilesHigh+$870             ;;BD09|----/----\----;
+                      dl !Map16TilesHigh+$A20             ;;BD0C|----/----\----;
+                      dl !Map16TilesHigh+$BD0             ;;BD0F|----/----\----;
+                      dl !Map16TilesHigh+$D80             ;;BD12|----/----\----;
+                      dl !Map16TilesHigh+$F30             ;;BD15|----/----\----;
+                      dl !Map16TilesHigh+$10E0            ;;BD18|----/----\----;
+                      dl !Map16TilesHigh+$1290            ;;BD1B|----/----\----;
+                      dl !Map16TilesHigh+$1440            ;;BD1E|----/----\----;
+                      dl !Map16TilesHigh+$15F0            ;;BD21|----/----\----;
+                      dl !Map16TilesHigh+$17A0            ;;BD24|----/----\----;
+                      dl !Map16TilesHigh+$1950            ;;BD27|----/----\----;
+                                                          ;;                   ;
+DATA_00BD2A:          dl !Map16TilesHigh+$1C00            ;;BD2A|----/----\----;
+                      dl !Map16TilesHigh+$1E00            ;;BD2D|----/----\----;
+                      dl !Map16TilesHigh+$2000            ;;BD30|----/----\----;
+                      dl !Map16TilesHigh+$2200            ;;BD33|----/----\----;
+                      dl !Map16TilesHigh+$2400            ;;BD36|----/----\----;
+                      dl !Map16TilesHigh+$2600            ;;BD39|----/----\----;
+                      dl !Map16TilesHigh+$2800            ;;BD3C|----/----\----;
+                      dl !Map16TilesHigh+$2A00            ;;BD3F|----/----\----;
+                      dl !Map16TilesHigh+$2C00            ;;BD42|----/----\----;
+                      dl !Map16TilesHigh+$2E00            ;;BD45|----/----\----;
+                      dl !Map16TilesHigh+$3000            ;;BD48|----/----\----;
+                      dl !Map16TilesHigh+$3200            ;;BD4B|----/----\----;
+                      dl !Map16TilesHigh+$3400            ;;BD4E|----/----\----;
+                      dl !Map16TilesHigh+$3600            ;;BD51|----/----\----;
+                                                          ;;                   ;
+DATA_00BD54:          dl !Map16TilesHigh                  ;;BD54|----/----\----;
+                      dl !Map16TilesHigh+$200             ;;BD57|----/----\----;
+                      dl !Map16TilesHigh+$400             ;;BD5A|----/----\----;
+                      dl !Map16TilesHigh+$600             ;;BD5D|----/----\----;
+                      dl !Map16TilesHigh+$800             ;;BD60|----/----\----;
+                      dl !Map16TilesHigh+$A00             ;;BD63|----/----\----;
+                      dl !Map16TilesHigh+$C00             ;;BD66|----/----\----;
+                      dl !Map16TilesHigh+$E00             ;;BD69|----/----\----;
+                      dl !Map16TilesHigh+$1000            ;;BD6C|----/----\----;
+                      dl !Map16TilesHigh+$1200            ;;BD6F|----/----\----;
+                      dl !Map16TilesHigh+$1400            ;;BD72|----/----\----;
+                      dl !Map16TilesHigh+$1600            ;;BD75|----/----\----;
+                      dl !Map16TilesHigh+$1800            ;;BD78|----/----\----;
+                      dl !Map16TilesHigh+$1A00            ;;BD7B|----/----\----;
+                                                          ;;                   ;
+DATA_00BD7E:          dl !Map16TilesHigh+$1C00            ;;BD7E|----/----\----;
+                      dl !Map16TilesHigh+$1E00            ;;BD81|----/----\----;
+                      dl !Map16TilesHigh+$2000            ;;BD84|----/----\----;
+                      dl !Map16TilesHigh+$2200            ;;BD87|----/----\----;
+                      dl !Map16TilesHigh+$2400            ;;BD8A|----/----\----;
+                      dl !Map16TilesHigh+$2600            ;;BD8D|----/----\----;
+                      dl !Map16TilesHigh+$2800            ;;BD90|----/----\----;
+                      dl !Map16TilesHigh+$2A00            ;;BD93|----/----\----;
+                      dl !Map16TilesHigh+$2C00            ;;BD96|----/----\----;
+                      dl !Map16TilesHigh+$2E00            ;;BD99|----/----\----;
+                      dl !Map16TilesHigh+$3000            ;;BD9C|----/----\----;
+                      dl !Map16TilesHigh+$3200            ;;BD9F|----/----\----;
+                      dl !Map16TilesHigh+$3400            ;;BDA2|----/----\----;
+                      dl !Map16TilesHigh+$3600            ;;BDA5|----/----\----;
                                                           ;;                   ;
 Ptrs00BDA8:           dw DATA_00BAD8                      ;;BDA8|----/----\----;
                       dw DATA_00BAD8                      ;;BDAA|----/----\----;
@@ -6379,7 +6855,7 @@ GeneratedTiles:       dw CODE_00C074                      ;;BFC9|----/----\----;
                       dw CODE_00C334                      ;;BFFB|----/----\----; 1a - cage 
                       dw CODE_00C3D1                      ;;BFFD|----/----\----; 1b -  
                                                           ;;                   ;
-DATA_00BFFF:          db $00,$00,$80,$00,$00,$01          ;;BFFF|----/----\----;
+DATA_00BFFF:          dw $0000,$0080,$0100                ;;BFFF|----/----\----;
                                                           ;;                   ;
 DATA_00C005:          db $80,$40,$20,$10,$08,$04,$02,$01  ;;C005|----/----\----;
                                                           ;;                   ;
@@ -6685,7 +7161,7 @@ CODE_00C222:          LDA.L !DynStripeImgSize             ;;C222|----/----\----;
                       RTS                                 ;;C29D|----/----\----; Return 
                                                           ;;                   ;
                                                           ;;                   ;
-                      db $99,$9C,$8B,$1C,$8B,$1C,$8B,$1C  ;;C29E|----/----\----;
+DATA_00C29E:          db $99,$9C,$8B,$1C,$8B,$1C,$8B,$1C  ;;C29E|----/----\----;
                       db $8B,$1C,$99,$DC,$9B,$1C,$F8,$1C  ;;C2A6|----/----\----;
                       db $F8,$1C,$F8,$1C,$F8,$1C,$9B,$5C  ;;C2AE|----/----\----;
                       db $9B,$1C,$F8,$1C,$F8,$1C,$F8,$1C  ;;C2B6|----/----\----;
@@ -6694,7 +7170,7 @@ CODE_00C222:          LDA.L !DynStripeImgSize             ;;C222|----/----\----;
                       db $9B,$1C,$F8,$1C,$F8,$1C,$F8,$1C  ;;C2CE|----/----\----;
                       db $F8,$1C,$9B,$5C,$99,$1C,$8B,$9C  ;;C2D6|----/----\----;
                       db $8B,$9C,$8B,$9C,$8B,$9C,$99,$5C  ;;C2DE|----/----\----;
-                      db $BA,$9C,$AB,$1C,$AB,$1C,$AB,$1C  ;;C2E6|----/----\----;
+DATA_00C2E6:          db $BA,$9C,$AB,$1C,$AB,$1C,$AB,$1C  ;;C2E6|----/----\----;
                       db $AB,$1C,$BA,$DC,$AA,$1C,$82,$1C  ;;C2EE|----/----\----;
                       db $82,$1C,$82,$1C,$82,$1C,$AA,$5C  ;;C2F6|----/----\----;
                       db $AA,$1C,$82,$1C,$82,$1C,$82,$1C  ;;C2FE|----/----\----;
@@ -6703,9 +7179,9 @@ CODE_00C222:          LDA.L !DynStripeImgSize             ;;C222|----/----\----;
                       db $AA,$1C,$82,$1C,$82,$1C,$82,$1C  ;;C316|----/----\----;
                       db $82,$1C,$AA,$5C,$BA,$1C,$AB,$9C  ;;C31E|----/----\----;
                       db $AB,$9C,$AB,$9C,$AB,$9C,$BA,$5C  ;;C326|----/----\----;
-DATA_00C32E:          db $9E,$C2                          ;;C32E|----/----\----;
                                                           ;;                   ;
-DATA_00C330:          db $00,$E6,$C2,$00                  ;;C330|----/----\----;
+DATA_00C32E:          dl DATA_00C29E                      ;;C32E|----/----\----;
+                      dl DATA_00C2E6                      ;;C331|----/----\----;
                                                           ;;                   ;
 CODE_00C334:          INC.B !_7                           ;;C334|----/----\----; Accum (8 bit) 
                       LDA.B !_7                           ;;C336|----/----\----;
@@ -6723,7 +7199,7 @@ CODE_00C334:          INC.B !_7                           ;;C334|----/----\----;
                       CLC                                 ;;C34B|----/----\----;
                       ADC.B !_0                           ;;C34C|----/----\----;
                       TAX                                 ;;C34E|----/----\----;
-                      LDA.L DATA_00C330,X                 ;;C34F|----/----\----;
+                      LDA.L DATA_00C32E+2,X               ;;C34F|----/----\----;
                       STA.B !_4                           ;;C353|----/----\----;
                       REP #$30                            ;;C355|----/----\----; Index (16 bit) Accum (16 bit) 
                       LDA.L DATA_00C32E,X                 ;;C357|----/----\----;
@@ -6847,9 +7323,10 @@ CODE_00C3D1:          REP #$30                            ;;C3D1|----/----\----;
                                                           ;;                   ;
                                                           ;;                   ;
                       db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;C453|----/----\----;
-                      db $FF,$FF,$FF,$FF,$FF,$80,$40,$20  ;;C45B|----/----\----;
-                      db $10,$08,$04,$02,$01,$80,$40,$20  ;;C463|----/----\----;
-                      db $10,$08,$04,$02,$01              ;;C46B|----/----\----;
+                      db $FF,$FF,$FF,$FF,$FF              ;;C45B|----/----\----;
+                                                          ;;                   ;
+                      db $80,$40,$20,$10,$08,$04,$02,$01  ;;C460|----/----\----;
+                      db $80,$40,$20,$10,$08,$04,$02,$01  ;;C468|----/----\----;
                                                           ;;                   ;
 DATA_00C470:          db $90,$00,$90,$00                  ;;C470|----/----\----;
                                                           ;;                   ;
@@ -6896,7 +7373,7 @@ CODE_00C4BC:          CLC                                 ;;C4BC|----/----\----;
                       LDA.B #$12                          ;;C4D0|----/----\----;
                       STA.B !ColorAddition                ;;C4D2|----/----\----;
                       REP #$20                            ;;C4D4|----/----\----; Accum (16 bit) 
-                      LDA.W #$CB93                        ;;C4D6|----/----\----;
+                      LDA.W #DATA_00CB93                  ;;C4D6|----/----\----;
                       STA.B !_4                           ;;C4D9|----/----\----;
                       STZ.B !_6                           ;;C4DB|----/----\----;
                       SEP #$20                            ;;C4DD|----/----\----; Accum (8 bit) 
@@ -7359,7 +7836,11 @@ CODE_00C95B:          LDY.B #$0B                          ;;C95B|----/----\----;
                       LDA.B #$01                          ;;C95D|----/----\----;
                       JMP CODE_00C9FE                     ;;C95F|----/----\----;
                                                           ;;                   ;
-                    + LDA.B #$A0                          ;;C962|----/----\----;
+                   if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
+                    + LDA.B #$70                          ;;    |----          ;
+                   else                         ;<  ELSE  ;;-------------------; U, E0, & E1
+                    + LDA.B #$A0                          ;;C962     /----\----;
+                   endif                        ;/ ENDIF  ;;+++++++++++++++++++;
                       STA.W !VariousPromptTimer           ;;C964|----/----\----;
                       INC.W !MessageBoxTrigger            ;;C967|----/----\----;
 Return00C96A:         RTS                                 ;;C96A|----/----\----; Return 
@@ -7478,7 +7959,7 @@ CODE_00CA44:          LDA.W !SpotlightSize                ;;CA44|----/----\----;
                       RTS                                 ;;CA60|----/----\----; Return 
                                                           ;;                   ;
 CODE_00CA61:          REP #$20                            ;;CA61|----/----\----; 16 bit A ; Accum (16 bit) 
-                      LDA.W #$CB12                        ;;CA63|----/----\----; \  
+                      LDA.W #DATA_00CB12                  ;;CA63|----/----\----; \  
                       STA.B !_4                           ;;CA66|----/----\----;  |Load xCB12 into $04 and $06 
                       STA.B !_6                           ;;CA68|----/----\----; /  
                       SEP #$20                            ;;CA6A|----/----\----; 8 bit A ; Accum (8 bit) 
@@ -7572,7 +8053,7 @@ CODE_00CB0A:          LDA.B #$80                          ;;CB0A|----/----\----;
                       RTS                                 ;;CB11|----/----\----; Return 
                                                           ;;                   ;
                                                           ;;                   ;
-                      db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;CB12|----/----\----;
+DATA_00CB12:          db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;CB12|----/----\----;
                       db $FF,$FF,$FF,$FF,$FE,$FE,$FE,$FE  ;;CB1A|----/----\----;
                       db $FD,$FD,$FD,$FD,$FC,$FC,$FC,$FB  ;;CB22|----/----\----;
                       db $FB,$FB,$FA,$FA,$F9,$F9,$F8,$F8  ;;CB2A|----/----\----;
@@ -7588,7 +8069,9 @@ CODE_00CB0A:          LDA.B #$80                          ;;CB0A|----/----\----;
                       db $95,$92,$8F,$8C,$89,$86,$82,$7F  ;;CB7A|----/----\----;
                       db $7B,$78,$74,$70,$6C,$67,$63,$5E  ;;CB82|----/----\----;
                       db $59,$53,$4D,$46,$3F,$37,$2D,$1F  ;;CB8A|----/----\----;
-                      db $00,$54,$53,$52,$52,$51,$50,$50  ;;CB92|----/----\----;
+                      db $00                              ;;CB92|----/----\----;
+                                                          ;;                   ;
+DATA_00CB93:          db $54,$53,$52,$52,$51,$50,$50      ;;CB93|----/----\----;
                       db $4F,$4E,$4E,$4D,$4C,$4C,$4B,$4A  ;;CB9A|----/----\----;
                       db $4A,$4B,$48,$48,$47,$46,$46,$45  ;;CBA2|----/----\----;
                       db $44,$44,$43,$42,$42,$41,$40,$40  ;;CBAA|----/----\----;
@@ -9594,8 +10077,16 @@ DATA_00E266:          db $02,$02,$02,$0C,$00,$00,$00,$00  ;;E266|----/----\----;
                                                           ;;                   ;
 DATA_00E292:          db $01,$01,$01,$01,$02,$02,$02,$02  ;;E292|----/----\----;
                       db $04,$04,$04,$04,$08,$08,$08,$08  ;;E29A|----/----\----;
-DATA_00E2A2:          db $C8,$B2,$DC,$B2,$C8,$B2,$DC,$B2  ;;E2A2|----/----\----;
-                      db $C8,$B2,$DC,$B2,$F0,$B2,$04,$B3  ;;E2AA|----/----\----;
+                                                          ;;                   ;
+DATA_00E2A2:          dw PlayerColors                     ;;E2A2|----/----\----;
+                      dw PlayerColors+$14                 ;;E2A4|----/----\----;
+                      dw PlayerColors                     ;;E2A6|----/----\----;
+                      dw PlayerColors+$14                 ;;E2A8|----/----\----;
+                      dw PlayerColors                     ;;E2AA|----/----\----;
+                      dw PlayerColors+$14                 ;;E2AC|----/----\----;
+                      dw PlayerColors+$28                 ;;E2AE|----/----\----;
+                      dw PlayerColors+$3C                 ;;E2B0|----/----\----;
+                                                          ;;                   ;
 DATA_00E2B2:          db $10,$D4,$10,$E8                  ;;E2B2|----/----\----;
                                                           ;;                   ;
 DATA_00E2B6:          db $08,$CC,$08                      ;;E2B6|----/----\----;
@@ -9881,7 +10372,9 @@ DATA_00E53D:          db $FF,$FF,$FF,$FF,$01,$01,$01,$01  ;;E53D|----/----\----;
                       db $FE,$FE,$02,$02,$FD,$03,$FD,$03  ;;E545|----/----\----;
                       db $FD,$03,$FD,$00,$00,$00,$00,$00  ;;E54D|----/----\----;
                       db $08,$08,$F8,$F8,$FC,$FC,$04,$04  ;;E555|----/----\----;
-                      db $00,$00,$00,$00,$00,$00,$01,$01  ;;E55D|----/----\----;
+                      db $00                              ;;E55D|----/----\----;
+                                                          ;;                   ;
+DATA_00E55E:          db $00,$00,$00,$00,$00,$01,$01      ;;E55E|----/----\----;
                       db $01,$01,$01,$02,$02,$02,$02,$02  ;;E565|----/----\----;
                       db $03,$03,$03,$03,$03,$04,$04,$04  ;;E56D|----/----\----;
                       db $04,$04,$05,$05,$05,$05,$05,$06  ;;E575|----/----\----;
@@ -9894,7 +10387,9 @@ DATA_00E53D:          db $FF,$FF,$FF,$FF,$01,$01,$01,$01  ;;E53D|----/----\----;
                       db $09,$0A,$0A,$0C,$0C,$0D,$0D,$12  ;;E5AD|----/----\----;
                       db $13,$14,$15,$16,$17,$1C,$1D,$1E  ;;E5B5|----/----\----;
                       db $1F,$18,$19,$1A,$1B,$08,$09,$0A  ;;E5BD|----/----\----;
-                      db $0B,$0C,$0D,$00,$00,$00,$00,$00  ;;E5C5|----/----\----;
+                      db $0B,$0C,$0D                      ;;E5C5|----/----\----;
+                                                          ;;                   ;
+DATA_00E5C8:          db $00,$00,$00,$00,$00              ;;E5C8|----/----\----;
                       db $01,$01,$01,$01,$01,$02,$02,$02  ;;E5CD|----/----\----;
                       db $02,$02,$03,$03,$03,$03,$03,$04  ;;E5D5|----/----\----;
                       db $04,$04,$04,$04,$05,$05,$05,$05  ;;E5DD|----/----\----;
@@ -12129,11 +12624,11 @@ CODE_00F9C9:          LDA.B !Mode7Angle                   ;;F9C9|----/----\----;
                       BPL -                               ;;FA16|----/----\----;  | 
                       RTL                                 ;;FA18|----/----\----; / 
                                                           ;;                   ;
-CODE_00FA19:          LDY.B #$32                          ;;FA19|----/----\----;
+CODE_00FA19:          LDY.B #DATA_00E632                  ;;FA19|----/----\----;
                       STY.B !_5                           ;;FA1B|----/----\----;
-                      LDY.B #$E6                          ;;FA1D|----/----\----;
+                      LDY.B #DATA_00E632>>8               ;;FA1D|----/----\----;
                       STY.B !_6                           ;;FA1F|----/----\----;
-                      LDY.B #$00                          ;;FA21|----/----\----;
+                      LDY.B #DATA_00E632>>16              ;;FA21|----/----\----;
                       STY.B !_7                           ;;FA23|----/----\----;
                       SEC                                 ;;FA25|----/----\----;
                       SBC.B #$6E                          ;;FA26|----/----\----;
@@ -12187,7 +12682,9 @@ FlatPalaceSwitch:     LDA.B #$20                          ;;FA45|----/----\----;
 TriggerGoalTape:      STZ.W !PBalloonInflating            ;;FA80|----/----\----;
                       STZ.W !PBalloonTimer                ;;FA83|----/----\----;
                       STZ.W !SpriteRespawnTimer           ;;FA86|----/----\----; Don't respawn sprites 
-                      STZ.W !CurrentGenerator             ;;FA89|----/----\----;
+                   if !_VER != 0                ;\   IF   ;;+++++++++++++++++++; U, E0, & E1
+                      STZ.W !CurrentGenerator             ;;FA89     /----\----;
+                   endif                        ;/ ENDIF  ;;-------------------;
                       STZ.W !SilverCoinsCollected         ;;FA8C|----/----\----;
                       LDY.B #$0B                          ;;FA8F|----/----\----; Loop over sprites: 
 LvlEndSprLoopStrt:    LDA.W !SpriteStatus,Y               ;;FA91|----/----\----; \ If sprite status < 8, 
