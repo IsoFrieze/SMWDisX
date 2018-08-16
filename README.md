@@ -11,8 +11,7 @@ You'll need the assembler, Asar v1.60 (you can find it [here](https://www.smwcen
 5. If you provide a ROM of each version of the game and call them "comparison_J.smc", etc., the batch file will also check the assembled ROM to see if it matches any exactly.
 
 # Status
-U version assembles perfectly since it was created from an old disassembly of the U version.
-J, E0, E1 versions only have the ROM header correct at the moment.
+All 4 versions assemble and play exactly like they should. The only difference at the moment is the PAL versions' empty space patterns, since they don't just use a $FF fill. Either I have bad dumps of these two versions, or there is no pattern to which bits are flipped in these areas. It *looks* like it alternates between $FF and $00 every $20 bytes but there is some other weirdness going on. I won't include these in the disassembly until I can find a clean way of doing it. I was hoping to write a macro that pulled the empty space pattern from a separate file, but Asar won't allow variable input to the `incbin` command.
 
 # Contribution
 Anyone can contribute as long as they follow the format rules below. This isn't like a personal project or anything. Just make sure every commit that the ROM will properly assemble.
@@ -25,6 +24,7 @@ I'm focusing on readability so its important that everything is nice and consist
 4. Any operand that refers to an address should use a variable. This includes immediates.
 5. Large datablocks should be placed in bin files and incbin'd in the disassembly, to reduce text file size.
 6. Version differences should be clearly marked with special comments like shown in smw.asm.
+   - Exceptions are single instructions with either different addressing modes (use the applicable macro) or different constant operands (I'll have a function setup to do this eventually).
 7. Spaces not tabs.
 8. Probably more things that I'll add as I think of them.
 9. I'm using the semicolon to the left of the program counter as a marker of whether I have cleaned up that area of code yet. If there are two semicolons, that line still needs work.
