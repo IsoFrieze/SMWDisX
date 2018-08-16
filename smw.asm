@@ -3,48 +3,9 @@
 ; by Dotsarecool
 ;========================
 
-macro BorW(cmd, addr)
-    if !_VER == 0
-        <cmd>.B <addr>
-    else
-        <cmd>.W <addr>
-    endif
-endmacro
-
-macro WorB(cmd, addr)
-    if !_VER == 0
-        <cmd>.W <addr>
-    else
-        <cmd>.B <addr>
-    endif
-endmacro
-
-macro WorL_X(cmd, addr)
-    if !_VER == 0
-        <cmd>.W <addr>,X
-    else
-        <cmd>.L <addr>,X
-    endif
-endmacro
-
-macro LorW_X(cmd, addr)
-    if !_VER == 0
-        <cmd>.L <addr>,X
-    else
-        <cmd>.W <addr>,X
-    endif
-endmacro
-
-macro LorW(cmd, addr)
-    if !_VER == 0
-        <cmd>.L <addr>
-    else
-        <cmd>.W <addr>
-    endif
-endmacro
-
 lorom
 math pri on
+incsrc "macros.asm"
 incsrc "rammap.asm"
 
 ; version to assemble
@@ -52,7 +13,7 @@ incsrc "rammap.asm"
 ; 1 = North American
 ; 2 = PAL 1.0
 ; 3 = PAL 1.1
-!_VER = 0
+!_VER = 1
                                                           ;                   ;
                       incsrc "bank_00.asm"                ;                   ;
                       incsrc "bank_01.asm"                ;                   ;
@@ -77,9 +38,9 @@ ROMSize:              db $09                              ;FFD7|FFD7/FFD7\FFD7; 
 SRAMSize:             db $01                              ;FFD8|FFD8/FFD8\FFD8; 16Kb SRAM
                                                           ;                   ;
                    if !_VER == 0                ;\   IF   ;+++++++++++++++++++; J
-DestinationCode:      db $00                              ;    |FFD9          ; Japan
+DestinationCode:      db $00                              ;FFD9|              ; Japan
                    elseif !_VER == 1            ;< ELSEIF ;-------------------; U
-DestinationCode:      db $01                              ;FFD9               ; North America (USA and Canada)
+DestinationCode:      db $01                              ;    |FFD9          ; North America (USA and Canada)
                    else                         ;<  ELSE  ;-------------------; E0 & E1
 DestinationCode:      db $02                              ;         /FFD9\FFD9; All of Europe
                    endif                        ;/ ENDIF  ;+++++++++++++++++++;
@@ -95,10 +56,27 @@ MaskROMVersion:       db $01                              ;              \FFDB; 
 Checksum:             dw $0000,$FFFF                      ;FFDC|FFDC/FFDC\FFDC; asar does this on its own
                                                           ;                   ;
                    if !_VER == 0                ;\   IF   ;+++++++++++++++++++; J
+NativeVectors:        dw $FFFF                            ;FFE0|              ;
+                      dw $FFFF                            ;FFE2|              ;
+                      dw I_EMPTY                          ;FFE4|              ;
+                      dw $50B2                            ;FFE6|              ;
+                      dw I_EMPTY                          ;FFE8|              ;
+                      dw I_NMI                            ;FFEA|              ;
+                      dw I_RESET                          ;FFEC|              ;
+                      dw I_IRQ                            ;FFEE|              ;
+EmulationVectors:     dw $FFFF                            ;FFF0|              ;
+                      dw $FFFF                            ;FFF2|              ;
+                      dw I_EMPTY                          ;FFF4|              ;
+                      dw I_EMPTY                          ;FFF6|              ;
+                      dw I_EMPTY                          ;FFF8|              ;
+                      dw I_EMPTY                          ;FFFA|              ;
+                      dw I_RESET                          ;FFFC|              ;
+                      dw I_EMPTY                          ;FFFE|              ;
+                   elseif !_VER == 1            ;< ELSEIF ;-------------------; U
 NativeVectors:        dw $FFFF                            ;    |FFE0          ;
                       dw $FFFF                            ;    |FFE2          ;
                       dw I_EMPTY                          ;    |FFE4          ;
-                      dw $50B2                            ;    |FFE6          ;
+                      dw $FFFF                            ;    |FFE6          ;
                       dw I_EMPTY                          ;    |FFE8          ;
                       dw I_NMI                            ;    |FFEA          ;
                       dw I_RESET                          ;    |FFEC          ;
@@ -111,23 +89,6 @@ EmulationVectors:     dw $FFFF                            ;    |FFF0          ;
                       dw I_EMPTY                          ;    |FFFA          ;
                       dw I_RESET                          ;    |FFFC          ;
                       dw I_EMPTY                          ;    |FFFE          ;
-                   elseif !_VER == 1            ;< ELSEIF ;-------------------; U
-NativeVectors:        dw $FFFF                            ;FFE0               ;
-                      dw $FFFF                            ;FFE2               ;
-                      dw I_EMPTY                          ;FFE4               ;
-                      dw $FFFF                            ;FFE6               ;
-                      dw I_EMPTY                          ;FFE8               ;
-                      dw I_NMI                            ;FFEA               ;
-                      dw I_RESET                          ;FFEC               ;
-                      dw I_IRQ                            ;FFEE               ;
-EmulationVectors:     dw $FFFF                            ;FFF0               ;
-                      dw $FFFF                            ;FFF2               ;
-                      dw I_EMPTY                          ;FFF4               ;
-                      dw I_EMPTY                          ;FFF6               ;
-                      dw I_EMPTY                          ;FFF8               ;
-                      dw I_EMPTY                          ;FFFA               ;
-                      dw I_RESET                          ;FFFC               ;
-                      dw I_EMPTY                          ;FFFE               ;
                    elseif !_VER == 2            ;< ELSEIF ;-------------------; E0
 NativeVectors:        dw $0000                            ;         /FFE0     ;
                       dw $0001                            ;         /FFE2     ;

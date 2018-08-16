@@ -105,7 +105,7 @@ incsrc "hardware_registers.asm"
 ; $7E0079 unused
 !PlayerXPosSpx = $7E007A
 !PlayerXSpeed = $7E007B
-; $7E007C unused
+!PlayerYPosSpx = $7E007C ; used only by E0 & E1
 !PlayerYSpeed = $7E007D
 !PlayerXPosScrRel = $7E007E
 !PlayerYPosScrRel = $7E0080
@@ -143,7 +143,9 @@ incsrc "hardware_registers.asm"
 !BackgroundGFXFile = $7E0105
 !OverworldOverride = $7E0109
 !SaveFile = $7E010A
-; $7E010B - $7E01FF used as stack
+; $7E010B = $7E010F unused
+!CreditsLetterbox = $7E0110 ; used only by E1
+; $7E0112 - $7E01FF used as stack
 !OAMTileXPos = $7E0200
 !OAMTileYPos = $7E0201
 !OAMTileNo = $7E0202

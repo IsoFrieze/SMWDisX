@@ -25,8 +25,20 @@ goto done
 :checke1
 fc comparison_E1.smc smw.smc > nul
 if errorlevel 2 goto noroms
-if errorlevel 1 goto error
+if errorlevel 1 goto checke0f
 echo E1 version match!
+goto done
+:checke0f
+fc comparison_E0_f.smc smw.smc > nul
+if errorlevel 2 goto noroms
+if errorlevel 1 goto checke1f
+echo E0 version temporary match!
+goto done
+:checke1f
+fc comparison_E1_f.smc smw.smc > nul
+if errorlevel 2 goto noroms
+if errorlevel 1 goto error
+echo E1 version temporary match!
 goto done
 :error
 echo The assembled ROM does not match any version!
