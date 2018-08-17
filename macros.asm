@@ -59,3 +59,7 @@ macro insert_empty(j, u, e0, e1)
         rep <e1> : db $FF
     endif
 endmacro
+
+; select a constant value depending on the region
+; easier to read than an if/else block for a single LDA instruction for example
+function con(u, j, e0, e1) = select(equal(!_VER,0),u,select(equal(!_VER,1),j,select(equal(!_VER,2),e0,e1)))

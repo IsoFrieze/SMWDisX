@@ -23,7 +23,7 @@ I'm focusing on readability so its important that everything is nice and consist
 3. Everything should be relative, using labels. This is kind of assumed, but it is very important with multiple version support since stuff shifts around a lot.
 4. Any operand that refers to an address should use a variable. This includes immediates.
 5. Large datablocks should be placed in bin files and incbin'd in the disassembly, to reduce text file size.
-6. Version differences should be clearly marked with special comments like shown in smw.asm.
+6. Version differences should be clearly marked with special comments. See label `GameMode17` in bank_00.asm.
    - Exceptions are single instructions with either different addressing modes (use the applicable macro) or different constant operands (I'll have a function setup to do this eventually).
 7. Spaces not tabs.
 8. Probably more things that I'll add as I think of them.
