@@ -14,22 +14,22 @@ lorom
 math pri on
 incsrc "macros.asm"
 incsrc "rammap.asm"
-                                                          ;                   ;
-                      incsrc "bank_00.asm"                ;                   ;
-                      incsrc "bank_01.asm"                ;                   ;
-                      incsrc "bank_02.asm"                ;                   ;
-                      incsrc "bank_03.asm"                ;                   ;
-                      incsrc "bank_04.asm"                ;                   ;
-                      incsrc "bank_05.asm"                ;                   ;
-                      incsrc "bank_06.asm"                ;                   ;
-                      incsrc "bank_07.asm"                ;                   ;
-                      incsrc "bank_08-0B.asm"             ;                   ;
-                      incsrc "bank_0C.asm"                ;                   ;
-                      incsrc "bank_0D.asm"                ;                   ;
-                      incsrc "bank_0E.asm"                ;                   ;
-                      incsrc "bank_0F.asm"                ;                   ;
-                                                          ;                   ;
-ORG $00FFC0                                               ;                   ;
+
+incsrc "bank_00.asm"
+incsrc "bank_01.asm"
+incsrc "bank_02.asm"
+incsrc "bank_03.asm"
+incsrc "bank_04.asm"
+incsrc "bank_05.asm"
+incsrc "bank_06.asm"
+incsrc "bank_07.asm"
+incsrc "bank_08-0B.asm"
+incsrc "bank_0C.asm"
+incsrc "bank_0D.asm"
+incsrc "bank_0E.asm"
+incsrc "bank_0F.asm"
+
+ORG $00FFC0                                               ;  J |  U / E0 \ E1 ;
                                                           ;                   ;
 ROMName:              db "SUPER MARIOWORLD  ",$20,$20,$20 ;FFC0|FFC0/FFC0\FFC0; Internal ROM name (PLEASE SOMEONE TELL ME WHY STRINGS ALONE DON'T ASSEMBLE)
 MemoryMap:            db $20                              ;FFD5|FFD5/FFD5\FFD5; LoROM, slow

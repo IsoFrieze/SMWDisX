@@ -19,16 +19,17 @@ Anyone can contribute as long as they follow the format rules below. This isn't 
 # Format
 I'm focusing on readability so its important that everything is nice and consistent.
 1. 22 characters for label, 36 characters for instruction, then the pc, raw bytes, then comment. Raw bytes don't need to be displayed for data blocks or binary inclusions.
-2. Address mode hints (.B .W .L) should be used by the following instructions if they are not accumulator addressed: TSB TRB BIT LDA LDX LDY STA STX STY STZ CMP CPX CPY ORA AND EOR ADC SBC ASL ROL LSR ROR DEC INC. Some address modes (e.g. LDA $addr,Y) are unambiguous but should be kept for consistency.
-3. Everything should be relative, using labels. This is kind of assumed, but it is very important with multiple version support since stuff shifts around a lot.
-4. Any operand that refers to an address should use a variable. This includes immediates.
-5. Large datablocks should be placed in bin files and incbin'd in the disassembly, to reduce text file size.
-6. Version differences should be clearly marked with special comments. See label `GameMode17` in bank_00.asm.
+2. The PC goes in the order of J, U, E0, the E1. The separator symbols are unique to each so you can prefix a bank address with one to look for that version specifically.
+3. Address mode hints (.B .W .L) should be used by the following instructions if they are not accumulator addressed: TSB TRB BIT LDA LDX LDY STA STX STY STZ CMP CPX CPY ORA AND EOR ADC SBC ASL ROL LSR ROR DEC INC. Some address modes (e.g. LDA $addr,Y) are unambiguous but should be kept for consistency.
+4. Everything should be relative, using labels. This is kind of assumed, but it is very important with multiple version support since stuff shifts around a lot.
+5. Any operand that refers to an address should use a variable. This includes immediates.
+6. Large datablocks should be placed in bin files and incbin'd in the disassembly, to reduce text file size.
+7. Version differences should be clearly marked with special comments. See label `GameMode17` in bank_00.asm.
    - Exceptions are single instructions with either different addressing modes (use the applicable macro) or different constant operands (I'll have a function setup to do this eventually).
-7. Spaces not tabs.
-8. Probably more things that I'll add as I think of them.
-9. I'm using the semicolon to the left of the program counter as a marker of whether I have cleaned up that area of code yet. If there are two semicolons, that line still needs work.
-10. Don't allow variable names to be a prefix of another variable's name. This way you can Ctrl+F a variable name and you won't get similarly named variables. (This is why scratch RAM starts with an underscore.) Generally this means short names are bad.
+8. Spaces not tabs.
+9. Probably more things that I'll add as I think of them.
+10. I'm using the semicolon to the left of the program counter as a marker of whether I have cleaned up that area of code yet. If there are two semicolons, that line still needs work.
+11. Don't allow variable names to be a prefix of another variable's name. This way you can Ctrl+F a variable name and you won't get similarly named variables. (This is why scratch RAM starts with an underscore.) Generally this means short names are bad.
 
 # Bugs
 The assembler Asar is an open source project still under development. Some bugs exist which require the disassembly to go against formatting protocol in order to assembly correctly. Here is a list of things I've run into to remind myself to go back and fix if the bugs are ever fixed:

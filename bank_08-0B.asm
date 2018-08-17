@@ -1,6 +1,6 @@
                       check bankcross off                 ;;                   ;
                                                           ;;                   ;
-                      ORG $088000                         ;;                   ;
+                      ORG $088000                         ;;  J |  U / E0 \ E1 ;
                                                           ;;                   ;
                    if !_VER == 0                ;\   IF   ;;+++++++++++++++++++; J
 GFX32:                                                    ;;                   ; (due to asar bug, labels must be on separate lines here...)

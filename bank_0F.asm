@@ -1,4 +1,4 @@
-                      ORG $0F8000                         ;;                   ;
+                      ORG $0F8000                         ;;  J |  U / E0 \ E1 ;
                                                           ;;                   ;
 MusicSamples:         dw SampleData-MusicSamples-4        ;;8000|8000/8000\8000;
                       dw !SamplePtrTable                  ;;8002|8002/8002\8002;

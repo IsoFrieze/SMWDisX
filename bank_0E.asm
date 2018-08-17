@@ -1,4 +1,4 @@
-                      ORG $0E8000                         ;;                   ;
+                      ORG $0E8000                         ;;  J |  U / E0 \ E1 ;
                                                           ;;                   ;
 SPC700Engine:         dw SoundEffects-SPC700Engine-4      ;;8000|8000/8000\8000;
                       dw !SPCEngine                       ;;8002|8002/8002\8002;

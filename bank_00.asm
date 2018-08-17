@@ -1,4 +1,4 @@
-                      ORG $008000                         ;;                   ;
+                      ORG $008000                         ;;  J |  U / E0 \ E1 ;
                                                           ;;                   ;
 I_RESET:              SEI                                 ;;8000|8000/8000\8000; Disable interrupts 
                       STZ.W !HW_NMITIMEN                  ;;8001|8001/8001\8001; Clear NMI and V/H Count, disable joypad ; NMI, V/H Count, and Joypad Enable
