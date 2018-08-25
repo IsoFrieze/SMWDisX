@@ -3,7 +3,7 @@
 This disassembly will focus on code readability and the ability to assemble any of the four releases of the original game (J, U, E 1.0, & E 1.1).
 
 # How to Assemble
-You'll need the assembler, Asar v1.60 (you can find it [here](https://www.smwcentral.net/?p=section&s=tools)).
+You'll need the assembler, Asar v1.61 (you can find it [here](https://www.smwcentral.net/?p=section&s=tools)).
 1. Click the big green "Clone or download" button and select zip file.
 2. Unzip that somewhere, and stick asar.exe in the folder with PATCH.bat.
 3. Open smw.asm and change the variable !_VER to correspond to the version of the game you want to assemble.
@@ -33,14 +33,8 @@ I'm focusing on readability so its important that everything is nice and consist
 
 # Bugs
 The assembler Asar is an open source project still under development. Some bugs exist which require the disassembly to go against formatting protocol in order to assembly correctly. Here is a list of things I've run into to remind myself to go back and fix if the bugs are ever fixed:
-1. Having a label on the same line as code with more than 3 spaces between the two causes some issues.
-   - Strings will not assemble alone. See label `ROMName` in smw.asm.
-     - Temp fix: replace the last character in the string with a normal hex byte.
-   - `incbin` will not update the pc. See label `GFX32` in bank_08-0B.asm.
-     - Temp fix: put the `incbin` on a separate line.
-2. Turning `check bankcross off` will cause the pc to always act as FastROM. This causes labels to have $80 added to their bank.
+1. Turning `check bankcross off` will cause the pc to always act as FastROM. This causes labels to have $80 added to their bank.
    - `padbyte pad` requires the FastROM address. See bank_08-0B.asm.
      - Temp fix: set the high byte of the bank in the `pad` command.
    - All references to labels in a non-bankcross-checked area will have the high bit set. See `GFXFilesBank` label in bank_00.asm.
      - Temp fix: Mask away the high bit of the bank by using `&$7F`.
-   
