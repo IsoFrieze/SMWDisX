@@ -10,6 +10,8 @@ You'll need the assembler, Asar v1.61 (you can find it [here](https://www.smwcen
 4. Run the bat file. The assembled ROM will be called "smw.smc."
 5. If you provide a ROM of each version of the game and call them "comparison_J.smc", etc., the batch file will also check the assembled ROM to see if it matches any exactly.
 
+On Linux, steps are the same but use asar instead of asar.exe and PATCH.sh instead of PATCH.bat.
+
 # Status
 All 4 versions assemble and play exactly like they should. The only difference at the moment is the PAL versions' empty space patterns, since they don't just use a $FF fill. Either I have bad dumps of these two versions, or there is no pattern to which bits are flipped in these areas. It *looks* like it alternates between $FF and $00 every $20 bytes but there is some other weirdness going on. I won't include these in the disassembly until I can find a clean way of doing it. I was hoping to write a macro that pulled the empty space pattern from a separate file, but Asar won't allow variable input to the `incbin` command.
 
