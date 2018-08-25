@@ -31,7 +31,7 @@ incsrc "bank_0F.asm"
 
 ORG $00FFC0                                               ;  J |  U / E0 \ E1 ;
                                                           ;                   ;
-ROMName:              db "SUPER MARIOWORLD  ",$20,$20,$20 ;FFC0|FFC0/FFC0\FFC0; Internal ROM name (PLEASE SOMEONE TELL ME WHY STRINGS ALONE DON'T ASSEMBLE)
+ROMName:              db "SUPER MARIOWORLD     "          ;FFC0|FFC0/FFC0\FFC0; Internal ROM name
 MemoryMap:            db $20                              ;FFD5|FFD5/FFD5\FFD5; LoROM, slow
 CatridgeType:         db $02                              ;FFD6|FFD6/FFD6\FFD6; ROM + SRAM + Battery
 ROMSize:              db $09                              ;FFD7|FFD7/FFD7\FFD7; <= 4Mb ROM
