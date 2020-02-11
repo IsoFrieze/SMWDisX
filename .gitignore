@@ -1,3 +1,4 @@
 *.exe
 *.smc
 __*
+empty/*
