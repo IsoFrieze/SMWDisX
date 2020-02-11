@@ -1,4 +1,6 @@
 *.exe
 *.smc
+*.sfc
 __*
 empty/*
+/asar
