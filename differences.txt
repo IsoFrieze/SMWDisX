@@ -1,0 +1,3398 @@
+J $0080EA | U $0080EA | SS $0080EA | E0 $0080EA | E1 $0080EA
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $0080EE | U $0080EF | SS $0080EF | E0 $0080EF | E1 $0080EF
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $0080F2 | U $0080F4 | SS $0080F4 | E0 $0080F4 | E1 $0080F4
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $0080FC | U $0080FF | SS $0080FF | E0 $0080FF | E1 $0080FF
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $008100 | U $008104 | SS $008104 | E0 $008104 | E1 $008104
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $008104 | U $008109 | SS $008109 | E0 $008109 | E1 $008109
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $00810A | U $008110 | SS $008110 | E0 $008110 | E1 $008110
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $00810E | U $008115 | SS $008115 | E0 $008115 | E1 $008115
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $008112 | U $00811A | SS $00811A | E0 $00811A | E1 $00811A
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $008141 | U $00814A | SS $00814A | E0 $00814A | E1 $00814A
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $008145 | U $00814F | SS $00814F | E0 $00814F | E1 $00814F
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $008149 | U $008154 | SS $008154 | E0 $008154 | E1 $008154
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $00814F | U $00815B | SS $00815B | E0 $00815B | E1 $00815B
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $008153 | U $008160 | SS $008160 | E0 $008160 | E1 $008160
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $008157 | U $008165 | SS $008165 | E0 $008165 | E1 $008165
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+    
+J $0084B9 | U $0084C8 | SS $0084C8 | E0 $0084C8 | E1 $0084C8
+
+    J: Absence of routine.
+    U, SS, E0, E1: Wrapper routine.
+    
+    Wrapper to call $008567 from outside banks.
+    Used by U, SS, E0, E1 to update enemy names in credits when Special World is completed.
+    Used by E1 to zero out L1 and L2 tilemaps before level load.
+    
+    J +0 | U +8 | SS +8 | E0 +8 | E1 +8
+
+J $0084DA | U $0084F1 | SS $0084F1 | E0 $0084F1 | E1 $0084F1
+
+    J: Pointers to 4*7 castle cutscene message stripe images.
+    U, SS, E0, E1: Pointers to 8*7 castle cutscene message stripe images.
+    
+    Text is stored differently in English versus Japanese, requiring twice as many lines.
+    
+    J +0 | U +56 | SS +56 | E0 +56 | E1 +56
+
+J $008A0E | U $008A79 | SS $008A79 | E0 $008A79 | E1 $008A79
+
+    J, U, SS, E0: SETINI register is set to #$00.
+    E1: SETINI register is set to #$04.
+    
+    When SETINI is set to #$04, the display is 239 lines (overscan).
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +2
+
+J $008D1F | U $008D8A | SS $008D8A | E0 $008D8A | E1 $008D8C
+
+    J, U, SS: In game timer fractional part initialized to #$28 frames.
+    E0, E1: In game timer fractional part initialized to #$22 frames.
+    
+    Slower framerate requires in game timer to be re-adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $008DC2 | U $008E2D | SS $008E2D | E0 $008E2D | E1 $008E2F
+
+    J, U, SS: In game timer counts down every #$28 frames.
+    E0, E1: In game timer counts down every #$22 frames.
+    
+    Slower framerate requires in game timer to be re-adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $0091FA | U $009265 | SS $009265 | E0 $009265 | E1 $009267
+
+    J, U, SS, E0: Window HDMA table is #$01BE +1 bytes long.
+    E1: Window HDMA table is #$01DE +1 bytes long
+    
+    Overscan requires extra lines to be transferred. No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $009211 | U $00927C | SS $00927C | E0 $00927C | E1 $00927E
+
+    J, U, SS, E0: Window HDMA table set up in two groups of #$F0 bytes.
+    E1: Window HDMA table set up in two groups of #$F8 bytes.
+    
+    Overscan requires extra lines to be transferred. No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $009223 | U $00928E | SS $00928E | E0 $00928E | E1 $009290
+
+    J, U, SS, E0: Window HDMA table is #$01BE +1 bytes long.
+    E1: Window HDMA table is #$01DE +1 bytes long
+    
+    Overscan requires extra lines to be transferred. No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $009230 | U $00929B | SS $00929B | E0 $00929B | E1 $00929D
+
+    J, U, SS, E0: Window HDMA table is #$01C0 bytes long.
+    E1: Window HDMA table is #$01E0 bytes long
+    
+    Overscan requires extra lines to be transferred. No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $0093DF | U $00944A | SS $00944A | E0 $00944A | E1 $00944C
+
+    J, U, SS, E0: $70
+    E1: $78
+    
+    ?
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $00B02F | U $00B091 | SS $00B091 | E0 $00B096 | E1 $00B098
+
+    J: Address mode is direct page.
+    U, SS, E0, E1: Address mode is address.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+    
+J $0096FA | U $009765 | SS $009765 | E0 $009765 | E1 $009767
+
+    J, U, SS: GAME OVER fades away when timer hits zero.
+    E0, E1: GAME OVER fades away when timer hits #$30.
+    
+    Slower framerate requires this timer to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +5 | E1 +5
+    
+J $009711 | U $00977C | SS $00977C | E0 $009781 | E1 $009783
+
+    J: Clear the hidden 1up collection flag table.
+    U, SS, E0, E1: Clear scratch RAM.
+    
+    Questionable difference. After a game over, hidden 1ups will return on J version only.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0098E4 | U $00994F | SS $00994F | E0 $009954 | E1 $009956
+
+    J, U, SS, E0: X = #$C0, A = #$A0.
+    E1: X = #$D0, A = #$B0.
+    
+    ?
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0098FA | U $009965 | SS $009965 | E0 $00996A | E1 $00996C
+
+    J, U, SS, E0: Y = #$02C0.
+    E1: Y = #$0300.
+    
+    ?
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $009902 | U $00996D | SS $00996D | E0 $009972 | E1 $009974
+
+    J, U, SS, E0: Y = #$FB80.
+    E1: Y = #$FBC0.
+    
+    ?
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00990A | U $009975 | SS $009975 | E0 $00997A | E1 $00997C
+
+    J, U, SS, E0: Y = #$0320.
+    E1: Y = #$0360.
+    
+    ?
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00991B | U $009986 | SS $009986 | E0 $00998B | E1 $00998D
+
+    J, U, SS, E0: Y = #$0080.
+    E1: Y = #$00C0.
+    
+    ?
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0099D0 | U $009A3B | SS $009A3B | E0 $009A40 | E1 $009A42
+
+    J, U, SS, E0: X = #$D0.
+    E1: X = #$E0.
+    
+    ?
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $009AAC | U $009B17 | SS $009B17 | E0 $009B1C | E1 $009B1E
+
+    J, U, E0, E1: Code for running game mode $09: delete save file mode.
+    SS: Mostly removed code.
+    
+    Since the SS version doesn't have save files, there was no need for a delete save file mode.
+    SS game mode $09 just immediately updates the game mode to $08.
+    Some return instructions remain for routines called outside this game mode.
+    
+    J +236 | U +236 | SS +0 | E0 +236 | E1 +236
+    
+J $009B10 | U $009B7B | SS ------- | E0 $009B80 | E1 $009B82
+
+    J: Y = #$0C.
+    U, E0, E1: X = #$00.
+    
+    The location of the blinking cursor in game mode $09 is indexed differently in the J version.
+    
+    J +0 | U +0 | SS -- | E0 +0 | E1 +0
+    
+J $009BB4 | U $009C1F | SS $009B33 | E0 $009C24 | E1 $009C26
+
+    J, U, SS: Input sequence for Mario's title screen movement.
+    E0, E1: Different input sequence for Mario's title screen movement.
+    
+    Due to the different framerate and physics, the title screen input sequence had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $009C42 | U $009CAD | SS $009BC1 | E0 $009CB2 | E1 $009CB4
+
+    J: Argument in Y to a routine call, write #$FF to RAM.
+    U: Clear HDMA enable mirror register.
+    SS: Absence of all 3 things.
+    
+    The routine called here draws the files/zones to the screen when the player presses a button on the title screen.
+    The J version of the routine (covered below) requires Y to be set to a value for the cursor icon.
+    Because the stripe image is not terminated in the routine in the J version, it is done here.
+    As for the STZ to $0D9F, who knows.
+    
+    J +8 | U +3 | SS +0 | E0 +3 | E1 +3
+    
+J $009C6B | U $009CD1 | SS $009BE2 | E0 $009CD6 | E1 $009CD8
+
+    J, U, E0, E1: Code for running game mode $08: select file mode.
+    SS: Code for running game mode $08: select zone mode.
+    
+    The SS version handles the entire game mode here, as it is quite simple.
+    There are a few tables added that help keep track of the seven zones and where to place the cursor and when to wrap.
+    The other versions mainly control entering/leaving game mode $09, erase file mode.
+    They instead call a more general routine to handle the drawing of file names and cursor.
+    
+    J +0 | U +0 | SS +77 | E0 +0 | E1 +0
+    
+J $009C84 | U $009CEA | SS ------- | E0 $009CEF | E1 $009CF1
+
+    J: Y = #$0C.
+    U, E0, E1: X = #$00.
+    
+    The location of the blinking cursor in game mode $09 is indexed differently in the J version.
+    
+    J +0 | U +0 | SS -- | E0 +0 | E1 +0
+    
+J $009CD2 | U $009D38 | SS $009C96 | E0 $009D3D | E1 $009D3F
+
+    J: Draw a single stripe image.
+    U, E0, E1: Draw one of two stripe images.
+    SS: Draw one of two stripe images, but do less.
+    
+    The J version only has one stripe image for file names.
+    The others use one of two depending on erase file mode.
+    SS version is set up to do so, but it can never draw the erase file names (they do exist in bank $05).
+    $05 holds info about drawing exit count, so SS skips that.
+    A then holds the index where the exit counter should go, so SS skips that too.
+    
+    J +8 | U +4 | SS +0 | E0 +4 | E1 +4
+    
+J $009CF5 | U $009D57 | SS $009CB1 | E0 $009D5C | E1 $009D5E
+
+    J, U, E0, E1: Draw exit count on the file select text.
+    SS: Do nothing.
+    
+    Since the SS version has no save data, all of this code was removed.
+    This section also computes the checksums for the save data to make sure it is valid.
+    
+    J +161 | U +161 | SS +0 | E0 +161 | E1 +161
+    
+J $009D0A | U $009D6C | SS ------- | E0 $009D71 | E1 $009D73
+
+    U, E0, E1: If 96 or more exits, use different graphics.
+    J: Just write the exit count.
+    
+    In U and E0 versions, getting 96 or more exits will display "*96".
+    The E1 version just displays "96", but this is because the "*96" graphics were actually edited.
+    
+    J +0 | U +10 | SS -- | E0 +10 | E1 +10
+    
+J $009D2A | U $009D96 | SS ------- | E0 $009D9B | E1 $009D9D
+
+    U, E0, E1: Overwrite "EMPTY" with blank tiles.
+    J: Overwrite "hajimekara" with blank tiles.
+    
+    This code runs during game mode $08: select file mode.
+    Since J version uses the same stripe image for file name and erase file name, it reads from a table.
+    
+    J +10 | U +0 | SS -- | E0 +0 | E1 +0
+    
+J $009E12 | U $009E74 | SS $009D2D | E0 $009E79 | E1 $009E7B
+
+    J: A set of five VRAM addresses.
+    U, E0, E1: A set of five VRAM addresses.
+    SS: A set of five VRAM addresses.
+    
+    These VRAM addresses determine the X,Y location of the blinking cursor in certain menus.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $009E7E | U $009EE0 | SS $009D99 | E0 $009EE5 | E1 $009EE7
+
+    J, U, E0, E1: Table of initial save data and code to copy it to the file.
+    SS: Multiple tables of initial save data and code to copy one of them to the file.
+    
+    Starting anywhere other than zone 1 in the SS version will copy additional data to the save file.
+    This allows all of the levels up to that world to be cleared.
+    
+    J +0 | U +0 | SS +389 | E0 +0 | E1 +0
+    
+J $00A039 | U $00A09B | SS $00A0D9 | E0 $00A0A0 | E1 $00A0A2
+
+    J, U, SS: Value set to #$B0.
+    E0, E1: Value set to #$90.
+    
+    This controls the amount of time the intro text box is active before you can skip it.
+    Slower framerate requires this timer to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00A060 | U $00A0C2 | SS $00A100 | E0 $00A0C7 | E1 $00A0C9
+
+    J, U, E0, E1: If the player runs out of lives, prepare to show the continue/end screen.
+    SS: Skip the continue/end screen.
+    
+    Upon a game over, the SS version will always return to the title screen.
+    
+    J +5 | U +5 | SS +0 | E0 +5 | E1 +5
+    
+J $00A091 | U $00A0F3 | SS $00A12C | E0 $00A0F8 | E1 $00A0FA
+
+    J, U, E0, E1: Upon game over, show continue/end screen if there is save data.
+    SS: Skip the continue/end screen.
+    
+    Upon a game over, the SS version will always return to the title screen.
+    
+    J +34 | U +34 | SS +0 | E0 +34 | E1 +34
+
+J $00A11E | U $00A180 | SS $00A197 | E0 $00A185 | E1 $00A187
+
+    J, U, SS, E0: Window HDMA table is #$01BE +1 bytes long.
+    E1: Window HDMA table is #$01DE +1 bytes long
+    
+    Overscan requires extra lines to be transferred. No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00A18C | U $00A1EE | SS $00A205 | E0 $00A1F3 | E1 $00A1F5
+
+    J, U, SS: Compare to #$40.
+    E0, E1: Compare to #$48.
+    
+    Value of counter after touching the last 1up in the bonus game to disable the controls.
+    Slower framerate requires this timer to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00A193 | U $00A1F5 | SS $00A20C | E0 $00A1FA | E1 $00A1FC
+
+    J, U, SS: Compare to #$1C.
+    E0, E1: Compare to #$24.
+    
+    Value of counter after touching the last 1up in the bonus game to make Mario show the peace sign.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00A1F9 | U $00A25B | SS $00A272 | E0 $00A260 | E1 $00A262
+
+    J, U, E0, E1: Handle start + select out of a level.
+    SS: Code removed.
+    
+    If a level has been beaten, pressing select while paused will exit the level.
+    The SS version removed this feature.
+    
+    J +46 | U +46 | SS +0 | E0 +46 | E1 +46
+    
+J $00AEC3 | U $00AF25 | SS $00AF0E | E0 $00AF2A | E1 $00AF2C
+
+    J, U, SS: Compare to #$A0.
+    E0, E1: Compare to #$B0.
+    
+    Value of counter after touching the goal tape to show "Course Clear!".
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00B02F | U $00B091 | SS $00B07A | E0 $00B096 | E1 $00B098
+
+    J: 17 bytes of freespace.
+    U: 15 bytes of freespace.
+    SS: 54 bytes of freespace.
+    E0: 29 bytes of freespace.
+    E1: 27 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +2 | U +0 | SS +27 | E0 +14 | E1 +12
+    
+J $00B90D | U $00B96D | SS $00B97D | E0 $00B980 | E1 $00B980
+
+    J, E1: An extra XBA instruction.
+    U, SS, E0: No extra instruction.
+    
+    Every pair of bytes in graphics data is swapped in the J and E1 versions, for an unknown reason.
+    Because of this, the E0 and E1 graphics data are completely different after being compressed, despite being nearly identical.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +1
+    
+J $00B9EE | U $00BA4D | SS $00BA5D | E0 $00BA60 | E1 $00BA61
+
+    J: 18 bytes of freespace.
+    U: 19 bytes of freespace.
+    SS: 3 bytes of freespace.
+    E0, E1: No freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +18 | U +19 | SS +3 | E0 +0 | E1 +0
+    
+J $00C3F3 | U $00C453 | SS $00C453 | E0 $00C453 | E1 $00C454
+
+    J, U, SS, E0: 13 bytes of freespace.
+    E1: 12 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +1 | U +1 | SS +1 | E0 +1 | E1 +0
+    
+J $00C4CA | U $00C52A | SS $00C52A | E0 $00C52A | E1 $00C52A
+
+    J, U, SS: Compare to #$01.
+    E0, E1: Compare to #$08.
+    
+    Value of counter after touching the last 1up in the bonus game to leave the level.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00C4EC | U $00C54C | SS $00C54C | E0 $00C54C | E1 $00C54C
+
+    J, U, SS: Compare to #$1E.
+    E0, E1: Compare to #$18.
+    
+    Value of counter after hitting a P-switch that the "running out" sound should play.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00C512 | U $00C572 | SS $00C572 | E0 $00C572 | E1 $00C572
+
+    J, U, SS: Unreachable debug code.
+    E0, E1: Code removed.
+    
+    This routine would have allowed you to press select + up to cycle through powerups.
+    No noticable difference.
+    
+    J +19 | U +19 | SS +19 | E0 +0 | E1 +0
+    
+J $00C588 | U $00C5E8 | SS $00C5E8 | E0 $00C5D5 | E1 $00C5D5
+
+    J, U, SS: Input sequences for Mario's castle cutscene movement.
+    E0, E1: Different input sequences for Mario's castle cutscene movement.
+    
+    Due to the different framerate and physics, the castle cutscene input sequences had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00C776 | U $00C7D6 | SS $00C7D6 | E0 $00C7C3 | E1 $00C7C3
+
+    J, U, SS: A = #$D8.
+    E0, E1: A = #$D2.
+    
+    This value is Mario's X speed when he rams into the side of Morton's castle in the cutscene.
+    Due to the different framerate and physics, this value had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00C7B0 | U $00C810 | SS $00C810 | E0 $00C7FD | E1 $00C7FD
+
+    J, U, SS: Subtract #$0D.
+    E0, E1: Subtract #$0F.
+    
+    This value is taken from Mario's Y speed when he grabs wings with Yoshi.
+    Due to the different framerate and physics, this value had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00C7E8 | U $00C848 | SS $00C848 | E0 $00C835 | E1 $00C835
+
+    J, U, SS: Input sequences for Mario's No-Yoshi intro movement.
+    E0, E1: Different input sequences for Mario's No-Yoshi intro movement.
+    
+    Due to the different framerate and physics, the No-Yoshi intro input sequences had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00C8F4 | U $00C954 | SS $00C954 | E0 $00C941 | E1 $00C941
+
+    J, U, SS: Branch at #$00.
+    E0, E1: Branch at #$50.
+    
+    The counter checked controls how long after pressing a switch palace switch the message box appears.
+    The counter is initialized at #$08, so this is effectively immediately for the E0 & E1 versions.
+    Slower framerate requires this value to be adjusted, but it seems it was adjusted too much.
+    
+    J +0 | U +0 | SS +0 | E0 +5 | E1 +5
+    
+J $00C902 | U $00C962 | SS $00C962 | E0 $00C954 | E1 $00C954
+
+    J: Timer set to #$70
+    U, SS: Timer set to #$A0.
+    E0, E1: Timer set to #$6A.
+    
+    This timer controls how long the switch palace message appears before exiting the level.
+    This value was increase for English releases to make it easier to read.
+    Slower framerate requires this timer to be adjusted for E0, E1 versions.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00C916 | U $00C976 | SS $00C976 | E0 $00C968 | E1 $00C968
+
+    J, U, SS: Compare to #$28.
+    E0, E1: Compare to #$50.
+    
+    Value of counter after hitting a goal tape that Mario makes the peace sign.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00C938 | U $00C998 | SS $00C998 | E0 $00C98A | E1 $00C98A
+
+    J, U, SS: Timer set to #$40.
+    E0, E1: Timer set to #$6E.
+    
+    This timer controls how long Mario makes the peace sign before exiting the level.
+    Slower framerate requires this timer to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00C93D | U $00C99D | SS $00C99D | E0 $00C98F | E1 $00C98F
+
+    J, U, SS: Shift left instruction.
+    E0, E1: Load #$80 instruction.
+    
+    The value of #$80 is used as a timer for fading out of black as Mario makes the peace sign.
+    The previously loaded value in J, U, SS versions was #$40, so an ASL makes #$80.
+    The E0 & E1 versions need to load #$80 though. No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +1 | E1 +1
+
+J $00CA45 | U $00CAA5 | SS $00CAA5 | E0 $00CA98 | E1 $00CA98
+
+    J, U, SS, E0: Window HDMA table is #$01C0 bytes long.
+    E1: Window HDMA table is #$01E0 bytes long
+    
+    Overscan requires extra lines to be transferred. No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $00CC08 | U $00CC68 | SS $00CC68 | E0 $00CC5B | E1 $00CC5B
+
+    J, U, SS: Unreachable debug code.
+    E0, E1: Code removed.
+    
+    This routine would have allowed you to free-roam in a level after pressing L+A.
+    No noticable difference.
+    
+    J +83 | U +83 | SS +83 | E0 +0 | E1 +0
+    
+J $00CFB4 | U $00D014 | SS $00D014 | E0 $00CFB4 | E1 $00CFB4
+
+    J, U, SS: Compare to #$2F.
+    E0, E1: Compare to #$3A.
+    
+    This value determines the minimum speed Mario must be traveling for him to hold out his arms.
+    Due to the different framerate and physics, this value had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00D131 | U $00D191 | SS $00D191 | E0 $00D131 | E1 $00D131
+
+    J, U, SS: Two bytes: -16, 16.
+    E0, E1: Two bytes: -14, 14.
+    
+    These values determine the vertical speed of Mario when he is travelling up or down a vertical pipe.
+    Due to the different framerate and physics, this value had to be updated.
+    It seems that this change actually makes no difference, however.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00D26D | U $00D2CD | SS $00D2CD | E0 $00D26D | E1 $00D26D
+
+    J, U, SS: Several tables dictating physics.
+    E0, E1: Several other tables dictating physics.
+    
+    These six tables are what determine Mario's and other entity's acceleration and other phyiscs calculations.
+    Due to the different framerate, these values had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00D58B | U $00D5EB | SS $00D5EB | E0 $00D58B | E1 $00D58B
+
+    J, U, SS, E0: Three bytes: -1, -1, 2.
+    E1: Three bytes: -1, -1, 3.
+    
+    These values determine how much to modify Mario's P-meter.
+    The index starts at zero, and is incremented for each if the player is holding run, and if Mario is on the ground.
+    Due to the different framerate and physics, this value had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00D60D | U $00D66D | SS $00D66D | E0 $00D60D | E1 $00D60D
+
+    J, U, SS: Compare to #$70.
+    E0: Compare to #$40.
+    E1: Compare to #$68.
+    
+    This value determines the maximum value for Mario's P-meter.
+    Due to the different framerate and physics, this value had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00D6C3 | U $00D723 | SS $00D723 | E0 $00D6C3 | E1 $00D6C3
+
+    J, U, SS: Compare to #$23.
+    E0, E1: Compare to #$2C.
+    
+    This value determines the minimum speed Mario must be traveling for him to flutter his legs when he jumps.
+    Due to the different framerate and physics, this value had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00D745 | U $00D7A5 | SS $00D7A5 | E0 $00D745 | E1 $00D745
+
+    J, U, SS: Several tables of data.
+    E0, E1: Several other tables of data.
+    
+    These four tables control Mario's Y speed when jumping in the air and while floating and flying with the cape.
+    To allow for more precision, the E0 and E1 versions include fractional bits for Y speed and position.
+    Due to the different framerate, these values had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +26 | E1 +26
+    
+J $00D826 | U $00D886 | SS $00D886 | E0 $00D840 | E1 $00D840
+
+    J, U, SS: Code regarding updating Mario's speed when jumping, floating, and flying.
+    E0, E1: Different code regarding updating Mario's speed when jumping, floating, and flying.
+    
+    The code in the E0 and E1 versions make use of the new fractional bits for Y speed.
+    Due to the different framerate, this code had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +16 | E1 +16
+    
+J $00D8D0 | U $00D930 | SS $00D930 | E0 $00D8FA | E1 $00D8FA
+
+    J, U, SS: Code regarding updating Mario's speed when jumping, floating, and flying.
+    E0, E1: Different code regarding updating Mario's speed when jumping, floating, and flying.
+    
+    The code in the E0 and E1 versions make use of the new fractional bits for Y speed.
+    Due to the different framerate, this code had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +10 | E1 +10
+    
+J $00D915 | U $00D975 | SS $00D975 | E0 $00D949 | E1 $00D949
+
+    J, U, SS: Compare to #$70.
+    E0: Compare to #$40.
+    E1: Compare to #$68.
+    
+    This value determines the maximum value for Mario's P-meter.
+    Due to the different framerate and physics, this value had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00D91A | U $00D97A | SS $00D97A | E0 $00D949 | E1 $00D949
+
+    J, U, SS: Counter set to #$70.
+    E0: Counter set to #$40.
+    E1: Counter set to #$68.
+    
+    This value determines the maximum value for Mario's P-meter.
+    Due to the different framerate and physics, this value had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00DBEF | U $00DC4F | SS $00DC4F | E0 $00DC23 | E1 $00DC23
+
+    J, U, SS: Code regarding updating Mario's horizontal position.
+    E0, E1: Different code regarding updating Mario's horizontal position.
+    
+    The code in the E0 and E1 versions use the hardware registers to multiply by 2.5.
+    Due to the different framerate, this code had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +28 | E1 +28
+    
+J $00DC1C | U $00DC7C | SS $00DC7C | E0 $00DC6C | E1 $00DC6C
+
+    J, U, SS: A table of 112 animation rates.
+    E0: A different table of 112 animation indices.
+    E1: Another different table of 112 animation indices.
+    
+    These values determine how quickly Mario's image animates in various states.
+    Due to the different framerate, these values had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00E285 | U $00E2E5 | SS $00E2E5 | E0 $00E2D5 | E1 $00E2D5
+
+    J, U, SS: Compare to #$1E.
+    E0, E1: Compare to #$18.
+    
+    Value of counter after collecting a star that the "running out" sound should play.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00EA59 | U $00EAB9 | SS $00EAB9 | E0 $00EAA9 | E1 $00EAA9
+
+    J, U, SS: Two bytes: -34, 35.
+    E0, E1: Two bytes: -42, 43.
+    
+    These values determine the minimum horizontal speed Mario needs to run up a wall triangle.
+    The negative value is one off to simplify calculations in the code.
+    Due to the different framerate and physics, this value had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00EEC6 | U $00EF26 | SS $00EF26 | E0 $00EF16 | E1 $00EF16
+
+    J, U, SS: Compare to #$28.
+    E0, E1: Compare to #$34.
+    
+    ?
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00EFBB | U $00F01B | SS $00F01B | E0 $00F00B | E1 $00F00B
+
+    J, U, SS: Compare to #$08.
+    E0, E1: Compare to #$09.
+    
+    This value determines the number of pixels into a wall triangle Mario must be to climb or bounce on it.
+    Due to the different framerate and physics, this value had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00F995 | U $00F9F5 | SS $00F9F5 | E0 $00F9E5 | E1 $00F9E5
+
+    J, U, SS: 27 bytes of freespace.
+    E0, E1: 77 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +50 | E1 +50
+    
+J $00FA29 | U $00FA89 | SS $00FA89 | E0 $00FAAB | E1 $00FAAB
+
+    U, SS, E0, E1: Clear current sprite generator.
+    J: Don't clear current sprite generator.
+    
+    Sprite generators are not turned off upon touching the goal tape in the J version.
+    
+    J +0 | U +3 | SS +3 | E0 +3 | E1 +3
+    
+J $00FF30 | U $00FF93 | SS $00FF93 | E0 $00FFB5 | E1 $00FFB5
+
+    J: 144 bytes of freespace.
+    U, SS: 45 bytes of freespace.
+    E0, E1: 11 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +133 | U +34 | SS +34 | E0 +0 | E1 +0
+    
+J $00FFD9 | U $00FFD9 | SS $00FFD9 | E0 $00FFD9 | E1 $00FFD9
+
+    J, SS: Region = #$00 = J.
+    U: Region = #$01 = U.
+    E0, E1: Region = #$02 = E.
+    
+    Interal ROM header region. SS is incorrect.
+    No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00FFDB | U $00FFDB | SS $00FFDB | E0 $00FFDB | E1 $00FFDB
+
+    J, SS, U, E0: Revision = #$00.
+    E1: Revision = #$01.
+    
+    Interal ROM header revision number.
+    No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00FFDC | U $00FFDC | SS $00FFDC | E0 $00FFDC | E1 $00FFDC
+
+    J, SS, U, E0: Revision = #$00.
+    E1: Revision = #$01.
+    
+    Interal ROM header revision number.
+    No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $00FFE0 | U $00FFE0 | SS $00FFE0 | E0 $00FFE0 | E1 $00FFE0
+
+    J: $737F, $8C80.
+    U: $5F25, $A0DA.
+    SS: $FFFF, $0000.
+    E0: $F616, $09E9.
+    E1: $3AC9, $C536.
+    
+    Interal ROM header checksum.
+    SS version is incorrect, should be $4B30, $B4CF.
+    No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0191F5 | U $0191F5 | SS $0191F5 | E0 $0191F5 | E1 $0191F5
+
+    J, SS, U, E0: Display a water or lava splash if a sprite enters a liquid.
+    E1: Display a water or lava splash if a sprite enters a liquid.
+    
+    Extra code added in the E1 version to prevent a splash if a sprite is offscreen vertically.
+    This was probably due to the splash wrapping around the screen due to the increased resolution.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +12
+    
+J $019F6B | U $019F6B | SS $019F6B | E0 $019F6B | E1 $019F77
+
+    J, SS, U: Four bytes: -46, 46, -52, 52
+    E0, E1: Four bytes: -55, 55, -62, 62
+    
+    These values determine the speed of shells when kicked and spit out by Yoshi.
+    Due to the different framerate and physics, these values had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01A48C | U $01A48C | SS $01A48C | E0 $01A48C | E1 $01A498
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01A65A | U $01A659 | SS $01A659 | E0 $01A659 | E1 $01A665
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01AA5A | U $01AA58 | SS $01AA58 | E0 $01AA58 | E1 $01AA64
+
+    J: Address mode is word.
+    U, SS, E0, E1: Address mode is direct page.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $01AD57 | U $01AD54 | SS $01AD54 | E0 $01AD54 | E1 $01AD60
+
+    J: 2 bytes of freespace.
+    U, SS, E0: 5 bytes of freespace.
+    E1: No freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +2 | U +5 | SS +5 | E0 +5 | E1 +0
+
+J $01B3FD | U $01B3FD | SS $01B3FD | E0 $01B3FD | E1 $01B404
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01BB51 | U $01BB50 | SS $01BB50 | E0 $01BB50 | E1 $01BB57
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01BB5A | U $01BB58 | SS $01BB58 | E0 $01BB58 | E1 $01BB5F
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01BB73 | U $01BB70 | SS $01BB70 | E0 $01BB70 | E1 $01BB77
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01BBC1 | U $01BBBD | SS $01BBBD | E0 $01BBBD | E1 $01BBC4
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01BD19 | U $01BD14 | SS $01BD14 | E0 $01BD14 | E1 $01BD1B
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01BD25 | U $01BD1F | SS $01BD1F | E0 $01BD1F | E1 $01BD26
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01BD39 | U $01BD32 | SS $01BD32 | E0 $01BD32 | E1 $01BD39
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01BD4D | U $01BD45 | SS $01BD45 | E0 $01BD45 | E1 $01BD4C
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01BD61 | U $01BD58 | SS $01BD58 | E0 $01BD58 | E1 $01BD5F
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01BD75 | U $01BD6B | SS $01BD6B | E0 $01BD6B | E1 $01BD72
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01C32C | U $01C321 | SS $01C321 | E0 $01C321 | E1 $01C328
+
+    J, U, SS: Only increment by one.
+    E0, E1: Increment by two.
+    
+    In the E0 and E1 versions, the roulette item cycles in half the number of frames.
+    Due to the different framerate, this value had to be updated (though it seems quite fast).
+    
+    J +0 | U +0 | SS +0 | E0 +3 | E1 +3
+
+J $01C372 | U $01C367 | SS $01C367 | E0 $01C36A | E1 $01C371
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01C573 | U $01C567 | SS $01C567 | E0 $01C56A | E1 $01C571
+
+    J: Address mode is word.
+    U, SS, E0, E1: Address mode is word indexed with Y.
+    
+    Seems to be an error.
+    Under normal situations, this doesn't cause any issues because Y = 0 always anyways.
+    However, with unintended powerup statuses, this code could run with Y != 0. (Set to #$2F.)
+     Y =   $00,   $2F,   $EA,   $EB,   $EC,   $ED,   $F2
+    EA = $1496, $14C5, $1580, $1581, $1582, $1583, $1588
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $01CA85 | U $01CA79 | SS $01CA79 | E0 $01CA7C | E1 $01CA83
+
+    J, SS, U: Code responsible for acceleration of the brown swinging platform.
+    E0, E1: Code responsible for acceleration of the brown swinging platform.
+    
+    The brown swinging platform accelerates quicker in the E0 and E1 versions.
+    Due to the different framerate and physics, these values had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +10
+    
+J $01CD2A | U $01CD1E | SS $01CD1E | E0 $01CD2B | E1 $01CD32
+
+    J: No freespace.
+    U, SS: 12 bytes of freespace.
+    E0, E1: 6 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +0 | U +12 | SS +12 | E0 +6 | E1 +6
+    
+J $01D011 | U $01D011 | SS $01D011 | E0 $01D018 | E1 $01D01F
+
+    J, U, SS: Compare to #$A0.
+    E0, E1: Compare to #$80.
+    
+    This value determines the number of frames a boss will spin around before disappearing in a puff of smoke.
+    As a result, the bosses don't shrink quite as much after being defeated in the E0 and E1 versions.
+    Due to the different framerate, this value had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01D496 | U $01D496 | SS $01D496 | E0 $01D49D | E1 $01D4A4
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01DC95 | U $01DC94 | SS $01DC94 | E0 $01DC9B | E1 $01DCA2
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01DCA0 | U $01DC9E | SS $01DC9E | E0 $01DCA5 | E1 $01DCAC
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01DDC4 | U $01DDC1 | SS $01DDC1 | E0 $01DDC8 | E1 $01DDCF
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01DDCF | U $01DDCB | SS $01DDCB | E0 $01DDD2 | E1 $01DDD9
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01DDE2 | U $01DDDD | SS $01DDDD | E0 $01DDE4 | E1 $01DDEB
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01DE6D | U $01DE67 | SS $01DE67 | E0 $01DE6E | E1 $01DE75
+
+    J, U, SS: Offset is #$00.
+    E0, E1: Offset is #$FC.
+    
+    This value determines the collision offset between big Mario and the bonus game blocks.
+    As a result, Mario's head sticks farther into the block before hitting it, like small Mario.
+    It seems this was originally intended, and only fixed in the E0 and E1 versions.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01DF7A | U $01DF74 | SS $01DF74 | E0 $01DF7B | E1 $01DF82
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01DF81 | U $01DF7A | SS $01DF7A | E0 $01DF81 | E1 $01DF88
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01DF88 | U $01DF80 | SS $01DF80 | E0 $01DF87 | E1 $01DF8E
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01DF8F | U $01DF86 | SS $01DF86 | E0 $01DF8D | E1 $01DF94
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01DF9E | U $01DF94 | SS $01DF94 | E0 $01DF9B | E1 $01DFA2
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $01E2BB | U $01E2B0 | SS $01E2B0 | E0 $01E2B7 | E1 $01E2BE
+
+    J: 13 bytes of freespace.
+    U, SS: 24 bytes of freespace.
+    E0: 17 bytes of freespace.
+    E1: 10 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +3 | U +14 | SS +14 | E0 +7 | E1 +0
+
+J $01E90A | U $01E90A | SS $01E90A | E0 $01E90A | E1 $01E90A
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01E915 | U $01E914 | SS $01E914 | E0 $01E914 | E1 $01E914
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $01EF7B | U $01EF79 | SS $01EF79 | E0 $01EF79 | E1 $01EF79
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $01FFC2 | U $01FFBF | SS $01FFBF | E0 $01FFBF | E1 $01FFBF
+
+    J: 62 bytes of freespace.
+    U, SS, E0, E1: 65 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +0 | U +3 | SS +3 | E0 +3 | E1 +3
+
+J $028852 | U $028852 | SS $028852 | E0 $028852 | E1 $028852
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $028859 | U $028858 | SS $028858 | E0 $028858 | E1 $028858
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $028DB8 | U $028DB6 | SS $028DB6 | E0 $028DB6 | E1 $028DB6
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $028E66 | U $028E63 | SS $028E63 | E0 $028E63 | E1 $028E63
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $028F15 | U $028F11 | SS $028F11 | E0 $028F11 | E1 $028F11
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $028F72 | U $028F6D | SS $028F6D | E0 $028F6D | E1 $028F6D
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $029011 | U $02900B | SS $02900B | E0 $02900B | E1 $02900B
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02901F | U $029018 | SS $029018 | E0 $029018 | E1 $029018
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02925A | U $029252 | SS $029252 | E0 $029252 | E1 $029252
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $029995 | U $02998C | SS $02998C | E0 $02998C | E1 $02998C
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $0299C9 | U $0299BF | SS $0299BF | E0 $0299BF | E1 $0299BF
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $029C62 | U $029C57 | SS $029C57 | E0 $029C57 | E1 $029C57
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $029E06 | U $029DFA | SS $029DFA | E0 $029DFA | E1 $029DFA
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $029E0F | U $029E02 | SS $029E02 | E0 $029E02 | E1 $029E02
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $029E1C | U $029E0E | SS $029E0E | E0 $029E0E | E1 $029E0E
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $029EDB | U $029ECC | SS $029ECC | E0 $029ECC | E1 $029ECC
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02A1F9 | U $02A1E9 | SS $02A1E9 | E0 $02A1E9 | E1 $02A1E9
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02A200 | U $02A1E9 | SS $02A1E9 | E0 $02A1E9 | E1 $02A1E9
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02A252 | U $02A240 | SS $02A240 | E0 $02A240 | E1 $02A240
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02A33A | U $02A327 | SS $02A327 | E0 $02A327 | E1 $02A327
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02A341 | U $02A32D | SS $02A32D | E0 $02A32D | E1 $02A32D
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02A3A1 | U $02A38C | SS $02A38C | E0 $02A38C | E1 $02A38C
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02A3AF | U $02A399 | SS $02A399 | E0 $02A399 | E1 $02A399
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02A3C5 | U $02A3AE | SS $02A3AE | E0 $02A3AE | E1 $02A3AE
+
+    J: Instruction is jump long.
+    U, SS, E0, E1: Instruction is jump address.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02A3EC | U $02A3D4 | SS $02A3D4 | E0 $02A3D4 | E1 $02A3D4
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02A3FA | U $02A3E1 | SS $02A3E1 | E0 $02A3E1 | E1 $02A3E1
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02AA92 | U $02AA78 | SS $02AA78 | E0 $02AA78 | E1 $02AA78
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02AEE0 | U $02AEC5 | SS $02AEC5 | E0 $02AEC5 | E1 $02AEC5
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02AEE7 | U $02AECB | SS $02AECB | E0 $02AECB | E1 $02AECB
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02B52D | U $02B510 | SS $02B510 | E0 $02B510 | E1 $02B510
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $02B60A | U $02B5EC | SS $02B5EC | E0 $02B5EC | E1 $02B5EC
+
+    J: 38 bytes of freespace.
+    U, SS, E0, E1: 68 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +0 | U +30 | SS +30 | E0 +30 | E1 +30
+
+J $02B911 | U $02B911 | SS $02B911 | E0 $02B911 | E1 $02B911
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02B91B | U $02B91A | SS $02B91A | E0 $02B91A | E1 $02B91A
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02B922 | U $02B920 | SS $02B920 | E0 $02B920 | E1 $02B920
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02BF8C | U $02BF89 | SS $02BF89 | E0 $02BF89 | E1 $02BF89
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02BF96 | U $02BF92 | SS $02BF92 | E0 $02BF92 | E1 $02BF92
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02BF9D | U $02BF98 | SS $02BF98 | E0 $02BF98 | E1 $02BF98
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02BFB4 | U $02BFAE | SS $02BFAE | E0 $02BFAE | E1 $02BFAE
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02C8D5 | U $02C8CE | SS $02C8CE | E0 $02C8CE | E1 $02C8CE
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02C8EB | U $02C8E3 | SS $02C8E3 | E0 $02C8E3 | E1 $02C8E3
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02C8F7 | U $02C8EE | SS $02C8EE | E0 $02C8EE | E1 $02C8EE
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02C900 | U $02C8F6 | SS $02C8F6 | E0 $02C8F6 | E1 $02C8F6
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CA4E | U $02CA43 | SS $02CA43 | E0 $02CA43 | E1 $02CA43
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CA58 | U $02CA4C | SS $02CA4C | E0 $02CA4C | E1 $02CA4C
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CA64 | U $02CA57 | SS $02CA57 | E0 $02CA57 | E1 $02CA57
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CA70 | U $02CA62 | SS $02CA62 | E0 $02CA62 | E1 $02CA62
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CA77 | U $02CA68 | SS $02CA68 | E0 $02CA68 | E1 $02CA68
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CA83 | U $02CA73 | SS $02CA73 | E0 $02CA73 | E1 $02CA73
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CA8B | U $02CA7A | SS $02CA7A | E0 $02CA7A | E1 $02CA7A
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02AC96 | U $02CA84 | SS $02CA84 | E0 $02CA84 | E1 $02CA84
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CACE | U $02CABB | SS $02CABB | E0 $02CABB | E1 $02CABB
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CAD8 | U $02CAC4 | SS $02CAC4 | E0 $02CAC4 | E1 $02CAC4
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CAE2 | U $02CACD | SS $02CACD | E0 $02CACD | E1 $02CACD
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CAEC | U $02CAD6 | SS $02CAD6 | E0 $02CAD6 | E1 $02CAD6
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CB04 | U $02CAED | SS $02CAED | E0 $02CAED | E1 $02CAED
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CCEF | U $02CCD7 | SS $02CCD7 | E0 $02CCD7 | E1 $02CCD7
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CCFC | U $02CCE3 | SS $02CCE3 | E0 $02CCE3 | E1 $02CCE3
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CF22 | U $02CF08 | SS $02CF08 | E0 $02CF08 | E1 $02CF08
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02CF36 | U $02CF1B | SS $02CF1B | E0 $02CF1B | E1 $02CF1B
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $02D445 | U $02D429 | SS $02D429 | E0 $02D429 | E1 $02D429
+
+    J, U, SS: Timer set to #$80.
+    E0, E1: Timer set to #$68.
+    
+    This timer controls how long the large castle crusher pokes down before slamming down quickly.
+    Slower framerate requires this timer to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $02D466 | U $02D44A | SS $02D44A | E0 $02D44A | E1 $02D44A
+
+    J, U, SS: Timer set to #$04.
+    E0, E1: Timer set to #$06.
+    
+    This timer controls how fast the large castle crusher pokes down before slamming down quickly.
+    Slower framerate requires this timer to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $02D478 | U $02D45C | SS $02D45C | E0 $02D45C | E1 $02D45C
+
+    J, U, SS: Compare to #$40.
+    E0, E1: Compare to #$70.
+    
+    This value determines the maximum speed of the large castle crusher when slamming down quickly.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $02D47D | U $02D461 | SS $02D461 | E0 $02D461 | E1 $02D461
+
+    J, U, SS: Increase by #$07.
+    E0, E1: Increase by #$0A.
+    
+    This value determines the large castle crusher's acceleration when slamming down quickly.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $02D4A5 | U $02D489 | SS $02D489 | E0 $02D489 | E1 $02D489
+
+    J, U, SS: Value set to #$E0.
+    E0, E1: Value set to #$D8.
+    
+    This value determines the large castle crusher's speed when retracting into the ceiling.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $02D4B2 | U $02D496 | SS $02D496 | E0 $02D496 | E1 $02D496
+
+    J, U, SS: Timer set to #$A0.
+    E0, E1: Timer set to #$88.
+    
+    This value determines how long the castle crusher waits before slamming down again.
+    Slower framerate requires this timer to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $02D53A | U $02D51E | SS $02D51E | E0 $02D51E | E1 $02D51E
+
+    J: 70 bytes of freespace.
+    U, SS, E0, E1: 98 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +0 | U +28 | SS +28 | E0 +28 | E1 +28
+
+J $02EDB0 | U $02EDB0 | SS $02EDB0 | E0 $02EDB0 | E1 $02EDB0
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F166 | U $02F165 | SS $02F165 | E0 $02F165 | E1 $02F165
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F177 | U $02F175 | SS $02F175 | E0 $02F175 | E1 $02F175
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F419 | U $02F416 | SS $02F416 | E0 $02F416 | E1 $02F416
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F50A | U $02F506 | SS $02F506 | E0 $02F506 | E1 $02F506
+
+    J, U, SS, E0: Randomly animate Yoshi's House fireplace.
+    E1: Do nothing.
+    
+    The fireplace in Yoshi's House does not animate in the E1 version.
+    
+    J +12 | U +12 | SS +12 | E0 +12 | E1 +0
+
+J $02F520 | U $02F51C | SS $02F51C | E0 $02F51C | E1 $02F510
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F527 | U $02F525 | SS $02F525 | E0 $02F525 | E1 $02F516
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F646 | U $02F640 | SS $02F640 | E0 $02F640 | E1 $02F634
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F650 | U $02F649 | SS $02F649 | E0 $02F649 | E1 $02F63D
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F657 | U $02F64F | SS $02F64F | E0 $02F64F | E1 $02F643
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F65E | U $02F655 | SS $02F655 | E0 $02F655 | E1 $02F649
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F6C9 | U $02C6BF | SS $02C6BF | E0 $02C6BF | E1 $02F6B3
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F6D9 | U $02F6CE | SS $02F6CE | E0 $02F6CE | E1 $02F6C2
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F7AC | U $02F7A0 | SS $02F7A0 | E0 $02F7A0 | E1 $02F794
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F7B3 | U $02F7A6 | SS $02F7A6 | E0 $02F7A6 | E1 $02F79A
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F7BF | U $02F7B1 | SS $02F7B1 | E0 $02F7B1 | E1 $02F7A5
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F7CA | U $02F7BB | SS $02F7BB | E0 $02F7BB | E1 $02F7AF
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F7E3 | U $02F7D3 | SS $02F7D3 | E0 $02F7D3 | E1 $02F7C7
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F7EA | U $02F7D9 | SS $02F7D9 | E0 $02F7D9 | E1 $02F7CD
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F7F6 | U $02F7E4 | SS $02F7E4 | E0 $02F7E4 | E1 $02F7D8
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02F801 | U $02F7EE | SS $02F7EE | E0 $02F7EE | E1 $02F7E2
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02FA5C | U $02FA48 | SS $02FA48 | E0 $02FA48 | E1 $02FA3C
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02FA63 | U $02FA4E | SS $02FA4E | E0 $02FA4E | E1 $02FA42
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02FB0C | U $02FAF6 | SS $02FAF6 | E0 $02FAF6 | E1 $02FAEA
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02FB16 | U $02FAFF | SS $02FAFF | E0 $02FAFF | E1 $02FAF3
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02FD88 | U $02FD70 | SS $02FD70 | E0 $02FD70 | E1 $02FD64
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $02FDF9 | U $02FDE0 | SS $02FDE0 | E0 $02FDE0 | E1 $02FDD4
+
+    J, U, SS: Update bonus game 1up horizontal position every other frame.
+    E0, E1: Update bonus game 1up horizontal position every frame.
+    
+    As a result, the 1ups in the bonus game move much faster.
+    Slower framerate requires this code to be adjusted.
+    
+    J +6 | U +6 | SS +6 | E0 +0 | E1 +0
+    
+J $02FFFB | U $02FFE2 | SS $02FFE2 | E0 $02FFDC | E1 $02FFD0
+
+    J: 5 bytes of freespace.
+    U, SS: 32 bytes of freespace.
+    E0: 24 bytes of freespace.
+    E1: 48 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +0 | U +27 | SS +27 | E0 +19 | E1 +43
+
+J $03925C | U $03925C | SS $03925C | E0 $03925C | E1 $03925C
+
+    J, U, SS: Timer set to #$40.
+    E0, E1: Timer set to #$20.
+    
+    This value determines how many frames a spike will shake before falling.
+    Slower framerate requires this timer to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $039E6C | U $039E6C | SS $039E6C | E0 $039E6C | E1 $039E6C
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $039E73 | U $039E72 | SS $039E72 | E0 $039E72 | E1 $039E72
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $039E83 | U $039E81 | SS $039E81 | E0 $039E81 | E1 $039E81
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $039E93 | U $039E90 | SS $039E90 | E0 $039E90 | E1 $039E90
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03A454 | U $03A450 | SS $03A450 | E0 $03A450 | E1 $03A450
+
+    J, U, SS: Value set to #$04.
+    E0, E1: Value set to #$05.
+    
+    This value determines how quickly Bowser decends at the beginning of the final fight.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03A480 | U $03A47C | SS $03A47C | E0 $03A47C | E1 $03A47C
+
+    J, U, SS: Timer set to #$24.
+    E0, E1: Timer set to #$15.
+    
+    This value determines how long Bowser stares at Mario before the final fight begins.
+    Slower framerate requires this timer to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03AB7F | U $03AB7B | SS $03AB7B | E0 $03AB7B | E1 $03AB7B
+
+    J, U, SS, E0: Compare to #$64.
+    E1: Compare to #$74.
+    
+    This value determines the Y position at which Bowser hits the floor.
+    Higher resolution requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03ABB8 | U $03ABB4 | SS $03ABB4 | E0 $03ABB4 | E1 $03ABB4
+
+    J, U, SS: Timer set to #$60.
+    E0, E1: Timer set to #$50.
+    
+    This value determines how many frames Bowser stalls in the air before tipping over when defeated.
+    Slower framerate requires this timer to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03ABE4 | U $03ABE0 | SS $03ABE0 | E0 $03ABE0 | E1 $03ABE0
+
+    J, U, SS: Timer set to #$60.
+    E0, E1: Timer set to #$50.
+    
+    This value determines how many frames Bowser stalls upside-down before flying away when defeated.
+    Slower framerate requires this timer to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03ABEF | U $03ABEB | SS $03ABEB | E0 $03ABEB | E1 $03ABEB
+
+    J, U, SS: Compare to #$40.
+    E0, E1: Compare to #$30.
+    
+    This value determines when to stop the clown copter from exploding after rising to the top of the screen.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03ABF3 | U $03ABEF | SS $03ABEF | E0 $03ABEF | E1 $03ABEF
+
+    J, U, SS: Compare to #$5E.
+    E0, E1: Compare to #$4A.
+    
+    This value determines when to trigger the Bowser defeated music.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03AD56 | U $03AD52 | SS $03AD52 | E0 $03AD52 | E1 $03AD52
+
+    J, U, SS, E0: Compare to #$A0.
+    E1: Compare to #$B0.
+    
+    This value determines the Y position at which Peach hits the floor.
+    Higher resolution requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03AD5A | U $03AD56 | SS $03AD56 | E0 $03AD56 | E1 $03AD56
+
+    J, U, SS, E0: Set value to #$A0.
+    E1: Set value to #$B0.
+    
+    This value determines the Y position at which Peach hits the floor.
+    Higher resolution requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03AE5F | U $03AE5B | SS $03AE5B | E0 $03AE5B | E1 $03AE5B
+
+    J: A table of 76 bytes.
+    U, SS: A table of 84 bytes.
+    E0, E1: Another table of 84 bytes.
+    
+    These values determine how many frames to wait between each character in the victory text.
+    Different text and slower framerate requires these values to be adjusted.
+    
+    J +0 | U +8 | SS +8 | E0 +8 | E1 +8
+
+J $03AEB6 | U $03AEBA | SS $03AEBA | E0 $03AEBA | E1 $03AEBA
+
+    J: Compare to #$4C.
+    U, SS, E0, E1: Compare to #$54.
+    
+    This value denotes the number of characters in the victory text.
+    Different text requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03B191 | U $03B195 | SS $03B195 | E0 $03B195 | E1 $03B195
+
+    J, U, SS, E0: Compare to #$B0.
+    E1: Compare to #$C0.
+    
+    This value determines the Y position at which Big Steelies hit the floor.
+    Higher resolution requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03B195 | U $03B199 | SS $03B199 | E0 $03B199 | E1 $03B199
+
+    J, U, SS, E0: Set value to #$B0.
+    E1: Set value to #$C0.
+    
+    This value determines the Y position at which Big Steelies hit the floor.
+    Higher resolution requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03B498 | U $03B49C | SS $03B49C | E0 $03B49C | E1 $03B49C
+
+    J, U, SS, E0: Table of 16 bytes.
+    E1: Another table of 16 bytes.
+    
+    These values determine the Y position of the castle roof tiles in the Bowser fight.
+    Higher resolution requires these values to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03B4BB | U $03B4BF | SS $03B4BF | E0 $03B4BF | E1 $03B4BF
+
+    J, U, SS, E0: Set value to #$C0.
+    E1: Set value to #$D0.
+    
+    These values determine the Y position of the castle roof tiles in the Bowser fight.
+    Higher resolution requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03B4F6 | U $03B4FA | SS $03B4FA | E0 $03B4FA | E1 $03B4FA
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03B500 | U $03B503 | SS $03B503 | E0 $03B503 | E1 $03B503
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03B532 | U $03B534 | SS $03B534 | E0 $03B534 | E1 $03B534
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03B53C | U $03B53D | SS $03B53D | E0 $03B53D | E1 $03B53D
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03C61D | U $03C61D | SS $03C61D | E0 $03C61D | E1 $03C61D
+
+    J, U, SS, E0: Window HDMA table is #$01C0 bytes long.
+    E1: Window HDMA table is #$01E0 bytes long
+    
+    The disco ball spotlight windowing extends farther to the bottom of the screen.
+    Higher resolution requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03D49F | U $03D49F | SS $03D49F | E0 $03D49F | E1 $03D49F
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03D4E5 | U $03D4E4 | SS $03D4E4 | E0 $03D4E4 | E1 $03D4E4
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03D526 | U $03D524 | SS $03D524 | E0 $03D524 | E1 $03D524
+
+    J: Table of 4*76 bytes.
+    U, SS, E0, E1: Table of 4*84 bytes.
+    
+    This data holds the tiles used to display the victory text.
+    
+    J +0 | U +32 | SS +32 | E0 +32 | E1 +32
+    
+J $03D68E | U $06D6AC | SS $06D6AC | E0 $06D6AC | E1 $06D6AC
+
+    J: 114 bytes of freespace.
+    U, SS, E0, E1: 84 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +30 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $03D9B6 | U $03D9B6 | SS $03D9B6 | E0 $03D9B6 | E1 $03D9B6
+
+    J: Address mode is address indexed with X.
+    U, SS, E0, E1: Address mode is long indexed with X.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $03D9BC | U $03D9BD | SS $03D9BD | E0 $03D9BD | E1 $03D9BD
+
+    J: Address mode is address indexed with X.
+    U, SS, E0, E1: Address mode is long indexed with X.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $03DEA9 | U $03DEAB | SS $03DEAB | E0 $03DEAB | E1 $03DEAB
+
+    J: Address mode is address indexed with X.
+    U, SS, E0, E1: Address mode is long indexed with X.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $03DF0B | U $03DF0E | SS $03DF0E | E0 $03DF0E | E1 $03DF0E
+
+    J: Address mode is address indexed with X.
+    U, SS, E0, E1: Address mode is long indexed with X.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $03DF12 | U $03DF16 | SS $03DF16 | E0 $03DF16 | E1 $03DF16
+
+    J: Address mode is address indexed with X.
+    U, SS, E0, E1: Address mode is long indexed with X.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $03DF19 | U $03DF1E | SS $03DF1E | E0 $03DF1E | E1 $03DF1E
+
+    J: Address mode is address indexed with X.
+    U, SS, E0, E1: Address mode is long indexed with X.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $03DFB1 | U $03DFB7 | SS $03DFB7 | E0 $03DFB7 | E1 $03DFB7
+
+    J: Address mode is address indexed with X.
+    U, SS, E0, E1: Address mode is long indexed with X.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+    
+J $03E055 | U $03E05C | SS $03E05C | E0 $03E05C | E1 $03E05C
+
+    J: 939 bytes of freespace.
+    U, SS, E0, E1: 932 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +7 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $04E366 | U $04E366 | SS $04E366 | E0 $04E366 | E1 $04E366
+
+    J, U, E0, E1: If the player presses L or R, swap lives.
+    SS: Code removed.
+    
+    The ability to transfer lives between Mario and Luigi was removed in the SS version.
+    
+    J +15 | U +15 | SS +0 | E0 +15 | E1 +15
+    
+J $048DF0 | U $048DF0 | SS $048DE1 | E0 $048DF0 | E1 $048DF0
+
+    U, SS, E0, E1: Code handling playing overworld music after beating a castle again.
+    J: Code absent.
+    
+    Normally the music stops after beating certain castles.
+    Since you can reenter castles in later releases, the music must be reenabled in this case.
+    
+    J +0 | U +50 | SS +50 | E0 +50 | E1 +50
+    
+J $048F58 | U $048F8A | SS $048F7B | E0 $048F8A | E1 $048F8A
+
+    J, U, E0, E1: Code handling saving data.
+    SS: Code removed.
+    
+    This block runs whenever a level that can trigger a save box is beaten.
+    in console releases, it is responsible for copying save data into the save buffer to prepare it for SRAM.
+    (Whether or not the player confirms to save or not.)
+    This code was relocated in the SS version.
+    
+    J +82 | U +82 | SS +0 | E0 +82 | E1 +82
+    
+J $048FCE | U $049000 | SS $048F9F | E0 $049000 | E1 $049000
+
+    J, U, E0, E1: Code handling saving data.
+    SS: Code removed.
+    
+    End of the loop to check which levels can trigger a save box from above code block.
+    
+    J +3 | U +3 | SS +0 | E0 +3 | E1 +3
+    
+J $04900F | U $049041 | SS $048FDD | E0 $049041 | E1 $049041
+
+    J, U, E0, E1: Code handling saving data.
+    SS: Code handling saving data, but not really.
+    
+    This block runs whenever the save box flag is set.
+    In console releases, it is responsible for copying more save data into the save buffer, as well as actually showing the save box.
+    In the SS version, the code from the console releases at J$048F58/UE$048F8A is here.
+    It copies data to the buffer, but never actually enables the save box, so it seems useless.
+    
+    J +0 | U +0 | SS +67 | E0 +0 | E1 +0
+    
+J $04910F | U $049150 | SS $04912F | E0 $049150 | E1 $049150
+
+    U, SS, E0, E1: Code handling reentering a castle with L & R.
+    J: Code absent.
+    
+    Reentering a castle on the overworld was added in the English releases.
+    
+    J +0 | U +15 | SS +15 | E0 +15 | E1 +15
+    
+J $049A84 | U $049AC5 | SS $049AA4 | E0 $049AC5 | E1 $049AC5
+
+    J: Data containing all the level names.
+    U, SS, E0, E1: Data containing all the level names.
+    
+    Different text means different data.
+    The format is slightly different.
+    
+    J +0 | U +203 | SS +203 | E0 +203 | E1 +203
+    
+J $049BFB | U $049D07 | SS $049CE6 | E0 $049D07 | E1 $049D07
+
+    J: Code related to building level name stripe images from the data pieces.
+    U, SS, E0, E1: Code related to building level name stripe images from the data pieces.
+    
+    The format for level names is slightly different, so the code to convert them into stripe images was updated.
+    
+    J +80 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $04A040 | U $04A0FC | SS $04A0DB | E0 $04A0FC | E1 $04A0FC
+
+    J: More data pertaining to level names.
+    U, SS, E0, E1: More data pertaining to level names.
+    
+    Different text means different data.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $04A0FA | U $04A1B6 | SS $04A195 | E0 $04A1B6 | E1 $04A1B6
+
+    J: 774 bytes of freespace.
+    U, E0, E1: 586 bytes of freespace.
+    SS: 619 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +188 | U +0 | SS +33 | E0 +0 | E1 +0
+
+J $04DB43 | U $04DB43 | SS $04DB43 | E0 $04DB43 | E1 $04DB43
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $04DB4A | U $04DB49 | SS $04DB49 | E0 $04DB49 | E1 $04DB49
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $04A0FA | U $04A1B6 | SS $04A195 | E0 $04A1B6 | E1 $04A1B6
+
+    J: 832 bytes of freespace.
+    U, SS, E0, E1: 834 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +0 | U +2 | SS +2 | E0 +2 | E1 +2
+    
+J $04F413 | U $04F413 | SS $04F413 | E0 $04F413 | E1 $04F413
+
+    J: One byte: 72.
+    U, SS, E0, E1: One byte: 104.
+    
+    This value determines the size of the save box.
+    English text was larger, so the box needed to be expanded.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $04F459 | U $04F459 | SS $04F459 | E0 $04F459 | E1 $04F459
+
+    J, U, SS, E0: Window HDMA table is #$016E+2 bytes long.
+    E1: Window HDMA table is #$018E+2 bytes long.
+    
+    Overscan requires extra lines to be transferred. No noticable difference.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $04F46A | U $04F46A | SS $04F46A | E0 $04F46A | E1 $04F46A
+
+    J: Code pertaining to the expanding and shrinking of the save box.
+    U, SS, E0, E1: Code pertaining to the expanding and shrinking of the save box.
+    
+    Since the save box was larger in the English releases, the amount of time it takes to shrink and expand was updated.
+    
+    J +0 | U +8 | SS +8 | E0 +8 | E1 +8
+
+J $04F491 | U $04F499 | SS $04F499 | E0 $04F499 | E1 $04F499
+
+    J: Stripe image for removing text on the overworld.
+    U, SS, E0, E1: Stripe image for removing text on the overworld.
+    
+    English text was larger, so the amount of tiles to erase was increased.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $04FFA9 | U $04FFB1 | SS $04FFB1 | E0 $04FFB1 | E1 $04FFB1
+
+    J: 87 bytes of freespace.
+    U, SS, E0, E1: 79 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +8 | U +0 | SS +33 | E0 +0 | E1 +0
+
+J $05809E | U $05809E | SS $05809E | E0 $05809E | E1 $05809E
+
+    E1: Extra code for clearing layer 1 and 2 tilemaps before every level load.
+    J, U, SS, E0: Code absent.
+    
+    Surely this was added because of the increased resolution, but it seems it wasn't really necessary.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +37
+    
+J $058E19 | U $058E19 | SS $058E19 | E0 $058E19 | E1 $058E3E
+
+    J, U, SS, E0: 487 bytes of freespace.
+    E1: 450 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +37 | U +37 | SS +37 | E0 +37 | E1 +0
+    
+J $05A580 | U $05A580 | SS $05A580 | E0 $05A580 | E1 $05A580
+
+    J: 4 VRAM addresses.
+    U, SS, E0, E1: 8 VRAM addresses.
+    
+    These pointers determine the location that the lines of text of a message box are drawn.
+    English text can fit 8 lines of text, while Japanese text only fits 4.
+    
+    J +0 | U +8 | SS +8 | E0 +8 | E1 +8
+    
+J $05A5D1 | U $05A5D9 | SS $05A5D9 | E0 $05A5D9 | E1 $05A5D9
+
+    J: The message box texts.
+    U, SS, E0, E1: The message box texts.
+    
+    All of the message box texts.
+    The Japanese text is in a slightly different format.
+    
+    J +0 | U +1103 | SS +1103 | E0 +1103 | E1 +1103
+    
+J ------- | U $05A666 | SS $05A666 | E0 $05A666 | E1 $05A666
+
+    U, E0, E1: Data for the switch palace message.
+    SS: Data for the switch palace message.
+    
+    The SS version removes the text about the game being saved afterwards.
+    
+    J -- | U +34 | SS +0 | E0 +34 | E1 +34
+    
+J $05ACA8 | U $05B0FF | SS $05B0DD | E0 $05B0FF | E1 $05B0FF
+
+    J: Stripe image for deleting a message box.
+    U, SS, E0, E1: Stripe image for deleting a message box.
+    
+    The Japanese text is one tile higher than the English text.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $05ACE3 | U $05B13A | SS $05B118 | E0 $05B13A | E1 $05B13A
+
+    J: Code regarding dismissing a message box.
+    U, E0, E1: Code regarding dismissing a message box.
+    SS: Code regarding dismissing a message box.
+    
+    In the J version, the intro and switch palace message boxes dismiss themselves automatically.
+    The later releases require the player to press a button to dismiss the message.
+    The SS version allows the player to dismiss the message much quicker.
+    
+    J +0 | U +6 | SS +1 | E0 +6 | E1 +6
+    
+J $05AD29 | U $05B186 | SS $05B15F | E0 $05B186 | E1 $05B186
+
+    U, E0, E1: Code handling exiting a message after pressing a button.
+    SS: Code handling exiting a message after pressing a button, and exiting a message early.
+    J: Code absent.
+    
+    Due to the changed code paths in the block above, additional checks for switch palace and intro message were added.
+    
+    J +0 | U +5 | SS +10 | E0 +5 | E1 +5
+    
+J $05AD8A | U $05B1EC | SS $05B1CA | E0 $05B1EC | E1 $05B1EC
+
+    J: Code related to building message box stripe images from the data pieces.
+    U, SS, E0, E1: Code related to building message box stripe images from the data pieces.
+    
+    The format for message box text is slightly different, so the code to convert them into stripe images was updated.
+    
+    J +25 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $05AE92 | U $05B2DB | SS $05B2B9 | E0 $05B2DB | E1 $05B2DB
+
+    J: Data for displaying switch palace blocks in the switch palace message.
+    U, E0, E1: Data for displaying switch palace blocks in the switch palace message.
+    SS: Data for displaying switch palace blocks in the switch palace message.
+    
+    The location of the switch palace block icons in the switch palace message were adjusted to fit the text.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $05AF2C | U $05B375 | SS $05B353 | E0 $05B375 | E1 $05B375
+
+    J: Stripe image for displaying the title screen graphics.
+    U, SS, E0: Stripe image for displaying the title screen graphics.
+    E1: Stripe image for displaying the title screen graphics.
+    
+    J version has different graphics for title text.
+    E1 version is updated for the increased resolution.
+    
+    J +0 | U +12 | SS +12 | E0 +12 | E1 +28
+    
+J $05B2A9 | U $05B6FE | SS $05B6DC | E0 $05B6FE | E1 $05B70E
+
+    J: Stripe image for displaying save file and player select text.
+    SS: Stripe image for displaying zone, save file erase, and player select text.
+    U, E0, E1: Stripe image for displaying save file, save file erase, and player select text.
+    
+    The J version doesn't use a separate stripe image for save file erase text.
+    Interestingly, the save file erase stripe image still exists in the SS version even though it is unused.
+    
+    J +0 | U +191 | SS +183 | E0 +191 | E1 +191
+    
+J $05B3B3 | U $05B8C7 | SS $05B89D | E0 $05B8C7 | E1 $05B8D7
+
+    J: Stripe images for displaying continue/save and continue/end text.
+    U, SS, E0, E1: Stripe images for displaying continue/save and continue/end text.
+    
+    The different text requires new stripe images.
+    
+    J +0 | U +28 | SS +28 | E0 +28 | E1 +28
+    
+J $05B676 | U $05BBA6 | SS $05BB7C | E0 $05BBA6 | E1 $05BBB6
+
+    J: 1162 bytes of freespace.
+    U, E0: 90 bytes of freespace.
+    SS: 132 bytes of freespace.
+    E1: 74 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +1088 | U +16 | SS +58 | E0 +16 | E1 +0
+    
+J $05C718 | U $05C818 | SS $05C818 | E0 $05C818 | E1 $05C818
+
+    J, U, SS: Two words: -1, 1.
+    E0, E1: Two words: -2, 2.
+    
+    These values determine the acceleration of layer 2 elements in levels.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $05C834 | U $05C934 | SS $05C934 | E0 $05C934 | E1 $05C934
+
+    J, U, SS: A table of timers used by autoscrollers.
+    E0, E1: A table of timers used by autoscrollers.
+    
+    These timers determine how many frames each phase of an autoscrolling pattern should last.
+    Slower framerate requires these timers to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $05CAF9 | U $05CBF9 | SS $05CBF9 | E0 $05CBF9 | E1 $05CBF9
+
+    J, U, SS, E0: Two bytes: 32, 16.
+    E1: Two bytes: 34, 2.
+    
+    The data in this table determine the extents of the layer 2 back-and-forth scroll commands.
+    These two values in particular control the scroll command used in Valley of Bowser 2 room 1.
+    The result of this change is that the upper range of the sandbar is one block lower.
+    It is unknown why this change was made.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $05CD0D | U $05CE0D | SS $05CE0D | E0 $05CE0D | E1 $05CE0D
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $05CD15 | U $05CE14 | SS $05CE14 | E0 $05CE14 | E1 $05CE14
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $05B676 | U $05BBA6 | SS $05BB7C | E0 $05BBA6 | E1 $05BBB6
+
+    J: 276 bytes of freespace.
+    U, SS, E0, E1: 22 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +254 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $06962D | U $06962D | SS $06962D | E0 $06962D | E1 $06962D
+
+    J: Level data for level $009, Donut Plains 2 room 1.
+    U, SS, E0, E1: Level data for level $009, Donut Plains 2 room 1.
+    
+    An extra yellow ! block was added in the English releases.
+    
+    J +0 | U +3 | SS +3 | E0 +3 | E1 +3
+    
+J $06A2EF | U $06A2F2 | SS $06A2F2 | E0 $06A2F2 | E1 $06A2F2
+
+    J: Level data for level $013 and $0ED, Donut Secret House, rooms 1 and 2.
+    U, SS, E0, E1: Level data for level $013 and $0ED, Donut Secret House, rooms 1 and 2.
+    
+    Each of the brick background objects were extended to the right in the English releases.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $06A5B6 | U $06A5B9 | SS $06A5B9 | E0 $06A5B9 | E1 $06A5B9
+
+    J: 74 bytes of freespace.
+    U, SS, E0, E1: 71 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +3 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $06A600 | U $06A600 | SS $06A600 | E0 $06A600 | E1 $06A600
+
+    J: Level data for level $11A, Vanilla Dome 1 room 1.
+    U, SS, E0, E1: Level data for level $11A, Vanilla Dome 1 room 1.
+    
+    An extra turn block with feather was added in the English releases.
+    
+    J +0 | U +3 | SS +3 | E0 +3 | E1 +3
+    
+J $06B4DD | U $06B4E0 | SS $06B4E0 | E0 $06B4E0 | E1 $06B4E0
+
+    J: Level data for level $11C, #3 Lemmy's Castle.
+    U, SS, E0, E1: Level data for level $11C, #3 Lemmy's Castle.
+    
+    The time limit for this level was increased to 400 seconds in the English releases.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $06C961 | U $06C964 | SS $06C964 | E0 $06C964 | E1 $06C964
+
+    J: 1695 bytes of freespace.
+    U, SS, E0, E1: 1692 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +3 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $06ECC9 | U $06ECC9 | SS $06ECC9 | E0 $06ECC9 | E1 $06ECC9
+
+    J: Level data for level $023, Chocolate Island 3 room 1.
+    U, SS, E0, E1: Level data for level $023, Chocolate Island 3 room 1.
+    
+    Two additional arrow signs were added in the English releases.
+    
+    J +0 | U +6 | SS +6 | E0 +6 | E1 +6
+    
+J $06F533 | U $06F539 | SS $06F539 | E0 $06F539 | E1 $06F539
+
+    J: 2765 bytes of freespace.
+    U, SS, E0, E1: 2759 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +6 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $07BF65 | U $07BF65 | SS $07BF65 | E0 $07BF65 | E1 $07BF65
+
+    J: Level data for level $125, Funky.
+    U, SS, E0, E1: Level data for level $125, Funky.
+    
+    Six berries were changed from red to green in the English releases.
+    Also, 12 coins were added to change "YOU ARE SUPER PLAYER!!" to "YOU ARE A SUPER PLAYER!!".
+    
+    J +0 | U +12 | SS +12 | E0 +12 | E1 +12
+    
+J $07C21A | U $07C226 | SS $07C226 | E0 $07C226 | E1 $07C226
+
+    J: 230 bytes of freespace.
+    U, SS, E0, E1: 218 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +12 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $07C661 | U $07C661 | SS $07C661 | E0 $07C661 | E1 $07C661
+
+    J, U, E0, E1: Sprite data for level $1BE, Yoshi's Island 4 room 2.
+    SS: Sprite data for level $1BE, Yoshi's Island 4 room 2.
+    
+    The message box explaining how to start + select out of a level was removed in the SS version.
+    This was because this feature was removed, so the message box was obsolete.
+    
+    J +3 | U +3 | SS +0 | E0 +3 | E1 +3
+    
+J $07DC61 | U $07DC61 | SS $07DC5E | E0 $07DC61 | E1 $07DC61
+
+    J: Sprite data for level $0F7, Sunken Ghost Ship room 3.
+    U, SS, E0, E1: Sprite data for level $0F7, Sunken Ghost Ship room 3.
+    
+    Three 1ups were added to the very end of the level in the English releases.
+    
+    J +0 | U +9 | SS +9 | E0 +9 | E1 +9
+    
+J $07E766 | U $07E76F | SS $07E76C | E0 $07E76F | E1 $07E76F
+
+    J: 2202 bytes of freespace.
+    SS: 2196 bytes of freespace.
+    U, E0, E1: 2193 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +9 | U +0 | SS +3 | E0 +0 | E1 +0
+    
+J $07F5D1 | U $07F5D1 | SS $07F5D1 | E0 $07F5D1 | E1 $07F5D1
+
+    J: Three bytes that control sprite properties of the Dolphin.
+    U, SS, E0, E1: Three bytes that control sprite properties of the Dolphin.
+    
+    Dolphins were changed to be inedible by Yoshi in the English releases.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $088000 | U $088000 | SS $088000 | E0 $088000 | E1 $088000
+
+    J: All of the graphics data, compressed.
+    U, SS, E0: All of the graphics data, compressed.
+    E1: All of the graphics data, compressed.
+    
+    Graphics changes:
+    
+    J +373 | U +0 | SS +0 | E0 +0 | E1 +142
+    
+J $0BFE82 | U $0BFD0D | SS $0BFD0D | E0 $0BFD0D | E1 $0BFD9B
+
+    J: 382 bytes of freespace.
+    SS: 755 bytes of freespace.
+    U, E0, E1: 613 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +0 | U +373 | SS +373 | E0 +373 | E1 +231
+    
+J $0C95EE | U $0C95EE | SS $0C95EE | E0 $0C95EE | E1 $0C95EE
+
+    J: Tile data for the staff credits.
+    U, SS, E0, E1: Tile data for the staff credits.
+    
+    Slight spacing differences and wording.
+    Only the English releases list "Dayv Brooks" under special thanks.
+    
+    J +0 | U +78 | SS +78 | E0 +78 | E1 +78
+    
+J $0C9F3A | U $0C9F88 | SS $0C9F88 | E0 $0C9F88 | E1 $0C9F88
+
+    J, U, SS: Value set to #$0040.
+    E0, E1: Value set to #$004E.
+    
+    This value determines the speed at which the credits scroll.
+    Slower framerate requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $0C9F62 | U $0C9FB0 | SS $0C9FB0 | E0 $0C9FB0 | E1 $0C9FB0
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0CA03B | U $0CA088 | SS $0CA088 | E0 $0CA088 | E1 $0CA088
+
+    J, U, SS, E0: Value set to #$E2.
+    E1: Value set to #$FE.
+    
+    This value determines the initial position of the black bars during the staff credits.
+    Increased resolution requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0CA3B6 | U $0CA403 | SS $0CA403 | E0 $0CA403 | E1 $0CA403
+
+    J, U, SS, E0: Value set to #$E2.
+    E1: Value set to #$FE.
+    
+    This value determines the initial position of the black bars during the credits Yoshi House scene.
+    Increased resolution requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0CAAD0 | U $0CAB1D | SS $0CAB1D | E0 $0CAB1D | E1 $0CAB1D
+
+    J, U, SS, E0: Two bytes: 0, 224.
+    E1: Two bytes: 0, 254.
+    
+    These values determines the bounds of the black bars during the staff credits.
+    Increased resolution requires this value to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0CAB1E | U $0CAB6B | SS $0CAB6B | E0 $0CAB6B | E1 $0CAB6B
+
+    J, U, SS, E0: Code regarding updating the size of the black bars during the staff credits.
+    E1: Code regarding updating the size of the black bars during the staff credits.
+    
+    Increased resolution requires this code to be adjusted.
+    Interestingly, the E1 version makes use of a memory address not used by the other releases: $0110.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +18
+
+J $0CAB9D | U $0CABEA | SS $0CABEA | E0 $0CABEA | E1 $0CABFC
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $0CAD90 | U $0CADDC | SS $0CADDC | E0 $0CADDC | E1 $0CADEE
+
+    U, SS, E0, E1: A list of pointers to stripe images for the credits.
+    J: Pointers absent.
+    
+    These pointers reference stripe images that contain the modified enemy names when beating special world.
+    The enemies' names did not update in the J version.
+    
+    J +0 | U +26 | SS +26 | E0 +26 | E1 +26
+
+J $0CADA2 | U $0CAE08 | SS $0CAE08 | E0 $0CAE08 | E1 $0CAE1A
+
+    U, SS, E0, E1: Code pertaining to updating the enemy names in the credits if special world is beaten.
+    J: Code absent.
+    
+    The enemies' names did not update in the J version.
+    
+    J +0 | U +66 | SS +66 | E0 +66 | E1 +66
+
+J $0CADBF | U $0CAE67 | SS $0CAE67 | E0 $0CAE67 | E1 $0CAE79
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $0CADFC | U $0CAEA3 | SS $0CAEA3 | E0 $0CAEA3 | E1 $0CAEB5
+
+    J, U, SS: Value set to #$00FF.
+    E0, E1: Value set to #$00A0.
+    
+    This value determines how many frames to pause on each of the screens of the enemies list.
+    Slower framerate requires this code to be adjusted.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0CB5C8 | U $0CB66F | SS $0CB66F | E0 $0CB66F | E1 $0CB681
+
+    J: 1592 bytes of freespace.
+    U, SS, E0: 401 bytes of freespace.
+    E1: 383 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +1209 | U +18 | SS +18 | E0 +18 | E1 +0
+    
+J $0CC285 | U $0CBE85 | SS $0CBE85 | E0 $0CBE85 | E1 $0CBE85
+
+    J: All of the castle cutscene message stripe images.
+    U, SS, E0, E1: All of the castle cutscene message stripe images.
+    
+    The text is different, so different stripe images are required.
+    
+    J +0 | U +897 | SS +897 | E0 +897 | E1 +897
+    
+J $0CC9D0 | U $0CC951 | SS $0CC951 | E0 $0CC951 | E1 $0CC951
+
+    SS: Code regarding speeding up and exiting a castle cutscene early by pressing a button.
+    J, U, E0, E1: Code absent.
+    
+    The SS release allowed the player to skip text and exit the cutscene by pressing buttons.
+    
+    J +0 | U +0 | SS +36 | E0 +0 | E1 +0
+    
+J $0CC9E2 | U $0CC963 | SS $0CC987 | E0 $0CC963 | E1 $0CC963
+
+    J: Multiply value by 4.
+    U, SS, E0, E1: Multiply value by 8.
+    
+    The English releases had twice as many lines of text in the castle cutscene, so this had to be updated.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+    
+J $0CC9E7 | U $0CC969 | SS $0CC98D | E0 $0CC969 | E1 $0CC969
+
+    J: Mask the value with #$60.
+    U, SS, E0, E1: Mask the value with #$E0.
+    
+    The English releases had twice as many lines of text in the castle cutscene, so this had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0CD064 | U $0CCFE6 | SS $0CCFE6 | E0 $0CCFE6 | E1 $0CCFE6
+
+    J, U, E0, E1: Code regarding exiting a castle cutscene.
+    SS: Code regarding exiting a castle cutscene.
+    
+    The console releases only exited the cutscene after the player presses A, B, Y, or X.
+    The SS version will exit when the timer runs out or if the player presses any button.
+    
+    J +0 | U +0 | SS +3 | E0 +0 | E1 +0
+    
+J $0CD647 | U $0CD5C9 | SS $0CD5F0 | E0 $0CD5C9 | E1 $0CD5C9
+
+    J: Timer set to #$80.
+    U, SS, E0, E1: Timer set to #$FF.
+    
+    This value controls when each line of text appears during the castle cutscenes.
+    The English releases had twice as many lines of text in the castle cutscene, so this had to be updated.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0CD64C | U $0CD5CE | SS $0CD5F5 | E0 $0CD5CE | E1 $0CD5CE
+
+    J, U: Timer set to #$D0.
+    SS: Timer set to #$01.
+    E0, E1: Timer set to #$A8.
+    
+    This value controls how many frames until the player can exit the castle cutscene.
+    Slower framerate requires this code to be adjusted.
+    SS version can exit immediately.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0CD8ED | U $0CD86F | SS $0CD896 | E0 $0CD86F | E1 $0CD86F
+
+    J: 19 bytes of freespace.
+    SS: 106 bytes of freespace.
+    U, E0, E1: 145 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +0 | U +126 | SS +87 | E0 +126 | E1 +126
+
+J $0DA691 | U $0DA691 | SS $0DA691 | E0 $0DA691 | E1 $0DA691
+
+    J: Address mode is address indexed with X.
+    U, SS, E0, E1: Address mode is long indexed with X.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+
+J $0DB7CA | U $0DB7CB | SS $0DB7CB | E0 $0DB7CB | E1 $0DB7CB
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+
+J $0DB87C | U $0DB87C | SS $0DB87C | E0 $0DB87C | E1 $0DB87C
+
+    J: Address mode is long indexed with X.
+    U, SS, E0, E1: Address mode is address indexed with X.
+    
+    No difference in execution.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0DBB69 | U $0DBB68 | SS $0DBB68 | E0 $0DBB68 | E1 $0DBB68
+
+    J: 151 bytes of freespace.
+    U, SS, E0, E1: 152 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+    
+J $0DBC98 | U $0DBC98 | SS $0DBC98 | E0 $0DBC98 | E1 $0DBC98
+
+    J, U, SS, E0: Character data for tile $086.
+    E1: Character data for tile $086.
+    
+    This tile makes up the dirt under the ground in the castle intro cutscenes.
+    It was updated since it would be entirely viewable on screen, instead of just the top pixel being visible.
+    Interestingly, this tile was (probably accidently) unused in the previous versions.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0DC4D1 | U $0DC4D1 | SS $0DC4D1 | E0 $0DC4D1 | E1 $0DC4D1
+
+    E1: Routine call to preserve some parameters.
+    J, U, SS, E0: Code absent.
+    
+    The castle intro cutscene grassy ledge was bugged, but you could barely notice it.
+    But with the higher resolution, it was easily noticable, so it was fixed.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +3
+    
+J $0DC4DE | U $0DC4DE | SS $0DC4DE | E0 $0DC4DE | E1 $0DC4E1
+
+    E1: Routine call to restore some parameters.
+    J, U, SS, E0: Code absent.
+    
+    The castle intro cutscene grassy ledge was bugged, but you could barely notice it.
+    But with the higher resolution, it was easily noticable, so it was fixed.
+    
+    J +0 | U +0 | SS +0 | E0 +0 | E1 +3
+    
+J $0DC620 | U $0DC620 | SS $0DC620 | E0 $0DC620 | E1 $0DC626
+
+    J, U, SS, E0: 480 bytes of freespace.
+    E1: 474 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +6 | U +6 | SS +6 | E0 +6 | E1 +0
+
+J $0DEC96 | U $0DEC96 | SS $0DEC96 | E0 $0DEC96 | E1 $0DEC96
+
+    J: Address mode is address indexed with X.
+    U, SS, E0, E1: Address mode is long indexed with X.
+    
+    No difference in execution.
+    
+    J +0 | U +1 | SS +1 | E0 +1 | E1 +1
+    
+J $0DF089 | U $0DF08A | SS $0DF08A | E0 $0DF08A | E1 $0DF08A
+
+    J: 631 bytes of freespace.
+    U, SS, E0, E1: 630 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +1 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0DF300 | U $0DF300 | SS $0DF300 | E0 $0DF300 | E1 $0DF300
+
+    J: Stripe images that make up the enemy names in the credits.
+    U, SS, E0, E1: Stripe images that make up the enemy names in the credits.
+    
+    The text is different in English, so the data had to be updated.
+    Additionally, the English releases include names for the enemies after beating special world.
+    
+    J +0 | U +436 | SS +436 | E0 +436 | E1 +436
+    
+J $0DFCEB | U $0DFE9F | SS $0DFE9F | E0 $0DFE9F | E1 $0DFE9F
+
+    J: 789 bytes of freespace.
+    U, SS, E0, E1: 353 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +436 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0E801C | U $0E801C | SS $0E801C | E0 $0E801C | E1 $0E801C
+
+    J: Code to check for a cold start of the APU.
+    U, SS, E0, E1: Code removed.
+    
+    If the SPC detected a warm start of the APU, the memory clearing routine would be skipped.
+    
+    J +14 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0E8039 | U $0E802B | SS $0E802B | E0 $0E802B | E1 $0E802B
+
+    J: Code to signal a warm start of the APU.
+    U, SS, E0, E1: Code removed.
+    
+    If the SPC detected a warm start of the APU, the memory clearing routine would be skipped.
+    
+    J +10 | U +0 | SS +0 | E0 +0 | E1 +0
+    
+J $0EF0F3 | U $0EF0DB | SS $0EF0DB | E0 $0EF0DB | E1 $0EF0DB
+
+    J: 13 stray bytes.
+    U, SS, E0, E1: 21 stray bytes.
+    
+    ?
+    
+    J +0 | U +8 | SS +8 | E0 +8 | E1 +8
+    
+J $0DFCEB | U $0DFE9F | SS $0DFE9F | E0 $0DFE9F | E1 $0DFE9F
+
+    J: 3840 bytes of freespace.
+    U, SS, E0, E1: 3856 bytes of freespace.
+    
+    Freespace buffer. No noticable difference.
+    
+    J +0 | U +16 | SS +16 | E0 +16 | E1 +16

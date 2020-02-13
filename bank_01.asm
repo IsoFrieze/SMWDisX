@@ -3823,10 +3823,12 @@ DATA_019F67:          db $F3,$0D                                ;;9F67|9F67+9F67
 DATA_019F69:          db $FF,$00                                ;;9F69|9F69+9F69/9F69\9F75;
                                                                 ;;                        ;
                    if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
-ShellSpeedX:          db $D2,$2E,$CC,$34,$00,$10                ;;9F6B|9F6B+9F6B          ;
+ShellSpeedX:          db $D2,$2E,$CC,$34                        ;;9F6B|9F6B+9F6B          ;
                    else                               ;<  ELSE  ;;------------------------; E0 & E1
-ShellSpeedX:          db $C9,$37,$C2,$3E,$00,$10                ;;              /9F6B\9F77;
+ShellSpeedX:          db $C9,$37,$C2,$3E                        ;;              /9F6B\9F77;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
+                                                                ;;                        ;
+DATA_019F6F:          db $00,$10                                ;;9F6F|9F6F+9F6F/9F6F\9F7B;
                                                                 ;;                        ;
 HandleSprCarried:     JSR CODE_019F9B                           ;;9F71|9F71+9F71/9F71\9F7D;
                       LDA.W !PlayerTurningPose                  ;;9F74|9F74+9F74/9F74\9F80;

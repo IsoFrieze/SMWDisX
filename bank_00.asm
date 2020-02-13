@@ -3402,9 +3402,6 @@ CODE_009D3C:          REP #$10                                  ;;         +9C98
                       CPY.W #$00CC                              ;;         +9CAA          ; If not at end of loop, continue 
                       BNE -                                     ;;         +9CAD          ;
                       SEP #$10                                  ;;         +9CAF          ; Index (8 bit) 
-                      RTS                                       ;;         +9CB1          ;
-                                                                ;;                        ;
-                      RTS                                       ;;         +9CB2          ; unused?
                    else                               ;<  ELSE  ;;------------------------; U, E0, & E1
 CODE_009D38:          LDX.B #$CB                                ;;    |9D38     /9D3D\9D3F;
 CODE_009D3A:          STZ.B !_5                                 ;;    |9D3A     /9D3F\9D41;
@@ -3530,6 +3527,10 @@ CODE_009DD1:          LDA.L !SaveData,X                         ;;9D6F|9DD1     
                                                                 ;;                        ;
 CODE_009DF7:          SEP #$20                                  ;;9D95|9DF7     /9DFC\9DFE; Accum (8 bit) 
                       RTS                                       ;;9D97|9DF9     /9DFE\9E00;
+                   else                               ;<  ELSE  ;;++++++++++++++++++++++++;
+                      RTS                                       ;;         +9CB1          ;
+                                                                ;;                        ;
+                      RTS                                       ;;         +9CB2          ; unused?
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
 GameMode0A:           LDA.B !byetudlrFrame                      ;;9D98|9DFA+9CB3/9DFF\9E01; Index (8 bit) 
@@ -3576,18 +3577,30 @@ CODE_009E62:          JSR KeepModeActive                        ;;9E00|9E62+9D1B
                       LDY.B #$0B                                ;;9E03|9E65+9D1E/9E6A\9E6C;
                       JMP CODE_009C8B                           ;;9E05|9E67+9D20/9E6C\9E6E;
                                                                 ;;                        ;
-DATA_009E6A:          dw $0002,$0004,$0002,$0002                ;;9E08|9E6A+9D23/9E6F\9E71;
-                      dw $0004                                  ;;9E10|9E72+9D2B/9E77\9E79;
+CursorOptCount:       dw $0002                                  ;;9E08|9E6A+9D23/9E6F\9E71; continue/end
+                      dw $0004                                  ;;9E0A|9E6C+9D25/9E71\9E73; file select
+                      dw $0002                                  ;;9E0C|9E6E+9D27/9E73\9E75; 1/2 player
+                      dw $0002                                  ;;9E0E|9E70+9D29/9E75\9E77; save/no save
+                      dw $0004                                  ;;9E10|9E72+9D2B/9E77\9E79; erase file select
                                                                 ;;                        ;
                    if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
-DATA_009E74:          dw $51CC,$5208,$5228,$5208                ;;9E12                    ;
-                      dw $5208                                  ;;9E1A                    ;
+CursorCoords:         dw $51CC                                  ;;9E12                    ; continue/end
+                      dw $5208                                  ;;9E14                    ; file select
+                      dw $5228                                  ;;9E16                    ; 1/2 player
+                      dw $5208                                  ;;9E18                    ; save/no save
+                      dw $5208                                  ;;9E1A                    ; erase file select
                    elseif !_VER == 2                  ;< ELSEIF ;;------------------------; SS
-DATA_009E74:          dw $51CB,$5208,$5208,$51C4                ;;         +9D2D          ;
-                      dw $5205                                  ;;         +9D35          ;
+CursorCoords:         dw $51CB                                  ;;         +9D2D          ; continue/end
+                      dw $5208                                  ;;         +9D2F          ; file select
+                      dw $5208                                  ;;         +9D31          ; 1/2 player
+                      dw $51C4                                  ;;         +9D33          ; save/no save
+                      dw $5205                                  ;;         +9D35          ; erase file select
                    else                               ;<  ELSE  ;;------------------------; U, E0, & E1
-DATA_009E74:          dw $51CB,$51E8,$5208,$51C4                ;;    |9E74     /9E79\9E7B;
-                      dw $51E5                                  ;;    |9E7C     /9E81\9E83;
+CursorCoords:         dw $51CB                                  ;;    |9E74     /9E79\9E7B; continue/end
+                      dw $51E8                                  ;;    |9E76     /9E7B\9E7D; file select
+                      dw $5208                                  ;;    |9E78     /9E7D\9E7F; 1/2 player
+                      dw $51C4                                  ;;    |9E7A     /9E7F\9E81; save/no save
+                      dw $51E5                                  ;;    |9E7C     /9E81\9E83; erase file select
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
 DATA_009E7E:          db $01,$02,$04,$08                        ;;9E1C|9E7E+9D37/9E83\9E85;
@@ -3604,10 +3617,10 @@ CODE_009E82:          LDX.W !BlinkCursorPos                     ;;9E20|9E82+9D3B
                       LDA.L !DynStripeImgSize                   ;;9E34|9E96+9D4F/9E9B\9E9D;
                       TAX                                       ;;9E38|9E9A+9D53/9E9F\9EA1;
                       REP #$20                                  ;;9E39|9E9B+9D54/9EA0\9EA2; Accum (16 bit) 
-                      LDA.W DATA_009E6A,Y                       ;;9E3B|9E9D+9D56/9EA2\9EA4;
+                      LDA.W CursorOptCount,Y                    ;;9E3B|9E9D+9D56/9EA2\9EA4;
                       STA.B !GraphicsCompPtr                    ;;9E3E|9EA0+9D59/9EA5\9EA7;
                       STA.B !_2                                 ;;9E40|9EA2+9D5B/9EA7\9EA9;
-                      LDA.W DATA_009E74,Y                       ;;9E42|9EA4+9D5D/9EA9\9EAB;
+                      LDA.W CursorCoords,Y                      ;;9E42|9EA4+9D5D/9EA9\9EAB;
 CODE_009EA7:          XBA                                       ;;9E45|9EA7+9D60/9EAC\9EAE;
                       STA.L !DynamicStripeImage,X               ;;9E46|9EA8+9D61/9EAD\9EAF;
                       XBA                                       ;;9E4A|9EAC+9D65/9EB1\9EB3;
@@ -9063,14 +9076,12 @@ FlowerAni:            LDA.W !PlayerSlopePose                    ;;D10F|D16F+D16F
                       RTS                                       ;;D12C|D18C+D18C/D12C\D12C; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
-PipeSpeedX:           db $F8,$08                                ;;D12D|D18D+D18D/D12D\D12D;
-                                                                ;;                        ;
-PipeSpeedY:           db $00,$00                                ;;D12F|D18F+D18F/D12F\D12F;
-                                                                ;;                        ;
+PipeSpeed:            db $F8,$08                                ;;D12D|D18D+D18D/D12D\D12D; horizontal pipe X speed
+                      db $00,$00                                ;;D12F|D18F+D18F/D12F\D12F; horizontal pipe Y speed, vertical pipe X speed
                    if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
-DATA_00D191:          db $F0,$10                                ;;D131|D191+D191          ;
+                      db $F0,$10                                ;;D131|D191+D191          ; vertical pipe Y speed
                    else                               ;<  ELSE  ;;------------------------; E0 & E1
-DATA_00D191:          db $F2,$0E                                ;;              /D131\D131;
+                      db $F2,$0E                                ;;              /D131\D131; vertical pipe Y speed
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
 DATA_00D193:          db $00,$63,$1C,$00                        ;;D133|D193+D193/D133\D133;
@@ -9096,7 +9107,7 @@ DoorPipeAni:          JSR NoButtons                             ;;D137|D197+D197
                       LSR A                                     ;;D166|D1C6+D1C6/D166\D166;
                       TAY                                       ;;D167|D1C7+D1C7/D167\D167;
                       INY                                       ;;D168|D1C8+D1C8/D168\D168;
-                      LDA.W DATA_00D191+1,Y                     ;;D169|D1C9+D1C9/D169\D169;
+                      LDA.W DATA_00D193-1,Y                     ;;D169|D1C9+D1C9/D169\D169;
                       LDX.W !IsCarryingItem                     ;;D16C|D1CC+D1CC/D16C\D16C;
                       BEQ +                                     ;;D16F|D1CF+D1CF/D16F\D16F;
                       EOR.B #$1C                                ;;D171|D1D1+D1D1/D171\D171;
@@ -9166,9 +9177,9 @@ CODE_00D22D:          LDA.B #$40                                ;;D1CD|D22D+D22D
                       BNE +                                     ;;D1F2|D252+D252/D1F2\D1F2;  | 
                       LDA.B #$04                                ;;D1F4|D254+D254/D1F4\D1F4;  | ...play sound effect 
                       STA.W !SPCIO0                             ;;D1F6|D256+D256/D1F6\D1F6; / 
-                    + LDA.W PipeSpeedX,Y                        ;;D1F9|D259+D259/D1F9\D1F9; \ Set X speed 
+                    + LDA.W PipeSpeed,Y                         ;;D1F9|D259+D259/D1F9\D1F9; \ Set X speed 
                       STA.B !PlayerXSpeed                       ;;D1FC|D25C+D25C/D1FC\D1FC; / 
-                      LDA.W PipeSpeedY,Y                        ;;D1FE|D25E+D25E/D1FE\D1FE; \ Set Y speed 
+                      LDA.W PipeSpeed+2,Y                       ;;D1FE|D25E+D25E/D1FE\D1FE; \ Set Y speed 
                       STA.B !PlayerYSpeed                       ;;D201|D261+D261/D201\D201; / 
                       STZ.B !PlayerInAir                        ;;D203|D263+D263/D203\D203; Mario flying = false 
                       JMP CODE_00DC2D                           ;;D205|D265+D265/D205\D205;

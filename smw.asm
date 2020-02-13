@@ -42,16 +42,16 @@ LicenseeCode:         db $01                                    ;FFDA|FFDA+FFDA/
 MaskROMVersion:       db con($00,$00,$00,$00,$01)               ;FFDB|FFDB+FFDB/FFDB\FFDB;
 Checksum:             dw $0000,$FFFF                            ;FFDC|FFDC+FFDC/FFDC\FFDC; asar does this on its own
                                                                 ;                        ;
-NativeVectors:        dw con($FFFF,$FFFF,$0000,$0000,$0000)     ;FFE0|FFE0+FFE0/FFE0\FFE0;
-                      dw con($FFFF,$FFFF,$0400,$0001,$0400)     ;FFE2|FFE2+FFE2/FFE2\FFE2;
-                      dw I_EMPTY                                ;FFE4|FFE4+FFE4/FFE4\FFE4;
-                      dw con($50B2,$FFFF,$0000,I_RESET,$0000)   ;FFE6|FFE6+FFE6/FFE6\FFE6;
-                      dw I_EMPTY                                ;FFE8|FFE8+FFE8/FFE8\FFE8;
-                      dw I_NMI                                  ;FFEA|FFEA+FFEA/FFEA\FFEA;
-                      dw I_RESET                                ;FFEC|FFEC+FFEC/FFEC\FFEC;
-                      dw I_IRQ                                  ;FFEE|FFEE+FFEE/FFEE\FFEE;
-EmulationVectors:     dw con($FFFF,$FFFF,$0000,$0000,$0000)     ;FFF0|FFF0+FFF0/FFF0\FFF0;
-                      dw con($FFFF,$FFFF,$0000,$0102,$0000)     ;FFF2|FFF2+FFF2/FFF2\FFF2;
+NativeVectors:        dw con($FFFF,$FFFF,$0000,$0000,$0000)     ;FFE0|FFE0+FFE0/FFE0\FFE0; \ Fairly certain these differences have to do with
+                      dw con($FFFF,$FFFF,$0400,$0001,$0400)     ;FFE2|FFE2+FFE2/FFE2\FFE2; | the weird freespace pattern & stray bits
+                      dw I_EMPTY                                ;FFE4|FFE4+FFE4/FFE4\FFE4; |
+                      dw con($50B2,$FFFF,$0000,I_RESET,$0000)   ;FFE6|FFE6+FFE6/FFE6\FFE6; | Except for this $50B2 maybe?
+                      dw I_EMPTY                                ;FFE8|FFE8+FFE8/FFE8\FFE8; |
+                      dw I_NMI                                  ;FFEA|FFEA+FFEA/FFEA\FFEA; |
+                      dw I_RESET                                ;FFEC|FFEC+FFEC/FFEC\FFEC; |
+                      dw I_IRQ                                  ;FFEE|FFEE+FFEE/FFEE\FFEE; |
+EmulationVectors:     dw con($FFFF,$FFFF,$0000,$0000,$0000)     ;FFF0|FFF0+FFF0/FFF0\FFF0; |
+                      dw con($FFFF,$FFFF,$0000,$0102,$0000)     ;FFF2|FFF2+FFF2/FFF2\FFF2; /
                       dw I_EMPTY                                ;FFF4|FFF4+FFF4/FFF4\FFF4;
                       dw I_EMPTY                                ;FFF6|FFF6+FFF6/FFF6\FFF6;
                       dw I_EMPTY                                ;FFF8|FFF8+FFF8/FFF8\FFF8;

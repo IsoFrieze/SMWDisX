@@ -5551,21 +5551,21 @@ CODE_05C7C1:          LDA.B #$02                                ;;C6C1|C7C1+C7C1
 CODE_05C7ED:          JMP CODE_05C32B                           ;;C6ED|C7ED+C7ED/C7ED\C7ED;
                                                                 ;;                        ;
                                                                 ;;                        ;
-DATA_05C7F0:          db $00,$00,$F0,$02,$B0,$08,$00,$00        ;;C6F0|C7F0+C7F0/C7F0\C7F0;
-                      db $00,$00,$70,$03                        ;;C6F8|C7F8+C7F8/C7F8\C7F8;
+DATA_05C7F0:          dw $0000,$02F0,$08B0,$0000                ;;C6F0|C7F0+C7F0/C7F0\C7F0;
+                      dw $0000,$0370                            ;;C6F8|C7F8+C7F8/C7F8\C7F8;
                                                                 ;;                        ;
-DATA_05C7FC:          db $D0,$00,$50,$03,$30,$0A,$08,$00        ;;C6FC|C7FC+C7FC/C7FC\C7FC;
-                      db $40,$00,$80,$03                        ;;C704|C804+C804/C804\C804;
+DATA_05C7FC:          dw $00D0,$0350,$0A30,$0008                ;;C6FC|C7FC+C7FC/C7FC\C7FC;
+                      dw $0040,$0380                            ;;C704|C804+C804/C804\C804;
                                                                 ;;                        ;
 DATA_05C808:          db $00,$06,$08                            ;;C708|C808+C808/C808\C808;
                                                                 ;;                        ;
 DATA_05C80B:          db $03,$01,$02                            ;;C70B|C80B+C80B/C80B\C80B;
                                                                 ;;                        ;
-DATA_05C80E:          db $C0,$00                                ;;C70E|C80E+C80E/C80E\C80E;
+DATA_05C80E:          dw $00C0                                  ;;C70E|C80E+C80E/C80E\C80E;
                                                                 ;;                        ;
-DATA_05C810:          db $00,$00,$B0,$00                        ;;C710|C810+C810/C810\C810;
+DATA_05C810:          dw $0000,$00B0                            ;;C710|C810+C810/C810\C810;
                                                                 ;;                        ;
-DATA_05C814:          db $80,$FF,$C0,$00                        ;;C714|C814+C814/C814\C814;
+DATA_05C814:          dw $FF80,$00C0                            ;;C714|C814+C814/C814\C814;
                                                                 ;;                        ;
                    if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
 DATA_05C818:          dw $FFFF,$0001                            ;;C718|C818+C818          ;
@@ -5836,12 +5836,12 @@ DATA_05CBEE:          db $42,$D0,$B2                            ;;CAEE|CBEE+CBEE
                                                                 ;;                        ;
 DATA_05CBF1:          db $80,$80,$80,$80                        ;;CAF1|CBF1+CBF1/CBF1\CBF1;
                                                                 ;;                        ;
-DATA_05CBF5:          db $90                                    ;;CAF5|CBF5+CBF5/CBF5\CBF5;
-                                                                ;;                        ;
                    if !_VER != 4                      ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
+DATA_05CBF5:          db $90                                    ;;CAF5|CBF5+CBF5/CBF5     ;
 DATA_05CBF6:          db $72,$60,$42,$20,$10,$40,$22,$20        ;;CAF6|CBF6+CBF6/CBF6     ;
                       db $10                                    ;;CAFE|CBFE+CBFE/CBFE     ;
                    else                               ;<  ELSE  ;;------------------------; E1
+DATA_05CBF5:          db $90                                    ;;                   \CBF5;
 DATA_05CBF6:          db $72,$60,$42,$22,$02,$40,$22,$20        ;;                   \CBF6;
                       db $10                                    ;;                   \CBFE;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
