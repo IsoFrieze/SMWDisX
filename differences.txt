@@ -3030,7 +3030,18 @@ J $088000 | U $088000 | SS $088000 | E0 $088000 | E1 $088000
     U, SS, E0: All of the graphics data, compressed.
     E1: All of the graphics data, compressed.
     
-    Graphics changes:
+    Graphics changes from J to U/SS/E0:
+    - All Japanese characters replaced with English characters.
+    - Title screen logo redrawn, with smaller shadow.
+    - Title screen wooden border and English characters redrawn a bit.
+    - Title screen *96 icon, "Super Mario Bros. 4", and "AND" added.
+    - Princess Peach redrawn.
+    - Yoshi, Bowser, and Reznor's signs updated with English names.
+    
+    Graphics changes from U/SS/E0 to E1:
+    - Castle intro cutscene grassy tile redrawn.
+    - *96 icon changed to plain 96.
+    - Minor unused tiles edited.
     
     J +373 | U +0 | SS +0 | E0 +0 | E1 +142
     
