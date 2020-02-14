@@ -1,4 +1,4 @@
-                      ORG $058000                               ;;  J |  U + SS / E0 \ E1;
+                      ORG $058000                               ;;  J |  U + SS / E0 \ E1 ;
                                                                 ;;                        ;
 TilesetMAP16Loc:      db $70,$8B,$00,$BC,$00,$C8,$00,$D4        ;;8000|8000+8000/8000\8000; Addresses to tileset-specific MAP16 data 
                       db $00,$E3,$00,$E3,$00,$C8,$70,$8B        ;;8008|8008+8008/8008\8008;
