@@ -3,16 +3,18 @@
 ; by Dotsarecool
 ;========================
 
-; version to assemble
-; 0 = Japanese
-; 1 = North American
-; 2 = Super System
-; 3 = PAL 1.0
-; 4 = PAL 1.1
-!_VER = 1
-
 lorom
 math pri on
+incsrc "constants.asm"
+
+; version to assemble
+; !__VER_J  = Japanese
+; !__VER_U  = North American
+; !__VER_SS = Super System
+; !__VER_E0 = PAL 1.0
+; !__VER_E1 = PAL 1.1
+!_VER = !__VER_U
+
 incsrc "macros.asm"
 incsrc "rammap.asm"
 

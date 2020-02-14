@@ -350,7 +350,7 @@ CODE_048356:          LDA.W !OverworldProcess                   ;;8356|8356+8356
                       LDA.W !PlayerSwitching                    ;;8361|8361+8361/8361\8361;
                       BNE CODE_04839A                           ;;8364|8364+8364/8364\8364;
 CODE_048366:                                                    ;;                        ;
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
                       LDA.W !axlr0000P1Frame                    ;;8366|8366     /8366\8366;
                       ORA.W !axlr0000P2Frame                    ;;8369|8369     /8369\8369;
                       AND.B #$30                                ;;836C|836C     /836C\836C;
@@ -1184,7 +1184,7 @@ CODE_048DDF:          LDA.W !CutsceneID                         ;;8DDF|8DDF+8DD0
                       LDA.W !CutsceneID                         ;;8DE7|8DE7+8DD8/8DE7\8DE7;
                       AND.W #$FF00                              ;;8DEA|8DEA+8DDB/8DEA\8DEA;
                       STA.W !CutsceneID                         ;;8DED|8DED+8DDE/8DED\8DED;
-                   if !_VER != 0                      ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
+                   if ver_is_english(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
                       SEP #$10                                  ;;    |8DF0+8DE1/8DF0\8DF0; Index (8 bit) 
                       LDX.W !PlayerTurnOW                       ;;    |8DF2+8DE3/8DF2\8DF2; this code block prevents the music from
                       LDA.W !OWPlayerXPos,X                     ;;    |8DF5+8DE6/8DF5\8DF5; being disabled after beating a boss for
@@ -1378,7 +1378,7 @@ CODE_048F7A:          REP #$30                                  ;;8F48|8F7A+8F6B
 DATA_048F7F:          db $58,$59,$5D,$63,$77,$79,$7E,$80        ;;8F4D|8F7F+8F70/8F7F\8F7F;
                                                                 ;;                        ;
 CODE_048F87:          JSR CODE_049903                           ;;8F55|8F87+8F78/8F87\8F87; Index (8 bit) 
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
                       LDX.B #$07                                ;;8F58|8F8A     /8F8A\8F8A;
 CODE_048F8C:          LDA.W !OverworldLayer1Tile                ;;8F5A|8F8C     /8F8C\8F8C;
                       CMP.W DATA_048F7F,X                       ;;8F5D|8F8F     /8F8F\8F8F;
@@ -1435,7 +1435,7 @@ CODE_048F8C:          LDA.W !OverworldLayer1Tile                ;;8F5A|8F8C     
 CODE_048FFB:          INC.W !ShowSavePrompt                     ;;8FC9|8FFB+8F9A/8FFB\8FFB;
                       BRA CODE_049003                           ;;8FCC|8FFE+8F9D/8FFE\8FFE;
                                                                 ;;                        ;
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
 CODE_049000:          DEX                                       ;;8FCE|9000     /9000\9000;
                       BPL CODE_048F8C                           ;;8FCF|9001     /9001\9001;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
@@ -1474,7 +1474,7 @@ CODE_049037:          PHX                                       ;;9005|9037+8FD3
                       SEP #$30                                  ;;9008|903A+8FD6/903A\903A; Index (8 bit) Accum (8 bit) 
                       LDA.W !ShowSavePrompt                     ;;900A|903C+8FD8/903C\903C;
                       BEQ CODE_049054                           ;;900D|903F+8FDB/903F\903F;
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
                       LDX.B #$5F                                ;;900F|9041     /9041\9041;
                     - LDA.W !OWLevelTileSettings,X              ;;9011|9043     /9043\9043;
                       STA.W !SaveDataBuffer,X                   ;;9014|9046     /9046\9046;
@@ -1583,7 +1583,7 @@ CODE_049132:          LDA.B !byetudlrFrame                      ;;9100|9132+9111
                       BEQ CODE_049165                           ;;9109|913B+911A/913B\913B;  | Debug: Warp to star road from Yoshi's house 
                       CMP.B #$56                                ;;910B|913D+911C/913D\913D;  | 
                       BEQ CODE_049165                           ;;910D|913F+911E/913F\913F; / 
-                   if !_VER != 0                      ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
+                   if ver_is_english(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
                     + LDA.B !axlr0000Hold                       ;;    |9141+9120/9141\9141; \ 
                       AND.B #$30                                ;;    |9143+9122/9143\9143;  |If L and R aren't pressed, 
                       CMP.B #$30                                ;;    |9145+9124/9145\9145;  |branch to OWPU_NoLR 
@@ -2677,7 +2677,7 @@ CODE_049A93:          LDA.W !PlayerTurnOW                       ;;9A52|9A93+9A72
                       RTS                                       ;;9A83|9AC4+9AA3/9AC4\9AC4; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 LevelNameStrings:     db $47,$5A,$4A,$4B,$5A,$11,$82,$64        ;;9A84                    ;
                       db $59,$5A,$46,$41,$18,$01,$9E,$61        ;;9A8C                    ;
                       db $59,$40,$63,$64,$59,$5A,$C3,$61        ;;9A94                    ;
@@ -2811,7 +2811,7 @@ DATA_049CED:          db $CB,$01,$9D,$01,$9E,$01,$9F,$01        ;;    |9CED+9CCC
                       db $C6,$01                                ;;    |9D05+9CE4/9D05\9D05;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 CODE_049D07:          LDA.L !DynStripeImgSize                   ;;9BFB                    ; Index (16 bit) Accum (16 bit) 
                       TAX                                       ;;9BFF                    ;
                       CLC                                       ;;9C00                    ;
@@ -3197,7 +3197,7 @@ DATA_04A0E4:          db $02,$02,$02,$02,$02,$00,$02,$02        ;;A028|A0E4+A0C3
                       db $02,$00,$02,$00,$02,$00,$02,$02        ;;A030|A0EC+A0CB/A0EC\A0EC;
                       db $00,$00,$00,$02,$02,$02,$02,$02        ;;A038|A0F4+A0D3/A0F4\A0F4;
                                                                 ;;                        ;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 LevelNames:           db $00,$00,$52,$44,$53,$44,$90,$22        ;;A040                    ;
                       db $07,$22,$03,$62,$04,$62,$09,$22        ;;A048                    ;
                       db $40,$62,$02,$62,$51,$42,$06,$24        ;;A050                    ;
@@ -7038,7 +7038,7 @@ CODE_04F407:          STZ.B !Layer12Window                      ;;F407|F407+F407
                                                                 ;;                        ;
 DATA_04F411:          db $04,$FC                                ;;F411|F411+F411/F411\F411;
                                                                 ;;                        ;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 DATA_04F413:          db $48,$00                                ;;F413                    ;
                    else                               ;<  ELSE  ;;------------------------; U, SS, E0, & E1
 DATA_04F413:          db $68,$00                                ;;    |F413+F413/F413\F413;
@@ -7084,7 +7084,7 @@ CODE_04F44B:          CLC                                       ;;F44B|F44B+F44B
                       DEX                                       ;;F465|F465+F465/F465\F465;
                       BPL -                                     ;;F466|F466+F466/F466\F466;
                       SEP #$10                                  ;;F468|F468+F468/F468\F468; Index (8 bit) 
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
                       LDA.B #$80                                ;;F46A                    ; timing difference for size of overworld save box
                       SEC                                       ;;F46C                    ;
                       SBC.W !MessageBoxTimer                    ;;F46D                    ;
@@ -7126,7 +7126,7 @@ CODE_04F44B:          CLC                                       ;;F44B|F44B+F44B
                       JMP CODE_04DB95                           ;;F48E|F496+F496/F496\F496;
                                                                 ;;                        ;
                                                                 ;;                        ;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 ClearOWBoxStripe:     db $51,$C9,$40,$14,$FC,$38,$52,$08        ;;F491                    ;
                       db $40,$1E,$FC,$38,$52,$2F,$40,$02        ;;F499                    ;
                       db $FC,$38,$52,$48,$40,$1C,$FC,$38        ;;F4A1                    ;

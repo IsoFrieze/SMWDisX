@@ -1,6 +1,17 @@
+; human-readable function names for version-exclusive code/data
+function ver_is_japanese(v) = equal(v,!__VER_J)
+function ver_is_english(v) = notequal(v,!__VER_J)
+function ver_is_hires(v) = equal(v,!__VER_E1)
+function ver_is_lores(v) = notequal(v,!__VER_E1)
+function ver_is_pal(v) = or(equal(v,!__VER_E0),equal(v,!__VER_E1))
+function ver_is_ntsc(v) = nor(equal(v,!__VER_E0),equal(v,!__VER_E1))
+function ver_is_arcade(v) = equal(v,!__VER_SS)
+function ver_is_console(v) = notequal(v,!__VER_SS)
+function ver_has_rev_gfx(v) = or(equal(v,!__VER_J),equal(v,!__VER_E1))
+
 ; instruction address mode $byte if J, $word otherwise
 macro BorW(cmd, addr)
-    if !_VER == 0
+    if ver_is_japanese(!_VER)
         <cmd>.B <addr>
     else
         <cmd>.W <addr>
@@ -9,7 +20,7 @@ endmacro
 
 ; instruction address mode $word if J, $byte otherwise
 macro WorB(cmd, addr)
-    if !_VER == 0
+    if ver_is_japanese(!_VER)
         <cmd>.W <addr>
     else
         <cmd>.B <addr>
@@ -18,7 +29,7 @@ endmacro
 
 ; instruction address mode $word,X if J, $long,X otherwise
 macro WorL_X(cmd, addr)
-    if !_VER == 0
+    if ver_is_japanese(!_VER)
         <cmd>.W <addr>,X
     else
         <cmd>.L <addr>,X
@@ -27,7 +38,7 @@ endmacro
 
 ; instruction address mode $long,X if J, $word,X otherwise
 macro LorW_X(cmd, addr)
-    if !_VER == 0
+    if ver_is_japanese(!_VER)
         <cmd>.L <addr>,X
     else
         <cmd>.W <addr>,X
@@ -36,7 +47,7 @@ endmacro
 
 ; instruction address mode $long if J, $word otherwise
 macro LorW(cmd, addr)
-    if !_VER == 0
+    if ver_is_japanese(!_VER)
         <cmd>.L <addr>
     else
         <cmd>.W <addr>
@@ -49,15 +60,15 @@ endmacro
 ; many stray bits are set/reset in the PAL/SS empty pattern.
 ; until I find a way to replicate this easily, I'm just treating the freespace the same as U/J versions.
 macro insert_empty(j, u, ss, e0, e1)
-    if !_VER == 0
+    if !_VER == !__VER_J
         rep <j> : db $FF
-    elseif !_VER == 1
+    elseif !_VER == !__VER_U
         rep <u> : db $FF
-    elseif !_VER == 2
+    elseif !_VER == !__VER_SS
         rep <ss> : db $FF
-    elseif !_VER == 3
+    elseif !_VER == !__VER_E0
         rep <e0> : db $FF
-    else
+    else;if !_VER == !__VER_E1
         rep <e1> : db $FF
     endif
 endmacro
@@ -74,4 +85,5 @@ endmacro
 
 ; select a constant value depending on the region
 ; easier to read than an if/else block for a single LDA instruction for example
-function con(u, j, ss, e0, e1) = select(equal(!_VER,0),u,select(equal(!_VER,1),j,select(equal(!_VER,2),ss,select(equal(!_VER,3),e0,e1))))
+function con(u, j, ss, e0, e1) = select(equal(!_VER,!__VER_J),u,select(equal(!_VER,!__VER_U),j,select(equal(!_VER,!__VER_SS),ss,select(equal(!_VER,!__VER_E0),e0,e1))))
+

@@ -4209,7 +4209,7 @@ CODE_0DBB63:          LDX.B #$0E                                ;;BB64|BB63+BB63
                       db $71,$09,$73,$09,$FA,$08,$FA,$08        ;;BC80|BC80+BC80/BC80\BC80;
                       db $FA,$08,$FA,$08,$FA,$08,$FA,$08        ;;BC88|BC88+BC88/BC88\BC88;
                       db $FA,$08,$FA,$08,$70,$29,$72,$29        ;;BC90|BC90+BC90/BC90\BC90;
-                   if !_VER != 4                      ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
+                   if ver_is_lores(!_VER)             ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
                       db $D3,$99,$D3,$19,$D4,$99,$D4,$19        ;;BC98|BC98+BC98/BC98     ;
                    else                               ;<  ELSE  ;;------------------------; E1
                       db $D3,$19,$D3,$19,$D4,$19,$D4,$19        ;;                   \BC98;
@@ -4722,7 +4722,7 @@ CODE_0DC4C9:          LDY.B !LevelLoadPos                       ;;C4C9|C4C9+C4C9
                       LDA.B !LvlLoadObjSize                     ;;C4CB|C4CB+C4CB/C4CB\C4CB;
                       AND.B #$0F                                ;;C4CD|C4CD+C4CD/C4CD\C4CD;
                       STA.B !_0                                 ;;C4CF|C4CF+C4CF/C4CF\C4CF;
-                   if !_VER == 4                      ;\   IF   ;;++++++++++++++++++++++++; E1
+                   if ver_is_hires(!_VER)             ;\   IF   ;;++++++++++++++++++++++++; E1
                       JSR CODE_0DA6B1                           ;;                   \C4D1;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                       LDX.B !_0                                 ;;C4D1|C4D1+C4D1/C4D1\C4D4;
@@ -4731,7 +4731,7 @@ CODE_0DC4C9:          LDY.B !LevelLoadPos                       ;;C4C9|C4C9+C4C9
                       JSR CODE_0DA95B                           ;;C4D8|C4D8+C4D8/C4D8\C4DB;
                       DEX                                       ;;C4DB|C4DB+C4DB/C4DB\C4DE;
                       BPL -                                     ;;C4DC|C4DC+C4DC/C4DC\C4DF;
-                   if !_VER == 4                      ;\   IF   ;;++++++++++++++++++++++++; E1
+                   if ver_is_hires(!_VER)             ;\   IF   ;;++++++++++++++++++++++++; E1
                       JSR CODE_0DA6BA                           ;;                   \C4E1;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                       JSR CODE_0DA97D                           ;;C4DE|C4DE+C4DE/C4DE\C4E4;
@@ -7899,7 +7899,7 @@ CODE_0DF06C:          LDY.B !LevelLoadPos                       ;;F06B|F06C+F06C
                                                                 ;;                        ;
                       %insert_empty($277,$276,$276,$276,$276)   ;;F089|F08A+F08A/F08A\F08A;
                                                                 ;;                        ;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 EnemyNameStripe00:    db $20,$00,$40,$A4,$FA,$34,$20,$60        ;;F300                    ;
                       db $C0,$2C,$FA,$34,$20,$61,$C0,$2C        ;;F308                    ;
                       db $FA,$34,$20,$62,$C0,$2C,$FA,$34        ;;F310                    ;

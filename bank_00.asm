@@ -559,7 +559,7 @@ CODE_008494:          LDY.B #$1E                                ;;8485|8494+8494
                       BPL -                                     ;;84B6|84C5+84C5/84C5\84C5;
                       RTS                                       ;;84B8|84C7+84C7/84C7\84C7;
                                                                 ;;                        ;
-                   if !_VER != 0                      ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
+                   if ver_is_english(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
 CODE_0084C8:          PHB                                       ;;    |84C8+84C8/84C8\84C8; Wrapper 
                       PHK                                       ;;    |84C9+84C9/84C9\84C9;
                       PLB                                       ;;    |84CA+84CA/84CA\84CA;
@@ -580,7 +580,7 @@ StripeImages:         dl !DynamicStripeImage                    ;;84B9|84D0+84D0
                       dl OWScrollEraseStripe                    ;;84D1|84E8+84E8/84E8\84E8; 18 - Remove OW scroll arrows 
                       dl ClearOWBoxStripe                       ;;84D4|84EB+84EB/84EB\84EB; 1B - Blank space to clear overworld boxes
                       dl ContinueSaveStripe                     ;;84D7|84EE+84EE/84EE\84EE; 1E - CONTINUE AND SAVE 
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 CutMessageStripes:    dl C1Message4Stripe                       ;;84DA                    ; 21 - tabidatsunodearimashita.
                       dl C1Message3Stripe                       ;;84DD                    ; 24 - nisareta nakamaotasukedashi doonatsuheiyae
                       dl C1Message2Stripe                       ;;84E0                    ; 27 - taoshita mariotachiwa kuppanomahoude tamago
@@ -1225,7 +1225,7 @@ CODE_008A61:          CPX.W #$FFFE                              ;;89F6|8A61+8A61
                       STA.L !DynamicStripeImage                 ;;8A09|8A74+8A74/8A74\8A74;
                       RTS                                       ;;8A0D|8A78+8A78/8A78\8A78;
                                                                 ;;                        ;
-                   if !_VER != 4                      ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
+                   if ver_is_lores(!_VER)             ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
 SetUpScreen:          STZ.W !HW_SETINI                          ;;8A0E|8A79+8A79/8A79     ; Set "Screen Initial Settings" to x00 ; Screen Initial Settings
                    else                               ;<  ELSE  ;;------------------------; E1
 SetUpScreen:          LDA.B #$04                                ;;                   \8A79; 239 lines
@@ -2024,7 +2024,7 @@ CODE_009263:          REP #$10                                  ;;91F8|9263+9263
 DATA_009277:          db $41,$26                                ;;920C|9277+9277/9277\9279;
                       dl DATA_00927C                            ;;920E|9279+9279/9279\927B;
                                                                 ;;                        ;
-                   if !_VER != 4                      ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
+                   if ver_is_lores(!_VER)             ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
 DATA_00927C:          db $F0                                    ;;9211|927C+927C/927C     ;
                       db $A0,$04                                ;;9212|927D+927D/927D     ;
                       db $F0                                    ;;9214|927F+927F/927F     ;
@@ -2579,7 +2579,7 @@ GameMode17:           JSL !OAMResetRoutine                      ;;96EE|9759+9759
                       LDA.W !GameOverAnimation                  ;;96F2|975D+975D/975D\975F;
                       BNE CODE_00978B                           ;;96F5|9760+9760/9760\9762;
                       DEC.W !GameOverTimer                      ;;96F7|9762+9762/9762\9764;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
                       BNE CODE_00978E                           ;;96FA|9765+9765          ;
                    else                               ;<  ELSE  ;;------------------------; E0, & E1
                       LDY.W !GameOverTimer                      ;;              /9765\9767;
@@ -2594,7 +2594,7 @@ GameMode17:           JSL !OAMResetRoutine                      ;;96EE|9759+9759
                       BPL CODE_009788                           ;;970A|9775+9775/977A\977C;
                       LDX.B #$0C                                ;;970C|9777+9777/977C\977E;
                     - STZ.W !AllDragonCoinsCollected,X          ;;970E|9779+9779/977E\9780;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
                       STZ.W !Checkpoint1upCollected,X           ;;9711                    ; it was correct...
                    else                               ;<  ELSE  ;;------------------------; U, SS, E0, & E1
                       STZ.W !_6,X                               ;;    |977C+977C/9781\9783; then they f'd it up
@@ -3005,7 +3005,7 @@ CODE_009B11:          LDA.B #$00                                ;;9AA6|9B11+9B11
                     + STA.W !BlinkCursorPos                     ;;9AA8|9B13+9B13/9B18\9B1A;
 Return009B16:         RTS                                       ;;9AAB|9B16+9B16/9B1B\9B1D;
                                                                 ;;                        ;
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
 DATA_009B17:          db $04,$02,$01                            ;;9AAC|9B17     /9B1C\9B1E;
                                                                 ;;                        ;
 GameMdoe09:           REP #$20                                  ;;9AAF|9B1A     /9B1F\9B21; Accum (16 bit) 
@@ -3024,7 +3024,7 @@ CODE_009B2C:          DEC.W !GameMode                           ;;9AC1|9B2C+9B17
                       JSR CODE_009B11                           ;;9AC7|9B32+9B1D/9B37\9B39;
                       JMP CODE_009CB0                           ;;9ACA|9B35+9B20/9B3A\9B3C;
                                                                 ;;                        ;
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
                     + LDY.B #$08                                ;;9ACD|9B38     /9B3D\9B3F;
                       JSR CODE_009AD0                           ;;9ACF|9B3A     /9B3F\9B41;
                       CPX.B #$03                                ;;9AD2|9B3D     /9B42\9B44;
@@ -3056,7 +3056,7 @@ CODE_009B6D:          STX.W !BlinkCursorPos                     ;;9B02|9B6D     
                       ORA.W !SaveFileDelete                     ;;9B08|9B73     /9B78\9B7A;
                       STA.W !SaveFileDelete                     ;;9B0B|9B76     /9B7B\9B7D;
                       STA.B !_5                                 ;;9B0E|9B79     /9B7E\9B80;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
                       LDY.B #$0C                                ;;9B10                    ;
                    else                               ;<  ELSE  ;;------------------------; U, E0, & E1
                       LDX.B #$00                                ;;    |9B7B     /9B80\9B82;
@@ -3159,7 +3159,7 @@ CODE_009C13:          INC.W !OverworldPromptProcess             ;;9BA8|9C13+9B27
                       RTL                                       ;;9BB3|9C1E+9B32/9C23\9C25;
                                                                 ;;                        ;
                                                                 ;;                        ;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
 ItrCntrlrSqnc:        db $41,$0F,$C1,$30,$00,$10,$42,$20        ;;9BB4|9C1F+9B33          ;
                       db $41,$70,$81,$11,$00,$80,$82,$0C        ;;9BBC|9C27+9B3B          ;
                       db $00,$30,$C1,$30,$41,$60,$C1,$10        ;;9BC4|9C2F+9B43          ;
@@ -3213,7 +3213,7 @@ CODE_009C9F:          JSL !OAMResetRoutine                      ;;9C34|9C9F+9BB3
                       STA.W !HW_TM                              ;;9C3A|9CA5+9BB9/9CAA\9CAC; Zero something related to PPU ; Background and Object Enable
                       LDA.B #$13                                ;;9C3D|9CA8+9BBC/9CAD\9CAF;
                       STA.W !HW_TS                              ;;9C3F|9CAA+9BBE/9CAF\9CB1; Sub Screen Designation
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 CODE_009CB0:          LDA.B #$E9                                ;;9C42                    ;
                       STA.W !OverworldOverride                  ;;9C44                    ; 
                       JSR CODE_WRITEOW                          ;;9C47                    ;
@@ -3221,7 +3221,7 @@ CODE_009CB0:          LDA.B #$E9                                ;;9C42          
                       JSR CODE_009D3A                           ;;9C4C                    ; 
                       LDA.B #$FF                                ;;9C4F                    ;
                       STA.L !DynamicStripeImage+$9C             ;;9C51                    ;
-                   elseif !_VER == 2                  ;< ELSEIF ;;------------------------; SS
+                   elseif ver_is_arcade(!_VER)        ;< ELSEIF ;;------------------------; SS
 CODE_009CB0:          LDA.B #$E9                                ;;         +9BC1          ;
                       STA.W !OverworldOverride                  ;;         +9BC3          ; #$E9 -> Uknown RAM byte 
                       JSR CODE_WRITEOW                          ;;         +9BC6          ;
@@ -3252,7 +3252,7 @@ DATA_009CCE:          db !SaveData                              ;;9C68|9CCE+9BDF
                       db !SaveDataFile2                         ;;9C69|9CCF+9BE0/9CD4\9CD6;
                       db !SaveDataFile3                         ;;9C6A|9CD0+9BE1/9CD5\9CD7;
                                                                 ;;                        ;
-                   if !_VER == 2                      ;\   IF   ;;++++++++++++++++++++++++; SS
+                   if ver_is_arcade(!_VER)            ;\   IF   ;;++++++++++++++++++++++++; SS
 SSDATA_009BE2:        db $52,$06,$C0,$0C,$FC,$38,$52,$10        ;;         +9BE2          ;
                       db $C0,$08,$FC,$38,$52,$06,$00,$01        ;;         +9BEA          ;
                       db $FC,$38,$FF                            ;;         +9BF2          ;
@@ -3332,7 +3332,7 @@ GameMode08:           REP #$20                                  ;;9C6B|9CD1     
                       CPX.B #$03                                ;;9C7D|9CE3     /9CE8\9CEA;
                       BNE +                                     ;;9C7F|9CE5     /9CEA\9CEC;
                       STZ.W !SaveFileDelete                     ;;9C81|9CE7     /9CEC\9CEE;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
                       LDY.B #$0C                                ;;9C84                    ;
                    else                               ;<  ELSE  ;;------------------------; U, E0, & E1
                       LDX.B #$00                                ;;    |9CEA     /9CEF\9CF1;
@@ -3376,7 +3376,7 @@ CODE_009D30:          STA.W !BackgroundColor                    ;;9CCA|9D30+9C8E
                       SEP #$20                                  ;;9CCF|9D35+9C93/9D3A\9D3C; 8 bit A ; Accum (8 bit) 
                       RTS                                       ;;9CD1|9D37+9C95/9D3C\9D3E;
                                                                 ;;                        ;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 DATA_009CD2:          db $D4,$31,$FC,$38,$9D,$31,$FC,$38        ;;9CD2                    ;
                       db $8D,$31,$FC,$38,$FC,$38,$FC,$38        ;;9CDA                    ;
                                                                 ;;                        ;
@@ -3388,7 +3388,7 @@ CODE_009D3C:          STY.B !_6                                 ;;9CE4          
                       DEX                                       ;;9CF0                    ;
                       BNE -                                     ;;9CF1                    ;
                       LDA.B #$76                                ;;9CF3                    ;
-                   elseif !_VER == 2                  ;< ELSEIF ;;------------------------; SS
+                   elseif ver_is_arcade(!_VER)        ;< ELSEIF ;;------------------------; SS
 CODE_009D38:          LDX.B #$CB                                ;;         +9C96          ;
 CODE_009D3C:          REP #$10                                  ;;         +9C98          ; Index (16 bit) 
                       LDY.W #$0000                              ;;         +9C9A          ;
@@ -3420,7 +3420,7 @@ CODE_009D3C:          REP #$10                                  ;;    |9D3C     
                       LDA.B #$84                                ;;    |9D55     /9D5A\9D5C;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
                       STA.B !_0                                 ;;9CF5|9D57     /9D5C\9D5E;
                       LDX.B #$02                                ;;9CF7|9D59     /9D5E\9D60;
 CODE_009D5B:          STX.B !_4                                 ;;9CF9|9D5B     /9D60\9D62;
@@ -3430,7 +3430,7 @@ CODE_009D5B:          STX.B !_4                                 ;;9CF9|9D5B     
                       BNE CODE_009DA6                           ;;9D02|9D64     /9D69\9D6B;
                       LDA.L !SaveDataChecksum,X                 ;;9D04|9D66     /9D6B\9D6D;
                       SEP #$10                                  ;;9D08|9D6A     /9D6F\9D71; Index (8 bit) 
-                   if !_VER != 0                      ;\   IF   ;;++++++++++++++++++++++++; U, E0, & E1
+                   if ver_is_english(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; U, E0, & E1
                       CMP.B #$60                                ;;    |9D6C     /9D71\9D73;
                       BCC CODE_009D76                           ;;    |9D6E     /9D73\9D75;
                       LDY.B #$87                                ;;    |9D70     /9D75\9D77;
@@ -3451,7 +3451,7 @@ CODE_009D76:          JSR HexToDec                              ;;9D0A|9D76     
                       STA.L !DynamicStripeImage+3,X             ;;9D20|9D8C     /9D91\9D93;
                       STA.L !DynamicStripeImage+5,X             ;;9D24|9D90     /9D95\9D97;
                       REP #$20                                  ;;9D28|9D94     /9D99\9D9B; Accum (16 bit) 
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
                       LDA.W #$38FC                              ;;9D2A                    ;
                       STA.L !DynamicStripeImage+$12,X           ;;9D2D                    ;
                       LDY.B !_6                                 ;;9D31                    ;
@@ -3583,13 +3583,13 @@ CursorOptCount:       dw $0002                                  ;;9E08|9E6A+9D23
                       dw $0002                                  ;;9E0E|9E70+9D29/9E75\9E77; save/no save
                       dw $0004                                  ;;9E10|9E72+9D2B/9E77\9E79; erase file select
                                                                 ;;                        ;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 CursorCoords:         dw $51CC                                  ;;9E12                    ; continue/end
                       dw $5208                                  ;;9E14                    ; file select
                       dw $5228                                  ;;9E16                    ; 1/2 player
                       dw $5208                                  ;;9E18                    ; save/no save
                       dw $5208                                  ;;9E1A                    ; erase file select
-                   elseif !_VER == 2                  ;< ELSEIF ;;------------------------; SS
+                   elseif ver_is_arcade(!_VER)        ;< ELSEIF ;;------------------------; SS
 CursorCoords:         dw $51CB                                  ;;         +9D2D          ; continue/end
                       dw $5208                                  ;;         +9D2F          ; file select
                       dw $5208                                  ;;         +9D31          ; 1/2 player
@@ -3650,7 +3650,7 @@ CODE_009ED4:          TXA                                       ;;9E72|9ED4+9D8D
                       STA.L !DynamicStripeImage,X               ;;9E79|9EDB+9D94/9EE0\9EE2;
                       RTS                                       ;;9E7D|9EDF+9D98/9EE4\9EE6;
                                                                 ;;                        ;
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
 TBL_009EE0:           db $28,$03                                ;;9E7E|9EE0     /9EE5\9EE7; enable left/right on yoshi's house
                       db $4D,$01                                ;;9E80|9EE2     /9EE7\9EE9; enable right on special world star warp
                       db $52,$01                                ;;9E82|9EE4     /9EE9\9EEB; enable right on star world top star warp
@@ -3950,7 +3950,7 @@ GameMode0C:           JSR TurnOffIO                             ;;A025|A087+A0C5
                       STZ.W !MusicBackup                        ;;A057|A0B9+A0F7/A0BE\A0C0;
                       LDX.W !PlayerTurnLvl                      ;;A05A|A0BC+A0FA/A0C1\A0C3;
                       LDA.W !PlayerLives                        ;;A05D|A0BF+A0FD/A0C4\A0C6;
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
                       BPL +                                     ;;A060|A0C2     /A0C7\A0C9;
                       INC.W !OverworldPromptProcess             ;;A062|A0C4     /A0C9\A0CB;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
@@ -3971,7 +3971,7 @@ GameMode0C:           JSR TurnOffIO                             ;;A025|A087+A0C5
                       LDX.B #$15                                ;;A08A|A0EC+A125/A0F1\A0F3;
                       LDY.W !ShowContinueEnd                    ;;A08C|A0EE+A127/A0F3\A0F5;
                       BEQ CODE_00A11B                           ;;A08F|A0F1+A12A/A0F6\A0F8;
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
                       JSR CODE_00A195                           ;;A091|A0F3     /A0F8\A0FA;
                       LDA.W !ExitsCompleted                     ;;A094|A0F6     /A0FB\A0FD;
                       BNE +                                     ;;A097|A0F9     /A0FE\A100;
@@ -4137,7 +4137,7 @@ CODE_00A242:          LDA.W !PauseFlag                          ;;A1E0|A242+A259
 ADDR_00A259:          BRA CODE_00A28A                           ;;A1F7|A259+A270/A25E\A260; / 
                                                                 ;;                        ;
 CODE_00A25B:                                                    ;;                        ;            
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
                       LDA.B !byetudlrHold                       ;;A1F9|A25B     /A260\A262;
                       AND.B #$20                                ;;A1FB|A25D     /A262\A264;
                       BEQ Return00A289                          ;;A1FD|A25F     /A264\A266;
@@ -6193,7 +6193,7 @@ CODE_00B963:          JMP CODE_00B8E3                           ;;B903|B963+B973
 CODE_00B966:          JSR ReadByte                              ;;B906|B966+B976/B979\B979;
                       XBA                                       ;;B909|B969+B979/B97C\B97C;
                       JSR ReadByte                              ;;B90A|B96A+B97A/B97D\B97D;
-                   if !_VER == 0 || !_VER == 4        ;\   IF   ;;++++++++++++++++++++++++; J & E1
+                   if ver_has_rev_gfx(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J & E1
                       XBA                                       ;;B90D               \B980; ThinkingFace
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                       TAX                                       ;;B90E|B96D+B97D/B980\B981;
@@ -7681,7 +7681,7 @@ CODE_00C569:          JSR CODE_00C593                           ;;C509|C569+C569
                       LDA.B !byetudlrFrame                      ;;C50C|C56C+C56C/C56C\C56C;
                       AND.B #$20                                ;;C50E|C56E+C56E/C56E\C56E;
                       BEQ CODE_00C58F                           ;;C510|C570+C570/C570\C570;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
                       LDA.B !byetudlrHold                       ;;C512|C572+C572          ;
                       AND.B #$08                                ;;C514|C574+C574          ;
                       BRA CODE_00C585                           ;;C516|C576+C576          ; Change to BEQ to reach debug routine below 
@@ -7743,7 +7743,7 @@ CODE_00C5CE:          STZ.W !HDMAEnable                         ;;C56E|C5CE+C5CE
                                                                 ;;                        ;
 DATA_00C5E1:          db $10,$30,$31,$32,$33,$34,$0E            ;;C581|C5E1+C5E1/C5CE\C5CE;
                                                                 ;;                        ;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
 DATA_00C5E8:          db $26,$11,$02,$48,$00,$60,$01,$09        ;;C588|C5E8+C5E8          ;
                       db $80,$08,$00,$20,$04,$60,$00,$01        ;;C590|C5F0+C5F0          ;
                       db $FF,$01                                ;;C598|C5F8+C5F8          ;
@@ -8017,7 +8017,7 @@ CODE_00C827:          JSR CODE_00DC2D                           ;;C7C7|C827+C827
                       JSR CODE_00D273                           ;;C7E2|C842+C842/C82F\C82F;
                     + JMP CODE_00CD8F                           ;;C7E5|C845+C845/C832\C832;
                                                                 ;;                        ;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
 DATA_00C848:          db $01,$5F,$00,$30,$08,$30,$00,$20        ;;C7E8|C848+C848          ;
                       db $40,$01,$00,$30,$01,$80,$FF,$01        ;;C7F0|C850+C850          ;
                       db $3F,$00,$30,$20,$01,$80,$06,$00        ;;C7F8|C858+C858          ;
@@ -8132,7 +8132,7 @@ CODE_00C948:          LDY.B #$01                                ;;C8E8|C948+C948
                       LSR A                                     ;;C8EE|C94E+C94E/C93B\C93B;
                       BCC Return00C96A                          ;;C8EF|C94F+C94F/C93C\C93C;
                       DEC.W !EndLevelTimer                      ;;C8F1|C951+C951/C93E\C93E;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
                       BNE Return00C96A                          ;;C8F4|C954+C954          ;
                    else                               ;<  ELSE  ;;------------------------; E0 & E1
                       LDA.W !EndLevelTimer                      ;;              /C941\C941;
@@ -8171,7 +8171,7 @@ CODE_00C96B:          JSR CODE_00AF17                           ;;C90B|C96B+C96B
                       INC.W !ShowPeaceSign                      ;;C935|C995+C995/C987\C987;
                       LDA.B #con($40,$40,$40,$6E,$6E)           ;;C938|C998+C998/C98A\C98A;
                       STA.W !PlayerPeaceSign                    ;;C93A|C99A+C99A/C98C\C98C;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
                       ASL A                                     ;;C93D|C99D+C99D          ;
                    else                               ;<  ELSE  ;;------------------------; E0 & E1
                       LDA.B #$80                                ;;              /C98F\C98F;
@@ -8443,7 +8443,7 @@ DATA_00CC5C:          db $00,$00,$00,$00,$02,$00,$06,$00        ;;CBFC|CC5C+CC5C
                       db $FE,$FF,$FA,$FF                        ;;CC04|CC64+CC64/CC57\CC57;
                                                                 ;;                        ;
 ResetAni:                                                       ;;                        ;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
                       LDA.B !axlr0000Hold                       ;;CC08|CC68+CC68          ;
                       AND.B #$20                                ;;CC0A|CC6A+CC6A          ;
                       BEQ +                                     ;;CC0C|CC6C+CC6C          ;
@@ -9078,7 +9078,7 @@ FlowerAni:            LDA.W !PlayerSlopePose                    ;;D10F|D16F+D16F
                                                                 ;;                        ;
 PipeSpeed:            db $F8,$08                                ;;D12D|D18D+D18D/D12D\D12D; horizontal pipe X speed
                       db $00,$00                                ;;D12F|D18F+D18F/D12F\D12F; horizontal pipe Y speed, vertical pipe X speed
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
                       db $F0,$10                                ;;D131|D191+D191          ; vertical pipe Y speed
                    else                               ;<  ELSE  ;;------------------------; E0 & E1
                       db $F2,$0E                                ;;              /D131\D131; vertical pipe Y speed
@@ -9231,7 +9231,7 @@ CODE_00D2AA:          STZ.W !PlayerBehindNet                    ;;D24A|D2AA+D2AA
 DATA_00D2BD:          db $B0,$B6,$AE,$B4,$AB,$B2,$A9,$B0        ;;D25D|D2BD+D2BD/D25D\D25D;
                       db $A6,$AE,$A4,$AB,$A1,$A9,$9F,$A6        ;;D265|D2C5+D2C5/D265\D265;
                                                                 ;;                        ;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
 DATA_00D2CD:          dw $FF00,$0100,$FF00,$0100                ;;D26D|D2CD+D2CD          ;
                       dw $FF00,$0100,$FE80,$00C0                ;;D275|D2D5+D2D5          ;
                       dw $FF40,$0180,$FE00,$0040                ;;D27D|D2DD+D2DD          ;
@@ -9449,7 +9449,7 @@ DATA_00D5C9:          db $00,$00,$00,$00,$00,$00,$00,$00        ;;              
                       db $00,$F6                                ;;              /D589\D589;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
-                   if !_VER != 4                      ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
+                   if ver_is_lores(!_VER)             ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
 DATA_00D5EB:          db $FF,$FF,$02                            ;;D58B|D5EB+D5EB/D58B     ;
                    else                               ;<  ELSE  ;;------------------------; E1
 DATA_00D5EB:          db $FF,$FF,$03                            ;;                   \D58B;
@@ -9680,7 +9680,7 @@ CODE_00D7A0:          STA.B !PlayerXPosSpx                      ;;D740|D7A0+D7A0
 Return00D7A4:         RTS                                       ;;D744|D7A4+D7A4/D744\D744; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
 DATA_00D7A5:          db $06,$03,$04,$10,$F4,$01,$03,$04        ;;D745|D7A5+D7A5          ;
                       db $05,$06                                ;;D74D|D7AD+D7AD          ;
                                                                 ;;                        ;
@@ -9790,7 +9790,7 @@ CODE_00D85B:          BIT.B !byetudlrHold                       ;;D7FB|D85B+D85B
 CODE_00D87E:          STX.W !NextFlightPhase                    ;;D81E|D87E+D87E/D838\D838;
                       LDY.W !FlightPhase                        ;;D821|D881+D881/D83B\D83B;
                       BEQ CODE_00D8CD                           ;;D824|D884+D884/D83E\D83E;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
                       LDA.B !PlayerYSpeed                       ;;D826|D886+D886          ;
                       BPL CODE_00D892                           ;;D828|D888+D888          ;
                       CMP.B #$C8                                ;;D82A|D88A+D88A          ;
@@ -9923,7 +9923,7 @@ CODE_00D928:          LDY.B #$01                                ;;D8C8|D928+D928
                       LDA.B !byetudlrHold                       ;;D8CA|D92A+D92A/D8F4\D8F4;
                       BMI +                                     ;;D8CC|D92C+D92C/D8F6\D8F6;
 CODE_00D92E:          LDY.B #$00                                ;;D8CE|D92E+D92E/D8F8\D8F8;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
                     + LDA.B !PlayerYSpeed                       ;;D8D0|D930+D930          ; \ If Mario's Y speed is negative (up), 
                       BMI CODE_00D948                           ;;D8D2|D932+D932          ; / branch to $D948 
                       CMP.W DATA_00D7AF,Y                       ;;D8D4|D934+D934          ;
@@ -10343,7 +10343,7 @@ CODE_00DC40:          LDX.B #$00                                ;;DBE0|DC40+DC40
                       STA.B !PlayerYSpeed                       ;;DBEC|DC4C+DC4C/DC20\DC20;
                       RTS                                       ;;DBEE|DC4E+DC4E/DC22\DC22; Return 
                                                                 ;;                        ;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
 CODE_00DC4F:          LDA.B !PlayerXSpeed,X                     ;;DBEF|DC4F+DC4F          ;
                       ASL A                                     ;;DBF1|DC51+DC51          ;
                       ASL A                                     ;;DBF2|DC52+DC52          ;
@@ -10411,7 +10411,7 @@ CODE_00DC4F:          LDA.B !PlayerXSpeed,X                     ;;              
                                                                 ;;                        ;
 NumWalkingFrames:     db $01,$02,$02,$02                        ;;DC18|DC78+DC78/DC68\DC68;
                                                                 ;;                        ;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
 DATA_00DC7C:          db $0A,$08,$06,$04,$03,$02,$01,$01        ;;DC1C|DC7C+DC7C          ;
                       db $0A,$08,$06,$04,$03,$02,$01,$01        ;;DC24|DC84+DC84          ;
                       db $0A,$08,$06,$04,$03,$02,$01,$01        ;;DC2C|DC8C+DC8C          ;
@@ -10426,22 +10426,7 @@ DATA_00DC7C:          db $0A,$08,$06,$04,$03,$02,$01,$01        ;;DC1C|DC7C+DC7C
                       db $04,$03,$02,$01,$01,$01,$01,$01        ;;DC74|DCD4+DCD4          ;
                       db $04,$03,$02,$01,$01,$01,$01,$01        ;;DC7C|DCDC+DCDC          ;
                       db $02,$02,$02,$02,$02,$02,$02,$02        ;;DC84|DCE4+DCE4          ;
-                   elseif !_VER == 3                  ;< ELSEIF ;;------------------------; E0
-DATA_00DC7C:          db $0A,$08,$07,$06,$05,$04,$03,$02        ;;              /DC6C     ;
-                      db $0A,$08,$07,$06,$05,$04,$03,$02        ;;              /DC74     ;
-                      db $0A,$08,$07,$06,$05,$04,$03,$02        ;;              /DC7C     ;
-                      db $08,$07,$06,$05,$04,$03,$02,$01        ;;              /DC84     ;
-                      db $08,$07,$06,$05,$04,$03,$02,$01        ;;              /DC8C     ;
-                      db $05,$04,$04,$03,$03,$02,$01,$01        ;;              /DC94     ;
-                      db $05,$04,$03,$03,$02,$02,$01,$01        ;;              /DC9C     ;
-                      db $05,$04,$03,$03,$02,$02,$01,$01        ;;              /DCA4     ;
-                      db $05,$04,$03,$03,$02,$02,$01,$01        ;;              /DCAC     ;
-                      db $05,$04,$03,$03,$02,$02,$01,$01        ;;              /DCB4     ;
-                      db $05,$04,$03,$03,$02,$02,$01,$01        ;;              /DCBC     ;
-                      db $04,$03,$03,$02,$02,$01,$01,$01        ;;              /DCC4     ;
-                      db $04,$03,$03,$02,$02,$01,$01,$01        ;;              /DCCC     ;
-                      db $02,$02,$02,$02,$02,$02,$02,$02        ;;              /DCD4     ;
-                   else                               ;<  ELSE  ;;------------------------; E1
+                   elseif ver_is_hires(!_VER)         ;< ELSEIF ;;------------------------; E1
 DATA_00DC7C:          db $09,$08,$06,$05,$04,$03,$03,$02        ;;                   \DC6C;
                       db $09,$08,$06,$05,$04,$03,$03,$02        ;;                   \DC74;
                       db $09,$08,$06,$05,$04,$03,$03,$02        ;;                   \DC7C;
@@ -10456,6 +10441,21 @@ DATA_00DC7C:          db $09,$08,$06,$05,$04,$03,$03,$02        ;;              
                       db $04,$03,$03,$02,$02,$01,$01,$01        ;;                   \DCC4;
                       db $04,$03,$03,$02,$02,$01,$01,$01        ;;                   \DCCC;
                       db $02,$02,$02,$02,$02,$02,$02,$02        ;;                   \DCD4;
+                   else                               ;<  ELSE  ;;------------------------; E0
+DATA_00DC7C:          db $0A,$08,$07,$06,$05,$04,$03,$02        ;;              /DC6C     ;
+                      db $0A,$08,$07,$06,$05,$04,$03,$02        ;;              /DC74     ;
+                      db $0A,$08,$07,$06,$05,$04,$03,$02        ;;              /DC7C     ;
+                      db $08,$07,$06,$05,$04,$03,$02,$01        ;;              /DC84     ;
+                      db $08,$07,$06,$05,$04,$03,$02,$01        ;;              /DC8C     ;
+                      db $05,$04,$04,$03,$03,$02,$01,$01        ;;              /DC94     ;
+                      db $05,$04,$03,$03,$02,$02,$01,$01        ;;              /DC9C     ;
+                      db $05,$04,$03,$03,$02,$02,$01,$01        ;;              /DCA4     ;
+                      db $05,$04,$03,$03,$02,$02,$01,$01        ;;              /DCAC     ;
+                      db $05,$04,$03,$03,$02,$02,$01,$01        ;;              /DCB4     ;
+                      db $05,$04,$03,$03,$02,$02,$01,$01        ;;              /DCBC     ;
+                      db $04,$03,$03,$02,$02,$01,$01,$01        ;;              /DCC4     ;
+                      db $04,$03,$03,$02,$02,$01,$01,$01        ;;              /DCCC     ;
+                      db $02,$02,$02,$02,$02,$02,$02,$02        ;;              /DCD4     ;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
 DATA_00DCEC:          db $00,$00,$00,$00,$00,$00,$00,$00        ;;DC8C|DCEC+DCEC/DCDC\DCDC;
@@ -11295,7 +11295,7 @@ CODE_00EAA6:          STZ.W !PlayerPoseLenTimer                 ;;EA46|EAA6+EAA6
                       RTS                                       ;;EA58|EAB8+EAB8/EAA8\EAA8; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
 DATA_00EAB9:          db $DE,$23                                ;;EA59|EAB9+EAB9          ;
                    else                               ;<  ELSE  ;;------------------------; E0 & E1
 DATA_00EAB9:          db $D6,$2B                                ;;              /EAA9\EAA9;
@@ -13270,7 +13270,7 @@ FlatPalaceSwitch:     LDA.B #$20                                ;;F9E5|FA45+FA45
 TriggerGoalTape:      STZ.W !PBalloonInflating                  ;;FA20|FA80+FA80/FAA2\FAA2;
                       STZ.W !PBalloonTimer                      ;;FA23|FA83+FA83/FAA5\FAA5;
                       STZ.W !SpriteRespawnTimer                 ;;FA26|FA86+FA86/FAA8\FAA8; Don't respawn sprites 
-                   if !_VER != 0                      ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
+                   if ver_is_english(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
                       STZ.W !CurrentGenerator                   ;;    |FA89+FA89/FAAB\FAAB;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                       STZ.W !SilverCoinsCollected               ;;FA29|FA8C+FA8C/FAAE\FAAE;

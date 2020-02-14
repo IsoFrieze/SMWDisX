@@ -2268,7 +2268,7 @@ CODE_0191BE:          LDA.W !SpriteTweakerF,X                   ;;91BE|91BE+91BE
                     + LDA.W !SpriteInLiquid,X                   ;;91ED|91ED+91ED/91ED\91ED;
                       EOR.W !SpriteInterIndex                   ;;91F0|91F0+91F0/91F0\91F0;
                       BEQ Return019210                          ;;91F3|91F3+91F3/91F3\91F3;
-                   if !_VER != 4                      ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
+                   if ver_is_lores(!_VER)             ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
                       ASL A                                     ;;91F5|91F5+91F5/91F5     ;
                       LDA.W !SpriteTweakerC,X                   ;;91F6|91F6+91F6/91F6     ; \ TODO: Unknown Bit A... 
                       AND.B #$40                                ;;91F9|91F9+91F9/91F9     ;  | ... may be related to cape 
@@ -3822,7 +3822,7 @@ DATA_019F67:          db $F3,$0D                                ;;9F67|9F67+9F67
                                                                 ;;                        ;
 DATA_019F69:          db $FF,$00                                ;;9F69|9F69+9F69/9F69\9F75;
                                                                 ;;                        ;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
 ShellSpeedX:          db $D2,$2E,$CC,$34                        ;;9F6B|9F6B+9F6B          ;
                    else                               ;<  ELSE  ;;------------------------; E0 & E1
 ShellSpeedX:          db $C9,$37,$C2,$3E                        ;;              /9F6B\9F77;
@@ -8357,7 +8357,7 @@ ChangingItem:         LDA.B #$01                                ;;C322|C317+C317
                       STA.W !SpriteMisc151C,X                   ;;C324|C319+C319/C319\C320;
                       LDA.W !SpriteOnYoshiTongue,X              ;;C327|C31C+C31C/C31C\C323;
                       BNE +                                     ;;C32A|C31F+C31F/C31F\C326;
-                   if !_VER > 2                       ;\   IF   ;;++++++++++++++++++++++++; E0 & E1
+                   if ver_is_pal(!_VER)               ;\   IF   ;;++++++++++++++++++++++++; E0 & E1
                       INC.W !SpriteMisc187B,X                   ;;              /C321\C328;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                       INC.W !SpriteMisc187B,X                   ;;C32C|C321+C321/C324\C32B;
@@ -8632,7 +8632,7 @@ TouchedPowerUp:       SEC                                       ;;C544|C538+C538
 GiveMarioMushroom:    LDA.B #$02                                ;;C56D|C561+C561/C564\C56B; \ Set growing action 
                       STA.B !PlayerAnimation                    ;;C56F|C563+C563/C566\C56D; / 
                       LDA.B #$2F                                ;;C571|C565+C565/C568\C56F; \  
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
                       STA.W !PlayerAniTimer                     ;;C573                    ;  | Set animation timer 
                    else                               ;<  ELSE  ;;------------------------; U, SS, E0, & E1
                       STA.W !PlayerAniTimer,Y                   ;;    |C567+C567/C56A\C571;  | Set animation timer 
@@ -9279,7 +9279,7 @@ CODE_01CA6E:          JSR CODE_01C9E2                           ;;CA7A|CA6E+CA6E
                       BMI +                                     ;;CA7F|CA73+CA73/CA76\CA7D;
                       LDA.B #$FF                                ;;CA81|CA75+CA75/CA78\CA7F;
                       STA.B !PlayerHiddenTiles                  ;;CA83|CA77+CA77/CA7A\CA81;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
                     + LDA.B !TrueFrame                          ;;CA85|CA79+CA79          ;
                       LSR A                                     ;;CA87|CA7B+CA7B          ;
                       BCC Return01CA9B                          ;;CA88|CA7C+CA7C          ;

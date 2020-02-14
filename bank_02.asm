@@ -4336,7 +4336,7 @@ CODE_02A362:          LDY.W DATA_02A153,X                       ;;A377|A362+A362
                       LDX.W !CurSpriteProcess                   ;;A3C1|A3AA+A3AA/A3AA\A3AA; X = Sprite index 
                       RTS                                       ;;A3C4|A3AD+A3AD/A3AD\A3AD; Return 
                                                                 ;;                        ;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 CODE_02A3AE:          JML CODE_02A211                           ;;A3C5                    ;
                    else                               ;<  ELSE  ;;------------------------; U, SS, E0, & E1
 CODE_02A3AE:          JMP CODE_02A211                           ;;    |A3AE+A3AE/A3AE\A3AE;
@@ -14293,7 +14293,7 @@ CODE_02F4EB:          LDA.W !SpriteOAMIndex,X                   ;;F4EF|F4EB+F4EB
                       LDA.B #$B8                                ;;F503|F4FF+F4FF/F4FF\F4FF;
                       STA.W !OAMTileYPos+$104,Y                 ;;F505|F501+F501/F501\F501;
                       LDA.B !TrueFrame                          ;;F508|F504+F504/F504\F504;
-                   if !_VER != 4                      ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
+                   if ver_is_lores(!_VER)             ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
                       AND.B #$03                                ;;F50A|F506+F506/F506     ;
                       BNE +                                     ;;F50C|F508+F508/F508     ;
                       PHY                                       ;;F50E|F50A+F50A/F50A     ;
@@ -15371,7 +15371,7 @@ CODE_02FDBC:          JSR CODE_02FFA3                           ;;FDD5|FDBC+FDBC
                       AND.B #$F0                                ;;FDF1|FDD8+FDD8/FDD8\FDCC;
                       STA.W !ClusterSpriteYPosLow,X             ;;FDF3|FDDA+FDDA/FDDA\FDCE;
                       STZ.W !ClusterSpriteMisc1E52,X            ;;FDF6|FDDD+FDDD/FDDD\FDD1;
-                   if !_VER <= 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
+                   if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
                     + TXA                                       ;;FDF9|FDE0+FDE0          ;
                       EOR.B !TrueFrame                          ;;FDFA|FDE1+FDE1          ;
                       LSR A                                     ;;FDFC|FDE3+FDE3          ;

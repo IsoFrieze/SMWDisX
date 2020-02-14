@@ -916,7 +916,7 @@ DATA_0C95C7:          db $07,$23,$0E,$3C,$21,$3C,$0E,$3C        ;;95C7|95C7+95C7
                       db $1B,$3C,$18,$3C,$0D,$3C,$1E,$3C        ;;95DF|95DF+95DF/95DF\95DF;
                       db $0C,$3C,$0E,$3C,$1B,$3C,$FF            ;;95E7|95E7+95E7/95E7\95E7;
                                                                 ;;                        ;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
                       db $08,$1F,$C7,$38,$C8,$38,$E1,$38        ;;95EE                    ;
                       db $CE,$38,$E2,$38,$C7,$38,$C8,$38        ;;95F6                    ;
                       db $FC,$00,$E8,$38,$C0,$38,$CC,$38        ;;95FE                    ;
@@ -2898,7 +2898,7 @@ CODE_0CAB13:          PHB                                       ;;AAC6|AB13+AB13
                                                                 ;;                        ;
 DATA_0CAB1B:          db $FE,$02                                ;;AACE|AB1B+AB1B/AB1B\AB1B;
                                                                 ;;                        ;
-                   if !_VER != 4                      ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
+                   if ver_is_lores(!_VER)             ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
 DATA_0CAB1D:          db $00,$E0                                ;;AAD0|AB1D+AB1D/AB1D     ;
                    else                               ;<  ELSE  ;;------------------------; E1
 DATA_0CAB1D:          db $00,$FE                                ;;                   \AB1D;
@@ -2940,7 +2940,7 @@ CODE_0CAB57:          PHA                                       ;;AB0A|AB57+AB57
 CODE_0CAB64:          CLC                                       ;;AB17|AB64+AB64/AB64\AB64;
                       ADC.W DATA_0CAB1B,X                       ;;AB18|AB65+AB65/AB65\AB65;
                       STA.W !MessageBoxTimer                    ;;AB1B|AB68+AB68/AB68\AB68;
-                   if !_VER != 4                      ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
+                   if ver_is_lores(!_VER)             ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
 CODE_0CAB6B:          REP #$20                                  ;;AB1E|AB6B+AB6B/AB6B     ; Accum (16 bit) 
                       LDX.B #$00                                ;;AB20|AB6D+AB6D/AB6D     ;
                       LDY.B #$E0                                ;;AB22|AB6F+AB6F/AB6F     ;
@@ -3171,7 +3171,7 @@ DATA_0CADC2:          db $00,$00,$88,$00,$E0,$00,$C0,$00        ;;AD76|ADC2+ADC2
                       db $B0,$00,$E0,$00,$18,$00,$E0,$00        ;;AD86|ADD2+ADD2/ADD2\ADE4;
                       db $00,$00                                ;;AD8E|ADDA+ADDA/ADDA\ADEC;
                                                                 ;;                        ;
-                   if !_VER != 0                      ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
+                   if ver_is_english(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
 DATA_0CADDC:          dw SpecEneNameStripe00                    ;;    |ADDC+ADDC/ADDC\ADEE;
                       dw SpecEneNameStripe01                    ;;    |ADDE+ADDE/ADDE\ADF0;
                       dw SpecEneNameStripe02                    ;;    |ADE0+ADE0/ADE0\ADF2;
@@ -3199,7 +3199,7 @@ CODE_0CADF6:          PHB                                       ;;AD90|ADF6+ADF6
                       CLC                                       ;;AD9D|AE03+AE03/AE03\AE15;
                       ADC.B #OtherStripes-StripeImages+$0F      ;;AD9E|AE04+AE04/AE04\AE16;
                       STA.B !StripeImage                        ;;ADA0|AE06+AE06/AE06\AE18;
-                   if !_VER != 0                      ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
+                   if ver_is_english(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
                       PHY                                       ;;    |AE08+AE08/AE08\AE1A;
                       PHX                                       ;;    |AE09+AE09/AE09\AE1B;
                       JSL CODE_0084C8                           ;;    |AE0A+AE0A/AE0A\AE1C;
@@ -3833,7 +3833,7 @@ IggyCutBGStripe:      db $30,$00,$5F,$FE,$FA,$28,$30,$64        ;;C102|BD02+BD02
                       db $00,$01,$B7,$35,$32,$19,$00,$01        ;;C27A|BE7A+BE7A/BE7A\BE7A;
                       db $B7,$35,$FF                            ;;C282|BE82+BE82/BE82\BE82;
                                                                 ;;                        ;
-                   if !_VER == 0                      ;\   IF   ;;++++++++++++++++++++++++; J
+                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 C1Message1Stripe:     db $52,$50,$00,$01,$59,$39,$52,$5A        ;;C285                    ;
                       db $00,$01,$5B,$39,$52,$64,$00,$2F        ;;C28D                    ;
                       db $47,$39,$5A,$39,$4A,$39,$4B,$39        ;;C295                    ;
@@ -4530,9 +4530,7 @@ C7Message8Stripe:     db $53,$44,$00,$1B,$03,$39,$48,$39        ;;    |C92D+C92D
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
 CODE_0CC94E:          LDA.W !Layer2ScrollType                   ;;C9CD|C94E+C94E/C94E\C94E;
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
-                      BEQ CODE_0CC97D                           ;;C9D0|C951     /C951\C951;
-                   else                               ;<  ELSE  ;;++++++++++++++++++++++++; SS
+                   if ver_is_arcade(!_VER)            ;\   IF   ;;++++++++++++++++++++++++; SS
                       BNE SSCODE_0CC95B                         ;;         +C951          ;
                       LDA.W !EnterLevelAuto                     ;;         +C953          ;
                       BNE +                                     ;;         +C956          ;
@@ -4552,6 +4550,8 @@ SSCODE_0CC95B:        LDA.B !byetudlrHold                       ;;         +C95F
                                                                 ;;                        ;
                     + INC A                                     ;;         +C973          ;
                       STA.W !Layer2ScrollType                   ;;         +C974          ;
+                   else                               ;<  ELSE  ;;++++++++++++++++++++++++; J, U, E0, & E1
+                      BEQ CODE_0CC97D                           ;;C9D0|C951     /C951\C951;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
 CODE_0CC953:          DEC.W !Layer2ScrollType                   ;;C9D2|C953+C977/C953\C953;
                       LDA.W !Layer2ScrollType                   ;;C9D5|C956+C97A/C956\C956;
@@ -4561,7 +4561,7 @@ CODE_0CC953:          DEC.W !Layer2ScrollType                   ;;C9D2|C953+C977
                       DEC A                                     ;;C9DF|C960+C984/C960\C960;
                       ASL A                                     ;;C9E0|C961+C985/C961\C961;
                       ASL A                                     ;;C9E1|C962+C986/C962\C962;
-                   if !_VER != 0                      ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
+                   if ver_is_english(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
                       ASL A                                     ;;    |C963+C987/C963\C963;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                       STA.B !_0                                 ;;C9E2|C964+C988/C964\C964;
@@ -5372,7 +5372,7 @@ CODE_0CCFD3:          DEC.W !Layer2ScrollCmd                    ;;D051|CFD3+CFF7
 CODE_0CCFDE:          LDA.W !Layer2ScrollType                   ;;D05C|CFDE+D002/CFDE\CFDE;
                       ORA.W !Layer2ScrollYSpeed+1               ;;D05F|CFE1+D005/CFE1\CFE1;
                       BNE +                                     ;;D062|CFE4+D008/CFE4\CFE4;
-                   if !_VER != 2                      ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
+                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
                       LDA.B !byetudlrFrame                      ;;D064|CFE6     /CFE6\CFE6;
                       ORA.B !axlr0000Frame                      ;;D066|CFE8     /CFE8\CFE8;
                       AND.B #$C0                                ;;D068|CFEA     /CFEA\CFEA;
