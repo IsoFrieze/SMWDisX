@@ -1555,7 +1555,7 @@ CODE_008E4C:          LDA.W !InGameTimerHundreds                ;;8DE1|8E4C+8E4C
                       AND.W !InGameTimerOnes                    ;;8DE9|8E54+8E54/8E54\8E56;  |If time is 99, 
                       CMP.B #$09                                ;;8DEC|8E57+8E57/8E57\8E59;  |speed up the music 
                       BNE +                                     ;;8DEE|8E59+8E59/8E59\8E5B;  | 
-                      LDA.B #$FF                                ;;8DF0|8E5B+8E5B/8E5B\8E5D;  | 
+                      LDA.B #!SFX_HURRYUP                       ;;8DF0|8E5B+8E5B/8E5B\8E5D;  | 
                       STA.W !SPCIO0                             ;;8DF2|8E5D+8E5D/8E5D\8E5F;  | 
                     + LDA.W !InGameTimerHundreds                ;;8DF5|8E60+8E60/8E60\8E62; \  
                       ORA.W !InGameTimerTens                    ;;8DF8|8E63+8E63/8E63\8E65;  | 
@@ -2190,7 +2190,7 @@ GameMode00:           JSR CODE_0085FA                           ;;9326|9391+9391
                       BPL -                                     ;;934E|93B9+93B9/93B9\93BB; /  
                       LDA.B #$AA                                ;;9350|93BB+93BB/93BB\93BD; \ Related to making the sprites 16x16? 
                       STA.W !OAMTileBitSize                     ;;9352|93BD+93BD/93BD\93BF; /  
-                      LDA.B #$01                                ;;9355|93C0+93C0/93C0\93C2; \ Play "Bing" sound? 
+                      LDA.B #!SFX_COIN                           ;;9355|93C0+93C0/93C0\93C2; \ Play "Bing" sound? 
                       STA.W !SPCIO3                             ;;9357|93C2+93C2/93C2\93C4; /  
                       LDA.B #$40                                ;;935A|93C5+93C5/93C5\93C7; \ Set timer to x40 
                       STA.W !VariousPromptTimer                 ;;935C|93C7+93C7/93C7\93C9; /  
@@ -2294,7 +2294,7 @@ GameMode19:           JSR CODE_0085FA                           ;;93FD|9468+9468
                       INC.W !SpriteTileset                      ;;9442|94AD+94AD/94AD\94AF;
                       BRA +                                     ;;9445|94B0+94B0/94B0\94B2;
                                                                 ;;                        ;
-CODE_0094B2:          LDA.B #$15                                ;;9447|94B2+94B2/94B2\94B4;
+CODE_0094B2:          LDA.B #!BGM_CUTSCENEINTRO                 ;;9447|94B2+94B2/94B2\94B4;
                       STA.W !SPCIO2                             ;;9449|94B4+94B4/94B4\94B6;
                       LDA.W CutsceneBackground-1,X              ;;944C|94B7+94B7/94B7\94B9;
                       STA.B !StripeImage                        ;;944F|94BA+94BA/94BA\94BC;
@@ -2516,7 +2516,7 @@ GameMode03:           STZ.W !HW_NMITIMEN                        ;;9643|96AE+96AE
                       LDA.W !OverworldOverride                  ;;9653|96BE+96BE/96BE\96C0;
                       BNE +                                     ;;9656|96C1+96C1/96C1\96C3;
                       JSR UploadMusicBank1                      ;;9658|96C3+96C3/96C3\96C5;
-                      LDA.B #$01                                ;;965B|96C6+96C6/96C6\96C8; \ Set title screen music 
+                      LDA.B #!BGM_TITLESCREEN                   ;;965B|96C6+96C6/96C6\96C8; \ Set title screen music 
                       STA.W !SPCIO2                             ;;965D|96C8+96C8/96C8\96CA; / 
                     + LDA.B #$EB                                ;;9660|96CB+96CB/96CB\96CD;
                       LDY.B #$00                                ;;9662|96CD+96CD/96CD\96CF;
@@ -2559,7 +2559,7 @@ CODE_009728:          LDA.W !MusicBackup                        ;;96BD|9728+9728
                       LDY.W !IRQNMICommand                      ;;96C4|972F+972F/972F\9731;
                       CPY.B #$C1                                ;;96C7|9732+9732/9732\9734;
                       BNE +                                     ;;96C9|9734+9734/9734\9736;
-                      LDA.B #$16                                ;;96CB|9736+9736/9736\9738;
+                      LDA.B #!BGM_BOWSERINTERLUDE               ;;96CB|9736+9736/9736\9738;
                     + STA.W !SPCIO2                             ;;96CD|9738+9738/9738\973A;
 CODE_00973B:          AND.B #$BF                                ;;96D0|973B+973B/973B\973D;
                       STA.W !MusicBackup                        ;;96D2|973D+973D/973D\973F;
@@ -2974,7 +2974,7 @@ CODE_009AD0:          INC.W !BlinkCursorTimer                   ;;9A65|9AD0+9AD0
                       BNE CODE_009AE3                           ;;9A72|9ADD+9ADD/9AE2\9AE4;
                       LDA.B !axlr0000Frame                      ;;9A74|9ADF+9ADF/9AE4\9AE6;
                       BPL CODE_009AEA                           ;;9A76|9AE1+9AE1/9AE6\9AE8;
-CODE_009AE3:          LDA.B #$01                                ;;9A78|9AE3+9AE3/9AE8\9AEA;
+CODE_009AE3:          LDA.B #!SFX_COIN                          ;;9A78|9AE3+9AE3/9AE8\9AEA;
                       STA.W !SPCIO3                             ;;9A7A|9AE5+9AE5/9AEA\9AEC;
                       BRA CODE_009B11                           ;;9A7D|9AE8+9AE8/9AED\9AEF;
                                                                 ;;                        ;
@@ -2988,7 +2988,7 @@ CODE_009AEA:          PLA                                       ;;9A7F|9AEA+9AEA
                       ORA.B !byetudlrFrame                      ;;9A88|9AF3+9AF3/9AF8\9AFA;
                       AND.B #$0C                                ;;9A8A|9AF5+9AF5/9AFA\9AFC;
                       BEQ Return009B16                          ;;9A8C|9AF7+9AF7/9AFC\9AFE;
-                      LDY.B #$06                                ;;9A8E|9AF9+9AF9/9AFE\9B00;
+                      LDY.B #!SFX_FIREBALL                      ;;9A8E|9AF9+9AF9/9AFE\9B00;
                       STY.W !SPCIO3                             ;;9A90|9AFB+9AFB/9B00\9B02;
                       STZ.W !BlinkCursorTimer                   ;;9A93|9AFE+9AFE/9B03\9B05;
                       LSR A                                     ;;9A96|9B01+9B01/9B06\9B08;
@@ -3101,7 +3101,7 @@ CODE_009BB0:          LDY.B #$06                                ;;9B45|9BB0     
                       TXA                                       ;;9B4A|9BB5     /9BBA\9BBC;
                       BNE +                                     ;;9B4B|9BB6     /9BBB\9BBD;
                       STZ.W !SPCIO3                             ;;9B4D|9BB8     /9BBD\9BBF;
-                      LDA.B #$05                                ;;9B50|9BBB     /9BC0\9BC2;
+                      LDA.B #!SFX_MIDWAY                        ;;9B50|9BBB     /9BC0\9BC2;
                       STA.W !SPCIO0                             ;;9B52|9BBD     /9BC2\9BC4;
                       JSL CODE_009BC9                           ;;9B55|9BC0     /9BC5\9BC7;
                     + JSL CODE_009C13                           ;;9B59|9BC4     /9BC9\9BCB;
@@ -3274,7 +3274,7 @@ GameMode08:           REP #$20                                  ;;         +9C00
                       LDA.B !byetudlrFrame                      ;;         +9C14          ;
                       AND.B #$0C                                ;;         +9C16          ;
                       BEQ SSCODE_009C3B                         ;;         +9C18          ;
-                      LDY.B #$06                                ;;         +9C1A          ;
+                      LDY.B #!SFX_FIREBALL                      ;;         +9C1A          ;
                       STY.W !SPCIO3                             ;;         +9C1C          ;
                       LSR A                                     ;;         +9C1F          ;
                       LSR A                                     ;;         +9C20          ;
@@ -3313,7 +3313,7 @@ SSCODE_009C3B:        REP #$10                                  ;;         +9C39
                       SEP #$30                                  ;;         +9C6A          ;
                       RTS                                       ;;         +9C6C          ;
                                                                 ;;                        ;
-SSCODE_009C6D:        LDA.B #$01                                ;;         +9C6D          ;
+SSCODE_009C6D:        LDA.B #!SFX_COIN                          ;;         +9C6D          ;
                       STA.W !SPCIO3                             ;;         +9C6F          ;
                       SEP #$10                                  ;;         +9C72          ;
                       LDA.W !Layer2ScrollType                   ;;         +9C74          ;
@@ -3545,7 +3545,7 @@ GameMode0A:           LDA.B !byetudlrFrame                      ;;9D98|9DFA+9CB3
                       STX.W !IsTwoPlayerGame                    ;;9DAB|9E0D+9CC6/9E12\9E14;
                       JSR CODE_00A195                           ;;9DAE|9E10+9CC9/9E15\9E17;
                       JSL CODE_04DAAD                           ;;9DB1|9E13+9CCC/9E18\9E1A;
-CODE_009E17:          LDA.B #$80                                ;;9DB5|9E17+9CD0/9E1C\9E1E;
+CODE_009E17:          LDA.B #!BGM_FADEOUT                       ;;9DB5|9E17+9CD0/9E1C\9E1E;
                       STA.W !SPCIO2                             ;;9DB7|9E19+9CD2/9E1E\9E20;
                       LDA.B #$FF                                ;;9DBA|9E1C+9CD5/9E21\9E23;
                       STA.W !SavedPlayerLives+1                 ;;9DBC|9E1E+9CD7/9E23\9E25;
@@ -4116,12 +4116,12 @@ CODE_00A21B:          LDA.B !byetudlrFrame                      ;;A1B9|A21B+A232
                       BCS CODE_00A242                           ;;A1C8|A22A+A241/A22F\A231;
                       LDA.B #$3C                                ;;A1CA|A22C+A243/A231\A233;
                       STA.W !PauseTimer                         ;;A1CC|A22E+A245/A233\A235;
-                      LDY.B #$12                                ;;A1CF|A231+A248/A236\A238;
+                      LDY.B #!SFX_UNPAUSE                       ;;A1CF|A231+A248/A236\A238;
                       LDA.W !PauseFlag                          ;;A1D1|A233+A24A/A238\A23A;
                       EOR.B #$01                                ;;A1D4|A236+A24D/A23B\A23D;
                       STA.W !PauseFlag                          ;;A1D6|A238+A24F/A23D\A23F;
                       BEQ +                                     ;;A1D9|A23B+A252/A240\A242;
-                      LDY.B #$11                                ;;A1DB|A23D+A254/A242\A244;
+                      LDY.B #!SFX_PAUSE                         ;;A1DB|A23D+A254/A242\A244;
                     + STY.W !SPCIO0                             ;;A1DD|A23F+A256/A244\A246;
 CODE_00A242:          LDA.W !PauseFlag                          ;;A1E0|A242+A259/A247\A249;
                       BEQ CODE_00A28A                           ;;A1E3|A245+A25C/A24A\A24C;
@@ -7648,7 +7648,7 @@ CODE_00C508:          LDA.W !ColorFadeTimer,X                   ;;C4A8|C508+C508
                       LDA.W !BonusFinishTimer                   ;;C4BE|C51E+C51E/C51E\C51E;
                       CMP.B #$44                                ;;C4C1|C521+C521/C521\C521;
                       BNE +                                     ;;C4C3|C523+C523/C523\C523;
-                      LDY.B #$14                                ;;C4C5|C525+C525/C525\C525;
+                      LDY.B #!BGM_BONUSOVER                     ;;C4C5|C525+C525/C525\C525;
                       STY.W !SPCIO2                             ;;C4C7|C527+C527/C527\C527; / Change music 
                     + CMP.B #con($01,$01,$01,$08,$08)           ;;C4CA|C52A+C52A/C52A\C52A;
                       BNE CODE_00C533                           ;;C4CC|C52C+C52C/C52C\C52C;
@@ -7669,7 +7669,7 @@ CODE_00C533:          LDY.W !BluePSwitchTimer                   ;;C4D3|C533+C533
                       BEQ +                                     ;;C4F1|C551+C551/C551\C551;
                       CPY.B #con($1E,$1E,$1E,$18,$18)           ;;C4F3|C553+C553/C553\C553;
                       BNE +                                     ;;C4F5|C555+C555/C555\C555;
-                      LDA.B #$24                                ;;C4F7|C557+C557/C557\C557; \ Play sound effect 
+                      LDA.B #!SFX_RUNNINGOUT                    ;;C4F7|C557+C557/C557\C557; \ Play sound effect 
                       STA.W !SPCIO3                             ;;C4F9|C559+C559/C559\C559; / 
                     + LDX.B #$06                                ;;C4FC|C55C+C55C/C55C\C55C;
 CODE_00C55E:          LDA.W !EmptyTimer14A8,X                   ;;C4FE|C55E+C55E/C55E\C55E;
@@ -7864,7 +7864,7 @@ UnknownAniC:          JSR NoButtons                             ;;C687|C6E7+C6E7
                                                                 ;;                        ;
 CODE_00C71C:          CMP.B #$4C                                ;;C6BC|C71C+C71C/C709\C709;
                       BCC CODE_00C73F                           ;;C6BE|C71E+C71E/C70B\C70B;
-                      LDA.B #$1B                                ;;C6C0|C720+C720/C70D\C70D; \ Play sound effect 
+                      LDA.B #!SFX_CUTSCENEFUSE                  ;;C6C0|C720+C720/C70D\C70D; \ Play sound effect 
                       STA.W !SPCIO3                             ;;C6C2|C722+C722/C70F\C70F; / 
                       INC.W !Layer1ScrollCmd                    ;;C6C5|C725+C725/C712\C712;
                       LDA.B #$4C                                ;;C6C8|C728+C728/C715\C715;
@@ -7872,7 +7872,7 @@ CODE_00C71C:          CMP.B #$4C                                ;;C6BC|C71C+C71C
                       LDX.B #$C0                                ;;C6CC|C72C+C72C/C719\C719;
 CODE_00C72E:          STY.B !PlayerXSpeed                       ;;C6CE|C72E+C72E/C71B\C71B;
 CODE_00C730:          STX.B !PlayerYSpeed                       ;;C6D0|C730+C730/C71D\C71D;
-                      LDX.B #$01                                ;;C6D2|C732+C732/C71F\C71F; \ Play sound effect 
+                      LDX.B #!SFX_BONK                          ;;C6D2|C732+C732/C71F\C71F; \ Play sound effect 
                       STX.W !SPCIO0                             ;;C6D4|C734+C734/C721\C721; / 
                       BRA +                                     ;;C6D7|C737+C737/C724\C724;
                                                                 ;;                        ;
@@ -7895,7 +7895,7 @@ CODE_00C73F:          LDX.W !CutsceneID                         ;;C6DF|C73F+C73F
                       LDA.W DATA_00C5E8,X                       ;;C6F8|C758+C758/C745\C745;
                       CMP.B #$2D                                ;;C6FB|C75B+C75B/C748\C748;
                       BNE +                                     ;;C6FD|C75D+C75D/C74A\C74A;
-                      LDA.B #$1E                                ;;C6FF|C75F+C75F/C74C\C74C; \ Play sound effect 
+                      LDA.B #!SFX_PBALLOON                      ;;C6FF|C75F+C75F/C74C\C74C; \ Play sound effect 
                       STA.W !SPCIO0                             ;;C701|C761+C761/C74E\C74E; / 
                     + LDA.W DATA_00C5E8,X                       ;;C704|C764+C764/C751\C751;
                       CMP.B #$FF                                ;;C707|C767+C767/C754\C754;
@@ -7925,7 +7925,7 @@ CODE_00C789:          TYA                                       ;;C729|C789+C789
                       BPL CODE_00C7A2                           ;;C731|C791+C791/C77E\C77E;
                       LDA.W !PickUpItemTimer                    ;;C733|C793+C793/C780\C780;
                       BEQ CODE_00C79D                           ;;C736|C796+C796/C783\C783;
-                      LDA.B #$09                                ;;C738|C798+C798/C785\C785; \ Play sound effect 
+                      LDA.B #!SFX_CAPE                          ;;C738|C798+C798/C785\C785; \ Play sound effect 
                       STA.W !SPCIO0                             ;;C73A|C79A+C79A/C787\C787; / 
 CODE_00C79D:          INC.W !Layer1ScrollCmd                    ;;C73D|C79D+C79D/C78A\C78A;
                       BRA CODE_00C7F6                           ;;C740|C7A0+C7A0/C78D\C78D;
@@ -7936,7 +7936,7 @@ CODE_00C7A2:          BNE CODE_00C7A9                           ;;C742|C7A2+C7A2
                                                                 ;;                        ;
 CODE_00C7A9:          DEC A                                     ;;C749|C7A9+C7A9/C796\C796;
                       BNE CODE_00C7B6                           ;;C74A|C7AA+C7AA/C797\C797;
-                      LDA.B #$0E                                ;;C74C|C7AC+C7AC/C799\C799; \ Play sound effect 
+                      LDA.B #!SFX_SWIM                          ;;C74C|C7AC+C7AC/C799\C799; \ Play sound effect 
                       STA.W !SPCIO0                             ;;C74E|C7AE+C7AE/C79B\C79B; / 
                       INC.W !Layer1ScrollXSpeed                 ;;C751|C7B1+C7B1/C79E\C79E;
                       BRA CODE_00C7F6                           ;;C754|C7B4+C7B4/C7A1\C7A1;
@@ -7957,7 +7957,7 @@ CODE_00C7C0:          DEC A                                     ;;C760|C7C0+C7C0
                                                                 ;;                        ;
 CODE_00C7CE:          DEC A                                     ;;C76E|C7CE+C7CE/C7BB\C7BB;
                       BNE CODE_00C7DF                           ;;C76F|C7CF+C7CF/C7BC\C7BC;
-                      LDA.B #$09                                ;;C771|C7D1+C7D1/C7BE\C7BE; \ Play sound effect 
+                      LDA.B #!SFX_KAPOW                         ;;C771|C7D1+C7D1/C7BE\C7BE; \ Play sound effect 
                       STA.W !SPCIO3                             ;;C773|C7D3+C7D3/C7C0\C7C0; / 
                       LDA.B #con($D8,$D8,$D8,$D2,$D2)           ;;C776|C7D6+C7D6/C7C3\C7C3;
                       STA.B !PlayerXSpeed                       ;;C778|C7D8+C7D8/C7C5\C7C5;
@@ -8102,7 +8102,7 @@ CODE_00C8FB:          INC.W !ShowMarioStart                     ;;C89B|C8FB+C8FB
                       INC.W !CarryYoshiThruLvls                 ;;C8A7|C907+C907/C8F4\C8F4;
 CODE_00C90A:          LDA.B #$01                                ;;C8AA|C90A+C90A/C8F7\C8F7;
                       STA.W !RemoveYoshiFlag                    ;;C8AC|C90C+C90C/C8F9\C8F9;
-                      LDA.B #$03                                ;;C8AF|C90F+C90F/C8FC\C8FC; \ Play sound effect 
+                      LDA.B #!SFX_YOSHIDRUMOFF                  ;;C8AF|C90F+C90F/C8FC\C8FC; \ Play sound effect 
                       STA.W !SPCIO1                             ;;C8B1|C911+C911/C8FE\C8FE; / 
                       RTS                                       ;;C8B4|C914+C914/C901\C901; Return 
                                                                 ;;                        ;
@@ -8187,7 +8187,7 @@ CODE_00C9AF:          JSR SetMarioPeaceImg                      ;;C94F|C9AF+C9AF
                       BEQ CODE_00C9C2                           ;;C955|C9B5+C9B5/C9A8\C9A8;
                       DEC.W !PlayerPeaceSign                    ;;C957|C9B7+C9B7/C9AA\C9AA;
                       BNE +                                     ;;C95A|C9BA+C9BA/C9AD\C9AD;
-                      LDA.B #$11                                ;;C95C|C9BC+C9BC/C9AF\C9AF;
+                      LDA.B #!BGM_SPOTLIGHT                     ;;C95C|C9BC+C9BC/C9AF\C9AF;
                       STA.W !SPCIO2                             ;;C95E|C9BE+C9BE/C9B1\C9B1; / Change music 
                     + RTS                                       ;;C961|C9C1+C9C1/C9B4\C9B4; Return 
                                                                 ;;                        ;
@@ -8670,7 +8670,7 @@ CODE_00CDF6:          LDA.B !axlr0000Hold                       ;;CD96|CDF6+CDF6
                       CMP.B !Layer1XPos                         ;;CDD9|CE39+CE39/CDD9\CDD9;
                       SEP #$20                                  ;;CDDB|CE3B+CE3B/CDDB\CDDB; Accum (8 bit) 
                       BEQ +                                     ;;CDDD|CE3D+CE3D/CDDD\CDDD;
-                      LDY.B #$0E                                ;;CDDF|CE3F+CE3F/CDDF\CDDF; \ Play sound effect 
+                      LDY.B #!SFX_SCREENSCROLL                  ;;CDDF|CE3F+CE3F/CDDF\CDDF; \ Play sound effect 
                       STY.W !SPCIO3                             ;;CDE1|CE41+CE41/CDE1\CDE1; / 
                     + TXA                                       ;;CDE4|CE44+CE44/CDE4\CDE4;
                       STA.W !CameraScrollDir                    ;;CDE5|CE45+CE45/CDE5\CDE5;
@@ -8941,7 +8941,7 @@ CODE_00D062:          LDA.B !Powerup                            ;;D002|D062+D062
                       BNE Return00D0AD                          ;;D014|D074+D074/D014\D014;
                       LDA.B #$12                                ;;D016|D076+D076/D016\D016;
                       STA.W !CapeSpinTimer                      ;;D018|D078+D078/D018\D018;
-                      LDA.B #$04                                ;;D01B|D07B+D07B/D01B\D01B; \ Play sound effect 
+                      LDA.B #!SFX_SPIN                          ;;D01B|D07B+D07B/D01B\D01B; \ Play sound effect 
                       STA.W !SPCIO3                             ;;D01D|D07D+D07D/D01D\D01D; / 
                       RTS                                       ;;D020|D080+D080/D020\D020; Return 
                                                                 ;;                        ;
@@ -8986,7 +8986,7 @@ MarioDeathAni:        STZ.B !Powerup                            ;;D056|D0B6+D0B6
                       STZ.W !CarryYoshiThruLvls                 ;;D075|D0D5+D0D5/D075\D075; Set reserve item to 0 
                     + DEC.W !PlayerLives                        ;;D078|D0D8+D0D8/D078\D078; Decrease amount of lifes 
                       BPL DeathNotGameOver                      ;;D07B|D0DB+D0DB/D07B\D07B; If not Game Over, branch to $D0E6 
-                      LDA.B #$0A                                ;;D07D|D0DD+D0DD/D07D\D07D;
+                      LDA.B #!BGM_GAMEOVER                      ;;D07D|D0DD+D0DD/D07D\D07D;
                       STA.W !SPCIO2                             ;;D07F|D0DF+D0DF/D07F\D07F; / Change music 
                       LDX.B #$14                                ;;D082|D0E2+D0E2/D082\D082; Set X (Death message) to x14 (Game Over) 
                       BRA DeathShowMessage                      ;;D084|D0E4+D0E4/D084\D084;
@@ -9175,7 +9175,7 @@ CODE_00D22D:          LDA.B #$40                                ;;D1CD|D22D+D22D
                     + LDA.B !PlayerXSpeed                       ;;D1EE|D24E+D24E/D1EE\D1EE; \ If Mario has no speed... 
                       ORA.B !PlayerYSpeed                       ;;D1F0|D250+D250/D1F0\D1F0;  | 
                       BNE +                                     ;;D1F2|D252+D252/D1F2\D1F2;  | 
-                      LDA.B #$04                                ;;D1F4|D254+D254/D1F4\D1F4;  | ...play sound effect 
+                      LDA.B #!SFX_PIPE                          ;;D1F4|D254+D254/D1F4\D1F4;  | ...play sound effect 
                       STA.W !SPCIO0                             ;;D1F6|D256+D256/D1F6\D1F6; / 
                     + LDA.W PipeSpeed,Y                         ;;D1F9|D259+D259/D1F9\D1F9; \ Set X speed 
                       STA.B !PlayerXSpeed                       ;;D1FC|D25C+D25C/D1FC\D1FC; / 
@@ -9216,7 +9216,7 @@ PipeCannonAni:        JSR NoButtons                             ;;D227|D287+D287
                       CMP.B #$18                                ;;D23F|D29F+D29F/D23F\D23F;
                       BCC CODE_00D2AA                           ;;D241|D2A1+D2A1/D241\D241;
                       BNE +                                     ;;D243|D2A3+D2A3/D243\D243;
-                      LDA.B #$09                                ;;D245|D2A5+D2A5/D245\D245; \ Play sound effect 
+                      LDA.B #!SFX_KAPOW                         ;;D245|D2A5+D2A5/D245\D245; \ Play sound effect 
                       STA.W !SPCIO3                             ;;D247|D2A7+D2A7/D247\D247; / 
 CODE_00D2AA:          STZ.W !PlayerBehindNet                    ;;D24A|D2AA+D2AA/D24A\D24A;
                       STZ.W !YoshiInPipeSetting                 ;;D24D|D2AD+D2AD/D24D\D24D;
@@ -9503,7 +9503,7 @@ CODE_00D630:          LDA.B !PlayerXSpeed                       ;;D5D0|D630+D630
                       BNE CODE_00D65E                           ;;D5E3|D643+D643/D5E3\D5E3;
                       INC A                                     ;;D5E5|D645+D645/D5E5\D5E5;
                       STA.W !SpinJumpFlag                       ;;D5E6|D646+D646/D5E6\D5E6;
-                      LDA.B #$04                                ;;D5E9|D649+D649/D5E9\D5E9; \ Play sound effect 
+                      LDA.B #!SFX_SPIN                          ;;D5E9|D649+D649/D5E9\D5E9; \ Play sound effect 
                       STA.W !SPCIO3                             ;;D5EB|D64B+D64B/D5EB\D5EB; / 
                       LDY.B !PlayerDirection                    ;;D5EE|D64E+D64E/D5EE\D5EE;
                       LDA.W DATA_00D5F0,Y                       ;;D5F0|D650+D650/D5F0\D5F0;
@@ -9513,7 +9513,7 @@ CODE_00D630:          LDA.B !PlayerXSpeed                       ;;D5D0|D630+D630
                       INX                                       ;;D5FB|D65B+D65B/D5FB\D5FB;
                       BRA +                                     ;;D5FC|D65C+D65C/D5FC\D5FC;
                                                                 ;;                        ;
-CODE_00D65E:          LDA.B #$01                                ;;D5FE|D65E+D65E/D5FE\D5FE; \ Play sound effect 
+CODE_00D65E:          LDA.B #!SFX_JUMP                          ;;D5FE|D65E+D65E/D5FE\D5FE; \ Play sound effect 
                       STA.W !SPCIO1                             ;;D600|D660+D660/D600\D600; / 
                     + LDA.W DATA_00D2BD,X                       ;;D603|D663+D663/D603\D603;
                       STA.B !PlayerYSpeed                       ;;D606|D666+D666/D606\D606;
@@ -9808,7 +9808,7 @@ CODE_00D892:          CMP.W DATA_00D7C8,Y                       ;;D832|D892+D892
                       BEQ CODE_00D8C4                           ;;D842|D8A2+D8A2          ;
                       LDA.B !PlayerYSpeed                       ;;D844|D8A4+D8A4          ;
                       BMI CODE_00D8AF                           ;;D846|D8A6+D8A6          ;
-                      LDA.B #$09                                ;;D848|D8A8+D8A8          ; \ Play sound effect 
+                      LDA.B #!SFX_CAPE                          ;;D848|D8A8+D8A8          ; \ Play sound effect 
                       STA.W !SPCIO0                             ;;D84A|D8AA+D8AA          ; / 
                       BRA +                                     ;;D84D|D8AD+D8AD          ;
                                                                 ;;                        ;
@@ -9851,7 +9851,7 @@ CODE_00D892:          CMP.W DATA_00D7C8-1,Y                     ;;              
                       BEQ CODE_00D8C4                           ;;              /D867\D867;
                       LDA.B !PlayerYSpeed                       ;;              /D869\D869;
                       BMI CODE_00D8AF                           ;;              /D86B\D86B;
-                      LDA.B #$09                                ;;              /D86D\D86D;
+                      LDA.B #!SFX_CAPE                          ;;              /D86D\D86D;
                       STA.W !SPCIO0                             ;;              /D86F\D86F;
                       BRA +                                     ;;              /D872\D872;
                                                                 ;;                        ;
@@ -10151,7 +10151,7 @@ Return00DA8C:         RTS                                       ;;DA2C|DA8C+DA8C
                     + STA.W !PlayerPose                         ;;DA45|DAA5+DAA5/DA79\DA79;
                       RTS                                       ;;DA48|DAA8+DAA8/DA7C\DA7C; Return 
                                                                 ;;                        ;
-CODE_00DAA9:          LDA.B #$0E                                ;;DA49|DAA9+DAA9/DA7D\DA7D; \ Play sound effect 
+CODE_00DAA9:          LDA.B #!SFX_SWIM                          ;;DA49|DAA9+DAA9/DA7D\DA7D; \ Play sound effect 
                       STA.W !SPCIO0                             ;;DA4B|DAAB+DAAB/DA7F\DA7F; / 
                       LDA.W !PlayerAniTimer                     ;;DA4E|DAAE+DAAE/DA82\DA82;
                       ORA.B #$10                                ;;DA51|DAB1+DAB1/DA85\DA85;
@@ -10253,14 +10253,14 @@ CODE_00DB92:          STA.W !PlayerPose                         ;;DB32|DB92+DB92
                       STA.B !PlayerInAir                        ;;DB3E|DB9E+DB9E/DB72\DB72;
                       LDA.W DATA_00DABB,Y                       ;;DB40|DBA0+DBA0/DB74\DB74;
                       STA.B !PlayerYSpeed                       ;;DB43|DBA3+DBA3/DB77\DB77;
-                      LDA.B #$01                                ;;DB45|DBA5+DBA5/DB79\DB79; \ Play sound effect 
+                      LDA.B #!SFX_JUMP                          ;;DB45|DBA5+DBA5/DB79\DB79; \ Play sound effect 
                       STA.W !SPCIO1                             ;;DB47|DBA7+DBA7/DB7B\DB7B; / 
                       BRA CODE_00DC00                           ;;DB4A|DBAA+DBAA/DB7E\DB7E;
                                                                 ;;                        ;
 CODE_00DBAC:          BVC +                                     ;;DB4C|DBAC+DBAC/DB80\DB80;
                       LDA.B !PlayerIsClimbing                   ;;DB4E|DBAE+DBAE/DB82\DB82;
                       BPL +                                     ;;DB50|DBB0+DBB0/DB84\DB84;
-                      LDA.B #$01                                ;;DB52|DBB2+DBB2/DB86\DB86; \ Play sound effect 
+                      LDA.B #!SFX_BONK                          ;;DB52|DBB2+DBB2/DB86\DB86; \ Play sound effect 
                       STA.W !SPCIO0                             ;;DB54|DBB4+DBB4/DB88\DB88; / 
                       STX.W !NetDoorDirIndex                    ;;DB57|DBB7+DBB7/DB8B\DB8B;
                       LDA.B !PlayerXPosNext                     ;;DB5A|DBBA+DBBA/DB8E\DB8E; Mario X 
@@ -10713,7 +10713,7 @@ CODE_00E2BD:          PHB                                       ;;E25D|E2BD+E2BD
                       ORA.W !SilverPSwitchTimer                 ;;E29B|E2FB+E2FB/E2EB\E2EB;
                       ORA.W !DirectCoinTimer                    ;;E29E|E2FE+E2FE/E2EE\E2EE;
                       BEQ +                                     ;;E2A1|E301+E301/E2F1\E2F1;
-                      LDX.B #$0E                                ;;E2A3|E303+E303/E2F3\E2F3;
+                      LDX.B #!BGM_PSWITCH                       ;;E2A3|E303+E303/E2F3\E2F3;
                     + STX.W !SPCIO2                             ;;E2A5|E305+E305/E2F5\E2F5; / Change music 
 CODE_00E308:          LDA.B !TrueFrame                          ;;E2A8|E308+E308/E2F8\E2F8;
 CODE_00E30A:          LSR A                                     ;;E2AA|E30A+E30A/E2FA\E2FA;
@@ -11272,7 +11272,7 @@ CODE_00EA65:          LSR.B !GraphicsCompPtr                    ;;EA05|EA65+EA65
                       BNE +                                     ;;EA27|EA87+EA87/EA77\EA77;
                       INC A                                     ;;EA29|EA89+EA89/EA79\EA79;
                       STA.W !SpinJumpFlag                       ;;EA2A|EA8A+EA8A/EA7A\EA7A;
-                      LDA.B #$04                                ;;EA2D|EA8D+EA8D/EA7D\EA7D; \ Play sound effect 
+                      LDA.B #!SFX_SPIN                          ;;EA2D|EA8D+EA8D/EA7D\EA7D; \ Play sound effect 
                       STA.W !SPCIO3                             ;;EA2F|EA8F+EA8F/EA7F\EA7F; / 
                     + LDA.B !PlayerBlockedDir                   ;;EA32|EA92+EA92/EA82\EA82;
                       AND.B #$08                                ;;EA34|EA94+EA94/EA84\EA84;
@@ -11472,7 +11472,7 @@ CODE_00EC06:          LDA.B !GraphicsUncompPtr+2                ;;EBA6|EC06+EC06
                       LDA.B !byetudlrFrame                      ;;EBAA|EC0A+EC0A/EBFA\EBFA;
                       AND.B #$08                                ;;EBAC|EC0C+EC0C/EBFC\EBFC;
                       BEQ CODE_00EC24                           ;;EBAE|EC0E+EC0E/EBFE\EBFE;
-                      LDA.B #$0F                                ;;EBB0|EC10+EC10/EC00\EC00; \ Play sound effect 
+                      LDA.B #!BGM_KEYHOLE                       ;;EBB0|EC10+EC10/EC00\EC00; \ Play sound effect 
                       STA.W !SPCIO3                             ;;EBB2|EC12+EC12/EC02\EC02; / 
                       JSR CODE_00D273                           ;;EBB5|EC15+EC15/EC05\EC05;
                       LDA.B #$0D                                ;;EBB8|EC18+EC18/EC08\EC08;
@@ -11626,7 +11626,7 @@ CODE_00ED3B:          LDA.B !PlayerYSpeed                       ;;ECDB|ED3B+ED3B
                       STZ.B !PlayerYSpeed                       ;;ECDF|ED3F+ED3F/ED2F\ED2F;
                       LDA.W !SPCIO0                             ;;ECE1|ED41+ED41/ED31\ED31; / Play sound effect 
                       BNE CODE_00ED4A                           ;;ECE4|ED44+ED44/ED34\ED34;
-                      INC A                                     ;;ECE6|ED46+ED46/ED36\ED36;
+                      INC A                                     ;;ECE6|ED46+ED46/ED36\ED36; play bonk only if no other sound was queued
                       STA.W !SPCIO0                             ;;ECE7|ED47+ED47/ED37\ED37; / Play sound effect 
 CODE_00ED4A:          JSR CODE_00F44D                           ;;ECEA|ED4A+ED4A/ED3A\ED3A;
                       BNE +                                     ;;ECED|ED4D+ED4D/ED3D\ED3D;
@@ -11820,7 +11820,7 @@ CODE_00EEAA:          TXA                                       ;;EE4A|EEAA+EEAA
                       STX.W !BigSwitchPressTimer                ;;EE5B|EEBB+EEBB/EEAB\EEAB;
                       JSR FlatPalaceSwitch                      ;;EE5E|EEBE+EEBE/EEAE\EEAE;
                       PLY                                       ;;EE61|EEC1+EEC1/EEB1\EEB1;
-                      LDA.B #$0C                                ;;EE62|EEC2+EEC2/EEB2\EEB2;
+                      LDA.B #!BGM_LEVELCLEAR                    ;;EE62|EEC2+EEC2/EEB2\EEB2;
                       STA.W !SPCIO2                             ;;EE64|EEC4+EEC4/EEB4\EEB4; / Change music 
                       LDA.B #$FF                                ;;EE67|EEC7+EEC7/EEB7\EEB7; \  
                       STA.W !MusicBackup                        ;;EE69|EEC9+EEC9/EEB9\EEB9; / Set music to xFF 
@@ -11913,7 +11913,7 @@ CODE_00EF60:          STA.B !PlayerYSpeed                       ;;EF00|EF60+EF60
                       LDA.W !YoshiCanStomp                      ;;EF27|EF87+EF87/EF77\EF77; \ If Yoshi has stomp ability, 
                       BEQ +                                     ;;EF2A|EF8A+EF8A/EF7A\EF7A;  | 
                       JSL YoshiStompRoutine                     ;;EF2C|EF8C+EF8C/EF7C\EF7C;  | Run routine 
-                      LDA.B #$25                                ;;EF30|EF90+EF90/EF80\EF80;  | Play sound effect 
+                      LDA.B #!SFX_YOSHISTOMP                    ;;EF30|EF90+EF90/EF80\EF80;  | Play sound effect 
                       STA.W !SPCIO3                             ;;EF32|EF92+EF92/EF82\EF82; / 
                     + STZ.W !SpriteStompCounter                 ;;EF35|EF95+EF95/EF85\EF85;
                       RTS                                       ;;EF38|EF98+EF98/EF88\EF88; Return 
@@ -11932,7 +11932,7 @@ CODE_00EF99:          STZ.W !SpriteStompCounter                 ;;EF39|EF99+EF99
 CallGroundPound:      LDA.B !GraphicsUncompPtr+2                ;;EF4E|EFAE+EFAE/EF9E\EF9E;
                       BEQ +                                     ;;EF50|EFB0+EFB0/EFA0\EFA0;
                       JSL GroundPound                           ;;EF52|EFB2+EFB2/EFA2\EFA2;
-                      LDA.B #$09                                ;;EF56|EFB6+EFB6/EFA6\EFA6; \ Play sound effect 
+                      LDA.B #!SFX_KAPOW                         ;;EF56|EFB6+EFB6/EFA6\EFA6; \ Play sound effect 
                       STA.W !SPCIO3                             ;;EF58|EFB8+EFB8/EFA8\EFA8; / 
                     + RTS                                       ;;EF5B|EFBB+EFBB/EFAB\EFAB; Return 
                                                                 ;;                        ;
@@ -11995,7 +11995,7 @@ CODE_00F005:          TYA                                       ;;EFA5|F005+F005
                       BCS Return00F04C                          ;;EFBD|F01D+F01D/F00D\F00D;
                       LDA.W !PlayerRidingYoshi                  ;;EFBF|F01F+F01F/F00F\F00F;
                       BEQ +                                     ;;EFC2|F022+F022/F012\F012;
-                      LDA.B #$08                                ;;EFC4|F024+F024/F014\F014;
+                      LDA.B #!SFX_SPRING                        ;;EFC4|F024+F024/F014\F014;
                       STA.W !SPCIO3                             ;;EFC6|F026+F026/F016\F016; / Play sound effect 
                       LDA.B #$80                                ;;EFC9|F029+F029/F019\F019;
                       STA.B !PlayerYSpeed                       ;;EFCB|F02B+F02B/F01B\F01B;
@@ -12214,7 +12214,7 @@ CODE_00F226:          LDA.W !DidPlayBonusGame                   ;;F1C6|F226+F226
                     + EOR.B #$03                                ;;F1D0|F230+F230/F220\F220;
                       AND.B !TrueFrame                          ;;F1D2|F232+F232/F222\F222;
                       BNE CODE_00F220                           ;;F1D4|F234+F234/F224\F224;
-CODE_00F236:          LDA.B #$2A                                ;;F1D6|F236+F236/F226\F226;
+CODE_00F236:          LDA.B #!SFX_WRONG                         ;;F1D6|F236+F236/F226\F226;
                       STA.W !SPCIO3                             ;;F1D8|F238+F238/F228\F228; / Play sound effect 
                       PHY                                       ;;F1DB|F23B+F23B/F22B\F22B;
                       STZ.B !_5                                 ;;F1DC|F23C+F23C/F22C\F22C;
@@ -12304,7 +12304,7 @@ CODE_00F2C9:          CPY.B #$38                                ;;F269|F2C9+F2C9
                       BNE +                                     ;;F282|F2E2+F2E2/F2D2\F2D2;
                       LDA.B #$01                                ;;F284|F2E4+F2E4/F2D4\F2D4;
                       STA.B !Powerup                            ;;F286|F2E6+F2E6/F2D6\F2D6;
-                    + LDA.B #$05                                ;;F288|F2E8+F2E8/F2D8\F2D8;
+                    + LDA.B #!SFX_MIDWAY                        ;;F288|F2E8+F2E8/F2D8\F2D8;
                       STA.W !SPCIO0                             ;;F28A|F2EA+F2EA/F2DA\F2DA; / Play sound effect 
                       RTS                                       ;;F28D|F2ED+F2ED/F2DD\F2DD; Return 
                                                                 ;;                        ;
@@ -12359,7 +12359,7 @@ CODE_00F33F:          JSL CODE_00F377                           ;;F2DF|F33F+F33F
                       ORA.W !AllDragonCoinsCollected,Y          ;;F2F1|F351+F351/F341\F341;
                       STA.W !AllDragonCoinsCollected,Y          ;;F2F4|F354+F354/F344\F344;
                       PLX                                       ;;F2F7|F357+F357/F347\F347;
-                    + LDA.B #$1C                                ;;F2F8|F358+F358/F348\F348;
+                    + LDA.B #!SFX_DRAGONCOIN                    ;;F2F8|F358+F358/F348\F348;
                       STA.W !SPCIO0                             ;;F2FA|F35A+F35A/F34A\F34A; / Play sound effect 
                       LDA.B #$01                                ;;F2FD|F35D+F35D/F34D\F34D;
                       JSL CODE_05B330                           ;;F2FF|F35F+F35F/F34F\F34F;
@@ -12479,7 +12479,7 @@ CODE_00F40A:          STA.B !PipeTimer                          ;;F3AA|F40A+F40A
                       STX.W !YoshiInPipeSetting                 ;;F3D1|F431+F431/F421\F421;
                       STY.B !PlayerAnimation                    ;;F3D4|F434+F434/F424\F424;
                       JSR NoButtons                             ;;F3D6|F436+F436/F426\F426;
-                      LDA.B #$04                                ;;F3D9|F439+F439/F429\F429;
+                      LDA.B #!SFX_PIPE                          ;;F3D9|F439+F439/F429\F429;
                       STA.W !SPCIO0                             ;;F3DB|F43B+F43B/F42B\F42B; / Play sound effect 
 CODE_00F43E:          PLX                                       ;;F3DE|F43E+F43E/F42E\F42E;
 CODE_00F43F:          LDY.W !Map16TileNumber                    ;;F3DF|F43F+F43F/F42F\F42F;
@@ -12708,7 +12708,7 @@ HurtMario:            LDA.B !PlayerAnimation                    ;;F557|F5B7+F5B7
                       BNE PowerDown                             ;;F57B|F5DB+F5DB/F5CB\F5CB; / 
                       LDA.W !FlightPhase                        ;;F57D|F5DD+F5DD/F5CD\F5CD; \ Branch if not soaring 
                       BEQ PowerDown                             ;;F580|F5E0+F5E0/F5D0\F5D0; / 
-                      LDY.B #$0F                                ;;F582|F5E2+F5E2/F5D2\F5D2; \ Break Mario out of soaring 
+                      LDY.B #!SFX_FLYHIT                        ;;F582|F5E2+F5E2/F5D2\F5D2; \ Break Mario out of soaring 
                       STY.W !SPCIO0                             ;;F584|F5E4+F5E4/F5D4\F5D4;  | (Play sound effect) 
                       LDA.B #$01                                ;;F587|F5E7+F5E7/F5D7\F5D7;  | (Set spin jump flag) 
                       STA.W !SpinJumpFlag                       ;;F589|F5E9+F5E9/F5D9\F5D9;  | 
@@ -12716,7 +12716,7 @@ HurtMario:            LDA.B !PlayerAnimation                    ;;F557|F5B7+F5B7
                       STA.W !IFrameTimer                        ;;F58E|F5EE+F5EE/F5DE\F5DE; / 
                       BRA CODE_00F622                           ;;F591|F5F1+F5F1/F5E1\F5E1;
                                                                 ;;                        ;
-PowerDown:            LDY.B #$04                                ;;F593|F5F3+F5F3/F5E3\F5E3; \ Play sound effect 
+PowerDown:            LDY.B #!SFX_PIPE                          ;;F593|F5F3+F5F3/F5E3\F5E3; \ Play sound effect 
                       STY.W !SPCIO0                             ;;F595|F5F5+F5F5/F5E5\F5E5; / 
                       JSL CODE_028008                           ;;F598|F5F8+F5F8/F5E8\F5E8;
                       LDA.B #$01                                ;;F59C|F5FC+F5FC/F5EC\F5EC; \ Set power down animation 
@@ -12727,7 +12727,7 @@ PowerDown:            LDY.B #$04                                ;;F593|F5F3+F5F3
                                                                 ;;                        ;
 KillMario:            LDA.B #$90                                ;;F5A6|F606+F606/F5F6\F5F6; \ Mario Y speed = #$90 
                       STA.B !PlayerYSpeed                       ;;F5A8|F608+F608/F5F8\F5F8; / 
-CODE_00F60A:          LDA.B #$09                                ;;F5AA|F60A+F60A/F5FA\F5FA; \ 
+CODE_00F60A:          LDA.B #!BGM_DEATH                         ;;F5AA|F60A+F60A/F5FA\F5FA; \ 
                       STA.W !SPCIO2                             ;;F5AC|F60C+F60C/F5FC\F5FC; / Change music 
                       LDA.B #$FF                                ;;F5AF|F60F+F60F/F5FF\F5FF;
                       STA.W !MusicBackup                        ;;F5B1|F611+F611/F601\F601;
@@ -13095,7 +13095,7 @@ CODE_00F8F2:          JSR CODE_00EAA6                           ;;F892|F8F2+F8F2
                       STA.B !PlayerYPosNext                     ;;F8B3|F913+F913/F903\F903;
                       SEP #$20                                  ;;F8B5|F915+F915/F905\F905; Accum (8 bit) 
                       STZ.B !PlayerYSpeed                       ;;F8B7|F917+F917/F907\F907;
-                      LDA.B #$01                                ;;F8B9|F919+F919/F909\F909;
+                      LDA.B #!SFX_BONK                          ;;F8B9|F919+F919/F909\F909;
                       STA.W !SPCIO0                             ;;F8BB|F91B+F91B/F90B\F90B; / Play sound effect 
                     + SEP #$20                                  ;;F8BE|F91E+F91E/F90E\F90E; Accum (8 bit) 
                       PLX                                       ;;F8C0|F920+F920/F910\F910;
@@ -13382,7 +13382,7 @@ CODE_00FB2D:          TXA                                       ;;FACA|FB2D+FB2D
                       STA.W !SpriteXSpeed,Y                     ;;FB12|FB75+FB75/FB97\FB97;
                       LDA.B #$20                                ;;FB15|FB78+FB78/FB9A\FB9A;
                       STA.W !SpriteMisc154C,Y                   ;;FB17|FB7A+FB7A/FB9C\FB9C;
-                      LDA.B #$0C                                ;;FB1A|FB7D+FB7D/FB9F\FB9F;
+                      LDA.B #!SFX_ITEMGOAL                      ;;FB1A|FB7D+FB7D/FB9F\FB9F;
                       STA.W !SPCIO0                             ;;FB1C|FB7F+FB7F/FBA1\FBA1; / Play sound effect 
                       LDX.B #$03                                ;;FB1F|FB82+FB82/FBA4\FBA4;
 CODE_00FB84:          LDA.W !SmokeSpriteNumber,X                ;;FB21|FB84+FB84/FBA6\FBA6;
@@ -13502,7 +13502,7 @@ ADDR_00FC73:          DEY                                       ;;FC10|FC73+FC73
                       STZ.W !CarryYoshiThruLvls                 ;;FC13|FC76+FC76/FC98\FC98;
                       RTL                                       ;;FC16|FC79+FC79/FC9B\FC9B; Return 
                                                                 ;;                        ;
-CODE_00FC7A:          LDA.B #$02                                ;;FC17|FC7A+FC7A/FC9C\FC9C;
+CODE_00FC7A:          LDA.B #!SFX_YOSHIDRUMON                   ;;FC17|FC7A+FC7A/FC9C\FC9C;
                       STA.W !SPCIO1                             ;;FC19|FC7C+FC7C/FC9E\FC9E; / Play sound effect 
                       LDX.B #$00                                ;;FC1C|FC7F+FC7F/FCA1\FCA1;
                       LDA.W !DisableBonusSprite                 ;;FC1E|FC81+FC81/FCA3\FCA3;
@@ -13791,7 +13791,7 @@ CODE_00FEAA:          LDA.W !ExtSpriteNumber,X                  ;;FE47|FEAA+FEAA
                       BNE CODE_00FEAA                           ;;FE4F|FEB2+FEB2/FED4\FED4;  | 
                       RTS                                       ;;FE51|FEB4+FEB4/FED6\FED6; / Return if no free slots 
                                                                 ;;                        ;
-CODE_00FEB5:          LDA.B #$06                                ;;FE52|FEB5+FEB5/FED7\FED7;
+CODE_00FEB5:          LDA.B #!SFX_FIREBALL                      ;;FE52|FEB5+FEB5/FED7\FED7;
                       STA.W !SPCIO3                             ;;FE54|FEB7+FEB7/FED9\FED9; / Play sound effect 
                       LDA.B #$0A                                ;;FE57|FEBA+FEBA/FEDC\FEDC;
                       STA.W !ShootFireTimer                     ;;FE59|FEBC+FEBC/FEDE\FEDE;

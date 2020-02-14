@@ -469,7 +469,14 @@ LevXYPPCCCTtbl:       db $20,$20,$20,$30,$30,$30,$30,$30        ;;84B7|84B7+84B7
                       db $30,$30,$30,$30,$30,$30,$30,$30        ;;84CF|84CF+84CF/84CF\84F4;
 TimerTable:           db $00,$02,$03,$04                        ;;84D7|84D7+84D7/84D7\84FC;
                                                                 ;;                        ;
-LevelMusicTable:      db $02,$06,$01,$08,$07,$03,$05,$12        ;;84DB|84DB+84DB/84DB\8500; A level can choose between 8 tracks. ; This table contains the tracks to choose from. 
+LevelMusicTable:      db !BGM_OVERWORLD                         ;;84DB|84DB+84DB/84DB\8500; A level can choose between 8 tracks. ; This table contains the tracks to choose from. 
+                      db !BGM_ATHLETIC                          ;;84DC|84DC+84DC/84DC\8501;
+                      db !BGM_UNDERGROUND                       ;;84DD|84DD+84DD/84DD\8502;
+                      db !BGM_CASTLE                            ;;84DE|84DE+84DE/84DE\8503;
+                      db !BGM_GHOSTHOUSE                        ;;84DF|84DF+84DF/84DF\8504;
+                      db !BGM_UNDERWATER                        ;;84E0|84E0+84E0/84E0\8505;
+                      db !BGM_BOSSFIGHT                         ;;84E1|84E1+84E1/84E1\8506;
+                      db !BGM_BONUSGAME                         ;;84E2|84E2+84E2/84E2\8507;
                                                                 ;;                        ;
 CODE_0584E3:          LDY.B #$00                                ;;84E3|84E3+84E3/84E3\8508;
                       LDA.B [!Layer1DataPtr],Y                  ;;84E5|84E5+84E5/84E5\850A; Get first byte 
@@ -3375,7 +3382,7 @@ CODE_05B31B:          LDY.B #$1C                                ;;AED2|B31B+B2F9
                       RTS                                       ;;AEDF|B328+B306/B328\B328; Return 
                                                                 ;;                        ;
 ADDR_05B329:          PHA                                       ;;AEE0|B329+B307/B329\B329;
-                      LDA.B #$01                                ;;AEE1|B32A+B308/B32A\B32A;
+                      LDA.B #!SFX_COIN                          ;;AEE1|B32A+B308/B32A\B32A;
                       STA.W !SPCIO3                             ;;AEE3|B32C+B30A/B32C\B32C; / Play sound effect 
                       PLA                                       ;;AEE6|B32F+B30D/B32F\B32F;
 CODE_05B330:          STA.B !_0                                 ;;AEE7|B330+B30E/B330\B330;
@@ -3392,7 +3399,7 @@ CODE_05B330:          STA.B !_0                                 ;;AEE7|B330+B30E
                       BRA Return05B35A                          ;;AEFF|B348+B326/B348\B348;
                                                                 ;;                        ;
 CODE_05B34A:          INC.W !CoinAdder                          ;;AF01|B34A+B328/B34A\B34A;
-                      LDA.B #$01                                ;;AF04|B34D+B32B/B34D\B34D;
+                      LDA.B #!SFX_COIN                          ;;AF04|B34D+B32B/B34D\B34D;
                       STA.W !SPCIO3                             ;;AF06|B34F+B32D/B34F\B34F; / Play sound effect 
                       LDA.W !GreenStarBlockCoins                ;;AF09|B352+B330/B352\B352;
                       BEQ Return05B35A                          ;;AF0C|B355+B333/B355\B355;
@@ -5485,7 +5492,7 @@ CODE_05C74A:          LDA.B #$10                                ;;C64A|C74A+C74A
                       BNE CODE_05C770                           ;;C657|C757+C757/C757\C757;
                       CPX.B #$00                                ;;C659|C759+C759/C759\C759;
                       BNE +                                     ;;C65B|C75B+C75B/C75B\C75B;
-                      LDA.W #$0009                              ;;C65D|C75D+C75D/C75D\C75D;
+                      LDA.W #!SFX_KAPOW                         ;;C65D|C75D+C75D/C75D\C75D;
                       STA.W !SPCIO3                             ;;C660|C760+C760/C760\C760; / Play sound effect 
                       LDA.W #$0020                              ;;C663|C763+C763/C763\C763; \ Set ground shake timer 
                       STA.W !ScreenShakeTimer                   ;;C666|C766+C766/C766\C766; / 
@@ -5711,7 +5718,7 @@ CODE_05C95D:          LDA.W !NextLayer2XPos                     ;;C85D|C95D+C95D
                       ADC.B #$12                                ;;C8BB|C9BB+C9BB/C9BB\C9BB;
                       CMP.B #$36                                ;;C8BD|C9BD+C9BD/C9BD\C9BD;
                       BCC +                                     ;;C8BF|C9BF+C9BF/C9BF\C9BF;
-                      LDA.B #$09                                ;;C8C1|C9C1+C9C1/C9C1\C9C1;
+                      LDA.B #!SFX_KAPOW                         ;;C8C1|C9C1+C9C1/C9C1\C9C1;
                       STA.W !SPCIO3                             ;;C8C3|C9C3+C9C3/C9C3\C9C3; / Play sound effect 
                       LDA.B #$20                                ;;C8C6|C9C6+C9C6/C9C6\C9C6; \ Set ground shake timer 
                       STA.W !ScreenShakeTimer                   ;;C8C8|C9C8+C9C8/C9C8\C9C8; / 
@@ -6033,7 +6040,7 @@ CODE_05CDD5:          DEC.W !DrumrollTimer                      ;;CCD5|CDD5+CDD5
                       LDA.W !BonusStarsGained                   ;;CCDA|CDDA+CDDA/CDDA\CDDA;
                       STA.W !DisplayBonusStars                  ;;CCDD|CDDD+CDDD/CDDD\CDDD;
                       INC.W !OverworldProcess                   ;;CCE0|CDE0+CDE0/CDE0\CDE0;
-                      LDA.B #$11                                ;;CCE3|CDE3+CDE3/CDE3\CDE3;
+                      LDA.B #!SFX_DRUMROLLSTART                 ;;CCE3|CDE3+CDE3/CDE3\CDE3;
                       STA.W !SPCIO3                             ;;CCE5|CDE5+CDE5/CDE5\CDE5; / Play sound effect 
 Return05CDE8:         RTS                                       ;;CCE8|CDE8+CDE8/CDE8\CDE8; Return 
                                                                 ;;                        ;
@@ -6192,7 +6199,7 @@ CODE_05CF36:          LDA.W !ScoreIncrement                     ;;CE38|CF36+CF36
                       LDX.B #$30                                ;;CE42|CF40+CF40/CF40\CF40;
                       STX.W !DrumrollTimer                      ;;CE44|CF42+CF42/CF42\CF42;
                       INC.W !OverworldProcess                   ;;CE47|CF45+CF45/CF45\CF45;
-                      LDX.B #$12                                ;;CE4A|CF48+CF48/CF48\CF48;
+                      LDX.B #!SFX_DRUMROLLEND                   ;;CE4A|CF48+CF48/CF48\CF48;
                       STX.W !SPCIO3                             ;;CE4C|CF4A+CF4A/CF4A\CF4A; / Play sound effect 
                     + LDY.B #$1E                                ;;CE4F|CF4D+CF4D/CF4D\CF4D;
                       TYA                                       ;;CE51|CF4F+CF4F/CF4F\CF4F;

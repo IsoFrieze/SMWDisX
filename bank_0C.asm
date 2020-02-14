@@ -711,7 +711,7 @@ CODE_0C93E2:          LDA.W !LevelLoadObject                    ;;93E2|93E2+93E2
                       STZ.W !LevelLoadObject                    ;;943C|943C+943C/943C\943C;
                       JSL CODE_0C9567                           ;;943F|943F+943F/943F\943F;
                       JSR CODE_0CA051                           ;;9443|9443+9443/9443\9443;
-                      LDA.B #$09                                ;;9446|9446+9446/9446\9446;
+                      LDA.B #!BGM_STAFFCREDITS                  ;;9446|9446+9446/9446\9446;
                       STA.W !SPCIO2                             ;;9448|9448+9448/9448\9448; / Change music 
                       RTL                                       ;;944B|944B+944B/944B\944B; Return 
                                                                 ;;                        ;
@@ -2095,7 +2095,7 @@ CODE_0CA3C9:          PHB                                       ;;A37C|A3C9+A3C9
                       LDA.B #con($E2,$E2,$E2,$E2,$FE)           ;;A3B6|A403+A403/A403\A403;
                       STA.W !MessageBoxTimer                    ;;A3B8|A405+A405/A405\A405;
                       STA.W !LevelLoadObject                    ;;A3BB|A408+A408/A408\A408;
-                      LDA.B #$0A                                ;;A3BE|A40B+A40B/A40B\A40B;
+                      LDA.B #!BGM_CREDITSYOSHISHOUSE            ;;A3BE|A40B+A40B/A40B\A40B;
                       STA.W !SPCIO2                             ;;A3C0|A40D+A40D/A40D\A40D; / Change music 
                       LDX.B #$0D                                ;;A3C3|A410+A410/A410\A410;
                       LDY.B #$06                                ;;A3C5|A412+A412/A412\A412;
@@ -2287,7 +2287,7 @@ CODE_0CA53A:          LDA.B #$98                                ;;A4ED|A53A+A53A
                       LDA.W !Layer3ScrollYSpeed+1               ;;A55B|A5A8+A5A8/A5A8\A5A8;
                       CMP.B #$08                                ;;A55E|A5AB+A5AB/A5AB\A5AB;
                       BEQ CODE_0CA5B6                           ;;A560|A5AD+A5AD/A5AD\A5AD;
-                      LDA.B #$0A                                ;;A562|A5AF+A5AF/A5AF\A5AF;
+                      LDA.B #!SFX_EGGHATCH                      ;;A562|A5AF+A5AF/A5AF\A5AF;
                       STA.W !SPCIO3                             ;;A564|A5B1+A5B1/A5B1\A5B1; / Play sound effect 
                       BRA CODE_0CA5CB                           ;;A567|A5B4+A5B4/A5B4\A5B4;
                                                                 ;;                        ;
@@ -2295,7 +2295,7 @@ CODE_0CA5B6:          STZ.W !CreditsSprXPosHigh+2               ;;A569|A5B6+A5B6
                       LDA.B #$80                                ;;A56C|A5B9+A5B9/A5B9\A5B9;
                       STA.W !CreditsSprXPosLow+2                ;;A56E|A5BB+A5BB/A5BB\A5BB;
                       STZ.W !CreditsSprXSpeed+2                 ;;A571|A5BE+A5BE/A5BE\A5BE;
-                      LDA.B #$0B                                ;;A574|A5C1+A5C1/A5C1\A5C1;
+                      LDA.B #!BGM_CREDITSTHANKYOU               ;;A574|A5C1+A5C1/A5C1\A5C1;
                       STA.W !SPCIO2                             ;;A576|A5C3+A5C3/A5C3\A5C3; / Change music 
                       INC.W !Layer1ScrollType                   ;;A579|A5C6+A5C6/A5C6\A5C6;
                       BRA +                                     ;;A57C|A5C9+A5C9/A5C9\A5C9;
@@ -5078,7 +5078,7 @@ CODE_0CCD31:          STA.W !CreditsSprYPosLow,X                ;;CDAF|CD31+CD55
                     + LDA.B !Layer1YPos                         ;;CDE0|CD62+CD86/CD62\CD62;
                       CMP.B #$C0                                ;;CDE2|CD64+CD88/CD64\CD64;
                       BNE CODE_0CCD75                           ;;CDE4|CD66+CD8A/CD66\CD66;
-                      LDA.B #$22                                ;;CDE6|CD68+CD8C/CD68\CD68;
+                      LDA.B #!SFX_RUMBLINGOFF                   ;;CDE6|CD68+CD8C/CD68\CD68;
                       STA.W !SPCIO0                             ;;CDE8|CD6A+CD8E/CD6A\CD6A; / Play sound effect 
                       JSR CODE_0CD1D0                           ;;CDEB|CD6D+CD91/CD6D\CD6D;
                       LDA.B #$08                                ;;CDEE|CD70+CD94/CD70\CD70;
@@ -5288,7 +5288,7 @@ CODE_0CCF0F:          DEC.W !Layer2ScrollCmd                    ;;CF8D|CF0F+CF33
                       STA.W !Layer2ScrollCmd                    ;;CFA3|CF25+CF49/CF25\CF25;
                       CPX.B #$01                                ;;CFA6|CF28+CF4C/CF28\CF28;
                       BNE +                                     ;;CFA8|CF2A+CF4E/CF2A\CF2A;
-                      LDA.B #$08                                ;;CFAA|CF2C+CF50/CF2C\CF2C;
+                      LDA.B #!SFX_SPINKILL                      ;;CFAA|CF2C+CF50/CF2C\CF2C;
                       STA.W !SPCIO0                             ;;CFAC|CF2E+CF52/CF2E\CF2E; / Play sound effect 
                     + CPX.B #$06                                ;;CFAF|CF31+CF55/CF31\CF31;
                       BNE CODE_0CCF38                           ;;CFB1|CF33+CF57/CF33\CF33;
@@ -5539,7 +5539,7 @@ CODE_0CD108:          LDA.W !Layer1ScrollCmd                    ;;D186|D108+D12F
                       BNE +                                     ;;D1A1|D123+D14A/D123\D123;
                       LDA.B #$40                                ;;D1A3|D125+D14C/D125\D125;
                       STA.W !Layer2ScrollCmd                    ;;D1A5|D127+D14E/D127\D127;
-                      LDA.B #$1A                                ;;D1A8|D12A+D151/D12A\D12A;
+                      LDA.B #!SFX_CUTSCENEBOMB                  ;;D1A8|D12A+D151/D12A\D12A;
                       STA.W !SPCIO3                             ;;D1AA|D12C+D153/D12C\D12C; / Play sound effect 
                       INC.W !Layer1ScrollType                   ;;D1AD|D12F+D156/D12F\D12F;
                       RTS                                       ;;D1B0|D132+D159/D132\D132; Return 
@@ -5688,7 +5688,7 @@ CODE_0CD290:          DEC.B !Layer1XPos                         ;;D30E|D290+D2B7
                     + SEP #$20                                  ;;D310|D292+D2B9/D292\D292; Accum (8 bit) 
                       RTS                                       ;;D312|D294+D2BB/D294\D294; Return 
                                                                 ;;                        ;
-CODE_0CD295:          LDA.B #$1A                                ;;D313|D295+D2BC/D295\D295;
+CODE_0CD295:          LDA.B #!SFX_CUTSCENEBOMB                  ;;D313|D295+D2BC/D295\D295;
                       STA.W !SPCIO3                             ;;D315|D297+D2BE/D297\D297; / Play sound effect 
                       LDA.B #$FF                                ;;D318|D29A+D2C1/D29A\D29A;
                       STA.W !Layer1ScrollBits                   ;;D31A|D29C+D2C3/D29C\D29C;
@@ -5699,11 +5699,11 @@ CODE_0CD295:          LDA.B #$1A                                ;;D313|D295+D2BC
                       INC.W !Layer1ScrollType                   ;;D327|D2A9+D2D0/D2A9\D2A9;
                       JSR CODE_0CCBFA                           ;;D32A|D2AC+D2D3/D2AC\D2AC;
                       BRL CODE_0CCC51                           ;;D32D|D2AF+D2D6/D2AF\D2AF;
-CODE_0CD2B2:          LDA.B #$21                                ;;D330|D2B2+D2D9/D2B2\D2B2;
+CODE_0CD2B2:          LDA.B #!SFX_RUMBLINGON                    ;;D330|D2B2+D2D9/D2B2\D2B2;
                       STA.W !SPCIO0                             ;;D332|D2B4+D2DB/D2B4\D2B4; / Play sound effect 
                       JSR CODE_0CD31A                           ;;D335|D2B7+D2DE/D2B7\D2B7;
                       BRL CODE_0CCD23                           ;;D338|D2BA+D2E1/D2BA\D2BA;
-CODE_0CD2BD:          LDA.B #$17                                ;;D33B|D2BD+D2E4/D2BD\D2BD;
+CODE_0CD2BD:          LDA.B #!SFX_FIRESPIT                      ;;D33B|D2BD+D2E4/D2BD\D2BD;
                       STA.W !SPCIO3                             ;;D33D|D2BF+D2E6/D2BF\D2BF; / Play sound effect 
                       LDA.B #$77                                ;;D340|D2C2+D2E9/D2C2\D2C2;
                       STA.W !CreditsSprYPosLow+2                ;;D342|D2C4+D2EB/D2C4\D2C4;
@@ -5713,7 +5713,7 @@ CODE_0CD2BD:          LDA.B #$17                                ;;D33B|D2BD+D2E4
 CODE_0CD2D0:          LDA.B #$03                                ;;D34E|D2D0+D2F7/D2D0\D2D0;
                       STA.W !Layer2ScrollCmd                    ;;D350|D2D2+D2F9/D2D2\D2D2;
                       STZ.W !Layer1ScrollBits                   ;;D353|D2D5+D2FC/D2D5\D2D5;
-                      LDA.B #$19                                ;;D356|D2D8+D2FF/D2D8\D2D8;
+                      LDA.B #!SFX_CLAP                          ;;D356|D2D8+D2FF/D2D8\D2D8;
                       STA.W !SPCIO3                             ;;D358|D2DA+D301/D2DA\D2DA; / Play sound effect 
                       INC.W !Layer1ScrollType                   ;;D35B|D2DD+D304/D2DD\D2DD;
                       JSR CODE_0CCBFA                           ;;D35E|D2E0+D307/D2E0\D2E0;
@@ -5830,7 +5830,7 @@ CODE_0CD3B6:          LDA.W !CastleCutExSprSlot,X               ;;D434|D3B6+D3DD
                       LDA.B !TrueFrame                          ;;D45F|D3E1+D408/D3E1\D3E1;
                       AND.B #$02                                ;;D461|D3E3+D40A/D3E3\D3E3;
                       BNE Return0CD3F3                          ;;D463|D3E5+D40C/D3E5\D3E5;
-                      LDA.B #$07                                ;;D465|D3E7+D40E/D3E7\D3E7;
+                      LDA.B #!SFX_SHATTER                       ;;D465|D3E7+D40E/D3E7\D3E7;
                       STA.W !SPCIO3                             ;;D467|D3E9+D410/D3E9\D3E9; / Play sound effect 
                       BRA Return0CD3F3                          ;;D46A|D3EC+D413/D3EC\D3EC;
                                                                 ;;                        ;
@@ -6069,7 +6069,7 @@ CODE_0CD5C9:          LDA.B #con($80,$FF,$FF,$FF,$FF)           ;;D647|D5C9+D5F0
                       STA.W !Layer2ScrollType                   ;;D649|D5CB+D5F2/D5CB\D5CB;
                       LDA.B #con($D0,$D0,$01,$A8,$A8)           ;;D64C|D5CE+D5F5/D5CE\D5CE;
                       STA.W !Layer2ScrollYSpeed+1               ;;D64E|D5D0+D5F7/D5D0\D5D0;
-                      LDA.B #$13                                ;;D651|D5D3+D5FA/D5D3\D5D3;
+                      LDA.B #!BGM_CUTSCENEFULL                  ;;D651|D5D3+D5FA/D5D3\D5D3;
                       STA.W !SPCIO2                             ;;D653|D5D5+D5FC/D5D5\D5D5;
                       RTS                                       ;;D656|D5D8+D5FF/D5D8\D5D8; Return 
                                                                 ;;                        ;
@@ -6294,7 +6294,7 @@ CODE_0CD7C9:          INC.W !Layer2ScrollTimer                  ;;D847|D7C9+D7F0
                     + TXA                                       ;;D852|D7D4+D7FB/D7D4\D7D4;
                       LSR A                                     ;;D853|D7D5+D7FC/D7D5\D7D5;
                       BCS +                                     ;;D854|D7D6+D7FD/D7D6\D7D6;
-                      LDA.B #$0F                                ;;D856|D7D8+D7FF/D7D8\D7D8;
+                      LDA.B #!SFX_FLYHIT                        ;;D856|D7D8+D7FF/D7D8\D7D8;
                       STA.W !SPCIO0                             ;;D858|D7DA+D801/D7DA\D7DA; / Play sound effect 
                     + RTS                                       ;;D85B|D7DD+D804/D7DD\D7DD; Return 
                                                                 ;;                        ;

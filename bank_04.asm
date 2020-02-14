@@ -399,9 +399,9 @@ CODE_0483C3:          LDX.W !OverworldEarthquake                ;;83C3|83C3+83B4
                       BEQ CODE_04840A                           ;;83C6|83C6+83B7/83C6\83C6;
                       CPX.B #$FE                                ;;83C8|83C8+83B9/83C8\83C8;
                       BNE +                                     ;;83CA|83CA+83BB/83CA\83CA;
-                      LDA.B #$21                                ;;83CC|83CC+83BD/83CC\83CC;
+                      LDA.B #!SFX_RUMBLINGON                    ;;83CC|83CC+83BD/83CC\83CC;
                       STA.W !SPCIO0                             ;;83CE|83CE+83BF/83CE\83CE; / Play sound effect 
-                      LDA.B #$08                                ;;83D1|83D1+83C2/83D1\83D1;
+                      LDA.B #!BGM_VALLEYOPENS                   ;;83D1|83D1+83C2/83D1\83D1;
                       STA.W !SPCIO2                             ;;83D3|83D3+83C4/83D3\83D3; / Change music 
                     + TXA                                       ;;83D6|83D6+83C7/83D6\83D6;
                       LSR A                                     ;;83D7|83D7+83C8/83D7\83D7;
@@ -427,7 +427,7 @@ CODE_0483C3:          LDX.W !OverworldEarthquake                ;;83C3|83C3+83B4
                       BNE CODE_04840A                           ;;83FC|83FC+83ED/83FC\83FC;
 CODE_0483FE:          DEC.W !OverworldEarthquake                ;;83FE|83FE+83EF/83FE\83FE;
                       BNE CODE_04840D                           ;;8401|8401+83F2/8401\8401;
-                      LDA.B #$22                                ;;8403|8403+83F4/8403\8403;
+                      LDA.B #!SFX_RUMBLINGOFF                   ;;8403|8403+83F4/8403\8403;
                       STA.W !SPCIO0                             ;;8405|8405+83F6/8405\8405; / Play sound effect 
                       BRA CODE_04840D                           ;;8408|8408+83F9/8408\8408;
                                                                 ;;                        ;
@@ -1142,7 +1142,13 @@ DATA_048D74:          db $0B,$00,$13,$00,$1A,$00,$1B,$00        ;;8D74|8D74+8D65
                       db $1F,$00,$20,$00,$31,$00,$32,$00        ;;8D7C|8D7C+8D6D/8D7C\8D7C;
                       db $34,$00,$35,$00,$40,$00                ;;8D84|8D84+8D75/8D84\8D84;
                                                                 ;;                        ;
-DATA_048D8A:          db $02,$03,$04,$06,$07,$09,$05            ;;8D8A|8D8A+8D7B/8D8A\8D8A;
+OverworldMusic:       db !BGM_DONUTPLAINS                       ;;8D8A|8D8A+8D7B/8D8A\8D8A;
+                      db !BGM_YOSHISISLAND                      ;;8D8B|8D8B+8D7C/8D8B\8D8B;
+                      db !BGM_VANILLADOME                       ;;8D8C|8D8C+8D7D/8D8C\8D8C;
+                      db !BGM_FORESTOFILLUSION                  ;;8D8D|8D8D+8D7E/8D8D\8D8D;
+                      db !BGM_VALLEYOFBOWSER                    ;;8D8E|8D8E+8D7F/8D8E\8D8E;
+                      db !BGM_SPECIALWORLD                      ;;8D8F|8D8F+8D80/8D8F\8D8F;
+                      db !BGM_STARWORLD                         ;;8D90|8D90+8D81/8D90\8D90;
                                                                 ;;                        ;
 CODE_048D91:          PHB                                       ;;8D91|8D91+8D82/8D91\8D91; Index (8 bit) 
                       PHK                                       ;;8D92|8D92+8D83/8D92\8D92;
@@ -1228,7 +1234,7 @@ CODE_048E38:          SEP #$30                                  ;;8E06|8E38+8E29
                       LDX.W !PlayerTurnLvl                      ;;8E08|8E3A+8E2B/8E3A\8E3A;
                       LDA.W !OWPlayerSubmap,X                   ;;8E0B|8E3D+8E2E/8E3D\8E3D;
                       TAX                                       ;;8E0E|8E40+8E31/8E40\8E40;
-                      LDA.W DATA_048D8A,X                       ;;8E0F|8E41+8E32/8E41\8E41;
+                      LDA.W OverworldMusic,X                    ;;8E0F|8E41+8E32/8E41\8E41;
                       STA.W !SPCIO2                             ;;8E12|8E44+8E35/8E44\8E44; / Change music 
                     + PLB                                       ;;8E15|8E47+8E38/8E47\8E47;
                       RTL                                       ;;8E16|8E48+8E39/8E48\8E48; Return 
@@ -1605,7 +1611,7 @@ CODE_049165:          JSR CODE_048509                           ;;9124|9165+9144
                       BNE OWPU_IsOnPipeRTS                      ;;9127|9168+9147/9168\9168;
                       STZ.W !StarWarpLaunchSpeed                ;;9129|916A+9149/916A\916A; Set "Fly away" speed to 0 
                       STZ.W !StarWarpLaunchTimer                ;;912C|916D+914C/916D\916D; Set "Stay on ground" timer to 0 (31 = Fly away) 
-                      LDA.B #$0D                                ;;912F|9170+914F/9170\9170; \ Star Road sound effect 
+                      LDA.B #!SFX_FEATHER                       ;;912F|9170+914F/9170\9170; \ Star Road sound effect 
                       STA.W !SPCIO0                             ;;9131|9172+9151/9172\9172; / 
                       LDA.B #$0B                                ;;9134|9175+9154/9175\9175; \ Activate star warp 
                       STA.W !OverworldProcess                   ;;9136|9177+9156/9177\9177; / 
@@ -1653,7 +1659,7 @@ OWPU_EnterLevel:      LDA.W !PlayerTurnOW                       ;;915E|919F+917E
                       STA.W !PlayerItembox                      ;;9197|91D8+91B7/91D8\91D8; / 
                       LDA.B #$02                                ;;919A|91DB+91BA/91DB\91DB; \ Related to fade speed 
                       STA.W !KeepModeActive                     ;;919C|91DD+91BC/91DD\91DD; / 
-                      LDA.B #$80                                ;;919F|91E0+91BF/91E0\91E0; \ Music fade out 
+                      LDA.B #!BGM_FADEOUT                       ;;919F|91E0+91BF/91E0\91E0; \ Music fade out 
                       STA.W !SPCIO2                             ;;91A1|91E2+91C1/91E2\91E2; / 
                       INC.W !GameMode                           ;;91A4|91E5+91C4/91E5\91E5; Fade to level 
                       RTS                                       ;;91A7|91E8+91C7/91E8\91E8; Return 
@@ -2215,7 +2221,7 @@ CODE_049676:          LDA.W !PlayerTurnOW                       ;;9635|9676+9655
                       BEQ +                                     ;;9657|9698+9677/9698\9698;
                       CMP.W #$0082                              ;;9659|969A+9679/969A\969A;
                       BEQ +                                     ;;965C|969D+967C/969D\969D;
-                      LDA.W #$0023                              ;;965E|969F+967E/969F\969F;
+                      LDA.W #!SFX_BEEP                          ;;965E|969F+967E/969F\969F;
                       STA.W !SPCIO3                             ;;9661|96A2+9681/96A2\96A2; / Play sound effect 
                     + NOP                                       ;;9664|96A5+9684/96A5\96A5;
                       NOP                                       ;;9665|96A6+9685/96A6\96A6;
@@ -5286,7 +5292,13 @@ CODE_04DB9D:          LDA.W !PlayerTurnOW                       ;;DB9F|DB9D+DB9D
                       RTS                                       ;;DBC9|DBC7+DBC7/DBC7\DBC7; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
-DATA_04DBC8:          db $02,$03,$04,$06,$07,$09,$05            ;;DBCA|DBC8+DBC8/DBC8\DBC8;
+OverworldMusic2:      db !BGM_DONUTPLAINS                       ;;DBCA|DBC8+DBC8/DBC8\DBC8;
+                      db !BGM_YOSHISISLAND                      ;;DBCB|DBC9+DBC9/DBC9\DBC9;
+                      db !BGM_VANILLADOME                       ;;DBCC|DBCA+DBCA/DBCA\DBCA;
+                      db !BGM_FORESTOFILLUSION                  ;;DBCD|DBCB+DBCB/DBCB\DBCB;
+                      db !BGM_VALLEYOFBOWSER                    ;;DBCE|DBCC+DBCC/DBCC\DBCC;
+                      db !BGM_SPECIALWORLD                      ;;DBCF|DBCD+DBCD/DBCD\DBCD;
+                      db !BGM_STARWORLD                         ;;DBD0|DBCE+DBCE/DBCE\DBCE;
                                                                 ;;                        ;
 CODE_04DBCF:          STZ.W !OWSubmapSwapProcess                ;;DBD1|DBCF+DBCF/DBCF\DBCF;
                       LDA.B #$04                                ;;DBD4|DBD2+DBD2/DBD2\DBD2;
@@ -5307,7 +5319,7 @@ CODE_04DBCF:          STZ.W !OWSubmapSwapProcess                ;;DBD1|DBCF+DBCF
                       BEQ +                                     ;;DBF3|DBF1+DBF1/DBF1\DBF1;
 CODE_04DBF3:          LDA.W !OWPlayerSubmap,Y                   ;;DBF5|DBF3+DBF3/DBF3\DBF3;
                       TAX                                       ;;DBF8|DBF6+DBF6/DBF6\DBF6;
-                      LDA.L DATA_04DBC8,X                       ;;DBF9|DBF7+DBF7/DBF7\DBF7;
+                      LDA.L OverworldMusic2,X                   ;;DBF9|DBF7+DBF7/DBF7\DBF7;
                       STA.W !SPCIO2                             ;;DBFD|DBFB+DBFB/DBFB\DBFB; / Change music 
                       STZ.W !SwapOverworldMusic                 ;;DC00|DBFE+DBFE/DBFE\DBFE;
                     + RTS                                       ;;DC03|DC01+DC01/DC01\DC01; Return 
@@ -5964,7 +5976,7 @@ CODE_04E640:          INC.W !OverworldEventProcess              ;;E642|E640+E640
                     + LDA.W !OverworldEventProcess              ;;E66A|E668+E668/E668\E668;
                       CMP.B #$02                                ;;E66D|E66B+E66B/E66B\E66B;
                       BEQ +                                     ;;E66F|E66D+E66D/E66D\E66D;
-                      LDA.B #$16                                ;;E671|E66F+E66F/E66F\E66F;
+                      LDA.B #!SFX_CASTLECRUSH                   ;;E671|E66F+E66F/E66F\E66F;
                       STA.W !SPCIO3                             ;;E673|E671+E671/E671\E671; / Play sound effect 
                     + SEP #$30                                  ;;E676|E674+E674/E674\E674; Index (8 bit) Accum (8 bit) 
                       RTS                                       ;;E678|E676+E676/E676\E676; Return 
@@ -6079,7 +6091,7 @@ CODE_04E752:          LDA.W #$00FF                              ;;E754|E752+E752
                       STA.L !DynStripeImgSize                   ;;E75C|E75A+E75A/E75A\E75A;
                       JSR CODE_04E496                           ;;E760|E75E+E75E/E75E\E75E;
                       SEP #$30                                  ;;E763|E761+E761/E761\E761; Index (8 bit) Accum (8 bit) 
-                      LDA.B #$15                                ;;E765|E763+E763/E763\E763;
+                      LDA.B #!SFX_NEWLEVEL                      ;;E765|E763+E763/E763\E763;
                       STA.W !SPCIO3                             ;;E767|E765+E765/E765\E765; / Play sound effect 
                       INC.W !OverworldEventProcess              ;;E76A|E768+E768/E768\E768;
                       RTS                                       ;;E76D|E76B+E76B/E76B\E76B; Return 
@@ -6615,7 +6627,7 @@ CODE_04EC97:          CMP.L DATA_04DA1D,X                       ;;EC99|EC97+EC97
                       RTS                                       ;;ECA9|ECA7+ECA7/ECA7\ECA7; Return 
                                                                 ;;                        ;
 CODE_04ECA8:          SEP #$30                                  ;;ECAA|ECA8+ECA8/ECA8\ECA8; Index (8 bit) Accum (8 bit) 
-                      LDA.B #$01                                ;;ECAC|ECAA+ECAA/ECAA\ECAA;
+                      LDA.B #!SFX_COIN                          ;;ECAC|ECAA+ECAA/ECAA\ECAA;
                       STA.W !SPCIO3                             ;;ECAE|ECAC+ECAC/ECAC\ECAC; / Play sound effect 
                       INC.W !OverworldEventProcess              ;;ECB1|ECAF+ECAF/ECAF\ECAF;
                       LDA.W !OverworldEvent                     ;;ECB4|ECB2+ECB2/ECB2\ECB2;
@@ -6863,7 +6875,7 @@ CODE_04F290:          LDY.W !KeyholeYPos+1                      ;;F290|F290+F290
                       BNE CODE_04F314                           ;;F29E|F29E+F29E/F29E\F29E;
                       CPY.B #$08                                ;;F2A0|F2A0+F2A0/F2A0\F2A0;
                       BCS CODE_04F30C                           ;;F2A2|F2A2+F2A2/F2A2\F2A2;
-                      LDA.B #$1C                                ;;F2A4|F2A4+F2A4/F2A4\F2A4;
+                      LDA.B #!SFX_SWITCHBLOCK                   ;;F2A4|F2A4+F2A4/F2A4\F2A4;
                       STA.W !SPCIO3                             ;;F2A6|F2A6+F2A6/F2A6\F2A6; / Play sound effect 
                       LDA.B #$07                                ;;F2A9|F2A9+F2A9/F2A9\F2A9;
                       STA.B !_0                                 ;;F2AB|F2AB+F2AB/F2AB\F2AB;
@@ -7026,7 +7038,7 @@ CODE_04F3E5:          DEC A                                     ;;F3E5|F3E5+F3E5
 CODE_04F3FA:          JSL CODE_009BA8                           ;;F3FA|F3FA+F3FA/F3FA\F3FA;
                       RTS                                       ;;F3FE|F3FE+F3FE/F3FE\F3FE; Return 
                                                                 ;;                        ;
-CODE_04F3FF:          LDA.B #$22                                ;;F3FF|F3FF+F3FF/F3FF\F3FF;
+CODE_04F3FF:          LDA.B #!SFX_MESSAGE                       ;;F3FF|F3FF+F3FF/F3FF\F3FF;
                       STA.W !SPCIO3                             ;;F401|F401+F401/F401\F401; / Play sound effect 
                       INC.W !OverworldPromptProcess             ;;F404|F404+F404/F404\F404;
 CODE_04F407:          STZ.B !Layer12Window                      ;;F407|F407+F407/F407\F407;
@@ -7196,7 +7208,7 @@ CODE_04F53B:          LDX.B #$01                                ;;F533|F53B+F53B
                       INC A                                     ;;F558|F560+F560/F560\F560;
                       STA.W !SavedPlayerLives,Y                 ;;F559|F561+F561/F561\F561;
                       DEC.W !SavedPlayerLives,X                 ;;F55C|F564+F564/F564\F564;
-                      LDA.B #$23                                ;;F55F|F567+F567/F567\F567;
+                      LDA.B #!SFX_BEEP                          ;;F55F|F567+F567/F567\F567;
                       STA.W !SPCIO3                             ;;F561|F569+F569/F569\F569; / Play sound effect 
 CODE_04F56C:          REP #$20                                  ;;F564|F56C+F56C/F56C\F56C; Accum (16 bit) 
                       LDA.W #$7848                              ;;F566|F56E+F56E/F56E\F56E;
@@ -7363,7 +7375,7 @@ CODE_04F708:          LDA.B #$F7                                ;;F700|F708+F708
                       STY.W !LightningFlashIndex                ;;F726|F72E+F72E/F72E\F72E;
                       LDA.B #$08                                ;;F729|F731+F731/F731\F731;
                       STA.W !LightningTimer                     ;;F72B|F733+F733/F733\F733;
-                      LDA.B #$18                                ;;F72E|F736+F736/F736\F736;
+                      LDA.B #!SFX_THUNDER                       ;;F72E|F736+F736/F736\F736;
                       STA.W !SPCIO3                             ;;F730|F738+F738/F738\F738; / Play sound effect 
 CODE_04F73B:          DEC.W !LightningTimer                     ;;F733|F73B+F73B/F73B\F73B;
                       BPL +                                     ;;F736|F73E+F73E/F73E\F73E;
@@ -7742,7 +7754,7 @@ CODE_04FA3E:          LDA.W !OWSpriteMisc0DF5,X                 ;;FA36|FA3E+FA3E
                       STA.W !OWSpriteMisc0DF5,X                 ;;FA68|FA70+FA70/FA70\FA70;
                       LDA.B #$24                                ;;FA6B|FA73+FA73/FA73\FA73;
                       STA.W !OWSpriteZSpeed,X                   ;;FA6D|FA75+FA75/FA75\FA75;
-                      LDA.B #$0E                                ;;FA70|FA78+FA78/FA78\FA78;
+                      LDA.B #!SFX_SWIM                          ;;FA70|FA78+FA78/FA78\FA78;
                       STA.W !SPCIO0                             ;;FA72|FA7A+FA7A/FA7A\FA7A; / Play sound effect 
 CODE_04FA7D:          LDA.B #$0F                                ;;FA75|FA7D+FA7D/FA7D\FA7D;
                       STA.W !OWSpriteMisc0E25,X                 ;;FA77|FA7F+FA7F/FA7F\FA7F;
