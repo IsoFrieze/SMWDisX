@@ -664,11 +664,21 @@ CODE_0C93AD:          PHB                                       ;;93AD|93AD+93AD
                       RTL                                       ;;93C0|93C0+93C0/93C0\93C0; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
-DATA_0C93C1:          db $5A,$F4,$C0,$E7,$82,$EC,$44,$DD        ;;93C1|93C1+93C1/93C1\93C1;
-                      db $00,$D9,$59,$DF,$54,$DE                ;;93C9|93C9+93C9/93C9\93C9;
+DATA_0C93C1:          dw DATA_0CF45A                            ;;93C1|93C1+93C1/93C1\93C1;
+                      dw DATA_0CE7C0                            ;;93C3|93C3+93C3/93C3\93C3;
+                      dw DATA_0CEC82                            ;;93C5|93C5+93C5/93C5\93C5;
+                      dw DATA_0CDD44                            ;;93C7|93C7+93C7/93C7\93C7;
+                      dw DATA_0CD900                            ;;93C9|93C9+93C9/93C9\93C9;
+                      dw DATA_0CDF59                            ;;93CB|93CB+93CB/93CB\93CB;
+                      dw DATA_0CDE54                            ;;93CD|93CD+93CD/93CD\93CD;
                                                                 ;;                        ;
-DATA_0C93CF:          db $FF,$FF,$FF,$FE,$FF,$FE,$FF,$FE        ;;93CF|93CF+93CF/93CF\93CF;
-                      db $FF,$FF,$FF,$FE,$FF,$FE                ;;93D7|93D7+93D7/93D7\93D7;
+DATA_0C93CF:          dw $FFFF                                  ;;93CF|93CF+93CF/93CF\93CF;
+                      dw $FEFF                                  ;;93D1|93D1+93D1/93D1\93D1;
+                      dw $FEFF                                  ;;93D3|93D3+93D3/93D3\93D3;
+                      dw $FEFF                                  ;;93D5|93D5+93D5/93D5\93D5;
+                      dw $FFFF                                  ;;93D7|93D7+93D7/93D7\93D7;
+                      dw $FEFF                                  ;;93D9|93D9+93D9/93D9\93D9;
+                      dw $FEFF                                  ;;93DB|93DB+93DB/93DB\93DB;
                                                                 ;;                        ;
 CODE_0C93DD:          REP #$30                                  ;;93DD|93DD+93DD/93DD\93DD; Index (16 bit) Accum (16 bit) 
                       STZ.W !LevelLoadObject                    ;;93DF|93DF+93DF/93DF\93DF;
@@ -683,7 +693,7 @@ CODE_0C93E2:          LDA.W !LevelLoadObject                    ;;93E2|93E2+93E2
                       SEP #$20                                  ;;93F6|93F6+93F6/93F6\93F6; Accum (8 bit) 
                       LDY.W #$0000                              ;;93F8|93F8+93F8/93F8\93F8;
                       LDX.B !Layer2DataPtr                      ;;93FB|93FB+93FB/93FB\93FB;
-                      CPX.W #$E8FE                              ;;93FD|93FD+93FD/93FD\93FD;
+                      CPX.W #DATA_0CE8FE                        ;;93FD|93FD+93FD/93FD\93FD;
                       BCC +                                     ;;9400|9400+9400/9400\9400;
                       LDY.W #$0001                              ;;9402|9402+9402/9402\9402;
                     + LDX.W #$0000                              ;;9405|9405+9405/9405\9405;
@@ -762,7 +772,7 @@ CODE_0C9492:          LDY.B !_3                                 ;;9492|9492+9492
                       CMP.B #$FF                                ;;949D|949D+949D/949D\949D;
                       BNE CODE_0C945B                           ;;949F|949F+949F/949F\949F;
                       REP #$20                                  ;;94A1|94A1+94A1/94A1\94A1; Accum (16 bit) 
-                      LDA.W #$9100                              ;;94A3|94A3+94A3/94A3\94A3;
+                      LDA.W #Map16BGTiles                       ;;94A3|94A3+94A3/94A3\94A3;
                       STA.B !_0                                 ;;94A6|94A6+94A6/94A6\94A6;
                       LDX.W #$0000                              ;;94A8|94A8+94A8/94A8\94A8;
                     - LDA.B !_0                                 ;;94AB|94AB+94AB/94AB\94AB;
@@ -7371,7 +7381,9 @@ DATA_0CF45A:          db $0B,$76,$D8,$D9,$DA,$DB,$D9,$DA        ;;F45A|F45A+F45A
                       db $0C,$DD,$E4,$E2,$E3,$DE,$DF,$DD        ;;F7C2|F7C2+F7C2/F7C2\F7C2;
                       db $DE,$DD,$DE,$DF,$DD,$DE,$82,$DF        ;;F7CA|F7CA+F7CA/F7CA\F7CA;
                       db $09,$DD,$DA,$DB,$D9,$DE,$DF,$DD        ;;F7D2|F7D2+F7D2/F7D2\F7D2;
-                      db $DE,$DD,$DE,$FF,$FF,$00,$00,$00        ;;F7DA|F7DA+F7DA/F7DA\F7DA;
+                      db $DE,$DD,$DE,$FF,$FF                    ;;F7DA|F7DA+F7DA/F7DA\F7DA;
+                                                                ;;                        ;
+OWL1TileData:         db $00,$00,$00                            ;;F7DF|F7DF+F7DF/F7DF\F7DF;
                       db $00,$00,$00,$00,$00,$00,$00,$00        ;;F7E2|F7E2+F7E2/F7E2\F7E2;
                       db $00,$00,$00,$00,$00,$00,$00,$00        ;;F7EA|F7EA+F7EA/F7EA\F7EA;
                       db $00,$00,$00,$00,$00,$00,$00,$00        ;;F7F2|F7F2+F7F2/F7F2\F7F2;
@@ -7627,6 +7639,6 @@ DATA_0CF45A:          db $0B,$76,$D8,$D9,$DA,$DB,$D9,$DA        ;;F45A|F45A+F45A
                       db $00,$00,$00,$00,$00,$00,$00,$00        ;;FFC2|FFC2+FFC2/FFC2\FFC2;
                       db $00,$00,$00,$00,$00,$00,$00,$00        ;;FFCA|FFCA+FFCA/FFCA\FFCA;
                       db $00,$00,$00,$00,$00,$00,$00,$00        ;;FFD2|FFD2+FFD2/FFD2\FFD2;
-                      db $00,$00,$00,$00,$00,$FF                ;;FFDA|FFDA+FFDA/FFDA\FFDA;
+                      db $00,$00,$00,$00,$00                    ;;FFDA|FFDA+FFDA/FFDA\FFDA;
                                                                 ;;                        ;
                       padbyte $FF : pad $0D8000                 ;;FFE0|FFE0+FFE0/FFE0\FFE0;

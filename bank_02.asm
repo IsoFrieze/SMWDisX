@@ -13762,7 +13762,7 @@ CODE_02F0DB:          PHX                                       ;;F0DC|F0DB+F0DB
                       ADC.W #$007F                              ;;F0EA|F0E9+F0E9/F0E9\F0E9;
                       TAY                                       ;;F0ED|F0EC+F0EC/F0EC\F0EC;
                       LDA.W #$007D                              ;;F0EE|F0ED+F0ED/F0ED\F0ED;
-                      MVP !PlayerXPosScrRel+1,$7F               ;;F0F1|F0F0+F0F0/F0F0\F0F0;
+                      MVP $7F,$7F                               ;;F0F1|F0F0+F0F0/F0F0\F0F0;
                       SEP #$30                                  ;;F0F4|F0F3+F0F3/F0F3\F0F3; Index (8 bit) Accum (8 bit) 
                       PLB                                       ;;F0F6|F0F5+F0F5/F0F5\F0F5;
                       PLX                                       ;;F0F7|F0F6+F0F6/F0F6\F0F6;

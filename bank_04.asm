@@ -3295,7 +3295,9 @@ OWBorderStripe:       db $50,$00,$41,$3E,$FE,$38,$50,$A0        ;;A400|A400+A400
                       db $FC,$2C,$50,$24,$C0,$06,$FC,$2C        ;;A518|A518+A518/A518\A518;
                       db $50,$25,$C0,$06,$FC,$2C,$50,$26        ;;A520|A520+A520/A520\A520;
                       db $C0,$06,$FC,$2C,$50,$87,$00,$01        ;;A528|A528+A528/A528\A528;
-                      db $8F,$38,$FF,$9B,$75,$81,$20,$01        ;;A530|A530+A530/A530\A530;
+                      db $8F,$38,$FF                            ;;A530|A530+A530/A530\A530;
+                                                                ;;                        ;
+OWTileNumbers:        db $9B,$75,$81,$20,$01                    ;;A533|A533+A533/A533\A533;
                       db $76,$20,$9B,$75,$81,$20,$01,$76        ;;A538|A538+A538/A538\A538;
                       db $20,$9A,$75,$00,$10,$81,$20,$01        ;;A540|A540+A540/A540\A540;
                       db $76,$20,$94,$75,$00,$01,$81,$02        ;;A548|A548+A548/A548\A548;
@@ -4158,7 +4160,9 @@ OWBorderStripe:       db $50,$00,$41,$3E,$FE,$38,$50,$A0        ;;A400|A400+A400
                       db $69,$20,$84,$69,$04,$20,$69,$20        ;;C010|C010+C010/C010\C010;
                       db $69,$20,$81,$3F,$81,$71,$03,$4F        ;;C018|C018+C018/C018\C018;
                       db $3C,$4F,$3C,$81,$4F,$00,$3D,$96        ;;C020|C020+C020/C020\C020;
-                      db $3F,$81,$75,$9B,$1C,$03,$58,$18        ;;C028|C028+C028/C028\C028;
+                      db $3F,$81,$75                            ;;C028|C028+C028/C028\C028;
+                                                                ;;                        ;
+OWTilemap:            db $9B,$1C,$03,$58,$18                    ;;C02B|C02B+C02B/C02B\C02B;
                       db $1C,$58,$9B,$1C,$03,$58,$18,$1C        ;;C030|C030+C030/C030\C030;
                       db $58,$9A,$1C,$04,$10,$58,$18,$1C        ;;C038|C038+C038/C038\C038;
                       db $58,$94,$1C,$81,$10,$81,$50,$82        ;;C040|C040+C040/C040\C040;
@@ -5349,7 +5353,7 @@ CODE_04DC09:          SEP #$30                                  ;;DC0B|DC09+DC09
                       CPX.W #$01B0                              ;;DC35|DC33+DC33/DC33\DC33;
                       BNE -                                     ;;DC38|DC36+DC36/DC36\DC36;
                       REP #$30                                  ;;DC3A|DC38+DC38/DC38\DC38; Index (16 bit) Accum (16 bit) 
-                      LDA.W #$D000                              ;;DC3C|DC3A+DC3A/DC3A\DC3A;
+                      LDA.W #OWL1CharData                       ;;DC3C|DC3A+DC3A/DC3A\DC3A;
                       STA.B !_0                                 ;;DC3F|DC3D+DC3D/DC3D\DC3D;
                       LDX.W #$0000                              ;;DC41|DC3F+DC3F/DC3F\DC3F;
                     - LDA.B !_0                                 ;;DC44|DC42+DC42/DC42\DC42;
@@ -5364,9 +5368,9 @@ CODE_04DC09:          SEP #$30                                  ;;DC0B|DC09+DC09
                       BNE -                                     ;;DC56|DC54+DC54/DC54\DC54;
                       PHB                                       ;;DC58|DC56+DC56/DC56\DC56;
                       LDA.W #$07FF                              ;;DC59|DC57+DC57/DC57\DC57;
-                      LDX.W #$F7DF                              ;;DC5C|DC5A+DC5A/DC5A\DC5A;
-                      LDY.W #$C800                              ;;DC5F|DC5D+DC5D/DC5D\DC5D;
-                      MVN !PlayerXPosScrRel,$0C                 ;;DC62|DC60+DC60/DC60\DC60;
+                      LDX.W #OWL1TileData                       ;;DC5C|DC5A+DC5A/DC5A\DC5A;
+                      LDY.W #!Map16TilesLow                     ;;DC5F|DC5D+DC5D/DC5D\DC5D;
+                      MVN $7E,$0C                               ;;DC62|DC60+DC60/DC60\DC60;
                       PLB                                       ;;DC65|DC63+DC63/DC63\DC63;
                       JSR CODE_04D7F2                           ;;DC66|DC64+DC64/DC64\DC64;
                       SEP #$30                                  ;;DC69|DC67+DC67/DC67\DC67; Index (8 bit) Accum (8 bit) 
@@ -5375,7 +5379,7 @@ CODE_04DC09:          SEP #$30                                  ;;DC0B|DC09+DC09
 CODE_04DC6A:          SEP #$30                                  ;;DC6C|DC6A+DC6A/DC6A\DC6A; Index (8 bit) Accum (8 bit) 
                       JSR CODE_04DD40                           ;;DC6E|DC6C+DC6C/DC6C\DC6C;
                       REP #$20                                  ;;DC71|DC6F+DC6F/DC6F\DC6F; Accum (16 bit) 
-                      LDA.W #$A533                              ;;DC73|DC71+DC71/DC71\DC71;
+                      LDA.W #OWTileNumbers                      ;;DC73|DC71+DC71/DC71\DC71;
                       STA.B !_0                                 ;;DC76|DC74+DC74/DC74\DC74;
                       SEP #$30                                  ;;DC78|DC76+DC76/DC76\DC76; Index (8 bit) Accum (8 bit) 
                       LDA.B #$04                                ;;DC7A|DC78+DC78/DC78\DC78;
@@ -5387,7 +5391,7 @@ CODE_04DC6A:          SEP #$30                                  ;;DC6C|DC6A+DC6A
                       TYX                                       ;;DC88|DC86+DC86/DC86\DC86;
                       JSR CODE_04DABA                           ;;DC89|DC87+DC87/DC87\DC87;
                       REP #$20                                  ;;DC8C|DC8A+DC8A/DC8A\DC8A; Accum (16 bit) 
-                      LDA.W #$C02B                              ;;DC8E|DC8C+DC8C/DC8C\DC8C;
+                      LDA.W #OWTilemap                          ;;DC8E|DC8C+DC8C/DC8C\DC8C;
                       STA.B !_0                                 ;;DC91|DC8F+DC8F/DC8F\DC8F;
                       SEP #$20                                  ;;DC93|DC91+DC91/DC91\DC91; Accum (8 bit) 
                       LDX.W #$0001                              ;;DC95|DC93+DC93/DC93\DC93;
@@ -5409,9 +5413,9 @@ CODE_04DC6A:          SEP #$30                                  ;;DC6C|DC6A+DC6A
 CODE_04DCB6:          PHP                                       ;;DCB8|DCB6+DCB6/DCB6\DCB6;
                       REP #$10                                  ;;DCB9|DCB7+DCB7/DCB7\DCB7; Index (16 bit) 
                       SEP #$20                                  ;;DCBB|DCB9+DCB9/DCB9\DCB9; Accum (8 bit) 
-                      LDX.W #$D000                              ;;DCBD|DCBB+DCBB/DCBB\DCBB;
+                      LDX.W #OWL1CharData                       ;;DCBD|DCBB+DCBB/DCBB\DCBB;
                       STX.B !Layer1DataPtr                      ;;DCC0|DCBE+DCBE/DCBE\DCBE;
-                      LDA.B #$05                                ;;DCC2|DCC0+DCC0/DCC0\DCC0;
+                      LDA.B #OWL1CharData>>16                   ;;DCC2|DCC0+DCC0/DCC0\DCC0;
                       STA.B !Layer1DataPtr+2                    ;;DCC4|DCC2+DCC2/DCC2\DCC2;
                       LDX.W #$0000                              ;;DCC6|DCC4+DCC4/DCC4\DCC4;
                       STX.B !_0                                 ;;DCC9|DCC7+DCC7/DCC7\DCC7;

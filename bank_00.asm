@@ -4520,10 +4520,10 @@ CODE_00A5B9:          JSR UploadSpriteGFX                       ;;A557|A5B9+A5A2
                       JSR CODE_008E1A                           ;;A573|A5D5+A5BE/A5DA\A5DC;
                       REP #$30                                  ;;A576|A5D8+A5C1/A5DD\A5DF; Index (16 bit) Accum (16 bit) 
                       PHB                                       ;;A578|A5DA+A5C3/A5DF\A5E1;
-                      LDX.W #$0703                              ;;A579|A5DB+A5C4/A5E0\A5E2;
-                      LDY.W #$0905                              ;;A57C|A5DE+A5C7/A5E3\A5E5;
+                      LDX.W #!MainPalette                       ;;A579|A5DB+A5C4/A5E0\A5E2;
+                      LDY.W #!CopyPalette                       ;;A57C|A5DE+A5C7/A5E3\A5E5;
                       LDA.W #$01EF                              ;;A57F|A5E1+A5CA/A5E6\A5E8;
-                      MVN !_0,$00                               ;;A582|A5E4+A5CD/A5E9\A5EB;
+                      MVN $00,$00                               ;;A582|A5E4+A5CD/A5E9\A5EB;
                       PLB                                       ;;A585|A5E7+A5D0/A5EC\A5EE;
                       LDX.W !BackgroundColor                    ;;A586|A5E8+A5D1/A5ED\A5EF;
                       STX.W !CopyBGColor                        ;;A589|A5EB+A5D4/A5F0\A5F2;

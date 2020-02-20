@@ -1,9 +1,20 @@
                       ORG $058000                               ;;  J |  U + SS / E0 \ E1 ;
                                                                 ;;                        ;
-TilesetMAP16Loc:      db $70,$8B,$00,$BC,$00,$C8,$00,$D4        ;;8000|8000+8000/8000\8000; Addresses to tileset-specific MAP16 data 
-                      db $00,$E3,$00,$E3,$00,$C8,$70,$8B        ;;8008|8008+8008/8008\8008;
-                      db $00,$C8,$00,$D4,$00,$D4,$00,$D4        ;;8010|8010+8010/8010\8010;
-                      db $70,$8B,$00,$E3,$00,$D4                ;;8018|8018+8018/8018\8018;
+TilesetMAP16Loc:      dw Map16Tileset0                          ;;8000|8000+8000/8000\8000; Addresses to tileset-specific MAP16 data 
+                      dw Map16Tileset1                          ;;8002|8002+8002/8002\8002;
+                      dw Map16Tileset2                          ;;8004|8004+8004/8004\8004;
+                      dw Map16Tileset3                          ;;8006|8006+8006/8006\8006;
+                      dw Map16Tileset4                          ;;8008|8008+8008/8008\8008;
+                      dw Map16Tileset4                          ;;800A|800A+800A/800A\800A;
+                      dw Map16Tileset2                          ;;800C|800C+800C/800C\800C;
+                      dw Map16Tileset0                          ;;800E|800E+800E/800E\800E;
+                      dw Map16Tileset2                          ;;8010|8010+8010/8010\8010;
+                      dw Map16Tileset3                          ;;8012|8012+8012/8012\8012;
+                      dw Map16Tileset3                          ;;8014|8014+8014/8014\8014;
+                      dw Map16Tileset3                          ;;8016|8016+8016/8016\8016;
+                      dw Map16Tileset0                          ;;8018|8018+8018/8018\8018;
+                      dw Map16Tileset4                          ;;801A|801A+801A/801A\801A;
+                      dw Map16Tileset3                          ;;801C|801C+801C/801C\801C;
                                                                 ;;                        ;
 CODE_05801E:          PHP                                       ;;801E|801E+801E/801E\801E;
                       SEP #$20                                  ;;801F|801F+801F/801F\801F; 8 bit A ; Accum (8 bit) 
@@ -22,7 +33,7 @@ CODE_05801E:          PHP                                       ;;801E|801E+801E
                       REP #$10                                  ;;803F|803F+803F/803F\803F; 16 bit X,Y ; Index (16 bit) 
                       LDY.W #$0000                              ;;8041|8041+8041/8041\8041; \ 
                       LDX.B !Layer2DataPtr                      ;;8044|8044+8044/8044\8044;  | 
-                      CPX.W #$E8FE                              ;;8046|8046+8046/8046\8046;  |If Layer 2 pointer >= $E8FF, 
+                      CPX.W #DATA_0CE8FE                        ;;8046|8046+8046/8046\8046;  |If Layer 2 pointer >= $E8FF, 
                       BCC +                                     ;;8049|8049+8049/8049\8049;  |the background should use Map16 page x11 instead of x10 
                       LDY.W #$0001                              ;;804B|804B+804B/804B\804B;  | 
                     + LDX.W #$0000                              ;;804E|804E+804E/804E\804E; \ 
@@ -201,7 +212,7 @@ CODE_058188:          REP #$20                                  ;;8188|8188+8188
                       CMP.B #$FF                                ;;8197|8197+8197/8197\81BC;
                       BNE CODE_058136                           ;;8199|8199+8199/8199\81BE;
                       REP #$20                                  ;;819B|819B+819B/819B\81C0; Accum (16 bit) 
-                      LDA.W #$9100                              ;;819D|819D+819D/819D\81C2;
+                      LDA.W #Map16BGTiles                       ;;819D|819D+819D/819D\81C2;
                       STA.B !_0                                 ;;81A0|81A0+81A0/81A0\81C5;
                       LDX.W #$0000                              ;;81A2|81A2+81A2/81A2\81C7;
                     - LDA.B !_0                                 ;;81A5|81A5+81A5/81A5\81CA;
@@ -244,7 +255,7 @@ CODE_0581FB:          SEP #$30                                  ;;81FB|81FB+81FB
                       STA.B !SlopesPtr                          ;;8219|8219+8219/8219\823E; / 
                       LDA.L TilesetMAP16Loc,X                   ;;821B|821B+821B/821B\8240; \Store address to MAP16 data in $00-$01 
                       STA.B !_0                                 ;;821F|821F+821F/821F\8244; / 
-                      LDA.W #$8000                              ;;8221|8221+8221/8221\8246; \Store x8000 in $02-$03 
+                      LDA.W #Map16Common                        ;;8221|8221+8221/8221\8246; \Store x8000 in $02-$03 
                       STA.B !_2                                 ;;8224|8224+8224/8224\8249; / 
                       LDA.W #DATA_0581BB                        ;;8226|8226+8226/8226\824B; \Store x81BB in $0D-$0E 
                       STA.B !_D                                 ;;8229|8229+8229/8229\824E; / 
@@ -470,8 +481,8 @@ LevXYPPCCCTtbl:       db $20,$20,$20,$30,$30,$30,$30,$30        ;;84B7|84B7+84B7
 TimerTable:           db $00,$02,$03,$04                        ;;84D7|84D7+84D7/84D7\84FC;
                                                                 ;;                        ;
 LevelMusicTable:      db !BGM_OVERWORLD                         ;;84DB|84DB+84DB/84DB\8500; A level can choose between 8 tracks. ; This table contains the tracks to choose from. 
-                      db !BGM_ATHLETIC                          ;;84DC|84DC+84DC/84DC\8501;
-                      db !BGM_UNDERGROUND                       ;;84DD|84DD+84DD/84DD\8502;
+                      db !BGM_UNDERGROUND                       ;;84DC|84DC+84DC/84DC\8501;
+                      db !BGM_ATHLETIC                          ;;84DD|84DD+84DD/84DD\8502;
                       db !BGM_CASTLE                            ;;84DE|84DE+84DE/84DE\8503;
                       db !BGM_GHOSTHOUSE                        ;;84DF|84DF+84DF/84DF\8504;
                       db !BGM_UNDERWATER                        ;;84E0|84E0+84E0/84E0\8505;
@@ -1579,7 +1590,7 @@ CODE_058D7A:          PHP                                       ;;8D7A|8D7A+8D7A
                       STA.B !Map16LowPtr                        ;;8D9A|8D9A+8D9A/8D9A\8DBF;
                       LDA.W #$BD00                              ;;8D9C|8D9C+8D9C/8D9C\8DC1;
                       STA.B !Map16HighPtr                       ;;8D9F|8D9F+8D9F/8D9F\8DC4;
-                      LDA.W #$9100                              ;;8DA1|8DA1+8DA1/8DA1\8DC6;
+                      LDA.W #Map16BGTiles                       ;;8DA1|8DA1+8DA1/8DA1\8DC6;
                       STA.B !_A                                 ;;8DA4|8DA4+8DA4/8DA4\8DC9;
                       LDA.W !LevelLoadObject                    ;;8DA6|8DA6+8DA6/8DA6\8DCB;
                       AND.W #$00F0                              ;;8DA9|8DA9+8DA9/8DA9\8DCE;
@@ -1597,7 +1608,7 @@ CODE_058D7A:          PHP                                       ;;8D7A|8D7A+8D7A
                       STA.B !Map16LowPtr+2                      ;;8DC2|8DC2+8DC2/8DC2\8DE7;
                       LDA.B #$7E                                ;;8DC4|8DC4+8DC4/8DC4\8DE9;
                       STA.B !Map16HighPtr+2                     ;;8DC6|8DC6+8DC6/8DC6\8DEB;
-                      LDY.B #$0D                                ;;8DC8|8DC8+8DC8/8DC8\8DED;
+                      LDY.B #Map16BGTiles>>16                   ;;8DC8|8DC8+8DC8/8DC8\8DED;
                       STY.B !_C                                 ;;8DCA|8DCA+8DCA/8DCA\8DEF;
                       REP #$30                                  ;;8DCC|8DCC+8DCC/8DCC\8DF1; Index (16 bit) Accum (16 bit) 
                       LDA.W !LevelLoadObject                    ;;8DCE|8DCE+8DCE/8DCE\8DF3;
@@ -6274,7 +6285,7 @@ Return05CFE9:         RTS                                       ;;CEEB|CFE9+CFE9
                                                                 ;;                        ;
                       %insert_empty($114,$16,$16,$16,$16)       ;;CEEC|CFEA+CFEA/CFEA\CFEA;
                                                                 ;;                        ;
-                      db $22,$01                                ;;D000|D000+D000/D000\D000;
+OWL1CharData:         db $22,$01                                ;;D000|D000+D000/D000\D000;
                       db $22,$01,$22,$01,$22,$01,$D8,$01        ;;D002|D002+D002/D002\D002;
                       db $D9,$C1,$D9,$01,$D8,$C1,$22,$01        ;;D00A|D00A+D00A/D00A\D00A;
                       db $DF,$01,$22,$01,$DF,$01,$EE,$C1        ;;D012|D012+D012/D012\D012;
