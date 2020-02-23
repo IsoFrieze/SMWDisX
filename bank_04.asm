@@ -1,23 +1,23 @@
                       ORG $048000                               ;;  J |  U + SS / E0 \ E1 ;
                                                                 ;;                        ;
-DATA_048000:          db $80,$B4,$98,$B4,$B0,$B4                ;;8000|8000+8000/8000\8000;
+DATA_048000:          dw $B480,$B498,$B4B0                      ;;8000|8000+8000/8000\8000;
                                                                 ;;                        ;
-DATA_048006:          db $00,$B3,$18,$B3,$30,$B3,$48,$B3        ;;8006|8006+8006/8006\8006;
-                      db $60,$B3,$78,$B3,$90,$B3,$A8,$B3        ;;800E|800E+800E/800E\800E;
-                      db $C0,$B3,$D8,$B3,$F0,$B3,$08,$B4        ;;8016|8016+8016/8016\8016;
-                      db $20,$B4,$38,$B4,$50,$B4,$68,$B4        ;;801E|801E+801E/801E\801E;
-                      db $80,$B4,$98,$B4,$B0,$B4,$C8,$B4        ;;8026|8026+8026/8026\8026;
-                      db $E0,$B4,$F8,$B4,$10,$B5,$28,$B5        ;;802E|802E+802E/802E\802E;
-                      db $40,$B5,$58,$B5,$70,$B5,$88,$B5        ;;8036|8036+8036/8036\8036;
-                      db $A0,$B5,$B8,$B5,$D0,$B5,$E8,$B5        ;;803E|803E+803E/803E\803E;
-                      db $00,$B6,$18,$B6,$30,$B6,$48,$B6        ;;8046|8046+8046/8046\8046;
-                      db $60,$B6,$78,$B6,$90,$B6,$A8,$B6        ;;804E|804E+804E/804E\804E;
-                      db $C0,$B6,$D8,$B6,$F0,$B6,$08,$B7        ;;8056|8056+8056/8056\8056;
-                      db $20,$B7,$38,$B7,$50,$B7,$68,$B7        ;;805E|805E+805E/805E\805E;
-                      db $80,$B7,$98,$B7,$B0,$B7,$C8,$B7        ;;8066|8066+8066/8066\8066;
-                      db $E0,$B7,$F8,$B7,$10,$B8,$28,$B8        ;;806E|806E+806E/806E\806E;
-                      db $40,$B8,$58,$B8,$70,$B8,$88,$B8        ;;8076|8076+8076/8076\8076;
-                      db $A0,$B8,$B8,$B8,$D0,$B8,$E8,$B8        ;;807E|807E+807E/807E\807E;
+DATA_048006:          dw $B300,$B318,$B330,$B348                ;;8006|8006+8006/8006\8006;
+                      dw $B360,$B378,$B390,$B3A8                ;;800E|800E+800E/800E\800E;
+                      dw $B3C0,$B3D8,$B3F0,$B408                ;;8016|8016+8016/8016\8016;
+                      dw $B420,$B438,$B450,$B468                ;;801E|801E+801E/801E\801E;
+                      dw $B480,$B498,$B4B0,$B4C8                ;;8026|8026+8026/8026\8026;
+                      dw $B4E0,$B4F8,$B510,$B528                ;;802E|802E+802E/802E\802E;
+                      dw $B540,$B558,$B570,$B588                ;;8036|8036+8036/8036\8036;
+                      dw $B5A0,$B5B8,$B5D0,$B5E8                ;;803E|803E+803E/803E\803E;
+                      dw $B600,$B618,$B630,$B648                ;;8046|8046+8046/8046\8046;
+                      dw $B660,$B678,$B690,$B6A8                ;;804E|804E+804E/804E\804E;
+                      dw $B6C0,$B6D8,$B6F0,$B708                ;;8056|8056+8056/8056\8056;
+                      dw $B720,$B738,$B750,$B768                ;;805E|805E+805E/805E\805E;
+                      dw $B780,$B798,$B7B0,$B7C8                ;;8066|8066+8066/8066\8066;
+                      dw $B7E0,$B7F8,$B810,$B828                ;;806E|806E+806E/806E\806E;
+                      dw $B840,$B858,$B870,$B888                ;;8076|8076+8076/8076\8076;
+                      dw $B8A0,$B8B8,$B8D0,$B8E8                ;;807E|807E+807E/807E\807E;
                                                                 ;;                        ;
 CODE_048086:          REP #$30                                  ;;8086|8086+8086/8086\8086; Index (16 bit) Accum (16 bit) 
                       STZ.B !_3                                 ;;8088|8088+8088/8088\8088;
@@ -93,9 +93,9 @@ CODE_048101:          LDA.B !TrueFrame                          ;;8101|8101+8101
                       AND.B #$07                                ;;810E|810E+810E/810E\810E;  |If lower 3 bits of frame counter isn't 0, 
                       BNE CODE_048123                           ;;8110|8110+8110/8110\8110; / branch to $8123 
                       LDX.B #$1F                                ;;8112|8112+8112/8112\8112;
-                    - LDA.W !CreditsSprXPosSpx+4,X              ;;8114|8114+8114/8114\8114;
+                    - LDA.W !GfxDecompOWAni+$40,X               ;;8114|8114+8114/8114\8114;
                       ASL A                                     ;;8117|8117+8117/8117\8117;
-                      ROL.W !CreditsSprXPosSpx+4,X              ;;8118|8118+8118/8118\8118;
+                      ROL.W !GfxDecompOWAni+$40,X               ;;8118|8118+8118/8118\8118;
                       DEX                                       ;;811B|811B+811B/811B\811B;
                       BPL -                                     ;;811C|811C+811C/811C\811C;
                       LDX.B #$40                                ;;811E|811E+811E/811E\811E;
@@ -797,7 +797,7 @@ CODE_048789:          LDA.B !GraphicsCompPtr                    ;;8789|8789+877A
                       XBA                                       ;;878F|878F+8780/878F\878F; A = player x 2
                       LSR A                                     ;;8790|8790+8781/8790\8790; A = player
                       TAX                                       ;;8791|8791+8782/8791\8791; X = player
-                      LDA.W !PlayerTurnLvl,X                    ;;8792|8792+8783/8792\8792; A = player lives | junk
+                      LDA.W !SavedPlayerLives-1,X               ;;8792|8792+8783/8792\8792; A = player lives | junk
                       PLX                                       ;;8795|8795+8786/8795\8795; X = player x #$20
                       AND.W #$FF00                              ;;8796|8796+8787/8796\8796; A = player lives | #$00
                       BPL +                                     ;;8799|8799+878A/8799\8799; skip if player lives positive
@@ -905,7 +905,7 @@ CODE_04894F:          SEP #$30                                  ;;894F|894F+8940
                       XBA                                       ;;897A|897A+896B/897A\897A; A = player x 2
                       LSR A                                     ;;897B|897B+896C/897B\897B; A = player
                       TAX                                       ;;897C|897C+896D/897C\897C; X = player
-                      LDA.W !PlayerTurnLvl,X                    ;;897D|897D+896E/897D\897D; A = player's lives | junk
+                      LDA.W !SavedPlayerLives-1,X               ;;897D|897D+896E/897D\897D; A = player's lives | junk
                       PLX                                       ;;8980|8980+8971/8980\8980; X = player x #$20
                       AND.W #$FF00                              ;;8981|8981+8972/8981\8981; A = player's lives | #$00
                       BPL CODE_04898B                           ;;8984|8984+8975/8984\8984; branch if player's lives positive
@@ -1550,29 +1550,46 @@ DATA_049082:          db $78,$01                                ;;9050|9082+9061
                                                                 ;;                        ;
 DATA_049084:          db $28,$01                                ;;9052|9084+9063/9084\9084;
                                                                 ;;                        ;
-DATA_049086:          db $10,$10,$1E,$19,$16,$66,$16,$19        ;;9054|9086+9065/9086\9086;
-                      db $1E,$10,$10,$66,$04,$04,$04,$58        ;;905C|908E+906D/908E\908E;
-                      db $04,$04,$04,$66,$04,$04,$04,$04        ;;9064|9096+9075/9096\9096;
-                      db $04,$6A,$04,$04,$04,$04,$04,$66        ;;906C|909E+907D/909E\909E;
-                      db $1E,$19,$06,$09,$0F,$20,$1A,$21        ;;9074|90A6+9085/90A6\90A6;
-                      db $1A,$14,$19,$18,$1F,$17,$82,$17        ;;907C|90AE+908D/90AE\90AE;
-                      db $1F,$18,$19,$14,$1A,$21,$1A,$20        ;;9084|90B6+9095/90B6\90B6;
-                      db $0F,$09,$06,$19,$1E,$66,$04,$04        ;;908C|90BE+909D/90BE\90BE;
-                      db $58,$04,$04,$5F                        ;;9094|90C6+90A5/90C6\90C6;
+OWHardCodedTiles:                                               ;;                        ;
+OWPathDP2_DP1:        db $10,$10,$1E,$19,$16,$66                ;;9054|9086+9065/9086\9086;
+OWPathDP1_DP2:        db $16,$19,$1E,$10,$10,$66                ;;905A|908C+906B/908C\908C;
+OWPathCI3_CF:         db $04,$04,$04,$58                        ;;9060|9092+9071/9092\9092;
+OWPathCF_CI3:         db $04,$04,$04,$66                        ;;9064|9096+9075/9096\9096;
+OWPathFoI4_FoI2:      db $04,$04,$04,$04,$04,$6A                ;;9068|909A+9079/909A\909A;
+OWPathFoI2_FoI4:      db $04,$04,$04,$04,$04,$66                ;;906E|90A0+907F/90A0\90A0;
+OWPathCI2_Pipe:       db $1E,$19,$06,$09,$0F,$20,$1A,$21        ;;9074|90A6+9085/90A6\90A6;
+                      db $1A,$14,$19,$18,$1F,$17,$82            ;;907C|90AE+908D/90AE\90AE;
+OWPathPipe_CI2:       db $17,$1F,$18,$19,$14,$1A,$21,$1A        ;;9083|90B5+9094/90B5\90B5;
+                      db $20,$0F,$09,$06,$19,$1E,$66            ;;908B|90BD+909C/90BD\90BD;
+OWPathStar_FD:        db $04,$04,$58                            ;;9092|90C4+90A3/90C4\90C4;
+OWPathFD_Star:        db $04,$04,$5F                            ;;9095|90C7+90A6/90C7\90C7;
                                                                 ;;                        ;
-DATA_0490CA:          db $02,$02,$02,$02,$06,$06,$04,$04        ;;9098|90CA+90A9/90CA\90CA;
-                      db $00,$00,$00,$00,$04,$04,$04,$04        ;;90A0|90D2+90B1/90D2\90D2;
-                      db $06,$06,$06,$06,$06,$06,$06,$06        ;;90A8|90DA+90B9/90DA\90DA;
-                      db $06,$06,$04,$04,$04,$04,$04,$04        ;;90B0|90E2+90C1/90E2\90E2;
-                      db $02,$02,$06,$06,$00,$00,$00,$04        ;;90B8|90EA+90C9/90EA\90EA;
-                      db $00,$04,$04,$00,$04,$00,$04,$06        ;;90C0|90F2+90D1/90F2\90F2;
-                      db $02,$06,$02,$06,$06,$02,$06,$02        ;;90C8|90FA+90D9/90FA\90FA;
-                      db $02,$02,$04,$04,$00,$00,$06,$06        ;;90D0|9102+90E1/9102\9102;
-                      db $06,$04,$04,$04                        ;;90D8|910A+90E9/910A\910A;
+OWHardCodedDirs:                                                ;;                        ;
+OWDirDP2_DP1:         db $02,$02,$02,$02,$06,$06                ;;9098|90CA+90A9/90CA\90CA;
+OWDirDP1_DP2:         db $04,$04,$00,$00,$00,$00                ;;909E|90D0+90AF/90D0\90D0;
+OWDirCI3_CF:          db $04,$04,$04,$04                        ;;90A4|90D6+90B5/90D6\90D6;
+OWDirCF_CI3:          db $06,$06,$06,$06                        ;;90A8|90DA+90B9/90DA\90DA;
+OWDirFoI4_FoI2:       db $06,$06,$06,$06,$06,$06                ;;90AC|90DE+90BD/90DE\90DE;
+OWDirFoI2_FoI4:       db $04,$04,$04,$04,$04,$04                ;;90B2|90E4+90C3/90E4\90E4;
+OWDirCI2_Pipe:        db $02,$02,$06,$06,$00,$00,$00,$04        ;;90B8|90EA+90C9/90EA\90EA;
+                      db $00,$04,$04,$00,$04,$00,$04            ;;90C0|90F2+90D1/90F2\90F2;
+OWDirPipe_CI2:        db $06,$02,$06,$02,$06,$06,$02,$06        ;;90C7|90F9+90D8/90F9\90F9;
+                      db $02,$02,$02,$04,$04,$00,$00            ;;90CF|9001+90E0/9001\9001;
+OWDirStar_FD:         db $06,$06,$06                            ;;90D6|9008+90E7/9008\9008;
+OWDirFD_Star:         db $04,$04,$04                            ;;90D9|900B+90EA/900B\900B;
                                                                 ;;                        ;
-DATA_04910E:          db $00,$06,$0C,$10,$14,$1A,$20,$2F        ;;90DC|910E+90ED/910E\910E;
-                      db $3E,$41,$08,$00,$04,$00,$02,$00        ;;90E4|9116+90F5/9116\9116;
-                      db $01,$00                                ;;90EC|911E+90FD/911E\911E;
+DATA_04910E:          db OWPathDP2_DP1-OWHardCodedTiles         ;;90DC|900E+90ED/900E\900E;
+                      db OWPathDP1_DP2-OWHardCodedTiles         ;;90DD|900F+90EE/900F\900F;
+                      db OWPathCI3_CF-OWHardCodedTiles          ;;90DE|9010+90EF/9010\9010;
+                      db OWPathCF_CI3-OWHardCodedTiles          ;;90DF|9011+90F0/9011\9011;
+                      db OWPathFoI4_FoI2-OWHardCodedTiles       ;;90E0|9012+90F1/9012\9012;
+                      db OWPathFoI2_FoI4-OWHardCodedTiles       ;;90E1|9013+90F2/9013\9013;
+                      db OWPathCI2_Pipe-OWHardCodedTiles        ;;90E2|9014+90F3/9014\9014;
+                      db OWPathPipe_CI2-OWHardCodedTiles        ;;90E3|9015+90F4/9015\9015;
+                      db OWPathStar_FD-OWHardCodedTiles         ;;90E4|9016+90F5/9016\9016;
+                      db OWPathFD_Star-OWHardCodedTiles         ;;90E5|9017+90F6/9017\9017;
+                                                                ;;                        ;
+DATA_049118:          db $08,$00,$04,$00,$02,$00,$01,$00        ;;90E6|9118+90F7/9118\9118;
                                                                 ;;                        ;
 CODE_049120:          STZ.W !PlayerSwitching                    ;;90EE|9120+90FF/9120\9120;
                       LDY.W !EnterLevelAuto                     ;;90F1|9123+9102/9123\9123;
@@ -1840,13 +1857,13 @@ CODE_04934D:          STX.B !_0                                 ;;930C|934D+932C
                       DEC A                                     ;;9315|9356+9335/9356\9356;
                       STA.W !HardcodedPathIndex                 ;;9316|9357+9336/9357\9357;
                       STY.B !_2                                 ;;9319|935A+9339/935A\935A;
-                      LDA.W DATA_0490CA,X                       ;;931B|935C+933B/935C\935C;
+                      LDA.W OWHardCodedDirs,X                   ;;931B|935C+933B/935C\935C;
                       AND.W #$00FF                              ;;931E|935F+933E/935F\935F;
                       CMP.B !_2                                 ;;9321|9362+9341/9362\9362;
                       BNE CODE_04937A                           ;;9323|9364+9343/9364\9364;
                       LDA.W #$0001                              ;;9325|9366+9345/9366\9366;
                       STA.W !HardcodedPathIsUsed                ;;9328|9369+9348/9369\9369;
-                      LDA.W DATA_049086,X                       ;;932B|936C+934B/936C\936C;
+                      LDA.W OWHardCodedTiles,X                  ;;932B|936C+934B/936C\936C;
                       AND.W #$00FF                              ;;932E|936F+934E/936F\936F;
                       BRA CODE_049384                           ;;9331|9372+9351/9372\9372;
                                                                 ;;                        ;
@@ -2120,12 +2137,12 @@ CODE_049582:          LDX.W !PlayerTurnOW                       ;;9541|9582+9561
                       STY.B !_6                                 ;;956F|95B0+958F/95B0\95B0;
                       LDX.W !HardcodedPathIndex                 ;;9571|95B2+9591/95B2\95B2;
                       INX                                       ;;9574|95B5+9594/95B5\95B5;
-                      LDA.W DATA_0490CA,X                       ;;9575|95B6+9595/95B6\95B6;
+                      LDA.W OWHardCodedDirs,X                   ;;9575|95B6+9595/95B6\95B6;
                       AND.W #$00FF                              ;;9578|95B9+9598/95B9\95B9;
                       CMP.B !_6                                 ;;957B|95BC+959B/95BC\95BC;
                       BNE ADDR_049575                           ;;957D|95BE+959D/95BE\95BE;
                       STX.W !HardcodedPathIndex                 ;;957F|95C0+959F/95C0\95C0;
-                      LDA.W DATA_049086,X                       ;;9582|95C3+95A2/95C3\95C3;
+                      LDA.W OWHardCodedTiles,X                  ;;9582|95C3+95A2/95C3\95C3;
                       AND.W #$00FF                              ;;9585|95C6+95A5/95C6\95C6;
                       CMP.W #$0058                              ;;9588|95C9+95A8/95C9\95C9;
                       BNE CODE_0495DE                           ;;958B|95CC+95AB/95CC\95CC;
@@ -4990,23 +5007,23 @@ CODE_04D770:          STA.L !Map16TilesHigh,X                   ;;D770|D770+D770
 CODE_04D7F2:          REP #$30                                  ;;D7F2|D7F2+D7F2/D7F2\D7F2; Index (16 bit) Accum (16 bit) 
                       LDA.W #$0000                              ;;D7F4|D7F4+D7F4/D7F4\D7F4;
                       SEP #$20                                  ;;D7F7|D7F7+D7F7/D7F7\D7F7; Accum (8 bit) 
-                      LDA.B #$00                                ;;D7F9|D7F9+D7F9/D7F9\D7F9;
+                      LDA.B #!OWLayer1Translevel                ;;D7F9|D7F9+D7F9/D7F9\D7F9;
                       STA.B !_D                                 ;;D7FB|D7FB+D7FB/D7FB\D7FB;
-                      LDA.B #$D0                                ;;D7FD|D7FD+D7FD/D7FD\D7FD;
+                      LDA.B #!OWLayer1Translevel>>8             ;;D7FD|D7FD+D7FD/D7FD\D7FD;
                       STA.B !_E                                 ;;D7FF|D7FF+D7FF/D7FF\D7FF;
-                      LDA.B #$7E                                ;;D801|D801+D801/D801\D801;
+                      LDA.B #!OWLayer1Translevel>>16            ;;D801|D801+D801/D801\D801;
                       STA.B !_F                                 ;;D803|D803+D803/D803\D803;
-                      LDA.B #$00                                ;;D805|D805+D805/D805\D805;
+                      LDA.B #!OWLayer2Directions                ;;D805|D805+D805/D805\D805;
                       STA.B !_A                                 ;;D807|D807+D807/D807\D807;
-                      LDA.B #$D8                                ;;D809|D809+D809/D809\D809;
+                      LDA.B #!OWLayer2Directions>>8             ;;D809|D809+D809/D809\D809;
                       STA.B !_B                                 ;;D80B|D80B+D80B/D80B\D80B;
-                      LDA.B #$7E                                ;;D80D|D80D+D80D/D80D\D80D;
+                      LDA.B #!OWLayer2Directions>>16            ;;D80D|D80D+D80D/D80D\D80D;
                       STA.B !_C                                 ;;D80F|D80F+D80F/D80F\D80F;
-                      LDA.B #$00                                ;;D811|D811+D811/D811\D811;
+                      LDA.B #!Map16TilesLow                     ;;D811|D811+D811/D811\D811;
                       STA.B !_4                                 ;;D813|D813+D813/D813\D813;
-                      LDA.B #$C8                                ;;D815|D815+D815/D815\D815;
+                      LDA.B #!Map16TilesLow>>8                  ;;D815|D815+D815/D815\D815;
                       STA.B !_5                                 ;;D817|D817+D817/D817\D817;
-                      LDA.B #$7E                                ;;D819|D819+D819/D819\D819;
+                      LDA.B #!Map16TilesLow>>16                 ;;D819|D819+D819/D819\D819;
                       STA.B !_6                                 ;;D81B|D81B+D81B/D81B\D81B;
                       LDY.W #$0001                              ;;D81D|D81D+D81D/D81D\D81D;
                       STY.B !_0                                 ;;D820|D820+D820/D820\D820;
@@ -5382,7 +5399,7 @@ CODE_04DC6A:          SEP #$30                                  ;;DC6C|DC6A+DC6A
                       LDA.W #OWTileNumbers                      ;;DC73|DC71+DC71/DC71\DC71;
                       STA.B !_0                                 ;;DC76|DC74+DC74/DC74\DC74;
                       SEP #$30                                  ;;DC78|DC76+DC76/DC76\DC76; Index (8 bit) Accum (8 bit) 
-                      LDA.B #$04                                ;;DC7A|DC78+DC78/DC78\DC78;
+                      LDA.B #OWTileNumbers>>16                  ;;DC7A|DC78+DC78/DC78\DC78;
                       STA.B !_2                                 ;;DC7C|DC7A+DC7A/DC7A\DC7A;
                       REP #$10                                  ;;DC7E|DC7C+DC7C/DC7C\DC7C; Index (16 bit) 
                       LDY.W #$4000                              ;;DC80|DC7E+DC7E/DC7E\DC7E;
@@ -5483,9 +5500,9 @@ CODE_04DCE8:          LDX.B !_0                                 ;;DCEA|DCE8+DCE8
                                                                 ;;                        ;
 CODE_04DD40:          REP #$10                                  ;;DD42|DD40+DD40/DD40\DD40; Index (16 bit) 
                       SEP #$20                                  ;;DD44|DD42+DD42/DD42\DD42; Accum (8 bit) 
-                      LDY.W #$8D00                              ;;DD46|DD44+DD44/DD44\DD44;
+                      LDY.W #OWEventTileProp                    ;;DD46|DD44+DD44/DD44\DD44;
                       STY.B !_2                                 ;;DD49|DD47+DD47/DD47\DD47;
-                      LDA.B #$0C                                ;;DD4B|DD49+DD49/DD49\DD49;
+                      LDA.B #OWEventTileProp>>16                ;;DD4B|DD49+DD49/DD49\DD49;
                       STA.B !_4                                 ;;DD4D|DD4B+DD4B/DD4B\DD4B;
                       LDX.W #$0000                              ;;DD4F|DD4D+DD4D/DD4D\DD4D;
                       TXY                                       ;;DD52|DD50+DD50/DD50\DD50;
@@ -6460,7 +6477,7 @@ CODE_04EAE7:          LDA.B !_5                                 ;;EAE9|EAE7+EAE7
                     - STA.B !_2                                 ;;EAEF|EAED+EAED/EAED\EAED;
                       LDA.B !_1                                 ;;EAF1|EAEF+EAEF/EAEF\EAEF;
                       STA.W !OAMTileYPos+$150,Y                 ;;EAF3|EAF1+EAF1/EAF1\EAF1;
-                      LDA.L DATA_0C8000,X                       ;;EAF6|EAF4+EAF4/EAF4\EAF4;
+                      LDA.L OWEventTileNum,X                    ;;EAF6|EAF4+EAF4/EAF4\EAF4;
                       STA.W !OAMTileNo+$150,Y                   ;;EAFA|EAF8+EAF8/EAF8\EAF8;
                       LDA.L !OWEventTilemap,X                   ;;EAFD|EAFB+EAFB/EAFB\EAFB;
                       AND.B #$C0                                ;;EB01|EAFF+EAFF/EAFF\EAFF;
@@ -7290,27 +7307,31 @@ CODE_04F60E:          INC A                                     ;;F606|F60E+F60E
                       RTS                                       ;;F61C|F624+F624/F624\F624; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
-DATA_04F625:          db $00,$00,$01,$E0,$00,$00,$00,$01        ;;F61D|F625+F625/F625\F625;
-                      db $60,$00,$06,$70,$01,$20,$00,$07        ;;F625|F62D+F62D/F62D\F62D;
-                      db $38,$00,$8A,$01,$00,$58,$00,$7A        ;;F62D|F635+F635/F635\F635;
-                      db $00,$08,$88,$01,$18,$00,$09,$48        ;;F635|F63D+F63D/F63D\F63D;
-                      db $01,$FC,$FF,$00,$80,$00,$00            ;;F63D|F645+F645/F645\F645;
+OverworldSprites:     db $00 : dw $0100,$00E0                   ;;F61D|F625+F625/F625\F625;
+                      db $00 : dw $0100,$0060                   ;;F622|F62A+F62A/F62A\F62A;
+                      db $06 : dw $0170,$0020                   ;;F627|F62F+F62F/F62F\F62F;
+                      db $07 : dw $0038,$018A                   ;;F62C|F634+F634/F634\F634;
+                      db $00 : dw $0058,$007A                   ;;F631|F639+F639/F639\F639;
+                      db $08 : dw $0188,$0018                   ;;F636|F63E+F63E/F63E\F63E;
+                      db $09 : dw $0148,$FFFC                   ;;F63B|F643+F643/F643\F643;
+                      db $00 : dw $0080,$0100                   ;;F640|F648+F648/F648\F648;
+                      db $00 : dw $0050,$0140                   ;;F645|F64D+F64D/F64D\F64D;
+                      db $03 : dw $0000,$0000                   ;;F64A|F652+F652/F652\F652;
+                      db $0A : dw $0040,$0098                   ;;F64F|F657+F657/F657\F657;
+                      db $0A : dw $0060,$00F8                   ;;F654|F65C+F65C/F65C\F65C;
+                      db $0A : dw $0140,$0158                   ;;F659|F661+F661/F661\F661;
                                                                 ;;                        ;
-DATA_04F64C:          db $01,$00,$50,$00,$40,$01                ;;F644|F64C+F64C/F64C\F64C;
+ExtraOWGhostXPos:     dw $0030,$0100,$FF10                      ;;F65E|F666+F666/F666\F666;
+ExtraOWGhostYPos:     dw $0020,$FF70,$0010                      ;;F664|F66C+F66C/F66C\F66C;
                                                                 ;;                        ;
-DATA_04F652:          db $03,$00,$00,$00,$00,$0A,$40,$00        ;;F64A|F652+F652/F652\F652;
-                      db $98,$00,$0A,$60,$00,$F8,$00,$0A        ;;F652|F65A+F65A/F65A\F65A;
-                      db $40,$01,$58                            ;;F65A|F662+F662/F662\F662;
-                                                                ;;                        ;
-DATA_04F665:          db $01,$30,$00,$00,$01,$10,$FF,$20        ;;F65D|F665+F665/F665\F665;
-                      db $00,$70,$FF,$10,$00,$01,$40,$80        ;;F665|F66D+F66D/F66D\F66D;
+DATA_04F672:          db $01,$40,$80                            ;;F66A|F672+F672/F672\F672;
                                                                 ;;                        ;
 CODE_04F675:          PHB                                       ;;F66D|F675+F675/F675\F675;
                       PHK                                       ;;F66E|F676+F676/F676\F676;
                       PLB                                       ;;F66F|F677+F677/F677\F677;
                       LDX.B #$0C                                ;;F670|F678+F678/F678\F678;
                       LDY.B #$4B                                ;;F672|F67A+F67A/F67A\F67A;
-CODE_04F67C:          LDA.W DATA_04F625-$0F,Y                   ;;F674|F67C+F67C/F67C\F67C;
+CODE_04F67C:          LDA.W OverworldSprites-$0F,Y              ;;F674|F67C+F67C/F67C\F67C;
                       STA.W !OWSpriteNumber+3,X                 ;;F677|F67F+F67F/F67F\F67F;
                       CMP.B #$01                                ;;F67A|F682+F682/F682\F682;
                       BEQ ADDR_04F68A                           ;;F67C|F684+F684/F684\F684;
@@ -7318,13 +7339,13 @@ CODE_04F67C:          LDA.W DATA_04F625-$0F,Y                   ;;F674|F67C+F67C
                       BNE +                                     ;;F680|F688+F688/F688\F688;
 ADDR_04F68A:          LDA.B #$40                                ;;F682|F68A+F68A/F68A\F68A;
                       STA.W !OWSpriteZPosLow+3,X                ;;F684|F68C+F68C/F68C\F68C;
-                    + LDA.W DATA_04F625-$0E,Y                   ;;F687|F68F+F68F/F68F\F68F;
+                    + LDA.W OverworldSprites-$0E,Y              ;;F687|F68F+F68F/F68F\F68F;
                       STA.W !OWSpriteXPosLow+3,X                ;;F68A|F692+F692/F692\F692;
-                      LDA.W DATA_04F625-$0D,Y                   ;;F68D|F695+F695/F695\F695;
+                      LDA.W OverworldSprites-$0D,Y              ;;F68D|F695+F695/F695\F695;
                       STA.W !OWSpriteXPosHigh+3,X               ;;F690|F698+F698/F698\F698;
-                      LDA.W DATA_04F625-$0C,Y                   ;;F693|F69B+F69B/F69B\F69B;
+                      LDA.W OverworldSprites-$0C,Y              ;;F693|F69B+F69B/F69B\F69B;
                       STA.W !OWSpriteYPosLow+3,X                ;;F696|F69E+F69E/F69E\F69E;
-                      LDA.W DATA_04F625-$0B,Y                   ;;F699|F6A1+F6A1/F6A1\F6A1;
+                      LDA.W OverworldSprites-$0B,Y              ;;F699|F6A1+F6A1/F6A1\F6A1;
                       STA.W !OWSpriteYPosHigh+3,X               ;;F69C|F6A4+F6A4/F6A4\F6A4;
                       TYA                                       ;;F69F|F6A7+F6A7/F6A7\F6A7;
                       SEC                                       ;;F6A0|F6A8+F6A8/F6A8\F6A8;
@@ -7337,7 +7358,7 @@ CODE_04F6B1:          STZ.W !OWSpriteMisc0E25,X                 ;;F6A9|F6B1+F6B1
                       LDA.W DATA_04FD22                         ;;F6AC|F6B4+F6B4/F6B4\F6B4;
                       DEC A                                     ;;F6AF|F6B7+F6B7/F6B7\F6B7;
                       STA.W !OWSpriteZSpeed,X                   ;;F6B0|F6B8+F6B8/F6B8\F6B8;
-                      LDA.W DATA_04F665,X                       ;;F6B3|F6BB+F6BB/F6BB\F6BB;
+                      LDA.W DATA_04F672-$0D,X                   ;;F6B3|F6BB+F6BB/F6BB\F6BB;
                     - PHA                                       ;;F6B6|F6BE+F6BE/F6BE\F6BE;
                       STX.W !SaveFileDelete                     ;;F6B7|F6BF+F6BF/F6BF\F6BF;
                       JSR CODE_04F853                           ;;F6BA|F6C2+F6C2/F6C2\F6C2;
@@ -8146,11 +8167,11 @@ CODE_04FD70:          JSR CODE_04FE90                           ;;FD68|FD70+FD70
                       REP #$20                                  ;;FD89|FD91+FD91/FD91\FD91; Accum (16 bit) 
                       LDA.B !_0                                 ;;FD8B|FD93+FD93/FD93\FD93;
                       CLC                                       ;;FD8D|FD95+FD95/FD95\FD95;
-                      ADC.W DATA_04F64C,Y                       ;;FD8E|FD96+FD96/FD96\FD96;
+                      ADC.W ExtraOWGhostXPos-$1A,Y              ;;FD8E|FD96+FD96/FD96\FD96;
                       STA.B !_0                                 ;;FD91|FD99+FD99/FD99\FD99;
                       LDA.B !_2                                 ;;FD93|FD9B+FD9B/FD9B\FD9B;
                       CLC                                       ;;FD95|FD9D+FD9D/FD9D\FD9D;
-                      ADC.W DATA_04F652,Y                       ;;FD96|FD9E+FD9E/FD9E\FD9E;
+                      ADC.W ExtraOWGhostYPos-$1A,Y              ;;FD96|FD9E+FD9E/FD9E\FD9E;
                       STA.B !_2                                 ;;FD99|FDA1+FDA1/FDA1\FDA1;
                       SEP #$20                                  ;;FD9B|FDA3+FDA3/FDA3\FDA3; Accum (8 bit) 
 CODE_04FDA5:          LDA.B #$34                                ;;FD9D|FDA5+FDA5/FDA5\FDA5;

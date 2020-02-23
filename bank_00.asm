@@ -2116,48 +2116,48 @@ DATA_00931D:          db $02,$11                                ;;92B2|931D+931D
 GetGameMode:          LDA.W !GameMode                           ;;92B7|9322+9322/9322\9324; Load game mode 
                       JSL ExecutePtr                            ;;92BA|9325+9325/9325\9327;
                                                                 ;;                        ;
-                      dw GameMode00                             ;;92BE|9329+9329/9329\932B; 00 - 
-                      dw GameMode01                             ;;92C0|932B+932B/932B\932D; 01 - 
-                      dw GMTransition                           ;;92C2|932D+932D/932D\932F; 02 - 
-                      dw GameMode03                             ;;92C4|932F+932F/932F\9331; 03 - 
-                      dw GameMode04                             ;;92C6|9331+9331/9331\9333; 04 - 
-                      dw GMTransition                           ;;92C8|9333+9333/9333\9335; 05 - 
-                      dw GameMode06                             ;;92CA|9335+9335/9335\9337; 06 - 
-                      dw GameMode07                             ;;92CC|9337+9337/9337\9339; 07 - 
-                      dw GameMode08                             ;;92CE|9339+9339/9339\933B; 08 - 
-                      dw GameMdoe09                             ;;92D0|933B+933B/933B\933D; 09 - 
-                      dw GameMode0A                             ;;92D2|933D+933D/933D\933F; 0A - 
-                      dw GMTransition                           ;;92D4|933F+933F/933F\9341; 0B - 
-                      dw GameMode0C                             ;;92D6|9341+9341/9341\9343; 0C - 
-                      dw GMTransition                           ;;92D8|9343+9343/9343\9345; 0D - 
-                      dw GameMode0E                             ;;92DA|9345+9345/9345\9347; 0E - 
-                      dw TempFade                               ;;92DC|9347+9347/9347\9349; 0F - 
-                      dw GameMode10                             ;;92DE|9349+9349/9349\934B; 10 - 
-                      dw GameMode11                             ;;92E0|934B+934B/934B\934D; 11 - 
-                      dw GameMode12                             ;;92E2|934D+934D/934D\934F; 12 - 
-                      dw TempFade                               ;;92E4|934F+934F/934F\9351; 13 - 
-                      dw GameMode14                             ;;92E6|9351+9351/9351\9353; 14 - 
-                      dw GMTransition                           ;;92E8|9353+9353/9353\9355; 15 - 
-                      dw GameMode16                             ;;92EA|9355+9355/9355\9357; 16 - 
-                      dw GameMode17                             ;;92EC|9357+9357/9357\9359; 17 - 
-                      dw GMTransition                           ;;92EE|9359+9359/9359\935B; 18 - 
-                      dw GameMode19                             ;;92F0|935B+935B/935B\935D; 19 - 
-                      dw GMTransition                           ;;92F2|935D+935D/935D\935F; 1A - 
-                      dw GameMode1B                             ;;92F4|935F+935F/935F\9361; 1B - 
-                      dw GMTransition                           ;;92F6|9361+9361/9361\9363; 1C - 
-                      dw GameMode1D                             ;;92F8|9363+9363/9363\9365; 1D - 
-                      dw GMTransition                           ;;92FA|9365+9365/9365\9367; 1E - 
-                      dw GameMode1F                             ;;92FC|9367+9367/9367\9369; 1F - 
-                      dw GMTransition                           ;;92FE|9369+9369/9369\936B; 20 - 
-                      dw GameMode21                             ;;9300|936B+936B/936B\936D; 21 - 
-                      dw GMTransition                           ;;9302|936D+936D/936D\936F; 22 - 
-                      dw GameMode23                             ;;9304|936F+936F/936F\9371; 23 - 
-                      dw GMTransition                           ;;9306|9371+9371/9371\9373; 24 - 
-                      dw GameMode25                             ;;9308|9373+9373/9373\9375; 25 - 
-                      dw GMTransition                           ;;930A|9375+9375/9375\9377; 26 - 
-                      dw GameMode27                             ;;930C|9377+9377/9377\9379; 27 - 
-                      dw GameMode28                             ;;930E|9379+9379/9379\937B; 28 - 
-                      dw GameMode29                             ;;9310|937B+937B/937B\937D; 29 - 
+                      dw GameMode00                             ;;92BE|9329+9329/9329\932B; 00 - load nintendo presents
+                      dw GameMode01                             ;;92C0|932B+932B/932B\932D; 01 - nintendo presents
+                      dw GMTransition                           ;;92C2|932D+932D/932D\932F; 02 - fade out to title screen
+                      dw GameMode03                             ;;92C4|932F+932F/932F\9331; 03 - load title screen
+                      dw GameMode04                             ;;92C6|9331+9331/9331\9333; 04 - prepare title screen
+                      dw GMTransition                           ;;92C8|9333+9333/9333\9335; 05 - fade in to title screen
+                      dw GameMode06                             ;;92CA|9335+9335/9335\9337; 06 - title screen spotlight
+                      dw GameMode07                             ;;92CC|9337+9337/9337\9339; 07 - title screen
+                      dw GameMode08                             ;;92CE|9339+9339/9339\933B; 08 - file select
+                      dw GameMdoe09                             ;;92D0|933B+933B/933B\933D; 09 - file delete
+                      dw GameMode0A                             ;;92D2|933D+933D/933D\933F; 0A - player select
+                      dw GMTransition                           ;;92D4|933F+933F/933F\9341; 0B - fade out to overworld
+                      dw GameMode0C                             ;;92D6|9341+9341/9341\9343; 0C - load overworld
+                      dw GMTransition                           ;;92D8|9343+9343/9343\9345; 0D - fade in to overworld
+                      dw GameMode0E                             ;;92DA|9345+9345/9345\9347; 0E - overworld
+                      dw TempFade                               ;;92DC|9347+9347/9347\9349; 0F - fade out to level
+                      dw GameMode10                             ;;92DE|9349+9349/9349\934B; 10 - finish fade to level
+                      dw GameMode11                             ;;92E0|934B+934B/934B\934D; 11 - load level
+                      dw GameMode12                             ;;92E2|934D+934D/934D\934F; 12 - prepare level
+                      dw TempFade                               ;;92E4|934F+934F/934F\9351; 13 - fade in to level
+                      dw GameMode14                             ;;92E6|9351+9351/9351\9353; 14 - level
+                      dw GMTransition                           ;;92E8|9353+9353/9353\9355; 15 - fade out to game over/time up
+                      dw GameMode16                             ;;92EA|9355+9355/9355\9357; 16 - load game over/time up
+                      dw GameMode17                             ;;92EC|9357+9357/9357\9359; 17 - game over/time up
+                      dw GMTransition                           ;;92EE|9359+9359/9359\935B; 18 - fade out to credits
+                      dw GameMode19                             ;;92F0|935B+935B/935B\935D; 19 - load credits
+                      dw GMTransition                           ;;92F2|935D+935D/935D\935F; 1A - fade in to credits
+                      dw GameMode1B                             ;;92F4|935F+935F/935F\9361; 1B - staff credits
+                      dw GMTransition                           ;;92F6|9361+9361/9361\9363; 1C - fade out to credits yoshi house
+                      dw GameMode1D                             ;;92F8|9363+9363/9363\9365; 1D - load credits yoshi house
+                      dw GMTransition                           ;;92FA|9365+9365/9365\9367; 1E - fade in to credits yoshi house
+                      dw GameMode1F                             ;;92FC|9367+9367/9367\9369; 1F - credits yoshi house
+                      dw GMTransition                           ;;92FE|9369+9369/9369\936B; 20 - fade out to load credits enemy list
+                      dw GameMode21                             ;;9300|936B+936B/936B\936D; 21 - load credits enemy list
+                      dw GMTransition                           ;;9302|936D+936D/936D\936F; 22 - fade out to credits enemy list
+                      dw GameMode23                             ;;9304|936F+936F/936F\9371; 23 - prepare credits enemy list
+                      dw GMTransition                           ;;9306|9371+9371/9371\9373; 24 - fade in to credits enemy list
+                      dw GameMode25                             ;;9308|9373+9373/9373\9375; 25 - credits enemy list
+                      dw GMTransition                           ;;930A|9375+9375/9375\9377; 26 - fade out to the end screen
+                      dw GameMode27                             ;;930C|9377+9377/9377\9379; 27 - load the end screen
+                      dw GameMode28                             ;;930E|9379+9379/9379\937B; 28 - fade in to the end screen
+                      dw GameMode29                             ;;9310|937B+937B/937B\937D; 29 - the end screen
                                                                 ;;                        ;
 TurnOffIO:            STZ.W !HW_NMITIMEN                        ;;9312|937D+937D/937D\937F; Disable NMI ,VIRQ, HIRQ, Joypads ; NMI, V/H Count, and Joypad Enable
                       STZ.W !HW_HDMAEN                          ;;9315|9380+9380/9380\9382; Turn off all HDMA ; H-DMA Channel Enable
@@ -2742,7 +2742,7 @@ CODE_0098A9:          LDA.W !IRQNMICommand                      ;;983E|98A9+98A9
                       STA.W !HW_VMADD                           ;;985B|98C6+98C6/98CB\98CD; Address for VRAM Read/Write (Low Byte)
                       LDA.L DATA_05BA39,X                       ;;985E|98C9+98C9/98CE\98D0;
                       STA.W !HW_DMAADDR+$20                     ;;9862|98CD+98CD/98D2\98D4; A Address (Low Byte)
-                      LDY.B #$7E                                ;;9865|98D0+98D0/98D5\98D7;
+                      LDY.B #!AnimatedTiles>>16                 ;;9865|98D0+98D0/98D5\98D7;
                       STY.W !HW_DMAADDR+$22                     ;;9867|98D2+98D2/98D7\98D9; A Address Bank
                       LDA.W #$0080                              ;;986A|98D5+98D5/98DA\98DC;
                       STA.W !HW_DMACNT+$20                      ;;986D|98D8+98D8/98DD\98DF; Number Bytes to Transfer (Low Byte) (DMA)
@@ -2756,12 +2756,12 @@ CODE_0098A9:          LDA.W !IRQNMICommand                      ;;983E|98A9+98A9
                       LDA.W #$0008                              ;;987F|98EA+98EA/98EF\98F1;
                       LDY.B #$16                                ;;9882|98ED+98ED/98F2\98F4;
                     + STA.B !_0                                 ;;9884|98EF+98EF/98F4\98F6;
-                      LDA.W #$C680                              ;;9886|98F1+98F1/98F6\98F8;
+                      LDA.W #!Mode7BossTilemap                  ;;9886|98F1+98F1/98F6\98F8;
                       STA.B !_2                                 ;;9889|98F4+98F4/98F9\98FB;
                       STZ.W !HW_VMAINC                          ;;988B|98F6+98F6/98FB\98FD; VRAM Address Increment Value
                       LDA.W #$1800                              ;;988E|98F9+98F9/98FE\9900;
                       STA.W !HW_DMAPARAM+$20                    ;;9891|98FC+98FC/9901\9903; Parameters for DMA Transfer
-                      LDX.B #$7E                                ;;9894|98FF+98FF/9904\9906;
+                      LDX.B #!Mode7BossTilemap>>16              ;;9894|98FF+98FF/9904\9906;
                       STX.W !HW_DMAADDR+$22                     ;;9896|9901+9901/9906\9908; A Address Bank
                       LDX.B #$04                                ;;9899|9904+9904/9909\990B;
                     - LDA.W DATA_009891,Y                       ;;989B|9906+9906/990B\990D;
@@ -4417,7 +4417,7 @@ CODE_00A4E3:          REP #$10                                  ;;A481|A4E3+A4CC
                       STY.W !HW_VMADD                           ;;A48B|A4ED+A4D6/A4F2\A4F4; Address for VRAM Read/Write (Low Byte)
                       LDY.W #$1801                              ;;A48E|A4F0+A4D9/A4F5\A4F7;
                       STY.W !HW_DMAPARAM+$20                    ;;A491|A4F3+A4DC/A4F8\A4FA; Parameters for DMA Transfer
-                      LDY.W #$0AF6                              ;;A494|A4F6+A4DF/A4FB\A4FD;
+                      LDY.W #!GfxDecompOWAni                    ;;A494|A4F6+A4DF/A4FB\A4FD;
                       STY.W !HW_DMAADDR+$20                     ;;A497|A4F9+A4E2/A4FE\A500; A Address (Low Byte)
                       STZ.W !HW_DMAADDR+$22                     ;;A49A|A4FC+A4E5/A501\A503; A Address Bank
                       LDY.W #$0160                              ;;A49D|A4FF+A4E8/A504\A506;

@@ -13657,14 +13657,14 @@ WigglerInit:          PHB                                       ;;EFF3|EFF2+EFF2
 CODE_02F011:          TXA                                       ;;F012|F011+F011/F011\F011;
                       AND.B #$03                                ;;F013|F012+F012/F012\F012;
                       TAY                                       ;;F015|F014+F014/F014\F014;
-                      LDA.B #$7B                                ;;F016|F015+F015/F015\F015;
+                      LDA.B #!WigglerTable                      ;;F016|F015+F015/F015\F015;
                       CLC                                       ;;F018|F017+F017/F017\F017;
                       ADC.W DATA_02EFEA,Y                       ;;F019|F018+F018/F018\F018;
                       STA.B !WigglerSegmentPtr                  ;;F01C|F01B+F01B/F01B\F01B;
-                      LDA.B #$9A                                ;;F01E|F01D+F01D/F01D\F01D;
+                      LDA.B #!WigglerTable>>8                   ;;F01E|F01D+F01D/F01D\F01D;
                       ADC.W DATA_02EFEE,Y                       ;;F020|F01F+F01F/F01F\F01F;
                       STA.B !WigglerSegmentPtr+1                ;;F023|F022+F022/F022\F022;
-                      LDA.B #$7F                                ;;F025|F024+F024/F024\F024;
+                      LDA.B #!WigglerTable>>16                  ;;F025|F024+F024/F024\F024;
                       STA.B !WigglerSegmentPtr+2                ;;F027|F026+F026/F026\F026;
                       RTS                                       ;;F029|F028+F028/F028\F028; Return 
                                                                 ;;                        ;
@@ -13762,7 +13762,7 @@ CODE_02F0DB:          PHX                                       ;;F0DC|F0DB+F0DB
                       ADC.W #$007F                              ;;F0EA|F0E9+F0E9/F0E9\F0E9;
                       TAY                                       ;;F0ED|F0EC+F0EC/F0EC\F0EC;
                       LDA.W #$007D                              ;;F0EE|F0ED+F0ED/F0ED\F0ED;
-                      MVP $7F,$7F                               ;;F0F1|F0F0+F0F0/F0F0\F0F0;
+                      MVP !WigglerTable>>16,!WigglerTable>>16   ;;F0F1|F0F0+F0F0/F0F0\F0F0;
                       SEP #$30                                  ;;F0F4|F0F3+F0F3/F0F3\F0F3; Index (8 bit) Accum (8 bit) 
                       PLB                                       ;;F0F6|F0F5+F0F5/F0F5\F0F5;
                       PLX                                       ;;F0F7|F0F6+F0F6/F0F6\F0F6;

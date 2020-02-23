@@ -8967,7 +8967,7 @@ CODE_03D77F:          LDA.B !TouchBlockXPos                     ;;D77F|D77F+D77F
                       RTS                                       ;;D7EB|D7EB+D7EB/D7EB\D7EB; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
-                      db $00,$00,$00,$00,$00,$00,$00,$00        ;;D7EC|D7EC+D7EC/D7EC\D7EC;
+DATA_03D7EC:          db $00,$00,$00,$00,$00,$00,$00,$00        ;;D7EC|D7EC+D7EC/D7EC\D7EC;
                       db $00,$00,$00,$00,$00,$00,$00,$00        ;;D7F4|D7F4+D7F4/D7F4\D7F4;
                       db $00,$00,$00,$00,$00,$00,$00,$00        ;;D7FC|D7FC+D7FC/D7FC\D7FC;
                       db $00,$00,$00,$00,$00,$00,$00,$00        ;;D804|D804+D804/D804\D804;
@@ -9031,11 +9031,11 @@ CODE_03D958:          REP #$10                                  ;;D958|D958+D958
                       PHB                                       ;;D975|D975+D975/D975\D975;
                       PHK                                       ;;D976|D976+D976/D976\D976;
                       PLB                                       ;;D977|D977+D977/D977\D977;
-                      LDA.B #$EC                                ;;D978|D978+D978/D978\D978;
+                      LDA.B #DATA_03D7EC                        ;;D978|D978+D978/D978\D978;
                       STA.B !_5                                 ;;D97A|D97A+D97A/D97A\D97A;
-                      LDA.B #$D7                                ;;D97C|D97C+D97C/D97C\D97C;
+                      LDA.B #DATA_03D7EC>>8                     ;;D97C|D97C+D97C/D97C\D97C;
                       STA.B !_6                                 ;;D97E|D97E+D97E/D97E\D97E;
-                      LDA.B #$03                                ;;D980|D980+D980/D980\D980;
+                      LDA.B #DATA_03D7EC>>16                    ;;D980|D980+D980/D980\D980;
                       STA.B !_7                                 ;;D982|D982+D982/D982\D982;
                       LDA.B #$10                                ;;D984|D984+D984/D984\D984;
                       STA.B !_0                                 ;;D986|D986+D986/D986\D986;

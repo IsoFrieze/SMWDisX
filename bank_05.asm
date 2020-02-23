@@ -2378,8 +2378,9 @@ DATA_05A221:          db $53,$DA,$00,$05,$F9,$11,$FA,$11        ;;A221|A221+A221
                       db $F7,$11,$F8,$11,$DA,$51,$5D,$92        ;;A549|A549+A549/A549\A549;
                       db $00,$0D,$DA,$15,$FE,$15,$FC,$11        ;;A551|A551+A551/A551\A551;
                       db $FD,$11,$FE,$11,$FC,$11,$DA,$55        ;;A559|A559+A559/A559\A559;
+                      db $FF                                    ;;A561|A561+A561/A561\A561;
                                                                 ;;                        ;
-                      %insert_empty($1F,$1F,$1F,$1F,$1F)        ;;A561|A561+A561/A561\A561;
+                      %insert_empty($1E,$1E,$1E,$1E,$1E)        ;;A562|A562+A562/A562\A562;
                                                                 ;;                        ;
                    if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 DATA_05A580:          db $51,$67,$51,$27,$50,$E7,$50,$A7        ;;A580                    ;
@@ -3996,58 +3997,214 @@ DATA_05B97D:          db $02,$00,$00,$00,$00,$00,$00,$00        ;;B44D|B97D+B953
 DATA_05B98B:          db $00,$05,$0A,$0F,$14,$14,$19,$14        ;;B45B|B98B+B961/B98B\B99B;
                       db $0A,$14,$00,$05,$00,$14                ;;B463|B993+B969/B993\B9A3;
                                                                 ;;                        ;
-AnimatedTileData:     db $00,$95,$00,$97,$00,$99,$00,$9B        ;;B469|B999+B96F/B999\B9A9;
-                      db $80,$95,$80,$97,$80,$99,$80,$9B        ;;B471|B9A1+B977/B9A1\B9B1;
-                      db $00,$96,$00,$96,$00,$96,$00,$96        ;;B479|B9A9+B97F/B9A9\B9B9;
-                      db $80,$9D,$80,$9F,$80,$A1,$80,$A3        ;;B481|B9B1+B987/B9B1\B9C1;
-                      db $00,$96,$00,$98,$00,$9A,$00,$9C        ;;B489|B9B9+B98F/B9B9\B9C9;
-                      db $80,$6D,$80,$6F,$00,$7C,$80,$7C        ;;B491|B9C1+B997/B9C1\B9D1;
-                      db $20,$AC,$20,$AC,$20,$AC,$20,$AC        ;;B499|B9C9+B99F/B9C9\B9D9;
-                      db $20,$AC,$20,$AC,$20,$AC,$20,$AC        ;;B4A1|B9D1+B9A7/B9D1\B9E1;
-                      db $80,$93,$80,$93,$80,$93,$80,$93        ;;B4A9|B9D9+B9AF/B9D9\B9E9;
-                      db $00,$A4,$80,$A4,$00,$A4,$80,$A4        ;;B4B1|B9E1+B9B7/B9E1\B9F1;
-                      db $20,$AC,$20,$AC,$20,$AC,$20,$AC        ;;B4B9|B9E9+B9BF/B9E9\B9F9;
-                      db $00,$AC,$00,$AC,$00,$AC,$00,$AC        ;;B4C1|B9F1+B9C7/B9F1\BA01;
-                      db $00,$91,$00,$91,$00,$91,$00,$91        ;;B4C9|B9F9+B9CF/B9F9\BA09;
-                      db $80,$96,$80,$98,$80,$9A,$80,$9C        ;;B4D1|BA01+B9D7/BA01\BA11;
-                      db $00,$9D,$00,$9F,$00,$A1,$00,$A3        ;;B4D9|BA09+B9DF/BA09\BA19;
-                      db $80,$8E,$80,$90,$80,$92,$80,$94        ;;B4E1|BA11+B9E7/BA11\BA21;
-                      db $00,$95,$00,$95,$00,$95,$00,$95        ;;B4E9|BA19+B9EF/BA19\BA29;
-                      db $00,$95,$00,$95,$00,$95,$00,$95        ;;B4F1|BA21+B9F7/BA21\BA31;
-                      db $00,$95,$00,$95,$00,$95,$00,$95        ;;B4F9|BA29+B9FF/BA29\BA39;
-                      db $00,$9D,$00,$9F,$00,$A1,$00,$A3        ;;B501|BA31+BA07/BA31\BA41;
-DATA_05BA39:          db $80,$8E,$80,$90,$80,$92,$80,$94        ;;B509|BA39+BA0F/BA39\BA49;
-                      db $00,$7D,$00,$7F,$00,$81,$00,$83        ;;B511|BA41+BA17/BA41\BA51;
-                      db $00,$83,$00,$81,$00,$7F,$00,$7D        ;;B519|BA49+BA1F/BA49\BA59;
-                      db $00,$9E,$00,$A0,$00,$A2,$00,$A0        ;;B521|BA51+BA27/BA51\BA61;
-                      db $00,$9D,$00,$9F,$00,$A1,$00,$A3        ;;B529|BA59+BA2F/BA59\BA69;
-                      db $00,$A5,$00,$A7,$00,$A9,$00,$AB        ;;B531|BA61+BA37/BA61\BA71;
-                      db $80,$A5,$80,$A7,$80,$A9,$80,$AB        ;;B539|BA69+BA3F/BA69\BA79;
-                      db $80,$AB,$80,$A9,$80,$A7,$80,$A5        ;;B541|BA71+BA47/BA71\BA81;
-                      db $00,$95,$00,$95,$00,$95,$00,$95        ;;B549|BA79+BA4F/BA79\BA89;
-                      db $80,$9E,$80,$A0,$80,$A2,$80,$A0        ;;B551|BA81+BA57/BA81\BA91;
-                      db $80,$7D,$80,$7F,$80,$81,$80,$83        ;;B559|BA89+BA5F/BA89\BA99;
-                      db $00,$7E,$00,$80,$00,$82,$00,$84        ;;B561|BA91+BA67/BA91\BAA1;
-                      db $80,$7E,$80,$80,$80,$82,$80,$84        ;;B569|BA99+BA6F/BA99\BAA9;
-                      db $80,$83,$80,$81,$80,$7F,$80,$7D        ;;B571|BAA1+BA77/BAA1\BAB1;
-                      db $00,$95,$00,$95,$00,$95,$00,$95        ;;B579|BAA9+BA7F/BAA9\BAB9;
-                      db $80,$A6,$80,$A8,$80,$AA,$80,$A8        ;;B581|BAB1+BA87/BAB1\BAC1;
-                      db $00,$8E,$00,$90,$00,$92,$00,$94        ;;B589|BAB9+BA8F/BAB9\BAC9;
-                      db $00,$95,$00,$95,$00,$95,$00,$95        ;;B591|BAC1+BA97/BAC1\BAD1;
-                      db $00,$95,$00,$95,$00,$95,$00,$95        ;;B599|BAC9+BA9F/BAC9\BAD9;
-                      db $80,$9E,$80,$A0,$80,$A2,$80,$A0        ;;B5A1|BAD1+BAA7/BAD1\BAE1;
-                      db $00,$A6,$00,$A8,$00,$AA,$00,$A8        ;;B5A9|BAD9+BAAF/BAD9\BAE9;
-                      db $00,$95,$00,$95,$00,$95,$00,$95        ;;B5B1|BAE1+BAB7/BAE1\BAF1;
-                      db $00,$95,$00,$95,$00,$95,$00,$95        ;;B5B9|BAE9+BABF/BAE9\BAF9;
-                      db $00,$95,$00,$95,$00,$95,$00,$95        ;;B5C1|BAF1+BAC7/BAF1\BB01;
-                      db $80,$91,$80,$91,$80,$91,$80,$91        ;;B5C9|BAF9+BACF/BAF9\BB09;
-                      db $80,$96,$80,$98,$80,$9A,$80,$9C        ;;B5D1|BB01+BAD7/BB01\BB11;
-                      db $80,$96,$80,$98,$80,$9A,$80,$9C        ;;B5D9|BB09+BADF/BB09\BB19;
-                      db $80,$96,$80,$98,$80,$9A,$80,$9C        ;;B5E1|BB11+BAE7/BB11\BB21;
-                      db $00,$95,$00,$97,$00,$99,$00,$9B        ;;B5E9|BB19+BAEF/BB19\BB29;
-                      db $80,$AC,$80,$AC,$80,$AC,$80,$AC        ;;B5F1|BB21+BAF7/BB21\BB31;
-                      db $00,$93,$00,$93,$00,$93,$00,$93        ;;B5F9|BB29+BAFF/BB29\BB39;
-                      db $80,$93,$80,$93,$80,$93,$80,$93        ;;B601|BB31+BB07/BB31\BB41;
+AnimatedTileData:     dw !AnimatedTiles+$1800                   ;;B469|B999+B96F/B999\B9A9; ? Block frame 1
+                      dw !AnimatedTiles+$1A00                   ;;B46B|B99B+B971/B99B\B9AB; ? Block frame 2
+                      dw !AnimatedTiles+$1C00                   ;;B46D|B99D+B973/B99D\B9AD; ? Block frame 3
+                      dw !AnimatedTiles+$1E00                   ;;B46F|B99F+B975/B99F\B9AF; ? Block frame 4
+                      dw !AnimatedTiles+$1880                   ;;B471|B9A1+B977/B9A1\B9B1; Note block frame 1
+                      dw !AnimatedTiles+$1A80                   ;;B473|B9A3+B979/B9A3\B9B3; Note block frame 2
+                      dw !AnimatedTiles+$1C80                   ;;B475|B9A5+B97B/B9A5\B9B5; Note block frame 3
+                      dw !AnimatedTiles+$1E80                   ;;B477|B9A7+B97D/B9A7\B9B7; Note block frame 4
+                      dw !AnimatedTiles+$1900                   ;;B479|B9A9+B97F/B9A9\B9B9; Turn block
+                      dw !AnimatedTiles+$1900                   ;;B47B|B9AB+B981/B9AB\B9BB; Turn block
+                      dw !AnimatedTiles+$1900                   ;;B47D|B9AD+B983/B9AD\B9BD; Turn block
+                      dw !AnimatedTiles+$1900                   ;;B47F|B9AF+B985/B9AF\B9BF; Turn block
+                      dw !AnimatedTiles+$2080                   ;;B481|B9B1+B987/B9B1\B9C1; Midway point frame 1
+                      dw !AnimatedTiles+$2280                   ;;B483|B9B3+B989/B9B3\B9C3; Midway point frame 2
+                      dw !AnimatedTiles+$2480                   ;;B485|B9B5+B98B/B9B5\B9C5; Midway point frame 3
+                      dw !AnimatedTiles+$2680                   ;;B487|B9B7+B98D/B9B7\B9C7; Midway point frame 4
+                      dw !AnimatedTiles+$1900                   ;;B489|B9B9+B98F/B9B9\B9C9; Spinning turn block frame 1
+                      dw !AnimatedTiles+$1B00                   ;;B48B|B9BB+B991/B9BB\B9CB; Spinning turn block frame 2
+                      dw !AnimatedTiles+$1D00                   ;;B48D|B9BD+B993/B9BD\B9CD; Spinning turn block frame 3
+                      dw !AnimatedTiles+$1F00                   ;;B48F|B9BF+B995/B9BF\B9CF; Spinning turn block frame 4
+                      dw !AnimatedTiles-$F80                    ;;B491|B9C1+B997/B9C1\B9D1; Berry frame 1
+                      dw !AnimatedTiles-$D80                    ;;B493|B9C3+B999/B9C3\B9D3; Berry frame 2
+                      dw !AnimatedTiles-$100                    ;;B495|B9C5+B99B/B9C5\B9D5; Berry frame 3
+                      dw !AnimatedTiles-$80                     ;;B497|B9C7+B99D/B9C7\B9D7; Berry frame 4
+                      dw !AnimatedTiles+$2F20                   ;;B499|B9C9+B99F/B9C9\B9D9; Blank
+                      dw !AnimatedTiles+$2F20                   ;;B49B|B9CB+B9A1/B9CB\B9DB; Blank
+                      dw !AnimatedTiles+$2F20                   ;;B49D|B9CD+B9A3/B9CD\B9DD; Blank
+                      dw !AnimatedTiles+$2F20                   ;;B49F|B9CF+B9A5/B9CF\B9DF; Blank
+                      dw !AnimatedTiles+$2F20                   ;;B4A1|B9D1+B9A7/B9D1\B9E1; Blank
+                      dw !AnimatedTiles+$2F20                   ;;B4A3|B9D3+B9A9/B9D3\B9E3; Blank
+                      dw !AnimatedTiles+$2F20                   ;;B4A5|B9D5+B9AB/B9D5\B9E5; Blank
+                      dw !AnimatedTiles+$2F20                   ;;B4A7|B9D7+B9AD/B9D7\B9E7; Blank
+                      dw !AnimatedTiles+$1680                   ;;B4A9|B9D9+B9AF/B9D9\B9E9; Used block
+                      dw !AnimatedTiles+$1680                   ;;B4AB|B9DB+B9B1/B9DB\B9EB; Used block
+                      dw !AnimatedTiles+$1680                   ;;B4AD|B9DD+B9B3/B9DD\B9ED; Used block
+                      dw !AnimatedTiles+$1680                   ;;B4AF|B9DF+B9B5/B9DF\B9EF; Used block
+                      dw !AnimatedTiles+$2700                   ;;B4B1|B9E1+B9B7/B9E1\B9F1; Muncher frame 1
+                      dw !AnimatedTiles+$2780                   ;;B4B3|B9E3+B9B9/B9E3\B9F3; Muncher frame 2
+                      dw !AnimatedTiles+$2700                   ;;B4B5|B9E5+B9BB/B9E5\B9F5; Muncher frame 1
+                      dw !AnimatedTiles+$2780                   ;;B4B7|B9E7+B9BD/B9E7\B9F7; Muncher frame 2
+                      dw !AnimatedTiles+$2F20                   ;;B4B9|B9E9+B9BF/B9E9\B9F9; Blank
+                      dw !AnimatedTiles+$2F20                   ;;B4BB|B9EB+B9C1/B9EB\B9FB; Blank
+                      dw !AnimatedTiles+$2F20                   ;;B4BD|B9ED+B9C3/B9ED\B9FD; Blank
+                      dw !AnimatedTiles+$2F20                   ;;B4BF|B9EF+B9C5/B9EF\B9FF; Blank
+                      dw !AnimatedTiles+$2F00                   ;;B4C1|B9F1+B9C7/B9F1\BA01; Line guide top-right bottom-left
+                      dw !AnimatedTiles+$2F00                   ;;B4C3|B9F3+B9C9/B9F3\BA03; Line guide top-right bottom-left
+                      dw !AnimatedTiles+$2F00                   ;;B4C5|B9F5+B9CB/B9F5\BA05; Line guide top-right bottom-left
+                      dw !AnimatedTiles+$2F00                   ;;B4C7|B9F7+B9CD/B9F7\BA07; Line guide top-right bottom-left
+                      dw !AnimatedTiles+$1400                   ;;B4C9|B9F9+B9CF/B9F9\BA09; On/Off block ON
+                      dw !AnimatedTiles+$1400                   ;;B4CB|B9FB+B9D1/B9FB\BA0B; On/Off block ON
+                      dw !AnimatedTiles+$1400                   ;;B4CD|B9FD+B9D3/B9FD\BA0D; On/Off block ON
+                      dw !AnimatedTiles+$1400                   ;;B4CF|B9FF+B9D5/B9FF\BA0F; On/Off block ON
+                      dw !AnimatedTiles+$1980                   ;;B4D1|BA01+B9D7/BA01\BA11; Coin frame 1
+                      dw !AnimatedTiles+$1B80                   ;;B4D3|BA03+B9D9/BA03\BA13; Coin frame 2
+                      dw !AnimatedTiles+$1D80                   ;;B4D5|BA05+B9DB/BA05\BA15; Coin frame 3
+                      dw !AnimatedTiles+$1F80                   ;;B4D7|BA07+B9DD/BA07\BA17; Coin frame 4
+                      dw !AnimatedTiles+$2000                   ;;B4D9|BA09+B9DF/BA09\BA19; Water frame 1
+                      dw !AnimatedTiles+$2200                   ;;B4DB|BA0B+B9E1/BA0B\BA1B; Water frame 2
+                      dw !AnimatedTiles+$2400                   ;;B4DD|BA0D+B9E3/BA0D\BA1D; Water frame 3
+                      dw !AnimatedTiles+$2600                   ;;B4DF|BA0F+B9E5/BA0F\BA1F; Water frame 4
+                      dw !AnimatedTiles+$1180                   ;;B4E1|BA11+B9E7/BA11\BA21; Lava frame 1
+                      dw !AnimatedTiles+$1380                   ;;B4E3|BA13+B9E9/BA13\BA23; Lava frame 2
+                      dw !AnimatedTiles+$1580                   ;;B4E5|BA15+B9EB/BA15\BA25; Lava frame 3
+                      dw !AnimatedTiles+$1780                   ;;B4E7|BA17+B9ED/BA17\BA27; Lava frame 4
+                      dw !AnimatedTiles+$1800                   ;;B4E9|BA19+B9EF/BA19\BA29; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B4EB|BA1B+B9F1/BA1B\BA2B; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B4ED|BA1D+B9F3/BA1D\BA2D; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B4EF|BA1F+B9F5/BA1F\BA2F; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B4F1|BA21+B9F7/BA21\BA31; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B4F3|BA23+B9F9/BA23\BA33; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B4F5|BA25+B9FB/BA25\BA35; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B4F7|BA27+B9FD/BA27\BA37; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B4F9|BA29+B9FF/BA29\BA39; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B4FB|BA2B+BA01/BA2B\BA3B; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B4FD|BA2D+BA03/BA2D\BA3D; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B4FF|BA2F+BA05/BA2F\BA3F; ? Block
+                      dw !AnimatedTiles+$2000                   ;;B501|BA31+BA07/BA31\BA41; Water frame 1
+                      dw !AnimatedTiles+$2200                   ;;B503|BA33+BA09/BA33\BA43; Water frame 2
+                      dw !AnimatedTiles+$2400                   ;;B505|BA35+BA0B/BA35\BA45; Water frame 3
+                      dw !AnimatedTiles+$2600                   ;;B507|BA37+BA0D/BA37\BA47; Water frame 4
+DATA_05BA39:          dw !AnimatedTiles+$1180                   ;;B509|BA39+BA0F/BA39\BA49; Coin frame 1
+                      dw !AnimatedTiles+$1380                   ;;B50B|BA3B+BA11/BA3B\BA4B; Coin frame 2
+                      dw !AnimatedTiles+$1580                   ;;B50D|BA3D+BA13/BA3D\BA4D; Coin frame 3
+                      dw !AnimatedTiles+$1780                   ;;B50F|BA3F+BA15/BA3F\BA4F; Coin frame 4
+                      dw !AnimatedTiles                         ;;B511|BA41+BA17/BA41\BA51; Escalator Up frame 1
+                      dw !AnimatedTiles+$200                    ;;B513|BA43+BA19/BA43\BA53; Escalator Up frame 2
+                      dw !AnimatedTiles+$400                    ;;B515|BA45+BA1B/BA45\BA55; Escalator Up frame 3
+                      dw !AnimatedTiles+$600                    ;;B517|BA47+BA1D/BA47\BA57; Escalator Up frame 4
+                      dw !AnimatedTiles+$600                    ;;B519|BA49+BA1F/BA49\BA59; Escalator Down frame 1
+                      dw !AnimatedTiles+$400                    ;;B51B|BA4B+BA21/BA4B\BA5B; Escalator Down frame 2
+                      dw !AnimatedTiles+$200                    ;;B51D|BA4D+BA23/BA4D\BA5D; Escalator Down frame 3
+                      dw !AnimatedTiles                         ;;B51F|BA4F+BA25/BA4F\BA5F; Escalator Down frame 4
+                      dw !AnimatedTiles+$2100                   ;;B521|BA51+BA27/BA51\BA61; Candle glow frame 1
+                      dw !AnimatedTiles+$2300                   ;;B523|BA53+BA29/BA53\BA63; Candle glow frame 2
+                      dw !AnimatedTiles+$2500                   ;;B525|BA55+BA2B/BA55\BA65; Candle glow frame 3
+                      dw !AnimatedTiles+$2300                   ;;B527|BA57+BA2D/BA57\BA67; Candle glow frame 2
+                      dw !AnimatedTiles+$2000                   ;;B529|BA59+BA2F/BA59\BA69; Water frame 1
+                      dw !AnimatedTiles+$2200                   ;;B52B|BA5B+BA31/BA5B\BA6B; Water frame 2
+                      dw !AnimatedTiles+$2400                   ;;B52D|BA5D+BA33/BA5D\BA6D; Water frame 3
+                      dw !AnimatedTiles+$2600                   ;;B52F|BA5F+BA35/BA5F\BA6F; Water frame 4
+                      dw !AnimatedTiles+$2800                   ;;B531|BA61+BA37/BA61\BA71; Line guide stopper & Rope frame 1
+                      dw !AnimatedTiles+$2A00                   ;;B533|BA63+BA39/BA63\BA73; Line guide stopper & Rope frame 2
+                      dw !AnimatedTiles+$2C00                   ;;B535|BA65+BA3B/BA65\BA75; Line guide stopper & Rope frame 3
+                      dw !AnimatedTiles+$2E00                   ;;B537|BA67+BA3D/BA67\BA77; Line guide stopper & Rope frame 4
+                      dw !AnimatedTiles+$2880                   ;;B539|BA69+BA3F/BA69\BA79; Diagonal rope Up frame 1
+                      dw !AnimatedTiles+$2A80                   ;;B53B|BA6B+BA41/BA6B\BA7B; Diagonal rope Up frame 2
+                      dw !AnimatedTiles+$2C80                   ;;B53D|BA6D+BA43/BA6D\BA7D; Diagonal rope Up frame 3
+                      dw !AnimatedTiles+$2E80                   ;;B53F|BA6F+BA45/BA6F\BA7F; Diagonal rope Up frame 4
+                      dw !AnimatedTiles+$2E80                   ;;B541|BA71+BA47/BA71\BA81; Diagonal rope Down frame 1
+                      dw !AnimatedTiles+$2C80                   ;;B543|BA73+BA49/BA73\BA83; Diagonal rope Down frame 2
+                      dw !AnimatedTiles+$2A80                   ;;B545|BA75+BA4B/BA75\BA85; Diagonal rope Down frame 3
+                      dw !AnimatedTiles+$2880                   ;;B547|BA77+BA4D/BA77\BA87; Diagonal rope Down frame 4
+                      dw !AnimatedTiles+$1800                   ;;B549|BA79+BA4F/BA79\BA89; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B54B|BA7B+BA51/BA7B\BA8B; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B54D|BA7D+BA53/BA7D\BA8D; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B54F|BA7F+BA55/BA7F\BA8F; ? Block
+                      dw !AnimatedTiles+$2180                   ;;B551|BA81+BA57/BA81\BA91; Shining stars frame 1
+                      dw !AnimatedTiles+$2380                   ;;B553|BA83+BA59/BA83\BA93; Shining stars frame 2
+                      dw !AnimatedTiles+$2580                   ;;B555|BA85+BA5B/BA85\BA95; Shining stars frame 3
+                      dw !AnimatedTiles+$2380                   ;;B557|BA87+BA5D/BA87\BA97; Shining stars frame 2
+                      dw !AnimatedTiles+$80                     ;;B559|BA89+BA5F/BA89\BA99; Gradual sloped lava frame 1
+                      dw !AnimatedTiles+$280                    ;;B55B|BA8B+BA61/BA8B\BA9B; Gradual sloped lava frame 2
+                      dw !AnimatedTiles+$480                    ;;B55D|BA8D+BA63/BA8D\BA9D; Gradual sloped lava frame 3
+                      dw !AnimatedTiles+$680                    ;;B55F|BA8F+BA65/BA8F\BA9F; Gradual sloped lava frame 4
+                      dw !AnimatedTiles+$100                    ;;B561|BA91+BA67/BA91\BAA1; Diagonal sloped lava frame 1
+                      dw !AnimatedTiles+$300                    ;;B563|BA93+BA69/BA93\BAA3; Diagonal sloped lava frame 2
+                      dw !AnimatedTiles+$500                    ;;B565|BA95+BA6B/BA95\BAA5; Diagonal sloped lava frame 3
+                      dw !AnimatedTiles+$700                    ;;B567|BA97+BA6D/BA97\BAA7; Diagonal sloped lava frame 4
+                      dw !AnimatedTiles+$180                    ;;B569|BA99+BA6F/BA99\BAA9; Lava wall frame 1
+                      dw !AnimatedTiles+$380                    ;;B56B|BA9B+BA71/BA9B\BAAB; Lava wall frame 2
+                      dw !AnimatedTiles+$580                    ;;B56D|BA9D+BA73/BA9D\BAAD; Lava wall frame 3
+                      dw !AnimatedTiles+$780                    ;;B56F|BA9F+BA75/BA9F\BAAF; Lava wall frame 4
+                      dw !AnimatedTiles+$680                    ;;B571|BAA1+BA77/BAA1\BAB1; Gradual sloped lava frame 4
+                      dw !AnimatedTiles+$480                    ;;B573|BAA3+BA79/BAA3\BAB3; Gradual sloped lava frame 3
+                      dw !AnimatedTiles+$280                    ;;B575|BAA5+BA7B/BAA5\BAB5; Gradual sloped lava frame 2
+                      dw !AnimatedTiles+$80                     ;;B577|BAA7+BA7D/BAA7\BAB7; Gradual sloped lava frame 1
+                      dw !AnimatedTiles+$1800                   ;;B579|BAA9+BA7F/BAA9\BAB9; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B57B|BAAB+BA81/BAAB\BABB; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B57D|BAAD+BA83/BAAD\BABD; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B57F|BAAF+BA85/BAAF\BABF; ? Block
+                      dw !AnimatedTiles+$2980                   ;;B581|BAB1+BA87/BAB1\BAC1; Ghost House lantern frame 1
+                      dw !AnimatedTiles+$2B80                   ;;B583|BAB3+BA89/BAB3\BAC3; Ghost House lantern frame 2
+                      dw !AnimatedTiles+$2D80                   ;;B585|BAB5+BA8B/BAB5\BAC5; Ghost House lantern frame 3
+                      dw !AnimatedTiles+$2B80                   ;;B587|BAB7+BA8D/BAB7\BAC7; Ghost House lantern frame 4
+                      dw !AnimatedTiles+$1100                   ;;B589|BAB9+BA8F/BAB9\BAC9; Seaweed frame 1
+                      dw !AnimatedTiles+$1300                   ;;B58B|BABB+BA91/BABB\BACB; Seaweed frame 2
+                      dw !AnimatedTiles+$1500                   ;;B58D|BABD+BA93/BABD\BACD; Seaweed frame 3
+                      dw !AnimatedTiles+$1700                   ;;B58F|BABF+BA95/BABF\BACF; Seaweed frame 4
+                      dw !AnimatedTiles+$1800                   ;;B591|BAC1+BA97/BAC1\BAD1; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B593|BAC3+BA99/BAC3\BAD3; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B595|BAC5+BA9B/BAC5\BAD5; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B597|BAC7+BA9D/BAC7\BAD7; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B599|BAC9+BA9F/BAC9\BAD9; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B59B|BACB+BAA1/BACB\BADB; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B59D|BACD+BAA3/BACD\BADD; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B59F|BACF+BAA5/BACF\BADF; ? Block
+                      dw !AnimatedTiles+$2180                   ;;B5A1|BAD1+BAA7/BAD1\BAE1; Shining stars frame 1
+                      dw !AnimatedTiles+$2380                   ;;B5A3|BAD3+BAA9/BAD3\BAE3; Shining stars frame 2
+                      dw !AnimatedTiles+$2580                   ;;B5A5|BAD5+BAAB/BAD5\BAE5; Shining stars frame 3
+                      dw !AnimatedTiles+$2380                   ;;B5A7|BAD7+BAAD/BAD7\BAE7; Shining stars frame 2
+                      dw !AnimatedTiles+$2900                   ;;B5A9|BAD9+BAAF/BAD9\BAE9; Twinkling stars frame 1
+                      dw !AnimatedTiles+$2B00                   ;;B5AB|BADB+BAB1/BADB\BAEB; Twinkling stars frame 2
+                      dw !AnimatedTiles+$2D00                   ;;B5AD|BADD+BAB3/BADD\BAED; Twinkling stars frame 3
+                      dw !AnimatedTiles+$2B00                   ;;B5AF|BADF+BAB5/BADF\BAEF; Twinkling stars frame 2
+                      dw !AnimatedTiles+$1800                   ;;B5B1|BAE1+BAB7/BAE1\BAF1; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B5B3|BAE3+BAB9/BAE3\BAF3; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B5B5|BAE5+BABB/BAE5\BAF5; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B5B7|BAE7+BABD/BAE7\BAF7; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B5B9|BAE9+BABF/BAE9\BAF9; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B5BB|BAEB+BAC1/BAEB\BAFB; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B5BD|BAED+BAC3/BAED\BAFD; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B5BF|BAEF+BAC5/BAEF\BAFF; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B5C1|BAF1+BAC7/BAF1\BB01; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B5C3|BAF3+BAC9/BAF3\BB03; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B5C5|BAF5+BACB/BAF5\BB05; ? Block
+                      dw !AnimatedTiles+$1800                   ;;B5C7|BAF7+BACD/BAF7\BB07; ? Block
+                      dw !AnimatedTiles+$1480                   ;;B5C9|BAF9+BACF/BAF9\BB09; Door
+                      dw !AnimatedTiles+$1480                   ;;B5CB|BAFB+BAD1/BAFB\BB0B; Door
+                      dw !AnimatedTiles+$1480                   ;;B5CD|BAFD+BAD3/BAFD\BB0D; Door
+                      dw !AnimatedTiles+$1480                   ;;B5CF|BAFF+BAD5/BAFF\BB0F; Door
+                      dw !AnimatedTiles+$1980                   ;;B5D1|BB01+BAD7/BB01\BB11; Coin frame 1
+                      dw !AnimatedTiles+$1B80                   ;;B5D3|BB03+BAD9/BB03\BB13; Coin frame 2
+                      dw !AnimatedTiles+$1D80                   ;;B5D5|BB05+BADB/BB05\BB15; Coin frame 3
+                      dw !AnimatedTiles+$1F80                   ;;B5D7|BB07+BADD/BB07\BB17; Coin frame 4
+                      dw !AnimatedTiles+$1980                   ;;B5D9|BB09+BADF/BB09\BB19; Coin frame 1
+                      dw !AnimatedTiles+$1B80                   ;;B5DB|BB0B+BAE1/BB0B\BB1B; Coin frame 2
+                      dw !AnimatedTiles+$1D80                   ;;B5DD|BB0D+BAE3/BB0D\BB1D; Coin frame 3
+                      dw !AnimatedTiles+$1F80                   ;;B5DF|BB0F+BAE5/BB0F\BB1F; Coin frame 4
+                      dw !AnimatedTiles+$1980                   ;;B5E1|BB11+BAE7/BB11\BB21; Coin frame 1
+                      dw !AnimatedTiles+$1B80                   ;;B5E3|BB13+BAE9/BB13\BB23; Coin frame 2
+                      dw !AnimatedTiles+$1D80                   ;;B5E5|BB15+BAEB/BB15\BB25; Coin frame 3
+                      dw !AnimatedTiles+$1F80                   ;;B5E7|BB17+BAED/BB17\BB27; Coin frame 4
+                      dw !AnimatedTiles+$1800                   ;;B5E9|BB19+BAEF/BB19\BB29; ? Block frame 1
+                      dw !AnimatedTiles+$1A00                   ;;B5EB|BB1B+BAF1/BB1B\BB2B; ? Block frame 2
+                      dw !AnimatedTiles+$1C00                   ;;B5ED|BB1D+BAF3/BB1D\BB2D; ? Block frame 3
+                      dw !AnimatedTiles+$1E00                   ;;B5EF|BB1F+BAF5/BB1F\BB2F; ? Block frame 4
+                      dw !AnimatedTiles+$2F80                   ;;B5F1|BB21+BAF7/BB21\BB31; Line guide top-left bottom-right
+                      dw !AnimatedTiles+$2F80                   ;;B5F3|BB23+BAF9/BB23\BB33; Line guide top-left bottom-right
+                      dw !AnimatedTiles+$2F80                   ;;B5F5|BB25+BAFB/BB25\BB35; Line guide top-left bottom-right
+                      dw !AnimatedTiles+$2F80                   ;;B5F7|BB27+BAFD/BB27\BB37; Line guide top-left bottom-right
+                      dw !AnimatedTiles+$1600                   ;;B5F9|BB29+BAFF/BB29\BB39; On/Off block OFF
+                      dw !AnimatedTiles+$1600                   ;;B5FB|BB2B+BB01/BB2B\BB3B; On/Off block OFF
+                      dw !AnimatedTiles+$1600                   ;;B5FD|BB2D+BB03/BB2D\BB3D; On/Off block OFF
+                      dw !AnimatedTiles+$1600                   ;;B5FF|BB2F+BB05/BB2F\BB3F; On/Off block OFF
+                      dw !AnimatedTiles+$1680                   ;;B601|BB31+BB07/BB31\BB41; Used block
+                      dw !AnimatedTiles+$1680                   ;;B603|BB33+BB09/BB33\BB43; Used block
+                      dw !AnimatedTiles+$1680                   ;;B605|BB35+BB0B/BB35\BB45; Used block
+                      dw !AnimatedTiles+$1680                   ;;B607|BB37+BB0D/BB37\BB47; Used block
                                                                 ;;                        ;
 CODE_05BB39:          PHB                                       ;;B609|BB39+BB0F/BB39\BB49;
                       PHK                                       ;;B60A|BB3A+BB10/BB3A\BB4A;
