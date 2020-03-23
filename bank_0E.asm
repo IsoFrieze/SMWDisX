@@ -6,25 +6,25 @@ SPC700Engine:         dw SoundEffects-SPC700Engine-4            ;;8000|8000+8000
                       arch spc700                               ;;                        ;
                       base !SPCEngine                           ;;                        ;
                                                                 ;;                        ;
-APU_Start:            CLRP                                      ;;0500|0500+0500/0500\0500;
-                      MOV X,#$CF                                ;;0501|0501+0501/0501\0501;
-                      MOV SP,X                                  ;;0503|0503+0503/0503\0503; set SP to (01)cf;
-                      MOV A,#$00                                ;;0504|0504+0504/0504\0504;
-                      MOV !ARam_0386,A                          ;;0506|0506+0506/0506\0506;
-                      MOV !ARam_0387,A                          ;;0509|0509+0509/0509\0509;
-                      MOV !ARam_0388,A                          ;;050C|050C+050C/050C\050C;
-                      MOV !ARam_0389,A                          ;;050F|050F+050F/050F\050F; zero 0386-9 
-                      MOV X,A                                   ;;0512|0512+0512/0512\0512;
-                    - MOV (X+),A                                ;;0513|0513+0513/0513\0513;
-                      CMP X,#$E8                                ;;0514|0514+0514/0514\0514;
-                      BNE -                                     ;;0516|0516+0516/0516\0516; zero 00-e7;
+APU_Start:            CLRP                                      ;;0500|0500+0500/0500\0500; 
+                      MOV X,#$CF                                ;;0501|0501+0501/0501\0501; \ Initialize Stack Pointer with ($01)CF
+                      MOV SP,X                                  ;;0503|0503+0503/0503\0503; / 
+                      MOV A,#$00                                ;;0504|0504+0504/0504\0504; \
+                      MOV !ARam_0386,A                          ;;0506|0506+0506/0506\0506;  |
+                      MOV !ARam_0387,A                          ;;0509|0509+0509/0509\0509;  |Initialize RAM in the 0386 to 0389 range
+                      MOV !ARam_0388,A                          ;;050C|050C+050C/050C\050C;  |
+                      MOV !ARam_0389,A                          ;;050F|050F+050F/050F\050F; /
+                      MOV X,A                                   ;;0512|0512+0512/0512\0512; \
+                    - MOV (X+),A                                ;;0513|0513+0513/0513\0513;  |
+                      CMP X,#$E8                                ;;0514|0514+0514/0514\0514;  | Clear ARAM $00 to $E7
+                      BNE -                                     ;;0516|0516+0516/0516\0516; /
                    if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
-                      MOV A,$04FF                               ;;0518                    ;
-                      CMP A,#$5A                                ;;051B                    ;
-                      BNE APU_0518                              ;;051D                    ;
-                      MOV A,$04FE                               ;;051F                    ;
-                      CMP A,#$A5                                ;;0522                    ;
-                      BEQ JAPU_0535                             ;;0524                    ;
+                      MOV A,$04FF                               ;;0518                    ; \
+                      CMP A,#$5A                                ;;051B                    ;  |Check if ran
+                      BNE APU_0518                              ;;051D                    ; /
+                      MOV A,$04FE                               ;;051F                    ;  |
+                      CMP A,#$A5                                ;;0522                    ;  |
+                      BEQ JAPU_0535                             ;;0524                    ; /
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
 APU_0518:             MOV A,#$00                                ;;0526|0518+0518/0518\0518;
                       MOV X,A                                   ;;0528|051A+051A/051A\051A;
@@ -1796,38 +1796,38 @@ PitchTable:           dw $10BE                                  ;;12F1|12D9+12D9
                       dw $1F9B                                  ;;1307|12EF+12EF/12EF\12EF;
                       db $00                                    ;;1308|12F0+12F0/12F0\12F0;
                                                                 ;;                        ;
-StandardTransfer:     MOV A,#$AA                                ;;130A|12F2+12F2/12F2\12F2; do: standardish SPU transfer;
-                      MOV !SNESIO0,A                            ;;130C|12F4+12F4/12F4\12F4;
-                      MOV A,#$BB                                ;;130F|12F7+12F7/12F7\12F7;
-                      MOV !SNESIO1,A                            ;;1311|12F9+12F9/12F9\12F9;
-                    - MOV A,!SNESIO0                            ;;1314|12FC+12FC/12FC\12FC;
-                      CMP A,#$CC                                ;;1317|12FF+12FF/12FF\12FF;
-                      BNE -                                     ;;1319|1301+1301/1301\1301;
-                      BRA APU_1325                              ;;131B|1303+1303/1303\1303;
+StandardTransfer:     MOV A,#$AA                                ;;130A|12F2+12F2/12F2\12F2; \ do: standardish SPU transfer;
+                      MOV !SNESIO0,A                            ;;130C|12F4+12F4/12F4\12F4;  |Send $BBAA to CPU, to denote transfer time
+                      MOV A,#$BB                                ;;130F|12F7+12F7/12F7\12F7;  |
+                      MOV !SNESIO1,A                            ;;1311|12F9+12F9/12F9\12F9; /
+                    - MOV A,!SNESIO0                            ;;1314|12FC+12FC/12FC\12FC; \
+                      CMP A,#$CC                                ;;1317|12FF+12FF/12FF\12FF;  |Loop until CPU returns $CC to denote that it's ready
+                      BNE -                                     ;;1319|1301+1301/1301\1301; /
+                      BRA TransferInitiate                      ;;131B|1303+1303/1303\1303; Start transfer.
                                                                 ;;                        ;
-APU_1305:             MOV Y,!SNESIO0                            ;;131D|1305+1305/1305\1305;
-                      BNE APU_1305                              ;;1320|1308+1308/1308\1308;
-APU_130A:             CMP Y,!SNESIO0                            ;;1322|130A+130A/130A\130A;
-                      BNE APU_131E                              ;;1325|130D+130D/130D\130D;
-                      MOV A,!SNESIO1                            ;;1327|130F+130F/130F\130F;
+TransferMain:         MOV Y,!SNESIO0                            ;;131D|1305+1305/1305\1305; \ Wait for 5A22 to indicate start signal on $2140
+                      BNE TransferMain                          ;;1320|1308+1308/1308\1308; /
+                    - CMP Y,!SNESIO0                            ;;1322|130A+130A/130A\130A; \ Start loop: wait for end signal on $2140
+                      BNE +                                     ;;1325|130D+130D/130D\130D;  |
+                      MOV A,!SNESIO1                            ;;1327|130F+130F/130F\130F;  |
                       MOV !SNESIO0,Y                            ;;132A|1312+1312/1312\1312;
                       MOV (!ARam_14)+Y,A                        ;;132D|1315+1315/1315\1315;
                       INC Y                                     ;;132F|1317+1317/1317\1317;
-                      BNE APU_130A                              ;;1330|1318+1318/1318\1318;
+                      BNE -                                     ;;1330|1318+1318/1318\1318;
                       INC !ARam_15                              ;;1332|131A+131A/131A\131A;
-                      BRA APU_130A                              ;;1334|131C+131C/131C\131C;
-APU_131E:             BPL APU_130A                              ;;1336|131E+131E/131E\131E;
+                      BRA -                                     ;;1334|131C+131C/131C\131C;
+                    + BPL -                                     ;;1336|131E+131E/131E\131E;
                       CMP Y,!SNESIO0                            ;;1338|1320+1320/1320\1320;
-                      BPL APU_130A                              ;;133B|1323+1323/1323\1323;
-APU_1325:             MOV A,!SNESIO2                            ;;133D|1325+1325/1325\1325;
-                      MOV Y,!SNESIO3                            ;;1340|1328+1328/1328\1328;
-                      MOVW !ARam_14,YA                          ;;1343|132B+132B/132B\132B;
-                      MOV Y,!SNESIO0                            ;;1345|132D+132D/132D\132D;
-                      MOV A,!SNESIO1                            ;;1348|1330+1330/1330\1330;
-                      MOV !SNESIO0,Y                            ;;134B|1333+1333/1333\1333;
-                      BNE APU_1305                              ;;134E|1336+1336/1336\1336;
-                      MOV X,#$31                                ;;1350|1338+1338/1338\1338;
-                      MOV !SPCCONTROL,X                         ;;1352|133A+133A/133A\133A; reset ports, keep timer running 
+                      BPL -                                     ;;133B|1323+1323/1323\1323;
+TransferInitiate:     MOV A,!SNESIO2                            ;;133D|1325+1325/1325\1325; \  ; APU I/O Port
+                      MOV Y,!SNESIO3                            ;;1340|1328+1328/1328\1328;  | ; APU I/O Port
+                      MOVW !ARam_14,YA                          ;;1343|132B+132B/132B\132B; / Get Address from I/O Port 2 and 3
+                      MOV Y,!SNESIO0                            ;;1345|132D+132D/132D\132D; \  ; APU I/O Port
+                      MOV A,!SNESIO1                            ;;1348|1330+1330/1330\1330;  | ; APU I/O Port
+                      MOV !SNESIO0,Y                            ;;134B|1333+1333/1333\1333; / Echo I/O Port 0 back, as it contains the transfer byte
+                      BNE TransferMain                          ;;134E|1336+1336/1336\1336; Begin transfer if I/O Port 1 returns Mode 1
+                      MOV X,#$31                                ;;1350|1338+1338/1338\1338; \
+                      MOV !SPCCONTROL,X                         ;;1352|133A+133A/133A\133A; / Reset ports and keep timer 0 running 
                       RET                                       ;;1355|133D+133D/133D\133D;
                                                                 ;;1356|133E+133E/133E\133E;
                                                                 ;;                        ;

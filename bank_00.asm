@@ -52,12 +52,12 @@ I_RESET:              SEI                                       ;;8000|8000+8000
                       STZ.B !LagFlag                            ;;8075|8075+8075/8075\8075; \ Wait for interrupt 
                       BRA -                                     ;;8077|8077+8077/8077\8077; /  
                                                                 ;;                        ;
-SPC700UploadLoop:     PHP                                       ;;8079|8079+8079/8079\8079;
+SPC700UploadLoop:     PHP                                       ;;8079|8079+8079/8079\8079; Save Processor flag status
                       REP #$30                                  ;;807A|807A+807A/807A\807A; Index (16 bit) Accum (16 bit) 
-                      LDY.W #$0000                              ;;807C|807C+807C/807C\807C;
-                      LDA.W #$BBAA                              ;;807F|807F+807F/807F\807F;
-                    - CMP.W !HW_APUIO0                          ;;8082|8082+8082/8082\8082; APU I/O Port
-                      BNE -                                     ;;8085|8085+8085/8085\8085;
+                      LDY.W #$0000                              ;;807C|807C+807C/807C\807C; \
+                      LDA.W #$BBAA                              ;;807F|807F+807F/807F\807F;  |Check if SPC700 is ready to upload
+                    - CMP.W !HW_APUIO0                          ;;8082|8082+8082/8082\8082;  | ; APU I/O Port
+                      BNE -                                     ;;8085|8085+8085/8085\8085; / Loop until the APU I/O Port returns $BBAA
                       SEP #$20                                  ;;8087|8087+8087/8087\8087; Accum (8 bit) 
                       LDA.B #$CC                                ;;8089|8089+8089/8089\8089; Load byte to start transfer 
                       BRA CODE_0080B3                           ;;808B|808B+808B/808B\808B;
@@ -84,21 +84,21 @@ CODE_0080A0:          REP #$20                                  ;;80A0|80A0+80A0
                       BNE -                                     ;;80AD|80AD+80AD/80AD\80AD;
                     - ADC.B #$03                                ;;80AF|80AF+80AF/80AF\80AF;
                       BEQ -                                     ;;80B1|80B1+80B1/80B1\80B1;
-CODE_0080B3:          PHA                                       ;;80B3|80B3+80B3/80B3\80B3;
+CODE_0080B3:          PHA                                       ;;80B3|80B3+80B3/80B3\80B3; Conserve transfer byte
                       REP #$20                                  ;;80B4|80B4+80B4/80B4\80B4; Accum (16 bit) 
-                      LDA.B [!_0],Y                             ;;80B6|80B6+80B6/80B6\80B6;
-                      INY                                       ;;80B8|80B8+80B8/80B8\80B8;
-                      INY                                       ;;80B9|80B9+80B9/80B9\80B9;
-                      TAX                                       ;;80BA|80BA+80BA/80BA\80BA;
-                      LDA.B [!_0],Y                             ;;80BB|80BB+80BB/80BB\80BB;
-                      INY                                       ;;80BD|80BD+80BD/80BD\80BD;
-                      INY                                       ;;80BE|80BE+80BE/80BE\80BE;
-                      STA.W !HW_APUIO2                          ;;80BF|80BF+80BF/80BF\80BF; APU I/O Port
-                      SEP #$20                                  ;;80C2|80C2+80C2/80C2\80C2; Accum (8 bit) 
-                      CPX.W #$0001                              ;;80C4|80C4+80C4/80C4\80C4;
-                      LDA.B #$00                                ;;80C7|80C7+80C7/80C7\80C7;
-                      ROL A                                     ;;80C9|80C9+80C9/80C9\80C9;
-                      STA.W !HW_APUIO1                          ;;80CA|80CA+80CA/80CA\80CA; APU I/O Port
+                      LDA.B [!_0],Y                             ;;80B6|80B6+80B6/80B6\80B6; \ Load the first address in the .
+                      INY                                       ;;80B8|80B8+80B8/80B8\80B8;  |Skip to the next 
+                      INY                                       ;;80B9|80B9+80B9/80B9\80B9;  |
+                      TAX                                       ;;80BA|80BA+80BA/80BA\80BA; / Conserve A by transferring it to X.
+                      LDA.B [!_0],Y                             ;;80BB|80BB+80BB/80BB\80BB; \
+                      INY                                       ;;80BD|80BD+80BD/80BD\80BD;  |
+                      INY                                       ;;80BE|80BE+80BE/80BE\80BE;  |
+                      STA.W !HW_APUIO2                          ;;80BF|80BF+80BF/80BF\80BF; / ; APU I/O Port
+                      SEP #$20                                  ;;80C2|80C2+80C2/80C2\80C2;  | ; Accum (8 bit) 
+                      CPX.W #$0001                              ;;80C4|80C4+80C4/80C4\80C4;  |
+                      LDA.B #$00                                ;;80C7|80C7+80C7/80C7\80C7;  |
+                      ROL A                                     ;;80C9|80C9+80C9/80C9\80C9;  |
+                      STA.W !HW_APUIO1                          ;;80CA|80CA+80CA/80CA\80CA;  | ; APU I/O Port
                       ADC.B #$7F                                ;;80CD|80CD+80CD/80CD\80CD;
                       PLA                                       ;;80CF|80CF+80CF/80CF\80CF;
                       STA.W !HW_APUIO0                          ;;80D0|80D0+80D0/80D0\80D0; APU I/O Port
