@@ -2432,7 +2432,7 @@ OWMoveScroll:         SEP #$20                                  ;;97F0|9831+9810
                       BEQ OWCancelMoveScroll                    ;;97F7|9838+9817/9838\9838; /
                       LDA.W !OverworldEarthquake                ;;97F9|983A+9819/983A\983A; \
                       BNE OWCancelMoveScroll                    ;;97FC|983D+981C/983D\983D; / Skip if earthquake happening
-CODE_04983F:          REP #$30                                  ;;97FE|983F+981E/983F\983F; Index (16 bit) Accum (16 bit) 
+OWScrollNoChecks:     REP #$30                                  ;;97FE|983F+981E/983F\983F; Index (16 bit) Accum (16 bit) 
                       LDX.W !PlayerTurnOW                       ;;9800|9841+9820/9841\9841; \
                       LDA.W !OWPlayerXPos,X                     ;;9803|9844+9823/9844\9844; | Save player overworld X and Y positons
                       STA.B !_0                                 ;;9806|9847+9826/9847\9847; | To $00-$03
@@ -2674,17 +2674,17 @@ CODE_049A90:          SEP #$20                                  ;;9A4F|9A90+9A6F
                       RTS                                       ;;9A51|9A92+9A71/9A92\9A92; Return 
                                                                 ;;                        ;
 CODE_049A93:          LDA.W !PlayerTurnOW                       ;;9A52|9A93+9A72/9A93\9A93; Accum (16 bit) 
-                      AND.W #$00FF                              ;;9A55|9A96+9A75/9A96\9A96;
-                      LSR A                                     ;;9A58|9A99+9A78/9A99\9A99;
-                      LSR A                                     ;;9A59|9A9A+9A79/9A9A\9A9A;
-                      TAX                                       ;;9A5A|9A9B+9A7A/9A9B\9A9B;
-                      LDA.W !OWPlayerSubmap,X                   ;;9A5B|9A9C+9A7B/9A9C\9A9C;
-                      AND.W #$FF00                              ;;9A5E|9A9F+9A7E/9A9F\9A9F;
-                      ORA.W !CurrentSubmap                      ;;9A61|9AA2+9A81/9AA2\9AA2;
-                      STA.W !OWPlayerSubmap,X                   ;;9A64|9AA5+9A84/9AA5\9AA5;
-                      AND.W #$00FF                              ;;9A67|9AA8+9A87/9AA8\9AA8;
-                      BNE +                                     ;;9A6A|9AAB+9A8A/9AAB\9AAB;
-                      JMP CODE_04983F                           ;;9A6C|9AAD+9A8C/9AAD\9AAD;
+                      AND.W #$00FF                              ;;9A55|9A96+9A75/9A96\9A96; \
+                      LSR A                                     ;;9A58|9A99+9A78/9A99\9A99; |
+                      LSR A                                     ;;9A59|9A9A+9A79/9A9A\9A9A; |
+                      TAX                                       ;;9A5A|9A9B+9A7A/9A9B\9A9B; | If player is not on a subworld
+                      LDA.W !OWPlayerSubmap,X                   ;;9A5B|9A9C+9A7B/9A9C\9A9C; | Scroll the screen to them
+                      AND.W #$FF00                              ;;9A5E|9A9F+9A7E/9A9F\9A9F; |
+                      ORA.W !CurrentSubmap                      ;;9A61|9AA2+9A81/9AA2\9AA2; |
+                      STA.W !OWPlayerSubmap,X                   ;;9A64|9AA5+9A84/9AA5\9AA5; |
+                      AND.W #$00FF                              ;;9A67|9AA8+9A87/9AA8\9AA8; |
+                      BNE +                                     ;;9A6A|9AAB+9A8A/9AAB\9AAB; |
+                      JMP OWScrollNoChecks                      ;;9A6C|9AAD+9A8C/9AAD\9AAD; /
                                                                 ;;                        ;
                     + DEC A                                     ;;9A6F|9AB0+9A8F/9AB0\9AB0;
                       ASL A                                     ;;9A70|9AB1+9A90/9AB1\9AB1;
