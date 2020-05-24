@@ -1949,9 +1949,9 @@ CODE_049411:          JMP OWMoveScroll                          ;;93D0|9411+93F0
                                                                 ;;                        ;
 DATA_049414:          db $0D,$08                                ;;93D3|9414+93F3/9414\9414;
                                                                 ;;                        ;
-DATA_049416:          db $EF,$FF,$D7,$FF                        ;;93D5|9416+93F5/9416\9416;
+OWScrollLowerBound:   db $EF,$FF,$D7,$FF                        ;;93D5|9416+93F5/9416\9416;
                                                                 ;;                        ;
-DATA_04941A:          db $11,$01,$31,$01                        ;;93D9|941A+93F9/941A\941A;
+OWScrollUpperBound:   db $11,$01,$31,$01                        ;;93D9|941A+93F9/941A\941A;
                                                                 ;;                        ;
 DATA_04941E:          db $08,$00,$04,$00,$02,$00,$01,$00        ;;93DD|941E+93FD/941E\941E;
 DATA_049426:          db $44,$43,$45,$46,$47,$48,$25,$40        ;;93E5|9426+9405/9426\9426;
@@ -2451,14 +2451,14 @@ CheckOWScrollBounds:  LDA.B !_0,X                               ;;981D|985E+983D
                       SEC                                       ;;981F|9860+983F/9860\9860; | If the player's position is >= #$0080
                       SBC.W #$0080                              ;;9820|9861+9840/9861\9861; | Try to scroll checking upper bound
                       BPL ++                                    ;;9823|9864+9843/9864\9864; /
-                      CMP.W DATA_049416,Y                       ;;9825|9866+9845/9866\9866; \
+                      CMP.W OWScrollLowerBound,Y                ;;9825|9866+9845/9866\9866; \
                       BCS +                                     ;;9828|9869+9848/9869\9869; | If player less than lower bound 
-                      LDA.W DATA_049416,Y                       ;;982A|986B+984A/986B\986B; | Set scroll to lower bound
+                      LDA.W OWScrollLowerBound,Y                ;;982A|986B+984A/986B\986B; | Set scroll to lower bound
                       BRA +                                     ;;982D|986E+984D/986E\986E; /
                                                                 ;;                        ;
-                   ++ CMP.W DATA_04941A,Y                       ;;982F|9870+984F/9870\9870; \ If player greater than uppper bound
+                   ++ CMP.W OWScrollUpperBound,Y                ;;982F|9870+984F/9870\9870; \ If player greater than uppper bound
                       BCC +                                     ;;9832|9873+9852/9873\9873; | Set scroll to upper bound
-                      LDA.W DATA_04941A,Y                       ;;9834|9875+9854/9875\9875; /
+                      LDA.W OWScrollUpperBound,Y                ;;9834|9875+9854/9875\9875; /
                     + STA.B !Layer1XPos,X                       ;;9837|9878+9857/9878\9878;
                       STA.B !Layer2XPos,X                       ;;9839|987A+9859/987A\987A;
                       DEY                                       ;;983B|987C+985B/987C\987C; \
