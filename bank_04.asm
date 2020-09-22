@@ -185,9 +185,9 @@ OWScrollEraseStripe:  db $50,$CF,$40,$02,$FC,$00,$50,$EF        ;;81E0|81E0+81E0
                       db $FC,$00,$53,$0F,$40,$02,$FC,$00        ;;8208|8208+8208/8208\8208;
                       db $FF                                    ;;8210|8210+8210/8210\8210;
                                                                 ;;                        ;
-DATA_048211:          db $00,$00,$02,$00,$FE,$FF,$02,$00        ;;8211|8211+8211/8211\8211;
+OWScrollSpeed:        db $00,$00,$02,$00,$FE,$FF,$02,$00        ;;8211|8211+8211/8211\8211;
                       db $00,$00,$02,$00,$FE,$FF,$02,$00        ;;8219|8219+8219/8219\8219;
-DATA_048221:          db $00,$00,$11,$01,$EF,$FF,$11,$01        ;;8221|8221+8221/8221\8221;
+OWMaxScrollRange:     db $00,$00,$11,$01,$EF,$FF,$11,$01        ;;8221|8221+8221/8221\8221;
                       db $00,$00,$32,$01,$D7,$FF,$32,$01        ;;8229|8229+8229/8229\8229;
 DATA_048231:          db $0F,$0F,$07,$07,$07,$03,$03,$03        ;;8231|8231+8231/8231\8231;
                       db $01,$01,$03,$03,$03,$07,$07,$07        ;;8239|8239+8239/8239\8239;
@@ -380,13 +380,13 @@ CODE_04839A:          LDA.W !PauseFlag                          ;;839A|839A+838B
                       LDA.B !byetudlrHold                       ;;83A1|83A1+8392/83A1\83A1;
                       AND.B #$03                                ;;83A3|83A3+8394/83A3\83A3;
                       ASL A                                     ;;83A5|83A5+8396/83A5\83A5;
-                      JSR CODE_048415                           ;;83A6|83A6+8397/83A6\83A6;
+                      JSR OWFreeLook                            ;;83A6|83A6+8397/83A6\83A6;
                       LDX.B #$02                                ;;83A9|83A9+839A/83A9\83A9;
                       LDA.B !byetudlrHold                       ;;83AB|83AB+839C/83AB\83AB;
                       AND.B #$0C                                ;;83AD|83AD+839E/83AD\83AD;
                       ORA.B #$10                                ;;83AF|83AF+83A0/83AF\83AF;
                       LSR A                                     ;;83B1|83B1+83A2/83B1\83B1;
-                      JSR CODE_048415                           ;;83B2|83B2+83A3/83B2\83B2;
+                      JSR OWFreeLook                            ;;83B2|83B2+83A3/83B2\83B2;
                       LDY.B #$15                                ;;83B5|83B5+83A6/83B5\83B5;
                       LDA.B !TrueFrame                          ;;83B7|83B7+83A8/83B7\83B7;
                       AND.B #$18                                ;;83B9|83B9+83AA/83B9\83B9;
@@ -437,18 +437,18 @@ CODE_048410:          JSR CODE_04862E                           ;;8410|8410+8401
 CODE_048413:          PLB                                       ;;8413|8413+8404/8413\8413;
                       RTL                                       ;;8414|8414+8405/8414\8414; Return 
                                                                 ;;                        ;
-CODE_048415:          TAY                                       ;;8415|8415+8406/8415\8415;
+OWFreeLook:           TAY                                       ;;8415|8415+8406/8415\8415; A=$2,X=$0 for right; A=$4,X=$0 for left; A=$A,X=$2 for down; A=$C,X=$2 for up
                       REP #$20                                  ;;8416|8416+8407/8416\8416; Accum (16 bit) 
-                      LDA.B !Layer1XPos,X                       ;;8418|8418+8409/8418\8418;
-                      CLC                                       ;;841A|841A+840B/841A\841A;
-                      ADC.W DATA_048211,Y                       ;;841B|841B+840C/841B\841B;
-                      PHA                                       ;;841E|841E+840F/841E\841E;
-                      SEC                                       ;;841F|841F+8410/841F\841F;
-                      SBC.W DATA_048221,Y                       ;;8420|8420+8411/8420\8420;
-                      EOR.W DATA_048211,Y                       ;;8423|8423+8414/8423\8423;
-                      ASL A                                     ;;8426|8426+8417/8426\8426;
-                      PLA                                       ;;8427|8427+8418/8427\8427;
-                      BCC +                                     ;;8428|8428+8419/8428\8428;
+                      LDA.B !Layer1XPos,X                       ;;8418|8418+8409/8418\8418; \
+                      CLC                                       ;;841A|841A+840B/841A\841A; | Add appropriate offset to X/Y position
+                      ADC.W OWScrollSpeed,Y                     ;;841B|841B+840C/841B\841B; / (+$0002 or +$FFFE)
+                      PHA                                       ;;841E|841E+840F/841E\841E; \
+                      SEC                                       ;;841F|841F+8410/841F\841F; |
+                      SBC.W OWMaxScrollRange,Y                  ;;8420|8420+8411/8420\8420; | If we go beyond the max scroll range
+                      EOR.W OWScrollSpeed,Y                     ;;8423|8423+8414/8423\8423; | Don't change the scroll
+                      ASL A                                     ;;8426|8426+8417/8426\8426; |
+                      PLA                                       ;;8427|8427+8418/8427\8427; |
+                      BCC +                                     ;;8428|8428+8419/8428\8428; /
                       STA.B !Layer1XPos,X                       ;;842A|842A+841B/842A\842A;
                       STA.B !Layer2XPos,X                       ;;842C|842C+841D/842C\842C;
                     + SEP #$20                                  ;;842E|842E+841F/842E\842E; Accum (8 bit) 
@@ -1308,7 +1308,7 @@ ADDR_048ED9:          LDA.W !OWLevelExitMode                    ;;8EA7|8ED9+8ECA
                       BMI CODE_048EE1                           ;;8EAA|8EDC+8ECD/8EDC\8EDC;
                       STZ.W !OWSpriteNumber,X                   ;;8EAC|8EDE+8ECF/8EDE\8EDE;
 CODE_048EE1:          REP #$30                                  ;;8EAF|8EE1+8ED2/8EE1\8EE1; Index (16 bit) Accum (16 bit) 
-                      JSR CODE_049831                           ;;8EB1|8EE3+8ED4/8EE3\8EE3;
+                      JSR OWMoveScroll                          ;;8EB1|8EE3+8ED4/8EE3\8EE3;
                       SEP #$30                                  ;;8EB4|8EE6+8ED7/8EE6\8EE6; Index (8 bit) Accum (8 bit) 
                       JSR DrawOWBoarder_                        ;;8EB6|8EE8+8ED9/8EE8\8EE8;
                       JSR CODE_048086                           ;;8EB9|8EEB+8EDC/8EEB\8EEB;
@@ -1378,7 +1378,7 @@ CODE_048F5F:          REP #$20                                  ;;8F2D|8F5F+8F50
                       STA.W !OWLevelTileSettings,X              ;;8F42|8F74+8F65/8F74\8F74;
                       INC.W !OverworldProcess                   ;;8F45|8F77+8F68/8F77\8F77;
 CODE_048F7A:          REP #$30                                  ;;8F48|8F7A+8F6B/8F7A\8F7A; Index (16 bit) Accum (16 bit) 
-                      JMP CODE_049831                           ;;8F4A|8F7C+8F6D/8F7C\8F7C;
+                      JMP OWMoveScroll                          ;;8F4A|8F7C+8F6D/8F7C\8F7C;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_048F7F:          db $58,$59,$5D,$63,$77,$79,$7E,$80        ;;8F4D|8F7F+8F70/8F7F\8F7F;
@@ -1759,7 +1759,7 @@ CODE_04926E:          DEC.W !Layer1ScrollXPosUpd                ;;922D|926E+924D
                       ORA.B #$02                                ;;9241|9282+9261/9282\9282;  |or "facing down in water", depending on if character 
                       STA.W !OWPlayerAnimation,X                ;;9243|9284+9263/9284\9284; / is in water or not. 
                     + REP #$30                                  ;;9246|9287+9266/9287\9287; Index (16 bit) Accum (16 bit) 
-                      JMP CODE_049831                           ;;9248|9289+9268/9289\9289;
+                      JMP OWMoveScroll                          ;;9248|9289+9268/9289\9289;
                                                                 ;;                        ;
 CODE_04928C:          REP #$30                                  ;;924B|928C+926B/928C\928C; Index (16 bit) Accum (16 bit) 
                       AND.W #$00FF                              ;;924D|928E+926D/928E\928E;
@@ -1944,14 +1944,14 @@ CODE_0493DA:          LDA.B !_0                                 ;;9399|93DA+93B9
                       STA.W !Layer1ScrollXPosUpd                ;;93C7|9408+93E7/9408\9408;
                       INC.W !OverworldProcess                   ;;93CA|940B+93EA/940B\940B;
                       STZ.W !Layer1ScrollTimer                  ;;93CD|940E+93ED/940E\940E;
-CODE_049411:          JMP CODE_049831                           ;;93D0|9411+93F0/9411\9411;
+CODE_049411:          JMP OWMoveScroll                          ;;93D0|9411+93F0/9411\9411;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_049414:          db $0D,$08                                ;;93D3|9414+93F3/9414\9414;
                                                                 ;;                        ;
-DATA_049416:          db $EF,$FF,$D7,$FF                        ;;93D5|9416+93F5/9416\9416;
+OWScrollLowerBound:   db $EF,$FF,$D7,$FF                        ;;93D5|9416+93F5/9416\9416;
                                                                 ;;                        ;
-DATA_04941A:          db $11,$01,$31,$01                        ;;93D9|941A+93F9/941A\941A;
+OWScrollUpperBound:   db $11,$01,$31,$01                        ;;93D9|941A+93F9/941A\941A;
                                                                 ;;                        ;
 DATA_04941E:          db $08,$00,$04,$00,$02,$00,$01,$00        ;;93DD|941E+93FD/941E\941E;
 DATA_049426:          db $44,$43,$45,$46,$47,$48,$25,$40        ;;93E5|9426+9405/9426\9426;
@@ -2094,7 +2094,7 @@ CODE_0494F8:          LDA.B !_E                                 ;;94B7|94F8+94D7
                       JSR CODE_049D07                           ;;950F|9550+952F/9550\9550;
                       INC.W !OverworldProcess                   ;;9512|9553+9532/9553\9553;
                       JSR CODE_049037                           ;;9515|9556+9535/9556\9556;
-                      JMP CODE_049831                           ;;9518|9559+9538/9559\9559;
+                      JMP OWMoveScroll                          ;;9518|9559+9538/9559\9559;
                                                                 ;;                        ;
                     + LDA.W !OverworldLayer1Tile                ;;951B|955C+953B/955C\955C;
                       STA.W !OverworldTightPath                 ;;951E|955F+953E/955F\955F;
@@ -2400,7 +2400,7 @@ CODE_0497E3:          LDA.W !OverworldDestYPos,X                ;;97A2|97E3+97C2
                     + STY.W !OWPlayerDirection                  ;;97B3|97F4+97D3/97F4\97F4;
                       LDA.W !OverworldProcess                   ;;97B6|97F7+97D6/97F7\97F7;
                       CMP.B #$0A                                ;;97B9|97FA+97D9/97FA\97FA;
-                      BEQ CODE_049831                           ;;97BB|97FC+97DB/97FC\97FC;
+                      BEQ OWMoveScroll                          ;;97BB|97FC+97DB/97FC\97FC;
                       JMP CODE_04945D                           ;;97BD|97FE+97DD/97FE\97FE;
                                                                 ;;                        ;
 CODE_049801:          REP #$20                                  ;;97C0|9801+97E0/9801\9801; Accum (16 bit) 
@@ -2426,47 +2426,47 @@ CODE_04980E:          LDA.W !Layer3ScrollType,Y                 ;;97CD|980E+97ED
                       DEY                                       ;;97EC|982D+980C/982D\982D;
                       DEY                                       ;;97ED|982E+980D/982E\982E;
                       BPL CODE_04980E                           ;;97EE|982F+980E/982F\982F;
-CODE_049831:          SEP #$20                                  ;;97F0|9831+9810/9831\9831; Accum (8 bit) 
-                      LDA.W !OverworldProcess                   ;;97F2|9833+9812/9833\9833;
-                      CMP.B #$0A                                ;;97F5|9836+9815/9836\9836;
-                      BEQ CODE_049882                           ;;97F7|9838+9817/9838\9838;
-                      LDA.W !OverworldEarthquake                ;;97F9|983A+9819/983A\983A;
-                      BNE CODE_049882                           ;;97FC|983D+981C/983D\983D;
-CODE_04983F:          REP #$30                                  ;;97FE|983F+981E/983F\983F; Index (16 bit) Accum (16 bit) 
-                      LDX.W !PlayerTurnOW                       ;;9800|9841+9820/9841\9841;
-                      LDA.W !OWPlayerXPos,X                     ;;9803|9844+9823/9844\9844;
-                      STA.B !_0                                 ;;9806|9847+9826/9847\9847;
-                      LDA.W !OWPlayerYPos,X                     ;;9808|9849+9828/9849\9849;
-                      STA.B !_2                                 ;;980B|984C+982B/984C\984C;
-                      TXA                                       ;;980D|984E+982D/984E\984E;
-                      LSR A                                     ;;980E|984F+982E/984F\984F;
-                      LSR A                                     ;;980F|9850+982F/9850\9850;
-                      TAX                                       ;;9810|9851+9830/9851\9851;
-                      LDA.W !OWPlayerSubmap,X                   ;;9811|9852+9831/9852\9852;
-                      AND.W #$00FF                              ;;9814|9855+9834/9855\9855;
-                      BNE CODE_049882                           ;;9817|9858+9837/9858\9858;
+OWMoveScroll:         SEP #$20                                  ;;97F0|9831+9810/9831\9831; Accum (8 bit) 
+                      LDA.W !OverworldProcess                   ;;97F2|9833+9812/9833\9833; \
+                      CMP.B #$0A                                ;;97F5|9836+9815/9836\9836; | Skip when in overworld mode $0A
+                      BEQ OWCancelMoveScroll                    ;;97F7|9838+9817/9838\9838; /
+                      LDA.W !OverworldEarthquake                ;;97F9|983A+9819/983A\983A; \
+                      BNE OWCancelMoveScroll                    ;;97FC|983D+981C/983D\983D; / Skip if earthquake happening
+OWScrollNoChecks:     REP #$30                                  ;;97FE|983F+981E/983F\983F; Index (16 bit) Accum (16 bit) 
+                      LDX.W !PlayerTurnOW                       ;;9800|9841+9820/9841\9841; \
+                      LDA.W !OWPlayerXPos,X                     ;;9803|9844+9823/9844\9844; | Save player overworld X and Y positons
+                      STA.B !_0                                 ;;9806|9847+9826/9847\9847; | To $00-$03
+                      LDA.W !OWPlayerYPos,X                     ;;9808|9849+9828/9849\9849; | X: $00-$01, Y: $02-$03
+                      STA.B !_2                                 ;;980B|984C+982B/984C\984C; /
+                      TXA                                       ;;980D|984E+982D/984E\984E; \
+                      LSR A                                     ;;980E|984F+982E/984F\984F; | X = 0 for Mario
+                      LSR A                                     ;;980F|9850+982F/9850\9850; | X = 1 for Luigi
+                      TAX                                       ;;9810|9851+9830/9851\9851; /
+                      LDA.W !OWPlayerSubmap,X                   ;;9811|9852+9831/9852\9852; \
+                      AND.W #$00FF                              ;;9814|9855+9834/9855\9855; | Don't scroll for any subworld
+                      BNE OWCancelMoveScroll                    ;;9817|9858+9837/9858\9858; /
                       LDX.W #$0002                              ;;9819|985A+9839/985A\985A;
                       TXY                                       ;;981C|985D+983C/985D\985D;
-CODE_04985E:          LDA.B !_0,X                               ;;981D|985E+983D/985E\985E;
-                      SEC                                       ;;981F|9860+983F/9860\9860;
-                      SBC.W #$0080                              ;;9820|9861+9840/9861\9861;
-                      BPL CODE_049870                           ;;9823|9864+9843/9864\9864;
-                      CMP.W DATA_049416,Y                       ;;9825|9866+9845/9866\9866;
-                      BCS +                                     ;;9828|9869+9848/9869\9869;
-                      LDA.W DATA_049416,Y                       ;;982A|986B+984A/986B\986B;
-                      BRA +                                     ;;982D|986E+984D/986E\986E;
+CheckOWScrollBounds:  LDA.B !_0,X                               ;;981D|985E+983D/985E\985E; \ This section is done once for Y position then for X position
+                      SEC                                       ;;981F|9860+983F/9860\9860; | If the player's position is >= #$0080
+                      SBC.W #$0080                              ;;9820|9861+9840/9861\9861; | Try to scroll checking upper bound
+                      BPL ++                                    ;;9823|9864+9843/9864\9864; /
+                      CMP.W OWScrollLowerBound,Y                ;;9825|9866+9845/9866\9866; \
+                      BCS +                                     ;;9828|9869+9848/9869\9869; | If player less than lower bound 
+                      LDA.W OWScrollLowerBound,Y                ;;982A|986B+984A/986B\986B; | Set scroll to lower bound
+                      BRA +                                     ;;982D|986E+984D/986E\986E; /
                                                                 ;;                        ;
-CODE_049870:          CMP.W DATA_04941A,Y                       ;;982F|9870+984F/9870\9870;
-                      BCC +                                     ;;9832|9873+9852/9873\9873;
-                      LDA.W DATA_04941A,Y                       ;;9834|9875+9854/9875\9875;
+                   ++ CMP.W OWScrollUpperBound,Y                ;;982F|9870+984F/9870\9870; \ If player greater than uppper bound
+                      BCC +                                     ;;9832|9873+9852/9873\9873; | Set scroll to upper bound
+                      LDA.W OWScrollUpperBound,Y                ;;9834|9875+9854/9875\9875; /
                     + STA.B !Layer1XPos,X                       ;;9837|9878+9857/9878\9878;
                       STA.B !Layer2XPos,X                       ;;9839|987A+9859/987A\987A;
-                      DEY                                       ;;983B|987C+985B/987C\987C;
-                      DEY                                       ;;983C|987D+985C/987D\987D;
-                      DEX                                       ;;983D|987E+985D/987E\987E;
-                      DEX                                       ;;983E|987F+985E/987F\987F;
-                      BPL CODE_04985E                           ;;983F|9880+985F/9880\9880;
-CODE_049882:          SEP #$30                                  ;;9841|9882+9861/9882\9882; Index (8 bit) Accum (8 bit) 
+                      DEY                                       ;;983B|987C+985B/987C\987C; \
+                      DEY                                       ;;983C|987D+985C/987D\987D; | If we were on Y position, decrement
+                      DEX                                       ;;983D|987E+985D/987E\987E; | And repeat process for X position
+                      DEX                                       ;;983E|987F+985E/987F\987F; |
+                      BPL CheckOWScrollBounds                   ;;983F|9880+985F/9880\9880; /
+OWCancelMoveScroll:   SEP #$30                                  ;;9841|9882+9861/9882\9882; Index (8 bit) Accum (8 bit) 
                       RTS                                       ;;9843|9884+9863/9884\9884; Return 
                                                                 ;;                        ;
 OW_TilePos_Calc:      LDA.B !_0                                 ;;9844|9885+9864/9885\9885; Get overworld X pos/16 (X) ; Accum (16 bit) 
@@ -2674,17 +2674,17 @@ CODE_049A90:          SEP #$20                                  ;;9A4F|9A90+9A6F
                       RTS                                       ;;9A51|9A92+9A71/9A92\9A92; Return 
                                                                 ;;                        ;
 CODE_049A93:          LDA.W !PlayerTurnOW                       ;;9A52|9A93+9A72/9A93\9A93; Accum (16 bit) 
-                      AND.W #$00FF                              ;;9A55|9A96+9A75/9A96\9A96;
-                      LSR A                                     ;;9A58|9A99+9A78/9A99\9A99;
-                      LSR A                                     ;;9A59|9A9A+9A79/9A9A\9A9A;
-                      TAX                                       ;;9A5A|9A9B+9A7A/9A9B\9A9B;
-                      LDA.W !OWPlayerSubmap,X                   ;;9A5B|9A9C+9A7B/9A9C\9A9C;
-                      AND.W #$FF00                              ;;9A5E|9A9F+9A7E/9A9F\9A9F;
-                      ORA.W !CurrentSubmap                      ;;9A61|9AA2+9A81/9AA2\9AA2;
-                      STA.W !OWPlayerSubmap,X                   ;;9A64|9AA5+9A84/9AA5\9AA5;
-                      AND.W #$00FF                              ;;9A67|9AA8+9A87/9AA8\9AA8;
-                      BNE +                                     ;;9A6A|9AAB+9A8A/9AAB\9AAB;
-                      JMP CODE_04983F                           ;;9A6C|9AAD+9A8C/9AAD\9AAD;
+                      AND.W #$00FF                              ;;9A55|9A96+9A75/9A96\9A96; \
+                      LSR A                                     ;;9A58|9A99+9A78/9A99\9A99; |
+                      LSR A                                     ;;9A59|9A9A+9A79/9A9A\9A9A; |
+                      TAX                                       ;;9A5A|9A9B+9A7A/9A9B\9A9B; | If player is not on a subworld
+                      LDA.W !OWPlayerSubmap,X                   ;;9A5B|9A9C+9A7B/9A9C\9A9C; | Scroll the screen to them
+                      AND.W #$FF00                              ;;9A5E|9A9F+9A7E/9A9F\9A9F; |
+                      ORA.W !CurrentSubmap                      ;;9A61|9AA2+9A81/9AA2\9AA2; |
+                      STA.W !OWPlayerSubmap,X                   ;;9A64|9AA5+9A84/9AA5\9AA5; |
+                      AND.W #$00FF                              ;;9A67|9AA8+9A87/9AA8\9AA8; |
+                      BNE +                                     ;;9A6A|9AAB+9A8A/9AAB\9AAB; |
+                      JMP OWScrollNoChecks                      ;;9A6C|9AAD+9A8C/9AAD\9AAD; /
                                                                 ;;                        ;
                     + DEC A                                     ;;9A6F|9AB0+9A8F/9AB0\9AB0;
                       ASL A                                     ;;9A70|9AB1+9A90/9AB1\9AB1;
@@ -3028,7 +3028,7 @@ CODE_049DAF:          LDA.B #$03                                ;;9CF3|9DAF+9D8E
                       STA.W !OverworldProcess                   ;;9CF5|9DB1+9D90/9DB1\9DB1;
                       STZ.W !OWLevelExitMode                    ;;9CF8|9DB4+9D93/9DB4\9DB4;
                       REP #$30                                  ;;9CFB|9DB7+9D96/9DB7\9DB7; Index (16 bit) Accum (16 bit) 
-                      JMP CODE_049831                           ;;9CFD|9DB9+9D98/9DB9\9DB9;
+                      JMP OWMoveScroll                          ;;9CFD|9DB9+9D98/9DB9\9DB9;
                                                                 ;;                        ;
                     + DEC.W !KeepModeActive                     ;;9D00|9DBC+9D9B/9DBC\9DBC; Index (8 bit) Accum (8 bit) 
                       BPL +                                     ;;9D03|9DBF+9D9E/9DBF\9DBF;
@@ -3037,7 +3037,7 @@ CODE_049DAF:          LDA.B #$03                                ;;9CF3|9DAF+9D8E
                       STZ.W !OWLevelExitMode                    ;;9D0A|9DC6+9DA5/9DC6\9DC6;
                       INC.W !OverworldProcess                   ;;9D0D|9DC9+9DA8/9DC9\9DC9;
                     + REP #$30                                  ;;9D10|9DCC+9DAB/9DCC\9DCC; Index (16 bit) Accum (16 bit) 
-                      JMP CODE_049831                           ;;9D12|9DCE+9DAD/9DCE\9DCE;
+                      JMP OWMoveScroll                          ;;9D12|9DCE+9DAD/9DCE\9DCE;
                                                                 ;;                        ;
 CODE_049DD1:          LDA.W !PlayerTurnLvl                      ;;9D15|9DD1+9DB0/9DD1\9DD1; Index (8 bit) Accum (8 bit) 
                       EOR.B #$01                                ;;9D18|9DD4+9DB3/9DD4\9DD4;
