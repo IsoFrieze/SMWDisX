@@ -2125,7 +2125,7 @@ GetGameMode:          LDA.W !GameMode                           ;;92B7|9322+9322
                       dw GameMode06                             ;;92CA|9335+9335/9335\9337; 06 - title screen spotlight
                       dw GameMode07                             ;;92CC|9337+9337/9337\9339; 07 - title screen
                       dw GameMode08                             ;;92CE|9339+9339/9339\933B; 08 - file select
-                      dw GameMdoe09                             ;;92D0|933B+933B/933B\933D; 09 - file delete
+                      dw GameMode09                             ;;92D0|933B+933B/933B\933D; 09 - file delete
                       dw GameMode0A                             ;;92D2|933D+933D/933D\933F; 0A - player select
                       dw GMTransition                           ;;92D4|933F+933F/933F\9341; 0B - fade out to overworld
                       dw GameMode0C                             ;;92D6|9341+9341/9341\9343; 0C - load overworld
@@ -3008,7 +3008,7 @@ Return009B16:         RTS                                       ;;9AAB|9B16+9B16
                    if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
 DATA_009B17:          db $04,$02,$01                            ;;9AAC|9B17     /9B1C\9B1E;
                                                                 ;;                        ;
-GameMdoe09:           REP #$20                                  ;;9AAF|9B1A     /9B1F\9B21; Accum (16 bit) 
+GameMode09:           REP #$20                                  ;;9AAF|9B1A     /9B1F\9B21; Accum (16 bit) 
                       LDA.W #$39C9                              ;;9AB1|9B1C     /9B21\9B23;
                       LDY.B #$60                                ;;9AB4|9B1F     /9B24\9B26;
                       JSR CODE_009D30                           ;;9AB6|9B21     /9B26\9B28;
@@ -3017,7 +3017,7 @@ GameMdoe09:           REP #$20                                  ;;9AAF|9B1A     
                       AND.B #$40                                ;;9ABD|9B28     /9B2D\9B2F;
                       BEQ +                                     ;;9ABF|9B2A     /9B2F\9B31;
                    else                               ;<  ELSE  ;;------------------------; SS
-GameMdoe09:                                                     ;;                        ;
+GameMode09:                                                     ;;                        ;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
 CODE_009B2C:          DEC.W !GameMode                           ;;9AC1|9B2C+9B17/9B31\9B33;
                       DEC.W !GameMode                           ;;9AC4|9B2F+9B1A/9B34\9B36;
