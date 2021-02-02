@@ -13,7 +13,7 @@ incsrc "constants.asm"
 ; !__VER_SS = Super System
 ; !__VER_E0 = PAL 1.0
 ; !__VER_E1 = PAL 1.1
-!_VER = !__VER_U
+!_VER ?= !__VER_U
 
 incsrc "macros.asm"
 incsrc "rammap.asm"
