@@ -1,7 +1,7 @@
 #!/bin/bash
 echo Assembling...
 rm -f smw.smc
-./asar smw.asm smw.smc || exit
+asar smw.asm smw.smc || exit
 echo Assembly complete!
 
 cmp --silent comparison_J.smc smw.smc && echo "J version match!"
