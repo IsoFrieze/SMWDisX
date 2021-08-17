@@ -5497,7 +5497,7 @@ DATA_00AEF7:          dw $8000,$4000,$2000,$1000                ;;AE95|AEF7+AEE0
                       dw $0080,$0040,$0020,$0010                ;;AEA5|AF07+AEF0/AF0C\AF0E;
                       dw $0008,$0004,$0002,$0001                ;;AEAD|AF0F+AEF8/AF14\AF16;
                                                                 ;;                        ;
-CODE_00AF17:          LDY.W !EndLevelTimer                      ;;AEB5|AF17+AF00/AF1C\AF1E;
+GoalBackgroundFade:   LDY.W !EndLevelTimer                      ;;AEB5|AF17+AF00/AF1C\AF1E;
                       LDA.B !TrueFrame                          ;;AEB8|AF1A+AF03/AF1F\AF21;
                       LSR A                                     ;;AEBA|AF1C+AF05/AF21\AF23;
                       BCC +                                     ;;AEBB|AF1D+AF06/AF22\AF24;
@@ -8106,7 +8106,7 @@ CODE_00C90A:          LDA.B #$01                                ;;C8AA|C90A+C90A
                       STA.W !SPCIO1                             ;;C8B1|C911+C911/C8FE\C8FE; / 
                       RTS                                       ;;C8B4|C914+C914/C901\C901; Return 
                                                                 ;;                        ;
-CODE_00C915:          JSR NoButtons                             ;;C8B5|C915+C915/C902\C902;
+EndLevelRoutine:      JSR NoButtons                             ;;C8B5|C915+C915/C902\C902;
                       STZ.W !PlayerInCloud                      ;;C8B8|C918+C918/C905\C905;
                       STZ.W !PlayerOverworldPose                ;;C8BB|C91B+C91B/C908\C908;
                       STZ.W !PlayerSlopePose                    ;;C8BE|C91E+C91E/C90B\C90B;
@@ -8115,7 +8115,7 @@ CODE_00C915:          JSR NoButtons                             ;;C8B5|C915+C915
                       BCS CODE_00C944                           ;;C8C4|C924+C924/C911\C911;
                       LDA.W !CutsceneID                         ;;C8C6|C926+C926/C913\C913;
                       ORA.W !SwitchPalaceColor                  ;;C8C9|C929+C929/C916\C916;
-                      BEQ CODE_00C96B                           ;;C8CC|C92C+C92C/C919\C919;
+                      BEQ GoalRoutine                           ;;C8CC|C92C+C92C/C919\C919;
                       LDA.B !PlayerInAir                        ;;C8CE|C92E+C92E/C91B\C91B;
                       BEQ +                                     ;;C8D0|C930+C930/C91D\C91D;
                       JSR CODE_00CCE0                           ;;C8D2|C932+C932/C91F\C91F;
@@ -8150,9 +8150,9 @@ CODE_00C95B:          LDY.B #$0B                                ;;C8FB|C95B+C95B
                       INC.W !MessageBoxTrigger                  ;;C907|C967+C967/C959\C959;
 Return00C96A:         RTS                                       ;;C90A|C96A+C96A/C95C\C95C; Return 
                                                                 ;;                        ;
-CODE_00C96B:          JSR CODE_00AF17                           ;;C90B|C96B+C96B/C95D\C95D;
+GoalRoutine:          JSR GoalBackgroundFade                    ;;C90B|C96B+C96B/C95D\C95D;
                       LDA.W !ShowPeaceSign                      ;;C90E|C96E+C96E/C960\C960;
-                      BNE CODE_00C9AF                           ;;C911|C971+C971/C963\C963;
+                      BNE SetPeaceSpotlightSFX                  ;;C911|C971+C971/C963\C963;
                       LDA.W !EndLevelTimer                      ;;C913|C973+C973/C965\C965;
                       CMP.B #con($28,$28,$28,$50,$50)           ;;C916|C976+C976/C968\C968;
                       BCC +                                     ;;C918|C978+C978/C96A\C96A;
@@ -8167,10 +8167,10 @@ CODE_00C96B:          JSR CODE_00AF17                           ;;C90B|C96B+C96B
                     + LDA.B !PlayerXSpeed                       ;;C92B|C98B+C98B/C97D\C97D;
                       BNE +                                     ;;C92D|C98D+C98D/C97F\C97F;
                       STZ.W !HorizLayer1Setting                 ;;C92F|C98F+C98F/C981\C981;
-                      JSR CODE_00CA3E                           ;;C932|C992+C992/C984\C984;
+                      JSR SetSpotlightSizeToF0                  ;;C932|C992+C992/C984\C984;
                       INC.W !ShowPeaceSign                      ;;C935|C995+C995/C987\C987;
                       LDA.B #con($40,$40,$40,$6E,$6E)           ;;C938|C998+C998/C98A\C98A;
-                      STA.W !PlayerPeaceSign                    ;;C93A|C99A+C99A/C98C\C98C;
+                      STA.W !PlayerPeaceSignTimer               ;;C93A|C99A+C99A/C98C\C98C;
                    if ver_is_ntsc(!_VER)              ;\   IF   ;;++++++++++++++++++++++++; J, U, & SS
                       ASL A                                     ;;C93D|C99D+C99D          ;
                    else                               ;<  ELSE  ;;------------------------; E0 & E1
@@ -8182,16 +8182,16 @@ CODE_00C96B:          JSR CODE_00AF17                           ;;C90B|C96B+C96B
                                                                 ;;                        ;
 DATA_00C9A7:          db $25,$07,$40,$0E,$20,$1A,$34,$32        ;;C947|C9A7+C9A7/C99A\C99A;
                                                                 ;;                        ;
-CODE_00C9AF:          JSR SetMarioPeaceImg                      ;;C94F|C9AF+C9AF/C9A2\C9A2;
-                      LDA.W !PlayerPeaceSign                    ;;C952|C9B2+C9B2/C9A5\C9A5;
-                      BEQ CODE_00C9C2                           ;;C955|C9B5+C9B5/C9A8\C9A8;
-                      DEC.W !PlayerPeaceSign                    ;;C957|C9B7+C9B7/C9AA\C9AA;
+SetPeaceSpotlightSFX: JSR SetMarioPeaceImg                      ;;C94F|C9AF+C9AF/C9A2\C9A2;
+                      LDA.W !PlayerPeaceSignTimer               ;;C952|C9B2+C9B2/C9A5\C9A5;
+                      BEQ GoalFinishPostPeace                   ;;C955|C9B5+C9B5/C9A8\C9A8;
+                      DEC.W !PlayerPeaceSignTimer               ;;C957|C9B7+C9B7/C9AA\C9AA;
                       BNE +                                     ;;C95A|C9BA+C9BA/C9AD\C9AD;
                       LDA.B #!BGM_SPOTLIGHT                     ;;C95C|C9BC+C9BC/C9AF\C9AF;
                       STA.W !SPCIO2                             ;;C95E|C9BE+C9BE/C9B1\C9B1; / Change music 
                     + RTS                                       ;;C961|C9C1+C9C1/C9B4\C9B4; Return 
                                                                 ;;                        ;
-CODE_00C9C2:          JSR CODE_00CA44                           ;;C962|C9C2+C9C2/C9B5\C9B5;
+GoalFinishPostPeace:  JSR GoalCheckSpotlight                    ;;C962|C9C2+C9C2/C9B5\C9B5;
                       LDA.B #$01                                ;;C965|C9C5+C9C5/C9B8\C9B8;
                       STA.B !byetudlrHold                       ;;C967|C9C7+C9C7/C9BA\C9BA;
                       JSR CODE_00CD24                           ;;C969|C9C9+C9C9/C9BC\C9BC;
@@ -8247,11 +8247,11 @@ SetMarioPeaceImg:     LDA.B #$26                                ;;C9D1|CA31+CA31
                     + STA.W !PlayerPose                         ;;C9DA|CA3A+CA3A/CA2D\CA2D; / 
                       RTS                                       ;;C9DD|CA3D+CA3D/CA30\CA30; Return 
                                                                 ;;                        ;
-CODE_00CA3E:          LDA.B #$F0                                ;;C9DE|CA3E+CA3E/CA31\CA31;
+SetSpotlightSizeToF0: LDA.B #$F0                                ;;C9DE|CA3E+CA3E/CA31\CA31;
                       STA.W !SpotlightSize                      ;;C9E0|CA40+CA40/CA33\CA33;
                       RTS                                       ;;C9E3|CA43+CA43/CA36\CA36; Return 
                                                                 ;;                        ;
-CODE_00CA44:          LDA.W !SpotlightSize                      ;;C9E4|CA44+CA44/CA37\CA37;
+GoalCheckSpotlight:   LDA.W !SpotlightSize                      ;;C9E4|CA44+CA44/CA37\CA37;
                       BNE +                                     ;;C9E7|CA47+CA47/CA3A\CA3A;
                       RTS                                       ;;C9E9|CA49+CA49/CA3C\CA3C; Return 
                                                                 ;;                        ;
@@ -8489,7 +8489,7 @@ ADDR_00CCB3:          LDA.B #$70                                ;;CC53|CCB3+CCB3
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
 CODE_00CCBB:          LDA.W !EndLevelTimer                      ;;CC5B|CCBB+CCBB/CC5B\CC5B;
                       BEQ +                                     ;;CC5E|CCBE+CCBE/CC5E\CC5E;
-                      JMP CODE_00C915                           ;;CC60|CCC0+CCC0/CC60\CC60;
+                      JMP EndLevelRoutine                       ;;CC60|CCC0+CCC0/CC60\CC60;
                                                                 ;;                        ;
                     + JSR CODE_00CDDD                           ;;CC63|CCC3+CCC3/CC63\CC63;
                       LDA.B !SpriteLock                         ;;CC66|CCC6+CCC6/CC66\CC66; \ Branch if sprites locked 

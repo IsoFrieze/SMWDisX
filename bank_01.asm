@@ -8048,7 +8048,7 @@ InitGoalTape:         LDA.B !SpriteXPosLow,X                    ;;C080|C075+C075
                       STA.W !SpriteMisc1534,X                   ;;C09F|C094+C094/C094\C09B;
                       RTS                                       ;;C0A2|C097+C097/C097\C09E; Return 
                                                                 ;;                        ;
-GoalTape:             JSR CODE_01C12D                           ;;C0A3|C098+C098/C098\C09F;
+GoalTape:             JSR GoalTapeGFX                           ;;C0A3|C098+C098/C098\C09F;
                       LDA.B !SpriteLock                         ;;C0A6|C09B+C09B/C09B\C0A2; \ Branch if sprites locked 
                       BNE Return01C0A4                          ;;C0A8|C09D+C09D/C09D\C0A4; / 
                       LDA.W !SpriteMisc1602,X                   ;;C0AA|C09F+C09F/C09F\C0A6;
@@ -8116,7 +8116,7 @@ CODE_01C125:          STZ.W !SpriteTweakerE,X                   ;;C130|C125+C125
                     + JSL TriggerGoalTape                       ;;C133|C128+C128/C128\C12F;
 Return01C12C:         RTS                                       ;;C137|C12C+C12C/C12C\C133; Return 
                                                                 ;;                        ;
-CODE_01C12D:          LDA.W !SpriteMisc160E,X                   ;;C138|C12D+C12D/C12D\C134;
+GoalTapeGFX:          LDA.W !SpriteMisc160E,X                   ;;C138|C12D+C12D/C12D\C134;
                       BNE +                                     ;;C13B|C130+C130/C130\C137;
                       JSR GetDrawInfoBnk1                       ;;C13D|C132+C132/C132\C139;
                       LDA.B !_0                                 ;;C140|C135+C135/C135\C13C;

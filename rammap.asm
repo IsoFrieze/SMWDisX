@@ -650,7 +650,7 @@ incsrc "hardware_registers.asm"
 !IsCarryingItem = $7E148F
 !InvinsibilityTimer = $7E1490
 !SpriteXMovement = $7E1491
-!PlayerPeaceSign = $7E1492
+!PlayerPeaceSignTimer = $7E1492
 !EndLevelTimer = $7E1493
 !ColorFadeDir = $7E1494
 !ColorFadeTimer = $7E1495
