@@ -5688,383 +5688,106 @@ Return00B090:         RTS                                       ;;B02E|B090+B079
                                                                 ;;                        ;
                       %insert_empty($11,$0F,$36,$1D,$1B)        ;;B02F|B091+B07A/B096\B098;
                                                                 ;;                        ;
-BackAreaColors:       dw $5B9F,$6FFB,$5D80,$0000                ;;B040|B0A0+B0B0/B0B3\B0B3; back area colors
-                      dw $1D22,$24C3,$7393,$7FFF                ;;B048|B0A8+B0B8/B0BB\B0BB;
-                                                                ;;                        ;
-BackgroundPalettes:   dw $3A49,$428B,$4ACD,$530F                ;;B050|B0B0+B0C0/B0C3\B0C3; BG Palette 0
-                      dw $5B51,$6393,$7FFF,$0000                ;;B058|B0B8+B0C8/B0CB\B0CB;
-                      dw $7F20,$7F80,$7FE0,$7FE0                ;;B060|B0C0+B0D0/B0D3\B0D3;
-                                                                ;;                        ;
-                      dw $3942,$5208,$6ACE,$6312                ;;B068|B0C8+B0D8/B0DB\B0DB; BG Palette 1
-                      dw $6B55,$7398,$3942,$5208                ;;B070|B0D0+B0E0/B0E3\B0E3;
-                      dw $6ACE,$3942,$5208,$6ACE                ;;B078|B0D8+B0E8/B0EB\B0EB;
-                                                                ;;                        ;
-                      dw $4ED6,$5718,$5F5A,$679C                ;;B080|B0E0+B0F0/B0F3\B0F3; BG Palette 2
-                      dw $6FDE,$77FF,$7FFF,$0000                ;;B088|B0E8+B0F8/B0FB\B0FB;
-                      dw $7F20,$7F80,$7FE0,$7FE0                ;;B090|B0F0+B100/B103\B103;
-                                                                ;;                        ;
-                      dw $20A3,$3148,$3DAC,$39CE                ;;B098|B0F8+B108/B10B\B10B; BG Palette 3
-                      dw $3E32,$4AB6,$20A2,$2D25                ;;B0A0|B100+B110/B113\B113;
-                      dw $3568,$358A,$24E4,$4A52                ;;B0A8|B108+B118/B11B\B11B;
-                                                                ;;                        ;
-                      dw $50C8,$59CC,$526D,$58EB                ;;B0B0|B110+B120/B123\B123; BG Palette 4
-                      dw $654C,$5AD0,$5D80,$7F39                ;;B0B8|B118+B128/B12B\B12B;
-                      dw $7E93,$65A8,$5648,$5728                ;;B0C0|B120+B130/B133\B133;
-                                                                ;;                        ;
-                      dw $1462,$3546,$45A9,$520D                ;;B0C8|B128+B138/B13B\B13B; BG Palette 5
-                      dw $62B1,$7B77,$0000,$7B1E                ;;B0D0|B130+B140/B143\B143;
-                      dw $7B9F,$7F99,$7FF6,$7FFC                ;;B0D8|B138+B148/B14B\B14B;
-                                                                ;;                        ;
-                      dw $0000,$24C5,$2D49,$2DAD                ;;B0E0|B140+B150/B153\B153; BG Palette 6
-                      dw $2253,$3F18,$1060,$1881                ;;B0E8|B148+B158/B15B\B15B;
-                      dw $1CA3,$1CE4,$2909,$254B                ;;B0F0|B150+B160/B163\B163;
-                                                                ;;                        ;
-                      dw $0960,$01A4,$01E8,$022C                ;;B0F8|B158+B168/B16B\B16B; BG Palette 7
-                      dw $0291,$02F5,$7FFF,$0000                ;;B100|B160+B170/B173\B173;
-                      dw $7EE0,$7F20,$7F80,$7FE0                ;;B108|B168+B178/B17B\B17B;
-                                                                ;;                        ;
-StatusBarColors:      dw $7393,$0000,$0CFB,$2FEB                ;;B110|B170+B180/B183\B183; Palette 0 colors 8-F
-                      dw $7393,$0000,$7FDD,$2D7F                ;;B118|B178+B188/B18B\B18B;
-                                                                ;;                        ;
-                      dw $7393,$0000,$7AAB,$7FFF                ;;B120|B180+B190/B193\B193; Palette 1 colors 8-F
-                      dw $7393,$0000,$1E9B,$3B7F                ;;B128|B188+B198/B19B\B19B;
-                                                                ;;                        ;
-ForegroundPalettes:   dw $0000,$0DAF,$2E79,$25E0                ;;B130|B190+B1A0/B1A3\B1A3; FG Palette 0
-                      dw $2B1C,$0320                            ;;B138|B198+B1A8/B1AB\B1AB;
-                      dw $0000,$2D6B,$3DEF,$4E73                ;;B13C|B19C+B1AC/B1AF\B1AF;
-                      dw $6318,$739C                            ;;B144|B1A4+B1B4/B1B7\B1B7;
-                                                                ;;                        ;
-                      dw $0000,$00E9,$220D,$058E                ;;B148|B1A8+B1B8/B1BB\B1BB; FG Palette 1
-                      dw $1A33,$32B7                            ;;B150|B1B0+B1C0/B1C3\B1C3;
-                      dw $0000,$2DE0,$52E0,$157F                ;;B154|B1B4+B1C4/B1C7\B1C7;
-                      dw $325F,$4B3F                            ;;B15C|B1BC+B1CC/B1CF\B1CF;
-                                                                ;;                        ;
-                      dw $0000,$59C8,$72CE,$39CB                ;;B160|B1C0+B1D0/B1D3\B1D3; FG Palette 2
-                      dw $3E30,$4AB3                            ;;B168|B1C8+B1D8/B1DB\B1DB;
-                      dw $0000,$0016,$001B,$015F                ;;B16C|B1CC+B1DC/B1DF\B1DF;
-                      dw $021F,$031F                            ;;B174|B1D4+B1E4/B1E7\B1E7;
-                                                                ;;                        ;
-                      dw $0000,$49EC,$524F,$5AB2                ;;B178|B1D8+B1E8/B1EB\B1EB; FG Palette 3
-                      dw $6715,$7FDB                            ;;B180|B1E0+B1F0/B1F3\B1F3;
-                      dw $0000,$0016,$001B,$015F                ;;B184|B1E4+B1F4/B1F7\B1F7;
-                      dw $021F,$031F                            ;;B18C|B1EC+B1FC/B1FF\B1FF;
-                                                                ;;                        ;
-                      dw $0000,$08C9,$194E,$29D3                ;;B190|B1F0+B200/B203\B203; FG Palette 4
-                      dw $3E78,$531D                            ;;B198|B1F8+B208/B20B\B20B;
-                      dw $0000,$14C8,$1D09,$296C                ;;B19C|B1FC+B20C/B20F\B20F;
-                      dw $35CF,$4232                            ;;B1A4|B204+B214/B217\B217;
-                                                                ;;                        ;
-                      dw $55EF,$6EB5,$76F7,$7F39                ;;B1A8|B208+B218/B21B\B21B; FG Palette 5
-                      dw $7F7B,$7FBD                            ;;B1B0|B210+B220/B223\B223;
-                      dw $0000,$2CC9,$414E,$55D3                ;;B1B4|B214+B224/B227\B227;
-                      dw $6E78,$7F1D                            ;;B1BC|B21C+B22C/B22F\B22F;
-                                                                ;;                        ;
-                      dw $0000,$01E9,$02AC,$032F                ;;B1C0|B220+B230/B233\B233; FG Palette 6
-                      dw $0399,$53FE                            ;;B1C8|B228+B238/B23B\B23B;
-                      dw $0000,$0000,$0000,$3C8F                ;;B1CC|B22C+B23C/B23F\B23F;
-                      dw $61D8,$7E7F                            ;;B1D4|B234+B244/B247\B247;
-                                                                ;;                        ;
-                      dw $0000,$24C5,$2D49,$2DAD                ;;B1D8|B238+B248/B24B\B24B; FG Palette 7
-                      dw $2253,$3F18                            ;;B1E0|B240+B250/B253\B253;
-                      dw $0000,$0016,$001B,$015F                ;;B1E4|B244+B254/B257\B257;
-                      dw $021F,$031F                            ;;B1EC|B24C+B25C/B25F\B25F;
-                                                                ;;                        ;
-StandardColors:       dw $39CE,$0000,$6318,$7F34                ;;B1F0|B250+B260/B263\B263; Palette 4 Colors 2-7
-                      dw $7F95,$7FF8                            ;;B1F8|B258+B268/B26B\B26B;
-                                                                ;;                        ;
-                      dw $0000,$32B7,$67FB,$0200                ;;B1FC|B25C+B26C/B26F\B26F; Palette 5 Colors 2-7
-                      dw $0320,$03E0                            ;;B204|B264+B274/B277\B277;
-                                                                ;;                        ;
-                      dw $0000,$0D71,$7C3F,$1E9B                ;;B208|B268+B278/B27B\B27B; Palette 6 Colors 2-7
-                      dw $137F,$03FF                            ;;B210|B270+B280/B283\B283;
-                                                                ;;                        ;
-                      dw $0000,$2817,$401F,$4529                ;;B214|B274+B284/B287\B287; Palette 7 Colors 2-7
-                      dw $59AD,$6610                            ;;B21C|B27C+B28C/B28F\B28F;
-                                                                ;;                        ;
-                      dw $0000,$0D71,$1E9B,$3B7F                ;;B220|B280+B290/B293\B293; Palette 8 Colors 2-7
-                      dw $7FFF,$7FFF                            ;;B228|B288+B298/B29B\B29B;
-                                                                ;;                        ;
-                      dw $0000,$39CE,$5294,$6318                ;;B22C|B28C+B29C/B29F\B29F; Palette 9 Colors 2-7
-                      dw $739C,$2C5F                            ;;B234|B294+B2A4/B2A7\B2A7;
-                                                                ;;                        ;
-                      dw $0000,$01FF,$031F,$03FF                ;;B238|B298+B2A8/B2AB\B2AB; Palette A Colors 2-7
-                      dw $00B7,$023F                            ;;B240|B2A0+B2B0/B2B3\B2B3;
-                                                                ;;                        ;
-                      dw $0000,$6D08,$6DAD,$7E31                ;;B244|B2A4+B2B4/B2B7\B2B7; Palette B Colors 2-7
-                      dw $00B7,$023F                            ;;B24C|B2AC+B2BC/B2BF\B2BF;
-                                                                ;;                        ;
-                      dw $0000,$0011,$0017,$001F                ;;B250|B2B0+B2C0/B2C3\B2C3; Palette C Colors 2-7
-                      dw $00B7,$023F                            ;;B258|B2B8+B2C8/B2CB\B2CB;
-                                                                ;;                        ;
-                      dw $0000,$01E0,$02E0,$03E0                ;;B25C|B2BC+B2CC/B2CF\B2CF; Palette D Colors 2-7
-                      dw $00B7,$023F                            ;;B264|B2C4+B2D4/B2D7\B2D7;
-                                                                ;;                        ;
-PlayerColors:         dw $635F,$581D,$000A,$391F                ;;B268|B2C8+B2D8/B2DB\B2DB; Mario Palette
-                      dw $44C4,$4E08,$6770,$30B6                ;;B270|B2D0+B2E0/B2E3\B2E3;
-                      dw $35DF,$03FF                            ;;B278|B2D8+B2E8/B2EB\B2EB;
-                                                                ;;                        ;
-                      dw $4F3F,$581D,$1140,$3FE0                ;;B27C|B2DC+B2EC/B2EF\B2EF; Luigi Palette
-                      dw $3C07,$7CAE,$7DB3,$2F00                ;;B284|B2E4+B2F4/B2F7\B2F7;
-                      dw $165F,$03FF                            ;;B28C|B2EC+B2FC/B2FF\B2FF;
-                                                                ;;                        ;
-                      dw $635F,$581D,$2529,$7FFF                ;;B290|B2F0+B300/B303\B303; Fire Mario Palette
-                      dw $0008,$0017,$001F,$577B                ;;B298|B2F8+B308/B30B\B30B;
-                      dw $0DDF,$03FF                            ;;B2A0|B300+B310/B313\B313;
-                                                                ;;                        ;
-                      dw $3B1F,$581D,$2529,$7FFF                ;;B2A4|B304+B314/B317\B317; Fire Luigi Palette
-                      dw $1140,$01E0,$02E0,$577B                ;;B2AC|B30C+B31C/B31F\B31F;
-                      dw $0DDF,$03FF                            ;;B2B4|B314+B324/B327\B327;
-                                                                ;;                        ;
-SpriteColors:         dw $0000,$24C5,$2D49,$2DAD                ;;B2B8|B318+B328/B32B\B32B; Sprite Palette 0
-                      dw $2253,$3F18                            ;;B2C0|B320+B330/B333\B333;
-                      dw $2523,$35C4,$3E25,$4686                ;;B2C4|B324+B334/B337\B337;
-                      dw $4EE7,$401F                            ;;B2CC|B32C+B33C/B33F\B33F;
-                                                                ;;                        ;
-                      dw $0000,$41C6,$7354,$7FFA                ;;B2D0|B330+B340/B343\B343; Sprite Palette 1
-                      dw $7FFD,$6D08                            ;;B2D8|B338+B348/B34B\B34B;
-                      dw $0000,$3434,$443A,$659F                ;;B2DC|B33C+B34C/B34F\B34F;
-                      dw $0116,$027F                            ;;B2E4|B344+B354/B357\B357;
-                                                                ;;                        ;
-                      dw $0000,$24C5,$2D49,$2DAD                ;;B2E8|B348+B358/B35B\B35B; Sprite Palette 2
-                      dw $2253,$3F18                            ;;B2F0|B350+B360/B363\B363;
-                      dw $0000,$2DAE,$3E32,$4AB6                ;;B2F4|B354+B364/B367\B367;
-                      dw $52F9,$2CF3                            ;;B2FC|B35C+B36C/B36F\B36F;
-                                                                ;;                        ;
-                      dw $0000,$516B,$4E6D,$4FB3                ;;B300|B360+B370/B373\B373; Sprite Palette 3
-                      dw $30BF,$371D                            ;;B308|B368+B378/B37B\B37B;
-                      dw $2E32,$4A0D,$1088,$214A                ;;B30C|B36C+B37C/B37F\B37F;
-                      dw $296D,$3DCF                            ;;B314|B374+B384/B387\B387;
-                                                                ;;                        ;
-                      dw $0000,$2940,$3DE0,$5280                ;;B318|B378+B388/B38B\B38B; Sprite Palette 4
-                      dw $00B7,$023F                            ;;B320|B380+B390/B393\B393;
-                      dw $0000,$39CE,$5294,$6318                ;;B324|B384+B394/B397\B397;
-                      dw $00B7,$023F                            ;;B32C|B38C+B39C/B39F\B39F;
-                                                                ;;                        ;
-                      dw $0000,$7E70,$7ED3,$7F36                ;;B330|B390+B3A0/B3A3\B3A3; Sprite Palette 5
-                      dw $7F99,$401F                            ;;B338|B398+B3A8/B3AB\B3AB;
-                      dw $0000,$39CE,$5294,$6318                ;;B33C|B39C+B3AC/B3AF\B3AF;
-                      dw $739C,$2C5F                            ;;B344|B3A4+B3B4/B3B7\B3B7;
-                                                                ;;                        ;
-                      dw $0000,$4EDF,$5ADE,$66BD                ;;B348|B3A8+B3B8/B3BB\B3BB; Sprite Palette 6
-                      dw $727C,$401F                            ;;B350|B3B0+B3C0/B3C3\B3C3;
-                      dw $0000,$7FF5,$7FF7,$7FF9                ;;B354|B3B4+B3C4/B3C7\B3C7;
-                      dw $7FFC,$7FFF                            ;;B35C|B3BC+B3CC/B3CF\B3CF;
-                                                                ;;                        ;
-                      dw $0000,$63FB,$030C,$020B                ;;B360|B3C0+B3D0/B3D3\B3D3; Sprite Palette 7
-                      dw $1535,$1A5F                            ;;B368|B3C8+B3D8/B3DB\B3DB;
-                      dw $0000,$3434,$443A,$659F                ;;B36C|B3CC+B3DC/B3DF\B3DF;
-                      dw $0116,$027F                            ;;B374|B3D4+B3E4/B3E7\B3E7;
-                                                                ;;                        ;
-OverworldColors:      dw $0000,$1228,$12A8,$1348                ;;B378|B3D8+B3E8/B3EB\B3EB; Yoshi's Island
-                      dw $327B,$5BBF,$7D60                      ;;B380|B3E0+B3F0/B3F3\B3F3;
-                      dw $0000,$7BDE,$1348,$7D60                ;;B386|B3E6+B3F6/B3F9\B3F9;
-                      dw $327B,$37BF,$2D7F                      ;;B38E|B3EE+B3FE/B401\B401;
-                      dw $0000,$3268,$32E8,$1348                ;;B394|B3F4+B404/B407\B407;
-                      dw $5EFF,$6F7F,$7D60                      ;;B39C|B3FC+B40C/B40F\B40F;
-                      dw $0000,$7BDE,$573B,$7EA0                ;;B3A2|B402+B412/B415\B415;
-                      dw $01F6,$12A8,$1348                      ;;B3AA|B40A+B41A/B41D\B41D;
-                                                                ;;                        ;
-                      dw $0000,$1228,$12A8,$1348                ;;B3B0|B410+B420/B423\B423; Main Overworld
-                      dw $327B,$5BBF,$7E28                      ;;B3B8|B418+B428/B42B\B42B;
-                      dw $0000,$7BDE,$1348,$7E28                ;;B3BE|B41E+B42E/B431\B431;
-                      dw $327B,$37BF,$03FF                      ;;B3C6|B426+B436/B439\B439;
-                      dw $0000,$3212,$3E75,$573B                ;;B3CC|B42C+B43C/B43F\B43F;
-                      dw $327B,$5BBF,$7E28                      ;;B3D4|B434+B444/B447\B447;
-                      dw $0000,$7BDE,$573B,$7E28                ;;B3DA|B43A+B44A/B44D\B44D;
-                      dw $327B,$38C4,$1348                      ;;B3E2|B442+B452/B455\B455;
-                                                                ;;                        ;
-                      dw $2CC7,$69F0,$66B2,$67D5                ;;B3E8|B448+B458/B45B\B45B; Star World
-                      dw $6634,$53DE,$7FFF                      ;;B3F0|B450+B460/B463\B463;
-                      dw $2CC7,$4560,$6680,$7FF7                ;;B3F6|B456+B466/B469\B469;
-                      dw $031F,$037F,$47FF                      ;;B3FE|B45E+B46E/B471\B471;
-                      dw $412C,$69F0,$66B2,$67D5                ;;B404|B464+B474/B477\B477;
-                      dw $001F,$7FFF,$2CC7                      ;;B40C|B46C+B47C/B47F\B47F;
-                      dw $2CC7,$69F0,$66B2,$67D5                ;;B412|B472+B482/B485\B485;
-                      dw $412C,$3AD5,$5B9C                      ;;B41A|B47A+B48A/B48D\B48D;
-                                                                ;;                        ;
-                      dw $0000,$49EC,$562E,$62F1                ;;B420|B480+B490/B493\B493; Vanilla Dome & Valley of Bowser
-                      dw $3126,$5BBF,$0000                      ;;B428|B488+B498/B49B\B49B;
-                      dw $0000,$7BDE,$5795,$7E28                ;;B42E|B48E+B49E/B4A1\B4A1;
-                      dw $3126,$37BF,$2D7F                      ;;B436|B496+B4A6/B4A9\B4A9;
-                      dw $0000,$3126,$3D89,$49EC                ;;B43C|B49C+B4AC/B4AF\B4AF;
-                      dw $3126,$5BBF,$7E28                      ;;B444|B4A4+B4B4/B4B7\B4B7;
-                      dw $0000,$7BDE,$573B,$32C6                ;;B44A|B4AA+B4BA/B4BD\B4BD;
-                      dw $3126,$037F,$037F                      ;;B452|B4B2+B4C2/B4C5\B4C5;
-                                                                ;;                        ;
-                      dw $0000,$1A05,$0AC5,$22EF                ;;B458|B4B8+B4C8/B4CB\B4CB; Forest of Illusion
-                      dw $1A75,$4359,$7D60                      ;;B460|B4C0+B4D0/B4D3\B4D3;
-                      dw $0000,$7739,$22EF,$7D60                ;;B466|B4C6+B4D6/B4D9\B4D9;
-                      dw $1E18,$375C,$7E09                      ;;B46E|B4CE+B4DE/B4E1\B4E1;
-                      dw $0000,$3660,$4B20,$22EF                ;;B474|B4D4+B4E4/B4E7\B4E7;
-                      dw $4E5A,$533A,$7D60                      ;;B47C|B4DC+B4EC/B4EF\B4EF;
-                      dw $0000,$327B,$22EF,$2119                ;;B482|B4E2+B4F2/B4F5\B4F5;
-                      dw $01F6,$2DE6,$36A8                      ;;B48A|B4EA+B4FA/B4FD\B4FD;
-                                                                ;;                        ;
-                      dw $2CC7,$69F0,$0000,$0000                ;;B490|B4F0+B500/B503\B503; Special World
-                      dw $6634,$7FF9,$7FFF                      ;;B498|B4F8+B508/B50B\B50B;
-                      dw $0000,$4560,$6680,$7FF7                ;;B49E|B4FE+B50E/B511\B511;
-                      dw $031F,$037F,$47FF                      ;;B4A6|B506+B516/B519\B519;
-                      dw $412C,$69F0,$66B2,$67D5                ;;B4AC|B50C+B51C/B51F\B51F;
-                      dw $001F,$7FFF,$2CC7                      ;;B4B4|B514+B524/B527\B527;
-                      dw $2CC7,$69F0,$66B2,$67D5                ;;B4BA|B51A+B52A/B52D\B52D;
-                      dw $412C,$3AD5,$5B9C                      ;;B4C2|B522+B532/B535\B535;
-                                                                ;;                        ;
-OWStdColors:          dw $0000,$2CE7,$3D6B,$4DEF                ;;B4C8|B528+B538/B53B\B53B; Palette 2 Colors 9-F
-                      dw $5E73,$6EF7,$7FFF                      ;;B4D0|B530+B540/B543\B543;
-                                                                ;;                        ;
-                      dw $7FF1,$01BF,$7E00,$03BF                ;;B4D6|B536+B546/B549\B549; Palette 3 Colors 9-F
-                      dw $03E0,$7FFC,$7FFF                      ;;B4DE|B53E+B54E/B551\B551;
-                                                                ;;                        ;
-                      dw $0000,$194F,$3E78,$573E                ;;B4E4|B544+B554/B557\B557; Palette 4 Colors 9-F
-                      dw $7E20,$7EE0,$7FE0                      ;;B4EC|B54C+B55C/B55F\B55F;
-                                                                ;;                        ;
-                      dw $0000,$5231,$66F6,$7B9C                ;;B4F2|B552+B562/B565\B565; Palette 5 Colors 9-F
-                      dw $1685,$2F4B,$47F1                      ;;B4FA|B55A+B56A/B56D\B56D;
-                                                                ;;                        ;
-                      dw $0000,$194F,$3E78,$573E                ;;B500|B560+B570/B573\B573; Palette 6 Colors 9-F
-                      dw $03FF,$7BDE,$7C1F                      ;;B508|B568+B578/B57B\B57B;
-                                                                ;;                        ;
-                      dw $0000,$194F,$3E78,$573E                ;;B50E|B56E+B57E/B581\B581; Palette 7 Colors 9-F
-                      dw $2D7F,$2F4B,$47F1                      ;;B516|B576+B586/B589\B589;
-                                                                ;;                        ;
-OWStdColors2:         dw $7FFF,$0000,$0D71,$037F                ;;B51C|B57C+B58C/B58F\B58F; Palette 8 Colors 1-7
-                      dw $4FFF,$4F3F,$7FE0                      ;;B524|B584+B594/B597\B597;
-                                                                ;;                        ;
-                      dw $7FFF,$0000,$01E0,$7DAD                ;;B52A|B58A+B59A/B59D\B59D; Palette 9 Colors 1-7
-                      dw $0380,$00B7,$023F                      ;;B532|B592+B5A2/B5A5\B5A5;
-                                                                ;;                        ;
-                      dw $7FFF,$0000,$0016,$001F                ;;B538|B598+B5A8/B5AB\B5AB; Palette A Colors 1-7
-                      dw $6D08,$2DDD,$635F                      ;;B540|B5A0+B5B0/B5B3\B5B3;
-                                                                ;;                        ;
-                      dw $7FFF,$0000,$0280,$03E0                ;;B546|B5A6+B5B6/B5B9\B5B9; Palette B Colors 1-7
-                      dw $6D08,$261A,$573B                      ;;B54E|B5AE+B5BE/B5C1\B5C1;
-                                                                ;;                        ;
-                      dw $7FFF,$0000,$7EE0,$7F20                ;;B554|B5B4+B5C4/B5C7\B5C7; Palette C Colors 1-7
-                      dw $7F80,$7FE0,$7FE0                      ;;B55C|B5BC+B5CC/B5CF\B5CF;
-                                                                ;;                        ;
-                      dw $7FFF,$0000,$7EE0,$7F20                ;;B562|B5C2+B5D2/B5D5\B5D5; Palette D Colors 1-7
-                      dw $7F80,$7FE0,$7FE0                      ;;B56A|B5CA+B5DA/B5DD\B5DD;
-                                                                ;;                        ;
-                      dw $0000,$001B,$462D,$5EF3                ;;B570|B5D0+B5E0/B5E3\B5E3; Palette E Colors 1-7
-                      dw $1685,$2F4B,$47F1                      ;;B578|B5D8+B5E8/B5EB\B5EB;
-                                                                ;;                        ;
-OverworldLightning:   dw $0000,$2CE7,$3D6B,$4DEF                ;;B57E|B5DE+B5EE/B5F1\B5F1; Also Palette F Colors 1-7
-                      dw $5E73,$6EF7,$7FFF                      ;;B586|B5E6+B5F6/B5F9\B5F9;
-                                                                ;;                        ;
-OverworldHudColors:   dw $7393,$0000,$03FF,$573B                ;;B58C|B5EC+B5FC/B5FF\B5FF; Palette 0 Colors 8-F
-                      dw $7393,$3E75,$3212,$25AF                ;;B594|B5F4+B604/B607\B607;
-                                                                ;;                        ;
-                      dw $7393,$573B,$7FFF,$0000                ;;B59C|B5FC+B60C/B60F\B60F; Palette 1 Colors 8-F
-                      dw $7393,$0000,$573B,$7E6C                ;;B5A4|B604+B614/B617\B617;
-                                                                ;;                        ;
-FlashingColors:       dw $02DF,$035F,$27FF,$5FFF                ;;B5AC|B60C+B61C/B61F\B61F; Flashing Yellow
-                      dw $73FF,$5FFF,$27FF,$035F                ;;B5B4|B614+B624/B627\B627;
-                                                                ;;                        ;
-                      dw $01BF,$001F,$001B,$0018                ;;B5BC|B61C+B62C/B62F\B62F; Flashing Red
-                      dw $0018,$001B,$001F,$01BF                ;;B5C4|B624+B634/B637\B637;
-                                                                ;;                        ;
-TitleScreenColors:    dw $437F,$0000,$7F60,$173F                ;;B5CC|B62C+B63C/B63F\B63F; Palette 0 Colors 8-F
-                      dw $437F,$0000,$1CFF,$0320                ;;B5D4|B634+B644/B647\B647;
-                                                                ;;                        ;
-                      dw $437F,$0000,$0320,$7F60                ;;B5DC|B63C+B64C/B64F\B64F; Palette 1 Colors 8-F
-                      dw $437F,$5BBF,$327B,$08E7                ;;B5E4|B644+B654/B657\B657;
-                                                                ;;                        ;
-                      dw $7E00,$7E20,$7EA0,$7EE0                ;;B5EC|B64C+B65C/B65F\B65F; Unknown Blue Gradient
-                      dw $7F20,$7F80,$7FE0,$7FE0                ;;B5F4|B654+B664/B667\B667;
-                                                                ;;                        ;
-IggyLarryPlatColors:  dw $0000,$1CE0,$3DE8,$5EF0                ;;B5FC|B65C+B66C/B66F\B66F; Palette 0 Colors 0-7
-                      dw $7FF8,$7FFF,$1685,$2F4B                ;;B604|B664+B674/B677\B677;
-                                                                ;;                        ;
-BigCrusherColors:     dw $7393,$0000,$0D71,$1E9B                ;;B60C|B66C+B67C/B67F\B67F; Palette 0 Colors C-F
-                                                                ;;                        ;
-BerryColors:          dw $7FFF,$0000,$0320,$0016                ;;B614|B674+B684/B687\B687; Palette 2,9 Colors 9-F
-                      dw $001F,$017F,$029F                      ;;B61C|B67C+B68C/B68F\B68F;
-                                                                ;;                        ;
-                      dw $7FFF,$0000,$0320,$347D                ;;B622|B682+B692/B695\B695; Palette 3,A Colors 9-F
-                      dw $551E,$65FF,$7B1F                      ;;B62A|B68A+B69A/B69D\B69D;
-                                                                ;;                        ;
-                      dw $7FFF,$0000,$0320,$0380                ;;B630|B690+B6A0/B6A3\B6A3; Palette 4,B Colors 9-F
-                      dw $1FF1,$03F9,$4FFF                      ;;B638|B698+B6A8/B6AB\B6AB;
-                                                                ;;                        ;
-BowserColors:         dw $7FFF,$18C0,$63FB,$030C                ;;B63E|B69E+B6AE/B6B1\B6B1; Palette 0 Colors 1-7
-                      dw $020B,$1535,$1A5F                      ;;B646|B6A6+B6B6/B6B9\B6B9;
-                      dw $779B,$1860,$5B97,$02A8                ;;B64C|B6AC+B6BC/B6BF\B6BF;
-                      dw $01A7,$0CD1,$11FB                      ;;B654|B6B4+B6C4/B6C7\B6C7;
-                      dw $6F37,$1800,$5333,$0245                ;;B65A|B6BA+B6CA/B6CD\B6CD;
-                      dw $0143,$046E,$0997                      ;;B662|B6C2+B6D2/B6D5\B6D5;
-                      dw $66D3,$1000,$4ACF,$01E1                ;;B668|B6C8+B6D8/B6DB\B6DB;
-                      dw $00E0,$000A,$0133                      ;;B670|B6D0+B6E0/B6E3\B6E3;
-                      dw $5E6F,$0000,$426B,$0180                ;;B676|B6D6+B6E6/B6E9\B6E9;
-                      dw $0080,$0006,$00CF                      ;;B67E|B6DE+B6EE/B6F1\B6F1;
-                      dw $560B,$0000,$3A07,$0120                ;;B684|B6E4+B6F4/B6F7\B6F7;
-                      dw $0020,$0002,$006B                      ;;B68C|B6EC+B6FC/B6FF\B6FF;
-                      dw $4DA7,$0000,$31A3,$00C0                ;;B692|B6F2+B702/B705\B705;
-                      dw $0000,$0000,$0007                      ;;B69A|B6FA+B70A/B70D\B70D;
-                      dw $4543,$0000,$2940,$0060                ;;B6A0|B700+B710/B713\B713;
-                      dw $0000,$0000,$0003                      ;;B6A8|B708+B718/B71B\B71B;
-                                                                ;;                        ;
-TheEndColors:         dw $44C4,$0320,$4ADF,$0200                ;;B6AE|B70E+B71E/B721\B721; Palette D Colors 2-7
-                      dw $013B,$4E08                            ;;B6B6|B716+B726/B729\B729;
-                                                                ;;                        ;
-                      dw $44C4,$391F,$4ADF,$2874                ;;B6BA|B71A+B72A/B72D\B72D; Palette E Colors 2-7
-                      dw $013F,$4E08                            ;;B6C2|B722+B732/B735\B735;
-                                                                ;;                        ;
-                      dw $28D2,$551E,$635F,$7B1F                ;;B6C6|B726+B736/B739\B739; Palette F Colors 2-7
-                      dw $01FB,$02DE                            ;;B6CE|B72E+B73E/B741\B741;
-                                                                ;;                        ;
-OWSpecialColors:      dw $0000,$1533,$25B7,$363B                ;;B6D2|B732+B742/B745\B745; Yoshi's Island
-                      dw $25AF,$5BBF,$5AC6                      ;;B6DA|B73A+B74A/B74D\B74D;
-                      dw $0000,$7BDE,$363B,$5AC6                ;;B6E0|B740+B750/B753\B753;
-                      dw $25AF,$37BF,$2D7F                      ;;B6E8|B748+B758/B75B\B75B;
-                      dw $0000,$1533,$25B7,$363B                ;;B6EE|B74E+B75E/B761\B761;
-                      dw $5EFF,$6F7F,$5AC6                      ;;B6F6|B756+B766/B769\B769;
-                      dw $0000,$7BDE,$573B,$5AC6                ;;B6FC|B75C+B76C/B76F\B76F;
-                      dw $25AF,$12A8,$1348                      ;;B704|B764+B774/B777\B777;
-                                                                ;;                        ;
-                      dw $0000,$25B7,$363B,$46BF                ;;B70A|B76A+B77A/B77D\B77D; Main Overworld
-                      dw $25AF,$5B5F,$5AC6                      ;;B712|B772+B782/B785\B785;
-                      dw $0000,$7BDE,$46BF,$5AC6                ;;B718|B778+B788/B78B\B78B;
-                      dw $25AF,$37BF,$03FF                      ;;B720|B780+B790/B793\B793;
-                      dw $0000,$1685,$2F4B,$47F1                ;;B726|B786+B796/B799\B799;
-                      dw $25AF,$5B5F,$5AC6                      ;;B72E|B78E+B79E/B7A1\B7A1;
-                      dw $0000,$7BDE,$573B,$5AC6                ;;B734|B794+B7A4/B7A7\B7A7;
-                      dw $25AF,$38C4,$1348                      ;;B73C|B79C+B7AC/B7AF\B7AF;
-                                                                ;;                        ;
-                      dw $1CE7,$19F3,$32B9,$4B7F                ;;B742|B7A2+B7B2/B7B5\B7B5; Star World
-                      dw $7610,$2EB9,$7FFF                      ;;B74A|B7AA+B7BA/B7BD\B7BD;
-                      dw $1CE7,$4560,$6680,$7FF7                ;;B750|B7B0+B7C0/B7C3\B7C3;
-                      dw $031F,$037F,$47FF                      ;;B758|B7B8+B7C8/B7CB\B7CB;
-                      dw $1CE7,$19F3,$32B9,$4B7F                ;;B75E|B7BE+B7CE/B7D1\B7D1;
-                      dw $001F,$7FFF,$1CE7                      ;;B766|B7C6+B7D6/B7D9\B7D9;
-                      dw $1CE7,$19F3,$32B9,$4B7F                ;;B76C|B7CC+B7DC/B7DF\B7DF;
-                      dw $58C6,$3AD5,$5B9C                      ;;B774|B7D4+B7E4/B7E7\B7E7;
-                                                                ;;                        ;
-                      dw $0000,$1D6D,$29D0,$3633                ;;B77A|B7DA+B7EA/B7ED\B7ED; Vanilla Dome & Valley of Bowser
-                      dw $2D6B,$4EF9,$0000                      ;;B782|B7E2+B7F2/B7F5\B7F5;
-                      dw $0000,$7BDE,$3633,$3082                ;;B788|B7E8+B7F8/B7FB\B7FB;
-                      dw $2D6B,$37BF,$2D7F                      ;;B790|B7F0+B800/B803\B803;
-                      dw $0000,$00A7,$152B,$218E                ;;B796|B7F6+B806/B809\B809;
-                      dw $2D6B,$4EF9,$3082                      ;;B79E|B7FE+B80E/B811\B811;
-                      dw $0000,$7BDE,$4EF9,$3082                ;;B7A4|B804+B814/B817\B817;
-                      dw $2D6B,$3082,$1348                      ;;B7AC|B80C+B81C/B81F\B81F;
-                                                                ;;                        ;
-                      dw $0000,$2171,$31F5,$3279                ;;B7B2|B812+B822/B825\B825; Forest of Illusion
-                      dw $41F6,$573B,$7D60                      ;;B7BA|B81A+B82A/B82D\B82D;
-                      dw $0000,$7739,$3279,$7D60                ;;B7C0|B820+B830/B833\B833;
-                      dw $1E18,$375C,$7E09                      ;;B7C8|B828+B838/B83B\B83B;
-                      dw $0000,$3660,$4B20,$22EF                ;;B7CE|B82E+B83E/B841\B841;
-                      dw $527A,$533A,$7D60                      ;;B7D6|B836+B846/B849\B849;
-                      dw $0000,$218E,$3279,$2119                ;;B7DC|B83C+B84C/B84F\B84F;
-                      dw $3E75,$1135,$1D98                      ;;B7E4|B844+B854/B857\B857;
-                                                                ;;                        ;
-                      dw $2CC7,$69F0,$0000,$0000                ;;B7EA|B84A+B85A/B85D\B85D; Special World
-                      dw $6634,$7FF9,$7FFF                      ;;B7F2|B852+B862/B865\B865;
-                      dw $0000,$4560,$6680,$7FF7                ;;B7F8|B858+B868/B86B\B86B;
-                      dw $031F,$037F,$47FF                      ;;B800|B860+B870/B873\B873;
-                      dw $412C,$69F0,$66B2,$67D5                ;;B806|B866+B876/B879\B879;
-                      dw $001F,$7FFF,$2CC7                      ;;B80E|B86E+B87E/B881\B881;
-                      dw $2CC7,$69F0,$66B2,$67D5                ;;B814|B874+B884/B887\B887;
-                      dw $412C,$3AD5,$5B9C                      ;;B81C|B87C+B88C/B88F\B88F;
+BackAreaColors:       %incpal("col/misc/back_area.pal")         ;;B040|B0A0+B0B0/B0B3\B0B3;
+                                                                ;;                        ;
+BackgroundPalettes:   %incpal("col/lvl/bg_00.pal")              ;;B050|B0B0+B0C0/B0C3\B0C3;
+                      %incpal("col/lvl/bg_01.pal")              ;;B068|B0C8+B0D8/B0DB\B0DB;
+                      %incpal("col/lvl/bg_02.pal")              ;;B080|B0E0+B0F0/B0F3\B0F3;
+                      %incpal("col/lvl/bg_03.pal")              ;;B098|B0F8+B108/B10B\B10B;
+                      %incpal("col/lvl/bg_04.pal")              ;;B0B0|B110+B120/B123\B123;
+                      %incpal("col/lvl/bg_05.pal")              ;;B0C8|B128+B138/B13B\B13B;
+                      %incpal("col/lvl/bg_06.pal")              ;;B0E0|B140+B150/B153\B153;
+                      %incpal("col/lvl/bg_07.pal")              ;;B0F8|B158+B168/B16B\B16B;
+                                                                ;;                        ;
+StatusBarColors:      %incpal("col/misc/status_bar.pal")        ;;B110|B170+B180/B183\B183;
+                                                                ;;                        ;
+ForegroundPalettes:   %incpal("col/lvl/fg_00.pal")              ;;B130|B190+B1A0/B1A3\B1A3;
+                      %incpal("col/lvl/fg_01.pal")              ;;B148|B1A8+B1B8/B1BB\B1BB;
+                      %incpal("col/lvl/fg_02.pal")              ;;B160|B1C0+B1D0/B1D3\B1D3;
+                      %incpal("col/lvl/fg_03.pal")              ;;B178|B1D8+B1E8/B1EB\B1EB;
+                      %incpal("col/lvl/fg_04.pal")              ;;B190|B1F0+B200/B203\B203;
+                      %incpal("col/lvl/fg_05.pal")              ;;B1A8|B208+B218/B21B\B21B;
+                      %incpal("col/lvl/fg_06.pal")              ;;B1C0|B220+B230/B233\B233;
+                      %incpal("col/lvl/fg_07.pal")              ;;B1D8|B238+B248/B24B\B24B;
+                                                                ;;                        ;
+StandardColors:       %incpal("col/lvl/std_04.pal")             ;;B1F0|B250+B260/B263\B263;
+                      %incpal("col/lvl/std_05.pal")             ;;B1FC|B25C+B26C/B26F\B26F;
+                      %incpal("col/lvl/std_06.pal")             ;;B208|B268+B278/B27B\B27B;
+                      %incpal("col/lvl/std_07.pal")             ;;B214|B274+B284/B287\B287;
+                      %incpal("col/lvl/std_08.pal")             ;;B220|B280+B290/B293\B293;
+                      %incpal("col/lvl/std_09.pal")             ;;B22C|B28C+B29C/B29F\B29F;
+                      %incpal("col/lvl/std_0A.pal")             ;;B238|B298+B2A8/B2AB\B2AB;
+                      %incpal("col/lvl/std_0B.pal")             ;;B244|B2A4+B2B4/B2B7\B2B7;
+                      %incpal("col/lvl/std_0C.pal")             ;;B250|B2B0+B2C0/B2C3\B2C3;
+                      %incpal("col/lvl/std_0D.pal")             ;;B25C|B2BC+B2CC/B2CF\B2CF;
+                                                                ;;                        ;
+PlayerColors:         %incpal("col/misc/mario_normal.pal")      ;;B268|B2C8+B2D8/B2DB\B2DB;
+                      %incpal("col/misc/luigi_normal.pal")      ;;B27C|B2DC+B2EC/B2EF\B2EF;
+                      %incpal("col/misc/mario_fire.pal")        ;;B290|B2F0+B300/B303\B303;
+                      %incpal("col/misc/luigi_fire.pal")        ;;B2A4|B304+B314/B317\B317;
+                                                                ;;                        ;
+SpriteColors:         %incpal("col/lvl/spr_00.pal")             ;;B2B8|B318+B328/B32B\B32B;
+                      %incpal("col/lvl/spr_01.pal")             ;;B2D0|B330+B340/B343\B343;
+                      %incpal("col/lvl/spr_02.pal")             ;;B2E8|B348+B358/B35B\B35B;
+                      %incpal("col/lvl/spr_03.pal")             ;;B300|B360+B370/B373\B373;
+                      %incpal("col/lvl/spr_04.pal")             ;;B318|B378+B388/B38B\B38B;
+                      %incpal("col/lvl/spr_05.pal")             ;;B330|B390+B3A0/B3A3\B3A3;
+                      %incpal("col/lvl/spr_06.pal")             ;;B348|B3A8+B3B8/B3BB\B3BB;
+                      %incpal("col/lvl/spr_07.pal")             ;;B360|B3C0+B3D0/B3D3\B3D3;
+                                                                ;;                        ;
+OverworldColors:      %incpal("col/ow/YI_normal.pal")           ;;B378|B3D8+B3E8/B3EB\B3EB;
+                      %incpal("col/ow/main_normal.pal")         ;;B3B0|B410+B420/B423\B423;
+                      %incpal("col/ow/star_normal.pal")         ;;B3E8|B448+B458/B45B\B45B;
+                      %incpal("col/ow/caves_normal.pal")        ;;B420|B480+B490/B493\B493;
+                      %incpal("col/ow/FoI_normal.pal")          ;;B458|B4B8+B4C8/B4CB\B4CB;
+                      %incpal("col/ow/special_normal.pal")      ;;B490|B4F0+B500/B503\B503;
+                                                                ;;                        ;
+OWStdColors:          %incpal("col/ow/std_02.pal")              ;;B4C8|B528+B538/B53B\B53B;
+                      %incpal("col/ow/std_03.pal")              ;;B4D6|B536+B546/B549\B549;
+                      %incpal("col/ow/std_04.pal")              ;;B4E4|B544+B554/B557\B557;
+                      %incpal("col/ow/std_05.pal")              ;;B4F2|B552+B562/B565\B565;
+                      %incpal("col/ow/std_06.pal")              ;;B500|B560+B570/B573\B573;
+                      %incpal("col/ow/std_07.pal")              ;;B50E|B56E+B57E/B581\B581;
+                                                                ;;                        ;
+OWStdColors2:         %incpal("col/ow/std_08.pal")              ;;B51C|B57C+B58C/B58F\B58F;
+                      %incpal("col/ow/std_09.pal")              ;;B52A|B58A+B59A/B59D\B59D;
+                      %incpal("col/ow/std_0A.pal")              ;;B538|B598+B5A8/B5AB\B5AB;
+                      %incpal("col/ow/std_0B.pal")              ;;B546|B5A6+B5B6/B5B9\B5B9;
+                      %incpal("col/ow/std_0C.pal")              ;;B554|B5B4+B5C4/B5C7\B5C7;
+                      %incpal("col/ow/std_0D.pal")              ;;B562|B5C2+B5D2/B5D5\B5D5;
+                      %incpal("col/ow/std_0E.pal")              ;;B570|B5D0+B5E0/B5E3\B5E3;
+                                                                ;;                        ;
+OverworldLightning:   %incpal("col/ow/lightning.pal")           ;;B57E|B5DE+B5EE/B5F1\B5F1; Also Palette F Colors 1-7
+                                                                ;;                        ;
+OverworldHudColors:   %incpal("col/ow/border.pal")              ;;B58C|B5EC+B5FC/B5FF\B5FF;
+                                                                ;;                        ;
+FlashingColors:       %incpal("col/misc/flashing_yellow.pal")   ;;B5AC|B60C+B61C/B61F\B61F;
+                      %incpal("col/misc/flashing_red.pal")      ;;B5BC|B61C+B62C/B62F\B62F;
+                                                                ;;                        ;
+TitleScreenColors:    %incpal("col/misc/title_screen.pal")      ;;B5CC|B62C+B63C/B63F\B63F;
+                                                                ;;                        ;
+                      %incpal("col/misc/blue_gradient.pal")     ;;B5EC|B64C+B65C/B65F\B65F; Unknown Blue Gradient
+                                                                ;;                        ;
+IggyLarryPlatColors:  %incpal("col/misc/iggy_platform.pal")     ;;B5FC|B65C+B66C/B66F\B66F;
+                                                                ;;                        ;
+BigCrusherColors:     %incpal("col/misc/castle_crusher.pal")    ;;B60C|B66C+B67C/B67F\B67F;
+                                                                ;;                        ;
+BerryColors:          %incpal("col/misc/berry_red.pal")         ;;B614|B674+B684/B687\B687;
+                      %incpal("col/misc/berry_pink.pal")        ;;B622|B682+B692/B695\B695;
+                      %incpal("col/misc/berry_green.pal")       ;;B630|B690+B6A0/B6A3\B6A3;
+                                                                ;;                        ;
+BowserColors:         %incpal("col/misc/bowser.pal")            ;;B63E|B69E+B6AE/B6B1\B6B1;
+                                                                ;;                        ;
+TheEndColors:         %incpal("col/misc/the_end_0D.pal")        ;;B6AE|B70E+B71E/B721\B721;
+                      %incpal("col/misc/the_end_0E.pal")        ;;B6BA|B71A+B72A/B72D\B72D;
+                      %incpal("col/misc/the_end_0F.pal")        ;;B6C6|B726+B736/B739\B739;
+                                                                ;;                        ;
+OWSpecialColors:      %incpal("col/ow/YI_special.pal")          ;;B6D2|B732+B742/B745\B745;
+                      %incpal("col/ow/main_special.pal")        ;;B70A|B76A+B77A/B77D\B77D;
+                      %incpal("col/ow/star_special.pal")        ;;B742|B7A2+B7B2/B7B5\B7B5;
+                      %incpal("col/ow/caves_special.pal")       ;;B77A|B7DA+B7EA/B7ED\B7ED;
+                      %incpal("col/ow/FoI_special.pal")         ;;B7B2|B812+B822/B825\B825;
+                      %incpal("col/ow/special_special.pal")     ;;B7EA|B84A+B85A/B85D\B85D;
                                                                 ;;                        ;
                       dl GFX33&$7FFFFF                          ;;B822|B882+B892/B895\B895;
                       dl GFX32&$7FFFFF                          ;;B825|B885+B895/B898\B898;

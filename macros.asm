@@ -83,6 +83,18 @@ macro Ptr16_Table_Entry(ptr, start, end)
     db <ptr>>>8
 endmacro
 
+; convert a *.pal palette file into SNES 15-bit color and insert it into the ROM.
+macro incpal(file)
+	!i = 0
+	while !i < (filesize("<file>")/3)
+		!r = readfile1("<file>", 3*!i)
+		!g = readfile1("<file>", 3*!i+1)
+		!b = readfile1("<file>", 3*!i+2)
+		dw ((!b&$F8)<<7)|((!g&$F8)<<2)|((!r&$F8)>>3)
+		!i #= !i+1
+	endif
+endmacro
+
 ; select a constant value depending on the region
 ; easier to read than an if/else block for a single LDA instruction for example
 function con(u, j, ss, e0, e1) = select(equal(!_VER,!__VER_J),u,select(equal(!_VER,!__VER_U),j,select(equal(!_VER,!__VER_SS),ss,select(equal(!_VER,!__VER_E0),e0,e1))))
