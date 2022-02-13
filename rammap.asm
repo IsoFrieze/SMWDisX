@@ -100,7 +100,7 @@ axlr0000Hold: skip 1
 axlr0000Frame: skip 1
 
 ; the player's current powerup status
-; 0: skip 
+; 0: skip
 ; 1 byte
 Powerup: skip 1
 
@@ -278,6 +278,7 @@ OBJCWWindow: skip 1
 ; ++------ color window, in/out bit for window 2
 ; 1 byte
 ColorAddition: skip 1
+
 Layer1TileUp: skip 2
 Layer1TileDown: skip 2
 Layer2TileUp: skip 2
@@ -363,6 +364,7 @@ SaveFile: skip 1
 ; $7E010B - $7E010F unused
 skip 5
 CreditsLetterbox: skip 1
+
 ; $7E0112 - $7E01FF used as stack
 
 ORG $000200
@@ -379,7 +381,7 @@ OAMTileSize: skip 128
 WindowTable: skip 480
 PaletteIndexTable: skip 1
 DynPaletteIndex: skip 1
-DynPaletteTable: 
+DynPaletteTable:
 
 ORG $000701
 
@@ -1170,7 +1172,7 @@ OAMResetRoutine: skip 387
 ; 7F8183 - 7F837A unused
 skip 504
 DynStripeImgSize: skip 2
-DynamicStripeImage: 
+DynamicStripeImage:
 ; 7F868D - 7F977A unused
 
 ORG $7F977B
@@ -1180,6 +1182,7 @@ WigglerTable: skip 512
 ; 7F9C7B - 7FC7FF unused
 skip 11141
 Map16TilesHigh: skip 14336
+
 
 ; SAVE RAM
 
@@ -1191,6 +1194,7 @@ SaveDataFile2: skip 143
 SaveDataFile3: skip 143
 SaveDataBackup: skip 429
 ; 70035A - 7007FF unused
+
 
 ; AUDIO RAM
 
@@ -1264,7 +1268,7 @@ HW_AUXIO1: skip 1
 HW_TIMER0: skip 1
 HW_TIMER1: skip 1
 HW_TIMER2: skip 1
-HW_COUNTER0: skip 1
+COUNTER0: skip 1
 HW_COUNTER1: skip 1
 HW_COUNTER2: skip 1
 NoteLength: skip 16
@@ -1310,10 +1314,13 @@ HotReset5A: skip 1
 
 ORG $000500
 SPCEngine:
+
 ORG $001360
 MusicData:
+
 ORG $005570
 SoundEffectTable:
+
 ORG $008000
 SamplePtrTable: skip 256
 SampleTable:

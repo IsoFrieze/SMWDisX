@@ -1,1019 +1,1019 @@
-                      ORG $078000                               ;;  J |  U + SS / E0 \ E1 ;
-                                                                ;;                        ;
-GhostHouseEntrance:   incbin "lvl/obj/ghosthouseentrance.bin"   ;;8000|8000+8000/8000\8000;
-EmptyLevel:           incbin "lvl/obj/empty.bin"                ;;8018|8018+8018/8018\8018;
-CastleEntrance1:      incbin "lvl/obj/castleentrancebright.bin" ;;801E|801E+801E/801E\801E;
-YHLevel104:           incbin "lvl/obj/104_YH.bin"               ;;802D|802D+802D/802D\802D;
-NoYoshiEntrance1:     incbin "lvl/obj/noyoshiintro1.bin"        ;;804E|804E+804E/804E\804E;
-UnusedGHExit2Level:   incbin "lvl/obj/unusedghexit2.bin"        ;;8060|8060+8060/8060\8060;
-BushesBetaLevel:      incbin "lvl/obj/betabushes.bin"           ;;8081|8081+8081/8081\8081;
-CastleEntrance2:      incbin "lvl/obj/castleentrancedark.bin"   ;;8090|8090+8090/8090\8090;
-NoYoshiEntrance2:     incbin "lvl/obj/noyoshiintro2.bin"        ;;809F|809F+809F/809F\809F;
-NoYoshiEntrance3:     incbin "lvl/obj/noyoshiintro3.bin"        ;;80B1|80B1+80B1/80B1\80B1;
-SlopeTestLevel108:    incbin "lvl/obj/slopetest.bin"            ;;80C3|80C3+80C3/80C3\80C3;
-                                                                ;;                        ;
-                      %insert_empty($13,$13,$13,$13,$13)        ;;80ED|80ED+80ED/80ED\80ED;
-                                                                ;;                        ;
-CI4Level01D:          incbin "lvl/obj/01D_CI4main.bin"          ;;8100|8100+8100/8100\8100;
-CI4Sub1Level0EA:      incbin "lvl/obj/0EA_CI4sub.bin"           ;;85B4|85B4+85B4/85B4\85B4;
-CI5Level01C:          incbin "lvl/obj/01C_CI5main.bin"          ;;86E3|86E3+86E3/86E3\86E3;
-CI5Sub2Level0C0:      incbin "lvl/obj/0C0_CI5sub.bin"           ;;88CB|88CB+88CB/88CB\88CB;
-CI5Sub1Level0BD:      incbin "lvl/obj/0BD_CI5bonus.bin"         ;;8935|8935+8935/8935\8935;
-C6Level01A:           incbin "lvl/obj/01A_C6room1.bin"          ;;89CC|89CC+89CC/89CC\89CC;
-C6LvlL201A:           incbin "lvl/obj/01A_C6room1_l2.bin"       ;;8B1D|8B1D+8B1D/8B1D\8B1D;
-C6Sub1Level0D4:       incbin "lvl/obj/0D4_C6room2.bin"          ;;8B4A|8B4A+8B4A/8B4A\8B4A;
-C6Sub1LvlL20D4:       incbin "lvl/obj/0D4_C6room2_l2.bin"       ;;8BB7|8BB7+8BB7/8BB7\8BB7;
-C6Sub2Level0D3:       incbin "lvl/obj/0D3_C6room3.bin"          ;;8BEA|8BEA+8BEA/8BEA\8BEA;
-SGSLevel018:          incbin "lvl/obj/018_SGSroom1.bin"         ;;8C14|8C14+8C14/8C14\8C14;
-SGSSub1Level0F8:      incbin "lvl/obj/0F8_SGSroom2.bin"         ;;8CC6|8CC6+8CC6/8CC6\8CC6;
-SGSSub2Level0F7:      incbin "lvl/obj/0F7_SGSroom3.bin"         ;;8DAB|8DAB+8DAB/8DAB\8DAB;
-VoB1Level116:         incbin "lvl/obj/116_VoB1main.bin"         ;;8EA4|8EA4+8EA4/8EA4\8EA4;
-VoB1Sub2Level1E5:     incbin "lvl/obj/1E5_VoB1end.bin"          ;;9221|9221+9221/9221\9221;
-VoB1Sub1Level1E4:     incbin "lvl/obj/1E4_VoB1bonus.bin"        ;;9233|9233+9233/9233\9233;
-VoB2Level115:         incbin "lvl/obj/115_VoBroom1.bin"         ;;92CA|92CA+92CA/92CA\92CA;
-VoB2LvlL2115:         incbin "lvl/obj/115_VoBroom1_l2.bin"      ;;937C|937C+937C/937C\937C;
-VoB2Sub1Level1E3:     incbin "lvl/obj/1E3_VoB2room2.bin"        ;;93E2|93E2+93E2/93E2\93E2;
-VoB2Sub1LvlL21E3:     incbin "lvl/obj/1E3_VoB2room2_l2.bin"     ;;95A5|95A5+95A5/95A5\95A5;
-VoB2Sub2Level1E2:     incbin "lvl/obj/1E2_VoB2room3.bin"        ;;95F0|95F0+95F0/95F0\95F0;
-VoB2Sub2LvlL21E2:     incbin "lvl/obj/1E2_VoB2room3_l2.bin"     ;;975E|975E+975E/975E\975E;
-YoshiWingsLevel0C8:   incbin "lvl/obj/0C8_yoshiwingsdark.bin"   ;;977C|977C+977C/977C\977C;
-VoBGHLevel114:        incbin "lvl/obj/114_VoBGHroom1.bin"       ;;9803|9803+9803/9803\9803;
-VoBGHSub1Level1DD:    incbin "lvl/obj/1DD_VoBGHroom2.bin"       ;;9867|9867+9867/9867\9867;
-VoBGHSub2Level1DB:    incbin "lvl/obj/1DB_VoBGHroom3.bin"       ;;9969|9969+9969/9969\9969;
-VoB3Level113:         incbin "lvl/obj/113_VoB3main.bin"         ;;99D6|99D6+99D6/99D6\99D6;
-VoB3Sub1Level1BB:     incbin "lvl/obj/1BB_VoB3bonus.bin"        ;;9AC1|9AC1+9AC1/9AC1\9AC1;
-VoB4Level10F:         incbin "lvl/obj/10F_VoB4main.bin"         ;;9B58|9B58+9B58/9B58\9B58;
-VoB4Sub1Level1BF:     incbin "lvl/obj/1BF_VoB4sub.bin"          ;;9D84|9D84+9D84/9D84\9D84;
-C7Level110:           incbin "lvl/obj/110_C7room1.bin"          ;;9DE2|9DE2+9DE2/9DE2\9DE2;
-C7Sub1Level1FE:       incbin "lvl/obj/1FE_C7room2.bin"          ;;9F22|9F22+9F22/9F22\9F22;
-VoBFLevel111:         incbin "lvl/obj/111_VoBFroom1.bin"        ;;A028|A028+A028/A028\A028;
-VoBFLvlL2111:         incbin "lvl/obj/111_VoBFroom1_l2.bin"     ;;A134|A134+A134/A134\A134;
-                                                                ;;                        ;
-                      %insert_empty($487,$487,$487,$487,$487)   ;;A179|A179+A179/A179\A179;
-                                                                ;;                        ;
-FDLevel10D:           incbin "lvl/obj/10D_FDmain.bin"           ;;A600|A600+A600/A600\A600;
-FDSub1Level1D4:       incbin "lvl/obj/1D4_FDroom1.bin"          ;;A68E|A68E+A68E/A68E\A68E;
-FDSub2Level1D3:       incbin "lvl/obj/1D3_FDroom2.bin"          ;;A707|A707+A707/A707\A707;
-FDSub3Level1D2:       incbin "lvl/obj/1D2_FDroom3.bin"          ;;A765|A765+A765/A765\A765;
-FDSub4Level1D1:       incbin "lvl/obj/1D1_FDroom4.bin"          ;;A802|A802+A802/A802\A802;
-FDSub9Level1D0:       incbin "lvl/obj/1D0_FDsub1.bin"           ;;A83F|A83F+A83F/A83F\A83F;
-FDSub5Level1CF:       incbin "lvl/obj/1CF_FDroom5.bin"          ;;A8D9|A8D9+A8D9/A8D9\A8D9;
-FDSub5LvlL21CF:       incbin "lvl/obj/1CF_FDroom5_l2.bin"       ;;A934|A934+A934/A934\A934;
-FDSub6Level1CE:       incbin "lvl/obj/1CE_FDroom6.bin"          ;;A961|A961+A961/A961\A961;
-FDSub6LvlL21CE:       incbin "lvl/obj/1CE_FDroom6_l2.bin"       ;;A9E3|A9E3+A9E3/A9E3\A9E3;
-FDSub7Level1CD:       incbin "lvl/obj/1CD_FDroom7.bin"          ;;AA16|AA16+AA16/AA16\AA16;
-FDSub8Level1CC:       incbin "lvl/obj/1CC_FDroom8.bin"          ;;AA77|AA77+AA77/AA77\AA77;
-FDSub10Level1BD:      incbin "lvl/obj/1BD_FDsub2.bin"           ;;AAC9|AAC9+AAC9/AAC9\AAC9;
-BDLevel10E:           incbin "lvl/obj/10E_BD.bin"               ;;ABF9|ABF9+ABF9/ABF9\ABF9;
-BowserLevel1C7:       incbin "lvl/obj/1C7_bowser.bin"           ;;AD2F|AD2F+AD2F/AD2F\AD2F;
-SW1Level134:          incbin "lvl/obj/134_SW1main.bin"          ;;AD35|AD35+AD35/AD35\AD35;
-SW1Sub1Level1D6:      incbin "lvl/obj/1D6_SW1end.bin"           ;;AF16|AF16+AF16/AF16\AF16;
-SW2Level130:          incbin "lvl/obj/130_SW2main.bin"          ;;AF25|AF25+AF25/AF25\AF25;
-SW2Sub1Level1D5:      incbin "lvl/obj/1D5_SW2end.bin"           ;;AFCE|AFCE+AFCE/AFCE\AFCE;
-SW3Level132:          incbin "lvl/obj/132_SW3.bin"              ;;AFE3|AFE3+AFE3/AFE3\AFE3;
-SW4Level135:          incbin "lvl/obj/135_SW4.bin"              ;;B031|B031+B031/B031\B031;
-SW5Level136:          incbin "lvl/obj/136_SW5.bin"              ;;B124|B124+B124/B124\B124;
-GnarlyLevel12A:       incbin "lvl/obj/12A_SP1room1.bin"         ;;B26B|B26B+B26B/B26B\B26B;
-GnarlySub1Level1C4:   incbin "lvl/obj/1C4_SP1room2.bin"         ;;B3C6|B3C6+B3C6/B3C6\B3C6;
-TubularLevel12B:      incbin "lvl/obj/12B_SP2.bin"              ;;B46E|B46E+B46E/B46E\B46E;
-WayCoolLevel12C:      incbin "lvl/obj/12C_SP3main.bin"          ;;B540|B540+B540/B540\B540;
-WayCoolSub1Level1C9:  incbin "lvl/obj/1C9_SP3sub.bin"           ;;B87D|B87D+B87D/B87D\B87D;
-YoshiWingsLevel1C8:   incbin "lvl/obj/1C8_yoshiwingsbright.bin" ;;B896|B896+B896/B896\B896;
-AwesomeLevel12D:      incbin "lvl/obj/12D_SP4.bin"              ;;B908|B908+B908/B908\B908;
-GroovyLevel128:       incbin "lvl/obj/128_SP5.bin"              ;;BABE|BABE+BABE/BABE\BABE;
-MondoLevel127:        incbin "lvl/obj/127_SP6main.bin"          ;;BC11|BC11+BC11/BC11\BC11;
-MondoSub2Level1E1:    incbin "lvl/obj/1E1_SP6end.bin"           ;;BD75|BD75+BD75/BD75\BD75;
-MondoSub1Level1E0:    incbin "lvl/obj/1E0_SP6sub.bin"           ;;BD8A|BD8A+BD8A/BD8A\BD8A;
-OutrageousLevel126:   incbin "lvl/obj/126_SP7.bin"              ;;BDE5|BDE5+BDE5/BDE5\BDE5;
-                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
-FunkyLevel125:        incbin "lvl/obj/125_SP8_J.bin"            ;;BF65                    ;
-                   else                               ;<  ELSE  ;;------------------------; U, SS, E0, & E1
-FunkyLevel125:        incbin "lvl/obj/125_SP8_U.bin"            ;;    |BF65+BF65/BF65\BF65;
-                   endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
-                                                                ;;                        ;
-                      %insert_empty($E6,$DA,$DA,$DA,$DA)        ;;C21A|C226+C226/C226\C226;
-                                                                ;;                        ;
-CloudsBetaSprites:    incbin "lvl/spr/betaclouds.bin"           ;;C300|C300+C300/C300\C300;
-MushroomBetaSprites:  incbin "lvl/spr/betamushrooms.bin"        ;;C30E|C30E+C30E/C30E\C30E;
-BowserCopySprites:    incbin "lvl/spr/1C7_bowser.bin"           ;;C340|C340+C340/C340\C340;
-MortonCopySprites:    incbin "lvl/spr/0E5_C2room4.bin"          ;;C345|C345+C345/C345\C345;
-RoyCopySprites:       incbin "lvl/spr/0CC_C5room2.bin"          ;;C34A|C34A+C34A/C34A\C34A;
-LudwigCopySprites:    incbin "lvl/spr/0D9_C4room4.bin"          ;;C34F|C34F+C34F/C34F\C34F;
-IggyCopySprites:      incbin "lvl/spr/1F6_C1room3.bin"          ;;C354|C354+C354/C354\C354;
-LarryCopySprites:     incbin "lvl/spr/1EB_C7room3.bin"          ;;C359|C359+C359/C359\C359;
-ReznorCopySprites:    incbin "lvl/spr/reznor.bin"               ;;C367|C367+C367/C367\C367;
-LavaCaveBetaSprites:  incbin "lvl/spr/betalavacave.bin"         ;;C375|C375+C375/C375\C375;
-TwinBlocksSprites:    incbin "lvl/spr/betatwinblocks.bin"       ;;C39B|C39B+C39B/C39B\C39B;
-WendyBetaSprites:     incbin "lvl/spr/betaC6room1.bin"          ;;C3A9|C3A9+C3A9/C3A9\C3A9;
-LemmyCopySprites:     incbin "lvl/spr/1F2_C3room4.bin"          ;;C3DB|C3DB+C3DB/C3DB\C3DB;
-WendyCopySprites:     incbin "lvl/spr/0D3_C6room3.bin"          ;;C3E3|C3E3+C3E3/C3E3\C3E3;
-EmptySprites:         incbin "lvl/spr/empty.bin"                ;;C3EE|C3EE+C3EE/C3EE\C3EE;
-SubNormalExitSprites: incbin "lvl/spr/goaltapenormal.bin"       ;;C3F0|C3F0+C3F0/C3F0\C3F0;
-GHNormalExitSprites:  incbin "lvl/spr/ghosthouseexitnormal.bin" ;;C3F5|C3F5+C3F5/C3F5\C3F5;
-UnusedGHExitSprites:  incbin "lvl/spr/unusedghexit1.bin"        ;;C3FD|C3FD+C3FD/C3FD\C3FD;
-UnusedGHExit2Sprites: incbin "lvl/spr/unusedghexit2.bin"        ;;C402|C402+C402/C402\C402;
-BonusGameSprites:     incbin "lvl/spr/bonusgame.bin"            ;;C407|C407+C407/C407\C407;
-SubSecretExitSprites: incbin "lvl/spr/goaltapesecret.bin"       ;;C40C|C40C+C40C/C40C\C40C;
-ReznorSubSprites:     incbin "lvl/spr/reznor.bin"               ;;C414|C414+C414/C414\C414;
-FDSprites10D:         incbin "lvl/spr/10D_FDmain.bin"           ;;C422|C422+C422/C422\C422;
-TitleScrSprites0C7:   incbin "lvl/spr/0C7_titlescreen.bin"      ;;C427|C427+C427/C427\C427;
-IntroSprites0C5:      incbin "lvl/spr/0C5_introcutscene.bin"    ;;C441|C441+C441/C441\C441;
-YSPSprites014:        incbin "lvl/spr/014_YSProom1.bin"         ;;C446|C446+C446/C446\C446;
-YSPSub1Sprites0CA:    incbin "lvl/spr/0CA_YSProom2.bin"         ;;C44B|C44B+C44B/C44B\C44B;
-RSPSprites11B:        incbin "lvl/spr/11B_RSProom1.bin"         ;;C450|C450+C450/C450\C450;
-RSPSub1Sprites1D8:    incbin "lvl/spr/1D8_RSProom2.bin"         ;;C473|C473+C473/C473\C473;
-BSPSprites121:        incbin "lvl/spr/121_BSProom1.bin"         ;;C478|C478+C478/C478\C478;
-BSPSub1Sprites1D7:    incbin "lvl/spr/1D7_BSProom2.bin"         ;;C498|C498+C498/C498\C498;
-GSPSprites008:        incbin "lvl/spr/008_GSProom1.bin"         ;;C49D|C49D+C49D/C49D\C49D;
-GSPSub1Sprites0C9:    incbin "lvl/spr/0C9_GSProom2.bin"         ;;C4C0|C4C0+C4C0/C4C0\C4C0;
-TSASprites003:        incbin "lvl/spr/003_TSA.bin"              ;;C4C5|C4C5+C4C5/C4C5\C4C5;
-YI1Sprites105:        incbin "lvl/spr/105_YI1main.bin"          ;;C4CA|C4CA+C4CA/C4CA\C4CA;
-YI2Sprites106:        incbin "lvl/spr/106_YI2main.bin"          ;;C532|C532+C532/C532\C532;
-YI2Sub1Sprites1CA:    incbin "lvl/spr/1CA_YI2sub.bin"           ;;C57F|C57F+C57F/C57F\C57F;
-YI3Spirtes103:        incbin "lvl/spr/103_YI3main.bin"          ;;C593|C593+C593/C593\C593;
-YI3Sub1Sprites1FD:    incbin "lvl/spr/1FD_YI3sub.bin"           ;;C5EF|C5EF+C5EF/C5EF\C5EF;
-YI4Sprites102:        incbin "lvl/spr/102_YI4main.bin"          ;;C5F4|C5F4+C5F4/C5F4\C5F4;
-YI4Sub2Sprites1FF:    incbin "lvl/spr/1FF_YI4end.bin"           ;;C659|C659+C659/C659\C659;
-                   if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
-YI4Sub1Sprites1BE:    incbin "lvl/spr/1BE_YI4sub_U.bin"         ;;C661|C661     /C661\C661;
-                   else                               ;<  ELSE  ;;------------------------; SS
-YI4Sub1Sprites1BE:    incbin "lvl/spr/1BE_YI4sub_SS.bin"        ;;         +C661          ;
-                   endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
-C1Sprites101:         incbin "lvl/spr/101_C1room1.bin"          ;;C66F|C66F+C66C/C66F\C66F;
-C1Sub1Sprites1FC:     incbin "lvl/spr/1FC_C1room2.bin"          ;;C6BF|C6BF+C6BC/C6BF\C6BF;
-C1Sub2Sprites1F6:     incbin "lvl/spr/1F6_C1room3.bin"          ;;C6D0|C6D0+C6CD/C6D0\C6D0;
-DP1Sprites015:        incbin "lvl/spr/015_DP1main.bin"          ;;C6D5|C6D5+C6D2/C6D5\C6D5;
-DP1Sub2Sprites0E3:    incbin "lvl/spr/0E3_DP1sub.bin"           ;;C749|C749+C746/C749\C749;
-DP2Sprites009:        incbin "lvl/spr/009_DP2main.bin"          ;;C751|C751+C74E/C751\C751;
-DP2Sub1Sprites0E9:    incbin "lvl/spr/0E9_DP2sub.bin"           ;;C7A7|C7A7+C7A4/C7A7\C7A7;
-DGHSprites004:        incbin "lvl/spr/004_DGHroom1.bin"         ;;C7B5|C7B5+C7B2/C7B5\C7B5;
-DGHSub1Sprites0F9:    incbin "lvl/spr/0F9_DGHroom2.bin"         ;;C7BD|C7BD+C7BA/C7BD\C7BD;
-DGHSub2Sprites0FE:    incbin "lvl/spr/0FE_DGHroom3.bin"         ;;C7CB|C7CB+C7C8/C7CB\C7CB;
-DP3Sprites005:        incbin "lvl/spr/005_DP3main.bin"          ;;C7D9|C7D9+C7D6/C7D9\C7D9;
-DP4Sprites006:        incbin "lvl/spr/006_DP4main.bin"          ;;C844|C844+C841/C844\C844;
-DP4Sub1Sprites0D2:    incbin "lvl/spr/0D2_DP4sub2.bin"          ;;C8CD|C8CD+C8CA/C8CD\C8CD;
-DP4Sub1Sprites0C3:    incbin "lvl/spr/0C3_DP4sub1.bin"          ;;C8EA|C8EA+C8E7/C8EA\C8EA;
-C2Sprites007:         incbin "lvl/spr/007_C2room1.bin"          ;;C904|C904+C901/C904\C904;
-C2Sub2Sprites0E8:     incbin "lvl/spr/0E8_C2room2.bin"          ;;C915|C915+C912/C915\C915;
-C2Sub3Sprites0E7:     incbin "lvl/spr/0E7_C2room3.bin"          ;;C926|C926+C923/C926\C926;
-C2Sub4Sprites0E5:     incbin "lvl/spr/0E5_C2room4.bin"          ;;C943|C943+C940/C943\C943;
-DS1Sprites00A:        incbin "lvl/spr/00A_DS1main.bin"          ;;C948|C948+C945/C948\C948;
-DS1Sub1Sprites0C2:    incbin "lvl/spr/0C2_DS1sub.bin"           ;;C9AA|C9AA+C9A7/C9AA\C9AA;
-DSHSprites013:        incbin "lvl/spr/013_DSHroom1.bin"         ;;C9CA|C9CA+C9C7/C9CA\C9CA;
-DSHSub1Sprites0ED:    incbin "lvl/spr/0ED_DSHroom2.bin"         ;;C9DB|C9DB+C9D8/C9DB\C9DB;
-DSHSub2Sprites0F1:    incbin "lvl/spr/0F1_DSHroom3.bin"         ;;C9F2|C9F2+C9EF/C9F2\C9F2;
-DSHSub4Sprites0E4:    incbin "lvl/spr/0E4_DSHroom4.bin"         ;;CA0C|CA0C+CA09/CA0C\CA0C;
-DS2Sprites10B:        incbin "lvl/spr/10B_DS2main.bin"          ;;CA17|CA17+CA14/CA17\CA17;
-DS2Sub1Sprites1C6:    incbin "lvl/spr/1C6_DS2sub.bin"           ;;CA6D|CA6D+CA6A/CA6D\CA6D;
-VD1Sprites11A:        incbin "lvl/spr/11A_VD1main.bin"          ;;CA87|CA87+CA84/CA87\CA87;
-VD1Sub1Sprites1EF:    incbin "lvl/spr/1EF_VD1sub.bin"           ;;CB01|CB01+CAFE/CB01\CB01;
-VD2Sprites118:        incbin "lvl/spr/118_VD2main.bin"          ;;CB2A|CB2A+CB27/CB2A\CB2A;
-VD2Sub1Sprites1C3:    incbin "lvl/spr/1C3_VD2sub.bin"           ;;CBC5|CBC5+CBC2/CBC5\CBC5;
-VGHSprites107:        incbin "lvl/spr/107_VGHroom1.bin"         ;;CBDC|CBDC+CBD9/CBDC\CBDC;
-VGHSub1Sprites1EA:    incbin "lvl/spr/1EA_VGHroom2.bin"         ;;CC11|CC11+CC0E/CC11\CC11;
-VD3Sprites10A:        incbin "lvl/spr/10A_VD3main.bin"          ;;CC25|CC25+CC22/CC25\CC25;
-VD3Sub2Sprites1C2:    incbin "lvl/spr/1C2_VD3sub.bin"           ;;CCBA|CCBA+CCB7/CCBA\CCBA;
-VD4Sprites119:        incbin "lvl/spr/119_VD4main.bin"          ;;CCD4|CCD4+CCD1/CCD4\CCD4;
-VD4Sub1Sprites1F5:    incbin "lvl/spr/1F5_VD4sub.bin"           ;;CD63|CD63+CD60/CD63\CD63;
-C3Sprites11C:         incbin "lvl/spr/11C_C3room1.bin"          ;;CD68|CD68+CD65/CD68\CD68;
-C3Sub2Sprites1F3:     incbin "lvl/spr/1F3_C3room3.bin"          ;;CD94|CD94+CD91/CD94\CD94;
-C3Sub3Sprites1F2:     incbin "lvl/spr/1F2_C3room4.bin"          ;;CDC0|CDC0+CDBD/CDC0\CDC0;
-VS1Sprites109:        incbin "lvl/spr/109_VS1main.bin"          ;;CDC8|CDC8+CDC5/CDC8\CDC8;
-VS1Sub1Sprites1F1:    incbin "lvl/spr/1F1_VS1end1.bin"          ;;CE0C|CE0C+CE09/CE0C\CE0C;
-VS1Sub2Sprites1F0:    incbin "lvl/spr/1F0_VS1end2.bin"          ;;CE14|CE14+CE11/CE14\CE14;
-VS2Sprites001:        incbin "lvl/spr/001_VS2main.bin"          ;;CE1C|CE1C+CE19/CE1C\CE1C;
-VS2Sub1Sprites0D8:    incbin "lvl/spr/0D8_VS2sub.bin"           ;;CEBA|CEBA+CEB7/CEBA\CEBA;
-VS3Sprites002:        incbin "lvl/spr/002_VS3main.bin"          ;;CEBF|CEBF+CEBC/CEBF\CEBF;
-VFSprites00B:         incbin "lvl/spr/00B_VFroom1.bin"          ;;CF06|CF06+CF03/CF06\CF06;
-VFSub1Sprites0E0:     incbin "lvl/spr/0E0_VFroom2.bin"          ;;CF4D|CF4D+CF4A/CF4D\CF4D;
-CBASprites00F:        incbin "lvl/spr/00F_CBAmain.bin"          ;;CFAF|CFAF+CFAC/CFAF\CFAF;
-CBASub1Sprites0BF:    incbin "lvl/spr/0BF_CBAsub.bin"           ;;D02F|D02F+D02C/D02F\D02F;
-CMSprites010:         incbin "lvl/spr/010_CMmain.bin"           ;;D043|D043+D040/D043\D043;
-CMSub1Sprites0C1:     incbin "lvl/spr/0C1_CMsub.bin"            ;;D0CF|D0CF+D0CC/D0CF\D0CF;
-C4Sprites00E:         incbin "lvl/spr/00E_C4room1.bin"          ;;D0D7|D0D7+D0D4/D0D7\D0D7;
-C4Sub2Sprites0DC:     incbin "lvl/spr/0DC_C4room2.bin"          ;;D0F4|D0F4+D0F1/D0F4\D0F4;
-C4Sub3Sprites0DB:     incbin "lvl/spr/0DB_C4room3.bin"          ;;D111|D111+D10E/D111\D111;
-C4Sub4Sprites0D9:     incbin "lvl/spr/0D9_C4room4.bin"          ;;D152|D152+D14F/D152\D152;
-SLSprites011:         incbin "lvl/spr/011_SLmain.bin"           ;;D157|D157+D154/D157\D157;
-BB1Sprites00C:        incbin "lvl/spr/00C_BB1main.bin"          ;;D1F5|D1F5+D1F2/D1F5\D1F5;
-BB2Sprites00D:        incbin "lvl/spr/00D_BB2main.bin"          ;;D25A|D25A+D257/D25A\D25A;
-BB2Sub1Sprites0DD:    incbin "lvl/spr/0DD_BB2sub.bin"           ;;D304|D304+D301/D304\D304;
-FoI1Sprites11E:       incbin "lvl/spr/11E_FoI1.bin"             ;;D30C|D30C+D309/D30C\D30C;
-FoI2Sprites120:       incbin "lvl/spr/120_FoI2.bin"             ;;D380|D380+D37D/D380\D380;
-FoI3Sprites123:       incbin "lvl/spr/123_FoI3main.bin"         ;;D445|D445+D442/D445\D445;
-FoI3Sub2Sprites1F8:   incbin "lvl/spr/1F8_FoI3sub.bin"          ;;D4C5|D4C5+D4C2/D4C5\D4C5;
-C5Sprites020:         incbin "lvl/spr/020_C5room1.bin"          ;;D4CD|D4CD+D4CA/D4CD\D4CD;
-C5Sub1Sprites0CC:     incbin "lvl/spr/0CC_C5room2.bin"          ;;D51D|D51D+D51A/D51D\D51D;
-FGHSprites11D:        incbin "lvl/spr/11D_FGHroom1.bin"         ;;D522|D522+D51F/D522\D522;
-FGHSub1Sprites1FA:    incbin "lvl/spr/1FA_FGHroom2.bin"         ;;D56C|D56C+D569/D56C\D56C;
-FoI4Sprites11F:       incbin "lvl/spr/11F_FoI4main.bin"         ;;D577|D577+D574/D577\D577;
-FoI4Sub2Sprites1DF:   incbin "lvl/spr/1DF_FoI4sub2.bin"         ;;D5C7|D5C7+D5C4/D5C7\D5C7;
-FoI4Sub1Sprites1C1:   incbin "lvl/spr/1C1_FoI4sub1.bin"         ;;D5CF|D5CF+D5CC/D5CF\D5CF;
-FSASprites122:        incbin "lvl/spr/122_FSA.bin"              ;;D5F5|D5F5+D5F2/D5F5\D5F5;
-FFSprites01F:         incbin "lvl/spr/01F_FFroom1.bin"          ;;D648|D648+D645/D648\D648;
-FFSub1Sprites0D6:     incbin "lvl/spr/0D6_FFroom2.bin"          ;;D668|D668+D665/D668\D668;
-CI1Sprites022:        incbin "lvl/spr/022_CI1main1.bin"         ;;D6D9|D6D9+D6D6/D6D9\D6D9;
-CI1Sub2Sprites0BE:    incbin "lvl/spr/0BE_CI1sub.bin"           ;;D741|D741+D73E/D741\D741;
-CGHSprites021:        incbin "lvl/spr/021_CGHroom1.bin"         ;;D74C|D74C+D749/D74C\D74C;
-CGHSub1Sprites0FC:    incbin "lvl/spr/0FC_CGHroom2.bin"         ;;D799|D799+D796/D799\D799;
-CI2Sprites024:        incbin "lvl/spr/024_CI2room1.bin"         ;;D7BF|D7BF+D7BC/D7BF\D7BF;
-CI2Sub3Sprites0CF:    incbin "lvl/spr/0CF_CI2room2c.bin"        ;;D7E5|D7E5+D7E2/D7E5\D7E5;
-CI2Sub2Sprites6E9FB:  incbin "lvl/spr/0CF_CI2room2b.bin"        ;;D7EA|D7EA+D7E7/D7EA\D7EA;
-CI2Sub1Sprites6EAB0:  incbin "lvl/spr/0CF_CI2room2a.bin"        ;;D825|D825+D822/D825\D825;
-CI2Sub4Sprites0CE:    incbin "lvl/spr/0CE_CI2room3c.bin"        ;;D84B|D84B+D848/D84B\D84B;
-CI2Sub5Sprites6EB72:  incbin "lvl/spr/0CE_CI2room3b.bin"        ;;D86E|D86E+D86B/D86E\D86E;
-CI2Sub6SPrites6EBBE:  incbin "lvl/spr/0CE_CI2room3a.bin"        ;;D888|D888+D885/D888\D888;
-CI2Sub8Sprites0CD:    incbin "lvl/spr/0CD_CI2room4b.bin"        ;;D899|D899+D896/D899\D899;
-CI2Sub7Sprites6EC7E:  incbin "lvl/spr/0CD_CI2room4a.bin"        ;;D8A1|D8A1+D89E/D8A1\D8A1;
-CI3Sprites023:        incbin "lvl/spr/023_CI3main.bin"          ;;D8BE|D8BE+D8BB/D8BE\D8BE;
-CI3Sub1Sprites0D7:    incbin "lvl/spr/0D7_CI3sub.bin"           ;;D956|D956+D953/D956\D956;
-CFSprites01B:         incbin "lvl/spr/01B_CFroom1.bin"          ;;D95E|D95E+D95B/D95E\D95E;
-CFSub1Sprites0EF:     incbin "lvl/spr/0EF_CFroom2.bin"          ;;D9B1|D9B1+D9AE/D9B1\D9B1;
-CSSprites117:         incbin "lvl/spr/117_CSroom1.bin"          ;;D9EF|D9EF+D9EC/D9EF\D9EF;
-CSSub2Sprites1ED:     incbin "lvl/spr/1ED_CSroom2.bin"          ;;DA12|DA12+DA0F/DA12\DA12;
-CSSub3Sprites1EC:     incbin "lvl/spr/1EC_CSroom3.bin"          ;;DA44|DA44+DA41/DA44\DA44;
-CSSub1Sprites1C0:     incbin "lvl/spr/1C0_CSsub.bin"            ;;DA7F|DA7F+DA7C/DA7F\DA7F;
-CI4Sprites01D:        incbin "lvl/spr/01D_CI4main.bin"          ;;DA93|DA93+DA90/DA93\DA93;
-CI4Sub1Sprites0EA:    incbin "lvl/spr/0EA_CI4sub.bin"           ;;DADD|DADD+DADA/DADD\DADD;
-CI5Sprites01C:        incbin "lvl/spr/01C_CI5main.bin"          ;;DB0F|DB0F+DB0C/DB0F\DB0F;
-CI5Sub2Sprites0C0:    incbin "lvl/spr/0C0_CI5sub.bin"           ;;DB95|DB95+DB92/DB95\DB95;
-C6Sprites01A:         incbin "lvl/spr/01A_C6room1.bin"          ;;DBBB|DBBB+DBB8/DBBB\DBBB;
-C6Sub1Sprites0D4:     incbin "lvl/spr/0D4_C6room2.bin"          ;;DBF9|DBF9+DBF6/DBF9\DBF9;
-C6Sub2Sprites0D3:     incbin "lvl/spr/0D3_C6room3.bin"          ;;DC22|DC22+DC1F/DC22\DC22;
-SGSSprites018:        incbin "lvl/spr/018_SGSroom1.bin"         ;;DC2D|DC2D+DC2A/DC2D\DC2D;
-SGSSub1Sprites0F8:    incbin "lvl/spr/0F8_SGSroom2.bin"         ;;DC3B|DC3B+DC38/DC3B\DC3B;
-                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
-SGSSub2Sprites0F7:    incbin "lvl/spr/0F7_SGSroom3_J.bin"       ;;DC61                    ;
-                   else                               ;<  ELSE  ;;------------------------; U, SS, E0, & E1
-SGSSub2Sprites0F7:    incbin "lvl/spr/0F7_SGSroom3_U.bin"       ;;    |DC61+DC5E/DC61\DC61;
-                   endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
-VoB1Sprites116:       incbin "lvl/spr/116_VoB1main.bin"         ;;DD0B|DD14+DD11/DD14\DD14;
-VoB1Sub2Sprites1E5:   incbin "lvl/spr/1E5_VoB1end.bin"          ;;DD6D|DD76+DD73/DD76\DD76;
-VoB2Sprites115:       incbin "lvl/spr/115_VoB2room1.bin"        ;;DD72|DD7B+DD78/DD7B\DD7B;
-VoB2Sub1Sprites1E3:   incbin "lvl/spr/1E3_VoB2room2.bin"        ;;DDAA|DDB3+DDB0/DDB3\DDB3;
-VoB2Sub2Sprites1E2:   incbin "lvl/spr/1E2_VoB2room3.bin"        ;;DDAF|DDB8+DDB5/DDB8\DDB8;
-YoshiWingsSprites0C8: incbin "lvl/spr/0C8_yoshiwingsdark.bin"   ;;DDC6|DDCF+DDCC/DDCF\DDCF;
-VoBGHSprites114:      incbin "lvl/spr/114_VoBGHroom1.bin"       ;;DDF8|DE01+DDFE/DE01\DE01;
-VoBGHSub1Sprites1DD:  incbin "lvl/spr/1DD_VoBGHroom2.bin"       ;;DE06|DE0F+DE0C/DE0F\DE0F;
-VoBGHSub2Sprites1DB:  incbin "lvl/spr/1DB_VoBGHroom3.bin"       ;;DE32|DE3B+DE38/DE3B\DE3B;
-VoB3Sprites113:       incbin "lvl/spr/113_VoB3main.bin"         ;;DE46|DE4F+DE4C/DE4F\DE4F;
-VoB4Sprites10F:       incbin "lvl/spr/10F_VoB4main.bin"         ;;DEFF|DF08+DF05/DF08\DF08;
-VoB4Sub1Sprites1BF:   incbin "lvl/spr/1BF_VoB4sub.bin"          ;;DF8B|DF94+DF91/DF94\DF94;
-C7Sprites110:         incbin "lvl/spr/110_C7room1.bin"          ;;DFA8|DFB1+DFAE/DFB1\DFB1;
-C7Sub1Sprites1FE:     incbin "lvl/spr/1FE_C7room2.bin"          ;;DFD7|DFE0+DFDD/DFE0\DFE0;
-C7Sub2Sprites1EB:     incbin "lvl/spr/1EB_C7room3.bin"          ;;E01B|E024+E021/E024\E024;
-VoBFSprites111:       incbin "lvl/spr/111_VoBFroom1.bin"        ;;E029|E032+E02F/E032\E032;
-FDSub1Sprites1D4:     incbin "lvl/spr/1D4_FDroom1.bin"          ;;E05E|E067+E064/E067\E067;
-FDSub2Sprites1D3:     incbin "lvl/spr/1D3_FDroom2.bin"          ;;E084|E08D+E08A/E08D\E08D;
-FDSub3Sprites1D2:     incbin "lvl/spr/1D2_FDroom3.bin"          ;;E0BC|E0C5+E0C2/E0C5\E0C5;
-FDSub4Sprites1D1:     incbin "lvl/spr/1D1_FDroom4.bin"          ;;E0DF|E0E8+E0E5/E0E8\E0E8;
-FDSub5Sprites1CF:     incbin "lvl/spr/1CF_FDroom5.bin"          ;;E10B|E114+E111/E114\E114;
-FDSub6Sprites1CE:     incbin "lvl/spr/1CE_FDroom6.bin"          ;;E128|E131+E12E/E131\E131;
-FDSub7Sprites1CD:     incbin "lvl/spr/1CD_FDroom7.bin"          ;;E157|E160+E15D/E160\E160;
-FDSub8Sprites1CC:     incbin "lvl/spr/1CC_FDroom8.bin"          ;;E17A|E183+E180/E183\E183;
-BDSprites10E:         incbin "lvl/spr/10E_BD.bin"               ;;E194|E19D+E19A/E19D\E19D;
-BowserSprites1C7:     incbin "lvl/spr/1C7_bowser.bin"           ;;E1B7|E1C0+E1BD/E1C0\E1C0;
-SW1Sprites134:        incbin "lvl/spr/134_SW1main.bin"          ;;E1BC|E1C5+E1C2/E1C5\E1C5;
-SW2Sprites130:        incbin "lvl/spr/130_SW2main.bin"          ;;E218|E221+E21E/E221\E221;
-SW3Sprites132:        incbin "lvl/spr/132_SW3.bin"              ;;E295|E29E+E29B/E29E\E29E;
-SW4Sprites135:        incbin "lvl/spr/135_SW4.bin"              ;;E2A6|E2AF+E2AC/E2AF\E2AF;
-SW5Sprites136:        incbin "lvl/spr/136_SW5.bin"              ;;E32C|E335+E332/E335\E335;
-GnarlySprites12A:     incbin "lvl/spr/12A_SP1room1.bin"         ;;E3D3|E3DC+E3D9/E3DC\E3DC;
-GnarlySub1Sprites1C4: incbin "lvl/spr/1C4_SP1room2.bin"         ;;E3F9|E402+E3FF/E402\E402;
-TubularSprites12B:    incbin "lvl/spr/12B_SP2.bin"              ;;E41F|E428+E425/E428\E428;
-WayCoolSprites12C:    incbin "lvl/spr/12C_SP3main.bin"          ;;E45D|E466+E463/E466\E466;
-YoshiWingsSprites1C8: incbin "lvl/spr/1C8_yoshiwingsbright.bin" ;;E4E3|E4EC+E4E9/E4EC\E4EC;
-AwesomeSprites12D:    incbin "lvl/spr/12D_SP4.bin"              ;;E4E8|E4F1+E4EE/E4F1\E4F1;
-GroovySprites128:     incbin "lvl/spr/128_SP5.bin"              ;;E56B|E574+E571/E574\E574;
-MondoSprites127:      incbin "lvl/spr/127_SP6main.bin"          ;;E5D6|E5DF+E5DC/E5DF\E5DF;
-OutrageousSprites126: incbin "lvl/spr/126_SP7.bin"              ;;E647|E650+E64D/E650\E650;
-FunkySprites125:      incbin "lvl/spr/125_SP8.bin"              ;;E6EB|E6F4+E6F1/E6F4\E6F4;
-YHSprites104:         incbin "lvl/spr/104_YH.bin"               ;;E750|E759+E756/E759\E759;
-TestLevelSprites:     incbin "lvl/spr/testlevel.bin"            ;;E764|E76D+E76A/E76D\E76D;
-                                                                ;;                        ;
-                      %insert_empty($89A,$891,$894,$891,$891)   ;;E766|E76F+E76C/E76F\E76F;
-                                                                ;;                        ;
-DATA_07F000:          db $30,$44,$58,$6C,$80,$94,$A8,$BC        ;;F000|F000+F000/F000\F000;
-                      db $D0,$E4,$28,$2C,$80,$94,$A8,$BC        ;;F008|F008+F008/F008\F008;
-                      db $D0,$E4,$30,$58,$00,$00,$28,$2C        ;;F010|F010+F010/F010\F010;
-                      db $30,$54,$64,$74,$84,$94,$A4,$B4        ;;F018|F018+F018/F018\F018;
-                      db $00,$00,$28,$2C,$30,$54,$78,$8C        ;;F020|F020+F020/F020\F020;
-                      db $A0,$B4,$C8,$DC,$F0,$F8,$28,$2C        ;;F028|F028+F028/F028\F028;
-                      db $30,$74,$88,$9C,$B0,$C4,$D8,$EC        ;;F030|F030+F030/F030\F030;
-                      db $F8,$FC,$28,$2C,$30,$84,$D8,$E0        ;;F038|F038+F038/F038\F038;
-                      db $E8,$F0,$F8,$00,$00,$00,$28,$2C        ;;F040|F040+F040/F040\F040;
-                      db $00,$60,$74,$88,$9C,$B0,$C4,$00        ;;F048|F048+F048/F048\F048;
-                      db $00,$00,$28,$2C,$30,$44,$58,$6C        ;;F050|F050+F050/F050\F050;
-                      db $80,$94,$A8,$00,$00,$00,$28,$2C        ;;F058|F058+F058/F058\F058;
-                      db $A0,$30,$34,$38,$3C,$40,$44,$48        ;;F060|F060+F060/F060\F060;
-                      db $4C,$50,$28,$2C,$30,$48,$60,$78        ;;F068|F068+F068/F068\F068;
-                      db $8C,$A0,$B4,$C8,$DC,$00,$28,$2C        ;;F070|F070+F070/F070\F070;
-                      db $58,$AC,$C0,$D4,$E8,$00,$00,$00        ;;F078|F078+F078/F078\F078;
-                      db $00,$00,$28,$2C,$58,$6C,$80,$94        ;;F080|F080+F080/F080\F080;
-                      db $A8,$BC,$D0,$E4,$00,$00,$28,$2C        ;;F088|F088+F088/F088\F088;
-                      db $30,$74,$B8,$C4,$D0,$DC,$E8,$F4        ;;F090|F090+F090/F090\F090;
-                      db $00,$00,$28,$2C,$30,$48,$60,$78        ;;F098|F098+F098/F098\F098;
-                      db $90,$A8,$C0,$D8,$00,$00,$28,$2C        ;;F0A0|F0A0+F0A0/F0A0\F0A0;
-                      db $30,$44,$58,$5C,$60,$64,$68,$6C        ;;F0A8|F0A8+F0A8/F0A8\F0A8;
-                      db $70,$00,$28,$2C                        ;;F0B0|F0B0+F0B0/F0B0\F0B0;
-                                                                ;;                        ;
-DATA_07F0B4:          db $00,$0C,$18,$24,$30,$3C,$00,$48        ;;F0B4|F0B4+F0B4/F0B4\F0B4;
-                      db $54,$60,$6C,$78,$84,$90,$9C,$00        ;;F0BC|F0BC+F0BC/F0BC\F0BC;
-                      db $A8,$0C,$00,$B4                        ;;F0C4|F0C4+F0C4/F0C4\F0C4;
-                                                                ;;                        ;
-DATA_07F0C8:          db $00,$08,$10,$00,$10,$00,$10,$00        ;;F0C8|F0C8+F0C8/F0C8\F0C8;
-                      db $10,$00,$08,$10,$FF,$08,$08,$08        ;;F0D0|F0D0+F0D0/F0D0\F0D0;
-                      db $08,$08,$FF,$00,$08,$10,$10,$08        ;;F0D8|F0D8+F0D8/F0D8\F0D8;
-                      db $00,$00,$08,$10,$FF,$00,$08,$10        ;;F0E0|F0E0+F0E0/F0E0\F0E0;
-                      db $08,$10,$10,$00,$08,$10,$FF,$00        ;;F0E8|F0E8+F0E8/F0E8\F0E8;
-                      db $00,$10,$00,$10,$00,$08,$10,$10        ;;F0F0|F0F0+F0F0/F0F0\F0F0;
-                      db $FF,$00,$08,$10,$00,$00,$08,$10        ;;F0F8|F0F8+F0F8/F0F8\F0F8;
-                      db $10,$00,$08,$10,$FF,$08,$10,$00        ;;F100|F100+F100/F100\F100;
-                      db $00,$08,$10,$00,$10,$00,$08,$10        ;;F108|F108+F108/F108\F108;
-                      db $FF,$00,$08,$10,$10,$0C,$08,$08        ;;F110|F110+F110/F110\F110;
-                      db $FF,$00,$08,$10,$00,$10,$00,$08        ;;F118|F118+F118/F118\F118;
-                      db $10,$00,$10,$00,$08,$10,$FF,$00        ;;F120|F120+F120/F120\F120;
-                      db $08,$10,$00,$10,$00,$08,$10,$10        ;;F128|F128+F128/F128\F128;
-                      db $00,$08,$10,$FF                        ;;F130|F130+F130/F130\F130;
-                                                                ;;                        ;
-DATA_07F134:          db $00,$00,$00,$08,$08,$10,$10,$18        ;;F134|F134+F134/F134\F134;
-                      db $18,$20,$20,$20,$FF,$00,$08,$10        ;;F13C|F13C+F13C/F13C\F13C;
-                      db $18,$20,$FF,$00,$00,$00,$08,$10        ;;F144|F144+F144/F144\F144;
-                      db $18,$20,$20,$20,$FF,$00,$00,$08        ;;F14C|F14C+F14C/F14C\F14C;
-                      db $10,$10,$18,$20,$20,$20,$FF,$00        ;;F154|F154+F154/F154\F154;
-                      db $08,$08,$10,$10,$18,$18,$18,$20        ;;F15C|F15C+F15C/F15C\F15C;
-                      db $FF,$00,$00,$00,$08,$10,$10,$10        ;;F164|F164+F164/F164\F164;
-                      db $18,$20,$20,$20,$FF,$00,$00,$08        ;;F16C|F16C+F16C/F16C\F16C;
-                      db $10,$10,$10,$18,$18,$20,$20,$20        ;;F174|F174+F174/F174\F174;
-                      db $FF,$00,$00,$00,$08,$10,$18,$20        ;;F17C|F17C+F17C/F17C\F17C;
-                      db $FF,$00,$00,$00,$08,$08,$10,$10        ;;F184|F184+F184/F184\F184;
-                      db $10,$18,$18,$20,$20,$20,$FF,$00        ;;F18C|F18C+F18C/F18C\F18C;
-                      db $00,$00,$08,$08,$10,$10,$10,$18        ;;F194|F194+F194/F194\F194;
-                      db $20,$20,$20,$FF                        ;;F19C|F19C+F19C/F19C\F19C;
-                                                                ;;                        ;
-DATA_07F1A0:          db $00,$0D,$13,$1D,$27,$31,$3D,$49        ;;F1A0|F1A0+F1A0/F1A0\F1A0;
-                      db $51,$5F                                ;;F1A8|F1A8+F1A8/F1A8\F1A8;
-                                                                ;;                        ;
-DATA_07F1AA:          db $01,$02,$03,$04,$05,$06,$07,$08        ;;F1AA|F1AA+F1AA/F1AA\F1AA;
-                      db $09,$10,$11,$12,$13,$14,$15,$16        ;;F1B2|F1B2+F1B2/F1B2\F1B2;
-                      db $17,$18,$19,$20,$21,$22,$23,$24        ;;F1BA|F1BA+F1BA/F1BA\F1BA;
-                      db $25,$26,$27,$28,$29,$30,$40,$50        ;;F1C2|F1C2+F1C2/F1C2\F1C2;
-                                                                ;;                        ;
-CODE_07F1CA:          LDA.W SpriteMisc1540,X                    ;;F1CA|F1CA+F1CA/F1CA\F1CA;
-                      STA.B _4                                  ;;F1CD|F1CD+F1CD/F1CD\F1CD;
-                      STZ.B _2                                  ;;F1CF|F1CF+F1CF/F1CF\F1CF;
-                      LDA.W SpriteMisc1594,X                    ;;F1D1|F1D1+F1D1/F1D1\F1D1;
-                      LSR A                                     ;;F1D4|F1D4+F1D4/F1D4\F1D4;
-                      LSR A                                     ;;F1D5|F1D5+F1D5/F1D5\F1D5;
-                      TAX                                       ;;F1D6|F1D6+F1D6/F1D6\F1D6;
-                      LDA.L DATA_07F1AA,X                       ;;F1D7|F1D7+F1D7/F1D7\F1D7;
-                      PHA                                       ;;F1DB|F1DB+F1DB/F1DB\F1DB;
-                      LSR A                                     ;;F1DC|F1DC+F1DC/F1DC\F1DC;
-                      LSR A                                     ;;F1DD|F1DD+F1DD/F1DD\F1DD;
-                      LSR A                                     ;;F1DE|F1DE+F1DE/F1DE\F1DE;
-                      LSR A                                     ;;F1DF|F1DF+F1DF/F1DF\F1DF;
-                      TAX                                       ;;F1E0|F1E0+F1E0/F1E0\F1E0;
-                      BEQ +                                     ;;F1E1|F1E1+F1E1/F1E1\F1E1;
-                      LDA.L DATA_07F1A0,X                       ;;F1E3|F1E3+F1E3/F1E3\F1E3;
-                      TAX                                       ;;F1E7|F1E7+F1E7/F1E7\F1E7;
-                      LDY.B #$20                                ;;F1E8|F1E8+F1E8/F1E8\F1E8;
-                      JSR CODE_07F200                           ;;F1EA|F1EA+F1EA/F1EA\F1EA;
-                    + PLA                                       ;;F1ED|F1ED+F1ED/F1ED\F1ED;
-                      AND.B #$0F                                ;;F1EE|F1EE+F1EE/F1EE\F1EE;
-                      TAX                                       ;;F1F0|F1F0+F1F0/F1F0\F1F0;
-                      LDA.L DATA_07F1A0,X                       ;;F1F1|F1F1+F1F1/F1F1\F1F1;
-                      TAX                                       ;;F1F5|F1F5+F1F5/F1F5\F1F5;
-                      LDA.B #$20                                ;;F1F6|F1F6+F1F6/F1F6\F1F6;
-                      STA.B _2                                  ;;F1F8|F1F8+F1F8/F1F8\F1F8;
-                      LDY.B #$54                                ;;F1FA|F1FA+F1FA/F1FA\F1FA;
-                      JSR CODE_07F200                           ;;F1FC|F1FC+F1FC/F1FC\F1FC;
-                      RTL                                       ;;F1FF|F1FF+F1FF/F1FF\F1FF;
-                                                                ;;                        ;
-CODE_07F200:          LDA.L DATA_07F0C8,X                       ;;F200|F200+F200/F200\F200;
-                      BMI CODE_07F24A                           ;;F204|F204+F204/F204\F204;
-                      CLC                                       ;;F206|F206+F206/F206\F206;
-                      ADC.B #$64                                ;;F207|F207+F207/F207\F207;
-                      CLC                                       ;;F209|F209+F209/F209\F209;
-                      ADC.B _2                                  ;;F20A|F20A+F20A/F20A\F20A;
-                      STA.W OAMTileXPos,Y                       ;;F20C|F20C+F20C/F20C\F20C;
-                      LDA.L DATA_07F134,X                       ;;F20F|F20F+F20F/F20F\F20F;
-                      CLC                                       ;;F213|F213+F213/F213\F213;
-                      ADC.B #$40                                ;;F214|F214+F214/F214\F214;
-                      STA.W OAMTileYPos,Y                       ;;F216|F216+F216/F216\F216;
-                      LDA.B #$EF                                ;;F219|F219+F219/F219\F219;
-                      PHX                                       ;;F21B|F21B+F21B/F21B\F21B;
-                      LDX.B _4                                  ;;F21C|F21C+F21C/F21C\F21C;
-                      CPX.B #$10                                ;;F21E|F21E+F21E/F21E\F21E;
-                      BCS +                                     ;;F220|F220+F220/F220\F220;
-                      TXA                                       ;;F222|F222+F222/F222\F222;
-                      LSR A                                     ;;F223|F223+F223/F223\F223;
-                      LSR A                                     ;;F224|F224+F224/F224\F224;
-                      TAX                                       ;;F225|F225+F225/F225\F225;
-                      LDA.L DATA_07F24E,X                       ;;F226|F226+F226/F226\F226;
-                    + STA.W OAMTileNo,Y                         ;;F22A|F22A+F22A/F22A\F22A;
-                      PLX                                       ;;F22D|F22D+F22D/F22D\F22D;
-                      LDA.B TrueFrame                           ;;F22E|F22E+F22E/F22E\F22E;
-                      LSR A                                     ;;F230|F230+F230/F230\F230;
-                      AND.B #$0E                                ;;F231|F231+F231/F231\F231;
-                      ORA.B #$30                                ;;F233|F233+F233/F233\F233;
-                      STA.W OAMTileAttr,Y                       ;;F235|F235+F235/F235\F235;
-                      PHY                                       ;;F238|F238+F238/F238\F238;
-                      TYA                                       ;;F239|F239+F239/F239\F239;
-                      LSR A                                     ;;F23A|F23A+F23A/F23A\F23A;
-                      LSR A                                     ;;F23B|F23B+F23B/F23B\F23B;
-                      TAY                                       ;;F23C|F23C+F23C/F23C\F23C;
-                      LDA.B #$00                                ;;F23D|F23D+F23D/F23D\F23D;
-                      STA.W OAMTileSize,Y                       ;;F23F|F23F+F23F/F23F\F23F;
-                      PLY                                       ;;F242|F242+F242/F242\F242;
-                      INY                                       ;;F243|F243+F243/F243\F243;
-                      INY                                       ;;F244|F244+F244/F244\F244;
-                      INY                                       ;;F245|F245+F245/F245\F245;
-                      INY                                       ;;F246|F246+F246/F246\F246;
-                      INX                                       ;;F247|F247+F247/F247\F247;
-                      BRA CODE_07F200                           ;;F248|F248+F248/F248\F248;
-                                                                ;;                        ;
-CODE_07F24A:          LDX.W CurSpriteProcess                    ;;F24A|F24A+F24A/F24A\F24A; X = Sprite index 
-                      RTS                                       ;;F24D|F24D+F24D/F24D\F24D;
-                                                                ;;                        ;
-                                                                ;;                        ;
-DATA_07F24E:          db $66,$66,$6E,$FF                        ;;F24E|F24E+F24E/F24E\F24E;
-                                                                ;;                        ;
-CODE_07F252:          PHX                                       ;;F252|F252+F252/F252\F252;
-                      LDA.W SpriteMisc1594,X                    ;;F253|F253+F253/F253\F253;
-                      LSR A                                     ;;F256|F256+F256/F256\F256;
-                      LSR A                                     ;;F257|F257+F257/F257\F257;
-                      TAX                                       ;;F258|F258+F258/F258\F258;
-                      LDA.L DATA_07F1AA,X                       ;;F259|F259+F259/F259\F259;
-                      STA.W BonusStarsGained                    ;;F25D|F25D+F25D/F25D\F25D;
-                      PLX                                       ;;F260|F260+F260/F260\F260;
-                      CMP.B #$50                                ;;F261|F261+F261/F261\F261;
-                      BNE +                                     ;;F263|F263+F263/F263\F263;
-                      LDA.B #$0A                                ;;F265|F265+F265/F265\F265;
-                      JSL GivePoints                            ;;F267|F267+F267/F267\F267;
-                    + RTL                                       ;;F26B|F26B+F26B/F26B\F26B;
-                                                                ;;                        ;
-                                                                ;;                        ;
-Sprite1656Vals:       db $70,$70,$70,$70,$10,$10,$10,$10        ;;F26C|F26C+F26C/F26C\F26C;
-                      db $10,$10,$10,$10,$10,$10,$00,$10        ;;F274|F274+F274/F274\F274;
-                      db $10,$10,$14,$00,$00,$00,$00,$10        ;;F27C|F27C+F27C/F27C\F27C;
-                      db $10,$11,$81,$10,$10,$80,$11,$11        ;;F284|F284+F284/F284\F284;
-                      db $82,$00,$13,$13,$13,$13,$01,$00        ;;F28C|F28C+F28C/F28C\F28C;
-                      db $00,$00,$81,$00,$00,$00,$00,$00        ;;F294|F294+F294/F294\F294;
-                      db $00,$00,$00,$00,$00,$05,$80,$00        ;;F29C|F29C+F29C/F29C\F29C;
-                      db $00,$00,$07,$07,$07,$00,$00,$30        ;;F2A4|F2A4+F2A4/F2A4\F2A4;
-                      db $30,$00,$00,$00,$00,$08,$00,$10        ;;F2AC|F2AC+F2AC/F2AC\F2AC;
-                      db $00,$00,$00,$10,$00,$10,$10,$8C        ;;F2B4|F2B4+F2B4/F2B4\F2B4;
-                      db $8C,$10,$00,$00,$00,$00,$01,$00        ;;F2BC|F2BC+F2BC/F2BC\F2BC;
-                      db $01,$01,$01,$0B,$0B,$0B,$0B,$00        ;;F2C4|F2C4+F2C4/F2C4\F2C4;
-                      db $00,$00,$00,$00,$00,$00,$00,$00        ;;F2CC|F2CC+F2CC/F2CC\F2CC;
-                      db $00,$00,$00,$00,$00,$10,$19,$30        ;;F2D4|F2D4+F2D4/F2D4\F2D4;
-                      db $0A,$10,$10,$30,$00,$00,$00,$00        ;;F2DC|F2DC+F2DC/F2DC\F2DC;
-                      db $00,$00,$00,$00,$01,$00,$00,$00        ;;F2E4|F2E4+F2E4/F2E4\F2E4;
-                      db $00,$00,$00,$00,$00,$00,$00,$00        ;;F2EC|F2EC+F2EC/F2EC\F2EC;
-                      db $00,$00,$00,$00,$00,$00,$00,$00        ;;F2F4|F2F4+F2F4/F2F4\F2F4;
-                      db $00,$00,$00,$00,$00,$00,$00,$00        ;;F2FC|F2FC+F2FC/F2FC\F2FC;
-                      db $00,$80,$00,$10,$00,$00,$00,$10        ;;F304|F304+F304/F304\F304;
-                      db $00,$00,$10,$00,$00,$00,$00,$00        ;;F30C|F30C+F30C/F30C\F30C;
-                      db $00,$00,$00,$00,$00,$00,$00,$00        ;;F314|F314+F314/F314\F314;
-                      db $00,$0D,$00,$00,$00,$00,$00,$00        ;;F31C|F31C+F31C/F31C\F31C;
-                      db $00,$00,$00,$00,$00,$70,$10,$0E        ;;F324|F324+F324/F324\F324;
-                      db $00,$00,$00,$00,$00,$00,$FF,$00        ;;F32C|F32C+F32C/F32C\F32C;
-                      db $00                                    ;;F334|F334+F334/F334\F334;
-                                                                ;;                        ;
-Sprite1662Vals:       db $00,$00,$00,$00,$40,$40,$40,$40        ;;F335|F335+F335/F335\F335;
-                      db $40,$40,$40,$40,$40,$00,$0A,$00        ;;F33D|F33D+F33D/F33D\F33D;
-                      db $00,$00,$08,$00,$00,$00,$00,$80        ;;F345|F345+F345/F345\F345;
-                      db $80,$81,$01,$80,$80,$00,$81,$81        ;;F34D|F34D+F34D/F34D\F34D;
-                      db $00,$00,$81,$81,$81,$81,$06,$00        ;;F355|F355+F355/F355\F355;
-                      db $07,$06,$01,$00,$00,$00,$00,$00        ;;F35D|F35D+F35D/F35D\F35D;
-                      db $37,$00,$37,$00,$00,$09,$01,$00        ;;F365|F365+F365/F365\F365;
-                      db $00,$00,$0E,$0E,$0E,$00,$00,$00        ;;F36D|F36D+F36D/F36D\F36D;
-                      db $00,$0F,$0F,$10,$14,$00,$0D,$80        ;;F375|F375+F375/F375\F375;
-                      db $00,$1D,$00,$80,$80,$80,$80,$00        ;;F37D|F37D+F37D/F37D\F37D;
-                      db $00,$80,$02,$0C,$03,$05,$04,$05        ;;F385|F385+F385/F385\F385;
-                      db $04,$00,$00,$04,$05,$04,$05,$00        ;;F38D|F38D+F38D/F38D\F38D;
-                      db $1D,$0C,$04,$04,$12,$20,$21,$2C        ;;F395|F395+F395/F395\F395;
-                      db $34,$04,$04,$04,$04,$0C,$16,$00        ;;F39D|F39D+F39D/F39D\F39D;
-                      db $17,$80,$80,$00,$00,$00,$00,$00        ;;F3A5|F3A5+F3A5/F3A5\F3A5;
-                      db $00,$00,$00,$1E,$35,$00,$00,$00        ;;F3AD|F3AD+F3AD/F3AD\F3AD;
-                      db $0C,$00,$00,$0C,$0C,$00,$00,$3A        ;;F3B5|F3B5+F3B5/F3B5\F3B5;
-                      db $08,$08,$00,$00,$00,$00,$1C,$08        ;;F3BD|F3BD+F3BD/F3BD\F3BD;
-                      db $38,$0D,$0D,$0D,$0D,$0D,$0D,$0D        ;;F3C5|F3C5+F3C5/F3C5\F3C5;
-                      db $0D,$00,$0D,$80,$1D,$00,$00,$B6        ;;F3CD|F3CD+F3CD/F3CD\F3CD;
-                      db $24,$23,$3B,$1F,$22,$00,$27,$00        ;;F3D5|F3D5+F3D5/F3D5\F3D5;
-                      db $00,$28,$00,$2A,$2B,$2B,$00,$00        ;;F3DD|F3DD+F3DD/F3DD\F3DD;
-                      db $00,$0C,$00,$2D,$00,$00,$00,$2E        ;;F3E5|F3E5+F3E5/F3E5\F3E5;
-                      db $2E,$0C,$1D,$2F,$0C,$00,$80,$30        ;;F3ED|F3ED+F3ED/F3ED\F3ED;
-                      db $32,$31,$00,$00,$33,$07,$FF,$00        ;;F3F5|F3F5+F3F5/F3F5\F3F5;
-                      db $0C                                    ;;F3FD|F3FD+F3FD/F3FD\F3FD;
-                                                                ;;                        ;
-Sprite166EVals:       db $0A,$08,$06,$04,$0A,$08,$06,$04        ;;F3FE|F3FE+F3FE/F3FE\F3FE;
-                      db $0A,$0A,$08,$08,$04,$17,$32,$04        ;;F406|F406+F406/F406\F406;
-                      db $04,$1D,$3D,$09,$09,$45,$45,$85        ;;F40E|F40E+F40E/F40E\F40E;
-                      db $85,$0B,$08,$01,$12,$15,$09,$4F        ;;F416|F416+F416/F416\F416;
-                      db $1C,$24,$0B,$09,$0B,$09,$33,$33        ;;F41E|F41E+F41E/F41E\F41E;
-                      db $FD,$2B,$08,$35,$3B,$3A,$19,$3A        ;;F426|F426+F426/F426\F426;
-                      db $13,$13,$13,$34,$39,$2A,$15,$F3        ;;F42E|F42E+F42E/F42E\F42E;
-                      db $FD,$FD,$37,$37,$37,$C7,$30,$05        ;;F436|F436+F436/F436\F436;
-                      db $15,$37,$37,$37,$33,$30,$8B,$85        ;;F43E|F43E+F43E/F43E\F43E;
-                      db $1D,$3B,$3B,$09,$34,$01,$01,$08        ;;F446|F446+F446/F446\F446;
-                      db $08,$09,$20,$30,$20,$E3,$E3,$E3        ;;F44E|F44E+F44E/F44E\F44E;
-                      db $E3,$E3,$E3,$E1,$E1,$EB,$EB,$E3        ;;F456|F456+F456/F456\F456;
-                      db $E3,$E3,$E1,$E1,$A3,$A3,$A3,$A3        ;;F45E|F45E+F45E/F45E\F45E;
-                      db $A3,$E3,$F0,$E3,$F3,$3F,$3F,$0F        ;;F466|F466+F466/F466\F466;
-                      db $35,$0B,$09,$07,$08,$0A,$20,$24        ;;F46E|F46E+F46E/F46E\F46E;
-                      db $0A,$3A,$3A,$20,$20,$21,$28,$20        ;;F476|F476+F476/F476\F476;
-                      db $20,$00,$20,$20,$20,$20,$F5,$20        ;;F47E|F47E+F47E/F47E\F47E;
-                      db $20,$20,$20,$20,$20,$20,$30,$3B        ;;F486|F486+F486/F486\F486;
-                      db $F3,$0B,$0B,$0B,$0B,$0B,$0B,$0B        ;;F48E|F48E+F48E/F48E\F48E;
-                      db $0B,$9B,$93,$00,$30,$31,$31,$31        ;;F496|F496+F496/F496\F496;
-                      db $FB,$FB,$BB,$E3,$F3,$35,$35,$39        ;;F49E|F49E+F49E/F49E\F49E;
-                      db $35,$35,$7D,$07,$37,$37,$3D,$3F        ;;F4A6|F4A6+F4A6/F4A6\F4A6;
-                      db $3F,$30,$31,$31,$31,$04,$35,$3B        ;;F4AE|F4AE+F4AE/F4AE\F4AE;
-                      db $3B,$36,$7B,$3B,$33,$06,$0B,$11        ;;F4B6|F4B6+F4B6/F4B6\F4B6;
-                      db $F5,$F5,$CB,$CD,$F3,$3F,$FF,$20        ;;F4BE|F4BE+F4BE/F4BE\F4BE;
-                      db $38                                    ;;F4C6|F4C6+F4C6/F4C6\F4C6;
-                                                                ;;                        ;
-Sprite167AVals:       db $00,$00,$00,$00,$00,$00,$00,$00        ;;F4C7|F4C7+F4C7/F4C7\F4C7;
-                      db $00,$00,$00,$00,$00,$18,$02,$18        ;;F4CF|F4CF+F4CF/F4CF\F4CF;
-                      db $00,$00,$81,$00,$01,$99,$99,$00        ;;F4D7|F4D7+F4D7/F4D7\F4D7;
-                      db $00,$01,$00,$00,$00,$00,$00,$02        ;;F4DF|F4DF+F4DF/F4DF\F4DF;
-                      db $00,$C2,$00,$00,$00,$00,$01,$01        ;;F4E7|F4E7+F4E7/F4E7\F4E7;
-                      db $01,$83,$00,$00,$9A,$1E,$01,$BE        ;;F4EF|F4EF+F4EF/F4EF\F4EF;
-                      db $81,$81,$81,$02,$18,$87,$02,$01        ;;F4F7|F4F7+F4F7/F4F7\F4F7;
-                      db $01,$01,$01,$01,$01,$00,$3E,$01        ;;F4FF|F4FF+F4FF/F4FF\F4FF;
-                      db $01,$82,$82,$82,$01,$02,$81,$00        ;;F507|F507+F507/F507\F507;
-                      db $00,$A2,$82,$01,$00,$00,$00,$00        ;;F50F|F50F+F50F/F50F\F50F;
-                      db $00,$00,$A2,$08,$02,$A2,$A2,$A2        ;;F517|F517+F517/F517\F517;
-                      db $A2,$A2,$A2,$A2,$A2,$A2,$A2,$A2        ;;F51F|F51F+F51F/F51F\F51F;
-                      db $A2,$A2,$A2,$A2,$A2,$22,$22,$22        ;;F527|F527+F527/F527\F527;
-                      db $22,$A2,$A2,$A2,$A2,$E2,$01,$01        ;;F52F|F52F+F52F/F52F\F52F;
-                      db $01,$01,$01,$01,$C2,$C2,$C2,$C2        ;;F537|F537+F537/F537\F537;
-                      db $C2,$82,$82,$A2,$A2,$9A,$80,$82        ;;F53F|F53F+F53F/F53F\F53F;
-                      db $3E,$C2,$82,$82,$82,$92,$80,$82        ;;F547|F547+F547/F547\F547;
-                      db $82,$82,$02,$02,$02,$02,$A2,$A2        ;;F54F|F54F+F54F/F54F\F54F;
-                      db $01,$F9,$F9,$F9,$F9,$F9,$F9,$F9        ;;F557|F557+F557/F557\F557;
-                      db $F9,$01,$01,$01,$A2,$81,$00,$01        ;;F55F|F55F+F55F/F55F\F55F;
-                      db $80,$00,$19,$A2,$01,$01,$01,$00        ;;F567|F567+F567/F567\F567;
-                      db $00,$81,$01,$81,$81,$81,$00,$01        ;;F56F|F56F+F56F/F56F\F56F;
-                      db $01,$A2,$00,$00,$00,$00,$00,$A2        ;;F577|F577+F577/F577\F577;
-                      db $A2,$A2,$A2,$A2,$A0,$01,$01,$A1        ;;F57F|F57F+F57F/F57F\F57F;
-                      db $A2,$A2,$01,$01,$A2,$A3,$FF,$82        ;;F587|F587+F587/F587\F587;
-                      db $A2                                    ;;F58F|F58F+F58F/F58F\F58F;
-                                                                ;;                        ;
-                   if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
-Sprite1686Vals:       db $00,$00,$00,$00,$02,$02,$02,$02        ;;F590                    ;
-                      db $42,$52,$52,$52,$52,$00,$09,$00        ;;F598                    ;
-                      db $40,$00,$01,$00,$00,$10,$10,$90        ;;F5A0                    ;
-                      db $90,$01,$10,$10,$90,$00,$11,$01        ;;F5A8                    ;
-                      db $01,$08,$00,$00,$00,$00,$01,$01        ;;F5B0                    ;
-                      db $19,$80,$00,$39,$09,$09,$10,$0A        ;;F5B8                    ;
-                      db $09,$09,$09,$99,$18,$29,$08,$19        ;;F5C0                    ;
-                      db $19,$19,$11,$11,$15,$10,$0A,$40        ;;F5C8                    ;
-                      db $40,$8C,$8C,$8C,$11,$18,$11,$80        ;;F5D0                    ; edible dolphins
-                      db $00,$29,$29,$10,$10,$10,$10,$00        ;;F5D8                    ;
-                      db $00,$10,$29,$20,$29,$A9,$A9,$A9        ;;F5E0                    ;
-                      db $A9,$A9,$A9,$A9,$A9,$A9,$A9,$A9        ;;F5E8                    ;
-                      db $29,$29,$3D,$3D,$3D,$3D,$3D,$3D        ;;F5F0                    ;
-                      db $3D,$29,$19,$29,$29,$59,$59,$18        ;;F5F8                    ;
-                      db $18,$10,$10,$50,$28,$28,$28,$28        ;;F600                    ;
-                      db $08,$29,$29,$39,$39,$29,$28,$28        ;;F608                    ;
-                      db $3A,$28,$29,$31,$31,$29,$00,$29        ;;F610                    ;
-                      db $29,$29,$29,$29,$29,$29,$29,$29        ;;F618                    ;
-                      db $11,$11,$11,$11,$11,$11,$11,$11        ;;F620                    ;
-                      db $11,$10,$11,$01,$39,$10,$19,$19        ;;F628                    ;
-                      db $19,$19,$01,$29,$98,$14,$14,$10        ;;F630                    ;
-                      db $18,$18,$18,$00,$19,$19,$19,$19        ;;F638                    ;
-                      db $19,$1D,$1D,$19,$19,$18,$18,$19        ;;F640                    ;
-                      db $19,$19,$1D,$19,$18,$00,$10,$00        ;;F648                    ;
-                      db $99,$99,$10,$90,$A9,$B9,$FF,$39        ;;F650                    ;
-                      db $19                                    ;;F658                    ;
-                   else                               ;<  ELSE  ;;------------------------; U, SS, E0, & E1
-Sprite1686Vals:       db $00,$00,$00,$00,$02,$02,$02,$02        ;;    |F590+F590/F590\F590;
-                      db $42,$52,$52,$52,$52,$00,$09,$00        ;;    |F598+F598/F598\F598;
-                      db $40,$00,$01,$00,$00,$10,$10,$90        ;;    |F5A0+F5A0/F5A0\F5A0;
-                      db $90,$01,$10,$10,$90,$00,$11,$01        ;;    |F5A8+F5A8/F5A8\F5A8;
-                      db $01,$08,$00,$00,$00,$00,$01,$01        ;;    |F5B0+F5B0/F5B0\F5B0;
-                      db $19,$80,$00,$39,$09,$09,$10,$0A        ;;    |F5B8+F5B8/F5B8\F5B8;
-                      db $09,$09,$09,$99,$18,$29,$08,$19        ;;    |F5C0+F5C0/F5C0\F5C0;
-                      db $19,$19,$11,$11,$15,$10,$0A,$40        ;;    |F5C8+F5C8/F5C8\F5C8;
-                      db $40,$8D,$8D,$8D,$11,$18,$11,$80        ;;    |F5D0+F5D0/F5D0\F5D0;
-                      db $00,$29,$29,$10,$10,$10,$10,$00        ;;    |F5D8+F5D8/F5D8\F5D8;
-                      db $00,$10,$29,$20,$29,$A9,$A9,$A9        ;;    |F5E0+F5E0/F5E0\F5E0;
-                      db $A9,$A9,$A9,$A9,$A9,$A9,$A9,$A9        ;;    |F5E8+F5E8/F5E8\F5E8;
-                      db $29,$29,$3D,$3D,$3D,$3D,$3D,$3D        ;;    |F5F0+F5F0/F5F0\F5F0;
-                      db $3D,$29,$19,$29,$29,$59,$59,$18        ;;    |F5F8+F5F8/F5F8\F5F8;
-                      db $18,$10,$10,$50,$28,$28,$28,$28        ;;    |F600+F600/F600\F600;
-                      db $08,$29,$29,$39,$39,$29,$28,$28        ;;    |F608+F608/F608\F608;
-                      db $3A,$28,$29,$31,$31,$29,$00,$29        ;;    |F610+F610/F610\F610;
-                      db $29,$29,$29,$29,$29,$29,$29,$29        ;;    |F618+F618/F618\F618;
-                      db $11,$11,$11,$11,$11,$11,$11,$11        ;;    |F620+F620/F620\F620;
-                      db $11,$10,$11,$01,$39,$10,$19,$19        ;;    |F628+F628/F628\F628;
-                      db $19,$19,$01,$29,$98,$14,$14,$10        ;;    |F630+F630/F630\F630;
-                      db $18,$18,$18,$00,$19,$19,$19,$19        ;;    |F638+F638/F638\F638;
-                      db $19,$1D,$1D,$19,$19,$18,$18,$19        ;;    |F640+F640/F640\F640;
-                      db $19,$19,$1D,$19,$18,$00,$10,$00        ;;    |F648+F648/F648\F648;
-                      db $99,$99,$10,$90,$A9,$B9,$FF,$39        ;;    |F650+F650/F650\F650;
-                      db $19                                    ;;    |F658+F658/F658\F658;
-                   endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
-                                                                ;;                        ;
-Sprite190FVals:       db $00,$00,$00,$00,$A0,$A0,$A0,$A0        ;;F659|F659+F659/F659\F659;
-                      db $B0,$B0,$B0,$B0,$A0,$80,$44,$80        ;;F661|F661+F661/F661\F661;
-                      db $80,$80,$20,$00,$00,$00,$00,$00        ;;F669|F669+F669/F669\F669;
-                      db $00,$20,$20,$00,$00,$00,$60,$20        ;;F671|F671+F671/F671\F671;
-                      db $04,$04,$20,$20,$20,$20,$24,$04        ;;F679|F679+F679/F679\F679;
-                      db $00,$44,$20,$04,$44,$C4,$00,$C4        ;;F681|F681+F681/F681\F681;
-                      db $24,$24,$24,$04,$04,$46,$04,$04        ;;F689|F689+F689/F689\F689;
-                      db $04,$04,$04,$04,$04,$00,$C4,$00        ;;F691|F691+F691/F691\F691;
-                      db $00,$05,$05,$05,$04,$44,$48,$00        ;;F699|F699+F699/F699\F699;
-                      db $00,$40,$40,$40,$04,$00,$00,$00        ;;F6A1|F6A1+F6A1/F6A1\F6A1;
-                      db $00,$00,$64,$C4,$64,$45,$65,$45        ;;F6A9|F6A9+F6A9/F6A9\F6A9;
-                      db $65,$45,$45,$45,$45,$65,$65,$45        ;;F6B1|F6B1+F6B1/F6B1\F6B1;
-                      db $45,$45,$45,$45,$45,$45,$45,$05        ;;F6B9|F6B9+F6B9/F6B9\F6B9;
-                      db $05,$44,$44,$44,$44,$46,$00,$00        ;;F6C1|F6C1+F6C1/F6C1\F6C1;
-                      db $00,$10,$10,$10,$40,$40,$40,$40        ;;F6C9|F6C9+F6C9/F6C9\F6C9;
-                      db $40,$40,$40,$42,$42,$40,$40,$40        ;;F6D1|F6D1+F6D1/F6D1\F6D1;
-                      db $C0,$40,$40,$40,$40,$00,$00,$40        ;;F6D9|F6D9+F6D9/F6D9\F6D9;
-                      db $40,$40,$40,$40,$40,$40,$40,$01        ;;F6E1|F6E1+F6E1/F6E1\F6E1;
-                      db $00,$48,$48,$48,$48,$48,$48,$48        ;;F6E9|F6E9+F6E9/F6E9\F6E9;
-                      db $48,$00,$40,$40,$40,$00,$04,$04        ;;F6F1|F6F1+F6F1/F6F1\F6F1;
-                      db $40,$40,$00,$41,$00,$00,$00,$00        ;;F6F9|F6F9+F6F9/F6F9\F6F9;
-                      db $00,$40,$00,$00,$40,$40,$00,$00        ;;F701|F701+F701/F701\F701;
-                      db $00,$40,$00,$00,$00,$00,$00,$41        ;;F709|F709+F709/F709\F709;
-                      db $41,$40,$41,$40,$00,$00,$00,$20        ;;F711|F711+F711/F711\F711;
-                      db $47,$45,$00,$00,$41,$41,$FF,$40        ;;F719|F719+F719/F719\F719;
-                      db $40                                    ;;F721|F721+F721/F721\F721;
-                                                                ;;                        ;
-ZeroSpriteTables:     STZ.W SpriteInLiquid,X                    ;;F722|F722+F722/F722\F722;
-                      STZ.W SpriteBehindScene,X                 ;;F725|F725+F725/F725\F725;
-                      STZ.B SpriteTableC2,X                     ;;F728|F728+F728/F728\F728;
-                      STZ.W SpriteMisc151C,X                    ;;F72A|F72A+F72A/F72A\F72A;
-                      STZ.W SpriteMisc1528,X                    ;;F72D|F72D+F72D/F72D\F72D;
-                      STZ.W SpriteMisc1534,X                    ;;F730|F730+F730/F730\F730;
-                      STZ.W SpriteMisc157C,X                    ;;F733|F733+F733/F733\F733;
-                      STZ.W SpriteBlockedDirs,X                 ;;F736|F736+F736/F736\F736;
-                      STZ.W SpriteWayOffscreenX,X               ;;F739|F739+F739/F739\F739;
-                      STZ.W SpriteMisc1602,X                    ;;F73C|F73C+F73C/F73C\F73C;
-                      STZ.W SpriteMisc1540,X                    ;;F73F|F73F+F73F/F73F\F73F;
-                      STZ.W SpriteMisc154C,X                    ;;F742|F742+F742/F742\F742;
-                      STZ.W SpriteMisc1558,X                    ;;F745|F745+F745/F745\F745;
-                      STZ.W SpriteMisc1564,X                    ;;F748|F748+F748/F748\F748;
-                      STZ.W SpriteMisc1FE2,X                    ;;F74B|F74B+F74B/F74B\F74B;
-                      STZ.W SpriteMisc1626,X                    ;;F74E|F74E+F74E/F74E\F74E;
-                      STZ.W SpriteMisc1570,X                    ;;F751|F751+F751/F751\F751;
-                      STZ.B SpriteXSpeed,X                      ;;F754|F754+F754/F754\F754; Sprite X Speed = 0 
-                      STZ.W SpriteXPosSpx,X                     ;;F756|F756+F756/F756\F756;
-                      STZ.B SpriteYSpeed,X                      ;;F759|F759+F759/F759\F759; Sprite Y Speed = 0 
-                      STZ.W SpriteYPosSpx,X                     ;;F75B|F75B+F75B/F75B\F75B;
-                      STZ.W SpriteDisableObjInt,X               ;;F75E|F75E+F75E/F75E\F75E;
-                      STZ.W SpriteOnYoshiTongue,X               ;;F761|F761+F761/F761\F761;
-                      STZ.W SpriteMisc163E,X                    ;;F764|F764+F764/F764\F764;
-                      STZ.W SpriteTweakerA,X                    ;;F767|F767+F767/F767\F767;
-                      STZ.W SpriteTweakerB,X                    ;;F76A|F76A+F76A/F76A\F76A;
-                      STZ.W SpriteTweakerC,X                    ;;F76D|F76D+F76D/F76D\F76D;
-                      STZ.W SpriteTweakerD,X                    ;;F770|F770+F770/F770\F770;
-                      STZ.W SpriteTweakerE,X                    ;;F773|F773+F773/F773\F773;
-                      STZ.W SpriteMisc187B,X                    ;;F776|F776+F776/F776\F776;
-                      STZ.W SpriteMisc160E,X                    ;;F779|F779+F779/F779\F779;
-                      STZ.W SpriteMisc1594,X                    ;;F77C|F77C+F77C/F77C\F77C;
-                      STZ.W SpriteMisc1504,X                    ;;F77F|F77F+F77F/F77F\F77F;
-                      STZ.W SpriteMisc1FD6,X                    ;;F782|F782+F782/F782\F782;
-                      LDA.B #$01                                ;;F785|F785+F785/F785\F785;
-                      STA.W SpriteOffscreenX,X                  ;;F787|F787+F787/F787\F787;
-                      RTL                                       ;;F78A|F78A+F78A/F78A\F78A;
-                                                                ;;                        ;
-LoadSpriteTables:     PHY                                       ;;F78B|F78B+F78B/F78B\F78B;
-                      PHX                                       ;;F78C|F78C+F78C/F78C\F78C;
-                      LDA.B SpriteNumber,X                      ;;F78D|F78D+F78D/F78D\F78D;
-                      TAX                                       ;;F78F|F78F+F78F/F78F\F78F;
-                      LDA.L Sprite166EVals,X                    ;;F790|F790+F790/F790\F790;
-                      AND.B #$0F                                ;;F794|F794+F794/F794\F794;
-                      PLX                                       ;;F796|F796+F796/F796\F796;
-                      STA.W SpriteOBJAttribute,X                ;;F797|F797+F797/F797\F797;
-                      JSL LoadTweakerBytes                      ;;F79A|F79A+F79A/F79A\F79A;
-                      PLY                                       ;;F79E|F79E+F79E/F79E\F79E;
-                      RTL                                       ;;F79F|F79F+F79F/F79F\F79F;
-                                                                ;;                        ;
-LoadTweakerBytes:     PHY                                       ;;F7A0|F7A0+F7A0/F7A0\F7A0;
-                      PHX                                       ;;F7A1|F7A1+F7A1/F7A1\F7A1;
-                      TXY                                       ;;F7A2|F7A2+F7A2/F7A2\F7A2;
-                      LDX.B SpriteNumber,Y                      ;;F7A3|F7A3+F7A3/F7A3\F7A3;
-                      LDA.L Sprite1656Vals,X                    ;;F7A5|F7A5+F7A5/F7A5\F7A5;
-                      STA.W SpriteTweakerA,Y                    ;;F7A9|F7A9+F7A9/F7A9\F7A9;
-                      LDA.L Sprite1662Vals,X                    ;;F7AC|F7AC+F7AC/F7AC\F7AC;
-                      STA.W SpriteTweakerB,Y                    ;;F7B0|F7B0+F7B0/F7B0\F7B0;
-                      LDA.L Sprite166EVals,X                    ;;F7B3|F7B3+F7B3/F7B3\F7B3;
-                      STA.W SpriteTweakerC,Y                    ;;F7B7|F7B7+F7B7/F7B7\F7B7;
-                      LDA.L Sprite167AVals,X                    ;;F7BA|F7BA+F7BA/F7BA\F7BA;
-                      STA.W SpriteTweakerD,Y                    ;;F7BE|F7BE+F7BE/F7BE\F7BE;
-                      LDA.L Sprite1686Vals,X                    ;;F7C1|F7C1+F7C1/F7C1\F7C1;
-                      STA.W SpriteTweakerE,Y                    ;;F7C5|F7C5+F7C5/F7C5\F7C5;
-                      LDA.L Sprite190FVals,X                    ;;F7C8|F7C8+F7C8/F7C8\F7C8;
-                      STA.W SpriteTweakerF,Y                    ;;F7CC|F7CC+F7CC/F7CC\F7CC;
-                      PLX                                       ;;F7CF|F7CF+F7CF/F7CF\F7CF;
-                      PLY                                       ;;F7D0|F7D0+F7D0/F7D0\F7D0;
-                      RTL                                       ;;F7D1|F7D1+F7D1/F7D1\F7D1;
-                                                                ;;                        ;
-InitSpriteTables:     JSL ZeroSpriteTables                      ;;F7D2|F7D2+F7D2/F7D2\F7D2;
-                      JSL LoadSpriteTables                      ;;F7D6|F7D6+F7D6/F7D6\F7D6;
-                      RTL                                       ;;F7DA|F7DA+F7DA/F7DA\F7DA;
-                                                                ;;                        ;
-                                                                ;;                        ;
-CircleCoords:         db $00,$00,$03,$00,$06,$00,$09,$00        ;;F7DB|F7DB+F7DB/F7DB\F7DB;
-                      db $0C,$00,$0F,$00,$12,$00,$15,$00        ;;F7E3|F7E3+F7E3/F7E3\F7E3;
-                      db $19,$00,$1C,$00,$1F,$00,$22,$00        ;;F7EB|F7EB+F7EB/F7EB\F7EB;
-                      db $25,$00,$28,$00,$2B,$00,$2E,$00        ;;F7F3|F7F3+F7F3/F7F3\F7F3;
-                      db $31,$00,$35,$00,$38,$00,$3B,$00        ;;F7FB|F7FB+F7FB/F7FB\F7FB;
-                      db $3E,$00,$41,$00,$44,$00,$47,$00        ;;F803|F803+F803/F803\F803;
-                      db $4A,$00,$4D,$00,$50,$00,$53,$00        ;;F80B|F80B+F80B/F80B\F80B;
-                      db $56,$00,$59,$00,$5C,$00,$5F,$00        ;;F813|F813+F813/F813\F813;
-                      db $61,$00,$64,$00,$67,$00,$6A,$00        ;;F81B|F81B+F81B/F81B\F81B;
-                      db $6D,$00,$70,$00,$73,$00,$75,$00        ;;F823|F823+F823/F823\F823;
-                      db $78,$00,$7B,$00,$7E,$00,$80,$00        ;;F82B|F82B+F82B/F82B\F82B;
-                      db $83,$00,$86,$00,$88,$00,$8B,$00        ;;F833|F833+F833/F833\F833;
-                      db $8E,$00,$90,$00,$93,$00,$95,$00        ;;F83B|F83B+F83B/F83B\F83B;
-                      db $98,$00,$9B,$00,$9D,$00,$9F,$00        ;;F843|F843+F843/F843\F843;
-                      db $A2,$00,$A4,$00,$A7,$00,$A9,$00        ;;F84B|F84B+F84B/F84B\F84B;
-                      db $AB,$00,$AE,$00,$B0,$00,$B2,$00        ;;F853|F853+F853/F853\F853;
-                      db $B5,$00,$B7,$00,$B9,$00,$BB,$00        ;;F85B|F85B+F85B/F85B\F85B;
-                      db $BD,$00,$BF,$00,$C1,$00,$C3,$00        ;;F863|F863+F863/F863\F863;
-                      db $C5,$00,$C7,$00,$C9,$00,$CB,$00        ;;F86B|F86B+F86B/F86B\F86B;
-                      db $CD,$00,$CF,$00,$D1,$00,$D3,$00        ;;F873|F873+F873/F873\F873;
-                      db $D4,$00,$D6,$00,$D8,$00,$D9,$00        ;;F87B|F87B+F87B/F87B\F87B;
-                      db $DB,$00,$DD,$00,$DE,$00,$E0,$00        ;;F883|F883+F883/F883\F883;
-                      db $E1,$00,$E3,$00,$E4,$00,$E6,$00        ;;F88B|F88B+F88B/F88B\F88B;
-                      db $E7,$00,$E8,$00,$EA,$00,$EB,$00        ;;F893|F893+F893/F893\F893;
-                      db $EC,$00,$ED,$00,$EE,$00,$EF,$00        ;;F89B|F89B+F89B/F89B\F89B;
-                      db $F1,$00,$F2,$00,$F3,$00,$F4,$00        ;;F8A3|F8A3+F8A3/F8A3\F8A3;
-                      db $F4,$00,$F5,$00,$F6,$00,$F7,$00        ;;F8AB|F8AB+F8AB/F8AB\F8AB;
-                      db $F8,$00,$F9,$00,$F9,$00,$FA,$00        ;;F8B3|F8B3+F8B3/F8B3\F8B3;
-                      db $FB,$00,$FB,$00,$FC,$00,$FC,$00        ;;F8BB|F8BB+F8BB/F8BB\F8BB;
-                      db $FD,$00,$FD,$00,$FE,$00,$FE,$00        ;;F8C3|F8C3+F8C3/F8C3\F8C3;
-                      db $FE,$00,$FF,$00,$FF,$00,$FF,$00        ;;F8CB|F8CB+F8CB/F8CB\F8CB;
-                      db $FF,$00,$FF,$00,$FF,$00,$FF,$00        ;;F8D3|F8D3+F8D3/F8D3\F8D3;
-                      db $00,$01,$FF,$00,$FF,$00,$FF,$00        ;;F8DB|F8DB+F8DB/F8DB\F8DB;
-                      db $FF,$00,$FF,$00,$FF,$00,$FF,$00        ;;F8E3|F8E3+F8E3/F8E3\F8E3;
-                      db $FE,$00,$FE,$00,$FE,$00,$FD,$00        ;;F8EB|F8EB+F8EB/F8EB\F8EB;
-                      db $FD,$00,$FC,$00,$FC,$00,$FB,$00        ;;F8F3|F8F3+F8F3/F8F3\F8F3;
-                      db $FB,$00,$FA,$00,$F9,$00,$F9,$00        ;;F8FB|F8FB+F8FB/F8FB\F8FB;
-                      db $F8,$00,$F7,$00,$F6,$00,$F5,$00        ;;F903|F903+F903/F903\F903;
-                      db $F4,$00,$F4,$00,$F3,$00,$F2,$00        ;;F90B|F90B+F90B/F90B\F90B;
-                      db $F1,$00,$EF,$00,$EE,$00,$ED,$00        ;;F913|F913+F913/F913\F913;
-                      db $EC,$00,$EB,$00,$EA,$00,$E8,$00        ;;F91B|F91B+F91B/F91B\F91B;
-                      db $E7,$00,$E6,$00,$E4,$00,$E3,$00        ;;F923|F923+F923/F923\F923;
-                      db $E1,$00,$E0,$00,$DE,$00,$DD,$00        ;;F92B|F92B+F92B/F92B\F92B;
-                      db $DB,$00,$D9,$00,$D8,$00,$D6,$00        ;;F933|F933+F933/F933\F933;
-                      db $D4,$00,$D3,$00,$D1,$00,$CF,$00        ;;F93B|F93B+F93B/F93B\F93B;
-                      db $CD,$00,$CB,$00,$C9,$00,$C7,$00        ;;F943|F943+F943/F943\F943;
-                      db $C5,$00,$C3,$00,$C1,$00,$BF,$00        ;;F94B|F94B+F94B/F94B\F94B;
-                      db $BD,$00,$BB,$00,$B9,$00,$B7,$00        ;;F953|F953+F953/F953\F953;
-                      db $B5,$00,$B2,$00,$B0,$00,$AE,$00        ;;F95B|F95B+F95B/F95B\F95B;
-                      db $AB,$00,$A9,$00,$A7,$00,$A4,$00        ;;F963|F963+F963/F963\F963;
-                      db $A2,$00,$9F,$00,$9D,$00,$9B,$00        ;;F96B|F96B+F96B/F96B\F96B;
-                      db $98,$00,$95,$00,$93,$00,$90,$00        ;;F973|F973+F973/F973\F973;
-                      db $8E,$00,$8B,$00,$88,$00,$86,$00        ;;F97B|F97B+F97B/F97B\F97B;
-                      db $83,$00,$80,$00,$7E,$00,$7B,$00        ;;F983|F983+F983/F983\F983;
-                      db $78,$00,$75,$00,$73,$00,$70,$00        ;;F98B|F98B+F98B/F98B\F98B;
-                      db $6D,$00,$6A,$00,$67,$00,$64,$00        ;;F993|F993+F993/F993\F993;
-                      db $61,$00,$5F,$00,$5C,$00,$59,$00        ;;F99B|F99B+F99B/F99B\F99B;
-                      db $56,$00,$53,$00,$50,$00,$4D,$00        ;;F9A3|F9A3+F9A3/F9A3\F9A3;
-                      db $4A,$00,$47,$00,$44,$00,$41,$00        ;;F9AB|F9AB+F9AB/F9AB\F9AB;
-                      db $3E,$00,$3B,$00,$38,$00,$35,$00        ;;F9B3|F9B3+F9B3/F9B3\F9B3;
-                      db $31,$00,$2E,$00,$2B,$00,$28,$00        ;;F9BB|F9BB+F9BB/F9BB\F9BB;
-                      db $25,$00,$22,$00,$1F,$00,$1C,$00        ;;F9C3|F9C3+F9C3/F9C3\F9C3;
-                      db $19,$00,$15,$00,$12,$00,$0F,$00        ;;F9CB|F9CB+F9CB/F9CB\F9CB;
-                      db $0C,$00,$09,$00,$06,$00,$03,$00        ;;F9D3|F9D3+F9D3/F9D3\F9D3;
-                                                                ;;                        ;
-LineGuideData00:      db $F0,$E0,$D0,$C1,$B1,$A1,$92,$82        ;;F9DB|F9DB+F9DB/F9DB\F9DB;
-                      db $73,$64,$55,$46,$37,$28,$29,$1A        ;;F9E3|F9E3+F9E3/F9E3\F9E3;
-                      db $1B,$1C,$0D,$0E,$0F                    ;;F9EB|F9EB+F9EB/F9EB\F9EB;
-                                                                ;;                        ;
-LineGuideData01:      db $00,$01,$02                            ;;F9F0|F9F0+F9F0/F9F0\F9F0;
-                      db $13,$14,$15,$26,$27,$38,$49,$5A        ;;F9F3|F9F3+F9F3/F9F3\F9F3;
-                      db $6B,$7C,$8D,$9D,$AE,$BE,$CE,$DF        ;;F9FB|F9FB+F9FB/F9FB\F9FB;
-                      db $EF,$FF                                ;;FA03|FA03+FA03/FA03\FA03;
-                                                                ;;                        ;
-LineGuideData02:      db $00,$10,$20,$31,$41,$51                ;;FA05|FA05+FA05/FA05\FA05;
-                      db $62,$72,$83,$94,$A5,$B6,$C7,$D8        ;;FA0B|FA0B+FA0B/FA0B\FA0B;
-                      db $D9,$EA,$EB,$EC,$FD,$FD,$FF            ;;FA13|FA13+FA13/FA13\FA13;
-                                                                ;;                        ;
-LineGuideData03:      db $F0                                    ;;FA1A|FA1A+FA1A/FA1A\FA1A;
-                      db $F1,$F2,$E3,$E4,$E5,$D6,$D7,$C8        ;;FA1B|FA1B+FA1B/FA1B\FA1B;
-                      db $B9,$AA,$9B,$8C,$7D,$6D,$5E,$4E        ;;FA23|FA23+FA23/FA23\FA23;
-                      db $3E,$2F,$1F,$0F                        ;;FA2B|FA2B+FA2B/FA2B\FA2B;
-                                                                ;;                        ;
-LineGuideData04:      db $F5,$E6,$D6,$C7                        ;;FA2F|FA2F+FA2F/FA2F\FA2F;
-                      db $B8,$A9,$9A,$8B,$7C,$6D,$6E,$5F        ;;FA33|FA33+FA33/FA33\FA33;
-                                                                ;;                        ;
-LineGuideData05:      db $40,$41,$32,$33,$24,$25,$26,$17        ;;FA3B|FA3B+FA3B/FA3B\FA3B;
-                      db $18,$19,$1A,$0B,$0C,$0D,$0E,$0F        ;;FA43|FA43+FA43/FA43\FA43;
-                                                                ;;                        ;
-LineGuideData06:      db $F0,$E0,$D0,$C0,$B0,$A1,$91,$81        ;;FA4B|FA4B+FA4B/FA4B\FA4B;
-                      db $71,$62,$52,$42,$33,$23,$14,$04        ;;FA53|FA53+FA53/FA53\FA53;
-                                                                ;;                        ;
-LineGuideData07:      db $0B,$1B,$2C,$3C,$4D,$5D,$6D,$7E        ;;FA5B|FA5B+FA5B/FA5B\FA5B;
-                      db $8E,$9E,$AE,$BF,$CF,$DF,$EF,$FF        ;;FA63|FA63+FA63/FA63\FA63;
-                                                                ;;                        ;
-LineGuideData08:      db $00,$01,$02,$03,$04,$15,$16,$17        ;;FA6B|FA6B+FA6B/FA6B\FA6B;
-                      db $18,$29,$2A,$2B,$3C,$3D,$4E,$4F        ;;FA73|FA73+FA73/FA73\FA73;
-                                                                ;;                        ;
-LineGuideData09:      db $50,$61,$62,$73,$84,$95,$A6,$B7        ;;FA7B|FA7B+FA7B/FA7B\FA7B;
-                      db $C8,$D9,$E9,$FA                        ;;FA83|FA83+FA83/FA83\FA83;
-                                                                ;;                        ;
-LineGuideData0A:      db $05,$16,$26,$37                        ;;FA87|FA87+FA87/FA87\FA87;
-                      db $48,$59,$6A,$7B,$8C,$9D,$9E,$AF        ;;FA8B|FA8B+FA8B/FA8B\FA8B;
-                                                                ;;                        ;
-LineGuideData0B:      db $B0,$B1,$C2,$C3,$D4,$D5,$D6,$E7        ;;FA93|FA93+FA93/FA93\FA93;
-                      db $E8,$E9,$EA,$FB,$FC,$FD,$FE,$FF        ;;FA9B|FA9B+FA9B/FA9B\FA9B;
-                                                                ;;                        ;
-LineGuideData0C:      db $00,$10,$20,$30,$40,$51,$61,$71        ;;FAA3|FAA3+FAA3/FAA3\FAA3;
-                      db $81,$92,$A2,$B2,$C3,$D3,$E4,$F4        ;;FAAB|FAAB+FAAB/FAAB\FAAB;
-                                                                ;;                        ;
-LineGuideData0D:      db $FB,$EB,$DC,$CC,$BD,$AD,$9D,$8E        ;;FAB3|FAB3+FAB3/FAB3\FAB3;
-                      db $7E,$6E,$5E,$4F,$3F,$2F,$1F,$0F        ;;FABB|FABB+FABB/FABB\FABB;
-                                                                ;;                        ;
-LineGuideData0E:      db $F0,$F1,$F2,$F3,$F4,$E5,$E6,$E7        ;;FAC3|FAC3+FAC3/FAC3\FAC3;
-                      db $E8,$D9,$DA,$DB,$CC,$CD,$BE,$BF        ;;FACB|FACB+FACB/FACB\FACB;
-                                                                ;;                        ;
-LineGuideData0F:      db $A0,$91,$92,$83,$74,$65,$56,$47        ;;FAD3|FAD3+FAD3/FAD3\FAD3;
-                      db $38,$29,$19,$0A                        ;;FADB|FADB+FADB/FADB\FADB;
-                                                                ;;                        ;
-LineGuideData10:      db $F0,$E1,$D2,$D2                        ;;FADF|FADF+FADF/FADF\FADF;
-                      db $C3,$B4,$A5,$A5,$96,$87,$78,$78        ;;FAE3|FAE3+FAE3/FAE3\FAE3;
-                      db $69,$5A,$4B,$4B,$3C,$2D,$1E,$1E        ;;FAEB|FAEB+FAEB/FAEB\FAEB;
-                      db $0F                                    ;;FAF3|FAF3+FAF3/FAF3\FAF3;
-                                                                ;;                        ;
-LineGuideData11:      db $00,$11,$22,$22,$33,$44,$55            ;;FAF4|FAF4+FAF4/FAF4\FAF4;
-                      db $55,$66,$77,$88,$88,$99,$AA,$BB        ;;FAFB|FAFB+FAFB/FAFB\FAFB;
-                      db $BB,$CC,$DD,$EE,$EE,$FF                ;;FB03|FB03+FB03/FB03\FB03;
-                                                                ;;                        ;
-LineGuideData12:      db $F8,$E8                                ;;FB09|FB09+FB09/FB09\FB09;
-                      db $D9,$C9,$BA,$AA,$9B,$8B,$7C,$6C        ;;FB0B|FB0B+FB0B/FB0B\FB0B;
-                      db $5D,$4D,$3E,$2E,$1F,$0F                ;;FB13|FB13+FB13/FB13\FB13;
-                                                                ;;                        ;
-LineGuideData13:      db $00,$10                                ;;FB19|FB19+FB19/FB19\FB19;
-                      db $21,$31,$42,$52,$63,$73,$84,$94        ;;FB1B|FB1B+FB1B/FB1B\FB1B;
-                      db $A5,$B5,$C6,$D6,$E7,$F7                ;;FB23|FB23+FB23/FB23\FB23;
-                                                                ;;                        ;
-LineGuideData14:      db $F0,$E0                                ;;FB29|FB29+FB29/FB29\FB29;
-                      db $D1,$C1,$B2,$A2,$93,$83,$74,$64        ;;FB2B|FB2B+FB2B/FB2B\FB2B;
-                      db $55,$45,$36,$26,$17,$07                ;;FB33|FB33+FB33/FB33\FB33;
-                                                                ;;                        ;
-LineGuideData15:      db $08,$18                                ;;FB39|FB39+FB39/FB39\FB39;
-                      db $29,$39,$4A,$5A,$6B,$7B,$8C,$9C        ;;FB3B|FB3B+FB3B/FB3B\FB3B;
-                      db $AD,$BD,$CE,$DE,$EF,$FF                ;;FB43|FB43+FB43/FB43\FB43;
-                                                                ;;                        ;
-LineGuideData16:      db $F0,$F1                                ;;FB49|FB49+FB49/FB49\FB49;
-                      db $E2,$E3,$D4,$D5,$C6,$C7,$B8,$B9        ;;FB4B|FB4B+FB4B/FB4B\FB4B;
-                      db $AA,$AB,$9C,$9D,$8E,$8F                ;;FB53|FB53+FB53/FB53\FB53;
-                                                                ;;                        ;
-LineGuideData17:      db $70,$71                                ;;FB59|FB59+FB59/FB59\FB59;
-                      db $62,$63,$54,$55,$46,$47,$38,$39        ;;FB5B|FB5B+FB5B/FB5B\FB5B;
-                      db $2A,$2B,$1C,$1D,$0E,$0F                ;;FB63|FB63+FB63/FB63\FB63;
-                                                                ;;                        ;
-LineGuideData18:      db $00,$01                                ;;FB69|FB69+FB69/FB69\FB69;
-                      db $12,$13,$24,$25,$36,$37,$48,$49        ;;FB6B|FB6B+FB6B/FB6B\FB6B;
-                      db $5A,$5B,$6C,$6D,$7E,$7F                ;;FB73|FB73+FB73/FB73\FB73;
-                                                                ;;                        ;
-LineGuideData19:      db $80,$81                                ;;FB79|FB79+FB79/FB79\FB79;
-                      db $92,$93,$A4,$A5,$B6,$B7,$C8,$C9        ;;FB7B|FB7B+FB7B/FB7B\FB7B;
-                      db $DA,$DB,$EC,$ED,$FE,$FF                ;;FB83|FB83+FB83/FB83\FB83;
-                                                                ;;                        ;
-LineGuideData1A:      db $00,$10                                ;;FB89|FB89+FB89/FB89\FB89;
-                      db $20,$30,$40,$50,$60,$70,$80,$90        ;;FB8B|FB8B+FB8B/FB8B\FB8B;
-                      db $A0,$B0,$C0,$D0,$E0,$F0                ;;FB93|FB93+FB93/FB93\FB93;
-                                                                ;;                        ;
-LineGuideData1B:      db $0F,$1F                                ;;FB99|FB99+FB99/FB99\FB99;
-                      db $2F,$3F,$4F,$5F,$6F,$7F,$8F,$9F        ;;FB9B|FB9B+FB9B/FB9B\FB9B;
-                      db $AF,$BF,$CF,$DF,$EF,$FF                ;;FBA3|FBA3+FBA3/FBA3\FBA3;
-                                                                ;;                        ;
-LineGuideData1C:      db $00,$01                                ;;FBA9|FBA9+FBA9/FBA9\FBA9;
-                      db $02,$03,$04,$05,$06,$07,$08,$09        ;;FBAB|FBAB+FBAB/FBAB\FBAB;
-                      db $0A,$0B,$0C,$0D,$0E,$0F                ;;FBB3|FBB3+FBB3/FBB3\FBB3;
-                                                                ;;                        ;
-LineGuideData1D:      db $F0,$F1                                ;;FBB9|FBB9+FBB9/FBB9\FBB9;
-                      db $F2,$F3,$F4,$F5,$F6,$F7,$F8,$F9        ;;FBBB|FBBB+FBBB/FBBB\FBBB;
-                      db $FA,$FB,$FC,$FD,$FE,$FF                ;;FBC3|FBC3+FBC3/FBC3\FBC3;
-                                                                ;;                        ;
-LineGuideData1E:      db $F0,$E1                                ;;FBC9|FBC9+FBC9/FBC9\FBC9;
-                      db $D2,$D2,$C3,$B4,$A5,$A5,$96,$87        ;;FBCB|FBCB+FBCB/FBCB\FBCB;
-                      db $78,$78,$69,$5A,$4B,$4B,$3C,$2D        ;;FBD3|FBD3+FBD3/FBD3\FBD3;
-                      db $1E,$1E,$0F                            ;;FBDB|FBDB+FBDB/FBDB\FBDB;
-                                                                ;;                        ;
-LineGuideData1F:      db $00,$11,$22,$22,$33                    ;;FBDE|FBDE+FBDE/FBDE\FBDE;
-                      db $44,$55,$55,$66,$77,$88,$88,$99        ;;FBE3|FBE3+FBE3/FBE3\FBE3;
-                      db $AA,$BB,$BB,$CC,$DD,$EE,$EE,$FF        ;;FBEB|FBEB+FBEB/FBEB\FBEB;
-                                                                ;;                        ;
-DATA_07FBF3:          db LineGuideData00                        ;;FBF3|FBF3+FBF3/FBF3\FBF3;
-                      db LineGuideData01                        ;;FBF4|FBF4+FBF4/FBF4\FBF4;
-                      db LineGuideData02                        ;;FBF5|FBF5+FBF5/FBF5\FBF5;
-                      db LineGuideData03                        ;;FBF6|FBF6+FBF6/FBF6\FBF6;
-                      db LineGuideData04                        ;;FBF7|FBF7+FBF7/FBF7\FBF7;
-                      db LineGuideData05                        ;;FBF8|FBF8+FBF8/FBF8\FBF8;
-                      db LineGuideData06                        ;;FBF9|FBF9+FBF9/FBF9\FBF9;
-                      db LineGuideData07                        ;;FBFA|FBFA+FBFA/FBFA\FBFA;
-                      db LineGuideData08                        ;;FBFB|FBFB+FBFB/FBFB\FBFB;
-                      db LineGuideData09                        ;;FBFC|FBFC+FBFC/FBFC\FBFC;
-                      db LineGuideData0A                        ;;FBFD|FBFD+FBFD/FBFD\FBFD;
-                      db LineGuideData0B                        ;;FBFE|FBFE+FBFE/FBFE\FBFE;
-                      db LineGuideData0C                        ;;FBFF|FBFF+FBFF/FBFF\FBFF;
-                      db LineGuideData0D                        ;;FC00|FC00+FC00/FC00\FC00;
-                      db LineGuideData0E                        ;;FC01|FC01+FC01/FC01\FC01;
-                      db LineGuideData0F                        ;;FC02|FC02+FC02/FC02\FC02;
-                      db LineGuideData10                        ;;FC03|FC03+FC03/FC03\FC03;
-                      db LineGuideData11                        ;;FC04|FC04+FC04/FC04\FC04;
-                      db LineGuideData12                        ;;FC05|FC05+FC05/FC05\FC05;
-                      db LineGuideData13                        ;;FC06|FC06+FC06/FC06\FC06;
-                      db LineGuideData14                        ;;FC07|FC07+FC07/FC07\FC07;
-                      db LineGuideData15                        ;;FC08|FC08+FC08/FC08\FC08;
-                      db LineGuideData16                        ;;FC09|FC09+FC09/FC09\FC09;
-                      db LineGuideData17                        ;;FC0A|FC0A+FC0A/FC0A\FC0A;
-                      db LineGuideData18                        ;;FC0B|FC0B+FC0B/FC0B\FC0B;
-                      db LineGuideData19                        ;;FC0C|FC0C+FC0C/FC0C\FC0C;
-                      db LineGuideData1A                        ;;FC0D|FC0D+FC0D/FC0D\FC0D;
-                      db LineGuideData1B                        ;;FC0E|FC0E+FC0E/FC0E\FC0E;
-                      db LineGuideData1C                        ;;FC0F|FC0F+FC0F/FC0F\FC0F;
-                      db LineGuideData1D                        ;;FC10|FC10+FC10/FC10\FC10;
-                      db LineGuideData1E                        ;;FC11|FC11+FC11/FC11\FC11;
-                      db LineGuideData1F                        ;;FC12|FC12+FC12/FC12\FC12;
-                                                                ;;                        ;
-DATA_07FC13:          db LineGuideData00>>8                     ;;FC13|FC13+FC13/FC13\FC13;
-                      db LineGuideData01>>8                     ;;FC14|FC14+FC14/FC14\FC14;
-                      db LineGuideData02>>8                     ;;FC15|FC15+FC15/FC15\FC15;
-                      db LineGuideData03>>8                     ;;FC16|FC16+FC16/FC16\FC16;
-                      db LineGuideData04>>8                     ;;FC17|FC17+FC17/FC17\FC17;
-                      db LineGuideData05>>8                     ;;FC18|FC18+FC18/FC18\FC18;
-                      db LineGuideData06>>8                     ;;FC19|FC19+FC19/FC19\FC19;
-                      db LineGuideData07>>8                     ;;FC1A|FC1A+FC1A/FC1A\FC1A;
-                      db LineGuideData08>>8                     ;;FC1B|FC1B+FC1B/FC1B\FC1B;
-                      db LineGuideData09>>8                     ;;FC1C|FC1C+FC1C/FC1C\FC1C;
-                      db LineGuideData0A>>8                     ;;FC1D|FC1D+FC1D/FC1D\FC1D;
-                      db LineGuideData0B>>8                     ;;FC1E|FC1E+FC1E/FC1E\FC1E;
-                      db LineGuideData0C>>8                     ;;FC1F|FC1F+FC1F/FC1F\FC1F;
-                      db LineGuideData0D>>8                     ;;FC20|FC20+FC20/FC20\FC20;
-                      db LineGuideData0E>>8                     ;;FC21|FC21+FC21/FC21\FC21;
-                      db LineGuideData0F>>8                     ;;FC22|FC22+FC22/FC22\FC22;
-                      db LineGuideData10>>8                     ;;FC23|FC23+FC23/FC23\FC23;
-                      db LineGuideData11>>8                     ;;FC24|FC24+FC24/FC24\FC24;
-                      db LineGuideData12>>8                     ;;FC25|FC25+FC25/FC25\FC25;
-                      db LineGuideData13>>8                     ;;FC26|FC26+FC26/FC26\FC26;
-                      db LineGuideData14>>8                     ;;FC27|FC27+FC27/FC27\FC27;
-                      db LineGuideData15>>8                     ;;FC28|FC28+FC28/FC28\FC28;
-                      db LineGuideData16>>8                     ;;FC29|FC29+FC29/FC29\FC29;
-                      db LineGuideData17>>8                     ;;FC2A|FC2A+FC2A/FC2A\FC2A;
-                      db LineGuideData18>>8                     ;;FC2B|FC2B+FC2B/FC2B\FC2B;
-                      db LineGuideData19>>8                     ;;FC2C|FC2C+FC2C/FC2C\FC2C;
-                      db LineGuideData1A>>8                     ;;FC2D|FC2D+FC2D/FC2D\FC2D;
-                      db LineGuideData1B>>8                     ;;FC2E|FC2E+FC2E/FC2E\FC2E;
-                      db LineGuideData1C>>8                     ;;FC2F|FC2F+FC2F/FC2F\FC2F;
-                      db LineGuideData1D>>8                     ;;FC30|FC30+FC30/FC30\FC30;
-                      db LineGuideData1E>>8                     ;;FC31|FC31+FC31/FC31\FC31;
-                      db LineGuideData1F>>8                     ;;FC32|FC32+FC32/FC32\FC32;
-                                                                ;;                        ;
-DATA_07FC33:          db $E0,$20,$E0,$20                        ;;FC33|FC33+FC33/FC33\FC33;
-                                                                ;;                        ;
-DATA_07FC37:          db $F0,$F0,$10,$10                        ;;FC37|FC37+FC37/FC37\FC37;
-                                                                ;;                        ;
-CODE_07FC3B:          PHX                                       ;;FC3B|FC3B+FC3B/FC3B\FC3B;
-                      LDX.B #$03                                ;;FC3C|FC3C+FC3C/FC3C\FC3C;
-                    - JSL CODE_07FC47                           ;;FC3E|FC3E+FC3E/FC3E\FC3E;
-                      DEX                                       ;;FC42|FC42+FC42/FC42\FC42;
-                      BPL -                                     ;;FC43|FC43+FC43/FC43\FC43;
-                      PLX                                       ;;FC45|FC45+FC45/FC45\FC45;
-                      RTL                                       ;;FC46|FC46+FC46/FC46\FC46;
-                                                                ;;                        ;
-CODE_07FC47:          LDY.B #$07                                ;;FC47|FC47+FC47/FC47\FC47; \ Find a free extended sprite slot 
-CODE_07FC49:          LDA.W ExtSpriteNumber,Y                   ;;FC49|FC49+FC49/FC49\FC49; | 
-                      BEQ CODE_07FC52                           ;;FC4C|FC4C+FC4C/FC4C\FC4C; | 
-                      DEY                                       ;;FC4E|FC4E+FC4E/FC4E\FC4E; | 
-                      BPL CODE_07FC49                           ;;FC4F|FC4F+FC4F/FC4F\FC4F; | 
-                      RTL                                       ;;FC51|FC51+FC51/FC51\FC51; / Return if no free slots 
-                                                                ;;                        ;
-CODE_07FC52:          LDA.B #$10                                ;;FC52|FC52+FC52/FC52\FC52; \ Extended sprite = Spin jump stars 
-                      STA.W ExtSpriteNumber,Y                   ;;FC54|FC54+FC54/FC54\FC54; / 
-                      PHX                                       ;;FC57|FC57+FC57/FC57\FC57;
-                      LDX.W CurSpriteProcess                    ;;FC58|FC58+FC58/FC58\FC58; X = Sprite index 
-                      LDA.B SpriteYPosLow,X                     ;;FC5B|FC5B+FC5B/FC5B\FC5B;
-                      CLC                                       ;;FC5D|FC5D+FC5D/FC5D\FC5D;
-                      ADC.B #$04                                ;;FC5E|FC5E+FC5E/FC5E\FC5E;
-                      STA.W ExtSpriteYPosLow,Y                  ;;FC60|FC60+FC60/FC60\FC60;
-                      LDA.W SpriteXPosHigh,X                    ;;FC63|FC63+FC63/FC63\FC63;
-                      ADC.B #$00                                ;;FC66|FC66+FC66/FC66\FC66;
-                      STA.W ExtSpriteYPosHigh,Y                 ;;FC68|FC68+FC68/FC68\FC68;
-                      LDA.B SpriteXPosLow,X                     ;;FC6B|FC6B+FC6B/FC6B\FC6B;
-                      CLC                                       ;;FC6D|FC6D+FC6D/FC6D\FC6D;
-                      ADC.B #$04                                ;;FC6E|FC6E+FC6E/FC6E\FC6E;
-                      STA.W ExtSpriteXPosLow,Y                  ;;FC70|FC70+FC70/FC70\FC70;
-                      LDA.W SpriteYPosHigh,X                    ;;FC73|FC73+FC73/FC73\FC73;
-                      ADC.B #$00                                ;;FC76|FC76+FC76/FC76\FC76;
-                      STA.W ExtSpriteXPosHigh,Y                 ;;FC78|FC78+FC78/FC78\FC78;
-                      PLX                                       ;;FC7B|FC7B+FC7B/FC7B\FC7B;
-                      LDA.L DATA_07FC33,X                       ;;FC7C|FC7C+FC7C/FC7C\FC7C;
-                      STA.W ExtSpriteXSpeed,Y                   ;;FC80|FC80+FC80/FC80\FC80;
-                      LDA.L DATA_07FC37,X                       ;;FC83|FC83+FC83/FC83\FC83;
-                      STA.W ExtSpriteYSpeed,Y                   ;;FC87|FC87+FC87/FC87\FC87;
-                      LDA.B #$17                                ;;FC8A|FC8A+FC8A/FC8A\FC8A;
-                      STA.W ExtSpriteMisc176F,Y                 ;;FC8C|FC8C+FC8C/FC8C\FC8C;
-                      RTL                                       ;;FC8F|FC8F+FC8F/FC8F\FC8F;
-                                                                ;;                        ;
-                      padbyte $FF : pad $088000                 ;;FC90|FC90+FC90/FC90\FC90;
+                      ORG $078000
+
+GhostHouseEntrance:   incbin "lvl/obj/ghosthouseentrance.bin"
+EmptyLevel:           incbin "lvl/obj/empty.bin"
+CastleEntrance1:      incbin "lvl/obj/castleentrancebright.bin"
+YHLevel104:           incbin "lvl/obj/104_YH.bin"
+NoYoshiEntrance1:     incbin "lvl/obj/noyoshiintro1.bin"
+UnusedGHExit2Level:   incbin "lvl/obj/unusedghexit2.bin"
+BushesBetaLevel:      incbin "lvl/obj/betabushes.bin"
+CastleEntrance2:      incbin "lvl/obj/castleentrancedark.bin"
+NoYoshiEntrance2:     incbin "lvl/obj/noyoshiintro2.bin"
+NoYoshiEntrance3:     incbin "lvl/obj/noyoshiintro3.bin"
+SlopeTestLevel108:    incbin "lvl/obj/slopetest.bin"
+
+                      %insert_empty($13,$13,$13,$13,$13)
+
+CI4Level01D:          incbin "lvl/obj/01D_CI4main.bin"
+CI4Sub1Level0EA:      incbin "lvl/obj/0EA_CI4sub.bin"
+CI5Level01C:          incbin "lvl/obj/01C_CI5main.bin"
+CI5Sub2Level0C0:      incbin "lvl/obj/0C0_CI5sub.bin"
+CI5Sub1Level0BD:      incbin "lvl/obj/0BD_CI5bonus.bin"
+C6Level01A:           incbin "lvl/obj/01A_C6room1.bin"
+C6LvlL201A:           incbin "lvl/obj/01A_C6room1_l2.bin"
+C6Sub1Level0D4:       incbin "lvl/obj/0D4_C6room2.bin"
+C6Sub1LvlL20D4:       incbin "lvl/obj/0D4_C6room2_l2.bin"
+C6Sub2Level0D3:       incbin "lvl/obj/0D3_C6room3.bin"
+SGSLevel018:          incbin "lvl/obj/018_SGSroom1.bin"
+SGSSub1Level0F8:      incbin "lvl/obj/0F8_SGSroom2.bin"
+SGSSub2Level0F7:      incbin "lvl/obj/0F7_SGSroom3.bin"
+VoB1Level116:         incbin "lvl/obj/116_VoB1main.bin"
+VoB1Sub2Level1E5:     incbin "lvl/obj/1E5_VoB1end.bin"
+VoB1Sub1Level1E4:     incbin "lvl/obj/1E4_VoB1bonus.bin"
+VoB2Level115:         incbin "lvl/obj/115_VoBroom1.bin"
+VoB2LvlL2115:         incbin "lvl/obj/115_VoBroom1_l2.bin"
+VoB2Sub1Level1E3:     incbin "lvl/obj/1E3_VoB2room2.bin"
+VoB2Sub1LvlL21E3:     incbin "lvl/obj/1E3_VoB2room2_l2.bin"
+VoB2Sub2Level1E2:     incbin "lvl/obj/1E2_VoB2room3.bin"
+VoB2Sub2LvlL21E2:     incbin "lvl/obj/1E2_VoB2room3_l2.bin"
+YoshiWingsLevel0C8:   incbin "lvl/obj/0C8_yoshiwingsdark.bin"
+VoBGHLevel114:        incbin "lvl/obj/114_VoBGHroom1.bin"
+VoBGHSub1Level1DD:    incbin "lvl/obj/1DD_VoBGHroom2.bin"
+VoBGHSub2Level1DB:    incbin "lvl/obj/1DB_VoBGHroom3.bin"
+VoB3Level113:         incbin "lvl/obj/113_VoB3main.bin"
+VoB3Sub1Level1BB:     incbin "lvl/obj/1BB_VoB3bonus.bin"
+VoB4Level10F:         incbin "lvl/obj/10F_VoB4main.bin"
+VoB4Sub1Level1BF:     incbin "lvl/obj/1BF_VoB4sub.bin"
+C7Level110:           incbin "lvl/obj/110_C7room1.bin"
+C7Sub1Level1FE:       incbin "lvl/obj/1FE_C7room2.bin"
+VoBFLevel111:         incbin "lvl/obj/111_VoBFroom1.bin"
+VoBFLvlL2111:         incbin "lvl/obj/111_VoBFroom1_l2.bin"
+
+                      %insert_empty($487,$487,$487,$487,$487)
+
+FDLevel10D:           incbin "lvl/obj/10D_FDmain.bin"
+FDSub1Level1D4:       incbin "lvl/obj/1D4_FDroom1.bin"
+FDSub2Level1D3:       incbin "lvl/obj/1D3_FDroom2.bin"
+FDSub3Level1D2:       incbin "lvl/obj/1D2_FDroom3.bin"
+FDSub4Level1D1:       incbin "lvl/obj/1D1_FDroom4.bin"
+FDSub9Level1D0:       incbin "lvl/obj/1D0_FDsub1.bin"
+FDSub5Level1CF:       incbin "lvl/obj/1CF_FDroom5.bin"
+FDSub5LvlL21CF:       incbin "lvl/obj/1CF_FDroom5_l2.bin"
+FDSub6Level1CE:       incbin "lvl/obj/1CE_FDroom6.bin"
+FDSub6LvlL21CE:       incbin "lvl/obj/1CE_FDroom6_l2.bin"
+FDSub7Level1CD:       incbin "lvl/obj/1CD_FDroom7.bin"
+FDSub8Level1CC:       incbin "lvl/obj/1CC_FDroom8.bin"
+FDSub10Level1BD:      incbin "lvl/obj/1BD_FDsub2.bin"
+BDLevel10E:           incbin "lvl/obj/10E_BD.bin"
+BowserLevel1C7:       incbin "lvl/obj/1C7_bowser.bin"
+SW1Level134:          incbin "lvl/obj/134_SW1main.bin"
+SW1Sub1Level1D6:      incbin "lvl/obj/1D6_SW1end.bin"
+SW2Level130:          incbin "lvl/obj/130_SW2main.bin"
+SW2Sub1Level1D5:      incbin "lvl/obj/1D5_SW2end.bin"
+SW3Level132:          incbin "lvl/obj/132_SW3.bin"
+SW4Level135:          incbin "lvl/obj/135_SW4.bin"
+SW5Level136:          incbin "lvl/obj/136_SW5.bin"
+GnarlyLevel12A:       incbin "lvl/obj/12A_SP1room1.bin"
+GnarlySub1Level1C4:   incbin "lvl/obj/1C4_SP1room2.bin"
+TubularLevel12B:      incbin "lvl/obj/12B_SP2.bin"
+WayCoolLevel12C:      incbin "lvl/obj/12C_SP3main.bin"
+WayCoolSub1Level1C9:  incbin "lvl/obj/1C9_SP3sub.bin"
+YoshiWingsLevel1C8:   incbin "lvl/obj/1C8_yoshiwingsbright.bin"
+AwesomeLevel12D:      incbin "lvl/obj/12D_SP4.bin"
+GroovyLevel128:       incbin "lvl/obj/128_SP5.bin"
+MondoLevel127:        incbin "lvl/obj/127_SP6main.bin"
+MondoSub2Level1E1:    incbin "lvl/obj/1E1_SP6end.bin"
+MondoSub1Level1E0:    incbin "lvl/obj/1E0_SP6sub.bin"
+OutrageousLevel126:   incbin "lvl/obj/126_SP7.bin"
+                   if ver_is_japanese(!_VER)                    ;\======================= J =====================
+FunkyLevel125:        incbin "lvl/obj/125_SP8_J.bin"            ;!
+                   else                                         ;<=============== U, SS, E0, & E1 ===============
+FunkyLevel125:        incbin "lvl/obj/125_SP8_U.bin"            ;!
+                   endif                                        ;/===============================================
+
+                      %insert_empty($E6,$DA,$DA,$DA,$DA)
+
+CloudsBetaSprites:    incbin "lvl/spr/betaclouds.bin"
+MushroomBetaSprites:  incbin "lvl/spr/betamushrooms.bin"
+BowserCopySprites:    incbin "lvl/spr/1C7_bowser.bin"
+MortonCopySprites:    incbin "lvl/spr/0E5_C2room4.bin"
+RoyCopySprites:       incbin "lvl/spr/0CC_C5room2.bin"
+LudwigCopySprites:    incbin "lvl/spr/0D9_C4room4.bin"
+IggyCopySprites:      incbin "lvl/spr/1F6_C1room3.bin"
+LarryCopySprites:     incbin "lvl/spr/1EB_C7room3.bin"
+ReznorCopySprites:    incbin "lvl/spr/reznor.bin"
+LavaCaveBetaSprites:  incbin "lvl/spr/betalavacave.bin"
+TwinBlocksSprites:    incbin "lvl/spr/betatwinblocks.bin"
+WendyBetaSprites:     incbin "lvl/spr/betaC6room1.bin"
+LemmyCopySprites:     incbin "lvl/spr/1F2_C3room4.bin"
+WendyCopySprites:     incbin "lvl/spr/0D3_C6room3.bin"
+EmptySprites:         incbin "lvl/spr/empty.bin"
+SubNormalExitSprites: incbin "lvl/spr/goaltapenormal.bin"
+GHNormalExitSprites:  incbin "lvl/spr/ghosthouseexitnormal.bin"
+UnusedGHExitSprites:  incbin "lvl/spr/unusedghexit1.bin"
+UnusedGHExit2Sprites: incbin "lvl/spr/unusedghexit2.bin"
+BonusGameSprites:     incbin "lvl/spr/bonusgame.bin"
+SubSecretExitSprites: incbin "lvl/spr/goaltapesecret.bin"
+ReznorSubSprites:     incbin "lvl/spr/reznor.bin"
+FDSprites10D:         incbin "lvl/spr/10D_FDmain.bin"
+TitleScrSprites0C7:   incbin "lvl/spr/0C7_titlescreen.bin"
+IntroSprites0C5:      incbin "lvl/spr/0C5_introcutscene.bin"
+YSPSprites014:        incbin "lvl/spr/014_YSProom1.bin"
+YSPSub1Sprites0CA:    incbin "lvl/spr/0CA_YSProom2.bin"
+RSPSprites11B:        incbin "lvl/spr/11B_RSProom1.bin"
+RSPSub1Sprites1D8:    incbin "lvl/spr/1D8_RSProom2.bin"
+BSPSprites121:        incbin "lvl/spr/121_BSProom1.bin"
+BSPSub1Sprites1D7:    incbin "lvl/spr/1D7_BSProom2.bin"
+GSPSprites008:        incbin "lvl/spr/008_GSProom1.bin"
+GSPSub1Sprites0C9:    incbin "lvl/spr/0C9_GSProom2.bin"
+TSASprites003:        incbin "lvl/spr/003_TSA.bin"
+YI1Sprites105:        incbin "lvl/spr/105_YI1main.bin"
+YI2Sprites106:        incbin "lvl/spr/106_YI2main.bin"
+YI2Sub1Sprites1CA:    incbin "lvl/spr/1CA_YI2sub.bin"
+YI3Spirtes103:        incbin "lvl/spr/103_YI3main.bin"
+YI3Sub1Sprites1FD:    incbin "lvl/spr/1FD_YI3sub.bin"
+YI4Sprites102:        incbin "lvl/spr/102_YI4main.bin"
+YI4Sub2Sprites1FF:    incbin "lvl/spr/1FF_YI4end.bin"
+                   if ver_is_console(!_VER)                     ;\================ J, U, E0, & E1 ===============
+YI4Sub1Sprites1BE:    incbin "lvl/spr/1BE_YI4sub_U.bin"         ;!
+                   else                                         ;<====================== SS =====================
+YI4Sub1Sprites1BE:    incbin "lvl/spr/1BE_YI4sub_SS.bin"        ;!
+                   endif                                        ;/===============================================
+C1Sprites101:         incbin "lvl/spr/101_C1room1.bin"
+C1Sub1Sprites1FC:     incbin "lvl/spr/1FC_C1room2.bin"
+C1Sub2Sprites1F6:     incbin "lvl/spr/1F6_C1room3.bin"
+DP1Sprites015:        incbin "lvl/spr/015_DP1main.bin"
+DP1Sub2Sprites0E3:    incbin "lvl/spr/0E3_DP1sub.bin"
+DP2Sprites009:        incbin "lvl/spr/009_DP2main.bin"
+DP2Sub1Sprites0E9:    incbin "lvl/spr/0E9_DP2sub.bin"
+DGHSprites004:        incbin "lvl/spr/004_DGHroom1.bin"
+DGHSub1Sprites0F9:    incbin "lvl/spr/0F9_DGHroom2.bin"
+DGHSub2Sprites0FE:    incbin "lvl/spr/0FE_DGHroom3.bin"
+DP3Sprites005:        incbin "lvl/spr/005_DP3main.bin"
+DP4Sprites006:        incbin "lvl/spr/006_DP4main.bin"
+DP4Sub1Sprites0D2:    incbin "lvl/spr/0D2_DP4sub2.bin"
+DP4Sub1Sprites0C3:    incbin "lvl/spr/0C3_DP4sub1.bin"
+C2Sprites007:         incbin "lvl/spr/007_C2room1.bin"
+C2Sub2Sprites0E8:     incbin "lvl/spr/0E8_C2room2.bin"
+C2Sub3Sprites0E7:     incbin "lvl/spr/0E7_C2room3.bin"
+C2Sub4Sprites0E5:     incbin "lvl/spr/0E5_C2room4.bin"
+DS1Sprites00A:        incbin "lvl/spr/00A_DS1main.bin"
+DS1Sub1Sprites0C2:    incbin "lvl/spr/0C2_DS1sub.bin"
+DSHSprites013:        incbin "lvl/spr/013_DSHroom1.bin"
+DSHSub1Sprites0ED:    incbin "lvl/spr/0ED_DSHroom2.bin"
+DSHSub2Sprites0F1:    incbin "lvl/spr/0F1_DSHroom3.bin"
+DSHSub4Sprites0E4:    incbin "lvl/spr/0E4_DSHroom4.bin"
+DS2Sprites10B:        incbin "lvl/spr/10B_DS2main.bin"
+DS2Sub1Sprites1C6:    incbin "lvl/spr/1C6_DS2sub.bin"
+VD1Sprites11A:        incbin "lvl/spr/11A_VD1main.bin"
+VD1Sub1Sprites1EF:    incbin "lvl/spr/1EF_VD1sub.bin"
+VD2Sprites118:        incbin "lvl/spr/118_VD2main.bin"
+VD2Sub1Sprites1C3:    incbin "lvl/spr/1C3_VD2sub.bin"
+VGHSprites107:        incbin "lvl/spr/107_VGHroom1.bin"
+VGHSub1Sprites1EA:    incbin "lvl/spr/1EA_VGHroom2.bin"
+VD3Sprites10A:        incbin "lvl/spr/10A_VD3main.bin"
+VD3Sub2Sprites1C2:    incbin "lvl/spr/1C2_VD3sub.bin"
+VD4Sprites119:        incbin "lvl/spr/119_VD4main.bin"
+VD4Sub1Sprites1F5:    incbin "lvl/spr/1F5_VD4sub.bin"
+C3Sprites11C:         incbin "lvl/spr/11C_C3room1.bin"
+C3Sub2Sprites1F3:     incbin "lvl/spr/1F3_C3room3.bin"
+C3Sub3Sprites1F2:     incbin "lvl/spr/1F2_C3room4.bin"
+VS1Sprites109:        incbin "lvl/spr/109_VS1main.bin"
+VS1Sub1Sprites1F1:    incbin "lvl/spr/1F1_VS1end1.bin"
+VS1Sub2Sprites1F0:    incbin "lvl/spr/1F0_VS1end2.bin"
+VS2Sprites001:        incbin "lvl/spr/001_VS2main.bin"
+VS2Sub1Sprites0D8:    incbin "lvl/spr/0D8_VS2sub.bin"
+VS3Sprites002:        incbin "lvl/spr/002_VS3main.bin"
+VFSprites00B:         incbin "lvl/spr/00B_VFroom1.bin"
+VFSub1Sprites0E0:     incbin "lvl/spr/0E0_VFroom2.bin"
+CBASprites00F:        incbin "lvl/spr/00F_CBAmain.bin"
+CBASub1Sprites0BF:    incbin "lvl/spr/0BF_CBAsub.bin"
+CMSprites010:         incbin "lvl/spr/010_CMmain.bin"
+CMSub1Sprites0C1:     incbin "lvl/spr/0C1_CMsub.bin"
+C4Sprites00E:         incbin "lvl/spr/00E_C4room1.bin"
+C4Sub2Sprites0DC:     incbin "lvl/spr/0DC_C4room2.bin"
+C4Sub3Sprites0DB:     incbin "lvl/spr/0DB_C4room3.bin"
+C4Sub4Sprites0D9:     incbin "lvl/spr/0D9_C4room4.bin"
+SLSprites011:         incbin "lvl/spr/011_SLmain.bin"
+BB1Sprites00C:        incbin "lvl/spr/00C_BB1main.bin"
+BB2Sprites00D:        incbin "lvl/spr/00D_BB2main.bin"
+BB2Sub1Sprites0DD:    incbin "lvl/spr/0DD_BB2sub.bin"
+FoI1Sprites11E:       incbin "lvl/spr/11E_FoI1.bin"
+FoI2Sprites120:       incbin "lvl/spr/120_FoI2.bin"
+FoI3Sprites123:       incbin "lvl/spr/123_FoI3main.bin"
+FoI3Sub2Sprites1F8:   incbin "lvl/spr/1F8_FoI3sub.bin"
+C5Sprites020:         incbin "lvl/spr/020_C5room1.bin"
+C5Sub1Sprites0CC:     incbin "lvl/spr/0CC_C5room2.bin"
+FGHSprites11D:        incbin "lvl/spr/11D_FGHroom1.bin"
+FGHSub1Sprites1FA:    incbin "lvl/spr/1FA_FGHroom2.bin"
+FoI4Sprites11F:       incbin "lvl/spr/11F_FoI4main.bin"
+FoI4Sub2Sprites1DF:   incbin "lvl/spr/1DF_FoI4sub2.bin"
+FoI4Sub1Sprites1C1:   incbin "lvl/spr/1C1_FoI4sub1.bin"
+FSASprites122:        incbin "lvl/spr/122_FSA.bin"
+FFSprites01F:         incbin "lvl/spr/01F_FFroom1.bin"
+FFSub1Sprites0D6:     incbin "lvl/spr/0D6_FFroom2.bin"
+CI1Sprites022:        incbin "lvl/spr/022_CI1main1.bin"
+CI1Sub2Sprites0BE:    incbin "lvl/spr/0BE_CI1sub.bin"
+CGHSprites021:        incbin "lvl/spr/021_CGHroom1.bin"
+CGHSub1Sprites0FC:    incbin "lvl/spr/0FC_CGHroom2.bin"
+CI2Sprites024:        incbin "lvl/spr/024_CI2room1.bin"
+CI2Sub3Sprites0CF:    incbin "lvl/spr/0CF_CI2room2c.bin"
+CI2Sub2Sprites6E9FB:  incbin "lvl/spr/0CF_CI2room2b.bin"
+CI2Sub1Sprites6EAB0:  incbin "lvl/spr/0CF_CI2room2a.bin"
+CI2Sub4Sprites0CE:    incbin "lvl/spr/0CE_CI2room3c.bin"
+CI2Sub5Sprites6EB72:  incbin "lvl/spr/0CE_CI2room3b.bin"
+CI2Sub6SPrites6EBBE:  incbin "lvl/spr/0CE_CI2room3a.bin"
+CI2Sub8Sprites0CD:    incbin "lvl/spr/0CD_CI2room4b.bin"
+CI2Sub7Sprites6EC7E:  incbin "lvl/spr/0CD_CI2room4a.bin"
+CI3Sprites023:        incbin "lvl/spr/023_CI3main.bin"
+CI3Sub1Sprites0D7:    incbin "lvl/spr/0D7_CI3sub.bin"
+CFSprites01B:         incbin "lvl/spr/01B_CFroom1.bin"
+CFSub1Sprites0EF:     incbin "lvl/spr/0EF_CFroom2.bin"
+CSSprites117:         incbin "lvl/spr/117_CSroom1.bin"
+CSSub2Sprites1ED:     incbin "lvl/spr/1ED_CSroom2.bin"
+CSSub3Sprites1EC:     incbin "lvl/spr/1EC_CSroom3.bin"
+CSSub1Sprites1C0:     incbin "lvl/spr/1C0_CSsub.bin"
+CI4Sprites01D:        incbin "lvl/spr/01D_CI4main.bin"
+CI4Sub1Sprites0EA:    incbin "lvl/spr/0EA_CI4sub.bin"
+CI5Sprites01C:        incbin "lvl/spr/01C_CI5main.bin"
+CI5Sub2Sprites0C0:    incbin "lvl/spr/0C0_CI5sub.bin"
+C6Sprites01A:         incbin "lvl/spr/01A_C6room1.bin"
+C6Sub1Sprites0D4:     incbin "lvl/spr/0D4_C6room2.bin"
+C6Sub2Sprites0D3:     incbin "lvl/spr/0D3_C6room3.bin"
+SGSSprites018:        incbin "lvl/spr/018_SGSroom1.bin"
+SGSSub1Sprites0F8:    incbin "lvl/spr/0F8_SGSroom2.bin"
+                   if ver_is_japanese(!_VER)                    ;\======================= J =====================
+SGSSub2Sprites0F7:    incbin "lvl/spr/0F7_SGSroom3_J.bin"       ;!
+                   else                                         ;<=============== U, SS, E0, & E1 ===============
+SGSSub2Sprites0F7:    incbin "lvl/spr/0F7_SGSroom3_U.bin"       ;!
+                   endif                                        ;/===============================================
+VoB1Sprites116:       incbin "lvl/spr/116_VoB1main.bin"
+VoB1Sub2Sprites1E5:   incbin "lvl/spr/1E5_VoB1end.bin"
+VoB2Sprites115:       incbin "lvl/spr/115_VoB2room1.bin"
+VoB2Sub1Sprites1E3:   incbin "lvl/spr/1E3_VoB2room2.bin"
+VoB2Sub2Sprites1E2:   incbin "lvl/spr/1E2_VoB2room3.bin"
+YoshiWingsSprites0C8: incbin "lvl/spr/0C8_yoshiwingsdark.bin"
+VoBGHSprites114:      incbin "lvl/spr/114_VoBGHroom1.bin"
+VoBGHSub1Sprites1DD:  incbin "lvl/spr/1DD_VoBGHroom2.bin"
+VoBGHSub2Sprites1DB:  incbin "lvl/spr/1DB_VoBGHroom3.bin"
+VoB3Sprites113:       incbin "lvl/spr/113_VoB3main.bin"
+VoB4Sprites10F:       incbin "lvl/spr/10F_VoB4main.bin"
+VoB4Sub1Sprites1BF:   incbin "lvl/spr/1BF_VoB4sub.bin"
+C7Sprites110:         incbin "lvl/spr/110_C7room1.bin"
+C7Sub1Sprites1FE:     incbin "lvl/spr/1FE_C7room2.bin"
+C7Sub2Sprites1EB:     incbin "lvl/spr/1EB_C7room3.bin"
+VoBFSprites111:       incbin "lvl/spr/111_VoBFroom1.bin"
+FDSub1Sprites1D4:     incbin "lvl/spr/1D4_FDroom1.bin"
+FDSub2Sprites1D3:     incbin "lvl/spr/1D3_FDroom2.bin"
+FDSub3Sprites1D2:     incbin "lvl/spr/1D2_FDroom3.bin"
+FDSub4Sprites1D1:     incbin "lvl/spr/1D1_FDroom4.bin"
+FDSub5Sprites1CF:     incbin "lvl/spr/1CF_FDroom5.bin"
+FDSub6Sprites1CE:     incbin "lvl/spr/1CE_FDroom6.bin"
+FDSub7Sprites1CD:     incbin "lvl/spr/1CD_FDroom7.bin"
+FDSub8Sprites1CC:     incbin "lvl/spr/1CC_FDroom8.bin"
+BDSprites10E:         incbin "lvl/spr/10E_BD.bin"
+BowserSprites1C7:     incbin "lvl/spr/1C7_bowser.bin"
+SW1Sprites134:        incbin "lvl/spr/134_SW1main.bin"
+SW2Sprites130:        incbin "lvl/spr/130_SW2main.bin"
+SW3Sprites132:        incbin "lvl/spr/132_SW3.bin"
+SW4Sprites135:        incbin "lvl/spr/135_SW4.bin"
+SW5Sprites136:        incbin "lvl/spr/136_SW5.bin"
+GnarlySprites12A:     incbin "lvl/spr/12A_SP1room1.bin"
+GnarlySub1Sprites1C4: incbin "lvl/spr/1C4_SP1room2.bin"
+TubularSprites12B:    incbin "lvl/spr/12B_SP2.bin"
+WayCoolSprites12C:    incbin "lvl/spr/12C_SP3main.bin"
+YoshiWingsSprites1C8: incbin "lvl/spr/1C8_yoshiwingsbright.bin"
+AwesomeSprites12D:    incbin "lvl/spr/12D_SP4.bin"
+GroovySprites128:     incbin "lvl/spr/128_SP5.bin"
+MondoSprites127:      incbin "lvl/spr/127_SP6main.bin"
+OutrageousSprites126: incbin "lvl/spr/126_SP7.bin"
+FunkySprites125:      incbin "lvl/spr/125_SP8.bin"
+YHSprites104:         incbin "lvl/spr/104_YH.bin"
+TestLevelSprites:     incbin "lvl/spr/testlevel.bin"
+
+                      %insert_empty($89A,$891,$894,$891,$891)
+
+DATA_07F000:          db $30,$44,$58,$6C,$80,$94,$A8,$BC
+                      db $D0,$E4,$28,$2C,$80,$94,$A8,$BC
+                      db $D0,$E4,$30,$58,$00,$00,$28,$2C
+                      db $30,$54,$64,$74,$84,$94,$A4,$B4
+                      db $00,$00,$28,$2C,$30,$54,$78,$8C
+                      db $A0,$B4,$C8,$DC,$F0,$F8,$28,$2C
+                      db $30,$74,$88,$9C,$B0,$C4,$D8,$EC
+                      db $F8,$FC,$28,$2C,$30,$84,$D8,$E0
+                      db $E8,$F0,$F8,$00,$00,$00,$28,$2C
+                      db $00,$60,$74,$88,$9C,$B0,$C4,$00
+                      db $00,$00,$28,$2C,$30,$44,$58,$6C
+                      db $80,$94,$A8,$00,$00,$00,$28,$2C
+                      db $A0,$30,$34,$38,$3C,$40,$44,$48
+                      db $4C,$50,$28,$2C,$30,$48,$60,$78
+                      db $8C,$A0,$B4,$C8,$DC,$00,$28,$2C
+                      db $58,$AC,$C0,$D4,$E8,$00,$00,$00
+                      db $00,$00,$28,$2C,$58,$6C,$80,$94
+                      db $A8,$BC,$D0,$E4,$00,$00,$28,$2C
+                      db $30,$74,$B8,$C4,$D0,$DC,$E8,$F4
+                      db $00,$00,$28,$2C,$30,$48,$60,$78
+                      db $90,$A8,$C0,$D8,$00,$00,$28,$2C
+                      db $30,$44,$58,$5C,$60,$64,$68,$6C
+                      db $70,$00,$28,$2C
+
+DATA_07F0B4:          db $00,$0C,$18,$24,$30,$3C,$00,$48
+                      db $54,$60,$6C,$78,$84,$90,$9C,$00
+                      db $A8,$0C,$00,$B4
+
+DATA_07F0C8:          db $00,$08,$10,$00,$10,$00,$10,$00
+                      db $10,$00,$08,$10,$FF,$08,$08,$08
+                      db $08,$08,$FF,$00,$08,$10,$10,$08
+                      db $00,$00,$08,$10,$FF,$00,$08,$10
+                      db $08,$10,$10,$00,$08,$10,$FF,$00
+                      db $00,$10,$00,$10,$00,$08,$10,$10
+                      db $FF,$00,$08,$10,$00,$00,$08,$10
+                      db $10,$00,$08,$10,$FF,$08,$10,$00
+                      db $00,$08,$10,$00,$10,$00,$08,$10
+                      db $FF,$00,$08,$10,$10,$0C,$08,$08
+                      db $FF,$00,$08,$10,$00,$10,$00,$08
+                      db $10,$00,$10,$00,$08,$10,$FF,$00
+                      db $08,$10,$00,$10,$00,$08,$10,$10
+                      db $00,$08,$10,$FF
+
+DATA_07F134:          db $00,$00,$00,$08,$08,$10,$10,$18
+                      db $18,$20,$20,$20,$FF,$00,$08,$10
+                      db $18,$20,$FF,$00,$00,$00,$08,$10
+                      db $18,$20,$20,$20,$FF,$00,$00,$08
+                      db $10,$10,$18,$20,$20,$20,$FF,$00
+                      db $08,$08,$10,$10,$18,$18,$18,$20
+                      db $FF,$00,$00,$00,$08,$10,$10,$10
+                      db $18,$20,$20,$20,$FF,$00,$00,$08
+                      db $10,$10,$10,$18,$18,$20,$20,$20
+                      db $FF,$00,$00,$00,$08,$10,$18,$20
+                      db $FF,$00,$00,$00,$08,$08,$10,$10
+                      db $10,$18,$18,$20,$20,$20,$FF,$00
+                      db $00,$00,$08,$08,$10,$10,$10,$18
+                      db $20,$20,$20,$FF
+
+DATA_07F1A0:          db $00,$0D,$13,$1D,$27,$31,$3D,$49
+                      db $51,$5F
+
+DATA_07F1AA:          db $01,$02,$03,$04,$05,$06,$07,$08
+                      db $09,$10,$11,$12,$13,$14,$15,$16
+                      db $17,$18,$19,$20,$21,$22,$23,$24
+                      db $25,$26,$27,$28,$29,$30,$40,$50
+
+CODE_07F1CA:          LDA.W SpriteMisc1540,X
+                      STA.B _4
+                      STZ.B _2
+                      LDA.W SpriteMisc1594,X
+                      LSR A
+                      LSR A
+                      TAX
+                      LDA.L DATA_07F1AA,X
+                      PHA
+                      LSR A
+                      LSR A
+                      LSR A
+                      LSR A
+                      TAX
+                      BEQ +
+                      LDA.L DATA_07F1A0,X
+                      TAX
+                      LDY.B #$20
+                      JSR CODE_07F200
+                    + PLA
+                      AND.B #$0F
+                      TAX
+                      LDA.L DATA_07F1A0,X
+                      TAX
+                      LDA.B #$20
+                      STA.B _2
+                      LDY.B #$54
+                      JSR CODE_07F200
+                      RTL
+
+CODE_07F200:          LDA.L DATA_07F0C8,X
+                      BMI CODE_07F24A
+                      CLC
+                      ADC.B #$64
+                      CLC
+                      ADC.B _2
+                      STA.W OAMTileXPos,Y
+                      LDA.L DATA_07F134,X
+                      CLC
+                      ADC.B #$40
+                      STA.W OAMTileYPos,Y
+                      LDA.B #$EF
+                      PHX
+                      LDX.B _4
+                      CPX.B #$10
+                      BCS +
+                      TXA
+                      LSR A
+                      LSR A
+                      TAX
+                      LDA.L DATA_07F24E,X
+                    + STA.W OAMTileNo,Y
+                      PLX
+                      LDA.B TrueFrame
+                      LSR A
+                      AND.B #$0E
+                      ORA.B #$30
+                      STA.W OAMTileAttr,Y
+                      PHY
+                      TYA
+                      LSR A
+                      LSR A
+                      TAY
+                      LDA.B #$00
+                      STA.W OAMTileSize,Y
+                      PLY
+                      INY
+                      INY
+                      INY
+                      INY
+                      INX
+                      BRA CODE_07F200
+
+CODE_07F24A:          LDX.W CurSpriteProcess                    ; X = Sprite index
+                      RTS
+
+
+DATA_07F24E:          db $66,$66,$6E,$FF
+
+CODE_07F252:          PHX
+                      LDA.W SpriteMisc1594,X
+                      LSR A
+                      LSR A
+                      TAX
+                      LDA.L DATA_07F1AA,X
+                      STA.W BonusStarsGained
+                      PLX
+                      CMP.B #$50
+                      BNE +
+                      LDA.B #$0A
+                      JSL GivePoints
+                    + RTL
+
+
+Sprite1656Vals:       db $70,$70,$70,$70,$10,$10,$10,$10
+                      db $10,$10,$10,$10,$10,$10,$00,$10
+                      db $10,$10,$14,$00,$00,$00,$00,$10
+                      db $10,$11,$81,$10,$10,$80,$11,$11
+                      db $82,$00,$13,$13,$13,$13,$01,$00
+                      db $00,$00,$81,$00,$00,$00,$00,$00
+                      db $00,$00,$00,$00,$00,$05,$80,$00
+                      db $00,$00,$07,$07,$07,$00,$00,$30
+                      db $30,$00,$00,$00,$00,$08,$00,$10
+                      db $00,$00,$00,$10,$00,$10,$10,$8C
+                      db $8C,$10,$00,$00,$00,$00,$01,$00
+                      db $01,$01,$01,$0B,$0B,$0B,$0B,$00
+                      db $00,$00,$00,$00,$00,$00,$00,$00
+                      db $00,$00,$00,$00,$00,$10,$19,$30
+                      db $0A,$10,$10,$30,$00,$00,$00,$00
+                      db $00,$00,$00,$00,$01,$00,$00,$00
+                      db $00,$00,$00,$00,$00,$00,$00,$00
+                      db $00,$00,$00,$00,$00,$00,$00,$00
+                      db $00,$00,$00,$00,$00,$00,$00,$00
+                      db $00,$80,$00,$10,$00,$00,$00,$10
+                      db $00,$00,$10,$00,$00,$00,$00,$00
+                      db $00,$00,$00,$00,$00,$00,$00,$00
+                      db $00,$0D,$00,$00,$00,$00,$00,$00
+                      db $00,$00,$00,$00,$00,$70,$10,$0E
+                      db $00,$00,$00,$00,$00,$00,$FF,$00
+                      db $00
+
+Sprite1662Vals:       db $00,$00,$00,$00,$40,$40,$40,$40
+                      db $40,$40,$40,$40,$40,$00,$0A,$00
+                      db $00,$00,$08,$00,$00,$00,$00,$80
+                      db $80,$81,$01,$80,$80,$00,$81,$81
+                      db $00,$00,$81,$81,$81,$81,$06,$00
+                      db $07,$06,$01,$00,$00,$00,$00,$00
+                      db $37,$00,$37,$00,$00,$09,$01,$00
+                      db $00,$00,$0E,$0E,$0E,$00,$00,$00
+                      db $00,$0F,$0F,$10,$14,$00,$0D,$80
+                      db $00,$1D,$00,$80,$80,$80,$80,$00
+                      db $00,$80,$02,$0C,$03,$05,$04,$05
+                      db $04,$00,$00,$04,$05,$04,$05,$00
+                      db $1D,$0C,$04,$04,$12,$20,$21,$2C
+                      db $34,$04,$04,$04,$04,$0C,$16,$00
+                      db $17,$80,$80,$00,$00,$00,$00,$00
+                      db $00,$00,$00,$1E,$35,$00,$00,$00
+                      db $0C,$00,$00,$0C,$0C,$00,$00,$3A
+                      db $08,$08,$00,$00,$00,$00,$1C,$08
+                      db $38,$0D,$0D,$0D,$0D,$0D,$0D,$0D
+                      db $0D,$00,$0D,$80,$1D,$00,$00,$B6
+                      db $24,$23,$3B,$1F,$22,$00,$27,$00
+                      db $00,$28,$00,$2A,$2B,$2B,$00,$00
+                      db $00,$0C,$00,$2D,$00,$00,$00,$2E
+                      db $2E,$0C,$1D,$2F,$0C,$00,$80,$30
+                      db $32,$31,$00,$00,$33,$07,$FF,$00
+                      db $0C
+
+Sprite166EVals:       db $0A,$08,$06,$04,$0A,$08,$06,$04
+                      db $0A,$0A,$08,$08,$04,$17,$32,$04
+                      db $04,$1D,$3D,$09,$09,$45,$45,$85
+                      db $85,$0B,$08,$01,$12,$15,$09,$4F
+                      db $1C,$24,$0B,$09,$0B,$09,$33,$33
+                      db $FD,$2B,$08,$35,$3B,$3A,$19,$3A
+                      db $13,$13,$13,$34,$39,$2A,$15,$F3
+                      db $FD,$FD,$37,$37,$37,$C7,$30,$05
+                      db $15,$37,$37,$37,$33,$30,$8B,$85
+                      db $1D,$3B,$3B,$09,$34,$01,$01,$08
+                      db $08,$09,$20,$30,$20,$E3,$E3,$E3
+                      db $E3,$E3,$E3,$E1,$E1,$EB,$EB,$E3
+                      db $E3,$E3,$E1,$E1,$A3,$A3,$A3,$A3
+                      db $A3,$E3,$F0,$E3,$F3,$3F,$3F,$0F
+                      db $35,$0B,$09,$07,$08,$0A,$20,$24
+                      db $0A,$3A,$3A,$20,$20,$21,$28,$20
+                      db $20,$00,$20,$20,$20,$20,$F5,$20
+                      db $20,$20,$20,$20,$20,$20,$30,$3B
+                      db $F3,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+                      db $0B,$9B,$93,$00,$30,$31,$31,$31
+                      db $FB,$FB,$BB,$E3,$F3,$35,$35,$39
+                      db $35,$35,$7D,$07,$37,$37,$3D,$3F
+                      db $3F,$30,$31,$31,$31,$04,$35,$3B
+                      db $3B,$36,$7B,$3B,$33,$06,$0B,$11
+                      db $F5,$F5,$CB,$CD,$F3,$3F,$FF,$20
+                      db $38
+
+Sprite167AVals:       db $00,$00,$00,$00,$00,$00,$00,$00
+                      db $00,$00,$00,$00,$00,$18,$02,$18
+                      db $00,$00,$81,$00,$01,$99,$99,$00
+                      db $00,$01,$00,$00,$00,$00,$00,$02
+                      db $00,$C2,$00,$00,$00,$00,$01,$01
+                      db $01,$83,$00,$00,$9A,$1E,$01,$BE
+                      db $81,$81,$81,$02,$18,$87,$02,$01
+                      db $01,$01,$01,$01,$01,$00,$3E,$01
+                      db $01,$82,$82,$82,$01,$02,$81,$00
+                      db $00,$A2,$82,$01,$00,$00,$00,$00
+                      db $00,$00,$A2,$08,$02,$A2,$A2,$A2
+                      db $A2,$A2,$A2,$A2,$A2,$A2,$A2,$A2
+                      db $A2,$A2,$A2,$A2,$A2,$22,$22,$22
+                      db $22,$A2,$A2,$A2,$A2,$E2,$01,$01
+                      db $01,$01,$01,$01,$C2,$C2,$C2,$C2
+                      db $C2,$82,$82,$A2,$A2,$9A,$80,$82
+                      db $3E,$C2,$82,$82,$82,$92,$80,$82
+                      db $82,$82,$02,$02,$02,$02,$A2,$A2
+                      db $01,$F9,$F9,$F9,$F9,$F9,$F9,$F9
+                      db $F9,$01,$01,$01,$A2,$81,$00,$01
+                      db $80,$00,$19,$A2,$01,$01,$01,$00
+                      db $00,$81,$01,$81,$81,$81,$00,$01
+                      db $01,$A2,$00,$00,$00,$00,$00,$A2
+                      db $A2,$A2,$A2,$A2,$A0,$01,$01,$A1
+                      db $A2,$A2,$01,$01,$A2,$A3,$FF,$82
+                      db $A2
+
+                   if ver_is_japanese(!_VER)                    ;\======================= J =====================
+Sprite1686Vals:       db $00,$00,$00,$00,$02,$02,$02,$02        ;!
+                      db $42,$52,$52,$52,$52,$00,$09,$00        ;!
+                      db $40,$00,$01,$00,$00,$10,$10,$90        ;!
+                      db $90,$01,$10,$10,$90,$00,$11,$01        ;!
+                      db $01,$08,$00,$00,$00,$00,$01,$01        ;!
+                      db $19,$80,$00,$39,$09,$09,$10,$0A        ;!
+                      db $09,$09,$09,$99,$18,$29,$08,$19        ;!
+                      db $19,$19,$11,$11,$15,$10,$0A,$40        ;!
+                      db $40,$8C,$8C,$8C,$11,$18,$11,$80        ;! edible dolphins
+                      db $00,$29,$29,$10,$10,$10,$10,$00        ;!
+                      db $00,$10,$29,$20,$29,$A9,$A9,$A9        ;!
+                      db $A9,$A9,$A9,$A9,$A9,$A9,$A9,$A9        ;!
+                      db $29,$29,$3D,$3D,$3D,$3D,$3D,$3D        ;!
+                      db $3D,$29,$19,$29,$29,$59,$59,$18        ;!
+                      db $18,$10,$10,$50,$28,$28,$28,$28        ;!
+                      db $08,$29,$29,$39,$39,$29,$28,$28        ;!
+                      db $3A,$28,$29,$31,$31,$29,$00,$29        ;!
+                      db $29,$29,$29,$29,$29,$29,$29,$29        ;!
+                      db $11,$11,$11,$11,$11,$11,$11,$11        ;!
+                      db $11,$10,$11,$01,$39,$10,$19,$19        ;!
+                      db $19,$19,$01,$29,$98,$14,$14,$10        ;!
+                      db $18,$18,$18,$00,$19,$19,$19,$19        ;!
+                      db $19,$1D,$1D,$19,$19,$18,$18,$19        ;!
+                      db $19,$19,$1D,$19,$18,$00,$10,$00        ;!
+                      db $99,$99,$10,$90,$A9,$B9,$FF,$39        ;!
+                      db $19                                    ;!
+                   else                                         ;<=============== U, SS, E0, & E1 ===============
+Sprite1686Vals:       db $00,$00,$00,$00,$02,$02,$02,$02        ;!
+                      db $42,$52,$52,$52,$52,$00,$09,$00        ;!
+                      db $40,$00,$01,$00,$00,$10,$10,$90        ;!
+                      db $90,$01,$10,$10,$90,$00,$11,$01        ;!
+                      db $01,$08,$00,$00,$00,$00,$01,$01        ;!
+                      db $19,$80,$00,$39,$09,$09,$10,$0A        ;!
+                      db $09,$09,$09,$99,$18,$29,$08,$19        ;!
+                      db $19,$19,$11,$11,$15,$10,$0A,$40        ;!
+                      db $40,$8D,$8D,$8D,$11,$18,$11,$80        ;!
+                      db $00,$29,$29,$10,$10,$10,$10,$00        ;!
+                      db $00,$10,$29,$20,$29,$A9,$A9,$A9        ;!
+                      db $A9,$A9,$A9,$A9,$A9,$A9,$A9,$A9        ;!
+                      db $29,$29,$3D,$3D,$3D,$3D,$3D,$3D        ;!
+                      db $3D,$29,$19,$29,$29,$59,$59,$18        ;!
+                      db $18,$10,$10,$50,$28,$28,$28,$28        ;!
+                      db $08,$29,$29,$39,$39,$29,$28,$28        ;!
+                      db $3A,$28,$29,$31,$31,$29,$00,$29        ;!
+                      db $29,$29,$29,$29,$29,$29,$29,$29        ;!
+                      db $11,$11,$11,$11,$11,$11,$11,$11        ;!
+                      db $11,$10,$11,$01,$39,$10,$19,$19        ;!
+                      db $19,$19,$01,$29,$98,$14,$14,$10        ;!
+                      db $18,$18,$18,$00,$19,$19,$19,$19        ;!
+                      db $19,$1D,$1D,$19,$19,$18,$18,$19        ;!
+                      db $19,$19,$1D,$19,$18,$00,$10,$00        ;!
+                      db $99,$99,$10,$90,$A9,$B9,$FF,$39        ;!
+                      db $19                                    ;!
+                   endif                                        ;/===============================================
+
+Sprite190FVals:       db $00,$00,$00,$00,$A0,$A0,$A0,$A0
+                      db $B0,$B0,$B0,$B0,$A0,$80,$44,$80
+                      db $80,$80,$20,$00,$00,$00,$00,$00
+                      db $00,$20,$20,$00,$00,$00,$60,$20
+                      db $04,$04,$20,$20,$20,$20,$24,$04
+                      db $00,$44,$20,$04,$44,$C4,$00,$C4
+                      db $24,$24,$24,$04,$04,$46,$04,$04
+                      db $04,$04,$04,$04,$04,$00,$C4,$00
+                      db $00,$05,$05,$05,$04,$44,$48,$00
+                      db $00,$40,$40,$40,$04,$00,$00,$00
+                      db $00,$00,$64,$C4,$64,$45,$65,$45
+                      db $65,$45,$45,$45,$45,$65,$65,$45
+                      db $45,$45,$45,$45,$45,$45,$45,$05
+                      db $05,$44,$44,$44,$44,$46,$00,$00
+                      db $00,$10,$10,$10,$40,$40,$40,$40
+                      db $40,$40,$40,$42,$42,$40,$40,$40
+                      db $C0,$40,$40,$40,$40,$00,$00,$40
+                      db $40,$40,$40,$40,$40,$40,$40,$01
+                      db $00,$48,$48,$48,$48,$48,$48,$48
+                      db $48,$00,$40,$40,$40,$00,$04,$04
+                      db $40,$40,$00,$41,$00,$00,$00,$00
+                      db $00,$40,$00,$00,$40,$40,$00,$00
+                      db $00,$40,$00,$00,$00,$00,$00,$41
+                      db $41,$40,$41,$40,$00,$00,$00,$20
+                      db $47,$45,$00,$00,$41,$41,$FF,$40
+                      db $40
+
+ZeroSpriteTables:     STZ.W SpriteInLiquid,X
+                      STZ.W SpriteBehindScene,X
+                      STZ.B SpriteTableC2,X
+                      STZ.W SpriteMisc151C,X
+                      STZ.W SpriteMisc1528,X
+                      STZ.W SpriteMisc1534,X
+                      STZ.W SpriteMisc157C,X
+                      STZ.W SpriteBlockedDirs,X
+                      STZ.W SpriteWayOffscreenX,X
+                      STZ.W SpriteMisc1602,X
+                      STZ.W SpriteMisc1540,X
+                      STZ.W SpriteMisc154C,X
+                      STZ.W SpriteMisc1558,X
+                      STZ.W SpriteMisc1564,X
+                      STZ.W SpriteMisc1FE2,X
+                      STZ.W SpriteMisc1626,X
+                      STZ.W SpriteMisc1570,X
+                      STZ.B SpriteXSpeed,X                      ; Sprite X Speed = 0
+                      STZ.W SpriteXPosSpx,X
+                      STZ.B SpriteYSpeed,X                      ; Sprite Y Speed = 0
+                      STZ.W SpriteYPosSpx,X
+                      STZ.W SpriteDisableObjInt,X
+                      STZ.W SpriteOnYoshiTongue,X
+                      STZ.W SpriteMisc163E,X
+                      STZ.W SpriteTweakerA,X
+                      STZ.W SpriteTweakerB,X
+                      STZ.W SpriteTweakerC,X
+                      STZ.W SpriteTweakerD,X
+                      STZ.W SpriteTweakerE,X
+                      STZ.W SpriteMisc187B,X
+                      STZ.W SpriteMisc160E,X
+                      STZ.W SpriteMisc1594,X
+                      STZ.W SpriteMisc1504,X
+                      STZ.W SpriteMisc1FD6,X
+                      LDA.B #$01
+                      STA.W SpriteOffscreenX,X
+                      RTL
+
+LoadSpriteTables:     PHY
+                      PHX
+                      LDA.B SpriteNumber,X
+                      TAX
+                      LDA.L Sprite166EVals,X
+                      AND.B #$0F
+                      PLX
+                      STA.W SpriteOBJAttribute,X
+                      JSL LoadTweakerBytes
+                      PLY
+                      RTL
+
+LoadTweakerBytes:     PHY
+                      PHX
+                      TXY
+                      LDX.B SpriteNumber,Y
+                      LDA.L Sprite1656Vals,X
+                      STA.W SpriteTweakerA,Y
+                      LDA.L Sprite1662Vals,X
+                      STA.W SpriteTweakerB,Y
+                      LDA.L Sprite166EVals,X
+                      STA.W SpriteTweakerC,Y
+                      LDA.L Sprite167AVals,X
+                      STA.W SpriteTweakerD,Y
+                      LDA.L Sprite1686Vals,X
+                      STA.W SpriteTweakerE,Y
+                      LDA.L Sprite190FVals,X
+                      STA.W SpriteTweakerF,Y
+                      PLX
+                      PLY
+                      RTL
+
+InitSpriteTables:     JSL ZeroSpriteTables
+                      JSL LoadSpriteTables
+                      RTL
+
+
+CircleCoords:         db $00,$00,$03,$00,$06,$00,$09,$00
+                      db $0C,$00,$0F,$00,$12,$00,$15,$00
+                      db $19,$00,$1C,$00,$1F,$00,$22,$00
+                      db $25,$00,$28,$00,$2B,$00,$2E,$00
+                      db $31,$00,$35,$00,$38,$00,$3B,$00
+                      db $3E,$00,$41,$00,$44,$00,$47,$00
+                      db $4A,$00,$4D,$00,$50,$00,$53,$00
+                      db $56,$00,$59,$00,$5C,$00,$5F,$00
+                      db $61,$00,$64,$00,$67,$00,$6A,$00
+                      db $6D,$00,$70,$00,$73,$00,$75,$00
+                      db $78,$00,$7B,$00,$7E,$00,$80,$00
+                      db $83,$00,$86,$00,$88,$00,$8B,$00
+                      db $8E,$00,$90,$00,$93,$00,$95,$00
+                      db $98,$00,$9B,$00,$9D,$00,$9F,$00
+                      db $A2,$00,$A4,$00,$A7,$00,$A9,$00
+                      db $AB,$00,$AE,$00,$B0,$00,$B2,$00
+                      db $B5,$00,$B7,$00,$B9,$00,$BB,$00
+                      db $BD,$00,$BF,$00,$C1,$00,$C3,$00
+                      db $C5,$00,$C7,$00,$C9,$00,$CB,$00
+                      db $CD,$00,$CF,$00,$D1,$00,$D3,$00
+                      db $D4,$00,$D6,$00,$D8,$00,$D9,$00
+                      db $DB,$00,$DD,$00,$DE,$00,$E0,$00
+                      db $E1,$00,$E3,$00,$E4,$00,$E6,$00
+                      db $E7,$00,$E8,$00,$EA,$00,$EB,$00
+                      db $EC,$00,$ED,$00,$EE,$00,$EF,$00
+                      db $F1,$00,$F2,$00,$F3,$00,$F4,$00
+                      db $F4,$00,$F5,$00,$F6,$00,$F7,$00
+                      db $F8,$00,$F9,$00,$F9,$00,$FA,$00
+                      db $FB,$00,$FB,$00,$FC,$00,$FC,$00
+                      db $FD,$00,$FD,$00,$FE,$00,$FE,$00
+                      db $FE,$00,$FF,$00,$FF,$00,$FF,$00
+                      db $FF,$00,$FF,$00,$FF,$00,$FF,$00
+                      db $00,$01,$FF,$00,$FF,$00,$FF,$00
+                      db $FF,$00,$FF,$00,$FF,$00,$FF,$00
+                      db $FE,$00,$FE,$00,$FE,$00,$FD,$00
+                      db $FD,$00,$FC,$00,$FC,$00,$FB,$00
+                      db $FB,$00,$FA,$00,$F9,$00,$F9,$00
+                      db $F8,$00,$F7,$00,$F6,$00,$F5,$00
+                      db $F4,$00,$F4,$00,$F3,$00,$F2,$00
+                      db $F1,$00,$EF,$00,$EE,$00,$ED,$00
+                      db $EC,$00,$EB,$00,$EA,$00,$E8,$00
+                      db $E7,$00,$E6,$00,$E4,$00,$E3,$00
+                      db $E1,$00,$E0,$00,$DE,$00,$DD,$00
+                      db $DB,$00,$D9,$00,$D8,$00,$D6,$00
+                      db $D4,$00,$D3,$00,$D1,$00,$CF,$00
+                      db $CD,$00,$CB,$00,$C9,$00,$C7,$00
+                      db $C5,$00,$C3,$00,$C1,$00,$BF,$00
+                      db $BD,$00,$BB,$00,$B9,$00,$B7,$00
+                      db $B5,$00,$B2,$00,$B0,$00,$AE,$00
+                      db $AB,$00,$A9,$00,$A7,$00,$A4,$00
+                      db $A2,$00,$9F,$00,$9D,$00,$9B,$00
+                      db $98,$00,$95,$00,$93,$00,$90,$00
+                      db $8E,$00,$8B,$00,$88,$00,$86,$00
+                      db $83,$00,$80,$00,$7E,$00,$7B,$00
+                      db $78,$00,$75,$00,$73,$00,$70,$00
+                      db $6D,$00,$6A,$00,$67,$00,$64,$00
+                      db $61,$00,$5F,$00,$5C,$00,$59,$00
+                      db $56,$00,$53,$00,$50,$00,$4D,$00
+                      db $4A,$00,$47,$00,$44,$00,$41,$00
+                      db $3E,$00,$3B,$00,$38,$00,$35,$00
+                      db $31,$00,$2E,$00,$2B,$00,$28,$00
+                      db $25,$00,$22,$00,$1F,$00,$1C,$00
+                      db $19,$00,$15,$00,$12,$00,$0F,$00
+                      db $0C,$00,$09,$00,$06,$00,$03,$00
+
+LineGuideData00:      db $F0,$E0,$D0,$C1,$B1,$A1,$92,$82
+                      db $73,$64,$55,$46,$37,$28,$29,$1A
+                      db $1B,$1C,$0D,$0E,$0F
+
+LineGuideData01:      db $00,$01,$02
+                      db $13,$14,$15,$26,$27,$38,$49,$5A
+                      db $6B,$7C,$8D,$9D,$AE,$BE,$CE,$DF
+                      db $EF,$FF
+
+LineGuideData02:      db $00,$10,$20,$31,$41,$51
+                      db $62,$72,$83,$94,$A5,$B6,$C7,$D8
+                      db $D9,$EA,$EB,$EC,$FD,$FD,$FF
+
+LineGuideData03:      db $F0
+                      db $F1,$F2,$E3,$E4,$E5,$D6,$D7,$C8
+                      db $B9,$AA,$9B,$8C,$7D,$6D,$5E,$4E
+                      db $3E,$2F,$1F,$0F
+
+LineGuideData04:      db $F5,$E6,$D6,$C7
+                      db $B8,$A9,$9A,$8B,$7C,$6D,$6E,$5F
+
+LineGuideData05:      db $40,$41,$32,$33,$24,$25,$26,$17
+                      db $18,$19,$1A,$0B,$0C,$0D,$0E,$0F
+
+LineGuideData06:      db $F0,$E0,$D0,$C0,$B0,$A1,$91,$81
+                      db $71,$62,$52,$42,$33,$23,$14,$04
+
+LineGuideData07:      db $0B,$1B,$2C,$3C,$4D,$5D,$6D,$7E
+                      db $8E,$9E,$AE,$BF,$CF,$DF,$EF,$FF
+
+LineGuideData08:      db $00,$01,$02,$03,$04,$15,$16,$17
+                      db $18,$29,$2A,$2B,$3C,$3D,$4E,$4F
+
+LineGuideData09:      db $50,$61,$62,$73,$84,$95,$A6,$B7
+                      db $C8,$D9,$E9,$FA
+
+LineGuideData0A:      db $05,$16,$26,$37
+                      db $48,$59,$6A,$7B,$8C,$9D,$9E,$AF
+
+LineGuideData0B:      db $B0,$B1,$C2,$C3,$D4,$D5,$D6,$E7
+                      db $E8,$E9,$EA,$FB,$FC,$FD,$FE,$FF
+
+LineGuideData0C:      db $00,$10,$20,$30,$40,$51,$61,$71
+                      db $81,$92,$A2,$B2,$C3,$D3,$E4,$F4
+
+LineGuideData0D:      db $FB,$EB,$DC,$CC,$BD,$AD,$9D,$8E
+                      db $7E,$6E,$5E,$4F,$3F,$2F,$1F,$0F
+
+LineGuideData0E:      db $F0,$F1,$F2,$F3,$F4,$E5,$E6,$E7
+                      db $E8,$D9,$DA,$DB,$CC,$CD,$BE,$BF
+
+LineGuideData0F:      db $A0,$91,$92,$83,$74,$65,$56,$47
+                      db $38,$29,$19,$0A
+
+LineGuideData10:      db $F0,$E1,$D2,$D2
+                      db $C3,$B4,$A5,$A5,$96,$87,$78,$78
+                      db $69,$5A,$4B,$4B,$3C,$2D,$1E,$1E
+                      db $0F
+
+LineGuideData11:      db $00,$11,$22,$22,$33,$44,$55
+                      db $55,$66,$77,$88,$88,$99,$AA,$BB
+                      db $BB,$CC,$DD,$EE,$EE,$FF
+
+LineGuideData12:      db $F8,$E8
+                      db $D9,$C9,$BA,$AA,$9B,$8B,$7C,$6C
+                      db $5D,$4D,$3E,$2E,$1F,$0F
+
+LineGuideData13:      db $00,$10
+                      db $21,$31,$42,$52,$63,$73,$84,$94
+                      db $A5,$B5,$C6,$D6,$E7,$F7
+
+LineGuideData14:      db $F0,$E0
+                      db $D1,$C1,$B2,$A2,$93,$83,$74,$64
+                      db $55,$45,$36,$26,$17,$07
+
+LineGuideData15:      db $08,$18
+                      db $29,$39,$4A,$5A,$6B,$7B,$8C,$9C
+                      db $AD,$BD,$CE,$DE,$EF,$FF
+
+LineGuideData16:      db $F0,$F1
+                      db $E2,$E3,$D4,$D5,$C6,$C7,$B8,$B9
+                      db $AA,$AB,$9C,$9D,$8E,$8F
+
+LineGuideData17:      db $70,$71
+                      db $62,$63,$54,$55,$46,$47,$38,$39
+                      db $2A,$2B,$1C,$1D,$0E,$0F
+
+LineGuideData18:      db $00,$01
+                      db $12,$13,$24,$25,$36,$37,$48,$49
+                      db $5A,$5B,$6C,$6D,$7E,$7F
+
+LineGuideData19:      db $80,$81
+                      db $92,$93,$A4,$A5,$B6,$B7,$C8,$C9
+                      db $DA,$DB,$EC,$ED,$FE,$FF
+
+LineGuideData1A:      db $00,$10
+                      db $20,$30,$40,$50,$60,$70,$80,$90
+                      db $A0,$B0,$C0,$D0,$E0,$F0
+
+LineGuideData1B:      db $0F,$1F
+                      db $2F,$3F,$4F,$5F,$6F,$7F,$8F,$9F
+                      db $AF,$BF,$CF,$DF,$EF,$FF
+
+LineGuideData1C:      db $00,$01
+                      db $02,$03,$04,$05,$06,$07,$08,$09
+                      db $0A,$0B,$0C,$0D,$0E,$0F
+
+LineGuideData1D:      db $F0,$F1
+                      db $F2,$F3,$F4,$F5,$F6,$F7,$F8,$F9
+                      db $FA,$FB,$FC,$FD,$FE,$FF
+
+LineGuideData1E:      db $F0,$E1
+                      db $D2,$D2,$C3,$B4,$A5,$A5,$96,$87
+                      db $78,$78,$69,$5A,$4B,$4B,$3C,$2D
+                      db $1E,$1E,$0F
+
+LineGuideData1F:      db $00,$11,$22,$22,$33
+                      db $44,$55,$55,$66,$77,$88,$88,$99
+                      db $AA,$BB,$BB,$CC,$DD,$EE,$EE,$FF
+
+DATA_07FBF3:          db LineGuideData00
+                      db LineGuideData01
+                      db LineGuideData02
+                      db LineGuideData03
+                      db LineGuideData04
+                      db LineGuideData05
+                      db LineGuideData06
+                      db LineGuideData07
+                      db LineGuideData08
+                      db LineGuideData09
+                      db LineGuideData0A
+                      db LineGuideData0B
+                      db LineGuideData0C
+                      db LineGuideData0D
+                      db LineGuideData0E
+                      db LineGuideData0F
+                      db LineGuideData10
+                      db LineGuideData11
+                      db LineGuideData12
+                      db LineGuideData13
+                      db LineGuideData14
+                      db LineGuideData15
+                      db LineGuideData16
+                      db LineGuideData17
+                      db LineGuideData18
+                      db LineGuideData19
+                      db LineGuideData1A
+                      db LineGuideData1B
+                      db LineGuideData1C
+                      db LineGuideData1D
+                      db LineGuideData1E
+                      db LineGuideData1F
+
+DATA_07FC13:          db LineGuideData00>>8
+                      db LineGuideData01>>8
+                      db LineGuideData02>>8
+                      db LineGuideData03>>8
+                      db LineGuideData04>>8
+                      db LineGuideData05>>8
+                      db LineGuideData06>>8
+                      db LineGuideData07>>8
+                      db LineGuideData08>>8
+                      db LineGuideData09>>8
+                      db LineGuideData0A>>8
+                      db LineGuideData0B>>8
+                      db LineGuideData0C>>8
+                      db LineGuideData0D>>8
+                      db LineGuideData0E>>8
+                      db LineGuideData0F>>8
+                      db LineGuideData10>>8
+                      db LineGuideData11>>8
+                      db LineGuideData12>>8
+                      db LineGuideData13>>8
+                      db LineGuideData14>>8
+                      db LineGuideData15>>8
+                      db LineGuideData16>>8
+                      db LineGuideData17>>8
+                      db LineGuideData18>>8
+                      db LineGuideData19>>8
+                      db LineGuideData1A>>8
+                      db LineGuideData1B>>8
+                      db LineGuideData1C>>8
+                      db LineGuideData1D>>8
+                      db LineGuideData1E>>8
+                      db LineGuideData1F>>8
+
+DATA_07FC33:          db $E0,$20,$E0,$20
+
+DATA_07FC37:          db $F0,$F0,$10,$10
+
+CODE_07FC3B:          PHX
+                      LDX.B #$03
+                    - JSL CODE_07FC47
+                      DEX
+                      BPL -
+                      PLX
+                      RTL
+
+CODE_07FC47:          LDY.B #$07                                ; \ Find a free extended sprite slot
+CODE_07FC49:          LDA.W ExtSpriteNumber,Y                   ; |
+                      BEQ CODE_07FC52                           ; |
+                      DEY                                       ; |
+                      BPL CODE_07FC49                           ; |
+                      RTL                                       ; / Return if no free slots
+
+CODE_07FC52:          LDA.B #$10                                ; \ Extended sprite = Spin jump stars
+                      STA.W ExtSpriteNumber,Y                   ; /
+                      PHX
+                      LDX.W CurSpriteProcess                    ; X = Sprite index
+                      LDA.B SpriteYPosLow,X
+                      CLC
+                      ADC.B #$04
+                      STA.W ExtSpriteYPosLow,Y
+                      LDA.W SpriteXPosHigh,X
+                      ADC.B #$00
+                      STA.W ExtSpriteYPosHigh,Y
+                      LDA.B SpriteXPosLow,X
+                      CLC
+                      ADC.B #$04
+                      STA.W ExtSpriteXPosLow,Y
+                      LDA.W SpriteYPosHigh,X
+                      ADC.B #$00
+                      STA.W ExtSpriteXPosHigh,Y
+                      PLX
+                      LDA.L DATA_07FC33,X
+                      STA.W ExtSpriteXSpeed,Y
+                      LDA.L DATA_07FC37,X
+                      STA.W ExtSpriteYSpeed,Y
+                      LDA.B #$17
+                      STA.W ExtSpriteMisc176F,Y
+                      RTL
+
+                      padbyte $FF : pad $088000

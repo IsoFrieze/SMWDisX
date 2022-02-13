@@ -98,4 +98,3 @@ endmacro
 ; select a constant value depending on the region
 ; easier to read than an if/else block for a single LDA instruction for example
 function con(u, j, ss, e0, e1) = select(equal(!_VER,!__VER_J),u,select(equal(!_VER,!__VER_U),j,select(equal(!_VER,!__VER_SS),ss,select(equal(!_VER,!__VER_E0),e0,e1))))
-
