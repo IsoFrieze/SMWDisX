@@ -1268,7 +1268,7 @@ HW_AUXIO1: skip 1
 HW_TIMER0: skip 1
 HW_TIMER1: skip 1
 HW_TIMER2: skip 1
-COUNTER0: skip 1
+HW_COUNTER0: skip 1
 HW_COUNTER1: skip 1
 HW_COUNTER2: skip 1
 NoteLength: skip 16

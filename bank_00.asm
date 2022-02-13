@@ -2125,7 +2125,7 @@ GetGameMode:          LDA.W GameMode                            ; Load game mode
                       dw GameMode06                             ; 06 - title screen spotlight
                       dw GameMode07                             ; 07 - title screen
                       dw GameMode08                             ; 08 - file select
-                      dw GameMdoe09                             ; 09 - file delete
+                      dw GameMode09                             ; 09 - file delete
                       dw GameMode0A                             ; 0A - player select
                       dw GMTransition                           ; 0B - fade out to overworld
                       dw GameMode0C                             ; 0C - load overworld
@@ -3008,7 +3008,7 @@ Return009B16:         RTS
                    if ver_is_console(!_VER)                     ;\=============== J, U, E0, & E1 ================
 DATA_009B17:          db $04,$02,$01                            ;!
                                                                 ;!
-GameMdoe09:           REP #$20                                  ;! A->16
+GameMode09:           REP #$20                                  ;! A->16
                       LDA.W #$39C9                              ;!
                       LDY.B #$60                                ;!
                       JSR CODE_009D30                           ;!
@@ -3017,7 +3017,7 @@ GameMdoe09:           REP #$20                                  ;! A->16
                       AND.B #$40                                ;!
                       BEQ +                                     ;!
                    else                                         ;<======================== SS ===================
-GameMdoe09:                                                     ;!
+GameMode09:                                                     ;!
                    endif                                        ;/===============================================
 CODE_009B2C:          DEC.W GameMode
                       DEC.W GameMode
