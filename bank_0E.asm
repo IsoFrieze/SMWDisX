@@ -1,71 +1,71 @@
                       ORG $0E8000                               ;;  J |  U + SS / E0 \ E1 ;
                                                                 ;;                        ;
 SPC700Engine:         dw SoundEffects-SPC700Engine-4            ;;8000|8000+8000/8000\8000;
-                      dw !SPCEngine                             ;;8002|8002+8002/8002\8002;
+                      dw SPCEngine                              ;;8002|8002+8002/8002\8002;
                                                                 ;;                        ;
                       arch spc700                               ;;                        ;
-                      base !SPCEngine                           ;;                        ;
+                      base SPCEngine                            ;;                        ;
                                                                 ;;                        ;
 APU_Start:            CLRP                                      ;;0500|0500+0500/0500\0500;
                       MOV X,#$CF                                ;;0501|0501+0501/0501\0501;
                       MOV SP,X                                  ;;0503|0503+0503/0503\0503; set SP to (01)cf;
                       MOV A,#$00                                ;;0504|0504+0504/0504\0504;
-                      MOV !ARam_0386,A                          ;;0506|0506+0506/0506\0506;
-                      MOV !ARam_0387,A                          ;;0509|0509+0509/0509\0509;
-                      MOV !ARam_0388,A                          ;;050C|050C+050C/050C\050C;
-                      MOV !ARam_0389,A                          ;;050F|050F+050F/050F\050F; zero 0386-9 
+                      MOV.W ARam_0386,A                         ;;0506|0506+0506/0506\0506;
+                      MOV.W ARam_0387,A                         ;;0509|0509+0509/0509\0509;
+                      MOV.W ARam_0388,A                         ;;050C|050C+050C/050C\050C;
+                      MOV.W ARam_0389,A                         ;;050F|050F+050F/050F\050F; zero 0386-9 
                       MOV X,A                                   ;;0512|0512+0512/0512\0512;
                     - MOV (X+),A                                ;;0513|0513+0513/0513\0513;
                       CMP X,#$E8                                ;;0514|0514+0514/0514\0514;
                       BNE -                                     ;;0516|0516+0516/0516\0516; zero 00-e7;
                    if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
-                      MOV A,$04FF                               ;;0518                    ;
+                      MOV.W A,HotReset5A                        ;;0518                    ;
                       CMP A,#$5A                                ;;051B                    ;
                       BNE APU_0518                              ;;051D                    ;
-                      MOV A,$04FE                               ;;051F                    ;
+                      MOV.W A,HotResetA5                        ;;051F                    ;
                       CMP A,#$A5                                ;;0522                    ;
                       BEQ JAPU_0535                             ;;0524                    ;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
 APU_0518:             MOV A,#$00                                ;;0526|0518+0518/0518\0518;
                       MOV X,A                                   ;;0528|051A+051A/051A\051A;
-                    - MOV !ARam_0200+X,A                        ;;0529|051B+051B/051B\051B;
+                    - MOV.W ARam_0200+X,A                       ;;0529|051B+051B/051B\051B;
                       INC X                                     ;;052C|051E+051E/051E\051E;
                       BNE -                                     ;;052D|051F+051F/051F\051F; zero 0200-02ff;
-                    - MOV !ARam_0300+X,A                        ;;052F|0521+0521/0521\0521;
+                    - MOV.W ARam_0300+X,A                       ;;052F|0521+0521/0521\0521;
                       INC X                                     ;;0532|0524+0524/0524\0524;
                       BNE -                                     ;;0533|0525+0525/0525\0525; zero 0300-03ff;
                    if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 JAPU_0535:            MOV A,#$5A                                ;;0535                    ;
-                      MOV $04FF,A                               ;;0537                    ;
+                      MOV.W HotReset5A,A                        ;;0537                    ;
                       MOV A,#$A5                                ;;053A                    ;
-                      MOV $04FE,A                               ;;053C                    ;
+                      MOV.W HotResetA5,A                        ;;053C                    ;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                       MOV X,#$0B                                ;;053F|0527+0527/0527\0527;
-                    - MOV A,DefaultDSPRegs+X                    ;;0541|0529+0529/0529\0529;
+                    - MOV.W A,DefaultDSPRegs+X                  ;;0541|0529+0529/0529\0529;
                       MOV Y,A                                   ;;0544|052C+052C/052C\052C;
-                      MOV A,DefaultDSPVals+X                    ;;0545|052D+052D/052D\052D;
+                      MOV.W A,DefaultDSPVals+X                  ;;0545|052D+052D/052D\052D;
                       CALL WriteDSPReg                          ;;0548|0530+0530/0530\0530; write A to DSP reg Y;
                       DEC X                                     ;;054B|0533+0533/0533\0533;
                       BPL -                                     ;;054C|0534+0534/0534\0534; set initial DSP reg values;
                       MOV A,#$F0                                ;;054E|0536+0536/0536\0536;
-                      MOV !SPCCONTROL,A                         ;;0550|0538+0538/0538\0538; reset ports, disable timers 
+                      MOV.W SPCCONTROL,A                        ;;0550|0538+0538/0538\0538; reset ports, disable timers 
                       MOV A,#$10                                ;;0553|053B+053B/053B\053B;
-                      MOV !TIMER0,A                             ;;0555|053D+053D/053D\053D; set timer0 freq to 2ms 
+                      MOV.W TIMER0,A                            ;;0555|053D+053D/053D\053D; set timer0 freq to 2ms 
                       MOV A,#$36                                ;;0558|0540+0540/0540\0540;
-                      MOV !MasterTempo+1,A                      ;;055A|0542+0542/0542\0542; set $51 to #$36 
+                      MOV.B MasterTempo+1,A                     ;;055A|0542+0542/0542\0542; set $51 to #$36 
                       MOV A,#$01                                ;;055C|0544+0544/0544\0544;
-                      MOV !SPCCONTROL,A                         ;;055E|0546+0546/0546\0546; start timer 0 
+                      MOV.W SPCCONTROL,A                        ;;055E|0546+0546/0546\0546; start timer 0 
                                                                 ;;                        ;
-APU_Loop:             MOV Y,!COUNTER0                           ;;0561|0549+0549/0549\0549; main loop 
+APU_Loop:             MOV.W Y,COUNTER0                          ;;0561|0549+0549/0549\0549; main loop 
                       BEQ APU_Loop                              ;;0564|054C+054C/054C\054C; wait for counter 0 increment;
                       PUSH Y                                    ;;0566|054E+054E/054E\054E;
                       MOV A,#$38                                ;;0567|054F+054F/054F\054F;
                       MUL YA                                    ;;0569|0551+0551/0551\0551;
                       CLRC                                      ;;056A|0552+0552/0552\0552;
-                      ADC A,!SPCTimer                           ;;056B|0553+0553/0553\0553;
-                      MOV !SPCTimer,A                           ;;056D|0555+0555/0555\0555;
+                      ADC.B A,SPCTimer                          ;;056B|0553+0553/0553\0553;
+                      MOV.B SPCTimer,A                          ;;056D|0555+0555/0555\0555;
                       BCC +                                     ;;056F|0557+0557/0557\0557;
-                      INC !SPCTimer+1                           ;;0571|0559+0559/0559\0559;
+                      INC.B SPCTimer+1                          ;;0571|0559+0559/0559\0559;
                       CALL APU_06AE                             ;;0573|055B+055B/055B\055B;
                       MOV X,#$00                                ;;0576|055E+055E/055E\055E;
                       CALL CopyToSNES                           ;;0578|0560+0560/0560\0560; read/send APU0;
@@ -75,28 +75,28 @@ APU_Loop:             MOV Y,!COUNTER0                           ;;0561|0549+0549
                       CALL APU_0816                             ;;0583|056B+056B/056B\056B;
                       MOV X,#$03                                ;;0586|056E+056E/056E\056E;
                       CALL CopyToSNES                           ;;0588|0570+0570/0570\0570; read/send APU3;
-                    + MOV A,!MasterTempo+1                      ;;058B|0573+0573/0573\0573;
+                    + MOV.B A,MasterTempo+1                     ;;058B|0573+0573/0573\0573;
                       POP Y                                     ;;058D|0575+0575/0575\0575;
                       MUL YA                                    ;;058E|0576+0576/0576\0576;
                       CLRC                                      ;;058F|0577+0577/0577\0577;
-                      ADC A,!ARam_49                            ;;0590|0578+0578/0578\0578;
-                      MOV !ARam_49,A                            ;;0592|057A+057A/057A\057A;
+                      ADC.B A,ARam_49                           ;;0590|0578+0578/0578\0578;
+                      MOV.B ARam_49,A                           ;;0592|057A+057A/057A\057A;
                       BCC APU_058D                              ;;0594|057C+057C/057C\057C;
-                      MOV A,!ARam_0388                          ;;0596|057E+057E/057E\057E;
+                      MOV.W A,ARam_0388                         ;;0596|057E+057E/057E\057E;
                       BNE +                                     ;;0599|0581+0581/0581\0581;
                       CALL APU_0BC0                             ;;059B|0583+0583/0583\0583;
                     + MOV X,#$02                                ;;059E|0586+0586/0586\0586;
                       CALL CopyToSNES                           ;;05A0|0588+0588/0588\0588; read/send APU2;
                       BRA APU_Loop                              ;;05A3|058B+058B/058B\058B; restart main loop;
-APU_058D:             MOV A,!SPCOutBuffer+2                     ;;05A5|058D+058D/058D\058D; if writing 0 to APU2 then 
+APU_058D:             MOV.B A,SPCOutBuffer+2                    ;;05A5|058D+058D/058D\058D; if writing 0 to APU2 then 
                       BEQ APU_Loop                              ;;05A7|058F+058F/058F\058F; restart main loop;
                                                                 ;;                        ;
                       MOV X,#$0E                                ;;05A9|0591+0591/0591\0591; foreach voice;
-                      MOV !CurrentChannel,#$80                  ;;05AB|0593+0593/0593\0593;
-                    - MOV A,!VoPhrasePtr+1+X                    ;;05AE|0596+0596/0596\0596;
+                      MOV.B CurrentChannel,#$80                 ;;05AB|0593+0593/0593\0593;
+                    - MOV.B A,VoPhrasePtr+1+X                   ;;05AE|0596+0596/0596\0596;
                       BEQ +                                     ;;05B0|0598+0598/0598\0598; skip call if vptr == 0;
                       CALL APU_1198                             ;;05B2|059A+059A/059A\059A; do per-voice fades/dsps?;
-                    + LSR !CurrentChannel                       ;;05B5|059D+059D/059D\059D;
+                    + LSR.B CurrentChannel                      ;;05B5|059D+059D/059D\059D;
                       DEC X                                     ;;05B7|059F+059F/059F\059F;
                       DEC X                                     ;;05B8|05A0+05A0/05A0\05A0;
                       BPL -                                     ;;05B9|05A1+05A1/05A1\05A1; loop for each voice;
@@ -104,20 +104,20 @@ APU_058D:             MOV A,!SPCOutBuffer+2                     ;;05A5|058D+058D
                                                                 ;;                        ;
 CopyToSNES:           MOV A,X                                   ;;05BD|05A5+05A5/05A5\05A5; SEND 04+X TO APUX; get APUX to 00+X with "debounce"?;
                       MOV Y,A                                   ;;05BE|05A6+05A6/05A6\05A6;
-                      MOV A,!SPCOutBuffer+X                     ;;05BF|05A7+05A7/05A7\05A7;
-                      MOV !SNESIO0+X,A                          ;;05C1|05A9+05A9/05A9\05A9;
-                    - MOV A,!SNESIO0+X                          ;;05C4|05AC+05AC/05AC\05AC;
-                      CMP A,!SNESIO0+X                          ;;05C7|05AF+05AF/05AF\05AF;
+                      MOV.B A,SPCOutBuffer+X                    ;;05BF|05A7+05A7/05A7\05A7;
+                      MOV.W SNESIO0+X,A                         ;;05C1|05A9+05A9/05A9\05A9;
+                    - MOV.W A,SNESIO0+X                         ;;05C4|05AC+05AC/05AC\05AC;
+                      CMP.W A,SNESIO0+X                         ;;05C7|05AF+05AF/05AF\05AF;
                       BNE -                                     ;;05CA|05B2+05B2/05B2\05B2;
                       MOV Y,A                                   ;;05CC|05B4+05B4/05B4\05B4;
-                      MOV A,!SPCInBuffer+X                      ;;05CD|05B5+05B5/05B5\05B5;
-                      MOV !SPCInBuffer+X,Y                      ;;05CF|05B7+05B7/05B7\05B7;
-                      CBNE !SPCInBuffer+X,+                     ;;05D1|05B9+05B9/05B9\05B9;
+                      MOV.B A,SPCInBuffer+X                     ;;05CD|05B5+05B5/05B5\05B5;
+                      MOV.B SPCInBuffer+X,Y                     ;;05CF|05B7+05B7/05B7\05B7;
+                      CBNE.B SPCInBuffer+X,+                    ;;05D1|05B9+05B9/05B9\05B9;
                       MOV Y,#$00                                ;;05D4|05BC+05BC/05BC\05BC;
-                      MOV !SPCInEdge+X,Y                        ;;05D6|05BE+05BE/05BE\05BE;
+                      MOV.B SPCInEdge+X,Y                       ;;05D6|05BE+05BE/05BE\05BE;
                       RET                                       ;;05D8|05C0+05C0/05C0\05C0; return with old value in A;
                                                                 ;;                        ;
-                    + MOV !SPCInEdge+X,Y                        ;;05D9|05C1+05C1/05C1\05C1;
+                    + MOV.B SPCInEdge+X,Y                       ;;05D9|05C1+05C1/05C1\05C1;
                       MOV A,Y                                   ;;05DB|05C3+05C3/05C3\05C3;
                       RET                                       ;;05DC|05C4+05C4/05C4\05C4; return with new value in A;
                                                                 ;;                        ;
@@ -127,213 +127,213 @@ HandleVCmd:           CMP A,#$D0                                ;;05DD|05C5+05C5
                       BCC APU_05E3                              ;;05E3|05CB+05CB/05CB\05CB; normal notenum OR $80;
                     - RET                                       ;;05E5|05CD+05CD/05CD\05CD;
                                                                 ;;                        ;
-                    + MOV !VoInstrument+1+X,A                   ;;05E6|05CE+05CE/05CE\05CE;
+                    + MOV.B VoInstrument+1+X,A                  ;;05E6|05CE+05CE/05CE\05CE;
                       SETC                                      ;;05E8|05D0+05D0/05D0\05D0;
                       SBC A,#$D0                                ;;05E9|05D1+05D1/05D1\05D1;
                       MOV Y,#$06                                ;;05EB|05D3+05D3/05D3\05D3;
-                      MOV !ARam_14,#$A5                         ;;05ED|05D5+05D5/05D5\05D5;
-                      MOV !ARam_15,#$5F                         ;;05F0|05D8+05D8/05D8\05D8;
+                      MOV ARam_14,#$A5                          ;;05ED|05D5+05D5/05D5\05D5;
+                      MOV ARam_15,#$5F                          ;;05F0|05D8+05D8/05D8\05D8;
                       CALL APU_0D56                             ;;05F3|05DB+05DB/05DB\05DB; set sample A-$D0 in bank $5FA5 width 6;
                       BNE -                                     ;;05F6|05DE+05DE/05DE\05DE; return if 1D vbit set;
                       INC Y                                     ;;05F8|05E0+05E0/05E0\05E0;
-                      MOV A,(!ARam_14)+Y                        ;;05F9|05E1+05E1/05E1\05E1; get perc note num from instr tbl 
+                      MOV.B A,(ARam_14)+Y                       ;;05F9|05E1+05E1/05E1\05E1; get perc note num from instr tbl 
 APU_05E3:             AND A,#$7F                                ;;05FB|05E3+05E3/05E3\05E3;
                       CLRC                                      ;;05FD|05E5+05E5/05E5\05E5;
-                      ADC A,!MasterTranspose                    ;;05FE|05E6+05E6/05E6\05E6; add global transpose 
-                      MOV !ARam_02B0+1+X,A                      ;;0600|05E8+05E8/05E8\05E8;
-                      MOV A,!ARam_02D0+1+X                      ;;0603|05EB+05EB/05EB\05EB;
-                      MOV !ARam_02B0+X,A                        ;;0606|05EE+05EE/05EE\05EE;
+                      ADC.B A,MasterTranspose                   ;;05FE|05E6+05E6/05E6\05E6; add global transpose 
+                      MOV.W ARam_02B0+1+X,A                     ;;0600|05E8+05E8/05E8\05E8;
+                      MOV.W A,ARam_02D0+1+X                     ;;0603|05EB+05EB/05EB\05EB;
+                      MOV.W ARam_02B0+X,A                       ;;0606|05EE+05EE/05EE\05EE;
                       MOV A,#$00                                ;;0609|05F1+05F1/05F1\05F1;
-                      MOV !ARam_0330+X,A                        ;;060B|05F3+05F3/05F3\05F3;
-                      MOV !ARam_0360+X,A                        ;;060E|05F6+05F6/05F6\05F6;
-                      MOV !VoVibrato+X,A                        ;;0611|05F9+05F9/05F9\05F9;
-                      MOV !ARam_0110+X,A                        ;;0613|05FB+05FB/05FB\05FB;
-                      MOV !ARam_B0+X,A                          ;;0616|05FE+05FE/05FE\05FE;
-                      OR (!ARam_5C),(!CurrentChannel)           ;;0618|0600+0600/0600\0600; set volume changed flg 
-                      OR (!ARam_47),(!CurrentChannel)           ;;061B|0603+0603/0603\0603; set key on shadow vbit 
-                      MOV A,!ARam_0300+X                        ;;061E|0606+0606/0606\0606;
-                      MOV !VoPitchSlide+X,A                     ;;0621|0609+0609/0609\0609;
+                      MOV.W ARam_0330+X,A                       ;;060B|05F3+05F3/05F3\05F3;
+                      MOV.W ARam_0360+X,A                       ;;060E|05F6+05F6/05F6\05F6;
+                      MOV.B VoVibrato+X,A                       ;;0611|05F9+05F9/05F9\05F9;
+                      MOV.W ARam_0110+X,A                       ;;0613|05FB+05FB/05FB\05FB;
+                      MOV.B ARam_B0+X,A                         ;;0616|05FE+05FE/05FE\05FE;
+                      OR.B (ARam_5C),(CurrentChannel)           ;;0618|0600+0600/0600\0600; set volume changed flg 
+                      OR.B (ARam_47),(CurrentChannel)           ;;061B|0603+0603/0603\0603; set key on shadow vbit 
+                      MOV.W A,ARam_0300+X                       ;;061E|0606+0606/0606\0606;
+                      MOV.B VoPitchSlide+X,A                    ;;0621|0609+0609/0609\0609;
                       BEQ APU_062B                              ;;0623|060B+060B/060B\060B;
-                      MOV A,!ARam_0300+1+X                      ;;0625|060D+060D/060D\060D;
-                      MOV !VoPitchSlide+1+X,A                   ;;0628|0610+0610/0610\0610;
-                      MOV A,!ARam_0320+X                        ;;062A|0612+0612/0612\0612;
+                      MOV.W A,ARam_0300+1+X                     ;;0625|060D+060D/060D\060D;
+                      MOV.B VoPitchSlide+1+X,A                  ;;0628|0610+0610/0610\0610;
+                      MOV.W A,ARam_0320+X                       ;;062A|0612+0612/0612\0612;
                       BNE +                                     ;;062D|0615+0615/0615\0615;
-                      MOV A,!ARam_02B0+1+X                      ;;062F|0617+0617/0617\0617;
+                      MOV.W A,ARam_02B0+1+X                     ;;062F|0617+0617/0617\0617;
                       SETC                                      ;;0632|061A+061A/061A\061A;
-                      SBC A,!ARam_0320+1+X                      ;;0633|061B+061B/061B\061B;
-                      MOV !ARam_02B0+1+X,A                      ;;0636|061E+061E/061E\061E;
-                    + MOV A,!ARam_0320+1+X                      ;;0639|0621+0621/0621\0621;
+                      SBC.W A,ARam_0320+1+X                     ;;0633|061B+061B/061B\061B;
+                      MOV.W ARam_02B0+1+X,A                     ;;0636|061E+061E/061E\061E;
+                    + MOV.W A,ARam_0320+1+X                     ;;0639|0621+0621/0621\0621;
                       CLRC                                      ;;063C|0624+0624/0624\0624;
-                      ADC A,!ARam_02B0+1+X                      ;;063D|0625+0625/0625\0625;
+                      ADC.W A,ARam_02B0+1+X                     ;;063D|0625+0625/0625\0625;
                       CALL APU_0F5D                             ;;0640|0628+0628/0628\0628;
-APU_062B:             MOV A,!ARam_02B0+1+X                      ;;0643|062B+062B/062B\062B;
+APU_062B:             MOV.W A,ARam_02B0+1+X                     ;;0643|062B+062B/062B\062B;
                       MOV Y,A                                   ;;0646|062E+062E/062E\062E;
-                      MOV A,!ARam_02B0+X                        ;;0647|062F+062F/062F\062F;
-                      MOVW !ARam_10,YA                          ;;064A|0632+0632/0632\0632;
+                      MOV.W A,ARam_02B0+X                       ;;0647|062F+062F/062F\062F;
+                      MOVW.B ARam_10,YA                         ;;064A|0632+0632/0632\0632;
                                                                 ;;                        ;
 APU_0634:             MOV Y,#$00                                ;;064C|0634+0634/0634\0634; set DSP pitch from $10/11;
-                      MOV A,!ARam_11                            ;;064E|0636+0636/0636\0636;
+                      MOV.B A,ARam_11                           ;;064E|0636+0636/0636\0636;
                       SETC                                      ;;0650|0638+0638/0638\0638;
                       SBC A,#$34                                ;;0651|0639+0639/0639\0639;
                       BCS APU_0646                              ;;0653|063B+063B/063B\063B;
-                      MOV A,!ARam_11                            ;;0655|063D+063D/063D\063D;
+                      MOV.B A,ARam_11                           ;;0655|063D+063D/063D\063D;
                       SETC                                      ;;0657|063F+063F/063F\063F;
                       SBC A,#$13                                ;;0658|0640+0640/0640\0640;
                       BCS APU_064A                              ;;065A|0642+0642/0642\0642;
                       DEC Y                                     ;;065C|0644+0644/0644\0644;
                       ASL A                                     ;;065D|0645+0645/0645\0645;
-APU_0646:             ADDW YA,!ARam_10                          ;;065E|0646+0646/0646\0646;
-                      MOVW !ARam_10,YA                          ;;0660|0648+0648/0648\0648;
+APU_0646:             ADDW.B YA,ARam_10                         ;;065E|0646+0646/0646\0646;
+                      MOVW.B ARam_10,YA                         ;;0660|0648+0648/0648\0648;
 APU_064A:             PUSH X                                    ;;0662|064A+064A/064A\064A;
-                      MOV A,!ARam_11                            ;;0663|064B+064B/064B\064B;
+                      MOV.B A,ARam_11                           ;;0663|064B+064B/064B\064B;
                       CALL GetPitch                             ;;0665|064D+064D/064D\064D;
-                      MOVW !ARam_14,YA                          ;;0668|0650+0650/0650\0650; $14/5 = pitch for notenum $11 
-                      MOV A,!ARam_11                            ;;066A|0652+0652/0652\0652;
+                      MOVW.B ARam_14,YA                         ;;0668|0650+0650/0650\0650; $14/5 = pitch for notenum $11 
+                      MOV.B A,ARam_11                           ;;066A|0652+0652/0652\0652;
                       INC A                                     ;;066C|0654+0654/0654\0654;
                       CALL GetPitch                             ;;066D|0655+0655/0655\0655; get pitch for notenum $11 + 1;
                       POP X                                     ;;0670|0658+0658/0658\0658;
-                      SUBW YA,!ARam_14                          ;;0671|0659+0659/0659\0659;
+                      SUBW.B YA,ARam_14                         ;;0671|0659+0659/0659\0659;
                       PUSH A                                    ;;0673|065B+065B/065B\065B;
-                      MOV A,!ARam_10                            ;;0674|065C+065C/065C\065C;
+                      MOV.B A,ARam_10                           ;;0674|065C+065C/065C\065C;
                       MUL YA                                    ;;0676|065E+065E/065E\065E; multiply pitch diff by fraction ($10);
-                      ADDW YA,!ARam_14                          ;;0677|065F+065F/065F\065F;
-                      MOVW !ARam_14,YA                          ;;0679|0661+0661/0661\0661;
-                      MOV A,!ARam_10                            ;;067B|0663+0663/0663\0663;
+                      ADDW.B YA,ARam_14                         ;;0677|065F+065F/065F\065F;
+                      MOVW.B ARam_14,YA                         ;;0679|0661+0661/0661\0661;
+                      MOV.B A,ARam_10                           ;;067B|0663+0663/0663\0663;
                       POP Y                                     ;;067D|0665+0665/0665\0665;
                       MUL YA                                    ;;067E|0666+0666/0666\0666;
                       MOV A,Y                                   ;;067F|0667+0667/0667\0667;
                       MOV Y,#$00                                ;;0680|0668+0668/0668\0668;
-                      ADDW YA,!ARam_14                          ;;0682|066A+066A/066A\066A;
-                      MOVW !ARam_14,YA                          ;;0684|066C+066C/066C\066C;
-                      MOV A,!ARam_0210+X                        ;;0686|066E+066E/066E\066E;
-                      MOV Y,!ARam_14                            ;;0689|0671+0671/0671\0671;
+                      ADDW.B YA,ARam_14                         ;;0682|066A+066A/066A\066A;
+                      MOVW.B ARam_14,YA                         ;;0684|066C+066C/066C\066C;
+                      MOV.W A,ARam_0210+X                       ;;0686|066E+066E/066E\066E;
+                      MOV.B Y,ARam_14                           ;;0689|0671+0671/0671\0671;
                       MUL YA                                    ;;068B|0673+0673/0673\0673;
-                      MOVW !PitchValue,YA                       ;;068C|0674+0674/0674\0674;
-                      MOV A,!ARam_0210+X                        ;;068E|0676+0676/0676\0676;
-                      MOV Y,!ARam_15                            ;;0691|0679+0679/0679\0679;
+                      MOVW.B PitchValue,YA                      ;;068C|0674+0674/0674\0674;
+                      MOV.W A,ARam_0210+X                       ;;068E|0676+0676/0676\0676;
+                      MOV.B Y,ARam_15                           ;;0691|0679+0679/0679\0679;
                       MUL YA                                    ;;0693|067B+067B/067B\067B;
                       CLRC                                      ;;0694|067C+067C/067C\067C;
-                      ADC A,!PitchValue+1                       ;;0695|067D+067D/067D\067D;
-                      MOV !PitchValue+1,A                       ;;0697|067F+067F/067F\067F; $16/7 = $14/15 * 0210+X 
+                      ADC.B A,PitchValue+1                      ;;0695|067D+067D/067D\067D;
+                      MOV.B PitchValue+1,A                      ;;0697|067F+067F/067F\067F; $16/7 = $14/15 * 0210+X 
                       MOV A,X                                   ;;0699|0681+0681/0681\0681; set voice X pitch DSP reg from 16/7;
                       XCN A                                     ;;069A|0682+0682/0682\0682; (if vbit clear in 1D);
                       LSR A                                     ;;069B|0683+0683/0683\0683;
                       OR A,#$02                                 ;;069C|0684+0684/0684\0684;
                       MOV Y,A                                   ;;069E|0686+0686/0686\0686; Y = voice X pitch DSP reg;
-                      MOV A,!PitchValue                         ;;069F|0687+0687/0687\0687;
+                      MOV.B A,PitchValue                        ;;069F|0687+0687/0687\0687;
                       CALL WriteDSPRegCond                      ;;06A1|0689+0689/0689\0689;
                       INC Y                                     ;;06A4|068C+068C/068C\068C;
-                      MOV A,!PitchValue+1                       ;;06A5|068D+068D/068D\068D;
+                      MOV.B A,PitchValue+1                      ;;06A5|068D+068D/068D\068D;
                                                                 ;;                        ;
 WriteDSPRegCond:      PUSH A                                    ;;06A7|068F+068F/068F\068F; write A to DSP reg Y if vbit clear in $1D;
-                      MOV A,!CurrentChannel                     ;;06A8|0690+0690/0690\0690;
-                      AND A,!ChannelsMuted                      ;;06AA|0692+0692/0692\0692;
+                      MOV.B A,CurrentChannel                    ;;06A8|0690+0690/0690\0690;
+                      AND.B A,ChannelsMuted                     ;;06AA|0692+0692/0692\0692;
                       POP A                                     ;;06AC|0694+0694/0694\0694;
                       BNE +                                     ;;06AD|0695+0695/0695\0695;
-WriteDSPReg:          MOV !DSPDATA,Y                            ;;06AF|0697+0697/0697\0697; write A to DSP reg Y 
-                      MOV !DSPADDR,A                            ;;06B2|069A+069A/069A\069A;
+WriteDSPReg:          MOV.W DSPDATA,Y                           ;;06AF|0697+0697/0697\0697; write A to DSP reg Y 
+                      MOV.W DSPADDR,A                           ;;06B2|069A+069A/069A\069A;
                     + RET                                       ;;06B5|069D+069D/069D\069D;
                                                                 ;;                        ;
 APU_069E:             MOV A,#$0A                                ;;06B6|069E+069E/069E\069E;
-                      MOV !ARam_0387,A                          ;;06B8|06A0+06A0/06A0\06A0;
-                      MOV A,!MasterTempo+1                      ;;06BB|06A3+06A3/06A3\06A3;
+                      MOV.W ARam_0387,A                         ;;06B8|06A0+06A0/06A0\06A0;
+                      MOV.B A,MasterTempo+1                     ;;06BB|06A3+06A3/06A3\06A3;
                       CALL APU_0E14                             ;;06BD|06A5+06A5/06A5\06A5; ADD #$0A TO TEMPO; zero tempo low;
                       MOV A,#$1D                                ;;06C0|06A8+06A8/06A8\06A8;
-                      MOV !SPCInEdge+3,A                        ;;06C2|06AA+06AA/06AA\06AA;
+                      MOV.B SPCInEdge+3,A                       ;;06C2|06AA+06AA/06AA\06AA;
                       BRA APU_06D2                              ;;06C4|06AC+06AC/06AC\06AC;
                                                                 ;;                        ;
-APU_06AE:             CMP !SPCInEdge,#$12                       ;;06C6|06AE+06AE/06AE\06AE;
+APU_06AE:             CMP.B SPCInEdge,#$12                      ;;06C6|06AE+06AE/06AE\06AE;
                       BEQ APU_06C2                              ;;06C9|06B1+06B1/06B1\06B1;
-                      CMP !SPCInEdge,#$11                       ;;06CB|06B3+06B3/06B3\06B3;
+                      CMP.B SPCInEdge,#$11                      ;;06CB|06B3+06B3/06B3\06B3;
                       BEQ APU_06C2                              ;;06CE|06B6+06B6/06B6\06B6;
-                      CMP !SPCOutBuffer,#$11                    ;;06D0|06B8+06B8/06B8\06B8;
+                      CMP.B SPCOutBuffer,#$11                   ;;06D0|06B8+06B8/06B8\06B8;
                       BEQ APU_06C8                              ;;06D3|06BB+06BB/06BB\06BB;
-                      CMP !SPCOutBuffer,#$1D                    ;;06D5|06BD+06BD/06BD\06BD;
+                      CMP.B SPCOutBuffer,#$1D                   ;;06D5|06BD+06BD/06BD\06BD;
                       BEQ APU_06C8                              ;;06D8|06C0+06C0/06C0\06C0;
-APU_06C2:             MOV A,!SPCInEdge                          ;;06DA|06C2+06C2/06C2\06C2;
+APU_06C2:             MOV.B A,SPCInEdge                         ;;06DA|06C2+06C2/06C2\06C2;
                       BMI APU_069E                              ;;06DC|06C4+06C4/06C4\06C4;
                       BNE APU_06D2                              ;;06DE|06C6+06C6/06C6\06C6;
-APU_06C8:             MOV A,!ARam_0382                          ;;06E0|06C8+06C8/06C8\06C8;
+APU_06C8:             MOV.W A,ARam_0382                         ;;06E0|06C8+06C8/06C8\06C8;
                       BNE APU_071A                              ;;06E3|06CB+06CB/06CB\06CB;
-                      MOV A,!SPCOutBuffer                       ;;06E5|06CD+06CD/06CD\06CD;
+                      MOV.B A,SPCOutBuffer                      ;;06E5|06CD+06CD/06CD\06CD;
                       BNE APU_074D                              ;;06E7|06CF+06CF/06CF\06CF;
 APU_06D1:             RET                                       ;;06E9|06D1+06D1/06D1\06D1;
                                                                 ;;                        ;
-APU_06D2:             MOV !SPCOutBuffer,A                       ;;06EA|06D2+06D2/06D2\06D2;
-                      MOV A,!ARam_0388                          ;;06EC|06D4+06D4/06D4\06D4;
+APU_06D2:             MOV.B SPCOutBuffer,A                      ;;06EA|06D2+06D2/06D2\06D2;
+                      MOV.W A,ARam_0388                         ;;06EC|06D4+06D4/06D4\06D4;
                       BEQ APU_06F7                              ;;06EF|06D7+06D7/06D7\06D7;
                       MOV A,#$00                                ;;06F1|06D9+06D9/06D9\06D9;
-                      MOV !ARam_0388,A                          ;;06F3|06DB+06DB/06DB\06DB;
-                      MOV A,!ARam_0389                          ;;06F6|06DE+06DE/06DE\06DE;
+                      MOV.W ARam_0388,A                         ;;06F3|06DB+06DB/06DB\06DB;
+                      MOV.W A,ARam_0389                         ;;06F6|06DE+06DE/06DE\06DE;
                       BNE +                                     ;;06F9|06E1+06E1/06E1\06E1;
                       MOV A,#$20                                ;;06FB|06E3+06E3/06E3\06E3;
                       BRA APU_06F2                              ;;06FD|06E5+06E5/06E5\06E5; disable echo write;
                     + MOV A,#$16                                ;;06FF|06E7+06E7/06E7\06E7;
-                      MOV !EchoVolLeft+1,A                      ;;0701|06E9+06E9/06E9\06E9;
-                      MOV !EchoVolRight+1,A                     ;;0703|06EB+06EB/06EB\06EB;
+                      MOV.B EchoVolLeft+1,A                     ;;0701|06E9+06E9/06E9\06E9;
+                      MOV.B EchoVolRight+1,A                    ;;0703|06EB+06EB/06EB\06EB;
                       CALL APU_0EEB                             ;;0705|06ED+06ED/06ED\06ED; set echo vol L/R to #$16;
                       MOV A,#$00                                ;;0708|06F0+06F0/06F0\06F0;
 APU_06F2:             MOV Y,#$6C                                ;;070A|06F2+06F2/06F2\06F2;
                       CALL WriteDSPReg                          ;;070C|06F4+06F4/06F4\06F4; enable echo write;
 APU_06F7:             MOV A,#$02                                ;;070F|06F7+06F7/06F7\06F7;
-                      MOV !ARam_0382,A                          ;;0711|06F9+06F9/06F9\06F9;
-                      CMP !SPCOutBuffer,#$11                    ;;0714|06FC+06FC/06FC\06FC;
+                      MOV.W ARam_0382,A                         ;;0711|06F9+06F9/06F9\06F9;
+                      CMP.B SPCOutBuffer,#$11                   ;;0714|06FC+06FC/06FC\06FC;
                       BNE +                                     ;;0717|06FF+06FF/06FF\06FF;
-                      MOV A,!ARam_0389                          ;;0719|0701+0701/0701\0701;
+                      MOV.W A,ARam_0389                         ;;0719|0701+0701/0701\0701;
                       BEQ +                                     ;;071C|0704+0704/0704\0704;
                       MOV A,#$00                                ;;071E|0706+0706/0706\0706;
                       CALL APU_0F22                             ;;0720|0708+0708/0708\0708;
                     + MOV A,#$10                                ;;0723|070B+070B/070B\070B;
                       MOV Y,#$5C                                ;;0725|070D+070D/070D\070D;
                       CALL WriteDSPReg                          ;;0727|070F+070F/070F\070F; key off voice 4;
-                      SET4 !ChannelsMuted                       ;;072A|0712+0712/0712\0712;
+                      SET4.B ChannelsMuted                      ;;072A|0712+0712/0712\0712;
                       MOV A,#$00                                ;;072C|0714+0714/0714\0714;
-                      MOV !ARam_0300+8,A                        ;;072E|0716+0716/0716\0716;
+                      MOV.W ARam_0300+8,A                       ;;072E|0716+0716/0716\0716;
                       RET                                       ;;0731|0719+0719/0719\0719;
                                                                 ;;                        ;
-APU_071A:             DEC !ARam_0382                            ;;0732|071A+071A/071A\071A; 0382 nonzero 
+APU_071A:             DEC.W ARam_0382                           ;;0732|071A+071A/071A\071A; 0382 nonzero 
                       BNE APU_06D1                              ;;0735|071D+071D/071D\071D; ret;
-APU_071F:             MOV A,!SPCOutBuffer                       ;;0737|071F+071F/071F\071F;
+APU_071F:             MOV.B A,SPCOutBuffer                      ;;0737|071F+071F/071F\071F;
                       ASL A                                     ;;0739|0721+0721/0721\0721;
                       MOV Y,A                                   ;;073A|0722+0722/0722\0722;
-                      MOV A,SFXPtrs1DF9-2+Y                     ;;073B|0723+0723/0723\0723;
-                      MOV !SFX1DF9PhrasePtr,A                   ;;073E|0726+0726/0726\0726;
-                      MOV A,SFXPtrs1DF9-1+Y                     ;;0740|0728+0728/0728\0728;
-                      MOV !SFX1DF9PhrasePtr+1,A                 ;;0743|072B+072B/072B\072B;
+                      MOV.W A,SFXPtrs1DF9-2+Y                   ;;073B|0723+0723/0723\0723;
+                      MOV.B SFX1DF9PhrasePtr,A                  ;;073E|0726+0726/0726\0726;
+                      MOV.W A,SFXPtrs1DF9-1+Y                   ;;0740|0728+0728/0728\0728;
+                      MOV.B SFX1DF9PhrasePtr+1,A                ;;0743|072B+072B/072B\072B;
                       BRA APU_0754                              ;;0745|072D+072D/072D\072D;
-APU_072F:             CMP !SPCOutBuffer,#$11                    ;;0747|072F+072F/072F\072F;
+APU_072F:             CMP.B SPCOutBuffer,#$11                   ;;0747|072F+072F/072F\072F;
                       BNE +                                     ;;074A|0732+0732/0732\0732;
                       MOV A,#$60                                ;;074C|0734+0734/0734\0734;
-                      MOV !ARam_0388,A                          ;;074E|0736+0736/0736\0736;
+                      MOV.W ARam_0388,A                         ;;074E|0736+0736/0736\0736;
                       MOV Y,#$6C                                ;;0751|0739+0739/0739\0739;
                       CALL WriteDSPReg                          ;;0753|073B+073B/073B\073B;
-                    + MOV !SPCOutBuffer,#$00                    ;;0756|073E+073E/073E\073E;
-                      CLR4 !ChannelsMuted                       ;;0759|0741+0741/0741\0741;
+                    + MOV SPCOutBuffer,#$00                     ;;0756|073E+073E/073E\073E;
+                      CLR4.B ChannelsMuted                      ;;0759|0741+0741/0741\0741;
                       MOV X,#$08                                ;;075B|0743+0743/0743\0743;
-                      MOV A,!VoInstrument+9                     ;;075D|0745+0745/0745\0745;
+                      MOV.B A,VoInstrument+9                    ;;075D|0745+0745/0745\0745;
                       BEQ +                                     ;;075F|0747+0747/0747\0747;
                       JMP APU_0D4B                              ;;0761|0749+0749/0749\0749;
                     + RET                                       ;;0764|074C+074C/074C\074C;
                                                                 ;;                        ;
-APU_074D:             DEC !ARam_0380                            ;;0765|074D+074D/074D\074D;
+APU_074D:             DEC.W ARam_0380                           ;;0765|074D+074D/074D\074D;
                       BNE APU_07A6                              ;;0768|0750+0750/0750\0750;
-APU_0752:             INCW !SFX1DF9PhrasePtr                    ;;076A|0752+0752/0752\0752;
+APU_0752:             INCW.B SFX1DF9PhrasePtr                   ;;076A|0752+0752/0752\0752;
 APU_0754:             MOV X,#$00                                ;;076C|0754+0754/0754\0754;
-                      MOV A,(!SFX1DF9PhrasePtr+X)               ;;076E|0756+0756/0756\0756;
+                      MOV.B A,(SFX1DF9PhrasePtr+X)              ;;076E|0756+0756/0756\0756;
                       BEQ APU_072F                              ;;0770|0758+0758/0758\0758;
                       BMI APU_0786                              ;;0772|075A+075A/075A\075A;
-                      MOV !ARam_0381,A                          ;;0774|075C+075C/075C\075C;
-                      INCW !SFX1DF9PhrasePtr                    ;;0777|075F+075F/075F\075F;
-                      MOV A,(!SFX1DF9PhrasePtr+X)               ;;0779|0761+0761/0761\0761;
-                      MOV !ARam_10,A                            ;;077B|0763+0763/0763\0763;
+                      MOV.W ARam_0381,A                         ;;0774|075C+075C/075C\075C;
+                      INCW.B SFX1DF9PhrasePtr                   ;;0777|075F+075F/075F\075F;
+                      MOV.B A,(SFX1DF9PhrasePtr+X)              ;;0779|0761+0761/0761\0761;
+                      MOV.B ARam_10,A                           ;;077B|0763+0763/0763\0763;
                       BMI APU_0786                              ;;077D|0765+0765/0765\0765;
                       MOV Y,#$40                                ;;077F|0767+0767/0767\0767;
                       CALL WriteDSPReg                          ;;0781|0769+0769/0769\0769;
-                      INCW !SFX1DF9PhrasePtr                    ;;0784|076C+076C/076C\076C;
-                      MOV A,(!SFX1DF9PhrasePtr+X)               ;;0786|076E+076E/076E\076E;
+                      INCW.B SFX1DF9PhrasePtr                   ;;0784|076C+076C/076C\076C;
+                      MOV.B A,(SFX1DF9PhrasePtr+X)              ;;0786|076E+076E/076E\076E;
                       BPL APU_077D                              ;;0788|0770+0770/0770\0770;
                       MOV X,A                                   ;;078A|0772+0772/0772\0772;
-                      MOV A,!ARam_10                            ;;078B|0773+0773/0773\0773;
+                      MOV.B A,ARam_10                           ;;078B|0773+0773/0773\0773;
                       MOV Y,#$41                                ;;078D|0775+0775/0775\0775;
                       CALL WriteDSPReg                          ;;078F|0777+0777/0777\0777;
                       MOV A,X                                   ;;0792|077A+077A/077A\077A;
@@ -341,8 +341,8 @@ APU_0754:             MOV X,#$00                                ;;076C|0754+0754
                                                                 ;;                        ;
 APU_077D:             MOV Y,#$41                                ;;0795|077D+077D/077D\077D;
                       CALL WriteDSPReg                          ;;0797|077F+077F/077F\077F;
-                      INCW !SFX1DF9PhrasePtr                    ;;079A|0782+0782/0782\0782;
-                      MOV A,(!SFX1DF9PhrasePtr+X)               ;;079C|0784+0784/0784\0784;
+                      INCW.B SFX1DF9PhrasePtr                   ;;079A|0782+0782/0782\0782;
+                      MOV.B A,(SFX1DF9PhrasePtr+X)              ;;079C|0784+0784/0784\0784;
 APU_0786:             CMP A,#$DA                                ;;079E|0786+0786/0786\0786;
                       BEQ APU_07F3                              ;;07A0|0788+0788/0788\0788;
                       CMP A,#$DD                                ;;07A2|078A+078A/078A\078A;
@@ -355,16 +355,16 @@ APU_0786:             CMP A,#$DA                                ;;079E|0786+0786
                       CALL HandleVCmd                           ;;07B0|0798+0798/0798\0798;
                       MOV A,#$10                                ;;07B3|079B+079B/079B\079B;
                       CALL APU_0D32                             ;;07B5|079D+079D/079D\079D;
-APU_07A0:             MOV A,!ARam_0381                          ;;07B8|07A0+07A0/07A0\07A0;
-                      MOV !ARam_0380,A                          ;;07BB|07A3+07A3/07A3\07A3;
-APU_07A6:             CLR7 !ARam_13                             ;;07BE|07A6+07A6/07A6\07A6;
+APU_07A0:             MOV.W A,ARam_0381                         ;;07B8|07A0+07A0/07A0\07A0;
+                      MOV.W ARam_0380,A                         ;;07BB|07A3+07A3/07A3\07A3;
+APU_07A6:             CLR7.B ARam_13                            ;;07BE|07A6+07A6/07A6\07A6;
                       MOV X,#$08                                ;;07C0|07A8+07A8/07A8\07A8;
-                      MOV A,!VoPitchSlide+X                     ;;07C2|07AA+07AA/07AA\07AA;
+                      MOV.B A,VoPitchSlide+X                    ;;07C2|07AA+07AA/07AA\07AA;
                       BEQ APU_07B3                              ;;07C4|07AC+07AC/07AC\07AC;
                       CALL PitchSlideDelta                      ;;07C6|07AE+07AE/07AE\07AE;
                       BRA +                                     ;;07C9|07B1+07B1/07B1\07B1;
 APU_07B3:             MOV A,#$02                                ;;07CB|07B3+07B3/07B3\07B3;
-                      CMP A,!ARam_0380                          ;;07CD|07B5+07B5/07B5\07B5;
+                      CMP.W A,ARam_0380                         ;;07CD|07B5+07B5/07B5\07B5;
                       BNE +                                     ;;07D0|07B8+07B8/07B8\07B8;
                       MOV A,#$10                                ;;07D2|07BA+07BA/07BA\07BA;
                       MOV Y,#$5C                                ;;07D4|07BC+07BC/07BC\07BC;
@@ -372,119 +372,119 @@ APU_07B3:             MOV A,#$02                                ;;07CB|07B3+07B3
                     + RET                                       ;;07D9|07C1+07C1/07C1\07C1;
                                                                 ;;                        ;
 APU_07C2:             MOV X,#$00                                ;;07DA|07C2+07C2/07C2\07C2;
-                      INCW !SFX1DF9PhrasePtr                    ;;07DC|07C4+07C4/07C4\07C4;
-                      MOV A,(!SFX1DF9PhrasePtr+X)               ;;07DE|07C6+07C6/07C6\07C6;
-                      MOV !CurrentChannel2,#$08                 ;;07E0|07C8+07C8/07C8\07C8;
+                      INCW.B SFX1DF9PhrasePtr                   ;;07DC|07C4+07C4/07C4\07C4;
+                      MOV.B A,(SFX1DF9PhrasePtr+X)              ;;07DE|07C6+07C6/07C6\07C6;
+                      MOV.B CurrentChannel2,#$08                ;;07E0|07C8+07C8/07C8\07C8;
                       MOV X,#$08                                ;;07E3|07CB+07CB/07CB\07CB;
                       CALL HandleVCmd                           ;;07E5|07CD+07CD/07CD\07CD;
                       MOV A,#$10                                ;;07E8|07D0+07D0/07D0\07D0;
                       CALL APU_0D32                             ;;07EA|07D2+07D2/07D2\07D2;
 APU_07D5:             MOV X,#$00                                ;;07ED|07D5+07D5/07D5\07D5;
-                      INCW !SFX1DF9PhrasePtr                    ;;07EF|07D7+07D7/07D7\07D7;
-                      MOV A,(!SFX1DF9PhrasePtr+X)               ;;07F1|07D9+07D9/07D9\07D9;
-                      MOV !VoPitchSlide+9,A                     ;;07F3|07DB+07DB/07DB\07DB;
-                      INCW !SFX1DF9PhrasePtr                    ;;07F5|07DD+07DD/07DD\07DD;
-                      MOV A,(!SFX1DF9PhrasePtr+X)               ;;07F7|07DF+07DF/07DF\07DF;
-                      MOV !VoPitchSlide+8,A                     ;;07F9|07E1+07E1/07E1\07E1;
+                      INCW.B SFX1DF9PhrasePtr                   ;;07EF|07D7+07D7/07D7\07D7;
+                      MOV.B A,(SFX1DF9PhrasePtr+X)              ;;07F1|07D9+07D9/07D9\07D9;
+                      MOV.B VoPitchSlide+9,A                    ;;07F3|07DB+07DB/07DB\07DB;
+                      INCW.B SFX1DF9PhrasePtr                   ;;07F5|07DD+07DD/07DD\07DD;
+                      MOV.B A,(SFX1DF9PhrasePtr+X)              ;;07F7|07DF+07DF/07DF\07DF;
+                      MOV.B VoPitchSlide+8,A                    ;;07F9|07E1+07E1/07E1\07E1;
                       PUSH A                                    ;;07FB|07E3+07E3/07E3\07E3;
-                      INCW !SFX1DF9PhrasePtr                    ;;07FC|07E4+07E4/07E4\07E4;
-                      MOV A,(!SFX1DF9PhrasePtr+X)               ;;07FE|07E6+07E6/07E6\07E6;
+                      INCW.B SFX1DF9PhrasePtr                   ;;07FC|07E4+07E4/07E4\07E4;
+                      MOV.B A,(SFX1DF9PhrasePtr+X)              ;;07FE|07E6+07E6/07E6\07E6;
                       POP Y                                     ;;0800|07E8+07E8/07E8\07E8;
-                      MOV !CurrentChannel2,#$08                 ;;0801|07E9+07E9/07E9\07E9;
+                      MOV.B CurrentChannel2,#$08                ;;0801|07E9+07E9/07E9\07E9;
                       MOV X,#$08                                ;;0804|07EC+07EC/07EC\07EC;
                       CALL APU_0F5D                             ;;0806|07EE+07EE/07EE\07EE;
                       BRA APU_07A0                              ;;0809|07F1+07F1/07F1\07F1;
                                                                 ;;                        ;
 APU_07F3:             MOV X,#$00                                ;;080B|07F3+07F3/07F3\07F3;
-                      INCW !SFX1DF9PhrasePtr                    ;;080D|07F5+07F5/07F5\07F5;
-                      MOV A,(!SFX1DF9PhrasePtr+X)               ;;080F|07F7+07F7/07F7\07F7;
+                      INCW.B SFX1DF9PhrasePtr                   ;;080D|07F5+07F5/07F5\07F5;
+                      MOV.B A,(SFX1DF9PhrasePtr+X)              ;;080F|07F7+07F7/07F7\07F7;
                       MOV Y,#$09                                ;;0811|07F9+07F9/07F9\07F9;
                       MUL YA                                    ;;0813|07FB+07FB/07FB\07FB;
                       MOV X,A                                   ;;0814|07FC+07FC/07FC\07FC;
                       MOV Y,#$40                                ;;0815|07FD+07FD/07FD\07FD;
-                      MOV !ARam_12,#$08                         ;;0817|07FF+07FF/07FF\07FF;
-                    - MOV A,SFXDSPSettings+X                    ;;081A|0802+0802/0802\0802;
+                      MOV ARam_12,#$08                          ;;0817|07FF+07FF/07FF\07FF;
+                    - MOV.W A,SFXDSPSettings+X                  ;;081A|0802+0802/0802\0802;
                       CALL WriteDSPReg                          ;;081D|0805+0805/0805\0805;
                       INC X                                     ;;0820|0808+0808/0808\0808;
                       INC Y                                     ;;0821|0809+0809/0809\0809;
-                      DBNZ !ARam_12,-                           ;;0822|080A+080A/080A\080A;
-                      MOV A,SFXDSPSettings+X                    ;;0825|080D+080D/080D\080D;
-                      MOV !ARam_0210+8,A                        ;;0828|0810+0810/0810\0810;
+                      DBNZ.B ARam_12,-                          ;;0822|080A+080A/080A\080A;
+                      MOV.W A,SFXDSPSettings+X                  ;;0825|080D+080D/080D\080D;
+                      MOV.W ARam_0210+8,A                       ;;0828|0810+0810/0810\0810;
                       JMP APU_0752                              ;;082B|0813+0813/0813\0813;
                                                                 ;;                        ;
-APU_0816:             CMP !SPCOutBuffer+3,#$24                  ;;082E|0816+0816/0816\0816;
+APU_0816:             CMP.B SPCOutBuffer+3,#$24                 ;;082E|0816+0816/0816\0816;
                       BEQ +                                     ;;0831|0819+0819/0819\0819;
-                      CMP !SPCInEdge+3,#$24                     ;;0833|081B+081B/081B\081B;
+                      CMP.B SPCInEdge+3,#$24                    ;;0833|081B+081B/081B\081B;
                       BEQ ++                                    ;;0836|081E+081E/081E\081E;
-                      CMP !SPCOutBuffer+3,#$1D                  ;;0838|0820+0820/0820\0820;
+                      CMP.B SPCOutBuffer+3,#$1D                 ;;0838|0820+0820/0820\0820;
                       BEQ +                                     ;;083B|0823+0823/0823\0823;
-                      CMP !SPCOutBuffer+3,#$05                  ;;083D|0825+0825/0825\0825;
+                      CMP.B SPCOutBuffer+3,#$05                 ;;083D|0825+0825/0825\0825;
                       BEQ +                                     ;;0840|0828+0828/0828\0828;
-                   ++ MOV A,!SPCInEdge+3                        ;;0842|082A+082A/082A\082A;
+                   ++ MOV.B A,SPCInEdge+3                       ;;0842|082A+082A/082A\082A;
                       BNE APU_0837                              ;;0844|082C+082C/082C\082C;
-                    + MOV A,!ARam_0C+1                          ;;0846|082E+082E/082E\082E;
+                    + MOV.B A,ARam_0C+1                         ;;0846|082E+082E/082E\082E;
                       BNE APU_084B                              ;;0848|0830+0830/0830\0830;
-                      MOV A,!SPCOutBuffer+3                     ;;084A|0832+0832/0832\0832;
+                      MOV.B A,SPCOutBuffer+3                    ;;084A|0832+0832/0832\0832;
                       BNE APU_0876                              ;;084C|0834+0834/0834\0834;
                     - RET                                       ;;084E|0836+0836/0836\0836;
                                                                 ;;                        ;
-APU_0837:             MOV !SPCOutBuffer+3,A                     ;;084F|0837+0837/0837\0837;
-                      MOV !ARam_0C+1,#$02                       ;;0851|0839+0839/0839\0839;
+APU_0837:             MOV.B SPCOutBuffer+3,A                    ;;084F|0837+0837/0837\0837;
+                      MOV.B ARam_0C+1,#$02                      ;;0851|0839+0839/0839\0839;
                       MOV A,#$40                                ;;0854|083C+083C/083C\083C;
                       MOV Y,#$5C                                ;;0856|083E+083E/083E\083E;
                       CALL WriteDSPReg                          ;;0858|0840+0840/0840\0840; key off voice 6 now;
-                      SET6 !ChannelsMuted                       ;;085B|0843+0843/0843\0843; don't set vol DSP for voice 6 
+                      SET6.B ChannelsMuted                      ;;085B|0843+0843/0843\0843; don't set vol DSP for voice 6 
                       MOV A,#$00                                ;;085D|0845+0845/0845\0845;
-                      MOV !ARam_0300+$0C,A                      ;;085F|0847+0847/0847\0847;
+                      MOV.W ARam_0300+$0C,A                     ;;085F|0847+0847/0847\0847;
                       RET                                       ;;0862|084A+084A/084A\084A;
-APU_084B:             DBNZ !ARam_0C+1,-                         ;;0863|084B+084B/084B\084B;
-                      MOV A,!SPCOutBuffer+3                     ;;0866|084E+084E/084E\084E;
+APU_084B:             DBNZ.B ARam_0C+1,-                        ;;0863|084B+084B/084B\084B;
+                      MOV.B A,SPCOutBuffer+3                    ;;0866|084E+084E/084E\084E;
                       ASL A                                     ;;0868|0850+0850/0850\0850;
                       MOV Y,A                                   ;;0869|0851+0851/0851\0851;
-                      MOV A,SFXPtrs1DFC-2+Y                     ;;086A|0852+0852/0852\0852;
-                      MOV !SFX1DFCPhrasePtr,A                   ;;086D|0855+0855/0855\0855;
-                      MOV A,SFXPtrs1DFC-1+Y                     ;;086F|0857+0857/0857\0857;
-                      MOV !SFX1DFCPhrasePtr+1,A                 ;;0872|085A+085A/085A\085A;
+                      MOV.W A,SFXPtrs1DFC-2+Y                   ;;086A|0852+0852/0852\0852;
+                      MOV.B SFX1DFCPhrasePtr,A                  ;;086D|0855+0855/0855\0855;
+                      MOV.W A,SFXPtrs1DFC-1+Y                   ;;086F|0857+0857/0857\0857;
+                      MOV.B SFX1DFCPhrasePtr+1,A                ;;0872|085A+085A/085A\085A;
                       BRA APU_087D                              ;;0874|085C+085C/085C\085C;
-APU_085E:             MOV !SPCOutBuffer+3,#$00                  ;;0876|085E+085E/085E\085E;
-                      CLR6 !ChannelsMuted                       ;;0879|0861+0861/0861\0861; OK to use voice 6 again 
+APU_085E:             MOV.B SPCOutBuffer+3,#$00                 ;;0876|085E+085E/085E\085E;
+                      CLR6.B ChannelsMuted                      ;;0879|0861+0861/0861\0861; OK to use voice 6 again 
                       MOV A,#$00                                ;;087B|0863+0863/0863\0863;
-                      MOV !ARam_2F,A                            ;;087D|0865+0865/0865\0865;
+                      MOV.B ARam_2F,A                           ;;087D|0865+0865/0865\0865;
                       MOV Y,#$3D                                ;;087F|0867+0867/0867\0867;
                       CALL WriteDSPReg                          ;;0881|0869+0869/0869\0869; noise vbits off;
                       MOV X,#$0C                                ;;0884|086C+086C/086C\086C;
-                      MOV A,!VoInstrument+$0D                   ;;0886|086E+086E/086E\086E;
+                      MOV.B A,VoInstrument+$0D                  ;;0886|086E+086E/086E\086E;
                       BEQ +                                     ;;0888|0870+0870/0870\0870;
                       JMP APU_0D4B                              ;;088A|0872+0872/0872\0872;
                     + RET                                       ;;088D|0875+0875/0875\0875;
                                                                 ;;                        ;
-APU_0876:             DEC !ARam_0384                            ;;088E|0876+0876/0876\0876;
+APU_0876:             DEC.W ARam_0384                           ;;088E|0876+0876/0876\0876;
                       BNE APU_08D3                              ;;0891|0879+0879/0879\0879;
-APU_087B:             INCW !SFX1DFCPhrasePtr                    ;;0893|087B+087B/087B\087B;
+APU_087B:             INCW.B SFX1DFCPhrasePtr                   ;;0893|087B+087B/087B\087B;
 APU_087D:             MOV X,#$00                                ;;0895|087D+087D/087D\087D;
-                      MOV A,(!SFX1DFCPhrasePtr+X)               ;;0897|087F+087F/087F\087F;
+                      MOV.B A,(SFX1DFCPhrasePtr+X)              ;;0897|087F+087F/087F\087F;
                       BEQ APU_085E                              ;;0899|0881+0881/0881\0881;
                       BMI APU_08AF                              ;;089B|0883+0883/0883\0883;
-                      MOV !ARam_0385,A                          ;;089D|0885+0885/0885\0885;
-                      INCW !SFX1DFCPhrasePtr                    ;;08A0|0888+0888/0888\0888;
-                      MOV A,(!SFX1DFCPhrasePtr+X)               ;;08A2|088A+088A/088A\088A;
-                      MOV !ARam_10,A                            ;;08A4|088C+088C/088C\088C;
+                      MOV.W ARam_0385,A                         ;;089D|0885+0885/0885\0885;
+                      INCW.B SFX1DFCPhrasePtr                   ;;08A0|0888+0888/0888\0888;
+                      MOV.B A,(SFX1DFCPhrasePtr+X)              ;;08A2|088A+088A/088A\088A;
+                      MOV.B ARam_10,A                           ;;08A4|088C+088C/088C\088C;
                       BMI APU_08AF                              ;;08A6|088E+088E/088E\088E;
                       MOV Y,#$60                                ;;08A8|0890+0890/0890\0890;
                       CALL WriteDSPReg                          ;;08AA|0892+0892/0892\0892; set voice 6 vol L;
-                      INCW !SFX1DFCPhrasePtr                    ;;08AD|0895+0895/0895\0895;
-                      MOV A,(!SFX1DFCPhrasePtr+X)               ;;08AF|0897+0897/0897\0897;
+                      INCW.B SFX1DFCPhrasePtr                   ;;08AD|0895+0895/0895\0895;
+                      MOV.B A,(SFX1DFCPhrasePtr+X)              ;;08AF|0897+0897/0897\0897;
                       BPL +                                     ;;08B1|0899+0899/0899\0899;
                       MOV X,A                                   ;;08B3|089B+089B/089B\089B;
-                      MOV A,!ARam_10                            ;;08B4|089C+089C/089C\089C;
+                      MOV.B A,ARam_10                           ;;08B4|089C+089C/089C\089C;
                       MOV Y,#$61                                ;;08B6|089E+089E/089E\089E;
                       CALL WriteDSPReg                          ;;08B8|08A0+08A0/08A0\08A0; set voice 6 vol R from $10;
                       MOV A,X                                   ;;08BB|08A3+08A3/08A3\08A3;
                       BRA APU_08AF                              ;;08BC|08A4+08A4/08A4\08A4;
                     + MOV Y,#$61                                ;;08BE|08A6+08A6/08A6\08A6;
                       CALL WriteDSPReg                          ;;08C0|08A8+08A8/08A8\08A8; set voice 6 vol R;
-                      INCW !SFX1DFCPhrasePtr                    ;;08C3|08AB+08AB/08AB\08AB;
-                      MOV A,(!SFX1DFCPhrasePtr+X)               ;;08C5|08AD+08AD/08AD\08AD;
+                      INCW.B SFX1DFCPhrasePtr                   ;;08C3|08AB+08AB/08AB\08AB;
+                      MOV.B A,(SFX1DFCPhrasePtr+X)              ;;08C5|08AD+08AD/08AD\08AD;
 APU_08AF:             CMP A,#$DA                                ;;08C7|08AF+08AF/08AF\08AF;
                       BEQ APU_0920                              ;;08C9|08B1+08B1/08B1\08B1;
                       CMP A,#$DD                                ;;08CB|08B3+08B3/08B3\08B3;
@@ -493,23 +493,23 @@ APU_08AF:             CMP A,#$DA                                ;;08C7|08AF+08AF
                       BEQ APU_0902                              ;;08D1|08B9+08B9/08B9\08B9;
                       CMP A,#$FF                                ;;08D3|08BB+08BB/08BB\08BB;
                       BNE +                                     ;;08D5|08BD+08BD/08BD\08BD;
-                      DECW !SFX1DFCPhrasePtr                    ;;08D7|08BF+08BF/08BF\08BF;
+                      DECW.B SFX1DFCPhrasePtr                   ;;08D7|08BF+08BF/08BF\08BF;
                       BRA APU_087D                              ;;08D9|08C1+08C1/08C1\08C1;
                                                                 ;;                        ;
                     + MOV X,#$0C                                ;;08DB|08C3+08C3/08C3\08C3; other $80+;
                       CALL HandleVCmd                           ;;08DD|08C5+08C5/08C5\08C5;
                       MOV A,#$40                                ;;08E0|08C8+08C8/08C8\08C8;
                       CALL APU_0D32                             ;;08E2|08CA+08CA/08CA\08CA;
-APU_08CD:             MOV A,!ARam_0385                          ;;08E5|08CD+08CD/08CD\08CD;
-                      MOV !ARam_0384,A                          ;;08E8|08D0+08D0/08D0\08D0;
-APU_08D3:             CLR7 !ARam_13                             ;;08EB|08D3+08D3/08D3\08D3;
+APU_08CD:             MOV.W A,ARam_0385                         ;;08E5|08CD+08CD/08CD\08CD;
+                      MOV.W ARam_0384,A                         ;;08E8|08D0+08D0/08D0\08D0;
+APU_08D3:             CLR7.B ARam_13                            ;;08EB|08D3+08D3/08D3\08D3;
                       MOV X,#$0C                                ;;08ED|08D5+08D5/08D5\08D5;
-                      MOV A,!VoPitchSlide+X                     ;;08EF|08D7+08D7/08D7\08D7; pitch slide counter 
+                      MOV.B A,VoPitchSlide+X                    ;;08EF|08D7+08D7/08D7\08D7; pitch slide counter 
                       BEQ APU_08E0                              ;;08F1|08D9+08D9/08D9\08D9;
                       CALL PitchSlideDelta                      ;;08F3|08DB+08DB/08DB\08DB; add pitch slide delta and set DSP pitch;
                       BRA +                                     ;;08F6|08DE+08DE/08DE\08DE;
 APU_08E0:             MOV A,#$02                                ;;08F8|08E0+08E0/08E0\08E0;
-                      CMP A,!ARam_0384                          ;;08FA|08E2+08E2/08E2\08E2;
+                      CMP.W A,ARam_0384                         ;;08FA|08E2+08E2/08E2\08E2;
                       BNE +                                     ;;08FD|08E5+08E5/08E5\08E5;
                       MOV A,#$40                                ;;08FF|08E7+08E7/08E7\08E7;
                       MOV Y,#$5C                                ;;0901|08E9+08E9/08E9\08E9;
@@ -517,57 +517,57 @@ APU_08E0:             MOV A,#$02                                ;;08F8|08E0+08E0
                     + RET                                       ;;0906|08EE+08EE/08EE\08EE;
                                                                 ;;                        ;
 APU_08EF:             MOV X,#$00                                ;;0907|08EF+08EF/08EF\08EF; DD;
-                      INCW !SFX1DFCPhrasePtr                    ;;0909|08F1+08F1/08F1\08F1;
-                      MOV A,(!SFX1DFCPhrasePtr+X)               ;;090B|08F3+08F3/08F3\08F3;
-                      MOV !CurrentChannel2,#$0C                 ;;090D|08F5+08F5/08F5\08F5;
+                      INCW.B SFX1DFCPhrasePtr                   ;;0909|08F1+08F1/08F1\08F1;
+                      MOV.B A,(SFX1DFCPhrasePtr+X)              ;;090B|08F3+08F3/08F3\08F3;
+                      MOV.B CurrentChannel2,#$0C                ;;090D|08F5+08F5/08F5\08F5;
                       MOV X,#$0C                                ;;0910|08F8+08F8/08F8\08F8;
                       CALL HandleVCmd                           ;;0912|08FA+08FA/08FA\08FA;
                       MOV A,#$40                                ;;0915|08FD+08FD/08FD\08FD;
                       CALL APU_0D32                             ;;0917|08FF+08FF/08FF\08FF;
                                                                 ;;                        ;
 APU_0902:             MOV X,#$00                                ;;091A|0902+0902/0902\0902; EB;
-                      INCW !SFX1DFCPhrasePtr                    ;;091C|0904+0904/0904\0904;
-                      MOV A,(!SFX1DFCPhrasePtr+X)               ;;091E|0906+0906/0906\0906;
-                      MOV !VoPitchSlide+$0D,A                   ;;0920|0908+0908/0908\0908;
-                      INCW !SFX1DFCPhrasePtr                    ;;0922|090A+090A/090A\090A;
-                      MOV A,(!SFX1DFCPhrasePtr+X)               ;;0924|090C+090C/090C\090C;
-                      MOV !VoPitchSlide+$0C,A                   ;;0926|090E+090E/090E\090E;
+                      INCW.B SFX1DFCPhrasePtr                   ;;091C|0904+0904/0904\0904;
+                      MOV.B A,(SFX1DFCPhrasePtr+X)              ;;091E|0906+0906/0906\0906;
+                      MOV.B VoPitchSlide+$0D,A                  ;;0920|0908+0908/0908\0908;
+                      INCW.B SFX1DFCPhrasePtr                   ;;0922|090A+090A/090A\090A;
+                      MOV.B A,(SFX1DFCPhrasePtr+X)              ;;0924|090C+090C/090C\090C;
+                      MOV.B VoPitchSlide+$0C,A                  ;;0926|090E+090E/090E\090E;
                       PUSH A                                    ;;0928|0910+0910/0910\0910;
-                      INCW !SFX1DFCPhrasePtr                    ;;0929|0911+0911/0911\0911;
-                      MOV A,(!SFX1DFCPhrasePtr+X)               ;;092B|0913+0913/0913\0913;
+                      INCW.B SFX1DFCPhrasePtr                   ;;0929|0911+0911/0911\0911;
+                      MOV.B A,(SFX1DFCPhrasePtr+X)              ;;092B|0913+0913/0913\0913;
                       POP Y                                     ;;092D|0915+0915/0915\0915;
-                      MOV !CurrentChannel2,#$0C                 ;;092E|0916+0916/0916\0916;
+                      MOV.B CurrentChannel2,#$0C                ;;092E|0916+0916/0916\0916;
                       MOV X,#$0C                                ;;0931|0919+0919/0919\0919;
                       CALL APU_0F5D                             ;;0933|091B+091B/091B\091B;
                       BRA APU_08CD                              ;;0936|091E+091E/091E\091E;
                                                                 ;;                        ;
 APU_0920:             MOV A,#$00                                ;;0938|0920+0920/0920\0920; DA;
-                      MOV !ARam_2F,A                            ;;093A|0922+0922/0922\0922;
+                      MOV.B ARam_2F,A                           ;;093A|0922+0922/0922\0922;
                       MOV Y,#$3D                                ;;093C|0924+0924/0924\0924;
                       CALL WriteDSPReg                          ;;093E|0926+0926/0926\0926;
 APU_0929:             MOV X,#$00                                ;;0941|0929+0929/0929\0929;
-                      INCW !SFX1DFCPhrasePtr                    ;;0943|092B+092B/092B\092B;
-                      MOV A,(!SFX1DFCPhrasePtr+X)               ;;0945|092D+092D/092D\092D;
+                      INCW.B SFX1DFCPhrasePtr                   ;;0943|092B+092B/092B\092B;
+                      MOV.B A,(SFX1DFCPhrasePtr+X)              ;;0945|092D+092D/092D\092D;
                       BMI +                                     ;;0947|092F+092F/092F\092F;
                       MOV Y,#$09                                ;;0949|0931+0931/0931\0931;
                       MUL YA                                    ;;094B|0933+0933/0933\0933;
                       MOV X,A                                   ;;094C|0934+0934/0934\0934;
                       MOV Y,#$60                                ;;094D|0935+0935/0935\0935;
-                      MOV !ARam_12,#$08                         ;;094F|0937+0937/0937\0937;
-                    - MOV A,SFXDSPSettings+X                    ;;0952|093A+093A/093A\093A;
+                      MOV ARam_12,#$08                          ;;094F|0937+0937/0937\0937;
+                    - MOV.W A,SFXDSPSettings+X                  ;;0952|093A+093A/093A\093A;
                       CALL WriteDSPReg                          ;;0955|093D+093D/093D\093D;
                       INC X                                     ;;0958|0940+0940/0940\0940;
                       INC Y                                     ;;0959|0941+0941/0941\0941;
-                      DBNZ !ARam_12,-                           ;;095A|0942+0942/0942\0942;
-                      MOV A,SFXDSPSettings+X                    ;;095D|0945+0945/0945\0945;
-                      MOV !ARam_0210+$0C,A                      ;;0960|0948+0948/0948\0948;
+                      DBNZ.B ARam_12,-                          ;;095A|0942+0942/0942\0942;
+                      MOV.W A,SFXDSPSettings+X                  ;;095D|0945+0945/0945\0945;
+                      MOV.W ARam_0210+$0C,A                     ;;0960|0948+0948/0948\0948;
                       JMP APU_087B                              ;;0963|094B+094B/094B\094B;
                     + AND A,#$1F                                ;;0966|094E+094E/094E\094E;
-                      MOV !ARam_2E,A                            ;;0968|0950+0950/0950\0950;
+                      MOV.B ARam_2E,A                           ;;0968|0950+0950/0950\0950;
                       MOV Y,#$6C                                ;;096A|0952+0952/0952\0952;
                       CALL WriteDSPReg                          ;;096C|0954+0954/0954\0954;
                       MOV A,#$40                                ;;096F|0957+0957/0957\0957;
-                      MOV !ARam_2F,A                            ;;0971|0959+0959/0959\0959;
+                      MOV.B ARam_2F,A                           ;;0971|0959+0959/0959\0959;
                       MOV Y,#$3D                                ;;0973|095B+095B/095B\095B;
                       CALL WriteDSPReg                          ;;0975|095D+095D/095D\095D;
                       BRA APU_0929                              ;;0978|0960+0960/0960\0960;
@@ -576,29 +576,29 @@ SFXDSPRegs:           MOV Y,#$09                                ;;097A|0962+0962
                       MUL YA                                    ;;097C|0964+0964/0964\0964;
                       MOV X,A                                   ;;097D|0965+0965/0965\0965;
                       MOV Y,#$50                                ;;097E|0966+0966/0966\0966;
-                      MOV !ARam_12,#$08                         ;;0980|0968+0968/0968\0968;
-                    - MOV A,SFXDSPSettings+X                    ;;0983|096B+096B/096B\096B;
+                      MOV ARam_12,#$08                          ;;0980|0968+0968/0968\0968;
+                    - MOV.W A,SFXDSPSettings+X                  ;;0983|096B+096B/096B\096B;
                       CALL WriteDSPReg                          ;;0986|096E+096E/096E\096E;
                       INC X                                     ;;0989|0971+0971/0971\0971;
                       INC Y                                     ;;098A|0972+0972/0972\0972;
-                      DBNZ !ARam_12,-                           ;;098B|0973+0973/0973\0973;
-                      MOV A,SFXDSPSettings+X                    ;;098E|0976+0976/0976\0976;
-                      MOV !ARam_0210+$0A,A                      ;;0991|0979+0979/0979\0979; set voice 5 pitch mult from 5570+X 
+                      DBNZ.B ARam_12,-                          ;;098B|0973+0973/0973\0973;
+                      MOV.W A,SFXDSPSettings+X                  ;;098E|0976+0976/0976\0976;
+                      MOV.W ARam_0210+$0A,A                     ;;0991|0979+0979/0979\0979; set voice 5 pitch mult from 5570+X 
                       RET                                       ;;0994|097C+097C/097C\097C;
                                                                 ;;                        ;
-APU_097D:             MOV A,!SPCOutBuffer+2                     ;;0995|097D+097D/097D\097D; $01 = 02 
+APU_097D:             MOV.B A,SPCOutBuffer+2                    ;;0995|097D+097D/097D\097D; $01 = 02 
                       CMP A,#$06                                ;;0997|097F+097F/097F\097F;
                       BEQ +                                     ;;0999|0981+0981/0981\0981;
                       AND A,#$FC                                ;;099B|0983+0983/0983\0983;
                       BNE APU_0A03                              ;;099D|0985+0985/0985\0985;
-                    + MOV A,!ARam_0386                          ;;099F|0987+0987/0987\0987;
+                    + MOV.W A,ARam_0386                         ;;099F|0987+0987/0987\0987;
                       BNE APU_099A                              ;;09A2|098A+098A/098A\098A;
                       MOV A,#$09                                ;;09A4|098C+098C/098C\098C;
                       CALL SFXDSPRegs                           ;;09A6|098E+098E/098E\098E; set voice 5 DSP from 5570+(9*9);
                       MOV A,#$01                                ;;09A9|0991+0991/0991\0991;
                       BNE +                                     ;;09AB|0993+0993/0993\0993;
 APU_0995:             MOV A,#$00                                ;;09AD|0995+0995/0995\0995; $01 = 03;
-                    + MOV !ARam_0386,A                          ;;09AF|0997+0997/0997\0997;
+                    + MOV.W ARam_0386,A                         ;;09AF|0997+0997/0997\0997;
 APU_099A:             BRA APU_0A03                              ;;09B2|099A+099A/099A\099A;
                                                                 ;;                        ;
 APU_099C:             MOV A,#$60                                ;;09B4|099C+099C/099C\099C; $01 = FF (reset?);
@@ -609,15 +609,15 @@ APU_099C:             MOV A,#$60                                ;;09B4|099C+099C
                       CALL WriteDSPReg                          ;;09BF|09A7+09A7/09A7\09A7; key off all voices now;
                       CALL StandardTransfer                     ;;09C2|09AA+09AA/09AA\09AA; do standardish SPC transfer;
                       MOV A,#$00                                ;;09C5|09AD+09AD/09AD\09AD;
-                      MOV !SPCOutBuffer,A                       ;;09C7|09AF+09AF/09AF\09AF;
-                      MOV !SPCOutBuffer+1,A                     ;;09C9|09B1+09B1/09B1\09B1;
-                      MOV !SPCOutBuffer+2,A                     ;;09CB|09B3+09B3/09B3\09B3;
-                      MOV !SPCOutBuffer+3,A                     ;;09CD|09B5+09B5/09B5\09B5;
-                      MOV !ChannelsMuted,A                      ;;09CF|09B7+09B7/09B7\09B7;
-                      MOV !ARam_0387,A                          ;;09D1|09B9+09B9/09B9\09B9;
-                      MOV !ARam_0388,A                          ;;09D4|09BC+09BC/09BC\09BC;
-                      MOV !ARam_0386,A                          ;;09D7|09BF+09BF/09BF\09BF;
-                      MOV !ARam_0389,A                          ;;09DA|09C2+09C2/09C2\09C2;
+                      MOV.B SPCOutBuffer,A                      ;;09C7|09AF+09AF/09AF\09AF;
+                      MOV.B SPCOutBuffer+1,A                    ;;09C9|09B1+09B1/09B1\09B1;
+                      MOV.B SPCOutBuffer+2,A                    ;;09CB|09B3+09B3/09B3\09B3;
+                      MOV.B SPCOutBuffer+3,A                    ;;09CD|09B5+09B5/09B5\09B5;
+                      MOV.B ChannelsMuted,A                     ;;09CF|09B7+09B7/09B7\09B7;
+                      MOV.W ARam_0387,A                         ;;09D1|09B9+09B9/09B9\09B9;
+                      MOV.W ARam_0388,A                         ;;09D4|09BC+09BC/09BC\09BC;
+                      MOV.W ARam_0386,A                         ;;09D7|09BF+09BF/09BF\09BF;
+                      MOV.W ARam_0389,A                         ;;09DA|09C2+09C2/09C2\09C2;
                       MOV A,#$20                                ;;09DD|09C5+09C5/09C5\09C5;
                       MOV Y,#$6C                                ;;09DF|09C7+09C7/09C7\09C7;
                       CALL WriteDSPReg                          ;;09E1|09C9+09C9/09C9\09C9; unmute voices;
@@ -625,16 +625,16 @@ APU_099C:             MOV A,#$60                                ;;09B4|099C+099C
                                                                 ;;                        ;
 PitchSlideDelta:      MOV A,#$B0                                ;;09E5|09CD+09CD/09CD\09CD; add pitch slide delta and set DSP pitch;
                       MOV Y,#$02                                ;;09E7|09CF+09CF/09CF\09CF; pitch (notenum fixed-point);
-                      DEC !VoPitchSlide+X                       ;;09E9|09D1+09D1/09D1\09D1;
+                      DEC.B VoPitchSlide+X                      ;;09E9|09D1+09D1/09D1\09D1;
                       CALL APU_1075                             ;;09EB|09D3+09D3/09D3\09D3; add pitch slide delta to value;
-                      MOV A,!ARam_02B0+1+X                      ;;09EE|09D6+09D6/09D6\09D6;
+                      MOV.W A,ARam_02B0+1+X                     ;;09EE|09D6+09D6/09D6\09D6;
                       MOV Y,A                                   ;;09F1|09D9+09D9/09D9\09D9;
-                      MOV A,!ARam_02B0+X                        ;;09F2|09DA+09DA/09DA\09DA;
-                      MOVW !ARam_10,YA                          ;;09F5|09DD+09DD/09DD\09DD;
-                      MOV !CurrentChannel,#$00                  ;;09F7|09DF+09DF/09DF\09DF; vbit flags = 0 (to force DSP set) 
+                      MOV.W A,ARam_02B0+X                       ;;09F2|09DA+09DA/09DA\09DA;
+                      MOVW.B ARam_10,YA                         ;;09F5|09DD+09DD/09DD\09DD;
+                      MOV.B CurrentChannel,#$00                 ;;09F7|09DF+09DF/09DF\09DF; vbit flags = 0 (to force DSP set) 
                       JMP APU_0634                              ;;09FA|09E2+09E2/09E2\09E2; force voice DSP pitch from 02B0/1;
                                                                 ;;                        ;
-APU_09E5:             MOV A,!SPCInEdge+1                        ;;09FD|09E5+09E5/09E5\09E5;
+APU_09E5:             MOV.B A,SPCInEdge+1                       ;;09FD|09E5+09E5/09E5\09E5;
                       CMP A,#$FF                                ;;09FF|09E7+09E7/09E7\09E7;
                       BEQ APU_099C                              ;;0A01|09E9+09E9/09E9\09E9;
                       CMP A,#$02                                ;;0A03|09EB+09EB/09EB\09EB;
@@ -643,14 +643,14 @@ APU_09E5:             MOV A,!SPCInEdge+1                        ;;09FD|09E5+09E5
                       BEQ APU_0995                              ;;0A09|09F1+09F1/09F1\09F1;
                       CMP A,#$01                                ;;0A0B|09F3+09F3/09F3\09F3;
                       BEQ APU_0A14                              ;;0A0D|09F5+09F5/09F5\09F5;
-                      MOV A,!SPCOutBuffer+1                     ;;0A0F|09F7+09F7/09F7\09F7;
+                      MOV.B A,SPCOutBuffer+1                    ;;0A0F|09F7+09F7/09F7\09F7;
                       CMP A,#$01                                ;;0A11|09F9+09F9/09F9\09F9;
                       BEQ APU_0A03                              ;;0A13|09FB+09FB/09FB\09FB;
-                      MOV A,!SPCInEdge+1                        ;;0A15|09FD+09FD/09FD\09FD;
+                      MOV.B A,SPCInEdge+1                       ;;0A15|09FD+09FD/09FD\09FD;
                       CMP A,#$04                                ;;0A17|09FF+09FF/09FF\09FF;
                       BEQ APU_0A0E                              ;;0A19|0A01+0A01/0A01\0A01; (jmp $0ace);
                                                                 ;;                        ;
-APU_0A03:             MOV A,!SPCOutBuffer+1                     ;;0A1B|0A03+0A03/0A03\0A03;
+APU_0A03:             MOV.B A,SPCOutBuffer+1                    ;;0A1B|0A03+0A03/0A03\0A03;
                       CMP A,#$01                                ;;0A1D|0A05+0A05/0A05\0A05;
                       BEQ APU_0A51                              ;;0A1F|0A07+0A07/0A07\0A07;
                       CMP A,#$04                                ;;0A21|0A09+0A09/0A09\0A09;
@@ -660,74 +660,74 @@ APU_0A0D:             RET                                       ;;0A25|0A0D+0A0D
 APU_0A0E:             JMP APU_0ACE                              ;;0A26|0A0E+0A0E/0A0E\0A0E;
                     + JMP APU_0B08                              ;;0A29|0A11+0A11/0A11\0A11;
                                                                 ;;                        ;
-APU_0A14:             MOV !SPCOutBuffer+1,A                     ;;0A2C|0A14+0A14/0A14\0A14; $01 = 01 
+APU_0A14:             MOV.B SPCOutBuffer+1,A                    ;;0A2C|0A14+0A14/0A14\0A14; $01 = 01 
                       MOV A,#$04                                ;;0A2E|0A16+0A16/0A16\0A16;
-                      MOV !ARam_0383,A                          ;;0A30|0A18+0A18/0A18\0A18;
+                      MOV.W ARam_0383,A                         ;;0A30|0A18+0A18/0A18\0A18;
                       MOV A,#$80                                ;;0A33|0A1B+0A1B/0A1B\0A1B;
                       MOV Y,#$5C                                ;;0A35|0A1D+0A1D/0A1D\0A1D;
                       CALL WriteDSPReg                          ;;0A37|0A1F+0A1F/0A1F\0A1F;
-                      SET7 !ChannelsMuted                       ;;0A3A|0A22+0A22/0A22\0A22;
+                      SET7.B ChannelsMuted                      ;;0A3A|0A22+0A22/0A22\0A22;
                       MOV A,#$00                                ;;0A3C|0A24+0A24/0A24\0A24;
                       MOV Y,#$20                                ;;0A3E|0A26+0A26/0A26\0A26;
-                    - MOV !ARam_02FF+Y,A                        ;;0A40|0A28+0A28/0A28\0A28;
+                    - MOV.W ARam_0300-1+Y,A                     ;;0A40|0A28+0A28/0A28\0A28;
                       DBNZ Y,-                                  ;;0A43|0A2B+0A2B/0A2B\0A2B;
                       RET                                       ;;0A45|0A2D+0A2D/0A2D\0A2D;
                                                                 ;;                        ;
-APU_0A2E:             DEC !ARam_0383                            ;;0A46|0A2E+0A2E/0A2E\0A2E;
+APU_0A2E:             DEC.W ARam_0383                           ;;0A46|0A2E+0A2E/0A2E\0A2E;
                       BNE APU_0A0D                              ;;0A49|0A31+0A31/0A31\0A31;
-                      MOV !ARam_1C,#$30                         ;;0A4B|0A33+0A33/0A33\0A33;
+                      MOV.B ARam_1C,#$30                        ;;0A4B|0A33+0A33/0A33\0A33;
                       BRA APU_0A68                              ;;0A4E|0A36+0A36/0A36\0A36;
-                    - CMP !ARam_1C,#$2A                         ;;0A50|0A38+0A38/0A38\0A38;
+                    - CMP.B ARam_1C,#$2A                        ;;0A50|0A38+0A38/0A38\0A38;
                       BNE APU_0A99                              ;;0A53|0A3B+0A3B/0A3B\0A3B;
-                      MOV !CurrentChannel2,#$0E                 ;;0A55|0A3D+0A3D/0A3D\0A3D;
+                      MOV.B CurrentChannel2,#$0E                ;;0A55|0A3D+0A3D/0A3D\0A3D;
                       MOV X,#$0E                                ;;0A58|0A40+0A40/0A40\0A40;
                       MOV Y,#$00                                ;;0A5A|0A42+0A42/0A42\0A42;
-                      MOV !VoPitchSlide+$0F,Y                   ;;0A5C|0A44+0A44/0A44\0A44;
+                      MOV.B VoPitchSlide+$0F,Y                  ;;0A5C|0A44+0A44/0A44\0A44;
                       MOV Y,#$12                                ;;0A5E|0A46+0A46/0A46\0A46;
-                      MOV !VoPitchSlide+$0E,Y                   ;;0A60|0A48+0A48/0A48\0A48;
+                      MOV.B VoPitchSlide+$0E,Y                  ;;0A60|0A48+0A48/0A48\0A48;
                       MOV A,#$B9                                ;;0A62|0A4A+0A4A/0A4A\0A4A;
                       CALL APU_0F5D                             ;;0A64|0A4C+0A4C/0A4C\0A4C;
                       BRA APU_0A99                              ;;0A67|0A4F+0A4F/0A4F\0A4F;
                                                                 ;;                        ;
-APU_0A51:             MOV A,!ARam_0383                          ;;0A69|0A51+0A51/0A51\0A51;
+APU_0A51:             MOV.W A,ARam_0383                         ;;0A69|0A51+0A51/0A51\0A51;
                       BNE APU_0A2E                              ;;0A6C|0A54+0A54/0A54\0A54;
-                      DBNZ !ARam_1C,-                           ;;0A6E|0A56+0A56/0A56\0A56;
-                      MOV !SPCOutBuffer+1,#$00                  ;;0A71|0A59+0A59/0A59\0A59;
-                      CLR7 !ChannelsMuted                       ;;0A74|0A5C+0A5C/0A5C\0A5C;
+                      DBNZ.B ARam_1C,-                          ;;0A6E|0A56+0A56/0A56\0A56;
+                      MOV.B SPCOutBuffer+1,#$00                 ;;0A71|0A59+0A59/0A59\0A59;
+                      CLR7.B ChannelsMuted                      ;;0A74|0A5C+0A5C/0A5C\0A5C;
                       MOV X,#$0E                                ;;0A76|0A5E+0A5E/0A5E\0A5E;
-                      MOV A,!VoInstrument+$0F                   ;;0A78|0A60+0A60/0A60\0A60;
+                      MOV.B A,VoInstrument+$0F                  ;;0A78|0A60+0A60/0A60\0A60;
                       BEQ +                                     ;;0A7A|0A62+0A62/0A62\0A62;
                       JMP APU_0D4B                              ;;0A7C|0A64+0A64/0A64\0A64;
                     + RET                                       ;;0A7F|0A67+0A67/0A67\0A67;
                                                                 ;;                        ;
 APU_0A68:             CALL APU_0AB1                             ;;0A80|0A68+0A68/0A68\0A68;
                       MOV A,#$B2                                ;;0A83|0A6B+0A6B/0A6B\0A6B;
-                      MOV !CurrentChannel2,#$0E                 ;;0A85|0A6D+0A6D/0A6D\0A6D;
+                      MOV CurrentChannel2,#$0E                  ;;0A85|0A6D+0A6D/0A6D\0A6D;
                       MOV X,#$0E                                ;;0A88|0A70+0A70/0A70\0A70;
                       CALL HandleVCmd                           ;;0A8A|0A72+0A72/0A72\0A72;
                       MOV Y,#$00                                ;;0A8D|0A75+0A75/0A75\0A75;
-                      MOV !VoPitchSlide+$0F,Y                   ;;0A8F|0A77+0A77/0A77\0A77;
+                      MOV.B VoPitchSlide+$0F,Y                  ;;0A8F|0A77+0A77/0A77\0A77;
                       MOV Y,#$05                                ;;0A91|0A79+0A79/0A79\0A79;
-                      MOV !VoPitchSlide+$0E,Y                   ;;0A93|0A7B+0A7B/0A7B\0A7B;
+                      MOV.B VoPitchSlide+$0E,Y                  ;;0A93|0A7B+0A7B/0A7B\0A7B;
                       MOV A,#$B5                                ;;0A95|0A7D+0A7D/0A7D\0A7D;
                       CALL APU_0F5D                             ;;0A97|0A7F+0A7F/0A7F\0A7F;
                       MOV A,#$38                                ;;0A9A|0A82+0A82/0A82\0A82;
-                      MOV !ARam_10,A                            ;;0A9C|0A84+0A84/0A84\0A84;
+                      MOV.B ARam_10,A                           ;;0A9C|0A84+0A84/0A84\0A84;
                       MOV Y,#$70                                ;;0A9E|0A86+0A86/0A86\0A86;
                       CALL WriteDSPReg                          ;;0AA0|0A88+0A88/0A88\0A88;
                       MOV A,#$38                                ;;0AA3|0A8B+0A8B/0A8B\0A8B;
-                      MOV !ARam_10,A                            ;;0AA5|0A8D+0A8D/0A8D\0A8D;
+                      MOV.B ARam_10,A                           ;;0AA5|0A8D+0A8D/0A8D\0A8D;
                       MOV Y,#$71                                ;;0AA7|0A8F+0A8F/0A8F\0A8F;
                       CALL WriteDSPReg                          ;;0AA9|0A91+0A91/0A91\0A91;
                       MOV A,#$80                                ;;0AAC|0A94+0A94/0A94\0A94;
                       CALL APU_0D32                             ;;0AAE|0A96+0A96/0A96\0A96;
 APU_0A99:             MOV A,#$02                                ;;0AB1|0A99+0A99/0A99\0A99;
-                      CBNE !ARam_1C,+                           ;;0AB3|0A9B+0A9B/0A9B\0A9B;
+                      CBNE.B ARam_1C,+                          ;;0AB3|0A9B+0A9B/0A9B\0A9B;
                       MOV A,#$80                                ;;0AB6|0A9E+0A9E/0A9E\0A9E;
                       MOV Y,#$5C                                ;;0AB8|0AA0+0AA0/0AA0\0AA0;
                       CALL WriteDSPReg                          ;;0ABA|0AA2+0AA2/0AA2\0AA2;
-                    + CLR7 !ARam_13                             ;;0ABD|0AA5+0AA5/0AA5\0AA5;
-                      MOV A,!VoPitchSlide+$0E                   ;;0ABF|0AA7+0AA7/0AA7\0AA7;
+                    + CLR7.B ARam_13                            ;;0ABD|0AA5+0AA5/0AA5\0AA5;
+                      MOV.B A,VoPitchSlide+$0E                  ;;0ABF|0AA7+0AA7/0AA7\0AA7;
                       BEQ +                                     ;;0AC1|0AA9+0AA9/0AA9\0AA9;
                       MOV X,#$0E                                ;;0AC3|0AAB+0AAB/0AAB\0AAB;
                       CALL PitchSlideDelta                      ;;0AC5|0AAD+0AAD/0AAD\0AAD;
@@ -738,63 +738,63 @@ APU_0AB3:             MOV Y,#$09                                ;;0ACB|0AB3+0AB3
                       MUL YA                                    ;;0ACD|0AB5+0AB5/0AB5\0AB5;
                       MOV X,A                                   ;;0ACE|0AB6+0AB6/0AB6\0AB6;
                       MOV Y,#$70                                ;;0ACF|0AB7+0AB7/0AB7\0AB7;
-                      MOV !ARam_12,#$08                         ;;0AD1|0AB9+0AB9/0AB9\0AB9;
-                    - MOV A,SFXDSPSettings+X                    ;;0AD4|0ABC+0ABC/0ABC\0ABC;
+                      MOV.B ARam_12,#$08                        ;;0AD1|0AB9+0AB9/0AB9\0AB9;
+                    - MOV.W A,SFXDSPSettings+X                  ;;0AD4|0ABC+0ABC/0ABC\0ABC;
                       CALL WriteDSPReg                          ;;0AD7|0ABF+0ABF/0ABF\0ABF;
                       INC X                                     ;;0ADA|0AC2+0AC2/0AC2\0AC2;
                       INC Y                                     ;;0ADB|0AC3+0AC3/0AC3\0AC3;
-                      DBNZ !ARam_12,-                           ;;0ADC|0AC4+0AC4/0AC4\0AC4;
-                      MOV A,SFXDSPSettings+X                    ;;0ADF|0AC7+0AC7/0AC7\0AC7;
-                      MOV !ARam_0210+$0E,A                      ;;0AE2|0ACA+0ACA/0ACA\0ACA;
+                      DBNZ.B ARam_12,-                          ;;0ADC|0AC4+0AC4/0AC4\0AC4;
+                      MOV.W A,SFXDSPSettings+X                  ;;0ADF|0AC7+0AC7/0AC7\0AC7;
+                      MOV.W ARam_0210+$0E,A                     ;;0AE2|0ACA+0ACA/0ACA\0ACA;
                       RET                                       ;;0AE5|0ACD+0ACD/0ACD\0ACD;
                                                                 ;;                        ;
-APU_0ACE:             MOV !SPCOutBuffer+1,A                     ;;0AE6|0ACE+0ACE/0ACE\0ACE; $01 = 04 && $05 != 01 
+APU_0ACE:             MOV.B SPCOutBuffer+1,A                    ;;0AE6|0ACE+0ACE/0ACE\0ACE; $01 = 04 && $05 != 01 
                       MOV A,#$04                                ;;0AE8|0AD0+0AD0/0AD0\0AD0;
-                      MOV !ARam_0383,A                          ;;0AEA|0AD2+0AD2/0AD2\0AD2;
+                      MOV.W ARam_0383,A                         ;;0AEA|0AD2+0AD2/0AD2\0AD2;
                       MOV A,#$80                                ;;0AED|0AD5+0AD5/0AD5\0AD5;
                       MOV Y,#$5C                                ;;0AEF|0AD7+0AD7/0AD7\0AD7;
                       CALL WriteDSPReg                          ;;0AF1|0AD9+0AD9/0AD9\0AD9; key off voice 7 now;
-                      SET7 !ChannelsMuted                       ;;0AF4|0ADC+0ADC/0ADC\0ADC;
+                      SET7.B ChannelsMuted                      ;;0AF4|0ADC+0ADC/0ADC\0ADC;
                       MOV A,#$00                                ;;0AF6|0ADE+0ADE/0ADE\0ADE;
                       MOV Y,#$20                                ;;0AF8|0AE0+0AE0/0AE0\0AE0;
-                    - MOV !ARam_02FF+Y,A                        ;;0AFA|0AE2+0AE2/0AE2\0AE2;
+                    - MOV.W ARam_0300-1+Y,A                     ;;0AFA|0AE2+0AE2/0AE2\0AE2;
                       DBNZ Y,-                                  ;;0AFD|0AE5+0AE5/0AE5\0AE5;
                     - RET                                       ;;0AFF|0AE7+0AE7/0AE7\0AE7;
                                                                 ;;                        ;
-APU_0AE8:             DEC !ARam_0383                            ;;0B00|0AE8+0AE8/0AE8\0AE8;
+APU_0AE8:             DEC.W ARam_0383                           ;;0B00|0AE8+0AE8/0AE8\0AE8;
                       BNE -                                     ;;0B03|0AEB+0AEB/0AEB\0AEB;
-                      MOV !ARam_1C,#$18                         ;;0B05|0AED+0AED/0AED\0AED;
+                      MOV.B ARam_1C,#$18                        ;;0B05|0AED+0AED/0AED\0AED;
                       BRA +                                     ;;0B08|0AF0+0AF0/0AF0\0AF0;
-APU_0AF2:             CMP !ARam_1C,#$0C                         ;;0B0A|0AF2+0AF2/0AF2\0AF2;
+APU_0AF2:             CMP.B ARam_1C,#$0C                        ;;0B0A|0AF2+0AF2/0AF2\0AF2;
                       BNE APU_0B33                              ;;0B0D|0AF5+0AF5/0AF5\0AF5;
                     + MOV A,#$07                                ;;0B0F|0AF7+0AF7/0AF7\0AF7;
                       CALL APU_0AB3                             ;;0B11|0AF9+0AF9/0AF9\0AF9;
                       MOV A,#$A4                                ;;0B14|0AFC+0AFC/0AFC\0AFC;
-                      MOV !CurrentChannel2,#$0E                 ;;0B16|0AFE+0AFE/0AFE\0AFE;
+                      MOV.B CurrentChannel2,#$0E                ;;0B16|0AFE+0AFE/0AFE\0AFE;
                       MOV X,#$0E                                ;;0B19|0B01+0B01/0B01\0B01;
                       CALL HandleVCmd                           ;;0B1B|0B03+0B03/0B03\0B03;
                       BRA APU_0B1C                              ;;0B1E|0B06+0B06/0B06\0B06;
                                                                 ;;                        ;
-APU_0B08:             MOV A,!ARam_0383                          ;;0B20|0B08+0B08/0B08\0B08;
+APU_0B08:             MOV.W A,ARam_0383                         ;;0B20|0B08+0B08/0B08\0B08;
                       BNE APU_0AE8                              ;;0B23|0B0B+0B0B/0B0B\0B0B;
-                      DBNZ !ARam_1C,APU_0AF2                    ;;0B25|0B0D+0B0D/0B0D\0B0D;
-                      MOV !SPCOutBuffer+1,#$00                  ;;0B28|0B10+0B10/0B10\0B10;
-                      CLR7 !ChannelsMuted                       ;;0B2B|0B13+0B13/0B13\0B13;
+                      DBNZ.B ARam_1C,APU_0AF2                   ;;0B25|0B0D+0B0D/0B0D\0B0D;
+                      MOV.B SPCOutBuffer+1,#$00                 ;;0B28|0B10+0B10/0B10\0B10;
+                      CLR7.B ChannelsMuted                      ;;0B2B|0B13+0B13/0B13\0B13;
                       MOV X,#$0E                                ;;0B2D|0B15+0B15/0B15\0B15;
-                      MOV A,!VoInstrument+$0F                   ;;0B2F|0B17+0B17/0B17\0B17;
+                      MOV.B A,VoInstrument+$0F                  ;;0B2F|0B17+0B17/0B17\0B17;
                       JMP APU_0D4B                              ;;0B31|0B19+0B19/0B19\0B19;
 APU_0B1C:             MOV A,#$28                                ;;0B34|0B1C+0B1C/0B1C\0B1C;
-                      MOV !ARam_10,A                            ;;0B36|0B1E+0B1E/0B1E\0B1E;
+                      MOV.B ARam_10,A                           ;;0B36|0B1E+0B1E/0B1E\0B1E;
                       MOV Y,#$70                                ;;0B38|0B20+0B20/0B20\0B20;
                       CALL WriteDSPReg                          ;;0B3A|0B22+0B22/0B22\0B22;
                       MOV A,#$28                                ;;0B3D|0B25+0B25/0B25\0B25;
-                      MOV !ARam_10,A                            ;;0B3F|0B27+0B27/0B27\0B27;
+                      MOV.B ARam_10,A                           ;;0B3F|0B27+0B27/0B27\0B27;
                       MOV Y,#$71                                ;;0B41|0B29+0B29/0B29\0B29;
                       CALL WriteDSPReg                          ;;0B43|0B2B+0B2B/0B2B\0B2B;
                       MOV A,#$80                                ;;0B46|0B2E+0B2E/0B2E\0B2E;
                       CALL APU_0D32                             ;;0B48|0B30+0B30/0B30\0B30;
 APU_0B33:             MOV A,#$02                                ;;0B4B|0B33+0B33/0B33\0B33;
-                      CBNE !ARam_1C,+                           ;;0B4D|0B35+0B35/0B35\0B35;
+                      CBNE.B ARam_1C,+                          ;;0B4D|0B35+0B35/0B35\0B35;
                       MOV A,#$80                                ;;0B50|0B38+0B38/0B38\0B38;
                       MOV Y,#$5C                                ;;0B52|0B3A+0B3A/0B3A\0B3A;
                       CALL WriteDSPReg                          ;;0B54|0B3C+0B3C/0B3C\0B3C;
@@ -812,172 +812,172 @@ APU_0B40:             SETC                                      ;;0B58|0B40+0B40
                       CMP A,#$0D                                ;;0B69|0B51+0B51/0B51\0B51;
                       BCS ++                                    ;;0B6B|0B53+0B53/0B53\0B53;
                     + MOV Y,#$00                                ;;0B6D|0B55+0B55/0B55\0B55;
-                      MOV !ARam_0387,Y                          ;;0B6F|0B57+0B57/0B57\0B57;
-                   ++ MOV !SPCOutBuffer+2,A                     ;;0B72|0B5A+0B5A/0B5A\0B5A;
-                      MOV !ARam_0C,#$02                         ;;0B74|0B5C+0B5C/0B5C\0B5C;
+                      MOV.W ARam_0387,Y                         ;;0B6F|0B57+0B57/0B57\0B57;
+                   ++ MOV.B SPCOutBuffer+2,A                    ;;0B72|0B5A+0B5A/0B5A\0B5A;
+                      MOV.B ARam_0C,#$02                        ;;0B74|0B5C+0B5C/0B5C\0B5C;
                       ASL A                                     ;;0B77|0B5F+0B5F/0B5F\0B5F;
                       MOV Y,A                                   ;;0B78|0B60+0B60/0B60\0B60;
-                      MOV A,!MusicData-2+Y                      ;;0B79|0B61+0B61/0B61\0B61;
-                      MOV !BlockPtr,A                           ;;0B7C|0B64+0B64/0B64\0B64;
-                      MOV A,!MusicData-1+Y                      ;;0B7E|0B66+0B66/0B66\0B66;
-                      MOV !BlockPtr+1,A                         ;;0B81|0B69+0B69/0B69\0B69;
+                      MOV.W A,MusicData-2+Y                     ;;0B79|0B61+0B61/0B61\0B61;
+                      MOV.B BlockPtr,A                          ;;0B7C|0B64+0B64/0B64\0B64;
+                      MOV.W A,MusicData-1+Y                     ;;0B7E|0B66+0B66/0B66\0B66;
+                      MOV.B BlockPtr+1,A                        ;;0B81|0B69+0B69/0B69\0B69;
                                                                 ;;                        ;
                       MOV X,#$0E                                ;;0B83|0B6B+0B6B/0B6B\0B6B; foreach voice;
                     - MOV A,#$0A                                ;;0B85|0B6D+0B6D/0B6D\0B6D;
-                      MOV !ARam_0280+1+X,A                      ;;0B87|0B6F+0B6F/0B6F\0B6F; pan 
+                      MOV.W ARam_0280+1+X,A                     ;;0B87|0B6F+0B6F/0B6F\0B6F; pan 
                       MOV A,#$FF                                ;;0B8A|0B72+0B72/0B72\0B72;
-                      MOV !ARam_0240+1+X,A                      ;;0B8C|0B74+0B74/0B74\0B74; voice base vol 
+                      MOV.W ARam_0240+1+X,A                     ;;0B8C|0B74+0B74/0B74\0B74; voice base vol 
                       MOV A,#$00                                ;;0B8F|0B77+0B77/0B77\0B77;
-                      MOV !ARam_02D0+1+X,A                      ;;0B91|0B79+0B79/0B79\0B79; portamento off 
-                      MOV !VoPanFade+1+X,A                      ;;0B94|0B7C+0B7C/0B7C\0B7C; pan fade ctr 
-                      MOV !VoPanFade+X,A                        ;;0B96|0B7E+0B7E/0B7E\0B7E; vol fade ctr 
-                      MOV !VoVibrato+1+X,A                      ;;0B98|0B80+0B80/0B80\0B80;
-                      MOV !ARam_B0+1+X,A                        ;;0B9A|0B82+0B82/0B82\0B82;
-                      MOV !VoInstrument+X,A                     ;;0B9C|0B84+0B84/0B84\0B84; repeat ctr 
-                      MOV !VoInstrument+1+X,A                   ;;0B9E|0B86+0B86/0B86\0B86; current instr 
+                      MOV.W ARam_02D0+1+X,A                     ;;0B91|0B79+0B79/0B79\0B79; portamento off 
+                      MOV.B VoPanFade+1+X,A                     ;;0B94|0B7C+0B7C/0B7C\0B7C; pan fade ctr 
+                      MOV.B VoPanFade+X,A                       ;;0B96|0B7E+0B7E/0B7E\0B7E; vol fade ctr 
+                      MOV.B VoVibrato+1+X,A                     ;;0B98|0B80+0B80/0B80\0B80;
+                      MOV.B ARam_B0+1+X,A                       ;;0B9A|0B82+0B82/0B82\0B82;
+                      MOV.B VoInstrument+X,A                    ;;0B9C|0B84+0B84/0B84\0B84; repeat ctr 
+                      MOV.B VoInstrument+1+X,A                  ;;0B9E|0B86+0B86/0B86\0B86; current instr 
                       DEC X                                     ;;0BA0|0B88+0B88/0B88\0B88;
                       DEC X                                     ;;0BA1|0B89+0B89/0B89\0B89;
                       BPL -                                     ;;0BA2|0B8A+0B8A/0B8A\0B8A;
                                                                 ;;                        ;
-                      MOV !VolFadeTimer,A                       ;;0BA4|0B8C+0B8C/0B8C\0B8C; master vol fade ctr 
-                      MOV !ARam_60,A                            ;;0BA6|0B8E+0B8E/0B8E\0B8E; echo vol fade ctr 
-                      MOV !TempoSetTimer,A                      ;;0BA8|0B90+0B90/0B90\0B90; tempo fade ctr 
-                      MOV !MasterTranspose,A                    ;;0BAA|0B92+0B92/0B92\0B92; global transpose 
-                      MOV !MasterVolume,#$C0                    ;;0BAC|0B94+0B94/0B94\0B94; master vol 
-                      MOV !MasterTempo+1,#$36                   ;;0BAF|0B97+0B97/0B97\0B97; tempo 
+                      MOV.B VolFadeTimer,A                      ;;0BA4|0B8C+0B8C/0B8C\0B8C; master vol fade ctr 
+                      MOV.B ARam_60,A                           ;;0BA6|0B8E+0B8E/0B8E\0B8E; echo vol fade ctr 
+                      MOV.B TempoSetTimer,A                     ;;0BA8|0B90+0B90/0B90\0B90; tempo fade ctr 
+                      MOV.B MasterTranspose,A                   ;;0BAA|0B92+0B92/0B92\0B92; global transpose 
+                      MOV.B MasterVolume,#$C0                   ;;0BAC|0B94+0B94/0B94\0B94; master vol 
+                      MOV.B MasterTempo+1,#$36                  ;;0BAF|0B97+0B97/0B97\0B97; tempo 
                       MOV Y,#$20                                ;;0BB2|0B9A+0B9A/0B9A\0B9A;
-                    - MOV !ARam_02FF+Y,A                        ;;0BB4|0B9C+0B9C/0B9C\0B9C;
+                    - MOV.W ARam_0300-1+Y,A                     ;;0BB4|0B9C+0B9C/0B9C\0B9C;
                       DBNZ Y,-                                  ;;0BB7|0B9F+0B9F/0B9F\0B9F; zero $0300-031f;
                       BRA +                                     ;;0BB9|0BA1+0BA1/0BA1\0BA1;
-APU_0BA3:             MOV !SPCOutBuffer+2,A                     ;;0BBB|0BA3+0BA3/0BA3\0BA3;
-                    + MOV A,!ChannelsMuted                      ;;0BBD|0BA5+0BA5/0BA5\0BA5;
+APU_0BA3:             MOV.B SPCOutBuffer+2,A                    ;;0BBB|0BA3+0BA3/0BA3\0BA3;
+                    + MOV.B A,ChannelsMuted                     ;;0BBD|0BA5+0BA5/0BA5\0BA5;
                       EOR A,#$FF                                ;;0BBF|0BA7+0BA7/0BA7\0BA7;
                       MOV Y,#$5C                                ;;0BC1|0BA9+0BA9/0BA9\0BA9;
                       JMP WriteDSPReg                           ;;0BC3|0BAB+0BAB/0BAB\0BAB;
                                                                 ;;                        ;
 APU_0BAE:             MOV X,#$F0                                ;;0BC6|0BAE+0BAE/0BAE\0BAE; fade volume out over 240 counts;
-                      MOV !VolFadeTimer,X                       ;;0BC8|0BB0+0BB0/0BB0\0BB0;
+                      MOV.B VolFadeTimer,X                      ;;0BC8|0BB0+0BB0/0BB0\0BB0;
                       MOV A,#$00                                ;;0BCA|0BB2+0BB2/0BB2\0BB2;
-                      MOV !VolFadeVal,A                         ;;0BCC|0BB4+0BB4/0BB4\0BB4;
+                      MOV.B VolFadeVal,A                        ;;0BCC|0BB4+0BB4/0BB4\0BB4;
                       SETC                                      ;;0BCE|0BB6+0BB6/0BB6\0BB6;
-                      SBC A,!MasterVolume                       ;;0BCF|0BB7+0BB7/0BB7\0BB7;
+                      SBC.B A,MasterVolume                      ;;0BCF|0BB7+0BB7/0BB7\0BB7;
                       CALL APU_0F76                             ;;0BD1|0BB9+0BB9/0BB9\0BB9;
-                      MOVW !ARam_5A,YA                          ;;0BD4|0BBC+0BBC/0BBC\0BBC; set volume fade out after 240 counts 
+                      MOVW.B ARam_5A,YA                         ;;0BD4|0BBC+0BBC/0BBC\0BBC; set volume fade out after 240 counts 
                       BRA APU_0BE7                              ;;0BD6|0BBE+0BBE/0BBE\0BBE;
                                                                 ;;                        ;
-APU_0BC0:             MOV A,!SPCOutBuffer+2                     ;;0BD8|0BC0+0BC0/0BC0\0BC0;
+APU_0BC0:             MOV.B A,SPCOutBuffer+2                    ;;0BD8|0BC0+0BC0/0BC0\0BC0;
                       BEQ APU_0BDE                              ;;0BDA|0BC2+0BC2/0BC2\0BC2;
                       CMP A,#$06                                ;;0BDC|0BC4+0BC4/0BC4\0BC4;
                       BEQ ++                                    ;;0BDE|0BC6+0BC6/0BC6\0BC6;
                       AND A,#$FC                                ;;0BE0|0BC8+0BC8/0BC8\0BC8;
                       BNE +                                     ;;0BE2|0BCA+0BCA/0BCA\0BCA;
-                   ++ MOV A,!ARam_0386                          ;;0BE4|0BCC+0BCC/0BCC\0BCC;
+                   ++ MOV.W A,ARam_0386                         ;;0BE4|0BCC+0BCC/0BCC\0BCC;
                       BNE +                                     ;;0BE7|0BCF+0BCF/0BCF\0BCF;
                       MOV A,#$20                                ;;0BE9|0BD1+0BD1/0BD1\0BD1;
                       MOV Y,#$5C                                ;;0BEB|0BD3+0BD3/0BD3\0BD3;
                       CALL WriteDSPReg                          ;;0BED|0BD5+0BD5/0BD5\0BD5;
-                      SET5 !ChannelsMuted                       ;;0BF0|0BD8+0BD8/0BD8\0BD8;
+                      SET5.B ChannelsMuted                      ;;0BF0|0BD8+0BD8/0BD8\0BD8;
                       BRA APU_0BDE                              ;;0BF2|0BDA+0BDA/0BDA\0BDA;
-                    + CLR5 !ChannelsMuted                       ;;0BF4|0BDC+0BDC/0BDC\0BDC;
-APU_0BDE:             MOV A,!SPCInEdge+2                        ;;0BF6|0BDE+0BDE/0BDE\0BDE;
+                    + CLR5.B ChannelsMuted                      ;;0BF4|0BDC+0BDC/0BDC\0BDC;
+APU_0BDE:             MOV.B A,SPCInEdge+2                       ;;0BF6|0BDE+0BDE/0BDE\0BDE;
                       BMI APU_0BAE                              ;;0BF8|0BE0+0BE0/0BE0\0BE0;
                       BEQ APU_0BE7                              ;;0BFA|0BE2+0BE2/0BE2\0BE2;
                       JMP APU_0B40                              ;;0BFC|0BE4+0BE4/0BE4\0BE4; play song in A?;
                                                                 ;;                        ;
-APU_0BE7:             MOV A,!ARam_0C                            ;;0BFF|0BE7+0BE7/0BE7\0BE7;
+APU_0BE7:             MOV.B A,ARam_0C                           ;;0BFF|0BE7+0BE7/0BE7\0BE7;
                       BNE APU_0BFE                              ;;0C01|0BE9+0BE9/0BE9\0BE9;
-                      MOV A,!SPCOutBuffer+2                     ;;0C03|0BEB+0BEB/0BEB\0BEB;
+                      MOV.B A,SPCOutBuffer+2                    ;;0C03|0BEB+0BEB/0BEB\0BEB;
                       BNE APU_0C46                              ;;0C05|0BED+0BED/0BED\0BED;
                     - RET                                       ;;0C07|0BEF+0BEF/0BEF\0BEF;
                                                                 ;;                        ;
 APU_0BF0:             MOV Y,#$00                                ;;0C08|0BF0+0BF0/0BF0\0BF0; read next word at $40 into YA;
-                      MOV A,(!BlockPtr)+Y                       ;;0C0A|0BF2+0BF2/0BF2\0BF2;
-                      INCW !BlockPtr                            ;;0C0C|0BF4+0BF4/0BF4\0BF4;
+                      MOV.B A,(BlockPtr)+Y                      ;;0C0A|0BF2+0BF2/0BF2\0BF2;
+                      INCW.B BlockPtr                           ;;0C0C|0BF4+0BF4/0BF4\0BF4;
                       PUSH A                                    ;;0C0E|0BF6+0BF6/0BF6\0BF6;
-                      MOV A,(!BlockPtr)+Y                       ;;0C0F|0BF7+0BF7/0BF7\0BF7;
-                      INCW !BlockPtr                            ;;0C11|0BF9+0BF9/0BF9\0BF9;
+                      MOV.B A,(BlockPtr)+Y                      ;;0C0F|0BF7+0BF7/0BF7\0BF7;
+                      INCW.B BlockPtr                           ;;0C11|0BF9+0BF9/0BF9\0BF9;
                       MOV Y,A                                   ;;0C13|0BFB+0BFB/0BFB\0BFB;
                       POP A                                     ;;0C14|0BFC+0BFC/0BFC\0BFC;
                       RET                                       ;;0C15|0BFD+0BFD/0BFD\0BFD;
                                                                 ;;                        ;
-APU_0BFE:             DBNZ !ARam_0C,-                           ;;0C16|0BFE+0BFE/0BFE\0BFE;
+APU_0BFE:             DBNZ.B ARam_0C,-                          ;;0C16|0BFE+0BFE/0BFE\0BFE;
 APU_0C01:             CALL APU_0BF0                             ;;0C19|0C01+0C01/0C01\0C01; read next word at $40;
-                      MOVW !PitchValue,YA                       ;;0C1C|0C04+0C04/0C04\0C04; save in $16/17 
+                      MOVW.B PitchValue,YA                      ;;0C1C|0C04+0C04/0C04\0C04; save in $16/17 
                       MOV A,Y                                   ;;0C1E|0C06+0C06/0C06\0C06; high byte zero?;
                       BNE APU_0C22                              ;;0C1F|0C07+0C07/0C07\0C07;
-                      MOV A,!PitchValue                         ;;0C21|0C09+0C09/0C09\0C09; refetch lo byte 
+                      MOV.B A,PitchValue                        ;;0C21|0C09+0C09/0C09\0C09; refetch lo byte 
                       BEQ APU_0BA3                              ;;0C23|0C0B+0C0B/0C0B\0C0B; key off, return if also zero;
-                      DEC !MusicLoopCounter                     ;;0C25|0C0D+0C0D/0C0D\0C0D;
+                      DEC.B MusicLoopCounter                    ;;0C25|0C0D+0C0D/0C0D\0C0D;
                       BEQ APU_0C1C                              ;;0C27|0C0F+0C0F/0C0F\0C0F;
                       BPL +                                     ;;0C29|0C11+0C11/0C11\0C11;
-                      MOV !MusicLoopCounter,A                   ;;0C2B|0C13+0C13/0C13\0C13;
+                      MOV.B MusicLoopCounter,A                  ;;0C2B|0C13+0C13/0C13\0C13;
                     + CALL APU_0BF0                             ;;0C2D|0C15+0C15/0C15\0C15; read next word at $40;
-                      MOVW !BlockPtr,YA                         ;;0C30|0C18+0C18/0C18\0C18; "goto" that address 
+                      MOVW.B BlockPtr,YA                        ;;0C30|0C18+0C18/0C18\0C18; "goto" that address 
                       BRA APU_0C01                              ;;0C32|0C1A+0C1A/0C1A\0C1A; and continue;
-APU_0C1C:             INCW !BlockPtr                            ;;0C34|0C1C+0C1C/0C1C\0C1C;
-                      INCW !BlockPtr                            ;;0C36|0C1E+0C1E/0C1E\0C1E; skip goto address 
+APU_0C1C:             INCW.B BlockPtr                           ;;0C34|0C1C+0C1C/0C1C\0C1C;
+                      INCW.B BlockPtr                           ;;0C36|0C1E+0C1E/0C1E\0C1E; skip goto address 
                       BRA APU_0C01                              ;;0C38|0C20+0C20/0C20\0C20; continue;
                                                                 ;;                        ;
 APU_0C22:             MOV Y,#$0F                                ;;0C3A|0C22+0C22/0C22\0C22; high byte not zero:;
-                    - MOV A,(!PitchValue)+Y                     ;;0C3C|0C24+0C24/0C24\0C24;
-                      MOV.W !VoPhrasePtr+Y,A                    ;;0C3E|0C26+0C26/0C26\0C26;
+                    - MOV.B A,(PitchValue)+Y                    ;;0C3C|0C24+0C24/0C24\0C24;
+                      MOV.W VoPhrasePtr+Y,A                     ;;0C3E|0C26+0C26/0C26\0C26;
                       DEC Y                                     ;;0C41|0C29+0C29/0C29\0C29;
                       BPL -                                     ;;0C42|0C2A+0C2A/0C2A\0C2A; set vptrs from [$16];
                                                                 ;;                        ;
                       MOV X,#$0E                                ;;0C44|0C2C+0C2C/0C2C\0C2C;
-                      MOV !CurrentChannel,#$80                  ;;0C46|0C2E+0C2E/0C2E\0C2E; foreach voice 
-                    - MOV A,!VoPhrasePtr+1+X                    ;;0C49|0C31+0C31/0C31\0C31;
+                      MOV.B CurrentChannel,#$80                 ;;0C46|0C2E+0C2E/0C2E\0C2E; foreach voice 
+                    - MOV.B A,VoPhrasePtr+1+X                   ;;0C49|0C31+0C31/0C31\0C31;
                       BEQ +                                     ;;0C4B|0C33+0C33/0C33\0C33; next if vptr hi = 0;
                       MOV A,#$01                                ;;0C4D|0C35+0C35/0C35\0C35;
-                      MOV !VoTimers+X,A                         ;;0C4F|0C37+0C37/0C37\0C37; set duration counter to 1 
-                      MOV A,!VoInstrument+1+X                   ;;0C51|0C39+0C39/0C39\0C39;
+                      MOV.B VoTimers+X,A                        ;;0C4F|0C37+0C37/0C37\0C37; set duration counter to 1 
+                      MOV.B A,VoInstrument+1+X                  ;;0C51|0C39+0C39/0C39\0C39;
                       BNE +                                     ;;0C53|0C3B+0C3B/0C3B\0C3B;
                       CALL APU_0D4A                             ;;0C55|0C3D+0C3D/0C3D\0C3D; set instr to 0 if no instr set;
-                    + LSR !CurrentChannel                       ;;0C58|0C40+0C40/0C40\0C40;
+                    + LSR.B CurrentChannel                      ;;0C58|0C40+0C40/0C40\0C40;
                       DEC X                                     ;;0C5A|0C42+0C42/0C42\0C42;
                       DEC X                                     ;;0C5B|0C43+0C43/0C43\0C43;
                       BPL -                                     ;;0C5C|0C44+0C44/0C44\0C44; loop;
                                                                 ;;                        ;
 APU_0C46:             MOV X,#$00                                ;;0C5E|0C46+0C46/0C46\0C46;
-                      MOV !ARam_47,X                            ;;0C60|0C48+0C48/0C48\0C48;
-                      MOV !CurrentChannel,#$01                  ;;0C62|0C4A+0C4A/0C4A\0C4A; foreach voice 
-APU_0C4D:             MOV !CurrentChannel2,X                    ;;0C65|0C4D+0C4D/0C4D\0C4D;
-                      MOV A,!VoPhrasePtr+1+X                    ;;0C67|0C4F+0C4F/0C4F\0C4F;
+                      MOV.B ARam_47,X                           ;;0C60|0C48+0C48/0C48\0C48;
+                      MOV.B CurrentChannel,#$01                 ;;0C62|0C4A+0C4A/0C4A\0C4A; foreach voice 
+APU_0C4D:             MOV.B CurrentChannel2,X                   ;;0C65|0C4D+0C4D/0C4D\0C4D;
+                      MOV.B A,VoPhrasePtr+1+X                   ;;0C67|0C4F+0C4F/0C4F\0C4F;
                       BEQ APU_0CC9                              ;;0C69|0C51+0C51/0C51\0C51; next if vptr hi zero;
-                      DEC !VoTimers+X                           ;;0C6B|0C53+0C53/0C53\0C53; dec duration counter 
+                      DEC.B VoTimers+X                          ;;0C6B|0C53+0C53/0C53\0C53; dec duration counter 
                       BNE APU_0CC6                              ;;0C6D|0C55+0C55/0C55\0C55; if not zero, skip to voice readahead;
 APU_0C57:             CALL NextVCmd                             ;;0C6F|0C57+0C57/0C57\0C57; get next vbyte;
                       BNE APU_0C7A                              ;;0C72|0C5A+0C5A/0C5A\0C5A;
-                      MOV A,!VoInstrument+X                     ;;0C74|0C5C+0C5C/0C5C\0C5C; vcmd 00:  end repeat/return 
+                      MOV.B A,VoInstrument+X                    ;;0C74|0C5C+0C5C/0C5C\0C5C; vcmd 00:  end repeat/return 
                       BEQ APU_0C01                              ;;0C76|0C5E+0C5E/0C5E\0C5E; goto next $40 section if rpt count 0;
-                      DEC !VoInstrument+X                       ;;0C78|0C60+0C60/0C60\0C60; dec repeat count 
+                      DEC.B VoInstrument+X                      ;;0C78|0C60+0C60/0C60\0C60; dec repeat count 
                       BNE APU_0C6E                              ;;0C7A|0C62+0C62/0C62\0C62; if zero then;
-                      MOV A,!ARam_03E0+X                        ;;0C7C|0C64+0C64/0C64\0C64;
-                      MOV !VoPhrasePtr+X,A                      ;;0C7F|0C67+0C67/0C67\0C67;
-                      MOV A,!ARam_03E0+1+X                      ;;0C81|0C69+0C69/0C69\0C69;
+                      MOV.W A,ARam_03E0+X                       ;;0C7C|0C64+0C64/0C64\0C64;
+                      MOV.B VoPhrasePtr+X,A                     ;;0C7F|0C67+0C67/0C67\0C67;
+                      MOV.W A,ARam_03E0+1+X                     ;;0C81|0C69+0C69/0C69\0C69;
                       BRA +                                     ;;0C84|0C6C+0C6C/0C6C\0C6C; goto 03E0/1;
-APU_0C6E:             MOV A,!ARam_03F0+X                        ;;0C86|0C6E+0C6E/0C6E\0C6E; else 
-                      MOV !VoPhrasePtr+X,A                      ;;0C89|0C71+0C71/0C71\0C71;
-                      MOV A,!ARam_03F0+1+X                      ;;0C8B|0C73+0C73/0C73\0C73; goto 03F0/1 
-                    + MOV !VoPhrasePtr+1+X,A                    ;;0C8E|0C76+0C76/0C76\0C76;
+APU_0C6E:             MOV.W A,ARam_03F0+X                       ;;0C86|0C6E+0C6E/0C6E\0C6E; else 
+                      MOV.B VoPhrasePtr+X,A                     ;;0C89|0C71+0C71/0C71\0C71;
+                      MOV.W A,ARam_03F0+1+X                     ;;0C8B|0C73+0C73/0C73\0C73; goto 03F0/1 
+                    + MOV.B VoPhrasePtr+1+X,A                   ;;0C8E|0C76+0C76/0C76\0C76;
                       BRA APU_0C57                              ;;0C90|0C78+0C78/0C78\0C78; continue to next vbyte;
                                                                 ;;                        ;
 APU_0C7A:             BMI APU_0C9F                              ;;0C92|0C7A+0C7A/0C7A\0C7A; vcmds 01-7f:;
-                      MOV !ARam_0200+X,A                        ;;0C94|0C7C+0C7C/0C7C\0C7C; set cmd as duration 
+                      MOV.W ARam_0200+X,A                       ;;0C94|0C7C+0C7C/0C7C\0C7C; set cmd as duration 
                       CALL NextVCmd                             ;;0C97|0C7F+0C7F/0C7F\0C7F; get next vcmd;
                       BMI APU_0C9F                              ;;0C9A|0C82+0C82/0C82\0C82; if not note then;
                       PUSH A                                    ;;0C9C|0C84+0C84/0C84\0C84;
                       XCN A                                     ;;0C9D|0C85+0C85/0C85\0C85;
                       AND A,#$07                                ;;0C9E|0C86+0C86/0C86\0C86;
                       MOV Y,A                                   ;;0CA0|0C88+0C88/0C88\0C88;
-                      MOV A,NoteDurs+Y                          ;;0CA1|0C89+0C89/0C89\0C89;
-                      MOV !ARam_0200+1+X,A                      ;;0CA4|0C8C+0C8C/0C8C\0C8C; set dur% from high nybble 
+                      MOV.W A,NoteDurs+Y                        ;;0CA1|0C89+0C89/0C89\0C89;
+                      MOV.W ARam_0200+1+X,A                     ;;0CA4|0C8C+0C8C/0C8C\0C8C; set dur% from high nybble 
                       POP A                                     ;;0CA7|0C8F+0C8F/0C8F\0C8F;
                       AND A,#$0F                                ;;0CA8|0C90+0C90/0C90\0C90;
                       MOV Y,A                                   ;;0CAA|0C92+0C92/0C92\0C92;
-                      MOV A,VelocityValues+Y                    ;;0CAB|0C93+0C93/0C93\0C93;
-                      MOV !ARam_0210+1+X,A                      ;;0CAE|0C96+0C96/0C96\0C96; set per-note vol from low nybble 
-                      OR (!ARam_5C),(!CurrentChannel)           ;;0CB1|0C99+0C99/0C99\0C99; mark vol changed? 
+                      MOV.W A,VelocityValues+Y                  ;;0CAB|0C93+0C93/0C93\0C93;
+                      MOV.W ARam_0210+1+X,A                     ;;0CAE|0C96+0C96/0C96\0C96; set per-note vol from low nybble 
+                      OR.B (ARam_5C),(CurrentChannel)           ;;0CB1|0C99+0C99/0C99\0C99; mark vol changed? 
                       CALL NextVCmd                             ;;0CB4|0C9C+0C9C/0C9C\0C9C; get next vbyte;
 APU_0C9F:             CMP A,#$DA                                ;;0CB7|0C9F+0C9F/0C9F\0C9F;
                       BCC +                                     ;;0CB9|0CA1+0CA1/0CA1\0CA1; vcmd da-ff:;
@@ -985,77 +985,77 @@ APU_0C9F:             CMP A,#$DA                                ;;0CB7|0C9F+0C9F
                       BRA APU_0C57                              ;;0CBE|0CA6+0CA6/0CA6\0CA6; do next vcmd;
                                                                 ;;                        ;
                     + PUSH A                                    ;;0CC0|0CA8+0CA8/0CA8\0CA8; vcmd 80-d9 (note);
-                      MOV A,!CurrentChannel                     ;;0CC1|0CA9+0CA9/0CA9\0CA9;
-                      AND A,!ChannelsMuted                      ;;0CC3|0CAB+0CAB/0CAB\0CAB;
+                      MOV.B A,CurrentChannel                    ;;0CC1|0CA9+0CA9/0CA9\0CA9;
+                      AND.B A,ChannelsMuted                     ;;0CC3|0CAB+0CAB/0CAB\0CAB;
                       POP A                                     ;;0CC5|0CAD+0CAD/0CAD\0CAD;
                       BNE +                                     ;;0CC6|0CAE+0CAE/0CAE\0CAE;
                       CALL HandleVCmd                           ;;0CC8|0CB0+0CB0/0CB0\0CB0; handle note cmd if vbit 1D clear;
-                    + MOV A,!ARam_0200+X                        ;;0CCB|0CB3+0CB3/0CB3\0CB3;
-                      MOV !VoTimers+X,A                         ;;0CCE|0CB6+0CB6/0CB6\0CB6; set duration counter from duration 
+                    + MOV.W A,ARam_0200+X                       ;;0CCB|0CB3+0CB3/0CB3\0CB3;
+                      MOV.B VoTimers+X,A                        ;;0CCE|0CB6+0CB6/0CB6\0CB6; set duration counter from duration 
                       MOV Y,A                                   ;;0CD0|0CB8+0CB8/0CB8\0CB8;
-                      MOV A,!ARam_0200+1+X                      ;;0CD1|0CB9+0CB9/0CB9\0CB9;
+                      MOV.W A,ARam_0200+1+X                     ;;0CD1|0CB9+0CB9/0CB9\0CB9;
                       MUL YA                                    ;;0CD4|0CBC+0CBC/0CBC\0CBC;
                       MOV A,Y                                   ;;0CD5|0CBD+0CBD/0CBD\0CBD;
                       BNE +                                     ;;0CD6|0CBE+0CBE/0CBE\0CBE;
                       INC A                                     ;;0CD8|0CC0+0CC0/0CC0\0CC0;
-                    + MOV !NoteLength+X,A                       ;;0CD9|0CC1+0CC1/0CC1\0CC1; set note dur counter from dur * dur% 
+                    + MOV.W NoteLength+X,A                      ;;0CD9|0CC1+0CC1/0CC1\0CC1; set note dur counter from dur * dur% 
                       BRA APU_0CC9                              ;;0CDC|0CC4+0CC4/0CC4\0CC4;
 APU_0CC6:             CALL APU_10A1                             ;;0CDE|0CC6+0CC6/0CC6\0CC6; do voice readahead;
 APU_0CC9:             INC X                                     ;;0CE1|0CC9+0CC9/0CC9\0CC9;
                       INC X                                     ;;0CE2|0CCA+0CCA/0CCA\0CCA;
-                      ASL !CurrentChannel                       ;;0CE3|0CCB+0CCB/0CCB\0CCB;
+                      ASL.B CurrentChannel                      ;;0CE3|0CCB+0CCB/0CCB\0CCB;
                       BCS +                                     ;;0CE5|0CCD+0CCD/0CCD\0CCD;
                       JMP APU_0C4D                              ;;0CE7|0CCF+0CCF/0CCF\0CCF; loop;
                                                                 ;;                        ;
-                    + MOV A,!TempoSetTimer                      ;;0CEA|0CD2+0CD2/0CD2\0CD2; do global fades 
+                    + MOV.B A,TempoSetTimer                     ;;0CEA|0CD2+0CD2/0CD2\0CD2; do global fades 
                       BEQ APU_0CE3                              ;;0CEC|0CD4+0CD4/0CD4\0CD4;
-                      DBNZ !TempoSetTimer,+                     ;;0CEE|0CD6+0CD6/0CD6\0CD6;
-                      MOVW YA,!TempoSetTimer                    ;;0CF1|0CD9+0CD9/0CD9\0CD9;
+                      DBNZ.B TempoSetTimer,+                    ;;0CEE|0CD6+0CD6/0CD6\0CD6;
+                      MOVW.B YA,TempoSetTimer                   ;;0CF1|0CD9+0CD9/0CD9\0CD9;
                       BRA APU_0CE1                              ;;0CF3|0CDB+0CDB/0CDB\0CDB;
                                                                 ;;                        ;
-                    + MOVW YA,!TempoSetVal+1                    ;;0CF5|0CDD+0CDD/0CDD\0CDD;
-                      ADDW YA,!MasterTempo                      ;;0CF7|0CDF+0CDF/0CDF\0CDF;
-APU_0CE1:             MOVW !MasterTempo,YA                      ;;0CF9|0CE1+0CE1/0CE1\0CE1;
-APU_0CE3:             MOV A,!ARam_60                            ;;0CFB|0CE3+0CE3/0CE3\0CE3;
+                    + MOVW.B YA,ARam_54                         ;;0CF5|0CDD+0CDD/0CDD\0CDD;
+                      ADDW.B YA,MasterTempo                     ;;0CF7|0CDF+0CDF/0CDF\0CDF;
+APU_0CE1:             MOVW.B MasterTempo,YA                     ;;0CF9|0CE1+0CE1/0CE1\0CE1;
+APU_0CE3:             MOV.B A,ARam_60                           ;;0CFB|0CE3+0CE3/0CE3\0CE3;
                       BEQ APU_0D03                              ;;0CFD|0CE5+0CE5/0CE5\0CE5;
-                      DBNZ !ARam_60,+                           ;;0CFF|0CE7+0CE7/0CE7\0CE7;
+                      DBNZ.B ARam_60,+                          ;;0CFF|0CE7+0CE7/0CE7\0CE7;
                       MOV A,#$00                                ;;0D02|0CEA+0CEA/0CEA\0CEA;
-                      MOV Y,!EchoVolLeft+1                      ;;0D04|0CEC+0CEC/0CEC\0CEC;
-                      MOVW !EchoVolLeft,YA                      ;;0D06|0CEE+0CEE/0CEE\0CEE;
-                      MOV Y,!EchoVolRight+1                     ;;0D08|0CF0+0CF0/0CF0\0CF0;
+                      MOV.B Y,EchoVolLeft+1                     ;;0D04|0CEC+0CEC/0CEC\0CEC;
+                      MOVW.B EchoVolLeft,YA                     ;;0D06|0CEE+0CEE/0CEE\0CEE;
+                      MOV.B Y,EchoVolRight+1                    ;;0D08|0CF0+0CF0/0CF0\0CF0;
                       BRA APU_0CFE                              ;;0D0A|0CF2+0CF2/0CF2\0CF2;
                                                                 ;;                        ;
-                    + MOVW YA,!ARam_65                          ;;0D0C|0CF4+0CF4/0CF4\0CF4;
-                      ADDW YA,!EchoVolLeft                      ;;0D0E|0CF6+0CF6/0CF6\0CF6;
-                      MOVW !EchoVolLeft,YA                      ;;0D10|0CF8+0CF8/0CF8\0CF8;
-                      MOVW YA,!ARam_67                          ;;0D12|0CFA+0CFA/0CFA\0CFA;
-                      ADDW YA,!EchoVolRight                     ;;0D14|0CFC+0CFC/0CFC\0CFC;
-APU_0CFE:             MOVW !EchoVolRight,YA                     ;;0D16|0CFE+0CFE/0CFE\0CFE;
+                    + MOVW.B YA,ARam_65                         ;;0D0C|0CF4+0CF4/0CF4\0CF4;
+                      ADDW.B YA,EchoVolLeft                     ;;0D0E|0CF6+0CF6/0CF6\0CF6;
+                      MOVW.B EchoVolLeft,YA                     ;;0D10|0CF8+0CF8/0CF8\0CF8;
+                      MOVW.B YA,ARam_67                         ;;0D12|0CFA+0CFA/0CFA\0CFA;
+                      ADDW.B YA,EchoVolRight                    ;;0D14|0CFC+0CFC/0CFC\0CFC;
+APU_0CFE:             MOVW.B EchoVolRight,YA                    ;;0D16|0CFE+0CFE/0CFE\0CFE;
                       CALL APU_0EEB                             ;;0D18|0D00+0D00/0D00\0D00;
-APU_0D03:             MOV A,!VolFadeTimer                       ;;0D1B|0D03+0D03/0D03\0D03;
+APU_0D03:             MOV.B A,VolFadeTimer                      ;;0D1B|0D03+0D03/0D03\0D03;
                       BEQ APU_0D17                              ;;0D1D|0D05+0D05/0D05\0D05;
-                      DBNZ !VolFadeTimer,+                      ;;0D1F|0D07+0D07/0D07\0D07;
-                      MOVW YA,!VolFadeTimer                     ;;0D22|0D0A+0D0A/0D0A\0D0A;
+                      DBNZ.B VolFadeTimer,+                     ;;0D1F|0D07+0D07/0D07\0D07;
+                      MOVW.B YA,VolFadeTimer                    ;;0D22|0D0A+0D0A/0D0A\0D0A;
                       BRA APU_0D12                              ;;0D24|0D0C+0D0C/0D0C\0D0C;
                                                                 ;;                        ;
-                    + MOVW YA,!ARam_5A                          ;;0D26|0D0E+0D0E/0D0E\0D0E;
-                      ADDW YA,!ARam_56                          ;;0D28|0D10+0D10/0D10\0D10;
-APU_0D12:             MOVW !ARam_56,YA                          ;;0D2A|0D12+0D12/0D12\0D12;
-                      MOV !ARam_5C,#$FF                         ;;0D2C|0D14+0D14/0D14\0D14; set all vol chg flags 
+                    + MOVW.B YA,ARam_5A                         ;;0D26|0D0E+0D0E/0D0E\0D0E;
+                      ADDW.B YA,ARam_56                         ;;0D28|0D10+0D10/0D10\0D10;
+APU_0D12:             MOVW.B ARam_56,YA                         ;;0D2A|0D12+0D12/0D12\0D12;
+                      MOV.B ARam_5C,#$FF                        ;;0D2C|0D14+0D14/0D14\0D14; set all vol chg flags 
                                                                 ;;                        ;
 APU_0D17:             MOV X,#$0E                                ;;0D2F|0D17+0D17/0D17\0D17;
-                      MOV !CurrentChannel,#$80                  ;;0D31|0D19+0D19/0D19\0D19;
-                    - MOV A,!VoPhrasePtr+1+X                    ;;0D34|0D1C+0D1C/0D1C\0D1C;
+                      MOV.B CurrentChannel,#$80                 ;;0D31|0D19+0D19/0D19\0D19;
+                    - MOV.B A,VoPhrasePtr+1+X                   ;;0D34|0D1C+0D1C/0D1C\0D1C;
                       BEQ +                                     ;;0D36|0D1E+0D1E/0D1E\0D1E;
                       CALL APU_0FDB                             ;;0D38|0D20+0D20/0D20\0D20; per-voice fades?;
-                    + LSR !CurrentChannel                       ;;0D3B|0D23+0D23/0D23\0D23;
+                    + LSR.B CurrentChannel                      ;;0D3B|0D23+0D23/0D23\0D23;
                       DEC X                                     ;;0D3D|0D25+0D25/0D25\0D25;
                       DEC X                                     ;;0D3E|0D26+0D26/0D26\0D26;
                       BPL -                                     ;;0D3F|0D27+0D27/0D27\0D27;
-                      MOV !ARam_5C,#$00                         ;;0D41|0D29+0D29/0D29\0D29; clear volchg flags 
-                      MOV A,!ChannelsMuted                      ;;0D44|0D2C+0D2C/0D2C\0D2C;
+                      MOV.B ARam_5C,#$00                        ;;0D41|0D29+0D29/0D29\0D29; clear volchg flags 
+                      MOV.B A,ChannelsMuted                     ;;0D44|0D2C+0D2C/0D2C\0D2C;
                       EOR A,#$FF                                ;;0D46|0D2E+0D2E/0D2E\0D2E;
-                      AND A,!ARam_47                            ;;0D48|0D30+0D30/0D30\0D30;
+                      AND.B A,ARam_47                           ;;0D48|0D30+0D30/0D30\0D30;
 APU_0D32:             PUSH A                                    ;;0D4A|0D32+0D32/0D32\0D32; key on voices in A;
                       MOV Y,#$5C                                ;;0D4B|0D33+0D33/0D33\0D33;
                       MOV A,#$00                                ;;0D4D|0D35+0D35/0D35\0D35;
@@ -1072,17 +1072,17 @@ APU_0D40:             ASL A                                     ;;0D58|0D40+0D40
 VCmd_DA:              CALL NextVCmd46                           ;;0D5F|0D47+0D47/0D47\0D47; vcmd DA: set instrument;
                                                                 ;;                        ;
 APU_0D4A:             INC A                                     ;;0D62|0D4A+0D4A/0D4A\0D4A; set instrument to A;
-APU_0D4B:             MOV !VoInstrument+1+X,A                   ;;0D63|0D4B+0D4B/0D4B\0D4B;
+APU_0D4B:             MOV.B VoInstrument+1+X,A                  ;;0D63|0D4B+0D4B/0D4B\0D4B;
                       DEC A                                     ;;0D65|0D4D+0D4D/0D4D\0D4D;
                       MOV Y,#$05                                ;;0D66|0D4E+0D4E/0D4E\0D4E;
-                      MOV !ARam_14,#$46                         ;;0D68|0D50+0D50/0D50\0D50;
-                      MOV !ARam_15,#$5F                         ;;0D6B|0D53+0D53/0D53\0D53;
+                      MOV.B ARam_14,#$46                        ;;0D68|0D50+0D50/0D50\0D50;
+                      MOV.B ARam_15,#$5F                        ;;0D6B|0D53+0D53/0D53\0D53;
                                                                 ;;                        ;
 APU_0D56:             MUL YA                                    ;;0D6E|0D56+0D56/0D56\0D56; set sample A in bank at $14/15 width Y;
-                      ADDW YA,!ARam_14                          ;;0D6F|0D57+0D57/0D57\0D57;
-                      MOVW !ARam_14,YA                          ;;0D71|0D59+0D59/0D59\0D59;
-                      MOV A,!CurrentChannel                     ;;0D73|0D5B+0D5B/0D5B\0D5B;
-                      AND A,!ChannelsMuted                      ;;0D75|0D5D+0D5D/0D5D\0D5D;
+                      ADDW.B YA,ARam_14                         ;;0D6F|0D57+0D57/0D57\0D57;
+                      MOVW.B ARam_14,YA                         ;;0D71|0D59+0D59/0D59\0D59;
+                      MOV.B A,CurrentChannel                    ;;0D73|0D5B+0D5B/0D5B\0D5B;
+                      AND.B A,ChannelsMuted                     ;;0D75|0D5D+0D5D/0D5D\0D5D;
                       BNE APU_0D8D                              ;;0D77|0D5F+0D5F/0D5F\0D5F;
                       PUSH X                                    ;;0D79|0D61+0D61/0D61\0D61;
                       MOV A,X                                   ;;0D7A|0D62+0D62/0D62\0D62;
@@ -1090,163 +1090,163 @@ APU_0D56:             MUL YA                                    ;;0D6E|0D56+0D56
                       LSR A                                     ;;0D7C|0D64+0D64/0D64\0D64;
                       OR A,#$04                                 ;;0D7D|0D65+0D65/0D65\0D65; voice X SRCN;
                       MOV X,A                                   ;;0D7F|0D67+0D67/0D67\0D67;
-                      MOV A,!CurrentChannel                     ;;0D80|0D68+0D68/0D68\0D68;
+                      MOV.B A,CurrentChannel                    ;;0D80|0D68+0D68/0D68\0D68;
                       EOR A,#$FF                                ;;0D82|0D6A+0D6A/0D6A\0D6A;
-                      AND A,!ARam_2F                            ;;0D84|0D6C+0D6C/0D6C\0D6C;
-                      MOV !ARam_2F,A                            ;;0D86|0D6E+0D6E/0D6E\0D6E;
+                      AND.B A,ARam_2F                           ;;0D84|0D6C+0D6C/0D6C\0D6C;
+                      MOV.B ARam_2F,A                           ;;0D86|0D6E+0D6E/0D6E\0D6E;
                       MOV Y,#$3D                                ;;0D88|0D70+0D70/0D70\0D70;
                       CALL WriteDSPReg                          ;;0D8A|0D72+0D72/0D72\0D72; clear noise vbit;
                       MOV Y,#$00                                ;;0D8D|0D75+0D75/0D75\0D75;
-                    - MOV A,(!ARam_14)+Y                        ;;0D8F|0D77+0D77/0D77\0D77;
-                      MOV !DSPDATA,X                            ;;0D91|0D79+0D79/0D79\0D79;
-                      MOV !DSPADDR,A                            ;;0D94|0D7C+0D7C/0D7C\0D7C;
+                    - MOV.B A,(ARam_14)+Y                       ;;0D8F|0D77+0D77/0D77\0D77;
+                      MOV.W DSPDATA,X                           ;;0D91|0D79+0D79/0D79\0D79;
+                      MOV.W DSPADDR,A                           ;;0D94|0D7C+0D7C/0D7C\0D7C;
                       INC X                                     ;;0D97|0D7F+0D7F/0D7F\0D7F;
                       INC Y                                     ;;0D98|0D80+0D80/0D80\0D80;
                       CMP Y,#$04                                ;;0D99|0D81+0D81/0D81\0D81;
                       BNE -                                     ;;0D9B|0D83+0D83/0D83\0D83; set SRCN, ADSR1/2, GAIN;
-                      MOV A,(!ARam_14)+Y                        ;;0D9D|0D85+0D85/0D85\0D85;
+                      MOV.B A,(ARam_14)+Y                       ;;0D9D|0D85+0D85/0D85\0D85;
                       POP X                                     ;;0D9F|0D87+0D87/0D87\0D87;
-                      MOV !ARam_0210+X,A                        ;;0DA0|0D88+0D88/0D88\0D88; set pitch multiplier 
+                      MOV.W ARam_0210+X,A                       ;;0DA0|0D88+0D88/0D88\0D88; set pitch multiplier 
                       MOV A,#$00                                ;;0DA3|0D8B+0D8B/0D8B\0D8B;
 APU_0D8D:             RET                                       ;;0DA5|0D8D+0D8D/0D8D\0D8D;
                                                                 ;;                        ;
 VCmd_DB:              CALL NextVCmd46                           ;;0DA6|0D8E+0D8E/0D8E\0D8E; vcmd DB: set pan;
                       AND A,#$1F                                ;;0DA9|0D91+0D91/0D91\0D91;
-                      MOV !ARam_0280+1+X,A                      ;;0DAB|0D93+0D93/0D93\0D93; voice pan value 
+                      MOV.W ARam_0280+1+X,A                     ;;0DAB|0D93+0D93/0D93\0D93; voice pan value 
                       MOV A,Y                                   ;;0DAE|0D96+0D96/0D96\0D96;
                       AND A,#$C0                                ;;0DAF|0D97+0D97/0D97\0D97;
-                      MOV !ARam_02A0+1+X,A                      ;;0DB1|0D99+0D99/0D99\0D99; negate voice vol bits 
+                      MOV.W ARam_02A0+1+X,A                     ;;0DB1|0D99+0D99/0D99\0D99; negate voice vol bits 
                       MOV A,#$00                                ;;0DB4|0D9C+0D9C/0D9C\0D9C;
-                      MOV !ARam_0280+X,A                        ;;0DB6|0D9E+0D9E/0D9E\0D9E;
-                      OR (!ARam_5C),(!CurrentChannel)           ;;0DB9|0DA1+0DA1/0DA1\0DA1; set vol chg flag 
+                      MOV.W ARam_0280+X,A                       ;;0DB6|0D9E+0D9E/0D9E\0D9E;
+                      OR.B (ARam_5C),(CurrentChannel)           ;;0DB9|0DA1+0DA1/0DA1\0DA1; set vol chg flag 
                       RET                                       ;;0DBC|0DA4+0DA4/0DA4\0DA4;
                                                                 ;;                        ;
 VCmd_DC:              CALL NextVCmd46                           ;;0DBD|0DA5+0DA5/0DA5\0DA5; vcmd DC: pan fade;
-                      MOV !VoPanFade+1+X,A                      ;;0DC0|0DA8+0DA8/0DA8\0DA8;
+                      MOV.B VoPanFade+1+X,A                     ;;0DC0|0DA8+0DA8/0DA8\0DA8;
                       PUSH A                                    ;;0DC2|0DAA+0DAA/0DAA\0DAA;
                       CALL NextVCmd                             ;;0DC3|0DAB+0DAB/0DAB\0DAB;
-                      MOV !ARam_02A0+X,A                        ;;0DC6|0DAE+0DAE/0DAE\0DAE;
+                      MOV.W ARam_02A0+X,A                       ;;0DC6|0DAE+0DAE/0DAE\0DAE;
                       SETC                                      ;;0DC9|0DB1+0DB1/0DB1\0DB1;
-                      SBC A,!ARam_0280+1+X                      ;;0DCA|0DB2+0DB2/0DB2\0DB2; current pan value 
+                      SBC.W A,ARam_0280+1+X                     ;;0DCA|0DB2+0DB2/0DB2\0DB2; current pan value 
                       POP X                                     ;;0DCD|0DB5+0DB5/0DB5\0DB5;
                       CALL APU_0F76                             ;;0DCE|0DB6+0DB6/0DB6\0DB6; delta = pan value / steps;
-                      MOV !ARam_0290+X,A                        ;;0DD1|0DB9+0DB9/0DB9\0DB9;
+                      MOV.W ARam_0290+X,A                       ;;0DD1|0DB9+0DB9/0DB9\0DB9;
                       MOV A,Y                                   ;;0DD4|0DBC+0DBC/0DBC\0DBC;
-                      MOV !ARam_0290+1+X,A                      ;;0DD5|0DBD+0DBD/0DBD\0DBD;
+                      MOV.W ARam_0290+1+X,A                     ;;0DD5|0DBD+0DBD/0DBD\0DBD;
                       RET                                       ;;0DD8|0DC0+0DC0/0DC0\0DC0;
                                                                 ;;                        ;
 VCmd_DE:              CALL NextVCmd46                           ;;0DD9|0DC1+0DC1/0DC1\0DC1; vcmd DE: vibrato on;
-                      MOV !ARam_0340+X,A                        ;;0DDC|0DC4+0DC4/0DC4\0DC4;
+                      MOV.W ARam_0340+X,A                       ;;0DDC|0DC4+0DC4/0DC4\0DC4;
                       MOV A,#$00                                ;;0DDF|0DC7+0DC7/0DC7\0DC7;
-                      MOV !ARam_0340+1+X,A                      ;;0DE1|0DC9+0DC9/0DC9\0DC9;
+                      MOV.W ARam_0340+1+X,A                     ;;0DE1|0DC9+0DC9/0DC9\0DC9;
                       CALL NextVCmd                             ;;0DE4|0DCC+0DCC/0DCC\0DCC;
-                      MOV !ARam_0330+1+X,A                      ;;0DE7|0DCF+0DCF/0DCF\0DCF;
+                      MOV.W ARam_0330+1+X,A                     ;;0DE7|0DCF+0DCF/0DCF\0DCF;
                       CALL NextVCmd                             ;;0DEA|0DD2+0DD2/0DD2\0DD2;
                                                                 ;;                        ;
-VCmd_DF:              MOV X,!CurrentChannel2                    ;;0DED|0DD5+0DD5/0DD5\0DD5; vcmd DF: vibrato off 
-                      MOV !VoVibrato+1+X,A                      ;;0DEF|0DD7+0DD7/0DD7\0DD7;
+VCmd_DF:              MOV.B X,CurrentChannel2                   ;;0DED|0DD5+0DD5/0DD5\0DD5; vcmd DF: vibrato off 
+                      MOV.B VoVibrato+1+X,A                     ;;0DEF|0DD7+0DD7/0DD7\0DD7;
                       RET                                       ;;0DF1|0DD9+0DD9/0DD9\0DD9;
                                                                 ;;                        ;
 VCmd_EA:              CALL NextVCmd46                           ;;0DF2|0DDA+0DDA/0DDA\0DDA; vcmd EA: vibrato fade;
-                      MOV !ARam_0340+1+X,A                      ;;0DF5|0DDD+0DDD/0DDD\0DDD;
+                      MOV.W ARam_0340+1+X,A                     ;;0DF5|0DDD+0DDD/0DDD\0DDD;
                       PUSH A                                    ;;0DF8|0DE0+0DE0/0DE0\0DE0;
-                      MOV A,!VoVibrato+1+X                      ;;0DF9|0DE1+0DE1/0DE1\0DE1;
-                      MOV !ARam_0350+1+X,A                      ;;0DFB|0DE3+0DE3/0DE3\0DE3;
+                      MOV.B A,VoVibrato+1+X                     ;;0DF9|0DE1+0DE1/0DE1\0DE1;
+                      MOV.W ARam_0350+1+X,A                     ;;0DFB|0DE3+0DE3/0DE3\0DE3;
                       POP X                                     ;;0DFE|0DE6+0DE6/0DE6\0DE6;
                       MOV Y,#$00                                ;;0DFF|0DE7+0DE7/0DE7\0DE7;
                       DIV YA,X                                  ;;0E01|0DE9+0DE9/0DE9\0DE9;
-                      MOV X,!CurrentChannel2                    ;;0E02|0DEA+0DEA/0DEA\0DEA;
-                      MOV !ARam_0350+X,A                        ;;0E04|0DEC+0DEC/0DEC\0DEC;
+                      MOV.B X,CurrentChannel2                   ;;0E02|0DEA+0DEA/0DEA\0DEA;
+                      MOV.W ARam_0350+X,A                       ;;0E04|0DEC+0DEC/0DEC\0DEC;
                       RET                                       ;;0E07|0DEF+0DEF/0DEF\0DEF;
                                                                 ;;                        ;
 VCmd_E0:              CALL NextVCmd46                           ;;0E08|0DF0+0DF0/0DF0\0DF0; vcmd E0: set master volume;
-                      MOV !MasterVolume,A                       ;;0E0B|0DF3+0DF3/0DF3\0DF3;
-                      MOV !ARam_56,#$00                         ;;0E0D|0DF5+0DF5/0DF5\0DF5;
-                      MOV !ARam_5C,#$FF                         ;;0E10|0DF8+0DF8/0DF8\0DF8; all vol chgd 
+                      MOV.B MasterVolume,A                      ;;0E0B|0DF3+0DF3/0DF3\0DF3;
+                      MOV.B ARam_56,#$00                        ;;0E0D|0DF5+0DF5/0DF5\0DF5;
+                      MOV.B ARam_5C,#$FF                        ;;0E10|0DF8+0DF8/0DF8\0DF8; all vol chgd 
                       RET                                       ;;0E13|0DFB+0DFB/0DFB\0DFB;
                                                                 ;;                        ;
 VCmd_E1:              CALL NextVCmd46                           ;;0E14|0DFC+0DFC/0DFC\0DFC; vcmd E1: master vol fade;
-                      MOV !VolFadeTimer,A                       ;;0E17|0DFF+0DFF/0DFF\0DFF;
+                      MOV.B VolFadeTimer,A                      ;;0E17|0DFF+0DFF/0DFF\0DFF;
                       CALL NextVCmd                             ;;0E19|0E01+0E01/0E01\0E01;
-                      MOV !VolFadeVal,A                         ;;0E1C|0E04+0E04/0E04\0E04;
-                      MOV X,!VolFadeTimer                       ;;0E1E|0E06+0E06/0E06\0E06;
+                      MOV.B VolFadeVal,A                        ;;0E1C|0E04+0E04/0E04\0E04;
+                      MOV.B X,VolFadeTimer                      ;;0E1E|0E06+0E06/0E06\0E06;
                       SETC                                      ;;0E20|0E08+0E08/0E08\0E08;
-                      SBC A,!MasterVolume                       ;;0E21|0E09+0E09/0E09\0E09;
+                      SBC.B A,MasterVolume                      ;;0E21|0E09+0E09/0E09\0E09;
                       CALL APU_0F76                             ;;0E23|0E0B+0E0B/0E0B\0E0B;
-                      MOVW !ARam_5A,YA                          ;;0E26|0E0E+0E0E/0E0E\0E0E;
+                      MOVW.B ARam_5A,YA                         ;;0E26|0E0E+0E0E/0E0E\0E0E;
                       RET                                       ;;0E28|0E10+0E10/0E10\0E10;
                                                                 ;;                        ;
 VCmd_E2:              CALL NextVCmd46                           ;;0E29|0E11+0E11/0E11\0E11; vcmd E2: tempo;
-APU_0E14:             ADC A,!ARam_0387                          ;;0E2C|0E14+0E14/0E14\0E14; set tempo 
-                      MOV !MasterTempo+1,A                      ;;0E2F|0E17+0E17/0E17\0E17;
-                      MOV !MasterTempo,#$00                     ;;0E31|0E19+0E19/0E19\0E19;
+APU_0E14:             ADC.W A,ARam_0387                         ;;0E2C|0E14+0E14/0E14\0E14; set tempo 
+                      MOV.B MasterTempo+1,A                     ;;0E2F|0E17+0E17/0E17\0E17;
+                      MOV.B MasterTempo,#$00                    ;;0E31|0E19+0E19/0E19\0E19;
                       RET                                       ;;0E34|0E1C+0E1C/0E1C\0E1C;
                                                                 ;;                        ;
 VCmd_E3:              CALL NextVCmd46                           ;;0E35|0E1D+0E1D/0E1D\0E1D; vcmd E3: tempo fade;
-                      MOV !TempoSetTimer,A                      ;;0E38|0E20+0E20/0E20\0E20;
+                      MOV.B TempoSetTimer,A                     ;;0E38|0E20+0E20/0E20\0E20;
                       CALL NextVCmd                             ;;0E3A|0E22+0E22/0E22\0E22;
-                      ADC A,!ARam_0387                          ;;0E3D|0E25+0E25/0E25\0E25;
-                      MOV !TempoSetVal,A                        ;;0E40|0E28+0E28/0E28\0E28;
-                      MOV X,!TempoSetTimer                      ;;0E42|0E2A+0E2A/0E2A\0E2A;
+                      ADC.W A,ARam_0387                         ;;0E3D|0E25+0E25/0E25\0E25;
+                      MOV.B TempoSetVal,A                       ;;0E40|0E28+0E28/0E28\0E28;
+                      MOV.B X,TempoSetTimer                     ;;0E42|0E2A+0E2A/0E2A\0E2A;
                       SETC                                      ;;0E44|0E2C+0E2C/0E2C\0E2C;
-                      SBC A,!MasterTempo+1                      ;;0E45|0E2D+0E2D/0E2D\0E2D;
+                      SBC.B A,MasterTempo+1                     ;;0E45|0E2D+0E2D/0E2D\0E2D;
                       CALL APU_0F76                             ;;0E47|0E2F+0E2F/0E2F\0E2F;
-                      MOVW !TempoSetVal+1,YA                    ;;0E4A|0E32+0E32/0E32\0E32;
+                      MOVW.B ARam_54,YA                         ;;0E4A|0E32+0E32/0E32\0E32;
                       RET                                       ;;0E4C|0E34+0E34/0E34\0E34;
                                                                 ;;                        ;
 VCmd_E4:              CALL NextVCmd46                           ;;0E4D|0E35+0E35/0E35\0E35; vcmd E4: transpose (global);
-                      MOV !MasterTranspose,A                    ;;0E50|0E38+0E38/0E38\0E38;
+                      MOV.B MasterTranspose,A                   ;;0E50|0E38+0E38/0E38\0E38;
                       RET                                       ;;0E52|0E3A+0E3A/0E3A\0E3A;
                                                                 ;;                        ;
 VCmd_E5:              CALL NextVCmd46                           ;;0E53|0E3B+0E3B/0E3B\0E3B; vcmd E5: tremolo on;
-                      MOV !ARam_0370+X,A                        ;;0E56|0E3E+0E3E/0E3E\0E3E;
+                      MOV.W ARam_0370+X,A                       ;;0E56|0E3E+0E3E/0E3E\0E3E;
                       CALL NextVCmd                             ;;0E59|0E41+0E41/0E41\0E41;
-                      MOV !ARam_0360+2+X,A                      ;;0E5C|0E44+0E44/0E44\0E44;
+                      MOV.W ARam_0360+2+X,A                     ;;0E5C|0E44+0E44/0E44\0E44;
                       CALL NextVCmd                             ;;0E5F|0E47+0E47/0E47\0E47;
                                                                 ;;                        ;
-VCmd_E6:              MOV X,!CurrentChannel2                    ;;0E62|0E4A+0E4A/0E4A\0E4A; vcmd E6: tremolo off 
-                      MOV !ARam_B0+1+X,A                        ;;0E64|0E4C+0E4C/0E4C\0E4C;
+VCmd_E6:              MOV.B X,CurrentChannel2                   ;;0E62|0E4A+0E4A/0E4A\0E4A; vcmd E6: tremolo off 
+                      MOV.B ARam_B0+1+X,A                       ;;0E64|0E4C+0E4C/0E4C\0E4C;
                       RET                                       ;;0E66|0E4E+0E4E/0E4E\0E4E;
                                                                 ;;                        ;
 VCmd_EB:              MOV A,#$01                                ;;0E67|0E4F+0E4F/0E4F\0E4F; vcmd EB: pitch envelope (release);
                       BRA +                                     ;;0E69|0E51+0E51/0E51\0E51;
 VCmd_EC:              MOV A,#$00                                ;;0E6B|0E53+0E53/0E53\0E53; vcmd EC: pitch envelope (attack);
-                    + MOV X,!CurrentChannel2                    ;;0E6D|0E55+0E55/0E55\0E55;
-                      MOV !ARam_0320+X,A                        ;;0E6F|0E57+0E57/0E57\0E57;
+                    + MOV.B X,CurrentChannel2                   ;;0E6D|0E55+0E55/0E55\0E55;
+                      MOV.W ARam_0320+X,A                       ;;0E6F|0E57+0E57/0E57\0E57;
                       CALL NextVCmd46                           ;;0E72|0E5A+0E5A/0E5A\0E5A;
-                      MOV !ARam_0300+1+X,A                      ;;0E75|0E5D+0E5D/0E5D\0E5D;
+                      MOV.W ARam_0300+1+X,A                     ;;0E75|0E5D+0E5D/0E5D\0E5D;
                       CALL NextVCmd                             ;;0E78|0E60+0E60/0E60\0E60;
-                      MOV !ARam_0300+X,A                        ;;0E7B|0E63+0E63/0E63\0E63;
+                      MOV.W ARam_0300+X,A                       ;;0E7B|0E63+0E63/0E63\0E63;
                       CALL NextVCmd                             ;;0E7E|0E66+0E66/0E66\0E66;
-                      MOV !ARam_0320+1+X,A                      ;;0E81|0E69+0E69/0E69\0E69;
+                      MOV.W ARam_0320+1+X,A                     ;;0E81|0E69+0E69/0E69\0E69;
                       RET                                       ;;0E84|0E6C+0E6C/0E6C\0E6C;
-                      MOV X,!CurrentChannel2                    ;;0E85|0E6D+0E6D/0E6D\0E6D;
-                      MOV !ARam_0300+X,A                        ;;0E87|0E6F+0E6F/0E6F\0E6F;
+                      MOV.B X,CurrentChannel2                   ;;0E85|0E6D+0E6D/0E6D\0E6D;
+                      MOV.W ARam_0300+X,A                       ;;0E87|0E6F+0E6F/0E6F\0E6F;
                       RET                                       ;;0E8A|0E72+0E72/0E72\0E72;
                                                                 ;;                        ;
 VCmd_E7:              CALL NextVCmd46                           ;;0E8B|0E73+0E73/0E73\0E73; vcmd E7: set voice volume base;
-                      MOV !ARam_0240+1+X,A                      ;;0E8E|0E76+0E76/0E76\0E76;
+                      MOV.W ARam_0240+1+X,A                     ;;0E8E|0E76+0E76/0E76\0E76;
                       MOV A,#$00                                ;;0E91|0E79+0E79/0E79\0E79;
-                      MOV !ARam_0240+X,A                        ;;0E93|0E7B+0E7B/0E7B\0E7B;
-                      OR (!ARam_5C),(!CurrentChannel)           ;;0E96|0E7E+0E7E/0E7E\0E7E; mark volume changed 
+                      MOV.W ARam_0240+X,A                       ;;0E93|0E7B+0E7B/0E7B\0E7B;
+                      OR.B (ARam_5C),(CurrentChannel)           ;;0E96|0E7E+0E7E/0E7E\0E7E; mark volume changed 
                       RET                                       ;;0E99|0E81+0E81/0E81\0E81;
                                                                 ;;                        ;
 VCmd_E8:              CALL NextVCmd46                           ;;0E9A|0E82+0E82/0E82\0E82; vcmd E8: voice volume base fade;
-                      MOV !VoPanFade+X,A                        ;;0E9D|0E85+0E85/0E85\0E85;
+                      MOV.B VoPanFade+X,A                       ;;0E9D|0E85+0E85/0E85\0E85;
                       PUSH A                                    ;;0E9F|0E87+0E87/0E87\0E87;
                       CALL NextVCmd                             ;;0EA0|0E88+0E88/0E88\0E88;
-                      MOV !ARam_0260+X,A                        ;;0EA3|0E8B+0E8B/0E8B\0E8B;
+                      MOV.W ARam_0260+X,A                       ;;0EA3|0E8B+0E8B/0E8B\0E8B;
                       SETC                                      ;;0EA6|0E8E+0E8E/0E8E\0E8E;
-                      SBC A,!ARam_0240+1+X                      ;;0EA7|0E8F+0E8F/0E8F\0E8F;
+                      SBC.W A,ARam_0240+1+X                     ;;0EA7|0E8F+0E8F/0E8F\0E8F;
                       POP X                                     ;;0EAA|0E92+0E92/0E92\0E92;
                       CALL APU_0F76                             ;;0EAB|0E93+0E93/0E93\0E93;
-                      MOV !ARam_0250+X,A                        ;;0EAE|0E96+0E96/0E96\0E96;
+                      MOV.W ARam_0250+X,A                       ;;0EAE|0E96+0E96/0E96\0E96;
                       MOV A,Y                                   ;;0EB1|0E99+0E99/0E99\0E99;
-                      MOV !ARam_0250+1+X,A                      ;;0EB2|0E9A+0E9A/0E9A\0E9A;
+                      MOV.W ARam_0250+1+X,A                     ;;0EB2|0E9A+0E9A/0E9A\0E9A;
                       RET                                       ;;0EB5|0E9D+0E9D/0E9D\0E9D;
                                                                 ;;                        ;
 VCmd_EE:              CALL NextVCmd46                           ;;0EB6|0E9E+0E9E/0E9E\0E9E; vcmd EE: tuning;
-                      MOV !ARam_02D0+1+X,A                      ;;0EB9|0EA1+0EA1/0EA1\0EA1;
+                      MOV.W ARam_02D0+1+X,A                     ;;0EB9|0EA1+0EA1/0EA1\0EA1;
                       RET                                       ;;0EBC|0EA4+0EA4/0EA4\0EA4;
                                                                 ;;                        ;
 VCmd_E9:              CALL NextVCmd46                           ;;0EBD|0EA5+0EA5/0EA5\0EA5; vcmd E9: call subroutine;
@@ -1254,66 +1254,66 @@ VCmd_E9:              CALL NextVCmd46                           ;;0EBD|0EA5+0EA5
                       CALL NextVCmd                             ;;0EC1|0EA9+0EA9/0EA9\0EA9;
                       PUSH A                                    ;;0EC4|0EAC+0EAC/0EAC\0EAC;
                       CALL NextVCmd                             ;;0EC5|0EAD+0EAD/0EAD\0EAD;
-                      MOV !VoInstrument+X,A                     ;;0EC8|0EB0+0EB0/0EB0\0EB0; repeat counter = op3 
-                      MOV A,!VoPhrasePtr+X                      ;;0ECA|0EB2+0EB2/0EB2\0EB2;
-                      MOV !ARam_03E0+X,A                        ;;0ECC|0EB4+0EB4/0EB4\0EB4;
-                      MOV A,!VoPhrasePtr+1+X                    ;;0ECF|0EB7+0EB7/0EB7\0EB7;
-                      MOV !ARam_03E0+1+X,A                      ;;0ED1|0EB9+0EB9/0EB9\0EB9; save current vptr in 3E0/1+X 
+                      MOV.B VoInstrument+X,A                    ;;0EC8|0EB0+0EB0/0EB0\0EB0; repeat counter = op3 
+                      MOV.B A,VoPhrasePtr+X                     ;;0ECA|0EB2+0EB2/0EB2\0EB2;
+                      MOV.W ARam_03E0+X,A                       ;;0ECC|0EB4+0EB4/0EB4\0EB4;
+                      MOV.B A,VoPhrasePtr+1+X                   ;;0ECF|0EB7+0EB7/0EB7\0EB7;
+                      MOV.W ARam_03E0+1+X,A                     ;;0ED1|0EB9+0EB9/0EB9\0EB9; save current vptr in 3E0/1+X 
                       POP A                                     ;;0ED4|0EBC+0EBC/0EBC\0EBC;
-                      MOV !VoPhrasePtr+1+X,A                    ;;0ED5|0EBD+0EBD/0EBD\0EBD;
-                      MOV !ARam_03F0+1+X,A                      ;;0ED7|0EBF+0EBF/0EBF\0EBF;
+                      MOV.B VoPhrasePtr+1+X,A                   ;;0ED5|0EBD+0EBD/0EBD\0EBD;
+                      MOV.W ARam_03F0+1+X,A                     ;;0ED7|0EBF+0EBF/0EBF\0EBF;
                       POP A                                     ;;0EDA|0EC2+0EC2/0EC2\0EC2;
-                      MOV !VoPhrasePtr+X,A                      ;;0EDB|0EC3+0EC3/0EC3\0EC3;
-                      MOV !ARam_03F0+X,A                        ;;0EDD|0EC5+0EC5/0EC5\0EC5; set vptr/3F0/1+X to op1/2 
+                      MOV.B VoPhrasePtr+X,A                     ;;0EDB|0EC3+0EC3/0EC3\0EC3;
+                      MOV.W ARam_03F0+X,A                       ;;0EDD|0EC5+0EC5/0EC5\0EC5; set vptr/3F0/1+X to op1/2 
                       RET                                       ;;0EE0|0EC8+0EC8/0EC8\0EC8;
                                                                 ;;                        ;
 VCmd_EF:              CALL NextVCmd46                           ;;0EE1|0EC9+0EC9/0EC9\0EC9; vcmd EF: set echo vbits/volume;
-                      MOV !ARam_0389,A                          ;;0EE4|0ECC+0ECC/0ECC\0ECC; set echo vbit shadow from op1 
+                      MOV.W ARam_0389,A                         ;;0EE4|0ECC+0ECC/0ECC\0ECC; set echo vbit shadow from op1 
                       MOV Y,#$4D                                ;;0EE7|0ECF+0ECF/0ECF\0ECF;
                       CALL WriteDSPReg                          ;;0EE9|0ED1+0ED1/0ED1\0ED1; set echo vbits DSP from shadow;
                       CALL NextVCmd                             ;;0EEC|0ED4+0ED4/0ED4\0ED4;
                       MOV A,#$00                                ;;0EEF|0ED7+0ED7/0ED7\0ED7;
-                      MOVW !EchoVolLeft,YA                      ;;0EF1|0ED9+0ED9/0ED9\0ED9; set 61/2 from op2 * $100 (evol L) 
+                      MOVW.B EchoVolLeft,YA                     ;;0EF1|0ED9+0ED9/0ED9\0ED9; set 61/2 from op2 * $100 (evol L) 
                       CALL NextVCmd                             ;;0EF3|0EDB+0EDB/0EDB\0EDB;
                       MOV A,#$00                                ;;0EF6|0EDE+0EDE/0EDE\0EDE;
-                      MOVW !EchoVolRight,YA                     ;;0EF8|0EE0+0EE0/0EE0\0EE0; set 63/4 from op3 * $100 (evol R) 
-                      MOV !ARam_2E,A                            ;;0EFA|0EE2+0EE2/0EE2\0EE2; zero 2e 
+                      MOVW.B EchoVolRight,YA                    ;;0EF8|0EE0+0EE0/0EE0\0EE0; set 63/4 from op3 * $100 (evol R) 
+                      MOV.B ARam_2E,A                           ;;0EFA|0EE2+0EE2/0EE2\0EE2; zero 2e 
                       AND A,#$1F                                ;;0EFC|0EE4+0EE4/0EE4\0EE4;
                       MOV Y,#$6C                                ;;0EFE|0EE6+0EE6/0EE6\0EE6;
                       CALL WriteDSPReg                          ;;0F00|0EE8+0EE8/0EE8\0EE8; zero noise freq, enable echo write;
                                                                 ;;                        ;
-APU_0EEB:             MOV A,!EchoVolLeft+1                      ;;0F03|0EEB+0EEB/0EEB\0EEB; set echo vol's from shadows 
+APU_0EEB:             MOV.B A,EchoVolLeft+1                     ;;0F03|0EEB+0EEB/0EEB\0EEB; set echo vol's from shadows 
                       MOV Y,#$2C                                ;;0F05|0EED+0EED/0EED\0EED;
                       CALL WriteDSPReg                          ;;0F07|0EEF+0EEF/0EEF\0EEF; set echo vol L DSP from $62;
-                      MOV A,!EchoVolRight+1                     ;;0F0A|0EF2+0EF2/0EF2\0EF2;
+                      MOV.B A,EchoVolRight+1                    ;;0F0A|0EF2+0EF2/0EF2\0EF2;
                       MOV Y,#$3C                                ;;0F0C|0EF4+0EF4/0EF4\0EF4;
                       JMP WriteDSPReg                           ;;0F0E|0EF6+0EF6/0EF6\0EF6; set echo vol R DSP from $64;
                                                                 ;;                        ;
 VCmd_F2:              CALL NextVCmd46                           ;;0F11|0EF9+0EF9/0EF9\0EF9; vcmd F2: echo volume fade;
-                      MOV !ARam_60,A                            ;;0F14|0EFC+0EFC/0EFC\0EFC;
+                      MOV.B ARam_60,A                           ;;0F14|0EFC+0EFC/0EFC\0EFC;
                       CALL NextVCmd                             ;;0F16|0EFE+0EFE/0EFE\0EFE;
-                      MOV !ARam_69,A                            ;;0F19|0F01+0F01/0F01\0F01;
-                      MOV X,!ARam_60                            ;;0F1B|0F03+0F03/0F03\0F03;
+                      MOV.B ARam_69,A                           ;;0F19|0F01+0F01/0F01\0F01;
+                      MOV.B X,ARam_60                           ;;0F1B|0F03+0F03/0F03\0F03;
                       SETC                                      ;;0F1D|0F05+0F05/0F05\0F05;
-                      SBC A,!EchoVolLeft+1                      ;;0F1E|0F06+0F06/0F06\0F06;
+                      SBC.B A,EchoVolLeft+1                     ;;0F1E|0F06+0F06/0F06\0F06;
                       CALL APU_0F76                             ;;0F20|0F08+0F08/0F08\0F08;
-                      MOVW !ARam_65,YA                          ;;0F23|0F0B+0F0B/0F0B\0F0B;
+                      MOVW.B ARam_65,YA                         ;;0F23|0F0B+0F0B/0F0B\0F0B;
                       CALL NextVCmd                             ;;0F25|0F0D+0F0D/0F0D\0F0D;
-                      MOV !ARam_6A,A                            ;;0F28|0F10+0F10/0F10\0F10;
-                      MOV X,!ARam_60                            ;;0F2A|0F12+0F12/0F12\0F12;
+                      MOV.B ARam_6A,A                           ;;0F28|0F10+0F10/0F10\0F10;
+                      MOV.B X,ARam_60                           ;;0F2A|0F12+0F12/0F12\0F12;
                       SETC                                      ;;0F2C|0F14+0F14/0F14\0F14;
-                      SBC A,!EchoVolRight+1                     ;;0F2D|0F15+0F15/0F15\0F15;
+                      SBC.B A,EchoVolRight+1                    ;;0F2D|0F15+0F15/0F15\0F15;
                       CALL APU_0F76                             ;;0F2F|0F17+0F17/0F17\0F17;
-                      MOVW !ARam_67,YA                          ;;0F32|0F1A+0F1A/0F1A\0F1A;
+                      MOVW.B ARam_67,YA                         ;;0F32|0F1A+0F1A/0F1A\0F1A;
                       RET                                       ;;0F34|0F1C+0F1C/0F1C\0F1C;
                                                                 ;;                        ;
-VCmd_F0:              MOV X,!CurrentChannel2                    ;;0F35|0F1D+0F1D/0F1D\0F1D; vcmd F0: disable echo 
-                      MOV !ARam_0389,A                          ;;0F37|0F1F+0F1F/0F1F\0F1F; clear all echo vbits 
+VCmd_F0:              MOV.B X,CurrentChannel2                   ;;0F35|0F1D+0F1D/0F1D\0F1D; vcmd F0: disable echo 
+                      MOV.W ARam_0389,A                         ;;0F37|0F1F+0F1F/0F1F\0F1F; clear all echo vbits 
 APU_0F22:             MOV Y,A                                   ;;0F3A|0F22+0F22/0F22\0F22;
-                      MOVW !EchoVolLeft,YA                      ;;0F3B|0F23+0F23/0F23\0F23; zero echo vol L shadow 
-                      MOVW !EchoVolRight,YA                     ;;0F3D|0F25+0F25/0F25\0F25; zero echo vol R shadow 
+                      MOVW.B EchoVolLeft,YA                     ;;0F3B|0F23+0F23/0F23\0F23; zero echo vol L shadow 
+                      MOVW.B EchoVolRight,YA                    ;;0F3D|0F25+0F25/0F25\0F25; zero echo vol R shadow 
                       CALL APU_0EEB                             ;;0F3F|0F27+0F27/0F27\0F27; set echo vol DSP regs from shadows;
-                      MOV !ARam_2E,A                            ;;0F42|0F2A+0F2A/0F2A\0F2A; zero 2E 
+                      MOV.B ARam_2E,A                           ;;0F42|0F2A+0F2A/0F2A\0F2A; zero 2E 
                       OR A,#$20                                 ;;0F44|0F2C+0F2C/0F2C\0F2C;
                       MOV Y,#$6C                                ;;0F46|0F2E+0F2E/0F2E\0F2E;
                       JMP WriteDSPReg                           ;;0F48|0F30+0F30/0F30\0F30; disable echo write, noise freq 0;
@@ -1329,7 +1329,7 @@ VCmd_F1:              CALL NextVCmd46                           ;;0F4B|0F33+0F33
                       MUL YA                                    ;;0F60|0F48+0F48/0F48\0F48;
                       MOV X,A                                   ;;0F61|0F49+0F49/0F49\0F49;
                       MOV Y,#$0F                                ;;0F62|0F4A+0F4A/0F4A\0F4A;
-                    - MOV A,EchoFilters+X                       ;;0F64|0F4C+0F4C/0F4C\0F4C; filter table;
+                    - MOV.W A,EchoFilters+X                     ;;0F64|0F4C+0F4C/0F4C\0F4C; filter table;
                       CALL WriteDSPReg                          ;;0F67|0F4F+0F4F/0F4F\0F4F;
                       INC X                                     ;;0F6A|0F52+0F52/0F52\0F52;
                       MOV A,Y                                   ;;0F6B|0F53+0F53/0F53\0F53;
@@ -1337,30 +1337,30 @@ VCmd_F1:              CALL NextVCmd46                           ;;0F4B|0F33+0F33
                       ADC A,#$10                                ;;0F6D|0F55+0F55/0F55\0F55;
                       MOV Y,A                                   ;;0F6F|0F57+0F57/0F57\0F57;
                       BPL -                                     ;;0F70|0F58+0F58/0F58\0F58; set echo filter from table idx op3;
-                      MOV X,!CurrentChannel2                    ;;0F72|0F5A+0F5A/0F5A\0F5A;
+                      MOV.B X,CurrentChannel2                   ;;0F72|0F5A+0F5A/0F5A\0F5A;
                       RET                                       ;;0F74|0F5C+0F5C/0F5C\0F5C;
                                                                 ;;                        ;
 APU_0F5D:             AND A,#$7F                                ;;0F75|0F5D+0F5D/0F5D\0F5D; calculate portamento delta;
-                      MOV !ARam_02D0+X,A                        ;;0F77|0F5F+0F5F/0F5F\0F5F; final portamento value 
+                      MOV.W ARam_02D0+X,A                       ;;0F77|0F5F+0F5F/0F5F\0F5F; final portamento value 
                       SETC                                      ;;0F7A|0F62+0F62/0F62\0F62;
-                      SBC A,!ARam_02B0+1+X                      ;;0F7B|0F63+0F63/0F63\0F63; note number 
+                      SBC.W A,ARam_02B0+1+X                     ;;0F7B|0F63+0F63/0F63\0F63; note number 
                       PUSH A                                    ;;0F7E|0F66+0F66/0F66\0F66;
-                      MOV A,!VoPitchSlide+X                     ;;0F7F|0F67+0F67/0F67\0F67; portamento steps 
+                      MOV.B A,VoPitchSlide+X                    ;;0F7F|0F67+0F67/0F67\0F67; portamento steps 
                       MOV X,A                                   ;;0F81|0F69+0F69/0F69\0F69;
                       POP A                                     ;;0F82|0F6A+0F6A/0F6A\0F6A;
                       CALL APU_0F76                             ;;0F83|0F6B+0F6B/0F6B\0F6B;
-                      MOV !ARam_02C0+X,A                        ;;0F86|0F6E+0F6E/0F6E\0F6E;
+                      MOV.W ARam_02C0+X,A                       ;;0F86|0F6E+0F6E/0F6E\0F6E;
                       MOV A,Y                                   ;;0F89|0F71+0F71/0F71\0F71;
-                      MOV !ARam_02C0+1+X,A                      ;;0F8A|0F72+0F72/0F72\0F72; portamento delta 
+                      MOV.W ARam_02C0+1+X,A                     ;;0F8A|0F72+0F72/0F72\0F72; portamento delta 
                       RET                                       ;;0F8D|0F75+0F75/0F75\0F75;
                                                                 ;;                        ;
 APU_0F76:             BCS APU_0F85                              ;;0F8E|0F76+0F76/0F76\0F76; signed 16 bit division;
                       EOR A,#$FF                                ;;0F90|0F78+0F78/0F78\0F78;
                       INC A                                     ;;0F92|0F7A+0F7A/0F7A\0F7A;
                       CALL APU_0F85                             ;;0F93|0F7B+0F7B/0F7B\0F7B;
-                      MOVW !ARam_14,YA                          ;;0F96|0F7E+0F7E/0F7E\0F7E;
-                      MOVW YA,!ARam_0E                          ;;0F98|0F80+0F80/0F80\0F80;
-                      SUBW YA,!ARam_14                          ;;0F9A|0F82+0F82/0F82\0F82;
+                      MOVW.B ARam_14,YA                         ;;0F96|0F7E+0F7E/0F7E\0F7E;
+                      MOVW.B YA,ARam_0E                         ;;0F98|0F80+0F80/0F80\0F80;
+                      SUBW.B YA,ARam_14                         ;;0F9A|0F82+0F82/0F82\0F82;
                       RET                                       ;;0F9C|0F84+0F84/0F84\0F84;
                                                                 ;;                        ;
 APU_0F85:             MOV Y,#$00                                ;;0F9D|0F85+0F85/0F85\0F85;
@@ -1369,7 +1369,7 @@ APU_0F85:             MOV Y,#$00                                ;;0F9D|0F85+0F85
                       MOV A,#$00                                ;;0FA1|0F89+0F89/0F89\0F89;
                       DIV YA,X                                  ;;0FA3|0F8B+0F8B/0F8B\0F8B;
                       POP Y                                     ;;0FA4|0F8C+0F8C/0F8C\0F8C;
-                      MOV X,!CurrentChannel2                    ;;0FA5|0F8D+0F8D/0F8D\0F8D;
+                      MOV.B X,CurrentChannel2                   ;;0FA5|0F8D+0F8D/0F8D\0F8D;
                       RET                                       ;;0FA7|0F8F+0F8F/0F8F\0F8F;
                                                                 ;;                        ; 
 VCmdPtrs:             dw VCmd_DA                                ;;0FA8|0F90+0F90/0F90\0F90; DA - SET INSTRUMENT ; dispatch table for 0d44 (vcmds)
@@ -1403,69 +1403,69 @@ VCmdLens:             db $02,$02,$03,$04,$04,$01,$02,$03        ;;0FDA|0FC2+0FC2
                       db $02,$04,$04,$01,$02,$04,$01,$04        ;;0FEA|0FD2+0FD2/0FD2\0FD2;
                       db $04                                    ;;0FF2|0FDA+0FDA/0FDA\0FDA;
                                                                 ;;                        ;
-APU_0FDB:             MOV A,!VoPanFade+X                        ;;0FF3|0FDB+0FDB/0FDB\0FDB;
+APU_0FDB:             MOV.B A,VoPanFade+X                       ;;0FF3|0FDB+0FDB/0FDB\0FDB;
                       BEQ +                                     ;;0FF5|0FDD+0FDD/0FDD\0FDD;
-                      OR (!ARam_5C),(!CurrentChannel)           ;;0FF7|0FDF+0FDF/0FDF\0FDF;
+                      OR.B (ARam_5C),(CurrentChannel)           ;;0FF7|0FDF+0FDF/0FDF\0FDF;
                       MOV A,#$40                                ;;0FFA|0FE2+0FE2/0FE2\0FE2;
                       MOV Y,#$02                                ;;0FFC|0FE4+0FE4/0FE4\0FE4;
-                      DEC !VoPanFade+X                          ;;0FFE|0FE6+0FE6/0FE6\0FE6;
+                      DEC.B VoPanFade+X                         ;;0FFE|0FE6+0FE6/0FE6\0FE6;
                       CALL APU_1075                             ;;1000|0FE8+0FE8/0FE8\0FE8;
-                    + MOV A,!ARam_B0+1+X                        ;;1003|0FEB+0FEB/0FEB\0FEB;
+                    + MOV.B A,ARam_B0+1+X                       ;;1003|0FEB+0FEB/0FEB\0FEB;
                       MOV Y,A                                   ;;1005|0FED+0FED/0FED\0FED;
                       BEQ APU_1013                              ;;1006|0FEE+0FEE/0FEE\0FEE;
-                      MOV A,!ARam_0370+X                        ;;1008|0FF0+0FF0/0FF0\0FF0;
-                      CBNE !ARam_B0+X,APU_1011                  ;;100B|0FF3+0FF3/0FF3\0FF3;
-                      OR (!ARam_5C),(!CurrentChannel)           ;;100E|0FF6+0FF6/0FF6\0FF6;
-                      MOV A,!ARam_0360+X                        ;;1011|0FF9+0FF9/0FF9\0FF9;
+                      MOV.W A,ARam_0370+X                       ;;1008|0FF0+0FF0/0FF0\0FF0;
+                      CBNE.B ARam_B0+X,APU_1011                 ;;100B|0FF3+0FF3/0FF3\0FF3;
+                      OR.B (ARam_5C),(CurrentChannel)           ;;100E|0FF6+0FF6/0FF6\0FF6;
+                      MOV.W A,ARam_0360+X                       ;;1011|0FF9+0FF9/0FF9\0FF9;
                       BPL +                                     ;;1014|0FFC+0FFC/0FFC\0FFC;
                       INC Y                                     ;;1016|0FFE+0FFE/0FFE\0FFE;
                       BNE +                                     ;;1017|0FFF+0FFF/0FFF\0FFF;
                       MOV A,#$80                                ;;1019|1001+1001/1001\1001;
                       BRA ++                                    ;;101B|1003+1003/1003\1003;
                     + CLRC                                      ;;101D|1005+1005/1005\1005;
-                      ADC A,!ARam_0360+2+X                      ;;101E|1006+1006/1006\1006;
-                   ++ MOV !ARam_0360+X,A                        ;;1021|1009+1009/1009\1009;
+                      ADC.W A,ARam_0360+2+X                     ;;101E|1006+1006/1006\1006;
+                   ++ MOV.W ARam_0360+X,A                       ;;1021|1009+1009/1009\1009;
                       CALL APU_123A                             ;;1024|100C+100C/100C\100C;
                       BRA APU_1019                              ;;1027|100F+100F/100F\100F;
                                                                 ;;                        ;
-APU_1011:             INC !ARam_B0+X                            ;;1029|1011+1011/1011\1011;
-APU_1013:             MOV A,!ARam_0210+1+X                      ;;102B|1013+1013/1013\1013; volume from note 
+APU_1011:             INC.B ARam_B0+X                           ;;1029|1011+1011/1011\1011;
+APU_1013:             MOV.W A,ARam_0210+1+X                     ;;102B|1013+1013/1013\1013; volume from note 
                       CALL APU_124D                             ;;102E|1016+1016/1016\1016; set voice vol from master/base/note;
-APU_1019:             MOV A,!VoPanFade+1+X                      ;;1031|1019+1019/1019\1019;
+APU_1019:             MOV.B A,VoPanFade+1+X                     ;;1031|1019+1019/1019\1019;
                       BNE APU_1024                              ;;1033|101B+101B/101B\101B;
-                      MOV A,!CurrentChannel                     ;;1035|101D+101D/101D\101D;
-                      AND A,!ARam_5C                            ;;1037|101F+101F/101F\101F;
+                      MOV.B A,CurrentChannel                    ;;1035|101D+101D/101D\101D;
+                      AND.B A,ARam_5C                           ;;1037|101F+101F/101F\101F;
                       BNE APU_102D                              ;;1039|1021+1021/1021\1021;
                       RET                                       ;;103B|1023+1023/1023\1023;
                                                                 ;;                        ;
 APU_1024:             MOV A,#$80                                ;;103C|1024+1024/1024\1024; do: pan fade and set volume;
                       MOV Y,#$02                                ;;103E|1026+1026/1026\1026;
-                      DEC !VoPanFade+1+X                        ;;1040|1028+1028/1028\1028;
+                      DEC.B VoPanFade+1+X                       ;;1040|1028+1028/1028\1028;
                       CALL APU_1075                             ;;1042|102A+102A/102A\102A;
-APU_102D:             MOV A,!ARam_0280+1+X                      ;;1045|102D+102D/102D\102D;
+APU_102D:             MOV.W A,ARam_0280+1+X                     ;;1045|102D+102D/102D\102D;
                       MOV Y,A                                   ;;1048|1030+1030/1030\1030;
-                      MOV A,!ARam_0280+X                        ;;1049|1031+1031/1031\1031;
-                      MOVW !ARam_10,YA                          ;;104C|1034+1034/1034\1034; set $10/1 from voice pan 
+                      MOV.W A,ARam_0280+X                       ;;1049|1031+1031/1031\1031;
+                      MOVW.B ARam_10,YA                         ;;104C|1034+1034/1034\1034; set $10/1 from voice pan 
                                                                 ;;                        ;
 APU_1036:             MOV A,X                                   ;;104E|1036+1036/1036\1036; set voice volume DSP regs with pan value from $10/1;
                       XCN A                                     ;;104F|1037+1037/1037\1037;
                       LSR A                                     ;;1050|1038+1038/1038\1038;
-                      MOV !ARam_12,A                            ;;1051|1039+1039/1039\1039; $12 = voice X volume DSP reg 
-APU_103B:             MOV Y,!ARam_11                            ;;1053|103B+103B/103B\103B;
-                      MOV A,PanTable+1+Y                        ;;1055|103D+103D/103D\103D; next pan val from table;
+                      MOV.B ARam_12,A                           ;;1051|1039+1039/1039\1039; $12 = voice X volume DSP reg 
+APU_103B:             MOV.B Y,ARam_11                           ;;1053|103B+103B/103B\103B;
+                      MOV.W A,PanTable+1+Y                      ;;1055|103D+103D/103D\103D; next pan val from table;
                       SETC                                      ;;1058|1040+1040/1040\1040;
-                      SBC A,PanTable+Y                          ;;1059|1041+1041/1041\1041; pan val;
-                      MOV Y,!ARam_10                            ;;105C|1044+1044/1044\1044;
+                      SBC.W A,PanTable+Y                        ;;1059|1041+1041/1041\1041; pan val;
+                      MOV.B Y,ARam_10                           ;;105C|1044+1044/1044\1044;
                       MUL YA                                    ;;105E|1046+1046/1046\1046;
                       MOV A,Y                                   ;;105F|1047+1047/1047\1047;
-                      MOV Y,!ARam_11                            ;;1060|1048+1048/1048\1048;
+                      MOV.B Y,ARam_11                           ;;1060|1048+1048/1048\1048;
                       CLRC                                      ;;1062|104A+104A/104A\104A;
-                      ADC A,PanTable+Y                          ;;1063|104B+104B/104B\104B; add integer part to pan val;
+                      ADC.W A,PanTable+Y                        ;;1063|104B+104B/104B\104B; add integer part to pan val;
                       MOV Y,A                                   ;;1066|104E+104E/104E\104E;
-                      MOV A,!ARam_0370+1+X                      ;;1067|104F+104F/104F\104F; volume 
+                      MOV.W A,ARam_0370+1+X                     ;;1067|104F+104F/104F\104F; volume 
                       MUL YA                                    ;;106A|1052+1052/1052\1052;
-                      MOV A,!ARam_02A0+1+X                      ;;106B|1053+1053/1053\1053; bits 7/6 will negate volume L/R 
-                      BBC0 !ARam_12,+                           ;;106E|1056+1056/1056\1056;
+                      MOV.W A,ARam_02A0+1+X                     ;;106B|1053+1053/1053\1053; bits 7/6 will negate volume L/R 
+                      BBC0.B ARam_12,+                          ;;106E|1056+1056/1056\1056;
                       ASL A                                     ;;1071|1059+1059/1059\1059;
                     + BPL APU_1061                              ;;1072|105A+105A/105A\105A;
                       MOV A,Y                                   ;;1074|105C+105C/105C\105C;
@@ -1473,62 +1473,62 @@ APU_103B:             MOV Y,!ARam_11                            ;;1053|103B+103B
                       INC A                                     ;;1077|105F+105F/105F\105F;
                       MOV Y,A                                   ;;1078|1060+1060/1060\1060;
 APU_1061:             MOV A,Y                                   ;;1079|1061+1061/1061\1061;
-                      MOV Y,!ARam_12                            ;;107A|1062+1062/1062\1062;
+                      MOV.B Y,ARam_12                           ;;107A|1062+1062/1062\1062;
                       CALL WriteDSPRegCond                      ;;107C|1064+1064/1064\1064; set DSP vol if vbit 1D clear;
                       MOV A,#$00                                ;;107F|1067+1067/1067\1067;
                       MOV Y,#$14                                ;;1081|1069+1069/1069\1069;
-                      SUBW YA,!ARam_10                          ;;1083|106B+106B/106B\106B;
-                      MOVW !ARam_10,YA                          ;;1085|106D+106D/106D\106D; $10/11 = #$1400 - $10/11 
-                      INC !ARam_12                              ;;1087|106F+106F/106F\106F; go back and do R chan vol 
-                      BBC1 !ARam_12,APU_103B                    ;;1089|1071+1071/1071\1071;
+                      SUBW.B YA,ARam_10                         ;;1083|106B+106B/106B\106B;
+                      MOVW.B ARam_10,YA                         ;;1085|106D+106D/106D\106D; $10/11 = #$1400 - $10/11 
+                      INC.B ARam_12                             ;;1087|106F+106F/106F\106F; go back and do R chan vol 
+                      BBC1.B ARam_12,APU_103B                   ;;1089|1071+1071/1071\1071;
                       RET                                       ;;108C|1074+1074/1074\1074;
                                                                 ;;                        ;
-APU_1075:             MOVW !ARam_14,YA                          ;;108D|1075+1075/1075\1075; add fade delta to value (set final value at end) 
+APU_1075:             MOVW.B ARam_14,YA                         ;;108D|1075+1075/1075\1075; add fade delta to value (set final value at end) 
                       BNE APU_1088                              ;;108F|1077+1077/1077\1077;
                       CLRC                                      ;;1091|1079+1079/1079\1079;
                       ADC A,#$20                                ;;1092|107A+107A/107A\107A;
-                      MOVW !PitchValue,YA                       ;;1094|107C+107C/107C\107C;
+                      MOVW.B PitchValue,YA                      ;;1094|107C+107C/107C\107C;
                       MOV A,X                                   ;;1096|107E+107E/107E\107E;
                       MOV Y,A                                   ;;1097|107F+107F/107F\107F;
                       MOV A,#$00                                ;;1098|1080+1080/1080\1080;
                       PUSH A                                    ;;109A|1082+1082/1082\1082;
-                      MOV A,(!PitchValue)+Y                     ;;109B|1083+1083/1083\1083;
+                      MOV.B A,(PitchValue)+Y                    ;;109B|1083+1083/1083\1083;
                       INC Y                                     ;;109D|1085+1085/1085\1085;
                       BRA APU_109A                              ;;109E|1086+1086/1086\1086;
                                                                 ;;                        ;
 APU_1088:             CLRC                                      ;;10A0|1088+1088/1088\1088;
                       ADC A,#$10                                ;;10A1|1089+1089/1089\1089;
-                      MOVW !PitchValue,YA                       ;;10A3|108B+108B/108B\108B;
+                      MOVW.B PitchValue,YA                      ;;10A3|108B+108B/108B\108B;
                       MOV A,X                                   ;;10A5|108D+108D/108D\108D;
                       MOV Y,A                                   ;;10A6|108E+108E/108E\108E;
-                      MOV A,(!ARam_14)+Y                        ;;10A7|108F+108F/108F\108F;
+                      MOV.B A,(ARam_14)+Y                       ;;10A7|108F+108F/108F\108F;
                       CLRC                                      ;;10A9|1091+1091/1091\1091;
-                      ADC A,(!PitchValue)+Y                     ;;10AA|1092+1092/1092\1092;
+                      ADC.B A,(PitchValue)+Y                    ;;10AA|1092+1092/1092\1092;
                       PUSH A                                    ;;10AC|1094+1094/1094\1094;
                       INC Y                                     ;;10AD|1095+1095/1095\1095;
-                      MOV A,(!ARam_14)+Y                        ;;10AE|1096+1096/1096\1096;
-                      ADC A,(!PitchValue)+Y                     ;;10B0|1098+1098/1098\1098;
-APU_109A:             MOV (!ARam_14)+Y,A                        ;;10B2|109A+109A/109A\109A;
+                      MOV.B A,(ARam_14)+Y                       ;;10AE|1096+1096/1096\1096;
+                      ADC.B A,(PitchValue)+Y                    ;;10B0|1098+1098/1098\1098;
+APU_109A:             MOV.B (ARam_14)+Y,A                       ;;10B2|109A+109A/109A\109A;
                       DEC Y                                     ;;10B4|109C+109C/109C\109C;
                       POP A                                     ;;10B5|109D+109D/109D\109D;
-                      MOV (!ARam_14)+Y,A                        ;;10B6|109E+109E/109E\109E;
+                      MOV.B (ARam_14)+Y,A                       ;;10B6|109E+109E/109E\109E;
                       RET                                       ;;10B8|10A0+10A0/10A0\10A0;
                                                                 ;;                        ;
 APU_10A1:             SETP                                      ;;10B9|10A1+10A1/10A1\10A1; do: voice readahead;
-                      DEC !SPCInEdge+X                          ;;10BA|10A2+10A2/10A2\10A2;
+                      DEC.B SPCInEdge+X                         ;;10BA|10A2+10A2/10A2\10A2;
                       CLRP                                      ;;10BC|10A4+10A4/10A4\10A4;
                       BEQ +                                     ;;10BD|10A5+10A5/10A5\10A5;
                       MOV A,#$02                                ;;10BF|10A7+10A7/10A7\10A7;
-                      CBNE !VoTimers+X,APU_10D8                 ;;10C1|10A9+10A9/10A9\10A9;
-                    + MOV A,!VoPhrasePtr+X                      ;;10C4|10AC+10AC/10AC\10AC;
-                      MOV Y,!VoPhrasePtr+1+X                    ;;10C6|10AE+10AE/10AE\10AE;
-                      MOVW !ARam_14,YA                          ;;10C8|10B0+10B0/10B0\10B0;
+                      CBNE.B VoTimers+X,APU_10D8                ;;10C1|10A9+10A9/10A9\10A9;
+                    + MOV.B A,VoPhrasePtr+X                     ;;10C4|10AC+10AC/10AC\10AC;
+                      MOV.B Y,VoPhrasePtr+1+X                   ;;10C6|10AE+10AE/10AE\10AE;
+                      MOVW.B ARam_14,YA                         ;;10C8|10B0+10B0/10B0\10B0;
                       MOV Y,#$00                                ;;10CA|10B2+10B2/10B2\10B2;
-APU_10B4:             MOV A,(!ARam_14)+Y                        ;;10CC|10B4+10B4/10B4\10B4;
+APU_10B4:             MOV.B A,(ARam_14)+Y                       ;;10CC|10B4+10B4/10B4\10B4;
                       BEQ APU_10D1                              ;;10CE|10B6+10B6/10B6\10B6;
                       BMI APU_10BF                              ;;10D0|10B8+10B8/10B8\10B8;
                     - INC Y                                     ;;10D2|10BA+10BA/10BA\10BA;
-                      MOV A,(!ARam_14)+Y                        ;;10D3|10BB+10BB/10BB\10BB;
+                      MOV.B A,(ARam_14)+Y                       ;;10D3|10BB+10BB/10BB\10BB;
                       BPL -                                     ;;10D5|10BD+10BD/10BD\10BD;
 APU_10BF:             CMP A,#$C6                                ;;10D7|10BF+10BF/10BF\10BF;
                       BEQ APU_10D8                              ;;10D9|10C1+10C1/10C1\10C1; tie?;
@@ -1538,90 +1538,90 @@ APU_10BF:             CMP A,#$C6                                ;;10D7|10BF+10BF
                       MOV Y,A                                   ;;10E0|10C8+10C8/10C8\10C8;
                       POP A                                     ;;10E1|10C9+10C9/10C9\10C9;
                       CLRC                                      ;;10E2|10CA+10CA/10CA\10CA;
-                      ADC A,VCmdLens-$DA+Y                      ;;10E3|10CB+10CB/10CB\10CB; (FC2) vcmd op lens;
+                      ADC.W A,VCmdLens-$DA+Y                    ;;10E3|10CB+10CB/10CB\10CB; (FC2) vcmd op lens;
                       MOV Y,A                                   ;;10E6|10CE+10CE/10CE\10CE;
                       BRA APU_10B4                              ;;10E7|10CF+10CF/10CF\10CF;
                                                                 ;;                        ;
-APU_10D1:             MOV A,!CurrentChannel                     ;;10E9|10D1+10D1/10D1\10D1;
+APU_10D1:             MOV.B A,CurrentChannel                    ;;10E9|10D1+10D1/10D1\10D1;
                       MOV Y,#$5C                                ;;10EB|10D3+10D3/10D3\10D3;
                       CALL WriteDSPRegCond                      ;;10ED|10D5+10D5/10D5\10D5; key off current voice now;
-APU_10D8:             CLR7 !ARam_13                             ;;10F0|10D8+10D8/10D8\10D8;
-                      MOV A,!VoPitchSlide+X                     ;;10F2|10DA+10DA/10DA\10DA;
+APU_10D8:             CLR7.B ARam_13                            ;;10F0|10D8+10D8/10D8\10D8;
+                      MOV.B A,VoPitchSlide+X                    ;;10F2|10DA+10DA/10DA\10DA;
                       BEQ +                                     ;;10F4|10DC+10DC/10DC\10DC;
-                      MOV A,!CurrentChannel                     ;;10F6|10DE+10DE/10DE\10DE;
-                      AND A,!ChannelsMuted                      ;;10F8|10E0+10E0/10E0\10E0;
+                      MOV.B A,CurrentChannel                    ;;10F6|10DE+10DE/10DE\10DE;
+                      AND.B A,ChannelsMuted                     ;;10F8|10E0+10E0/10E0\10E0;
                       BEQ APU_1111                              ;;10FA|10E2+10E2/10E2\10E2;
-                    + MOV A,(!VoPhrasePtr+X)                    ;;10FC|10E4+10E4/10E4\10E4;
+                    + MOV.B A,(VoPhrasePtr+X)                   ;;10FC|10E4+10E4/10E4\10E4;
                       CMP A,#$DD                                ;;10FE|10E6+10E6/10E6\10E6;
                       BNE APU_112A                              ;;1100|10E8+10E8/10E8\10E8;
-                      MOV A,!CurrentChannel                     ;;1102|10EA+10EA/10EA\10EA;
-                      AND A,!ChannelsMuted                      ;;1104|10EC+10EC/10EC\10EC;
+                      MOV.B A,CurrentChannel                    ;;1102|10EA+10EA/10EA\10EA;
+                      AND.B A,ChannelsMuted                     ;;1104|10EC+10EC/10EC\10EC;
                       BEQ +                                     ;;1106|10EE+10EE/10EE\10EE;
-                      MOV !ARam_10,#$04                         ;;1108|10F0+10F0/10F0\10F0;
+                      MOV.B ARam_10,#$04                        ;;1108|10F0+10F0/10F0\10F0;
                     - CALL APU_1260                             ;;110B|10F3+10F3/10F3\10F3;
-                      DBNZ !ARam_10,-                           ;;110E|10F6+10F6/10F6\10F6;
+                      DBNZ.B ARam_10,-                          ;;110E|10F6+10F6/10F6\10F6;
                       BRA APU_1111                              ;;1111|10F9+10F9/10F9\10F9;
                     + CALL APU_1260                             ;;1113|10FB+10FB/10FB\10FB;
                       CALL NextVCmd                             ;;1116|10FE+10FE/10FE\10FE;
-                      MOV !VoPitchSlide+1+X,A                   ;;1119|1101+1101/1101\1101;
+                      MOV.B VoPitchSlide+1+X,A                  ;;1119|1101+1101/1101\1101;
                       CALL NextVCmd                             ;;111B|1103+1103/1103\1103;
-                      MOV !VoPitchSlide+X,A                     ;;111E|1106+1106/1106\1106;
+                      MOV.B VoPitchSlide+X,A                    ;;111E|1106+1106/1106\1106;
                       CALL NextVCmd                             ;;1120|1108+1108/1108\1108;
                       CLRC                                      ;;1123|110B+110B/110B\110B;
-                      ADC A,!MasterTranspose                    ;;1124|110C+110C/110C\110C;
+                      ADC.B A,MasterTranspose                   ;;1124|110C+110C/110C\110C;
                       CALL APU_0F5D                             ;;1126|110E+110E/110E\110E;
-APU_1111:             MOV A,!VoPitchSlide+1+X                   ;;1129|1111+1111/1111\1111;
+APU_1111:             MOV.B A,VoPitchSlide+1+X                  ;;1129|1111+1111/1111\1111;
                       BEQ +                                     ;;112B|1113+1113/1113\1113;
-                      DEC !VoPitchSlide+1+X                     ;;112D|1115+1115/1115\1115;
+                      DEC.B VoPitchSlide+1+X                    ;;112D|1115+1115/1115\1115;
                       BRA APU_112A                              ;;112F|1117+1117/1117\1117;
                                                                 ;;                        ;
-                    + MOV A,!ChannelsMuted                      ;;1131|1119+1119/1119\1119;
-                      AND A,!CurrentChannel                     ;;1133|111B+111B/111B\111B;
+                    + MOV.B A,ChannelsMuted                     ;;1131|1119+1119/1119\1119;
+                      AND.B A,CurrentChannel                    ;;1133|111B+111B/111B\111B;
                       BNE APU_112A                              ;;1135|111D+111D/111D\111D;
-APU_111F:             SET7 !ARam_13                             ;;1137|111F+111F/111F\111F;
+APU_111F:             SET7.B ARam_13                            ;;1137|111F+111F/111F\111F;
                       MOV A,#$B0                                ;;1139|1121+1121/1121\1121;
                       MOV Y,#$02                                ;;113B|1123+1123/1123\1123;
-                      DEC !VoPitchSlide+X                       ;;113D|1125+1125/1125\1125;
+                      DEC.B VoPitchSlide+X                      ;;113D|1125+1125/1125\1125;
                       CALL APU_1075                             ;;113F|1127+1127/1127\1127;
-APU_112A:             MOV A,!ARam_02B0+1+X                      ;;1142|112A+112A/112A\112A;
+APU_112A:             MOV.W A,ARam_02B0+1+X                     ;;1142|112A+112A/112A\112A;
                       MOV Y,A                                   ;;1145|112D+112D/112D\112D;
-                      MOV A,!ARam_02B0+X                        ;;1146|112E+112E/112E\112E;
-                      MOVW !ARam_10,YA                          ;;1149|1131+1131/1131\1131; note num -> $10/11 
-                      MOV A,!VoVibrato+1+X                      ;;114B|1133+1133/1133\1133;
+                      MOV.W A,ARam_02B0+X                       ;;1146|112E+112E/112E\112E;
+                      MOVW.B ARam_10,YA                         ;;1149|1131+1131/1131\1131; note num -> $10/11 
+                      MOV.B A,VoVibrato+1+X                     ;;114B|1133+1133/1133\1133;
                       BEQ APU_1140                              ;;114D|1135+1135/1135\1135;
-                      MOV A,!ARam_0340+X                        ;;114F|1137+1137/1137\1137;
-                      CMP A,!VoVibrato+X                        ;;1152|113A+113A/113A\113A;
+                      MOV.W A,ARam_0340+X                       ;;114F|1137+1137/1137\1137;
+                      CMP.B A,VoVibrato+X                       ;;1152|113A+113A/113A\113A;
                       BEQ APU_1144                              ;;1154|113C+113C/113C\113C;
-                      INC !VoVibrato+X                          ;;1156|113E+113E/113E\113E;
-APU_1140:             BBS7 !ARam_13,APU_1195                    ;;1158|1140+1140/1140\1140;
+                      INC.B VoVibrato+X                         ;;1156|113E+113E/113E\113E;
+APU_1140:             BBS7.B ARam_13,APU_1195                   ;;1158|1140+1140/1140\1140;
                       RET                                       ;;115B|1143+1143/1143\1143;
-APU_1144:             MOV A,!ARam_0340+1+X                      ;;115C|1144+1144/1144\1144;
+APU_1144:             MOV.W A,ARam_0340+1+X                     ;;115C|1144+1144/1144\1144;
                       BEQ APU_1166                              ;;115F|1147+1147/1147\1147;
-                      CMP A,!ARam_0110+X                        ;;1161|1149+1149/1149\1149;
+                      CMP.W A,ARam_0110+X                       ;;1161|1149+1149/1149\1149;
                       BNE +                                     ;;1164|114C+114C/114C\114C;
-                      MOV A,!ARam_0350+1+X                      ;;1166|114E+114E/114E\114E;
-                      MOV !VoVibrato+1+X,A                      ;;1169|1151+1151/1151\1151;
+                      MOV.W A,ARam_0350+1+X                     ;;1166|114E+114E/114E\114E;
+                      MOV.B VoVibrato+1+X,A                     ;;1169|1151+1151/1151\1151;
                       BRA APU_1166                              ;;116B|1153+1153/1153\1153;
-                    + MOV A,!ARam_0110+X                        ;;116D|1155+1155/1155\1155;
+                    + MOV.W A,ARam_0110+X                       ;;116D|1155+1155/1155\1155;
                       BEQ +                                     ;;1170|1158+1158/1158\1158;
-                      MOV A,!VoVibrato+1+X                      ;;1172|115A+115A/115A\115A;
+                      MOV.B A,VoVibrato+1+X                     ;;1172|115A+115A/115A\115A;
                     + CLRC                                      ;;1174|115C+115C/115C\115C;
-                      ADC A,!ARam_0350+X                        ;;1175|115D+115D/115D\115D;
-                      MOV !VoVibrato+1+X,A                      ;;1178|1160+1160/1160\1160;
+                      ADC.W A,ARam_0350+X                       ;;1175|115D+115D/115D\115D;
+                      MOV.B VoVibrato+1+X,A                     ;;1178|1160+1160/1160\1160;
                       SETP                                      ;;117A|1162+1162/1162\1162;
-                      INC !ARam_10+X                            ;;117B|1163+1163/1163\1163;
+                      INC.B ARam_10+X                           ;;117B|1163+1163/1163\1163;
                       CLRP                                      ;;117D|1165+1165/1165\1165;
-APU_1166:             MOV A,!ARam_0330+X                        ;;117E|1166+1166/1166\1166;
+APU_1166:             MOV.W A,ARam_0330+X                       ;;117E|1166+1166/1166\1166;
                       CLRC                                      ;;1181|1169+1169/1169\1169;
-                      ADC A,!ARam_0330+1+X                      ;;1182|116A+116A/116A\116A;
-                      MOV !ARam_0330+X,A                        ;;1185|116D+116D/116D\116D;
-APU_1170:             MOV !ARam_12,A                            ;;1188|1170+1170/1170\1170;
+                      ADC.W A,ARam_0330+1+X                     ;;1182|116A+116A/116A\116A;
+                      MOV.W ARam_0330+X,A                       ;;1185|116D+116D/116D\116D;
+APU_1170:             MOV.B ARam_12,A                           ;;1188|1170+1170/1170\1170;
                       ASL A                                     ;;118A|1172+1172/1172\1172;
                       ASL A                                     ;;118B|1173+1173/1173\1173;
                       BCC +                                     ;;118C|1174+1174/1174\1174;
                       EOR A,#$FF                                ;;118E|1176+1176/1176\1176;
                     + MOV Y,A                                   ;;1190|1178+1178/1178\1178;
-                      MOV A,!VoVibrato+1+X                      ;;1191|1179+1179/1179\1179;
+                      MOV.B A,VoVibrato+1+X                     ;;1191|1179+1179/1179\1179;
                       CMP A,#$F1                                ;;1193|117B+117B/117B\117B;
                       BCS APU_1185                              ;;1195|117D+117D/117D\117D;
                       MUL YA                                    ;;1197|117F+117F/117F\117F;
@@ -1630,120 +1630,120 @@ APU_1170:             MOV !ARam_12,A                            ;;1188|1170+1170
                       BRA APU_1188                              ;;119B|1183+1183/1183\1183;
 APU_1185:             AND A,#$0F                                ;;119D|1185+1185/1185\1185;
                       MUL YA                                    ;;119F|1187+1187/1187\1187;
-APU_1188:             BBC7 !ARam_12,+                           ;;11A0|1188+1188/1188\1188;
-                      MOVW !ARam_12,YA                          ;;11A3|118B+118B/118B\118B;
-                      MOVW YA,!ARam_0E                          ;;11A5|118D+118D/118D\118D;
-                      SUBW YA,!ARam_12                          ;;11A7|118F+118F/118F\118F;
-                    + ADDW YA,!ARam_10                          ;;11A9|1191+1191/1191\1191;
-                      MOVW !ARam_10,YA                          ;;11AB|1193+1193/1193\1193;
+APU_1188:             BBC7.B ARam_12,+                          ;;11A0|1188+1188/1188\1188;
+                      MOVW.B ARam_12,YA                         ;;11A3|118B+118B/118B\118B;
+                      MOVW.B YA,ARam_0E                         ;;11A5|118D+118D/118D\118D;
+                      SUBW.B YA,ARam_12                         ;;11A7|118F+118F/118F\118F;
+                    + ADDW.B YA,ARam_10                         ;;11A9|1191+1191/1191\1191;
+                      MOVW.B ARam_10,YA                         ;;11AB|1193+1193/1193\1193;
 APU_1195:             JMP APU_0634                              ;;11AD|1195+1195/1195\1195;
                                                                 ;;                        ;
-APU_1198:             CLR7 !ARam_13                             ;;11B0|1198+1198/1198\1198; per-voice fades/dsps? 
-                      MOV A,!ARam_B0+1+X                        ;;11B2|119A+119A/119A\119A;
+APU_1198:             CLR7.B ARam_13                            ;;11B0|1198+1198/1198\1198; per-voice fades/dsps? 
+                      MOV.B A,ARam_B0+1+X                       ;;11B2|119A+119A/119A\119A;
                       BEQ +                                     ;;11B4|119C+119C/119C\119C;
-                      MOV A,!ARam_0370+X                        ;;11B6|119E+119E/119E\119E;
-                      CBNE !ARam_B0+X,+                         ;;11B9|11A1+11A1/11A1\11A1;
+                      MOV.W A,ARam_0370+X                       ;;11B6|119E+119E/119E\119E;
+                      CBNE.B ARam_B0+X,+                        ;;11B9|11A1+11A1/11A1\11A1;
                       CALL APU_122D                             ;;11BC|11A4+11A4/11A4\11A4; voice vol calculations;
-                    + MOV A,!ARam_0280+1+X                      ;;11BF|11A7+11A7/11A7\11A7;
+                    + MOV.W A,ARam_0280+1+X                     ;;11BF|11A7+11A7/11A7\11A7;
                       MOV Y,A                                   ;;11C2|11AA+11AA/11AA\11AA;
-                      MOV A,!ARam_0280+X                        ;;11C3|11AB+11AB/11AB\11AB;
-                      MOVW !ARam_10,YA                          ;;11C6|11AE+11AE/11AE\11AE; $10/11 = voice pan value 
-                      MOV A,!VoPanFade+1+X                      ;;11C8|11B0+11B0/11B0\11B0; voice pan fade counter 
+                      MOV.W A,ARam_0280+X                       ;;11C3|11AB+11AB/11AB\11AB;
+                      MOVW.B ARam_10,YA                         ;;11C6|11AE+11AE/11AE\11AE; $10/11 = voice pan value 
+                      MOV.B A,VoPanFade+1+X                     ;;11C8|11B0+11B0/11B0\11B0; voice pan fade counter 
                       BNE +                                     ;;11CA|11B2+11B2/11B2\11B2;
-                      BBS7 !ARam_13,APU_11C3                    ;;11CC|11B4+11B4/11B4\11B4;
+                      BBS7.B ARam_13,APU_11C3                   ;;11CC|11B4+11B4/11B4\11B4;
                       BRA APU_11C6                              ;;11CF|11B7+11B7/11B7\11B7;
                                                                 ;;                        ;
-                    + MOV A,!ARam_0290+1+X                      ;;11D1|11B9+11B9/11B9\11B9;
+                    + MOV.W A,ARam_0290+1+X                     ;;11D1|11B9+11B9/11B9\11B9;
                       MOV Y,A                                   ;;11D4|11BC+11BC/11BC\11BC;
-                      MOV A,!ARam_0290+X                        ;;11D5|11BD+11BD/11BD\11BD; pan fade delta 
+                      MOV.W A,ARam_0290+X                       ;;11D5|11BD+11BD/11BD\11BD; pan fade delta 
                       CALL APU_1201                             ;;11D8|11C0+11C0/11C0\11C0; add delta (with mutations)?;
 APU_11C3:             CALL APU_1036                             ;;11DB|11C3+11C3/11C3\11C3; set voice DSP regs, pan from $10/11;
-APU_11C6:             CLR7 !ARam_13                             ;;11DE|11C6+11C6/11C6\11C6;
-                      MOV A,!ARam_02B0+1+X                      ;;11E0|11C8+11C8/11C8\11C8;
+APU_11C6:             CLR7.B ARam_13                            ;;11DE|11C6+11C6/11C6\11C6;
+                      MOV.W A,ARam_02B0+1+X                     ;;11E0|11C8+11C8/11C8\11C8;
                       MOV Y,A                                   ;;11E3|11CB+11CB/11CB\11CB;
-                      MOV A,!ARam_02B0+X                        ;;11E4|11CC+11CC/11CC\11CC;
-                      MOVW !ARam_10,YA                          ;;11E7|11CF+11CF/11CF\11CF; notenum to $10/11 
-                      MOV A,!VoPitchSlide+X                     ;;11E9|11D1+11D1/11D1\11D1; pitch slide counter 
+                      MOV.W A,ARam_02B0+X                       ;;11E4|11CC+11CC/11CC\11CC;
+                      MOVW.B ARam_10,YA                         ;;11E7|11CF+11CF/11CF\11CF; notenum to $10/11 
+                      MOV.B A,VoPitchSlide+X                    ;;11E9|11D1+11D1/11D1\11D1; pitch slide counter 
                       BEQ +                                     ;;11EB|11D3+11D3/11D3\11D3;
-                      MOV A,!VoPitchSlide+1+X                   ;;11ED|11D5+11D5/11D5\11D5;
+                      MOV.B A,VoPitchSlide+1+X                  ;;11ED|11D5+11D5/11D5\11D5;
                       BNE +                                     ;;11EF|11D7+11D7/11D7\11D7;
-                      MOV A,!ARam_02C0+1+X                      ;;11F1|11D9+11D9/11D9\11D9;
+                      MOV.W A,ARam_02C0+1+X                     ;;11F1|11D9+11D9/11D9\11D9;
                       MOV Y,A                                   ;;11F4|11DC+11DC/11DC\11DC;
-                      MOV A,!ARam_02C0+X                        ;;11F5|11DD+11DD/11DD\11DD;
+                      MOV.W A,ARam_02C0+X                       ;;11F5|11DD+11DD/11DD\11DD;
                       CALL APU_11FF                             ;;11F8|11E0+11E0/11E0\11E0; add pitch slide delta;
-                    + MOV A,!VoVibrato+1+X                      ;;11FB|11E3+11E3/11E3\11E3;
+                    + MOV.B A,VoVibrato+1+X                     ;;11FB|11E3+11E3/11E3\11E3;
                       BNE +                                     ;;11FD|11E5+11E5/11E5\11E5;
-                    - BBS7 !ARam_13,APU_1195                    ;;11FF|11E7+11E7/11E7\11E7;
+                    - BBS7.B ARam_13,APU_1195                   ;;11FF|11E7+11E7/11E7\11E7;
                       RET                                       ;;1202|11EA+11EA/11EA\11EA;
                                                                 ;;                        ;
-                    + MOV A,!ARam_0340+X                        ;;1203|11EB+11EB/11EB\11EB;
-                      CBNE !VoVibrato+X,-                       ;;1206|11EE+11EE/11EE\11EE;
-                      MOV Y,!ARam_49                            ;;1209|11F1+11F1/11F1\11F1;
-                      MOV A,!ARam_0330+1+X                      ;;120B|11F3+11F3/11F3\11F3;
+                    + MOV.W A,ARam_0340+X                       ;;1203|11EB+11EB/11EB\11EB;
+                      CBNE.B VoVibrato+X,-                      ;;1206|11EE+11EE/11EE\11EE;
+                      MOV.B Y,ARam_49                           ;;1209|11F1+11F1/11F1\11F1;
+                      MOV.W A,ARam_0330+1+X                     ;;120B|11F3+11F3/11F3\11F3;
                       MUL YA                                    ;;120E|11F6+11F6/11F6\11F6;
                       MOV A,Y                                   ;;120F|11F7+11F7/11F7\11F7;
                       CLRC                                      ;;1210|11F8+11F8/11F8\11F8;
-                      ADC A,!ARam_0330+X                        ;;1211|11F9+11F9/11F9\11F9;
+                      ADC.W A,ARam_0330+X                       ;;1211|11F9+11F9/11F9\11F9;
                       JMP APU_1170                              ;;1214|11FC+11FC/11FC\11FC;
                                                                 ;;                        ;
-APU_11FF:             SET7 !ARam_13                             ;;1217|11FF+11FF/11FF\11FF;
-APU_1201:             MOVW !PitchValue,YA                       ;;1219|1201+1201/1201\1201;
-                      MOV !ARam_12,Y                            ;;121B|1203+1203/1203\1203;
-                      BBC7 !ARam_12,+                           ;;121D|1205+1205/1205\1205;
-                      MOVW YA,!ARam_0E                          ;;1220|1208+1208/1208\1208;
-                      SUBW YA,!PitchValue                       ;;1222|120A+120A/120A\120A;
-                      MOVW !PitchValue,YA                       ;;1224|120C+120C/120C\120C;
-                    + MOV Y,!ARam_49                            ;;1226|120E+120E/120E\120E;
-                      MOV A,!PitchValue                         ;;1228|1210+1210/1210\1210;
+APU_11FF:             SET7.B ARam_13                            ;;1217|11FF+11FF/11FF\11FF;
+APU_1201:             MOVW.B PitchValue,YA                      ;;1219|1201+1201/1201\1201;
+                      MOV.B ARam_12,Y                           ;;121B|1203+1203/1203\1203;
+                      BBC7.B ARam_12,+                          ;;121D|1205+1205/1205\1205;
+                      MOVW.B YA,ARam_0E                         ;;1220|1208+1208/1208\1208;
+                      SUBW.B YA,PitchValue                      ;;1222|120A+120A/120A\120A;
+                      MOVW.B PitchValue,YA                      ;;1224|120C+120C/120C\120C;
+                    + MOV.B Y,ARam_49                           ;;1226|120E+120E/120E\120E;
+                      MOV.B A,PitchValue                        ;;1228|1210+1210/1210\1210;
                       MUL YA                                    ;;122A|1212+1212/1212\1212;
-                      MOV !ARam_14,Y                            ;;122B|1213+1213/1213\1213;
-                      MOV !ARam_15,#$00                         ;;122D|1215+1215/1215\1215;
-                      MOV Y,!ARam_49                            ;;1230|1218+1218/1218\1218;
-                      MOV A,!PitchValue+1                       ;;1232|121A+121A/121A\121A;
+                      MOV.B ARam_14,Y                           ;;122B|1213+1213/1213\1213;
+                      MOV.B ARam_15,#$00                        ;;122D|1215+1215/1215\1215;
+                      MOV.B Y,ARam_49                           ;;1230|1218+1218/1218\1218;
+                      MOV.B A,PitchValue+1                      ;;1232|121A+121A/121A\121A;
                       MUL YA                                    ;;1234|121C+121C/121C\121C;
-                      ADDW YA,!ARam_14                          ;;1235|121D+121D/121D\121D;
-                      BBC7 !ARam_12,+                           ;;1237|121F+121F/121F\121F;
-                      MOVW !ARam_14,YA                          ;;123A|1222+1222/1222\1222;
-                      MOVW YA,!ARam_0E                          ;;123C|1224+1224/1224\1224;
-                      SUBW YA,!ARam_14                          ;;123E|1226+1226/1226\1226;
-                    + ADDW YA,!ARam_10                          ;;1240|1228+1228/1228\1228;
-                      MOVW !ARam_10,YA                          ;;1242|122A+122A/122A\122A;
+                      ADDW.B YA,ARam_14                         ;;1235|121D+121D/121D\121D;
+                      BBC7.B ARam_12,+                          ;;1237|121F+121F/121F\121F;
+                      MOVW.B ARam_14,YA                         ;;123A|1222+1222/1222\1222;
+                      MOVW.B YA,ARam_0E                         ;;123C|1224+1224/1224\1224;
+                      SUBW.B YA,ARam_14                         ;;123E|1226+1226/1226\1226;
+                    + ADDW.B YA,ARam_10                         ;;1240|1228+1228/1228\1228;
+                      MOVW.B ARam_10,YA                         ;;1242|122A+122A/122A\122A;
                       RET                                       ;;1244|122C+122C/122C\122C;
                                                                 ;;                        ;
-APU_122D:             SET7 !ARam_13                             ;;1245|122D+122D/122D\122D;
-                      MOV Y,!ARam_49                            ;;1247|122F+122F/122F\122F; tempo counter (i.e. fractional part of tick counter) 
-                      MOV A,!ARam_0360+2+X                      ;;1249|1231+1231/1231\1231; tremolo rate 
+APU_122D:             SET7.B ARam_13                            ;;1245|122D+122D/122D\122D;
+                      MOV.B Y,ARam_49                           ;;1247|122F+122F/122F\122F; tempo counter (i.e. fractional part of tick counter) 
+                      MOV.W A,ARam_0360+2+X                     ;;1249|1231+1231/1231\1231; tremolo rate 
                       MUL YA                                    ;;124C|1234+1234/1234\1234;
                       MOV A,Y                                   ;;124D|1235+1235/1235\1235;
                       CLRC                                      ;;124E|1236+1236/1236\1236;
-                      ADC A,!ARam_0360+X                        ;;124F|1237+1237/1237\1237;
+                      ADC.W A,ARam_0360+X                       ;;124F|1237+1237/1237\1237;
 APU_123A:             ASL A                                     ;;1252|123A+123A/123A\123A;
                       BCC +                                     ;;1253|123B+123B/123B\123B;
                       EOR A,#$FF                                ;;1255|123D+123D/123D\123D;
-                    + MOV Y,!ARam_B0+1+X                        ;;1257|123F+123F/123F\123F; tremolo depth 
+                    + MOV.B Y,ARam_B0+1+X                       ;;1257|123F+123F/123F\123F; tremolo depth 
                       MUL YA                                    ;;1259|1241+1241/1241\1241;
-                      MOV A,!ARam_0210+1+X                      ;;125A|1242+1242/1242\1242; per-note volume (velocity) 
+                      MOV.W A,ARam_0210+1+X                     ;;125A|1242+1242/1242\1242; per-note volume (velocity) 
                       MUL YA                                    ;;125D|1245+1245/1245\1245;
                       MOV A,Y                                   ;;125E|1246+1246/1246\1246;
                       EOR A,#$FF                                ;;125F|1247+1247/1247\1247;
                       SETC                                      ;;1261|1249+1249/1249\1249;
-                      ADC A,!ARam_0210+1+X                      ;;1262|124A+124A/124A\124A;
+                      ADC.W A,ARam_0210+1+X                     ;;1262|124A+124A/124A\124A;
 APU_124D:             MOV Y,A                                   ;;1265|124D+124D/124D\124D;
-                      MOV A,!ARam_0240+1+X                      ;;1266|124E+124E/124E\124E; CHANNEL VOLUME ; set voice volume from master/base/A 
+                      MOV.W A,ARam_0240+1+X                     ;;1266|124E+124E/124E\124E; CHANNEL VOLUME ; set voice volume from master/base/A 
                       MUL YA                                    ;;1269|1251+1251/1251\1251;
-                      MOV A,!MasterVolume                       ;;126A|1252+1252/1252\1252; master volume 
+                      MOV.B A,MasterVolume                      ;;126A|1252+1252/1252\1252; master volume 
                       MUL YA                                    ;;126C|1254+1254/1254\1254;
                       MOV A,Y                                   ;;126D|1255+1255/1255\1255;
                       MUL YA                                    ;;126E|1256+1256/1256\1256;
                       MOV A,Y                                   ;;126F|1257+1257/1257\1257; (^2 exponential);
-                      MOV !ARam_0370+1+X,A                      ;;1270|1258+1258/1258\1258; voice volume 
+                      MOV.W ARam_0370+1+X,A                     ;;1270|1258+1258/1258\1258; voice volume 
                       RET                                       ;;1273|125B+125B/125B\125B;
                                                                 ;;                        ;
-NextVCmd46:           MOV X,!CurrentChannel2                    ;;1274|125C+125C/125C\125C; get next vcmd stream byte for voice $46 Channel2
-NextVCmd:             MOV A,(!VoPhrasePtr+X)                    ;;1276|125E+125E/125E\125E; get next vcmd stream byte into A/Y 
-APU_1260:             INC !VoPhrasePtr+X                        ;;1278|1260+1260/1260\1260;
+NextVCmd46:           MOV.B X,CurrentChannel2                   ;;1274|125C+125C/125C\125C; get next vcmd stream byte for voice $46 Channel2
+NextVCmd:             MOV.B A,(VoPhrasePtr+X)                   ;;1276|125E+125E/125E\125E; get next vcmd stream byte into A/Y 
+APU_1260:             INC.B VoPhrasePtr+X                       ;;1278|1260+1260/1260\1260;
                       BNE +                                     ;;127A|1262+1262/1262\1262;
-                      INC !VoPhrasePtr+1+X                      ;;127C|1264+1264/1264\1264;
+                      INC.B VoPhrasePtr+1+X                     ;;127C|1264+1264/1264\1264;
                     + MOV Y,A                                   ;;127E|1266+1266/1266\1266;
                       RET                                       ;;127F|1267+1267/1267\1267;
                                                                 ;;                        ; 
@@ -1770,16 +1770,16 @@ GetPitch:             MOV Y,#$00                                ;;12D5|12BD+12BD
                       MOV X,#$18                                ;;12D8|12C0+12C0/12C0\12C0;
                       DIV YA,X                                  ;;12DA|12C2+12C2/12C2\12C2;
                       MOV X,A                                   ;;12DB|12C3+12C3/12C3\12C3;
-                      MOV A,PitchTable+1+Y                      ;;12DC|12C4+12C4/12C4\12C4;
-                      MOV !PitchValue,A                         ;;12DF|12C7+12C7/12C7\12C7;
-                      MOV A,PitchTable+Y                        ;;12E1|12C9+12C9/12C9\12C9;
+                      MOV.W A,PitchTable+1+Y                    ;;12DC|12C4+12C4/12C4\12C4;
+                      MOV.B PitchValue,A                        ;;12DF|12C7+12C7/12C7\12C7;
+                      MOV.W A,PitchTable+Y                      ;;12E1|12C9+12C9/12C9\12C9;
                       BRA +                                     ;;12E4|12CC+12CC/12CC\12CC;
-                    - LSR !PitchValue                           ;;12E6|12CE+12CE/12CE\12CE;
+                    - LSR.B PitchValue                          ;;12E6|12CE+12CE/12CE\12CE;
                       ROR A                                     ;;12E8|12D0+12D0/12D0\12D0;
                       INC X                                     ;;12E9|12D1+12D1/12D1\12D1;
                     + CMP X,#$06                                ;;12EA|12D2+12D2/12D2\12D2;
                       BNE -                                     ;;12EC|12D4+12D4/12D4\12D4;
-                      MOV Y,!PitchValue                         ;;12EE|12D6+12D6/12D6\12D6;
+                      MOV.B Y,PitchValue                        ;;12EE|12D6+12D6/12D6\12D6;
                       RET                                       ;;12F0|12D8+12D8/12D8\12D8;
                                                                 ;;                        ;
 PitchTable:           dw $10BE                                  ;;12F1|12D9+12D9/12D9\12D9; pitch table
@@ -1797,37 +1797,37 @@ PitchTable:           dw $10BE                                  ;;12F1|12D9+12D9
                       db $00                                    ;;1308|12F0+12F0/12F0\12F0;
                                                                 ;;                        ;
 StandardTransfer:     MOV A,#$AA                                ;;130A|12F2+12F2/12F2\12F2; do: standardish SPU transfer;
-                      MOV !SNESIO0,A                            ;;130C|12F4+12F4/12F4\12F4;
+                      MOV.W SNESIO0,A                           ;;130C|12F4+12F4/12F4\12F4;
                       MOV A,#$BB                                ;;130F|12F7+12F7/12F7\12F7;
-                      MOV !SNESIO1,A                            ;;1311|12F9+12F9/12F9\12F9;
-                    - MOV A,!SNESIO0                            ;;1314|12FC+12FC/12FC\12FC;
+                      MOV.W SNESIO1,A                           ;;1311|12F9+12F9/12F9\12F9;
+                    - MOV.W A,SNESIO0                           ;;1314|12FC+12FC/12FC\12FC;
                       CMP A,#$CC                                ;;1317|12FF+12FF/12FF\12FF;
                       BNE -                                     ;;1319|1301+1301/1301\1301;
                       BRA APU_1325                              ;;131B|1303+1303/1303\1303;
                                                                 ;;                        ;
-APU_1305:             MOV Y,!SNESIO0                            ;;131D|1305+1305/1305\1305;
+APU_1305:             MOV.W Y,SNESIO0                           ;;131D|1305+1305/1305\1305;
                       BNE APU_1305                              ;;1320|1308+1308/1308\1308;
-APU_130A:             CMP Y,!SNESIO0                            ;;1322|130A+130A/130A\130A;
+APU_130A:             CMP.W Y,SNESIO0                           ;;1322|130A+130A/130A\130A;
                       BNE APU_131E                              ;;1325|130D+130D/130D\130D;
-                      MOV A,!SNESIO1                            ;;1327|130F+130F/130F\130F;
-                      MOV !SNESIO0,Y                            ;;132A|1312+1312/1312\1312;
-                      MOV (!ARam_14)+Y,A                        ;;132D|1315+1315/1315\1315;
+                      MOV.W A,SNESIO1                           ;;1327|130F+130F/130F\130F;
+                      MOV.W SNESIO0,Y                           ;;132A|1312+1312/1312\1312;
+                      MOV.B (ARam_14)+Y,A                       ;;132D|1315+1315/1315\1315;
                       INC Y                                     ;;132F|1317+1317/1317\1317;
                       BNE APU_130A                              ;;1330|1318+1318/1318\1318;
-                      INC !ARam_15                              ;;1332|131A+131A/131A\131A;
+                      INC.B ARam_15                             ;;1332|131A+131A/131A\131A;
                       BRA APU_130A                              ;;1334|131C+131C/131C\131C;
 APU_131E:             BPL APU_130A                              ;;1336|131E+131E/131E\131E;
-                      CMP Y,!SNESIO0                            ;;1338|1320+1320/1320\1320;
+                      CMP.W Y,SNESIO0                           ;;1338|1320+1320/1320\1320;
                       BPL APU_130A                              ;;133B|1323+1323/1323\1323;
-APU_1325:             MOV A,!SNESIO2                            ;;133D|1325+1325/1325\1325;
-                      MOV Y,!SNESIO3                            ;;1340|1328+1328/1328\1328;
-                      MOVW !ARam_14,YA                          ;;1343|132B+132B/132B\132B;
-                      MOV Y,!SNESIO0                            ;;1345|132D+132D/132D\132D;
-                      MOV A,!SNESIO1                            ;;1348|1330+1330/1330\1330;
-                      MOV !SNESIO0,Y                            ;;134B|1333+1333/1333\1333;
+APU_1325:             MOV.W A,SNESIO2                           ;;133D|1325+1325/1325\1325;
+                      MOV.W Y,SNESIO3                           ;;1340|1328+1328/1328\1328;
+                      MOVW.B ARam_14,YA                         ;;1343|132B+132B/132B\132B;
+                      MOV.W Y,SNESIO0                           ;;1345|132D+132D/132D\132D;
+                      MOV.W A,SNESIO1                           ;;1348|1330+1330/1330\1330;
+                      MOV.W SNESIO0,Y                           ;;134B|1333+1333/1333\1333;
                       BNE APU_1305                              ;;134E|1336+1336/1336\1336;
                       MOV X,#$31                                ;;1350|1338+1338/1338\1338;
-                      MOV !SPCCONTROL,X                         ;;1352|133A+133A/133A\133A; reset ports, keep timer running 
+                      MOV.W SPCCONTROL,X                        ;;1352|133A+133A/133A\133A; reset ports, keep timer running 
                       RET                                       ;;1355|133D+133D/133D\133D;
                                                                 ;;1356|133E+133E/133E\133E;
                                                                 ;;                        ;
@@ -1835,9 +1835,9 @@ APU_1325:             MOV A,!SNESIO2                            ;;133D|1325+1325
                       arch 65816                                ;;                        ;
                                                                 ;;                        ;
 SoundEffects:         dw MusicBank1-SoundEffects-4              ;;8E5A|8E42+8E42/8E42\8E42;
-                      dw !SoundEffectTable                      ;;8E5C|8E44+8E44/8E44\8E44;
+                      dw SoundEffectTable                       ;;8E5C|8E44+8E44/8E44\8E44;
                                                                 ;;                        ;
-                      base !SoundEffectTable                    ;;                        ;
+                      base SoundEffectTable                     ;;                        ;
                                                                 ;;                        ;
 SFXDSPSettings:       db $70,$70 : dw $1000                     ;;5570|5570+5570/5570\5570;
                       db $06,$DF,$E0,$B8,$02                    ;;5574|5574+5574/5574\5574;
@@ -2069,9 +2069,9 @@ SFX_1DFC_12:          incbin "sfx/SFX_1DFC_12.bin"              ;;5F37|5F37+5F37
                       base off                                  ;;                        ;
                                                                 ;;                        ;
 MusicBank1:           dw MusicBank1_End-MusicBank1-4            ;;98C9|98B1+98B1/98B1\98B1;
-                      dw !MusicData                             ;;98CB|98B3+98B3/98B3\98B3;
+                      dw MusicData                              ;;98CB|98B3+98B3/98B3\98B3;
                                                                 ;;                        ;
-                      base !MusicData                           ;;                        ;
+                      base MusicData                            ;;                        ;
                                                                 ;;                        ;
                       dw MusicB1S01                             ;;1360|1360+1360/1360\1360;
                       dw MusicB1S02                             ;;1362|1362+1362/1362\1362;
@@ -3346,12 +3346,12 @@ MusicB1S01P1D:        db $DA,$01,$DB,$0A,$18,$6E,$C7,$48        ;;2957|2957+2957
                                                                 ;;                        ;
                       base off                                  ;;                        ;
                                                                 ;;                        ;
-MusicBank1_End:       dw $0000,!SPCEngine                       ;;AEEA|AED2+AED2/AED2\AED2;
+MusicBank1_End:       dw $0000,SPCEngine                        ;;AEEA|AED2+AED2/AED2\AED2;
                                                                 ;;                        ;
 MusicBank2:           dw MusicBank2_End-MusicBank2-4            ;;AEEE|AED6+AED6/AED6\AED6;
-                      dw !MusicData                             ;;AEF0|AED8+AED8/AED8\AED8;
+                      dw MusicData                              ;;AEF0|AED8+AED8/AED8\AED8;
                                                                 ;;                        ;
-                      base !MusicData                           ;;                        ;
+                      base MusicData                            ;;                        ;
                                                                 ;;                        ;
                       dw MusicB2S01                             ;;1360|1360+1360/1360\1360;
                       dw MusicB2S02                             ;;1362|1362+1362/1362\1362;
@@ -7074,7 +7074,7 @@ MusicB2S03P2A:        db $60,$AF,$0C,$B0,$B1,$B2,$B5,$48        ;;5552|5552+5552
                                                                 ;;                        ;
                       base off                                  ;;                        ;
                                                                 ;;                        ;
-MusicBank2_End:       dw $0000,!SPCEngine                       ;;F0EF|F0D7+F0D7/F0D7\F0D7;
+MusicBank2_End:       dw $0000,SPCEngine                        ;;F0EF|F0D7+F0D7/F0D7\F0D7;
                                                                 ;;                        ;
                    if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
                       db $98,$00,$00,$00,$00,$01,$FF,$00        ;;F0F3                    ;

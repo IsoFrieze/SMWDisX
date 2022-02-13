@@ -20,25 +20,25 @@ DATA_048006:          dw $B300,$B318,$B330,$B348                ;;8006|8006+8006
                       dw $B8A0,$B8B8,$B8D0,$B8E8                ;;807E|807E+807E/807E\807E;
                                                                 ;;                        ;
 CODE_048086:          REP #$30                                  ;;8086|8086+8086/8086\8086; Index (16 bit) Accum (16 bit) 
-                      STZ.B !_3                                 ;;8088|8088+8088/8088\8088;
-                      STZ.B !_5                                 ;;808A|808A+808A/808A\808A;
-                    - LDX.B !_3                                 ;;808C|808C+808C/808C\808C;
+                      STZ.B _3                                  ;;8088|8088+8088/8088\8088;
+                      STZ.B _5                                  ;;808A|808A+808A/808A\808A;
+                    - LDX.B _3                                  ;;808C|808C+808C/808C\808C;
                       LDA.W DATA_048000,X                       ;;808E|808E+808E/808E\808E;
-                      STA.B !_0                                 ;;8091|8091+8091/8091\8091;
+                      STA.B _0                                  ;;8091|8091+8091/8091\8091;
                       SEP #$10                                  ;;8093|8093+8093/8093\8093; Index (8 bit) 
                       LDY.B #$7E                                ;;8095|8095+8095/8095\8095;
-                      STY.B !_2                                 ;;8097|8097+8097/8097\8097;
+                      STY.B _2                                  ;;8097|8097+8097/8097\8097;
                       REP #$10                                  ;;8099|8099+8099/8099\8099; Index (16 bit) 
-                      LDX.B !_5                                 ;;809B|809B+809B/809B\809B;
+                      LDX.B _5                                  ;;809B|809B+809B/809B\809B;
                       JSR CODE_0480B9                           ;;809D|809D+809D/809D\809D;
-                      LDA.B !_5                                 ;;80A0|80A0+80A0/80A0\80A0;
+                      LDA.B _5                                  ;;80A0|80A0+80A0/80A0\80A0;
                       CLC                                       ;;80A2|80A2+80A2/80A2\80A2;
                       ADC.W #$0020                              ;;80A3|80A3+80A3/80A3\80A3;
-                      STA.B !_5                                 ;;80A6|80A6+80A6/80A6\80A6;
-                      LDA.B !_3                                 ;;80A8|80A8+80A8/80A8\80A8;
+                      STA.B _5                                  ;;80A6|80A6+80A6/80A6\80A6;
+                      LDA.B _3                                  ;;80A8|80A8+80A8/80A8\80A8;
                       INC A                                     ;;80AA|80AA+80AA/80AA\80AA;
                       INC A                                     ;;80AB|80AB+80AB/80AB\80AB;
-                      STA.B !_3                                 ;;80AC|80AC+80AC/80AC\80AC;
+                      STA.B _3                                  ;;80AC|80AC+80AC/80AC\80AC;
                       AND.W #$00FF                              ;;80AE|80AE+80AE/80AE\80AE;
                       CMP.W #$0006                              ;;80B1|80B1+80B1/80B1\80B1;
                       BNE -                                     ;;80B4|80B4+80B4/80B4\80B4;
@@ -47,94 +47,94 @@ CODE_048086:          REP #$30                                  ;;8086|8086+8086
                                                                 ;;                        ;
 CODE_0480B9:          LDY.W #$0000                              ;;80B9|80B9+80B9/80B9\80B9; Index (16 bit) Accum (16 bit) 
                       LDA.W #$0008                              ;;80BC|80BC+80BC/80BC\80BC;
-                      STA.B !_7                                 ;;80BF|80BF+80BF/80BF\80BF;
-                      STA.B !_9                                 ;;80C1|80C1+80C1/80C1\80C1;
-                    - LDA.B [!_0],Y                             ;;80C3|80C3+80C3/80C3\80C3;
-                      STA.W !GfxDecompOWAni,X                   ;;80C5|80C5+80C5/80C5\80C5;
+                      STA.B _7                                  ;;80BF|80BF+80BF/80BF\80BF;
+                      STA.B _9                                  ;;80C1|80C1+80C1/80C1\80C1;
+                    - LDA.B [_0],Y                              ;;80C3|80C3+80C3/80C3\80C3;
+                      STA.W GfxDecompOWAni,X                    ;;80C5|80C5+80C5/80C5\80C5;
                       INY                                       ;;80C8|80C8+80C8/80C8\80C8;
                       INY                                       ;;80C9|80C9+80C9/80C9\80C9;
                       INX                                       ;;80CA|80CA+80CA/80CA\80CA;
                       INX                                       ;;80CB|80CB+80CB/80CB\80CB;
-                      DEC.B !_7                                 ;;80CC|80CC+80CC/80CC\80CC;
+                      DEC.B _7                                  ;;80CC|80CC+80CC/80CC\80CC;
                       BNE -                                     ;;80CE|80CE+80CE/80CE\80CE;
-                    - LDA.B [!_0],Y                             ;;80D0|80D0+80D0/80D0\80D0;
+                    - LDA.B [_0],Y                              ;;80D0|80D0+80D0/80D0\80D0;
                       AND.W #$00FF                              ;;80D2|80D2+80D2/80D2\80D2;
-                      STA.W !GfxDecompOWAni,X                   ;;80D5|80D5+80D5/80D5\80D5;
+                      STA.W GfxDecompOWAni,X                    ;;80D5|80D5+80D5/80D5\80D5;
                       INY                                       ;;80D8|80D8+80D8/80D8\80D8;
                       INX                                       ;;80D9|80D9+80D9/80D9\80D9;
                       INX                                       ;;80DA|80DA+80DA/80DA\80DA;
-                      DEC.B !_9                                 ;;80DB|80DB+80DB/80DB\80DB;
+                      DEC.B _9                                  ;;80DB|80DB+80DB/80DB\80DB;
                       BNE -                                     ;;80DD|80DD+80DD/80DD\80DD;
                       RTS                                       ;;80DF|80DF+80DF/80DF\80DF; Return 
                                                                 ;;                        ;
-OW_Tile_Animation:    LDA.B !TrueFrame                          ;;80E0|80E0+80E0/80E0\80E0; \ ; Index (8 bit) Accum (8 bit) 
+OW_Tile_Animation:    LDA.B TrueFrame                           ;;80E0|80E0+80E0/80E0\80E0; \ ; Index (8 bit) Accum (8 bit) 
                       AND.B #$07                                ;;80E2|80E2+80E2/80E2\80E2;  |If lower 3 bits of frame counter isn't 0, 
                       BNE CODE_048101                           ;;80E4|80E4+80E4/80E4\80E4; / don't update the water animation 
                       LDX.B #$1F                                ;;80E6|80E6+80E6/80E6\80E6;
-CODE_0480E8:          LDA.W !GfxDecompOWAni,X                   ;;80E8|80E8+80E8/80E8\80E8;
-                      STA.B !_0                                 ;;80EB|80EB+80EB/80EB\80EB;
+CODE_0480E8:          LDA.W GfxDecompOWAni,X                    ;;80E8|80E8+80E8/80E8\80E8;
+                      STA.B _0                                  ;;80EB|80EB+80EB/80EB\80EB;
                       TXA                                       ;;80ED|80ED+80ED/80ED\80ED;
                       AND.B #$08                                ;;80EE|80EE+80EE/80EE\80EE;
                       BNE CODE_0480F9                           ;;80F0|80F0+80F0/80F0\80F0;
-                      ASL.B !_0                                 ;;80F2|80F2+80F2/80F2\80F2;
-                      ROL.W !GfxDecompOWAni,X                   ;;80F4|80F4+80F4/80F4\80F4;
+                      ASL.B _0                                  ;;80F2|80F2+80F2/80F2\80F2;
+                      ROL.W GfxDecompOWAni,X                    ;;80F4|80F4+80F4/80F4\80F4;
                       BRA +                                     ;;80F7|80F7+80F7/80F7\80F7;
                                                                 ;;                        ;
-CODE_0480F9:          LSR.B !_0                                 ;;80F9|80F9+80F9/80F9\80F9;
-                      ROR.W !GfxDecompOWAni,X                   ;;80FB|80FB+80FB/80FB\80FB;
+CODE_0480F9:          LSR.B _0                                  ;;80F9|80F9+80F9/80F9\80F9;
+                      ROR.W GfxDecompOWAni,X                    ;;80FB|80FB+80FB/80FB\80FB;
                     + DEX                                       ;;80FE|80FE+80FE/80FE\80FE;
                       BPL CODE_0480E8                           ;;80FF|80FF+80FF/80FF\80FF;
-CODE_048101:          LDA.B !TrueFrame                          ;;8101|8101+8101/8101\8101; \ 
+CODE_048101:          LDA.B TrueFrame                           ;;8101|8101+8101/8101\8101; \ 
                       AND.B #$07                                ;;8103|8103+8103/8103\8103;  |If lower 3 bits of frame counter isn't 0, 
                       BNE +                                     ;;8105|8105+8105/8105\8105; / don't update the waterfall animation 
                       LDX.B #$20                                ;;8107|8107+8107/8107\8107;
                       JSR CODE_048172                           ;;8109|8109+8109/8109\8109;
-                    + LDA.B !TrueFrame                          ;;810C|810C+810C/810C\810C; \ 
+                    + LDA.B TrueFrame                           ;;810C|810C+810C/810C\810C; \ 
                       AND.B #$07                                ;;810E|810E+810E/810E\810E;  |If lower 3 bits of frame counter isn't 0, 
                       BNE CODE_048123                           ;;8110|8110+8110/8110\8110; / branch to $8123 
                       LDX.B #$1F                                ;;8112|8112+8112/8112\8112;
-                    - LDA.W !GfxDecompOWAni+$40,X               ;;8114|8114+8114/8114\8114;
+                    - LDA.W GfxDecompOWAni+$40,X                ;;8114|8114+8114/8114\8114;
                       ASL A                                     ;;8117|8117+8117/8117\8117;
-                      ROL.W !GfxDecompOWAni+$40,X               ;;8118|8118+8118/8118\8118;
+                      ROL.W GfxDecompOWAni+$40,X                ;;8118|8118+8118/8118\8118;
                       DEX                                       ;;811B|811B+811B/811B\811B;
                       BPL -                                     ;;811C|811C+811C/811C\811C;
                       LDX.B #$40                                ;;811E|811E+811E/811E\811E;
                       JSR CODE_048172                           ;;8120|8120+8120/8120\8120;
 CODE_048123:          REP #$30                                  ;;8123|8123+8123/8123\8123; Index (16 bit) Accum (16 bit) 
                       LDA.W #$0060                              ;;8125|8125+8125/8125\8125;
-                      STA.B !_D                                 ;;8128|8128+8128/8128\8128;
-                      STZ.B !_B                                 ;;812A|812A+812A/812A\812A;
+                      STA.B _D                                  ;;8128|8128+8128/8128\8128;
+                      STZ.B _B                                  ;;812A|812A+812A/812A\812A;
 CODE_04812C:          LDX.W #$0038                              ;;812C|812C+812C/812C\812C;
-                      LDA.B !_B                                 ;;812F|812F+812F/812F\812F;
+                      LDA.B _B                                  ;;812F|812F+812F/812F\812F;
                       CMP.W #$0020                              ;;8131|8131+8131/8131\8131;
                       BCS +                                     ;;8134|8134+8134/8134\8134;
                       LDX.W #$0070                              ;;8136|8136+8136/8136\8136;
                     + TXA                                       ;;8139|8139+8139/8139\8139;
-                      AND.B !TrueFrame                          ;;813A|813A+813A/813A\813A;
+                      AND.B TrueFrame                           ;;813A|813A+813A/813A\813A;
                       LSR A                                     ;;813C|813C+813C/813C\813C;
                       LSR A                                     ;;813D|813D+813D/813D\813D;
                       CPX.W #$0038                              ;;813E|813E+813E/813E\813E;
                       BEQ +                                     ;;8141|8141+8141/8141\8141;
                       LSR A                                     ;;8143|8143+8143/8143\8143;
                     + CLC                                       ;;8144|8144+8144/8144\8144;
-                      ADC.B !_B                                 ;;8145|8145+8145/8145\8145;
+                      ADC.B _B                                  ;;8145|8145+8145/8145\8145;
                       TAX                                       ;;8147|8147+8147/8147\8147;
                       LDA.W DATA_048006,X                       ;;8148|8148+8148/8148\8148;
-                      STA.B !_0                                 ;;814B|814B+814B/814B\814B;
+                      STA.B _0                                  ;;814B|814B+814B/814B\814B;
                       SEP #$10                                  ;;814D|814D+814D/814D\814D; Index (8 bit) 
                       LDY.B #$7E                                ;;814F|814F+814F/814F\814F;
-                      STY.B !_2                                 ;;8151|8151+8151/8151\8151;
+                      STY.B _2                                  ;;8151|8151+8151/8151\8151;
                       REP #$10                                  ;;8153|8153+8153/8153\8153; Index (16 bit) 
-                      LDX.B !_D                                 ;;8155|8155+8155/8155\8155;
+                      LDX.B _D                                  ;;8155|8155+8155/8155\8155;
                       JSR CODE_0480B9                           ;;8157|8157+8157/8157\8157;
-                      LDA.B !_D                                 ;;815A|815A+815A/815A\815A;
+                      LDA.B _D                                  ;;815A|815A+815A/815A\815A;
                       CLC                                       ;;815C|815C+815C/815C\815C;
                       ADC.W #$0020                              ;;815D|815D+815D/815D\815D;
-                      STA.B !_D                                 ;;8160|8160+8160/8160\8160;
-                      LDA.B !_B                                 ;;8162|8162+8162/8162\8162;
+                      STA.B _D                                  ;;8160|8160+8160/8160\8160;
+                      LDA.B _B                                  ;;8162|8162+8162/8162\8162;
                       CLC                                       ;;8164|8164+8164/8164\8164;
                       ADC.W #$0010                              ;;8165|8165+8165/8165\8165;
-                      STA.B !_B                                 ;;8168|8168+8168/8168\8168;
+                      STA.B _B                                  ;;8168|8168+8168/8168\8168;
                       CMP.W #$0080                              ;;816A|816A+816A/816A\816A;
                       BNE CODE_04812C                           ;;816D|816D+816D/816D\816D;
                       SEP #$30                                  ;;816F|816F+816F/816F\816F; Index (8 bit) Accum (8 bit) 
@@ -147,15 +147,15 @@ CODE_048172:          REP #$20                                  ;;8172|8172+8172
                       CLC                                       ;;8178|8178+8178/8178\8178;
                       ADC.W #$000E                              ;;8179|8179+8179/8179\8179;
                       TAX                                       ;;817C|817C+817C/817C\817C;
-                      LDA.W !GfxDecompOWAni,X                   ;;817D|817D+817D/817D\817D;
-                      STA.B !_0                                 ;;8180|8180+8180/8180\8180;
+                      LDA.W GfxDecompOWAni,X                    ;;817D|817D+817D/817D\817D;
+                      STA.B _0                                  ;;8180|8180+8180/8180\8180;
                       PLX                                       ;;8182|8182+8182/8182\8182;
-CODE_048183:          LDA.W !GfxDecompOWAni,X                   ;;8183|8183+8183/8183\8183;
-                      STA.B !_2                                 ;;8186|8186+8186/8186\8186;
-                      LDA.B !_0                                 ;;8188|8188+8188/8188\8188;
-                      STA.W !GfxDecompOWAni,X                   ;;818A|818A+818A/818A\818A;
-                      LDA.B !_2                                 ;;818D|818D+818D/818D\818D;
-                      STA.B !_0                                 ;;818F|818F+818F/818F\818F;
+CODE_048183:          LDA.W GfxDecompOWAni,X                    ;;8183|8183+8183/8183\8183;
+                      STA.B _2                                  ;;8186|8186+8186/8186\8186;
+                      LDA.B _0                                  ;;8188|8188+8188/8188\8188;
+                      STA.W GfxDecompOWAni,X                    ;;818A|818A+818A/818A\818A;
+                      LDA.B _2                                  ;;818D|818D+818D/818D\818D;
+                      STA.B _0                                  ;;818F|818F+818F/818F\818F;
                       INX                                       ;;8191|8191+8191/8191\8191;
                       INX                                       ;;8192|8192+8192/8192\8192;
                       INY                                       ;;8193|8193+8193/8193\8193;
@@ -196,11 +196,11 @@ GameMode_0E_Prim:     PHB                                       ;;8241|8241+8241
                       PHK                                       ;;8242|8242+8242/8242\8242;
                       PLB                                       ;;8243|8243+8243/8243\8243;
                       LDX.B #$01                                ;;8244|8244+8244/8244\8244; \ If player 1 pushes select... 
-CODE_048246:          LDA.W !byetudlrP1Frame,X                  ;;8246|8246+8246/8246\8246;  | 
+CODE_048246:          LDA.W byetudlrP1Frame,X                   ;;8246|8246+8246/8246\8246;  | 
                       AND.B #$20                                ;;8249|8249+8249/8249\8249;  | ...disabled by BRA 
                       BRA CODE_048261                           ;;824B|824B+824B/824B\824B; / Change to BEQ to enable debug code below 
                                                                 ;;                        ;
-                      LDA.W !SavedPlayerYoshi,X                 ;;824D|824D+824D/824D\824D; \ Unreachable 
+                      LDA.W SavedPlayerYoshi,X                  ;;824D|824D+824D/824D\824D; \ Unreachable 
                       INC A                                     ;;8250|8250+8250/8250\8250;  | Debug: Change Yoshi color 
                       INC A                                     ;;8251|8251+8251/8251\8251;  | 
                       CMP.B #$04                                ;;8252|8252+8252/8252\8252;  | 
@@ -209,79 +209,79 @@ CODE_048246:          LDA.W !byetudlrP1Frame,X                  ;;8246|8246+8246
                     + CMP.B #$0B                                ;;8258|8258+8258/8258\8258;  | 
                       BCC +                                     ;;825A|825A+825A/825A\825A;  | 
                       LDA.B #$00                                ;;825C|825C+825C/825C\825C;  | 
-                    + STA.W !SavedPlayerYoshi,X                 ;;825E|825E+825E/825E\825E; / 
+                    + STA.W SavedPlayerYoshi,X                  ;;825E|825E+825E/825E\825E; / 
 CODE_048261:          DEX                                       ;;8261|8261+8261/8261\8261;
                       BPL CODE_048246                           ;;8262|8262+8262/8262\8262;
                       JSR CODE_0485A7                           ;;8264|8264+8264/8264\8264;
                       JSR OW_Tile_Animation                     ;;8267|8267+8267/8267\8267;
-                      LDA.W !SwitchPalaceColor                  ;;826A|826A+826A/826A\826A; \ If "! blocks flying away color" is 0, 
+                      LDA.W SwitchPalaceColor                   ;;826A|826A+826A/826A\826A; \ If "! blocks flying away color" is 0, 
                       BEQ +                                     ;;826D|826D+826D/826D\826D; / don't play the animation 
                       JSR CODE_04F290                           ;;826F|826F+826F/826F\826F;
                       JMP CODE_04840D                           ;;8272|8272+8272/8272\8272;
                                                                 ;;                        ;
-                    + LDA.W !ShowContinueEnd                    ;;8275|8275+8275/8275\8275; \ If not showing Continue/End message, 
+                    + LDA.W ShowContinueEnd                     ;;8275|8275+8275/8275\8275; \ If not showing Continue/End message, 
                       BEQ +                                     ;;8278|8278+8278/8278\8278; / branch to $8281 
                       JSL CODE_009B80                           ;;827A|827A+827A/827A\827A;
                       JMP CODE_048410                           ;;827E|827E+827E/827E\827E;
                                                                 ;;                        ;
-                    + LDA.W !OverworldPromptProcess             ;;8281|8281+8281/8281\8281;
+                    + LDA.W OverworldPromptProcess              ;;8281|8281+8281/8281\8281;
                       BEQ CODE_048295                           ;;8284|8284+8284/8284\8284;
                       CMP.B #$05                                ;;8286|8286+8286/8286\8286;
                       BCS CODE_04828F                           ;;8288|8288+8288/8288\8288;
-                      LDY.W !IsTwoPlayerGame                    ;;828A|828A+828A/828A\828A;
+                      LDY.W IsTwoPlayerGame                     ;;828A|828A+828A/828A\828A;
                       BEQ CODE_048295                           ;;828D|828D+828D/828D\828D;
 CODE_04828F:          JSR CODE_04F3E5                           ;;828F|828F+828F/828F\828F;
                       JMP CODE_048413                           ;;8292|8292+8292/8292\8292;
                                                                 ;;                        ;
-CODE_048295:          LDA.W !PauseFlag                          ;;8295|8295+8295/8295\8295;
+CODE_048295:          LDA.W PauseFlag                           ;;8295|8295+8295/8295\8295;
                       LSR A                                     ;;8298|8298+8298/8298\8298;
                       BNE +                                     ;;8299|8299+8299/8299\8299;
                       JMP CODE_048356                           ;;829B|829B+829B/829B\829B;
                                                                 ;;                        ;
                     + REP #$20                                  ;;829E|829E+829E/829E\829E; Accum (16 bit) 
-                      LDA.W !OverworldFreeCamYPos               ;;82A0|82A0+82A0/82A0\82A0;
+                      LDA.W OverworldFreeCamYPos                ;;82A0|82A0+82A0/82A0\82A0;
                       SEC                                       ;;82A3|82A3+82A3/82A3\82A3;
-                      SBC.B !Layer1YPos                         ;;82A4|82A4+82A4/82A4\82A4;
-                      STA.B !_1                                 ;;82A6|82A6+82A6/82A6\82A6;
+                      SBC.B Layer1YPos                          ;;82A4|82A4+82A4/82A4\82A4;
+                      STA.B _1                                  ;;82A6|82A6+82A6/82A6\82A6;
                       BPL +                                     ;;82A8|82A8+82A8/82A8\82A8;
                       EOR.W #$FFFF                              ;;82AA|82AA+82AA/82AA\82AA;
                       INC A                                     ;;82AD|82AD+82AD/82AD\82AD;
                     + LSR A                                     ;;82AE|82AE+82AE/82AE\82AE;
                       SEP #$20                                  ;;82AF|82AF+82AF/82AF\82AF; Accum (8 bit) 
-                      STA.B !_5                                 ;;82B1|82B1+82B1/82B1\82B1;
+                      STA.B _5                                  ;;82B1|82B1+82B1/82B1\82B1;
                       REP #$20                                  ;;82B3|82B3+82B3/82B3\82B3; Accum (16 bit) 
-                      LDA.W !OverworldFreeCamXPos               ;;82B5|82B5+82B5/82B5\82B5;
+                      LDA.W OverworldFreeCamXPos                ;;82B5|82B5+82B5/82B5\82B5;
                       SEC                                       ;;82B8|82B8+82B8/82B8\82B8;
-                      SBC.B !Layer1XPos                         ;;82B9|82B9+82B9/82B9\82B9;
-                      STA.B !_0                                 ;;82BB|82BB+82BB/82BB\82BB;
+                      SBC.B Layer1XPos                          ;;82B9|82B9+82B9/82B9\82B9;
+                      STA.B _0                                  ;;82BB|82BB+82BB/82BB\82BB;
                       BPL +                                     ;;82BD|82BD+82BD/82BD\82BD;
                       EOR.W #$FFFF                              ;;82BF|82BF+82BF/82BF\82BF;
                       INC A                                     ;;82C2|82C2+82C2/82C2\82C2;
                     + LSR A                                     ;;82C3|82C3+82C3/82C3\82C3;
                       SEP #$20                                  ;;82C4|82C4+82C4/82C4\82C4; Accum (8 bit) 
-                      STA.B !_4                                 ;;82C6|82C6+82C6/82C6\82C6;
+                      STA.B _4                                  ;;82C6|82C6+82C6/82C6\82C6;
                       LDX.B #$01                                ;;82C8|82C8+82C8/82C8\82C8;
-                      CMP.B !_5                                 ;;82CA|82CA+82CA/82CA\82CA;
+                      CMP.B _5                                  ;;82CA|82CA+82CA/82CA\82CA;
                       BCS +                                     ;;82CC|82CC+82CC/82CC\82CC;
                       DEX                                       ;;82CE|82CE+82CE/82CE\82CE;
-                      LDA.B !_5                                 ;;82CF|82CF+82CF/82CF\82CF;
+                      LDA.B _5                                  ;;82CF|82CF+82CF/82CF\82CF;
                     + CMP.B #$02                                ;;82D1|82D1+82D1/82D1\82D1;
                       BCS +                                     ;;82D3|82D3+82D3/82D3\82D3;
                       REP #$20                                  ;;82D5|82D5+82D5/82D5\82D5; Accum (16 bit) 
-                      LDA.W !OverworldFreeCamXPos               ;;82D7|82D7+82D7/82D7\82D7;
-                      STA.B !Layer1XPos                         ;;82DA|82DA+82DA/82DA\82DA;
-                      STA.B !Layer2XPos                         ;;82DC|82DC+82DC/82DC\82DC;
-                      LDA.W !OverworldFreeCamYPos               ;;82DE|82DE+82DE/82DE\82DE;
-                      STA.B !Layer1YPos                         ;;82E1|82E1+82E1/82E1\82E1;
-                      STA.B !Layer2YPos                         ;;82E3|82E3+82E3/82E3\82E3;
+                      LDA.W OverworldFreeCamXPos                ;;82D7|82D7+82D7/82D7\82D7;
+                      STA.B Layer1XPos                          ;;82DA|82DA+82DA/82DA\82DA;
+                      STA.B Layer2XPos                          ;;82DC|82DC+82DC/82DC\82DC;
+                      LDA.W OverworldFreeCamYPos                ;;82DE|82DE+82DE/82DE\82DE;
+                      STA.B Layer1YPos                          ;;82E1|82E1+82E1/82E1\82E1;
+                      STA.B Layer2YPos                          ;;82E3|82E3+82E3/82E3\82E3;
                       SEP #$20                                  ;;82E5|82E5+82E5/82E5\82E5; Accum (8 bit) 
-                      STZ.W !PauseFlag                          ;;82E7|82E7+82E7/82E7\82E7;
+                      STZ.W PauseFlag                           ;;82E7|82E7+82E7/82E7\82E7;
                       JMP CODE_0483BD                           ;;82EA|82EA+82EA/82EA\82EA;
                                                                 ;;                        ;
-                    + STZ.W !HW_WRDIV                           ;;82ED|82ED+82ED/82ED\82ED; Dividend (Low Byte)
-                      LDY.B !_4,X                               ;;82F0|82F0+82F0/82F0\82F0;
-                      STY.W !HW_WRDIV+1                         ;;82F2|82F2+82F2/82F2\82F2; Dividend (High-Byte)
-                      STA.W !HW_WRDIV+2                         ;;82F5|82F5+82F5/82F5\82F5; Divisor B
+                    + STZ.W HW_WRDIV                            ;;82ED|82ED+82ED/82ED\82ED; Dividend (Low Byte)
+                      LDY.B _4,X                                ;;82F0|82F0+82F0/82F0\82F0;
+                      STY.W HW_WRDIV+1                          ;;82F2|82F2+82F2/82F2\82F2; Dividend (High-Byte)
+                      STA.W HW_WRDIV+2                          ;;82F5|82F5+82F5/82F5\82F5; Divisor B
                       NOP                                       ;;82F8|82F8+82F8/82F8\82F8; \ 
                       NOP                                       ;;82F9|82F9+82F9/82F9\82F9;  | 
                       NOP                                       ;;82FA|82FA+82FA/82FA\82FA;  |Makes you wonder what used to be here... 
@@ -289,36 +289,36 @@ CODE_048295:          LDA.W !PauseFlag                          ;;8295|8295+8295
                       NOP                                       ;;82FC|82FC+82FC/82FC\82FC;  | 
                       NOP                                       ;;82FD|82FD+82FD/82FD\82FD; / 
                       REP #$20                                  ;;82FE|82FE+82FE/82FE\82FE; Accum (16 bit) 
-                      LDA.W !HW_RDDIV                           ;;8300|8300+8300/8300\8300; Quotient of Divide Result (Low Byte)
+                      LDA.W HW_RDDIV                            ;;8300|8300+8300/8300\8300; Quotient of Divide Result (Low Byte)
                       LSR A                                     ;;8303|8303+8303/8303\8303;
                       LSR A                                     ;;8304|8304+8304/8304\8304;
                       SEP #$20                                  ;;8305|8305+8305/8305\8305; Accum (8 bit) 
-                      LDY.B !_1,X                               ;;8307|8307+8307/8307\8307;
+                      LDY.B _1,X                                ;;8307|8307+8307/8307\8307;
                       BPL +                                     ;;8309|8309+8309/8309\8309;
                       EOR.B #$FF                                ;;830B|830B+830B/830B\830B;
                       INC A                                     ;;830D|830D+830D/830D\830D;
-                    + STA.B !_1,X                               ;;830E|830E+830E/830E\830E;
+                    + STA.B _1,X                                ;;830E|830E+830E/830E\830E;
                       TXA                                       ;;8310|8310+8310/8310\8310;
                       EOR.B #$01                                ;;8311|8311+8311/8311\8311;
                       TAX                                       ;;8313|8313+8313/8313\8313;
                       LDA.B #$40                                ;;8314|8314+8314/8314\8314;
-                      LDY.B !_1,X                               ;;8316|8316+8316/8316\8316;
+                      LDY.B _1,X                                ;;8316|8316+8316/8316\8316;
                       BPL +                                     ;;8318|8318+8318/8318\8318;
                       LDA.B #$C0                                ;;831A|831A+831A/831A\831A;
-                    + STA.B !_1,X                               ;;831C|831C+831C/831C\831C;
+                    + STA.B _1,X                                ;;831C|831C+831C/831C\831C;
                       LDY.B #$01                                ;;831E|831E+831E/831E\831E;
 CODE_048320:          TYA                                       ;;8320|8320+8320/8320\8320;
                       ASL A                                     ;;8321|8321+8321/8321\8321;
                       TAX                                       ;;8322|8322+8322/8322\8322;
-                      LDA.W !_1,Y                               ;;8323|8323+8323/8323\8323;
+                      LDA.W _1,Y                                ;;8323|8323+8323/8323\8323;
                       ASL A                                     ;;8326|8326+8326/8326\8326;
                       ASL A                                     ;;8327|8327+8327/8327\8327;
                       ASL A                                     ;;8328|8328+8328/8328\8328;
                       ASL A                                     ;;8329|8329+8329/8329\8329;
                       CLC                                       ;;832A|832A+832A/832A\832A;
-                      ADC.W !Layer1PosSpx,Y                     ;;832B|832B+832B/832B\832B;
-                      STA.W !Layer1PosSpx,Y                     ;;832E|832E+832E/832E\832E;
-                      LDA.W !_1,Y                               ;;8331|8331+8331/8331\8331;
+                      ADC.W Layer1PosSpx,Y                      ;;832B|832B+832B/832B\832B;
+                      STA.W Layer1PosSpx,Y                      ;;832E|832E+832E/832E\832E;
+                      LDA.W _1,Y                                ;;8331|8331+8331/8331\8331;
                       PHY                                       ;;8334|8334+8334/8334\8334;
                       PHP                                       ;;8335|8335+8335/8335\8335;
                       LSR A                                     ;;8336|8336+8336/8336\8336;
@@ -330,105 +330,105 @@ CODE_048320:          TYA                                       ;;8320|8320+8320
                       BPL +                                     ;;833D|833D+833D/833D\833D;
                       ORA.B #$F0                                ;;833F|833F+833F/833F\833F;
                       DEY                                       ;;8341|8341+8341/8341\8341;
-                    + ADC.B !Layer1XPos,X                       ;;8342|8342+8342/8342\8342;
-                      STA.B !Layer1XPos,X                       ;;8344|8344+8344/8344\8344;
-                      STA.B !Layer2XPos,X                       ;;8346|8346+8346/8346\8346;
+                    + ADC.B Layer1XPos,X                        ;;8342|8342+8342/8342\8342;
+                      STA.B Layer1XPos,X                        ;;8344|8344+8344/8344\8344;
+                      STA.B Layer2XPos,X                        ;;8346|8346+8346/8346\8346;
                       TYA                                       ;;8348|8348+8348/8348\8348;
-                      ADC.B !Layer1XPos+1,X                     ;;8349|8349+8349/8349\8349;
-                      STA.B !Layer1XPos+1,X                     ;;834B|834B+834B/834B\834B;
-                      STA.B !Layer2XPos+1,X                     ;;834D|834D+834D/834D\834D;
+                      ADC.B Layer1XPos+1,X                      ;;8349|8349+8349/8349\8349;
+                      STA.B Layer1XPos+1,X                      ;;834B|834B+834B/834B\834B;
+                      STA.B Layer2XPos+1,X                      ;;834D|834D+834D/834D\834D;
                       PLY                                       ;;834F|834F+834F/834F\834F;
                       DEY                                       ;;8350|8350+8350/8350\8350;
                       BPL CODE_048320                           ;;8351|8351+8351/8351\8351;
                       JMP CODE_04840D                           ;;8353|8353+8353/8353\8353;
                                                                 ;;                        ;
-CODE_048356:          LDA.W !OverworldProcess                   ;;8356|8356+8356/8356\8356;
+CODE_048356:          LDA.W OverworldProcess                    ;;8356|8356+8356/8356\8356;
                       CMP.B #$03                                ;;8359|8359+8359/8359\8359;
                       BEQ CODE_048366                           ;;835B|835B+835B/835B\835B;
                       CMP.B #$04                                ;;835D|835D+835D/835D\835D;
                       BNE CODE_04839A                           ;;835F|835F+835F/835F\835F;
-                      LDA.W !PlayerSwitching                    ;;8361|8361+8361/8361\8361;
+                      LDA.W PlayerSwitching                     ;;8361|8361+8361/8361\8361;
                       BNE CODE_04839A                           ;;8364|8364+8364/8364\8364;
 CODE_048366:                                                    ;;                        ;
                    if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
-                      LDA.W !axlr0000P1Frame                    ;;8366|8366     /8366\8366;
-                      ORA.W !axlr0000P2Frame                    ;;8369|8369     /8369\8369;
+                      LDA.W axlr0000P1Frame                     ;;8366|8366     /8366\8366;
+                      ORA.W axlr0000P2Frame                     ;;8369|8369     /8369\8369;
                       AND.B #$30                                ;;836C|836C     /836C\836C;
                       BEQ +                                     ;;836E|836E     /836E\836E;
                       LDA.B #$01                                ;;8370|8370     /8370\8370;
-                      STA.W !OverworldPromptProcess             ;;8372|8372     /8372\8372;
+                      STA.W OverworldPromptProcess              ;;8372|8372     /8372\8372;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
-                    + LDX.W !PlayerTurnLvl                      ;;8375|8375+8366/8375\8375;
-                      LDA.W !OWPlayerSubmap,X                   ;;8378|8378+8369/8378\8378;
+                    + LDX.W PlayerTurnLvl                       ;;8375|8375+8366/8375\8375;
+                      LDA.W OWPlayerSubmap,X                    ;;8378|8378+8369/8378\8378;
                       BNE CODE_04839A                           ;;837B|837B+836C/837B\837B;
-                      LDA.B !byetudlrFrame                      ;;837D|837D+836E/837D\837D;
+                      LDA.B byetudlrFrame                       ;;837D|837D+836E/837D\837D;
                       AND.B #$10                                ;;837F|837F+8370/837F\837F;
                       BEQ CODE_04839A                           ;;8381|8381+8372/8381\8381;
-                      INC.W !PauseFlag                          ;;8383|8383+8374/8383\8383; Look around overworld 
-                      LDA.W !PauseFlag                          ;;8386|8386+8377/8386\8386;
+                      INC.W PauseFlag                           ;;8383|8383+8374/8383\8383; Look around overworld 
+                      LDA.W PauseFlag                           ;;8386|8386+8377/8386\8386;
                       LSR A                                     ;;8389|8389+837A/8389\8389;
                       BNE CODE_04839A                           ;;838A|838A+837B/838A\838A;
                       REP #$20                                  ;;838C|838C+837D/838C\838C; Accum (16 bit) 
-                      LDA.B !Layer1XPos                         ;;838E|838E+837F/838E\838E;
-                      STA.W !OverworldFreeCamXPos               ;;8390|8390+8381/8390\8390;
-                      LDA.B !Layer1YPos                         ;;8393|8393+8384/8393\8393;
-                      STA.W !OverworldFreeCamYPos               ;;8395|8395+8386/8395\8395;
+                      LDA.B Layer1XPos                          ;;838E|838E+837F/838E\838E;
+                      STA.W OverworldFreeCamXPos                ;;8390|8390+8381/8390\8390;
+                      LDA.B Layer1YPos                          ;;8393|8393+8384/8393\8393;
+                      STA.W OverworldFreeCamYPos                ;;8395|8395+8386/8395\8395;
                       SEP #$20                                  ;;8398|8398+8389/8398\8398; Accum (8 bit) 
-CODE_04839A:          LDA.W !PauseFlag                          ;;839A|839A+838B/839A\839A;
+CODE_04839A:          LDA.W PauseFlag                           ;;839A|839A+838B/839A\839A;
                       BEQ CODE_0483C3                           ;;839D|839D+838E/839D\839D;
                       LDX.B #$00                                ;;839F|839F+8390/839F\839F;
-                      LDA.B !byetudlrHold                       ;;83A1|83A1+8392/83A1\83A1;
+                      LDA.B byetudlrHold                        ;;83A1|83A1+8392/83A1\83A1;
                       AND.B #$03                                ;;83A3|83A3+8394/83A3\83A3;
                       ASL A                                     ;;83A5|83A5+8396/83A5\83A5;
                       JSR CODE_048415                           ;;83A6|83A6+8397/83A6\83A6;
                       LDX.B #$02                                ;;83A9|83A9+839A/83A9\83A9;
-                      LDA.B !byetudlrHold                       ;;83AB|83AB+839C/83AB\83AB;
+                      LDA.B byetudlrHold                        ;;83AB|83AB+839C/83AB\83AB;
                       AND.B #$0C                                ;;83AD|83AD+839E/83AD\83AD;
                       ORA.B #$10                                ;;83AF|83AF+83A0/83AF\83AF;
                       LSR A                                     ;;83B1|83B1+83A2/83B1\83B1;
                       JSR CODE_048415                           ;;83B2|83B2+83A3/83B2\83B2;
                       LDY.B #$15                                ;;83B5|83B5+83A6/83B5\83B5;
-                      LDA.B !TrueFrame                          ;;83B7|83B7+83A8/83B7\83B7;
+                      LDA.B TrueFrame                           ;;83B7|83B7+83A8/83B7\83B7;
                       AND.B #$18                                ;;83B9|83B9+83AA/83B9\83B9;
                       BNE +                                     ;;83BB|83BB+83AC/83BB\83BB;
 CODE_0483BD:          LDY.B #$18                                ;;83BD|83BD+83AE/83BD\83BD;
-                    + STY.B !StripeImage                        ;;83BF|83BF+83B0/83BF\83BF;
+                    + STY.B StripeImage                         ;;83BF|83BF+83B0/83BF\83BF;
                       BRA CODE_04840D                           ;;83C1|83C1+83B2/83C1\83C1;
                                                                 ;;                        ;
-CODE_0483C3:          LDX.W !OverworldEarthquake                ;;83C3|83C3+83B4/83C3\83C3;
+CODE_0483C3:          LDX.W OverworldEarthquake                 ;;83C3|83C3+83B4/83C3\83C3;
                       BEQ CODE_04840A                           ;;83C6|83C6+83B7/83C6\83C6;
                       CPX.B #$FE                                ;;83C8|83C8+83B9/83C8\83C8;
                       BNE +                                     ;;83CA|83CA+83BB/83CA\83CA;
                       LDA.B #!SFX_RUMBLINGON                    ;;83CC|83CC+83BD/83CC\83CC;
-                      STA.W !SPCIO0                             ;;83CE|83CE+83BF/83CE\83CE; / Play sound effect 
+                      STA.W SPCIO0                              ;;83CE|83CE+83BF/83CE\83CE; / Play sound effect 
                       LDA.B #!BGM_VALLEYOPENS                   ;;83D1|83D1+83C2/83D1\83D1;
-                      STA.W !SPCIO2                             ;;83D3|83D3+83C4/83D3\83D3; / Change music 
+                      STA.W SPCIO2                              ;;83D3|83D3+83C4/83D3\83D3; / Change music 
                     + TXA                                       ;;83D6|83D6+83C7/83D6\83D6;
                       LSR A                                     ;;83D7|83D7+83C8/83D7\83D7;
                       LSR A                                     ;;83D8|83D8+83C9/83D8\83D8;
                       LSR A                                     ;;83D9|83D9+83CA/83D9\83D9;
                       LSR A                                     ;;83DA|83DA+83CB/83DA\83DA;
                       TAY                                       ;;83DB|83DB+83CC/83DB\83DB;
-                      LDA.B !TrueFrame                          ;;83DC|83DC+83CD/83DC\83DC;
+                      LDA.B TrueFrame                           ;;83DC|83DC+83CD/83DC\83DC;
                       AND.W DATA_048231,Y                       ;;83DE|83DE+83CF/83DE\83DE;
                       BNE +                                     ;;83E1|83E1+83D2/83E1\83E1;
-                      LDA.B !Layer1XPos                         ;;83E3|83E3+83D4/83E3\83E3;
+                      LDA.B Layer1XPos                          ;;83E3|83E3+83D4/83E3\83E3;
                       EOR.B #$01                                ;;83E5|83E5+83D6/83E5\83E5;
-                      STA.B !Layer1XPos                         ;;83E7|83E7+83D8/83E7\83E7;
-                      STA.B !Layer2XPos                         ;;83E9|83E9+83DA/83E9\83E9;
-                      LDA.B !Layer1YPos                         ;;83EB|83EB+83DC/83EB\83EB;
+                      STA.B Layer1XPos                          ;;83E7|83E7+83D8/83E7\83E7;
+                      STA.B Layer2XPos                          ;;83E9|83E9+83DA/83E9\83E9;
+                      LDA.B Layer1YPos                          ;;83EB|83EB+83DC/83EB\83EB;
                       EOR.B #$01                                ;;83ED|83ED+83DE/83ED\83ED;
-                      STA.B !Layer1YPos                         ;;83EF|83EF+83E0/83EF\83EF;
-                      STA.B !Layer2YPos                         ;;83F1|83F1+83E2/83F1\83F1;
+                      STA.B Layer1YPos                          ;;83EF|83EF+83E0/83EF\83EF;
+                      STA.B Layer2YPos                          ;;83F1|83F1+83E2/83F1\83F1;
                     + CPX.B #$80                                ;;83F3|83F3+83E4/83F3\83F3;
                       BCS CODE_0483FE                           ;;83F5|83F5+83E6/83F5\83F5;
-                      LDA.W !OverworldProcess                   ;;83F7|83F7+83E8/83F7\83F7;
+                      LDA.W OverworldProcess                    ;;83F7|83F7+83E8/83F7\83F7;
                       CMP.B #$02                                ;;83FA|83FA+83EB/83FA\83FA;
                       BNE CODE_04840A                           ;;83FC|83FC+83ED/83FC\83FC;
-CODE_0483FE:          DEC.W !OverworldEarthquake                ;;83FE|83FE+83EF/83FE\83FE;
+CODE_0483FE:          DEC.W OverworldEarthquake                 ;;83FE|83FE+83EF/83FE\83FE;
                       BNE CODE_04840D                           ;;8401|8401+83F2/8401\8401;
                       LDA.B #!SFX_RUMBLINGOFF                   ;;8403|8403+83F4/8403\8403;
-                      STA.W !SPCIO0                             ;;8405|8405+83F6/8405\8405; / Play sound effect 
+                      STA.W SPCIO0                              ;;8405|8405+83F6/8405\8405; / Play sound effect 
                       BRA CODE_04840D                           ;;8408|8408+83F9/8408\8408;
                                                                 ;;                        ;
 CODE_04840A:          JSR CODE_048576                           ;;840A|840A+83FB/840A\840A;
@@ -439,7 +439,7 @@ CODE_048413:          PLB                                       ;;8413|8413+8404
                                                                 ;;                        ;
 CODE_048415:          TAY                                       ;;8415|8415+8406/8415\8415;
                       REP #$20                                  ;;8416|8416+8407/8416\8416; Accum (16 bit) 
-                      LDA.B !Layer1XPos,X                       ;;8418|8418+8409/8418\8418;
+                      LDA.B Layer1XPos,X                        ;;8418|8418+8409/8418\8418;
                       CLC                                       ;;841A|841A+840B/841A\841A;
                       ADC.W DATA_048211,Y                       ;;841B|841B+840C/841B\841B;
                       PHA                                       ;;841E|841E+840F/841E\841E;
@@ -449,8 +449,8 @@ CODE_048415:          TAY                                       ;;8415|8415+8406
                       ASL A                                     ;;8426|8426+8417/8426\8426;
                       PLA                                       ;;8427|8427+8418/8427\8427;
                       BCC +                                     ;;8428|8428+8419/8428\8428;
-                      STA.B !Layer1XPos,X                       ;;842A|842A+841B/842A\842A;
-                      STA.B !Layer2XPos,X                       ;;842C|842C+841D/842C\842C;
+                      STA.B Layer1XPos,X                        ;;842A|842A+841B/842A\842A;
+                      STA.B Layer2XPos,X                        ;;842C|842C+841D/842C\842C;
                     + SEP #$20                                  ;;842E|842E+841F/842E\842E; Accum (8 bit) 
                       RTS                                       ;;8430|8430+8421/8430\8430; Return 
                                                                 ;;                        ;
@@ -487,26 +487,26 @@ DATA_0484D3:          db $48,$01,$B8,$00,$38,$00,$18,$00        ;;84D3|84D3+84C4
                       db $D8,$01,$38,$00,$38,$01,$88,$01        ;;84FB|84FB+84EC/84FB\84FB;
                       db $78,$00,$D8,$01,$D8,$01                ;;8503|8503+84F4/8503\8503;
                                                                 ;;                        ;
-CODE_048509:          LDY.W !PlayerTurnLvl                      ;;8509|8509+84FA/8509\8509; \ Get current player's submap 
-                      LDA.W !OWPlayerSubmap,Y                   ;;850C|850C+84FD/850C\850C; / 
-                      STA.B !_1                                 ;;850F|850F+8500/850F\850F; Store it in $01 
-                      STZ.B !_0                                 ;;8511|8511+8502/8511\8511; Store x00 in $00 
+CODE_048509:          LDY.W PlayerTurnLvl                       ;;8509|8509+84FA/8509\8509; \ Get current player's submap 
+                      LDA.W OWPlayerSubmap,Y                    ;;850C|850C+84FD/850C\850C; / 
+                      STA.B _1                                  ;;850F|850F+8500/850F\850F; Store it in $01 
+                      STZ.B _0                                  ;;8511|8511+8502/8511\8511; Store x00 in $00 
                       REP #$20                                  ;;8513|8513+8504/8513\8513; 16 bit A ; Accum (16 bit) 
-                      LDX.W !PlayerTurnOW                       ;;8515|8515+8506/8515\8515; Set X to Current character*4 
+                      LDX.W PlayerTurnOW                        ;;8515|8515+8506/8515\8515; Set X to Current character*4 
                       LDY.B #$34                                ;;8518|8518+8509/8518\8518; Set Y to x34 
 CODE_04851A:          LDA.W DATA_048431,Y                       ;;851A|851A+850B/851A\851A;
-                      EOR.B !_0                                 ;;851D|851D+850E/851D\851D;
+                      EOR.B _0                                  ;;851D|851D+850E/851D\851D;
                       CMP.W #$0200                              ;;851F|851F+8510/851F\851F;
                       BCS CODE_048531                           ;;8522|8522+8513/8522\8522;
-                      CMP.W !OWPlayerXPosPtr,X                  ;;8524|8524+8515/8524\8524;
+                      CMP.W OWPlayerXPosPtr,X                   ;;8524|8524+8515/8524\8524;
                       BNE CODE_048531                           ;;8527|8527+8518/8527\8527;
-                      LDA.W !OWPlayerYPosPtr,X                  ;;8529|8529+851A/8529\8529;
+                      LDA.W OWPlayerYPosPtr,X                   ;;8529|8529+851A/8529\8529;
                       CMP.W DATA_048467,Y                       ;;852C|852C+851D/852C\852C;
                       BEQ CODE_048535                           ;;852F|852F+8520/852F\852F;
 CODE_048531:          DEY                                       ;;8531|8531+8522/8531\8531;
                       DEY                                       ;;8532|8532+8523/8532\8532;
                       BPL CODE_04851A                           ;;8533|8533+8524/8533\8533;
-CODE_048535:          STY.W !StarWarpIndex                      ;;8535|8535+8526/8535\8535; Store Y in "Warp destination" 
+CODE_048535:          STY.W StarWarpIndex                       ;;8535|8535+8526/8535\8535; Store Y in "Warp destination" 
                       SEP #$20                                  ;;8538|8538+8529/8538\8538; 8 bit A ; Accum (8 bit) 
                       RTS                                       ;;853A|853A+852B/853A\853A; Return 
                                                                 ;;                        ;
@@ -514,36 +514,36 @@ CODE_04853B:          PHB                                       ;;853B|853B+852C
                       PHK                                       ;;853C|853C+852D/853C\853C;
                       PLB                                       ;;853D|853D+852E/853D\853D;
                       REP #$20                                  ;;853E|853E+852F/853E\853E; Accum (16 bit) 
-                      LDX.W !PlayerTurnOW                       ;;8540|8540+8531/8540\8540;
-                      LDY.W !StarWarpIndex                      ;;8543|8543+8534/8543\8543;
+                      LDX.W PlayerTurnOW                        ;;8540|8540+8531/8540\8540;
+                      LDY.W StarWarpIndex                       ;;8543|8543+8534/8543\8543;
                       LDA.W DATA_04849D,Y                       ;;8546|8546+8537/8546\8546;
                       PHA                                       ;;8549|8549+853A/8549\8549;
                       AND.W #$01FF                              ;;854A|854A+853B/854A\854A;
-                      STA.W !OWPlayerXPos,X                     ;;854D|854D+853E/854D\854D;
+                      STA.W OWPlayerXPos,X                      ;;854D|854D+853E/854D\854D;
                       LSR A                                     ;;8550|8550+8541/8550\8550;
                       LSR A                                     ;;8551|8551+8542/8551\8551;
                       LSR A                                     ;;8552|8552+8543/8552\8552;
                       LSR A                                     ;;8553|8553+8544/8553\8553;
-                      STA.W !OWPlayerXPosPtr,X                  ;;8554|8554+8545/8554\8554;
+                      STA.W OWPlayerXPosPtr,X                   ;;8554|8554+8545/8554\8554;
                       LDA.W DATA_0484D3,Y                       ;;8557|8557+8548/8557\8557;
-                      STA.W !OWPlayerYPos,X                     ;;855A|855A+854B/855A\855A;
+                      STA.W OWPlayerYPos,X                      ;;855A|855A+854B/855A\855A;
                       LSR A                                     ;;855D|855D+854E/855D\855D;
                       LSR A                                     ;;855E|855E+854F/855E\855E;
                       LSR A                                     ;;855F|855F+8550/855F\855F;
                       LSR A                                     ;;8560|8560+8551/8560\8560;
-                      STA.W !OWPlayerYPosPtr,X                  ;;8561|8561+8552/8561\8561;
+                      STA.W OWPlayerYPosPtr,X                   ;;8561|8561+8552/8561\8561;
                       PLA                                       ;;8564|8564+8555/8564\8564;
                       LSR A                                     ;;8565|8565+8556/8565\8565;
                       XBA                                       ;;8566|8566+8557/8566\8566;
                       AND.W #$000F                              ;;8567|8567+8558/8567\8567;
-                      STA.W !CurrentSubmap                      ;;856A|856A+855B/856A\856A;
+                      STA.W CurrentSubmap                       ;;856A|856A+855B/856A\856A;
                       REP #$10                                  ;;856D|856D+855E/856D\856D; Index (16 bit) 
                       JSR CODE_049A93                           ;;856F|856F+8560/856F\856F;
                       SEP #$30                                  ;;8572|8572+8563/8572\8572; Index (8 bit) Accum (8 bit) 
                       PLB                                       ;;8574|8574+8565/8574\8574;
                       RTL                                       ;;8575|8575+8566/8575\8575; Return 
                                                                 ;;                        ;
-CODE_048576:          LDA.W !OverworldProcess                   ;;8576|8576+8567/8576\8576;
+CODE_048576:          LDA.W OverworldProcess                    ;;8576|8576+8567/8576\8576;
                       JSL ExecutePtrLong                        ;;8579|8579+856A/8579\8579;
                                                                 ;;                        ;
                       dl CODE_048EF1                            ;;857D|857D+856E/857D\857D;
@@ -564,15 +564,15 @@ DrawOWBoarder_:       JSR CODE_04862E                           ;;85A4|85A4+8595
 CODE_0485A7:          REP #$20                                  ;;85A7|85A7+8598/85A7\85A7; Accum (16 bit) 
                       LDA.W #$001E                              ;;85A9|85A9+859A/85A9\85A9; \ Mario X postion = #$001E 
                       CLC                                       ;;85AC|85AC+859D/85AC\85AC;  | (On overworld boarder) 
-                      ADC.B !Layer1XPos                         ;;85AD|85AD+859E/85AD\85AD;  | 
-                      STA.B !PlayerXPosNext                     ;;85AF|85AF+85A0/85AF\85AF; / 
+                      ADC.B Layer1XPos                          ;;85AD|85AD+859E/85AD\85AD;  | 
+                      STA.B PlayerXPosNext                      ;;85AF|85AF+85A0/85AF\85AF; / 
                       LDA.W #$0006                              ;;85B1|85B1+85A2/85B1\85B1; \ Mario Y postion = #$0006 
                       CLC                                       ;;85B4|85B4+85A5/85B4\85B4;  | (On overworld boarder) 
-                      ADC.B !Layer1YPos                         ;;85B5|85B5+85A6/85B5\85B5;  | 
-                      STA.B !PlayerYPosNext                     ;;85B7|85B7+85A8/85B7\85B7; / 
+                      ADC.B Layer1YPos                          ;;85B5|85B5+85A6/85B5\85B5;  | 
+                      STA.B PlayerYPosNext                      ;;85B7|85B7+85A8/85B7\85B7; / 
                       SEP #$20                                  ;;85B9|85B9+85AA/85B9\85B9; Accum (8 bit) 
                       LDA.B #$08                                ;;85BB|85BB+85AC/85BB\85BB;
-                      STA.W !PlayerXSpeed                       ;;85BD|85BD+85AE/85BD\85BD;
+                      STA.W PlayerXSpeed                        ;;85BD|85BD+85AE/85BD\85BD;
                       PHB                                       ;;85C0|85C0+85B1/85C0\85C0;
                       LDA.B #$00                                ;;85C1|85C1+85B2/85C1\85C1;
                       PHA                                       ;;85C3|85C3+85B4/85C3\85C3;
@@ -580,48 +580,48 @@ CODE_0485A7:          REP #$20                                  ;;85A7|85A7+8598
                       JSL CODE_00CEB1                           ;;85C5|85C5+85B6/85C5\85C5;
                       PLB                                       ;;85C9|85C9+85BA/85C9\85C9;
                       LDA.B #$03                                ;;85CA|85CA+85BB/85CA\85CA;
-                      STA.W !PlayerBehindNet                    ;;85CC|85CC+85BD/85CC\85CC;
+                      STA.W PlayerBehindNet                     ;;85CC|85CC+85BD/85CC\85CC;
                       JSL CODE_00E2BD                           ;;85CF|85CF+85C0/85CF\85CF;
                       LDA.B #$06                                ;;85D3|85D3+85C4/85D3\85D3;
-                      STA.W !PlayerGfxTileCount                 ;;85D5|85D5+85C6/85D5\85D5;
-                      LDA.W !PlayerAniTimer                     ;;85D8|85D8+85C9/85D8\85D8;
+                      STA.W PlayerGfxTileCount                  ;;85D5|85D5+85C6/85D5\85D5;
+                      LDA.W PlayerAniTimer                      ;;85D8|85D8+85C9/85D8\85D8;
                       BEQ +                                     ;;85DB|85DB+85CC/85DB\85DB;
-                      DEC.W !PlayerAniTimer                     ;;85DD|85DD+85CE/85DD\85DD;
-                    + LDA.W !CapeAniTimer                       ;;85E0|85E0+85D1/85E0\85E0;
+                      DEC.W PlayerAniTimer                      ;;85DD|85DD+85CE/85DD\85DD;
+                    + LDA.W CapeAniTimer                        ;;85E0|85E0+85D1/85E0\85E0;
                       BEQ +                                     ;;85E3|85E3+85D4/85E3\85E3;
-                      DEC.W !CapeAniTimer                       ;;85E5|85E5+85D6/85E5\85E5;
+                      DEC.W CapeAniTimer                        ;;85E5|85E5+85D6/85E5\85E5;
                     + LDA.B #$18                                ;;85E8|85E8+85D9/85E8\85E8;
-                      STA.B !_0                                 ;;85EA|85EA+85DB/85EA\85EA;
+                      STA.B _0                                  ;;85EA|85EA+85DB/85EA\85EA;
                       LDA.B #$07                                ;;85EC|85EC+85DD/85EC\85EC;
-                      STA.B !_1                                 ;;85EE|85EE+85DF/85EE\85EE;
+                      STA.B _1                                  ;;85EE|85EE+85DF/85EE\85EE;
                       LDY.B #$00                                ;;85F0|85F0+85E1/85F0\85F0;
                       TYX                                       ;;85F2|85F2+85E3/85F2\85F2;
-CODE_0485F3:          LDA.B !_0                                 ;;85F3|85F3+85E4/85F3\85F3;
-                      STA.W !OAMTileXPos,X                      ;;85F5|85F5+85E6/85F5\85F5;
+CODE_0485F3:          LDA.B _0                                  ;;85F3|85F3+85E4/85F3\85F3;
+                      STA.W OAMTileXPos,X                       ;;85F5|85F5+85E6/85F5\85F5;
                       CLC                                       ;;85F8|85F8+85E9/85F8\85F8;
                       ADC.B #$08                                ;;85F9|85F9+85EA/85F9\85F9;
-                      STA.B !_0                                 ;;85FB|85FB+85EC/85FB\85FB;
-                      LDA.B !_1                                 ;;85FD|85FD+85EE/85FD\85FD;
-                      STA.W !OAMTileYPos,X                      ;;85FF|85FF+85F0/85FF\85FF;
+                      STA.B _0                                  ;;85FB|85FB+85EC/85FB\85FB;
+                      LDA.B _1                                  ;;85FD|85FD+85EE/85FD\85FD;
+                      STA.W OAMTileYPos,X                       ;;85FF|85FF+85F0/85FF\85FF;
                       LDA.B #$7E                                ;;8602|8602+85F3/8602\8602;
-                      STA.W !OAMTileNo,X                        ;;8604|8604+85F5/8604\8604;
+                      STA.W OAMTileNo,X                         ;;8604|8604+85F5/8604\8604;
                       LDA.B #$36                                ;;8607|8607+85F8/8607\8607;
-                      STA.W !OAMTileAttr,X                      ;;8609|8609+85FA/8609\8609;
+                      STA.W OAMTileAttr,X                       ;;8609|8609+85FA/8609\8609;
                       PHX                                       ;;860C|860C+85FD/860C\860C;
                       TYX                                       ;;860D|860D+85FE/860D\860D;
                       LDA.B #$00                                ;;860E|860E+85FF/860E\860E;
-                      STA.W !OAMTileSize,X                      ;;8610|8610+8601/8610\8610;
+                      STA.W OAMTileSize,X                       ;;8610|8610+8601/8610\8610;
                       PLX                                       ;;8613|8613+8604/8613\8613;
                       INY                                       ;;8614|8614+8605/8614\8614;
                       TYA                                       ;;8615|8615+8606/8615\8615;
                       AND.B #$03                                ;;8616|8616+8607/8616\8616;
                       BNE +                                     ;;8618|8618+8609/8618\8618;
                       LDA.B #$18                                ;;861A|861A+860B/861A\861A;
-                      STA.B !_0                                 ;;861C|861C+860D/861C\861C;
-                      LDA.B !_1                                 ;;861E|861E+860F/861E\861E;
+                      STA.B _0                                  ;;861C|861C+860D/861C\861C;
+                      LDA.B _1                                  ;;861E|861E+860F/861E\861E;
                       CLC                                       ;;8620|8620+8611/8620\8620;
                       ADC.B #$08                                ;;8621|8621+8612/8621\8621;
-                      STA.B !_1                                 ;;8623|8623+8614/8623\8623;
+                      STA.B _1                                  ;;8623|8623+8614/8623\8623;
                     + INX                                       ;;8625|8625+8616/8625\8625;
                       INX                                       ;;8626|8626+8617/8626\8626;
                       INX                                       ;;8627|8627+8618/8627\8627;
@@ -631,197 +631,197 @@ CODE_0485F3:          LDA.B !_0                                 ;;85F3|85F3+85E4
                       RTS                                       ;;862D|862D+861E/862D\862D; Return 
                                                                 ;;                        ;
 CODE_04862E:          REP #$30                                  ;;862E|862E+861F/862E\862E; Index (16 bit) Accum (16 bit) 
-                      LDX.W !PlayerTurnOW                       ;;8630|8630+8621/8630\8630; X = player x 4
-                      LDA.W !OWPlayerXPos,X                     ;;8633|8633+8624/8633\8633; A = player X-pos on OW
+                      LDX.W PlayerTurnOW                        ;;8630|8630+8621/8630\8630; X = player x 4
+                      LDA.W OWPlayerXPos,X                      ;;8633|8633+8624/8633\8633; A = player X-pos on OW
                       SEC                                       ;;8636|8636+8627/8636\8636; 
-                      SBC.B !Layer1XPos                         ;;8637|8637+8628/8637\8637; A = X-pos on screen
+                      SBC.B Layer1XPos                          ;;8637|8637+8628/8637\8637; A = X-pos on screen
                       CMP.W #$0100                              ;;8639|8639+862A/8639\8639; 
                       BCS CODE_04864D                           ;;863C|863C+862D/863C\863C; \ if < #$0100
-                      STA.B !_0                                 ;;863E|863E+862F/863E\863E; | $00 = X-pos on screen
-                      STA.B !_8                                 ;;8640|8640+8631/8640\8640; | $08 = X-pos on screen
-                      LDA.W !OWPlayerYPos,X                     ;;8642|8642+8633/8642\8642; | A = player Y-pos on OW
+                      STA.B _0                                  ;;863E|863E+862F/863E\863E; | $00 = X-pos on screen
+                      STA.B _8                                  ;;8640|8640+8631/8640\8640; | $08 = X-pos on screen
+                      LDA.W OWPlayerYPos,X                      ;;8642|8642+8633/8642\8642; | A = player Y-pos on OW
                       SEC                                       ;;8645|8645+8636/8645\8645; |
-                      SBC.B !Layer1YPos                         ;;8646|8646+8637/8646\8646; | A = Y-pos on screen
+                      SBC.B Layer1YPos                          ;;8646|8646+8637/8646\8646; | A = Y-pos on screen
                       CMP.W #$0100                              ;;8648|8648+8639/8648\8648; |
                       BCC +                                     ;;864B|864B+863C/864B\864B; /
 CODE_04864D:          LDA.W #$00F0                              ;;864D|864D+863E/864D\864D; \ 
-                    + STA.B !_2                                 ;;8650|8650+8641/8650\8650; | $02 = Y-pos on screen
-                      STA.B !_A                                 ;;8652|8652+8643/8652\8652; / $0A = Y-pos on screen
+                    + STA.B _2                                  ;;8650|8650+8641/8650\8650; | $02 = Y-pos on screen
+                      STA.B _A                                  ;;8652|8652+8643/8652\8652; / $0A = Y-pos on screen
                       TXA                                       ;;8654|8654+8645/8654\8654; A = player x 4
                       EOR.W #$0004                              ;;8655|8655+8646/8655\8655; A = other player x 4
                       TAX                                       ;;8658|8658+8649/8658\8658; X = other player x 4
-                      LDA.W !OWPlayerXPos,X                     ;;8659|8659+864A/8659\8659; \
+                      LDA.W OWPlayerXPos,X                      ;;8659|8659+864A/8659\8659; \
                       SEC                                       ;;865C|865C+864D/865C\865C; | (same as above, but for luigi)
-                      SBC.B !Layer1XPos                         ;;865D|865D+864E/865D\865D; |
+                      SBC.B Layer1XPos                          ;;865D|865D+864E/865D\865D; |
                       CMP.W #$0100                              ;;865F|865F+8650/865F\865F; |
                       BCS CODE_048673                           ;;8662|8662+8653/8662\8662; |
-                      STA.B !_4                                 ;;8664|8664+8655/8664\8664; | $04 = X-pos on screen
-                      STA.B !_C                                 ;;8666|8666+8657/8666\8666; | $0C = X-pos on screen
-                      LDA.W !OWPlayerYPos,X                     ;;8668|8668+8659/8668\8668; |
+                      STA.B _4                                  ;;8664|8664+8655/8664\8664; | $04 = X-pos on screen
+                      STA.B _C                                  ;;8666|8666+8657/8666\8666; | $0C = X-pos on screen
+                      LDA.W OWPlayerYPos,X                      ;;8668|8668+8659/8668\8668; |
                       SEC                                       ;;866B|866B+865C/866B\866B; |
-                      SBC.B !Layer1YPos                         ;;866C|866C+865D/866C\866C; |
+                      SBC.B Layer1YPos                          ;;866C|866C+865D/866C\866C; |
                       CMP.W #$0100                              ;;866E|866E+865F/866E\866E; |
                       BCC +                                     ;;8671|8671+8662/8671\8671; |
 CODE_048673:          LDA.W #$00F0                              ;;8673|8673+8664/8673\8673; |
-                    + STA.B !_6                                 ;;8676|8676+8667/8676\8676; | $06 = Y-pos on screen
-                      STA.B !_E                                 ;;8678|8678+8669/8678\8678; / $0E = Y-pos on screen
+                    + STA.B _6                                  ;;8676|8676+8667/8676\8676; | $06 = Y-pos on screen
+                      STA.B _E                                  ;;8678|8678+8669/8678\8678; / $0E = Y-pos on screen
                       SEP #$30                                  ;;867A|867A+866B/867A\867A; Index (8 bit) Accum (8 bit) 
-                      LDA.B !_0                                 ;;867C|867C+866D/867C\867C;
+                      LDA.B _0                                  ;;867C|867C+866D/867C\867C;
                       SEC                                       ;;867E|867E+866F/867E\867E;
                       SBC.B #$08                                ;;867F|867F+8670/867F\867F; subtract 8 from 1P X-pos
-                      STA.B !_0                                 ;;8681|8681+8672/8681\8681; $00 = 1P X-pos on screen
-                      LDA.B !_2                                 ;;8683|8683+8674/8683\8683;
+                      STA.B _0                                  ;;8681|8681+8672/8681\8681; $00 = 1P X-pos on screen
+                      LDA.B _2                                  ;;8683|8683+8674/8683\8683;
                       SEC                                       ;;8685|8685+8676/8685\8685;
                       SBC.B #$09                                ;;8686|8686+8677/8686\8686; subtract 9 from 1P Y-pos
-                      STA.B !_1                                 ;;8688|8688+8679/8688\8688; $01 = 1P Y-pos on screen
-                      LDA.B !_4                                 ;;868A|868A+867B/868A\868A;
+                      STA.B _1                                  ;;8688|8688+8679/8688\8688; $01 = 1P Y-pos on screen
+                      LDA.B _4                                  ;;868A|868A+867B/868A\868A;
                       SEC                                       ;;868C|868C+867D/868C\868C;
                       SBC.B #$08                                ;;868D|868D+867E/868D\868D; subtract 8 from 2P X-pos
-                      STA.B !_2                                 ;;868F|868F+8680/868F\868F; $02 = 2P X-pos on screen
-                      LDA.B !_6                                 ;;8691|8691+8682/8691\8691;
+                      STA.B _2                                  ;;868F|868F+8680/868F\868F; $02 = 2P X-pos on screen
+                      LDA.B _6                                  ;;8691|8691+8682/8691\8691;
                       SEC                                       ;;8693|8693+8684/8693\8693;
                       SBC.B #$09                                ;;8694|8694+8685/8694\8694; subtract 9 from 2P Y-pos
-                      STA.B !_3                                 ;;8696|8696+8687/8696\8696; $03 = 2P Y-pos on screen
+                      STA.B _3                                  ;;8696|8696+8687/8696\8696; $03 = 2P Y-pos on screen
                       LDA.B #$03                                ;;8698|8698+8689/8698\8698;
-                      STA.B !GraphicsCompPtr+2                  ;;869A|869A+868B/869A\869A; $8C = #$03
-                      LDA.B !_0                                 ;;869C|869C+868D/869C\869C;
-                      STA.B !_6                                 ;;869E|869E+868F/869E\869E; $06 = 1P X-pos on screen
-                      STA.B !GraphicsCompPtr                    ;;86A0|86A0+8691/86A0\86A0; $8A = 1P X-pos on screen
-                      LDA.B !_1                                 ;;86A2|86A2+8693/86A2\86A2;
-                      STA.B !_7                                 ;;86A4|86A4+8695/86A4\86A4; $07 = 1P Y-pos on screen
-                      STA.B !GraphicsCompPtr+1                  ;;86A6|86A6+8697/86A6\86A6; $8B = 1P Y-pos on screen
-                      LDA.W !PlayerTurnOW                       ;;86A8|86A8+8699/86A8\86A8; A = player x 4
+                      STA.B GraphicsCompPtr+2                   ;;869A|869A+868B/869A\869A; $8C = #$03
+                      LDA.B _0                                  ;;869C|869C+868D/869C\869C;
+                      STA.B _6                                  ;;869E|869E+868F/869E\869E; $06 = 1P X-pos on screen
+                      STA.B GraphicsCompPtr                     ;;86A0|86A0+8691/86A0\86A0; $8A = 1P X-pos on screen
+                      LDA.B _1                                  ;;86A2|86A2+8693/86A2\86A2;
+                      STA.B _7                                  ;;86A4|86A4+8695/86A4\86A4; $07 = 1P Y-pos on screen
+                      STA.B GraphicsCompPtr+1                   ;;86A6|86A6+8697/86A6\86A6; $8B = 1P Y-pos on screen
+                      LDA.W PlayerTurnOW                        ;;86A8|86A8+8699/86A8\86A8; A = player x 4
                       LSR A                                     ;;86AB|86AB+869C/86AB\86AB; A = player x 2
                       TAY                                       ;;86AC|86AC+869D/86AC\86AC; Y = player x 2
-                      LDA.W !OWPlayerAnimation,Y                ;;86AD|86AD+869E/86AD\86AD; A = player OW animation type
+                      LDA.W OWPlayerAnimation,Y                 ;;86AD|86AD+869E/86AD\86AD; A = player OW animation type
                       CMP.B #$12                                ;;86B0|86B0+86A1/86B0\86B0;
                       BEQ CODE_0486C5                           ;;86B2|86B2+86A3/86B2\86B2; skip if enter level in water animation
                       CMP.B #$07                                ;;86B4|86B4+86A5/86B4\86B4;
                       BCC CODE_0486BC                           ;;86B6|86B6+86A7/86B6\86B6; don't skip if moving on land
                       CMP.B #$0F                                ;;86B8|86B8+86A9/86B8\86B8;
                       BCC CODE_0486C5                           ;;86BA|86BA+86AB/86BA\86BA; skip if moving in water
-CODE_0486BC:          LDA.B !GraphicsCompPtr+1                  ;;86BC|86BC+86AD/86BC\86BC;
+CODE_0486BC:          LDA.B GraphicsCompPtr+1                   ;;86BC|86BC+86AD/86BC\86BC;
                       SEC                                       ;;86BE|86BE+86AF/86BE\86BE;
                       SBC.B #$05                                ;;86BF|86BF+86B0/86BF\86BF; subtract 5 from Y-pos if on land
-                      STA.B !GraphicsCompPtr+1                  ;;86C1|86C1+86B2/86C1\86C1; $8B = 1P Y-pos on screen
-                      STA.B !_7                                 ;;86C3|86C3+86B4/86C3\86C3; $07 = 1P Y-pos on screen
+                      STA.B GraphicsCompPtr+1                   ;;86C1|86C1+86B2/86C1\86C1; $8B = 1P Y-pos on screen
+                      STA.B _7                                  ;;86C3|86C3+86B4/86C3\86C3; $07 = 1P Y-pos on screen
 CODE_0486C5:          REP #$30                                  ;;86C5|86C5+86B6/86C5\86C5; Index (16 bit) Accum (16 bit) 
-                      LDA.W !PlayerTurnOW                       ;;86C7|86C7+86B8/86C7\86C7; A = player x 4
+                      LDA.W PlayerTurnOW                        ;;86C7|86C7+86B8/86C7\86C7; A = player x 4
                       XBA                                       ;;86CA|86CA+86BB/86CA\86CA; A = player x #$400
                       LSR A                                     ;;86CB|86CB+86BC/86CB\86CB; A = player x #$200
-                      STA.B !_4                                 ;;86CC|86CC+86BD/86CC\86CC; $04 = player x #$200
+                      STA.B _4                                  ;;86CC|86CC+86BD/86CC\86CC; $04 = player x #$200
                       LDX.W #$0000                              ;;86CE|86CE+86BF/86CE\86CE; X = #$0000
                       JSR CODE_048789                           ;;86D1|86D1+86C2/86D1\86D1; draw halo if out of lives
-                      LDA.W !PlayerTurnOW                       ;;86D4|86D4+86C5/86D4\86D4; A = player x 4
+                      LDA.W PlayerTurnOW                        ;;86D4|86D4+86C5/86D4\86D4; A = player x 4
                       LSR A                                     ;;86D7|86D7+86C8/86D7\86D7; A = player x 2
                       TAY                                       ;;86D8|86D8+86C9/86D8\86D8; Y = player x 2
                       LDX.W #$0000                              ;;86D9|86D9+86CA/86D9\86D9; X = #$0000
                       JSR CODE_04894F                           ;;86DC|86DC+86CD/86DC\86DC;
                       SEP #$30                                  ;;86DF|86DF+86D0/86DF\86DF; Index (8 bit) Accum (8 bit) 
-                      STZ.W !OAMTileSize+$27                    ;;86E1|86E1+86D2/86E1\86E1; \
-                      STZ.W !OAMTileSize+$28                    ;;86E4|86E4+86D5/86E4\86E4; | make OAM tiles 8x8
-                      STZ.W !OAMTileSize+$29                    ;;86E7|86E7+86D8/86E7\86E7; |
-                      STZ.W !OAMTileSize+$2A                    ;;86EA|86EA+86DB/86EA\86EA; |
-                      STZ.W !OAMTileSize+$2B                    ;;86ED|86ED+86DE/86ED\86ED; |
-                      STZ.W !OAMTileSize+$2C                    ;;86F0|86F0+86E1/86F0\86F0; |
-                      STZ.W !OAMTileSize+$2D                    ;;86F3|86F3+86E4/86F3\86F3; |
-                      STZ.W !OAMTileSize+$2E                    ;;86F6|86F6+86E7/86F6\86F6; /
+                      STZ.W OAMTileSize+$27                     ;;86E1|86E1+86D2/86E1\86E1; \
+                      STZ.W OAMTileSize+$28                     ;;86E4|86E4+86D5/86E4\86E4; | make OAM tiles 8x8
+                      STZ.W OAMTileSize+$29                     ;;86E7|86E7+86D8/86E7\86E7; |
+                      STZ.W OAMTileSize+$2A                     ;;86EA|86EA+86DB/86EA\86EA; |
+                      STZ.W OAMTileSize+$2B                     ;;86ED|86ED+86DE/86ED\86ED; |
+                      STZ.W OAMTileSize+$2C                     ;;86F0|86F0+86E1/86F0\86F0; |
+                      STZ.W OAMTileSize+$2D                     ;;86F3|86F3+86E4/86F3\86F3; |
+                      STZ.W OAMTileSize+$2E                     ;;86F6|86F6+86E7/86F6\86F6; /
                       LDA.B #$03                                ;;86F9|86F9+86EA/86F9\86F9;
-                      STA.B !GraphicsCompPtr+2                  ;;86FB|86FB+86EC/86FB\86FB; $8C = #$03
-                      LDA.W !OWPlayerSubmap                     ;;86FD|86FD+86EE/86FD\86FD; A = 1P submap
-                      LDY.W !OverworldProcess                   ;;8700|8700+86F1/8700\8700; Y = overworld process
+                      STA.B GraphicsCompPtr+2                   ;;86FB|86FB+86EC/86FB\86FB; $8C = #$03
+                      LDA.W OWPlayerSubmap                      ;;86FD|86FD+86EE/86FD\86FD; A = 1P submap
+                      LDY.W OverworldProcess                    ;;8700|8700+86F1/8700\8700; Y = overworld process
                       CPY.B #$0A                                ;;8703|8703+86F4/8703\8703;
                       BNE +                                     ;;8705|8705+86F6/8705\8705;
                       EOR.B #$01                                ;;8707|8707+86F8/8707\8707; ??
-                    + CMP.W !OWPlayerSubmap+1                   ;;8709|8709+86FA/8709\8709;
+                    + CMP.W OWPlayerSubmap+1                    ;;8709|8709+86FA/8709\8709;
                       BNE CODE_048786                           ;;870C|870C+86FD/870C\870C; skip everything if 1P and 2P are on different submaps
-                      LDA.B !_2                                 ;;870E|870E+86FF/870E\870E;
-                      STA.B !_6                                 ;;8710|8710+8701/8710\8710; $06 = 2P X-pos on screen
-                      STA.B !GraphicsCompPtr                    ;;8712|8712+8703/8712\8712; $8A = 2P X-pos on screen
-                      LDA.B !_3                                 ;;8714|8714+8705/8714\8714;
-                      STA.B !_7                                 ;;8716|8716+8707/8716\8716; $07 = 2P Y-pos on screen
-                      STA.B !GraphicsCompPtr+1                  ;;8718|8718+8709/8718\8718; $8B = 2P Y-pos on screen
-                      LDA.W !PlayerTurnOW                       ;;871A|871A+870B/871A\871A; A = player x 4
+                      LDA.B _2                                  ;;870E|870E+86FF/870E\870E;
+                      STA.B _6                                  ;;8710|8710+8701/8710\8710; $06 = 2P X-pos on screen
+                      STA.B GraphicsCompPtr                     ;;8712|8712+8703/8712\8712; $8A = 2P X-pos on screen
+                      LDA.B _3                                  ;;8714|8714+8705/8714\8714;
+                      STA.B _7                                  ;;8716|8716+8707/8716\8716; $07 = 2P Y-pos on screen
+                      STA.B GraphicsCompPtr+1                   ;;8718|8718+8709/8718\8718; $8B = 2P Y-pos on screen
+                      LDA.W PlayerTurnOW                        ;;871A|871A+870B/871A\871A; A = player x 4
                       LSR A                                     ;;871D|871D+870E/871D\871D; A = player x 2
                       EOR.B #$02                                ;;871E|871E+870F/871E\871E; A = other player x 2
                       TAY                                       ;;8720|8720+8711/8720\8720; Y = other player x 2
-                      LDA.W !OWPlayerAnimation,Y                ;;8721|8721+8712/8721\8721; A = other player OW animation type
+                      LDA.W OWPlayerAnimation,Y                 ;;8721|8721+8712/8721\8721; A = other player OW animation type
                       CMP.B #$12                                ;;8724|8724+8715/8724\8724;
                       BEQ CODE_048739                           ;;8726|8726+8717/8726\8726; skip if enter level in water animation
                       CMP.B #$07                                ;;8728|8728+8719/8728\8728;
                       BCC CODE_048730                           ;;872A|872A+871B/872A\872A; don't skip if moving on land
                       CMP.B #$0F                                ;;872C|872C+871D/872C\872C;
                       BCC CODE_048739                           ;;872E|872E+871F/872E\872E; skip if moving in water
-CODE_048730:          LDA.B !GraphicsCompPtr+1                  ;;8730|8730+8721/8730\8730;
+CODE_048730:          LDA.B GraphicsCompPtr+1                   ;;8730|8730+8721/8730\8730;
                       SEC                                       ;;8732|8732+8723/8732\8732;
                       SBC.B #$05                                ;;8733|8733+8724/8733\8733; subtract 5 from Y-pos if on land
-                      STA.B !GraphicsCompPtr+1                  ;;8735|8735+8726/8735\8735; $8B = 2P Y-pos on screen
-                      STA.B !_7                                 ;;8737|8737+8728/8737\8737; $07 = 2P Y-pos on screen
+                      STA.B GraphicsCompPtr+1                   ;;8735|8735+8726/8735\8735; $8B = 2P Y-pos on screen
+                      STA.B _7                                  ;;8737|8737+8728/8737\8737; $07 = 2P Y-pos on screen
 CODE_048739:          REP #$30                                  ;;8739|8739+872A/8739\8739; Index (16 bit) Accum (16 bit) 
-                      LDA.W !IsTwoPlayerGame                    ;;873B|873B+872C/873B\873B;
+                      LDA.W IsTwoPlayerGame                     ;;873B|873B+872C/873B\873B;
                       AND.W #$00FF                              ;;873E|873E+872F/873E\873E;
                       BEQ CODE_048786                           ;;8741|8741+8732/8741\8741; skip everything if we are in a 1P-game (why check that so late?)
-                      LDA.B !_C                                 ;;8743|8743+8734/8743\8743;
+                      LDA.B _C                                  ;;8743|8743+8734/8743\8743;
                       CMP.W #$00F0                              ;;8745|8745+8736/8745\8745;
                       BCS CODE_048786                           ;;8748|8748+8739/8748\8748; skip if 2P is offscreen in the X direction
-                      LDA.B !_E                                 ;;874A|874A+873B/874A\874A;
+                      LDA.B _E                                  ;;874A|874A+873B/874A\874A;
                       CMP.W #$00F0                              ;;874C|874C+873D/874C\874C;
                       BCS CODE_048786                           ;;874F|874F+8740/874F\874F; skip if 2P is offscreen in the Y direction
-                      LDA.B !_4                                 ;;8751|8751+8742/8751\8751; A = player x #$200
+                      LDA.B _4                                  ;;8751|8751+8742/8751\8751; A = player x #$200
                       EOR.W #$0200                              ;;8753|8753+8744/8753\8753; A = other player x #$200
-                      STA.B !_4                                 ;;8756|8756+8747/8756\8756; $04 = other player x #$200
+                      STA.B _4                                  ;;8756|8756+8747/8756\8756; $04 = other player x #$200
                       LDX.W #$0020                              ;;8758|8758+8749/8758\8758; X = #$0020
                       JSR CODE_048789                           ;;875B|875B+874C/875B\875B; draw halo if out of lives
-                      LDA.W !PlayerTurnOW                       ;;875E|875E+874F/875E\875E; A = player x 4
+                      LDA.W PlayerTurnOW                        ;;875E|875E+874F/875E\875E; A = player x 4
                       LSR A                                     ;;8761|8761+8752/8761\8761; A = player x 2
                       EOR.W #$0002                              ;;8762|8762+8753/8762\8762; A = other player x 2
                       TAY                                       ;;8765|8765+8756/8765\8765; Y = other player x 2
                       LDX.W #$0020                              ;;8766|8766+8757/8766\8766; X = #$0020
                       JSR CODE_04894F                           ;;8769|8769+875A/8769\8769;
                       SEP #$30                                  ;;876C|876C+875D/876C\876C; Index (8 bit) Accum (8 bit) 
-                      STZ.W !OAMTileSize+$2F                    ;;876E|876E+875F/876E\876E; \
-                      STZ.W !OAMTileSize+$30                    ;;8771|8771+8762/8771\8771; | make OAM tiles 8x8
-                      STZ.W !OAMTileSize+$31                    ;;8774|8774+8765/8774\8774; |
-                      STZ.W !OAMTileSize+$32                    ;;8777|8777+8768/8777\8777; |
-                      STZ.W !OAMTileSize+$33                    ;;877A|877A+876B/877A\877A; |
-                      STZ.W !OAMTileSize+$34                    ;;877D|877D+876E/877D\877D; |
-                      STZ.W !OAMTileSize+$35                    ;;8780|8780+8771/8780\8780; |
-                      STZ.W !OAMTileSize+$36                    ;;8783|8783+8774/8783\8783; /
+                      STZ.W OAMTileSize+$2F                     ;;876E|876E+875F/876E\876E; \
+                      STZ.W OAMTileSize+$30                     ;;8771|8771+8762/8771\8771; | make OAM tiles 8x8
+                      STZ.W OAMTileSize+$31                     ;;8774|8774+8765/8774\8774; |
+                      STZ.W OAMTileSize+$32                     ;;8777|8777+8768/8777\8777; |
+                      STZ.W OAMTileSize+$33                     ;;877A|877A+876B/877A\877A; |
+                      STZ.W OAMTileSize+$34                     ;;877D|877D+876E/877D\877D; |
+                      STZ.W OAMTileSize+$35                     ;;8780|8780+8771/8780\8780; |
+                      STZ.W OAMTileSize+$36                     ;;8783|8783+8774/8783\8783; /
 CODE_048786:          SEP #$30                                  ;;8786|8786+8777/8786\8786; Index (8 bit) Accum (8 bit) 
                       RTS                                       ;;8788|8788+8779/8788\8788; Return 
                                                                 ;;                        ;
-CODE_048789:          LDA.B !GraphicsCompPtr                    ;;8789|8789+877A/8789\8789; A = Y-pos on screen | X-pos on screen
+CODE_048789:          LDA.B GraphicsCompPtr                     ;;8789|8789+877A/8789\8789; A = Y-pos on screen | X-pos on screen
                       PHA                                       ;;878B|878B+877C/878B\878B;
                       PHX                                       ;;878C|878C+877D/878C\878C; X = player x #$20
-                      LDA.B !_4                                 ;;878D|878D+877E/878D\878D; A = player x #$200
+                      LDA.B _4                                  ;;878D|878D+877E/878D\878D; A = player x #$200
                       XBA                                       ;;878F|878F+8780/878F\878F; A = player x 2
                       LSR A                                     ;;8790|8790+8781/8790\8790; A = player
                       TAX                                       ;;8791|8791+8782/8791\8791; X = player
-                      LDA.W !SavedPlayerLives-1,X               ;;8792|8792+8783/8792\8792; A = player lives | junk
+                      LDA.W SavedPlayerLives-1,X                ;;8792|8792+8783/8792\8792; A = player lives | junk
                       PLX                                       ;;8795|8795+8786/8795\8795; X = player x #$20
                       AND.W #$FF00                              ;;8796|8796+8787/8796\8796; A = player lives | #$00
                       BPL +                                     ;;8799|8799+878A/8799\8799; skip if player lives positive
                       SEP #$20                                  ;;879B|879B+878C/879B\879B; Accum (8 bit) 
-                      LDA.B !GraphicsCompPtr                    ;;879D|879D+878E/879D\879D;
-                      STA.W !OAMTileXPos+$B4,X                  ;;879F|879F+8790/879F\879F; OAM X-pos of 1st halo tile
+                      LDA.B GraphicsCompPtr                     ;;879D|879D+878E/879D\879D;
+                      STA.W OAMTileXPos+$B4,X                   ;;879F|879F+8790/879F\879F; OAM X-pos of 1st halo tile
                       CLC                                       ;;87A2|87A2+8793/87A2\87A2;
                       ADC.B #$08                                ;;87A3|87A3+8794/87A3\87A3;
-                      STA.W !OAMTileXPos+$B8,X                  ;;87A5|87A5+8796/87A5\87A5; OAM X-pos of 2nd halo tile
-                      LDA.B !GraphicsCompPtr+1                  ;;87A8|87A8+8799/87A8\87A8;
+                      STA.W OAMTileXPos+$B8,X                   ;;87A5|87A5+8796/87A5\87A5; OAM X-pos of 2nd halo tile
+                      LDA.B GraphicsCompPtr+1                   ;;87A8|87A8+8799/87A8\87A8;
                       CLC                                       ;;87AA|87AA+879B/87AA\87AA;
                       ADC.B #$F9                                ;;87AB|87AB+879C/87AB\87AB;
-                      STA.W !OAMTileYPos+$B4,X                  ;;87AD|87AD+879E/87AD\87AD; OAM Y-pos of 1st halo tile
-                      STA.W !OAMTileYPos+$B8,X                  ;;87B0|87B0+87A1/87B0\87B0; OAM Y-pos of 2nd halo tile
+                      STA.W OAMTileYPos+$B4,X                   ;;87AD|87AD+879E/87AD\87AD; OAM Y-pos of 1st halo tile
+                      STA.W OAMTileYPos+$B8,X                   ;;87B0|87B0+87A1/87B0\87B0; OAM Y-pos of 2nd halo tile
                       LDA.B #$7C                                ;;87B3|87B3+87A4/87B3\87B3;
-                      STA.W !OAMTileNo+$B4,X                    ;;87B5|87B5+87A6/87B5\87B5; OAM tile number of 1st halo tile
-                      STA.W !OAMTileNo+$B8,X                    ;;87B8|87B8+87A9/87B8\87B8; OAM tile number of 2nd halo tile
+                      STA.W OAMTileNo+$B4,X                     ;;87B5|87B5+87A6/87B5\87B5; OAM tile number of 1st halo tile
+                      STA.W OAMTileNo+$B8,X                     ;;87B8|87B8+87A9/87B8\87B8; OAM tile number of 2nd halo tile
                       LDA.B #$20                                ;;87BB|87BB+87AC/87BB\87BB;
-                      STA.W !OAMTileAttr+$B4,X                  ;;87BD|87BD+87AE/87BD\87BD; OAM yxppccct of 1st halo tile
+                      STA.W OAMTileAttr+$B4,X                   ;;87BD|87BD+87AE/87BD\87BD; OAM yxppccct of 1st halo tile
                       LDA.B #$60                                ;;87C0|87C0+87B1/87C0\87C0;
-                      STA.W !OAMTileAttr+$B8,X                  ;;87C2|87C2+87B3/87C2\87C2; OAM yxppccct of 2nd halo tile
+                      STA.W OAMTileAttr+$B8,X                   ;;87C2|87C2+87B3/87C2\87C2; OAM yxppccct of 2nd halo tile
                       REP #$20                                  ;;87C5|87C5+87B6/87C5\87C5; Accum (16 bit) 
                     + PLA                                       ;;87C7|87C7+87B8/87C7\87C7; A = Y-pos on screen | X-pos on screen
-                      STA.B !GraphicsCompPtr                    ;;87C8|87C8+87B9/87C8\87C8; $8A = X-pos on screen, $8B = Y-pos on screen
+                      STA.B GraphicsCompPtr                     ;;87C8|87C8+87B9/87C8\87C8; $8A = X-pos on screen, $8B = Y-pos on screen
                       RTS                                       ;;87CA|87CA+87BB/87CA\87CA; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
@@ -880,45 +880,45 @@ CODE_04894F:          SEP #$30                                  ;;894F|894F+8940
                       TYA                                       ;;8952|8952+8943/8952\8952; A = player x 2
                       LSR A                                     ;;8953|8953+8944/8953\8953; A = player
                       TAY                                       ;;8954|8954+8945/8954\8954; Y = player
-                      LDA.W !SavedPlayerYoshi,Y                 ;;8955|8955+8946/8955\8955; A = player's yoshi color
+                      LDA.W SavedPlayerYoshi,Y                  ;;8955|8955+8946/8955\8955; A = player's yoshi color
                       BEQ +                                     ;;8958|8958+8949/8958\8958; branch if no yoshi
-                      STA.B !_E                                 ;;895A|895A+894B/895A\895A; $0E = player's yoshi color
-                      STZ.B !_F                                 ;;895C|895C+894D/895C\895C; $0F = #$00
+                      STA.B _E                                  ;;895A|895A+894B/895A\895A; $0E = player's yoshi color
+                      STZ.B _F                                  ;;895C|895C+894D/895C\895C; $0F = #$00
                       PLY                                       ;;895E|895E+894F/895E\895E; Y = player x 2
                       JMP CODE_048CE6                           ;;895F|895F+8950/895F\895F; jump
                                                                 ;;                        ;
                     + PLY                                       ;;8962|8962+8953/8962\8962; Y = player x 2
                       REP #$30                                  ;;8963|8963+8954/8963\8963; Index (16 bit) Accum (16 bit) 
-                      LDA.W !OWPlayerAnimation,Y                ;;8965|8965+8956/8965\8965; A = player OW animation type
+                      LDA.W OWPlayerAnimation,Y                 ;;8965|8965+8956/8965\8965; A = player OW animation type
                       ASL A                                     ;;8968|8968+8959/8968\8968;
                       ASL A                                     ;;8969|8969+895A/8969\8969;
                       ASL A                                     ;;896A|896A+895B/896A\896A;
                       ASL A                                     ;;896B|896B+895C/896B\896B; A = player OW animation type x #$10
-                      STA.B !_0                                 ;;896C|896C+895D/896C\896C; $00 = player OW animation type x #$10
-                      LDA.B !TrueFrame                          ;;896E|896E+895F/896E\896E; A = frame counter
+                      STA.B _0                                  ;;896C|896C+895D/896C\896C; $00 = player OW animation type x #$10
+                      LDA.B TrueFrame                           ;;896E|896E+895F/896E\896E; A = frame counter
                       AND.W #$0018                              ;;8970|8970+8961/8970\8970; A = 5 LSB of frame counter
                       CLC                                       ;;8973|8973+8964/8973\8973;
-                      ADC.B !_0                                 ;;8974|8974+8965/8974\8974; A = 0000 000a aaaf ffff (a = animation type, f = 5 LSB of frame counter)
+                      ADC.B _0                                  ;;8974|8974+8965/8974\8974; A = 0000 000a aaaf ffff (a = animation type, f = 5 LSB of frame counter)
                       TAY                                       ;;8976|8976+8967/8976\8976; Y = that index ^
                       PHX                                       ;;8977|8977+8968/8977\8977; X = player x #$20
-                      LDA.B !_4                                 ;;8978|8978+8969/8978\8978; A = player x #$200
+                      LDA.B _4                                  ;;8978|8978+8969/8978\8978; A = player x #$200
                       XBA                                       ;;897A|897A+896B/897A\897A; A = player x 2
                       LSR A                                     ;;897B|897B+896C/897B\897B; A = player
                       TAX                                       ;;897C|897C+896D/897C\897C; X = player
-                      LDA.W !SavedPlayerLives-1,X               ;;897D|897D+896E/897D\897D; A = player's lives | junk
+                      LDA.W SavedPlayerLives-1,X                ;;897D|897D+896E/897D\897D; A = player's lives | junk
                       PLX                                       ;;8980|8980+8971/8980\8980; X = player x #$20
                       AND.W #$FF00                              ;;8981|8981+8972/8981\8981; A = player's lives | #$00
                       BPL CODE_04898B                           ;;8984|8984+8975/8984\8984; branch if player's lives positive
-                      LDA.B !_0                                 ;;8986|8986+8977/8986\8986; A = player OW animation type x #$10
+                      LDA.B _0                                  ;;8986|8986+8977/8986\8986; A = player OW animation type x #$10
                       TAY                                       ;;8988|8988+8979/8988\8988; Y = player OW animation type x #$10
                       BRA CODE_0489A7                           ;;8989|8989+897A/8989\8989; branch (basically, if player is out of lives, their sprite is static)
                                                                 ;;                        ;
 CODE_04898B:          CPX.W #$0000                              ;;898B|898B+897C/898B\898B;
                       BNE CODE_0489A7                           ;;898E|898E+897F/898E\898E; skip if 2P
-                      LDA.W !OverworldProcess                   ;;8990|8990+8981/8990\8990;
+                      LDA.W OverworldProcess                    ;;8990|8990+8981/8990\8990;
                       CMP.W #$000B                              ;;8993|8993+8984/8993\8993;
                       BNE CODE_0489A7                           ;;8996|8996+8987/8996\8996; skip if not on star warp
-                      LDA.B !TrueFrame                          ;;8998|8998+8989/8998\8998; A = frame counter
+                      LDA.B TrueFrame                           ;;8998|8998+8989/8998\8998; A = frame counter
                       AND.W #$000C                              ;;899A|899A+898B/899A\899A; A = 0000 ff00 (f = frame counter bits)
                       LSR A                                     ;;899D|899D+898E/899D\899D;
                       LSR A                                     ;;899E|899E+898F/899E\899E; A = 2 LSB of frame counter / 4
@@ -927,12 +927,12 @@ CODE_04898B:          CPX.W #$0000                              ;;898B|898B+897C
                       AND.W #$00FF                              ;;89A3|89A3+8994/89A3\89A3;
                       TAY                                       ;;89A6|89A6+8997/89A6\89A6; Y = index into tilemap table
 CODE_0489A7:          REP #$20                                  ;;89A7|89A7+8998/89A7\89A7; Accum (16 bit) 
-                      LDA.B !GraphicsCompPtr                    ;;89A9|89A9+899A/89A9\89A9; A = Y-pos on screen | X-pos on screen 
-                      STA.W !OAMTileXPos+$9C,X                  ;;89AB|89AB+899C/89AB\89AB; OAM y-pos and x-pos for tile
+                      LDA.B GraphicsCompPtr                     ;;89A9|89A9+899A/89A9\89A9; A = Y-pos on screen | X-pos on screen 
+                      STA.W OAMTileXPos+$9C,X                   ;;89AB|89AB+899C/89AB\89AB; OAM y-pos and x-pos for tile
                       LDA.W OWPlayerTiles,Y                     ;;89AE|89AE+899F/89AE\89AE; get tile | yxppccct
                       CLC                                       ;;89B1|89B1+89A2/89B1\89B1;
-                      ADC.B !_4                                 ;;89B2|89B2+89A3/89B2\89B2; add player x #$200 (increment palette of tile by 1)
-                      STA.W !OAMTileNo+$9C,X                    ;;89B4|89B4+89A5/89B4\89B4; OAM tile and yxppccct for tile
+                      ADC.B _4                                  ;;89B2|89B2+89A3/89B2\89B2; add player x #$200 (increment palette of tile by 1)
+                      STA.W OAMTileNo+$9C,X                     ;;89B4|89B4+89A5/89B4\89B4; OAM tile and yxppccct for tile
                       SEP #$20                                  ;;89B7|89B7+89A8/89B7\89B7; Accum (8 bit) 
                       INX                                       ;;89B9|89B9+89AA/89B9\89B9;
                       INX                                       ;;89BA|89BA+89AB/89BA\89BA;
@@ -940,21 +940,21 @@ CODE_0489A7:          REP #$20                                  ;;89A7|89A7+8998
                       INX                                       ;;89BC|89BC+89AD/89BC\89BC; increment X to next OAM tile
                       INY                                       ;;89BD|89BD+89AE/89BD\89BD;
                       INY                                       ;;89BE|89BE+89AF/89BE\89BE; increment index to tilemap table
-                      LDA.B !GraphicsCompPtr                    ;;89BF|89BF+89B0/89BF\89BF;
+                      LDA.B GraphicsCompPtr                     ;;89BF|89BF+89B0/89BF\89BF;
                       CLC                                       ;;89C1|89C1+89B2/89C1\89C1;
                       ADC.B #$08                                ;;89C2|89C2+89B3/89C2\89C2; \
-                      STA.B !GraphicsCompPtr                    ;;89C4|89C4+89B5/89C4\89C4; | update X and Y position of tile
-                      DEC.B !GraphicsCompPtr+2                  ;;89C6|89C6+89B7/89C6\89C6; | (zig zag pattern)
-                      LDA.B !GraphicsCompPtr+2                  ;;89C8|89C8+89B9/89C8\89C8; |
+                      STA.B GraphicsCompPtr                     ;;89C4|89C4+89B5/89C4\89C4; | update X and Y position of tile
+                      DEC.B GraphicsCompPtr+2                   ;;89C6|89C6+89B7/89C6\89C6; | (zig zag pattern)
+                      LDA.B GraphicsCompPtr+2                   ;;89C8|89C8+89B9/89C8\89C8; |
                       AND.B #$01                                ;;89CA|89CA+89BB/89CA\89CA; |
                       BEQ +                                     ;;89CC|89CC+89BD/89CC\89CC; |
-                      LDA.B !_6                                 ;;89CE|89CE+89BF/89CE\89CE; |
-                      STA.B !GraphicsCompPtr                    ;;89D0|89D0+89C1/89D0\89D0; |
-                      LDA.B !GraphicsCompPtr+1                  ;;89D2|89D2+89C3/89D2\89D2; |
+                      LDA.B _6                                  ;;89CE|89CE+89BF/89CE\89CE; |
+                      STA.B GraphicsCompPtr                     ;;89D0|89D0+89C1/89D0\89D0; |
+                      LDA.B GraphicsCompPtr+1                   ;;89D2|89D2+89C3/89D2\89D2; |
                       CLC                                       ;;89D4|89D4+89C5/89D4\89D4; |
                       ADC.B #$08                                ;;89D5|89D5+89C6/89D5\89D5; |
-                      STA.B !GraphicsCompPtr+1                  ;;89D7|89D7+89C8/89D7\89D7; /
-                    + LDA.B !GraphicsCompPtr+2                  ;;89D9|89D9+89CA/89D9\89D9;
+                      STA.B GraphicsCompPtr+1                   ;;89D7|89D7+89C8/89D7\89D7; /
+                    + LDA.B GraphicsCompPtr+2                   ;;89D9|89D9+89CA/89D9\89D9;
                       BPL CODE_0489A7                           ;;89DB|89DB+89CC/89DB\89DB; loop if we have tiles left
                       RTS                                       ;;89DD|89DD+89CE/89DD\89DD; Return 
                                                                 ;;                        ;
@@ -1058,26 +1058,26 @@ DATA_048C1E:          db $FB,$FB,$03,$03,$00,$00,$08,$08        ;;8C1E|8C1E+8C0F
 DATA_048CDE:          db $00,$00,$00,$02,$00,$04,$00,$06        ;;8CDE|8CDE+8CCF/8CDE\8CDE;
                                                                 ;;                        ;
 CODE_048CE6:          LDA.B #$07                                ;;8CE6|8CE6+8CD7/8CE6\8CE6;
-                      STA.B !GraphicsCompPtr+2                  ;;8CE8|8CE8+8CD9/8CE8\8CE8; $8C = #$07
+                      STA.B GraphicsCompPtr+2                   ;;8CE8|8CE8+8CD9/8CE8\8CE8; $8C = #$07
                       REP #$30                                  ;;8CEA|8CEA+8CDB/8CEA\8CEA; Index (16 bit) Accum (16 bit) 
-                      LDA.W !OWPlayerAnimation,Y                ;;8CEC|8CEC+8CDD/8CEC\8CEC;
+                      LDA.W OWPlayerAnimation,Y                 ;;8CEC|8CEC+8CDD/8CEC\8CEC;
                       ASL A                                     ;;8CEF|8CEF+8CE0/8CEF\8CEF;
                       ASL A                                     ;;8CF0|8CF0+8CE1/8CF0\8CF0;
                       ASL A                                     ;;8CF1|8CF1+8CE2/8CF1\8CF1;
                       ASL A                                     ;;8CF2|8CF2+8CE3/8CF2\8CF2;
-                      STA.B !_0                                 ;;8CF3|8CF3+8CE4/8CF3\8CF3;
-                      LDA.B !TrueFrame                          ;;8CF5|8CF5+8CE6/8CF5\8CF5;
+                      STA.B _0                                  ;;8CF3|8CF3+8CE4/8CF3\8CF3;
+                      LDA.B TrueFrame                           ;;8CF5|8CF5+8CE6/8CF5\8CF5;
                       AND.W #$0008                              ;;8CF7|8CF7+8CE8/8CF7\8CF7;
                       ASL A                                     ;;8CFA|8CFA+8CEB/8CFA\8CFA;
                       CLC                                       ;;8CFB|8CFB+8CEC/8CFB\8CFB;
-                      ADC.B !_0                                 ;;8CFC|8CFC+8CED/8CFC\8CFC;
+                      ADC.B _0                                  ;;8CFC|8CFC+8CED/8CFC\8CFC;
                       TAY                                       ;;8CFE|8CFE+8CEF/8CFE\8CFE; Y = 0000 000a aaaf ffff (a = animation type, f = 5 LSB of frame counter)
                       CPX.W #$0000                              ;;8CFF|8CFF+8CF0/8CFF\8CFF;
                       BNE CODE_048D1B                           ;;8D02|8D02+8CF3/8D02\8D02; skip if not 1P
-                      LDA.W !OverworldProcess                   ;;8D04|8D04+8CF5/8D04\8D04;
+                      LDA.W OverworldProcess                    ;;8D04|8D04+8CF5/8D04\8D04;
                       CMP.W #$000B                              ;;8D07|8D07+8CF8/8D07\8D07;
                       BNE CODE_048D1B                           ;;8D0A|8D0A+8CFB/8D0A\8D0A; skip if not star warp
-                      LDA.B !TrueFrame                          ;;8D0C|8D0C+8CFD/8D0C\8D0C;
+                      LDA.B TrueFrame                           ;;8D0C|8D0C+8CFD/8D0C\8D0C;
                       AND.W #$000C                              ;;8D0E|8D0E+8CFF/8D0E\8D0E;
                       LSR A                                     ;;8D11|8D11+8D02/8D11\8D11;
                       LSR A                                     ;;8D12|8D12+8D03/8D12\8D12;
@@ -1093,12 +1093,12 @@ CODE_048D1B:          REP #$20                                  ;;8D1B|8D1B+8D0C
                       SEP #$20                                  ;;8D21|8D21+8D12/8D21\8D21; Accum (8 bit) 
                       LDA.W DATA_048B5E,Y                       ;;8D23|8D23+8D14/8D23\8D23; X offset table for riding yoshi sprites
                       CLC                                       ;;8D26|8D26+8D17/8D26\8D26;
-                      ADC.B !GraphicsCompPtr                    ;;8D27|8D27+8D18/8D27\8D27;
-                      STA.W !OAMTileXPos+$9C,X                  ;;8D29|8D29+8D1A/8D29\8D29; OAM X-position
+                      ADC.B GraphicsCompPtr                     ;;8D27|8D27+8D18/8D27\8D27;
+                      STA.W OAMTileXPos+$9C,X                   ;;8D29|8D29+8D1A/8D29\8D29; OAM X-position
                       LDA.W DATA_048C1E,Y                       ;;8D2C|8D2C+8D1D/8D2C\8D2C; Y offset table for riding yoshi sprites
                       CLC                                       ;;8D2F|8D2F+8D20/8D2F\8D2F;
-                      ADC.B !GraphicsCompPtr+1                  ;;8D30|8D30+8D21/8D30\8D30;
-                      STA.W !OAMTileYPos+$9C,X                  ;;8D32|8D32+8D23/8D32\8D32; OAM Y-position
+                      ADC.B GraphicsCompPtr+1                   ;;8D30|8D30+8D21/8D30\8D30;
+                      STA.W OAMTileYPos+$9C,X                   ;;8D32|8D32+8D23/8D32\8D32; OAM Y-position
                       PLY                                       ;;8D35|8D35+8D26/8D35\8D35;
                       REP #$20                                  ;;8D36|8D36+8D27/8D36\8D36; Accum (16 bit) 
                       LDA.W DATA_0489DE,Y                       ;;8D38|8D38+8D29/8D38\8D38; 
@@ -1108,8 +1108,8 @@ CODE_048D1B:          REP #$20                                  ;;8D1B|8D1B+8D0C
                       AND.W #$0F00                              ;;8D41|8D41+8D32/8D41\8D41;
                       CMP.W #$0200                              ;;8D44|8D44+8D35/8D44\8D44;
                       BNE CODE_048D5E                           ;;8D47|8D47+8D38/8D47\8D47;
-                      STY.B !_8                                 ;;8D49|8D49+8D3A/8D49\8D49;
-                      LDA.B !_E                                 ;;8D4B|8D4B+8D3C/8D4B\8D4B;
+                      STY.B _8                                  ;;8D49|8D49+8D3A/8D49\8D49;
+                      LDA.B _E                                  ;;8D4B|8D4B+8D3C/8D4B\8D4B;
                       SEC                                       ;;8D4D|8D4D+8D3E/8D4D\8D4D;
                       SBC.W #$0004                              ;;8D4E|8D4E+8D3F/8D4E\8D4E;
                       TAY                                       ;;8D51|8D51+8D42/8D51\8D51;
@@ -1117,15 +1117,15 @@ CODE_048D1B:          REP #$20                                  ;;8D1B|8D1B+8D0C
                       AND.W #$F0FF                              ;;8D53|8D53+8D44/8D53\8D53;
                       ORA.W DATA_048CDE,Y                       ;;8D56|8D56+8D47/8D56\8D56;
                       PHA                                       ;;8D59|8D59+8D4A/8D59\8D59;
-                      LDY.B !_8                                 ;;8D5A|8D5A+8D4B/8D5A\8D5A;
+                      LDY.B _8                                  ;;8D5A|8D5A+8D4B/8D5A\8D5A;
                       BRA +                                     ;;8D5C|8D5C+8D4D/8D5C\8D5C;
                                                                 ;;                        ;
 CODE_048D5E:          PLA                                       ;;8D5E|8D5E+8D4F/8D5E\8D5E;
                       CLC                                       ;;8D5F|8D5F+8D50/8D5F\8D5F;
-                      ADC.B !_4                                 ;;8D60|8D60+8D51/8D60\8D60;
+                      ADC.B _4                                  ;;8D60|8D60+8D51/8D60\8D60;
                       PHA                                       ;;8D62|8D62+8D53/8D62\8D62;
                     + PLA                                       ;;8D63|8D63+8D54/8D63\8D63;
-                      STA.W !OAMTileNo+$9C,X                    ;;8D64|8D64+8D55/8D64\8D64;
+                      STA.W OAMTileNo+$9C,X                     ;;8D64|8D64+8D55/8D64\8D64;
 CODE_048D67:          SEP #$20                                  ;;8D67|8D67+8D58/8D67\8D67; Accum (8 bit) 
                       INX                                       ;;8D69|8D69+8D5A/8D69\8D69;
                       INX                                       ;;8D6A|8D6A+8D5B/8D6A\8D6A;
@@ -1133,7 +1133,7 @@ CODE_048D67:          SEP #$20                                  ;;8D67|8D67+8D58
                       INX                                       ;;8D6C|8D6C+8D5D/8D6C\8D6C;
                       INY                                       ;;8D6D|8D6D+8D5E/8D6D\8D6D;
                       INY                                       ;;8D6E|8D6E+8D5F/8D6E\8D6E;
-                      DEC.B !GraphicsCompPtr+2                  ;;8D6F|8D6F+8D60/8D6F\8D6F;
+                      DEC.B GraphicsCompPtr+2                   ;;8D6F|8D6F+8D60/8D6F\8D6F;
                       BPL CODE_048D1B                           ;;8D71|8D71+8D62/8D71\8D71;
                       RTS                                       ;;8D73|8D73+8D64/8D73\8D73; Return 
                                                                 ;;                        ;
@@ -1153,74 +1153,74 @@ OverworldMusic:       db !BGM_DONUTPLAINS                       ;;8D8A|8D8A+8D7B
 CODE_048D91:          PHB                                       ;;8D91|8D91+8D82/8D91\8D91; Index (8 bit) 
                       PHK                                       ;;8D92|8D92+8D83/8D92\8D92;
                       PLB                                       ;;8D93|8D93+8D84/8D93\8D93;
-                      STZ.W !SwapOverworldMusic                 ;;8D94|8D94+8D85/8D94\8D94;
+                      STZ.W SwapOverworldMusic                  ;;8D94|8D94+8D85/8D94\8D94;
                       LDA.B #$0F                                ;;8D97|8D97+8D88/8D97\8D97;
-                      STA.W !Layer1ScrollXPosUpd                ;;8D99|8D99+8D8A/8D99\8D99;
+                      STA.W Layer1ScrollXPosUpd                 ;;8D99|8D99+8D8A/8D99\8D99;
                       LDX.B #$02                                ;;8D9C|8D9C+8D8D/8D9C\8D9C;
-                      LDA.W !OWPlayerAnimation                  ;;8D9E|8D9E+8D8F/8D9E\8D9E;
+                      LDA.W OWPlayerAnimation                   ;;8D9E|8D9E+8D8F/8D9E\8D9E;
                       CMP.B #$12                                ;;8DA1|8DA1+8D92/8DA1\8DA1;
                       BEQ CODE_048DA9                           ;;8DA3|8DA3+8D94/8DA3\8DA3;
                       AND.B #$08                                ;;8DA5|8DA5+8D96/8DA5\8DA5;
                       BEQ +                                     ;;8DA7|8DA7+8D98/8DA7\8DA7;
 CODE_048DA9:          LDX.B #$0A                                ;;8DA9|8DA9+8D9A/8DA9\8DA9;
-                    + STX.W !OWPlayerAnimation                  ;;8DAB|8DAB+8D9C/8DAB\8DAB;
+                    + STX.W OWPlayerAnimation                   ;;8DAB|8DAB+8D9C/8DAB\8DAB;
                       LDX.B #$02                                ;;8DAE|8DAE+8D9F/8DAE\8DAE;
-                      LDA.W !OWPlayerAnimation+2                ;;8DB0|8DB0+8DA1/8DB0\8DB0;
+                      LDA.W OWPlayerAnimation+2                 ;;8DB0|8DB0+8DA1/8DB0\8DB0;
                       CMP.B #$12                                ;;8DB3|8DB3+8DA4/8DB3\8DB3;
                       BEQ CODE_048DBB                           ;;8DB5|8DB5+8DA6/8DB5\8DB5;
                       AND.B #$08                                ;;8DB7|8DB7+8DA8/8DB7\8DB7;
                       BEQ +                                     ;;8DB9|8DB9+8DAA/8DB9\8DB9;
 CODE_048DBB:          LDX.B #$0A                                ;;8DBB|8DBB+8DAC/8DBB\8DBB;
-                    + STX.W !OWPlayerAnimation+2                ;;8DBD|8DBD+8DAE/8DBD\8DBD;
+                    + STX.W OWPlayerAnimation+2                 ;;8DBD|8DBD+8DAE/8DBD\8DBD;
                       SEP #$10                                  ;;8DC0|8DC0+8DB1/8DC0\8DC0; Index (8 bit) 
                       JSR CODE_048E55                           ;;8DC2|8DC2+8DB3/8DC2\8DC2;
                       REP #$30                                  ;;8DC5|8DC5+8DB6/8DC5\8DC5; Index (16 bit) Accum (16 bit) 
-                      LDA.W !OWLevelExitMode-1                  ;;8DC7|8DC7+8DB8/8DC7\8DC7;
+                      LDA.W OWLevelExitMode-1                   ;;8DC7|8DC7+8DB8/8DC7\8DC7;
                       AND.W #$FF00                              ;;8DCA|8DCA+8DBB/8DCA\8DCA;
                       BEQ CODE_048DDF                           ;;8DCD|8DCD+8DBE/8DCD\8DCD;
                       BMI CODE_048DDF                           ;;8DCF|8DCF+8DC0/8DCF\8DCF;
-                      LDA.W !TranslevelNo                       ;;8DD1|8DD1+8DC2/8DD1\8DD1;
+                      LDA.W TranslevelNo                        ;;8DD1|8DD1+8DC2/8DD1\8DD1;
                       AND.W #$00FF                              ;;8DD4|8DD4+8DC5/8DD4\8DD4;
                       CMP.W #$0018                              ;;8DD7|8DD7+8DC8/8DD7\8DD7;
                       BNE CODE_048DDF                           ;;8DDA|8DDA+8DCB/8DDA\8DDA;
                       BRL CODE_048E34                           ;;8DDC|8DDC+8DCD/8DDC\8DDC;
-CODE_048DDF:          LDA.W !CutsceneID                         ;;8DDF|8DDF+8DD0/8DDF\8DDF;
+CODE_048DDF:          LDA.W CutsceneID                          ;;8DDF|8DDF+8DD0/8DDF\8DDF;
                       AND.W #$00FF                              ;;8DE2|8DE2+8DD3/8DE2\8DE2;
                       BEQ CODE_048E38                           ;;8DE5|8DE5+8DD6/8DE5\8DE5;
-                      LDA.W !CutsceneID                         ;;8DE7|8DE7+8DD8/8DE7\8DE7;
+                      LDA.W CutsceneID                          ;;8DE7|8DE7+8DD8/8DE7\8DE7;
                       AND.W #$FF00                              ;;8DEA|8DEA+8DDB/8DEA\8DEA;
-                      STA.W !CutsceneID                         ;;8DED|8DED+8DDE/8DED\8DED;
+                      STA.W CutsceneID                          ;;8DED|8DED+8DDE/8DED\8DED;
                    if ver_is_english(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
                       SEP #$10                                  ;;    |8DF0+8DE1/8DF0\8DF0; Index (8 bit) 
-                      LDX.W !PlayerTurnOW                       ;;    |8DF2+8DE3/8DF2\8DF2; this code block prevents the music from
-                      LDA.W !OWPlayerXPos,X                     ;;    |8DF5+8DE6/8DF5\8DF5; being disabled after beating a boss for
+                      LDX.W PlayerTurnOW                        ;;    |8DF2+8DE3/8DF2\8DF2; this code block prevents the music from
+                      LDA.W OWPlayerXPos,X                      ;;    |8DF5+8DE6/8DF5\8DF5; being disabled after beating a boss for
                       LSR A                                     ;;    |8DF8+8DE9/8DF8\8DF8; a second time
                       LSR A                                     ;;    |8DF9+8DEA/8DF9\8DF9;
                       LSR A                                     ;;    |8DFA+8DEB/8DFA\8DFA;
                       LSR A                                     ;;    |8DFB+8DEC/8DFB\8DFB;
-                      STA.B !_0                                 ;;    |8DFC+8DED/8DFC\8DFC;
-                      LDA.W !OWPlayerYPos,X                     ;;    |8DFE+8DEF/8DFE\8DFE;
+                      STA.B _0                                  ;;    |8DFC+8DED/8DFC\8DFC;
+                      LDA.W OWPlayerYPos,X                      ;;    |8DFE+8DEF/8DFE\8DFE;
                       LSR A                                     ;;    |8E01+8DF2/8E01\8E01;
                       LSR A                                     ;;    |8E02+8DF3/8E02\8E02;
                       LSR A                                     ;;    |8E03+8DF4/8E03\8E03;
                       LSR A                                     ;;    |8E04+8DF5/8E04\8E04;
-                      STA.B !_2                                 ;;    |8E05+8DF6/8E05\8E05;
+                      STA.B _2                                  ;;    |8E05+8DF6/8E05\8E05;
                       TXA                                       ;;    |8E07+8DF8/8E07\8E07;
                       LSR A                                     ;;    |8E08+8DF9/8E08\8E08;
                       LSR A                                     ;;    |8E09+8DFA/8E09\8E09;
                       TAX                                       ;;    |8E0A+8DFB/8E0A\8E0A;
                       JSR OW_TilePos_Calc                       ;;    |8E0B+8DFC/8E0B\8E0B;
                       REP #$10                                  ;;    |8E0E+8DFF/8E0E\8E0E; Index (16 bit) 
-                      LDX.B !_4                                 ;;    |8E10+8E01/8E10\8E10;
-                      LDA.L !OWLayer1Translevel,X               ;;    |8E12+8E03/8E12\8E12;
+                      LDX.B _4                                  ;;    |8E10+8E01/8E10\8E10;
+                      LDA.L OWLayer1Translevel,X                ;;    |8E12+8E03/8E12\8E12;
                       AND.W #$00FF                              ;;    |8E16+8E07/8E16\8E16;
                       TAX                                       ;;    |8E19+8E0A/8E19\8E19;
-                      LDA.W !OWLevelTileSettings,X              ;;    |8E1A+8E0B/8E1A\8E1A;
+                      LDA.W OWLevelTileSettings,X               ;;    |8E1A+8E0B/8E1A\8E1A;
                       AND.W #$0080                              ;;    |8E1D+8E0E/8E1D\8E1D;
                       BNE CODE_048E38                           ;;    |8E20+8E11/8E20\8E20;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                       LDY.W #$0014                              ;;8DF0|8E22+8E13/8E22\8E22;
-CODE_048E25:          LDA.W !TranslevelNo                       ;;8DF3|8E25+8E16/8E25\8E25;
+CODE_048E25:          LDA.W TranslevelNo                        ;;8DF3|8E25+8E16/8E25\8E25;
                       AND.W #$00FF                              ;;8DF6|8E28+8E19/8E28\8E28;
                       CMP.W DATA_048D74,Y                       ;;8DF9|8E2B+8E1C/8E2B\8E2B;
                       BEQ CODE_048E38                           ;;8DFC|8E2E+8E1F/8E2E\8E2E;
@@ -1231,11 +1231,11 @@ CODE_048E34:          SEP #$30                                  ;;8E02|8E34+8E25
                       BRA +                                     ;;8E04|8E36+8E27/8E36\8E36;
                                                                 ;;                        ;
 CODE_048E38:          SEP #$30                                  ;;8E06|8E38+8E29/8E38\8E38; Index (8 bit) Accum (8 bit) 
-                      LDX.W !PlayerTurnLvl                      ;;8E08|8E3A+8E2B/8E3A\8E3A;
-                      LDA.W !OWPlayerSubmap,X                   ;;8E0B|8E3D+8E2E/8E3D\8E3D;
+                      LDX.W PlayerTurnLvl                       ;;8E08|8E3A+8E2B/8E3A\8E3A;
+                      LDA.W OWPlayerSubmap,X                    ;;8E0B|8E3D+8E2E/8E3D\8E3D;
                       TAX                                       ;;8E0E|8E40+8E31/8E40\8E40;
                       LDA.W OverworldMusic,X                    ;;8E0F|8E41+8E32/8E41\8E41;
-                      STA.W !SPCIO2                             ;;8E12|8E44+8E35/8E44\8E44; / Change music 
+                      STA.W SPCIO2                              ;;8E12|8E44+8E35/8E44\8E44; / Change music 
                     + PLB                                       ;;8E15|8E47+8E38/8E47\8E47;
                       RTL                                       ;;8E16|8E48+8E39/8E48\8E48; Return 
                                                                 ;;                        ;
@@ -1245,68 +1245,68 @@ DATA_048E49:          db $28,$01,$00,$00,$88,$01                ;;8E17|8E49+8E3A
 DATA_048E4F:          db $C8,$01,$00,$00,$D8,$01                ;;8E1D|8E4F+8E40/8E4F\8E4F;
                                                                 ;;                        ;
 CODE_048E55:          REP #$30                                  ;;8E23|8E55+8E46/8E55\8E55; Index (16 bit) Accum (16 bit) 
-                      LDA.W !PlayerTurnLvl                      ;;8E25|8E57+8E48/8E57\8E57;
+                      LDA.W PlayerTurnLvl                       ;;8E25|8E57+8E48/8E57\8E57;
                       AND.W #$00FF                              ;;8E28|8E5A+8E4B/8E5A\8E5A;
                       ASL A                                     ;;8E2B|8E5D+8E4E/8E5D\8E5D;
                       ASL A                                     ;;8E2C|8E5E+8E4F/8E5E\8E5E;
-                      STA.W !PlayerTurnOW                       ;;8E2D|8E5F+8E50/8E5F\8E5F;
-                      LDX.W !PlayerTurnOW                       ;;8E30|8E62+8E53/8E62\8E62;
-                      LDA.W !OWPlayerXPosPtr,X                  ;;8E33|8E65+8E56/8E65\8E65;
-                      STA.B !_0                                 ;;8E36|8E68+8E59/8E68\8E68;
-                      LDA.W !OWPlayerYPosPtr,X                  ;;8E38|8E6A+8E5B/8E6A\8E6A;
-                      STA.B !_2                                 ;;8E3B|8E6D+8E5E/8E6D\8E6D;
+                      STA.W PlayerTurnOW                        ;;8E2D|8E5F+8E50/8E5F\8E5F;
+                      LDX.W PlayerTurnOW                        ;;8E30|8E62+8E53/8E62\8E62;
+                      LDA.W OWPlayerXPosPtr,X                   ;;8E33|8E65+8E56/8E65\8E65;
+                      STA.B _0                                  ;;8E36|8E68+8E59/8E68\8E68;
+                      LDA.W OWPlayerYPosPtr,X                   ;;8E38|8E6A+8E5B/8E6A\8E6A;
+                      STA.B _2                                  ;;8E3B|8E6D+8E5E/8E6D\8E6D;
                       TXA                                       ;;8E3D|8E6F+8E60/8E6F\8E6F;
                       LSR A                                     ;;8E3E|8E70+8E61/8E70\8E70;
                       LSR A                                     ;;8E3F|8E71+8E62/8E71\8E71;
                       TAX                                       ;;8E40|8E72+8E63/8E72\8E72;
                       JSR OW_TilePos_Calc                       ;;8E41|8E73+8E64/8E73\8E73;
-                      STZ.B !_0                                 ;;8E44|8E76+8E67/8E76\8E76;
-                      LDX.B !_4                                 ;;8E46|8E78+8E69/8E78\8E78;
-                      LDA.L !OWLayer1Translevel,X               ;;8E48|8E7A+8E6B/8E7A\8E7A;
+                      STZ.B _0                                  ;;8E44|8E76+8E67/8E76\8E76;
+                      LDX.B _4                                  ;;8E46|8E78+8E69/8E78\8E78;
+                      LDA.L OWLayer1Translevel,X                ;;8E48|8E7A+8E6B/8E7A\8E7A;
                       AND.W #$00FF                              ;;8E4C|8E7E+8E6F/8E7E\8E7E;
                       ASL A                                     ;;8E4F|8E81+8E72/8E81\8E81;
                       TAX                                       ;;8E50|8E82+8E73/8E82\8E82;
                       LDA.W LevelNames,X                        ;;8E51|8E83+8E74/8E83\8E83;
-                      STA.B !_0                                 ;;8E54|8E86+8E77/8E86\8E86;
+                      STA.B _0                                  ;;8E54|8E86+8E77/8E86\8E86;
                       JSR CODE_049D07                           ;;8E56|8E88+8E79/8E88\8E88;
-                      LDX.B !_4                                 ;;8E59|8E8B+8E7C/8E8B\8E8B;
+                      LDX.B _4                                  ;;8E59|8E8B+8E7C/8E8B\8E8B;
                       BMI +                                     ;;8E5B|8E8D+8E7E/8E8D\8E8D;
                       CPX.W #$0800                              ;;8E5D|8E8F+8E80/8E8F\8E8F;
                       BCS +                                     ;;8E60|8E92+8E83/8E92\8E92;
-                      LDA.L !Map16TilesLow,X                    ;;8E62|8E94+8E85/8E94\8E94;
+                      LDA.L Map16TilesLow,X                     ;;8E62|8E94+8E85/8E94\8E94;
                       AND.W #$00FF                              ;;8E66|8E98+8E89/8E98\8E98;
-                      STA.W !OverworldLayer1Tile                ;;8E69|8E9B+8E8C/8E9B\8E9B;
+                      STA.W OverworldLayer1Tile                 ;;8E69|8E9B+8E8C/8E9B\8E9B;
                     + SEP #$30                                  ;;8E6C|8E9E+8E8F/8E9E\8E9E; Index (8 bit) Accum (8 bit) 
-                      LDX.W !EnterLevelAuto                     ;;8E6E|8EA0+8E91/8EA0\8EA0;
+                      LDX.W EnterLevelAuto                      ;;8E6E|8EA0+8E91/8EA0\8EA0;
                       BEQ CODE_048EE1                           ;;8E71|8EA3+8E94/8EA3\8EA3;
                       BPL ADDR_048ED9                           ;;8E73|8EA5+8E96/8EA5\8EA5;
                       TXA                                       ;;8E75|8EA7+8E98/8EA7\8EA7;
                       AND.B #$7F                                ;;8E76|8EA8+8E99/8EA8\8EA8;
                       TAX                                       ;;8E78|8EAA+8E9B/8EAA\8EAA;
-                      STZ.W !OWSpriteMisc0DF5,X                 ;;8E79|8EAB+8E9C/8EAB\8EAB;
-                      LDA.W !KoopaKidTile                       ;;8E7C|8EAE+8E9F/8EAE\8EAE;
-                      LDX.W !OWLevelExitMode                    ;;8E7F|8EB1+8EA2/8EB1\8EB1;
+                      STZ.W OWSpriteMisc0DF5,X                  ;;8E79|8EAB+8E9C/8EAB\8EAB;
+                      LDA.W KoopaKidTile                        ;;8E7C|8EAE+8E9F/8EAE\8EAE;
+                      LDX.W OWLevelExitMode                     ;;8E7F|8EB1+8EA2/8EB1\8EB1;
                       BPL ADDR_048ECD                           ;;8E82|8EB4+8EA5/8EB4\8EB4;
                       ASL A                                     ;;8E84|8EB6+8EA7/8EB6\8EB6;
                       TAX                                       ;;8E85|8EB7+8EA8/8EB7\8EB7;
                       REP #$20                                  ;;8E86|8EB8+8EA9/8EB8\8EB8; Accum (16 bit) 
-                      LDY.W !PlayerTurnOW                       ;;8E88|8EBA+8EAB/8EBA\8EBA;
+                      LDY.W PlayerTurnOW                        ;;8E88|8EBA+8EAB/8EBA\8EBA;
                       LDA.W DATA_048E49,X                       ;;8E8B|8EBD+8EAE/8EBD\8EBD;
-                      STA.W !OWPlayerXPos,Y                     ;;8E8E|8EC0+8EB1/8EC0\8EC0;
+                      STA.W OWPlayerXPos,Y                      ;;8E8E|8EC0+8EB1/8EC0\8EC0;
                       LDA.W DATA_048E4F,X                       ;;8E91|8EC3+8EB4/8EC3\8EC3;
-                      STA.W !OWPlayerYPos,Y                     ;;8E94|8EC6+8EB7/8EC6\8EC6;
+                      STA.W OWPlayerYPos,Y                      ;;8E94|8EC6+8EB7/8EC6\8EC6;
                       SEP #$20                                  ;;8E97|8EC9+8EBA/8EC9\8EC9; Accum (8 bit) 
                       BRA CODE_048EE1                           ;;8E99|8ECB+8EBC/8ECB\8ECB;
                                                                 ;;                        ;
 ADDR_048ECD:          TAX                                       ;;8E9B|8ECD+8EBE/8ECD\8ECD;
                       LDA.W DATA_04FB85,X                       ;;8E9C|8ECE+8EBF/8ECE\8ECE;
-                      ORA.W !KoopaKidActive                     ;;8E9F|8ED1+8EC2/8ED1\8ED1;
-                      STA.W !KoopaKidActive                     ;;8EA2|8ED4+8EC5/8ED4\8ED4;
+                      ORA.W KoopaKidActive                      ;;8E9F|8ED1+8EC2/8ED1\8ED1;
+                      STA.W KoopaKidActive                      ;;8EA2|8ED4+8EC5/8ED4\8ED4;
                       BRA CODE_048EE1                           ;;8EA5|8ED7+8EC8/8ED7\8ED7;
                                                                 ;;                        ;
-ADDR_048ED9:          LDA.W !OWLevelExitMode                    ;;8EA7|8ED9+8ECA/8ED9\8ED9;
+ADDR_048ED9:          LDA.W OWLevelExitMode                     ;;8EA7|8ED9+8ECA/8ED9\8ED9;
                       BMI CODE_048EE1                           ;;8EAA|8EDC+8ECD/8EDC\8EDC;
-                      STZ.W !OWSpriteNumber,X                   ;;8EAC|8EDE+8ECF/8EDE\8EDE;
+                      STZ.W OWSpriteNumber,X                    ;;8EAC|8EDE+8ECF/8EDE\8EDE;
 CODE_048EE1:          REP #$30                                  ;;8EAF|8EE1+8ED2/8EE1\8EE1; Index (16 bit) Accum (16 bit) 
                       JSR CODE_049831                           ;;8EB1|8EE3+8ED4/8EE3\8EE3;
                       SEP #$30                                  ;;8EB4|8EE6+8ED7/8EE6\8EE6; Index (8 bit) Accum (8 bit) 
@@ -1315,33 +1315,33 @@ CODE_048EE1:          REP #$30                                  ;;8EAF|8EE1+8ED2
                       JMP OW_Tile_Animation                     ;;8EBC|8EEE+8EDF/8EEE\8EEE;
                                                                 ;;                        ;
 CODE_048EF1:          LDA.B #$08                                ;;8EBF|8EF1+8EE2/8EF1\8EF1;
-                      STA.W !KeepModeActive                     ;;8EC1|8EF3+8EE4/8EF3\8EF3;
-                      LDA.W !OWPlayerSubmap                     ;;8EC4|8EF6+8EE7/8EF6\8EF6;
+                      STA.W KeepModeActive                      ;;8EC1|8EF3+8EE4/8EF3\8EF3;
+                      LDA.W OWPlayerSubmap                      ;;8EC4|8EF6+8EE7/8EF6\8EF6;
                       CMP.B #$01                                ;;8EC7|8EF9+8EEA/8EF9\8EF9;
                       BNE CODE_048F13                           ;;8EC9|8EFB+8EEC/8EFB\8EFB;
-                      LDA.W !OWPlayerXPos                       ;;8ECB|8EFD+8EEE/8EFD\8EFD;
+                      LDA.W OWPlayerXPos                        ;;8ECB|8EFD+8EEE/8EFD\8EFD;
                       CMP.B #$68                                ;;8ECE|8F00+8EF1/8F00\8F00;
                       BNE CODE_048F13                           ;;8ED0|8F02+8EF3/8F02\8F02;
-                      LDA.W !OWPlayerYPos                       ;;8ED2|8F04+8EF5/8F04\8F04;
+                      LDA.W OWPlayerYPos                        ;;8ED2|8F04+8EF5/8F04\8F04;
                       CMP.B #$8E                                ;;8ED5|8F07+8EF8/8F07\8F07;
                       BNE CODE_048F13                           ;;8ED7|8F09+8EFA/8F09\8F09;
                       LDA.B #$0C                                ;;8ED9|8F0B+8EFC/8F0B\8F0B;
-                      STA.W !OverworldProcess                   ;;8EDB|8F0D+8EFE/8F0D\8F0D;
+                      STA.W OverworldProcess                    ;;8EDB|8F0D+8EFE/8F0D\8F0D;
                       BRL CODE_048F7A                           ;;8EDE|8F10+8F01/8F10\8F10;
 CODE_048F13:          REP #$20                                  ;;8EE1|8F13+8F04/8F13\8F13; Accum (16 bit) 
-                      LDX.W !PlayerTurnOW                       ;;8EE3|8F15+8F06/8F15\8F15;
-                      LDA.W !OWPlayerXPos,X                     ;;8EE6|8F18+8F09/8F18\8F18;
+                      LDX.W PlayerTurnOW                        ;;8EE3|8F15+8F06/8F15\8F15;
+                      LDA.W OWPlayerXPos,X                      ;;8EE6|8F18+8F09/8F18\8F18;
                       LSR A                                     ;;8EE9|8F1B+8F0C/8F1B\8F1B;
                       LSR A                                     ;;8EEA|8F1C+8F0D/8F1C\8F1C;
                       LSR A                                     ;;8EEB|8F1D+8F0E/8F1D\8F1D;
                       LSR A                                     ;;8EEC|8F1E+8F0F/8F1E\8F1E;
-                      STA.B !_0                                 ;;8EED|8F1F+8F10/8F1F\8F1F;
-                      LDA.W !OWPlayerYPos,X                     ;;8EEF|8F21+8F12/8F21\8F21;
+                      STA.B _0                                  ;;8EED|8F1F+8F10/8F1F\8F1F;
+                      LDA.W OWPlayerYPos,X                      ;;8EEF|8F21+8F12/8F21\8F21;
                       LSR A                                     ;;8EF2|8F24+8F15/8F24\8F24;
                       LSR A                                     ;;8EF3|8F25+8F16/8F25\8F25;
                       LSR A                                     ;;8EF4|8F26+8F17/8F26\8F26;
                       LSR A                                     ;;8EF5|8F27+8F18/8F27\8F27;
-                      STA.B !_2                                 ;;8EF6|8F28+8F19/8F28\8F28;
+                      STA.B _2                                  ;;8EF6|8F28+8F19/8F28\8F28;
                       TXA                                       ;;8EF8|8F2A+8F1B/8F2A\8F2A;
                       LSR A                                     ;;8EF9|8F2B+8F1C/8F2B\8F2B;
                       LSR A                                     ;;8EFA|8F2C+8F1D/8F2C\8F2C;
@@ -1349,34 +1349,34 @@ CODE_048F13:          REP #$20                                  ;;8EE1|8F13+8F04
                       JSR OW_TilePos_Calc                       ;;8EFC|8F2E+8F1F/8F2E\8F2E;
                       REP #$10                                  ;;8EFF|8F31+8F22/8F31\8F31; Index (16 bit) 
                       SEP #$20                                  ;;8F01|8F33+8F24/8F33\8F33; Accum (8 bit) 
-                      LDA.W !MidwayFlag                         ;;8F03|8F35+8F26/8F35\8F35;
+                      LDA.W MidwayFlag                          ;;8F03|8F35+8F26/8F35\8F35;
                       BEQ CODE_048F56                           ;;8F06|8F38+8F29/8F38\8F38;
-                      LDA.W !OWLevelExitMode                    ;;8F08|8F3A+8F2B/8F3A\8F3A;
+                      LDA.W OWLevelExitMode                     ;;8F08|8F3A+8F2B/8F3A\8F3A;
                       BEQ CODE_048F56                           ;;8F0B|8F3D+8F2E/8F3D\8F3D;
                       BPL CODE_048F5F                           ;;8F0D|8F3F+8F30/8F3F\8F3F;
                       REP #$20                                  ;;8F0F|8F41+8F32/8F41\8F41; Accum (16 bit) 
-                      LDX.B !_4                                 ;;8F11|8F43+8F34/8F43\8F43;
-                      LDA.L !OWLayer1Translevel,X               ;;8F13|8F45+8F36/8F45\8F45;
+                      LDX.B _4                                  ;;8F11|8F43+8F34/8F43\8F43;
+                      LDA.L OWLayer1Translevel,X                ;;8F13|8F45+8F36/8F45\8F45;
                       AND.W #$00FF                              ;;8F17|8F49+8F3A/8F49\8F49;
                       TAX                                       ;;8F1A|8F4C+8F3D/8F4C\8F4C;
-                      LDA.W !OWLevelTileSettings,X              ;;8F1B|8F4D+8F3E/8F4D\8F4D;
+                      LDA.W OWLevelTileSettings,X               ;;8F1B|8F4D+8F3E/8F4D\8F4D;
                       ORA.W #$0040                              ;;8F1E|8F50+8F41/8F50\8F50;
-                      STA.W !OWLevelTileSettings,X              ;;8F21|8F53+8F44/8F53\8F53;
+                      STA.W OWLevelTileSettings,X               ;;8F21|8F53+8F44/8F53\8F53;
 CODE_048F56:          SEP #$20                                  ;;8F24|8F56+8F47/8F56\8F56; Accum (8 bit) 
                       LDA.B #$05                                ;;8F26|8F58+8F49/8F58\8F58;
-                      STA.W !OverworldProcess                   ;;8F28|8F5A+8F4B/8F5A\8F5A;
+                      STA.W OverworldProcess                    ;;8F28|8F5A+8F4B/8F5A\8F5A;
                       BRA CODE_048F7A                           ;;8F2B|8F5D+8F4E/8F5D\8F5D;
                                                                 ;;                        ;
 CODE_048F5F:          REP #$20                                  ;;8F2D|8F5F+8F50/8F5F\8F5F; Accum (16 bit) 
-                      LDX.B !_4                                 ;;8F2F|8F61+8F52/8F61\8F61;
-                      LDA.L !OWLayer1Translevel,X               ;;8F31|8F63+8F54/8F63\8F63;
+                      LDX.B _4                                  ;;8F2F|8F61+8F52/8F61\8F61;
+                      LDA.L OWLayer1Translevel,X                ;;8F31|8F63+8F54/8F63\8F63;
                       AND.W #$00FF                              ;;8F35|8F67+8F58/8F67\8F67;
                       TAX                                       ;;8F38|8F6A+8F5B/8F6A\8F6A;
-                      LDA.W !OWLevelTileSettings,X              ;;8F39|8F6B+8F5C/8F6B\8F6B;
+                      LDA.W OWLevelTileSettings,X               ;;8F39|8F6B+8F5C/8F6B\8F6B;
                       ORA.W #$0080                              ;;8F3C|8F6E+8F5F/8F6E\8F6E;
                       AND.W #$FFBF                              ;;8F3F|8F71+8F62/8F71\8F71;
-                      STA.W !OWLevelTileSettings,X              ;;8F42|8F74+8F65/8F74\8F74;
-                      INC.W !OverworldProcess                   ;;8F45|8F77+8F68/8F77\8F77;
+                      STA.W OWLevelTileSettings,X               ;;8F42|8F74+8F65/8F74\8F74;
+                      INC.W OverworldProcess                    ;;8F45|8F77+8F68/8F77\8F77;
 CODE_048F7A:          REP #$30                                  ;;8F48|8F7A+8F6B/8F7A\8F7A; Index (16 bit) Accum (16 bit) 
                       JMP CODE_049831                           ;;8F4A|8F7C+8F6D/8F7C\8F7C;
                                                                 ;;                        ;
@@ -1386,59 +1386,59 @@ DATA_048F7F:          db $58,$59,$5D,$63,$77,$79,$7E,$80        ;;8F4D|8F7F+8F70
 CODE_048F87:          JSR CODE_049903                           ;;8F55|8F87+8F78/8F87\8F87; Index (8 bit) 
                    if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
                       LDX.B #$07                                ;;8F58|8F8A     /8F8A\8F8A;
-CODE_048F8C:          LDA.W !OverworldLayer1Tile                ;;8F5A|8F8C     /8F8C\8F8C;
+CODE_048F8C:          LDA.W OverworldLayer1Tile                 ;;8F5A|8F8C     /8F8C\8F8C;
                       CMP.W DATA_048F7F,X                       ;;8F5D|8F8F     /8F8F\8F8F;
                       BNE CODE_049000                           ;;8F60|8F92     /8F92\8F92;
                       LDX.B #$2C                                ;;8F62|8F94     /8F94\8F94;
-                    - LDA.W !OWEventsActivated,X                ;;8F64|8F96     /8F96\8F96;
-                      STA.W !SaveDataBufferEvents,X             ;;8F67|8F99     /8F99\8F99;
+                    - LDA.W OWEventsActivated,X                 ;;8F64|8F96     /8F96\8F96;
+                      STA.W SaveDataBufferEvents,X              ;;8F67|8F99     /8F99\8F99;
                       DEX                                       ;;8F6A|8F9C     /8F9C\8F9C;
                       BPL -                                     ;;8F6B|8F9D     /8F9D\8F9D;
                       REP #$30                                  ;;8F6D|8F9F     /8F9F\8F9F; Index (16 bit) Accum (16 bit) 
-                      LDX.W !PlayerTurnOW                       ;;8F6F|8FA1     /8FA1\8FA1;
+                      LDX.W PlayerTurnOW                        ;;8F6F|8FA1     /8FA1\8FA1;
                       TXA                                       ;;8F72|8FA4     /8FA4\8FA4;
                       EOR.W #$0004                              ;;8F73|8FA5     /8FA5\8FA5;
                       TAY                                       ;;8F76|8FA8     /8FA8\8FA8;
-                      LDA.W !SaveDataBufferXPos,X               ;;8F77|8FA9     /8FA9\8FA9;
-                      STA.W !SaveDataBufferXPos,Y               ;;8F7A|8FAC     /8FAC\8FAC;
-                      LDA.W !SaveDataBufferYPos,X               ;;8F7D|8FAF     /8FAF\8FAF;
-                      STA.W !SaveDataBufferYPos,Y               ;;8F80|8FB2     /8FB2\8FB2;
-                      LDA.W !SaveDataBufferXPosPtr,X            ;;8F83|8FB5     /8FB5\8FB5;
-                      STA.W !SaveDataBufferXPosPtr,Y            ;;8F86|8FB8     /8FB8\8FB8;
-                      LDA.W !SaveDataBufferYPosPtr,X            ;;8F89|8FBB     /8FBB\8FBB;
-                      STA.W !SaveDataBufferYPosPtr,Y            ;;8F8C|8FBE     /8FBE\8FBE;
+                      LDA.W SaveDataBufferXPos,X                ;;8F77|8FA9     /8FA9\8FA9;
+                      STA.W SaveDataBufferXPos,Y                ;;8F7A|8FAC     /8FAC\8FAC;
+                      LDA.W SaveDataBufferYPos,X                ;;8F7D|8FAF     /8FAF\8FAF;
+                      STA.W SaveDataBufferYPos,Y                ;;8F80|8FB2     /8FB2\8FB2;
+                      LDA.W SaveDataBufferXPosPtr,X             ;;8F83|8FB5     /8FB5\8FB5;
+                      STA.W SaveDataBufferXPosPtr,Y             ;;8F86|8FB8     /8FB8\8FB8;
+                      LDA.W SaveDataBufferYPosPtr,X             ;;8F89|8FBB     /8FBB\8FBB;
+                      STA.W SaveDataBufferYPosPtr,Y             ;;8F8C|8FBE     /8FBE\8FBE;
                       TXA                                       ;;8F8F|8FC1     /8FC1\8FC1;
                       LSR A                                     ;;8F90|8FC2     /8FC2\8FC2;
                       TAX                                       ;;8F91|8FC3     /8FC3\8FC3;
                       EOR.W #$0002                              ;;8F92|8FC4     /8FC4\8FC4;
                       TAY                                       ;;8F95|8FC7     /8FC7\8FC7;
-                      LDA.W !SaveDataBufferAni,X                ;;8F96|8FC8     /8FC8\8FC8;
-                      STA.W !SaveDataBufferAni,Y                ;;8F99|8FCB     /8FCB\8FCB;
+                      LDA.W SaveDataBufferAni,X                 ;;8F96|8FC8     /8FC8\8FC8;
+                      STA.W SaveDataBufferAni,Y                 ;;8F99|8FCB     /8FCB\8FCB;
                       TXA                                       ;;8F9C|8FCE     /8FCE\8FCE;
                       SEP #$30                                  ;;8F9D|8FCF     /8FCF\8FCF; Index (8 bit) Accum (8 bit) 
                       LSR A                                     ;;8F9F|8FD1     /8FD1\8FD1;
                       TAX                                       ;;8FA0|8FD2     /8FD2\8FD2;
                       EOR.B #$01                                ;;8FA1|8FD3     /8FD3\8FD3;
                       TAY                                       ;;8FA3|8FD5     /8FD5\8FD5;
-                      LDA.W !SaveDataBufferSubmap,X             ;;8FA4|8FD6     /8FD6\8FD6;
-                      STA.W !SaveDataBufferSubmap,Y             ;;8FA7|8FD9     /8FD9\8FD9;
+                      LDA.W SaveDataBufferSubmap,X              ;;8FA4|8FD6     /8FD6\8FD6;
+                      STA.W SaveDataBufferSubmap,Y              ;;8FA7|8FD9     /8FD9\8FD9;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
-                      LDA.W !OWLevelExitMode                    ;;8FAA|8FDC+8F7B/8FDC\8FDC;
+                      LDA.W OWLevelExitMode                     ;;8FAA|8FDC+8F7B/8FDC\8FDC;
                       CMP.B #$E0                                ;;8FAD|8FDF+8F7E/8FDF\8FDF;
                       BNE CODE_048FFB                           ;;8FAF|8FE1+8F80/8FE1\8FE1;
-                      DEC.W !KeepModeActive                     ;;8FB1|8FE3+8F82/8FE3\8FE3;
+                      DEC.W KeepModeActive                      ;;8FB1|8FE3+8F82/8FE3\8FE3;
                       BMI +                                     ;;8FB4|8FE6+8F85/8FE6\8FE6;
                       RTS                                       ;;8FB6|8FE8+8F87/8FE8\8FE8; Return 
                                                                 ;;                        ;
-                    + INC.W !ShowSavePrompt                     ;;8FB7|8FE9+8F88/8FE9\8FE9;
+                    + INC.W ShowSavePrompt                      ;;8FB7|8FE9+8F88/8FE9\8FE9;
                       JSR CODE_049037                           ;;8FBA|8FEC+8F8B/8FEC\8FEC;
                       LDA.B #$02                                ;;8FBD|8FEF+8F8E/8FEF\8FEF;
-                      STA.W !KeepModeActive                     ;;8FBF|8FF1+8F90/8FF1\8FF1;
+                      STA.W KeepModeActive                      ;;8FBF|8FF1+8F90/8FF1\8FF1;
                       LDA.B #$04                                ;;8FC2|8FF4+8F93/8FF4\8FF4;
-                      STA.W !OverworldProcess                   ;;8FC4|8FF6+8F95/8FF6\8FF6;
+                      STA.W OverworldProcess                    ;;8FC4|8FF6+8F95/8FF6\8FF6;
                       BRA CODE_049003                           ;;8FC7|8FF9+8F98/8FF9\8FF9;
                                                                 ;;                        ;
-CODE_048FFB:          INC.W !ShowSavePrompt                     ;;8FC9|8FFB+8F9A/8FFB\8FFB;
+CODE_048FFB:          INC.W ShowSavePrompt                      ;;8FC9|8FFB+8F9A/8FFB\8FFB;
                       BRA CODE_049003                           ;;8FCC|8FFE+8F9D/8FFE\8FFE;
                                                                 ;;                        ;
                    if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
@@ -1446,89 +1446,89 @@ CODE_049000:          DEX                                       ;;8FCE|9000     
                       BPL CODE_048F8C                           ;;8FCF|9001     /9001\9001;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
 CODE_049003:          REP #$20                                  ;;8FD1|9003+8F9F/9003\9003; Accum (16 bit) 
-                      STZ.B !_6                                 ;;8FD3|9005+8FA1/9005\9005;
-                      LDX.W !PlayerTurnOW                       ;;8FD5|9007+8FA3/9007\9007;
-                      LDA.W !OWPlayerXPos,X                     ;;8FD8|900A+8FA6/900A\900A;
+                      STZ.B _6                                  ;;8FD3|9005+8FA1/9005\9005;
+                      LDX.W PlayerTurnOW                        ;;8FD5|9007+8FA3/9007\9007;
+                      LDA.W OWPlayerXPos,X                      ;;8FD8|900A+8FA6/900A\900A;
                       LSR A                                     ;;8FDB|900D+8FA9/900D\900D;
                       LSR A                                     ;;8FDC|900E+8FAA/900E\900E;
                       LSR A                                     ;;8FDD|900F+8FAB/900F\900F;
                       LSR A                                     ;;8FDE|9010+8FAC/9010\9010;
-                      STA.B !_0                                 ;;8FDF|9011+8FAD/9011\9011;
-                      LDA.W !OWPlayerYPos,X                     ;;8FE1|9013+8FAF/9013\9013;
+                      STA.B _0                                  ;;8FDF|9011+8FAD/9011\9011;
+                      LDA.W OWPlayerYPos,X                      ;;8FE1|9013+8FAF/9013\9013;
                       LSR A                                     ;;8FE4|9016+8FB2/9016\9016;
                       LSR A                                     ;;8FE5|9017+8FB3/9017\9017;
                       LSR A                                     ;;8FE6|9018+8FB4/9018\9018;
                       LSR A                                     ;;8FE7|9019+8FB5/9019\9019;
-                      STA.B !_2                                 ;;8FE8|901A+8FB6/901A\901A;
+                      STA.B _2                                  ;;8FE8|901A+8FB6/901A\901A;
                       TXA                                       ;;8FEA|901C+8FB8/901C\901C;
                       LSR A                                     ;;8FEB|901D+8FB9/901D\901D;
                       LSR A                                     ;;8FEC|901E+8FBA/901E\901E;
                       TAX                                       ;;8FED|901F+8FBB/901F\901F;
                       JSR OW_TilePos_Calc                       ;;8FEE|9020+8FBC/9020\9020;
                       REP #$10                                  ;;8FF1|9023+8FBF/9023\9023; Index (16 bit) 
-                      LDX.B !_4                                 ;;8FF3|9025+8FC1/9025\9025;
-                      LDA.L !Map16TilesLow,X                    ;;8FF5|9027+8FC3/9027\9027;
+                      LDX.B _4                                  ;;8FF3|9025+8FC1/9025\9025;
+                      LDA.L Map16TilesLow,X                     ;;8FF5|9027+8FC3/9027\9027;
                       AND.W #$00FF                              ;;8FF9|902B+8FC7/902B\902B;
-                      STA.W !OverworldLayer1Tile                ;;8FFC|902E+8FCA/902E\902E;
+                      STA.W OverworldLayer1Tile                 ;;8FFC|902E+8FCA/902E\902E;
                       SEP #$30                                  ;;8FFF|9031+8FCD/9031\9031; Index (8 bit) Accum (8 bit) 
-                      INC.W !OverworldProcess                   ;;9001|9033+8FCF/9033\9033;
+                      INC.W OverworldProcess                    ;;9001|9033+8FCF/9033\9033;
                       RTS                                       ;;9004|9036+8FD2/9036\9036; Return 
                                                                 ;;                        ;
 CODE_049037:          PHX                                       ;;9005|9037+8FD3/9037\9037;
                       PHY                                       ;;9006|9038+8FD4/9038\9038;
                       PHP                                       ;;9007|9039+8FD5/9039\9039;
                       SEP #$30                                  ;;9008|903A+8FD6/903A\903A; Index (8 bit) Accum (8 bit) 
-                      LDA.W !ShowSavePrompt                     ;;900A|903C+8FD8/903C\903C;
+                      LDA.W ShowSavePrompt                      ;;900A|903C+8FD8/903C\903C;
                       BEQ CODE_049054                           ;;900D|903F+8FDB/903F\903F;
                    if ver_is_console(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; J, U, E0, & E1
                       LDX.B #$5F                                ;;900F|9041     /9041\9041;
-                    - LDA.W !OWLevelTileSettings,X              ;;9011|9043     /9043\9043;
-                      STA.W !SaveDataBuffer,X                   ;;9014|9046     /9046\9046;
+                    - LDA.W OWLevelTileSettings,X               ;;9011|9043     /9043\9043;
+                      STA.W SaveDataBuffer,X                    ;;9014|9046     /9046\9046;
                       DEX                                       ;;9017|9049     /9049\9049;
                       BPL -                                     ;;9018|904A     /904A\904A;
-                      STZ.W !ShowSavePrompt                     ;;901A|904C     /904C\904C;
+                      STZ.W ShowSavePrompt                      ;;901A|904C     /904C\904C;
                       LDA.B #$05                                ;;901D|904F     /904F\904F;
-                      STA.W !OverworldPromptProcess             ;;901F|9051     /9051\9051;
+                      STA.W OverworldPromptProcess              ;;901F|9051     /9051\9051;
                    else                               ;<  ELSE  ;;++++++++++++++++++++++++; SS
                       LDX.B #$2C                                ;;         +8FDD          ;
-                    - LDA.W !OWEventsActivated,X                ;;         +8FDF          ;
-                      STA.W !SaveDataBufferEvents,X             ;;         +8FE2          ;
+                    - LDA.W OWEventsActivated,X                 ;;         +8FDF          ;
+                      STA.W SaveDataBufferEvents,X              ;;         +8FE2          ;
                       DEX                                       ;;         +8FE5          ;
                       BPL -                                     ;;         +8FE6          ;
                       REP #$30                                  ;;         +8FE8          ;
-                      LDX.W !PlayerTurnOW                       ;;         +8FEA          ;
+                      LDX.W PlayerTurnOW                        ;;         +8FEA          ;
                       TXA                                       ;;         +8FED          ;
                       EOR.W #$0004                              ;;         +8FEE          ;
                       TAY                                       ;;         +8FF1          ;
-                      LDA.W !SaveDataBufferXPos,X               ;;         +8FF2          ;
-                      STA.W !SaveDataBufferXPos,Y               ;;         +8FF5          ;
-                      LDA.W !SaveDataBufferYPos,X               ;;         +8FF8          ;
-                      STA.W !SaveDataBufferYPos,Y               ;;         +8FFB          ;
-                      LDA.W !SaveDataBufferXPosPtr,X            ;;         +8FFE          ;
-                      STA.W !SaveDataBufferXPosPtr,Y            ;;         +9001          ;
-                      LDA.W !SaveDataBufferYPosPtr,X            ;;         +9004          ;
-                      STA.W !SaveDataBufferYPosPtr,Y            ;;         +9007          ;
+                      LDA.W SaveDataBufferXPos,X                ;;         +8FF2          ;
+                      STA.W SaveDataBufferXPos,Y                ;;         +8FF5          ;
+                      LDA.W SaveDataBufferYPos,X                ;;         +8FF8          ;
+                      STA.W SaveDataBufferYPos,Y                ;;         +8FFB          ;
+                      LDA.W SaveDataBufferXPosPtr,X             ;;         +8FFE          ;
+                      STA.W SaveDataBufferXPosPtr,Y             ;;         +9001          ;
+                      LDA.W SaveDataBufferYPosPtr,X             ;;         +9004          ;
+                      STA.W SaveDataBufferYPosPtr,Y             ;;         +9007          ;
                       TXA                                       ;;         +900A          ;
                       LSR A                                     ;;         +900B          ;
                       TAX                                       ;;         +900C          ;
                       EOR.W #$0002                              ;;         +900D          ;
                       TAY                                       ;;         +9010          ;
-                      LDA.W !SaveDataBufferAni,X                ;;         +9011          ;
-                      STA.W !SaveDataBufferAni,Y                ;;         +9014          ;
+                      LDA.W SaveDataBufferAni,X                 ;;         +9011          ;
+                      STA.W SaveDataBufferAni,Y                 ;;         +9014          ;
                       TXA                                       ;;         +9017          ;
                       SEP #$30                                  ;;         +9018          ;
                       LSR A                                     ;;         +901A          ;
                       TAX                                       ;;         +901B          ;
                       EOR.B #$01                                ;;         +901C          ;
                       TAY                                       ;;         +901E          ;
-                      LDA.W !SaveDataBufferSubmap,X             ;;         +901F          ;
-                      STA.W !SaveDataBufferSubmap,Y             ;;         +9022          ;
+                      LDA.W SaveDataBufferSubmap,X              ;;         +901F          ;
+                      STA.W SaveDataBufferSubmap,Y              ;;         +9022          ;
                       LDX.B #$5F                                ;;         +9025          ;
-                    - LDA.W !OWLevelTileSettings,X              ;;         +9027          ;
-                      STA.W !SaveDataBuffer,X                   ;;         +902A          ;
+                    - LDA.W OWLevelTileSettings,X               ;;         +9027          ;
+                      STA.W SaveDataBuffer,X                    ;;         +902A          ;
                       DEX                                       ;;         +902D          ;
                       BPL -                                     ;;         +902E          ;
-                      STZ.W !ShowSavePrompt                     ;;         +9030          ;
+                      STZ.W ShowSavePrompt                      ;;         +9030          ;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
 CODE_049054:          PLP                                       ;;9022|9054+9033/9054\9054;
                       PLY                                       ;;9023|9055+9034/9055\9055;
@@ -1591,141 +1591,141 @@ DATA_04910E:          db OWPathDP2_DP1-OWHardCodedTiles         ;;90DC|900E+90ED
                                                                 ;;                        ;
 DATA_049118:          db $08,$00,$04,$00,$02,$00,$01,$00        ;;90E6|9118+90F7/9118\9118;
                                                                 ;;                        ;
-CODE_049120:          STZ.W !PlayerSwitching                    ;;90EE|9120+90FF/9120\9120;
-                      LDY.W !EnterLevelAuto                     ;;90F1|9123+9102/9123\9123;
+CODE_049120:          STZ.W PlayerSwitching                     ;;90EE|9120+90FF/9120\9120;
+                      LDY.W EnterLevelAuto                      ;;90F1|9123+9102/9123\9123;
                       BMI OWPU_NotOnPipe                        ;;90F4|9126+9105/9126\9126;
-                      LDA.W !OWLevelExitMode                    ;;90F6|9128+9107/9128\9128;
+                      LDA.W OWLevelExitMode                     ;;90F6|9128+9107/9128\9128;
                       BMI CODE_049132                           ;;90F9|912B+910A/912B\912B;
                       BEQ CODE_049132                           ;;90FB|912D+910C/912D\912D;
                       BRL CODE_0491E9                           ;;90FD|912F+910E/912F\912F;
-CODE_049132:          LDA.B !byetudlrFrame                      ;;9100|9132+9111/9132\9132;
+CODE_049132:          LDA.B byetudlrFrame                       ;;9100|9132+9111/9132\9132;
                       AND.B #$20                                ;;9102|9134+9113/9134\9134;
                       BRA +                                     ;;9104|9136+9115/9136\9136; Change to BEQ to enable below debug code 
                                                                 ;;                        ;
-                      LDA.W !OverworldLayer1Tile                ;;9106|9138+9117/9138\9138; \ Unreachable 
+                      LDA.W OverworldLayer1Tile                 ;;9106|9138+9117/9138\9138; \ Unreachable 
                       BEQ CODE_049165                           ;;9109|913B+911A/913B\913B;  | Debug: Warp to star road from Yoshi's house 
                       CMP.B #$56                                ;;910B|913D+911C/913D\913D;  | 
                       BEQ CODE_049165                           ;;910D|913F+911E/913F\913F; / 
                    if ver_is_english(!_VER)           ;\   IF   ;;++++++++++++++++++++++++; U, SS, E0, & E1
-                    + LDA.B !axlr0000Hold                       ;;    |9141+9120/9141\9141; \ 
+                    + LDA.B axlr0000Hold                        ;;    |9141+9120/9141\9141; \ 
                       AND.B #$30                                ;;    |9143+9122/9143\9143;  |If L and R aren't pressed, 
                       CMP.B #$30                                ;;    |9145+9124/9145\9145;  |branch to OWPU_NoLR 
                       BNE +                                     ;;    |9147+9126/9147\9147; / 
-                      LDA.W !OverworldLayer1Tile                ;;    |9149+9128/9149\9149; \ 
+                      LDA.W OverworldLayer1Tile                 ;;    |9149+9128/9149\9149; \ 
                       CMP.B #$81                                ;;    |914C+912B/914C\914C;  |If Mario is standing on Destroyed Castle, 
                       BEQ OWPU_EnterLevel                       ;;    |914E+912D/914E\914E; / branch to OWPU_EnterLevel 
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
-                    + LDA.B !byetudlrFrame                      ;;910F|9150+912F/9150\9150; \ 
-                      ORA.B !axlr0000Frame                      ;;9111|9152+9131/9152\9152;  |If A, B, X or Y are pressed, 
+                    + LDA.B byetudlrFrame                       ;;910F|9150+912F/9150\9150; \ 
+                      ORA.B axlr0000Frame                       ;;9111|9152+9131/9152\9152;  |If A, B, X or Y are pressed, 
                       AND.B #$C0                                ;;9113|9154+9133/9154\9154;  |branch to OWPU_ABXY 
                       BNE OWPU_ABXY                             ;;9115|9156+9135/9156\9156;  |Otherwise, 
                       BRL CODE_0491E9                           ;;9117|9158+9137/9158\9158; / branch to $91E9 
-OWPU_ABXY:            STZ.W !SwapOverworldMusic                 ;;911A|915B+913A/915B\915B;
-                      LDA.W !OverworldLayer1Tile                ;;911D|915E+913D/915E\915E; \ 
+OWPU_ABXY:            STZ.W SwapOverworldMusic                  ;;911A|915B+913A/915B\915B;
+                      LDA.W OverworldLayer1Tile                 ;;911D|915E+913D/915E\915E; \ 
                       CMP.B #$5F                                ;;9120|9161+9140/9161\9161;  |If not standing on a star tile, 
                       BNE OWPU_NotOnStar                        ;;9122|9163+9142/9163\9163; / branch to OWPU_NotOnStar 
 CODE_049165:          JSR CODE_048509                           ;;9124|9165+9144/9165\9165;
                       BNE OWPU_IsOnPipeRTS                      ;;9127|9168+9147/9168\9168;
-                      STZ.W !StarWarpLaunchSpeed                ;;9129|916A+9149/916A\916A; Set "Fly away" speed to 0 
-                      STZ.W !StarWarpLaunchTimer                ;;912C|916D+914C/916D\916D; Set "Stay on ground" timer to 0 (31 = Fly away) 
+                      STZ.W StarWarpLaunchSpeed                 ;;9129|916A+9149/916A\916A; Set "Fly away" speed to 0 
+                      STZ.W StarWarpLaunchTimer                 ;;912C|916D+914C/916D\916D; Set "Stay on ground" timer to 0 (31 = Fly away) 
                       LDA.B #!SFX_FEATHER                       ;;912F|9170+914F/9170\9170; \ Star Road sound effect 
-                      STA.W !SPCIO0                             ;;9131|9172+9151/9172\9172; / 
+                      STA.W SPCIO0                              ;;9131|9172+9151/9172\9172; / 
                       LDA.B #$0B                                ;;9134|9175+9154/9175\9175; \ Activate star warp 
-                      STA.W !OverworldProcess                   ;;9136|9177+9156/9177\9177; / 
+                      STA.W OverworldProcess                    ;;9136|9177+9156/9177\9177; / 
                       JMP CODE_049E52                           ;;9139|917A+9159/917A\917A;
                                                                 ;;                        ;
-OWPU_NotOnStar:       LDA.W !OverworldLayer1Tile                ;;913C|917D+915C/917D\917D; \ 
+OWPU_NotOnStar:       LDA.W OverworldLayer1Tile                 ;;913C|917D+915C/917D\917D; \ 
                       CMP.B #$82                                ;;913F|9180+915F/9180\9180;  |If standing on Pipe#1 (unused), 
                       BEQ OWPU_IsOnPipe                         ;;9141|9182+9161/9182\9182; / branch to OWPU_IsOnPipe 
                       CMP.B #$5B                                ;;9143|9184+9163/9184\9184; \ If not standing on Pipe#2, 
                       BNE OWPU_NotOnPipe                        ;;9145|9186+9165/9186\9186; / branch to OWPU_NotOnPipe 
 OWPU_IsOnPipe:        JSR CODE_048509                           ;;9147|9188+9167/9188\9188;
                       BNE OWPU_IsOnPipeRTS                      ;;914A|918B+916A/918B\918B;
-CODE_04918D:          INC.W !EnteringStarWarp                   ;;914C|918D+916C/918D\918D;
-                      STZ.W !OWLevelExitMode                    ;;914F|9190+916F/9190\9190; Set auto-walk to 0 
+CODE_04918D:          INC.W EnteringStarWarp                    ;;914C|918D+916C/918D\918D;
+                      STZ.W OWLevelExitMode                     ;;914F|9190+916F/9190\9190; Set auto-walk to 0 
                       LDA.B #$0B                                ;;9152|9193+9172/9193\9193; \ Fade to overworld 
-                      STA.W !GameMode                           ;;9154|9195+9174/9195\9195; / 
+                      STA.W GameMode                            ;;9154|9195+9174/9195\9195; / 
 OWPU_IsOnPipeRTS:     RTS                                       ;;9157|9198+9177/9198\9198; Return 
                                                                 ;;                        ;
 OWPU_NotOnPipe:       CMP.B #$81                                ;;9158|9199+9178/9199\9199; \ 
                       BEQ CODE_0491E9                           ;;915A|919B+917A/919B\919B;  |If standing on a tile >= (?) Destroyed Castle, 
                       BCS CODE_0491E9                           ;;915C|919D+917C/919D\919D; / branch to $91E9 
-OWPU_EnterLevel:      LDA.W !PlayerTurnOW                       ;;915E|919F+917E/919F\919F; \ 
+OWPU_EnterLevel:      LDA.W PlayerTurnOW                        ;;915E|919F+917E/919F\919F; \ 
                       LSR A                                     ;;9161|91A2+9181/91A2\91A2;  |If current player is Luigi, 
                       AND.B #$02                                ;;9162|91A3+9182/91A3\91A3;  |change Luigi's animation in the following lines 
                       TAX                                       ;;9164|91A5+9184/91A5\91A5; / 
                       LDY.B #$10                                ;;9165|91A6+9185/91A6\91A6; \ 
-                      LDA.W !OWPlayerAnimation,X                ;;9167|91A8+9187/91A8\91A8;  | 
+                      LDA.W OWPlayerAnimation,X                 ;;9167|91A8+9187/91A8\91A8;  | 
                       AND.B #$08                                ;;916A|91AB+918A/91AB\91AB;  |If Mario isn't swimming, use "raise hand" animation 
                       BEQ +                                     ;;916C|91AD+918C/91AD\91AD;  |Otherwise, use "raise hand, swimming" animation 
                       LDY.B #$12                                ;;916E|91AF+918E/91AF\91AF;  | 
                     + TYA                                       ;;9170|91B1+9190/91B1\91B1;  | 
-                      STA.W !OWPlayerAnimation,X                ;;9171|91B2+9191/91B2\91B2; / 
-                      LDX.W !PlayerTurnLvl                      ;;9174|91B5+9194/91B5\91B5; Get current character 
-                      LDA.W !SavedPlayerCoins,X                 ;;9177|91B8+9197/91B8\91B8; \ Get character's coins 
-                      STA.W !PlayerCoins                        ;;917A|91BB+919A/91BB\91BB; / 
-                      LDA.W !SavedPlayerLives,X                 ;;917D|91BE+919D/91BE\91BE; \ Get character's lives 
-                      STA.W !PlayerLives                        ;;9180|91C1+91A0/91C1\91C1; / 
-                      LDA.W !SavedPlayerPowerup,X               ;;9183|91C4+91A3/91C4\91C4; \ Get character's powerup 
-                      STA.B !Powerup                            ;;9186|91C7+91A6/91C7\91C7; / 
-                      LDA.W !SavedPlayerYoshi,X                 ;;9188|91C9+91A8/91C9\91C9; \ 
-                      STA.W !CarryYoshiThruLvls                 ;;918B|91CC+91AB/91CC\91CC;  |Get character's Yoshi color 
-                      STA.W !YoshiColor                         ;;918E|91CF+91AE/91CF\91CF;  | 
-                      STA.W !PlayerRidingYoshi                  ;;9191|91D2+91B1/91D2\91D2; / 
-                      LDA.W !SavedPlayerItembox,X               ;;9194|91D5+91B4/91D5\91D5; \ Get character's reserved item 
-                      STA.W !PlayerItembox                      ;;9197|91D8+91B7/91D8\91D8; / 
+                      STA.W OWPlayerAnimation,X                 ;;9171|91B2+9191/91B2\91B2; / 
+                      LDX.W PlayerTurnLvl                       ;;9174|91B5+9194/91B5\91B5; Get current character 
+                      LDA.W SavedPlayerCoins,X                  ;;9177|91B8+9197/91B8\91B8; \ Get character's coins 
+                      STA.W PlayerCoins                         ;;917A|91BB+919A/91BB\91BB; / 
+                      LDA.W SavedPlayerLives,X                  ;;917D|91BE+919D/91BE\91BE; \ Get character's lives 
+                      STA.W PlayerLives                         ;;9180|91C1+91A0/91C1\91C1; / 
+                      LDA.W SavedPlayerPowerup,X                ;;9183|91C4+91A3/91C4\91C4; \ Get character's powerup 
+                      STA.B Powerup                             ;;9186|91C7+91A6/91C7\91C7; / 
+                      LDA.W SavedPlayerYoshi,X                  ;;9188|91C9+91A8/91C9\91C9; \ 
+                      STA.W CarryYoshiThruLvls                  ;;918B|91CC+91AB/91CC\91CC;  |Get character's Yoshi color 
+                      STA.W YoshiColor                          ;;918E|91CF+91AE/91CF\91CF;  | 
+                      STA.W PlayerRidingYoshi                   ;;9191|91D2+91B1/91D2\91D2; / 
+                      LDA.W SavedPlayerItembox,X                ;;9194|91D5+91B4/91D5\91D5; \ Get character's reserved item 
+                      STA.W PlayerItembox                       ;;9197|91D8+91B7/91D8\91D8; / 
                       LDA.B #$02                                ;;919A|91DB+91BA/91DB\91DB; \ Related to fade speed 
-                      STA.W !KeepModeActive                     ;;919C|91DD+91BC/91DD\91DD; / 
+                      STA.W KeepModeActive                      ;;919C|91DD+91BC/91DD\91DD; / 
                       LDA.B #!BGM_FADEOUT                       ;;919F|91E0+91BF/91E0\91E0; \ Music fade out 
-                      STA.W !SPCIO2                             ;;91A1|91E2+91C1/91E2\91E2; / 
-                      INC.W !GameMode                           ;;91A4|91E5+91C4/91E5\91E5; Fade to level 
+                      STA.W SPCIO2                              ;;91A1|91E2+91C1/91E2\91E2; / 
+                      INC.W GameMode                            ;;91A4|91E5+91C4/91E5\91E5; Fade to level 
                       RTS                                       ;;91A7|91E8+91C7/91E8\91E8; Return 
                                                                 ;;                        ;
 CODE_0491E9:          REP #$20                                  ;;91A8|91E9+91C8/91E9\91E9; 16 bit A ; Accum (16 bit) 
-                      LDX.W !PlayerTurnOW                       ;;91AA|91EB+91CA/91EB\91EB; Get current character * 4 
-                      LDA.W !OWPlayerXPos,X                     ;;91AD|91EE+91CD/91EE\91EE; Get character's X coordinate 
+                      LDX.W PlayerTurnOW                        ;;91AA|91EB+91CA/91EB\91EB; Get current character * 4 
+                      LDA.W OWPlayerXPos,X                      ;;91AD|91EE+91CD/91EE\91EE; Get character's X coordinate 
                       LSR A                                     ;;91B0|91F1+91D0/91F1\91F1; \ 
                       LSR A                                     ;;91B1|91F2+91D1/91F2\91F2;  |Divide X coordinate by 16 
                       LSR A                                     ;;91B2|91F3+91D2/91F3\91F3;  | 
                       LSR A                                     ;;91B3|91F4+91D3/91F4\91F4; / 
-                      STA.B !_0                                 ;;91B4|91F5+91D4/91F5\91F5; \ Store in $00 and $1F1F,x 
-                      STA.W !OWPlayerXPosPtr,X                  ;;91B6|91F7+91D6/91F7\91F7; / 
-                      LDA.W !OWPlayerYPos,X                     ;;91B9|91FA+91D9/91FA\91FA; Get character's Y coordinate 
+                      STA.B _0                                  ;;91B4|91F5+91D4/91F5\91F5; \ Store in $00 and $1F1F,x 
+                      STA.W OWPlayerXPosPtr,X                   ;;91B6|91F7+91D6/91F7\91F7; / 
+                      LDA.W OWPlayerYPos,X                      ;;91B9|91FA+91D9/91FA\91FA; Get character's Y coordinate 
                       LSR A                                     ;;91BC|91FD+91DC/91FD\91FD; \ 
                       LSR A                                     ;;91BD|91FE+91DD/91FE\91FE;  |Divide Y coordinate by 16 
                       LSR A                                     ;;91BE|91FF+91DE/91FF\91FF;  | 
                       LSR A                                     ;;91BF|9200+91DF/9200\9200; / 
-                      STA.B !_2                                 ;;91C0|9201+91E0/9201\9201; \ Store in $02 and $1F21,x 
-                      STA.W !OWPlayerYPosPtr,X                  ;;91C2|9203+91E2/9203\9203; / 
+                      STA.B _2                                  ;;91C0|9201+91E0/9201\9201; \ Store in $02 and $1F21,x 
+                      STA.W OWPlayerYPosPtr,X                   ;;91C2|9203+91E2/9203\9203; / 
                       TXA                                       ;;91C5|9206+91E5/9206\9206; \ 
                       LSR A                                     ;;91C6|9207+91E6/9207\9207;  |Divide (current character * 4) by 4 
                       LSR A                                     ;;91C7|9208+91E7/9208\9208;  | 
                       TAX                                       ;;91C8|9209+91E8/9209\9209; / 
                       JSR OW_TilePos_Calc                       ;;91C9|920A+91E9/920A\920A; Calculate current tile pos 
                       SEP #$20                                  ;;91CC|920D+91EC/920D\920D; 8 bit A ; Accum (8 bit) 
-                      LDX.W !OWLevelExitMode                    ;;91CE|920F+91EE/920F\920F; \ If auto-walk=0, 
+                      LDX.W OWLevelExitMode                     ;;91CE|920F+91EE/920F\920F; \ If auto-walk=0, 
                       BEQ OWPU_NotAutoWalk                      ;;91D1|9212+91F1/9212\9212; / branch to OWPU_NotAutoWalk 
                       DEX                                       ;;91D3|9214+91F3/9214\9214;
                       LDA.W DATA_049060,X                       ;;91D4|9215+91F4/9215\9215;
-                      STA.B !_8                                 ;;91D7|9218+91F7/9218\9218;
-                      STZ.B !_9                                 ;;91D9|921A+91F9/921A\921A;
+                      STA.B _8                                  ;;91D7|9218+91F7/9218\9218;
+                      STZ.B _9                                  ;;91D9|921A+91F9/921A\921A;
                       REP #$30                                  ;;91DB|921C+91FB/921C\921C; 16 bit A,X,Y ; Index (16 bit) Accum (16 bit) 
-                      LDX.B !_4                                 ;;91DD|921E+91FD/921E\921E; X = tile pos 
-                      LDA.L !OWLayer1Translevel,X               ;;91DF|9220+91FF/9220\9220; \ Get level number of current tile pos 
+                      LDX.B _4                                  ;;91DD|921E+91FD/921E\921E; X = tile pos 
+                      LDA.L OWLayer1Translevel,X                ;;91DF|9220+91FF/9220\9220; \ Get level number of current tile pos 
                       AND.W #$00FF                              ;;91E3|9224+9203/9224\9224; / 
                       LDY.W #$000A                              ;;91E6|9227+9206/9227\9227;
 CODE_04922A:          CMP.W DATA_04906C,Y                       ;;91E9|922A+9209/922A\922A;
                       BNE CODE_04923B                           ;;91EC|922D+920C/922D\922D;
                       LDA.W #$0005                              ;;91EE|922F+920E/922F\922F;
-                      STA.W !OverworldProcess                   ;;91F1|9232+9211/9232\9232;
+                      STA.W OverworldProcess                    ;;91F1|9232+9211/9232\9232;
                       JSR CODE_049037                           ;;91F4|9235+9214/9235\9235;
                       BRL CODE_049411                           ;;91F7|9238+9217/9238\9238;
 CODE_04923B:          DEY                                       ;;91FA|923B+921A/923B\923B;
                       DEY                                       ;;91FB|923C+921B/923C\923C;
                       BPL CODE_04922A                           ;;91FC|923D+921C/923D\923D;
-                      LDA.L !OWLayer2Directions,X               ;;91FE|923F+921E/923F\923F;
+                      LDA.L OWLayer2Directions,X                ;;91FE|923F+921E/923F\923F;
                       AND.W #$00FF                              ;;9202|9243+9222/9243\9243;
-                      LDX.B !_8                                 ;;9205|9246+9225/9246\9246;
+                      LDX.B _8                                  ;;9205|9246+9225/9246\9246;
                       BEQ CODE_04924E                           ;;9207|9248+9227/9248\9248;
                     - LSR A                                     ;;9209|924A+9229/924A\924A;
                       DEX                                       ;;920A|924B+922A/924B\924B;
@@ -1738,26 +1738,26 @@ CODE_04924E:          AND.W #$0003                              ;;920D|924E+922D
                       JMP CODE_0492BC                           ;;9216|9257+9236/9257\9257;
                                                                 ;;                        ;
 OWPU_NotAutoWalk:     SEP #$30                                  ;;9219|925A+9239/925A\925A; 8 bit A,X,Y ; Index (8 bit) Accum (8 bit) 
-                      STZ.W !OWLevelExitMode                    ;;921B|925C+923B/925C\925C; Set auto-walk to 0 
-                      LDA.B !byetudlrFrame                      ;;921E|925F+923E/925F\925F; \ 
+                      STZ.W OWLevelExitMode                     ;;921B|925C+923B/925C\925C; Set auto-walk to 0 
+                      LDA.B byetudlrFrame                       ;;921E|925F+923E/925F\925F; \ 
                       AND.B #$0F                                ;;9220|9261+9240/9261\9261;  |If no dir button is pressed (one frame), 
                       BEQ CODE_04926E                           ;;9222|9263+9242/9263\9263; / branch to $926E 
-                      LDX.W !OverworldLayer1Tile                ;;9224|9265+9244/9265\9265; \ 
+                      LDX.W OverworldLayer1Tile                 ;;9224|9265+9244/9265\9265; \ 
                       CPX.B #$82                                ;;9227|9268+9247/9268\9268;  |If standing on Pipe#2, 
                       BEQ CODE_0492AD                           ;;9229|926A+9249/926A\926A;  |branch to $92AD 
                       BRA CODE_04928C                           ;;922B|926C+924B/926C\926C; / Otherwise, branch to $928C 
                                                                 ;;                        ;
-CODE_04926E:          DEC.W !Layer1ScrollXPosUpd                ;;922D|926E+924D/926E\926E; \ Decrease "Face walking dir" timer 
+CODE_04926E:          DEC.W Layer1ScrollXPosUpd                 ;;922D|926E+924D/926E\926E; \ Decrease "Face walking dir" timer 
                       BPL +                                     ;;9230|9271+9250/9271\9271; / If >= 0, branch to $9287 
-                      STZ.W !Layer1ScrollXPosUpd                ;;9232|9273+9252/9273\9273; Set "Face walking dir" timer to 0 
-                      LDA.W !PlayerTurnOW                       ;;9235|9276+9255/9276\9276; \ 
+                      STZ.W Layer1ScrollXPosUpd                 ;;9232|9273+9252/9273\9273; Set "Face walking dir" timer to 0 
+                      LDA.W PlayerTurnOW                        ;;9235|9276+9255/9276\9276; \ 
                       LSR A                                     ;;9238|9279+9258/9279\9279;  |Set X to current character * 2 
                       AND.B #$02                                ;;9239|927A+9259/927A\927A;  | 
                       TAX                                       ;;923B|927C+925B/927C\927C; / 
-                      LDA.W !OWPlayerAnimation,X                ;;923C|927D+925C/927D\927D; \ 
+                      LDA.W OWPlayerAnimation,X                 ;;923C|927D+925C/927D\927D; \ 
                       AND.B #$08                                ;;923F|9280+925F/9280\9280;  |Set current character's animation to "facing down" 
                       ORA.B #$02                                ;;9241|9282+9261/9282\9282;  |or "facing down in water", depending on if character 
-                      STA.W !OWPlayerAnimation,X                ;;9243|9284+9263/9284\9284; / is in water or not. 
+                      STA.W OWPlayerAnimation,X                 ;;9243|9284+9263/9284\9284; / is in water or not. 
                     + REP #$30                                  ;;9246|9287+9266/9287\9287; Index (16 bit) Accum (16 bit) 
                       JMP CODE_049831                           ;;9248|9289+9268/9289\9289;
                                                                 ;;                        ;
@@ -1767,13 +1767,13 @@ CODE_04928C:          REP #$30                                  ;;924B|928C+926B
                       NOP                                       ;;9251|9292+9271/9292\9292;
                       NOP                                       ;;9252|9293+9272/9293\9293;
                       PHA                                       ;;9253|9294+9273/9294\9294;
-                      STZ.B !_6                                 ;;9254|9295+9274/9295\9295;
-                      LDX.B !_4                                 ;;9256|9297+9276/9297\9297;
-                      LDA.L !OWLayer1Translevel,X               ;;9258|9299+9278/9299\9299;
+                      STZ.B _6                                  ;;9254|9295+9274/9295\9295;
+                      LDX.B _4                                  ;;9256|9297+9276/9297\9297;
+                      LDA.L OWLayer1Translevel,X                ;;9258|9299+9278/9299\9299;
                       AND.W #$00FF                              ;;925C|929D+927C/929D\929D;
                       TAX                                       ;;925F|92A0+927F/92A0\92A0;
                       PLA                                       ;;9260|92A1+9280/92A1\92A1;
-                      AND.W !OWLevelTileSettings,X              ;;9261|92A2+9281/92A2\92A2;
+                      AND.W OWLevelTileSettings,X               ;;9261|92A2+9281/92A2\92A2;
                       AND.W #$000F                              ;;9264|92A5+9284/92A5\92A5;
                       BNE CODE_0492AD                           ;;9267|92A8+9287/92A8\92A8;
                       JMP CODE_049411                           ;;9269|92AA+9289/92AA\92AA;
@@ -1787,27 +1787,27 @@ CODE_0492B5:          LSR A                                     ;;9274|92B5+9294
                       DEY                                       ;;9278|92B9+9298/92B9\92B9;
                       BPL CODE_0492B5                           ;;9279|92BA+9299/92BA\92BA;
 CODE_0492BC:          TYA                                       ;;927B|92BC+929B/92BC\92BC;
-                      STA.W !OWPlayerDirection                  ;;927C|92BD+929C/92BD\92BD;
+                      STA.W OWPlayerDirection                   ;;927C|92BD+929C/92BD\92BD;
                       LDX.W #$0000                              ;;927F|92C0+929F/92C0\92C0;
                       CPY.W #$0004                              ;;9282|92C3+92A2/92C3\92C3;
                       BCS +                                     ;;9285|92C6+92A5/92C6\92C6;
                       LDX.W #$0002                              ;;9287|92C8+92A7/92C8\92C8;
-                    + LDA.B !_4                                 ;;928A|92CB+92AA/92CB\92CB;
-                      STA.B !_8                                 ;;928C|92CD+92AC/92CD\92CD;
-                      LDA.B !_0,X                               ;;928E|92CF+92AE/92CF\92CF;
+                    + LDA.B _4                                  ;;928A|92CB+92AA/92CB\92CB;
+                      STA.B _8                                  ;;928C|92CD+92AC/92CD\92CD;
+                      LDA.B _0,X                                ;;928E|92CF+92AE/92CF\92CF;
                       CLC                                       ;;9290|92D1+92B0/92D1\92D1;
                       ADC.W DATA_049058,Y                       ;;9291|92D2+92B1/92D2\92D2;
-                      STA.B !_0,X                               ;;9294|92D5+92B4/92D5\92D5;
-                      LDA.W !PlayerTurnOW                       ;;9296|92D7+92B6/92D7\92D7;
+                      STA.B _0,X                                ;;9294|92D5+92B4/92D5\92D5;
+                      LDA.W PlayerTurnOW                        ;;9296|92D7+92B6/92D7\92D7;
                       LSR A                                     ;;9299|92DA+92B9/92DA\92DA;
                       LSR A                                     ;;929A|92DB+92BA/92DB\92DB;
                       TAX                                       ;;929B|92DC+92BB/92DC\92DC;
                       JSR OW_TilePos_Calc                       ;;929C|92DD+92BC/92DD\92DD;
-                      LDX.B !_4                                 ;;929F|92E0+92BF/92E0\92E0;
+                      LDX.B _4                                  ;;929F|92E0+92BF/92E0\92E0;
                       BMI CODE_049301                           ;;92A1|92E2+92C1/92E2\92E2;
                       CMP.W #$0800                              ;;92A3|92E4+92C3/92E4\92E4;
                       BCS CODE_049301                           ;;92A6|92E7+92C6/92E7\92E7;
-                      LDA.L !Map16TilesLow,X                    ;;92A8|92E9+92C8/92E9\92E9;
+                      LDA.L Map16TilesLow,X                     ;;92A8|92E9+92C8/92E9\92E9;
                       AND.W #$00FF                              ;;92AC|92ED+92CC/92ED\92ED;
                       BEQ CODE_049301                           ;;92AF|92F0+92CF/92F0\92F0;
                       CMP.W #$0056                              ;;92B1|92F2+92D1/92F2\92F2;
@@ -1817,29 +1817,29 @@ CODE_0492BC:          TYA                                       ;;927B|92BC+929B
                       BRA CODE_049301                           ;;92BB|92FC+92DB/92FC\92FC;
                                                                 ;;                        ;
 CODE_0492FE:          BRL CODE_049384                           ;;92BD|92FE+92DD/92FE\92FE;
-CODE_049301:          STZ.W !HardcodedPathIsUsed                ;;92C0|9301+92E0/9301\9301;
-                      STZ.W !HardcodedPathIndex                 ;;92C3|9304+92E3/9304\9304;
-                      LDX.B !_8                                 ;;92C6|9307+92E6/9307\9307;
-                      LDA.L !OWLayer1Translevel,X               ;;92C8|9309+92E8/9309\9309;
+CODE_049301:          STZ.W HardcodedPathIsUsed                 ;;92C0|9301+92E0/9301\9301;
+                      STZ.W HardcodedPathIndex                  ;;92C3|9304+92E3/9304\9304;
+                      LDX.B _8                                  ;;92C6|9307+92E6/9307\9307;
+                      LDA.L OWLayer1Translevel,X                ;;92C8|9309+92E8/9309\9309;
                       AND.W #$00FF                              ;;92CC|930D+92EC/930D\930D;
-                      STA.B !_0                                 ;;92CF|9310+92EF/9310\9310;
+                      STA.B _0                                  ;;92CF|9310+92EF/9310\9310;
                       LDX.W #$0009                              ;;92D1|9312+92F1/9312\9312;
 CODE_049315:          LDA.W HardCodedOWPaths,X                  ;;92D4|9315+92F4/9315\9315;
                       AND.W #$00FF                              ;;92D7|9318+92F7/9318\9318;
                       CMP.W #$00FF                              ;;92DA|931B+92FA/931B\931B;
                       BNE CODE_049349                           ;;92DD|931E+92FD/931E\931E;
                       PHX                                       ;;92DF|9320+92FF/9320\9320;
-                      LDX.W !PlayerTurnOW                       ;;92E0|9321+9300/9321\9321;
-                      LDA.W !OWPlayerYPos,X                     ;;92E3|9324+9303/9324\9324;
+                      LDX.W PlayerTurnOW                        ;;92E0|9321+9300/9321\9321;
+                      LDA.W OWPlayerYPos,X                      ;;92E3|9324+9303/9324\9324;
                       CMP.W DATA_049082                         ;;92E6|9327+9306/9327\9327;
                       BNE CODE_049346                           ;;92E9|932A+9309/932A\932A;
-                      LDA.W !OWPlayerXPos,X                     ;;92EB|932C+930B/932C\932C;
+                      LDA.W OWPlayerXPos,X                      ;;92EB|932C+930B/932C\932C;
                       CMP.W DATA_049084                         ;;92EE|932F+930E/932F\932F;
                       BNE CODE_049346                           ;;92F1|9332+9311/9332\9332;
-                      LDA.W !PlayerTurnLvl                      ;;92F3|9334+9313/9334\9334;
+                      LDA.W PlayerTurnLvl                       ;;92F3|9334+9313/9334\9334;
                       AND.W #$00FF                              ;;92F6|9337+9316/9337\9337;
                       TAX                                       ;;92F9|933A+9319/933A\933A;
-                      LDA.W !OWPlayerSubmap,X                   ;;92FA|933B+931A/933B\933B;
+                      LDA.W OWPlayerSubmap,X                    ;;92FA|933B+931A/933B\933B;
                       AND.W #$00FF                              ;;92FD|933E+931D/933E\933E;
                       BNE CODE_049346                           ;;9300|9341+9320/9341\9341;
                       PLX                                       ;;9302|9343+9322/9343\9343;
@@ -1848,21 +1848,21 @@ CODE_049315:          LDA.W HardCodedOWPaths,X                  ;;92D4|9315+92F4
 CODE_049346:          PLX                                       ;;9305|9346+9325/9346\9346;
                       BRA CODE_049374                           ;;9306|9347+9326/9347\9347;
                                                                 ;;                        ;
-CODE_049349:          CMP.B !_0                                 ;;9308|9349+9328/9349\9349;
+CODE_049349:          CMP.B _0                                  ;;9308|9349+9328/9349\9349;
                       BNE CODE_049374                           ;;930A|934B+932A/934B\934B;
-CODE_04934D:          STX.B !_0                                 ;;930C|934D+932C/934D\934D;
+CODE_04934D:          STX.B _0                                  ;;930C|934D+932C/934D\934D;
                       LDA.W DATA_04910E,X                       ;;930E|934F+932E/934F\934F;
                       AND.W #$00FF                              ;;9311|9352+9331/9352\9352;
                       TAX                                       ;;9314|9355+9334/9355\9355;
                       DEC A                                     ;;9315|9356+9335/9356\9356;
-                      STA.W !HardcodedPathIndex                 ;;9316|9357+9336/9357\9357;
-                      STY.B !_2                                 ;;9319|935A+9339/935A\935A;
+                      STA.W HardcodedPathIndex                  ;;9316|9357+9336/9357\9357;
+                      STY.B _2                                  ;;9319|935A+9339/935A\935A;
                       LDA.W OWHardCodedDirs,X                   ;;931B|935C+933B/935C\935C;
                       AND.W #$00FF                              ;;931E|935F+933E/935F\935F;
-                      CMP.B !_2                                 ;;9321|9362+9341/9362\9362;
+                      CMP.B _2                                  ;;9321|9362+9341/9362\9362;
                       BNE CODE_04937A                           ;;9323|9364+9343/9364\9364;
                       LDA.W #$0001                              ;;9325|9366+9345/9366\9366;
-                      STA.W !HardcodedPathIsUsed                ;;9328|9369+9348/9369\9369;
+                      STA.W HardcodedPathIsUsed                 ;;9328|9369+9348/9369\9369;
                       LDA.W OWHardCodedTiles,X                  ;;932B|936C+934B/936C\936C;
                       AND.W #$00FF                              ;;932E|936F+934E/936F\936F;
                       BRA CODE_049384                           ;;9331|9372+9351/9372\9372;
@@ -1871,30 +1871,30 @@ CODE_049374:          DEX                                       ;;9333|9374+9353
                       BMI CODE_04937A                           ;;9334|9375+9354/9375\9375;
                       BRL CODE_049315                           ;;9336|9377+9356/9377\9377;
 CODE_04937A:          SEP #$20                                  ;;9339|937A+9359/937A\937A; Accum (8 bit) 
-                      STZ.W !OWLevelExitMode                    ;;933B|937C+935B/937C\937C;
+                      STZ.W OWLevelExitMode                     ;;933B|937C+935B/937C\937C;
                       REP #$20                                  ;;933E|937F+935E/937F\937F; Accum (16 bit) 
                       JMP CODE_049411                           ;;9340|9381+9360/9381\9381;
                                                                 ;;                        ;
-CODE_049384:          STA.W !OverworldLayer1Tile                ;;9343|9384+9363/9384\9384;
-                      STA.B !_0                                 ;;9346|9387+9366/9387\9387;
-                      STZ.B !_2                                 ;;9348|9389+9368/9389\9389;
+CODE_049384:          STA.W OverworldLayer1Tile                 ;;9343|9384+9363/9384\9384;
+                      STA.B _0                                  ;;9346|9387+9366/9387\9387;
+                      STZ.B _2                                  ;;9348|9389+9368/9389\9389;
                       LDX.W #$0017                              ;;934A|938B+936A/938B\938B;
 CODE_04938E:          LDA.W DATA_04A03C,X                       ;;934D|938E+936D/938E\938E;
                       AND.W #$00FF                              ;;9350|9391+9370/9391\9391;
-                      CMP.B !_0                                 ;;9353|9394+9373/9394\9394;
+                      CMP.B _0                                  ;;9353|9394+9373/9394\9394;
                       BNE CODE_0493B5                           ;;9355|9396+9375/9396\9396;
                       LDA.W DATA_04A0E4,X                       ;;9357|9398+9377/9398\9398;
                       CLC                                       ;;935A|939B+937A/939B\939B;
-                      ADC.W !PlayerTurnOW                       ;;935B|939C+937B/939C\939C;
+                      ADC.W PlayerTurnOW                        ;;935B|939C+937B/939C\939C;
                       PHA                                       ;;935E|939F+937E/939F\939F;
                       TXA                                       ;;935F|93A0+937F/93A0\93A0;
                       ASL A                                     ;;9360|93A1+9380/93A1\93A1;
                       ASL A                                     ;;9361|93A2+9381/93A2\93A2;
                       TAX                                       ;;9362|93A3+9382/93A3\93A3;
                       LDA.W DATA_04A084,X                       ;;9363|93A4+9383/93A4\93A4;
-                      STA.B !_0                                 ;;9366|93A7+9386/93A7\93A7;
+                      STA.B _0                                  ;;9366|93A7+9386/93A7\93A7;
                       LDA.W DATA_04A086,X                       ;;9368|93A9+9388/93A9\93A9;
-                      STA.B !_2                                 ;;936B|93AC+938B/93AC\93AC;
+                      STA.B _2                                  ;;936B|93AC+938B/93AC\93AC;
                       PLA                                       ;;936D|93AE+938D/93AE\93AE;
                       AND.W #$00FF                              ;;936E|93AF+938E/93AF\93AF;
                       TAX                                       ;;9371|93B2+9391/93B2\93B2;
@@ -1910,40 +1910,40 @@ CODE_0493B5:          DEX                                       ;;9374|93B5+9394
                       EOR.W #$FFFF                              ;;9381|93C2+93A1/93C2\93C2;
                       INC A                                     ;;9384|93C5+93A4/93C5\93C5;
                       TAX                                       ;;9385|93C6+93A5/93C6\93C6;
-                    + STX.B !_0                                 ;;9386|93C7+93A6/93C7\93C7;
+                    + STX.B _0                                  ;;9386|93C7+93A6/93C7\93C7;
                       LDX.W #$0000                              ;;9388|93C9+93A8/93C9\93C9;
                       CPY.W #$0004                              ;;938B|93CC+93AB/93CC\93CC;
                       BCS +                                     ;;938E|93CF+93AE/93CF\93CF;
                       LDX.W #$0002                              ;;9390|93D1+93B0/93D1\93D1;
                     + TXA                                       ;;9393|93D4+93B3/93D4\93D4;
                       CLC                                       ;;9394|93D5+93B4/93D5\93D5;
-                      ADC.W !PlayerTurnOW                       ;;9395|93D6+93B5/93D6\93D6;
+                      ADC.W PlayerTurnOW                        ;;9395|93D6+93B5/93D6\93D6;
                       TAX                                       ;;9398|93D9+93B8/93D9\93D9;
-CODE_0493DA:          LDA.B !_0                                 ;;9399|93DA+93B9/93DA\93DA;
+CODE_0493DA:          LDA.B _0                                  ;;9399|93DA+93B9/93DA\93DA;
                       CLC                                       ;;939B|93DC+93BB/93DC\93DC;
-                      ADC.W !OWPlayerXPos,X                     ;;939C|93DD+93BC/93DD\93DD;
-                      STA.W !OverworldDestXPos,X                ;;939F|93E0+93BF/93E0\93E0;
+                      ADC.W OWPlayerXPos,X                      ;;939C|93DD+93BC/93DD\93DD;
+                      STA.W OverworldDestXPos,X                 ;;939F|93E0+93BF/93E0\93E0;
                       TXA                                       ;;93A2|93E3+93C2/93E3\93E3;
                       EOR.W #$0002                              ;;93A3|93E4+93C3/93E4\93E4;
                       TAX                                       ;;93A6|93E7+93C6/93E7\93E7;
-                      LDA.B !_2                                 ;;93A7|93E8+93C7/93E8\93E8;
+                      LDA.B _2                                  ;;93A7|93E8+93C7/93E8\93E8;
                       CLC                                       ;;93A9|93EA+93C9/93EA\93EA;
-                      ADC.W !OWPlayerXPos,X                     ;;93AA|93EB+93CA/93EB\93EB;
-                      STA.W !OverworldDestXPos,X                ;;93AD|93EE+93CD/93EE\93EE;
+                      ADC.W OWPlayerXPos,X                      ;;93AA|93EB+93CA/93EB\93EB;
+                      STA.W OverworldDestXPos,X                 ;;93AD|93EE+93CD/93EE\93EE;
                       TXA                                       ;;93B0|93F1+93D0/93F1\93F1;
                       LSR A                                     ;;93B1|93F2+93D1/93F2\93F2;
                       AND.W #$0002                              ;;93B2|93F3+93D2/93F3\93F3;
                       TAX                                       ;;93B5|93F6+93D5/93F6\93F6;
                       TYA                                       ;;93B6|93F7+93D6/93F7\93F7;
-                      STA.B !_0                                 ;;93B7|93F8+93D7/93F8\93F8;
-                      LDA.W !OWPlayerAnimation,X                ;;93B9|93FA+93D9/93FA\93FA;
+                      STA.B _0                                  ;;93B7|93F8+93D7/93F8\93F8;
+                      LDA.W OWPlayerAnimation,X                 ;;93B9|93FA+93D9/93FA\93FA;
                       AND.W #$0008                              ;;93BC|93FD+93DC/93FD\93FD;
-                      ORA.B !_0                                 ;;93BF|9400+93DF/9400\9400;
-                      STA.W !OWPlayerAnimation,X                ;;93C1|9402+93E1/9402\9402;
+                      ORA.B _0                                  ;;93BF|9400+93DF/9400\9400;
+                      STA.W OWPlayerAnimation,X                 ;;93C1|9402+93E1/9402\9402;
                       LDA.W #$000F                              ;;93C4|9405+93E4/9405\9405;
-                      STA.W !Layer1ScrollXPosUpd                ;;93C7|9408+93E7/9408\9408;
-                      INC.W !OverworldProcess                   ;;93CA|940B+93EA/940B\940B;
-                      STZ.W !Layer1ScrollTimer                  ;;93CD|940E+93ED/940E\940E;
+                      STA.W Layer1ScrollXPosUpd                 ;;93C7|9408+93E7/9408\9408;
+                      INC.W OverworldProcess                    ;;93CA|940B+93EA/940B\940B;
+                      STZ.W Layer1ScrollTimer                   ;;93CD|940E+93ED/940E\940E;
 CODE_049411:          JMP CODE_049831                           ;;93D0|9411+93F0/9411\9411;
                                                                 ;;                        ;
                                                                 ;;                        ;
@@ -1967,64 +1967,64 @@ DATA_049431:          db $00,$0E,$00,$10,$06,$12,$00,$18        ;;93F0|9431+9410
 DATA_04944E:          db $01,$01,$00,$01,$01,$00,$00,$00        ;;940D|944E+942D/944E\944E;
                       db $01,$00,$00,$01,$00,$01,$00            ;;9415|9456+9435/9456\9456;
                                                                 ;;                        ;
-CODE_04945D:          LDA.W !PlayerSwitching                    ;;941C|945D+943C/945D\945D; Accum (8 bit) 
+CODE_04945D:          LDA.W PlayerSwitching                     ;;941C|945D+943C/945D\945D; Accum (8 bit) 
                       BEQ +                                     ;;941F|9460+943F/9460\9460;
                       LDA.B #$08                                ;;9421|9462+9441/9462\9462;
-                      STA.W !OverworldProcess                   ;;9423|9464+9443/9464\9464;
+                      STA.W OverworldProcess                    ;;9423|9464+9443/9464\9464;
                       RTS                                       ;;9426|9467+9446/9467\9467; Return 
                                                                 ;;                        ;
                     + REP #$30                                  ;;9427|9468+9447/9468\9468; Index (16 bit) Accum (16 bit) 
-                      LDA.W !PlayerTurnOW                       ;;9429|946A+9449/946A\946A;
+                      LDA.W PlayerTurnOW                        ;;9429|946A+9449/946A\946A;
                       CLC                                       ;;942C|946D+944C/946D\946D;
                       ADC.W #$0002                              ;;942D|946E+944D/946E\946E;
                       TAY                                       ;;9430|9471+9450/9471\9471;
                       LDX.W #$0002                              ;;9431|9472+9451/9472\9472;
-CODE_049475:          LDA.W !OverworldDestXPos,Y                ;;9434|9475+9454/9475\9475;
+CODE_049475:          LDA.W OverworldDestXPos,Y                 ;;9434|9475+9454/9475\9475;
                       SEC                                       ;;9437|9478+9457/9478\9478;
-                      SBC.W !OWPlayerXPos,Y                     ;;9438|9479+9458/9479\9479;
-                      STA.B !_0,X                               ;;943B|947C+945B/947C\947C;
+                      SBC.W OWPlayerXPos,Y                      ;;9438|9479+9458/9479\9479;
+                      STA.B _0,X                                ;;943B|947C+945B/947C\947C;
                       BPL +                                     ;;943D|947E+945D/947E\947E;
                       EOR.W #$FFFF                              ;;943F|9480+945F/9480\9480;
                       INC A                                     ;;9442|9483+9462/9483\9483;
-                    + STA.B !_4,X                               ;;9443|9484+9463/9484\9484;
+                    + STA.B _4,X                                ;;9443|9484+9463/9484\9484;
                       DEY                                       ;;9445|9486+9465/9486\9486;
                       DEY                                       ;;9446|9487+9466/9487\9487;
                       DEX                                       ;;9447|9488+9467/9488\9488;
                       DEX                                       ;;9448|9489+9468/9489\9489;
                       BPL CODE_049475                           ;;9449|948A+9469/948A\948A;
                       LDY.W #$FFFF                              ;;944B|948C+946B/948C\948C;
-                      LDA.B !_4                                 ;;944E|948F+946E/948F\948F;
-                      STA.B !_A                                 ;;9450|9491+9470/9491\9491;
-                      LDA.B !_6                                 ;;9452|9493+9472/9493\9493;
-                      STA.B !_C                                 ;;9454|9495+9474/9495\9495;
-                      CMP.B !_4                                 ;;9456|9497+9476/9497\9497;
+                      LDA.B _4                                  ;;944E|948F+946E/948F\948F;
+                      STA.B _A                                  ;;9450|9491+9470/9491\9491;
+                      LDA.B _6                                  ;;9452|9493+9472/9493\9493;
+                      STA.B _C                                  ;;9454|9495+9474/9495\9495;
+                      CMP.B _4                                  ;;9456|9497+9476/9497\9497;
                       BCC +                                     ;;9458|9499+9478/9499\9499;
-                      STA.B !_A                                 ;;945A|949B+947A/949B\949B;
-                      LDA.B !_4                                 ;;945C|949D+947C/949D\949D;
-                      STA.B !_C                                 ;;945E|949F+947E/949F\949F;
+                      STA.B _A                                  ;;945A|949B+947A/949B\949B;
+                      LDA.B _4                                  ;;945C|949D+947C/949D\949D;
+                      STA.B _C                                  ;;945E|949F+947E/949F\949F;
                       LDY.W #$0001                              ;;9460|94A1+9480/94A1\94A1;
-                    + STY.B !_8                                 ;;9463|94A4+9483/94A4\94A4;
+                    + STY.B _8                                  ;;9463|94A4+9483/94A4\94A4;
                       SEP #$20                                  ;;9465|94A6+9485/94A6\94A6; Accum (8 bit) 
-                      LDX.W !OverworldClimbing                  ;;9467|94A8+9487/94A8\94A8;
+                      LDX.W OverworldClimbing                   ;;9467|94A8+9487/94A8\94A8;
                       LDA.W DATA_049414,X                       ;;946A|94AB+948A/94AB\94AB;
                       ASL A                                     ;;946D|94AE+948D/94AE\94AE;
                       ASL A                                     ;;946E|94AF+948E/94AF\94AF;
                       ASL A                                     ;;946F|94B0+948F/94B0\94B0;
                       ASL A                                     ;;9470|94B1+9490/94B1\94B1;
-                      STA.W !HW_WRMPYA                          ;;9471|94B2+9491/94B2\94B2; Multiplicand A
-                      LDA.B !_C                                 ;;9474|94B5+9494/94B5\94B5;
+                      STA.W HW_WRMPYA                           ;;9471|94B2+9491/94B2\94B2; Multiplicand A
+                      LDA.B _C                                  ;;9474|94B5+9494/94B5\94B5;
                       BEQ +                                     ;;9476|94B7+9496/94B7\94B7;
-                      STA.W !HW_WRMPYB                          ;;9478|94B9+9498/94B9\94B9; Multplier B
+                      STA.W HW_WRMPYB                           ;;9478|94B9+9498/94B9\94B9; Multplier B
                       NOP                                       ;;947B|94BC+949B/94BC\94BC;
                       NOP                                       ;;947C|94BD+949C/94BD\94BD;
                       NOP                                       ;;947D|94BE+949D/94BE\94BE;
                       NOP                                       ;;947E|94BF+949E/94BF\94BF;
                       REP #$20                                  ;;947F|94C0+949F/94C0\94C0; Accum (16 bit) 
-                      LDA.W !HW_RDMPY                           ;;9481|94C2+94A1/94C2\94C2; Product/Remainder Result (Low Byte)
-                      STA.W !HW_WRDIV                           ;;9484|94C5+94A4/94C5\94C5; Dividend (Low Byte)
+                      LDA.W HW_RDMPY                            ;;9481|94C2+94A1/94C2\94C2; Product/Remainder Result (Low Byte)
+                      STA.W HW_WRDIV                            ;;9484|94C5+94A4/94C5\94C5; Dividend (Low Byte)
                       SEP #$20                                  ;;9487|94C8+94A7/94C8\94C8; Accum (8 bit) 
-                      LDA.B !_A                                 ;;9489|94CA+94A9/94CA\94CA;
-                      STA.W !HW_WRDIV+2                         ;;948B|94CC+94AB/94CC\94CC; Divisor B
+                      LDA.B _A                                  ;;9489|94CA+94A9/94CA\94CA;
+                      STA.W HW_WRDIV+2                          ;;948B|94CC+94AB/94CC\94CC; Divisor B
                       NOP                                       ;;948E|94CF+94AE/94CF\94CF;
                       NOP                                       ;;948F|94D0+94AF/94D0\94D0;
                       NOP                                       ;;9490|94D1+94B0/94D1\94D1;
@@ -2032,127 +2032,127 @@ CODE_049475:          LDA.W !OverworldDestXPos,Y                ;;9434|9475+9454
                       NOP                                       ;;9492|94D3+94B2/94D3\94D3;
                       NOP                                       ;;9493|94D4+94B3/94D4\94D4;
                       REP #$20                                  ;;9494|94D5+94B4/94D5\94D5; Accum (16 bit) 
-                      LDA.W !HW_RDDIV                           ;;9496|94D7+94B6/94D7\94D7; Quotient of Divide Result (Low Byte)
+                      LDA.W HW_RDDIV                            ;;9496|94D7+94B6/94D7\94D7; Quotient of Divide Result (Low Byte)
                     + REP #$20                                  ;;9499|94DA+94B9/94DA\94DA; Accum (16 bit) 
-                      STA.B !_E                                 ;;949B|94DC+94BB/94DC\94DC;
-                      LDX.W !OverworldClimbing                  ;;949D|94DE+94BD/94DE\94DE;
+                      STA.B _E                                  ;;949B|94DC+94BB/94DC\94DC;
+                      LDX.W OverworldClimbing                   ;;949D|94DE+94BD/94DE\94DE;
                       LDA.W DATA_049414,X                       ;;94A0|94E1+94C0/94E1\94E1;
                       AND.W #$00FF                              ;;94A3|94E4+94C3/94E4\94E4;
                       ASL A                                     ;;94A6|94E7+94C6/94E7\94E7;
                       ASL A                                     ;;94A7|94E8+94C7/94E8\94E8;
                       ASL A                                     ;;94A8|94E9+94C8/94E9\94E9;
                       ASL A                                     ;;94A9|94EA+94C9/94EA\94EA;
-                      STA.B !_A                                 ;;94AA|94EB+94CA/94EB\94EB;
+                      STA.B _A                                  ;;94AA|94EB+94CA/94EB\94EB;
                       LDX.W #$0002                              ;;94AC|94ED+94CC/94ED\94ED;
-CODE_0494F0:          LDA.B !_8                                 ;;94AF|94F0+94CF/94F0\94F0;
+CODE_0494F0:          LDA.B _8                                  ;;94AF|94F0+94CF/94F0\94F0;
                       BMI CODE_0494F8                           ;;94B1|94F2+94D1/94F2\94F2;
-                      LDA.B !_A                                 ;;94B3|94F4+94D3/94F4\94F4;
+                      LDA.B _A                                  ;;94B3|94F4+94D3/94F4\94F4;
                       BRA +                                     ;;94B5|94F6+94D5/94F6\94F6;
                                                                 ;;                        ;
-CODE_0494F8:          LDA.B !_E                                 ;;94B7|94F8+94D7/94F8\94F8;
-                    + BIT.B !_0,X                               ;;94B9|94FA+94D9/94FA\94FA;
+CODE_0494F8:          LDA.B _E                                  ;;94B7|94F8+94D7/94F8\94F8;
+                    + BIT.B _0,X                                ;;94B9|94FA+94D9/94FA\94FA;
                       BPL +                                     ;;94BB|94FC+94DB/94FC\94FC;
                       EOR.W #$FFFF                              ;;94BD|94FE+94DD/94FE\94FE;
                       INC A                                     ;;94C0|9501+94E0/9501\9501;
-                    + STA.W !OWPlayerSpeed,X                    ;;94C1|9502+94E1/9502\9502;
-                      LDA.B !_8                                 ;;94C4|9505+94E4/9505\9505;
+                    + STA.W OWPlayerSpeed,X                     ;;94C1|9502+94E1/9502\9502;
+                      LDA.B _8                                  ;;94C4|9505+94E4/9505\9505;
                       EOR.W #$FFFF                              ;;94C6|9507+94E6/9507\9507;
                       INC A                                     ;;94C9|950A+94E9/950A\950A;
-                      STA.B !_8                                 ;;94CA|950B+94EA/950B\950B;
+                      STA.B _8                                  ;;94CA|950B+94EA/950B\950B;
                       DEX                                       ;;94CC|950D+94EC/950D\950D;
                       DEX                                       ;;94CD|950E+94ED/950E\950E;
                       BPL CODE_0494F0                           ;;94CE|950F+94EE/950F\950F;
                       LDX.W #$0000                              ;;94D0|9511+94F0/9511\9511;
-                      LDA.B !_8                                 ;;94D3|9514+94F3/9514\9514;
+                      LDA.B _8                                  ;;94D3|9514+94F3/9514\9514;
                       BMI +                                     ;;94D5|9516+94F5/9516\9516;
                       LDX.W #$0002                              ;;94D7|9518+94F7/9518\9518;
-                    + LDA.B !_0,X                               ;;94DA|951B+94FA/951B\951B;
+                    + LDA.B _0,X                                ;;94DA|951B+94FA/951B\951B;
                       BEQ +                                     ;;94DC|951D+94FC/951D\951D;
                       JMP CODE_049801                           ;;94DE|951F+94FE/951F\951F;
                                                                 ;;                        ;
-                    + LDA.W !Layer1ScrollTimer                  ;;94E1|9522+9501/9522\9522;
+                    + LDA.W Layer1ScrollTimer                   ;;94E1|9522+9501/9522\9522;
                       BEQ +                                     ;;94E4|9525+9504/9525\9525;
-                      STZ.W !HardcodedPathIsUsed                ;;94E6|9527+9506/9527\9527;
-                      LDX.W !PlayerTurnOW                       ;;94E9|952A+9509/952A\952A;
-                      LDA.W !OWPlayerXPosPtr,X                  ;;94EC|952D+950C/952D\952D;
-                      STA.B !_0                                 ;;94EF|9530+950F/9530\9530;
-                      LDA.W !OWPlayerYPosPtr,X                  ;;94F1|9532+9511/9532\9532;
-                      STA.B !_2                                 ;;94F4|9535+9514/9535\9535;
+                      STZ.W HardcodedPathIsUsed                 ;;94E6|9527+9506/9527\9527;
+                      LDX.W PlayerTurnOW                        ;;94E9|952A+9509/952A\952A;
+                      LDA.W OWPlayerXPosPtr,X                   ;;94EC|952D+950C/952D\952D;
+                      STA.B _0                                  ;;94EF|9530+950F/9530\9530;
+                      LDA.W OWPlayerYPosPtr,X                   ;;94F1|9532+9511/9532\9532;
+                      STA.B _2                                  ;;94F4|9535+9514/9535\9535;
                       TXA                                       ;;94F6|9537+9516/9537\9537;
                       LSR A                                     ;;94F7|9538+9517/9538\9538;
                       LSR A                                     ;;94F8|9539+9518/9539\9539;
                       TAX                                       ;;94F9|953A+9519/953A\953A;
                       JSR OW_TilePos_Calc                       ;;94FA|953B+951A/953B\953B;
-                      STZ.B !_0                                 ;;94FD|953E+951D/953E\953E;
-                      LDX.B !_4                                 ;;94FF|9540+951F/9540\9540;
-                      LDA.L !OWLayer1Translevel,X               ;;9501|9542+9521/9542\9542;
+                      STZ.B _0                                  ;;94FD|953E+951D/953E\953E;
+                      LDX.B _4                                  ;;94FF|9540+951F/9540\9540;
+                      LDA.L OWLayer1Translevel,X                ;;9501|9542+9521/9542\9542;
                       AND.W #$00FF                              ;;9505|9546+9525/9546\9546;
                       ASL A                                     ;;9508|9549+9528/9549\9549;
                       TAX                                       ;;9509|954A+9529/954A\954A;
                       LDA.W LevelNames,X                        ;;950A|954B+952A/954B\954B;
-                      STA.B !_0                                 ;;950D|954E+952D/954E\954E;
+                      STA.B _0                                  ;;950D|954E+952D/954E\954E;
                       JSR CODE_049D07                           ;;950F|9550+952F/9550\9550;
-                      INC.W !OverworldProcess                   ;;9512|9553+9532/9553\9553;
+                      INC.W OverworldProcess                    ;;9512|9553+9532/9553\9553;
                       JSR CODE_049037                           ;;9515|9556+9535/9556\9556;
                       JMP CODE_049831                           ;;9518|9559+9538/9559\9559;
                                                                 ;;                        ;
-                    + LDA.W !OverworldLayer1Tile                ;;951B|955C+953B/955C\955C;
-                      STA.W !OverworldTightPath                 ;;951E|955F+953E/955F\955F;
+                    + LDA.W OverworldLayer1Tile                 ;;951B|955C+953B/955C\955C;
+                      STA.W OverworldTightPath                  ;;951E|955F+953E/955F\955F;
                       LDA.W #$0008                              ;;9521|9562+9541/9562\9562;
-                      STA.B !_8                                 ;;9524|9565+9544/9565\9565;
-                      LDY.W !OWPlayerDirection                  ;;9526|9567+9546/9567\9567;
+                      STA.B _8                                  ;;9524|9565+9544/9565\9565;
+                      LDY.W OWPlayerDirection                   ;;9526|9567+9546/9567\9567;
                       TYA                                       ;;9529|956A+9549/956A\956A;
                       AND.W #$00FF                              ;;952A|956B+954A/956B\956B;
                       EOR.W #$0002                              ;;952D|956E+954D/956E\956E;
-                      STA.B !_A                                 ;;9530|9571+9550/9571\9571;
+                      STA.B _A                                  ;;9530|9571+9550/9571\9571;
                       BRA CODE_049582                           ;;9532|9573+9552/9573\9573;
                                                                 ;;                        ;
-ADDR_049575:          LDA.B !_8                                 ;;9534|9575+9554/9575\9575;
+ADDR_049575:          LDA.B _8                                  ;;9534|9575+9554/9575\9575;
                       SEC                                       ;;9536|9577+9556/9577\9577;
                       SBC.W #$0002                              ;;9537|9578+9557/9578\9578;
-                      STA.B !_8                                 ;;953A|957B+955A/957B\957B;
-                      CMP.B !_A                                 ;;953C|957D+955C/957D\957D;
+                      STA.B _8                                  ;;953A|957B+955A/957B\957B;
+                      CMP.B _A                                  ;;953C|957D+955C/957D\957D;
                       BEQ ADDR_049575                           ;;953E|957F+955E/957F\957F;
                       TAY                                       ;;9540|9581+9560/9581\9581;
-CODE_049582:          LDX.W !PlayerTurnOW                       ;;9541|9582+9561/9582\9582;
-                      LDA.W !OWPlayerXPosPtr,X                  ;;9544|9585+9564/9585\9585;
-                      STA.B !_0                                 ;;9547|9588+9567/9588\9588;
-                      LDA.W !OWPlayerYPosPtr,X                  ;;9549|958A+9569/958A\958A;
-                      STA.B !_2                                 ;;954C|958D+956C/958D\958D;
+CODE_049582:          LDX.W PlayerTurnOW                        ;;9541|9582+9561/9582\9582;
+                      LDA.W OWPlayerXPosPtr,X                   ;;9544|9585+9564/9585\9585;
+                      STA.B _0                                  ;;9547|9588+9567/9588\9588;
+                      LDA.W OWPlayerYPosPtr,X                   ;;9549|958A+9569/958A\958A;
+                      STA.B _2                                  ;;954C|958D+956C/958D\958D;
                       LDX.W #$0000                              ;;954E|958F+956E/958F\958F;
                       CPY.W #$0004                              ;;9551|9592+9571/9592\9592;
                       BCS +                                     ;;9554|9595+9574/9595\9595;
                       LDX.W #$0002                              ;;9556|9597+9576/9597\9597;
-                    + LDA.B !_0,X                               ;;9559|959A+9579/959A\959A;
+                    + LDA.B _0,X                                ;;9559|959A+9579/959A\959A;
                       CLC                                       ;;955B|959C+957B/959C\959C;
                       ADC.W DATA_049058,Y                       ;;955C|959D+957C/959D\959D;
-                      STA.B !_0,X                               ;;955F|95A0+957F/95A0\95A0;
-                      LDA.W !PlayerTurnOW                       ;;9561|95A2+9581/95A2\95A2;
+                      STA.B _0,X                                ;;955F|95A0+957F/95A0\95A0;
+                      LDA.W PlayerTurnOW                        ;;9561|95A2+9581/95A2\95A2;
                       LSR A                                     ;;9564|95A5+9584/95A5\95A5;
                       LSR A                                     ;;9565|95A6+9585/95A6\95A6;
                       TAX                                       ;;9566|95A7+9586/95A7\95A7;
                       JSR OW_TilePos_Calc                       ;;9567|95A8+9587/95A8\95A8;
-                      LDA.W !HardcodedPathIsUsed                ;;956A|95AB+958A/95AB\95AB;
+                      LDA.W HardcodedPathIsUsed                 ;;956A|95AB+958A/95AB\95AB;
                       BEQ CODE_0495CE                           ;;956D|95AE+958D/95AE\95AE;
-                      STY.B !_6                                 ;;956F|95B0+958F/95B0\95B0;
-                      LDX.W !HardcodedPathIndex                 ;;9571|95B2+9591/95B2\95B2;
+                      STY.B _6                                  ;;956F|95B0+958F/95B0\95B0;
+                      LDX.W HardcodedPathIndex                  ;;9571|95B2+9591/95B2\95B2;
                       INX                                       ;;9574|95B5+9594/95B5\95B5;
                       LDA.W OWHardCodedDirs,X                   ;;9575|95B6+9595/95B6\95B6;
                       AND.W #$00FF                              ;;9578|95B9+9598/95B9\95B9;
-                      CMP.B !_6                                 ;;957B|95BC+959B/95BC\95BC;
+                      CMP.B _6                                  ;;957B|95BC+959B/95BC\95BC;
                       BNE ADDR_049575                           ;;957D|95BE+959D/95BE\95BE;
-                      STX.W !HardcodedPathIndex                 ;;957F|95C0+959F/95C0\95C0;
+                      STX.W HardcodedPathIndex                  ;;957F|95C0+959F/95C0\95C0;
                       LDA.W OWHardCodedTiles,X                  ;;9582|95C3+95A2/95C3\95C3;
                       AND.W #$00FF                              ;;9585|95C6+95A5/95C6\95C6;
                       CMP.W #$0058                              ;;9588|95C9+95A8/95C9\95C9;
                       BNE CODE_0495DE                           ;;958B|95CC+95AB/95CC\95CC;
-CODE_0495CE:          LDX.B !_4                                 ;;958D|95CE+95AD/95CE\95CE;
+CODE_0495CE:          LDX.B _4                                  ;;958D|95CE+95AD/95CE\95CE;
                       BMI ADDR_049575                           ;;958F|95D0+95AF/95D0\95D0;
                       CMP.W #$0800                              ;;9591|95D2+95B1/95D2\95D2;
                       BCS ADDR_049575                           ;;9594|95D5+95B4/95D5\95D5;
-                      LDA.L !Map16TilesLow,X                    ;;9596|95D7+95B6/95D7\95D7; \ Load OW tile number 
+                      LDA.L Map16TilesLow,X                     ;;9596|95D7+95B6/95D7\95D7; \ Load OW tile number 
                       AND.W #$00FF                              ;;959A|95DB+95BA/95DB\95DB; / 
-CODE_0495DE:          STA.W !OverworldLayer1Tile                ;;959D|95DE+95BD/95DE\95DE; Set "Current OW tile" 
+CODE_0495DE:          STA.W OverworldLayer1Tile                 ;;959D|95DE+95BD/95DE\95DE; Set "Current OW tile" 
                       BEQ ADDR_049575                           ;;95A0|95E1+95C0/95E1\95E1;
                       CMP.W #$0087                              ;;95A2|95E3+95C2/95E3\95E3;
                       BCS ADDR_049575                           ;;95A5|95E6+95C5/95E6\95E6;
@@ -2162,17 +2162,17 @@ CODE_0495DE:          STA.W !OverworldLayer1Tile                ;;959D|95DE+95BD
                       DEX                                       ;;95AA|95EB+95CA/95EB\95EB;
                       LDY.W #$0000                              ;;95AB|95EC+95CB/95EC\95EC;
                       LDA.W DATA_049FEB,X                       ;;95AE|95EF+95CE/95EF\95EF;
-                      STA.B !_E                                 ;;95B1|95F2+95D1/95F2\95F2;
+                      STA.B _E                                  ;;95B1|95F2+95D1/95F2\95F2;
                       AND.W #$00FF                              ;;95B3|95F4+95D3/95F4\95F4;
                       CMP.W #$0014                              ;;95B6|95F7+95D6/95F7\95F7;
                       BNE +                                     ;;95B9|95FA+95D9/95FA\95FA;
                       LDY.W #$0001                              ;;95BB|95FC+95DB/95FC\95FC;
-                    + STY.W !OverworldClimbing                  ;;95BE|95FF+95DE/95FF\95FF;
-                      LDX.W !PlayerTurnOW                       ;;95C1|9602+95E1/9602\9602;
-                      LDA.B !_0                                 ;;95C4|9605+95E4/9605\9605;
-                      STA.W !OWPlayerXPosPtr,X                  ;;95C6|9607+95E6/9607\9607;
-                      LDA.B !_2                                 ;;95C9|960A+95E9/960A\960A;
-                      STA.W !OWPlayerYPosPtr,X                  ;;95CB|960C+95EB/960C\960C;
+                    + STY.W OverworldClimbing                   ;;95BE|95FF+95DE/95FF\95FF;
+                      LDX.W PlayerTurnOW                        ;;95C1|9602+95E1/9602\9602;
+                      LDA.B _0                                  ;;95C4|9605+95E4/9605\9605;
+                      STA.W OWPlayerXPosPtr,X                   ;;95C6|9607+95E6/9607\9607;
+                      LDA.B _2                                  ;;95C9|960A+95E9/960A\960A;
+                      STA.W OWPlayerYPosPtr,X                   ;;95CB|960C+95EB/960C\960C;
                       PLY                                       ;;95CE|960F+95EE/960F\960F;
                       PLA                                       ;;95CF|9610+95EF/9610\9610;
                       PHA                                       ;;95D0|9611+95F0/9611\9611;
@@ -2184,18 +2184,18 @@ CODE_049616:          CMP.W DATA_049426,X                       ;;95D5|9616+95F5
                       JSR CODE_049A24                           ;;95DB|961C+95FB/961C\961C;
                       PLY                                       ;;95DE|961F+95FE/961F\961F;
                       LDA.B #$01                                ;;95DF|9620+95FF/9620\9620;
-                      STA.W !SwapOverworldMusic                 ;;95E1|9622+9601/9622\9622;
+                      STA.W SwapOverworldMusic                  ;;95E1|9622+9601/9622\9622;
                       JSR CODE_04F407                           ;;95E4|9625+9604/9625\9625;
-                      STZ.W !OWTransitionFlag                   ;;95E7|9628+9607/9628\9628;
+                      STZ.W OWTransitionFlag                    ;;95E7|9628+9607/9628\9628;
                       REP #$20                                  ;;95EA|962B+960A/962B\962B; Accum (16 bit) 
-                      STZ.W !BackgroundColor                    ;;95EC|962D+960C/962D\962D;
+                      STZ.W BackgroundColor                     ;;95EC|962D+960C/962D\962D;
                       LDA.W #$7000                              ;;95EF|9630+960F/9630\9630;
-                      STA.W !OWTransitionXCalc                  ;;95F2|9633+9612/9633\9633;
+                      STA.W OWTransitionXCalc                   ;;95F2|9633+9612/9633\9633;
                       LDA.W #$5400                              ;;95F5|9636+9615/9636\9636;
-                      STA.W !OWTransitionYCalc                  ;;95F8|9639+9618/9639\9639;
+                      STA.W OWTransitionYCalc                   ;;95F8|9639+9618/9639\9639;
                       SEP #$20                                  ;;95FB|963C+961B/963C\963C; Accum (8 bit) 
                       LDA.B #$0A                                ;;95FD|963E+961D/963E\963E;
-                      STA.W !OverworldProcess                   ;;95FF|9640+961F/9640\9640;
+                      STA.W OverworldProcess                    ;;95FF|9640+961F/9640\9640;
                       BRA CODE_049648                           ;;9602|9643+9622/9643\9643;
                                                                 ;;                        ;
 CODE_049645:          DEX                                       ;;9604|9645+9624/9645\9645;
@@ -2213,25 +2213,25 @@ CODE_049648:          REP #$30                                  ;;9607|9648+9627
                       BCC CODE_049676                           ;;961B|965C+963B/965C\965C;
                       CMP.W #$006E                              ;;961D|965E+963D/965E\965E;
                       BCS CODE_049676                           ;;9620|9661+9640/9661\9661;
-CODE_049663:          LDA.W !PlayerTurnOW                       ;;9622|9663+9642/9663\9663;
+CODE_049663:          LDA.W PlayerTurnOW                        ;;9622|9663+9642/9663\9663;
                       LSR A                                     ;;9625|9666+9645/9666\9666;
                       AND.W #$0002                              ;;9626|9667+9646/9667\9667;
                       TAX                                       ;;9629|966A+9649/966A\966A;
-                      LDA.W !OWPlayerAnimation,X                ;;962A|966B+964A/966B\966B;
+                      LDA.W OWPlayerAnimation,X                 ;;962A|966B+964A/966B\966B;
                       ORA.W #$0008                              ;;962D|966E+964D/966E\966E;
-                      STA.W !OWPlayerAnimation,X                ;;9630|9671+9650/9671\9671;
+                      STA.W OWPlayerAnimation,X                 ;;9630|9671+9650/9671\9671;
                       BRA +                                     ;;9633|9674+9653/9674\9674;
                                                                 ;;                        ;
-CODE_049676:          LDA.W !PlayerTurnOW                       ;;9635|9676+9655/9676\9676;
+CODE_049676:          LDA.W PlayerTurnOW                        ;;9635|9676+9655/9676\9676;
                       LSR A                                     ;;9638|9679+9658/9679\9679;
                       AND.W #$0002                              ;;9639|967A+9659/967A\967A;
                       TAX                                       ;;963C|967D+965C/967D\967D;
-                      LDA.W !OWPlayerAnimation,X                ;;963D|967E+965D/967E\967E;
+                      LDA.W OWPlayerAnimation,X                 ;;963D|967E+965D/967E\967E;
                       AND.W #$00F7                              ;;9640|9681+9660/9681\9681;
-                      STA.W !OWPlayerAnimation,X                ;;9643|9684+9663/9684\9684;
+                      STA.W OWPlayerAnimation,X                 ;;9643|9684+9663/9684\9684;
                     + LDA.W #$0001                              ;;9646|9687+9666/9687\9687;
-                      STA.W !Layer1ScrollTimer                  ;;9649|968A+9669/968A\968A;
-                      LDA.W !OverworldLayer1Tile                ;;964C|968D+966C/968D\968D;
+                      STA.W Layer1ScrollTimer                   ;;9649|968A+9669/968A\968A;
+                      LDA.W OverworldLayer1Tile                 ;;964C|968D+966C/968D\968D;
                       CMP.W #$005F                              ;;964F|9690+966F/9690\9690;
                       BEQ +                                     ;;9652|9693+9672/9693\9693;
                       CMP.W #$005B                              ;;9654|9695+9674/9695\9695;
@@ -2239,11 +2239,11 @@ CODE_049676:          LDA.W !PlayerTurnOW                       ;;9635|9676+9655
                       CMP.W #$0082                              ;;9659|969A+9679/969A\969A;
                       BEQ +                                     ;;965C|969D+967C/969D\969D;
                       LDA.W #!SFX_BEEP                          ;;965E|969F+967E/969F\969F;
-                      STA.W !SPCIO3                             ;;9661|96A2+9681/96A2\96A2; / Play sound effect 
+                      STA.W SPCIO3                              ;;9661|96A2+9681/96A2\96A2; / Play sound effect 
                     + NOP                                       ;;9664|96A5+9684/96A5\96A5;
                       NOP                                       ;;9665|96A6+9685/96A6\96A6;
                       NOP                                       ;;9666|96A7+9686/96A7\96A7;
-                      LDA.W !OverworldLayer1Tile                ;;9667|96A8+9687/96A8\96A8;
+                      LDA.W OverworldLayer1Tile                 ;;9667|96A8+9687/96A8\96A8;
                       AND.W #$00FF                              ;;966A|96AB+968A/96AB\96AB;
                       CMP.W #$0082                              ;;966D|96AE+968D/96AE\96AE;
                       BEQ +                                     ;;9670|96B1+9690/96B1\96B1;
@@ -2252,31 +2252,31 @@ CODE_049676:          LDA.W !PlayerTurnOW                       ;;9635|9676+9655
                       AND.W #$00FF                              ;;9674|96B5+9694/96B5\96B5;
                       EOR.W #$0002                              ;;9677|96B8+9697/96B8\96B8;
                       TAY                                       ;;967A|96BB+969A/96BB\96BB;
-                      STZ.B !_6                                 ;;967B|96BC+969B/96BC\96BC;
-                      LDX.B !_4                                 ;;967D|96BE+969D/96BE\96BE;
-                      LDA.L !OWLayer1Translevel,X               ;;967F|96C0+969F/96C0\96C0;
+                      STZ.B _6                                  ;;967B|96BC+969B/96BC\96BC;
+                      LDX.B _4                                  ;;967D|96BE+969D/96BE\96BE;
+                      LDA.L OWLayer1Translevel,X                ;;967F|96C0+969F/96C0\96C0;
                       AND.W #$00FF                              ;;9683|96C4+96A3/96C4\96C4;
                       TAX                                       ;;9686|96C7+96A6/96C7\96C7;
                       LDA.W DATA_04941E,Y                       ;;9687|96C8+96A7/96C8\96C8;
-                      ORA.W !OWLevelTileSettings,X              ;;968A|96CB+96AA/96CB\96CB;
-                      STA.W !OWLevelTileSettings,X              ;;968D|96CE+96AD/96CE\96CE;
+                      ORA.W OWLevelTileSettings,X               ;;968A|96CB+96AA/96CB\96CB;
+                      STA.W OWLevelTileSettings,X               ;;968D|96CE+96AD/96CE\96CE;
                       PLY                                       ;;9690|96D1+96B0/96D1\96D1;
-                    + LDA.W !PlayerTurnOW                       ;;9691|96D2+96B1/96D2\96D2;
+                    + LDA.W PlayerTurnOW                        ;;9691|96D2+96B1/96D2\96D2;
                       LSR A                                     ;;9694|96D5+96B4/96D5\96D5;
                       AND.W #$0002                              ;;9695|96D6+96B5/96D6\96D6;
                       TAX                                       ;;9698|96D9+96B8/96D9\96D9;
-                      LDA.W !OWPlayerAnimation,X                ;;9699|96DA+96B9/96DA\96DA;
+                      LDA.W OWPlayerAnimation,X                 ;;9699|96DA+96B9/96DA\96DA;
                       AND.W #$000C                              ;;969C|96DD+96BC/96DD\96DD;
-                      STA.B !_E                                 ;;969F|96E0+96BF/96E0\96E0;
+                      STA.B _E                                  ;;969F|96E0+96BF/96E0\96E0;
                       LDA.W #$0001                              ;;96A1|96E2+96C1/96E2\96E2;
-                      STA.B !_4                                 ;;96A4|96E5+96C4/96E5\96E5;
-                      LDA.W !OverworldTightPath                 ;;96A6|96E7+96C6/96E7\96E7;
+                      STA.B _4                                  ;;96A4|96E5+96C4/96E5\96E5;
+                      LDA.W OverworldTightPath                  ;;96A6|96E7+96C6/96E7\96E7;
                       AND.W #$00FF                              ;;96A9|96EA+96C9/96EA\96EA;
-                      STA.B !_0                                 ;;96AC|96ED+96CC/96ED\96ED;
+                      STA.B _0                                  ;;96AC|96ED+96CC/96ED\96ED;
                       LDX.W #$0017                              ;;96AE|96EF+96CE/96EF\96EF;
 CODE_0496F2:          LDA.W DATA_04A03C,X                       ;;96B1|96F2+96D1/96F2\96F2;
                       AND.W #$00FF                              ;;96B4|96F5+96D4/96F5\96F5;
-                      CMP.B !_0                                 ;;96B7|96F8+96D7/96F8\96F8;
+                      CMP.B _0                                  ;;96B7|96F8+96D7/96F8\96F8;
                       BNE CODE_049704                           ;;96B9|96FA+96D9/96FA\96FA;
                       TXA                                       ;;96BB|96FC+96DB/96FC\96FC;
                       ASL A                                     ;;96BC|96FD+96DC/96FD\96FD;
@@ -2299,9 +2299,9 @@ CODE_04971D:          DEC A                                     ;;96DC|971D+96FC
                       ASL A                                     ;;96DD|971E+96FD/971E\971E;
                       TAX                                       ;;96DE|971F+96FE/971F\971F;
                       LDA.W DATA_049F49,X                       ;;96DF|9720+96FF/9720\9720;
-                      STA.B !_4                                 ;;96E2|9723+9702/9723\9723;
+                      STA.B _4                                  ;;96E2|9723+9702/9723\9723;
                       LDA.W DATA_049EA7,X                       ;;96E4|9725+9704/9725\9725;
-                    + STA.B !_0                                 ;;96E7|9728+9707/9728\9728;
+                    + STA.B _0                                  ;;96E7|9728+9707/9728\9728;
                       TXA                                       ;;96E9|972A+9709/972A\972A;
                       SEP #$20                                  ;;96EA|972B+970A/972B\972B; Accum (8 bit) 
                       LDX.W #$001C                              ;;96EC|972D+970C/972D\972D;
@@ -2327,127 +2327,127 @@ CODE_04974A:          LDX.W #$0000                              ;;9709|974A+9729
                       AND.B #$02                                ;;970D|974E+972D/974E\974E;
                       BEQ +                                     ;;970F|9750+972F/9750\9750;
                       LDX.W #$0001                              ;;9711|9752+9731/9752\9752;
-                    + LDA.B !_4,X                               ;;9714|9755+9734/9755\9755;
+                    + LDA.B _4,X                                ;;9714|9755+9734/9755\9755;
                       BEQ +                                     ;;9716|9757+9736/9757\9757;
-                      LDA.B !_0                                 ;;9718|9759+9738/9759\9759;
+                      LDA.B _0                                  ;;9718|9759+9738/9759\9759;
                       EOR.B #$FF                                ;;971A|975B+973A/975B\975B;
                       INC A                                     ;;971C|975D+973C/975D\975D;
-                      STA.B !_0                                 ;;971D|975E+973D/975E\975E;
-                      LDA.B !_1                                 ;;971F|9760+973F/9760\9760;
+                      STA.B _0                                  ;;971D|975E+973D/975E\975E;
+                      LDA.B _1                                  ;;971F|9760+973F/9760\9760;
                       EOR.B #$FF                                ;;9721|9762+9741/9762\9762;
                       INC A                                     ;;9723|9764+9743/9764\9764;
-                      STA.B !_1                                 ;;9724|9765+9744/9765\9765;
+                      STA.B _1                                  ;;9724|9765+9744/9765\9765;
                     + REP #$20                                  ;;9726|9767+9746/9767\9767; Accum (16 bit) 
                       PLA                                       ;;9728|9769+9748/9769\9769;
                       LDX.W #$0000                              ;;9729|976A+9749/976A\976A;
-                      LDA.B !_E                                 ;;972C|976D+974C/976D\976D;
+                      LDA.B _E                                  ;;972C|976D+974C/976D\976D;
                       AND.W #$0007                              ;;972E|976F+974E/976F\976F;
                       BNE +                                     ;;9731|9772+9751/9772\9772;
                       LDX.W #$0001                              ;;9733|9774+9753/9774\9774;
-                    + LDA.B !_E                                 ;;9736|9777+9756/9777\9777;
+                    + LDA.B _E                                  ;;9736|9777+9756/9777\9777;
                       AND.W #$00FF                              ;;9738|9779+9758/9779\9779;
-                      STA.B !_4                                 ;;973B|977C+975B/977C\977C;
-                      LDA.B !_0,X                               ;;973D|977E+975D/977E\977E;
+                      STA.B _4                                  ;;973B|977C+975B/977C\977C;
+                      LDA.B _0,X                                ;;973D|977E+975D/977E\977E;
                       AND.W #$00FF                              ;;973F|9780+975F/9780\9780;
                       CMP.W #$0080                              ;;9742|9783+9762/9783\9783;
                       BCS +                                     ;;9745|9786+9765/9786\9786;
-                      LDA.B !_4                                 ;;9747|9788+9767/9788\9788;
+                      LDA.B _4                                  ;;9747|9788+9767/9788\9788;
                       CLC                                       ;;9749|978A+9769/978A\978A;
                       ADC.W #$0002                              ;;974A|978B+976A/978B\978B;
-                      STA.B !_4                                 ;;974D|978E+976D/978E\978E;
-                    + LDA.W !PlayerTurnOW                       ;;974F|9790+976F/9790\9790;
+                      STA.B _4                                  ;;974D|978E+976D/978E\978E;
+                    + LDA.W PlayerTurnOW                        ;;974F|9790+976F/9790\9790;
                       LSR A                                     ;;9752|9793+9772/9793\9793;
                       AND.W #$0002                              ;;9753|9794+9773/9794\9794;
                       TAX                                       ;;9756|9797+9776/9797\9797;
-                      LDA.B !_4                                 ;;9757|9798+9777/9798\9798;
-                      STA.W !OWPlayerAnimation,X                ;;9759|979A+9779/979A\979A;
-                      LDX.W !PlayerTurnOW                       ;;975C|979D+977C/979D\979D;
-                      LDA.B !_0                                 ;;975F|97A0+977F/97A0\97A0;
+                      LDA.B _4                                  ;;9757|9798+9777/9798\9798;
+                      STA.W OWPlayerAnimation,X                 ;;9759|979A+9779/979A\979A;
+                      LDX.W PlayerTurnOW                        ;;975C|979D+977C/979D\979D;
+                      LDA.B _0                                  ;;975F|97A0+977F/97A0\97A0;
                       AND.W #$00FF                              ;;9761|97A2+9781/97A2\97A2;
                       CMP.W #$0080                              ;;9764|97A5+9784/97A5\97A5;
                       BCC +                                     ;;9767|97A8+9787/97A8\97A8;
                       ORA.W #$FF00                              ;;9769|97AA+9789/97AA\97AA;
                     + CLC                                       ;;976C|97AD+978C/97AD\97AD;
-                      ADC.W !OWPlayerXPos,X                     ;;976D|97AE+978D/97AE\97AE;
+                      ADC.W OWPlayerXPos,X                      ;;976D|97AE+978D/97AE\97AE;
                       AND.W #$FFFC                              ;;9770|97B1+9790/97B1\97B1;
-                      STA.W !OverworldDestXPos,X                ;;9773|97B4+9793/97B4\97B4;
-                      LDA.B !_1                                 ;;9776|97B7+9796/97B7\97B7;
+                      STA.W OverworldDestXPos,X                 ;;9773|97B4+9793/97B4\97B4;
+                      LDA.B _1                                  ;;9776|97B7+9796/97B7\97B7;
                       AND.W #$00FF                              ;;9778|97B9+9798/97B9\97B9;
                       CMP.W #$0080                              ;;977B|97BC+979B/97BC\97BC;
                       BCC +                                     ;;977E|97BF+979E/97BF\97BF;
                       ORA.W #$FF00                              ;;9780|97C1+97A0/97C1\97C1;
                     + CLC                                       ;;9783|97C4+97A3/97C4\97C4;
-                      ADC.W !OWPlayerYPos,X                     ;;9784|97C5+97A4/97C5\97C5;
+                      ADC.W OWPlayerYPos,X                      ;;9784|97C5+97A4/97C5\97C5;
                       AND.W #$FFFC                              ;;9787|97C8+97A7/97C8\97C8;
-                      STA.W !OverworldDestYPos,X                ;;978A|97CB+97AA/97CB\97CB;
+                      STA.W OverworldDestYPos,X                 ;;978A|97CB+97AA/97CB\97CB;
                       SEP #$20                                  ;;978D|97CE+97AD/97CE\97CE; Accum (8 bit) 
-                      LDA.W !OverworldDestXPos,X                ;;978F|97D0+97AF/97D0\97D0;
+                      LDA.W OverworldDestXPos,X                 ;;978F|97D0+97AF/97D0\97D0;
                       AND.B #$0F                                ;;9792|97D3+97B2/97D3\97D3;
                       BNE CODE_0497E3                           ;;9794|97D5+97B4/97D5\97D5;
                       LDY.W #$0004                              ;;9796|97D7+97B6/97D7\97D7;
-                      LDA.B !_0                                 ;;9799|97DA+97B9/97DA\97DA;
+                      LDA.B _0                                  ;;9799|97DA+97B9/97DA\97DA;
                       BMI +                                     ;;979B|97DC+97BB/97DC\97DC;
                       LDY.W #$0006                              ;;979D|97DE+97BD/97DE\97DE;
                     + BRA +                                     ;;97A0|97E1+97C0/97E1\97E1;
                                                                 ;;                        ;
-CODE_0497E3:          LDA.W !OverworldDestYPos,X                ;;97A2|97E3+97C2/97E3\97E3;
+CODE_0497E3:          LDA.W OverworldDestYPos,X                 ;;97A2|97E3+97C2/97E3\97E3;
                       AND.B #$0F                                ;;97A5|97E6+97C5/97E6\97E6;
                       BNE +                                     ;;97A7|97E8+97C7/97E8\97E8;
                       LDY.W #$0000                              ;;97A9|97EA+97C9/97EA\97EA;
-                      LDA.B !_1                                 ;;97AC|97ED+97CC/97ED\97ED;
+                      LDA.B _1                                  ;;97AC|97ED+97CC/97ED\97ED;
                       BMI +                                     ;;97AE|97EF+97CE/97EF\97EF;
                       LDY.W #$0002                              ;;97B0|97F1+97D0/97F1\97F1;
-                    + STY.W !OWPlayerDirection                  ;;97B3|97F4+97D3/97F4\97F4;
-                      LDA.W !OverworldProcess                   ;;97B6|97F7+97D6/97F7\97F7;
+                    + STY.W OWPlayerDirection                   ;;97B3|97F4+97D3/97F4\97F4;
+                      LDA.W OverworldProcess                    ;;97B6|97F7+97D6/97F7\97F7;
                       CMP.B #$0A                                ;;97B9|97FA+97D9/97FA\97FA;
                       BEQ CODE_049831                           ;;97BB|97FC+97DB/97FC\97FC;
                       JMP CODE_04945D                           ;;97BD|97FE+97DD/97FE\97FE;
                                                                 ;;                        ;
 CODE_049801:          REP #$20                                  ;;97C0|9801+97E0/9801\9801; Accum (16 bit) 
-                      LDA.W !PlayerTurnOW                       ;;97C2|9803+97E2/9803\9803;
+                      LDA.W PlayerTurnOW                        ;;97C2|9803+97E2/9803\9803;
                       CLC                                       ;;97C5|9806+97E5/9806\9806;
                       ADC.W #$0002                              ;;97C6|9807+97E6/9807\9807;
                       TAX                                       ;;97C9|980A+97E9/980A\980A;
                       LDY.W #$0002                              ;;97CA|980B+97EA/980B\980B;
-CODE_04980E:          LDA.W !Layer3ScrollType,Y                 ;;97CD|980E+97ED/980E\980E;
+CODE_04980E:          LDA.W Layer3ScrollType,Y                  ;;97CD|980E+97ED/980E\980E;
                       AND.W #$00FF                              ;;97D0|9811+97F0/9811\9811;
                       CLC                                       ;;97D3|9814+97F3/9814\9814;
-                      ADC.W !OWPlayerSpeed,Y                    ;;97D4|9815+97F4/9815\9815;
-                      STA.W !Layer3ScrollType,Y                 ;;97D7|9818+97F7/9818\9818;
+                      ADC.W OWPlayerSpeed,Y                     ;;97D4|9815+97F4/9815\9815;
+                      STA.W Layer3ScrollType,Y                  ;;97D7|9818+97F7/9818\9818;
                       AND.W #$FF00                              ;;97DA|981B+97FA/981B\981B;
                       BPL +                                     ;;97DD|981E+97FD/981E\981E;
                       ORA.W #$00FF                              ;;97DF|9820+97FF/9820\9820;
                     + XBA                                       ;;97E2|9823+9802/9823\9823;
                       CLC                                       ;;97E3|9824+9803/9824\9824;
-                      ADC.W !OWPlayerXPos,X                     ;;97E4|9825+9804/9825\9825;
-                      STA.W !OWPlayerXPos,X                     ;;97E7|9828+9807/9828\9828;
+                      ADC.W OWPlayerXPos,X                      ;;97E4|9825+9804/9825\9825;
+                      STA.W OWPlayerXPos,X                      ;;97E7|9828+9807/9828\9828;
                       DEX                                       ;;97EA|982B+980A/982B\982B;
                       DEX                                       ;;97EB|982C+980B/982C\982C;
                       DEY                                       ;;97EC|982D+980C/982D\982D;
                       DEY                                       ;;97ED|982E+980D/982E\982E;
                       BPL CODE_04980E                           ;;97EE|982F+980E/982F\982F;
 CODE_049831:          SEP #$20                                  ;;97F0|9831+9810/9831\9831; Accum (8 bit) 
-                      LDA.W !OverworldProcess                   ;;97F2|9833+9812/9833\9833;
+                      LDA.W OverworldProcess                    ;;97F2|9833+9812/9833\9833;
                       CMP.B #$0A                                ;;97F5|9836+9815/9836\9836;
                       BEQ CODE_049882                           ;;97F7|9838+9817/9838\9838;
-                      LDA.W !OverworldEarthquake                ;;97F9|983A+9819/983A\983A;
+                      LDA.W OverworldEarthquake                 ;;97F9|983A+9819/983A\983A;
                       BNE CODE_049882                           ;;97FC|983D+981C/983D\983D;
 CODE_04983F:          REP #$30                                  ;;97FE|983F+981E/983F\983F; Index (16 bit) Accum (16 bit) 
-                      LDX.W !PlayerTurnOW                       ;;9800|9841+9820/9841\9841;
-                      LDA.W !OWPlayerXPos,X                     ;;9803|9844+9823/9844\9844;
-                      STA.B !_0                                 ;;9806|9847+9826/9847\9847;
-                      LDA.W !OWPlayerYPos,X                     ;;9808|9849+9828/9849\9849;
-                      STA.B !_2                                 ;;980B|984C+982B/984C\984C;
+                      LDX.W PlayerTurnOW                        ;;9800|9841+9820/9841\9841;
+                      LDA.W OWPlayerXPos,X                      ;;9803|9844+9823/9844\9844;
+                      STA.B _0                                  ;;9806|9847+9826/9847\9847;
+                      LDA.W OWPlayerYPos,X                      ;;9808|9849+9828/9849\9849;
+                      STA.B _2                                  ;;980B|984C+982B/984C\984C;
                       TXA                                       ;;980D|984E+982D/984E\984E;
                       LSR A                                     ;;980E|984F+982E/984F\984F;
                       LSR A                                     ;;980F|9850+982F/9850\9850;
                       TAX                                       ;;9810|9851+9830/9851\9851;
-                      LDA.W !OWPlayerSubmap,X                   ;;9811|9852+9831/9852\9852;
+                      LDA.W OWPlayerSubmap,X                    ;;9811|9852+9831/9852\9852;
                       AND.W #$00FF                              ;;9814|9855+9834/9855\9855;
                       BNE CODE_049882                           ;;9817|9858+9837/9858\9858;
                       LDX.W #$0002                              ;;9819|985A+9839/985A\985A;
                       TXY                                       ;;981C|985D+983C/985D\985D;
-CODE_04985E:          LDA.B !_0,X                               ;;981D|985E+983D/985E\985E;
+CODE_04985E:          LDA.B _0,X                                ;;981D|985E+983D/985E\985E;
                       SEC                                       ;;981F|9860+983F/9860\9860;
                       SBC.W #$0080                              ;;9820|9861+9840/9861\9861;
                       BPL CODE_049870                           ;;9823|9864+9843/9864\9864;
@@ -2459,8 +2459,8 @@ CODE_04985E:          LDA.B !_0,X                               ;;981D|985E+983D
 CODE_049870:          CMP.W DATA_04941A,Y                       ;;982F|9870+984F/9870\9870;
                       BCC +                                     ;;9832|9873+9852/9873\9873;
                       LDA.W DATA_04941A,Y                       ;;9834|9875+9854/9875\9875;
-                    + STA.B !Layer1XPos,X                       ;;9837|9878+9857/9878\9878;
-                      STA.B !Layer2XPos,X                       ;;9839|987A+9859/987A\987A;
+                    + STA.B Layer1XPos,X                        ;;9837|9878+9857/9878\9878;
+                      STA.B Layer2XPos,X                        ;;9839|987A+9859/987A\987A;
                       DEY                                       ;;983B|987C+985B/987C\987C;
                       DEY                                       ;;983C|987D+985C/987D\987D;
                       DEX                                       ;;983D|987E+985D/987E\987E;
@@ -2469,46 +2469,46 @@ CODE_049870:          CMP.W DATA_04941A,Y                       ;;982F|9870+984F
 CODE_049882:          SEP #$30                                  ;;9841|9882+9861/9882\9882; Index (8 bit) Accum (8 bit) 
                       RTS                                       ;;9843|9884+9863/9884\9884; Return 
                                                                 ;;                        ;
-OW_TilePos_Calc:      LDA.B !_0                                 ;;9844|9885+9864/9885\9885; Get overworld X pos/16 (X) ; Accum (16 bit) 
+OW_TilePos_Calc:      LDA.B _0                                  ;;9844|9885+9864/9885\9885; Get overworld X pos/16 (X) ; Accum (16 bit) 
                       AND.W #$000F                              ;;9846|9887+9866/9887\9887; \ 
-                      STA.B !_4                                 ;;9849|988A+9869/988A\988A;  | 
-                      LDA.B !_0                                 ;;984B|988C+986B/988C\988C;  | 
+                      STA.B _4                                  ;;9849|988A+9869/988A\988A;  | 
+                      LDA.B _0                                  ;;984B|988C+986B/988C\988C;  | 
                       AND.W #$0010                              ;;984D|988E+986D/988E\988E;  | 
                       ASL A                                     ;;9850|9891+9870/9891\9891;  |Set tile pos to ((X&0xF)+((X&0x10)<<4)) 
                       ASL A                                     ;;9851|9892+9871/9892\9892;  | 
                       ASL A                                     ;;9852|9893+9872/9893\9893;  | 
                       ASL A                                     ;;9853|9894+9873/9894\9894;  | 
-                      ADC.B !_4                                 ;;9854|9895+9874/9895\9895;  | 
-                      STA.B !_4                                 ;;9856|9897+9876/9897\9897; / 
-                      LDA.B !_2                                 ;;9858|9899+9878/9899\9899; Get overworld Y pos/16 (Y) 
+                      ADC.B _4                                  ;;9854|9895+9874/9895\9895;  | 
+                      STA.B _4                                  ;;9856|9897+9876/9897\9897; / 
+                      LDA.B _2                                  ;;9858|9899+9878/9899\9899; Get overworld Y pos/16 (Y) 
                       ASL A                                     ;;985A|989B+987A/989B\989B; \ 
                       ASL A                                     ;;985B|989C+987B/989C\989C;  | 
                       ASL A                                     ;;985C|989D+987C/989D\989D;  |Increase tile pos by ((Y<<4)&0xFF) 
                       ASL A                                     ;;985D|989E+987D/989E\989E;  | 
                       AND.W #$00FF                              ;;985E|989F+987E/989F\989F;  | 
-                      ADC.B !_4                                 ;;9861|98A2+9881/98A2\98A2;  | 
-                      STA.B !_4                                 ;;9863|98A4+9883/98A4\98A4; / 
-                      LDA.B !_2                                 ;;9865|98A6+9885/98A6\98A6; \ 
+                      ADC.B _4                                  ;;9861|98A2+9881/98A2\98A2;  | 
+                      STA.B _4                                  ;;9863|98A4+9883/98A4\98A4; / 
+                      LDA.B _2                                  ;;9865|98A6+9885/98A6\98A6; \ 
                       AND.W #$0010                              ;;9867|98A8+9887/98A8\98A8;  | 
                       BEQ +                                     ;;986A|98AB+988A/98AB\98AB;  |If (Y&0x10) isn't 0, 
-                      LDA.B !_4                                 ;;986C|98AD+988C/98AD\98AD;  |increase tile pos by x200 
+                      LDA.B _4                                  ;;986C|98AD+988C/98AD\98AD;  |increase tile pos by x200 
                       CLC                                       ;;986E|98AF+988E/98AF\98AF;  | 
                       ADC.W #$0200                              ;;986F|98B0+988F/98B0\98B0;  | 
-                      STA.B !_4                                 ;;9872|98B3+9892/98B3\98B3; / 
-                    + LDA.W !OWPlayerSubmap,X                   ;;9874|98B5+9894/98B5\98B5; \ 
+                      STA.B _4                                  ;;9872|98B3+9892/98B3\98B3; / 
+                    + LDA.W OWPlayerSubmap,X                    ;;9874|98B5+9894/98B5\98B5; \ 
                       AND.W #$00FF                              ;;9877|98B8+9897/98B8\98B8;  | 
                       BEQ Return0498C5                          ;;987A|98BB+989A/98BB\98BB;  |If on submap, 
-                      LDA.B !_4                                 ;;987C|98BD+989C/98BD\98BD;  |Increase tile pos by x400 
+                      LDA.B _4                                  ;;987C|98BD+989C/98BD\98BD;  |Increase tile pos by x400 
                       CLC                                       ;;987E|98BF+989E/98BF\98BF;  | 
                       ADC.W #$0400                              ;;987F|98C0+989F/98C0\98C0;  | 
-                      STA.B !_4                                 ;;9882|98C3+98A2/98C3\98C3; / 
+                      STA.B _4                                  ;;9882|98C3+98A2/98C3\98C3; / 
 Return0498C5:         RTS                                       ;;9884|98C5+98A4/98C5\98C5; Return 
                                                                 ;;                        ;
-CODE_0498C6:          STZ.W !OWPlayerAnimation                  ;;9885|98C6+98A5/98C6\98C6; Accum (8 bit) 
+CODE_0498C6:          STZ.W OWPlayerAnimation                   ;;9885|98C6+98A5/98C6\98C6; Accum (8 bit) 
                       LDA.B #$80                                ;;9888|98C9+98A8/98C9\98C9;
                       CLC                                       ;;988A|98CB+98AA/98CB\98CB;
-                      ADC.W !IntroMarchYPosSpx                  ;;988B|98CC+98AB/98CC\98CC;
-                      STA.W !IntroMarchYPosSpx                  ;;988E|98CF+98AE/98CF\98CF;
+                      ADC.W IntroMarchYPosSpx                   ;;988B|98CC+98AB/98CC\98CC;
+                      STA.W IntroMarchYPosSpx                   ;;988E|98CF+98AE/98CF\98CF;
                       PHP                                       ;;9891|98D2+98B1/98D2\98D2;
                       LDA.B #$0F                                ;;9892|98D3+98B2/98D3\98D3;
                       CMP.B #$08                                ;;9894|98D5+98B4/98D5\98D5;
@@ -2517,54 +2517,54 @@ CODE_0498C6:          STZ.W !OWPlayerAnimation                  ;;9885|98C6+98A5
                       ORA.B #$F0                                ;;989A|98DB+98BA/98DB\98DB;
                       DEY                                       ;;989C|98DD+98BC/98DD\98DD;
                     + PLP                                       ;;989D|98DE+98BD/98DE\98DE;
-                      ADC.W !OWPlayerYPos                       ;;989E|98DF+98BE/98DF\98DF;
-                      STA.W !OWPlayerYPos                       ;;98A1|98E2+98C1/98E2\98E2;
+                      ADC.W OWPlayerYPos                        ;;989E|98DF+98BE/98DF\98DF;
+                      STA.W OWPlayerYPos                        ;;98A1|98E2+98C1/98E2\98E2;
                       TYA                                       ;;98A4|98E5+98C4/98E5\98E5;
-                      ADC.W !OWPlayerYPos+1                     ;;98A5|98E6+98C5/98E6\98E6;
-                      STA.W !OWPlayerYPos+1                     ;;98A8|98E9+98C8/98E9\98E9;
-                      LDA.W !OWPlayerYPos                       ;;98AB|98EC+98CB/98EC\98EC;
+                      ADC.W OWPlayerYPos+1                      ;;98A5|98E6+98C5/98E6\98E6;
+                      STA.W OWPlayerYPos+1                      ;;98A8|98E9+98C8/98E9\98E9;
+                      LDA.W OWPlayerYPos                        ;;98AB|98EC+98CB/98EC\98EC;
                       CMP.B #$78                                ;;98AE|98EF+98CE/98EF\98EF;
                       BNE +                                     ;;98B0|98F1+98D0/98F1\98F1;
-                      STZ.W !OverworldProcess                   ;;98B2|98F3+98D2/98F3\98F3;
+                      STZ.W OverworldProcess                    ;;98B2|98F3+98D2/98F3\98F3;
                       JSL CODE_009BC9                           ;;98B5|98F6+98D5/98F6\98F6;
                     + RTS                                       ;;98B9|98FA+98D9/98FA\98FA; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
                       db $08,$00,$04,$00,$02,$00,$01,$00        ;;98BA|98FB+98DA/98FB\98FB;
                                                                 ;;                        ;
-CODE_049903:          LDX.W !OWLevelExitMode                    ;;98C2|9903+98E2/9903\9903;
+CODE_049903:          LDX.W OWLevelExitMode                     ;;98C2|9903+98E2/9903\9903;
                       BEQ Return0498C5                          ;;98C5|9906+98E5/9906\9906;
                       BMI Return0498C5                          ;;98C7|9908+98E7/9908\9908;
                       DEX                                       ;;98C9|990A+98E9/990A\990A;
                       LDA.W DATA_049060,X                       ;;98CA|990B+98EA/990B\990B;
-                      STA.B !_8                                 ;;98CD|990E+98ED/990E\990E;
-                      STZ.B !_9                                 ;;98CF|9910+98EF/9910\9910;
+                      STA.B _8                                  ;;98CD|990E+98ED/990E\990E;
+                      STZ.B _9                                  ;;98CF|9910+98EF/9910\9910;
                       REP #$20                                  ;;98D1|9912+98F1/9912\9912; Accum (16 bit) 
-                      LDX.W !PlayerTurnOW                       ;;98D3|9914+98F3/9914\9914;
-                      LDA.W !OWPlayerXPos,X                     ;;98D6|9917+98F6/9917\9917;
+                      LDX.W PlayerTurnOW                        ;;98D3|9914+98F3/9914\9914;
+                      LDA.W OWPlayerXPos,X                      ;;98D6|9917+98F6/9917\9917;
                       LSR A                                     ;;98D9|991A+98F9/991A\991A;
                       LSR A                                     ;;98DA|991B+98FA/991B\991B;
                       LSR A                                     ;;98DB|991C+98FB/991C\991C;
                       LSR A                                     ;;98DC|991D+98FC/991D\991D;
-                      STA.B !_0                                 ;;98DD|991E+98FD/991E\991E;
-                      STA.W !OWPlayerXPosPtr,X                  ;;98DF|9920+98FF/9920\9920;
-                      LDA.W !OWPlayerYPos,X                     ;;98E2|9923+9902/9923\9923;
+                      STA.B _0                                  ;;98DD|991E+98FD/991E\991E;
+                      STA.W OWPlayerXPosPtr,X                   ;;98DF|9920+98FF/9920\9920;
+                      LDA.W OWPlayerYPos,X                      ;;98E2|9923+9902/9923\9923;
                       LSR A                                     ;;98E5|9926+9905/9926\9926;
                       LSR A                                     ;;98E6|9927+9906/9927\9927;
                       LSR A                                     ;;98E7|9928+9907/9928\9928;
                       LSR A                                     ;;98E8|9929+9908/9929\9929;
-                      STA.B !_2                                 ;;98E9|992A+9909/992A\992A;
-                      STA.W !OWPlayerYPosPtr,X                  ;;98EB|992C+990B/992C\992C;
+                      STA.B _2                                  ;;98E9|992A+9909/992A\992A;
+                      STA.W OWPlayerYPosPtr,X                   ;;98EB|992C+990B/992C\992C;
                       TXA                                       ;;98EE|992F+990E/992F\992F;
                       LSR A                                     ;;98EF|9930+990F/9930\9930;
                       LSR A                                     ;;98F0|9931+9910/9931\9931;
                       TAX                                       ;;98F1|9932+9911/9932\9932;
                       JSR OW_TilePos_Calc                       ;;98F2|9933+9912/9933\9933;
                       REP #$10                                  ;;98F5|9936+9915/9936\9936; Index (16 bit) 
-                      LDX.B !_4                                 ;;98F7|9938+9917/9938\9938;
-                      LDA.L !OWLayer2Directions,X               ;;98F9|993A+9919/993A\993A;
+                      LDX.B _4                                  ;;98F7|9938+9917/9938\9938;
+                      LDA.L OWLayer2Directions,X                ;;98F9|993A+9919/993A\993A;
                       AND.W #$00FF                              ;;98FD|993E+991D/993E\993E;
-                      LDX.B !_8                                 ;;9900|9941+9920/9941\9941;
+                      LDX.B _8                                  ;;9900|9941+9920/9941\9941;
                       BEQ CODE_049949                           ;;9902|9943+9922/9943\9943;
                     - LSR A                                     ;;9904|9945+9924/9945\9945;
                       DEX                                       ;;9905|9946+9925/9946\9946;
@@ -2572,13 +2572,13 @@ CODE_049903:          LDX.W !OWLevelExitMode                    ;;98C2|9903+98E2
 CODE_049949:          AND.W #$0003                              ;;9908|9949+9928/9949\9949;
                       ASL A                                     ;;990B|994C+992B/994C\994C;
                       TAY                                       ;;990C|994D+992C/994D\994D;
-                      LDX.B !_4                                 ;;990D|994E+992D/994E\994E;
-                      LDA.L !OWLayer1Translevel,X               ;;990F|9950+992F/9950\9950;
+                      LDX.B _4                                  ;;990D|994E+992D/994E\994E;
+                      LDA.L OWLayer1Translevel,X                ;;990F|9950+992F/9950\9950;
                       AND.W #$00FF                              ;;9913|9954+9933/9954\9954;
                       TAX                                       ;;9916|9957+9936/9957\9957;
                       LDA.W DATA_04941E,Y                       ;;9917|9958+9937/9958\9958;
-                      ORA.W !OWLevelTileSettings,X              ;;991A|995B+993A/995B\995B;
-                      STA.W !OWLevelTileSettings,X              ;;991D|995E+993D/995E\995E;
+                      ORA.W OWLevelTileSettings,X               ;;991A|995B+993A/995B\995B;
+                      STA.W OWLevelTileSettings,X               ;;991D|995E+993D/995E\995E;
                       SEP #$30                                  ;;9920|9961+9940/9961\9961; Index (8 bit) Accum (8 bit) 
                       RTS                                       ;;9922|9963+9942/9963\9963; Return 
                                                                 ;;                        ;
@@ -2625,45 +2625,45 @@ DATA_049A0E:          db $D8,$FF,$EF,$FF,$80,$00,$EF,$FF        ;;99CD|9A0E+99ED
                       db $80,$00,$F0,$00,$28,$01                ;;99DD|9A1E+99FD/9A1E\9A1E;
                                                                 ;;                        ;
 CODE_049A24:          REP #$20                                  ;;99E3|9A24+9A03/9A24\9A24; Accum (16 bit) 
-                      LDA.W !PlayerTurnOW                       ;;99E5|9A26+9A05/9A26\9A26;
+                      LDA.W PlayerTurnOW                        ;;99E5|9A26+9A05/9A26\9A26;
                       LSR A                                     ;;99E8|9A29+9A08/9A29\9A29;
                       LSR A                                     ;;99E9|9A2A+9A09/9A2A\9A2A;
                       TAX                                       ;;99EA|9A2B+9A0A/9A2B\9A2B;
-                      LDA.W !OWPlayerSubmap,X                   ;;99EB|9A2C+9A0B/9A2C\9A2C;
+                      LDA.W OWPlayerSubmap,X                    ;;99EB|9A2C+9A0B/9A2C\9A2C;
                       AND.W #$00FF                              ;;99EE|9A2F+9A0E/9A2F\9A2F;
-                      STA.W !CurrentSubmap                      ;;99F1|9A32+9A11/9A32\9A32;
+                      STA.W CurrentSubmap                       ;;99F1|9A32+9A11/9A32\9A32;
                       LDA.W #$001A                              ;;99F4|9A35+9A14/9A35\9A35;
-                      STA.B !_2                                 ;;99F7|9A38+9A17/9A38\9A38;
+                      STA.B _2                                  ;;99F7|9A38+9A17/9A38\9A38;
                       LDY.B #$41                                ;;99F9|9A3A+9A19/9A3A\9A3A;
-                      LDX.W !PlayerTurnOW                       ;;99FB|9A3C+9A1B/9A3C\9A3C;
-CODE_049A3F:          LDA.W !OWPlayerYPos,X                     ;;99FE|9A3F+9A1E/9A3F\9A3F;
+                      LDX.W PlayerTurnOW                        ;;99FB|9A3C+9A1B/9A3C\9A3C;
+CODE_049A3F:          LDA.W OWPlayerYPos,X                      ;;99FE|9A3F+9A1E/9A3F\9A3F;
                       CMP.W DATA_049964,Y                       ;;9A01|9A42+9A21/9A42\9A42;
                       BNE CODE_049A85                           ;;9A04|9A45+9A24/9A45\9A45;
-                      LDA.W !OWPlayerXPos,X                     ;;9A06|9A47+9A26/9A47\9A47;
+                      LDA.W OWPlayerXPos,X                      ;;9A06|9A47+9A26/9A47\9A47;
                       CMP.W DATA_049966,Y                       ;;9A09|9A4A+9A29/9A4A\9A4A;
                       BNE CODE_049A85                           ;;9A0C|9A4D+9A2C/9A4D\9A4D;
                       LDA.W DATA_049968,Y                       ;;9A0E|9A4F+9A2E/9A4F\9A4F;
                       AND.W #$00FF                              ;;9A11|9A52+9A31/9A52\9A52;
-                      CMP.W !CurrentSubmap                      ;;9A14|9A55+9A34/9A55\9A55;
+                      CMP.W CurrentSubmap                       ;;9A14|9A55+9A34/9A55\9A55;
                       BNE CODE_049A85                           ;;9A17|9A58+9A37/9A58\9A58;
                       LDA.W DATA_0499AA,Y                       ;;9A19|9A5A+9A39/9A5A\9A5A;
-                      STA.W !OWPlayerYPos,X                     ;;9A1C|9A5D+9A3C/9A5D\9A5D;
+                      STA.W OWPlayerYPos,X                      ;;9A1C|9A5D+9A3C/9A5D\9A5D;
                       LDA.W DATA_0499AC,Y                       ;;9A1F|9A60+9A3F/9A60\9A60;
-                      STA.W !OWPlayerXPos,X                     ;;9A22|9A63+9A42/9A63\9A63;
+                      STA.W OWPlayerXPos,X                      ;;9A22|9A63+9A42/9A63\9A63;
                       LDA.W DATA_0499AE,Y                       ;;9A25|9A66+9A45/9A66\9A66;
                       AND.W #$00FF                              ;;9A28|9A69+9A48/9A69\9A69;
-                      STA.W !CurrentSubmap                      ;;9A2B|9A6C+9A4B/9A6C\9A6C;
-                      LDY.B !_2                                 ;;9A2E|9A6F+9A4E/9A6F\9A6F;
+                      STA.W CurrentSubmap                       ;;9A2B|9A6C+9A4B/9A6C\9A6C;
+                      LDY.B _2                                  ;;9A2E|9A6F+9A4E/9A6F\9A6F;
                       LDA.W DATA_0499F0,Y                       ;;9A30|9A71+9A50/9A71\9A71;
                       AND.W #$00FF                              ;;9A33|9A74+9A53/9A74\9A74;
-                      STA.W !OWPlayerYPosPtr,X                  ;;9A36|9A77+9A56/9A77\9A77;
+                      STA.W OWPlayerYPosPtr,X                   ;;9A36|9A77+9A56/9A77\9A77;
                       LDA.W DATA_0499F1,Y                       ;;9A39|9A7A+9A59/9A7A\9A7A;
                       AND.W #$00FF                              ;;9A3C|9A7D+9A5C/9A7D\9A7D;
-                      STA.W !OWPlayerXPosPtr,X                  ;;9A3F|9A80+9A5F/9A80\9A80;
+                      STA.W OWPlayerXPosPtr,X                   ;;9A3F|9A80+9A5F/9A80\9A80;
                       BRA CODE_049A90                           ;;9A42|9A83+9A62/9A83\9A83;
                                                                 ;;                        ;
-CODE_049A85:          DEC.B !_2                                 ;;9A44|9A85+9A64/9A85\9A85;
-                      DEC.B !_2                                 ;;9A46|9A87+9A66/9A87\9A87;
+CODE_049A85:          DEC.B _2                                  ;;9A44|9A85+9A64/9A85\9A85;
+                      DEC.B _2                                  ;;9A46|9A87+9A66/9A87\9A87;
                       DEY                                       ;;9A48|9A89+9A68/9A89\9A89;
                       DEY                                       ;;9A49|9A8A+9A69/9A8A\9A8A;
                       DEY                                       ;;9A4A|9A8B+9A6A/9A8B\9A8B;
@@ -2673,15 +2673,15 @@ CODE_049A85:          DEC.B !_2                                 ;;9A44|9A85+9A64
 CODE_049A90:          SEP #$20                                  ;;9A4F|9A90+9A6F/9A90\9A90; Accum (8 bit) 
                       RTS                                       ;;9A51|9A92+9A71/9A92\9A92; Return 
                                                                 ;;                        ;
-CODE_049A93:          LDA.W !PlayerTurnOW                       ;;9A52|9A93+9A72/9A93\9A93; Accum (16 bit) 
+CODE_049A93:          LDA.W PlayerTurnOW                        ;;9A52|9A93+9A72/9A93\9A93; Accum (16 bit) 
                       AND.W #$00FF                              ;;9A55|9A96+9A75/9A96\9A96;
                       LSR A                                     ;;9A58|9A99+9A78/9A99\9A99;
                       LSR A                                     ;;9A59|9A9A+9A79/9A9A\9A9A;
                       TAX                                       ;;9A5A|9A9B+9A7A/9A9B\9A9B;
-                      LDA.W !OWPlayerSubmap,X                   ;;9A5B|9A9C+9A7B/9A9C\9A9C;
+                      LDA.W OWPlayerSubmap,X                    ;;9A5B|9A9C+9A7B/9A9C\9A9C;
                       AND.W #$FF00                              ;;9A5E|9A9F+9A7E/9A9F\9A9F;
-                      ORA.W !CurrentSubmap                      ;;9A61|9AA2+9A81/9AA2\9AA2;
-                      STA.W !OWPlayerSubmap,X                   ;;9A64|9AA5+9A84/9AA5\9AA5;
+                      ORA.W CurrentSubmap                       ;;9A61|9AA2+9A81/9AA2\9AA2;
+                      STA.W OWPlayerSubmap,X                    ;;9A64|9AA5+9A84/9AA5\9AA5;
                       AND.W #$00FF                              ;;9A67|9AA8+9A87/9AA8\9AA8;
                       BNE +                                     ;;9A6A|9AAB+9A8A/9AAB\9AAB;
                       JMP CODE_04983F                           ;;9A6C|9AAD+9A8C/9AAD\9AAD;
@@ -2691,11 +2691,11 @@ CODE_049A93:          LDA.W !PlayerTurnOW                       ;;9A52|9A93+9A72
                       ASL A                                     ;;9A71|9AB2+9A91/9AB2\9AB2;
                       TAY                                       ;;9A72|9AB3+9A92/9AB3\9AB3;
                       LDA.W DATA_049A0C,Y                       ;;9A73|9AB4+9A93/9AB4\9AB4;
-                      STA.B !Layer1XPos                         ;;9A76|9AB7+9A96/9AB7\9AB7;
-                      STA.B !Layer2XPos                         ;;9A78|9AB9+9A98/9AB9\9AB9;
+                      STA.B Layer1XPos                          ;;9A76|9AB7+9A96/9AB7\9AB7;
+                      STA.B Layer2XPos                          ;;9A78|9AB9+9A98/9AB9\9AB9;
                       LDA.W DATA_049A0E,Y                       ;;9A7A|9ABB+9A9A/9ABB\9ABB;
-                      STA.B !Layer1YPos                         ;;9A7D|9ABE+9A9D/9ABE\9ABE;
-                      STA.B !Layer2YPos                         ;;9A7F|9AC0+9A9F/9AC0\9AC0;
+                      STA.B Layer1YPos                          ;;9A7D|9ABE+9A9D/9ABE\9ABE;
+                      STA.B Layer2YPos                          ;;9A7F|9AC0+9A9F/9AC0\9AC0;
                       SEP #$30                                  ;;9A81|9AC2+9AA1/9AC2\9AC2; Index (8 bit) Accum (8 bit) 
                       RTS                                       ;;9A83|9AC4+9AA3/9AC4\9AC4; Return 
                                                                 ;;                        ;
@@ -2835,22 +2835,22 @@ DATA_049CED:          db $CB,$01,$9D,$01,$9E,$01,$9F,$01        ;;    |9CED+9CCC
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
                    if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
-CODE_049D07:          LDA.L !DynStripeImgSize                   ;;9BFB                    ; Index (16 bit) Accum (16 bit) 
+CODE_049D07:          LDA.L DynStripeImgSize                    ;;9BFB                    ; Index (16 bit) Accum (16 bit) 
                       TAX                                       ;;9BFF                    ;
                       CLC                                       ;;9C00                    ;
                       ADC.W #$0020                              ;;9C01                    ;
-                      STA.B !_2                                 ;;9C04                    ;
+                      STA.B _2                                  ;;9C04                    ;
                       CLC                                       ;;9C06                    ;
                       ADC.W #$0024                              ;;9C07                    ;
-                      STA.L !DynStripeImgSize                   ;;9C0A                    ;
+                      STA.L DynStripeImgSize                    ;;9C0A                    ;
                       LDA.W #$1F00                              ;;9C0E                    ;
-                      STA.L !DynamicStripeImage+2,X             ;;9C11                    ;
-                      STA.L !DynamicStripeImage+$26,X           ;;9C15                    ;
+                      STA.L DynamicStripeImage+2,X              ;;9C11                    ;
+                      STA.L DynamicStripeImage+$26,X            ;;9C15                    ;
                       LDA.W #$8C50                              ;;9C19                    ;
-                      STA.L !DynamicStripeImage,X               ;;9C1C                    ;
+                      STA.L DynamicStripeImage,X                ;;9C1C                    ;
                       LDA.W #$6C50                              ;;9C20                    ;
-                      STA.L !DynamicStripeImage+$24,X           ;;9C23                    ;
-                      LDA.B !_1                                 ;;9C27                    ;
+                      STA.L DynamicStripeImage+$24,X            ;;9C23                    ;
+                      LDA.B _1                                  ;;9C27                    ;
                       AND.W #$001F                              ;;9C29                    ;
                       ASL A                                     ;;9C2C                    ;
                       TAY                                       ;;9C2D                    ;
@@ -2860,7 +2860,7 @@ CODE_049D07:          LDA.L !DynStripeImgSize                   ;;9BFB          
                       LDA.W LevelNameStrings,Y                  ;;9C34                    ;
                       BMI +                                     ;;9C37                    ;
                       JSR CODE_049D7F                           ;;9C39                    ;
-                      LDA.B !_1                                 ;;9C3C                    ;
+                      LDA.B _1                                  ;;9C3C                    ;
                       ASL A                                     ;;9C3E                    ;
                       ROL A                                     ;;9C3F                    ;
                       ROL A                                     ;;9C40                    ;
@@ -2873,7 +2873,7 @@ CODE_049D07:          LDA.L !DynStripeImgSize                   ;;9BFB          
                       SEP #$20                                  ;;9C4C                    ;
                       JSR CODE_049D7F                           ;;9C4E                    ;
                     + REP #$20                                  ;;9C51                    ; Accum (16 bit) 
-                      LDA.B !_0                                 ;;9C53                    ;
+                      LDA.B _0                                  ;;9C53                    ;
                       AND.W #$00F0                              ;;9C55                    ;
                       LSR A                                     ;;9C58                    ;
                       LSR A                                     ;;9C59                    ;
@@ -2886,7 +2886,7 @@ CODE_049D07:          LDA.L !DynStripeImgSize                   ;;9BFB          
                       CMP.B #$DD                                ;;9C65                    ;
                       BEQ +                                     ;;9C67                    ;
                       JSR CODE_049D7F                           ;;9C69                    ;
-                      LDA.B !_1                                 ;;9C6C                    ;
+                      LDA.B _1                                  ;;9C6C                    ;
                       AND.B #$20                                ;;9C6E                    ;
                       ASL A                                     ;;9C70                    ;
                       ASL A                                     ;;9C71                    ;
@@ -2901,7 +2901,7 @@ CODE_049D07:          LDA.L !DynStripeImgSize                   ;;9BFB          
                       SEP #$20                                  ;;9C7F                    ;
                       JSR CODE_049D7F                           ;;9C81                    ;
                     + REP #$20                                  ;;9C84                    ; Accum (16 bit) 
-                      LDA.B !_0                                 ;;9C86                    ;
+                      LDA.B _0                                  ;;9C86                    ;
                       AND.W #$000F                              ;;9C88                    ;
                       ASL A                                     ;;9C8B                    ;
                       TAY                                       ;;9C8C                    ;
@@ -2909,33 +2909,33 @@ CODE_049D07:          LDA.L !DynStripeImgSize                   ;;9BFB          
                       TAY                                       ;;9C90                    ;
                       SEP #$20                                  ;;9C91                    ; Accum (8 bit) 
                       JSR CODE_049D7F                           ;;9C93                    ;
-                    - CPX.B !_2                                 ;;9C96                    ;
+                    - CPX.B _2                                  ;;9C96                    ;
                       BCS +                                     ;;9C98                    ;
                       LDY.W #$011A                              ;;9C9A                    ;
                       JSR CODE_049D7F                           ;;9C9D                    ;
                       BRA -                                     ;;9CA0                    ;
                     + LDA.B #$FF                                ;;9CA2                    ;
-                      STA.L !DynamicStripeImage+$28,X           ;;9CA4                    ;
+                      STA.L DynamicStripeImage+$28,X            ;;9CA4                    ;
                       REP #$20                                  ;;9CA8                    ;
                       RTS                                       ;;9CAA                    ;
                                                                 ;;                        ;
 CODE_049D7F:          LDA.W LevelNameStrings,Y                  ;;9CAB                    ; Index (8 bit) Accum (8 bit) 
                       PHP                                       ;;9CAE                    ;
-                      CPX.B !_2                                 ;;9CAF                    ;
+                      CPX.B _2                                  ;;9CAF                    ;
                       BCS +++                                   ;;9CB1                    ;
                       AND.B #$7F                                ;;9CB3                    ;
                       CMP.B #$59                                ;;9CB5                    ;
                       BEQ +                                     ;;9CB7                    ;
                       CMP.B #$5B                                ;;9CB9                    ;
                       BNE ++                                    ;;9CBB                    ;
-                    + STA.L !DynamicStripeImage+$26,X           ;;9CBD                    ;
+                    + STA.L DynamicStripeImage+$26,X            ;;9CBD                    ;
                       BRA +++                                   ;;9CC1                    ;
-                   ++ STA.L !DynamicStripeImage+4,X             ;;9CC3                    ;
+                   ++ STA.L DynamicStripeImage+4,X              ;;9CC3                    ;
                       LDA.B #$5D                                ;;9CC7                    ;
-                      STA.L !DynamicStripeImage+$28,X           ;;9CC9                    ;
+                      STA.L DynamicStripeImage+$28,X            ;;9CC9                    ;
                       LDA.B #$39                                ;;9CCD                    ;
-                      STA.L !DynamicStripeImage+5,X             ;;9CCF                    ;
-                      STA.L !DynamicStripeImage+$29,X           ;;9CD3                    ;
+                      STA.L DynamicStripeImage+5,X              ;;9CCF                    ;
+                      STA.L DynamicStripeImage+$29,X            ;;9CD3                    ;
                       INX                                       ;;9CD7                    ;
                       INX                                       ;;9CD8                    ;
                   +++ INY                                       ;;9CD9                    ;
@@ -2943,19 +2943,19 @@ CODE_049D7F:          LDA.W LevelNameStrings,Y                  ;;9CAB          
                       BPL CODE_049D7F                           ;;9CDB                    ;
                       RTS                                       ;;9CDD                    ; Return 
                    else                               ;<  ELSE  ;;------------------------; U, SS, E0 & E1
-CODE_049D07:          LDA.L !DynStripeImgSize                   ;;    |9D07+9CE6/9D07\9D07; Index (16 bit) Accum (16 bit) 
+CODE_049D07:          LDA.L DynStripeImgSize                    ;;    |9D07+9CE6/9D07\9D07; Index (16 bit) Accum (16 bit) 
                       TAX                                       ;;    |9D0B+9CEA/9D0B\9D0B;
                       CLC                                       ;;    |9D0C+9CEB/9D0C\9D0C;
                       ADC.W #$0026                              ;;    |9D0D+9CEC/9D0D\9D0D;
-                      STA.B !_2                                 ;;    |9D10+9CEF/9D10\9D10;
+                      STA.B _2                                  ;;    |9D10+9CEF/9D10\9D10;
                       CLC                                       ;;    |9D12+9CF1/9D12\9D12;
                       ADC.W #$0004                              ;;    |9D13+9CF2/9D13\9D13;
-                      STA.L !DynStripeImgSize                   ;;    |9D16+9CF5/9D16\9D16;
+                      STA.L DynStripeImgSize                    ;;    |9D16+9CF5/9D16\9D16;
                       LDA.W #$2500                              ;;    |9D1A+9CF9/9D1A\9D1A;
-                      STA.L !DynamicStripeImage+2,X             ;;    |9D1D+9CFC/9D1D\9D1D;
+                      STA.L DynamicStripeImage+2,X              ;;    |9D1D+9CFC/9D1D\9D1D;
                       LDA.W #$8B50                              ;;    |9D21+9D00/9D21\9D21;
-                      STA.L !DynamicStripeImage,X               ;;    |9D24+9D03/9D24\9D24;
-                      LDA.B !_1                                 ;;    |9D28+9D07/9D28\9D28;
+                      STA.L DynamicStripeImage,X                ;;    |9D24+9D03/9D24\9D24;
+                      LDA.B _1                                  ;;    |9D28+9D07/9D28\9D28;
                       AND.W #$007F                              ;;    |9D2A+9D09/9D2A\9D2A;
                       ASL A                                     ;;    |9D2D+9D0C/9D2D\9D2D;
                       TAY                                       ;;    |9D2E+9D0D/9D2E\9D2E;
@@ -2966,7 +2966,7 @@ CODE_049D07:          LDA.L !DynStripeImgSize                   ;;    |9D07+9CE6
                       BMI +                                     ;;    |9D38+9D17/9D38\9D38;
                       JSR CODE_049D7F                           ;;    |9D3A+9D19/9D3A\9D3A;
                     + REP #$20                                  ;;    |9D3D+9D1C/9D3D\9D3D; Accum (16 bit) 
-                      LDA.B !_0                                 ;;    |9D3F+9D1E/9D3F\9D3F;
+                      LDA.B _0                                  ;;    |9D3F+9D1E/9D3F\9D3F;
                       AND.W #$00F0                              ;;    |9D41+9D20/9D41\9D41;
                       LSR A                                     ;;    |9D44+9D23/9D44\9D44;
                       LSR A                                     ;;    |9D45+9D24/9D45\9D45;
@@ -2980,7 +2980,7 @@ CODE_049D07:          LDA.L !DynStripeImgSize                   ;;    |9D07+9CE6
                       BEQ +                                     ;;    |9D53+9D32/9D53\9D53;
                       JSR CODE_049D7F                           ;;    |9D55+9D34/9D55\9D55;
                     + REP #$20                                  ;;    |9D58+9D37/9D58\9D58; Accum (16 bit) 
-                      LDA.B !_0                                 ;;    |9D5A+9D39/9D5A\9D5A;
+                      LDA.B _0                                  ;;    |9D5A+9D39/9D5A\9D5A;
                       AND.W #$000F                              ;;    |9D5C+9D3B/9D5C\9D5C;
                       ASL A                                     ;;    |9D5F+9D3E/9D5F\9D5F;
                       TAY                                       ;;    |9D60+9D3F/9D60\9D60;
@@ -2988,25 +2988,25 @@ CODE_049D07:          LDA.L !DynStripeImgSize                   ;;    |9D07+9CE6
                       TAY                                       ;;    |9D64+9D43/9D64\9D64;
                       SEP #$20                                  ;;    |9D65+9D44/9D65\9D65; Accum (8 bit) 
                       JSR CODE_049D7F                           ;;    |9D67+9D46/9D67\9D67;
-CODE_049D6A:          CPX.B !_2                                 ;;    |9D6A+9D49/9D6A\9D6A;
+CODE_049D6A:          CPX.B _2                                  ;;    |9D6A+9D49/9D6A\9D6A;
                       BCS CODE_049D76                           ;;    |9D6C+9D4B/9D6C\9D6C;
                       LDY.W #$01CB                              ;;    |9D6E+9D4D/9D6E\9D6E;
                       JSR CODE_049D7F                           ;;    |9D71+9D50/9D71\9D71;
                       BRA CODE_049D6A                           ;;    |9D74+9D53/9D74\9D74;
                                                                 ;;                        ;
 CODE_049D76:          LDA.B #$FF                                ;;    |9D76+9D55/9D76\9D76;
-                      STA.L !DynamicStripeImage+4,X             ;;    |9D78+9D57/9D78\9D78;
+                      STA.L DynamicStripeImage+4,X              ;;    |9D78+9D57/9D78\9D78;
                       REP #$20                                  ;;    |9D7C+9D5B/9D7C\9D7C; Accum (16 bit) 
                       RTS                                       ;;    |9D7E+9D5D/9D7E\9D7E; Return 
                                                                 ;;                        ;
 CODE_049D7F:          LDA.W LevelNameStrings,Y                  ;;    |9D7F+9D5E/9D7F\9D7F; Index (8 bit) Accum (8 bit) 
                       PHP                                       ;;    |9D82+9D61/9D82\9D82;
-                      CPX.B !_2                                 ;;    |9D83+9D62/9D83\9D83;
+                      CPX.B _2                                  ;;    |9D83+9D62/9D83\9D83;
                       BCS +                                     ;;    |9D85+9D64/9D85\9D85;
                       AND.B #$7F                                ;;    |9D87+9D66/9D87\9D87;
-                      STA.L !DynamicStripeImage+4,X             ;;    |9D89+9D68/9D89\9D89;
+                      STA.L DynamicStripeImage+4,X              ;;    |9D89+9D68/9D89\9D89;
                       LDA.B #$39                                ;;    |9D8D+9D6C/9D8D\9D8D;
-                      STA.L !DynamicStripeImage+5,X             ;;    |9D8F+9D6E/9D8F\9D8F;
+                      STA.L DynamicStripeImage+5,X              ;;    |9D8F+9D6E/9D8F\9D8F;
                       INX                                       ;;    |9D93+9D72/9D93\9D93;
                       INX                                       ;;    |9D94+9D73/9D94\9D94;
                     + INY                                       ;;    |9D95+9D74/9D95\9D95;
@@ -3015,110 +3015,110 @@ CODE_049D7F:          LDA.W LevelNameStrings,Y                  ;;    |9D7F+9D5E
                       RTS                                       ;;    |9D99+9D78/9D99\9D99; Return 
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
-CODE_049D9A:          LDA.W !IsTwoPlayerGame                    ;;9CDE|9D9A+9D79/9D9A\9D9A;
+CODE_049D9A:          LDA.W IsTwoPlayerGame                     ;;9CDE|9D9A+9D79/9D9A\9D9A;
                       BEQ CODE_049DAF                           ;;9CE1|9D9D+9D7C/9D9D\9D9D;
-                      LDA.W !PlayerTurnLvl                      ;;9CE3|9D9F+9D7E/9D9F\9D9F;
+                      LDA.W PlayerTurnLvl                       ;;9CE3|9D9F+9D7E/9D9F\9D9F;
                       EOR.B #$01                                ;;9CE6|9DA2+9D81/9DA2\9DA2;
                       TAX                                       ;;9CE8|9DA4+9D83/9DA4\9DA4;
-                      LDA.W !SavedPlayerLives,X                 ;;9CE9|9DA5+9D84/9DA5\9DA5;
+                      LDA.W SavedPlayerLives,X                  ;;9CE9|9DA5+9D84/9DA5\9DA5;
                       BMI CODE_049DAF                           ;;9CEC|9DA8+9D87/9DA8\9DA8;
-                      LDA.W !OWLevelExitMode                    ;;9CEE|9DAA+9D89/9DAA\9DAA;
+                      LDA.W OWLevelExitMode                     ;;9CEE|9DAA+9D89/9DAA\9DAA;
                       BNE +                                     ;;9CF1|9DAD+9D8C/9DAD\9DAD;
 CODE_049DAF:          LDA.B #$03                                ;;9CF3|9DAF+9D8E/9DAF\9DAF;
-                      STA.W !OverworldProcess                   ;;9CF5|9DB1+9D90/9DB1\9DB1;
-                      STZ.W !OWLevelExitMode                    ;;9CF8|9DB4+9D93/9DB4\9DB4;
+                      STA.W OverworldProcess                    ;;9CF5|9DB1+9D90/9DB1\9DB1;
+                      STZ.W OWLevelExitMode                     ;;9CF8|9DB4+9D93/9DB4\9DB4;
                       REP #$30                                  ;;9CFB|9DB7+9D96/9DB7\9DB7; Index (16 bit) Accum (16 bit) 
                       JMP CODE_049831                           ;;9CFD|9DB9+9D98/9DB9\9DB9;
                                                                 ;;                        ;
-                    + DEC.W !KeepModeActive                     ;;9D00|9DBC+9D9B/9DBC\9DBC; Index (8 bit) Accum (8 bit) 
+                    + DEC.W KeepModeActive                      ;;9D00|9DBC+9D9B/9DBC\9DBC; Index (8 bit) Accum (8 bit) 
                       BPL +                                     ;;9D03|9DBF+9D9E/9DBF\9DBF;
                       LDA.B #$02                                ;;9D05|9DC1+9DA0/9DC1\9DC1;
-                      STA.W !KeepModeActive                     ;;9D07|9DC3+9DA2/9DC3\9DC3;
-                      STZ.W !OWLevelExitMode                    ;;9D0A|9DC6+9DA5/9DC6\9DC6;
-                      INC.W !OverworldProcess                   ;;9D0D|9DC9+9DA8/9DC9\9DC9;
+                      STA.W KeepModeActive                      ;;9D07|9DC3+9DA2/9DC3\9DC3;
+                      STZ.W OWLevelExitMode                     ;;9D0A|9DC6+9DA5/9DC6\9DC6;
+                      INC.W OverworldProcess                    ;;9D0D|9DC9+9DA8/9DC9\9DC9;
                     + REP #$30                                  ;;9D10|9DCC+9DAB/9DCC\9DCC; Index (16 bit) Accum (16 bit) 
                       JMP CODE_049831                           ;;9D12|9DCE+9DAD/9DCE\9DCE;
                                                                 ;;                        ;
-CODE_049DD1:          LDA.W !PlayerTurnLvl                      ;;9D15|9DD1+9DB0/9DD1\9DD1; Index (8 bit) Accum (8 bit) 
+CODE_049DD1:          LDA.W PlayerTurnLvl                       ;;9D15|9DD1+9DB0/9DD1\9DD1; Index (8 bit) Accum (8 bit) 
                       EOR.B #$01                                ;;9D18|9DD4+9DB3/9DD4\9DD4;
-                      STA.W !PlayerTurnLvl                      ;;9D1A|9DD6+9DB5/9DD6\9DD6;
+                      STA.W PlayerTurnLvl                       ;;9D1A|9DD6+9DB5/9DD6\9DD6;
                       TAX                                       ;;9D1D|9DD9+9DB8/9DD9\9DD9;
-                      LDA.W !SavedPlayerCoins,X                 ;;9D1E|9DDA+9DB9/9DDA\9DDA;
-                      STA.W !PlayerCoins                        ;;9D21|9DDD+9DBC/9DDD\9DDD;
-                      LDA.W !SavedPlayerLives,X                 ;;9D24|9DE0+9DBF/9DE0\9DE0;
-                      STA.W !PlayerLives                        ;;9D27|9DE3+9DC2/9DE3\9DE3;
-                      LDA.W !SavedPlayerPowerup,X               ;;9D2A|9DE6+9DC5/9DE6\9DE6;
-                      STA.B !Powerup                            ;;9D2D|9DE9+9DC8/9DE9\9DE9;
-                      LDA.W !SavedPlayerYoshi,X                 ;;9D2F|9DEB+9DCA/9DEB\9DEB;
-                      STA.W !CarryYoshiThruLvls                 ;;9D32|9DEE+9DCD/9DEE\9DEE;
-                      STA.W !YoshiColor                         ;;9D35|9DF1+9DD0/9DF1\9DF1;
-                      STA.W !PlayerRidingYoshi                  ;;9D38|9DF4+9DD3/9DF4\9DF4;
-                      LDA.W !SavedPlayerItembox,X               ;;9D3B|9DF7+9DD6/9DF7\9DF7;
-                      STA.W !PlayerItembox                      ;;9D3E|9DFA+9DD9/9DFA\9DFA;
+                      LDA.W SavedPlayerCoins,X                  ;;9D1E|9DDA+9DB9/9DDA\9DDA;
+                      STA.W PlayerCoins                         ;;9D21|9DDD+9DBC/9DDD\9DDD;
+                      LDA.W SavedPlayerLives,X                  ;;9D24|9DE0+9DBF/9DE0\9DE0;
+                      STA.W PlayerLives                         ;;9D27|9DE3+9DC2/9DE3\9DE3;
+                      LDA.W SavedPlayerPowerup,X                ;;9D2A|9DE6+9DC5/9DE6\9DE6;
+                      STA.B Powerup                             ;;9D2D|9DE9+9DC8/9DE9\9DE9;
+                      LDA.W SavedPlayerYoshi,X                  ;;9D2F|9DEB+9DCA/9DEB\9DEB;
+                      STA.W CarryYoshiThruLvls                  ;;9D32|9DEE+9DCD/9DEE\9DEE;
+                      STA.W YoshiColor                          ;;9D35|9DF1+9DD0/9DF1\9DF1;
+                      STA.W PlayerRidingYoshi                   ;;9D38|9DF4+9DD3/9DF4\9DF4;
+                      LDA.W SavedPlayerItembox,X                ;;9D3B|9DF7+9DD6/9DF7\9DF7;
+                      STA.W PlayerItembox                       ;;9D3E|9DFA+9DD9/9DFA\9DFA;
                       JSL CODE_05DBF2                           ;;9D41|9DFD+9DDC/9DFD\9DFD;
                       REP #$20                                  ;;9D45|9E01+9DE0/9E01\9E01; Accum (16 bit) 
                       JSR CODE_048E55                           ;;9D47|9E03+9DE2/9E03\9E03;
                       SEP #$20                                  ;;9D4A|9E06+9DE5/9E06\9E06; Accum (8 bit) 
-                      LDX.W !PlayerTurnLvl                      ;;9D4C|9E08+9DE7/9E08\9E08;
-                      LDA.W !OWPlayerSubmap,X                   ;;9D4F|9E0B+9DEA/9E0B\9E0B;
-                      STA.W !CurrentSubmap                      ;;9D52|9E0E+9DED/9E0E\9E0E;
-                      STZ.W !CurrentSubmap+1                    ;;9D55|9E11+9DF0/9E11\9E11;
+                      LDX.W PlayerTurnLvl                       ;;9D4C|9E08+9DE7/9E08\9E08;
+                      LDA.W OWPlayerSubmap,X                    ;;9D4F|9E0B+9DEA/9E0B\9E0B;
+                      STA.W CurrentSubmap                       ;;9D52|9E0E+9DED/9E0E\9E0E;
+                      STZ.W CurrentSubmap+1                     ;;9D55|9E11+9DF0/9E11\9E11;
                       LDA.B #$02                                ;;9D58|9E14+9DF3/9E14\9E14;
-                      STA.W !KeepModeActive                     ;;9D5A|9E16+9DF5/9E16\9E16;
+                      STA.W KeepModeActive                      ;;9D5A|9E16+9DF5/9E16\9E16;
                       LDA.B #$0A                                ;;9D5D|9E19+9DF8/9E19\9E19;
-                      STA.W !OverworldProcess                   ;;9D5F|9E1B+9DFA/9E1B\9E1B;
-                      INC.W !PlayerSwitching                    ;;9D62|9E1E+9DFD/9E1E\9E1E;
+                      STA.W OverworldProcess                    ;;9D5F|9E1B+9DFA/9E1B\9E1B;
+                      INC.W PlayerSwitching                     ;;9D62|9E1E+9DFD/9E1E\9E1E;
                       RTS                                       ;;9D65|9E21+9E00/9E21\9E21; Return 
                                                                 ;;                        ;
-CODE_049E22:          DEC.W !KeepModeActive                     ;;9D66|9E22+9E01/9E22\9E22;
+CODE_049E22:          DEC.W KeepModeActive                      ;;9D66|9E22+9E01/9E22\9E22;
                       BPL +                                     ;;9D69|9E25+9E04/9E25\9E25;
                       LDA.B #$02                                ;;9D6B|9E27+9E06/9E27\9E27;
-                      STA.W !KeepModeActive                     ;;9D6D|9E29+9E08/9E29\9E29;
-                      LDX.W !MosaicDirection                    ;;9D70|9E2C+9E0B/9E2C\9E2C;
-                      LDA.W !Brightness                         ;;9D73|9E2F+9E0E/9E2F\9E2F;
+                      STA.W KeepModeActive                      ;;9D6D|9E29+9E08/9E29\9E29;
+                      LDX.W MosaicDirection                     ;;9D70|9E2C+9E0B/9E2C\9E2C;
+                      LDA.W Brightness                          ;;9D73|9E2F+9E0E/9E2F\9E2F;
                       CLC                                       ;;9D76|9E32+9E11/9E32\9E32;
                       ADC.L DATA_009F2F,X                       ;;9D77|9E33+9E12/9E33\9E33;
-                      STA.W !Brightness                         ;;9D7B|9E37+9E16/9E37\9E37;
+                      STA.W Brightness                          ;;9D7B|9E37+9E16/9E37\9E37;
                       CMP.L DATA_009F33,X                       ;;9D7E|9E3A+9E19/9E3A\9E3A;
                       BNE +                                     ;;9D82|9E3E+9E1D/9E3E\9E3E;
-                      INC.W !OverworldProcess                   ;;9D84|9E40+9E1F/9E40\9E40;
-                      LDA.W !MosaicDirection                    ;;9D87|9E43+9E22/9E43\9E43;
+                      INC.W OverworldProcess                    ;;9D84|9E40+9E1F/9E40\9E40;
+                      LDA.W MosaicDirection                     ;;9D87|9E43+9E22/9E43\9E43;
                       EOR.B #$01                                ;;9D8A|9E46+9E25/9E46\9E46;
-                      STA.W !MosaicDirection                    ;;9D8C|9E48+9E27/9E48\9E48;
+                      STA.W MosaicDirection                     ;;9D8C|9E48+9E27/9E48\9E48;
                     + RTS                                       ;;9D8F|9E4B+9E2A/9E4B\9E4B; Return 
                                                                 ;;                        ;
 CODE_049E4C:          LDA.B #$03                                ;;9D90|9E4C+9E2B/9E4C\9E4C;
-                      STA.W !OverworldProcess                   ;;9D92|9E4E+9E2D/9E4E\9E4E;
+                      STA.W OverworldProcess                    ;;9D92|9E4E+9E2D/9E4E\9E4E;
                       RTS                                       ;;9D95|9E51+9E30/9E51\9E51; Return 
                                                                 ;;                        ;
-CODE_049E52:          LDA.W !StarWarpLaunchSpeed                ;;9D96|9E52+9E31/9E52\9E52;
+CODE_049E52:          LDA.W StarWarpLaunchSpeed                 ;;9D96|9E52+9E31/9E52\9E52;
                       BNE CODE_049E63                           ;;9D99|9E55+9E34/9E55\9E55;
-                      INC.W !StarWarpLaunchTimer                ;;9D9B|9E57+9E36/9E57\9E57;
-                      LDA.W !StarWarpLaunchTimer                ;;9D9E|9E5A+9E39/9E5A\9E5A;
+                      INC.W StarWarpLaunchTimer                 ;;9D9B|9E57+9E36/9E57\9E57;
+                      LDA.W StarWarpLaunchTimer                 ;;9D9E|9E5A+9E39/9E5A\9E5A;
                       CMP.B #$31                                ;;9DA1|9E5D+9E3C/9E5D\9E5D;
                       BNE CODE_049E93                           ;;9DA3|9E5F+9E3E/9E5F\9E5F;
                       BRA CODE_049E69                           ;;9DA5|9E61+9E40/9E61\9E61;
                                                                 ;;                        ;
-CODE_049E63:          LDA.B !TrueFrame                          ;;9DA7|9E63+9E42/9E63\9E63;
+CODE_049E63:          LDA.B TrueFrame                           ;;9DA7|9E63+9E42/9E63\9E63;
                       AND.B #$07                                ;;9DA9|9E65+9E44/9E65\9E65;
                       BNE +                                     ;;9DAB|9E67+9E46/9E67\9E67;
-CODE_049E69:          INC.W !StarWarpLaunchSpeed                ;;9DAD|9E69+9E48/9E69\9E69;
-                      LDA.W !StarWarpLaunchSpeed                ;;9DB0|9E6C+9E4B/9E6C\9E6C;
+CODE_049E69:          INC.W StarWarpLaunchSpeed                 ;;9DAD|9E69+9E48/9E69\9E69;
+                      LDA.W StarWarpLaunchSpeed                 ;;9DB0|9E6C+9E4B/9E6C\9E6C;
                       CMP.B #$05                                ;;9DB3|9E6F+9E4E/9E6F\9E6F;
                       BNE +                                     ;;9DB5|9E71+9E50/9E71\9E71;
                       LDA.B #$04                                ;;9DB7|9E73+9E52/9E73\9E73;
-                      STA.W !StarWarpLaunchSpeed                ;;9DB9|9E75+9E54/9E75\9E75;
+                      STA.W StarWarpLaunchSpeed                 ;;9DB9|9E75+9E54/9E75\9E75;
                     + REP #$20                                  ;;9DBC|9E78+9E57/9E78\9E78; Accum (16 bit) 
-                      LDA.W !StarWarpLaunchSpeed                ;;9DBE|9E7A+9E59/9E7A\9E7A;
+                      LDA.W StarWarpLaunchSpeed                 ;;9DBE|9E7A+9E59/9E7A\9E7A;
                       AND.W #$00FF                              ;;9DC1|9E7D+9E5C/9E7D\9E7D;
-                      STA.B !_0                                 ;;9DC4|9E80+9E5F/9E80\9E80;
-                      LDX.W !PlayerTurnOW                       ;;9DC6|9E82+9E61/9E82\9E82;
-                      LDA.W !OWPlayerYPos,X                     ;;9DC9|9E85+9E64/9E85\9E85;
+                      STA.B _0                                  ;;9DC4|9E80+9E5F/9E80\9E80;
+                      LDX.W PlayerTurnOW                        ;;9DC6|9E82+9E61/9E82\9E82;
+                      LDA.W OWPlayerYPos,X                      ;;9DC9|9E85+9E64/9E85\9E85;
                       SEC                                       ;;9DCC|9E88+9E67/9E88\9E88;
-                      SBC.B !_0                                 ;;9DCD|9E89+9E68/9E89\9E89;
-                      STA.W !OWPlayerYPos,X                     ;;9DCF|9E8B+9E6A/9E8B\9E8B;
+                      SBC.B _0                                  ;;9DCD|9E89+9E68/9E89\9E89;
+                      STA.W OWPlayerYPos,X                      ;;9DCF|9E8B+9E6A/9E8B\9E8B;
                       SEC                                       ;;9DD2|9E8E+9E6D/9E8E\9E8E;
-                      SBC.B !Layer1YPos                         ;;9DD3|9E8F+9E6E/9E8F\9E8F;
+                      SBC.B Layer1YPos                          ;;9DD3|9E8F+9E6E/9E8F\9E8F;
                       BMI +                                     ;;9DD5|9E91+9E70/9E91\9E91;
 CODE_049E93:          SEP #$20                                  ;;9DD7|9E93+9E72/9E93\9E93; Accum (8 bit) 
                       RTS                                       ;;9DD9|9E95+9E74/9E95\9E95; Return 
@@ -4910,149 +4910,149 @@ DATA_04D678:          db $00,$C0,$C0,$C0,$30,$C0,$C0,$00        ;;D678|D678+D678
                       db $00                                    ;;D6E8|D6E8+D6E8/D6E8\D6E8;
                                                                 ;;                        ;
 CODE_04D6E9:          REP #$30                                  ;;D6E9|D6E9+D6E9/D6E9\D6E9; Index (16 bit) Accum (16 bit) 
-                      STZ.B !Layer1YPos                         ;;D6EB|D6EB+D6EB/D6EB\D6EB;
+                      STZ.B Layer1YPos                          ;;D6EB|D6EB+D6EB/D6EB\D6EB;
                       LDA.W #$FFFF                              ;;D6ED|D6ED+D6ED/D6ED\D6ED;
-                      STA.B !Layer1PrevTileUp                   ;;D6F0|D6F0+D6F0/D6F0\D6F0;
-                      STA.B !Layer1PrevTileDown                 ;;D6F2|D6F2+D6F2/D6F2\D6F2;
+                      STA.B Layer1PrevTileUp                    ;;D6F0|D6F0+D6F0/D6F0\D6F0;
+                      STA.B Layer1PrevTileDown                  ;;D6F2|D6F2+D6F2/D6F2\D6F2;
                       LDA.W #$0202                              ;;D6F4|D6F4+D6F4/D6F4\D6F4;
-                      STA.B !Layer1ScrollDir                    ;;D6F7|D6F7+D6F7/D6F7\D6F7;
-                      LDA.W !PlayerTurnOW                       ;;D6F9|D6F9+D6F9/D6F9\D6F9;
+                      STA.B Layer1ScrollDir                     ;;D6F7|D6F7+D6F7/D6F7\D6F7;
+                      LDA.W PlayerTurnOW                        ;;D6F9|D6F9+D6F9/D6F9\D6F9;
                       LSR A                                     ;;D6FC|D6FC+D6FC/D6FC\D6FC;
                       LSR A                                     ;;D6FD|D6FD+D6FD/D6FD\D6FD;
                       AND.W #$00FF                              ;;D6FE|D6FE+D6FE/D6FE\D6FE;
                       TAX                                       ;;D701|D701+D701/D701\D701;
-                      LDA.W !OWPlayerSubmap,X                   ;;D702|D702+D702/D702\D702;
+                      LDA.W OWPlayerSubmap,X                    ;;D702|D702+D702/D702\D702;
                       AND.W #$000F                              ;;D705|D705+D705/D705\D705;
                       BEQ CODE_04D714                           ;;D708|D708+D708/D708\D708;
                       LDA.W #$0020                              ;;D70A|D70A+D70A/D70A\D70A;
-                      STA.B !Layer1TileDown                     ;;D70D|D70D+D70D/D70D\D70D;
+                      STA.B Layer1TileDown                      ;;D70D|D70D+D70D/D70D\D70D;
                       LDA.W #$0200                              ;;D70F|D70F+D70F/D70F\D70F;
-                      STA.B !Layer1YPos                         ;;D712|D712+D712/D712\D712;
+                      STA.B Layer1YPos                          ;;D712|D712+D712/D712\D712;
 CODE_04D714:          JSL CODE_05881A                           ;;D714|D714+D714/D714\D714;
                       JSL CODE_0087AD                           ;;D718|D718+D718/D718\D718;
                       REP #$30                                  ;;D71C|D71C+D71C/D71C\D71C; Index (16 bit) Accum (16 bit) 
-                      INC.B !Layer1TileDown                     ;;D71E|D71E+D71E/D71E\D71E;
-                      LDA.B !Layer1YPos                         ;;D720|D720+D720/D720\D720;
+                      INC.B Layer1TileDown                      ;;D71E|D71E+D71E/D71E\D71E;
+                      LDA.B Layer1YPos                          ;;D720|D720+D720/D720\D720;
                       CLC                                       ;;D722|D722+D722/D722\D722;
                       ADC.W #$0010                              ;;D723|D723+D723/D723\D723;
-                      STA.B !Layer1YPos                         ;;D726|D726+D726/D726\D726;
+                      STA.B Layer1YPos                          ;;D726|D726+D726/D726\D726;
                       AND.W #$01FF                              ;;D728|D728+D728/D728\D728;
                       BNE CODE_04D714                           ;;D72B|D72B+D72B/D72B\D72B;
-                      LDA.B !Layer2YPos                         ;;D72D|D72D+D72D/D72D\D72D;
-                      STA.B !Layer1YPos                         ;;D72F|D72F+D72F/D72F\D72F;
-                      STZ.B !Layer1TileDown                     ;;D731|D731+D731/D731\D731;
-                      STZ.W !LevelModeSetting                   ;;D733|D733+D733/D733\D733;
-                      STZ.B !ScreenMode                         ;;D736|D736+D736/D736\D736;
+                      LDA.B Layer2YPos                          ;;D72D|D72D+D72D/D72D\D72D;
+                      STA.B Layer1YPos                          ;;D72F|D72F+D72F/D72F\D72F;
+                      STZ.B Layer1TileDown                      ;;D731|D731+D731/D731\D731;
+                      STZ.W LevelModeSetting                    ;;D733|D733+D733/D733\D733;
+                      STZ.B ScreenMode                          ;;D736|D736+D736/D736\D736;
                       LDA.W #$FFFF                              ;;D738|D738+D738/D738\D738;
-                      STA.B !Layer1PrevTileUp                   ;;D73B|D73B+D73B/D73B\D73B;
-                      STA.B !Layer1PrevTileDown                 ;;D73D|D73D+D73D/D73D\D73D;
+                      STA.B Layer1PrevTileUp                    ;;D73B|D73B+D73B/D73B\D73B;
+                      STA.B Layer1PrevTileDown                  ;;D73D|D73D+D73D/D73D\D73D;
                       SEP #$30                                  ;;D73F|D73F+D73F/D73F\D73F; Index (8 bit) Accum (8 bit) 
                       LDA.B #$80                                ;;D741|D741+D741/D741\D741;
-                      STA.W !HW_VMAINC                          ;;D743|D743+D743/D743\D743; VRAM Address Increment Value
-                      STZ.W !HW_VMADD                           ;;D746|D746+D746/D746\D746; Address for VRAM Read/Write (Low Byte)
+                      STA.W HW_VMAINC                           ;;D743|D743+D743/D743\D743; VRAM Address Increment Value
+                      STZ.W HW_VMADD                            ;;D746|D746+D746/D746\D746; Address for VRAM Read/Write (Low Byte)
                       LDA.B #$30                                ;;D749|D749+D749/D749\D749;
-                      STA.W !HW_VMADD+1                         ;;D74B|D74B+D74B/D74B\D74B; Address for VRAM Read/Write (High Byte)
+                      STA.W HW_VMADD+1                          ;;D74B|D74B+D74B/D74B\D74B; Address for VRAM Read/Write (High Byte)
                       LDX.B #$06                                ;;D74E|D74E+D74E/D74E\D74E;
                     - LDA.L DATA_04DAB3,X                       ;;D750|D750+D750/D750\D750;
-                      STA.W !HW_DMAPARAM+$10,X                  ;;D754|D754+D754/D754\D754;
+                      STA.W HW_DMAPARAM+$10,X                   ;;D754|D754+D754/D754\D754;
                       DEX                                       ;;D757|D757+D757/D757\D757;
                       BPL -                                     ;;D758|D758+D758/D758\D758;
-                      LDA.W !PlayerTurnOW                       ;;D75A|D75A+D75A/D75A\D75A;
+                      LDA.W PlayerTurnOW                        ;;D75A|D75A+D75A/D75A\D75A;
                       LSR A                                     ;;D75D|D75D+D75D/D75D\D75D;
                       LSR A                                     ;;D75E|D75E+D75E/D75E\D75E;
                       TAX                                       ;;D75F|D75F+D75F/D75F\D75F;
-                      LDA.W !OWPlayerSubmap,X                   ;;D760|D760+D760/D760\D760;
+                      LDA.W OWPlayerSubmap,X                    ;;D760|D760+D760/D760\D760;
                       BEQ +                                     ;;D763|D763+D763/D763\D763;
                       LDA.B #$60                                ;;D765|D765+D765/D765\D765;
-                      STA.W !HW_DMAADDR+$11                     ;;D767|D767+D767/D767\D767; A Address (High Byte)
+                      STA.W HW_DMAADDR+$11                      ;;D767|D767+D767/D767\D767; A Address (High Byte)
                     + LDA.B #$02                                ;;D76A|D76A+D76A/D76A\D76A;
-                      STA.W !HW_MDMAEN                          ;;D76C|D76C+D76C/D76C\D76C; Regular DMA Channel Enable
+                      STA.W HW_MDMAEN                           ;;D76C|D76C+D76C/D76C\D76C; Regular DMA Channel Enable
                       RTL                                       ;;D76F|D76F+D76F/D76F\D76F; Return 
                                                                 ;;                        ;
-CODE_04D770:          STA.L !Map16TilesHigh,X                   ;;D770|D770+D770/D770\D770;
-                      STA.L !Map16TilesHigh+$1B0,X              ;;D774|D774+D774/D774\D774;
-                      STA.L !Map16TilesHigh+$360,X              ;;D778|D778+D778/D778\D778;
-                      STA.L !Map16TilesHigh+$510,X              ;;D77C|D77C+D77C/D77C\D77C;
-                      STA.L !Map16TilesHigh+$6C0,X              ;;D780|D780+D780/D780\D780;
-                      STA.L !Map16TilesHigh+$870,X              ;;D784|D784+D784/D784\D784;
-                      STA.L !Map16TilesHigh+$A20,X              ;;D788|D788+D788/D788\D788;
-                      STA.L !Map16TilesHigh+$BD0,X              ;;D78C|D78C+D78C/D78C\D78C;
-                      STA.L !Map16TilesHigh+$D80,X              ;;D790|D790+D790/D790\D790;
-                      STA.L !Map16TilesHigh+$F30,X              ;;D794|D794+D794/D794\D794;
-                      STA.L !Map16TilesHigh+$10E0,X             ;;D798|D798+D798/D798\D798;
-                      STA.L !Map16TilesHigh+$1290,X             ;;D79C|D79C+D79C/D79C\D79C;
-                      STA.L !Map16TilesHigh+$1440,X             ;;D7A0|D7A0+D7A0/D7A0\D7A0;
-                      STA.L !Map16TilesHigh+$15F0,X             ;;D7A4|D7A4+D7A4/D7A4\D7A4;
-                      STA.L !Map16TilesHigh+$17A0,X             ;;D7A8|D7A8+D7A8/D7A8\D7A8;
-                      STA.L !Map16TilesHigh+$1950,X             ;;D7AC|D7AC+D7AC/D7AC\D7AC;
-                      STA.L !Map16TilesHigh+$1B00,X             ;;D7B0|D7B0+D7B0/D7B0\D7B0;
-                      STA.L !Map16TilesHigh+$1CB0,X             ;;D7B4|D7B4+D7B4/D7B4\D7B4;
-                      STA.L !Map16TilesHigh+$1E60,X             ;;D7B8|D7B8+D7B8/D7B8\D7B8;
-                      STA.L !Map16TilesHigh+$2010,X             ;;D7BC|D7BC+D7BC/D7BC\D7BC;
-                      STA.L !Map16TilesHigh+$21C0,X             ;;D7C0|D7C0+D7C0/D7C0\D7C0;
-                      STA.L !Map16TilesHigh+$2370,X             ;;D7C4|D7C4+D7C4/D7C4\D7C4;
-                      STA.L !Map16TilesHigh+$2520,X             ;;D7C8|D7C8+D7C8/D7C8\D7C8;
-                      STA.L !Map16TilesHigh+$26D0,X             ;;D7CC|D7CC+D7CC/D7CC\D7CC;
-                      STA.L !Map16TilesHigh+$2880,X             ;;D7D0|D7D0+D7D0/D7D0\D7D0;
-                      STA.L !Map16TilesHigh+$2A30,X             ;;D7D4|D7D4+D7D4/D7D4\D7D4;
-                      STA.L !Map16TilesHigh+$2BE0,X             ;;D7D8|D7D8+D7D8/D7D8\D7D8;
-                      STA.L !Map16TilesHigh+$2D90,X             ;;D7DC|D7DC+D7DC/D7DC\D7DC;
-                      STA.L !Map16TilesHigh+$2F40,X             ;;D7E0|D7E0+D7E0/D7E0\D7E0;
-                      STA.L !Map16TilesHigh+$30F0,X             ;;D7E4|D7E4+D7E4/D7E4\D7E4;
-                      STA.L !Map16TilesHigh+$32A0,X             ;;D7E8|D7E8+D7E8/D7E8\D7E8;
-                      STA.L !Map16TilesHigh+$3450,X             ;;D7EC|D7EC+D7EC/D7EC\D7EC;
+CODE_04D770:          STA.L Map16TilesHigh,X                    ;;D770|D770+D770/D770\D770;
+                      STA.L Map16TilesHigh+$1B0,X               ;;D774|D774+D774/D774\D774;
+                      STA.L Map16TilesHigh+$360,X               ;;D778|D778+D778/D778\D778;
+                      STA.L Map16TilesHigh+$510,X               ;;D77C|D77C+D77C/D77C\D77C;
+                      STA.L Map16TilesHigh+$6C0,X               ;;D780|D780+D780/D780\D780;
+                      STA.L Map16TilesHigh+$870,X               ;;D784|D784+D784/D784\D784;
+                      STA.L Map16TilesHigh+$A20,X               ;;D788|D788+D788/D788\D788;
+                      STA.L Map16TilesHigh+$BD0,X               ;;D78C|D78C+D78C/D78C\D78C;
+                      STA.L Map16TilesHigh+$D80,X               ;;D790|D790+D790/D790\D790;
+                      STA.L Map16TilesHigh+$F30,X               ;;D794|D794+D794/D794\D794;
+                      STA.L Map16TilesHigh+$10E0,X              ;;D798|D798+D798/D798\D798;
+                      STA.L Map16TilesHigh+$1290,X              ;;D79C|D79C+D79C/D79C\D79C;
+                      STA.L Map16TilesHigh+$1440,X              ;;D7A0|D7A0+D7A0/D7A0\D7A0;
+                      STA.L Map16TilesHigh+$15F0,X              ;;D7A4|D7A4+D7A4/D7A4\D7A4;
+                      STA.L Map16TilesHigh+$17A0,X              ;;D7A8|D7A8+D7A8/D7A8\D7A8;
+                      STA.L Map16TilesHigh+$1950,X              ;;D7AC|D7AC+D7AC/D7AC\D7AC;
+                      STA.L Map16TilesHigh+$1B00,X              ;;D7B0|D7B0+D7B0/D7B0\D7B0;
+                      STA.L Map16TilesHigh+$1CB0,X              ;;D7B4|D7B4+D7B4/D7B4\D7B4;
+                      STA.L Map16TilesHigh+$1E60,X              ;;D7B8|D7B8+D7B8/D7B8\D7B8;
+                      STA.L Map16TilesHigh+$2010,X              ;;D7BC|D7BC+D7BC/D7BC\D7BC;
+                      STA.L Map16TilesHigh+$21C0,X              ;;D7C0|D7C0+D7C0/D7C0\D7C0;
+                      STA.L Map16TilesHigh+$2370,X              ;;D7C4|D7C4+D7C4/D7C4\D7C4;
+                      STA.L Map16TilesHigh+$2520,X              ;;D7C8|D7C8+D7C8/D7C8\D7C8;
+                      STA.L Map16TilesHigh+$26D0,X              ;;D7CC|D7CC+D7CC/D7CC\D7CC;
+                      STA.L Map16TilesHigh+$2880,X              ;;D7D0|D7D0+D7D0/D7D0\D7D0;
+                      STA.L Map16TilesHigh+$2A30,X              ;;D7D4|D7D4+D7D4/D7D4\D7D4;
+                      STA.L Map16TilesHigh+$2BE0,X              ;;D7D8|D7D8+D7D8/D7D8\D7D8;
+                      STA.L Map16TilesHigh+$2D90,X              ;;D7DC|D7DC+D7DC/D7DC\D7DC;
+                      STA.L Map16TilesHigh+$2F40,X              ;;D7E0|D7E0+D7E0/D7E0\D7E0;
+                      STA.L Map16TilesHigh+$30F0,X              ;;D7E4|D7E4+D7E4/D7E4\D7E4;
+                      STA.L Map16TilesHigh+$32A0,X              ;;D7E8|D7E8+D7E8/D7E8\D7E8;
+                      STA.L Map16TilesHigh+$3450,X              ;;D7EC|D7EC+D7EC/D7EC\D7EC;
                       INX                                       ;;D7F0|D7F0+D7F0/D7F0\D7F0;
                       RTS                                       ;;D7F1|D7F1+D7F1/D7F1\D7F1; Return 
                                                                 ;;                        ;
 CODE_04D7F2:          REP #$30                                  ;;D7F2|D7F2+D7F2/D7F2\D7F2; Index (16 bit) Accum (16 bit) 
                       LDA.W #$0000                              ;;D7F4|D7F4+D7F4/D7F4\D7F4;
                       SEP #$20                                  ;;D7F7|D7F7+D7F7/D7F7\D7F7; Accum (8 bit) 
-                      LDA.B #!OWLayer1Translevel                ;;D7F9|D7F9+D7F9/D7F9\D7F9;
-                      STA.B !_D                                 ;;D7FB|D7FB+D7FB/D7FB\D7FB;
-                      LDA.B #!OWLayer1Translevel>>8             ;;D7FD|D7FD+D7FD/D7FD\D7FD;
-                      STA.B !_E                                 ;;D7FF|D7FF+D7FF/D7FF\D7FF;
-                      LDA.B #!OWLayer1Translevel>>16            ;;D801|D801+D801/D801\D801;
-                      STA.B !_F                                 ;;D803|D803+D803/D803\D803;
-                      LDA.B #!OWLayer2Directions                ;;D805|D805+D805/D805\D805;
-                      STA.B !_A                                 ;;D807|D807+D807/D807\D807;
-                      LDA.B #!OWLayer2Directions>>8             ;;D809|D809+D809/D809\D809;
-                      STA.B !_B                                 ;;D80B|D80B+D80B/D80B\D80B;
-                      LDA.B #!OWLayer2Directions>>16            ;;D80D|D80D+D80D/D80D\D80D;
-                      STA.B !_C                                 ;;D80F|D80F+D80F/D80F\D80F;
-                      LDA.B #!Map16TilesLow                     ;;D811|D811+D811/D811\D811;
-                      STA.B !_4                                 ;;D813|D813+D813/D813\D813;
-                      LDA.B #!Map16TilesLow>>8                  ;;D815|D815+D815/D815\D815;
-                      STA.B !_5                                 ;;D817|D817+D817/D817\D817;
-                      LDA.B #!Map16TilesLow>>16                 ;;D819|D819+D819/D819\D819;
-                      STA.B !_6                                 ;;D81B|D81B+D81B/D81B\D81B;
+                      LDA.B #OWLayer1Translevel                 ;;D7F9|D7F9+D7F9/D7F9\D7F9;
+                      STA.B _D                                  ;;D7FB|D7FB+D7FB/D7FB\D7FB;
+                      LDA.B #OWLayer1Translevel>>8              ;;D7FD|D7FD+D7FD/D7FD\D7FD;
+                      STA.B _E                                  ;;D7FF|D7FF+D7FF/D7FF\D7FF;
+                      LDA.B #OWLayer1Translevel>>16             ;;D801|D801+D801/D801\D801;
+                      STA.B _F                                  ;;D803|D803+D803/D803\D803;
+                      LDA.B #OWLayer2Directions                 ;;D805|D805+D805/D805\D805;
+                      STA.B _A                                  ;;D807|D807+D807/D807\D807;
+                      LDA.B #OWLayer2Directions>>8              ;;D809|D809+D809/D809\D809;
+                      STA.B _B                                  ;;D80B|D80B+D80B/D80B\D80B;
+                      LDA.B #OWLayer2Directions>>16             ;;D80D|D80D+D80D/D80D\D80D;
+                      STA.B _C                                  ;;D80F|D80F+D80F/D80F\D80F;
+                      LDA.B #Map16TilesLow                      ;;D811|D811+D811/D811\D811;
+                      STA.B _4                                  ;;D813|D813+D813/D813\D813;
+                      LDA.B #Map16TilesLow>>8                   ;;D815|D815+D815/D815\D815;
+                      STA.B _5                                  ;;D817|D817+D817/D817\D817;
+                      LDA.B #Map16TilesLow>>16                  ;;D819|D819+D819/D819\D819;
+                      STA.B _6                                  ;;D81B|D81B+D81B/D81B\D81B;
                       LDY.W #$0001                              ;;D81D|D81D+D81D/D81D\D81D;
-                      STY.B !_0                                 ;;D820|D820+D820/D820\D820;
+                      STY.B _0                                  ;;D820|D820+D820/D820\D820;
                       LDY.W #$07FF                              ;;D822|D822+D822/D822\D822;
                       LDA.B #$00                                ;;D825|D825+D825/D825\D825;
-                    - STA.B [!_A],Y                             ;;D827|D827+D827/D827\D827;
-                      STA.B [!_D],Y                             ;;D829|D829+D829/D829\D829;
+                    - STA.B [_A],Y                              ;;D827|D827+D827/D827\D827;
+                      STA.B [_D],Y                              ;;D829|D829+D829/D829\D829;
                       DEY                                       ;;D82B|D82B+D82B/D82B\D82B;
                       BPL -                                     ;;D82C|D82C+D82C/D82C\D82C;
                       LDY.W #$0000                              ;;D82E|D82E+D82E/D82E\D82E;
                       TYX                                       ;;D831|D831+D831/D831\D831;
-CODE_04D832:          LDA.B [!_4],Y                             ;;D832|D832+D832/D832\D832;
+CODE_04D832:          LDA.B [_4],Y                              ;;D832|D832+D832/D832\D832;
                       CMP.B #$56                                ;;D834|D834+D834/D834\D834;
                       BCC +                                     ;;D836|D836+D836/D836\D836;
                       CMP.B #$81                                ;;D838|D838+D838/D838\D838;
                       BCS +                                     ;;D83A|D83A+D83A/D83A\D83A;
-                      LDA.B !_0                                 ;;D83C|D83C+D83C/D83C\D83C;
-                      STA.B [!_D],Y                             ;;D83E|D83E+D83E/D83E\D83E;
+                      LDA.B _0                                  ;;D83C|D83C+D83C/D83C\D83C;
+                      STA.B [_D],Y                              ;;D83E|D83E+D83E/D83E\D83E;
                       TAX                                       ;;D840|D840+D840/D840\D840;
                       LDA.L DATA_04D678,X                       ;;D841|D841+D841/D841\D841;
-                      STA.B [!_A],Y                             ;;D845|D845+D845/D845\D845;
-                      INC.B !_0                                 ;;D847|D847+D847/D847\D847;
+                      STA.B [_A],Y                              ;;D845|D845+D845/D845\D845;
+                      INC.B _0                                  ;;D847|D847+D847/D847\D847;
                     + INY                                       ;;D849|D849+D849/D849\D849;
                       CPY.W #$0800                              ;;D84A|D84A+D84A/D84A\D84A;
                       BNE CODE_04D832                           ;;D84D|D84D+D84D/D84D\D84D;
-                      STZ.B !_F                                 ;;D84F|D84F+D84F/D84F\D84F;
+                      STZ.B _F                                  ;;D84F|D84F+D84F/D84F\D84F;
                     - JSR CODE_04DA49                           ;;D851|D851+D851/D851\D851;
-                      INC.B !_F                                 ;;D854|D854+D854/D854\D854;
-                      LDA.B !_F                                 ;;D856|D856+D856/D856\D856;
+                      INC.B _F                                  ;;D854|D854+D854/D854\D854;
+                      LDA.B _F                                  ;;D856|D856+D856/D856\D856;
                       CMP.B #$6F                                ;;D858|D858+D858/D858\D858;
                       BNE -                                     ;;D85A|D85A+D85A/D85A\D85A;
                       RTS                                       ;;D85C|D85C+D85C/D85C\D85C; Return 
@@ -5123,23 +5123,23 @@ DATA_04DA33:          db $66,$67,$68,$69,$6A,$6B,$6C,$6D        ;;DA33|DA33+DA33
                       db $79,$63,$7C,$7E,$80,$23                ;;DA43|DA43+DA43/DA43\DA43;
                                                                 ;;                        ;
 CODE_04DA49:          REP #$30                                  ;;DA49|DA49+DA49/DA49\DA49; Index (16 bit) Accum (16 bit) 
-                      LDA.B !_F                                 ;;DA4B|DA4B+DA4B/DA4B\DA4B;
+                      LDA.B _F                                  ;;DA4B|DA4B+DA4B/DA4B\DA4B;
                       AND.W #$00F8                              ;;DA4D|DA4D+DA4D/DA4D\DA4D;
                       LSR A                                     ;;DA50|DA50+DA50/DA50\DA50;
                       LSR A                                     ;;DA51|DA51+DA51/DA51\DA51;
                       LSR A                                     ;;DA52|DA52+DA52/DA52\DA52;
                       TAY                                       ;;DA53|DA53+DA53/DA53\DA53;
-                      LDA.B !_F                                 ;;DA54|DA54+DA54/DA54\DA54;
+                      LDA.B _F                                  ;;DA54|DA54+DA54/DA54\DA54;
                       AND.W #$0007                              ;;DA56|DA56+DA56/DA56\DA56;
                       TAX                                       ;;DA59|DA59+DA59/DA59\DA59;
                       SEP #$20                                  ;;DA5A|DA5A+DA5A/DA5A\DA5A; Accum (8 bit) 
-                      LDA.W !OWEventsActivated,Y                ;;DA5C|DA5C+DA5C/DA5C\DA5C;
+                      LDA.W OWEventsActivated,Y                 ;;DA5C|DA5C+DA5C/DA5C\DA5C;
                       AND.L DATA_04E44B,X                       ;;DA5F|DA5F+DA5F/DA5F\DA5F;
                       BEQ Return04DAAC                          ;;DA63|DA63+DA63/DA63\DA63;
                       REP #$20                                  ;;DA65|DA65+DA65/DA65\DA65; Accum (16 bit) 
                       LDA.W #$C800                              ;;DA67|DA67+DA67/DA67\DA67;
-                      STA.B !_4                                 ;;DA6A|DA6A+DA6A/DA6A\DA6A;
-                      LDA.B !_F                                 ;;DA6C|DA6C+DA6C/DA6C\DA6C;
+                      STA.B _4                                  ;;DA6A|DA6A+DA6A/DA6A\DA6A;
+                      LDA.B _F                                  ;;DA6C|DA6C+DA6C/DA6C\DA6C;
                       AND.W #$00FF                              ;;DA6E|DA6E+DA6E/DA6E\DA6E;
                       ASL A                                     ;;DA71|DA71+DA71/DA71\DA71;
                       TAX                                       ;;DA72|DA72+DA72/DA72\DA72;
@@ -5148,8 +5148,8 @@ CODE_04DA49:          REP #$30                                  ;;DA49|DA49+DA49
                       LDX.W #$0015                              ;;DA78|DA78+DA78/DA78\DA78;
                       SEP #$20                                  ;;DA7B|DA7B+DA7B/DA7B\DA7B; Accum (8 bit) 
                       LDA.B #$7E                                ;;DA7D|DA7D+DA7D/DA7D\DA7D;
-                      STA.B !_6                                 ;;DA7F|DA7F+DA7F/DA7F\DA7F;
-                      LDA.B [!_4],Y                             ;;DA81|DA81+DA81/DA81\DA81;
+                      STA.B _6                                  ;;DA7F|DA7F+DA7F/DA7F\DA7F;
+                      LDA.B [_4],Y                              ;;DA81|DA81+DA81/DA81\DA81;
 CODE_04DA83:          CMP.L DATA_04DA1D,X                       ;;DA83|DA83+DA83/DA83\DA83;
                       BEQ CODE_04DA8F                           ;;DA87|DA87+DA87/DA87\DA87;
                       DEX                                       ;;DA89|DA89+DA89/DA89\DA89;
@@ -5157,16 +5157,16 @@ CODE_04DA83:          CMP.L DATA_04DA1D,X                       ;;DA83|DA83+DA83
                       JMP CODE_04DA9D                           ;;DA8C|DA8C+DA8C/DA8C\DA8C;
                                                                 ;;                        ;
 CODE_04DA8F:          LDA.L DATA_04DA33,X                       ;;DA8F|DA8F+DA8F/DA8F\DA8F;
-                      STA.B [!_4],Y                             ;;DA93|DA93+DA93/DA93\DA93;
+                      STA.B [_4],Y                              ;;DA93|DA93+DA93/DA93\DA93;
                       CPX.W #$0015                              ;;DA95|DA95+DA95/DA95\DA95;
                       BNE CODE_04DA9D                           ;;DA98|DA98+DA98/DA98\DA98;
                       INY                                       ;;DA9A|DA9A+DA9A/DA9A\DA9A;
-                      STA.B [!_4],Y                             ;;DA9B|DA9B+DA9B/DA9B\DA9B;
-CODE_04DA9D:          LDA.B !_F                                 ;;DA9D|DA9D+DA9D/DA9D\DA9D;
+                      STA.B [_4],Y                              ;;DA9B|DA9B+DA9B/DA9B\DA9B;
+CODE_04DA9D:          LDA.B _F                                  ;;DA9D|DA9D+DA9D/DA9D\DA9D;
                       JSR CODE_04E677                           ;;DA9F|DA9F+DA9F/DA9F\DA9F;
                       SEP #$10                                  ;;DAA2|DAA2+DAA2/DAA2\DAA2; Index (8 bit) 
-                      STZ.W !OverworldEventProcess              ;;DAA4|DAA4+DAA4/DAA4\DAA4;
-                      LDA.B !_F                                 ;;DAA7|DAA7+DAA7/DAA7\DAA7;
+                      STZ.W OverworldEventProcess               ;;DAA4|DAA4+DAA4/DAA4\DAA4;
+                      LDA.B _F                                  ;;DAA7|DAA7+DAA7/DAA7\DAA7;
                       JSR CODE_04E9F1                           ;;DAA9|DAA9+DAA9/DAA9\DAA9;
 Return04DAAC:         RTS                                       ;;DAAC|DAAC+DAAC/DAAC\DAAC; Return 
                                                                 ;;                        ;
@@ -5177,41 +5177,41 @@ CODE_04DAAD:          PHP                                       ;;DAAD|DAAD+DAAD
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_04DAB3:          db $01,$18                                ;;DAB3|DAB3+DAB3/DAB3\DAB3;
-                      dl !OWLayer2Tilemap                       ;;DAB5|DAB5+DAB5/DAB5\DAB5;
+                      dl OWLayer2Tilemap                        ;;DAB5|DAB5+DAB5/DAB5\DAB5;
                       dw $2000                                  ;;DAB8|DAB8+DAB8/DAB8\DAB8;
                                                                 ;;                        ;
 CODE_04DABA:          SEP #$20                                  ;;DABA|DABA+DABA/DABA\DABA; Accum (8 bit) 
                       REP #$10                                  ;;DABC|DABC+DABC/DABC\DABC; Index (16 bit) 
-                      LDA.B [!_0],Y                             ;;DABE|DABE+DABE/DABE\DABE;
-                      STA.B !_3                                 ;;DAC0|DAC0+DAC0/DAC0\DAC0;
+                      LDA.B [_0],Y                              ;;DABE|DABE+DABE/DABE\DABE;
+                      STA.B _3                                  ;;DAC0|DAC0+DAC0/DAC0\DAC0;
                       AND.B #$80                                ;;DAC2|DAC2+DAC2/DAC2\DAC2;
                       BNE CODE_04DAD6                           ;;DAC4|DAC4+DAC4/DAC4\DAC4;
                     - INY                                       ;;DAC6|DAC6+DAC6/DAC6\DAC6;
-                      LDA.B [!_0],Y                             ;;DAC7|DAC7+DAC7/DAC7\DAC7;
-                      STA.L !OWLayer2Tilemap,X                  ;;DAC9|DAC9+DAC9/DAC9\DAC9;
+                      LDA.B [_0],Y                              ;;DAC7|DAC7+DAC7/DAC7\DAC7;
+                      STA.L OWLayer2Tilemap,X                   ;;DAC9|DAC9+DAC9/DAC9\DAC9;
                       INX                                       ;;DACD|DACD+DACD/DACD\DACD;
                       INX                                       ;;DACE|DACE+DACE/DACE\DACE;
-                      DEC.B !_3                                 ;;DACF|DACF+DACF/DACF\DACF;
+                      DEC.B _3                                  ;;DACF|DACF+DACF/DACF\DACF;
                       BPL -                                     ;;DAD1|DAD1+DAD1/DAD1\DAD1;
                       JMP CODE_04DAE9                           ;;DAD3|DAD3+DAD3/DAD3\DAD3;
                                                                 ;;                        ;
-CODE_04DAD6:          LDA.B !_3                                 ;;DAD6|DAD6+DAD6/DAD6\DAD6;
+CODE_04DAD6:          LDA.B _3                                  ;;DAD6|DAD6+DAD6/DAD6\DAD6;
                       AND.B #$7F                                ;;DAD8|DAD8+DAD8/DAD8\DAD8;
-                      STA.B !_3                                 ;;DADA|DADA+DADA/DADA\DADA;
+                      STA.B _3                                  ;;DADA|DADA+DADA/DADA\DADA;
                       INY                                       ;;DADC|DADC+DADC/DADC\DADC;
-                      LDA.B [!_0],Y                             ;;DADD|DADD+DADD/DADD\DADD;
-                    - STA.L !OWLayer2Tilemap,X                  ;;DADF|DADF+DADF/DADF\DADF;
+                      LDA.B [_0],Y                              ;;DADD|DADD+DADD/DADD\DADD;
+                    - STA.L OWLayer2Tilemap,X                   ;;DADF|DADF+DADF/DADF\DADF;
                       INX                                       ;;DAE3|DAE3+DAE3/DAE3\DAE3;
                       INX                                       ;;DAE4|DAE4+DAE4/DAE4\DAE4;
-                      DEC.B !_3                                 ;;DAE5|DAE5+DAE5/DAE5\DAE5;
+                      DEC.B _3                                  ;;DAE5|DAE5+DAE5/DAE5\DAE5;
                       BPL -                                     ;;DAE7|DAE7+DAE7/DAE7\DAE7;
 CODE_04DAE9:          INY                                       ;;DAE9|DAE9+DAE9/DAE9\DAE9;
-                      CPX.B !_E                                 ;;DAEA|DAEA+DAEA/DAEA\DAEA;
+                      CPX.B _E                                  ;;DAEA|DAEA+DAEA/DAEA\DAEA;
                       BCC CODE_04DABA                           ;;DAEC|DAEC+DAEC/DAEC\DAEC;
                       RTS                                       ;;DAEE|DAEE+DAEE/DAEE\DAEE; Return 
                                                                 ;;                        ;
 CODE_04DAEF:          SEP #$30                                  ;;DAEF|DAEF+DAEF/DAEF\DAEF; Index (8 bit) Accum (8 bit) 
-                      LDA.W !OWSubmapSwapProcess                ;;DAF1|DAF1+DAF1/DAF1\DAF1;
+                      LDA.W OWSubmapSwapProcess                 ;;DAF1|DAF1+DAF1/DAF1\DAF1;
                       JSL ExecutePtr                            ;;DAF4|DAF4+DAF4/DAF4\DAF4;
                                                                 ;;                        ;
                       dw CODE_04DB18                            ;;DAF8|DAF8+DAF8/DAF8\DAF8;
@@ -5232,53 +5232,53 @@ DATA_04DB10:          db $C0,$FA,$40,$05                        ;;DB10|DB10+DB10
 DATA_04DB14:          db $00,$00,$00,$54                        ;;DB14|DB14+DB14/DB14\DB14;
                                                                 ;;                        ;
 CODE_04DB18:          REP #$20                                  ;;DB18|DB18+DB18/DB18\DB18; Accum (16 bit) 
-                      LDX.W !OWTransitionFlag                   ;;DB1A|DB1A+DB1A/DB1A\DB1A;
-                      LDA.W !OWTransitionXCalc                  ;;DB1D|DB1D+DB1D/DB1D\DB1D;
+                      LDX.W OWTransitionFlag                    ;;DB1A|DB1A+DB1A/DB1A\DB1A;
+                      LDA.W OWTransitionXCalc                   ;;DB1D|DB1D+DB1D/DB1D\DB1D;
                       CLC                                       ;;DB20|DB20+DB20/DB20\DB20;
                       ADC.W DATA_04DB08,X                       ;;DB21|DB21+DB21/DB21\DB21;
-                      STA.W !OWTransitionXCalc                  ;;DB24|DB24+DB24/DB24\DB24;
+                      STA.W OWTransitionXCalc                   ;;DB24|DB24+DB24/DB24\DB24;
                       SEC                                       ;;DB27|DB27+DB27/DB27\DB27;
                       SBC.W DATA_04DB0C,X                       ;;DB28|DB28+DB28/DB28\DB28;
                       EOR.W DATA_04DB08,X                       ;;DB2B|DB2B+DB2B/DB2B\DB2B;
                       BPL CODE_04DB43                           ;;DB2E|DB2E+DB2E/DB2E\DB2E;
-                      LDA.W !OWTransitionYCalc                  ;;DB30|DB30+DB30/DB30\DB30;
+                      LDA.W OWTransitionYCalc                   ;;DB30|DB30+DB30/DB30\DB30;
                       CLC                                       ;;DB33|DB33+DB33/DB33\DB33;
                       ADC.W DATA_04DB10,X                       ;;DB34|DB34+DB34/DB34\DB34;
-                      STA.W !OWTransitionYCalc                  ;;DB37|DB37+DB37/DB37\DB37;
+                      STA.W OWTransitionYCalc                   ;;DB37|DB37+DB37/DB37\DB37;
                       SEC                                       ;;DB3A|DB3A+DB3A/DB3A\DB3A;
                       SBC.W DATA_04DB14,X                       ;;DB3B|DB3B+DB3B/DB3B\DB3B;
                       EOR.W DATA_04DB10,X                       ;;DB3E|DB3E+DB3E/DB3E\DB3E;
                       BMI +                                     ;;DB41|DB41+DB41/DB41\DB41;
 CODE_04DB43:          %LorW_X(LDA,DATA_04DB0C)                  ;;DB43|DB43+DB43/DB43\DB43;
-                      STA.W !OWTransitionXCalc                  ;;DB47|DB46+DB46/DB46\DB46;
+                      STA.W OWTransitionXCalc                   ;;DB47|DB46+DB46/DB46\DB46;
                       %LorW_X(LDA,DATA_04DB14)                  ;;DB4A|DB49+DB49/DB49\DB49;
-                      STA.W !OWTransitionYCalc                  ;;DB4E|DB4C+DB4C/DB4C\DB4C;
-                      INC.W !OWSubmapSwapProcess                ;;DB51|DB4F+DB4F/DB4F\DB4F;
+                      STA.W OWTransitionYCalc                   ;;DB4E|DB4C+DB4C/DB4C\DB4C;
+                      INC.W OWSubmapSwapProcess                 ;;DB51|DB4F+DB4F/DB4F\DB4F;
                       TXA                                       ;;DB54|DB52+DB52/DB52\DB52;
                       EOR.W #$0002                              ;;DB55|DB53+DB53/DB53\DB53;
                       TAX                                       ;;DB58|DB56+DB56/DB56\DB56;
-                      STX.W !OWTransitionFlag                   ;;DB59|DB57+DB57/DB57\DB57;
+                      STX.W OWTransitionFlag                    ;;DB59|DB57+DB57/DB57\DB57;
                       BEQ +                                     ;;DB5C|DB5A+DB5A/DB5A\DB5A;
                       JSR CODE_049A93                           ;;DB5E|DB5C+DB5C/DB5C\DB5C;
                     + SEP #$20                                  ;;DB61|DB5F+DB5F/DB5F\DB5F; Accum (8 bit) 
-                      LDA.W !OWTransitionYCalc+1                ;;DB63|DB61+DB61/DB61\DB61;
+                      LDA.W OWTransitionYCalc+1                 ;;DB63|DB61+DB61/DB61\DB61;
                       ASL A                                     ;;DB66|DB64+DB64/DB64\DB64;
-                      STA.B !_0                                 ;;DB67|DB65+DB65/DB65\DB65;
-                      LDA.W !OWTransitionXCalc+1                ;;DB69|DB67+DB67/DB67\DB67;
+                      STA.B _0                                  ;;DB67|DB65+DB65/DB65\DB65;
+                      LDA.W OWTransitionXCalc+1                 ;;DB69|DB67+DB67/DB67\DB67;
                       CLC                                       ;;DB6C|DB6A+DB6A/DB6A\DB6A;
                       ADC.B #$80                                ;;DB6D|DB6B+DB6B/DB6B\DB6B;
                       XBA                                       ;;DB6F|DB6D+DB6D/DB6D\DB6D;
                       LDA.B #$80                                ;;DB70|DB6E+DB6E/DB6E\DB6E;
                       SEC                                       ;;DB72|DB70+DB70/DB70\DB70;
-                      SBC.W !OWTransitionXCalc+1                ;;DB73|DB71+DB71/DB71\DB71;
+                      SBC.W OWTransitionXCalc+1                 ;;DB73|DB71+DB71/DB71\DB71;
                       REP #$20                                  ;;DB76|DB74+DB74/DB74\DB74; Accum (16 bit) 
                       LDX.B #$00                                ;;DB78|DB76+DB76/DB76\DB76;
                       LDY.B #$A8                                ;;DB7A|DB78+DB78/DB78\DB78;
-CODE_04DB7A:          CPX.B !_0                                 ;;DB7C|DB7A+DB7A/DB7A\DB7A;
+CODE_04DB7A:          CPX.B _0                                  ;;DB7C|DB7A+DB7A/DB7A\DB7A;
                       BCC +                                     ;;DB7E|DB7C+DB7C/DB7C\DB7C;
                       LDA.W #$00FF                              ;;DB80|DB7E+DB7E/DB7E\DB7E;
-                    + STA.W !WindowTable+$4E,Y                  ;;DB83|DB81+DB81/DB81\DB81;
-                      STA.W !WindowTable+$F8,X                  ;;DB86|DB84+DB84/DB84\DB84;
+                    + STA.W WindowTable+$4E,Y                   ;;DB83|DB81+DB81/DB81\DB81;
+                      STA.W WindowTable+$F8,X                   ;;DB86|DB84+DB84/DB84\DB84;
                       INX                                       ;;DB89|DB87+DB87/DB87\DB87;
                       INX                                       ;;DB8A|DB88+DB88/DB88\DB88;
                       DEY                                       ;;DB8B|DB89+DB89/DB89\DB89;
@@ -5286,30 +5286,30 @@ CODE_04DB7A:          CPX.B !_0                                 ;;DB7C|DB7A+DB7A
                       BNE CODE_04DB7A                           ;;DB8D|DB8B+DB8B/DB8B\DB8B;
                       SEP #$20                                  ;;DB8F|DB8D+DB8D/DB8D\DB8D; Accum (8 bit) 
                       LDA.B #$33                                ;;DB91|DB8F+DB8F/DB8F\DB8F;
-                      STA.B !Layer12Window                      ;;DB93|DB91+DB91/DB91\DB91;
+                      STA.B Layer12Window                       ;;DB93|DB91+DB91/DB91\DB91;
                       LDA.B #$33                                ;;DB95|DB93+DB93/DB93\DB93;
-CODE_04DB95:          STA.B !OBJCWWindow                        ;;DB97|DB95+DB95/DB95\DB95;
+CODE_04DB95:          STA.B OBJCWWindow                         ;;DB97|DB95+DB95/DB95\DB95;
                       LDA.B #$80                                ;;DB99|DB97+DB97/DB97\DB97;
-                      STA.W !HDMAEnable                         ;;DB9B|DB99+DB99/DB99\DB99;
+                      STA.W HDMAEnable                          ;;DB9B|DB99+DB99/DB99\DB99;
                       RTS                                       ;;DB9E|DB9C+DB9C/DB9C\DB9C; Return 
                                                                 ;;                        ;
-CODE_04DB9D:          LDA.W !PlayerTurnOW                       ;;DB9F|DB9D+DB9D/DB9D\DB9D;
+CODE_04DB9D:          LDA.W PlayerTurnOW                        ;;DB9F|DB9D+DB9D/DB9D\DB9D;
                       LSR A                                     ;;DBA2|DBA0+DBA0/DBA0\DBA0;
                       LSR A                                     ;;DBA3|DBA1+DBA1/DBA1\DBA1;
                       TAX                                       ;;DBA4|DBA2+DBA2/DBA2\DBA2;
-                      LDA.W !OWPlayerSubmap,X                   ;;DBA5|DBA3+DBA3/DBA3\DBA3;
+                      LDA.W OWPlayerSubmap,X                    ;;DBA5|DBA3+DBA3/DBA3\DBA3;
                       TAX                                       ;;DBA8|DBA6+DBA6/DBA6\DBA6;
                       LDA.L DATA_04DC02,X                       ;;DBA9|DBA7+DBA7/DBA7\DBA7;
-                      STA.W !ObjectTileset                      ;;DBAD|DBAB+DBAB/DBAB\DBAB;
+                      STA.W ObjectTileset                       ;;DBAD|DBAB+DBAB/DBAB\DBAB;
                       JSL CODE_00A594                           ;;DBB0|DBAE+DBAE/DBAE\DBAE;
                       LDA.B #$FE                                ;;DBB4|DBB2+DBB2/DBB2\DBB2;
-                      STA.W !MainPalette                        ;;DBB6|DBB4+DBB4/DBB4\DBB4;
+                      STA.W MainPalette                         ;;DBB6|DBB4+DBB4/DBB4\DBB4;
                       LDA.B #$01                                ;;DBB9|DBB7+DBB7/DBB7\DBB7;
-                      STA.W !MainPalette+1                      ;;DBBB|DBB9+DBB9/DBB9\DBB9;
-                      STZ.W !MainPalette+$100                   ;;DBBE|DBBC+DBBC/DBBC\DBBC;
+                      STA.W MainPalette+1                       ;;DBBB|DBB9+DBB9/DBB9\DBB9;
+                      STZ.W MainPalette+$100                    ;;DBBE|DBBC+DBBC/DBBC\DBBC;
                       LDA.B #$06                                ;;DBC1|DBBF+DBBF/DBBF\DBBF;
-                      STA.W !PaletteIndexTable                  ;;DBC3|DBC1+DBC1/DBC1\DBC1;
-                      INC.W !OWSubmapSwapProcess                ;;DBC6|DBC4+DBC4/DBC4\DBC4;
+                      STA.W PaletteIndexTable                   ;;DBC3|DBC1+DBC1/DBC1\DBC1;
+                      INC.W OWSubmapSwapProcess                 ;;DBC6|DBC4+DBC4/DBC4\DBC4;
                       RTS                                       ;;DBC9|DBC7+DBC7/DBC7\DBC7; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
@@ -5321,48 +5321,48 @@ OverworldMusic2:      db !BGM_DONUTPLAINS                       ;;DBCA|DBC8+DBC8
                       db !BGM_SPECIALWORLD                      ;;DBCF|DBCD+DBCD/DBCD\DBCD;
                       db !BGM_STARWORLD                         ;;DBD0|DBCE+DBCE/DBCE\DBCE;
                                                                 ;;                        ;
-CODE_04DBCF:          STZ.W !OWSubmapSwapProcess                ;;DBD1|DBCF+DBCF/DBCF\DBCF;
+CODE_04DBCF:          STZ.W OWSubmapSwapProcess                 ;;DBD1|DBCF+DBCF/DBCF\DBCF;
                       LDA.B #$04                                ;;DBD4|DBD2+DBD2/DBD2\DBD2;
-                      STA.W !OverworldProcess                   ;;DBD6|DBD4+DBD4/DBD4\DBD4;
-                      LDA.W !PlayerTurnOW                       ;;DBD9|DBD7+DBD7/DBD7\DBD7;
+                      STA.W OverworldProcess                    ;;DBD6|DBD4+DBD4/DBD4\DBD4;
+                      LDA.W PlayerTurnOW                        ;;DBD9|DBD7+DBD7/DBD7\DBD7;
                       LSR A                                     ;;DBDC|DBDA+DBDA/DBDA\DBDA;
                       LSR A                                     ;;DBDD|DBDB+DBDB/DBDB\DBDB;
                       TAY                                       ;;DBDE|DBDC+DBDC/DBDC\DBDC;
-                      LDA.W !IsTwoPlayerGame                    ;;DBDF|DBDD+DBDD/DBDD\DBDD;
+                      LDA.W IsTwoPlayerGame                     ;;DBDF|DBDD+DBDD/DBDD\DBDD;
                       BEQ CODE_04DBF3                           ;;DBE2|DBE0+DBE0/DBE0\DBE0;
-                      LDA.W !SwapOverworldMusic                 ;;DBE4|DBE2+DBE2/DBE2\DBE2;
+                      LDA.W SwapOverworldMusic                  ;;DBE4|DBE2+DBE2/DBE2\DBE2;
                       BNE CODE_04DBF3                           ;;DBE7|DBE5+DBE5/DBE5\DBE5;
                       TYA                                       ;;DBE9|DBE7+DBE7/DBE7\DBE7;
                       EOR.B #$01                                ;;DBEA|DBE8+DBE8/DBE8\DBE8;
                       TAX                                       ;;DBEC|DBEA+DBEA/DBEA\DBEA;
-                      LDA.W !OWPlayerSubmap,Y                   ;;DBED|DBEB+DBEB/DBEB\DBEB;
-                      CMP.W !OWPlayerSubmap,X                   ;;DBF0|DBEE+DBEE/DBEE\DBEE;
+                      LDA.W OWPlayerSubmap,Y                    ;;DBED|DBEB+DBEB/DBEB\DBEB;
+                      CMP.W OWPlayerSubmap,X                    ;;DBF0|DBEE+DBEE/DBEE\DBEE;
                       BEQ +                                     ;;DBF3|DBF1+DBF1/DBF1\DBF1;
-CODE_04DBF3:          LDA.W !OWPlayerSubmap,Y                   ;;DBF5|DBF3+DBF3/DBF3\DBF3;
+CODE_04DBF3:          LDA.W OWPlayerSubmap,Y                    ;;DBF5|DBF3+DBF3/DBF3\DBF3;
                       TAX                                       ;;DBF8|DBF6+DBF6/DBF6\DBF6;
                       LDA.L OverworldMusic2,X                   ;;DBF9|DBF7+DBF7/DBF7\DBF7;
-                      STA.W !SPCIO2                             ;;DBFD|DBFB+DBFB/DBFB\DBFB; / Change music 
-                      STZ.W !SwapOverworldMusic                 ;;DC00|DBFE+DBFE/DBFE\DBFE;
+                      STA.W SPCIO2                              ;;DBFD|DBFB+DBFB/DBFB\DBFB; / Change music 
+                      STZ.W SwapOverworldMusic                  ;;DC00|DBFE+DBFE/DBFE\DBFE;
                     + RTS                                       ;;DC03|DC01+DC01/DC01\DC01; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_04DC02:          db $11,$12,$13,$14,$15,$16,$17            ;;DC04|DC02+DC02/DC02\DC02;
                                                                 ;;                        ;
 CODE_04DC09:          SEP #$30                                  ;;DC0B|DC09+DC09/DC09\DC09; Index (8 bit) Accum (8 bit) 
-                      LDA.W !PlayerTurnOW                       ;;DC0D|DC0B+DC0B/DC0B\DC0B;
+                      LDA.W PlayerTurnOW                        ;;DC0D|DC0B+DC0B/DC0B\DC0B;
                       LSR A                                     ;;DC10|DC0E+DC0E/DC0E\DC0E;
                       LSR A                                     ;;DC11|DC0F+DC0F/DC0F\DC0F;
                       TAX                                       ;;DC12|DC10+DC10/DC10\DC10;
-                      LDA.W !OWPlayerSubmap,X                   ;;DC13|DC11+DC11/DC11\DC11;
+                      LDA.W OWPlayerSubmap,X                    ;;DC13|DC11+DC11/DC11\DC11;
                       TAX                                       ;;DC16|DC14+DC14/DC14\DC14;
                       LDA.L DATA_04DC02,X                       ;;DC17|DC15+DC15/DC15\DC15;
-                      STA.W !ObjectTileset                      ;;DC1B|DC19+DC19/DC19\DC19;
+                      STA.W ObjectTileset                       ;;DC1B|DC19+DC19/DC19\DC19;
                       LDA.B #$11                                ;;DC1E|DC1C+DC1C/DC1C\DC1C;
-                      STA.W !SpriteTileset                      ;;DC20|DC1E+DC1E/DC1E\DC1E;
+                      STA.W SpriteTileset                       ;;DC20|DC1E+DC1E/DC1E\DC1E;
                       LDA.B #$07                                ;;DC23|DC21+DC21/DC21\DC21;
-                      STA.W !LevelModeSetting                   ;;DC25|DC23+DC23/DC23\DC23;
+                      STA.W LevelModeSetting                    ;;DC25|DC23+DC23/DC23\DC23;
                       LDA.B #$03                                ;;DC28|DC26+DC26/DC26\DC26;
-                      STA.B !ScreenMode                         ;;DC2A|DC28+DC28/DC28\DC28;
+                      STA.B ScreenMode                          ;;DC2A|DC28+DC28/DC28\DC28;
                       REP #$10                                  ;;DC2C|DC2A+DC2A/DC2A\DC2A; Index (16 bit) 
                       LDX.W #$0000                              ;;DC2E|DC2C+DC2C/DC2C\DC2C;
                       TXA                                       ;;DC31|DC2F+DC2F/DC2F\DC2F;
@@ -5371,14 +5371,14 @@ CODE_04DC09:          SEP #$30                                  ;;DC0B|DC09+DC09
                       BNE -                                     ;;DC38|DC36+DC36/DC36\DC36;
                       REP #$30                                  ;;DC3A|DC38+DC38/DC38\DC38; Index (16 bit) Accum (16 bit) 
                       LDA.W #OWL1CharData                       ;;DC3C|DC3A+DC3A/DC3A\DC3A;
-                      STA.B !_0                                 ;;DC3F|DC3D+DC3D/DC3D\DC3D;
+                      STA.B _0                                  ;;DC3F|DC3D+DC3D/DC3D\DC3D;
                       LDX.W #$0000                              ;;DC41|DC3F+DC3F/DC3F\DC3F;
-                    - LDA.B !_0                                 ;;DC44|DC42+DC42/DC42\DC42;
-                      STA.W !Map16Pointers,X                    ;;DC46|DC44+DC44/DC44\DC44;
-                      LDA.B !_0                                 ;;DC49|DC47+DC47/DC47\DC47;
+                    - LDA.B _0                                  ;;DC44|DC42+DC42/DC42\DC42;
+                      STA.W Map16Pointers,X                     ;;DC46|DC44+DC44/DC44\DC44;
+                      LDA.B _0                                  ;;DC49|DC47+DC47/DC47\DC47;
                       CLC                                       ;;DC4B|DC49+DC49/DC49\DC49;
                       ADC.W #$0008                              ;;DC4C|DC4A+DC4A/DC4A\DC4A;
-                      STA.B !_0                                 ;;DC4F|DC4D+DC4D/DC4D\DC4D;
+                      STA.B _0                                  ;;DC4F|DC4D+DC4D/DC4D\DC4D;
                       INX                                       ;;DC51|DC4F+DC4F/DC4F\DC4F;
                       INX                                       ;;DC52|DC50+DC50/DC50\DC50;
                       CPX.W #$0400                              ;;DC53|DC51+DC51/DC51\DC51;
@@ -5386,7 +5386,7 @@ CODE_04DC09:          SEP #$30                                  ;;DC0B|DC09+DC09
                       PHB                                       ;;DC58|DC56+DC56/DC56\DC56;
                       LDA.W #$07FF                              ;;DC59|DC57+DC57/DC57\DC57;
                       LDX.W #OWL1TileData                       ;;DC5C|DC5A+DC5A/DC5A\DC5A;
-                      LDY.W #!Map16TilesLow                     ;;DC5F|DC5D+DC5D/DC5D\DC5D;
+                      LDY.W #Map16TilesLow                      ;;DC5F|DC5D+DC5D/DC5D\DC5D;
                       MVN $7E,$0C                               ;;DC62|DC60+DC60/DC60\DC60;
                       PLB                                       ;;DC65|DC63+DC63/DC63\DC63;
                       JSR CODE_04D7F2                           ;;DC66|DC64+DC64/DC64\DC64;
@@ -5397,29 +5397,29 @@ CODE_04DC6A:          SEP #$30                                  ;;DC6C|DC6A+DC6A
                       JSR CODE_04DD40                           ;;DC6E|DC6C+DC6C/DC6C\DC6C;
                       REP #$20                                  ;;DC71|DC6F+DC6F/DC6F\DC6F; Accum (16 bit) 
                       LDA.W #OWTileNumbers                      ;;DC73|DC71+DC71/DC71\DC71;
-                      STA.B !_0                                 ;;DC76|DC74+DC74/DC74\DC74;
+                      STA.B _0                                  ;;DC76|DC74+DC74/DC74\DC74;
                       SEP #$30                                  ;;DC78|DC76+DC76/DC76\DC76; Index (8 bit) Accum (8 bit) 
                       LDA.B #OWTileNumbers>>16                  ;;DC7A|DC78+DC78/DC78\DC78;
-                      STA.B !_2                                 ;;DC7C|DC7A+DC7A/DC7A\DC7A;
+                      STA.B _2                                  ;;DC7C|DC7A+DC7A/DC7A\DC7A;
                       REP #$10                                  ;;DC7E|DC7C+DC7C/DC7C\DC7C; Index (16 bit) 
                       LDY.W #$4000                              ;;DC80|DC7E+DC7E/DC7E\DC7E;
-                      STY.B !_E                                 ;;DC83|DC81+DC81/DC81\DC81;
+                      STY.B _E                                  ;;DC83|DC81+DC81/DC81\DC81;
                       LDY.W #$0000                              ;;DC85|DC83+DC83/DC83\DC83;
                       TYX                                       ;;DC88|DC86+DC86/DC86\DC86;
                       JSR CODE_04DABA                           ;;DC89|DC87+DC87/DC87\DC87;
                       REP #$20                                  ;;DC8C|DC8A+DC8A/DC8A\DC8A; Accum (16 bit) 
                       LDA.W #OWTilemap                          ;;DC8E|DC8C+DC8C/DC8C\DC8C;
-                      STA.B !_0                                 ;;DC91|DC8F+DC8F/DC8F\DC8F;
+                      STA.B _0                                  ;;DC91|DC8F+DC8F/DC8F\DC8F;
                       SEP #$20                                  ;;DC93|DC91+DC91/DC91\DC91; Accum (8 bit) 
                       LDX.W #$0001                              ;;DC95|DC93+DC93/DC93\DC93;
                       LDY.W #$0000                              ;;DC98|DC96+DC96/DC96\DC96;
                       JSR CODE_04DABA                           ;;DC9B|DC99+DC99/DC99\DC99;
                       SEP #$30                                  ;;DC9E|DC9C+DC9C/DC9C\DC9C; Index (8 bit) Accum (8 bit) 
                       LDA.B #$00                                ;;DCA0|DC9E+DC9E/DC9E\DC9E;
-                      STA.B !_F                                 ;;DCA2|DCA0+DCA0/DCA0\DCA0;
+                      STA.B _F                                  ;;DCA2|DCA0+DCA0/DCA0\DCA0;
                     - JSR CODE_04E453                           ;;DCA4|DCA2+DCA2/DCA2\DCA2;
-                      INC.B !_F                                 ;;DCA7|DCA5+DCA5/DCA5\DCA5;
-                      LDA.B !_F                                 ;;DCA9|DCA7+DCA7/DCA7\DCA7;
+                      INC.B _F                                  ;;DCA7|DCA5+DCA5/DCA5\DCA5;
+                      LDA.B _F                                  ;;DCA9|DCA7+DCA7/DCA7\DCA7;
                       CMP.B #$6F                                ;;DCAB|DCA9+DCA9/DCA9\DCA9;
                       BNE -                                     ;;DCAD|DCAB+DCAB/DCAB\DCAB;
                       RTS                                       ;;DCAF|DCAD+DCAD/DCAD\DCAD; Return 
@@ -5431,79 +5431,79 @@ CODE_04DCB6:          PHP                                       ;;DCB8|DCB6+DCB6
                       REP #$10                                  ;;DCB9|DCB7+DCB7/DCB7\DCB7; Index (16 bit) 
                       SEP #$20                                  ;;DCBB|DCB9+DCB9/DCB9\DCB9; Accum (8 bit) 
                       LDX.W #OWL1CharData                       ;;DCBD|DCBB+DCBB/DCBB\DCBB;
-                      STX.B !Layer1DataPtr                      ;;DCC0|DCBE+DCBE/DCBE\DCBE;
+                      STX.B Layer1DataPtr                       ;;DCC0|DCBE+DCBE/DCBE\DCBE;
                       LDA.B #OWL1CharData>>16                   ;;DCC2|DCC0+DCC0/DCC0\DCC0;
-                      STA.B !Layer1DataPtr+2                    ;;DCC4|DCC2+DCC2/DCC2\DCC2;
+                      STA.B Layer1DataPtr+2                     ;;DCC4|DCC2+DCC2/DCC2\DCC2;
                       LDX.W #$0000                              ;;DCC6|DCC4+DCC4/DCC4\DCC4;
-                      STX.B !_0                                 ;;DCC9|DCC7+DCC7/DCC7\DCC7;
-                      LDA.W !OWSubmapSwapProcess                ;;DCCB|DCC9+DCC9/DCC9\DCC9;
+                      STX.B _0                                  ;;DCC9|DCC7+DCC7/DCC7\DCC7;
+                      LDA.W OWSubmapSwapProcess                 ;;DCCB|DCC9+DCC9/DCC9\DCC9;
                       DEC A                                     ;;DCCE|DCCC+DCCC/DCCC\DCCC;
-                      STA.B !_1                                 ;;DCCF|DCCD+DCCD/DCCD\DCCD;
+                      STA.B _1                                  ;;DCCF|DCCD+DCCD/DCCD\DCCD;
                       REP #$20                                  ;;DCD1|DCCF+DCCF/DCCF\DCCF; Accum (16 bit) 
-                      LDA.W !PlayerTurnOW                       ;;DCD3|DCD1+DCD1/DCD1\DCD1;
+                      LDA.W PlayerTurnOW                        ;;DCD3|DCD1+DCD1/DCD1\DCD1;
                       LSR A                                     ;;DCD6|DCD4+DCD4/DCD4\DCD4;
                       LSR A                                     ;;DCD7|DCD5+DCD5/DCD5\DCD5;
                       AND.W #$00FF                              ;;DCD8|DCD6+DCD6/DCD6\DCD6;
                       TAX                                       ;;DCDB|DCD9+DCD9/DCD9\DCD9;
                       SEP #$20                                  ;;DCDC|DCDA+DCDA/DCDA\DCDA; Accum (8 bit) 
-                      LDA.W !OWPlayerSubmap,X                   ;;DCDE|DCDC+DCDC/DCDC\DCDC;
+                      LDA.W OWPlayerSubmap,X                    ;;DCDE|DCDC+DCDC/DCDC\DCDC;
                       BEQ CODE_04DCE8                           ;;DCE1|DCDF+DCDF/DCDF\DCDF;
-                      LDA.B !_1                                 ;;DCE3|DCE1+DCE1/DCE1\DCE1;
+                      LDA.B _1                                  ;;DCE3|DCE1+DCE1/DCE1\DCE1;
                       CLC                                       ;;DCE5|DCE3+DCE3/DCE3\DCE3;
                       ADC.B #$04                                ;;DCE6|DCE4+DCE4/DCE4\DCE4;
-                      STA.B !_1                                 ;;DCE8|DCE6+DCE6/DCE6\DCE6;
-CODE_04DCE8:          LDX.B !_0                                 ;;DCEA|DCE8+DCE8/DCE8\DCE8;
-                      LDA.L !Map16TilesLow,X                    ;;DCEC|DCEA+DCEA/DCEA\DCEA;
-                      STA.B !_2                                 ;;DCF0|DCEE+DCEE/DCEE\DCEE;
+                      STA.B _1                                  ;;DCE8|DCE6+DCE6/DCE6\DCE6;
+CODE_04DCE8:          LDX.B _0                                  ;;DCEA|DCE8+DCE8/DCE8\DCE8;
+                      LDA.L Map16TilesLow,X                     ;;DCEC|DCEA+DCEA/DCEA\DCEA;
+                      STA.B _2                                  ;;DCF0|DCEE+DCEE/DCEE\DCEE;
                       REP #$20                                  ;;DCF2|DCF0+DCF0/DCF0\DCF0; Accum (16 bit) 
-                      LDA.L !Map16TilesHigh,X                   ;;DCF4|DCF2+DCF2/DCF2\DCF2;
-                      STA.B !_3                                 ;;DCF8|DCF6+DCF6/DCF6\DCF6;
-                      LDA.B !_2                                 ;;DCFA|DCF8+DCF8/DCF8\DCF8;
+                      LDA.L Map16TilesHigh,X                    ;;DCF4|DCF2+DCF2/DCF2\DCF2;
+                      STA.B _3                                  ;;DCF8|DCF6+DCF6/DCF6\DCF6;
+                      LDA.B _2                                  ;;DCFA|DCF8+DCF8/DCF8\DCF8;
                       ASL A                                     ;;DCFC|DCFA+DCFA/DCFA\DCFA;
                       ASL A                                     ;;DCFD|DCFB+DCFB/DCFB\DCFB;
                       ASL A                                     ;;DCFE|DCFC+DCFC/DCFC\DCFC;
                       TAY                                       ;;DCFF|DCFD+DCFD/DCFD\DCFD;
-                      LDA.B !_0                                 ;;DD00|DCFE+DCFE/DCFE\DCFE;
+                      LDA.B _0                                  ;;DD00|DCFE+DCFE/DCFE\DCFE;
                       AND.W #$00FF                              ;;DD02|DD00+DD00/DD00\DD00;
                       ASL A                                     ;;DD05|DD03+DD03/DD03\DD03;
                       ASL A                                     ;;DD06|DD04+DD04/DD04\DD04;
                       PHA                                       ;;DD07|DD05+DD05/DD05\DD05;
                       AND.W #$003F                              ;;DD08|DD06+DD06/DD06\DD06;
-                      STA.B !_2                                 ;;DD0B|DD09+DD09/DD09\DD09;
+                      STA.B _2                                  ;;DD0B|DD09+DD09/DD09\DD09;
                       PLA                                       ;;DD0D|DD0B+DD0B/DD0B\DD0B;
                       ASL A                                     ;;DD0E|DD0C+DD0C/DD0C\DD0C;
                       AND.W #$0F80                              ;;DD0F|DD0D+DD0D/DD0D\DD0D;
-                      ORA.B !_2                                 ;;DD12|DD10+DD10/DD10\DD10;
+                      ORA.B _2                                  ;;DD12|DD10+DD10/DD10\DD10;
                       TAX                                       ;;DD14|DD12+DD12/DD12\DD12;
-                      LDA.B [!Layer1DataPtr],Y                  ;;DD15|DD13+DD13/DD13\DD13;
-                      STA.L !OWLayer1VramBuffer,X               ;;DD17|DD15+DD15/DD15\DD15;
+                      LDA.B [Layer1DataPtr],Y                   ;;DD15|DD13+DD13/DD13\DD13;
+                      STA.L OWLayer1VramBuffer,X                ;;DD17|DD15+DD15/DD15\DD15;
                       INY                                       ;;DD1B|DD19+DD19/DD19\DD19;
                       INY                                       ;;DD1C|DD1A+DD1A/DD1A\DD1A;
-                      LDA.B [!Layer1DataPtr],Y                  ;;DD1D|DD1B+DD1B/DD1B\DD1B;
-                      STA.L !OWLayer1VramBuffer+$40,X           ;;DD1F|DD1D+DD1D/DD1D\DD1D;
+                      LDA.B [Layer1DataPtr],Y                   ;;DD1D|DD1B+DD1B/DD1B\DD1B;
+                      STA.L OWLayer1VramBuffer+$40,X            ;;DD1F|DD1D+DD1D/DD1D\DD1D;
                       INY                                       ;;DD23|DD21+DD21/DD21\DD21;
                       INY                                       ;;DD24|DD22+DD22/DD22\DD22;
-                      LDA.B [!Layer1DataPtr],Y                  ;;DD25|DD23+DD23/DD23\DD23;
-                      STA.L !OWLayer1VramBuffer+2,X             ;;DD27|DD25+DD25/DD25\DD25;
+                      LDA.B [Layer1DataPtr],Y                   ;;DD25|DD23+DD23/DD23\DD23;
+                      STA.L OWLayer1VramBuffer+2,X              ;;DD27|DD25+DD25/DD25\DD25;
                       INY                                       ;;DD2B|DD29+DD29/DD29\DD29;
                       INY                                       ;;DD2C|DD2A+DD2A/DD2A\DD2A;
-                      LDA.B [!Layer1DataPtr],Y                  ;;DD2D|DD2B+DD2B/DD2B\DD2B;
-                      STA.L !OWLayer1VramBuffer+$42,X           ;;DD2F|DD2D+DD2D/DD2D\DD2D;
+                      LDA.B [Layer1DataPtr],Y                   ;;DD2D|DD2B+DD2B/DD2B\DD2B;
+                      STA.L OWLayer1VramBuffer+$42,X            ;;DD2F|DD2D+DD2D/DD2D\DD2D;
                       SEP #$20                                  ;;DD33|DD31+DD31/DD31\DD31; Accum (8 bit) 
-                      INC.B !_0                                 ;;DD35|DD33+DD33/DD33\DD33;
-                      LDA.B !_0                                 ;;DD37|DD35+DD35/DD35\DD35;
+                      INC.B _0                                  ;;DD35|DD33+DD33/DD33\DD33;
+                      LDA.B _0                                  ;;DD37|DD35+DD35/DD35\DD35;
                       AND.B #$FF                                ;;DD39|DD37+DD37/DD37\DD37;
                       BNE CODE_04DCE8                           ;;DD3B|DD39+DD39/DD39\DD39;
-                      INC.W !OWSubmapSwapProcess                ;;DD3D|DD3B+DD3B/DD3B\DD3B;
+                      INC.W OWSubmapSwapProcess                 ;;DD3D|DD3B+DD3B/DD3B\DD3B;
                       PLP                                       ;;DD40|DD3E+DD3E/DD3E\DD3E;
                       RTS                                       ;;DD41|DD3F+DD3F/DD3F\DD3F; Return 
                                                                 ;;                        ;
 CODE_04DD40:          REP #$10                                  ;;DD42|DD40+DD40/DD40\DD40; Index (16 bit) 
                       SEP #$20                                  ;;DD44|DD42+DD42/DD42\DD42; Accum (8 bit) 
                       LDY.W #OWEventTileProp                    ;;DD46|DD44+DD44/DD44\DD44;
-                      STY.B !_2                                 ;;DD49|DD47+DD47/DD47\DD47;
+                      STY.B _2                                  ;;DD49|DD47+DD47/DD47\DD47;
                       LDA.B #OWEventTileProp>>16                ;;DD4B|DD49+DD49/DD49\DD49;
-                      STA.B !_4                                 ;;DD4D|DD4B+DD4B/DD4B\DD4B;
+                      STA.B _4                                  ;;DD4D|DD4B+DD4B/DD4B\DD4B;
                       LDX.W #$0000                              ;;DD4F|DD4D+DD4D/DD4D\DD4D;
                       TXY                                       ;;DD52|DD50+DD50/DD50\DD50;
                       JSR CODE_04DD57                           ;;DD53|DD51+DD51/DD51\DD51;
@@ -5511,30 +5511,30 @@ CODE_04DD40:          REP #$10                                  ;;DD42|DD40+DD40
                       RTS                                       ;;DD58|DD56+DD56/DD56\DD56; Return 
                                                                 ;;                        ;
 CODE_04DD57:          SEP #$20                                  ;;DD59|DD57+DD57/DD57\DD57; Accum (8 bit) 
-                      LDA.B [!_2],Y                             ;;DD5B|DD59+DD59/DD59\DD59;
+                      LDA.B [_2],Y                              ;;DD5B|DD59+DD59/DD59\DD59;
                       INY                                       ;;DD5D|DD5B+DD5B/DD5B\DD5B;
-                      STA.B !_5                                 ;;DD5E|DD5C+DD5C/DD5C\DD5C;
+                      STA.B _5                                  ;;DD5E|DD5C+DD5C/DD5C\DD5C;
                       AND.B #$80                                ;;DD60|DD5E+DD5E/DD5E\DD5E;
                       BNE CODE_04DD71                           ;;DD62|DD60+DD60/DD60\DD60;
-                    - LDA.B [!_2],Y                             ;;DD64|DD62+DD62/DD62\DD62;
-                      STA.L !OWEventTilemap,X                   ;;DD66|DD64+DD64/DD64\DD64;
+                    - LDA.B [_2],Y                              ;;DD64|DD62+DD62/DD62\DD62;
+                      STA.L OWEventTilemap,X                    ;;DD66|DD64+DD64/DD64\DD64;
                       INY                                       ;;DD6A|DD68+DD68/DD68\DD68;
                       INX                                       ;;DD6B|DD69+DD69/DD69\DD69;
-                      DEC.B !_5                                 ;;DD6C|DD6A+DD6A/DD6A\DD6A;
+                      DEC.B _5                                  ;;DD6C|DD6A+DD6A/DD6A\DD6A;
                       BPL -                                     ;;DD6E|DD6C+DD6C/DD6C\DD6C;
                       JMP CODE_04DD83                           ;;DD70|DD6E+DD6E/DD6E\DD6E;
                                                                 ;;                        ;
-CODE_04DD71:          LDA.B !_5                                 ;;DD73|DD71+DD71/DD71\DD71;
+CODE_04DD71:          LDA.B _5                                  ;;DD73|DD71+DD71/DD71\DD71;
                       AND.B #$7F                                ;;DD75|DD73+DD73/DD73\DD73;
-                      STA.B !_5                                 ;;DD77|DD75+DD75/DD75\DD75;
-                      LDA.B [!_2],Y                             ;;DD79|DD77+DD77/DD77\DD77;
-                    - STA.L !OWEventTilemap,X                   ;;DD7B|DD79+DD79/DD79\DD79;
+                      STA.B _5                                  ;;DD77|DD75+DD75/DD75\DD75;
+                      LDA.B [_2],Y                              ;;DD79|DD77+DD77/DD77\DD77;
+                    - STA.L OWEventTilemap,X                    ;;DD7B|DD79+DD79/DD79\DD79;
                       INX                                       ;;DD7F|DD7D+DD7D/DD7D\DD7D;
-                      DEC.B !_5                                 ;;DD80|DD7E+DD7E/DD7E\DD7E;
+                      DEC.B _5                                  ;;DD80|DD7E+DD7E/DD7E\DD7E;
                       BPL -                                     ;;DD82|DD80+DD80/DD80\DD80;
                       INY                                       ;;DD84|DD82+DD82/DD82\DD82;
 CODE_04DD83:          REP #$20                                  ;;DD85|DD83+DD83/DD83\DD83; Accum (16 bit) 
-                      LDA.B [!_2],Y                             ;;DD87|DD85+DD85/DD85\DD85;
+                      LDA.B [_2],Y                              ;;DD87|DD85+DD85/DD85\DD85;
                       CMP.W #$FFFF                              ;;DD89|DD87+DD87/DD87\DD87;
                       BNE CODE_04DD57                           ;;DD8C|DD8A+DD8A/DD8A\DD8A;
                       RTS                                       ;;DD8E|DD8C+DD8C/DD8C\DD8C; Return 
@@ -5764,57 +5764,57 @@ DATA_04E35B:          db $00,$00,$0D,$00,$0D,$00,$10,$00        ;;E35D|E35B+E35B
 DATA_04E44B:          db $80,$40,$20,$10,$08,$04,$02,$01        ;;E44D|E44B+E44B/E44B\E44B;
                                                                 ;;                        ;
 CODE_04E453:          SEP #$30                                  ;;E455|E453+E453/E453\E453; Index (8 bit) Accum (8 bit) 
-                      LDA.B !_F                                 ;;E457|E455+E455/E455\E455;
+                      LDA.B _F                                  ;;E457|E455+E455/E455\E455;
                       AND.B #$07                                ;;E459|E457+E457/E457\E457;
                       TAX                                       ;;E45B|E459+E459/E459\E459;
-                      LDA.B !_F                                 ;;E45C|E45A+E45A/E45A\E45A;
+                      LDA.B _F                                  ;;E45C|E45A+E45A/E45A\E45A;
                       LSR A                                     ;;E45E|E45C+E45C/E45C\E45C;
                       LSR A                                     ;;E45F|E45D+E45D/E45D\E45D;
                       LSR A                                     ;;E460|E45E+E45E/E45E\E45E;
                       TAY                                       ;;E461|E45F+E45F/E45F\E45F;
-                      LDA.W !OWEventsActivated,Y                ;;E462|E460+E460/E460\E460;
+                      LDA.W OWEventsActivated,Y                 ;;E462|E460+E460/E460\E460;
                       AND.L DATA_04E44B,X                       ;;E465|E463+E463/E463\E463;
                       BNE +                                     ;;E469|E467+E467/E467\E467;
                       RTS                                       ;;E46B|E469+E469/E469\E469; Return 
                                                                 ;;                        ;
-                    + LDA.B !_F                                 ;;E46C|E46A+E46A/E46A\E46A;
+                    + LDA.B _F                                  ;;E46C|E46A+E46A/E46A\E46A;
                       ASL A                                     ;;E46E|E46C+E46C/E46C\E46C;
                       TAX                                       ;;E46F|E46D+E46D/E46D\E46D;
                       REP #$20                                  ;;E470|E46E+E46E/E46E\E46E; Accum (16 bit) 
                       LDA.L DATA_04E359,X                       ;;E472|E470+E470/E470\E470;
-                      STA.W !EventTileIndex                     ;;E476|E474+E474/E474\E474;
+                      STA.W EventTileIndex                      ;;E476|E474+E474/E474\E474;
                       LDA.L DATA_04E35B,X                       ;;E479|E477+E477/E477\E477;
-                      STA.W !EventLength                        ;;E47D|E47B+E47B/E47B\E47B;
-                      CMP.W !EventTileIndex                     ;;E480|E47E+E47E/E47E\E47E;
+                      STA.W EventLength                         ;;E47D|E47B+E47B/E47B\E47B;
+                      CMP.W EventTileIndex                      ;;E480|E47E+E47E/E47E\E47E;
                       BEQ CODE_04E493                           ;;E483|E481+E481/E481\E481;
                     - JSR CODE_04E496                           ;;E485|E483+E483/E483\E483;
                       REP #$20                                  ;;E488|E486+E486/E486\E486; Accum (16 bit) 
-                      INC.W !EventTileIndex                     ;;E48A|E488+E488/E488\E488;
-                      LDA.W !EventTileIndex                     ;;E48D|E48B+E48B/E48B\E48B;
-                      CMP.W !EventLength                        ;;E490|E48E+E48E/E48E\E48E;
+                      INC.W EventTileIndex                      ;;E48A|E488+E488/E488\E488;
+                      LDA.W EventTileIndex                      ;;E48D|E48B+E48B/E48B\E48B;
+                      CMP.W EventLength                         ;;E490|E48E+E48E/E48E\E48E;
                       BNE -                                     ;;E493|E491+E491/E491\E491;
 CODE_04E493:          SEP #$30                                  ;;E495|E493+E493/E493\E493; Index (8 bit) Accum (8 bit) 
                       RTS                                       ;;E497|E495+E495/E495\E495; Return 
                                                                 ;;                        ;
 CODE_04E496:          REP #$30                                  ;;E498|E496+E496/E496\E496; Index (16 bit) Accum (16 bit) 
-                      LDA.W !EventTileIndex                     ;;E49A|E498+E498/E498\E498;
+                      LDA.W EventTileIndex                      ;;E49A|E498+E498/E498\E498;
                       ASL A                                     ;;E49D|E49B+E49B/E49B\E49B;
                       ASL A                                     ;;E49E|E49C+E49C/E49C\E49C;
                       TAX                                       ;;E49F|E49D+E49D/E49D\E49D;
                       LDA.L DATA_04DD8D,X                       ;;E4A0|E49E+E49E/E49E\E49E;
                       TAY                                       ;;E4A4|E4A2+E4A2/E4A2\E4A2;
                       LDA.L DATA_04DD8F,X                       ;;E4A5|E4A3+E4A3/E4A3\E4A3;
-                      STA.B !_4                                 ;;E4A9|E4A7+E4A7/E4A7\E4A7;
+                      STA.B _4                                  ;;E4A9|E4A7+E4A7/E4A7\E4A7;
 CODE_04E4A9:          SEP #$20                                  ;;E4AB|E4A9+E4A9/E4A9\E4A9; Accum (8 bit) 
                       LDA.B #$7F                                ;;E4AD|E4AB+E4AB/E4AB\E4AB;
-                      STA.B !_8                                 ;;E4AF|E4AD+E4AD/E4AD\E4AD;
+                      STA.B _8                                  ;;E4AF|E4AD+E4AD/E4AD\E4AD;
                       LDA.B #$0C                                ;;E4B1|E4AF+E4AF/E4AF\E4AF;
-                      STA.B !_B                                 ;;E4B3|E4B1+E4B1/E4B1\E4B1;
+                      STA.B _B                                  ;;E4B3|E4B1+E4B1/E4B1\E4B1;
                       REP #$20                                  ;;E4B5|E4B3+E4B3/E4B3\E4B3; Accum (16 bit) 
                       LDA.W #$0000                              ;;E4B7|E4B5+E4B5/E4B5\E4B5;
-                      STA.B !_6                                 ;;E4BA|E4B8+E4B8/E4B8\E4B8;
+                      STA.B _6                                  ;;E4BA|E4B8+E4B8/E4B8\E4B8;
                       LDA.W #$8000                              ;;E4BC|E4BA+E4BA/E4BA\E4BA;
-                      STA.B !_9                                 ;;E4BF|E4BD+E4BD/E4BD\E4BD;
+                      STA.B _9                                  ;;E4BF|E4BD+E4BD/E4BD\E4BD;
                       CPY.W #$0900                              ;;E4C1|E4BF+E4BF/E4BF\E4BF;
                       BCC +                                     ;;E4C4|E4C2+E4C2/E4C2\E4C2;
                       JSR CODE_04E4D0                           ;;E4C6|E4C4+E4C4/E4C4\E4C4;
@@ -5825,16 +5825,16 @@ CODE_04E4CD:          SEP #$30                                  ;;E4CF|E4CD+E4CD
                       RTS                                       ;;E4D1|E4CF+E4CF/E4CF\E4CF; Return 
                                                                 ;;                        ;
 CODE_04E4D0:          LDA.W #$0001                              ;;E4D2|E4D0+E4D0/E4D0\E4D0; Accum (16 bit) 
-                      STA.B !_0                                 ;;E4D5|E4D3+E4D3/E4D3\E4D3;
-CODE_04E4D5:          LDX.B !_4                                 ;;E4D7|E4D5+E4D5/E4D5\E4D5;
+                      STA.B _0                                  ;;E4D5|E4D3+E4D3/E4D3\E4D3;
+CODE_04E4D5:          LDX.B _4                                  ;;E4D7|E4D5+E4D5/E4D5\E4D5;
                       LDA.W #$0001                              ;;E4D9|E4D7+E4D7/E4D7\E4D7;
-                      STA.B !_C                                 ;;E4DC|E4DA+E4DA/E4DA\E4DA;
+                      STA.B _C                                  ;;E4DC|E4DA+E4DA/E4DA\E4DA;
 CODE_04E4DC:          SEP #$20                                  ;;E4DE|E4DC+E4DC/E4DC\E4DC; Accum (8 bit) 
-                      LDA.B [!_9],Y                             ;;E4E0|E4DE+E4DE/E4DE\E4DE;
-                      STA.L !OWLayer2Tilemap,X                  ;;E4E2|E4E0+E4E0/E4E0\E4E0;
+                      LDA.B [_9],Y                              ;;E4E0|E4DE+E4DE/E4DE\E4DE;
+                      STA.L OWLayer2Tilemap,X                   ;;E4E2|E4E0+E4E0/E4E0\E4E0;
                       INX                                       ;;E4E6|E4E4+E4E4/E4E4\E4E4;
-                      LDA.B [!_6],Y                             ;;E4E7|E4E5+E4E5/E4E5\E4E5;
-                      STA.L !OWLayer2Tilemap,X                  ;;E4E9|E4E7+E4E7/E4E7\E4E7;
+                      LDA.B [_6],Y                              ;;E4E7|E4E5+E4E5/E4E5\E4E5;
+                      STA.L OWLayer2Tilemap,X                   ;;E4E9|E4E7+E4E7/E4E7\E4E7;
                       INY                                       ;;E4ED|E4EB+E4EB/E4EB\E4EB;
                       INX                                       ;;E4EE|E4EC+E4EC/E4EC\E4EC;
                       REP #$20                                  ;;E4EF|E4ED+E4ED/E4ED\E4ED; Accum (16 bit) 
@@ -5847,35 +5847,35 @@ CODE_04E4DC:          SEP #$20                                  ;;E4DE|E4DC+E4DC
                       CLC                                       ;;E4FC|E4FA+E4FA/E4FA\E4FA;
                       ADC.W #$0800                              ;;E4FD|E4FB+E4FB/E4FB\E4FB;
                       TAX                                       ;;E500|E4FE+E4FE/E4FE\E4FE;
-                    + DEC.B !_C                                 ;;E501|E4FF+E4FF/E4FF\E4FF;
+                    + DEC.B _C                                  ;;E501|E4FF+E4FF/E4FF\E4FF;
                       BPL CODE_04E4DC                           ;;E503|E501+E501/E501\E501;
-                      LDA.B !_4                                 ;;E505|E503+E503/E503\E503;
+                      LDA.B _4                                  ;;E505|E503+E503/E503\E503;
                       TAX                                       ;;E507|E505+E505/E505\E505;
                       CLC                                       ;;E508|E506+E506/E506\E506;
                       ADC.W #$0040                              ;;E509|E507+E507/E507\E507;
-                      STA.B !_4                                 ;;E50C|E50A+E50A/E50A\E50A;
+                      STA.B _4                                  ;;E50C|E50A+E50A/E50A\E50A;
                       AND.W #$07C0                              ;;E50E|E50C+E50C/E50C\E50C;
                       BNE +                                     ;;E511|E50F+E50F/E50F\E50F;
                       TXA                                       ;;E513|E511+E511/E511\E511;
                       AND.W #$F83F                              ;;E514|E512+E512/E512\E512;
                       CLC                                       ;;E517|E515+E515/E515\E515;
                       ADC.W #$1000                              ;;E518|E516+E516/E516\E516;
-                      STA.B !_4                                 ;;E51B|E519+E519/E519\E519;
-                    + DEC.B !_0                                 ;;E51D|E51B+E51B/E51B\E51B;
+                      STA.B _4                                  ;;E51B|E519+E519/E519\E519;
+                    + DEC.B _0                                  ;;E51D|E51B+E51B/E51B\E51B;
                       BPL CODE_04E4D5                           ;;E51F|E51D+E51D/E51D\E51D;
                       RTS                                       ;;E521|E51F+E51F/E51F\E51F; Return 
                                                                 ;;                        ;
 CODE_04E520:          LDA.W #$0005                              ;;E522|E520+E520/E520\E520;
-                      STA.B !_0                                 ;;E525|E523+E523/E523\E523;
-CODE_04E525:          LDX.B !_4                                 ;;E527|E525+E525/E525\E525;
+                      STA.B _0                                  ;;E525|E523+E523/E523\E523;
+CODE_04E525:          LDX.B _4                                  ;;E527|E525+E525/E525\E525;
                       LDA.W #$0005                              ;;E529|E527+E527/E527\E527;
-                      STA.B !_C                                 ;;E52C|E52A+E52A/E52A\E52A;
+                      STA.B _C                                  ;;E52C|E52A+E52A/E52A\E52A;
 CODE_04E52C:          SEP #$20                                  ;;E52E|E52C+E52C/E52C\E52C; Accum (8 bit) 
-                      LDA.B [!_9],Y                             ;;E530|E52E+E52E/E52E\E52E;
-                      STA.L !OWLayer2Tilemap,X                  ;;E532|E530+E530/E530\E530;
+                      LDA.B [_9],Y                              ;;E530|E52E+E52E/E52E\E52E;
+                      STA.L OWLayer2Tilemap,X                   ;;E532|E530+E530/E530\E530;
                       INX                                       ;;E536|E534+E534/E534\E534;
-                      LDA.B [!_6],Y                             ;;E537|E535+E535/E535\E535;
-                      STA.L !OWLayer2Tilemap,X                  ;;E539|E537+E537/E537\E537;
+                      LDA.B [_6],Y                              ;;E537|E535+E535/E535\E535;
+                      STA.L OWLayer2Tilemap,X                   ;;E539|E537+E537/E537\E537;
                       INY                                       ;;E53D|E53B+E53B/E53B\E53B;
                       INX                                       ;;E53E|E53C+E53C/E53C\E53C;
                       REP #$20                                  ;;E53F|E53D+E53D/E53D\E53D; Accum (16 bit) 
@@ -5888,25 +5888,25 @@ CODE_04E52C:          SEP #$20                                  ;;E52E|E52C+E52C
                       CLC                                       ;;E54C|E54A+E54A/E54A\E54A;
                       ADC.W #$0800                              ;;E54D|E54B+E54B/E54B\E54B;
                       TAX                                       ;;E550|E54E+E54E/E54E\E54E;
-                    + DEC.B !_C                                 ;;E551|E54F+E54F/E54F\E54F;
+                    + DEC.B _C                                  ;;E551|E54F+E54F/E54F\E54F;
                       BPL CODE_04E52C                           ;;E553|E551+E551/E551\E551;
-                      LDA.B !_4                                 ;;E555|E553+E553/E553\E553;
+                      LDA.B _4                                  ;;E555|E553+E553/E553\E553;
                       TAX                                       ;;E557|E555+E555/E555\E555;
                       CLC                                       ;;E558|E556+E556/E556\E556;
                       ADC.W #$0040                              ;;E559|E557+E557/E557\E557;
-                      STA.B !_4                                 ;;E55C|E55A+E55A/E55A\E55A;
+                      STA.B _4                                  ;;E55C|E55A+E55A/E55A\E55A;
                       AND.W #$07C0                              ;;E55E|E55C+E55C/E55C\E55C;
                       BNE +                                     ;;E561|E55F+E55F/E55F\E55F;
                       TXA                                       ;;E563|E561+E561/E561\E561;
                       AND.W #$F83F                              ;;E564|E562+E562/E562\E562;
                       CLC                                       ;;E567|E565+E565/E565\E565;
                       ADC.W #$1000                              ;;E568|E566+E566/E566\E566;
-                      STA.B !_4                                 ;;E56B|E569+E569/E569\E569;
-                    + DEC.B !_0                                 ;;E56D|E56B+E56B/E56B\E56B;
+                      STA.B _4                                  ;;E56B|E569+E569/E569\E569;
+                    + DEC.B _0                                  ;;E56D|E56B+E56B/E56B\E56B;
                       BPL CODE_04E525                           ;;E56F|E56D+E56D/E56D\E56D;
                       RTS                                       ;;E571|E56F+E56F/E56F\E56F; Return 
                                                                 ;;                        ;
-CODE_04E570:          LDA.W !OverworldEventProcess              ;;E572|E570+E570/E570\E570;
+CODE_04E570:          LDA.W OverworldEventProcess               ;;E572|E570+E570/E570\E570;
                       JSL ExecutePtr                            ;;E575|E573+E573/E573\E573;
                                                                 ;;                        ;
                       dw CODE_04E5EE                            ;;E579|E577+E577/E577\E577;
@@ -5936,69 +5936,69 @@ DATA_04E5D6:          db $06,$0F,$1C,$21,$24,$28,$29,$37        ;;E5D8|E5D6+E5D6
                       db $40,$41,$43,$4A,$4D,$02,$61,$35        ;;E5E0|E5DE+E5DE/E5DE\E5DE;
 DATA_04E5E6:          db $58,$59,$5D,$63,$77,$79,$7E,$80        ;;E5E8|E5E6+E5E6/E5E6\E5E6;
                                                                 ;;                        ;
-CODE_04E5EE:          LDA.W !OWLevelExitMode                    ;;E5F0|E5EE+E5EE/E5EE\E5EE; Accum (8 bit) 
+CODE_04E5EE:          LDA.W OWLevelExitMode                     ;;E5F0|E5EE+E5EE/E5EE\E5EE; Accum (8 bit) 
                       CMP.B #$02                                ;;E5F3|E5F1+E5F1/E5F1\E5F1;
                       BNE +                                     ;;E5F5|E5F3+E5F3/E5F3\E5F3;
-                      INC.W !OverworldEvent                     ;;E5F7|E5F5+E5F5/E5F5\E5F5;
-                    + LDA.W !CreditsScreenNumber                ;;E5FA|E5F8+E5F8/E5F8\E5F8;
+                      INC.W OverworldEvent                      ;;E5F7|E5F5+E5F5/E5F5\E5F5;
+                    + LDA.W CreditsScreenNumber                 ;;E5FA|E5F8+E5F8/E5F8\E5F8;
                       BEQ CODE_04E61A                           ;;E5FD|E5FB+E5FB/E5FB\E5FB;
-                      LDA.W !OverworldEvent                     ;;E5FF|E5FD+E5FD/E5FD\E5FD;
+                      LDA.W OverworldEvent                      ;;E5FF|E5FD+E5FD/E5FD\E5FD;
                       CMP.B #$FF                                ;;E602|E600+E600/E600\E600;
                       BEQ CODE_04E61A                           ;;E604|E602+E602/E602\E602;
-                      LDA.W !OverworldEvent                     ;;E606|E604+E604/E604\E604;
+                      LDA.W OverworldEvent                      ;;E606|E604+E604/E604\E604;
                       AND.B #$07                                ;;E609|E607+E607/E607\E607;
                       TAX                                       ;;E60B|E609+E609/E609\E609;
-                      LDA.W !OverworldEvent                     ;;E60C|E60A+E60A/E60A\E60A;
+                      LDA.W OverworldEvent                      ;;E60C|E60A+E60A/E60A\E60A;
                       LSR A                                     ;;E60F|E60D+E60D/E60D\E60D;
                       LSR A                                     ;;E610|E60E+E60E/E60E\E60E;
                       LSR A                                     ;;E611|E60F+E60F/E60F\E60F;
                       TAY                                       ;;E612|E610+E610/E610\E610;
-                      LDA.W !OWEventsActivated,Y                ;;E613|E611+E611/E611\E611;
+                      LDA.W OWEventsActivated,Y                 ;;E613|E611+E611/E611\E611;
                       AND.L DATA_04E44B,X                       ;;E616|E614+E614/E614\E614;
                       BEQ CODE_04E640                           ;;E61A|E618+E618/E618\E618;
 CODE_04E61A:          LDX.B #$07                                ;;E61C|E61A+E61A/E61A\E61A;
 CODE_04E61C:          LDA.W DATA_04E5E6,X                       ;;E61E|E61C+E61C/E61C\E61C;
-                      CMP.W !OverworldLayer1Tile                ;;E621|E61F+E61F/E61F\E61F;
+                      CMP.W OverworldLayer1Tile                 ;;E621|E61F+E61F/E61F\E61F;
                       BNE +                                     ;;E624|E622+E622/E622\E622;
-                      INC.W !OverworldProcess                   ;;E626|E624+E624/E624\E624;
+                      INC.W OverworldProcess                    ;;E626|E624+E624/E624\E624;
                       LDA.B #$E0                                ;;E629|E627+E627/E627\E627;
-                      STA.W !OWLevelExitMode                    ;;E62B|E629+E629/E629\E629;
+                      STA.W OWLevelExitMode                     ;;E62B|E629+E629/E629\E629;
                       LDA.B #$0F                                ;;E62E|E62C+E62C/E62C\E62C;
-                      STA.W !KeepModeActive                     ;;E630|E62E+E62E/E62E\E62E;
+                      STA.W KeepModeActive                      ;;E630|E62E+E62E/E62E\E62E;
                       RTS                                       ;;E633|E631+E631/E631\E631; Return 
                                                                 ;;                        ;
                     + DEX                                       ;;E634|E632+E632/E632\E632;
                       BPL CODE_04E61C                           ;;E635|E633+E633/E633\E633;
                       LDA.B #$05                                ;;E637|E635+E635/E635\E635;
-                      STA.W !OverworldProcess                   ;;E639|E637+E637/E637\E637;
+                      STA.W OverworldProcess                    ;;E639|E637+E637/E637\E637;
                       LDA.B #$80                                ;;E63C|E63A+E63A/E63A\E63A;
-                      STA.W !OWLevelExitMode                    ;;E63E|E63C+E63C/E63C\E63C;
+                      STA.W OWLevelExitMode                     ;;E63E|E63C+E63C/E63C\E63C;
                       RTS                                       ;;E641|E63F+E63F/E63F\E63F; Return 
                                                                 ;;                        ;
-CODE_04E640:          INC.W !OverworldEventProcess              ;;E642|E640+E640/E640\E640;
-                      LDA.W !OverworldEvent                     ;;E645|E643+E643/E643\E643;
+CODE_04E640:          INC.W OverworldEventProcess               ;;E642|E640+E640/E640\E640;
+                      LDA.W OverworldEvent                      ;;E645|E643+E643/E643\E643;
                       JSR CODE_04E677                           ;;E648|E646+E646/E646\E646;
                       TYA                                       ;;E64B|E649+E649/E649\E649;
                       ASL A                                     ;;E64C|E64A+E64A/E64A\E64A;
                       ASL A                                     ;;E64D|E64B+E64B/E64B\E64B;
                       ASL A                                     ;;E64E|E64C+E64C/E64C\E64C;
                       ASL A                                     ;;E64F|E64D+E64D/E64D\E64D;
-                      STA.W !OverworldEventXPos                 ;;E650|E64E+E64E/E64E\E64E;
+                      STA.W OverworldEventXPos                  ;;E650|E64E+E64E/E64E\E64E;
                       TYA                                       ;;E653|E651+E651/E651\E651;
                       AND.B #$F0                                ;;E654|E652+E652/E652\E652;
-                      STA.W !OverworldEventYPos                 ;;E656|E654+E654/E654\E654;
+                      STA.W OverworldEventYPos                  ;;E656|E654+E654/E654\E654;
                       LDA.B #$28                                ;;E659|E657+E657/E657\E657;
-                      STA.W !OverworldEventSize                 ;;E65B|E659+E659/E659\E659;
-                      LDA.W !TranslevelNo                       ;;E65E|E65C+E65C/E65C\E65C;
+                      STA.W OverworldEventSize                  ;;E65B|E659+E659/E659\E659;
+                      LDA.W TranslevelNo                        ;;E65E|E65C+E65C/E65C\E65C;
                       CMP.B #$18                                ;;E661|E65F+E65F/E65F\E65F;
                       BNE +                                     ;;E663|E661+E661/E661\E661;
                       LDA.B #$FF                                ;;E665|E663+E663/E663\E663;
-                      STA.W !OverworldEarthquake                ;;E667|E665+E665/E665\E665;
-                    + LDA.W !OverworldEventProcess              ;;E66A|E668+E668/E668\E668;
+                      STA.W OverworldEarthquake                 ;;E667|E665+E665/E665\E665;
+                    + LDA.W OverworldEventProcess               ;;E66A|E668+E668/E668\E668;
                       CMP.B #$02                                ;;E66D|E66B+E66B/E66B\E66B;
                       BEQ +                                     ;;E66F|E66D+E66D/E66D\E66D;
                       LDA.B #!SFX_CASTLECRUSH                   ;;E671|E66F+E66F/E66F\E66F;
-                      STA.W !SPCIO3                             ;;E673|E671+E671/E671\E671; / Play sound effect 
+                      STA.W SPCIO3                              ;;E673|E671+E671/E671\E671; / Play sound effect 
                     + SEP #$30                                  ;;E676|E674+E674/E674\E674; Index (8 bit) Accum (8 bit) 
                       RTS                                       ;;E678|E676+E676/E676\E676; Return 
                                                                 ;;                        ;
@@ -6009,23 +6009,23 @@ CODE_04E67B:          CMP.L DATA_04E5D6,X                       ;;E67D|E67B+E67B
                       DEX                                       ;;E683|E681+E681/E681\E681;
                       BPL CODE_04E67B                           ;;E684|E682+E682/E682\E682;
 CODE_04E684:          LDA.B #$02                                ;;E686|E684+E684/E684\E684;
-                      STA.W !OverworldEventProcess              ;;E688|E686+E686/E686\E686;
+                      STA.W OverworldEventProcess               ;;E688|E686+E686/E686\E686;
                       RTS                                       ;;E68B|E689+E689/E689\E689; Return 
                                                                 ;;                        ;
-CODE_04E68A:          STX.W !StructureCrushIndex                ;;E68C|E68A+E68A/E68A\E68A;
+CODE_04E68A:          STX.W StructureCrushIndex                 ;;E68C|E68A+E68A/E68A\E68A;
                       TXA                                       ;;E68F|E68D+E68D/E68D\E68D;
                       ASL A                                     ;;E690|E68E+E68E/E68E\E68E;
                       TAX                                       ;;E691|E68F+E68F/E68F\E68F;
                       LDA.B #$7E                                ;;E692|E690+E690/E690\E690;
-                      STA.B !_C                                 ;;E694|E692+E692/E692\E692;
+                      STA.B _C                                  ;;E694|E692+E692/E692\E692;
                       REP #$30                                  ;;E696|E694+E694/E694\E694; Index (16 bit) Accum (16 bit) 
                       LDA.W #$C800                              ;;E698|E696+E696/E696\E696;
-                      STA.B !_A                                 ;;E69B|E699+E699/E699\E699;
+                      STA.B _A                                  ;;E69B|E699+E699/E699\E699;
                       LDA.L DATA_04E5B6,X                       ;;E69D|E69B+E69B/E69B\E69B;
                       TAY                                       ;;E6A1|E69F+E69F/E69F\E69F;
                       SEP #$20                                  ;;E6A2|E6A0+E6A0/E6A0\E6A0; Accum (8 bit) 
                       LDX.W #$0004                              ;;E6A4|E6A2+E6A2/E6A2\E6A2;
-                      LDA.B [!_A],Y                             ;;E6A7|E6A5+E6A5/E6A5\E6A5;
+                      LDA.B [_A],Y                              ;;E6A7|E6A5+E6A5/E6A5\E6A5;
 CODE_04E6A7:          CMP.L DATA_04E5A7,X                       ;;E6A9|E6A7+E6A7/E6A7\E6A7;
                       BEQ CODE_04E6B3                           ;;E6AD|E6AB+E6AB/E6AB\E6AB;
                       DEX                                       ;;E6AF|E6AD+E6AD/E6AD\E6AD;
@@ -6033,11 +6033,11 @@ CODE_04E6A7:          CMP.L DATA_04E5A7,X                       ;;E6A9|E6A7+E6A7
                       JMP CODE_04E684                           ;;E6B2|E6B0+E6B0/E6B0\E6B0;
                                                                 ;;                        ;
 CODE_04E6B3:          TXA                                       ;;E6B5|E6B3+E6B3/E6B3\E6B3;
-                      STA.W !StructureCrushTile                 ;;E6B6|E6B4+E6B4/E6B4\E6B4;
+                      STA.W StructureCrushTile                  ;;E6B6|E6B4+E6B4/E6B4\E6B4;
                       CPX.W #$0003                              ;;E6B9|E6B7+E6B7/E6B7\E6B7;
                       BMI +                                     ;;E6BC|E6BA+E6BA/E6BA\E6BA;
                       LDA.L DATA_04E5AC,X                       ;;E6BE|E6BC+E6BC/E6BC\E6BC;
-                      STA.B [!_A],Y                             ;;E6C2|E6C0+E6C0/E6C0\E6C0;
+                      STA.B [_A],Y                              ;;E6C2|E6C0+E6C0/E6C0\E6C0;
                       REP #$20                                  ;;E6C4|E6C2+E6C2/E6C2\E6C2; Accum (16 bit) 
                       TYA                                       ;;E6C6|E6C4+E6C4/E6C4\E6C4;
                       CLC                                       ;;E6C7|E6C5+E6C5/E6C5\E6C5;
@@ -6045,61 +6045,61 @@ CODE_04E6B3:          TXA                                       ;;E6B5|E6B3+E6B3
                       TAY                                       ;;E6CB|E6C9+E6C9/E6C9\E6C9;
                     + SEP #$20                                  ;;E6CC|E6CA+E6CA/E6CA\E6CA; Accum (8 bit) 
                       LDA.L DATA_04E5B1,X                       ;;E6CE|E6CC+E6CC/E6CC\E6CC;
-                      STA.B [!_A],Y                             ;;E6D2|E6D0+E6D0/E6D0\E6D0;
+                      STA.B [_A],Y                              ;;E6D2|E6D0+E6D0/E6D0\E6D0;
                       RTS                                       ;;E6D4|E6D2+E6D2/E6D2\E6D2; Return 
                                                                 ;;                        ;
-CODE_04E6D3:          INC.W !OverworldEventProcess              ;;E6D5|E6D3+E6D3/E6D3\E6D3;
-                      LDA.W !OverworldEvent                     ;;E6D8|E6D6+E6D6/E6D6\E6D6;
+CODE_04E6D3:          INC.W OverworldEventProcess               ;;E6D5|E6D3+E6D3/E6D3\E6D3;
+                      LDA.W OverworldEvent                      ;;E6D8|E6D6+E6D6/E6D6\E6D6;
                       ASL A                                     ;;E6DB|E6D9+E6D9/E6D9\E6D9;
                       TAX                                       ;;E6DC|E6DA+E6DA/E6DA\E6DA;
                       REP #$20                                  ;;E6DD|E6DB+E6DB/E6DB\E6DB; Accum (16 bit) 
                       LDA.L DATA_04E359,X                       ;;E6DF|E6DD+E6DD/E6DD\E6DD;
-                      STA.W !EventTileIndex                     ;;E6E3|E6E1+E6E1/E6E1\E6E1;
+                      STA.W EventTileIndex                      ;;E6E3|E6E1+E6E1/E6E1\E6E1;
                       LDA.L DATA_04E35B,X                       ;;E6E6|E6E4+E6E4/E6E4\E6E4;
-                      STA.W !EventLength                        ;;E6EA|E6E8+E6E8/E6E8\E6E8;
-                      CMP.W !EventTileIndex                     ;;E6ED|E6EB+E6EB/E6EB\E6EB;
+                      STA.W EventLength                         ;;E6EA|E6E8+E6E8/E6E8\E6E8;
+                      CMP.W EventTileIndex                      ;;E6ED|E6EB+E6EB/E6EB\E6EB;
                       SEP #$20                                  ;;E6F0|E6EE+E6EE/E6EE\E6EE; Accum (8 bit) 
                       BNE +                                     ;;E6F2|E6F0+E6F0/E6F0\E6F0;
-                      INC.W !OverworldEventProcess              ;;E6F4|E6F2+E6F2/E6F2\E6F2;
-                      INC.W !OverworldEventProcess              ;;E6F7|E6F5+E6F5/E6F5\E6F5;
+                      INC.W OverworldEventProcess               ;;E6F4|E6F2+E6F2/E6F2\E6F2;
+                      INC.W OverworldEventProcess               ;;E6F7|E6F5+E6F5/E6F5\E6F5;
                     + RTS                                       ;;E6FA|E6F8+E6F8/E6F8\E6F8; Return 
                                                                 ;;                        ;
 CODE_04E6F9:          JSR CODE_04EA62                           ;;E6FB|E6F9+E6F9/E6F9\E6F9;
                       LDA.B #$7F                                ;;E6FE|E6FC+E6FC/E6FC\E6FC;
-                      STA.B !_E                                 ;;E700|E6FE+E6FE/E6FE\E6FE;
+                      STA.B _E                                  ;;E700|E6FE+E6FE/E6FE\E6FE;
                       REP #$30                                  ;;E702|E700+E700/E700\E700; Index (16 bit) Accum (16 bit) 
-                      LDA.W !EventTileIndex                     ;;E704|E702+E702/E702\E702;
+                      LDA.W EventTileIndex                      ;;E704|E702+E702/E702\E702;
                       ASL A                                     ;;E707|E705+E705/E705\E705;
                       ASL A                                     ;;E708|E706+E706/E706\E706;
                       TAX                                       ;;E709|E707+E707/E707\E707;
                       LDA.L DATA_04DD8D,X                       ;;E70A|E708+E708/E708\E708;
-                      STA.W !OverworldEventSize                 ;;E70E|E70C+E70C/E70C\E70C;
+                      STA.W OverworldEventSize                  ;;E70E|E70C+E70C/E70C\E70C;
                       LDA.L DATA_04DD8F,X                       ;;E711|E70F+E70F/E70F\E70F;
-                      STA.B !_0                                 ;;E715|E713+E713/E713\E713;
+                      STA.B _0                                  ;;E715|E713+E713/E713\E713;
                       AND.W #$1FFF                              ;;E717|E715+E715/E715\E715;
                       LSR A                                     ;;E71A|E718+E718/E718\E718;
                       CLC                                       ;;E71B|E719+E719/E719\E719;
                       ADC.W #$3000                              ;;E71C|E71A+E71A/E71A\E71A;
                       XBA                                       ;;E71F|E71D+E71D/E71D\E71D;
-                      STA.B !_2                                 ;;E720|E71E+E71E/E71E\E71E;
-                      LDA.B !_0                                 ;;E722|E720+E720/E720\E720;
+                      STA.B _2                                  ;;E720|E71E+E71E/E71E\E71E;
+                      LDA.B _0                                  ;;E722|E720+E720/E720\E720;
                       LSR A                                     ;;E724|E722+E722/E722\E722;
                       LSR A                                     ;;E725|E723+E723/E723\E723;
                       LSR A                                     ;;E726|E724+E724/E724\E724;
                       SEP #$20                                  ;;E727|E725+E725/E725\E725; Accum (8 bit) 
                       AND.B #$F8                                ;;E729|E727+E727/E727\E727;
-                      STA.W !OverworldEventYPos                 ;;E72B|E729+E729/E729\E729;
-                      LDA.B !_0                                 ;;E72E|E72C+E72C/E72C\E72C;
+                      STA.W OverworldEventYPos                  ;;E72B|E729+E729/E729\E729;
+                      LDA.B _0                                  ;;E72E|E72C+E72C/E72C\E72C;
                       AND.B #$3E                                ;;E730|E72E+E72E/E72E\E72E;
                       ASL A                                     ;;E732|E730+E730/E730\E730;
                       ASL A                                     ;;E733|E731+E731/E731\E731;
-                      STA.W !OverworldEventXPos                 ;;E734|E732+E732/E732\E732;
+                      STA.W OverworldEventXPos                  ;;E734|E732+E732/E732\E732;
                       REP #$20                                  ;;E737|E735+E735/E735\E735; Accum (16 bit) 
                       LDA.W #$4000                              ;;E739|E737+E737/E737\E737;
-                      STA.B !_C                                 ;;E73C|E73A+E73A/E73A\E73A;
+                      STA.B _C                                  ;;E73C|E73A+E73A/E73A\E73A;
                       LDA.W #$EFFF                              ;;E73E|E73C+E73C/E73C\E73C;
-                      STA.B !_A                                 ;;E741|E73F+E73F/E73F\E73F;
-                      LDA.W !OverworldEventSize                 ;;E743|E741+E741/E741\E741;
+                      STA.B _A                                  ;;E741|E73F+E73F/E73F\E73F;
+                      LDA.W OverworldEventSize                  ;;E743|E741+E741/E741\E741;
                       CMP.W #$0900                              ;;E746|E744+E744/E744\E744;
                       BCC +                                     ;;E749|E747+E747/E747\E747;
                       JSR CODE_04E76C                           ;;E74B|E749+E749/E749\E749;
@@ -6107,49 +6107,49 @@ CODE_04E6F9:          JSR CODE_04EA62                           ;;E6FB|E6F9+E6F9
                                                                 ;;                        ;
                     + JSR CODE_04E824                           ;;E751|E74F+E74F/E74F\E74F;
 CODE_04E752:          LDA.W #$00FF                              ;;E754|E752+E752/E752\E752;
-                      STA.L !DynamicStripeImage,X               ;;E757|E755+E755/E755\E755;
+                      STA.L DynamicStripeImage,X                ;;E757|E755+E755/E755\E755;
                       TXA                                       ;;E75B|E759+E759/E759\E759;
-                      STA.L !DynStripeImgSize                   ;;E75C|E75A+E75A/E75A\E75A;
+                      STA.L DynStripeImgSize                    ;;E75C|E75A+E75A/E75A\E75A;
                       JSR CODE_04E496                           ;;E760|E75E+E75E/E75E\E75E;
                       SEP #$30                                  ;;E763|E761+E761/E761\E761; Index (8 bit) Accum (8 bit) 
                       LDA.B #!SFX_NEWLEVEL                      ;;E765|E763+E763/E763\E763;
-                      STA.W !SPCIO3                             ;;E767|E765+E765/E765\E765; / Play sound effect 
-                      INC.W !OverworldEventProcess              ;;E76A|E768+E768/E768\E768;
+                      STA.W SPCIO3                              ;;E767|E765+E765/E765\E765; / Play sound effect 
+                      INC.W OverworldEventProcess               ;;E76A|E768+E768/E768\E768;
                       RTS                                       ;;E76D|E76B+E76B/E76B\E76B; Return 
                                                                 ;;                        ;
 CODE_04E76C:          LDA.W #$0001                              ;;E76E|E76C+E76C/E76C\E76C; Index (16 bit) Accum (16 bit) 
-                      STA.B !_6                                 ;;E771|E76F+E76F/E76F\E76F;
-                      LDA.L !DynStripeImgSize                   ;;E773|E771+E771/E771\E771;
+                      STA.B _6                                  ;;E771|E76F+E76F/E76F\E76F;
+                      LDA.L DynStripeImgSize                    ;;E773|E771+E771/E771\E771;
                       TAX                                       ;;E777|E775+E775/E775\E775;
-CODE_04E776:          LDA.B !_2                                 ;;E778|E776+E776/E776\E776;
-                      STA.L !DynamicStripeImage,X               ;;E77A|E778+E778/E778\E778;
+CODE_04E776:          LDA.B _2                                  ;;E778|E776+E776/E776\E776;
+                      STA.L DynamicStripeImage,X                ;;E77A|E778+E778/E778\E778;
                       INX                                       ;;E77E|E77C+E77C/E77C\E77C;
                       INX                                       ;;E77F|E77D+E77D/E77D\E77D;
                       LDY.W #$0300                              ;;E780|E77E+E77E/E77E\E77E;
-                      LDA.B !_3                                 ;;E783|E781+E781/E781\E781;
+                      LDA.B _3                                  ;;E783|E781+E781/E781\E781;
                       AND.W #$001F                              ;;E785|E783+E783/E783\E783;
-                      STA.B !_8                                 ;;E788|E786+E786/E786\E786;
+                      STA.B _8                                  ;;E788|E786+E786/E786\E786;
                       LDA.W #$0020                              ;;E78A|E788+E788/E788\E788;
                       SEC                                       ;;E78D|E78B+E78B/E78B\E78B;
-                      SBC.B !_8                                 ;;E78E|E78C+E78C/E78C\E78C;
-                      STA.B !_8                                 ;;E790|E78E+E78E/E78E\E78E;
+                      SBC.B _8                                  ;;E78E|E78C+E78C/E78C\E78C;
+                      STA.B _8                                  ;;E790|E78E+E78E/E78E\E78E;
                       CMP.W #$0001                              ;;E792|E790+E790/E790\E790;
                       BNE +                                     ;;E795|E793+E793/E793\E793;
-                      LDA.B !_8                                 ;;E797|E795+E795/E795\E795;
+                      LDA.B _8                                  ;;E797|E795+E795/E795\E795;
                       ASL A                                     ;;E799|E797+E797/E797\E797;
                       DEC A                                     ;;E79A|E798+E798/E798\E798;
                       XBA                                       ;;E79B|E799+E799/E799\E799;
                       TAY                                       ;;E79C|E79A+E79A/E79A\E79A;
                     + TYA                                       ;;E79D|E79B+E79B/E79B\E79B;
-                      STA.L !DynamicStripeImage,X               ;;E79E|E79C+E79C/E79C\E79C;
+                      STA.L DynamicStripeImage,X                ;;E79E|E79C+E79C/E79C\E79C;
                       INX                                       ;;E7A2|E7A0+E7A0/E7A0\E7A0;
                       INX                                       ;;E7A3|E7A1+E7A1/E7A1\E7A1;
                       LDA.W #$0001                              ;;E7A4|E7A2+E7A2/E7A2\E7A2;
-                      STA.B !_4                                 ;;E7A7|E7A5+E7A5/E7A5\E7A5;
-                      LDY.B !_0                                 ;;E7A9|E7A7+E7A7/E7A7\E7A7;
-CODE_04E7A9:          LDA.B [!_C],Y                             ;;E7AB|E7A9+E7A9/E7A9\E7A9;
-                      AND.B !_A                                 ;;E7AD|E7AB+E7AB/E7AB\E7AB;
-                      STA.L !DynamicStripeImage,X               ;;E7AF|E7AD+E7AD/E7AD\E7AD;
+                      STA.B _4                                  ;;E7A7|E7A5+E7A5/E7A5\E7A5;
+                      LDY.B _0                                  ;;E7A9|E7A7+E7A7/E7A7\E7A7;
+CODE_04E7A9:          LDA.B [_C],Y                              ;;E7AB|E7A9+E7A9/E7A9\E7A9;
+                      AND.B _A                                  ;;E7AD|E7AB+E7AB/E7AB\E7AB;
+                      STA.L DynamicStripeImage,X                ;;E7AF|E7AD+E7AD/E7AD\E7AD;
                       INX                                       ;;E7B3|E7B1+E7B1/E7B1\E7B1;
                       INX                                       ;;E7B4|E7B2+E7B2/E7B2\E7B2;
                       INY                                       ;;E7B5|E7B3+E7B3/E7B3\E7B3;
@@ -6157,7 +6157,7 @@ CODE_04E7A9:          LDA.B [!_C],Y                             ;;E7AB|E7A9+E7A9
                       TYA                                       ;;E7B7|E7B5+E7B5/E7B5\E7B5;
                       AND.W #$003F                              ;;E7B8|E7B6+E7B6/E7B6\E7B6;
                       BNE +                                     ;;E7BB|E7B9+E7B9/E7B9\E7B9;
-                      LDA.B !_4                                 ;;E7BD|E7BB+E7BB/E7BB\E7BB;
+                      LDA.B _4                                  ;;E7BD|E7BB+E7BB/E7BB\E7BB;
                       BEQ +                                     ;;E7BF|E7BD+E7BD/E7BD\E7BD;
                       DEY                                       ;;E7C1|E7BF+E7BF/E7BF\E7BF;
                       TYA                                       ;;E7C2|E7C0+E7C0/E7C0\E7C0;
@@ -6165,43 +6165,43 @@ CODE_04E7A9:          LDA.B [!_C],Y                             ;;E7AB|E7A9+E7A9
                       CLC                                       ;;E7C6|E7C4+E7C4/E7C4\E7C4;
                       ADC.W #$0800                              ;;E7C7|E7C5+E7C5/E7C5\E7C5;
                       TAY                                       ;;E7CA|E7C8+E7C8/E7C8\E7C8;
-                      LDA.B !_2                                 ;;E7CB|E7C9+E7C9/E7C9\E7C9;
+                      LDA.B _2                                  ;;E7CB|E7C9+E7C9/E7C9\E7C9;
                       XBA                                       ;;E7CD|E7CB+E7CB/E7CB\E7CB;
                       AND.W #$3BE0                              ;;E7CE|E7CC+E7CC/E7CC\E7CC;
                       CLC                                       ;;E7D1|E7CF+E7CF/E7CF\E7CF;
                       ADC.W #$0400                              ;;E7D2|E7D0+E7D0/E7D0\E7D0;
                       XBA                                       ;;E7D5|E7D3+E7D3/E7D3\E7D3;
-                      STA.L !DynamicStripeImage,X               ;;E7D6|E7D4+E7D4/E7D4\E7D4;
+                      STA.L DynamicStripeImage,X                ;;E7D6|E7D4+E7D4/E7D4\E7D4;
                       INX                                       ;;E7DA|E7D8+E7D8/E7D8\E7D8;
                       INX                                       ;;E7DB|E7D9+E7D9/E7D9\E7D9;
-                      LDA.B !_8                                 ;;E7DC|E7DA+E7DA/E7DA\E7DA;
+                      LDA.B _8                                  ;;E7DC|E7DA+E7DA/E7DA\E7DA;
                       ASL A                                     ;;E7DE|E7DC+E7DC/E7DC\E7DC;
                       DEC A                                     ;;E7DF|E7DD+E7DD/E7DD\E7DD;
                       XBA                                       ;;E7E0|E7DE+E7DE/E7DE\E7DE;
-                      STA.L !DynamicStripeImage,X               ;;E7E1|E7DF+E7DF/E7DF\E7DF;
+                      STA.L DynamicStripeImage,X                ;;E7E1|E7DF+E7DF/E7DF\E7DF;
                       INX                                       ;;E7E5|E7E3+E7E3/E7E3\E7E3;
                       INX                                       ;;E7E6|E7E4+E7E4/E7E4\E7E4;
-                    + DEC.B !_4                                 ;;E7E7|E7E5+E7E5/E7E5\E7E5;
+                    + DEC.B _4                                  ;;E7E7|E7E5+E7E5/E7E5\E7E5;
                       BPL CODE_04E7A9                           ;;E7E9|E7E7+E7E7/E7E7\E7E7;
-                      LDA.B !_2                                 ;;E7EB|E7E9+E7E9/E7E9\E7E9;
+                      LDA.B _2                                  ;;E7EB|E7E9+E7E9/E7E9\E7E9;
                       XBA                                       ;;E7ED|E7EB+E7EB/E7EB\E7EB;
                       CLC                                       ;;E7EE|E7EC+E7EC/E7EC\E7EC;
                       ADC.W #$0020                              ;;E7EF|E7ED+E7ED/E7ED\E7ED;
                       XBA                                       ;;E7F2|E7F0+E7F0/E7F0\E7F0;
-                      STA.B !_2                                 ;;E7F3|E7F1+E7F1/E7F1\E7F1;
-                      LDA.B !_0                                 ;;E7F5|E7F3+E7F3/E7F3\E7F3;
+                      STA.B _2                                  ;;E7F3|E7F1+E7F1/E7F1\E7F1;
+                      LDA.B _0                                  ;;E7F5|E7F3+E7F3/E7F3\E7F3;
                       TAY                                       ;;E7F7|E7F5+E7F5/E7F5\E7F5;
                       CLC                                       ;;E7F8|E7F6+E7F6/E7F6\E7F6;
                       ADC.W #$0040                              ;;E7F9|E7F7+E7F7/E7F7\E7F7;
-                      STA.B !_0                                 ;;E7FC|E7FA+E7FA/E7FA\E7FA;
+                      STA.B _0                                  ;;E7FC|E7FA+E7FA/E7FA\E7FA;
                       AND.W #$07C0                              ;;E7FE|E7FC+E7FC/E7FC\E7FC;
                       BNE +                                     ;;E801|E7FF+E7FF/E7FF\E7FF;
                       TYA                                       ;;E803|E801+E801/E801\E801;
                       AND.W #$F83F                              ;;E804|E802+E802/E802\E802;
                       CLC                                       ;;E807|E805+E805/E805\E805;
                       ADC.W #$1000                              ;;E808|E806+E806/E806\E806;
-                      STA.B !_0                                 ;;E80B|E809+E809/E809\E809;
-                      LDA.B !_2                                 ;;E80D|E80B+E80B/E80B\E80B;
+                      STA.B _0                                  ;;E80B|E809+E809/E809\E809;
+                      LDA.B _2                                  ;;E80D|E80B+E80B/E80B\E80B;
                       XBA                                       ;;E80F|E80D+E80D/E80D\E80D;
                       SEC                                       ;;E810|E80E+E80E/E80E\E80E;
                       SBC.W #$0020                              ;;E811|E80F+E80F/E80F\E80F;
@@ -6209,50 +6209,50 @@ CODE_04E7A9:          LDA.B [!_C],Y                             ;;E7AB|E7A9+E7A9
                       CLC                                       ;;E817|E815+E815/E815\E815;
                       ADC.W #$0800                              ;;E818|E816+E816/E816\E816;
                       XBA                                       ;;E81B|E819+E819/E819\E819;
-                      STA.B !_2                                 ;;E81C|E81A+E81A/E81A\E81A;
-                    + DEC.B !_6                                 ;;E81E|E81C+E81C/E81C\E81C;
+                      STA.B _2                                  ;;E81C|E81A+E81A/E81A\E81A;
+                    + DEC.B _6                                  ;;E81E|E81C+E81C/E81C\E81C;
                       BMI +                                     ;;E820|E81E+E81E/E81E\E81E;
                       JMP CODE_04E776                           ;;E822|E820+E820/E820\E820;
                                                                 ;;                        ;
                     + RTS                                       ;;E825|E823+E823/E823\E823; Return 
                                                                 ;;                        ;
 CODE_04E824:          LDA.W #$0005                              ;;E826|E824+E824/E824\E824;
-                      STA.B !_6                                 ;;E829|E827+E827/E827\E827;
-                      LDA.L !DynStripeImgSize                   ;;E82B|E829+E829/E829\E829;
+                      STA.B _6                                  ;;E829|E827+E827/E827\E827;
+                      LDA.L DynStripeImgSize                    ;;E82B|E829+E829/E829\E829;
                       TAX                                       ;;E82F|E82D+E82D/E82D\E82D;
-CODE_04E82E:          LDA.B !_2                                 ;;E830|E82E+E82E/E82E\E82E;
-                      STA.L !DynamicStripeImage,X               ;;E832|E830+E830/E830\E830;
+CODE_04E82E:          LDA.B _2                                  ;;E830|E82E+E82E/E82E\E82E;
+                      STA.L DynamicStripeImage,X                ;;E832|E830+E830/E830\E830;
                       INX                                       ;;E836|E834+E834/E834\E834;
                       INX                                       ;;E837|E835+E835/E835\E835;
                       LDY.W #$0B00                              ;;E838|E836+E836/E836\E836;
-                      LDA.B !_3                                 ;;E83B|E839+E839/E839\E839;
+                      LDA.B _3                                  ;;E83B|E839+E839/E839\E839;
                       AND.W #$001F                              ;;E83D|E83B+E83B/E83B\E83B;
-                      STA.B !_8                                 ;;E840|E83E+E83E/E83E\E83E;
+                      STA.B _8                                  ;;E840|E83E+E83E/E83E\E83E;
                       LDA.W #$0020                              ;;E842|E840+E840/E840\E840;
                       SEC                                       ;;E845|E843+E843/E843\E843;
-                      SBC.B !_8                                 ;;E846|E844+E844/E844\E844;
-                      STA.B !_8                                 ;;E848|E846+E846/E846\E846;
+                      SBC.B _8                                  ;;E846|E844+E844/E844\E844;
+                      STA.B _8                                  ;;E848|E846+E846/E846\E846;
                       CMP.W #$0006                              ;;E84A|E848+E848/E848\E848;
                       BCS +                                     ;;E84D|E84B+E84B/E84B\E84B;
-                      LDA.B !_8                                 ;;E84F|E84D+E84D/E84D\E84D;
+                      LDA.B _8                                  ;;E84F|E84D+E84D/E84D\E84D;
                       ASL A                                     ;;E851|E84F+E84F/E84F\E84F;
                       DEC A                                     ;;E852|E850+E850/E850\E850;
                       XBA                                       ;;E853|E851+E851/E851\E851;
                       TAY                                       ;;E854|E852+E852/E852\E852;
                       LDA.W #$0006                              ;;E855|E853+E853/E853\E853;
                       SEC                                       ;;E858|E856+E856/E856\E856;
-                      SBC.B !_8                                 ;;E859|E857+E857/E857\E857;
-                      STA.B !_8                                 ;;E85B|E859+E859/E859\E859;
+                      SBC.B _8                                  ;;E859|E857+E857/E857\E857;
+                      STA.B _8                                  ;;E85B|E859+E859/E859\E859;
                     + TYA                                       ;;E85D|E85B+E85B/E85B\E85B;
-                      STA.L !DynamicStripeImage,X               ;;E85E|E85C+E85C/E85C\E85C;
+                      STA.L DynamicStripeImage,X                ;;E85E|E85C+E85C/E85C\E85C;
                       INX                                       ;;E862|E860+E860/E860\E860;
                       INX                                       ;;E863|E861+E861/E861\E861;
                       LDA.W #$0005                              ;;E864|E862+E862/E862\E862;
-                      STA.B !_4                                 ;;E867|E865+E865/E865\E865;
-                      LDY.B !_0                                 ;;E869|E867+E867/E867\E867;
-CODE_04E869:          LDA.B [!_C],Y                             ;;E86B|E869+E869/E869\E869;
-                      AND.B !_A                                 ;;E86D|E86B+E86B/E86B\E86B;
-                      STA.L !DynamicStripeImage,X               ;;E86F|E86D+E86D/E86D\E86D;
+                      STA.B _4                                  ;;E867|E865+E865/E865\E865;
+                      LDY.B _0                                  ;;E869|E867+E867/E867\E867;
+CODE_04E869:          LDA.B [_C],Y                              ;;E86B|E869+E869/E869\E869;
+                      AND.B _A                                  ;;E86D|E86B+E86B/E86B\E86B;
+                      STA.L DynamicStripeImage,X                ;;E86F|E86D+E86D/E86D\E86D;
                       INX                                       ;;E873|E871+E871/E871\E871;
                       INX                                       ;;E874|E872+E872/E872\E872;
                       INY                                       ;;E875|E873+E873/E873\E873;
@@ -6260,7 +6260,7 @@ CODE_04E869:          LDA.B [!_C],Y                             ;;E86B|E869+E869
                       TYA                                       ;;E877|E875+E875/E875\E875;
                       AND.W #$003F                              ;;E878|E876+E876/E876\E876;
                       BNE +                                     ;;E87B|E879+E879/E879\E879;
-                      LDA.B !_4                                 ;;E87D|E87B+E87B/E87B\E87B;
+                      LDA.B _4                                  ;;E87D|E87B+E87B/E87B\E87B;
                       BEQ +                                     ;;E87F|E87D+E87D/E87D\E87D;
                       DEY                                       ;;E881|E87F+E87F/E87F\E87F;
                       TYA                                       ;;E882|E880+E880/E880\E880;
@@ -6268,43 +6268,43 @@ CODE_04E869:          LDA.B [!_C],Y                             ;;E86B|E869+E869
                       CLC                                       ;;E886|E884+E884/E884\E884;
                       ADC.W #$0800                              ;;E887|E885+E885/E885\E885;
                       TAY                                       ;;E88A|E888+E888/E888\E888;
-                      LDA.B !_2                                 ;;E88B|E889+E889/E889\E889;
+                      LDA.B _2                                  ;;E88B|E889+E889/E889\E889;
                       XBA                                       ;;E88D|E88B+E88B/E88B\E88B;
                       AND.W #$3BE0                              ;;E88E|E88C+E88C/E88C\E88C;
                       CLC                                       ;;E891|E88F+E88F/E88F\E88F;
                       ADC.W #$0400                              ;;E892|E890+E890/E890\E890;
                       XBA                                       ;;E895|E893+E893/E893\E893;
-                      STA.L !DynamicStripeImage,X               ;;E896|E894+E894/E894\E894;
+                      STA.L DynamicStripeImage,X                ;;E896|E894+E894/E894\E894;
                       INX                                       ;;E89A|E898+E898/E898\E898;
                       INX                                       ;;E89B|E899+E899/E899\E899;
-                      LDA.B !_8                                 ;;E89C|E89A+E89A/E89A\E89A;
+                      LDA.B _8                                  ;;E89C|E89A+E89A/E89A\E89A;
                       ASL A                                     ;;E89E|E89C+E89C/E89C\E89C;
                       DEC A                                     ;;E89F|E89D+E89D/E89D\E89D;
                       XBA                                       ;;E8A0|E89E+E89E/E89E\E89E;
-                      STA.L !DynamicStripeImage,X               ;;E8A1|E89F+E89F/E89F\E89F;
+                      STA.L DynamicStripeImage,X                ;;E8A1|E89F+E89F/E89F\E89F;
                       INX                                       ;;E8A5|E8A3+E8A3/E8A3\E8A3;
                       INX                                       ;;E8A6|E8A4+E8A4/E8A4\E8A4;
-                    + DEC.B !_4                                 ;;E8A7|E8A5+E8A5/E8A5\E8A5;
+                    + DEC.B _4                                  ;;E8A7|E8A5+E8A5/E8A5\E8A5;
                       BPL CODE_04E869                           ;;E8A9|E8A7+E8A7/E8A7\E8A7;
-                      LDA.B !_2                                 ;;E8AB|E8A9+E8A9/E8A9\E8A9;
+                      LDA.B _2                                  ;;E8AB|E8A9+E8A9/E8A9\E8A9;
                       XBA                                       ;;E8AD|E8AB+E8AB/E8AB\E8AB;
                       CLC                                       ;;E8AE|E8AC+E8AC/E8AC\E8AC;
                       ADC.W #$0020                              ;;E8AF|E8AD+E8AD/E8AD\E8AD;
                       XBA                                       ;;E8B2|E8B0+E8B0/E8B0\E8B0;
-                      STA.B !_2                                 ;;E8B3|E8B1+E8B1/E8B1\E8B1;
-                      LDA.B !_0                                 ;;E8B5|E8B3+E8B3/E8B3\E8B3;
+                      STA.B _2                                  ;;E8B3|E8B1+E8B1/E8B1\E8B1;
+                      LDA.B _0                                  ;;E8B5|E8B3+E8B3/E8B3\E8B3;
                       TAY                                       ;;E8B7|E8B5+E8B5/E8B5\E8B5;
                       CLC                                       ;;E8B8|E8B6+E8B6/E8B6\E8B6;
                       ADC.W #$0040                              ;;E8B9|E8B7+E8B7/E8B7\E8B7;
-                      STA.B !_0                                 ;;E8BC|E8BA+E8BA/E8BA\E8BA;
+                      STA.B _0                                  ;;E8BC|E8BA+E8BA/E8BA\E8BA;
                       AND.W #$07C0                              ;;E8BE|E8BC+E8BC/E8BC\E8BC;
                       BNE +                                     ;;E8C1|E8BF+E8BF/E8BF\E8BF;
                       TYA                                       ;;E8C3|E8C1+E8C1/E8C1\E8C1;
                       AND.W #$F83F                              ;;E8C4|E8C2+E8C2/E8C2\E8C2;
                       CLC                                       ;;E8C7|E8C5+E8C5/E8C5\E8C5;
                       ADC.W #$1000                              ;;E8C8|E8C6+E8C6/E8C6\E8C6;
-                      STA.B !_0                                 ;;E8CB|E8C9+E8C9/E8C9\E8C9;
-                      LDA.B !_2                                 ;;E8CD|E8CB+E8CB/E8CB\E8CB;
+                      STA.B _0                                  ;;E8CB|E8C9+E8C9/E8C9\E8C9;
+                      LDA.B _2                                  ;;E8CD|E8CB+E8CB/E8CB\E8CB;
                       XBA                                       ;;E8CF|E8CD+E8CD/E8CD\E8CD;
                       SEC                                       ;;E8D0|E8CE+E8CE/E8CE\E8CE;
                       SBC.W #$0020                              ;;E8D1|E8CF+E8CF/E8CF\E8CF;
@@ -6312,8 +6312,8 @@ CODE_04E869:          LDA.B [!_C],Y                             ;;E86B|E869+E869
                       CLC                                       ;;E8D7|E8D5+E8D5/E8D5\E8D5;
                       ADC.W #$0800                              ;;E8D8|E8D6+E8D6/E8D6\E8D6;
                       XBA                                       ;;E8DB|E8D9+E8D9/E8D9\E8D9;
-                      STA.B !_2                                 ;;E8DC|E8DA+E8DA/E8DA\E8DA;
-                    + DEC.B !_6                                 ;;E8DE|E8DC+E8DC/E8DC\E8DC;
+                      STA.B _2                                  ;;E8DC|E8DA+E8DA/E8DA\E8DA;
+                    + DEC.B _6                                  ;;E8DE|E8DC+E8DC/E8DC\E8DC;
                       BMI +                                     ;;E8E0|E8DE+E8DE/E8DE\E8DE;
                       JMP CODE_04E82E                           ;;E8E2|E8E0+E8E0/E8E0\E8E0;
                                                                 ;;                        ;
@@ -6357,73 +6357,73 @@ DATA_04E994:          db $68,$00,$24,$00,$24,$00,$25,$00        ;;E996|E994+E994
                       db $A0,$09,$30,$0A,$69,$00,$5F,$00        ;;E9DE|E9DC+E9DC/E9DC\E9DC;
                       db $5F,$00,$5F,$00,$5F,$00,$5F,$00        ;;E9E6|E9E4+E9E4/E9E4\E9E4;
                                                                 ;;                        ;
-CODE_04E9EC:          LDA.W !OverworldEvent                     ;;E9EE|E9EC+E9EC/E9EC\E9EC; Index (8 bit) Accum (8 bit) 
-                      STA.B !_F                                 ;;E9F1|E9EF+E9EF/E9EF\E9EF;
+CODE_04E9EC:          LDA.W OverworldEvent                      ;;E9EE|E9EC+E9EC/E9EC\E9EC; Index (8 bit) Accum (8 bit) 
+                      STA.B _F                                  ;;E9F1|E9EF+E9EF/E9EF\E9EF;
 CODE_04E9F1:          LDX.B #$2B                                ;;E9F3|E9F1+E9F1/E9F1\E9F1;
 CODE_04E9F3:          CMP.L DATA_04E8E4,X                       ;;E9F5|E9F3+E9F3/E9F3\E9F3;
                       BEQ CODE_04EA25                           ;;E9F9|E9F7+E9F7/E9F7\E9F7;
 CODE_04E9F9:          DEX                                       ;;E9FB|E9F9+E9F9/E9F9\E9F9;
                       BPL CODE_04E9F3                           ;;E9FC|E9FA+E9FA/E9FA\E9FA;
-                      LDA.W !OverworldEventProcess              ;;E9FE|E9FC+E9FC/E9FC\E9FC;
+                      LDA.W OverworldEventProcess               ;;E9FE|E9FC+E9FC/E9FC\E9FC;
                       BEQ +                                     ;;EA01|E9FF+E9FF/E9FF\E9FF;
-                      STZ.W !OverworldEventProcess              ;;EA03|EA01+EA01/EA01\EA01;
-                      INC.W !OverworldProcess                   ;;EA06|EA04+EA04/EA04\EA04;
-                      LDA.W !OverworldEvent                     ;;EA09|EA07+EA07/EA07\EA07;
+                      STZ.W OverworldEventProcess               ;;EA03|EA01+EA01/EA01\EA01;
+                      INC.W OverworldProcess                    ;;EA06|EA04+EA04/EA04\EA04;
+                      LDA.W OverworldEvent                      ;;EA09|EA07+EA07/EA07\EA07;
                       AND.B #$07                                ;;EA0C|EA0A+EA0A/EA0A\EA0A;
                       TAX                                       ;;EA0E|EA0C+EA0C/EA0C\EA0C;
-                      LDA.W !OverworldEvent                     ;;EA0F|EA0D+EA0D/EA0D\EA0D;
+                      LDA.W OverworldEvent                      ;;EA0F|EA0D+EA0D/EA0D\EA0D;
                       LSR A                                     ;;EA12|EA10+EA10/EA10\EA10;
                       LSR A                                     ;;EA13|EA11+EA11/EA11\EA11;
                       LSR A                                     ;;EA14|EA12+EA12/EA12\EA12;
                       TAY                                       ;;EA15|EA13+EA13/EA13\EA13;
-                      LDA.W !OWEventsActivated,Y                ;;EA16|EA14+EA14/EA14\EA14;
+                      LDA.W OWEventsActivated,Y                 ;;EA16|EA14+EA14/EA14\EA14;
                       ORA.L DATA_04E44B,X                       ;;EA19|EA17+EA17/EA17\EA17;
-                      STA.W !OWEventsActivated,Y                ;;EA1D|EA1B+EA1B/EA1B\EA1B;
-                      INC.W !ExitsCompleted                     ;;EA20|EA1E+EA1E/EA1E\EA1E;
-                      STZ.W !CreditsScreenNumber                ;;EA23|EA21+EA21/EA21\EA21;
+                      STA.W OWEventsActivated,Y                 ;;EA1D|EA1B+EA1B/EA1B\EA1B;
+                      INC.W ExitsCompleted                      ;;EA20|EA1E+EA1E/EA1E\EA1E;
+                      STZ.W CreditsScreenNumber                 ;;EA23|EA21+EA21/EA21\EA21;
                     + RTS                                       ;;EA26|EA24+EA24/EA24\EA24; Return 
                                                                 ;;                        ;
 CODE_04EA25:          PHX                                       ;;EA27|EA25+EA25/EA25\EA25;
                       LDA.L DATA_04E910,X                       ;;EA28|EA26+EA26/EA26\EA26;
-                      STA.B !_2                                 ;;EA2C|EA2A+EA2A/EA2A\EA2A;
+                      STA.B _2                                  ;;EA2C|EA2A+EA2A/EA2A\EA2A;
                       TXA                                       ;;EA2E|EA2C+EA2C/EA2C\EA2C;
                       ASL A                                     ;;EA2F|EA2D+EA2D/EA2D\EA2D;
                       TAX                                       ;;EA30|EA2E+EA2E/EA2E\EA2E;
                       REP #$20                                  ;;EA31|EA2F+EA2F/EA2F\EA2F; Accum (16 bit) 
                       LDA.L DATA_04E994,X                       ;;EA33|EA31+EA31/EA31\EA31;
-                      STA.B !_0                                 ;;EA37|EA35+EA35/EA35\EA35;
+                      STA.B _0                                  ;;EA37|EA35+EA35/EA35\EA35;
                       LDA.L DATA_04E93C,X                       ;;EA39|EA37+EA37/EA37\EA37;
-                      STA.B !_4                                 ;;EA3D|EA3B+EA3B/EA3B\EA3B;
-                      LDA.B !_2                                 ;;EA3F|EA3D+EA3D/EA3D\EA3D;
+                      STA.B _4                                  ;;EA3D|EA3B+EA3B/EA3B\EA3B;
+                      LDA.B _2                                  ;;EA3F|EA3D+EA3D/EA3D\EA3D;
                       AND.W #$0001                              ;;EA41|EA3F+EA3F/EA3F\EA3F;
                       BEQ +                                     ;;EA44|EA42+EA42/EA42\EA42;
                       REP #$10                                  ;;EA46|EA44+EA44/EA44\EA44; Index (16 bit) 
-                      LDY.B !_0                                 ;;EA48|EA46+EA46/EA46\EA46;
+                      LDY.B _0                                  ;;EA48|EA46+EA46/EA46\EA46;
                       JSR CODE_04E4A9                           ;;EA4A|EA48+EA48/EA48\EA48;
                       JMP CODE_04EA5A                           ;;EA4D|EA4B+EA4B/EA4B\EA4B;
                                                                 ;;                        ;
                     + SEP #$20                                  ;;EA50|EA4E+EA4E/EA4E\EA4E; Accum (8 bit) 
                       REP #$10                                  ;;EA52|EA50+EA50/EA50\EA50; Index (16 bit) 
-                      LDX.B !_4                                 ;;EA54|EA52+EA52/EA52\EA52;
-                      LDA.B !_0                                 ;;EA56|EA54+EA54/EA54\EA54;
-                      STA.L !Map16TilesLow,X                    ;;EA58|EA56+EA56/EA56\EA56;
+                      LDX.B _4                                  ;;EA54|EA52+EA52/EA52\EA52;
+                      LDA.B _0                                  ;;EA56|EA54+EA54/EA54\EA54;
+                      STA.L Map16TilesLow,X                     ;;EA58|EA56+EA56/EA56\EA56;
 CODE_04EA5A:          SEP #$30                                  ;;EA5C|EA5A+EA5A/EA5A\EA5A; Index (8 bit) Accum (8 bit) 
                       PLX                                       ;;EA5E|EA5C+EA5C/EA5C\EA5C;
-                      LDA.B !_F                                 ;;EA5F|EA5D+EA5D/EA5D\EA5D;
+                      LDA.B _F                                  ;;EA5F|EA5D+EA5D/EA5D\EA5D;
                       JMP CODE_04E9F9                           ;;EA61|EA5F+EA5F/EA5F\EA5F;
                                                                 ;;                        ;
-CODE_04EA62:          STZ.W !ColorFadeTimer                     ;;EA64|EA62+EA62/EA62\EA62;
-                      STZ.W !ColorFadeDir                       ;;EA67|EA65+EA65/EA65\EA65;
+CODE_04EA62:          STZ.W ColorFadeTimer                      ;;EA64|EA62+EA62/EA62\EA62;
+                      STZ.W ColorFadeDir                        ;;EA67|EA65+EA65/EA65\EA65;
                       LDX.B #$6F                                ;;EA6A|EA68+EA68/EA68\EA68;
-                    - LDA.W !MainPalette,X                      ;;EA6C|EA6A+EA6A/EA6A\EA6A;
-                      STA.W !CopyPalette+2,X                    ;;EA6F|EA6D+EA6D/EA6D\EA6D;
-                      STZ.W !CopyPalette+$74,X                  ;;EA72|EA70+EA70/EA70\EA70;
+                    - LDA.W MainPalette,X                       ;;EA6C|EA6A+EA6A/EA6A\EA6A;
+                      STA.W CopyPalette+2,X                     ;;EA6F|EA6D+EA6D/EA6D\EA6D;
+                      STZ.W CopyPalette+$74,X                   ;;EA72|EA70+EA70/EA70\EA70;
                       DEX                                       ;;EA75|EA73+EA73/EA73\EA73;
                       BPL -                                     ;;EA76|EA74+EA74/EA74\EA74;
                       LDX.B #$6F                                ;;EA78|EA76+EA76/EA76\EA76;
 CODE_04EA78:          LDY.B #$10                                ;;EA7A|EA78+EA78/EA78\EA78;
-                    - LDA.W !MainPalette+$80,X                  ;;EA7C|EA7A+EA7A/EA7A\EA7A;
-                      STA.W !CopyPalette+2,X                    ;;EA7F|EA7D+EA7D/EA7D\EA7D;
+                    - LDA.W MainPalette+$80,X                   ;;EA7C|EA7A+EA7A/EA7A\EA7A;
+                      STA.W CopyPalette+2,X                     ;;EA7F|EA7D+EA7D/EA7D\EA7D;
                       DEX                                       ;;EA82|EA80+EA80/EA80\EA80;
                       DEY                                       ;;EA83|EA81+EA81/EA81\EA81;
                       BNE -                                     ;;EA84|EA82+EA82/EA82\EA82;
@@ -6434,62 +6434,62 @@ CODE_04EA78:          LDY.B #$10                                ;;EA7A|EA78+EA78
                       BPL CODE_04EA78                           ;;EA8B|EA89+EA89/EA89\EA89;
 CODE_04EA8B:          REP #$20                                  ;;EA8D|EA8B+EA8B/EA8B\EA8B; Accum (16 bit) 
                       LDA.W #$0070                              ;;EA8F|EA8D+EA8D/EA8D\EA8D;
-                      STA.W !CopyPalette                        ;;EA92|EA90+EA90/EA90\EA90;
+                      STA.W CopyPalette                         ;;EA92|EA90+EA90/EA90\EA90;
                       LDA.W #$C070                              ;;EA95|EA93+EA93/EA93\EA93;
-                      STA.W !CopyPalette+$72                    ;;EA98|EA96+EA96/EA96\EA96;
+                      STA.W CopyPalette+$72                     ;;EA98|EA96+EA96/EA96\EA96;
                       SEP #$20                                  ;;EA9B|EA99+EA99/EA99\EA99; Accum (8 bit) 
-                      STZ.W !CopyPalette+$E4                    ;;EA9D|EA9B+EA9B/EA9B\EA9B;
+                      STZ.W CopyPalette+$E4                     ;;EA9D|EA9B+EA9B/EA9B\EA9B;
                       LDA.B #$03                                ;;EAA0|EA9E+EA9E/EA9E\EA9E;
-                      STA.W !PaletteIndexTable                  ;;EAA2|EAA0+EAA0/EAA0\EAA0;
+                      STA.W PaletteIndexTable                   ;;EAA2|EAA0+EAA0/EAA0\EAA0;
                       RTS                                       ;;EAA5|EAA3+EAA3/EAA3\EAA3; Return 
                                                                 ;;                        ;
-CODE_04EAA4:          LDA.W !ColorFadeTimer                     ;;EAA6|EAA4+EAA4/EAA4\EAA4;
+CODE_04EAA4:          LDA.W ColorFadeTimer                      ;;EAA6|EAA4+EAA4/EAA4\EAA4;
                       CMP.B #$40                                ;;EAA9|EAA7+EAA7/EAA7\EAA7;
                       BCC CODE_04EAC9                           ;;EAAB|EAA9+EAA9/EAA9\EAA9;
-                      INC.W !OverworldEventProcess              ;;EAAD|EAAB+EAAB/EAAB\EAAB;
+                      INC.W OverworldEventProcess               ;;EAAD|EAAB+EAAB/EAAB\EAAB;
                       JSR CODE_04EE30                           ;;EAB0|EAAE+EAAE/EAAE\EAAE;
                       JSR CODE_04E496                           ;;EAB3|EAB1+EAB1/EAB1\EAB1;
                       REP #$20                                  ;;EAB6|EAB4+EAB4/EAB4\EAB4; Accum (16 bit) 
-                      INC.W !EventTileIndex                     ;;EAB8|EAB6+EAB6/EAB6\EAB6;
-                      LDA.W !EventTileIndex                     ;;EABB|EAB9+EAB9/EAB9\EAB9;
-                      CMP.W !EventLength                        ;;EABE|EABC+EABC/EABC\EABC;
+                      INC.W EventTileIndex                      ;;EAB8|EAB6+EAB6/EAB6\EAB6;
+                      LDA.W EventTileIndex                      ;;EABB|EAB9+EAB9/EAB9\EAB9;
+                      CMP.W EventLength                         ;;EABE|EABC+EABC/EABC\EABC;
                       SEP #$20                                  ;;EAC1|EABF+EABF/EABF\EABF; Accum (8 bit) 
                       BCS +                                     ;;EAC3|EAC1+EAC1/EAC1\EAC1;
                       LDA.B #$03                                ;;EAC5|EAC3+EAC3/EAC3\EAC3;
-                      STA.W !OverworldEventProcess              ;;EAC7|EAC5+EAC5/EAC5\EAC5;
+                      STA.W OverworldEventProcess               ;;EAC7|EAC5+EAC5/EAC5\EAC5;
                     + RTS                                       ;;EACA|EAC8+EAC8/EAC8\EAC8; Return 
                                                                 ;;                        ;
 CODE_04EAC9:          JSR CODE_04EC67                           ;;EACB|EAC9+EAC9/EAC9\EAC9;
                       REP #$30                                  ;;EACE|EACC+EACC/EACC\EACC; Index (16 bit) Accum (16 bit) 
                       LDY.W #$008C                              ;;EAD0|EACE+EACE/EACE\EACE;
                       LDX.W #$0006                              ;;EAD3|EAD1+EAD1/EAD1\EAD1;
-                      LDA.W !OverworldEventSize                 ;;EAD6|EAD4+EAD4/EAD4\EAD4;
+                      LDA.W OverworldEventSize                  ;;EAD6|EAD4+EAD4/EAD4\EAD4;
                       CMP.W #$0900                              ;;EAD9|EAD7+EAD7/EAD7\EAD7;
                       BCC +                                     ;;EADC|EADA+EADA/EADA\EADA;
                       LDY.W #$000C                              ;;EADE|EADC+EADC/EADC\EADC;
                       LDX.W #$0002                              ;;EAE1|EADF+EADF/EADF\EADF;
-                    + STX.B !_5                                 ;;EAE4|EAE2+EAE2/EAE2\EAE2;
+                    + STX.B _5                                  ;;EAE4|EAE2+EAE2/EAE2\EAE2;
                       TAX                                       ;;EAE6|EAE4+EAE4/EAE4\EAE4;
                       SEP #$20                                  ;;EAE7|EAE5+EAE5/EAE5\EAE5; Accum (8 bit) 
-CODE_04EAE7:          LDA.B !_5                                 ;;EAE9|EAE7+EAE7/EAE7\EAE7;
-                      STA.B !_3                                 ;;EAEB|EAE9+EAE9/EAE9\EAE9;
-                      LDA.B !_0                                 ;;EAED|EAEB+EAEB/EAEB\EAEB;
-                    - STA.B !_2                                 ;;EAEF|EAED+EAED/EAED\EAED;
-                      LDA.B !_1                                 ;;EAF1|EAEF+EAEF/EAEF\EAEF;
-                      STA.W !OAMTileYPos+$150,Y                 ;;EAF3|EAF1+EAF1/EAF1\EAF1;
+CODE_04EAE7:          LDA.B _5                                  ;;EAE9|EAE7+EAE7/EAE7\EAE7;
+                      STA.B _3                                  ;;EAEB|EAE9+EAE9/EAE9\EAE9;
+                      LDA.B _0                                  ;;EAED|EAEB+EAEB/EAEB\EAEB;
+                    - STA.B _2                                  ;;EAEF|EAED+EAED/EAED\EAED;
+                      LDA.B _1                                  ;;EAF1|EAEF+EAEF/EAEF\EAEF;
+                      STA.W OAMTileYPos+$150,Y                  ;;EAF3|EAF1+EAF1/EAF1\EAF1;
                       LDA.L OWEventTileNum,X                    ;;EAF6|EAF4+EAF4/EAF4\EAF4;
-                      STA.W !OAMTileNo+$150,Y                   ;;EAFA|EAF8+EAF8/EAF8\EAF8;
-                      LDA.L !OWEventTilemap,X                   ;;EAFD|EAFB+EAFB/EAFB\EAFB;
+                      STA.W OAMTileNo+$150,Y                    ;;EAFA|EAF8+EAF8/EAF8\EAF8;
+                      LDA.L OWEventTilemap,X                    ;;EAFD|EAFB+EAFB/EAFB\EAFB;
                       AND.B #$C0                                ;;EB01|EAFF+EAFF/EAFF\EAFF;
-                      STA.B !_4                                 ;;EB03|EB01+EB01/EB01\EB01;
-                      LDA.L !OWEventTilemap,X                   ;;EB05|EB03+EB03/EB03\EB03;
+                      STA.B _4                                  ;;EB03|EB01+EB01/EB01\EB01;
+                      LDA.L OWEventTilemap,X                    ;;EB05|EB03+EB03/EB03\EB03;
                       AND.B #$1C                                ;;EB09|EB07+EB07/EB07\EB07;
                       LSR A                                     ;;EB0B|EB09+EB09/EB09\EB09;
-                      ORA.B !_4                                 ;;EB0C|EB0A+EB0A/EB0A\EB0A;
+                      ORA.B _4                                  ;;EB0C|EB0A+EB0A/EB0A\EB0A;
                       ORA.B #$11                                ;;EB0E|EB0C+EB0C/EB0C\EB0C;
-                      STA.W !OAMTileAttr+$150,Y                 ;;EB10|EB0E+EB0E/EB0E\EB0E;
-                      LDA.B !_2                                 ;;EB13|EB11+EB11/EB11\EB11;
-                      STA.W !OAMTileXPos+$150,Y                 ;;EB15|EB13+EB13/EB13\EB13;
+                      STA.W OAMTileAttr+$150,Y                  ;;EB10|EB0E+EB0E/EB0E\EB0E;
+                      LDA.B _2                                  ;;EB13|EB11+EB11/EB11\EB11;
+                      STA.W OAMTileXPos+$150,Y                  ;;EB15|EB13+EB13/EB13\EB13;
                       CLC                                       ;;EB18|EB16+EB16/EB16\EB16;
                       ADC.B #$08                                ;;EB19|EB17+EB17/EB17\EB17;
                       INX                                       ;;EB1B|EB19+EB19/EB19\EB19;
@@ -6497,29 +6497,29 @@ CODE_04EAE7:          LDA.B !_5                                 ;;EAE9|EAE7+EAE7
                       DEY                                       ;;EB1D|EB1B+EB1B/EB1B\EB1B;
                       DEY                                       ;;EB1E|EB1C+EB1C/EB1C\EB1C;
                       DEY                                       ;;EB1F|EB1D+EB1D/EB1D\EB1D;
-                      DEC.B !_3                                 ;;EB20|EB1E+EB1E/EB1E\EB1E;
+                      DEC.B _3                                  ;;EB20|EB1E+EB1E/EB1E\EB1E;
                       BNE -                                     ;;EB22|EB20+EB20/EB20\EB20;
-                      LDA.B !_1                                 ;;EB24|EB22+EB22/EB22\EB22;
+                      LDA.B _1                                  ;;EB24|EB22+EB22/EB22\EB22;
                       CLC                                       ;;EB26|EB24+EB24/EB24\EB24;
                       ADC.B #$08                                ;;EB27|EB25+EB25/EB25\EB25;
-                      STA.B !_1                                 ;;EB29|EB27+EB27/EB27\EB27;
+                      STA.B _1                                  ;;EB29|EB27+EB27/EB27\EB27;
                       CPY.W #$FFFC                              ;;EB2B|EB29+EB29/EB29\EB29;
                       BNE CODE_04EAE7                           ;;EB2E|EB2C+EB2C/EB2C\EB2C;
                       SEP #$10                                  ;;EB30|EB2E+EB2E/EB2E\EB2E; Index (8 bit) 
                       LDX.B #$23                                ;;EB32|EB30+EB30/EB30\EB30;
-                    - STZ.W !OAMTileSize+$54,X                  ;;EB34|EB32+EB32/EB32\EB32;
+                    - STZ.W OAMTileSize+$54,X                   ;;EB34|EB32+EB32/EB32\EB32;
                       DEX                                       ;;EB37|EB35+EB35/EB35\EB35;
                       BPL -                                     ;;EB38|EB36+EB36/EB36\EB36;
                       LDY.B #$08                                ;;EB3A|EB38+EB38/EB38\EB38;
-                      LDX.W !PlayerTurnLvl                      ;;EB3C|EB3A+EB3A/EB3A\EB3A;
-                      LDA.W !OWPlayerSubmap,X                   ;;EB3F|EB3D+EB3D/EB3D\EB3D;
+                      LDX.W PlayerTurnLvl                       ;;EB3C|EB3A+EB3A/EB3A\EB3A;
+                      LDA.W OWPlayerSubmap,X                    ;;EB3F|EB3D+EB3D/EB3D\EB3D;
                       CMP.B #$03                                ;;EB42|EB40+EB40/EB40\EB40;
                       BNE +                                     ;;EB44|EB42+EB42/EB42\EB42;
                       LDY.B #$01                                ;;EB46|EB44+EB44/EB44\EB44;
-                    + STY.B !GraphicsCompPtr                    ;;EB48|EB46+EB46/EB46\EB46;
-                    - LDA.W !ColorFadeTimer                     ;;EB4A|EB48+EB48/EB48\EB48;
+                    + STY.B GraphicsCompPtr                     ;;EB48|EB46+EB46/EB46\EB46;
+                    - LDA.W ColorFadeTimer                      ;;EB4A|EB48+EB48/EB48\EB48;
                       JSL CODE_00B006                           ;;EB4D|EB4B+EB4B/EB4B\EB4B;
-                      DEC.B !GraphicsCompPtr                    ;;EB51|EB4F+EB4F/EB4F\EB4F;
+                      DEC.B GraphicsCompPtr                     ;;EB51|EB4F+EB4F/EB4F\EB4F;
                       BNE -                                     ;;EB53|EB51+EB51/EB51\EB51;
                       JMP CODE_04EA8B                           ;;EB55|EB53+EB53/EB53\EB53;
                                                                 ;;                        ;
@@ -6550,13 +6550,13 @@ DATA_04EBDA:          db $22,$23,$32,$33,$32,$23,$22            ;;EBDC|EBDA+EBDA
 DATA_04EBE1:          db $73,$73,$72,$72,$5F,$5F,$28,$28        ;;EBE3|EBE1+EBE1/EBE1\EBE1;
                       db $28,$28                                ;;EBEB|EBE9+EBE9/EBE9\EBE9;
                                                                 ;;                        ;
-CODE_04EBEB:          DEC.W !OverworldEventSize                 ;;EBED|EBEB+EBEB/EBEB\EBEB;
+CODE_04EBEB:          DEC.W OverworldEventSize                  ;;EBED|EBEB+EBEB/EBEB\EBEB;
                       BPL +                                     ;;EBF0|EBEE+EBEE/EBEE\EBEE;
-                      INC.W !OverworldEventProcess              ;;EBF2|EBF0+EBF0/EBF0\EBF0;
+                      INC.W OverworldEventProcess               ;;EBF2|EBF0+EBF0/EBF0\EBF0;
                       RTS                                       ;;EBF5|EBF3+EBF3/EBF3\EBF3; Return 
                                                                 ;;                        ;
-                    + LDA.W !OverworldEventSize                 ;;EBF6|EBF4+EBF4/EBF4\EBF4;
-                      LDY.W !OverworldEventProcess              ;;EBF9|EBF7+EBF7/EBF7\EBF7;
+                    + LDA.W OverworldEventSize                  ;;EBF6|EBF4+EBF4/EBF4\EBF4;
+                      LDY.W OverworldEventProcess               ;;EBF9|EBF7+EBF7/EBF7\EBF7;
                       CPY.B #$01                                ;;EBFC|EBFA+EBFA/EBFA\EBFA;
                       BEQ CODE_04EC17                           ;;EBFE|EBFC+EBFC/EBFC\EBFC;
                       CMP.B #$10                                ;;EC00|EBFE+EBFE/EBFE\EBFE;
@@ -6568,7 +6568,7 @@ CODE_04EBEB:          DEC.W !OverworldEventSize                 ;;EBED|EBEB+EBEB
                       LSR A                                     ;;EC0A|EC08+EC08/EC08\EC08;
                       TAX                                       ;;EC0B|EC09+EC09/EC09\EC09;
                       LDA.W DATA_04EBDA,X                       ;;EC0C|EC0A+EC0A/EC0A\EC0A;
-                      STA.B !_2                                 ;;EC0F|EC0D+EC0D/EC0D\EC0D;
+                      STA.B _2                                  ;;EC0F|EC0D+EC0D/EC0D\EC0D;
                       JSR CODE_04EC67                           ;;EC11|EC0F+EC0F/EC0F\EC0F;
                       LDX.B #$28                                ;;EC14|EC12+EC12/EC12\EC12;
                       JMP CODE_04EC2E                           ;;EC16|EC14+EC14/EC14\EC14;
@@ -6584,52 +6584,52 @@ CODE_04EC17:          CMP.B #$18                                ;;EC19|EC17+EC17
                       LSR A                                     ;;EC26|EC24+EC24/EC24\EC24;
                       TAY                                       ;;EC27|EC25+EC25/EC25\EC25;
                       LDA.W DATA_04EBE1,Y                       ;;EC28|EC26+EC26/EC26\EC26;
-                      STA.B !_2                                 ;;EC2B|EC29+EC29/EC29\EC29;
+                      STA.B _2                                  ;;EC2B|EC29+EC29/EC29\EC29;
                       JSR CODE_04EC67                           ;;EC2D|EC2B+EC2B/EC2B\EC2B;
 CODE_04EC2E:          LDA.B #$03                                ;;EC30|EC2E+EC2E/EC2E\EC2E;
-                      STA.B !_3                                 ;;EC32|EC30+EC30/EC30\EC30;
+                      STA.B _3                                  ;;EC32|EC30+EC30/EC30\EC30;
                       LDY.B #$00                                ;;EC34|EC32+EC32/EC32\EC32;
-                    - LDA.B !_0                                 ;;EC36|EC34+EC34/EC34\EC34;
+                    - LDA.B _0                                  ;;EC36|EC34+EC34/EC34\EC34;
                       CLC                                       ;;EC38|EC36+EC36/EC36\EC36;
                       ADC.W DATA_04EB56,X                       ;;EC39|EC37+EC37/EC37\EC37;
-                      STA.W !OAMTileXPos+$80,Y                  ;;EC3C|EC3A+EC3A/EC3A\EC3A;
-                      LDA.B !_1                                 ;;EC3F|EC3D+EC3D/EC3D\EC3D;
+                      STA.W OAMTileXPos+$80,Y                   ;;EC3C|EC3A+EC3A/EC3A\EC3A;
+                      LDA.B _1                                  ;;EC3F|EC3D+EC3D/EC3D\EC3D;
                       CLC                                       ;;EC41|EC3F+EC3F/EC3F\EC3F;
                       ADC.W DATA_04EB82,X                       ;;EC42|EC40+EC40/EC40\EC40;
-                      STA.W !OAMTileYPos+$80,Y                  ;;EC45|EC43+EC43/EC43\EC43;
-                      LDA.B !_2                                 ;;EC48|EC46+EC46/EC46\EC46;
-                      STA.W !OAMTileNo+$80,Y                    ;;EC4A|EC48+EC48/EC48\EC48;
+                      STA.W OAMTileYPos+$80,Y                   ;;EC45|EC43+EC43/EC43\EC43;
+                      LDA.B _2                                  ;;EC48|EC46+EC46/EC46\EC46;
+                      STA.W OAMTileNo+$80,Y                     ;;EC4A|EC48+EC48/EC48\EC48;
                       LDA.W DATA_04EBAE,X                       ;;EC4D|EC4B+EC4B/EC4B\EC4B;
-                      STA.W !OAMTileAttr+$80,Y                  ;;EC50|EC4E+EC4E/EC4E\EC4E;
+                      STA.W OAMTileAttr+$80,Y                   ;;EC50|EC4E+EC4E/EC4E\EC4E;
                       INY                                       ;;EC53|EC51+EC51/EC51\EC51;
                       INY                                       ;;EC54|EC52+EC52/EC52\EC52;
                       INY                                       ;;EC55|EC53+EC53/EC53\EC53;
                       INY                                       ;;EC56|EC54+EC54/EC54\EC54;
                       INX                                       ;;EC57|EC55+EC55/EC55\EC55;
-                      DEC.B !_3                                 ;;EC58|EC56+EC56/EC56\EC56;
+                      DEC.B _3                                  ;;EC58|EC56+EC56/EC56\EC56;
                       BPL -                                     ;;EC5A|EC58+EC58/EC58\EC58;
-                      STZ.W !OAMTileSize+$20                    ;;EC5C|EC5A+EC5A/EC5A\EC5A;
-                      STZ.W !OAMTileSize+$21                    ;;EC5F|EC5D+EC5D/EC5D\EC5D;
-                      STZ.W !OAMTileSize+$22                    ;;EC62|EC60+EC60/EC60\EC60;
-                      STZ.W !OAMTileSize+$23                    ;;EC65|EC63+EC63/EC63\EC63;
+                      STZ.W OAMTileSize+$20                     ;;EC5C|EC5A+EC5A/EC5A\EC5A;
+                      STZ.W OAMTileSize+$21                     ;;EC5F|EC5D+EC5D/EC5D\EC5D;
+                      STZ.W OAMTileSize+$22                     ;;EC62|EC60+EC60/EC60\EC60;
+                      STZ.W OAMTileSize+$23                     ;;EC65|EC63+EC63/EC63\EC63;
                       RTS                                       ;;EC68|EC66+EC66/EC66\EC66; Return 
                                                                 ;;                        ;
-CODE_04EC67:          LDA.W !OverworldEventXPos                 ;;EC69|EC67+EC67/EC67\EC67;
+CODE_04EC67:          LDA.W OverworldEventXPos                  ;;EC69|EC67+EC67/EC67\EC67;
                       SEC                                       ;;EC6C|EC6A+EC6A/EC6A\EC6A;
-                      SBC.B !Layer2XPos                         ;;EC6D|EC6B+EC6B/EC6B\EC6B;
-                      STA.B !_0                                 ;;EC6F|EC6D+EC6D/EC6D\EC6D;
-                      LDA.W !OverworldEventYPos                 ;;EC71|EC6F+EC6F/EC6F\EC6F;
+                      SBC.B Layer2XPos                          ;;EC6D|EC6B+EC6B/EC6B\EC6B;
+                      STA.B _0                                  ;;EC6F|EC6D+EC6D/EC6D\EC6D;
+                      LDA.W OverworldEventYPos                  ;;EC71|EC6F+EC6F/EC6F\EC6F;
                       CLC                                       ;;EC74|EC72+EC72/EC72\EC72;
-                      SBC.B !Layer2YPos                         ;;EC75|EC73+EC73/EC73\EC73;
-                      STA.B !_1                                 ;;EC77|EC75+EC75/EC75\EC75;
+                      SBC.B Layer2YPos                          ;;EC75|EC73+EC73/EC73\EC73;
+                      STA.B _1                                  ;;EC77|EC75+EC75/EC75\EC75;
                       RTS                                       ;;EC79|EC77+EC77/EC77\EC77; Return 
                                                                 ;;                        ;
 CODE_04EC78:          LDA.B #$7E                                ;;EC7A|EC78+EC78/EC78\EC78;
-                      STA.B !_F                                 ;;EC7C|EC7A+EC7A/EC7A\EC7A;
+                      STA.B _F                                  ;;EC7C|EC7A+EC7A/EC7A\EC7A;
                       REP #$30                                  ;;EC7E|EC7C+EC7C/EC7C\EC7C; Index (16 bit) Accum (16 bit) 
                       LDA.W #$C800                              ;;EC80|EC7E+EC7E/EC7E\EC7E;
-                      STA.B !_D                                 ;;EC83|EC81+EC81/EC81\EC81;
-                      LDA.W !OverworldEvent                     ;;EC85|EC83+EC83/EC83\EC83;
+                      STA.B _D                                  ;;EC83|EC81+EC81/EC81\EC81;
+                      LDA.W OverworldEvent                      ;;EC85|EC83+EC83/EC83\EC83;
                       AND.W #$00FF                              ;;EC88|EC86+EC86/EC86\EC86;
                       ASL A                                     ;;EC8B|EC89+EC89/EC89\EC89;
                       TAX                                       ;;EC8C|EC8A+EC8A/EC8A\EC8A;
@@ -6637,21 +6637,21 @@ CODE_04EC78:          LDA.B #$7E                                ;;EC7A|EC78+EC78
                       TAY                                       ;;EC91|EC8F+EC8F/EC8F\EC8F;
                       LDX.W #$0015                              ;;EC92|EC90+EC90/EC90\EC90;
                       SEP #$20                                  ;;EC95|EC93+EC93/EC93\EC93; Accum (8 bit) 
-                      LDA.B [!_D],Y                             ;;EC97|EC95+EC95/EC95\EC95;
+                      LDA.B [_D],Y                              ;;EC97|EC95+EC95/EC95\EC95;
 CODE_04EC97:          CMP.L DATA_04DA1D,X                       ;;EC99|EC97+EC97/EC97\EC97;
                       BEQ CODE_04ECA8                           ;;EC9D|EC9B+EC9B/EC9B\EC9B;
                       DEX                                       ;;EC9F|EC9D+EC9D/EC9D\EC9D;
                       BPL CODE_04EC97                           ;;ECA0|EC9E+EC9E/EC9E\EC9E;
                       SEP #$10                                  ;;ECA2|ECA0+ECA0/ECA0\ECA0; Index (8 bit) 
                       LDA.B #$07                                ;;ECA4|ECA2+ECA2/ECA2\ECA2;
-                      STA.W !OverworldEventProcess              ;;ECA6|ECA4+ECA4/ECA4\ECA4;
+                      STA.W OverworldEventProcess               ;;ECA6|ECA4+ECA4/ECA4\ECA4;
                       RTS                                       ;;ECA9|ECA7+ECA7/ECA7\ECA7; Return 
                                                                 ;;                        ;
 CODE_04ECA8:          SEP #$30                                  ;;ECAA|ECA8+ECA8/ECA8\ECA8; Index (8 bit) Accum (8 bit) 
                       LDA.B #!SFX_COIN                          ;;ECAC|ECAA+ECAA/ECAA\ECAA;
-                      STA.W !SPCIO3                             ;;ECAE|ECAC+ECAC/ECAC\ECAC; / Play sound effect 
-                      INC.W !OverworldEventProcess              ;;ECB1|ECAF+ECAF/ECAF\ECAF;
-                      LDA.W !OverworldEvent                     ;;ECB4|ECB2+ECB2/ECB2\ECB2;
+                      STA.W SPCIO3                              ;;ECAE|ECAC+ECAC/ECAC\ECAC; / Play sound effect 
+                      INC.W OverworldEventProcess               ;;ECB1|ECAF+ECAF/ECAF\ECAF;
+                      LDA.W OverworldEvent                      ;;ECB4|ECB2+ECB2/ECB2\ECB2;
                       AND.B #$FF                                ;;ECB7|ECB5+ECB5/ECB5\ECB5;
                       ASL A                                     ;;ECB9|ECB7+ECB7/ECB7\ECB7;
                       TAX                                       ;;ECBA|ECB8+ECB8/ECB8\ECB8;
@@ -6660,12 +6660,12 @@ CODE_04ECA8:          SEP #$30                                  ;;ECAA|ECA8+ECA8
                       ASL A                                     ;;ECC0|ECBE+ECBE/ECBE\ECBE;
                       ASL A                                     ;;ECC1|ECBF+ECBF/ECBF\ECBF;
                       ASL A                                     ;;ECC2|ECC0+ECC0/ECC0\ECC0;
-                      STA.W !OverworldEventXPos                 ;;ECC3|ECC1+ECC1/ECC1\ECC1;
+                      STA.W OverworldEventXPos                  ;;ECC3|ECC1+ECC1/ECC1\ECC1;
                       LDA.L DATA_04D85D,X                       ;;ECC6|ECC4+ECC4/ECC4\ECC4;
                       AND.B #$F0                                ;;ECCA|ECC8+ECC8/ECC8\ECC8;
-                      STA.W !OverworldEventYPos                 ;;ECCC|ECCA+ECCA/ECCA\ECCA;
+                      STA.W OverworldEventYPos                  ;;ECCC|ECCA+ECCA/ECCA\ECCA;
                       LDA.B #$1C                                ;;ECCF|ECCD+ECCD/ECCD\ECCD;
-                      STA.W !OverworldEventSize                 ;;ECD1|ECCF+ECCF/ECCF\ECCF;
+                      STA.W OverworldEventSize                  ;;ECD1|ECCF+ECCF/ECCF\ECCF;
                       RTS                                       ;;ECD4|ECD2+ECD2/ECD2\ECD2; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
@@ -6692,12 +6692,12 @@ DATA_04ECD3:          db $86,$99,$86,$19,$86,$D9,$86,$59        ;;ECD5|ECD3+ECD3
                       db $86,$99,$86,$19,$86,$D9,$86,$59        ;;ED75|ED73+ED73/ED73\ED73;
                       db $A8,$11,$B8,$11,$A9,$11,$B9,$11        ;;ED7D|ED7B+ED7B/ED7B\ED7B;
                                                                 ;;                        ;
-CODE_04ED83:          LDA.B #!Map16TilesLow>>16                 ;;ED85|ED83+ED83/ED83\ED83;
-                      STA.B !_F                                 ;;ED87|ED85+ED85/ED85\ED85;
+CODE_04ED83:          LDA.B #Map16TilesLow>>16                  ;;ED85|ED83+ED83/ED83\ED83;
+                      STA.B _F                                  ;;ED87|ED85+ED85/ED85\ED85;
                       REP #$30                                  ;;ED89|ED87+ED87/ED87\ED87; Index (16 bit) Accum (16 bit) 
-                      LDA.W #!Map16TilesLow                     ;;ED8B|ED89+ED89/ED89\ED89;
-                      STA.B !_D                                 ;;ED8E|ED8C+ED8C/ED8C\ED8C;
-                      LDA.W !OverworldEvent                     ;;ED90|ED8E+ED8E/ED8E\ED8E;
+                      LDA.W #Map16TilesLow                      ;;ED8B|ED89+ED89/ED89\ED89;
+                      STA.B _D                                  ;;ED8E|ED8C+ED8C/ED8C\ED8C;
+                      LDA.W OverworldEvent                      ;;ED90|ED8E+ED8E/ED8E\ED8E;
                       AND.W #$00FF                              ;;ED93|ED91+ED91/ED91\ED91;
                       ASL A                                     ;;ED96|ED94+ED94/ED94\ED94;
                       TAX                                       ;;ED97|ED95+ED95/ED95\ED95;
@@ -6705,90 +6705,90 @@ CODE_04ED83:          LDA.B #!Map16TilesLow>>16                 ;;ED85|ED83+ED83
                       TAY                                       ;;ED9C|ED9A+ED9A/ED9A\ED9A;
                       LDX.W #$0015                              ;;ED9D|ED9B+ED9B/ED9B\ED9B;
                       SEP #$20                                  ;;EDA0|ED9E+ED9E/ED9E\ED9E; Accum (8 bit) 
-                      LDA.B [!_D],Y                             ;;EDA2|EDA0+EDA0/EDA0\EDA0;
+                      LDA.B [_D],Y                              ;;EDA2|EDA0+EDA0/EDA0\EDA0;
 CODE_04EDA2:          CMP.L DATA_04DA1D,X                       ;;EDA4|EDA2+EDA2/EDA2\EDA2;
                       BEQ CODE_04EDAB                           ;;EDA8|EDA6+EDA6/EDA6\EDA6;
                       DEX                                       ;;EDAA|EDA8+EDA8/EDA8\EDA8;
                       BNE CODE_04EDA2                           ;;EDAB|EDA9+EDA9/EDA9\EDA9;
 CODE_04EDAB:          REP #$30                                  ;;EDAD|EDAB+EDAB/EDAB\EDAB; Index (16 bit) Accum (16 bit) 
-                      STX.B !_E                                 ;;EDAF|EDAD+EDAD/EDAD\EDAD;
-                      LDA.W !OverworldEvent                     ;;EDB1|EDAF+EDAF/EDAF\EDAF;
+                      STX.B _E                                  ;;EDAF|EDAD+EDAD/EDAD\EDAD;
+                      LDA.W OverworldEvent                      ;;EDB1|EDAF+EDAF/EDAF\EDAF;
                       AND.W #$00FF                              ;;EDB4|EDB2+EDB2/EDB2\EDB2;
                       ASL A                                     ;;EDB7|EDB5+EDB5/EDB5\EDB5;
                       TAX                                       ;;EDB8|EDB6+EDB6/EDB6\EDB6;
                       LDA.L DATA_04D93D,X                       ;;EDB9|EDB7+EDB7/EDB7\EDB7;
-                      STA.B !_0                                 ;;EDBD|EDBB+EDBB/EDBB\EDBB;
+                      STA.B _0                                  ;;EDBD|EDBB+EDBB/EDBB\EDBB;
                       LDA.L DATA_04D85D,X                       ;;EDBF|EDBD+EDBD/EDBD\EDBD;
                       TAX                                       ;;EDC3|EDC1+EDC1/EDC1\EDC1;
                       PHX                                       ;;EDC4|EDC2+EDC2/EDC2\EDC2;
-                      LDX.B !_E                                 ;;EDC5|EDC3+EDC3/EDC3\EDC3;
+                      LDX.B _E                                  ;;EDC5|EDC3+EDC3/EDC3\EDC3;
                       SEP #$20                                  ;;EDC7|EDC5+EDC5/EDC5\EDC5; Accum (8 bit) 
                       LDA.L DATA_04DA33,X                       ;;EDC9|EDC7+EDC7/EDC7\EDC7;
                       PLX                                       ;;EDCD|EDCB+EDCB/EDCB\EDCB;
-                      STA.L !Map16TilesLow,X                    ;;EDCE|EDCC+EDCC/EDCC\EDCC;
+                      STA.L Map16TilesLow,X                     ;;EDCE|EDCC+EDCC/EDCC\EDCC;
                       LDA.B #DATA_04ECD3>>16                    ;;EDD2|EDD0+EDD0/EDD0\EDD0;
-                      STA.B !_C                                 ;;EDD4|EDD2+EDD2/EDD2\EDD2;
+                      STA.B _C                                  ;;EDD4|EDD2+EDD2/EDD2\EDD2;
                       REP #$20                                  ;;EDD6|EDD4+EDD4/EDD4\EDD4; Accum (16 bit) 
                       LDA.W #DATA_04ECD3                        ;;EDD8|EDD6+EDD6/EDD6\EDD6;
-                      STA.B !_A                                 ;;EDDB|EDD9+EDD9/EDD9\EDD9;
-                      LDA.B !_E                                 ;;EDDD|EDDB+EDDB/EDDB\EDDB;
+                      STA.B _A                                  ;;EDDB|EDD9+EDD9/EDD9\EDD9;
+                      LDA.B _E                                  ;;EDDD|EDDB+EDDB/EDDB\EDDB;
                       ASL A                                     ;;EDDF|EDDD+EDDD/EDDD\EDDD;
                       ASL A                                     ;;EDE0|EDDE+EDDE/EDDE\EDDE;
                       ASL A                                     ;;EDE1|EDDF+EDDF/EDDF\EDDF;
                       TAY                                       ;;EDE2|EDE0+EDE0/EDE0\EDE0;
-                      LDA.L !DynStripeImgSize                   ;;EDE3|EDE1+EDE1/EDE1\EDE1;
+                      LDA.L DynStripeImgSize                    ;;EDE3|EDE1+EDE1/EDE1\EDE1;
                       TAX                                       ;;EDE7|EDE5+EDE5/EDE5\EDE5;
-CODE_04EDE6:          LDA.B !_0                                 ;;EDE8|EDE6+EDE6/EDE6\EDE6;
-                      STA.L !DynamicStripeImage,X               ;;EDEA|EDE8+EDE8/EDE8\EDE8;
+CODE_04EDE6:          LDA.B _0                                  ;;EDE8|EDE6+EDE6/EDE6\EDE6;
+                      STA.L DynamicStripeImage,X                ;;EDEA|EDE8+EDE8/EDE8\EDE8;
                       CLC                                       ;;EDEE|EDEC+EDEC/EDEC\EDEC;
                       ADC.W #$2000                              ;;EDEF|EDED+EDED/EDED\EDED;
-                      STA.L !DynamicStripeImage+8,X             ;;EDF2|EDF0+EDF0/EDF0\EDF0;
+                      STA.L DynamicStripeImage+8,X              ;;EDF2|EDF0+EDF0/EDF0\EDF0;
                       LDA.W #$0300                              ;;EDF6|EDF4+EDF4/EDF4\EDF4;
-                      STA.L !DynamicStripeImage+2,X             ;;EDF9|EDF7+EDF7/EDF7\EDF7;
-                      STA.L !DynamicStripeImage+$0A,X           ;;EDFD|EDFB+EDFB/EDFB\EDFB;
-                      LDA.B [!_A],Y                             ;;EE01|EDFF+EDFF/EDFF\EDFF;
-                      STA.L !DynamicStripeImage+4,X             ;;EE03|EE01+EE01/EE01\EE01;
+                      STA.L DynamicStripeImage+2,X              ;;EDF9|EDF7+EDF7/EDF7\EDF7;
+                      STA.L DynamicStripeImage+$0A,X            ;;EDFD|EDFB+EDFB/EDFB\EDFB;
+                      LDA.B [_A],Y                              ;;EE01|EDFF+EDFF/EDFF\EDFF;
+                      STA.L DynamicStripeImage+4,X              ;;EE03|EE01+EE01/EE01\EE01;
                       INY                                       ;;EE07|EE05+EE05/EE05\EE05;
                       INY                                       ;;EE08|EE06+EE06/EE06\EE06;
-                      LDA.B [!_A],Y                             ;;EE09|EE07+EE07/EE07\EE07;
-                      STA.L !DynamicStripeImage+$0C,X           ;;EE0B|EE09+EE09/EE09\EE09;
+                      LDA.B [_A],Y                              ;;EE09|EE07+EE07/EE07\EE07;
+                      STA.L DynamicStripeImage+$0C,X            ;;EE0B|EE09+EE09/EE09\EE09;
                       INY                                       ;;EE0F|EE0D+EE0D/EE0D\EE0D;
                       INY                                       ;;EE10|EE0E+EE0E/EE0E\EE0E;
-                      LDA.B [!_A],Y                             ;;EE11|EE0F+EE0F/EE0F\EE0F;
-                      STA.L !DynamicStripeImage+6,X             ;;EE13|EE11+EE11/EE11\EE11;
+                      LDA.B [_A],Y                              ;;EE11|EE0F+EE0F/EE0F\EE0F;
+                      STA.L DynamicStripeImage+6,X              ;;EE13|EE11+EE11/EE11\EE11;
                       INY                                       ;;EE17|EE15+EE15/EE15\EE15;
                       INY                                       ;;EE18|EE16+EE16/EE16\EE16;
-                      LDA.B [!_A],Y                             ;;EE19|EE17+EE17/EE17\EE17;
-                      STA.L !DynamicStripeImage+$0E,X           ;;EE1B|EE19+EE19/EE19\EE19;
+                      LDA.B [_A],Y                              ;;EE19|EE17+EE17/EE17\EE17;
+                      STA.L DynamicStripeImage+$0E,X            ;;EE1B|EE19+EE19/EE19\EE19;
                       LDA.W #$00FF                              ;;EE1F|EE1D+EE1D/EE1D\EE1D;
-                      STA.L !DynamicStripeImage+$10,X           ;;EE22|EE20+EE20/EE20\EE20;
+                      STA.L DynamicStripeImage+$10,X            ;;EE22|EE20+EE20/EE20\EE20;
                       TXA                                       ;;EE26|EE24+EE24/EE24\EE24;
                       CLC                                       ;;EE27|EE25+EE25/EE25\EE25;
                       ADC.W #$0010                              ;;EE28|EE26+EE26/EE26\EE26;
-                      STA.L !DynStripeImgSize                   ;;EE2B|EE29+EE29/EE29\EE29;
+                      STA.L DynStripeImgSize                    ;;EE2B|EE29+EE29/EE29\EE29;
                       SEP #$30                                  ;;EE2F|EE2D+EE2D/EE2D\EE2D; Index (8 bit) Accum (8 bit) 
                       RTS                                       ;;EE31|EE2F+EE2F/EE2F\EE2F; Return 
                                                                 ;;                        ;
 CODE_04EE30:          SEP #$20                                  ;;EE32|EE30+EE30/EE30\EE30; Accum (8 bit) 
                       LDA.B #$7F                                ;;EE34|EE32+EE32/EE32\EE32;
-                      STA.B !_E                                 ;;EE36|EE34+EE34/EE34\EE34;
+                      STA.B _E                                  ;;EE36|EE34+EE34/EE34\EE34;
                       REP #$30                                  ;;EE38|EE36+EE36/EE36\EE36; Index (16 bit) Accum (16 bit) 
-                      LDA.W !EventTileIndex                     ;;EE3A|EE38+EE38/EE38\EE38;
+                      LDA.W EventTileIndex                      ;;EE3A|EE38+EE38/EE38\EE38;
                       ASL A                                     ;;EE3D|EE3B+EE3B/EE3B\EE3B;
                       ASL A                                     ;;EE3E|EE3C+EE3C/EE3C\EE3C;
                       TAX                                       ;;EE3F|EE3D+EE3D/EE3D\EE3D;
                       LDA.L DATA_04DD8F,X                       ;;EE40|EE3E+EE3E/EE3E\EE3E;
-                      STA.B !_0                                 ;;EE44|EE42+EE42/EE42\EE42;
+                      STA.B _0                                  ;;EE44|EE42+EE42/EE42\EE42;
                       AND.W #$1FFF                              ;;EE46|EE44+EE44/EE44\EE44;
                       LSR A                                     ;;EE49|EE47+EE47/EE47\EE47;
                       CLC                                       ;;EE4A|EE48+EE48/EE48\EE48;
                       ADC.W #$3000                              ;;EE4B|EE49+EE49/EE49\EE49;
                       XBA                                       ;;EE4E|EE4C+EE4C/EE4C\EE4C;
-                      STA.B !_2                                 ;;EE4F|EE4D+EE4D/EE4D\EE4D;
+                      STA.B _2                                  ;;EE4F|EE4D+EE4D/EE4D\EE4D;
                       LDA.W #$4000                              ;;EE51|EE4F+EE4F/EE4F\EE4F;
-                      STA.B !_C                                 ;;EE54|EE52+EE52/EE52\EE52;
+                      STA.B _C                                  ;;EE54|EE52+EE52/EE52\EE52;
                       LDA.W #$FFFF                              ;;EE56|EE54+EE54/EE54\EE54;
-                      STA.B !_A                                 ;;EE59|EE57+EE57/EE57\EE57;
+                      STA.B _A                                  ;;EE59|EE57+EE57/EE57\EE57;
                       LDA.L DATA_04DD8D,X                       ;;EE5B|EE59+EE59/EE59\EE59;
                       CMP.W #$0900                              ;;EE5F|EE5D+EE5D/EE5D\EE5D;
                       BCC +                                     ;;EE62|EE60+EE60/EE60\EE60;
@@ -6797,9 +6797,9 @@ CODE_04EE30:          SEP #$20                                  ;;EE32|EE30+EE30
                                                                 ;;                        ;
                     + JSR CODE_04E824                           ;;EE6A|EE68+EE68/EE68\EE68;
 CODE_04EE6B:          LDA.W #$00FF                              ;;EE6D|EE6B+EE6B/EE6B\EE6B;
-                      STA.L !DynamicStripeImage,X               ;;EE70|EE6E+EE6E/EE6E\EE6E;
+                      STA.L DynamicStripeImage,X                ;;EE70|EE6E+EE6E/EE6E\EE6E;
                       TXA                                       ;;EE74|EE72+EE72/EE72\EE72;
-                      STA.L !DynStripeImgSize                   ;;EE75|EE73+EE73/EE73\EE73;
+                      STA.L DynStripeImgSize                    ;;EE75|EE73+EE73/EE73\EE73;
                       SEP #$30                                  ;;EE79|EE77+EE77/EE77\EE77; Index (8 bit) Accum (8 bit) 
                       RTS                                       ;;EE7B|EE79+EE79/EE79\EE79; Return 
                                                                 ;;                        ;
@@ -6812,24 +6812,24 @@ DATA_04EE7A:          db $22,$01,$82,$1C,$22,$01,$83,$1C        ;;EE7C|EE7A+EE7A
                       db $8A,$15,$9A,$15,$8B,$15,$9B,$15        ;;EEA4|EEA2+EEA2/EEA2\EEA2;
                                                                 ;;                        ;
 CODE_04EEAA:          SEP #$30                                  ;;EEAC|EEAA+EEAA/EEAA\EEAA; Index (8 bit) Accum (8 bit) 
-                      LDA.B #!Map16TilesLow>>16                 ;;EEAE|EEAC+EEAC/EEAC\EEAC;
-                      STA.B !_F                                 ;;EEB0|EEAE+EEAE/EEAE\EEAE;
+                      LDA.B #Map16TilesLow>>16                  ;;EEAE|EEAC+EEAC/EEAC\EEAC;
+                      STA.B _F                                  ;;EEB0|EEAE+EEAE/EEAE\EEAE;
                       LDA.B #DATA_04EE7A>>16                    ;;EEB2|EEB0+EEB0/EEB0\EEB0;
-                      STA.B !_C                                 ;;EEB4|EEB2+EEB2/EEB2\EEB2;
+                      STA.B _C                                  ;;EEB4|EEB2+EEB2/EEB2\EEB2;
                       REP #$30                                  ;;EEB6|EEB4+EEB4/EEB4\EEB4; Index (16 bit) Accum (16 bit) 
-                      LDA.W #!Map16TilesLow                     ;;EEB8|EEB6+EEB6/EEB6\EEB6;
-                      STA.B !_D                                 ;;EEBB|EEB9+EEB9/EEB9\EEB9;
+                      LDA.W #Map16TilesLow                      ;;EEB8|EEB6+EEB6/EEB6\EEB6;
+                      STA.B _D                                  ;;EEBB|EEB9+EEB9/EEB9\EEB9;
                       LDA.W #DATA_04EE7A                        ;;EEBD|EEBB+EEBB/EEBB\EEBB;
-                      STA.B !_A                                 ;;EEC0|EEBE+EEBE/EEBE\EEBE;
-                      LDA.W !StructureCrushIndex                ;;EEC2|EEC0+EEC0/EEC0\EEC0;
+                      STA.B _A                                  ;;EEC0|EEBE+EEBE/EEBE\EEBE;
+                      LDA.W StructureCrushIndex                 ;;EEC2|EEC0+EEC0/EEC0\EEC0;
                       AND.W #$00FF                              ;;EEC5|EEC3+EEC3/EEC3\EEC3;
                       ASL A                                     ;;EEC8|EEC6+EEC6/EEC6\EEC6;
                       TAX                                       ;;EEC9|EEC7+EEC7/EEC7\EEC7;
                       LDA.L DATA_04E587,X                       ;;EECA|EEC8+EEC8/EEC8\EEC8;
-                      STA.B !_0                                 ;;EECE|EECC+EECC/EECC\EECC;
-                      LDA.L !DynStripeImgSize                   ;;EED0|EECE+EECE/EECE\EECE;
+                      STA.B _0                                  ;;EECE|EECC+EECC/EECC\EECC;
+                      LDA.L DynStripeImgSize                    ;;EED0|EECE+EECE/EECE\EECE;
                       TAX                                       ;;EED4|EED2+EED2/EED2\EED2;
-                      LDA.W !StructureCrushTile                 ;;EED5|EED3+EED3/EED3\EED3;
+                      LDA.W StructureCrushTile                  ;;EED5|EED3+EED3/EED3\EED3;
                       AND.W #$00FF                              ;;EED8|EED6+EED6/EED6\EED6;
                       CMP.W #$0003                              ;;EEDB|EED9+EED9/EED9\EED9;
                       BMI +                                     ;;EEDE|EEDC+EEDC/EEDC\EEDC;
@@ -6837,38 +6837,38 @@ CODE_04EEAA:          SEP #$30                                  ;;EEAC|EEAA+EEAA
                       ASL A                                     ;;EEE1|EEDF+EEDF/EEDF\EEDF;
                       ASL A                                     ;;EEE2|EEE0+EEE0/EEE0\EEE0;
                       TAY                                       ;;EEE3|EEE1+EEE1/EEE1\EEE1;
-                      LDA.B !_0                                 ;;EEE4|EEE2+EEE2/EEE2\EEE2;
-                      STA.L !DynamicStripeImage,X               ;;EEE6|EEE4+EEE4/EEE4\EEE4;
+                      LDA.B _0                                  ;;EEE4|EEE2+EEE2/EEE2\EEE2;
+                      STA.L DynamicStripeImage,X                ;;EEE6|EEE4+EEE4/EEE4\EEE4;
                       CLC                                       ;;EEEA|EEE8+EEE8/EEE8\EEE8;
                       ADC.W #$2000                              ;;EEEB|EEE9+EEE9/EEE9\EEE9;
-                      STA.L !DynamicStripeImage+8,X             ;;EEEE|EEEC+EEEC/EEEC\EEEC;
+                      STA.L DynamicStripeImage+8,X              ;;EEEE|EEEC+EEEC/EEEC\EEEC;
                       XBA                                       ;;EEF2|EEF0+EEF0/EEF0\EEF0;
                       CLC                                       ;;EEF3|EEF1+EEF1/EEF1\EEF1;
                       ADC.W #$0020                              ;;EEF4|EEF2+EEF2/EEF2\EEF2;
                       XBA                                       ;;EEF7|EEF5+EEF5/EEF5\EEF5;
-                      STA.B !_0                                 ;;EEF8|EEF6+EEF6/EEF6\EEF6;
+                      STA.B _0                                  ;;EEF8|EEF6+EEF6/EEF6\EEF6;
                       LDA.W #$0300                              ;;EEFA|EEF8+EEF8/EEF8\EEF8;
-                      STA.L !DynamicStripeImage+2,X             ;;EEFD|EEFB+EEFB/EEFB\EEFB;
-                      STA.L !DynamicStripeImage+$0A,X           ;;EF01|EEFF+EEFF/EEFF\EEFF;
-                      LDA.B [!_A],Y                             ;;EF05|EF03+EF03/EF03\EF03;
-                      STA.L !DynamicStripeImage+4,X             ;;EF07|EF05+EF05/EF05\EF05;
+                      STA.L DynamicStripeImage+2,X              ;;EEFD|EEFB+EEFB/EEFB\EEFB;
+                      STA.L DynamicStripeImage+$0A,X            ;;EF01|EEFF+EEFF/EEFF\EEFF;
+                      LDA.B [_A],Y                              ;;EF05|EF03+EF03/EF03\EF03;
+                      STA.L DynamicStripeImage+4,X              ;;EF07|EF05+EF05/EF05\EF05;
                       INY                                       ;;EF0B|EF09+EF09/EF09\EF09;
                       INY                                       ;;EF0C|EF0A+EF0A/EF0A\EF0A;
-                      LDA.B [!_A],Y                             ;;EF0D|EF0B+EF0B/EF0B\EF0B;
-                      STA.L !DynamicStripeImage+$0C,X           ;;EF0F|EF0D+EF0D/EF0D\EF0D;
+                      LDA.B [_A],Y                              ;;EF0D|EF0B+EF0B/EF0B\EF0B;
+                      STA.L DynamicStripeImage+$0C,X            ;;EF0F|EF0D+EF0D/EF0D\EF0D;
                       INY                                       ;;EF13|EF11+EF11/EF11\EF11;
                       INY                                       ;;EF14|EF12+EF12/EF12\EF12;
-                      LDA.B [!_A],Y                             ;;EF15|EF13+EF13/EF13\EF13;
-                      STA.L !DynamicStripeImage+6,X             ;;EF17|EF15+EF15/EF15\EF15;
+                      LDA.B [_A],Y                              ;;EF15|EF13+EF13/EF13\EF13;
+                      STA.L DynamicStripeImage+6,X              ;;EF17|EF15+EF15/EF15\EF15;
                       INY                                       ;;EF1B|EF19+EF19/EF19\EF19;
                       INY                                       ;;EF1C|EF1A+EF1A/EF1A\EF1A;
-                      LDA.B [!_A],Y                             ;;EF1D|EF1B+EF1B/EF1B\EF1B;
-                      STA.L !DynamicStripeImage+$0E,X           ;;EF1F|EF1D+EF1D/EF1D\EF1D;
+                      LDA.B [_A],Y                              ;;EF1D|EF1B+EF1B/EF1B\EF1B;
+                      STA.L DynamicStripeImage+$0E,X            ;;EF1F|EF1D+EF1D/EF1D\EF1D;
                       TXA                                       ;;EF23|EF21+EF21/EF21\EF21;
                       CLC                                       ;;EF24|EF22+EF22/EF22\EF22;
                       ADC.W #$0010                              ;;EF25|EF23+EF23/EF23\EF23;
                       TAX                                       ;;EF28|EF26+EF26/EF26\EF26;
-                    + LDA.W !StructureCrushTile                 ;;EF29|EF27+EF27/EF27\EF27;
+                    + LDA.W StructureCrushTile                  ;;EF29|EF27+EF27/EF27\EF27;
                       AND.W #$00FF                              ;;EF2C|EF2A+EF2A/EF2A\EF2A;
                       CMP.W #$0002                              ;;EF2F|EF2D+EF2D/EF2D\EF2D;
                       BPL CODE_04EF38                           ;;EF32|EF30+EF30/EF30\EF30;
@@ -6886,60 +6886,60 @@ CODE_04EF38:          LDY.W #$0028                              ;;EF3A|EF38+EF38
 DATA_04F280:          db $00,$D8,$28,$D0,$30,$D8,$28,$00        ;;F280|F280+F280/F280\F280;
 DATA_04F288:          db $D0,$D8,$D8,$00,$00,$28,$28,$30        ;;F288|F288+F288/F288\F288;
                                                                 ;;                        ;
-CODE_04F290:          LDY.W !KeyholeYPos+1                      ;;F290|F290+F290/F290\F290; Index (8 bit) Accum (8 bit) 
+CODE_04F290:          LDY.W KeyholeYPos+1                       ;;F290|F290+F290/F290\F290; Index (8 bit) Accum (8 bit) 
                       CPY.B #$0C                                ;;F293|F293+F293/F293\F293;
                       BCC +                                     ;;F295|F295+F295/F295\F295;
-                      STZ.W !SwitchPalaceColor                  ;;F297|F297+F297/F297\F297;
+                      STZ.W SwitchPalaceColor                   ;;F297|F297+F297/F297\F297;
                       RTS                                       ;;F29A|F29A+F29A/F29A\F29A; Return 
                                                                 ;;                        ;
-                    + LDA.W !KeyholeXPos+1                      ;;F29B|F29B+F29B/F29B\F29B;
+                    + LDA.W KeyholeXPos+1                       ;;F29B|F29B+F29B/F29B\F29B;
                       BNE CODE_04F314                           ;;F29E|F29E+F29E/F29E\F29E;
                       CPY.B #$08                                ;;F2A0|F2A0+F2A0/F2A0\F2A0;
                       BCS CODE_04F30C                           ;;F2A2|F2A2+F2A2/F2A2\F2A2;
                       LDA.B #!SFX_SWITCHBLOCK                   ;;F2A4|F2A4+F2A4/F2A4\F2A4;
-                      STA.W !SPCIO3                             ;;F2A6|F2A6+F2A6/F2A6\F2A6; / Play sound effect 
+                      STA.W SPCIO3                              ;;F2A6|F2A6+F2A6/F2A6\F2A6; / Play sound effect 
                       LDA.B #$07                                ;;F2A9|F2A9+F2A9/F2A9\F2A9;
-                      STA.B !_0                                 ;;F2AB|F2AB+F2AB/F2AB\F2AB;
-                      LDX.W !KeyholeXPos                        ;;F2AD|F2AD+F2AD/F2AD\F2AD;
-                    - LDY.W !PlayerTurnOW                       ;;F2B0|F2B0+F2B0/F2B0\F2B0;
-                      LDA.W !OWPlayerXPos,Y                     ;;F2B3|F2B3+F2B3/F2B3\F2B3;
-                      STA.L !SwitchEventTableC,X                ;;F2B6|F2B6+F2B6/F2B6\F2B6;
-                      LDA.W !OWPlayerXPos+1,Y                   ;;F2BA|F2BA+F2BA/F2BA\F2BA;
-                      STA.L !Layer2TilemapLow,X                 ;;F2BD|F2BD+F2BD/F2BD\F2BD;
-                      LDA.W !OWPlayerYPos,Y                     ;;F2C1|F2C1+F2C1/F2C1\F2C1;
-                      STA.L !SwitchEventTableD,X                ;;F2C4|F2C4+F2C4/F2C4\F2C4;
-                      LDA.W !OWPlayerYPos+1,Y                   ;;F2C8|F2C8+F2C8/F2C8\F2C8;
-                      STA.L !SwitchEventTableA,X                ;;F2CB|F2CB+F2CB/F2CB\F2CB;
+                      STA.B _0                                  ;;F2AB|F2AB+F2AB/F2AB\F2AB;
+                      LDX.W KeyholeXPos                         ;;F2AD|F2AD+F2AD/F2AD\F2AD;
+                    - LDY.W PlayerTurnOW                        ;;F2B0|F2B0+F2B0/F2B0\F2B0;
+                      LDA.W OWPlayerXPos,Y                      ;;F2B3|F2B3+F2B3/F2B3\F2B3;
+                      STA.L SwitchAniXPosLow,X                  ;;F2B6|F2B6+F2B6/F2B6\F2B6;
+                      LDA.W OWPlayerXPos+1,Y                    ;;F2BA|F2BA+F2BA/F2BA\F2BA;
+                      STA.L SwitchAniXPosHigh,X                 ;;F2BD|F2BD+F2BD/F2BD\F2BD;
+                      LDA.W OWPlayerYPos,Y                      ;;F2C1|F2C1+F2C1/F2C1\F2C1;
+                      STA.L SwitchAniYPosLow,X                  ;;F2C4|F2C4+F2C4/F2C4\F2C4;
+                      LDA.W OWPlayerYPos+1,Y                    ;;F2C8|F2C8+F2C8/F2C8\F2C8;
+                      STA.L SwitchAniYPosHigh,X                 ;;F2CB|F2CB+F2CB/F2CB\F2CB;
                       LDA.B #$00                                ;;F2CF|F2CF+F2CF/F2CF\F2CF;
-                      STA.L !SwitchEventTableE,X                ;;F2D1|F2D1+F2D1/F2D1\F2D1;
-                      STA.L !SwitchEventTableB,X                ;;F2D5|F2D5+F2D5/F2D5\F2D5;
-                      LDY.B !_0                                 ;;F2D9|F2D9+F2D9/F2D9\F2D9;
+                      STA.L SwitchAniZPosLow,X                  ;;F2D1|F2D1+F2D1/F2D1\F2D1;
+                      STA.L SwitchAniZPosHigh,X                 ;;F2D5|F2D5+F2D5/F2D5\F2D5;
+                      LDY.B _0                                  ;;F2D9|F2D9+F2D9/F2D9\F2D9;
                       LDA.W DATA_04F280,Y                       ;;F2DB|F2DB+F2DB/F2DB\F2DB;
-                      STA.L !SwitchEventTableF,X                ;;F2DE|F2DE+F2DE/F2DE\F2DE;
+                      STA.L SwitchAniXSpeed,X                   ;;F2DE|F2DE+F2DE/F2DE\F2DE;
                       LDA.W DATA_04F288,Y                       ;;F2E2|F2E2+F2E2/F2E2\F2E2;
-                      STA.L !SwitchEventTableG,X                ;;F2E5|F2E5+F2E5/F2E5\F2E5;
+                      STA.L SwitchAniYSpeed,X                   ;;F2E5|F2E5+F2E5/F2E5\F2E5;
                       LDA.B #$D0                                ;;F2E9|F2E9+F2E9/F2E9\F2E9;
-                      STA.L !SwitchEventTableH,X                ;;F2EB|F2EB+F2EB/F2EB\F2EB;
+                      STA.L SwitchAniZSpeed,X                   ;;F2EB|F2EB+F2EB/F2EB\F2EB;
                       INX                                       ;;F2EF|F2EF+F2EF/F2EF\F2EF;
-                      DEC.B !_0                                 ;;F2F0|F2F0+F2F0/F2F0\F2F0;
+                      DEC.B _0                                  ;;F2F0|F2F0+F2F0/F2F0\F2F0;
                       BPL -                                     ;;F2F2|F2F2+F2F2/F2F2\F2F2;
                       CPX.B #$28                                ;;F2F4|F2F4+F2F4/F2F4\F2F4;
                       BCC CODE_04F309                           ;;F2F6|F2F6+F2F6/F2F6\F2F6;
-                      LDA.W !KeyholeYPos                        ;;F2F8|F2F8+F2F8/F2F8\F2F8;
+                      LDA.W KeyholeYPos                         ;;F2F8|F2F8+F2F8/F2F8\F2F8;
                       CLC                                       ;;F2FB|F2FB+F2FB/F2FB\F2FB;
                       ADC.B #$20                                ;;F2FC|F2FC+F2FC/F2FC\F2FC;
                       CMP.B #$A0                                ;;F2FE|F2FE+F2FE/F2FE\F2FE;
                       BCC +                                     ;;F300|F300+F300/F300\F300;
                       LDA.B #$00                                ;;F302|F302+F302/F302\F302;
-                    + STA.W !KeyholeYPos                        ;;F304|F304+F304/F304\F304;
+                    + STA.W KeyholeYPos                         ;;F304|F304+F304/F304\F304;
                       LDX.B #$00                                ;;F307|F307+F307/F307\F307;
-CODE_04F309:          STX.W !KeyholeXPos                        ;;F309|F309+F309/F309\F309;
+CODE_04F309:          STX.W KeyholeXPos                         ;;F309|F309+F309/F309\F309;
 CODE_04F30C:          LDA.B #$10                                ;;F30C|F30C+F30C/F30C\F30C;
-                      STA.W !KeyholeXPos+1                      ;;F30E|F30E+F30E/F30E\F30E;
-                      INC.W !KeyholeYPos+1                      ;;F311|F311+F311/F311\F311;
-CODE_04F314:          DEC.W !KeyholeXPos+1                      ;;F314|F314+F314/F314\F314;
-                      LDA.W !KeyholeYPos                        ;;F317|F317+F317/F317\F317;
-                      STA.B !_F                                 ;;F31A|F31A+F31A/F31A\F31A;
+                      STA.W KeyholeXPos+1                       ;;F30E|F30E+F30E/F30E\F30E;
+                      INC.W KeyholeYPos+1                       ;;F311|F311+F311/F311\F311;
+CODE_04F314:          DEC.W KeyholeXPos+1                       ;;F314|F314+F314/F314\F314;
+                      LDA.W KeyholeYPos                         ;;F317|F317+F317/F317\F317;
+                      STA.B _F                                  ;;F31A|F31A+F31A/F31A\F31A;
                       LDX.B #$00                                ;;F31C|F31C+F31C/F31C\F31C;
 CODE_04F31E:          PHX                                       ;;F31E|F31E+F31E/F31E\F31E;
                       LDY.B #$00                                ;;F31F|F31F+F31F/F31F\F31F;
@@ -6947,54 +6947,54 @@ CODE_04F31E:          PHX                                       ;;F31E|F31E+F31E
                       JSR CODE_04F397                           ;;F324|F324+F324/F324\F324;
                       JSR CODE_04F397                           ;;F327|F327+F327/F327\F327;
                       PLX                                       ;;F32A|F32A+F32A/F32A\F32A;
-                      LDA.L !SwitchEventTableH,X                ;;F32B|F32B+F32B/F32B\F32B;
+                      LDA.L SwitchAniZSpeed,X                   ;;F32B|F32B+F32B/F32B\F32B;
                       CLC                                       ;;F32F|F32F+F32F/F32F\F32F;
                       ADC.B #$01                                ;;F330|F330+F330/F330\F330;
                       BMI +                                     ;;F332|F332+F332/F332\F332;
                       CMP.B #$40                                ;;F334|F334+F334/F334\F334;
                       BCC +                                     ;;F336|F336+F336/F336\F336;
                       LDA.B #$40                                ;;F338|F338+F338/F338\F338;
-                    + STA.L !SwitchEventTableH,X                ;;F33A|F33A+F33A/F33A\F33A;
-                      LDA.L !SwitchEventTableB,X                ;;F33E|F33E+F33E/F33E\F33E;
+                    + STA.L SwitchAniZSpeed,X                   ;;F33A|F33A+F33A/F33A\F33A;
+                      LDA.L SwitchAniZPosHigh,X                 ;;F33E|F33E+F33E/F33E\F33E;
                       XBA                                       ;;F342|F342+F342/F342\F342;
-                      LDA.L !SwitchEventTableE,X                ;;F343|F343+F343/F343\F343;
+                      LDA.L SwitchAniZPosLow,X                  ;;F343|F343+F343/F343\F343;
                       REP #$20                                  ;;F347|F347+F347/F347\F347; Accum (16 bit) 
                       CLC                                       ;;F349|F349+F349/F349\F349;
-                      ADC.B !_2                                 ;;F34A|F34A+F34A/F34A\F34A;
-                      STA.B !_2                                 ;;F34C|F34C+F34C/F34C\F34C;
+                      ADC.B _2                                  ;;F34A|F34A+F34A/F34A\F34A;
+                      STA.B _2                                  ;;F34C|F34C+F34C/F34C\F34C;
                       SEP #$20                                  ;;F34E|F34E+F34E/F34E\F34E; Accum (8 bit) 
                       XBA                                       ;;F350|F350+F350/F350\F350;
-                      ORA.B !_1                                 ;;F351|F351+F351/F351\F351;
+                      ORA.B _1                                  ;;F351|F351+F351/F351\F351;
                       BNE +                                     ;;F353|F353+F353/F353\F353;
-                      LDY.B !_F                                 ;;F355|F355+F355/F355\F355;
+                      LDY.B _F                                  ;;F355|F355+F355/F355\F355;
                       XBA                                       ;;F357|F357+F357/F357\F357;
-                      STA.W !OAMTileYPos+$140,Y                 ;;F358|F358+F358/F358\F358;
-                      LDA.B !_0                                 ;;F35B|F35B+F35B/F35B\F35B;
-                      STA.W !OAMTileXPos+$140,Y                 ;;F35D|F35D+F35D/F35D\F35D;
+                      STA.W OAMTileYPos+$140,Y                  ;;F358|F358+F358/F358\F358;
+                      LDA.B _0                                  ;;F35B|F35B+F35B/F35B\F35B;
+                      STA.W OAMTileXPos+$140,Y                  ;;F35D|F35D+F35D/F35D\F35D;
                       LDA.B #$E6                                ;;F360|F360+F360/F360\F360;
-                      STA.W !OAMTileNo+$140,Y                   ;;F362|F362+F362/F362\F362;
-                      LDA.W !SwitchPalaceColor                  ;;F365|F365+F365/F365\F365;
+                      STA.W OAMTileNo+$140,Y                    ;;F362|F362+F362/F362\F362;
+                      LDA.W SwitchPalaceColor                   ;;F365|F365+F365/F365\F365;
                       DEC A                                     ;;F368|F368+F368/F368\F368;
                       ASL A                                     ;;F369|F369+F369/F369\F369;
                       ORA.B #$30                                ;;F36A|F36A+F36A/F36A\F36A;
-                      STA.W !OAMTileAttr+$140,Y                 ;;F36C|F36C+F36C/F36C\F36C;
+                      STA.W OAMTileAttr+$140,Y                  ;;F36C|F36C+F36C/F36C\F36C;
                       TYA                                       ;;F36F|F36F+F36F/F36F\F36F;
                       LSR A                                     ;;F370|F370+F370/F370\F370;
                       LSR A                                     ;;F371|F371+F371/F371\F371;
                       TAY                                       ;;F372|F372+F372/F372\F372;
                       LDA.B #$02                                ;;F373|F373+F373/F373\F373;
-                      STA.W !OAMTileSize+$50,Y                  ;;F375|F375+F375/F375\F375;
-                    + LDA.B !_F                                 ;;F378|F378+F378/F378\F378;
+                      STA.W OAMTileSize+$50,Y                   ;;F375|F375+F375/F375\F375;
+                    + LDA.B _F                                  ;;F378|F378+F378/F378\F378;
                       CLC                                       ;;F37A|F37A+F37A/F37A\F37A;
                       ADC.B #$04                                ;;F37B|F37B+F37B/F37B\F37B;
                       CMP.B #$A0                                ;;F37D|F37D+F37D/F37D\F37D;
                       BCC +                                     ;;F37F|F37F+F37F/F37F\F37F;
                       LDA.B #$00                                ;;F381|F381+F381/F381\F381;
-                    + STA.B !_F                                 ;;F383|F383+F383/F383\F383;
+                    + STA.B _F                                  ;;F383|F383+F383/F383\F383;
                       INX                                       ;;F385|F385+F385/F385\F385;
-                      CPX.W !KeyholeXPos                        ;;F386|F386+F386/F386\F386;
+                      CPX.W KeyholeXPos                         ;;F386|F386+F386/F386\F386;
                       BCC CODE_04F31E                           ;;F389|F389+F389/F389\F389;
-                      LDA.W !KeyholeYPos+1                      ;;F38B|F38B+F38B/F38B\F38B;
+                      LDA.W KeyholeYPos+1                       ;;F38B|F38B+F38B/F38B\F38B;
                       CMP.B #$05                                ;;F38E|F38E+F38E/F38E\F38E;
                       BCC Return04F396                          ;;F390|F390+F390/F390\F390;
                       CPX.B #$28                                ;;F392|F392+F392/F392\F392;
@@ -7006,15 +7006,15 @@ CODE_04F397:          TXA                                       ;;F397|F397+F397
                       ADC.B #$28                                ;;F399|F399+F399/F399\F399;
                       TAX                                       ;;F39B|F39B+F39B/F39B\F39B;
 CODE_04F39C:          PHY                                       ;;F39C|F39C+F39C/F39C\F39C;
-                      LDA.L !SwitchEventTableF,X                ;;F39D|F39D+F39D/F39D\F39D;
+                      LDA.L SwitchAniXSpeed,X                   ;;F39D|F39D+F39D/F39D\F39D;
                       ASL A                                     ;;F3A1|F3A1+F3A1/F3A1\F3A1;
                       ASL A                                     ;;F3A2|F3A2+F3A2/F3A2\F3A2;
                       ASL A                                     ;;F3A3|F3A3+F3A3/F3A3\F3A3;
                       ASL A                                     ;;F3A4|F3A4+F3A4/F3A4\F3A4;
                       CLC                                       ;;F3A5|F3A5+F3A5/F3A5\F3A5;
-                      ADC.L !SwitchEventTableI,X                ;;F3A6|F3A6+F3A6/F3A6\F3A6;
-                      STA.L !SwitchEventTableI,X                ;;F3AA|F3AA+F3AA/F3AA\F3AA;
-                      LDA.L !SwitchEventTableF,X                ;;F3AE|F3AE+F3AE/F3AE\F3AE;
+                      ADC.L SwitchAniXSpx,X                     ;;F3A6|F3A6+F3A6/F3A6\F3A6;
+                      STA.L SwitchAniXSpx,X                     ;;F3AA|F3AA+F3AA/F3AA\F3AA;
+                      LDA.L SwitchAniXSpeed,X                   ;;F3AE|F3AE+F3AE/F3AE\F3AE;
                       PHP                                       ;;F3B2|F3B2+F3B2/F3B2\F3B2;
                       LSR A                                     ;;F3B3|F3B3+F3B3/F3B3\F3B3;
                       LSR A                                     ;;F3B4|F3B4+F3B4/F3B4\F3B4;
@@ -7025,20 +7025,20 @@ CODE_04F39C:          PHY                                       ;;F39C|F39C+F39C
                       BPL +                                     ;;F3BA|F3BA+F3BA/F3BA\F3BA;
                       ORA.B #$F0                                ;;F3BC|F3BC+F3BC/F3BC\F3BC;
                       DEY                                       ;;F3BE|F3BE+F3BE/F3BE\F3BE;
-                    + ADC.L !SwitchEventTableC,X                ;;F3BF|F3BF+F3BF/F3BF\F3BF;
-                      STA.L !SwitchEventTableC,X                ;;F3C3|F3C3+F3C3/F3C3\F3C3;
+                    + ADC.L SwitchAniXPosLow,X                  ;;F3BF|F3BF+F3BF/F3BF\F3BF;
+                      STA.L SwitchAniXPosLow,X                  ;;F3C3|F3C3+F3C3/F3C3\F3C3;
                       XBA                                       ;;F3C7|F3C7+F3C7/F3C7\F3C7;
                       TYA                                       ;;F3C8|F3C8+F3C8/F3C8\F3C8;
-                      ADC.L !Layer2TilemapLow,X                 ;;F3C9|F3C9+F3C9/F3C9\F3C9;
-                      STA.L !Layer2TilemapLow,X                 ;;F3CD|F3CD+F3CD/F3CD\F3CD;
+                      ADC.L SwitchAniXPosHigh,X                 ;;F3C9|F3C9+F3C9/F3C9\F3C9;
+                      STA.L SwitchAniXPosHigh,X                 ;;F3CD|F3CD+F3CD/F3CD\F3CD;
                       XBA                                       ;;F3D1|F3D1+F3D1/F3D1\F3D1;
                       PLY                                       ;;F3D2|F3D2+F3D2/F3D2\F3D2;
                       REP #$20                                  ;;F3D3|F3D3+F3D3/F3D3\F3D3; Accum (16 bit) 
                       SEC                                       ;;F3D5|F3D5+F3D5/F3D5\F3D5;
-                      SBC.W !Layer1XPos,Y                       ;;F3D6|F3D6+F3D6/F3D6\F3D6;
+                      SBC.W Layer1XPos,Y                        ;;F3D6|F3D6+F3D6/F3D6\F3D6;
                       SEC                                       ;;F3D9|F3D9+F3D9/F3D9\F3D9;
                       SBC.W #$0008                              ;;F3DA|F3DA+F3DA/F3DA\F3DA;
-                      STA.W !_0,Y                               ;;F3DD|F3DD+F3DD/F3DD\F3DD;
+                      STA.W _0,Y                                ;;F3DD|F3DD+F3DD/F3DD\F3DD;
                       SEP #$20                                  ;;F3E0|F3E0+F3E0/F3E0\F3E0; Accum (8 bit) 
                       INY                                       ;;F3E2|F3E2+F3E2/F3E2\F3E2;
                       INY                                       ;;F3E3|F3E3+F3E3/F3E3\F3E3;
@@ -7060,12 +7060,12 @@ CODE_04F3FA:          JSL CODE_009BA8                           ;;F3FA|F3FA+F3FA
                       RTS                                       ;;F3FE|F3FE+F3FE/F3FE\F3FE; Return 
                                                                 ;;                        ;
 CODE_04F3FF:          LDA.B #!SFX_MESSAGE                       ;;F3FF|F3FF+F3FF/F3FF\F3FF;
-                      STA.W !SPCIO3                             ;;F401|F401+F401/F401\F401; / Play sound effect 
-                      INC.W !OverworldPromptProcess             ;;F404|F404+F404/F404\F404;
-CODE_04F407:          STZ.B !Layer12Window                      ;;F407|F407+F407/F407\F407;
-                      STZ.B !Layer34Window                      ;;F409|F409+F409/F409\F409;
-                      STZ.B !OBJCWWindow                        ;;F40B|F40B+F40B/F40B\F40B;
-                      STZ.W !HDMAEnable                         ;;F40D|F40D+F40D/F40D\F40D;
+                      STA.W SPCIO3                              ;;F401|F401+F401/F401\F401; / Play sound effect 
+                      INC.W OverworldPromptProcess              ;;F404|F404+F404/F404\F404;
+CODE_04F407:          STZ.B Layer12Window                       ;;F407|F407+F407/F407\F407;
+                      STZ.B Layer34Window                       ;;F409|F409+F409/F409\F409;
+                      STZ.B OBJCWWindow                         ;;F40B|F40B+F40B/F40B\F40B;
+                      STZ.W HDMAEnable                          ;;F40D|F40D+F40D/F40D\F40D;
                       RTS                                       ;;F410|F410+F410/F410\F410; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
@@ -7078,41 +7078,41 @@ DATA_04F413:          db $68,$00                                ;;    |F413+F413
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
 CODE_04F415:          LDX.B #$00                                ;;F415|F415+F415/F415\F415;
-                      LDA.W !SavedPlayerLives                   ;;F417|F417+F417/F417\F417;
-                      CMP.W !SavedPlayerLives+1                 ;;F41A|F41A+F41A/F41A\F41A;
+                      LDA.W SavedPlayerLives                    ;;F417|F417+F417/F417\F417;
+                      CMP.W SavedPlayerLives+1                  ;;F41A|F41A+F41A/F41A\F41A;
                       BPL +                                     ;;F41D|F41D+F41D/F41D\F41D;
                       INX                                       ;;F41F|F41F+F41F/F41F\F41F;
-                    + STX.W !OWPromptArrowDir                   ;;F420|F420+F420/F420\F420;
-                      LDX.W !MessageBoxExpand                   ;;F423|F423+F423/F423\F423;
-                      LDA.W !MessageBoxTimer                    ;;F426|F426+F426/F426\F426;
+                    + STX.W OWPromptArrowDir                    ;;F420|F420+F420/F420\F420;
+                      LDX.W MessageBoxExpand                    ;;F423|F423+F423/F423\F423;
+                      LDA.W MessageBoxTimer                     ;;F426|F426+F426/F426\F426;
                       CMP.L DATA_04F413,X                       ;;F429|F429+F429/F429\F429;
                       BNE CODE_04F44B                           ;;F42D|F42D+F42D/F42D\F42D;
-                      INC.W !OverworldPromptProcess             ;;F42F|F42F+F42F/F42F\F42F;
-                      LDA.W !OverworldPromptProcess             ;;F432|F432+F432/F432\F432;
+                      INC.W OverworldPromptProcess              ;;F42F|F42F+F42F/F42F\F42F;
+                      LDA.W OverworldPromptProcess              ;;F432|F432+F432/F432\F432;
                       CMP.B #$07                                ;;F435|F435+F435/F435\F435;
                       BNE +                                     ;;F437|F437+F437/F437\F437;
                       LDY.B #$1E                                ;;F439|F439+F439/F439\F439;
-                      STY.B !StripeImage                        ;;F43B|F43B+F43B/F43B\F43B;
+                      STY.B StripeImage                         ;;F43B|F43B+F43B/F43B\F43B;
                     + DEC A                                     ;;F43D|F43D+F43D/F43D\F43D;
                       AND.B #$03                                ;;F43E|F43E+F43E/F43E\F43E;
                       BNE Return04F44A                          ;;F440|F440+F440/F440\F440;
-                      STZ.W !OverworldPromptProcess             ;;F442|F442+F442/F442\F442;
-                      STZ.W !MessageBoxExpand                   ;;F445|F445+F445/F445\F445;
+                      STZ.W OverworldPromptProcess              ;;F442|F442+F442/F442\F442;
+                      STZ.W MessageBoxExpand                    ;;F445|F445+F445/F445\F445;
                       BRA CODE_04F407                           ;;F448|F448+F448/F448\F448;
                                                                 ;;                        ;
 Return04F44A:         RTS                                       ;;F44A|F44A+F44A/F44A\F44A; Return 
                                                                 ;;                        ;
 CODE_04F44B:          CLC                                       ;;F44B|F44B+F44B/F44B\F44B;
                       ADC.L DATA_04F411,X                       ;;F44C|F44C+F44C/F44C\F44C;
-                      STA.W !MessageBoxTimer                    ;;F450|F450+F450/F450\F450;
+                      STA.W MessageBoxTimer                     ;;F450|F450+F450/F450\F450;
                       CLC                                       ;;F453|F453+F453/F453\F453;
                       ADC.B #$80                                ;;F454|F454+F454/F454\F454;
                       XBA                                       ;;F456|F456+F456/F456\F456;
                       REP #$10                                  ;;F457|F457+F457/F457\F457; Index (16 bit) 
                       LDX.W #con($016E,$016E,$016E,$016E,$018E) ;;F459|F459+F459/F459\F459;
                       LDA.B #$FF                                ;;F45C|F45C+F45C/F45C\F45C;
-                    - STA.W !WindowTable+$50,X                  ;;F45E|F45E+F45E/F45E\F45E;
-                      STZ.W !WindowTable+$51,X                  ;;F461|F461+F461/F461\F461;
+                    - STA.W WindowTable+$50,X                   ;;F45E|F45E+F45E/F45E\F45E;
+                      STZ.W WindowTable+$51,X                   ;;F461|F461+F461/F461\F461;
                       DEX                                       ;;F464|F464+F464/F464\F464;
                       DEX                                       ;;F465|F465+F465/F465\F465;
                       BPL -                                     ;;F466|F466+F466/F466\F466;
@@ -7120,41 +7120,41 @@ CODE_04F44B:          CLC                                       ;;F44B|F44B+F44B
                    if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
                       LDA.B #$80                                ;;F46A                    ; timing difference for size of overworld save box
                       SEC                                       ;;F46C                    ;
-                      SBC.W !MessageBoxTimer                    ;;F46D                    ;
+                      SBC.W MessageBoxTimer                     ;;F46D                    ;
                       REP #$20                                  ;;F470                    ;
-                      LDX.W !MessageBoxTimer                    ;;F472                    ;
+                      LDX.W MessageBoxTimer                     ;;F472                    ;
                       LDY.B #$48                                ;;F475                    ;
-                    - STA.W !WindowTable+$C8,Y                  ;;F477                    ;
-                      STA.W !WindowTable+$110,X                 ;;F47A                    ;
+                    - STA.W WindowTable+$C8,Y                   ;;F477                    ;
+                      STA.W WindowTable+$110,X                  ;;F47A                    ;
                       DEY                                       ;;F47D                    ;
                       DEY                                       ;;F47E                    ;
                       DEX                                       ;;F47F                    ;
                       DEX                                       ;;F480                    ;
                       BPL -                                     ;;F481                    ;
                    else                               ;<  ELSE  ;;------------------------; U, SS, E0, & E1
-                      LDA.W !MessageBoxTimer                    ;;    |F46A+F46A/F46A\F46A;
+                      LDA.W MessageBoxTimer                     ;;    |F46A+F46A/F46A\F46A;
                       LSR A                                     ;;    |F46D+F46D/F46D\F46D;
-                      ADC.W !MessageBoxTimer                    ;;    |F46E+F46E/F46E\F46E;
+                      ADC.W MessageBoxTimer                     ;;    |F46E+F46E/F46E\F46E;
                       LSR A                                     ;;    |F471+F471/F471\F471;
                       AND.B #$FE                                ;;    |F472+F472/F472\F472;
                       TAX                                       ;;    |F474+F474/F474\F474;
                       LDA.B #$80                                ;;    |F475+F475/F475\F475;
                       SEC                                       ;;    |F477+F477/F477\F477;
-                      SBC.W !MessageBoxTimer                    ;;    |F478+F478/F478\F478;
+                      SBC.W MessageBoxTimer                     ;;    |F478+F478/F478\F478;
                       REP #$20                                  ;;    |F47B+F47B/F47B\F47B; Accum (16 bit) 
                       LDY.B #$48                                ;;    |F47D+F47D/F47D\F47D;
-                    - STA.W !WindowTable+$A8,Y                  ;;    |F47F+F47F/F47F\F47F;
-                      STA.W !WindowTable+$F0,X                  ;;    |F482+F482/F482\F482;
+                    - STA.W WindowTable+$A8,Y                   ;;    |F47F+F47F/F47F\F47F;
+                      STA.W WindowTable+$F0,X                   ;;    |F482+F482/F482\F482;
                       DEY                                       ;;    |F485+F485/F485\F485;
                       DEY                                       ;;    |F486+F486/F486\F486;
                       DEX                                       ;;    |F487+F487/F487\F487;
                       DEX                                       ;;    |F488+F488/F488\F488;
                       BPL -                                     ;;    |F489+F489/F489\F489;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
-                      STZ.W !BackgroundColor                    ;;F483|F48B+F48B/F48B\F48B;
+                      STZ.W BackgroundColor                     ;;F483|F48B+F48B/F48B\F48B;
                       SEP #$20                                  ;;F486|F48E+F48E/F48E\F48E; Accum (8 bit) 
                       LDA.B #$22                                ;;F488|F490+F490/F490\F490;
-                      STA.B !Layer12Window                      ;;F48A|F492+F492/F492\F492;
+                      STA.B Layer12Window                       ;;F48A|F492+F492/F492\F492;
                       LDA.B #$20                                ;;F48C|F494+F494/F494\F494;
                       JMP CODE_04DB95                           ;;F48E|F496+F496/F496\F496;
                                                                 ;;                        ;
@@ -7191,20 +7191,20 @@ DATA_04F50B:          db $7D,$B8,$7E,$F8                        ;;F503|F50B+F50B
                                                                 ;;                        ;
 DATA_04F50F:          db $7E,$B8,$7D,$F8                        ;;F507|F50F+F50F/F50F\F50F;
                                                                 ;;                        ;
-CODE_04F513:          LDA.W !byetudlrP1Frame                    ;;F50B|F513+F513/F513\F513;
-                      ORA.W !byetudlrP2Frame                    ;;F50E|F516+F516/F516\F516;
+CODE_04F513:          LDA.W byetudlrP1Frame                     ;;F50B|F513+F513/F513\F513;
+                      ORA.W byetudlrP2Frame                     ;;F50E|F516+F516/F516\F516;
                       AND.B #$10                                ;;F511|F519+F519/F519\F519;
                       BEQ +                                     ;;F513|F51B+F51B/F51B\F51B;
-                      LDX.W !PlayerTurnLvl                      ;;F515|F51D+F51D/F51D\F51D;
-                      LDA.W !SavedPlayerLives,X                 ;;F518|F520+F520/F520\F520;
-                      STA.W !PlayerLives                        ;;F51B|F523+F523/F523\F523;
+                      LDX.W PlayerTurnLvl                       ;;F515|F51D+F51D/F51D\F51D;
+                      LDA.W SavedPlayerLives,X                  ;;F518|F520+F520/F520\F520;
+                      STA.W PlayerLives                         ;;F51B|F523+F523/F523\F523;
                       JSL CODE_009C13                           ;;F51E|F526+F526/F526\F526;
                       RTS                                       ;;F522|F52A+F52A/F52A\F52A; Return 
                                                                 ;;                        ;
-                    + LDA.W !byetudlrP1Frame                    ;;F523|F52B+F52B/F52B\F52B;
+                    + LDA.W byetudlrP1Frame                     ;;F523|F52B+F52B/F52B\F52B;
                       AND.B #$C0                                ;;F526|F52E+F52E/F52E\F52E;
                       BNE CODE_04F53B                           ;;F528|F530+F530/F530\F530;
-                      LDA.W !byetudlrP2Frame                    ;;F52A|F532+F532/F532\F532;
+                      LDA.W byetudlrP2Frame                     ;;F52A|F532+F532/F532\F532;
                       AND.B #$C0                                ;;F52D|F535+F535/F535\F535;
                       BEQ CODE_04F56C                           ;;F52F|F537+F537/F537\F537;
                       EOR.B #$C0                                ;;F531|F539+F539/F539\F539;
@@ -7212,87 +7212,87 @@ CODE_04F53B:          LDX.B #$01                                ;;F533|F53B+F53B
                       ASL A                                     ;;F535|F53D+F53D/F53D\F53D;
                       BCS +                                     ;;F536|F53E+F53E/F53E\F53E;
                       DEX                                       ;;F538|F540+F540/F540\F540;
-                    + CPX.W !OWPromptArrowDir                   ;;F539|F541+F541/F541\F541;
+                    + CPX.W OWPromptArrowDir                    ;;F539|F541+F541/F541\F541;
                       BEQ +                                     ;;F53C|F544+F544/F544\F544;
                       LDA.B #$18                                ;;F53E|F546+F546/F546\F546;
-                      STA.W !OWPromptArrowTimer                 ;;F540|F548+F548/F548\F548;
-                    + STX.W !OWPromptArrowDir                   ;;F543|F54B+F54B/F54B\F54B;
+                      STA.W OWPromptArrowTimer                  ;;F540|F548+F548/F548\F548;
+                    + STX.W OWPromptArrowDir                    ;;F543|F54B+F54B/F54B\F54B;
                       TXA                                       ;;F546|F54E+F54E/F54E\F54E;
                       EOR.B #$01                                ;;F547|F54F+F54F/F54F\F54F;
                       TAY                                       ;;F549|F551+F551/F551\F551;
-                      LDA.W !SavedPlayerLives,X                 ;;F54A|F552+F552/F552\F552;
+                      LDA.W SavedPlayerLives,X                  ;;F54A|F552+F552/F552\F552;
                       BEQ CODE_04F56C                           ;;F54D|F555+F555/F555\F555;
                       BMI CODE_04F56C                           ;;F54F|F557+F557/F557\F557;
-                      LDA.W !SavedPlayerLives,Y                 ;;F551|F559+F559/F559\F559;
+                      LDA.W SavedPlayerLives,Y                  ;;F551|F559+F559/F559\F559;
                       CMP.B #$62                                ;;F554|F55C+F55C/F55C\F55C;
                       BPL CODE_04F56C                           ;;F556|F55E+F55E/F55E\F55E;
                       INC A                                     ;;F558|F560+F560/F560\F560;
-                      STA.W !SavedPlayerLives,Y                 ;;F559|F561+F561/F561\F561;
-                      DEC.W !SavedPlayerLives,X                 ;;F55C|F564+F564/F564\F564;
+                      STA.W SavedPlayerLives,Y                  ;;F559|F561+F561/F561\F561;
+                      DEC.W SavedPlayerLives,X                  ;;F55C|F564+F564/F564\F564;
                       LDA.B #!SFX_BEEP                          ;;F55F|F567+F567/F567\F567;
-                      STA.W !SPCIO3                             ;;F561|F569+F569/F569\F569; / Play sound effect 
+                      STA.W SPCIO3                              ;;F561|F569+F569/F569\F569; / Play sound effect 
 CODE_04F56C:          REP #$20                                  ;;F564|F56C+F56C/F56C\F56C; Accum (16 bit) 
                       LDA.W #$7848                              ;;F566|F56E+F56E/F56E\F56E;
-                      STA.W !OAMTileXPos+$9C                    ;;F569|F571+F571/F571\F571;
+                      STA.W OAMTileXPos+$9C                     ;;F569|F571+F571/F571\F571;
                       LDA.W #$7890                              ;;F56C|F574+F574/F574\F574;
-                      STA.W !OAMTileXPos+$A0                    ;;F56F|F577+F577/F577\F577;
+                      STA.W OAMTileXPos+$A0                     ;;F56F|F577+F577/F577\F577;
                       LDA.W #$340A                              ;;F572|F57A+F57A/F57A\F57A;
-                      STA.W !OAMTileNo+$9C                      ;;F575|F57D+F57D/F57D\F57D;
+                      STA.W OAMTileNo+$9C                       ;;F575|F57D+F57D/F57D\F57D;
                       LDA.W #$360A                              ;;F578|F580+F580/F580\F580;
-                      STA.W !OAMTileNo+$A0                      ;;F57B|F583+F583/F583\F583;
+                      STA.W OAMTileNo+$A0                       ;;F57B|F583+F583/F583\F583;
                       SEP #$20                                  ;;F57E|F586+F586/F586\F586; Accum (8 bit) 
                       LDA.B #$02                                ;;F580|F588+F588/F588\F588;
-                      STA.W !OAMTileSize+$27                    ;;F582|F58A+F58A/F58A\F58A;
-                      STA.W !OAMTileSize+$28                    ;;F585|F58D+F58D/F58D\F58D;
+                      STA.W OAMTileSize+$27                     ;;F582|F58A+F58A/F58A\F58A;
+                      STA.W OAMTileSize+$28                     ;;F585|F58D+F58D/F58D\F58D;
                       JSL CODE_05DBF2                           ;;F588|F590+F590/F590\F590;
                       LDY.B #$50                                ;;F58C|F594+F594/F594\F594;
                       TYA                                       ;;F58E|F596+F596/F596\F596;
                       CLC                                       ;;F58F|F597+F597/F597\F597;
-                      ADC.L !DynStripeImgSize                   ;;F590|F598+F598/F598\F598;
-                      STA.L !DynStripeImgSize                   ;;F594|F59C+F59C/F59C\F59C;
+                      ADC.L DynStripeImgSize                    ;;F590|F598+F598/F598\F598;
+                      STA.L DynStripeImgSize                    ;;F594|F59C+F59C/F59C\F59C;
                       TAX                                       ;;F598|F5A0+F5A0/F5A0\F5A0;
                     - LDA.W DATA_04F4B2,Y                       ;;F599|F5A1+F5A1/F5A1\F5A1;
-                      STA.L !DynamicStripeImage,X               ;;F59C|F5A4+F5A4/F5A4\F5A4;
+                      STA.L DynamicStripeImage,X                ;;F59C|F5A4+F5A4/F5A4\F5A4;
                       DEX                                       ;;F5A0|F5A8+F5A8/F5A8\F5A8;
                       DEY                                       ;;F5A1|F5A9+F5A9/F5A9\F5A9;
                       BPL -                                     ;;F5A2|F5AA+F5AA/F5AA\F5AA;
                       INX                                       ;;F5A4|F5AC+F5AC/F5AC\F5AC;
                       REP #$20                                  ;;F5A5|F5AD+F5AD/F5AD\F5AD; Accum (16 bit) 
-                      LDY.W !SavedPlayerLives                   ;;F5A7|F5AF+F5AF/F5AF\F5AF;
+                      LDY.W SavedPlayerLives                    ;;F5A7|F5AF+F5AF/F5AF\F5AF;
                       BMI +                                     ;;F5AA|F5B2+F5B2/F5B2\F5B2;
                       LDA.W #$38FC                              ;;F5AC|F5B4+F5B4/F5B4\F5B4;
-                      STA.L !DynamicStripeImage+$44,X           ;;F5AF|F5B7+F5B7/F5B7\F5B7;
-                      STA.L !DynamicStripeImage+$46,X           ;;F5B3|F5BB+F5BB/F5BB\F5BB;
-                    + LDY.W !SavedPlayerLives+1                 ;;F5B7|F5BF+F5BF/F5BF\F5BF;
+                      STA.L DynamicStripeImage+$44,X            ;;F5AF|F5B7+F5B7/F5B7\F5B7;
+                      STA.L DynamicStripeImage+$46,X            ;;F5B3|F5BB+F5BB/F5BB\F5BB;
+                    + LDY.W SavedPlayerLives+1                  ;;F5B7|F5BF+F5BF/F5BF\F5BF;
                       BMI +                                     ;;F5BA|F5C2+F5C2/F5C2\F5C2;
                       LDA.W #$38FC                              ;;F5BC|F5C4+F5C4/F5C4\F5C4;
-                      STA.L !DynamicStripeImage+$4C,X           ;;F5BF|F5C7+F5C7/F5C7\F5C7;
-                      STA.L !DynamicStripeImage+$4E,X           ;;F5C3|F5CB+F5CB/F5CB\F5CB;
+                      STA.L DynamicStripeImage+$4C,X            ;;F5BF|F5C7+F5C7/F5C7\F5C7;
+                      STA.L DynamicStripeImage+$4E,X            ;;F5C3|F5CB+F5CB/F5CB\F5CB;
                     + SEP #$20                                  ;;F5C7|F5CF+F5CF/F5CF\F5CF; Accum (8 bit) 
-                      INC.W !OWPromptArrowTimer                 ;;F5C9|F5D1+F5D1/F5D1\F5D1;
-                      LDA.W !OWPromptArrowTimer                 ;;F5CC|F5D4+F5D4/F5D4\F5D4;
+                      INC.W OWPromptArrowTimer                  ;;F5C9|F5D1+F5D1/F5D1\F5D1;
+                      LDA.W OWPromptArrowTimer                  ;;F5CC|F5D4+F5D4/F5D4\F5D4;
                       AND.B #$18                                ;;F5CF|F5D7+F5D7/F5D7\F5D7;
                       BEQ +                                     ;;F5D1|F5D9+F5D9/F5D9\F5D9;
-                      LDA.W !OWPromptArrowDir                   ;;F5D3|F5DB+F5DB/F5DB\F5DB;
+                      LDA.W OWPromptArrowDir                    ;;F5D3|F5DB+F5DB/F5DB\F5DB;
                       ASL A                                     ;;F5D6|F5DE+F5DE/F5DE\F5DE;
                       TAY                                       ;;F5D7|F5DF+F5DF/F5DF\F5DF;
                       REP #$20                                  ;;F5D8|F5E0+F5E0/F5E0\F5E0; Accum (16 bit) 
                       LDA.W DATA_04F503,Y                       ;;F5DA|F5E2+F5E2/F5E2\F5E2;
-                      STA.L !DynamicStripeImage+$34,X           ;;F5DD|F5E5+F5E5/F5E5\F5E5;
+                      STA.L DynamicStripeImage+$34,X            ;;F5DD|F5E5+F5E5/F5E5\F5E5;
                       LDA.W DATA_04F507,Y                       ;;F5E1|F5E9+F5E9/F5E9\F5E9;
-                      STA.L !DynamicStripeImage+$36,X           ;;F5E4|F5EC+F5EC/F5EC\F5EC;
+                      STA.L DynamicStripeImage+$36,X            ;;F5E4|F5EC+F5EC/F5EC\F5EC;
                       LDA.W DATA_04F50B,Y                       ;;F5E8|F5F0+F5F0/F5F0\F5F0;
-                      STA.L !DynamicStripeImage+$3C,X           ;;F5EB|F5F3+F5F3/F5F3\F5F3;
+                      STA.L DynamicStripeImage+$3C,X            ;;F5EB|F5F3+F5F3/F5F3\F5F3;
                       LDA.W DATA_04F50F,Y                       ;;F5EF|F5F7+F5F7/F5F7\F5F7;
-                      STA.L !DynamicStripeImage+$3E,X           ;;F5F2|F5FA+F5FA/F5FA\F5FA;
+                      STA.L DynamicStripeImage+$3E,X            ;;F5F2|F5FA+F5FA/F5FA\F5FA;
                       SEP #$20                                  ;;F5F6|F5FE+F5FE/F5FE\F5FE; Accum (8 bit) 
-                    + LDA.W !SavedPlayerLives                   ;;F5F8|F600+F600/F600\F600;
+                    + LDA.W SavedPlayerLives                    ;;F5F8|F600+F600/F600\F600;
                       JSR CODE_04F60E                           ;;F5FB|F603+F603/F603\F603;
                       TXA                                       ;;F5FE|F606+F606/F606\F606;
                       CLC                                       ;;F5FF|F607+F607/F607\F607;
                       ADC.B #$0A                                ;;F600|F608+F608/F608\F608;
                       TAX                                       ;;F602|F60A+F60A/F60A\F60A;
-                      LDA.W !SavedPlayerLives+1                 ;;F603|F60B+F60B/F60B\F60B;
+                      LDA.W SavedPlayerLives+1                  ;;F603|F60B+F60B/F60B\F60B;
 CODE_04F60E:          INC A                                     ;;F606|F60E+F60E/F60E\F60E;
                       PHX                                       ;;F607|F60F+F60F/F60F\F60F;
                       JSL CODE_00974C                           ;;F608|F610+F610/F610\F610;
@@ -7301,9 +7301,9 @@ CODE_04F60E:          INC A                                     ;;F606|F60E+F60E
                       LDX.B #$FC                                ;;F60F|F617+F617/F617\F617;
                     + TXY                                       ;;F611|F619+F619/F619\F619;
                       PLX                                       ;;F612|F61A+F61A/F61A\F61A;
-                      STA.L !DynamicStripeImage+$24,X           ;;F613|F61B+F61B/F61B\F61B;
+                      STA.L DynamicStripeImage+$24,X            ;;F613|F61B+F61B/F61B\F61B;
                       TYA                                       ;;F617|F61F+F61F/F61F\F61F;
-                      STA.L !DynamicStripeImage+$22,X           ;;F618|F620+F620/F620\F620;
+                      STA.L DynamicStripeImage+$22,X            ;;F618|F620+F620/F620\F620;
                       RTS                                       ;;F61C|F624+F624/F624\F624; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
@@ -7332,21 +7332,21 @@ CODE_04F675:          PHB                                       ;;F66D|F675+F675
                       LDX.B #$0C                                ;;F670|F678+F678/F678\F678;
                       LDY.B #$4B                                ;;F672|F67A+F67A/F67A\F67A;
 CODE_04F67C:          LDA.W OverworldSprites-$0F,Y              ;;F674|F67C+F67C/F67C\F67C;
-                      STA.W !OWSpriteNumber+3,X                 ;;F677|F67F+F67F/F67F\F67F;
+                      STA.W OWSpriteNumber+3,X                  ;;F677|F67F+F67F/F67F\F67F;
                       CMP.B #$01                                ;;F67A|F682+F682/F682\F682;
                       BEQ ADDR_04F68A                           ;;F67C|F684+F684/F684\F684;
                       CMP.B #$02                                ;;F67E|F686+F686/F686\F686;
                       BNE +                                     ;;F680|F688+F688/F688\F688;
 ADDR_04F68A:          LDA.B #$40                                ;;F682|F68A+F68A/F68A\F68A;
-                      STA.W !OWSpriteZPosLow+3,X                ;;F684|F68C+F68C/F68C\F68C;
+                      STA.W OWSpriteZPosLow+3,X                 ;;F684|F68C+F68C/F68C\F68C;
                     + LDA.W OverworldSprites-$0E,Y              ;;F687|F68F+F68F/F68F\F68F;
-                      STA.W !OWSpriteXPosLow+3,X                ;;F68A|F692+F692/F692\F692;
+                      STA.W OWSpriteXPosLow+3,X                 ;;F68A|F692+F692/F692\F692;
                       LDA.W OverworldSprites-$0D,Y              ;;F68D|F695+F695/F695\F695;
-                      STA.W !OWSpriteXPosHigh+3,X               ;;F690|F698+F698/F698\F698;
+                      STA.W OWSpriteXPosHigh+3,X                ;;F690|F698+F698/F698\F698;
                       LDA.W OverworldSprites-$0C,Y              ;;F693|F69B+F69B/F69B\F69B;
-                      STA.W !OWSpriteYPosLow+3,X                ;;F696|F69E+F69E/F69E\F69E;
+                      STA.W OWSpriteYPosLow+3,X                 ;;F696|F69E+F69E/F69E\F69E;
                       LDA.W OverworldSprites-$0B,Y              ;;F699|F6A1+F6A1/F6A1\F6A1;
-                      STA.W !OWSpriteYPosHigh+3,X               ;;F69C|F6A4+F6A4/F6A4\F6A4;
+                      STA.W OWSpriteYPosHigh+3,X                ;;F69C|F6A4+F6A4/F6A4\F6A4;
                       TYA                                       ;;F69F|F6A7+F6A7/F6A7\F6A7;
                       SEC                                       ;;F6A0|F6A8+F6A8/F6A8\F6A8;
                       SBC.B #$05                                ;;F6A1|F6A9+F6A9/F6A9\F6A9;
@@ -7354,13 +7354,13 @@ ADDR_04F68A:          LDA.B #$40                                ;;F682|F68A+F68A
                       DEX                                       ;;F6A4|F6AC+F6AC/F6AC\F6AC;
                       BPL CODE_04F67C                           ;;F6A5|F6AD+F6AD/F6AD\F6AD;
                       LDX.B #$0D                                ;;F6A7|F6AF+F6AF/F6AF\F6AF;
-CODE_04F6B1:          STZ.W !OWSpriteMisc0E25,X                 ;;F6A9|F6B1+F6B1/F6B1\F6B1;
+CODE_04F6B1:          STZ.W OWSpriteMisc0E25,X                  ;;F6A9|F6B1+F6B1/F6B1\F6B1;
                       LDA.W DATA_04FD22                         ;;F6AC|F6B4+F6B4/F6B4\F6B4;
                       DEC A                                     ;;F6AF|F6B7+F6B7/F6B7\F6B7;
-                      STA.W !OWSpriteZSpeed,X                   ;;F6B0|F6B8+F6B8/F6B8\F6B8;
+                      STA.W OWSpriteZSpeed,X                    ;;F6B0|F6B8+F6B8/F6B8\F6B8;
                       LDA.W DATA_04F672-$0D,X                   ;;F6B3|F6BB+F6BB/F6BB\F6BB;
                     - PHA                                       ;;F6B6|F6BE+F6BE/F6BE\F6BE;
-                      STX.W !SaveFileDelete                     ;;F6B7|F6BF+F6BF/F6BF\F6BF;
+                      STX.W SaveFileDelete                      ;;F6B7|F6BF+F6BF/F6BF\F6BF;
                       JSR CODE_04F853                           ;;F6BA|F6C2+F6C2/F6C2\F6C2;
                       PLA                                       ;;F6BD|F6C5+F6C5/F6C5\F6C5;
                       DEC A                                     ;;F6BE|F6C6+F6C6/F6C6\F6C6;
@@ -7383,132 +7383,132 @@ DATA_04F700:          db $07,$05,$06,$07,$04,$06,$07,$05        ;;F6F8|F700+F700
 CODE_04F708:          LDA.B #$F7                                ;;F700|F708+F708/F708\F708;
                       JSR CODE_04F882                           ;;F702|F70A+F70A/F70A\F70A;
                       BNE CODE_04F76E                           ;;F705|F70D+F70D/F70D\F70D;
-                      LDY.W !LightningFlashIndex                ;;F707|F70F+F70F/F70F\F70F;
+                      LDY.W LightningFlashIndex                 ;;F707|F70F+F70F/F70F\F70F;
                       BNE CODE_04F73B                           ;;F70A|F712+F712/F712\F712;
-                      LDA.B !TrueFrame                          ;;F70C|F714+F714/F714\F714;
+                      LDA.B TrueFrame                           ;;F70C|F714+F714/F714\F714;
                       LSR A                                     ;;F70E|F716+F716/F716\F716;
                       BCC CODE_04F76E                           ;;F70F|F717+F717/F717\F717;
-                      DEC.W !LightningWaitTimer                 ;;F711|F719+F719/F719\F719;
+                      DEC.W LightningWaitTimer                  ;;F711|F719+F719/F719\F719;
                       BNE CODE_04F76E                           ;;F714|F71C+F71C/F71C\F71C;
                       TAY                                       ;;F716|F71E+F71E/F71E\F71E;
                       LDA.W CODE_04F708,Y                       ;;F717|F71F+F71F/F71F\F71F;
                       AND.B #$07                                ;;F71A|F722+F722/F722\F722;
                       TAX                                       ;;F71C|F724+F724/F724\F724;
                       LDA.W DATA_04F6F8,X                       ;;F71D|F725+F725/F725\F725;
-                      STA.W !LightningWaitTimer                 ;;F720|F728+F728/F728\F728;
+                      STA.W LightningWaitTimer                  ;;F720|F728+F728/F728\F728;
                       LDY.W DATA_04F700,X                       ;;F723|F72B+F72B/F72B\F72B;
-                      STY.W !LightningFlashIndex                ;;F726|F72E+F72E/F72E\F72E;
+                      STY.W LightningFlashIndex                 ;;F726|F72E+F72E/F72E\F72E;
                       LDA.B #$08                                ;;F729|F731+F731/F731\F731;
-                      STA.W !LightningTimer                     ;;F72B|F733+F733/F733\F733;
+                      STA.W LightningTimer                      ;;F72B|F733+F733/F733\F733;
                       LDA.B #!SFX_THUNDER                       ;;F72E|F736+F736/F736\F736;
-                      STA.W !SPCIO3                             ;;F730|F738+F738/F738\F738; / Play sound effect 
-CODE_04F73B:          DEC.W !LightningTimer                     ;;F733|F73B+F73B/F73B\F73B;
+                      STA.W SPCIO3                              ;;F730|F738+F738/F738\F738; / Play sound effect 
+CODE_04F73B:          DEC.W LightningTimer                      ;;F733|F73B+F73B/F73B\F73B;
                       BPL +                                     ;;F736|F73E+F73E/F73E\F73E;
-                      DEC.W !LightningFlashIndex                ;;F738|F740+F740/F740\F740;
+                      DEC.W LightningFlashIndex                 ;;F738|F740+F740/F740\F740;
                       LDA.B #$04                                ;;F73B|F743+F743/F743\F743;
-                      STA.W !LightningTimer                     ;;F73D|F745+F745/F745\F745;
+                      STA.W LightningTimer                      ;;F73D|F745+F745/F745\F745;
                     + TYA                                       ;;F740|F748+F748/F748\F748;
                       ASL A                                     ;;F741|F749+F749/F749\F749;
                       TAY                                       ;;F742|F74A+F74A/F74A\F74A;
-                      LDX.W !DynPaletteIndex                    ;;F743|F74B+F74B/F74B\F74B;
+                      LDX.W DynPaletteIndex                     ;;F743|F74B+F74B/F74B\F74B;
                       LDA.B #$02                                ;;F746|F74E+F74E/F74E\F74E;
-                      STA.W !DynPaletteTable,X                  ;;F748|F750+F750/F750\F750;
+                      STA.W DynPaletteTable,X                   ;;F748|F750+F750/F750\F750;
                       LDA.B #$47                                ;;F74B|F753+F753/F753\F753;
-                      STA.W !DynPaletteTable+1,X                ;;F74D|F755+F755/F755\F755;
-                      LDA.W !MainPalette+$50,Y                  ;;F750|F758+F758/F758\F758;
-                      STA.W !DynPaletteTable+2,X                ;;F753|F75B+F75B/F75B\F75B;
-                      LDA.W !MainPalette+$51,Y                  ;;F756|F75E+F75E/F75E\F75E;
-                      STA.W !DynPaletteTable+3,X                ;;F759|F761+F761/F761\F761;
-                      STZ.W !DynPaletteTable+4,X                ;;F75C|F764+F764/F764\F764;
+                      STA.W DynPaletteTable+1,X                 ;;F74D|F755+F755/F755\F755;
+                      LDA.W MainPalette+$50,Y                   ;;F750|F758+F758/F758\F758;
+                      STA.W DynPaletteTable+2,X                 ;;F753|F75B+F75B/F75B\F75B;
+                      LDA.W MainPalette+$51,Y                   ;;F756|F75E+F75E/F75E\F75E;
+                      STA.W DynPaletteTable+3,X                 ;;F759|F761+F761/F761\F761;
+                      STZ.W DynPaletteTable+4,X                 ;;F75C|F764+F764/F764\F764;
                       TXA                                       ;;F75F|F767+F767/F767\F767;
                       CLC                                       ;;F760|F768+F768/F768\F768;
                       ADC.B #$04                                ;;F761|F769+F769/F769\F769;
-                      STA.W !DynPaletteIndex                    ;;F763|F76B+F76B/F76B\F76B;
+                      STA.W DynPaletteIndex                     ;;F763|F76B+F76B/F76B\F76B;
 CODE_04F76E:          LDX.B #$02                                ;;F766|F76E+F76E/F76E\F76E;
-CODE_04F770:          LDA.W !OWSpriteNumber,X                   ;;F768|F770+F770/F770\F770;
+CODE_04F770:          LDA.W OWSpriteNumber,X                    ;;F768|F770+F770/F770\F770;
                       BNE +                                     ;;F76B|F773+F773/F773\F773;
                       LDA.B #$05                                ;;F76D|F775+F775/F775\F775;
-                      STA.W !OWSpriteNumber,X                   ;;F76F|F777+F777/F777\F777;
+                      STA.W OWSpriteNumber,X                    ;;F76F|F777+F777/F777\F777;
                       JSR CODE_04FE5B                           ;;F772|F77A+F77A/F77A\F77A;
                       AND.B #$07                                ;;F775|F77D+F77D/F77D\F77D;
                       TAY                                       ;;F777|F77F+F77F/F77F\F77F;
                       LDA.W DATA_04F6D0,Y                       ;;F778|F780+F780/F780\F780;
-                      STA.W !OWSpriteZPosLow,X                  ;;F77B|F783+F783/F783\F783;
+                      STA.W OWSpriteZPosLow,X                   ;;F77B|F783+F783/F783\F783;
                       TYA                                       ;;F77E|F786+F786/F786\F786;
                       ASL A                                     ;;F77F|F787+F787/F787\F787;
                       TAY                                       ;;F780|F788+F788/F788\F788;
                       REP #$20                                  ;;F781|F789+F789/F789\F789; Accum (16 bit) 
-                      LDA.B !Layer1XPos                         ;;F783|F78B+F78B/F78B\F78B;
+                      LDA.B Layer1XPos                          ;;F783|F78B+F78B/F78B\F78B;
                       CLC                                       ;;F785|F78D+F78D/F78D\F78D;
                       ADC.W DATA_04F6D8,Y                       ;;F786|F78E+F78E/F78E\F78E;
                       SEP #$20                                  ;;F789|F791+F791/F791\F791; Accum (8 bit) 
-                      STA.W !OWSpriteXPosLow,X                  ;;F78B|F793+F793/F793\F793;
+                      STA.W OWSpriteXPosLow,X                   ;;F78B|F793+F793/F793\F793;
                       XBA                                       ;;F78E|F796+F796/F796\F796;
-                      STA.W !OWSpriteXPosHigh,X                 ;;F78F|F797+F797/F797\F797;
+                      STA.W OWSpriteXPosHigh,X                  ;;F78F|F797+F797/F797\F797;
                       REP #$20                                  ;;F792|F79A+F79A/F79A\F79A; Accum (16 bit) 
-                      LDA.B !Layer1YPos                         ;;F794|F79C+F79C/F79C\F79C;
+                      LDA.B Layer1YPos                          ;;F794|F79C+F79C/F79C\F79C;
                       CLC                                       ;;F796|F79E+F79E/F79E\F79E;
                       ADC.W DATA_04F6E8,Y                       ;;F797|F79F+F79F/F79F\F79F;
                       SEP #$20                                  ;;F79A|F7A2+F7A2/F7A2\F7A2; Accum (8 bit) 
-                      STA.W !OWSpriteYPosLow,X                  ;;F79C|F7A4+F7A4/F7A4\F7A4;
+                      STA.W OWSpriteYPosLow,X                   ;;F79C|F7A4+F7A4/F7A4\F7A4;
                       XBA                                       ;;F79F|F7A7+F7A7/F7A7\F7A7;
-                      STA.W !OWSpriteYPosHigh,X                 ;;F7A0|F7A8+F7A8/F7A8\F7A8;
+                      STA.W OWSpriteYPosHigh,X                  ;;F7A0|F7A8+F7A8/F7A8\F7A8;
                     + DEX                                       ;;F7A3|F7AB+F7AB/F7AB\F7AB;
                       BPL CODE_04F770                           ;;F7A4|F7AC+F7AC/F7AC\F7AC;
                       LDX.B #$04                                ;;F7A6|F7AE+F7AE/F7AE\F7AE;
                     - TXA                                       ;;F7A8|F7B0+F7B0/F7B0\F7B0;
-                      STA.W !OWCloudYSpeed,X                    ;;F7A9|F7B1+F7B1/F7B1\F7B1;
+                      STA.W OWCloudYSpeed,X                     ;;F7A9|F7B1+F7B1/F7B1\F7B1;
                       DEX                                       ;;F7AC|F7B4+F7B4/F7B4\F7B4;
                       BPL -                                     ;;F7AD|F7B5+F7B5/F7B5\F7B5;
                       LDX.B #$04                                ;;F7AF|F7B7+F7B7/F7B7\F7B7;
-CODE_04F7B9:          STX.B !_0                                 ;;F7B1|F7B9+F7B9/F7B9\F7B9;
-CODE_04F7BB:          STX.B !_1                                 ;;F7B3|F7BB+F7BB/F7BB\F7BB;
-                      LDX.B !_0                                 ;;F7B5|F7BD+F7BD/F7BD\F7BD;
-                      LDY.W !OWCloudYSpeed,X                    ;;F7B7|F7BF+F7BF/F7BF\F7BF;
-                      LDA.W !OWSpriteYPosLow,Y                  ;;F7BA|F7C2+F7C2/F7C2\F7C2;
-                      STA.B !_2                                 ;;F7BD|F7C5+F7C5/F7C5\F7C5;
-                      LDA.W !OWSpriteYPosHigh,Y                 ;;F7BF|F7C7+F7C7/F7C7\F7C7;
-                      STA.B !_3                                 ;;F7C2|F7CA+F7CA/F7CA\F7CA;
-                      LDX.B !_1                                 ;;F7C4|F7CC+F7CC/F7CC\F7CC;
-                      LDY.W !OWCloudOAMIndex,X                  ;;F7C6|F7CE+F7CE/F7CE\F7CE;
-                      LDA.W !OWSpriteYPosHigh,Y                 ;;F7C9|F7D1+F7D1/F7D1\F7D1;
+CODE_04F7B9:          STX.B _0                                  ;;F7B1|F7B9+F7B9/F7B9\F7B9;
+CODE_04F7BB:          STX.B _1                                  ;;F7B3|F7BB+F7BB/F7BB\F7BB;
+                      LDX.B _0                                  ;;F7B5|F7BD+F7BD/F7BD\F7BD;
+                      LDY.W OWCloudYSpeed,X                     ;;F7B7|F7BF+F7BF/F7BF\F7BF;
+                      LDA.W OWSpriteYPosLow,Y                   ;;F7BA|F7C2+F7C2/F7C2\F7C2;
+                      STA.B _2                                  ;;F7BD|F7C5+F7C5/F7C5\F7C5;
+                      LDA.W OWSpriteYPosHigh,Y                  ;;F7BF|F7C7+F7C7/F7C7\F7C7;
+                      STA.B _3                                  ;;F7C2|F7CA+F7CA/F7CA\F7CA;
+                      LDX.B _1                                  ;;F7C4|F7CC+F7CC/F7CC\F7CC;
+                      LDY.W OWCloudOAMIndex,X                   ;;F7C6|F7CE+F7CE/F7CE\F7CE;
+                      LDA.W OWSpriteYPosHigh,Y                  ;;F7C9|F7D1+F7D1/F7D1\F7D1;
                       XBA                                       ;;F7CC|F7D4+F7D4/F7D4\F7D4;
-                      LDA.W !OWSpriteYPosLow,Y                  ;;F7CD|F7D5+F7D5/F7D5\F7D5;
+                      LDA.W OWSpriteYPosLow,Y                   ;;F7CD|F7D5+F7D5/F7D5\F7D5;
                       REP #$20                                  ;;F7D0|F7D8+F7D8/F7D8\F7D8; Accum (16 bit) 
-                      CMP.B !_2                                 ;;F7D2|F7DA+F7DA/F7DA\F7DA;
+                      CMP.B _2                                  ;;F7D2|F7DA+F7DA/F7DA\F7DA;
                       SEP #$20                                  ;;F7D4|F7DC+F7DC/F7DC\F7DC; Accum (8 bit) 
                       BPL +                                     ;;F7D6|F7DE+F7DE/F7DE\F7DE;
                       PHY                                       ;;F7D8|F7E0+F7E0/F7E0\F7E0;
-                      LDY.B !_0                                 ;;F7D9|F7E1+F7E1/F7E1\F7E1;
-                      LDA.W !OWCloudYSpeed,Y                    ;;F7DB|F7E3+F7E3/F7E3\F7E3;
-                      STA.W !OWCloudOAMIndex,X                  ;;F7DE|F7E6+F7E6/F7E6\F7E6;
+                      LDY.B _0                                  ;;F7D9|F7E1+F7E1/F7E1\F7E1;
+                      LDA.W OWCloudYSpeed,Y                     ;;F7DB|F7E3+F7E3/F7E3\F7E3;
+                      STA.W OWCloudOAMIndex,X                   ;;F7DE|F7E6+F7E6/F7E6\F7E6;
                       PLA                                       ;;F7E1|F7E9+F7E9/F7E9\F7E9;
-                      STA.W !OWCloudYSpeed,Y                    ;;F7E2|F7EA+F7EA/F7EA\F7EA;
+                      STA.W OWCloudYSpeed,Y                     ;;F7E2|F7EA+F7EA/F7EA\F7EA;
                     + DEX                                       ;;F7E5|F7ED+F7ED/F7ED\F7ED;
                       BNE CODE_04F7BB                           ;;F7E6|F7EE+F7EE/F7EE\F7EE;
-                      LDX.B !_0                                 ;;F7E8|F7F0+F7F0/F7F0\F7F0;
+                      LDX.B _0                                  ;;F7E8|F7F0+F7F0/F7F0\F7F0;
                       DEX                                       ;;F7EA|F7F2+F7F2/F7F2\F7F2;
                       BNE CODE_04F7B9                           ;;F7EB|F7F3+F7F3/F7F3\F7F3;
                       LDA.B #$30                                ;;F7ED|F7F5+F7F5/F7F5\F7F5;
-                      STA.W !OWCloudOAMIndex                    ;;F7EF|F7F7+F7F7/F7F7\F7F7;
-                      STZ.W !EnterLevelAuto                     ;;F7F2|F7FA+F7FA/F7FA\F7FA;
+                      STA.W OWCloudOAMIndex                     ;;F7EF|F7F7+F7F7/F7F7\F7F7;
+                      STZ.W EnterLevelAuto                      ;;F7F2|F7FA+F7FA/F7FA\F7FA;
                       LDX.B #$0F                                ;;F7F5|F7FD+F7FD/F7FD\F7FD;
                       LDY.B #$2D                                ;;F7F7|F7FF+F7FF/F7FF\F7FF;
 CODE_04F801:          CPX.B #$0D                                ;;F7F9|F801+F801/F801\F801;
                       BCS +                                     ;;F7FB|F803+F803/F803\F803;
-                      LDA.W !OWSpriteMisc0E25,X                 ;;F7FD|F805+F805/F805\F805;
+                      LDA.W OWSpriteMisc0E25,X                  ;;F7FD|F805+F805/F805\F805;
                       BEQ +                                     ;;F800|F808+F808/F808\F808;
-                      DEC.W !OWSpriteMisc0E25,X                 ;;F802|F80A+F80A/F80A\F80A;
+                      DEC.W OWSpriteMisc0E25,X                  ;;F802|F80A+F80A/F80A\F80A;
                     + CPX.B #$05                                ;;F805|F80D+F80D/F80D\F80D;
                       BCC CODE_04F819                           ;;F807|F80F+F80F/F80F\F80F;
-                      STX.W !SaveFileDelete                     ;;F809|F811+F811/F811\F811;
+                      STX.W SaveFileDelete                      ;;F809|F811+F811/F811\F811;
                       JSR CODE_04F853                           ;;F80C|F814+F814/F814\F814;
                       BRA +                                     ;;F80F|F817+F817/F817\F817;
                                                                 ;;                        ;
 CODE_04F819:          PHX                                       ;;F811|F819+F819/F819\F819;
-                      LDA.W !OWCloudYSpeed,X                    ;;F812|F81A+F81A/F81A\F81A;
+                      LDA.W OWCloudYSpeed,X                     ;;F812|F81A+F81A/F81A\F81A;
                       TAX                                       ;;F815|F81D+F81D/F81D\F81D;
-                      STX.W !SaveFileDelete                     ;;F816|F81E+F81E/F81E\F81E;
+                      STX.W SaveFileDelete                      ;;F816|F81E+F81E/F81E\F81E;
                       JSR CODE_04F853                           ;;F819|F821+F821/F821\F821;
                       PLX                                       ;;F81C|F824+F824/F824\F824;
                     + DEX                                       ;;F81D|F825+F825/F825\F825;
@@ -7526,7 +7526,7 @@ DATA_04F843:          db $F4,$F4,$F4,$F4,$F4,$9C,$3C,$48        ;;F83B|F843+F843
                                                                 ;;                        ;
 CODE_04F853:          JSR CODE_04F87C                           ;;F84B|F853+F853/F853\F853;
                       BNE Return04F828                          ;;F84E|F856+F856/F856\F856;
-                      LDA.W !OWSpriteNumber,X                   ;;F850|F858+F858/F858\F858;
+                      LDA.W OWSpriteNumber,X                    ;;F850|F858+F858/F858\F858;
                       JSL ExecutePtr                            ;;F853|F85B+F85B/F85B\F85B;
                                                                 ;;                        ;
                       dw Return04F828                           ;;F857|F85F+F85F/F85F\F85F;
@@ -7543,23 +7543,23 @@ CODE_04F853:          JSR CODE_04F87C                           ;;F84B|F853+F853
                                                                 ;;                        ;
 DATA_04F875:          db $80,$40,$20,$10,$08,$04,$02            ;;F86D|F875+F875/F875\F875;
                                                                 ;;                        ;
-CODE_04F87C:          LDY.W !OWSpriteNumber,X                   ;;F874|F87C+F87C/F87C\F87C;
+CODE_04F87C:          LDY.W OWSpriteNumber,X                    ;;F874|F87C+F87C/F87C\F87C;
                       LDA.W Return04F828,Y                      ;;F877|F87F+F87F/F87F\F87F;
-CODE_04F882:          STA.B !_0                                 ;;F87A|F882+F882/F882\F882;
-                      LDY.W !OverworldProcess                   ;;F87C|F884+F884/F884\F884;
+CODE_04F882:          STA.B _0                                  ;;F87A|F882+F882/F882\F882;
+                      LDY.W OverworldProcess                    ;;F87C|F884+F884/F884\F884;
                       CPY.B #$0A                                ;;F87F|F887+F887/F887\F887;
                       BNE CODE_04F892                           ;;F881|F889+F889/F889\F889;
-                      LDY.W !OWSubmapSwapProcess                ;;F883|F88B+F88B/F88B\F88B;
+                      LDY.W OWSubmapSwapProcess                 ;;F883|F88B+F88B/F88B\F88B;
                       CPY.B #$01                                ;;F886|F88E+F88E/F88E\F88E;
                       BNE CODE_04F8A3                           ;;F888|F890+F890/F890\F890;
-CODE_04F892:          LDA.W !PlayerTurnOW                       ;;F88A|F892+F892/F892\F892;
+CODE_04F892:          LDA.W PlayerTurnOW                        ;;F88A|F892+F892/F892\F892;
                       LSR A                                     ;;F88D|F895+F895/F895\F895;
                       LSR A                                     ;;F88E|F896+F896/F896\F896;
                       TAY                                       ;;F88F|F897+F897/F897\F897;
-                      LDA.W !OWPlayerSubmap,Y                   ;;F890|F898+F898/F898\F898;
+                      LDA.W OWPlayerSubmap,Y                    ;;F890|F898+F898/F898\F898;
                       TAY                                       ;;F893|F89B+F89B/F89B\F89B;
                       LDA.W DATA_04F875,Y                       ;;F894|F89C+F89C/F89C\F89C;
-                      AND.B !_0                                 ;;F897|F89F+F89F/F89F\F89F;
+                      AND.B _0                                  ;;F897|F89F+F89F/F89F\F89F;
                       BEQ +                                     ;;F899|F8A1+F8A1/F8A1\F8A1;
 CODE_04F8A3:          LDA.B #$01                                ;;F89B|F8A3+F8A3/F8A3\F8A3;
                     + RTS                                       ;;F89D|F8A5+F8A5/F8A5\F8A5; Return 
@@ -7580,102 +7580,102 @@ ADDR_04F8CC:          JSR CODE_04FE90                           ;;F8C4|F8CC+F8CC
                       JSR ADDR_04FE00                           ;;F8C8|F8D0+F8D0/F8D0\F8D0;
                       JSR CODE_04FE62                           ;;F8CB|F8D3+F8D3/F8D3\F8D3;
                       REP #$20                                  ;;F8CE|F8D6+F8D6/F8D6\F8D6; Accum (16 bit) 
-                      LDA.B !_2                                 ;;F8D0|F8D8+F8D8/F8D8\F8D8;
-                      STA.B !_4                                 ;;F8D2|F8DA+F8DA/F8DA\F8DA;
+                      LDA.B _2                                  ;;F8D0|F8D8+F8D8/F8D8\F8D8;
+                      STA.B _4                                  ;;F8D2|F8DA+F8DA/F8DA\F8DA;
                       SEP #$20                                  ;;F8D4|F8DC+F8DC/F8DC\F8DC; Accum (8 bit) 
                       JSR CODE_04FE5B                           ;;F8D6|F8DE+F8DE/F8DE\F8DE;
                       LDX.B #$06                                ;;F8D9|F8E1+F8E1/F8E1\F8E1;
                       AND.B #$10                                ;;F8DB|F8E3+F8E3/F8E3\F8E3;
                       BEQ ADDR_04F8E8                           ;;F8DD|F8E5+F8E5/F8E5\F8E5;
                       INX                                       ;;F8DF|F8E7+F8E7/F8E7\F8E7;
-ADDR_04F8E8:          STX.B !_6                                 ;;F8E0|F8E8+F8E8/F8E8\F8E8;
-                      LDA.B !_0                                 ;;F8E2|F8EA+F8EA/F8EA\F8EA;
+ADDR_04F8E8:          STX.B _6                                  ;;F8E0|F8E8+F8E8/F8E8\F8E8;
+                      LDA.B _0                                  ;;F8E2|F8EA+F8EA/F8EA\F8EA;
                       CLC                                       ;;F8E4|F8EC+F8EC/F8EC\F8EC;
                       ADC.W DATA_04F8A6,X                       ;;F8E5|F8ED+F8ED/F8ED\F8ED;
-                      STA.B !_0                                 ;;F8E8|F8F0+F8F0/F8F0\F8F0;
+                      STA.B _0                                  ;;F8E8|F8F0+F8F0/F8F0\F8F0;
                       BCC +                                     ;;F8EA|F8F2+F8F2/F8F2\F8F2;
-                      INC.B !_1                                 ;;F8EC|F8F4+F8F4/F8F4\F8F4;
-                    + LDA.B !_4                                 ;;F8EE|F8F6+F8F6/F8F6\F8F6;
+                      INC.B _1                                  ;;F8EC|F8F4+F8F4/F8F4\F8F4;
+                    + LDA.B _4                                  ;;F8EE|F8F6+F8F6/F8F6\F8F6;
                       CLC                                       ;;F8F0|F8F8+F8F8/F8F8\F8F8;
                       ADC.W DATA_04F8AE,X                       ;;F8F1|F8F9+F8F9/F8F9\F8F9;
-                      STA.B !_2                                 ;;F8F4|F8FC+F8FC/F8FC\F8FC;
-                      LDA.B !_5                                 ;;F8F6|F8FE+F8FE/F8FE\F8FE;
+                      STA.B _2                                  ;;F8F4|F8FC+F8FC/F8FC\F8FC;
+                      LDA.B _5                                  ;;F8F6|F8FE+F8FE/F8FE\F8FE;
                       ADC.B #$00                                ;;F8F8|F900+F900/F900\F900;
-                      STA.B !_3                                 ;;F8FA|F902+F902/F902\F902;
+                      STA.B _3                                  ;;F8FA|F902+F902/F902\F902;
                       LDA.B #$32                                ;;F8FC|F904+F904/F904\F904;
                       XBA                                       ;;F8FE|F906+F906/F906\F906;
                       LDA.B #$28                                ;;F8FF|F907+F907/F907\F907;
                       JSR CODE_04FB7B                           ;;F901|F909+F909/F909\F909;
-                      LDX.B !_6                                 ;;F904|F90C+F90C/F90C\F90C;
+                      LDX.B _6                                  ;;F904|F90C+F90C/F90C\F90C;
                       DEX                                       ;;F906|F90E+F90E/F90E\F90E;
                       DEX                                       ;;F907|F90F+F90F/F90F\F90F;
                       BPL ADDR_04F8E8                           ;;F908|F910+F910/F910\F910;
-                      LDX.W !SaveFileDelete                     ;;F90A|F912+F912/F912\F912;
+                      LDX.W SaveFileDelete                      ;;F90A|F912+F912/F912\F912;
                       JSR CODE_04FE62                           ;;F90D|F915+F915/F915\F915;
                       LDA.B #$32                                ;;F910|F918+F918/F918\F918;
                       XBA                                       ;;F912|F91A+F91A/F91A\F91A;
                       LDA.B #$26                                ;;F913|F91B+F91B/F91B\F91B;
                       JSR CODE_04FB7A                           ;;F915|F91D+F91D/F91D\F91D;
-                      LDA.W !OWSpriteMisc0E15,X                 ;;F918|F920+F920/F920\F920;
+                      LDA.W OWSpriteMisc0E15,X                  ;;F918|F920+F920/F920\F920;
                       BEQ +                                     ;;F91B|F923+F923/F923\F923;
                       JMP ADDR_04FF2E                           ;;F91D|F925+F925/F925\F925;
                                                                 ;;                        ;
-                    + LDA.W !OWSpriteMisc0E05,X                 ;;F920|F928+F928/F928\F928;
+                    + LDA.W OWSpriteMisc0E05,X                  ;;F920|F928+F928/F928\F928;
                       AND.B #$01                                ;;F923|F92B+F92B/F92B\F92B;
                       TAY                                       ;;F925|F92D+F92D/F92D\F92D;
-                      LDA.W !OWSpriteZSpeed,X                   ;;F926|F92E+F92E/F92E\F92E;
+                      LDA.W OWSpriteZSpeed,X                    ;;F926|F92E+F92E/F92E\F92E;
                       CLC                                       ;;F929|F931+F931/F931\F931;
                       ADC.W DATA_04F8C6,Y                       ;;F92A|F932+F932/F932\F932;
-                      STA.W !OWSpriteZSpeed,X                   ;;F92D|F935+F935/F935\F935;
+                      STA.W OWSpriteZSpeed,X                    ;;F92D|F935+F935/F935\F935;
                       CMP.W DATA_04F8CA,Y                       ;;F930|F938+F938/F938\F938;
                       BNE +                                     ;;F933|F93B+F93B/F93B\F93B;
-                      LDA.W !OWSpriteMisc0E05,X                 ;;F935|F93D+F93D/F93D\F93D;
+                      LDA.W OWSpriteMisc0E05,X                  ;;F935|F93D+F93D/F93D\F93D;
                       EOR.B #$01                                ;;F938|F940+F940/F940\F940;
-                      STA.W !OWSpriteMisc0E05,X                 ;;F93A|F942+F942/F942\F942;
+                      STA.W OWSpriteMisc0E05,X                  ;;F93A|F942+F942/F942\F942;
                     + JSR ADDR_04FEEF                           ;;F93D|F945+F945/F945\F945;
-                      LDY.W !OWSpriteMisc0DF5,X                 ;;F940|F948+F948/F948\F948; Accum (16 bit) 
-                      LDA.W !OWSpriteMisc0E05-1,X               ;;F943|F94B+F94B/F94B\F94B;
+                      LDY.W OWSpriteMisc0DF5,X                  ;;F940|F948+F948/F948\F948; Accum (16 bit) 
+                      LDA.W OWSpriteMisc0E05-1,X                ;;F943|F94B+F94B/F94B\F94B;
                       ASL A                                     ;;F946|F94E+F94E/F94E\F94E;
-                      EOR.B !_0                                 ;;F947|F94F+F94F/F94F\F94F;
+                      EOR.B _0                                  ;;F947|F94F+F94F/F94F\F94F;
                       BPL ADDR_04F95D                           ;;F949|F951+F951/F951\F951;
-                      LDA.B !_6                                 ;;F94B|F953+F953/F953\F953;
+                      LDA.B _6                                  ;;F94B|F953+F953/F953\F953;
                       CMP.W DATA_04F8B6,Y                       ;;F94D|F955+F955/F955\F955;
                       LDA.W #$0040                              ;;F950|F958+F958/F958\F958;
                       BCS +                                     ;;F953|F95B+F95B/F95B\F95B;
-ADDR_04F95D:          LDA.W !OWSpriteMisc0E05-1,X               ;;F955|F95D+F95D/F95D\F95D;
-                      EOR.B !_2                                 ;;F958|F960+F960/F960\F960;
+ADDR_04F95D:          LDA.W OWSpriteMisc0E05-1,X                ;;F955|F95D+F95D/F95D\F95D;
+                      EOR.B _2                                  ;;F958|F960+F960/F960\F960;
                       ASL A                                     ;;F95A|F962+F962/F962\F962;
                       BCC +                                     ;;F95B|F963+F963/F963\F963;
-                      LDA.B !_8                                 ;;F95D|F965+F965/F965\F965;
+                      LDA.B _8                                  ;;F95D|F965+F965/F965\F965;
                       CMP.W DATA_04F8BE,Y                       ;;F95F|F967+F967/F967\F967;
                       LDA.W #$0080                              ;;F962|F96A+F96A/F96A\F96A;
                     + SEP #$20                                  ;;F965|F96D+F96D/F96D\F96D; Accum (8 bit) 
                       BCC +                                     ;;F967|F96F+F96F/F96F\F96F;
-                      EOR.W !OWSpriteMisc0E05,X                 ;;F969|F971+F971/F971\F971;
-                      STA.W !OWSpriteMisc0E05,X                 ;;F96C|F974+F974/F974\F974;
+                      EOR.W OWSpriteMisc0E05,X                  ;;F969|F971+F971/F971\F971;
+                      STA.W OWSpriteMisc0E05,X                  ;;F96C|F974+F974/F974\F974;
                       JSR CODE_04FE5B                           ;;F96F|F977+F977/F977\F977;
                       AND.B #$06                                ;;F972|F97A+F97A/F97A\F97A;
-                      STA.W !OWSpriteMisc0DF5,X                 ;;F974|F97C+F97C/F97C\F97C;
+                      STA.W OWSpriteMisc0DF5,X                  ;;F974|F97C+F97C/F97C\F97C;
                     + TXA                                       ;;F977|F97F+F97F/F97F\F97F;
                       CLC                                       ;;F978|F980+F980/F980\F980;
                       ADC.B #$10                                ;;F979|F981+F981/F981\F981;
                       TAX                                       ;;F97B|F983+F983/F983\F983;
-                      LDA.W !OWSpriteMisc0DF5,X                 ;;F97C|F984+F984/F984\F984;
+                      LDA.W OWSpriteMisc0DF5,X                  ;;F97C|F984+F984/F984\F984;
                       ASL A                                     ;;F97F|F987+F987/F987\F987;
                       JSR ADDR_04F993                           ;;F980|F988+F988/F988\F988;
-                      LDX.W !SaveFileDelete                     ;;F983|F98B+F98B/F98B\F98B;
-                      LDA.W !OWSpriteMisc0E05,X                 ;;F986|F98E+F98E/F98E\F98E;
+                      LDX.W SaveFileDelete                      ;;F983|F98B+F98B/F98B\F98B;
+                      LDA.W OWSpriteMisc0E05,X                  ;;F986|F98E+F98E/F98E\F98E;
                       ASL A                                     ;;F989|F991+F991/F991\F991;
                       ASL A                                     ;;F98A|F992+F992/F992\F992;
 ADDR_04F993:          LDY.B #$00                                ;;F98B|F993+F993/F993\F993;
                       BCS +                                     ;;F98D|F995+F995/F995\F995;
                       INY                                       ;;F98F|F997+F997/F997\F997;
-                    + LDA.W !OWSpriteXSpeed,X                   ;;F990|F998+F998/F998\F998;
+                    + LDA.W OWSpriteXSpeed,X                    ;;F990|F998+F998/F998\F998;
                       CLC                                       ;;F993|F99B+F99B/F99B\F99B;
                       ADC.W DATA_04F8C6,Y                       ;;F994|F99C+F99C/F99C\F99C;
                       CMP.W DATA_04F8C8,Y                       ;;F997|F99F+F99F/F99F\F99F;
                       BEQ +                                     ;;F99A|F9A2+F9A2/F9A2\F9A2;
-                      STA.W !OWSpriteXSpeed,X                   ;;F99C|F9A4+F9A4/F9A4\F9A4;
+                      STA.W OWSpriteXSpeed,X                    ;;F99C|F9A4+F9A4/F9A4\F9A4;
                     + RTS                                       ;;F99F|F9A7+F9A7/F9A7\F9A7; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
@@ -7692,24 +7692,24 @@ ADDR_04F9B8:          CLC                                       ;;F9B0|F9B8+F9B8
                       JSR ADDR_04FEEF                           ;;F9B4|F9BC+F9BC/F9BC\F9BC;
                       SEP #$20                                  ;;F9B7|F9BF+F9BF/F9BF\F9BF; Accum (8 bit) 
                       LDY.B #$00                                ;;F9B9|F9C1+F9C1/F9C1\F9C1;
-                      LDA.B !_1                                 ;;F9BB|F9C3+F9C3/F9C3\F9C3;
+                      LDA.B _1                                  ;;F9BB|F9C3+F9C3/F9C3\F9C3;
                       BMI +                                     ;;F9BD|F9C5+F9C5/F9C5\F9C5;
                       INY                                       ;;F9BF|F9C7+F9C7/F9C7\F9C7;
-                    + LDA.W !OWSpriteXSpeed,X                   ;;F9C0|F9C8+F9C8/F9C8\F9C8;
+                    + LDA.W OWSpriteXSpeed,X                    ;;F9C0|F9C8+F9C8/F9C8\F9C8;
                       CLC                                       ;;F9C3|F9CB+F9CB/F9CB\F9CB;
                       ADC.W DATA_04F8C6,Y                       ;;F9C4|F9CC+F9CC/F9CC\F9CC;
                       CMP.W DATA_04F8C8,Y                       ;;F9C7|F9CF+F9CF/F9CF\F9CF;
                       BEQ +                                     ;;F9CA|F9D2+F9D2/F9D2\F9D2;
-                      STA.W !OWSpriteXSpeed,X                   ;;F9CC|F9D4+F9D4/F9D4\F9D4;
-                    + LDY.W !PlayerTurnOW                       ;;F9CF|F9D7+F9D7/F9D7\F9D7;
-                      LDA.W !OWPlayerYPos,Y                     ;;F9D2|F9DA+F9DA/F9DA\F9DA;
-                      STA.W !OWSpriteYPosLow,X                  ;;F9D5|F9DD+F9DD/F9DD\F9DD;
-                      LDA.W !OWPlayerYPos+1,Y                   ;;F9D8|F9E0+F9E0/F9E0\F9E0;
-                      STA.W !OWSpriteYPosHigh,X                 ;;F9DB|F9E3+F9E3/F9E3\F9E3;
+                      STA.W OWSpriteXSpeed,X                    ;;F9CC|F9D4+F9D4/F9D4\F9D4;
+                    + LDY.W PlayerTurnOW                        ;;F9CF|F9D7+F9D7/F9D7\F9D7;
+                      LDA.W OWPlayerYPos,Y                      ;;F9D2|F9DA+F9DA/F9DA\F9DA;
+                      STA.W OWSpriteYPosLow,X                   ;;F9D5|F9DD+F9DD/F9DD\F9DD;
+                      LDA.W OWPlayerYPos+1,Y                    ;;F9D8|F9E0+F9E0/F9E0\F9E0;
+                      STA.W OWSpriteYPosHigh,X                  ;;F9DB|F9E3+F9E3/F9E3\F9E3;
                       JSR CODE_04FE90                           ;;F9DE|F9E6+F9E6/F9E6\F9E6;
                       JSR CODE_04FE62                           ;;F9E1|F9E9+F9E9/F9E9\F9E9;
                       LDA.B #$36                                ;;F9E4|F9EC+F9EC/F9EC\F9EC;
-                      LDY.W !OWSpriteXSpeed,X                   ;;F9E6|F9EE+F9EE/F9EE\F9EE;
+                      LDY.W OWSpriteXSpeed,X                    ;;F9E6|F9EE+F9EE/F9EE\F9EE;
                       BMI +                                     ;;F9E9|F9F1+F9F1/F9F1\F9F1;
                       ORA.B #$40                                ;;F9EB|F9F3+F9F3/F9F3\F9F3;
                     + PHA                                       ;;F9ED|F9F5+F9F5/F9F5\F9F5;
@@ -7725,20 +7725,20 @@ ADDR_04F9B8:          CLC                                       ;;F9B0|F9B8+F9B8
                       AND.B #$03                                ;;F9FC|FA04+FA04/FA04\FA04;
                       TAY                                       ;;F9FE|FA06+FA06/FA06\FA06;
                       LDA.W DATA_04F9AC,Y                       ;;F9FF|FA07+FA07/FA07\FA07;
-                      BIT.W !OWSpriteXSpeed,X                   ;;FA02|FA0A+FA0A/FA0A\FA0A;
+                      BIT.W OWSpriteXSpeed,X                    ;;FA02|FA0A+FA0A/FA0A\FA0A;
                       BMI +                                     ;;FA05|FA0D+FA0D/FA0D\FA0D;
                       LDA.W DATA_04F9B0,Y                       ;;FA07|FA0F+FA0F/FA0F\FA0F;
                     + CLC                                       ;;FA0A|FA12+FA12/FA12\FA12;
-                      ADC.B !_0                                 ;;FA0B|FA13+FA13/FA13\FA13;
-                      STA.B !_0                                 ;;FA0D|FA15+FA15/FA15\FA15;
+                      ADC.B _0                                  ;;FA0B|FA13+FA13/FA13\FA13;
+                      STA.B _0                                  ;;FA0D|FA15+FA15/FA15\FA15;
                       BCC +                                     ;;FA0F|FA17+FA17/FA17\FA17;
-                      INC.B !_1                                 ;;FA11|FA19+FA19/FA19\FA19;
+                      INC.B _1                                  ;;FA11|FA19+FA19/FA19\FA19;
                     + LDA.W DATA_04F9B4,Y                       ;;FA13|FA1B+FA1B/FA1B\FA1B;
                       CLC                                       ;;FA16|FA1E+FA1E/FA1E\FA1E;
-                      ADC.B !_2                                 ;;FA17|FA1F+FA1F/FA1F\FA1F;
-                      STA.B !_2                                 ;;FA19|FA21+FA21/FA21\FA21;
+                      ADC.B _2                                  ;;FA17|FA1F+FA1F/FA1F\FA1F;
+                      STA.B _2                                  ;;FA19|FA21+FA21/FA21\FA21;
                       BCC +                                     ;;FA1B|FA23+FA23/FA23\FA23;
-                      INC.B !_3                                 ;;FA1D|FA25+FA25/FA25\FA25;
+                      INC.B _3                                  ;;FA1D|FA25+FA25/FA25\FA25;
                     + LDA.W DATA_04F9A8,Y                       ;;FA1F|FA27+FA27/FA27\FA27;
                       CLC                                       ;;FA22|FA2A+FA2A/FA2A\FA2A;
                       JMP CODE_04FB7B                           ;;FA23|FA2B+FA2B/FA2B\FA2B;
@@ -7754,58 +7754,58 @@ DATA_04FA37:          db $00,$00,$01                            ;;FA2F|FA37+FA37
                                                                 ;;                        ;
 DATA_04FA3A:          db $73,$72,$63,$62                        ;;FA32|FA3A+FA3A/FA3A\FA3A;
                                                                 ;;                        ;
-CODE_04FA3E:          LDA.W !OWSpriteMisc0DF5,X                 ;;FA36|FA3E+FA3E/FA3E\FA3E;
+CODE_04FA3E:          LDA.W OWSpriteMisc0DF5,X                  ;;FA36|FA3E+FA3E/FA3E\FA3E;
                       BNE CODE_04FA83                           ;;FA39|FA41+FA41/FA41\FA41;
-                      LDA.W !OverworldLayer1Tile                ;;FA3B|FA43+FA43/FA43\FA43;
+                      LDA.W OverworldLayer1Tile                 ;;FA3B|FA43+FA43/FA43\FA43;
                       SEC                                       ;;FA3E|FA46+FA46/FA46\FA46;
                       SBC.B #$4E                                ;;FA3F|FA47+FA47/FA47\FA47;
                       CMP.B #$03                                ;;FA41|FA49+FA49/FA49\FA49;
                       BCS Return04FA82                          ;;FA43|FA4B+FA4B/FA4B\FA4B;
                       TAY                                       ;;FA45|FA4D+FA4D/FA4D\FA4D;
                       LDA.W DATA_04FA2E,Y                       ;;FA46|FA4E+FA4E/FA4E\FA4E;
-                      STA.W !OWSpriteXPosLow,X                  ;;FA49|FA51+FA51/FA51\FA51;
+                      STA.W OWSpriteXPosLow,X                   ;;FA49|FA51+FA51/FA51\FA51;
                       LDA.W DATA_04FA31,Y                       ;;FA4C|FA54+FA54/FA54\FA54;
-                      STA.W !OWSpriteXPosHigh,X                 ;;FA4F|FA57+FA57/FA57\FA57;
+                      STA.W OWSpriteXPosHigh,X                  ;;FA4F|FA57+FA57/FA57\FA57;
                       LDA.W DATA_04FA34,Y                       ;;FA52|FA5A+FA5A/FA5A\FA5A;
-                      STA.W !OWSpriteYPosLow,X                  ;;FA55|FA5D+FA5D/FA5D\FA5D;
+                      STA.W OWSpriteYPosLow,X                   ;;FA55|FA5D+FA5D/FA5D\FA5D;
                       LDA.W DATA_04FA37,Y                       ;;FA58|FA60+FA60/FA60\FA60;
-                      STA.W !OWSpriteYPosHigh,X                 ;;FA5B|FA63+FA63/FA63\FA63;
+                      STA.W OWSpriteYPosHigh,X                  ;;FA5B|FA63+FA63/FA63\FA63;
                       JSR CODE_04FE5B                           ;;FA5E|FA66+FA66/FA66\FA66;
                       LSR A                                     ;;FA61|FA69+FA69/FA69\FA69;
                       ROR A                                     ;;FA62|FA6A+FA6A/FA6A\FA6A;
                       LSR A                                     ;;FA63|FA6B+FA6B/FA6B\FA6B;
                       AND.B #$40                                ;;FA64|FA6C+FA6C/FA6C\FA6C;
                       ORA.B #$12                                ;;FA66|FA6E+FA6E/FA6E\FA6E;
-                      STA.W !OWSpriteMisc0DF5,X                 ;;FA68|FA70+FA70/FA70\FA70;
+                      STA.W OWSpriteMisc0DF5,X                  ;;FA68|FA70+FA70/FA70\FA70;
                       LDA.B #$24                                ;;FA6B|FA73+FA73/FA73\FA73;
-                      STA.W !OWSpriteZSpeed,X                   ;;FA6D|FA75+FA75/FA75\FA75;
+                      STA.W OWSpriteZSpeed,X                    ;;FA6D|FA75+FA75/FA75\FA75;
                       LDA.B #!SFX_SWIM                          ;;FA70|FA78+FA78/FA78\FA78;
-                      STA.W !SPCIO0                             ;;FA72|FA7A+FA7A/FA7A\FA7A; / Play sound effect 
+                      STA.W SPCIO0                              ;;FA72|FA7A+FA7A/FA7A\FA7A; / Play sound effect 
 CODE_04FA7D:          LDA.B #$0F                                ;;FA75|FA7D+FA7D/FA7D\FA7D;
-                      STA.W !OWSpriteMisc0E25,X                 ;;FA77|FA7F+FA7F/FA7F\FA7F;
+                      STA.W OWSpriteMisc0E25,X                  ;;FA77|FA7F+FA7F/FA7F\FA7F;
 Return04FA82:         RTS                                       ;;FA7A|FA82+FA82/FA82\FA82; Return 
                                                                 ;;                        ;
-CODE_04FA83:          DEC.W !OWSpriteZSpeed,X                   ;;FA7B|FA83+FA83/FA83\FA83;
-                      LDA.W !OWSpriteZSpeed,X                   ;;FA7E|FA86+FA86/FA86\FA86;
+CODE_04FA83:          DEC.W OWSpriteZSpeed,X                    ;;FA7B|FA83+FA83/FA83\FA83;
+                      LDA.W OWSpriteZSpeed,X                    ;;FA7E|FA86+FA86/FA86\FA86;
                       CMP.B #$E4                                ;;FA81|FA89+FA89/FA89\FA89;
                       BNE +                                     ;;FA83|FA8B+FA8B/FA8B\FA8B;
                       JSR CODE_04FA7D                           ;;FA85|FA8D+FA8D/FA8D\FA8D;
                     + JSR CODE_04FE90                           ;;FA88|FA90+FA90/FA90\FA90;
-                      LDA.W !OWSpriteZPosLow,X                  ;;FA8B|FA93+FA93/FA93\FA93;
-                      ORA.W !OWSpriteMisc0E25,X                 ;;FA8E|FA96+FA96/FA96\FA96;
+                      LDA.W OWSpriteZPosLow,X                   ;;FA8B|FA93+FA93/FA93\FA93;
+                      ORA.W OWSpriteMisc0E25,X                  ;;FA8E|FA96+FA96/FA96\FA96;
                       BNE +                                     ;;FA91|FA99+FA99/FA99\FA99;
-                      STZ.W !OWSpriteMisc0DF5,X                 ;;FA93|FA9B+FA9B/FA9B\FA9B;
+                      STZ.W OWSpriteMisc0DF5,X                  ;;FA93|FA9B+FA9B/FA9B\FA9B;
                     + JSR CODE_04FE62                           ;;FA96|FA9E+FA9E/FA9E\FA9E;
-                      LDA.W !OWSpriteMisc0DF5,X                 ;;FA99|FAA1+FAA1/FAA1\FAA1;
+                      LDA.W OWSpriteMisc0DF5,X                  ;;FA99|FAA1+FAA1/FAA1\FAA1;
                       LDY.B #$08                                ;;FA9C|FAA4+FAA4/FAA4\FAA4;
-                      BIT.W !OWSpriteZSpeed,X                   ;;FA9E|FAA6+FAA6/FAA6\FAA6;
+                      BIT.W OWSpriteZSpeed,X                    ;;FA9E|FAA6+FAA6/FAA6\FAA6;
                       BPL +                                     ;;FAA1|FAA9+FAA9/FAA9\FAA9;
                       EOR.B #$C0                                ;;FAA3|FAAB+FAAB/FAAB\FAAB;
                       LDY.B #$10                                ;;FAA5|FAAD+FAAD/FAAD\FAAD;
                     + XBA                                       ;;FAA7|FAAF+FAAF/FAAF\FAAF;
                       TYA                                       ;;FAA8|FAB0+FAB0/FAB0\FAB0;
                       LDY.B #$4A                                ;;FAA9|FAB1+FAB1/FAB1\FAB1;
-                      AND.B !TrueFrame                          ;;FAAB|FAB3+FAB3/FAB3\FAB3;
+                      AND.B TrueFrame                           ;;FAAB|FAB3+FAB3/FAB3\FAB3;
                       BEQ +                                     ;;FAAD|FAB5+FAB5/FAB5\FAB5;
                       LDY.B #$48                                ;;FAAF|FAB7+FAB7/FAB7\FAB7;
                     + TYA                                       ;;FAB1|FAB9+FAB9/FAB9\FAB9;
@@ -7813,12 +7813,12 @@ CODE_04FA83:          DEC.W !OWSpriteZSpeed,X                   ;;FA7B|FA83+FA83
                       JSR CODE_04FE4E                           ;;FAB5|FABD+FABD/FABD\FABD;
                       SEC                                       ;;FAB8|FAC0+FAC0/FAC0\FAC0;
                       SBC.B #$08                                ;;FAB9|FAC1+FAC1/FAC1\FAC1;
-                      STA.B !_2                                 ;;FABB|FAC3+FAC3/FAC3\FAC3;
+                      STA.B _2                                  ;;FABB|FAC3+FAC3/FAC3\FAC3;
                       BCS +                                     ;;FABD|FAC5+FAC5/FAC5\FAC5;
-                      DEC.B !_3                                 ;;FABF|FAC7+FAC7/FAC7\FAC7;
+                      DEC.B _3                                  ;;FABF|FAC7+FAC7/FAC7\FAC7;
                     + LDA.B #$36                                ;;FAC1|FAC9+FAC9/FAC9\FAC9;
                       XBA                                       ;;FAC3|FACB+FACB/FACB\FACB;
-                      LDA.W !OWSpriteMisc0E25,X                 ;;FAC4|FACC+FACC/FACC\FACC;
+                      LDA.W OWSpriteMisc0E25,X                  ;;FAC4|FACC+FACC/FACC\FACC;
                       BEQ Return04FA82                          ;;FAC7|FACF+FACF/FACF\FACF;
                       LSR A                                     ;;FAC9|FAD1+FAD1/FAD1\FAD1;
                       LSR A                                     ;;FACA|FAD2+FAD2/FAD2\FAD2;
@@ -7829,10 +7829,10 @@ CODE_04FA83:          DEC.W !OWSpriteZSpeed,X                   ;;FA7B|FA83+FA83
                       PHA                                       ;;FAD1|FAD9+FAD9/FAD9\FAD9;
                       JSR CODE_04FAED                           ;;FAD2|FADA+FADA/FADA\FADA;
                       REP #$20                                  ;;FAD5|FADD+FADD/FADD\FADD; Accum (16 bit) 
-                      LDA.B !_0                                 ;;FAD7|FADF+FADF/FADF\FADF;
+                      LDA.B _0                                  ;;FAD7|FADF+FADF/FADF\FADF;
                       CLC                                       ;;FAD9|FAE1+FAE1/FAE1\FAE1;
                       ADC.W #$0008                              ;;FADA|FAE2+FAE2/FAE2\FAE2;
-                      STA.B !_0                                 ;;FADD|FAE5+FAE5/FAE5\FAE5;
+                      STA.B _0                                  ;;FADD|FAE5+FAE5/FAE5\FAE5;
                       SEP #$20                                  ;;FADF|FAE7+FAE7/FAE7\FAE7; Accum (8 bit) 
                       LDA.B #$76                                ;;FAE1|FAE9+FAE9/FAE9\FAE9;
                       XBA                                       ;;FAE3|FAEB+FAEB/FAEB\FAEB;
@@ -7852,18 +7852,18 @@ ADDR_04FAF1:          JSR ADDR_04FED7                           ;;FAE9|FAF1+FAF1
                       TYA                                       ;;FAFD|FB05+FB05/FB05\FB05;
 CODE_04FB06:          SEC                                       ;;FAFE|FB06+FB06/FB06\FB06;
                       LDY.W DATA_04F843,X                       ;;FAFF|FB07+FB07/FB07\FB07;
-CODE_04FB0A:          STA.W !OAMTileNo+$40,Y                    ;;FB02|FB0A+FB0A/FB0A\FB0A;Tilemap
+CODE_04FB0A:          STA.W OAMTileNo+$40,Y                     ;;FB02|FB0A+FB0A/FB0A\FB0A;Tilemap
                       XBA                                       ;;FB05|FB0D+FB0D/FB0D\FB0D;
-                      STA.W !OAMTileAttr+$40,Y                  ;;FB06|FB0E+FB0E/FB0E\FB0E;Property
-                      LDA.B !_1                                 ;;FB09|FB11+FB11/FB11\FB11;
+                      STA.W OAMTileAttr+$40,Y                   ;;FB06|FB0E+FB0E/FB0E\FB0E;Property
+                      LDA.B _1                                  ;;FB09|FB11+FB11/FB11\FB11;
                       BNE +                                     ;;FB0B|FB13+FB13/FB13\FB13;
-                      LDA.B !_0                                 ;;FB0D|FB15+FB15/FB15\FB15;
-                      STA.W !OAMTileXPos+$40,Y                  ;;FB0F|FB17+FB17/FB17\FB17;X Position
-                      LDA.B !_3                                 ;;FB12|FB1A+FB1A/FB1A\FB1A;
+                      LDA.B _0                                  ;;FB0D|FB15+FB15/FB15\FB15;
+                      STA.W OAMTileXPos+$40,Y                   ;;FB0F|FB17+FB17/FB17\FB17;X Position
+                      LDA.B _3                                  ;;FB12|FB1A+FB1A/FB1A\FB1A;
                       BNE +                                     ;;FB14|FB1C+FB1C/FB1C\FB1C;
                       PHP                                       ;;FB16|FB1E+FB1E/FB1E\FB1E;
-                      LDA.B !_2                                 ;;FB17|FB1F+FB1F/FB1F\FB1F;
-                      STA.W !OAMTileYPos+$40,Y                  ;;FB19|FB21+FB21/FB21\FB21;Y Position
+                      LDA.B _2                                  ;;FB17|FB1F+FB1F/FB1F\FB1F;
+                      STA.W OAMTileYPos+$40,Y                   ;;FB19|FB21+FB21/FB21\FB21;Y Position
                       TYA                                       ;;FB1C|FB24+FB24/FB24\FB24;
                       LSR A                                     ;;FB1D|FB25+FB25/FB25\FB25;
                       LSR A                                     ;;FB1E|FB26+FB26/FB26\FB26;
@@ -7873,7 +7873,7 @@ CODE_04FB0A:          STA.W !OAMTileNo+$40,Y                    ;;FB02|FB0A+FB0A
                       ROL A                                     ;;FB22|FB2A+FB2A/FB2A\FB2A;
                       ASL A                                     ;;FB23|FB2B+FB2B/FB2B\FB2B;
                       AND.B #$03                                ;;FB24|FB2C+FB2C/FB2C\FB2C;
-                      STA.W !OAMTileSize+$10,Y                  ;;FB26|FB2E+FB2E/FB2E\FB2E;
+                      STA.W OAMTileSize+$10,Y                   ;;FB26|FB2E+FB2E/FB2E\FB2E;
                       PLY                                       ;;FB29|FB31+FB31/FB31\FB31;
                       DEY                                       ;;FB2A|FB32+FB32/FB32\FB32;
                       DEY                                       ;;FB2B|FB33+FB33/FB33\FB33;
@@ -7882,39 +7882,39 @@ CODE_04FB0A:          STA.W !OAMTileNo+$40,Y                    ;;FB02|FB0A+FB0A
                     + RTS                                       ;;FB2E|FB36+FB36/FB36\FB36; Return 
                                                                 ;;                        ;
 CODE_04FB37:          LDA.B #$02                                ;;FB2F|FB37+FB37/FB37\FB37;\Overworld Sprite X Speed
-                      STA.W !OWSpriteXSpeed,X                   ;;FB31|FB39+FB39/FB39\FB39;/
+                      STA.W OWSpriteXSpeed,X                    ;;FB31|FB39+FB39/FB39\FB39;/
                       LDA.B #$FF                                ;;FB34|FB3C+FB3C/FB3C\FB3C;\Overworld Sprite Y Speed
-                      STA.W !OWSpriteYSpeed,X                   ;;FB36|FB3E+FB3E/FB3E\FB3E;/
+                      STA.W OWSpriteYSpeed,X                    ;;FB36|FB3E+FB3E/FB3E\FB3E;/
                       JSR CODE_04FE90                           ;;FB39|FB41+FB41/FB41\FB41;Move the overworld cloud
                       JSR CODE_04FE62                           ;;FB3C|FB44+FB44/FB44\FB44;
                       REP #$20                                  ;;FB3F|FB47+FB47/FB47\FB47; Accum (16 bit) 
-                      LDA.B !_0                                 ;;FB41|FB49+FB49/FB49\FB49;
+                      LDA.B _0                                  ;;FB41|FB49+FB49/FB49\FB49;
                       CLC                                       ;;FB43|FB4B+FB4B/FB4B\FB4B;
                       ADC.W #$0020                              ;;FB44|FB4C+FB4C/FB4C\FB4C;
                       CMP.W #$0140                              ;;FB47|FB4F+FB4F/FB4F\FB4F;
                       BCS +                                     ;;FB4A|FB52+FB52/FB52\FB52;
-                      LDA.B !_2                                 ;;FB4C|FB54+FB54/FB54\FB54;
+                      LDA.B _2                                  ;;FB4C|FB54+FB54/FB54\FB54;
                       CLC                                       ;;FB4E|FB56+FB56/FB56\FB56;
                       ADC.W #$0080                              ;;FB4F|FB57+FB57/FB57\FB57;
                       CMP.W #$01A0                              ;;FB52|FB5A+FB5A/FB5A\FB5A;
                     + SEP #$20                                  ;;FB55|FB5D+FB5D/FB5D\FB5D; Accum (8 bit) 
                       BCC +                                     ;;FB57|FB5F+FB5F/FB5F\FB5F;
-                      STZ.W !OWSpriteNumber,X                   ;;FB59|FB61+FB61/FB61\FB61;
+                      STZ.W OWSpriteNumber,X                    ;;FB59|FB61+FB61/FB61\FB61;
                     + LDA.B #$32                                ;;FB5C|FB64+FB64/FB64\FB64;
                       JSR CODE_04FB77                           ;;FB5E|FB66+FB66/FB66\FB66;
                       REP #$20                                  ;;FB61|FB69+FB69/FB69\FB69; Accum (16 bit) 
-                      LDA.B !_0                                 ;;FB63|FB6B+FB6B/FB6B\FB6B;
+                      LDA.B _0                                  ;;FB63|FB6B+FB6B/FB6B\FB6B;
                       CLC                                       ;;FB65|FB6D+FB6D/FB6D\FB6D;
                       ADC.W #$0010                              ;;FB66|FB6E+FB6E/FB6E\FB6E;
-                      STA.B !_0                                 ;;FB69|FB71+FB71/FB71\FB71;
+                      STA.B _0                                  ;;FB69|FB71+FB71/FB71\FB71;
                       SEP #$20                                  ;;FB6B|FB73+FB73/FB73\FB73; Accum (8 bit) 
                       LDA.B #$72                                ;;FB6D|FB75+FB75/FB75\FB75;
 CODE_04FB77:          XBA                                       ;;FB6F|FB77+FB77/FB77\FB77;
                       LDA.B #$44                                ;;FB70|FB78+FB78/FB78\FB78;
 CODE_04FB7A:          SEC                                       ;;FB72|FB7A+FB7A/FB7A\FB7A;
-CODE_04FB7B:          LDY.W !OWCloudOAMIndex                    ;;FB73|FB7B+FB7B/FB7B\FB7B;
+CODE_04FB7B:          LDY.W OWCloudOAMIndex                     ;;FB73|FB7B+FB7B/FB7B\FB7B;
                       JSR CODE_04FB0A                           ;;FB76|FB7E+FB7E/FB7E\FB7E;
-                      STY.W !OWCloudOAMIndex                    ;;FB79|FB81+FB81/FB81\FB81;
+                      STY.W OWCloudOAMIndex                     ;;FB79|FB81+FB81/FB81\FB81;
 Return04FB84:         RTS                                       ;;FB7C|FB84+FB84/FB84\FB84; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
@@ -7932,49 +7932,49 @@ DATA_04FB93:          db $01,$08                                ;;FB8B|FB93+FB93
                                                                 ;;                        ;
 DATA_04FB95:          db $02,$0F,$00                            ;;FB8D|FB95+FB95/FB95\FB95;
                                                                 ;;                        ;
-CODE_04FB98:          LDA.W !OWSpriteMisc0DF5,X                 ;;FB90|FB98+FB98/FB98\FB98;
+CODE_04FB98:          LDA.W OWSpriteMisc0DF5,X                  ;;FB90|FB98+FB98/FB98\FB98;
                       BNE ADDR_04FBD8                           ;;FB93|FB9B+FB9B/FB9B\FB9B;
-                      LDA.W !OverworldLayer1Tile                ;;FB95|FB9D+FB9D/FB9D\FB9D;
+                      LDA.W OverworldLayer1Tile                 ;;FB95|FB9D+FB9D/FB9D\FB9D;
                       SEC                                       ;;FB98|FBA0+FBA0/FBA0\FBA0;
                       SBC.B #$49                                ;;FB99|FBA1+FBA1/FBA1\FBA1;
                       CMP.B #$03                                ;;FB9B|FBA3+FBA3/FBA3\FBA3;
                       BCS Return04FB84                          ;;FB9D|FBA5+FBA5/FBA5\FBA5;
                       TAY                                       ;;FB9F|FBA7+FBA7/FBA7\FBA7;
-                      STA.W !KoopaKidTile                       ;;FBA0|FBA8+FBA8/FBA8\FBA8;
-                      LDA.W !KoopaKidActive                     ;;FBA3|FBAB+FBAB/FBAB\FBAB;
+                      STA.W KoopaKidTile                        ;;FBA0|FBA8+FBA8/FBA8\FBA8;
+                      LDA.W KoopaKidActive                      ;;FBA3|FBAB+FBAB/FBAB\FBAB;
                       AND.W DATA_04FB85,Y                       ;;FBA6|FBAE+FBAE/FBAE\FBAE;
                       BNE Return04FB84                          ;;FBA9|FBB1+FBB1/FBB1\FBB1;
                       LDA.W DATA_04FB88,Y                       ;;FBAB|FBB3+FBB3/FBB3\FBB3;
-                      STA.W !OWSpriteXPosLow,X                  ;;FBAE|FBB6+FBB6/FBB6\FBB6;
+                      STA.W OWSpriteXPosLow,X                   ;;FBAE|FBB6+FBB6/FBB6\FBB6;
                       LDA.W DATA_04FB8B,Y                       ;;FBB1|FBB9+FBB9/FBB9\FBB9;
-                      STA.W !OWSpriteXPosHigh,X                 ;;FBB4|FBBC+FBBC/FBBC\FBBC;
+                      STA.W OWSpriteXPosHigh,X                  ;;FBB4|FBBC+FBBC/FBBC\FBBC;
                       LDA.W DATA_04FB8E,Y                       ;;FBB7|FBBF+FBBF/FBBF\FBBF;
-                      STA.W !OWSpriteYPosLow,X                  ;;FBBA|FBC2+FBC2/FBC2\FBC2;
+                      STA.W OWSpriteYPosLow,X                   ;;FBBA|FBC2+FBC2/FBC2\FBC2;
                       LDA.W DATA_04FB91,Y                       ;;FBBD|FBC5+FBC5/FBC5\FBC5;
-                      STA.W !OWSpriteYPosHigh,X                 ;;FBC0|FBC8+FBC8/FBC8\FBC8;
+                      STA.W OWSpriteYPosHigh,X                  ;;FBC0|FBC8+FBC8/FBC8\FBC8;
                       LDA.B #$02                                ;;FBC3|FBCB+FBCB/FBCB\FBCB;
-                      STA.W !OWSpriteMisc0DF5,X                 ;;FBC5|FBCD+FBCD/FBCD\FBCD;
+                      STA.W OWSpriteMisc0DF5,X                  ;;FBC5|FBCD+FBCD/FBCD\FBCD;
                       LDA.B #$F0                                ;;FBC8|FBD0+FBD0/FBD0\FBD0;
-                      STA.W !OWSpriteXSpeed,X                   ;;FBCA|FBD2+FBD2/FBD2\FBD2;
-                      STZ.W !OWSpriteMisc0E25,X                 ;;FBCD|FBD5+FBD5/FBD5\FBD5;
+                      STA.W OWSpriteXSpeed,X                    ;;FBCA|FBD2+FBD2/FBD2\FBD2;
+                      STZ.W OWSpriteMisc0E25,X                  ;;FBCD|FBD5+FBD5/FBD5\FBD5;
 ADDR_04FBD8:          JSR CODE_04FE62                           ;;FBD0|FBD8+FBD8/FBD8\FBD8;
-                      LDA.W !OWSpriteMisc0E25,X                 ;;FBD3|FBDB+FBDB/FBDB\FBDB;
+                      LDA.W OWSpriteMisc0E25,X                  ;;FBD3|FBDB+FBDB/FBDB\FBDB;
                       BNE +                                     ;;FBD6|FBDE+FBDE/FBDE\FBDE;
-                      INC.W !OWSpriteMisc0E05,X                 ;;FBD8|FBE0+FBE0/FBE0\FBE0;
+                      INC.W OWSpriteMisc0E05,X                  ;;FBD8|FBE0+FBE0/FBE0\FBE0;
                       JSR CODE_04FEAB                           ;;FBDB|FBE3+FBE3/FBE3\FBE3;
-                      LDY.W !OWSpriteMisc0DF5,X                 ;;FBDE|FBE6+FBE6/FBE6\FBE6;
-                      LDA.W !OWSpriteXPosLow,X                  ;;FBE1|FBE9+FBE9/FBE9\FBE9;
+                      LDY.W OWSpriteMisc0DF5,X                  ;;FBDE|FBE6+FBE6/FBE6\FBE6;
+                      LDA.W OWSpriteXPosLow,X                   ;;FBE1|FBE9+FBE9/FBE9\FBE9;
                       AND.B #$0F                                ;;FBE4|FBEC+FBEC/FBEC\FBEC;
                       CMP.W DATA_04FB95,Y                       ;;FBE6|FBEE+FBEE/FBEE\FBEE;
                       BNE +                                     ;;FBE9|FBF1+FBF1/FBF1\FBF1;
-                      DEC.W !OWSpriteMisc0DF5,X                 ;;FBEB|FBF3+FBF3/FBF3\FBF3;
+                      DEC.W OWSpriteMisc0DF5,X                  ;;FBEB|FBF3+FBF3/FBF3\FBF3;
                       LDA.B #$04                                ;;FBEE|FBF6+FBF6/FBF6\FBF6;
-                      STA.W !OWSpriteXSpeed,X                   ;;FBF0|FBF8+FBF8/FBF8\FBF8;
+                      STA.W OWSpriteXSpeed,X                    ;;FBF0|FBF8+FBF8/FBF8\FBF8;
                       LDA.B #$60                                ;;FBF3|FBFB+FBFB/FBFB\FBFB;
-                      STA.W !OWSpriteMisc0E25,X                 ;;FBF5|FBFD+FBFD/FBFD\FBFD;
+                      STA.W OWSpriteMisc0E25,X                  ;;FBF5|FBFD+FBFD/FBFD\FBFD;
                     + LDA.W DATA_04FB93,Y                       ;;FBF8|FC00+FC00/FC00\FC00;
                       LDY.B #$22                                ;;FBFB|FC03+FC03/FC03\FC03;
-                      AND.W !OWSpriteMisc0E05,X                 ;;FBFD|FC05+FC05/FC05\FC05;
+                      AND.W OWSpriteMisc0E05,X                  ;;FBFD|FC05+FC05/FC05\FC05;
                       BNE +                                     ;;FC00|FC08+FC08/FC08\FC08;
                       LDY.B #$62                                ;;FC02|FC0A+FC0A/FC0A\FC0A;
                     + TYA                                       ;;FC04|FC0C+FC0C/FC0C\FC0C;
@@ -7984,7 +7984,7 @@ ADDR_04FBD8:          JSR CODE_04FE62                           ;;FBD0|FBD8+FBD8
                       JSR ADDR_04FED7                           ;;FC0B|FC13+FC13/FC13\FC13;
                       BCS +                                     ;;FC0E|FC16+FC16/FC16\FC16;
                       ORA.B #$80                                ;;FC10|FC18+FC18/FC18\FC18;
-                      STA.W !EnterLevelAuto                     ;;FC12|FC1A+FC1A/FC1A\FC1A;
+                      STA.W EnterLevelAuto                      ;;FC12|FC1A+FC1A/FC1A\FC1A;
                     + RTS                                       ;;FC15|FC1D+FC1D/FC1D\FC1D; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
@@ -8001,57 +8001,57 @@ DATA_04FC26:          db $01,$02,$03,$04,$03,$02,$01,$00        ;;FC1E|FC26+FC26
 DATA_04FC36:          db $FF,$FF,$FE,$FD,$FD,$FC,$FB,$FB        ;;FC2E|FC36+FC36/FC36\FC36;
                       db $FA,$F9,$F9,$F8,$F7,$F7,$F6,$F5        ;;FC36|FC3E+FC3E/FC3E\FC3E;
                                                                 ;;                        ;
-CODE_04FC46:          LDA.W !PlayerTurnOW                       ;;FC3E|FC46+FC46/FC46\FC46;
+CODE_04FC46:          LDA.W PlayerTurnOW                        ;;FC3E|FC46+FC46/FC46\FC46;
                       LSR A                                     ;;FC41|FC49+FC49/FC49\FC49;
                       LSR A                                     ;;FC42|FC4A+FC4A/FC4A\FC4A;
                       TAY                                       ;;FC43|FC4B+FC4B/FC4B\FC4B;
-                      LDA.W !OWPlayerSubmap,Y                   ;;FC44|FC4C+FC4C/FC4C\FC4C;
+                      LDA.W OWPlayerSubmap,Y                    ;;FC44|FC4C+FC4C/FC4C\FC4C;
                       ASL A                                     ;;FC47|FC4F+FC4F/FC4F\FC4F;
                       TAY                                       ;;FC48|FC50+FC50/FC50\FC50;
                       LDA.W DATA_04FC1E,Y                       ;;FC49|FC51+FC51/FC51\FC51;
-                      STA.W !OWSpriteXPosLow,X                  ;;FC4C|FC54+FC54/FC54\FC54;
+                      STA.W OWSpriteXPosLow,X                   ;;FC4C|FC54+FC54/FC54\FC54;
                       LDA.W DATA_04FC1F,Y                       ;;FC4F|FC57+FC57/FC57\FC57;
-                      STA.W !OWSpriteXPosHigh,X                 ;;FC52|FC5A+FC5A/FC5A\FC5A;
+                      STA.W OWSpriteXPosHigh,X                  ;;FC52|FC5A+FC5A/FC5A\FC5A;
                       LDA.W DATA_04FC22,Y                       ;;FC55|FC5D+FC5D/FC5D\FC5D;
-                      STA.W !OWSpriteYPosLow,X                  ;;FC58|FC60+FC60/FC60\FC60;
+                      STA.W OWSpriteYPosLow,X                   ;;FC58|FC60+FC60/FC60\FC60;
                       LDA.W DATA_04FC23,Y                       ;;FC5B|FC63+FC63/FC63\FC63;
-                      STA.W !OWSpriteYPosHigh,X                 ;;FC5E|FC66+FC66/FC66\FC66;
-                      LDA.B !TrueFrame                          ;;FC61|FC69+FC69/FC69\FC69;
+                      STA.W OWSpriteYPosHigh,X                  ;;FC5E|FC66+FC66/FC66\FC66;
+                      LDA.B TrueFrame                           ;;FC61|FC69+FC69/FC69\FC69;
                       AND.B #$0F                                ;;FC63|FC6B+FC6B/FC6B\FC6B;
                       BNE CODE_04FC7C                           ;;FC65|FC6D+FC6D/FC6D\FC6D;
-                      LDA.W !OWSpriteMisc0DF5,X                 ;;FC67|FC6F+FC6F/FC6F\FC6F;
+                      LDA.W OWSpriteMisc0DF5,X                  ;;FC67|FC6F+FC6F/FC6F\FC6F;
                       INC A                                     ;;FC6A|FC72+FC72/FC72\FC72;
                       CMP.B #$0C                                ;;FC6B|FC73+FC73/FC73\FC73;
                       BCC +                                     ;;FC6D|FC75+FC75/FC75\FC75;
                       LDA.B #$00                                ;;FC6F|FC77+FC77/FC77\FC77;
-                    + STA.W !OWSpriteMisc0DF5,X                 ;;FC71|FC79+FC79/FC79\FC79;
+                    + STA.W OWSpriteMisc0DF5,X                  ;;FC71|FC79+FC79/FC79\FC79;
 CODE_04FC7C:          LDA.B #$03                                ;;FC74|FC7C+FC7C/FC7C\FC7C;
-                      STA.B !_4                                 ;;FC76|FC7E+FC7E/FC7E\FC7E;
-                      LDA.B !TrueFrame                          ;;FC78|FC80+FC80/FC80\FC80;
-                      STA.B !_6                                 ;;FC7A|FC82+FC82/FC82\FC82;
-                      STZ.B !_7                                 ;;FC7C|FC84+FC84/FC84\FC84;
+                      STA.B _4                                  ;;FC76|FC7E+FC7E/FC7E\FC7E;
+                      LDA.B TrueFrame                           ;;FC78|FC80+FC80/FC80\FC80;
+                      STA.B _6                                  ;;FC7A|FC82+FC82/FC82\FC82;
+                      STZ.B _7                                  ;;FC7C|FC84+FC84/FC84\FC84;
                       LDY.W DATA_04F843,X                       ;;FC7E|FC86+FC86/FC86\FC86;
-                      LDA.W !OWSpriteMisc0DF5,X                 ;;FC81|FC89+FC89/FC89\FC89;
+                      LDA.W OWSpriteMisc0DF5,X                  ;;FC81|FC89+FC89/FC89\FC89;
                       TAX                                       ;;FC84|FC8C+FC8C/FC8C\FC8C;
 CODE_04FC8D:          PHY                                       ;;FC85|FC8D+FC8D/FC8D\FC8D;
                       PHX                                       ;;FC86|FC8E+FC8E/FC8E\FC8E;
-                      LDX.W !SaveFileDelete                     ;;FC87|FC8F+FC8F/FC8F\FC8F;
+                      LDX.W SaveFileDelete                      ;;FC87|FC8F+FC8F/FC8F\FC8F;
                       JSR CODE_04FE62                           ;;FC8A|FC92+FC92/FC92\FC92;
                       PLX                                       ;;FC8D|FC95+FC95/FC95\FC95;
-                      LDA.B !_7                                 ;;FC8E|FC96+FC96/FC96\FC96;
+                      LDA.B _7                                  ;;FC8E|FC96+FC96/FC96\FC96;
                       CLC                                       ;;FC90|FC98+FC98/FC98\FC98;
                       ADC.W DATA_04FC36,X                       ;;FC91|FC99+FC99/FC99\FC99;
                       CLC                                       ;;FC94|FC9C+FC9C/FC9C\FC9C;
-                      ADC.B !_2                                 ;;FC95|FC9D+FC9D/FC9D\FC9D;
-                      STA.B !_2                                 ;;FC97|FC9F+FC9F/FC9F\FC9F;
+                      ADC.B _2                                  ;;FC95|FC9D+FC9D/FC9D\FC9D;
+                      STA.B _2                                  ;;FC97|FC9F+FC9F/FC9F\FC9F;
                       BCS +                                     ;;FC99|FCA1+FCA1/FCA1\FCA1;
-                      DEC.B !_3                                 ;;FC9B|FCA3+FCA3/FCA3\FCA3;
-                    + LDA.B !_0                                 ;;FC9D|FCA5+FCA5/FCA5\FCA5;
+                      DEC.B _3                                  ;;FC9B|FCA3+FCA3/FCA3\FCA3;
+                    + LDA.B _0                                  ;;FC9D|FCA5+FCA5/FCA5\FCA5;
                       CLC                                       ;;FC9F|FCA7+FCA7/FCA7\FCA7;
                       ADC.W DATA_04FC26,X                       ;;FCA0|FCA8+FCA8/FCA8\FCA8;
-                      STA.B !_0                                 ;;FCA3|FCAB+FCAB/FCAB\FCAB;
+                      STA.B _0                                  ;;FCA3|FCAB+FCAB/FCAB\FCAB;
                       BCC +                                     ;;FCA5|FCAD+FCAD/FCAD\FCAD;
-                      INC.B !_1                                 ;;FCA7|FCAF+FCAF/FCAF\FCAF;
+                      INC.B _1                                  ;;FCA7|FCAF+FCAF/FCAF\FCAF;
                     + TXA                                       ;;FCA9|FCB1+FCB1/FCB1\FCB1;
                       CLC                                       ;;FCAA|FCB2+FCB2/FCB2\FCB2;
                       ADC.B #$0C                                ;;FCAB|FCB3+FCB3/FCB3\FCB3;
@@ -8059,48 +8059,48 @@ CODE_04FC8D:          PHY                                       ;;FC85|FC8D+FC8D
                       AND.B #$0F                                ;;FCAF|FCB7+FCB7/FCB7\FCB7;
                       TAX                                       ;;FCB1|FCB9+FCB9/FCB9\FCB9;
                       BCC +                                     ;;FCB2|FCBA+FCBA/FCBA\FCBA;
-                      LDA.B !_7                                 ;;FCB4|FCBC+FCBC/FCBC\FCBC;
+                      LDA.B _7                                  ;;FCB4|FCBC+FCBC/FCBC\FCBC;
                       SBC.B #$0C                                ;;FCB6|FCBE+FCBE/FCBE\FCBE;
-                      STA.B !_7                                 ;;FCB8|FCC0+FCC0/FCC0\FCC0;
+                      STA.B _7                                  ;;FCB8|FCC0+FCC0/FCC0\FCC0;
                     + LDA.B #$30                                ;;FCBA|FCC2+FCC2/FCC2\FCC2;
                       XBA                                       ;;FCBC|FCC4+FCC4/FCC4\FCC4;
                       LDY.B #$28                                ;;FCBD|FCC5+FCC5/FCC5\FCC5;
-                      LDA.B !_6                                 ;;FCBF|FCC7+FCC7/FCC7\FCC7;
+                      LDA.B _6                                  ;;FCBF|FCC7+FCC7/FCC7\FCC7;
                       CLC                                       ;;FCC1|FCC9+FCC9/FCC9\FCC9;
                       ADC.B #$0A                                ;;FCC2|FCCA+FCCA/FCCA\FCCA;
-                      STA.B !_6                                 ;;FCC4|FCCC+FCCC/FCCC\FCCC;
+                      STA.B _6                                  ;;FCC4|FCCC+FCCC/FCCC\FCCC;
                       AND.B #$20                                ;;FCC6|FCCE+FCCE/FCCE\FCCE;
                       BEQ +                                     ;;FCC8|FCD0+FCD0/FCD0\FCD0;
                       LDY.B #$5F                                ;;FCCA|FCD2+FCD2/FCD2\FCD2;
                     + TYA                                       ;;FCCC|FCD4+FCD4/FCD4\FCD4;
                       PLY                                       ;;FCCD|FCD5+FCD5/FCD5\FCD5;
                       JSR CODE_04FAED                           ;;FCCE|FCD6+FCD6/FCD6\FCD6;
-                      DEC.B !_4                                 ;;FCD1|FCD9+FCD9/FCD9\FCD9;
+                      DEC.B _4                                  ;;FCD1|FCD9+FCD9/FCD9\FCD9;
                       BNE CODE_04FC8D                           ;;FCD3|FCDB+FCDB/FCDB\FCDB;
-                      LDX.W !SaveFileDelete                     ;;FCD5|FCDD+FCDD/FCDD\FCDD;
+                      LDX.W SaveFileDelete                      ;;FCD5|FCDD+FCDD/FCDD\FCDD;
                       RTS                                       ;;FCD8|FCE0+FCE0/FCE0\FCE0; Return 
                                                                 ;;                        ;
                                                                 ;;                        ;
                                                                 ;;                        ;Bowser's sign code starts here.
 CODE_04FCE1:          JSR CODE_04FE62                           ;;FCD9|FCE1+FCE1/FCE1\FCE1;
                       LDA.B #$04                                ;;FCDC|FCE4+FCE4/FCE4\FCE4;\How many tiles to show up for Bowser's sign
-                      STA.B !_4                                 ;;FCDE|FCE6+FCE6/FCE6\FCE6;/            
+                      STA.B _4                                  ;;FCDE|FCE6+FCE6/FCE6\FCE6;/            
                       LDA.B #$6F                                ;;FCE0|FCE8+FCE8/FCE8\FCE8;
-                      STA.B !_5                                 ;;FCE2|FCEA+FCEA/FCEA\FCEA; 
+                      STA.B _5                                  ;;FCE2|FCEA+FCEA/FCEA\FCEA; 
                       LDY.W DATA_04F843,X                       ;;FCE4|FCEC+FCEC/FCEC\FCEC;
-                    - LDA.B !TrueFrame                          ;;FCE7|FCEF+FCEF/FCEF\FCEF;
+                    - LDA.B TrueFrame                           ;;FCE7|FCEF+FCEF/FCEF\FCEF;
                       LSR A                                     ;;FCE9|FCF1+FCF1/FCF1\FCF1;
                       AND.B #$06                                ;;FCEA|FCF2+FCF2/FCF2\FCF2;
                       ORA.B #$30                                ;;FCEC|FCF4+FCF4/FCF4\FCF4;
                       XBA                                       ;;FCEE|FCF6+FCF6/FCF6\FCF6;
-                      LDA.B !_5                                 ;;FCEF|FCF7+FCF7/FCF7\FCF7;
+                      LDA.B _5                                  ;;FCEF|FCF7+FCF7/FCF7\FCF7;
                       JSR CODE_04FAED                           ;;FCF1|FCF9+FCF9/FCF9\FCF9;Jump to CLC, then the OAM part of the Pirahna Plant code.
-                      LDA.B !_0                                 ;;FCF4|FCFC+FCFC/FCFC\FCFC;
+                      LDA.B _0                                  ;;FCF4|FCFC+FCFC/FCFC\FCFC;
                       SEC                                       ;;FCF6|FCFE+FCFE/FCFE\FCFE;
                       SBC.B #$08                                ;;FCF7|FCFF+FCFF/FCFF\FCFF;
-                      STA.B !_0                                 ;;FCF9|FD01+FD01/FD01\FD01;
-                      DEC.B !_5                                 ;;FCFB|FD03+FD03/FD03\FD03;
-                      DEC.B !_4                                 ;;FCFD|FD05+FD05/FD05\FD05;
+                      STA.B _0                                  ;;FCF9|FD01+FD01/FD01\FD01;
+                      DEC.B _5                                  ;;FCFB|FD03+FD03/FD03\FD03;
+                      DEC.B _4                                  ;;FCFD|FD05+FD05/FD05\FD05;
                       BNE -                                     ;;FCFF|FD07+FD07/FD07\FD07;
                       RTS                                       ;;FD01|FD09+FD09/FD09\FD09; Return 
                                                                 ;;                        ;
@@ -8117,73 +8117,73 @@ CODE_04FD24:          JSR CODE_04FE90                           ;;FD1C|FD24+FD24
                       JSR CODE_04FE62                           ;;FD1F|FD27+FD27/FD27\FD27;
                       JSR CODE_04FE62                           ;;FD22|FD2A+FD2A/FD2A\FD2A;
                       LDA.B #$00                                ;;FD25|FD2D+FD2D/FD2D\FD2D;
-                      LDY.W !OWSpriteXSpeed,X                   ;;FD27|FD2F+FD2F/FD2F\FD2F;
+                      LDY.W OWSpriteXSpeed,X                    ;;FD27|FD2F+FD2F/FD2F\FD2F;
                       BMI +                                     ;;FD2A|FD32+FD32/FD32\FD32;
                       LDA.B #$40                                ;;FD2C|FD34+FD34/FD34\FD34;
                     + XBA                                       ;;FD2E|FD36+FD36/FD36\FD36;
                       LDA.B #$68                                ;;FD2F|FD37+FD37/FD37\FD37;
                       JSR CODE_04FB06                           ;;FD31|FD39+FD39/FD39\FD39;
-                      INC.W !OWSpriteMisc0E15,X                 ;;FD34|FD3C+FD3C/FD3C\FD3C;
-                      LDA.W !OWSpriteMisc0E15,X                 ;;FD37|FD3F+FD3F/FD3F\FD3F;
+                      INC.W OWSpriteMisc0E15,X                  ;;FD34|FD3C+FD3C/FD3C\FD3C;
+                      LDA.W OWSpriteMisc0E15,X                  ;;FD37|FD3F+FD3F/FD3F\FD3F;
                       LSR A                                     ;;FD3A|FD42+FD42/FD42\FD42;
                       BCS Return04FD6F                          ;;FD3B|FD43+FD43/FD43\FD43;
-                      LDA.W !OWSpriteMisc0E05,X                 ;;FD3D|FD45+FD45/FD45\FD45;
+                      LDA.W OWSpriteMisc0E05,X                  ;;FD3D|FD45+FD45/FD45\FD45;
                       ORA.B #$02                                ;;FD40|FD48+FD48/FD48\FD48;
                       TAY                                       ;;FD42|FD4A+FD4A/FD4A\FD4A;
                       TXA                                       ;;FD43|FD4B+FD4B/FD4B\FD4B;
                       ADC.B #$10                                ;;FD44|FD4C+FD4C/FD4C\FD4C;
                       TAX                                       ;;FD46|FD4E+FD4E/FD4E\FD4E;
                       JSR CODE_04FD55                           ;;FD47|FD4F+FD4F/FD4F\FD4F;
-                      LDY.W !OWSpriteMisc0DF5,X                 ;;FD4A|FD52+FD52/FD52\FD52;
-CODE_04FD55:          LDA.W !OWSpriteXSpeed,X                   ;;FD4D|FD55+FD55/FD55\FD55;
+                      LDY.W OWSpriteMisc0DF5,X                  ;;FD4A|FD52+FD52/FD52\FD52;
+CODE_04FD55:          LDA.W OWSpriteXSpeed,X                    ;;FD4D|FD55+FD55/FD55\FD55;
                       CLC                                       ;;FD50|FD58+FD58/FD58\FD58;
                       ADC.W DATA_04FD10,Y                       ;;FD51|FD59+FD59/FD59\FD59;
-                      STA.W !OWSpriteXSpeed,X                   ;;FD54|FD5C+FD5C/FD5C\FD5C;
+                      STA.W OWSpriteXSpeed,X                    ;;FD54|FD5C+FD5C/FD5C\FD5C;
                       CMP.W DATA_04FD1A,Y                       ;;FD57|FD5F+FD5F/FD5F\FD5F;
                       BNE CODE_04FD68                           ;;FD5A|FD62+FD62/FD62\FD62;
                       TYA                                       ;;FD5C|FD64+FD64/FD64\FD64;
                       EOR.B #$01                                ;;FD5D|FD65+FD65/FD65\FD65;
                       TAY                                       ;;FD5F|FD67+FD67/FD67\FD67;
 CODE_04FD68:          TYA                                       ;;FD60|FD68+FD68/FD68\FD68;
-                      STA.W !OWSpriteMisc0DF5,X                 ;;FD61|FD69+FD69/FD69\FD69;
-                      LDX.W !SaveFileDelete                     ;;FD64|FD6C+FD6C/FD6C\FD6C;
+                      STA.W OWSpriteMisc0DF5,X                  ;;FD61|FD69+FD69/FD69\FD69;
+                      LDX.W SaveFileDelete                      ;;FD64|FD6C+FD6C/FD6C\FD6C;
 Return04FD6F:         RTS                                       ;;FD67|FD6F+FD6F/FD6F\FD6F; Return 
                                                                 ;;                        ;
 CODE_04FD70:          JSR CODE_04FE90                           ;;FD68|FD70+FD70/FD70\FD70;
                       JSR CODE_04FE62                           ;;FD6B|FD73+FD73/FD73\FD73;
                       JSR CODE_04FE62                           ;;FD6E|FD76+FD76/FD76\FD76;
-                      LDY.W !PlayerTurnLvl                      ;;FD71|FD79+FD79/FD79\FD79;
-                      LDA.W !OWPlayerSubmap,Y                   ;;FD74|FD7C+FD7C/FD7C\FD7C;
+                      LDY.W PlayerTurnLvl                       ;;FD71|FD79+FD79/FD79\FD79;
+                      LDA.W OWPlayerSubmap,Y                    ;;FD74|FD7C+FD7C/FD7C\FD7C;
                       BEQ CODE_04FDA5                           ;;FD77|FD7F+FD7F/FD7F\FD7F;
                       CPX.B #$0F                                ;;FD79|FD81+FD81/FD81\FD81;
                       BNE +                                     ;;FD7B|FD83+FD83/FD83\FD83;
-                      LDA.W !OWEventsActivated+5                ;;FD7D|FD85+FD85/FD85\FD85;
+                      LDA.W OWEventsActivated+5                 ;;FD7D|FD85+FD85/FD85\FD85;
                       AND.B #$12                                ;;FD80|FD88+FD88/FD88\FD88;
                       BNE +                                     ;;FD82|FD8A+FD8A/FD8A\FD8A;
-                      STX.B !_3                                 ;;FD84|FD8C+FD8C/FD8C\FD8C;
+                      STX.B _3                                  ;;FD84|FD8C+FD8C/FD8C\FD8C;
                     + TXA                                       ;;FD86|FD8E+FD8E/FD8E\FD8E;
                       ASL A                                     ;;FD87|FD8F+FD8F/FD8F\FD8F;
                       TAY                                       ;;FD88|FD90+FD90/FD90\FD90;
                       REP #$20                                  ;;FD89|FD91+FD91/FD91\FD91; Accum (16 bit) 
-                      LDA.B !_0                                 ;;FD8B|FD93+FD93/FD93\FD93;
+                      LDA.B _0                                  ;;FD8B|FD93+FD93/FD93\FD93;
                       CLC                                       ;;FD8D|FD95+FD95/FD95\FD95;
                       ADC.W ExtraOWGhostXPos-$1A,Y              ;;FD8E|FD96+FD96/FD96\FD96;
-                      STA.B !_0                                 ;;FD91|FD99+FD99/FD99\FD99;
-                      LDA.B !_2                                 ;;FD93|FD9B+FD9B/FD9B\FD9B;
+                      STA.B _0                                  ;;FD91|FD99+FD99/FD99\FD99;
+                      LDA.B _2                                  ;;FD93|FD9B+FD9B/FD9B\FD9B;
                       CLC                                       ;;FD95|FD9D+FD9D/FD9D\FD9D;
                       ADC.W ExtraOWGhostYPos-$1A,Y              ;;FD96|FD9E+FD9E/FD9E\FD9E;
-                      STA.B !_2                                 ;;FD99|FDA1+FDA1/FDA1\FDA1;
+                      STA.B _2                                  ;;FD99|FDA1+FDA1/FDA1\FDA1;
                       SEP #$20                                  ;;FD9B|FDA3+FDA3/FDA3\FDA3; Accum (8 bit) 
 CODE_04FDA5:          LDA.B #$34                                ;;FD9D|FDA5+FDA5/FDA5\FDA5;
-                      LDY.W !OWSpriteXSpeed,X                   ;;FD9F|FDA7+FDA7/FDA7\FDA7;
+                      LDY.W OWSpriteXSpeed,X                    ;;FD9F|FDA7+FDA7/FDA7\FDA7;
                       BMI +                                     ;;FDA2|FDAA+FDAA/FDAA\FDAA;
                       LDA.B #$44                                ;;FDA4|FDAC+FDAC/FDAC\FDAC;
                     + XBA                                       ;;FDA6|FDAE+FDAE/FDAE\FDAE;
                       LDA.B #$60                                ;;FDA7|FDAF+FDAF/FDAF\FDAF;
                       JSR CODE_04FB06                           ;;FDA9|FDB1+FDB1/FDB1\FDB1;
-                      LDA.W !OWSpriteMisc0E25,X                 ;;FDAC|FDB4+FDB4/FDB4\FDB4;
-                      STA.B !_0                                 ;;FDAF|FDB7+FDB7/FDB7\FDB7;
-                      INC.W !OWSpriteMisc0E25,X                 ;;FDB1|FDB9+FDB9/FDB9\FDB9;
+                      LDA.W OWSpriteMisc0E25,X                  ;;FDAC|FDB4+FDB4/FDB4\FDB4;
+                      STA.B _0                                  ;;FDAF|FDB7+FDB7/FDB7\FDB7;
+                      INC.W OWSpriteMisc0E25,X                  ;;FDB1|FDB9+FDB9/FDB9\FDB9;
                       TXA                                       ;;FDB4|FDBC+FDBC/FDBC\FDBC;
                       CLC                                       ;;FDB5|FDBD+FDBD/FDBD\FDBD;
                       ADC.B #$20                                ;;FDB6|FDBE+FDBE/FDBE\FDBE;
@@ -8197,10 +8197,10 @@ CODE_04FDA5:          LDA.B #$34                                ;;FD9D|FDA5+FDA5
                       LDA.B #$06                                ;;FDC3|FDCB+FDCB/FDCB\FDCB;
                       JSR CODE_04FDD2                           ;;FDC5|FDCD+FDCD/FDCD\FDCD;
                       LDA.B #$04                                ;;FDC8|FDD0+FDD0/FDD0\FDD0;
-CODE_04FDD2:          ORA.W !OWSpriteMisc0DF5,X                 ;;FDCA|FDD2+FDD2/FDD2\FDD2;
+CODE_04FDD2:          ORA.W OWSpriteMisc0DF5,X                  ;;FDCA|FDD2+FDD2/FDD2\FDD2;
                       TAY                                       ;;FDCD|FDD5+FDD5/FDD5\FDD5;
                       LDA.W DATA_04FD0A-4,Y                     ;;FDCE|FDD6+FDD6/FDD6\FDD6;
-                      AND.B !_0                                 ;;FDD1|FDD9+FDD9/FDD9\FDD9;
+                      AND.B _0                                  ;;FDD1|FDD9+FDD9/FDD9\FDD9;
                       BNE CODE_04FD68                           ;;FDD3|FDDB+FDDB/FDDB\FDDB;
                       JMP CODE_04FD55                           ;;FDD5|FDDD+FDDD/FDDD\FDDD;
                                                                 ;;                        ;
@@ -8210,57 +8210,57 @@ DATA_04FDE0:          db $00,$00,$00,$00,$01,$02,$02,$02        ;;FDD8|FDE0+FDE0
 DATA_04FDF0:          db $08,$08,$08,$08,$07,$06,$05,$05        ;;FDE8|FDF0+FDF0/FDF0\FDF0;
                       db $00,$00,$0E,$0E,$0C,$0C,$0A,$0A        ;;FDF0|FDF8+FDF8/FDF8\FDF8;
                                                                 ;;                        ;
-ADDR_04FE00:          ROR.B !_4                                 ;;FDF8|FE00+FE00/FE00\FE00;
+ADDR_04FE00:          ROR.B _4                                  ;;FDF8|FE00+FE00/FE00\FE00;
                       JSR CODE_04FE62                           ;;FDFA|FE02+FE02/FE02\FE02;
                       JSR CODE_04FE4E                           ;;FDFD|FE05+FE05/FE05\FE05;
-                      LDA.W !OWSpriteZPosLow,X                  ;;FE00|FE08+FE08/FE08\FE08;
+                      LDA.W OWSpriteZPosLow,X                   ;;FE00|FE08+FE08/FE08\FE08;
                       LSR A                                     ;;FE03|FE0B+FE0B/FE0B\FE0B;
                       LSR A                                     ;;FE04|FE0C+FE0C/FE0C\FE0C;
                       LSR A                                     ;;FE05|FE0D+FE0D/FE0D\FE0D;
                       LSR A                                     ;;FE06|FE0E+FE0E/FE0E\FE0E;
                       LDY.B #$29                                ;;FE07|FE0F+FE0F/FE0F\FE0F;
-                      BIT.B !_4                                 ;;FE09|FE11+FE11/FE11\FE11;
+                      BIT.B _4                                  ;;FE09|FE11+FE11/FE11\FE11;
                       BPL +                                     ;;FE0B|FE13+FE13/FE13\FE13;
                       LDY.B #$2E                                ;;FE0D|FE15+FE15/FE15\FE15;
                       CLC                                       ;;FE0F|FE17+FE17/FE17\FE17;
                       ADC.B #$08                                ;;FE10|FE18+FE18/FE18\FE18;
-                    + STY.B !_5                                 ;;FE12|FE1A+FE1A/FE1A\FE1A;
+                    + STY.B _5                                  ;;FE12|FE1A+FE1A/FE1A\FE1A;
                       TAY                                       ;;FE14|FE1C+FE1C/FE1C\FE1C;
-                      STY.B !_6                                 ;;FE15|FE1D+FE1D/FE1D\FE1D;
-                      LDA.B !_0                                 ;;FE17|FE1F+FE1F/FE1F\FE1F;
+                      STY.B _6                                  ;;FE15|FE1D+FE1D/FE1D\FE1D;
+                      LDA.B _0                                  ;;FE17|FE1F+FE1F/FE1F\FE1F;
                       CLC                                       ;;FE19|FE21+FE21/FE21\FE21;
                       ADC.W DATA_04FDE0,Y                       ;;FE1A|FE22+FE22/FE22\FE22;
-                      STA.B !_0                                 ;;FE1D|FE25+FE25/FE25\FE25;
+                      STA.B _0                                  ;;FE1D|FE25+FE25/FE25\FE25;
                       BCC +                                     ;;FE1F|FE27+FE27/FE27\FE27;
-                      INC.B !_1                                 ;;FE21|FE29+FE29/FE29\FE29;
+                      INC.B _1                                  ;;FE21|FE29+FE29/FE29\FE29;
                     + LDA.B #$32                                ;;FE23|FE2B+FE2B/FE2B\FE2B;
                       LDY.W DATA_04F843,X                       ;;FE25|FE2D+FE2D/FE2D\FE2D;
                       JSR ADDR_04FE45                           ;;FE28|FE30+FE30/FE30\FE30;
                       PHY                                       ;;FE2B|FE33+FE33/FE33\FE33;
-                      LDY.B !_6                                 ;;FE2C|FE34+FE34/FE34\FE34;
-                      LDA.B !_0                                 ;;FE2E|FE36+FE36/FE36\FE36;
+                      LDY.B _6                                  ;;FE2C|FE34+FE34/FE34\FE34;
+                      LDA.B _0                                  ;;FE2E|FE36+FE36/FE36\FE36;
                       CLC                                       ;;FE30|FE38+FE38/FE38\FE38;
                       ADC.W DATA_04FDF0,Y                       ;;FE31|FE39+FE39/FE39\FE39;
-                      STA.B !_0                                 ;;FE34|FE3C+FE3C/FE3C\FE3C;
+                      STA.B _0                                  ;;FE34|FE3C+FE3C/FE3C\FE3C;
                       BCC +                                     ;;FE36|FE3E+FE3E/FE3E\FE3E;
-                      INC.B !_1                                 ;;FE38|FE40+FE40/FE40\FE40;
+                      INC.B _1                                  ;;FE38|FE40+FE40/FE40\FE40;
                     + LDA.B #$72                                ;;FE3A|FE42+FE42/FE42\FE42;
                       PLY                                       ;;FE3C|FE44+FE44/FE44\FE44;
 ADDR_04FE45:          XBA                                       ;;FE3D|FE45+FE45/FE45\FE45;
-                      LDA.B !_4                                 ;;FE3E|FE46+FE46/FE46\FE46;
+                      LDA.B _4                                  ;;FE3E|FE46+FE46/FE46\FE46;
                       ASL A                                     ;;FE40|FE48+FE48/FE48\FE48;
-                      LDA.B !_5                                 ;;FE41|FE49+FE49/FE49\FE49;
+                      LDA.B _5                                  ;;FE41|FE49+FE49/FE49\FE49;
                       JMP CODE_04FB0A                           ;;FE43|FE4B+FE4B/FE4B\FE4B;
                                                                 ;;                        ;
-CODE_04FE4E:          LDA.B !_2                                 ;;FE46|FE4E+FE4E/FE4E\FE4E;
+CODE_04FE4E:          LDA.B _2                                  ;;FE46|FE4E+FE4E/FE4E\FE4E;
                       CLC                                       ;;FE48|FE50+FE50/FE50\FE50;
-                      ADC.W !OWSpriteZPosLow,X                  ;;FE49|FE51+FE51/FE51\FE51;
-                      STA.B !_2                                 ;;FE4C|FE54+FE54/FE54\FE54;
+                      ADC.W OWSpriteZPosLow,X                   ;;FE49|FE51+FE51/FE51\FE51;
+                      STA.B _2                                  ;;FE4C|FE54+FE54/FE54\FE54;
                       BCC +                                     ;;FE4E|FE56+FE56/FE56\FE56;
-                      INC.B !_3                                 ;;FE50|FE58+FE58/FE58\FE58;
+                      INC.B _3                                  ;;FE50|FE58+FE58/FE58\FE58;
                     + RTS                                       ;;FE52|FE5A+FE5A/FE5A\FE5A; Return 
                                                                 ;;                        ;
-CODE_04FE5B:          LDA.B !TrueFrame                          ;;FE53|FE5B+FE5B/FE5B\FE5B;
+CODE_04FE5B:          LDA.B TrueFrame                           ;;FE53|FE5B+FE5B/FE5B\FE5B;
                       CLC                                       ;;FE55|FE5D+FE5D/FE5D\FE5D;
                       ADC.W DATA_04F833,X                       ;;FE56|FE5E+FE5E/FE5E\FE5E;
                       RTS                                       ;;FE59|FE61+FE61/FE61\FE61; Return 
@@ -8271,21 +8271,21 @@ CODE_04FE62:          TXA                                       ;;FE5A|FE62+FE62
                       TAX                                       ;;FE5E|FE66+FE66/FE66\FE66;
                       LDY.B #$02                                ;;FE5F|FE67+FE67/FE67\FE67;
                       JSR CODE_04FE7D                           ;;FE61|FE69+FE69/FE69\FE69;
-                      LDX.W !SaveFileDelete                     ;;FE64|FE6C+FE6C/FE6C\FE6C;
-                      LDA.B !_2                                 ;;FE67|FE6F+FE6F/FE6F\FE6F;
+                      LDX.W SaveFileDelete                      ;;FE64|FE6C+FE6C/FE6C\FE6C;
+                      LDA.B _2                                  ;;FE67|FE6F+FE6F/FE6F\FE6F;
                       SEC                                       ;;FE69|FE71+FE71/FE71\FE71;
-                      SBC.W !OWSpriteZPosLow,X                  ;;FE6A|FE72+FE72/FE72\FE72;
-                      STA.B !_2                                 ;;FE6D|FE75+FE75/FE75\FE75;
+                      SBC.W OWSpriteZPosLow,X                   ;;FE6A|FE72+FE72/FE72\FE72;
+                      STA.B _2                                  ;;FE6D|FE75+FE75/FE75\FE75;
                       BCS +                                     ;;FE6F|FE77+FE77/FE77\FE77;
-                      DEC.B !_3                                 ;;FE71|FE79+FE79/FE79\FE79;
+                      DEC.B _3                                  ;;FE71|FE79+FE79/FE79\FE79;
                     + LDY.B #$00                                ;;FE73|FE7B+FE7B/FE7B\FE7B;
-CODE_04FE7D:          LDA.W !OWSpriteXPosHigh,X                 ;;FE75|FE7D+FE7D/FE7D\FE7D;
+CODE_04FE7D:          LDA.W OWSpriteXPosHigh,X                  ;;FE75|FE7D+FE7D/FE7D\FE7D;
                       XBA                                       ;;FE78|FE80+FE80/FE80\FE80;
-                      LDA.W !OWSpriteXPosLow,X                  ;;FE79|FE81+FE81/FE81\FE81;
+                      LDA.W OWSpriteXPosLow,X                   ;;FE79|FE81+FE81/FE81\FE81;
                       REP #$20                                  ;;FE7C|FE84+FE84/FE84\FE84; Accum (16 bit) 
                       SEC                                       ;;FE7E|FE86+FE86/FE86\FE86;
-                      SBC.W !Layer1XPos,Y                       ;;FE7F|FE87+FE87/FE87\FE87;
-                      STA.W !_0,Y                               ;;FE82|FE8A+FE8A/FE8A\FE8A;
+                      SBC.W Layer1XPos,Y                        ;;FE7F|FE87+FE87/FE87\FE87;
+                      STA.W _0,Y                                ;;FE82|FE8A+FE8A/FE8A\FE8A;
                       SEP #$20                                  ;;FE85|FE8D+FE8D/FE8D\FE8D; Accum (8 bit) 
                       RTS                                       ;;FE87|FE8F+FE8F/FE8F\FE8F; Return 
                                                                 ;;                        ;
@@ -8294,24 +8294,24 @@ CODE_04FE90:          TXA                                       ;;FE88|FE90+FE90
                       ADC.B #$20                                ;;FE8A|FE92+FE92/FE92\FE92;Add #$20 to A
                       TAX                                       ;;FE8C|FE94+FE94/FE94\FE94;Transfer A to X
                       JSR CODE_04FEAB                           ;;FE8D|FE95+FE95/FE95\FE95;
-                      LDA.W !OWSpriteXPosLow,X                  ;;FE90|FE98+FE98/FE98\FE98;Load OW Sprite XPos Low
+                      LDA.W OWSpriteXPosLow,X                   ;;FE90|FE98+FE98/FE98\FE98;Load OW Sprite XPos Low
                       BPL +                                     ;;FE93|FE9B+FE9B/FE9B\FE9B;If it is => 80
-                      STZ.W !OWSpriteXPosLow,X                  ;;FE95|FE9D+FE9D/FE9D\FE9D;Store 00 OW Sprite Xpos Low
+                      STZ.W OWSpriteXPosLow,X                   ;;FE95|FE9D+FE9D/FE9D\FE9D;Store 00 OW Sprite Xpos Low
                     + TXA                                       ;;FE98|FEA0+FEA0/FEA0\FEA0;Transfer X to A
                       SEC                                       ;;FE99|FEA1+FEA1/FEA1\FEA1;Set Carry Flag...
                       SBC.B #$10                                ;;FE9A|FEA2+FEA2/FEA2\FEA2;...for substraction
                       TAX                                       ;;FE9C|FEA4+FEA4/FEA4\FEA4;Transfer A to X
                       JSR CODE_04FEAB                           ;;FE9D|FEA5+FEA5/FEA5\FEA5;
-                      LDX.W !SaveFileDelete                     ;;FEA0|FEA8+FEA8/FEA8\FEA8;
-CODE_04FEAB:          LDA.W !OWSpriteXSpeed,X                   ;;FEA3|FEAB+FEAB/FEAB\FEAB;Load OW Sprite X Speed
+                      LDX.W SaveFileDelete                      ;;FEA0|FEA8+FEA8/FEA8\FEA8;
+CODE_04FEAB:          LDA.W OWSpriteXSpeed,X                    ;;FEA3|FEAB+FEAB/FEAB\FEAB;Load OW Sprite X Speed
                       ASL A                                     ;;FEA6|FEAE+FEAE/FEAE\FEAE;Multiply it by 2
                       ASL A                                     ;;FEA7|FEAF+FEAF/FEAF\FEAF;4...
                       ASL A                                     ;;FEA8|FEB0+FEB0/FEB0\FEB0;8...
                       ASL A                                     ;;FEA9|FEB1+FEB1/FEB1\FEB1;16...
                       CLC                                       ;;FEAA|FEB2+FEB2/FEB2\FEB2;Clear Carry Flag
-                      ADC.W !OWSpriteXPosSpx,X                  ;;FEAB|FEB3+FEB3/FEB3\FEB3;
-                      STA.W !OWSpriteXPosSpx,X                  ;;FEAE|FEB6+FEB6/FEB6\FEB6;And store it in
-                      LDA.W !OWSpriteXSpeed,X                   ;;FEB1|FEB9+FEB9/FEB9\FEB9;Load OW Sprite X Speed
+                      ADC.W OWSpriteXPosSpx,X                   ;;FEAB|FEB3+FEB3/FEB3\FEB3;
+                      STA.W OWSpriteXPosSpx,X                   ;;FEAE|FEB6+FEB6/FEB6\FEB6;And store it in
+                      LDA.W OWSpriteXSpeed,X                    ;;FEB1|FEB9+FEB9/FEB9\FEB9;Load OW Sprite X Speed
                       PHP                                       ;;FEB4|FEBC+FEBC/FEBC\FEBC;
                       LSR A                                     ;;FEB5|FEBD+FEBD/FEBD\FEBD;Divide by 2
                       LSR A                                     ;;FEB6|FEBE+FEBE/FEBE\FEBE;4
@@ -8322,95 +8322,95 @@ CODE_04FEAB:          LDA.W !OWSpriteXSpeed,X                   ;;FEA3|FEAB+FEAB
                       BPL +                                     ;;FEBC|FEC4+FEC4/FEC4\FEC4;
                       ORA.B #$F0                                ;;FEBE|FEC6+FEC6/FEC6\FEC6;
                       DEY                                       ;;FEC0|FEC8+FEC8/FEC8\FEC8;
-                    + ADC.W !OWSpriteXPosLow,X                  ;;FEC1|FEC9+FEC9/FEC9\FEC9;
-                      STA.W !OWSpriteXPosLow,X                  ;;FEC4|FECC+FECC/FECC\FECC;
+                    + ADC.W OWSpriteXPosLow,X                   ;;FEC1|FEC9+FEC9/FEC9\FEC9;
+                      STA.W OWSpriteXPosLow,X                   ;;FEC4|FECC+FECC/FECC\FECC;
                       TYA                                       ;;FEC7|FECF+FECF/FECF\FECF;
-                      ADC.W !OWSpriteXPosHigh,X                 ;;FEC8|FED0+FED0/FED0\FED0;
-                      STA.W !OWSpriteXPosHigh,X                 ;;FECB|FED3+FED3/FED3\FED3;
+                      ADC.W OWSpriteXPosHigh,X                  ;;FEC8|FED0+FED0/FED0\FED0;
+                      STA.W OWSpriteXPosHigh,X                  ;;FECB|FED3+FED3/FED3\FED3;
                       RTS                                       ;;FECE|FED6+FED6/FED6\FED6; Return 
                                                                 ;;                        ;
 ADDR_04FED7:          JSR ADDR_04FEEF                           ;;FECF|FED7+FED7/FED7\FED7; Accum (16 bit) 
-                      LDA.B !_6                                 ;;FED2|FEDA+FEDA/FEDA\FEDA;
+                      LDA.B _6                                  ;;FED2|FEDA+FEDA/FEDA\FEDA;
                       CMP.W #$0008                              ;;FED4|FEDC+FEDC/FEDC\FEDC;
                       BCS +                                     ;;FED7|FEDF+FEDF/FEDF\FEDF;
-                      LDA.B !_8                                 ;;FED9|FEE1+FEE1/FEE1\FEE1;
+                      LDA.B _8                                  ;;FED9|FEE1+FEE1/FEE1\FEE1;
                       CMP.W #$0008                              ;;FEDB|FEE3+FEE3/FEE3\FEE3;
                     + SEP #$20                                  ;;FEDE|FEE6+FEE6/FEE6\FEE6; Accum (8 bit) 
                       TXA                                       ;;FEE0|FEE8+FEE8/FEE8\FEE8;
                       BCS +                                     ;;FEE1|FEE9+FEE9/FEE9\FEE9;
-                      STA.W !EnterLevelAuto                     ;;FEE3|FEEB+FEEB/FEEB\FEEB;
+                      STA.W EnterLevelAuto                      ;;FEE3|FEEB+FEEB/FEEB\FEEB;
                     + RTS                                       ;;FEE6|FEEE+FEEE/FEEE\FEEE; Return 
                                                                 ;;                        ;
-ADDR_04FEEF:          LDA.W !OWSpriteXPosHigh,X                 ;;FEE7|FEEF+FEEF/FEEF\FEEF;
+ADDR_04FEEF:          LDA.W OWSpriteXPosHigh,X                  ;;FEE7|FEEF+FEEF/FEEF\FEEF;
                       XBA                                       ;;FEEA|FEF2+FEF2/FEF2\FEF2;
-                      LDA.W !OWSpriteXPosLow,X                  ;;FEEB|FEF3+FEF3/FEF3\FEF3;
+                      LDA.W OWSpriteXPosLow,X                   ;;FEEB|FEF3+FEF3/FEF3\FEF3;
                       REP #$20                                  ;;FEEE|FEF6+FEF6/FEF6\FEF6; Accum (16 bit) 
                       CLC                                       ;;FEF0|FEF8+FEF8/FEF8\FEF8;
                       ADC.W #$0008                              ;;FEF1|FEF9+FEF9/FEF9\FEF9;
-                      LDY.W !PlayerTurnOW                       ;;FEF4|FEFC+FEFC/FEFC\FEFC;
+                      LDY.W PlayerTurnOW                        ;;FEF4|FEFC+FEFC/FEFC\FEFC;
                       SEC                                       ;;FEF7|FEFF+FEFF/FEFF\FEFF;
-                      SBC.W !OWPlayerXPos,Y                     ;;FEF8|FF00+FF00/FF00\FF00;
-                      STA.B !_0                                 ;;FEFB|FF03+FF03/FF03\FF03;
+                      SBC.W OWPlayerXPos,Y                      ;;FEF8|FF00+FF00/FF00\FF00;
+                      STA.B _0                                  ;;FEFB|FF03+FF03/FF03\FF03;
                       BPL +                                     ;;FEFD|FF05+FF05/FF05\FF05;
                       EOR.W #$FFFF                              ;;FEFF|FF07+FF07/FF07\FF07;
                       INC A                                     ;;FF02|FF0A+FF0A/FF0A\FF0A;
-                    + STA.B !_6                                 ;;FF03|FF0B+FF0B/FF0B\FF0B;
+                    + STA.B _6                                  ;;FF03|FF0B+FF0B/FF0B\FF0B;
                       SEP #$20                                  ;;FF05|FF0D+FF0D/FF0D\FF0D; Accum (8 bit) 
-                      LDA.W !OWSpriteYPosHigh,X                 ;;FF07|FF0F+FF0F/FF0F\FF0F;
+                      LDA.W OWSpriteYPosHigh,X                  ;;FF07|FF0F+FF0F/FF0F\FF0F;
                       XBA                                       ;;FF0A|FF12+FF12/FF12\FF12;
-                      LDA.W !OWSpriteYPosLow,X                  ;;FF0B|FF13+FF13/FF13\FF13;
+                      LDA.W OWSpriteYPosLow,X                   ;;FF0B|FF13+FF13/FF13\FF13;
                       REP #$20                                  ;;FF0E|FF16+FF16/FF16\FF16; Accum (16 bit) 
                       CLC                                       ;;FF10|FF18+FF18/FF18\FF18;
                       ADC.W #$0008                              ;;FF11|FF19+FF19/FF19\FF19;
-                      LDY.W !PlayerTurnOW                       ;;FF14|FF1C+FF1C/FF1C\FF1C;
+                      LDY.W PlayerTurnOW                        ;;FF14|FF1C+FF1C/FF1C\FF1C;
                       SEC                                       ;;FF17|FF1F+FF1F/FF1F\FF1F;
-                      SBC.W !OWPlayerYPos,Y                     ;;FF18|FF20+FF20/FF20\FF20;
-                      STA.B !_2                                 ;;FF1B|FF23+FF23/FF23\FF23;
+                      SBC.W OWPlayerYPos,Y                      ;;FF18|FF20+FF20/FF20\FF20;
+                      STA.B _2                                  ;;FF1B|FF23+FF23/FF23\FF23;
                       BPL +                                     ;;FF1D|FF25+FF25/FF25\FF25;
                       EOR.W #$FFFF                              ;;FF1F|FF27+FF27/FF27\FF27;
                       INC A                                     ;;FF22|FF2A+FF2A/FF2A\FF2A;
-                    + STA.B !_8                                 ;;FF23|FF2B+FF2B/FF2B\FF2B;
+                    + STA.B _8                                  ;;FF23|FF2B+FF2B/FF2B\FF2B;
                       RTS                                       ;;FF25|FF2D+FF2D/FF2D\FF2D; Return 
                                                                 ;;                        ;
 ADDR_04FF2E:          JSR ADDR_04FEEF                           ;;FF26|FF2E+FF2E/FF2E\FF2E;
-                      LSR.B !_6                                 ;;FF29|FF31+FF31/FF31\FF31;
-                      LSR.B !_8                                 ;;FF2B|FF33+FF33/FF33\FF33;
+                      LSR.B _6                                  ;;FF29|FF31+FF31/FF31\FF31;
+                      LSR.B _8                                  ;;FF2B|FF33+FF33/FF33\FF33;
                       SEP #$20                                  ;;FF2D|FF35+FF35/FF35\FF35; Accum (8 bit) 
-                      LDA.W !OWSpriteZPosLow,X                  ;;FF2F|FF37+FF37/FF37\FF37;
+                      LDA.W OWSpriteZPosLow,X                   ;;FF2F|FF37+FF37/FF37\FF37;
                       LSR A                                     ;;FF32|FF3A+FF3A/FF3A\FF3A;
-                      STA.B !_A                                 ;;FF33|FF3B+FF3B/FF3B\FF3B;
-                      STZ.B !_5                                 ;;FF35|FF3D+FF3D/FF3D\FF3D;
+                      STA.B _A                                  ;;FF33|FF3B+FF3B/FF3B\FF3B;
+                      STZ.B _5                                  ;;FF35|FF3D+FF3D/FF3D\FF3D;
                       LDY.B #$04                                ;;FF37|FF3F+FF3F/FF3F\FF3F;
-                      CMP.B !_8                                 ;;FF39|FF41+FF41/FF41\FF41;
+                      CMP.B _8                                  ;;FF39|FF41+FF41/FF41\FF41;
                       BCS +                                     ;;FF3B|FF43+FF43/FF43\FF43;
                       LDY.B #$02                                ;;FF3D|FF45+FF45/FF45\FF45;
-                      LDA.B !_8                                 ;;FF3F|FF47+FF47/FF47\FF47;
-                    + CMP.B !_6                                 ;;FF41|FF49+FF49/FF49\FF49;
+                      LDA.B _8                                  ;;FF3F|FF47+FF47/FF47\FF47;
+                    + CMP.B _6                                  ;;FF41|FF49+FF49/FF49\FF49;
                       BCS +                                     ;;FF43|FF4B+FF4B/FF4B\FF4B;
                       LDY.B #$00                                ;;FF45|FF4D+FF4D/FF4D\FF4D;
-                      LDA.B !_6                                 ;;FF47|FF4F+FF4F/FF4F\FF4F;
+                      LDA.B _6                                  ;;FF47|FF4F+FF4F/FF4F\FF4F;
                     + CMP.B #$01                                ;;FF49|FF51+FF51/FF51\FF51;
                       BCS +                                     ;;FF4B|FF53+FF53/FF53\FF53;
-                      STZ.W !OWSpriteMisc0E15,X                 ;;FF4D|FF55+FF55/FF55\FF55;
-                      STZ.W !OWSpriteXSpeed,X                   ;;FF50|FF58+FF58/FF58\FF58;
-                      STZ.W !OWSpriteYSpeed,X                   ;;FF53|FF5B+FF5B/FF5B\FF5B;
-                      STZ.W !OWSpriteZSpeed,X                   ;;FF56|FF5E+FF5E/FF5E\FF5E;
+                      STZ.W OWSpriteMisc0E15,X                  ;;FF4D|FF55+FF55/FF55\FF55;
+                      STZ.W OWSpriteXSpeed,X                    ;;FF50|FF58+FF58/FF58\FF58;
+                      STZ.W OWSpriteYSpeed,X                    ;;FF53|FF5B+FF5B/FF5B\FF5B;
+                      STZ.W OWSpriteZSpeed,X                    ;;FF56|FF5E+FF5E/FF5E\FF5E;
                       LDA.B #$40                                ;;FF59|FF61+FF61/FF61\FF61;
-                      STA.W !OWSpriteZPosLow,X                  ;;FF5B|FF63+FF63/FF63\FF63;
+                      STA.W OWSpriteZPosLow,X                   ;;FF5B|FF63+FF63/FF63\FF63;
                       RTS                                       ;;FF5E|FF66+FF66/FF66\FF66; Return 
                                                                 ;;                        ;
-                    + STY.B !_C                                 ;;FF5F|FF67+FF67/FF67\FF67;
+                    + STY.B _C                                  ;;FF5F|FF67+FF67/FF67\FF67;
                       LDX.B #$04                                ;;FF61|FF69+FF69/FF69\FF69;
-ADDR_04FF6B:          CPX.B !_C                                 ;;FF63|FF6B+FF6B/FF6B\FF6B;
+ADDR_04FF6B:          CPX.B _C                                  ;;FF63|FF6B+FF6B/FF6B\FF6B;
                       BNE ADDR_04FF73                           ;;FF65|FF6D+FF6D/FF6D\FF6D;
                       LDA.B #$20                                ;;FF67|FF6F+FF6F/FF6F\FF6F;
                       BRA +                                     ;;FF69|FF71+FF71/FF71\FF71;
                                                                 ;;                        ;
-ADDR_04FF73:          STZ.W !HW_WRDIV                           ;;FF6B|FF73+FF73/FF73\FF73; Dividend (Low Byte)
-                      LDA.B !_6,X                               ;;FF6E|FF76+FF76/FF76\FF76;
-                      STA.W !HW_WRDIV+1                         ;;FF70|FF78+FF78/FF78\FF78; Dividend (High-Byte)
-                      LDA.W !_6,Y                               ;;FF73|FF7B+FF7B/FF7B\FF7B;
-                      STA.W !HW_WRDIV+2                         ;;FF76|FF7E+FF7E/FF7E\FF7E; Divisor B
+ADDR_04FF73:          STZ.W HW_WRDIV                            ;;FF6B|FF73+FF73/FF73\FF73; Dividend (Low Byte)
+                      LDA.B _6,X                                ;;FF6E|FF76+FF76/FF76\FF76;
+                      STA.W HW_WRDIV+1                          ;;FF70|FF78+FF78/FF78\FF78; Dividend (High-Byte)
+                      LDA.W _6,Y                                ;;FF73|FF7B+FF7B/FF7B\FF7B;
+                      STA.W HW_WRDIV+2                          ;;FF76|FF7E+FF7E/FF7E\FF7E; Divisor B
                       NOP                                       ;;FF79|FF81+FF81/FF81\FF81;
                       NOP                                       ;;FF7A|FF82+FF82/FF82\FF82;
                       NOP                                       ;;FF7B|FF83+FF83/FF83\FF83;
@@ -8418,26 +8418,26 @@ ADDR_04FF73:          STZ.W !HW_WRDIV                           ;;FF6B|FF73+FF73
                       NOP                                       ;;FF7D|FF85+FF85/FF85\FF85;
                       NOP                                       ;;FF7E|FF86+FF86/FF86\FF86;
                       REP #$20                                  ;;FF7F|FF87+FF87/FF87\FF87; Accum (16 bit) 
-                      LDA.W !HW_RDDIV                           ;;FF81|FF89+FF89/FF89\FF89; Quotient of Divide Result (Low Byte)
+                      LDA.W HW_RDDIV                            ;;FF81|FF89+FF89/FF89\FF89; Quotient of Divide Result (Low Byte)
                       LSR A                                     ;;FF84|FF8C+FF8C/FF8C\FF8C;
                       LSR A                                     ;;FF85|FF8D+FF8D/FF8D\FF8D;
                       LSR A                                     ;;FF86|FF8E+FF8E/FF8E\FF8E;
                       SEP #$20                                  ;;FF87|FF8F+FF8F/FF8F\FF8F; Accum (8 bit) 
-                    + BIT.B !_1,X                               ;;FF89|FF91+FF91/FF91\FF91;
+                    + BIT.B _1,X                                ;;FF89|FF91+FF91/FF91\FF91;
                       BMI +                                     ;;FF8B|FF93+FF93/FF93\FF93;
                       EOR.B #$FF                                ;;FF8D|FF95+FF95/FF95\FF95;
                       INC A                                     ;;FF8F|FF97+FF97/FF97\FF97;
-                    + STA.B !_0,X                               ;;FF90|FF98+FF98/FF98\FF98;
+                    + STA.B _0,X                                ;;FF90|FF98+FF98/FF98\FF98;
                       DEX                                       ;;FF92|FF9A+FF9A/FF9A\FF9A;
                       DEX                                       ;;FF93|FF9B+FF9B/FF9B\FF9B;
                       BPL ADDR_04FF6B                           ;;FF94|FF9C+FF9C/FF9C\FF9C;
-                      LDX.W !SaveFileDelete                     ;;FF96|FF9E+FF9E/FF9E\FF9E;
-                      LDA.B !_0                                 ;;FF99|FFA1+FFA1/FFA1\FFA1;
-                      STA.W !OWSpriteXSpeed,X                   ;;FF9B|FFA3+FFA3/FFA3\FFA3;
-                      LDA.B !_2                                 ;;FF9E|FFA6+FFA6/FFA6\FFA6;
-                      STA.W !OWSpriteYSpeed,X                   ;;FFA0|FFA8+FFA8/FFA8\FFA8;
-                      LDA.B !_4                                 ;;FFA3|FFAB+FFAB/FFAB\FFAB;
-                      STA.W !OWSpriteZSpeed,X                   ;;FFA5|FFAD+FFAD/FFAD\FFAD;
+                      LDX.W SaveFileDelete                      ;;FF96|FF9E+FF9E/FF9E\FF9E;
+                      LDA.B _0                                  ;;FF99|FFA1+FFA1/FFA1\FFA1;
+                      STA.W OWSpriteXSpeed,X                    ;;FF9B|FFA3+FFA3/FFA3\FFA3;
+                      LDA.B _2                                  ;;FF9E|FFA6+FFA6/FFA6\FFA6;
+                      STA.W OWSpriteYSpeed,X                    ;;FFA0|FFA8+FFA8/FFA8\FFA8;
+                      LDA.B _4                                  ;;FFA3|FFAB+FFAB/FFAB\FFAB;
+                      STA.W OWSpriteZSpeed,X                    ;;FFA5|FFAD+FFAD/FFAD\FFAD;
                       RTS                                       ;;FFA8|FFB0+FFB0/FFB0\FFB0; Return 
                                                                 ;;                        ;
                       padbyte $FF : pad $058000                 ;;FFA9|FFB1+FFB1/FFB1\FFB1;

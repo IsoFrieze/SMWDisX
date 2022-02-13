@@ -1,7 +1,7 @@
                       ORG $0F8000                               ;;  J |  U + SS / E0 \ E1 ;
                                                                 ;;                        ;
 MusicSamples:         dw SampleData-MusicSamples-4              ;;8000|8000+8000/8000\8000;
-                      dw !SamplePtrTable                        ;;8002|8002+8002/8002\8002;
+                      dw SamplePtrTable                         ;;8002|8002+8002/8002\8002;
                                                                 ;;                        ;
                       dw Sample00, Sample00+$24                 ;;8002|8002+8002/8002\8002;
                       dw Sample01, Sample01+$24                 ;;8006|8006+8006/8006\8006;
@@ -25,9 +25,9 @@ MusicSamples:         dw SampleData-MusicSamples-4              ;;8000|8000+8000
                       dw Sample13, Sample13                     ;;804E|804E+804E/804E\804E;
                                                                 ;;                        ;
 SampleData:           dw SampleData_End-SampleData-4            ;;8054|8054+8054/8054\8054;
-                      dw !SampleTable                           ;;8056|8056+8056/8056\8056;
+                      dw SampleTable                            ;;8056|8056+8056/8056\8056;
                                                                 ;;                        ;
-                      base !SampleTable                         ;;                        ;
+                      base SampleTable                          ;;                        ;
 Sample00:             incbin "samples/Sample00.brr"             ;;8100|8100+8100/8100\8100;
 Sample01:             incbin "samples/Sample01.brr"             ;;813F|813F+813F/813F\813F;
 Sample02:             incbin "samples/Sample02.brr"             ;;817E|817E+817E/817E\817E;
@@ -51,7 +51,7 @@ Sample13:             incbin "samples/Sample13.brr"             ;;DE7B|DE7B+DE7B
                                                                 ;;                        ;
                       base off                                  ;;                        ;
                                                                 ;;                        ;
-SampleData_End:       dw $0000,!SPCEngine                       ;;EF78|EF78+EF78/EF78\EF78;
+SampleData_End:       dw $0000,SPCEngine                        ;;EF78|EF78+EF78/EF78\EF78;
                                                                 ;;                        ;
                       db $18,$00,$00,$00                        ;;EF7C|EF7C+EF7C/EF7C\EF7C;
                       db $00,$00,$00,$00,$00,$00,$00,$00        ;;EF80|EF80+EF80/EF80\EF80;
