@@ -1045,11 +1045,11 @@ Map16BGTiles:         db $F8,$00,$F8,$00,$F8,$00,$F8,$00        ;;9100|9100+9100
                                                                 ;;                        ;
                       %insert_empty($60,$60,$60,$60,$60)        ;;A0A0|A0A0+A0A0/A0A0\A0A0;
                                                                 ;;                        ;
-CODE_0DA100:          SEP #$30                                  ;;A100|A100+A100/A100\A100; Index (8 bit) Accum (8 bit) 
+CODE_0DA100:          SEP #$30                                  ;;A100|A100+A100/A100\A100; AXY->8
                       JSR CODE_0DA106                           ;;A102|A102+A102/A102\A102;
-                      RTL                                       ;;A105|A105+A105/A105\A105; Return 
+                      RTL                                       ;;A105|A105+A105/A105\A105;
                                                                 ;;                        ;
-CODE_0DA106:          SEP #$30                                  ;;A106|A106+A106/A106\A106; Index (8 bit) Accum (8 bit) 
+CODE_0DA106:          SEP #$30                                  ;;A106|A106+A106/A106\A106; AXY->8
                       LDA.B LvlLoadObjSize                      ;;A108|A108+A108/A108\A108;
                       TAX                                       ;;A10A|A10A+A10A/A10A\A10A;
                       JSL ExecutePtrLong                        ;;A10B|A10B+A10B/A10B\A10B;
@@ -1311,11 +1311,11 @@ CODE_0DA106:          SEP #$30                                  ;;A106|A106+A106
                       dl CODE_0DA6D1                            ;;A409|A409+A409/A409\A409;
                       dl CODE_0DA6D1                            ;;A40C|A40C+A40C/A40C\A40C;
                                                                 ;;                        ;
-CODE_0DA40F:          SEP #$30                                  ;;A40F|A40F+A40F/A40F\A40F; Index (8 bit) Accum (8 bit) 
+CODE_0DA40F:          SEP #$30                                  ;;A40F|A40F+A40F/A40F\A40F; AXY->8
                       JSR CODE_0DA415                           ;;A411|A411+A411/A411\A411;
-                      RTL                                       ;;A414|A414+A414/A414\A414; Return 
+                      RTL                                       ;;A414|A414+A414/A414\A414;
                                                                 ;;                        ;
-CODE_0DA415:          SEP #$30                                  ;;A415|A415+A415/A415\A415; Index (8 bit) Accum (8 bit) 
+CODE_0DA415:          SEP #$30                                  ;;A415|A415+A415/A415\A415; AXY->8
                       LDA.W ObjectTileset                       ;;A417|A417+A417/A417\A417;
                       JSL ExecutePtrLong                        ;;A41A|A41A+A41A/A41A\A41A;
                                                                 ;;                        ;
@@ -1335,7 +1335,7 @@ CODE_0DA415:          SEP #$30                                  ;;A415|A415+A415
                       dl CODE_0DE890                            ;;A445|A445+A445/A445\A445;
                       dl CODE_0DD990                            ;;A448|A448+A448/A448\A448;
                                                                 ;;                        ;
-CODE_0DA44B:          SEP #$30                                  ;;A44B|A44B+A44B/A44B\A44B; Index (8 bit) Accum (8 bit) 
+CODE_0DA44B:          SEP #$30                                  ;;A44B|A44B+A44B/A44B\A44B; AXY->8
                       LDX.B LvlLoadObjNo                        ;;A44D|A44D+A44D/A44D\A44D;
                       DEX                                       ;;A44F|A44F+A44F/A44F\A44F;
                       TXA                                       ;;A450|A450+A450/A450\A450;
@@ -1427,13 +1427,13 @@ CODE_0DA512:          LDY.B #$00                                ;;A512|A512+A512
                       LDA.B _B                                  ;;A536|A536+A536/A536\A536;
                       LSR A                                     ;;A538|A538+A538/A538\A538;
                       STA.W UseSecondaryExit                    ;;A539|A539+A539/A539\A539;
-                      RTS                                       ;;A53C|A53C+A53C/A53C\A53C; Return 
+                      RTS                                       ;;A53C|A53C+A53C/A53C\A53C;
                                                                 ;;                        ;
 CODE_0DA53D:          LDA.B _A                                  ;;A53D|A53D+A53D/A53D\A53D;
                       AND.B #$1F                                ;;A53F|A53F+A53F/A53F\A53F;
                       STA.W LevelLoadObject                     ;;A541|A541+A541/A541\A541;
                       STA.W LevelLoadObjectTile                 ;;A544|A544+A544/A544\A544;
-                      RTS                                       ;;A547|A547+A547/A547\A547; Return 
+                      RTS                                       ;;A547|A547+A547/A547\A547;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DA548:          db $1F,$22,$24,$42,$43,$27,$29,$25        ;;A548|A548+A548/A548\A548;
@@ -1471,7 +1471,7 @@ CODE_0DA57F:          STA.B _0                                  ;;A57F|A57F+A57F
 CODE_0DA5A7:          LDA.W Checkpoint1upCollected,Y            ;;A5A7|A5A7+A5A7/A5A7\A5A7;
                       AND.L DATA_0DA8A6,X                       ;;A5AA|A5AA+A5AA/A5AA\A5AA;
                       BEQ CODE_0DA5B1                           ;;A5AE|A5AE+A5AE/A5AE\A5AE;
-Return0DA5B0:         RTS                                       ;;A5B0|A5B0+A5B0/A5B0\A5B0; Return 
+Return0DA5B0:         RTS                                       ;;A5B0|A5B0+A5B0/A5B0\A5B0;
                                                                 ;;                        ;
 CODE_0DA5B1:          LDY.B LevelLoadPos                        ;;A5B1|A5B1+A5B1/A5B1\A5B1;
                       JSR StzTo6ePointer                        ;;A5B3|A5B3+A5B3/A5B3\A5B3;
@@ -1551,7 +1551,7 @@ CODE_0DA5F0:          TXA                                       ;;A5F0|A5F0+A5F0
                       STA.B _C                                  ;;A646|A646+A646/A646\A646;
 CODE_0DA648:          LDA.B _C                                  ;;A648|A648+A648/A648\A648;
                       STA.B [Map16LowPtr],Y                     ;;A64A|A64A+A64A/A64A\A64A;
-                    + RTS                                       ;;A64C|A64C+A64C/A64C\A64C; Return 
+                    + RTS                                       ;;A64C|A64C+A64C/A64C\A64C;
                                                                 ;;                        ;
 CODE_0DA64D:          LDA.B #$32                                ;;A64D|A64D+A64D/A64D\A64D;
                       JMP CODE_0DA57F                           ;;A64F|A64F+A64F/A64F\A64F;
@@ -1572,7 +1572,7 @@ ADDR_0DA656:          LDY.B LevelLoadPos                        ;;A656|A656+A656
                       LDA.L DATA_0DA654,X                       ;;A667|A667+A667/A667\A667;
                       STA.B [Map16LowPtr],Y                     ;;A66B|A66B+A66B/A66B\A66B;
                       JSR Sta1To6ePointer                       ;;A66D|A66D+A66D/A66D\A66D;
-                      RTS                                       ;;A670|A670+A670/A670\A670; Return 
+                      RTS                                       ;;A670|A670+A670/A670\A670;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DA671:          db $B4,$B5                                ;;A671|A671+A671/A671\A671;
@@ -1589,7 +1589,7 @@ CODE_0DA673:          LDY.B LevelLoadPos                        ;;A673|A673+A673
                       LDA.B #$EB                                ;;A686|A686+A686/A686\A686;
                       STA.B [Map16LowPtr],Y                     ;;A688|A688+A688/A688\A688;
                       JSR Sta1To6ePointer                       ;;A68A|A68A+A68A/A68A\A68A;
-                      RTS                                       ;;A68D|A68D+A68D/A68D\A68D; Return 
+                      RTS                                       ;;A68D|A68D+A68D/A68D\A68D;
                                                                 ;;                        ;
 CODE_0DA68E:          LDX.W TranslevelNo                        ;;A68E|A68E+A68E/A68E\A68E;
                       %WorL_X(LDA,OWLevelTileSettings)          ;;A691|A691+A691/A691\A691;
@@ -1605,13 +1605,13 @@ CODE_0DA68E:          LDX.W TranslevelNo                        ;;A68E|A68E+A68E
                       JSR StzTo6ePointer                        ;;A6A8|A6A9+A6A9/A6A9\A6A9;
                       LDA.B #$38                                ;;A6AB|A6AC+A6AC/A6AC\A6AC;
                       STA.B [Map16LowPtr],Y                     ;;A6AD|A6AE+A6AE/A6AE\A6AE;
-                    + RTS                                       ;;A6AF|A6B0+A6B0/A6B0\A6B0; Return 
+                    + RTS                                       ;;A6AF|A6B0+A6B0/A6B0\A6B0;
                                                                 ;;                        ;
 CODE_0DA6B1:          LDA.B Map16LowPtr                         ;;A6B0|A6B1+A6B1/A6B1\A6B1;
                       STA.B _4                                  ;;A6B2|A6B3+A6B3/A6B3\A6B3;
                       LDA.B Map16LowPtr+1                       ;;A6B4|A6B5+A6B5/A6B5\A6B5;
                       STA.B _5                                  ;;A6B6|A6B7+A6B7/A6B7\A6B7;
-                      RTS                                       ;;A6B8|A6B9+A6B9/A6B9\A6B9; Return 
+                      RTS                                       ;;A6B8|A6B9+A6B9/A6B9\A6B9;
                                                                 ;;                        ;
 CODE_0DA6BA:          LDA.B _4                                  ;;A6B9|A6BA+A6BA/A6BA\A6BA;
                       STA.B Map16LowPtr                         ;;A6BB|A6BC+A6BC/A6BC\A6BC;
@@ -1621,7 +1621,7 @@ CODE_0DA6BA:          LDA.B _4                                  ;;A6B9|A6BA+A6BA
                       STA.B Map16HighPtr+1                      ;;A6C3|A6C4+A6C4/A6C4\A6C4;
                       LDA.W LevelLoadObject                     ;;A6C5|A6C6+A6C6/A6C6\A6C6;
                       STA.W LevelLoadObjectTile                 ;;A6C8|A6C9+A6C9/A6C9\A6C9;
-                      RTS                                       ;;A6CB|A6CC+A6CC/A6CC\A6CC; Return 
+                      RTS                                       ;;A6CB|A6CC+A6CC/A6CC\A6CC;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DA6CD:          db $1F,$27                                ;;A6CC|A6CD+A6CD/A6CD\A6CD;
@@ -1640,7 +1640,7 @@ CODE_0DA6D1:          LDY.B LevelLoadPos                        ;;A6D0|A6D1+A6D1
                       JSR StzTo6ePointer                        ;;A6E3|A6E4+A6E4/A6E4\A6E4;
                       LDA.L DATA_0DA6CF,X                       ;;A6E6|A6E7+A6E7/A6E7\A6E7;
                       STA.B [Map16LowPtr],Y                     ;;A6EA|A6EB+A6EB/A6EB\A6EB;
-                      RTS                                       ;;A6EC|A6ED+A6ED/A6ED\A6ED; Return 
+                      RTS                                       ;;A6EC|A6ED+A6ED/A6ED\A6ED;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DA6EE:          db $25,$25,$25,$4B,$4D,$4E,$25,$25        ;;A6ED|A6EE+A6EE/A6EE\A6EE;
@@ -1669,7 +1669,7 @@ CODE_0DA72A:          LDA.B _0                                  ;;A729|A72A+A72A
                       JSR CODE_0DA97D                           ;;A73F|A740+A740/A740\A740;
                       DEC.B _1                                  ;;A742|A743+A743/A743\A743;
                       BPL CODE_0DA72A                           ;;A744|A745+A745/A745\A745;
-                      RTS                                       ;;A746|A747+A747/A747\A747; Return 
+                      RTS                                       ;;A746|A747+A747/A747\A747;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DA748:          db $25,$25,$4B,$4C,$25,$25,$25,$54        ;;A747|A748+A748/A748\A748;
@@ -1695,7 +1695,7 @@ CODE_0DA76F:          LDA.B _0                                  ;;A76E|A76F+A76F
                       JSR CODE_0DA97D                           ;;A784|A785+A785/A785\A785;
                       DEC.B _1                                  ;;A787|A788+A788/A788\A788;
                       BPL CODE_0DA76F                           ;;A789|A78A+A78A/A78A\A78A;
-                      RTS                                       ;;A78B|A78C+A78C/A78C\A78C; Return 
+                      RTS                                       ;;A78B|A78C+A78C/A78C\A78C;
                                                                 ;;                        ;
 CODE_0DA78D:          STA.B _F                                  ;;A78C|A78D+A78D/A78D\A78D;
                       CMP.B #$25                                ;;A78E|A78F+A78F/A78F\A78F;
@@ -1734,7 +1734,7 @@ CODE_0DA7C8:          LDA.B #$03                                ;;A7C7|A7C8+A7C8
                       JSR CODE_0DA97D                           ;;A7DA|A7DB+A7DB/A7DB\A7DB;
                       CPX.B #$10                                ;;A7DD|A7DE+A7DE/A7DE\A7DE;
                       BNE CODE_0DA7C8                           ;;A7DF|A7E0+A7E0/A7E0\A7E0;
-                      RTS                                       ;;A7E1|A7E2+A7E2/A7E2\A7E2; Return 
+                      RTS                                       ;;A7E1|A7E2+A7E2/A7E2\A7E2;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DA7E3:          db $66,$67,$68,$69                        ;;A7E2|A7E3+A7E3/A7E3\A7E3;
@@ -1753,7 +1753,7 @@ CODE_0DA7E7:          LDY.B LevelLoadPos                        ;;A7E6|A7E7+A7E7
                       JSR CODE_0DA97D                           ;;A800|A801+A801/A801\A801;
                       CPX.B #$04                                ;;A803|A804+A804/A804\A804;
                       BNE -                                     ;;A805|A806+A806/A806\A806;
-                      RTS                                       ;;A807|A808+A808/A808\A808; Return 
+                      RTS                                       ;;A807|A808+A808/A808\A808;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DA809:          db $AA,$AF                                ;;A808|A809+A809/A809\A809;
@@ -1772,7 +1772,7 @@ CODE_0DA80D:          LDY.B LevelLoadPos                        ;;A80C|A80D+A80D
                       JSR Sta1To6ePointer                       ;;A81F|A820+A820/A820\A820;
                       LDA.L DATA_0DA80B,X                       ;;A822|A823+A823/A823\A823;
                       STA.B [Map16LowPtr],Y                     ;;A826|A827+A827/A827\A827;
-                      RTS                                       ;;A828|A829+A829/A829\A829; Return 
+                      RTS                                       ;;A828|A829+A829/A829\A829;
                                                                 ;;                        ;
 CODE_0DA82A:          LDA.B LevelLoadPos                        ;;A829|A82A+A82A/A82A\A82A;
                       CLC                                       ;;A82B|A82C+A82C/A82C\A82C;
@@ -1785,7 +1785,7 @@ CODE_0DA82A:          LDA.B LevelLoadPos                        ;;A829|A82A+A82A
                       ADC.B #$02                                ;;A836|A837+A837/A837\A837;
                       STA.B Map16LowPtr+1                       ;;A838|A839+A839/A839\A839;
                       STA.B Map16HighPtr+1                      ;;A83A|A83B+A83B/A83B\A83B;
-                    + RTS                                       ;;A83C|A83D+A83D/A83D\A83D; Return 
+                    + RTS                                       ;;A83C|A83D+A83D/A83D\A83D;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DA83E:          db $96,$A0                                ;;A83D|A83E+A83E/A83E\A83E;
@@ -1814,7 +1814,7 @@ CODE_0DA846:          LDY.B LevelLoadPos                        ;;A845|A846+A846
                       JSR Sta1To6ePointer                       ;;A86C|A86D+A86D/A86D\A86D;
                       LDA.L DATA_0DA844,X                       ;;A86F|A870+A870/A870\A870;
                       STA.B [Map16LowPtr],Y                     ;;A873|A874+A874/A874\A874;
-                      RTS                                       ;;A875|A876+A876/A876\A876; Return 
+                      RTS                                       ;;A875|A876+A876/A876\A876;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DA877:          db $CA,$CC                                ;;A876|A877+A877/A877\A877;
@@ -1839,7 +1839,7 @@ CODE_0DA87D:          LDY.B LevelLoadPos                        ;;A87C|A87D+A87D
                       JSR Sta1To6ePointer                       ;;A89B|A89C+A89C/A89C\A89C;
                       LDA.L DATA_0DA87B,X                       ;;A89E|A89F+A89F/A89F\A89F;
                       STA.B [Map16LowPtr],Y                     ;;A8A2|A8A3+A8A3/A8A3\A8A3;
-                      RTS                                       ;;A8A4|A8A5+A8A5/A8A5\A8A5; Return 
+                      RTS                                       ;;A8A4|A8A5+A8A5/A8A5\A8A5;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DA8A6:          db $80,$40,$20,$10,$08,$04,$02,$01        ;;A8A5|A8A6+A8A6/A8A6\A8A6;
@@ -1927,7 +1927,7 @@ CODE_0DA943:          DEC.B _2                                  ;;A942|A943+A943
                       BMI +                                     ;;A954|A955+A955/A955\A955;
                       JMP CODE_0DA8D8                           ;;A956|A957+A957/A957\A957;
                                                                 ;;                        ;
-                    + RTS                                       ;;A959|A95A+A95A/A95A\A95A; Return 
+                    + RTS                                       ;;A959|A95A+A95A/A95A\A95A;
                                                                 ;;                        ;
 CODE_0DA95B:          STA.B [Map16LowPtr],Y                     ;;A95A|A95B+A95B/A95B\A95B;
 CODE_0DA95D:          INY                                       ;;A95C|A95D+A95D/A95D\A95D;
@@ -1947,7 +1947,7 @@ CODE_0DA95D:          INY                                       ;;A95C|A95D+A95D
                       LDA.B LevelLoadPos                        ;;A976|A977+A977/A977\A977;
                       AND.B #$F0                                ;;A978|A979+A979/A979\A979;
                       TAY                                       ;;A97A|A97B+A97B/A97B\A97B;
-                    + RTS                                       ;;A97B|A97C+A97C/A97C\A97C; Return 
+                    + RTS                                       ;;A97B|A97C+A97C/A97C\A97C;
                                                                 ;;                        ;
 CODE_0DA97D:          LDA.B LevelLoadPos                        ;;A97C|A97D+A97D/A97D\A97D;
                       CLC                                       ;;A97E|A97F+A97F/A97F\A97F;
@@ -1960,7 +1960,7 @@ CODE_0DA987:          LDA.B Map16LowPtr+1                       ;;A986|A987+A987
                       STA.B Map16LowPtr+1                       ;;A98A|A98B+A98B/A98B\A98B;
                       STA.B Map16HighPtr+1                      ;;A98C|A98D+A98D/A98D\A98D;
                       STA.B _5                                  ;;A98E|A98F+A98F/A98F\A98F;
-                    + RTS                                       ;;A990|A991+A991/A991\A991; Return 
+                    + RTS                                       ;;A990|A991+A991/A991\A991;
                                                                 ;;                        ;
 CODE_0DA992:          LDA.B LevelLoadPos                        ;;A991|A992+A992/A992\A992;
                       CLC                                       ;;A993|A994+A994/A994\A994;
@@ -1980,7 +1980,7 @@ CODE_0DA992:          LDA.B LevelLoadPos                        ;;A991|A992+A992
                       JSR CODE_0DA987                           ;;A9AA|A9AB+A9AB/A9AB\A9AB;
                     + JSR CODE_0DA9D6                           ;;A9AD|A9AE+A9AE/A9AE\A9AE;
 CODE_0DA9B1:          STY.B LevelLoadPos                        ;;A9B0|A9B1+A9B1/A9B1\A9B1;
-                      RTS                                       ;;A9B2|A9B3+A9B3/A9B3\A9B3; Return 
+                      RTS                                       ;;A9B2|A9B3+A9B3/A9B3\A9B3;
                                                                 ;;                        ;
 CODE_0DA9B4:          LDA.B LevelLoadPos                        ;;A9B3|A9B4+A9B4/A9B4\A9B4;
                       CLC                                       ;;A9B5|A9B6+A9B6/A9B6\A9B6;
@@ -2000,7 +2000,7 @@ CODE_0DA9B4:          LDA.B LevelLoadPos                        ;;A9B3|A9B4+A9B4
                       JSR CODE_0DA987                           ;;A9CC|A9CD+A9CD/A9CD\A9CD;
                     + JSR CODE_0DA9EF                           ;;A9CF|A9D0+A9D0/A9D0\A9D0;
 CODE_0DA9D3:          STY.B LevelLoadPos                        ;;A9D2|A9D3+A9D3/A9D3\A9D3;
-                      RTS                                       ;;A9D4|A9D5+A9D5/A9D5\A9D5; Return 
+                      RTS                                       ;;A9D4|A9D5+A9D5/A9D5\A9D5;
                                                                 ;;                        ;
 CODE_0DA9D6:          LDA.B Map16LowPtr                         ;;A9D5|A9D6+A9D6/A9D6\A9D6;
                       SEC                                       ;;A9D7|A9D8+A9D8/A9D8\A9D8;
@@ -2014,7 +2014,7 @@ CODE_0DA9D6:          LDA.B Map16LowPtr                         ;;A9D5|A9D6+A9D6
                       STA.B Map16HighPtr+1                      ;;A9E6|A9E7+A9E7/A9E7\A9E7;
                       STA.B _5                                  ;;A9E8|A9E9+A9E9/A9E9\A9E9;
                       DEC.W LevelLoadObjectTile                 ;;A9EA|A9EB+A9EB/A9EB\A9EB;
-                      RTS                                       ;;A9ED|A9EE+A9EE/A9EE\A9EE; Return 
+                      RTS                                       ;;A9ED|A9EE+A9EE/A9EE\A9EE;
                                                                 ;;                        ;
 CODE_0DA9EF:          LDA.B Map16LowPtr                         ;;A9EE|A9EF+A9EF/A9EF\A9EF;
                       CLC                                       ;;A9F0|A9F1+A9F1/A9F1\A9F1;
@@ -2028,15 +2028,15 @@ CODE_0DA9EF:          LDA.B Map16LowPtr                         ;;A9EE|A9EF+A9EF
                       STA.B Map16HighPtr+1                      ;;A9FF|AA00+AA00/AA00\AA00;
                       STA.B _5                                  ;;AA01|AA02+AA02/AA02\AA02;
                       INC.W LevelLoadObjectTile                 ;;AA03|AA04+AA04/AA04\AA04;
-                      RTS                                       ;;AA06|AA07+AA07/AA07\AA07; Return 
+                      RTS                                       ;;AA06|AA07+AA07/AA07\AA07;
                                                                 ;;                        ;
 Sta1To6ePointer:      LDA.B #$01                                ;;AA07|AA08+AA08/AA08\AA08;
                       STA.B [Map16HighPtr],Y                    ;;AA09|AA0A+AA0A/AA0A\AA0A;
-                      RTS                                       ;;AA0B|AA0C+AA0C/AA0C\AA0C; Return 
+                      RTS                                       ;;AA0B|AA0C+AA0C/AA0C\AA0C;
                                                                 ;;                        ;
 StzTo6ePointer:       LDA.B #$00                                ;;AA0C|AA0D+AA0D/AA0D\AA0D;
                       STA.B [Map16HighPtr],Y                    ;;AA0E|AA0F+AA0F/AA0F\AA0F;
-                      RTS                                       ;;AA10|AA11+AA11/AA11\AA11; Return 
+                      RTS                                       ;;AA10|AA11+AA11/AA11\AA11;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DAA12:          db $33,$37,$39,$00,$00                    ;;AA11|AA12+AA12/AA12\AA12;
@@ -2102,7 +2102,7 @@ CODE_0DAA8C:          DEC.B _0                                  ;;AA8B|AA8C+AA8C
                       JSR Sta1To6ePointer                       ;;AA99|AA9A+AA9A/AA9A\AA9A;
                       LDA.L DATA_0DAA21,X                       ;;AA9C|AA9D+AA9D/AA9D\AA9D;
                       STA.B [Map16LowPtr],Y                     ;;AAA0|AAA1+AAA1/AAA1\AAA1;
-Return0DAAA3:         RTS                                       ;;AAA2|AAA3+AAA3/AAA3\AAA3; Return 
+Return0DAAA3:         RTS                                       ;;AAA2|AAA3+AAA3/AAA3\AAA3;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DAAA4:          db $3B,$3C,$3B,$3F,$3B,$3C,$3B,$3F        ;;AAA3|AAA4+AAA4/AAA4\AAA4;
@@ -2149,7 +2149,7 @@ CODE_0DAAFC:          LDA.B _0                                  ;;AAFB|AAFC+AAFC
                       TXA                                       ;;AB06|AB07+AB07/AB07\AB07;
                       AND.B #$01                                ;;AB07|AB08+AB08/AB08\AB08;
                       BNE CODE_0DAAC9                           ;;AB09|AB0A+AB0A/AB0A\AB0A;
-                      RTS                                       ;;AB0B|AB0C+AB0C/AB0C\AB0C; Return 
+                      RTS                                       ;;AB0B|AB0C+AB0C/AB0C\AB0C;
                                                                 ;;                        ;
 CODE_0DAB0D:          LDY.B LevelLoadPos                        ;;AB0C|AB0D+AB0D/AB0D\AB0D;
                       LDA.B LvlLoadObjSize                      ;;AB0E|AB0F+AB0F/AB0F\AB0F;
@@ -2176,7 +2176,7 @@ CODE_0DAB0D:          LDY.B LevelLoadPos                        ;;AB0C|AB0D+AB0D
                       JSR CODE_0DA97D                           ;;AB36|AB37+AB37/AB37\AB37;
                       DEX                                       ;;AB39|AB3A+AB3A/AB3A\AB3A;
                       BPL -                                     ;;AB3A|AB3B+AB3B/AB3B\AB3B;
-Return0DAB3D:         RTS                                       ;;AB3C|AB3D+AB3D/AB3D\AB3D; Return 
+Return0DAB3D:         RTS                                       ;;AB3C|AB3D+AB3D/AB3D\AB3D;
                                                                 ;;                        ;
 CODE_0DAB3E:          LDA.B LvlLoadObjSize                      ;;AB3D|AB3E+AB3E/AB3E\AB3E;
                       AND.B #$0F                                ;;AB3F|AB40+AB40/AB40\AB40;
@@ -2269,7 +2269,7 @@ CODE_0DABEC:          LDX.B _2                                  ;;ABEB|ABEC+ABEC
                       JSR CODE_0DA97D                           ;;ABEF|ABF0+ABF0/ABF0\ABF0;
                       JMP CODE_0DAB99                           ;;ABF2|ABF3+ABF3/ABF3\ABF3;
                                                                 ;;                        ;
-Return0DABF6:         RTS                                       ;;ABF5|ABF6+ABF6/ABF6\ABF6; Return 
+Return0DABF6:         RTS                                       ;;ABF5|ABF6+ABF6/ABF6\ABF6;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DABF7:          db $3F,$01,$03                            ;;ABF6|ABF7+ABF7/ABF7\ABF7;
@@ -2354,7 +2354,7 @@ CODE_0DAC89:          LDX.B _2                                  ;;AC88|AC89+AC89
                       JSR CODE_0DA97D                           ;;AC8A|AC8B+AC8B/AC8B\AC8B;
                       JMP CODE_0DAC3E                           ;;AC8D|AC8E+AC8E/AC8E\AC8E;
                                                                 ;;                        ;
-Return0DAC91:         RTS                                       ;;AC90|AC91+AC91/AC91\AC91; Return 
+Return0DAC91:         RTS                                       ;;AC90|AC91+AC91/AC91\AC91;
                                                                 ;;                        ;
 CODE_0DAC92:          LDY.B LevelLoadPos                        ;;AC91|AC92+AC92/AC92\AC92;
                       LDA.B #$03                                ;;AC93|AC94+AC94/AC94\AC94;
@@ -2446,7 +2446,7 @@ CODE_0DAD37:          LDX.B _2                                  ;;AD36|AD37+AD37
                       JSR CODE_0DA97D                           ;;AD3C|AD3D+AD3D/AD3D\AD3D;
                       JMP CODE_0DACCF                           ;;AD3F|AD40+AD40/AD40\AD40;
                                                                 ;;                        ;
-Return0DAD43:         RTS                                       ;;AD42|AD43+AD43/AD43\AD43; Return 
+Return0DAD43:         RTS                                       ;;AD42|AD43+AD43/AD43\AD43;
                                                                 ;;                        ;
 CODE_0DAD44:          LDY.B LevelLoadPos                        ;;AD43|AD44+AD44/AD44\AD44;
                       LDX.B #$01                                ;;AD45|AD46+AD46/AD46\AD46;
@@ -2491,7 +2491,7 @@ CODE_0DAD7F:          JSR Sta1To6ePointer                       ;;AD7E|AD7F+AD7F
                       LDX.B _2                                  ;;AD98|AD99+AD99/AD99\AD99;
                       DEC.B _0                                  ;;AD9A|AD9B+AD9B/AD9B\AD9B;
                       BPL +                                     ;;AD9C|AD9D+AD9D/AD9D\AD9D;
-Return0DAD9F:         RTS                                       ;;AD9E|AD9F+AD9F/AD9F\AD9F; Return 
+Return0DAD9F:         RTS                                       ;;AD9E|AD9F+AD9F/AD9F\AD9F;
                                                                 ;;                        ;
                     + JMP CODE_0DAD65                           ;;AD9F|ADA0+ADA0/ADA0\ADA0;
                                                                 ;;                        ;
@@ -2529,7 +2529,7 @@ CODE_0DADD0:          LDA.B _0                                  ;;ADCF|ADD0+ADD0
                       LDX.B _2                                  ;;ADE3|ADE4+ADE4/ADE4\ADE4;
                       DEC.B _0                                  ;;ADE5|ADE6+ADE6/ADE6\ADE6;
                       BPL CODE_0DADC4                           ;;ADE7|ADE8+ADE8/ADE8\ADE8;
-Return0DADEA:         RTS                                       ;;ADE9|ADEA+ADEA/ADEA\ADEA; Return 
+Return0DADEA:         RTS                                       ;;ADE9|ADEA+ADEA/ADEA\ADEA;
                                                                 ;;                        ;
 CODE_0DADEB:          LDY.B LevelLoadPos                        ;;ADEA|ADEB+ADEB/ADEB\ADEB;
                       LDX.B #$03                                ;;ADEC|ADED+ADED/ADED\ADED;
@@ -2590,7 +2590,7 @@ CODE_0DAE36:          JSR Sta1To6ePointer                       ;;AE35|AE36+AE36
                       LDX.B _2                                  ;;AE62|AE63+AE63/AE63\AE63;
                       DEC.B _0                                  ;;AE64|AE65+AE65/AE65\AE65;
                       BPL +                                     ;;AE66|AE67+AE67/AE67\AE67;
-Return0DAE69:         RTS                                       ;;AE68|AE69+AE69/AE69\AE69; Return 
+Return0DAE69:         RTS                                       ;;AE68|AE69+AE69/AE69\AE69;
                                                                 ;;                        ;
                     + JMP CODE_0DAE0A                           ;;AE69|AE6A+AE6A/AE6A\AE6A;
                                                                 ;;                        ;
@@ -2667,7 +2667,7 @@ CODE_0DAEF2:          STY.B LevelLoadPos                        ;;AEF1|AEF2+AEF2
                       BMI +                                     ;;AEF5|AEF6+AEF6/AEF6\AEF6;
                       JMP CODE_0DAE88                           ;;AEF7|AEF8+AEF8/AEF8\AEF8;
                                                                 ;;                        ;
-                    + RTS                                       ;;AEFA|AEFB+AEFB/AEFB\AEFB; Return 
+                    + RTS                                       ;;AEFA|AEFB+AEFB/AEFB\AEFB;
                                                                 ;;                        ;
 CODE_0DAEFC:          LDY.B LevelLoadPos                        ;;AEFB|AEFC+AEFC/AEFC\AEFC;
                       LDA.B LvlLoadObjSize                      ;;AEFD|AEFE+AEFE/AEFE\AEFE;
@@ -2717,7 +2717,7 @@ CODE_0DAF3C:          JSR Sta1To6ePointer                       ;;AF3B|AF3C+AF3C
                       JSR CODE_0DA97D                           ;;AF58|AF59+AF59/AF59\AF59;
                       DEC.B _0                                  ;;AF5B|AF5C+AF5C/AF5C\AF5C;
                       BPL CODE_0DAF20                           ;;AF5D|AF5E+AF5E/AF5E\AF5E;
-                      RTS                                       ;;AF5F|AF60+AF60/AF60\AF60; Return 
+                      RTS                                       ;;AF5F|AF60+AF60/AF60\AF60;
                                                                 ;;                        ;
 CODE_0DAF61:          LDY.B LevelLoadPos                        ;;AF60|AF61+AF61/AF61\AF61;
                       LDA.B LvlLoadObjSize                      ;;AF62|AF63+AF63/AF63\AF63;
@@ -2784,14 +2784,14 @@ CODE_0DAFD5:          STY.B LevelLoadPos                        ;;AFD4|AFD5+AFD5
                       BMI +                                     ;;AFD8|AFD9+AFD9/AFD9\AFD9;
                       JMP CODE_0DAF7B                           ;;AFDA|AFDB+AFDB/AFDB\AFDB;
                                                                 ;;                        ;
-                    + RTS                                       ;;AFDD|AFDE+AFDE/AFDE\AFDE; Return 
+                    + RTS                                       ;;AFDD|AFDE+AFDE/AFDE\AFDE;
                                                                 ;;                        ;
 CODE_0DAFDF:          LDA.B Map16LowPtr+1                       ;;AFDE|AFDF+AFDF/AFDF\AFDF;
                       SBC.B #$00                                ;;AFE0|AFE1+AFE1/AFE1\AFE1;
                       STA.B Map16LowPtr+1                       ;;AFE2|AFE3+AFE3/AFE3\AFE3;
                       STA.B Map16HighPtr+1                      ;;AFE4|AFE5+AFE5/AFE5\AFE5;
                       STA.B _5                                  ;;AFE6|AFE7+AFE7/AFE7\AFE7;
-                      RTS                                       ;;AFE8|AFE9+AFE9/AFE9\AFE9; Return 
+                      RTS                                       ;;AFE8|AFE9+AFE9/AFE9\AFE9;
                                                                 ;;                        ;
 CODE_0DAFEA:          LDY.B LevelLoadPos                        ;;AFE9|AFEA+AFEA/AFEA\AFEA;
                       LDA.B LvlLoadObjSize                      ;;AFEB|AFEC+AFEC/AFEC\AFEC;
@@ -2831,7 +2831,7 @@ CODE_0DB01F:          JSR Sta1To6ePointer                       ;;B01E|B01F+B01F
                       JSR CODE_0DA97D                           ;;B030|B031+B031/B031\B031;
                       DEC.B _0                                  ;;B033|B034+B034/B034\B034;
                       BPL CODE_0DB00B                           ;;B035|B036+B036/B036\B036;
-                      RTS                                       ;;B037|B038+B038/B038\B038; Return 
+                      RTS                                       ;;B037|B038+B038/B038\B038;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB039:          db $40,$41,$06,$45,$4B,$48,$4C,$01        ;;B038|B039+B039/B039\B039;
@@ -2899,7 +2899,7 @@ CODE_0DB0E2:          CPX.B #$0B                                ;;B0E1|B0E2+B0E2
                       JSR Sta1To6ePointer                       ;;B0E5|B0E6+B0E6/B0E6\B0E6;
                       LDA.L DATA_0DB066,X                       ;;B0E8|B0E9+B0E9/B0E9\B0E9;
                       STA.B [Map16LowPtr],Y                     ;;B0EC|B0ED+B0ED/B0ED\B0ED;
-                    + RTS                                       ;;B0EE|B0EF+B0EF/B0EF\B0EF; Return 
+                    + RTS                                       ;;B0EE|B0EF+B0EF/B0EF\B0EF;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB0F0:          db $7D,$7E,$82,$83,$9B,$9C,$A0,$A1        ;;B0EF|B0F0+B0F0/B0F0\B0F0;
@@ -2944,7 +2944,7 @@ CODE_0DB14D:          LDA.B _C                                  ;;B14C|B14D+B14D
 CODE_0DB152:          JSR Sta1To6ePointer                       ;;B151|B152+B152/B152\B152;
                       LDA.L DATA_0DB102,X                       ;;B154|B155+B155/B155\B155;
 CODE_0DB159:          LDX.B _B                                  ;;B158|B159+B159/B159\B159;
-Return0DB15B:         RTS                                       ;;B15A|B15B+B15B/B15B\B15B; Return 
+Return0DB15B:         RTS                                       ;;B15A|B15B+B15B/B15B\B15B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB15C:          db $6E,$6F,$73,$74,$78,$79,$7D,$7E        ;;B15B|B15C+B15C/B15C\B15C;
@@ -2979,7 +2979,7 @@ CODE_0DB1B0:          CMP.L DATA_0DB15C,X                       ;;B1AF|B1B0+B1B0
 CODE_0DB1BE:          JSR Sta1To6ePointer                       ;;B1BD|B1BE+B1BE/B1BE\B1BE;
                       LDA.L DATA_0DB17A,X                       ;;B1C0|B1C1+B1C1/B1C1\B1C1;
 CODE_0DB1C5:          LDX.B _B                                  ;;B1C4|B1C5+B1C5/B1C5\B1C5;
-Return0DB1C7:         RTS                                       ;;B1C6|B1C7+B1C7/B1C7\B1C7; Return 
+Return0DB1C7:         RTS                                       ;;B1C6|B1C7+B1C7/B1C7\B1C7;
                                                                 ;;                        ;
 CODE_0DB1C8:          LDA.B LvlLoadObjSize                      ;;B1C7|B1C8+B1C8/B1C8\B1C8;
                       STA.B _0                                  ;;B1C9|B1CA+B1CA/B1CA\B1CA;
@@ -3019,7 +3019,7 @@ CODE_0DB205:          JSR CODE_0DA6BA                           ;;B204|B205+B205
                       LDX.B _0                                  ;;B20A|B20B+B20B/B20B\B20B;
                       DEC.B _2                                  ;;B20C|B20D+B20D/B20D\B20D;
                       BPL -                                     ;;B20E|B20F+B20F/B20F\B20F;
-                      RTS                                       ;;B210|B211+B211/B211\B211; Return 
+                      RTS                                       ;;B210|B211+B211/B211\B211;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB212:          db $2F,$25,$32                            ;;B211|B212+B212/B212\B212;
@@ -3115,7 +3115,7 @@ CODE_0DB28F:          LDA.L DATA_0DB218,X                       ;;B28E|B28F+B28F
                       BEQ Return0DB2C9                          ;;B2C3|B2C4+B2C4/B2C4\B2C4;
                       JMP CODE_0DB23B                           ;;B2C5|B2C6+B2C6/B2C6\B2C6;
                                                                 ;;                        ;
-Return0DB2C9:         RTS                                       ;;B2C8|B2C9+B2C9/B2C9\B2C9; Return 
+Return0DB2C9:         RTS                                       ;;B2C8|B2C9+B2C9/B2C9\B2C9;
                                                                 ;;                        ;
 CODE_0DB2CA:          LDA.W TranslevelNo                        ;;B2C9|B2CA+B2CA/B2CA\B2CA;
                       LSR A                                     ;;B2CC|B2CD+B2CD/B2CD\B2CD;
@@ -3168,7 +3168,7 @@ CODE_0DB2CA:          LDA.W TranslevelNo                        ;;B2C9|B2CA+B2CA
                       JSR StzTo6ePointer                        ;;B32D|B32E+B32E/B32E\B32E;
                       LDA.B #$2E                                ;;B330|B331+B331/B331\B331;
                       STA.B [Map16LowPtr],Y                     ;;B332|B333+B333/B333\B333;
-                    + RTS                                       ;;B334|B335+B335/B335\B335; Return 
+                    + RTS                                       ;;B334|B335+B335/B335\B335;
                                                                 ;;                        ;
 ADDR_0DB336:          LDY.B LevelLoadPos                        ;;B335|B336+B336/B336\B336;
                       LDA.B LvlLoadObjSize                      ;;B337|B338+B338/B338\B338;
@@ -3240,7 +3240,7 @@ ADDR_0DB3A8:          DEX                                       ;;B3A7|B3A8+B3A8
                       BMI +                                     ;;B3B4|B3B5+B3B5/B3B5\B3B5;
                       JMP ADDR_0DB34A                           ;;B3B6|B3B7+B3B7/B3B7\B3B7;
                                                                 ;;                        ;
-                    + RTS                                       ;;B3B9|B3BA+B3BA/B3BA\B3BA; Return 
+                    + RTS                                       ;;B3B9|B3BA+B3BA/B3BA\B3BA;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB3BB:          db $05,$06                                ;;B3BA|B3BB+B3BB/B3BB\B3BB;
@@ -3260,7 +3260,7 @@ CODE_0DB3BD:          LDY.B LevelLoadPos                        ;;B3BC|B3BD+B3BD
                       JSR CODE_0DA95B                           ;;B3D2|B3D3+B3D3/B3D3\B3D3;
                       DEC.B _0                                  ;;B3D5|B3D6+B3D6/B3D6\B3D6;
                       BPL -                                     ;;B3D7|B3D8+B3D8/B3D8\B3D8;
-                      RTS                                       ;;B3D9|B3DA+B3DA/B3DA\B3DA; Return 
+                      RTS                                       ;;B3D9|B3DA+B3DA/B3DA\B3DA;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB3DB:          db $00,$01,$04,$08                        ;;B3DA|B3DB+B3DB/B3DB\B3DB;
@@ -3301,7 +3301,7 @@ CODE_0DB41C:          JSR CODE_0DA6BA                           ;;B41B|B41C+B41C
                       STA.B _2                                  ;;B423|B424+B424/B424\B424;
                       DEC.B _1                                  ;;B425|B426+B426/B426\B426;
                       BPL -                                     ;;B427|B428+B428/B428\B428;
-                      RTS                                       ;;B429|B42A+B42A/B42A\B42A; Return 
+                      RTS                                       ;;B429|B42A+B42A/B42A\B42A;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB42B:          db $26,$44                                ;;B42A|B42B+B42B/B42B\B42B;
@@ -3328,7 +3328,7 @@ CODE_0DB43C:          JSR StzTo6ePointer                        ;;B43B|B43C+B43C
                       INX                                       ;;B45A|B45B+B45B/B45B\B45B;
                       CPX.B #$02                                ;;B45B|B45C+B45C/B45C\B45C;
                       BNE CODE_0DB43C                           ;;B45D|B45E+B45E/B45E\B45E;
-                      RTS                                       ;;B45F|B460+B460/B460\B460; Return 
+                      RTS                                       ;;B45F|B460+B460/B460\B460;
                                                                 ;;                        ;
 CODE_0DB461:          LDY.B LevelLoadPos                        ;;B460|B461+B461/B461\B461;
                       LDA.B LvlLoadObjSize                      ;;B462|B463+B463/B463\B463;
@@ -3359,7 +3359,7 @@ CODE_0DB490:          JSR StzTo6ePointer                        ;;B48F|B490+B490
                       JSR CODE_0DA95B                           ;;B494|B495+B495/B495\B495;
                       DEX                                       ;;B497|B498+B498/B498\B498;
                       BPL CODE_0DB490                           ;;B498|B499+B499/B499\B499;
-                      RTS                                       ;;B49A|B49B+B49B/B49B\B49B; Return 
+                      RTS                                       ;;B49A|B49B+B49B/B49B\B49B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB49C:          db $0A,$0C                                ;;B49B|B49C+B49C/B49C\B49C;
@@ -3411,7 +3411,7 @@ CODE_0DB4F0:          STA.B _C                                  ;;B4EF|B4F0+B4F0
                     + JSR StzTo6ePointer                        ;;B4F1|B4F2+B4F2/B4F2\B4F2;
                       LDA.B _C                                  ;;B4F4|B4F5+B4F5/B4F5\B4F5;
                       STA.B [Map16LowPtr],Y                     ;;B4F6|B4F7+B4F7/B4F7\B4F7;
-                      RTS                                       ;;B4F8|B4F9+B4F9/B4F9\B4F9; Return 
+                      RTS                                       ;;B4F8|B4F9+B4F9/B4F9\B4F9;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB4FA:          db $0D,$0F                                ;;B4F9|B4FA+B4FA/B4FA\B4FA;
@@ -3432,7 +3432,7 @@ CODE_0DB515:          STA.B _C                                  ;;B514|B515+B515
                     + JSR StzTo6ePointer                        ;;B516|B517+B517/B517\B517;
                       LDA.B _C                                  ;;B519|B51A+B51A/B51A\B51A;
                       STA.B [Map16LowPtr],Y                     ;;B51B|B51C+B51C/B51C\B51C;
-                      RTS                                       ;;B51D|B51E+B51E/B51E\B51E; Return 
+                      RTS                                       ;;B51D|B51E+B51E/B51E\B51E;
                                                                 ;;                        ;
 CODE_0DB51F:          LDY.B LevelLoadPos                        ;;B51E|B51F+B51F/B51F\B51F;
                       LDA.B LvlLoadObjSize                      ;;B520|B521+B521/B521\B521;
@@ -3455,7 +3455,7 @@ CODE_0DB537:          STA.B [Map16LowPtr],Y                     ;;B536|B537+B537
                       JSR Sta1To6ePointer                       ;;B53E|B53F+B53F/B53F\B53F;
                       LDA.B #$55                                ;;B541|B542+B542/B542\B542;
                       STA.B [Map16LowPtr],Y                     ;;B543|B544+B544/B544\B544;
-                      RTS                                       ;;B545|B546+B546/B546\B546; Return 
+                      RTS                                       ;;B545|B546+B546/B546\B546;
                                                                 ;;                        ;
 CODE_0DB547:          LDY.B LevelLoadPos                        ;;B546|B547+B547/B547\B547;
                       LDA.B LvlLoadObjSize                      ;;B548|B549+B549/B549\B549;
@@ -3473,7 +3473,7 @@ CODE_0DB55B:          JSR CODE_0DA95B                           ;;B55A|B55B+B55B
                       JSR Sta1To6ePointer                       ;;B560|B561+B561/B561\B561;
                       LDA.B #$58                                ;;B563|B564+B564/B564\B564;
                       STA.B [Map16LowPtr],Y                     ;;B565|B566+B566/B566\B566;
-                      RTS                                       ;;B567|B568+B568/B568\B568; Return 
+                      RTS                                       ;;B567|B568+B568/B568\B568;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB569:          db $91,$92,$96,$97,$9A,$9B,$9F,$A0        ;;B568|B569+B569/B569\B569;
@@ -3486,7 +3486,7 @@ ADDR_0DB571:          LDY.B LevelLoadPos                        ;;B570|B571+B571
                       JSR StzTo6ePointer                        ;;B578|B579+B579/B579\B579;
                       LDA.L DATA_0DB569,X                       ;;B57B|B57C+B57C/B57C\B57C;
                       STA.B [Map16LowPtr],Y                     ;;B57F|B580+B580/B580\B580;
-                      RTS                                       ;;B581|B582+B582/B582\B582; Return 
+                      RTS                                       ;;B581|B582+B582/B582\B582;
                                                                 ;;                        ;
 CODE_0DB583:          LDX.B #$01                                ;;B582|B583+B583/B583\B583;
                       BNE +                                     ;;B584|B585+B585/B585\B585;
@@ -3502,12 +3502,12 @@ CODE_0DB58B:          LDX.B #$00                                ;;B58A|B58B+B58B
                       JSR StzTo6ePointer                        ;;B593|B594+B594/B594\B594;
                       LDA.L DATA_0DB589,X                       ;;B596|B597+B597/B597\B597;
                       STA.B [Map16LowPtr],Y                     ;;B59A|B59B+B59B/B59B\B59B;
-                      RTS                                       ;;B59C|B59D+B59D/B59D\B59D; Return 
+                      RTS                                       ;;B59C|B59D+B59D/B59D\B59D;
                                                                 ;;                        ;
                     + JSR Sta1To6ePointer                       ;;B59D|B59E+B59E/B59E\B59E;
                       LDA.L DATA_0DB587,X                       ;;B5A0|B5A1+B5A1/B5A1\B5A1;
                       STA.B [Map16LowPtr],Y                     ;;B5A4|B5A5+B5A5/B5A5\B5A5;
-                      RTS                                       ;;B5A6|B5A7+B5A7/B5A7\B5A7; Return 
+                      RTS                                       ;;B5A6|B5A7+B5A7/B5A7\B5A7;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB5A8:          db $73,$7A,$85,$88,$C3                    ;;B5A7|B5A8+B5A8/B5A8\B5A8;
@@ -3538,7 +3538,7 @@ CODE_0DB5D7:          JSR CODE_0DA95B                           ;;B5D6|B5D7+B5D7
                       JSR StzTo6ePointer                        ;;B5DD|B5DE+B5DE/B5DE\B5DE;
                       LDA.L DATA_0DB5B2,X                       ;;B5E0|B5E1+B5E1/B5E1\B5E1;
                       STA.B [Map16LowPtr],Y                     ;;B5E4|B5E5+B5E5/B5E5\B5E5;
-                      RTS                                       ;;B5E6|B5E7+B5E7/B5E7\B5E7; Return 
+                      RTS                                       ;;B5E6|B5E7+B5E7/B5E7\B5E7;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB5E8:          db $07                                    ;;B5E7|B5E8+B5E8/B5E8\B5E8;
@@ -3628,7 +3628,7 @@ CODE_0DB6B2:          INX                                       ;;B6B1|B6B2+B6B2
                       BMI +                                     ;;B6BA|B6BB+B6BB/B6BB\B6BB;
                       JMP CODE_0DB664                           ;;B6BC|B6BD+B6BD/B6BD\B6BD;
                                                                 ;;                        ;
-                    + RTS                                       ;;B6BF|B6C0+B6C0/B6C0\B6C0; Return 
+                    + RTS                                       ;;B6BF|B6C0+B6C0/B6C0\B6C0;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB6C1:          db $93,$9C                                ;;B6C0|B6C1+B6C1/B6C1\B6C1;
@@ -3648,7 +3648,7 @@ CODE_0DB6C3:          LDY.B LevelLoadPos                        ;;B6C2|B6C3+B6C3
                       JSR CODE_0DA95B                           ;;B6D8|B6D9+B6D9/B6D9\B6D9;
                       DEC.B _0                                  ;;B6DB|B6DC+B6DC/B6DC\B6DC;
                       BPL -                                     ;;B6DD|B6DE+B6DE/B6DE\B6DE;
-                      RTS                                       ;;B6DF|B6E0+B6E0/B6E0\B6E0; Return 
+                      RTS                                       ;;B6DF|B6E0+B6E0/B6E0\B6E0;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB6E1:          db $C1,$C2                                ;;B6E0|B6E1+B6E1/B6E1\B6E1;
@@ -3661,7 +3661,7 @@ CODE_0DB6E3:          LDY.B LevelLoadPos                        ;;B6E2|B6E3+B6E3
                       JSR StzTo6ePointer                        ;;B6EA|B6EB+B6EB/B6EB\B6EB;
                       LDA.L DATA_0DB6E1,X                       ;;B6ED|B6EE+B6EE/B6EE\B6EE;
                       STA.B [Map16LowPtr],Y                     ;;B6F1|B6F2+B6F2/B6F2\B6F2;
-                      RTS                                       ;;B6F3|B6F4+B6F4/B6F4\B6F4; Return 
+                      RTS                                       ;;B6F3|B6F4+B6F4/B6F4\B6F4;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB6F5:          db $94,$8F,$9D,$98,$95,$90,$9E,$99        ;;B6F4|B6F5+B6F5/B6F5\B6F5;
@@ -3687,7 +3687,7 @@ ADDR_0DB725:          STA.B [Map16LowPtr],Y                     ;;B724|B725+B725
                       JSR CODE_0DA97D                           ;;B726|B727+B727/B727\B727;
                       DEC.B _0                                  ;;B729|B72A+B72A/B72A\B72A;
                       BPL -                                     ;;B72B|B72C+B72C/B72C\B72C;
-                      RTS                                       ;;B72D|B72E+B72E/B72E\B72E; Return 
+                      RTS                                       ;;B72D|B72E+B72E/B72E\B72E;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB72F:          db $C4,$C5,$C7,$EC,$ED,$C6,$C7,$EE        ;;B72E|B72F+B72F/B72F\B72F;
@@ -3743,7 +3743,7 @@ CODE_0DB79F:          JSR CODE_0DA95D                           ;;B79E|B79F+B79F
                       JSR Sta1To6ePointer                       ;;B7A1|B7A2+B7A2/B7A2\B7A2;
                       LDA.B #$EB                                ;;B7A4|B7A5+B7A5/B7A5\B7A5;
                       STA.B [Map16LowPtr],Y                     ;;B7A6|B7A7+B7A7/B7A7\B7A7;
-                      RTS                                       ;;B7A8|B7A9+B7A9/B7A9\B7A9; Return 
+                      RTS                                       ;;B7A8|B7A9+B7A9/B7A9\B7A9;
                                                                 ;;                        ;
 CODE_0DB7AA:          LDY.B LevelLoadPos                        ;;B7A9|B7AA+B7AA/B7AA\B7AA;
                       LDA.B LvlLoadObjSize                      ;;B7AB|B7AC+B7AC/B7AC\B7AC;
@@ -3819,7 +3819,7 @@ CODE_0DB836:          DEX                                       ;;B836|B836+B836
                       LDX.B _1                                  ;;B847|B847+B847/B847\B847;
                       DEC.B _3                                  ;;B849|B849+B849/B849\B849;
                       BPL CODE_0DB823                           ;;B84B|B84B+B84B/B84B\B84B;
-                      RTS                                       ;;B84D|B84D+B84D/B84D\B84D; Return 
+                      RTS                                       ;;B84D|B84D+B84D/B84D\B84D;
                                                                 ;;                        ;
 CODE_0DB84E:          STA.B _F                                  ;;B84E|B84E+B84E/B84E\B84E;
                       LDA.B [Map16LowPtr],Y                     ;;B850|B850+B850/B850\B850;
@@ -3913,7 +3913,7 @@ CODE_0DB909:          JSR CODE_0DA6BA                           ;;B90A|B909+B909
                       LDX.B _1                                  ;;B910|B90F+B90F/B90F\B90F;
                       DEC.B _3                                  ;;B912|B911+B911/B911\B911;
                       BPL CODE_0DB8EB                           ;;B914|B913+B913/B913\B913;
-                      RTS                                       ;;B916|B915+B915/B915\B915; Return 
+                      RTS                                       ;;B916|B915+B915/B915\B915;
                                                                 ;;                        ;
 CODE_0DB916:          LDX.B #$00                                ;;B917|B916+B916/B916\B916;
                       BEQ +                                     ;;B919|B918+B918/B918\B918;
@@ -3952,7 +3952,7 @@ CODE_0DB937:          JSR StzTo6ePointer                        ;;B938|B937+B937
                       JSR CODE_0DA97D                           ;;B95B|B95A+B95A/B95A\B95A;
                       DEC.B _1                                  ;;B95E|B95D+B95D/B95D\B95D;
                       BPL CODE_0DB930                           ;;B960|B95F+B95F/B95F\B95F;
-                      RTS                                       ;;B962|B961+B961/B961\B961; Return 
+                      RTS                                       ;;B962|B961+B961/B961\B961;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DB962:          db $BD,$BF                                ;;B963|B962+B962/B962\B962;
@@ -3981,7 +3981,7 @@ CODE_0DB975:          JSR StzTo6ePointer                        ;;B976|B975+B975
                       JSR CODE_0DA97D                           ;;B990|B98F+B98F/B98F\B98F;
                       DEC.B _0                                  ;;B993|B992+B992/B992\B992;
                       BPL CODE_0DB975                           ;;B995|B994+B994/B994\B994;
-Return0DB996:         RTS                                       ;;B997|B996+B996/B996\B996; Return 
+Return0DB996:         RTS                                       ;;B997|B996+B996/B996\B996;
                                                                 ;;                        ;
 CODE_0DB997:          STA.B _F                                  ;;B998|B997+B997/B997\B997;
                       CPX.B #$01                                ;;B99A|B999+B999/B999\B999;
@@ -4003,7 +4003,7 @@ CODE_0DB9AE:          LDA.B [Map16LowPtr],Y                     ;;B9AF|B9AE+B9AE
                       STA.B _F                                  ;;B9BA|B9B9+B9B9/B9B9\B9B9;
 CODE_0DB9BB:          LDA.B _F                                  ;;B9BC|B9BB+B9BB/B9BB\B9BB;
                       STA.B [Map16LowPtr],Y                     ;;B9BE|B9BD+B9BD/B9BD\B9BD;
-                      RTS                                       ;;B9C0|B9BF+B9BF/B9BF\B9BF; Return 
+                      RTS                                       ;;B9C0|B9BF+B9BF/B9BF\B9BF;
                                                                 ;;                        ;
 CODE_0DB9C0:          LDY.B LevelLoadPos                        ;;B9C1|B9C0+B9C0/B9C0\B9C0;
                       LDA.B LvlLoadObjSize                      ;;B9C3|B9C2+B9C2/B9C2\B9C2;
@@ -4029,7 +4029,7 @@ CODE_0DB9CA:          JSR CODE_0DA6B1                           ;;B9CB|B9CA+B9CA
                       JSR CODE_0DA97D                           ;;B9EF|B9EE+B9EE/B9EE\B9EE;
                       DEC.B _0                                  ;;B9F2|B9F1+B9F1/B9F1\B9F1;
                       BPL CODE_0DB9CA                           ;;B9F4|B9F3+B9F3/B9F3\B9F3;
-Return0DB9F5:         RTS                                       ;;B9F6|B9F5+B9F5/B9F5\B9F5; Return 
+Return0DB9F5:         RTS                                       ;;B9F6|B9F5+B9F5/B9F5\B9F5;
                                                                 ;;                        ;
 CODE_0DB9F6:          LDA.B [Map16LowPtr],Y                     ;;B9F7|B9F6+B9F6/B9F6\B9F6;
                       CMP.B #$0E                                ;;B9F9|B9F8+B9F8/B9F8\B9F8;
@@ -4041,7 +4041,7 @@ CODE_0DB9F6:          LDA.B [Map16LowPtr],Y                     ;;B9F7|B9F6+B9F6
                       INX                                       ;;BA06|BA05+BA05/BA05\BA05;
                       TXA                                       ;;BA07|BA06+BA06/BA06\BA06;
                       STA.B [Map16LowPtr],Y                     ;;BA08|BA07+BA07/BA07\BA07;
-                      RTS                                       ;;BA0A|BA09+BA09/BA09\BA09; Return 
+                      RTS                                       ;;BA0A|BA09+BA09/BA09\BA09;
                                                                 ;;                        ;
 CODE_0DBA0A:          LDY.B LevelLoadPos                        ;;BA0B|BA0A+BA0A/BA0A\BA0A;
                       LDA.B LvlLoadObjSize                      ;;BA0D|BA0C+BA0C/BA0C\BA0C;
@@ -4072,7 +4072,7 @@ CODE_0DBA37:          JSR CODE_0DA6BA                           ;;BA38|BA37+BA37
                       LDX.B _0                                  ;;BA3E|BA3D+BA3D/BA3D\BA3D;
                       DEC.B _1                                  ;;BA40|BA3F+BA3F/BA3F\BA3F;
                       BPL -                                     ;;BA42|BA41+BA41/BA41\BA41;
-                      RTS                                       ;;BA44|BA43+BA43/BA43\BA43; Return 
+                      RTS                                       ;;BA44|BA43+BA43/BA43\BA43;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DBA44:          db $5F,$5E,$10,$0F                        ;;BA45|BA44+BA44/BA44\BA44;
@@ -4102,7 +4102,7 @@ CODE_0DBA67:          CPX.B #$02                                ;;BA68|BA67+BA67
 CODE_0DBA74:          JSR CODE_0DA97D                           ;;BA75|BA74+BA74/BA74\BA74;
                       DEC.B _0                                  ;;BA78|BA77+BA77/BA77\BA77;
                       BPL CODE_0DBA67                           ;;BA7A|BA79+BA79/BA79\BA79;
-                      RTS                                       ;;BA7C|BA7B+BA7B/BA7B\BA7B; Return 
+                      RTS                                       ;;BA7C|BA7B+BA7B/BA7B\BA7B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DBA7C:          db $B4,$B4,$B4,$B4,$B4,$B4,$B4,$B4        ;;BA7D|BA7C+BA7C/BA7C\BA7C;
@@ -4157,7 +4157,7 @@ CODE_0DBAF2:          LDA.B _0                                  ;;BAF3|BAF2+BAF2
                       STA.B Map16HighPtr+1                      ;;BB26|BB25+BB25/BB25\BB25;
                       DEC.B _F                                  ;;BB28|BB27+BB27/BB27\BB27;
                       BPL CODE_0DBAE0                           ;;BB2A|BB29+BB29/BB29\BB29;
-                      RTS                                       ;;BB2C|BB2B+BB2B/BB2B\BB2B; Return 
+                      RTS                                       ;;BB2C|BB2B+BB2B/BB2B\BB2B;
                                                                 ;;                        ;
 CODE_0DBB2C:          LDY.B LevelLoadPos                        ;;BB2D|BB2C+BB2C/BB2C\BB2C;
                       LDA.B LvlLoadObjSize                      ;;BB2F|BB2E+BB2E/BB2E\BB2E;
@@ -4185,7 +4185,7 @@ CODE_0DBB59:          JSR CODE_0DA6BA                           ;;BB5A|BB59+BB59
                       JSR CODE_0DA97D                           ;;BB5D|BB5C+BB5C/BB5C\BB5C;
                       DEX                                       ;;BB60|BB5F+BB5F/BB5F\BB5F;
                       BPL -                                     ;;BB61|BB60+BB60/BB60\BB60;
-                      RTS                                       ;;BB63|BB62+BB62/BB62\BB62; Return 
+                      RTS                                       ;;BB63|BB62+BB62/BB62\BB62;
                                                                 ;;                        ;
 CODE_0DBB63:          LDX.B #$0E                                ;;BB64|BB63+BB63/BB63\BB63;
                       JMP CODE_0DA8C3                           ;;BB66|BB65+BB65/BB65\BB65;
@@ -4375,7 +4375,7 @@ Map16Tileset1:        db $F4,$09,$F7,$09,$F5,$09,$FC,$09        ;;BC00|BC00+BC00
                       db $26,$1C,$36,$1C,$26,$5C,$36,$5C        ;;C180|C180+C180/C180\C180;
                       db $27,$1C,$37,$1C,$27,$5C,$37,$5C        ;;C188|C188+C188/C188\C188;
                                                                 ;;                        ;
-CODE_0DC190:          SEP #$30                                  ;;C190|C190+C190/C190\C190; Index (8 bit) Accum (8 bit) 
+CODE_0DC190:          SEP #$30                                  ;;C190|C190+C190/C190\C190; AXY->8
                       LDX.B LvlLoadObjNo                        ;;C192|C192+C192/C192\C192;
                       DEX                                       ;;C194|C194+C194/C194\C194;
                       TXA                                       ;;C195|C195+C195/C195\C195;
@@ -4455,7 +4455,7 @@ CODE_0DC259:          LDY.B LevelLoadPos                        ;;C259|C259+C259
                       JSR Sta1To6ePointer                       ;;C261|C261+C261/C261\C261;
                       LDA.L DATA_0DC257,X                       ;;C264|C264+C264/C264\C264;
                       STA.B [Map16LowPtr],Y                     ;;C268|C268+C268/C268\C268;
-                      RTS                                       ;;C26A|C26A+C26A/C26A\C26A; Return 
+                      RTS                                       ;;C26A|C26A+C26A/C26A\C26A;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DC26B:          db $73,$74,$75,$73,$74,$74,$7B,$79        ;;C26B|C26B+C26B/C26B\C26B;
@@ -4495,7 +4495,7 @@ CODE_0DC2F1:          JSR StzTo6ePointer                        ;;C2F1|C2F1+C2F1
                       JSR CODE_0DA97D                           ;;C310|C310+C310/C310\C310;
                       CPX.B #$7E                                ;;C313|C313+C313/C313\C313;
                       BNE CODE_0DC2ED                           ;;C315|C315+C315/C315\C315;
-                      RTS                                       ;;C317|C317+C317/C317\C317; Return 
+                      RTS                                       ;;C317|C317+C317/C317\C317;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DC318:          db $98,$99,$9A,$9B,$9C,$9C                ;;C318|C318+C318/C318\C318;
@@ -4515,7 +4515,7 @@ CODE_0DC326:          LDA.B _0                                  ;;C326|C326+C326
                       JSR CODE_0DA97D                           ;;C339|C339+C339/C339\C339;
                       CPX.B #$06                                ;;C33C|C33C+C33C/C33C\C33C;
                       BNE CODE_0DC326                           ;;C33E|C33E+C33E/C33E\C33E;
-                      RTS                                       ;;C340|C340+C340/C340\C340; Return 
+                      RTS                                       ;;C340|C340+C340/C340\C340;
                                                                 ;;                        ;
 CODE_0DC341:          LDA.B LvlLoadObjSize                      ;;C341|C341+C341/C341\C341;
                       AND.B #$02                                ;;C343|C343+C343/C343\C343;
@@ -4592,7 +4592,7 @@ CODE_0DC3CD:          LDA.B _2                                  ;;C3CD|C3CD+C3CD
                       JSR CODE_0DA97D                           ;;C3D1|C3D1+C3D1/C3D1\C3D1;
                       JMP CODE_0DC37E                           ;;C3D4|C3D4+C3D4/C3D4\C3D4;
                                                                 ;;                        ;
-Return0DC3D7:         RTS                                       ;;C3D7|C3D7+C3D7/C3D7\C3D7; Return 
+Return0DC3D7:         RTS                                       ;;C3D7|C3D7+C3D7/C3D7\C3D7;
                                                                 ;;                        ;
 CODE_0DC3D8:          LDY.B LevelLoadPos                        ;;C3D8|C3D8+C3D8/C3D8\C3D8;
                       LDA.B #$00                                ;;C3DA|C3DA+C3DA/C3DA\C3DA;
@@ -4632,7 +4632,7 @@ CODE_0DC40D:          LDA.B _0                                  ;;C40D|C40D+C40D
                       STA.B _3                                  ;;C425|C425+C425/C425\C425;
                       DEC.B _0                                  ;;C427|C427+C427/C427\C427;
                       BPL CODE_0DC3FD                           ;;C429|C429+C429/C429\C429;
-Return0DC42B:         RTS                                       ;;C42B|C42B+C42B/C42B\C42B; Return 
+Return0DC42B:         RTS                                       ;;C42B|C42B+C42B/C42B\C42B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DC42C:          db $5A,$59                                ;;C42C|C42C+C42C/C42C\C42C;
@@ -4652,7 +4652,7 @@ CODE_0DC42E:          LDY.B LevelLoadPos                        ;;C42E|C42E+C42E
                       JSR CODE_0DA95B                           ;;C444|C444+C444/C444\C444;
                       DEC.B _0                                  ;;C447|C447+C447/C447\C447;
                       BPL -                                     ;;C449|C449+C449/C449\C449;
-                      RTS                                       ;;C44B|C44B+C44B/C44B\C44B; Return 
+                      RTS                                       ;;C44B|C44B+C44B/C44B\C44B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DC44C:          db $5B,$5C,$53                            ;;C44C|C44C+C44C/C44C\C44C;
@@ -4673,7 +4673,7 @@ CODE_0DC44F:          LDY.B LevelLoadPos                        ;;C44F|C44F+C44F
                       JSR CODE_0DA97D                           ;;C467|C467+C467/C467\C467;
                       DEC.B _0                                  ;;C46A|C46A+C46A/C46A\C46A;
                       BPL -                                     ;;C46C|C46C+C46C/C46C\C46C;
-                      RTS                                       ;;C46E|C46E+C46E/C46E\C46E; Return 
+                      RTS                                       ;;C46E|C46E+C46E/C46E\C46E;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DC46F:          db $5D,$60,$63                            ;;C46F|C46F+C46F/C46F\C46F;
@@ -4718,7 +4718,7 @@ CODE_0DC4A8:          DEC.B _2                                  ;;C4A8|C4A8+C4A8
                       LDX.B #$02                                ;;C4C3|C4C3+C4C3/C4C3\C4C3;
                     + JMP CODE_0DC48D                           ;;C4C5|C4C5+C4C5/C4C5\C4C5;
                                                                 ;;                        ;
-Return0DC4C8:         RTS                                       ;;C4C8|C4C8+C4C8/C4C8\C4C8; Return 
+Return0DC4C8:         RTS                                       ;;C4C8|C4C8+C4C8/C4C8\C4C8;
                                                                 ;;                        ;
 CODE_0DC4C9:          LDY.B LevelLoadPos                        ;;C4C9|C4C9+C4C9/C4C9\C4C9;
                       LDA.B LvlLoadObjSize                      ;;C4CB|C4CB+C4CB/C4CB\C4CB;
@@ -4743,7 +4743,7 @@ CODE_0DC4C9:          LDY.B LevelLoadPos                        ;;C4C9|C4C9+C4C9
                       JSR CODE_0DA95B                           ;;C4E8|C4E8+C4E8/C4E8\C4EE;
                       DEX                                       ;;C4EB|C4EB+C4EB/C4EB\C4F1;
                       BPL -                                     ;;C4EC|C4EC+C4EC/C4EC\C4F2;
-                      RTS                                       ;;C4EE|C4EE+C4EE/C4EE\C4F4; Return 
+                      RTS                                       ;;C4EE|C4EE+C4EE/C4EE\C4F4;
                                                                 ;;                        ;
 CODE_0DC4EF:          LDY.B LevelLoadPos                        ;;C4EF|C4EF+C4EF/C4EF\C4F5;
                       LDA.B LvlLoadObjSize                      ;;C4F1|C4F1+C4F1/C4F1\C4F7;
@@ -4808,7 +4808,7 @@ CODE_0DC572:          CPX.B #$00                                ;;C572|C572+C572
                       JSR StzTo6ePointer                        ;;C581|C581+C581/C581\C587;
                       LDA.B #$8E                                ;;C584|C584+C584/C584\C58A;
                       JSR CODE_0DA95B                           ;;C586|C586+C586/C586\C58C;
-                    + RTS                                       ;;C589|C589+C589/C589\C58F; Return 
+                    + RTS                                       ;;C589|C589+C589/C589\C58F;
                                                                 ;;                        ;
 CODE_0DC58A:          LDY.B LevelLoadPos                        ;;C58A|C58A+C58A/C58A\C590;
                       LDA.B LvlLoadObjSize                      ;;C58C|C58C+C58C/C58C\C592;
@@ -4845,7 +4845,7 @@ CODE_0DC59D:          LDX.B _0                                  ;;C59D|C59D+C59D
                       JSR CODE_0DA97D                           ;;C5D0|C5D0+C5D0/C5D0\C5D6;
                       DEC.B _1                                  ;;C5D3|C5D3+C5D3/C5D3\C5D9;
                       BPL CODE_0DC59D                           ;;C5D5|C5D5+C5D5/C5D5\C5DB;
-                      RTS                                       ;;C5D7|C5D7+C5D7/C5D7\C5DD; Return 
+                      RTS                                       ;;C5D7|C5D7+C5D7/C5D7\C5DD;
                                                                 ;;                        ;
 CODE_0DC5D8:          LDY.B LevelLoadPos                        ;;C5D8|C5D8+C5D8/C5D8\C5DE;
                       LDA.B LvlLoadObjSize                      ;;C5DA|C5DA+C5DA/C5DA\C5E0;
@@ -4879,7 +4879,7 @@ CODE_0DC606:          JSR CODE_0DA6BA                           ;;C606|C606+C606
                       JSR Sta1To6ePointer                       ;;C618|C618+C618/C618\C61E;
                       LDA.B #$34                                ;;C61B|C61B+C61B/C61B\C621;
                       STA.B [Map16LowPtr],Y                     ;;C61D|C61D+C61D/C61D\C623;
-                      RTS                                       ;;C61F|C61F+C61F/C61F\C625; Return 
+                      RTS                                       ;;C61F|C61F+C61F/C61F\C625;
                                                                 ;;                        ;
                       %insert_empty($1E0,$1E0,$1E0,$1E0,$1DA)   ;;C620|C620+C620/C620\C626;
                                                                 ;;                        ;
@@ -5062,7 +5062,7 @@ Map16Tileset2:        db $C5,$09,$C5,$09,$85,$09,$C6,$89        ;;C800|C800+C800
                       db $26,$1C,$36,$1C,$26,$5C,$36,$5C        ;;CD80|CD80+CD80/CD80\CD80;
                       db $27,$1C,$37,$1C,$27,$5C,$37,$5C        ;;CD88|CD88+CD88/CD88\CD88;
                                                                 ;;                        ;
-CODE_0DCD90:          SEP #$30                                  ;;CD90|CD90+CD90/CD90\CD90; Index (8 bit) Accum (8 bit) 
+CODE_0DCD90:          SEP #$30                                  ;;CD90|CD90+CD90/CD90\CD90; AXY->8
                       LDX.B LvlLoadObjNo                        ;;CD92|CD92+CD92/CD92\CD92;
                       DEX                                       ;;CD94|CD94+CD94/CD94\CD94;
                       TXA                                       ;;CD95|CD95+CD95/CD95\CD95;
@@ -5155,7 +5155,7 @@ CODE_0DCE67:          LDY.B LevelLoadPos                        ;;CE67|CE67+CE67
                       TXA                                       ;;CE8A|CE8A+CE8A/CE8A\CE8A;
                       AND.B #$03                                ;;CE8B|CE8B+CE8B/CE8B\CE8B;
                       BNE -                                     ;;CE8D|CE8D+CE8D/CE8D\CE8D;
-                      RTS                                       ;;CE8F|CE8F+CE8F/CE8F\CE8F; Return 
+                      RTS                                       ;;CE8F|CE8F+CE8F/CE8F\CE8F;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DCE90:          db $76,$77,$78,$79                        ;;CE90|CE90+CE90/CE90\CE90;
@@ -5168,7 +5168,7 @@ CODE_0DCE94:          LDY.B LevelLoadPos                        ;;CE94|CE94+CE94
                       JSR StzTo6ePointer                        ;;CE9C|CE9C+CE9C/CE9C\CE9C;
                       LDA.L DATA_0DCE90,X                       ;;CE9F|CE9F+CE9F/CE9F\CE9F;
                       STA.B [Map16LowPtr],Y                     ;;CEA3|CEA3+CEA3/CEA3\CEA3;
-                      RTS                                       ;;CEA5|CEA5+CEA5/CEA5\CEA5; Return 
+                      RTS                                       ;;CEA5|CEA5+CEA5/CEA5\CEA5;
                                                                 ;;                        ;
 ADDR_0DCEA6:          LDY.B LevelLoadPos                        ;;CEA6|CEA6+CEA6/CEA6\CEA6;
                       LDA.B LvlLoadObjSize                      ;;CEA8|CEA8+CEA8/CEA8\CEA8;
@@ -5181,7 +5181,7 @@ ADDR_0DCEA6:          LDY.B LevelLoadPos                        ;;CEA6|CEA6+CEA6
                       JSR StzTo6ePointer                        ;;CEB6|CEB6+CEB6/CEB6\CEB6;
                       LDA.B #$85                                ;;CEB9|CEB9+CEB9/CEB9\CEB9;
                       STA.B [Map16LowPtr],Y                     ;;CEBB|CEBB+CEBB/CEBB\CEBB;
-                      RTS                                       ;;CEBD|CEBD+CEBD/CEBD\CEBD; Return 
+                      RTS                                       ;;CEBD|CEBD+CEBD/CEBD\CEBD;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DCEBE:          db $96,$97                                ;;CEBE|CEBE+CEBE/CEBE\CEBE;
@@ -5196,7 +5196,7 @@ CODE_0DCEC0:          LDY.B LevelLoadPos                        ;;CEC0|CEC0+CEC0
                       INX                                       ;;CED2|CED2+CED2/CED2\CED2;
                       CPX.B #$02                                ;;CED3|CED3+CED3/CED3\CED3;
                       BNE -                                     ;;CED5|CED5+CED5/CED5\CED5;
-                      RTS                                       ;;CED7|CED7+CED7/CED7\CED7; Return 
+                      RTS                                       ;;CED7|CED7+CED7/CED7\CED7;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DCED8:          db $98,$99                                ;;CED8|CED8+CED8/CED8\CED8;
@@ -5210,7 +5210,7 @@ CODE_0DCEDA:          LDY.B LevelLoadPos                        ;;CEDA|CEDA+CEDA
                       INX                                       ;;CEEA|CEEA+CEEA/CEEA\CEEA;
                       CPX.B #$02                                ;;CEEB|CEEB+CEEB/CEEB\CEEB;
                       BNE -                                     ;;CEED|CEED+CEED/CEED\CEED;
-                      RTS                                       ;;CEEF|CEEF+CEEF/CEEF\CEEF; Return 
+                      RTS                                       ;;CEEF|CEEF+CEEF/CEEF\CEEF;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DCEF0:          db $0C,$0D                                ;;CEF0|CEF0+CEF0/CEF0\CEF0;
@@ -5230,7 +5230,7 @@ ADDR_0DCEF2:          LDY.B LevelLoadPos                        ;;CEF2|CEF2+CEF2
                       JSR CODE_0DA95B                           ;;CF08|CF08+CF08/CF08\CF08;
                       DEC.B _0                                  ;;CF0B|CF0B+CF0B/CF0B\CF0B;
                       BPL -                                     ;;CF0D|CF0D+CF0D/CF0D\CF0D;
-                      RTS                                       ;;CF0F|CF0F+CF0F/CF0F\CF0F; Return 
+                      RTS                                       ;;CF0F|CF0F+CF0F/CF0F\CF0F;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DCF10:          db $92,$93                                ;;CF10|CF10+CF10/CF10\CF10;
@@ -5250,7 +5250,7 @@ CODE_0DCF12:          LDY.B LevelLoadPos                        ;;CF12|CF12+CF12
                       JSR CODE_0DA95B                           ;;CF28|CF28+CF28/CF28\CF28;
                       DEC.B _0                                  ;;CF2B|CF2B+CF2B/CF2B\CF2B;
                       BPL -                                     ;;CF2D|CF2D+CF2D/CF2D\CF2D;
-                      RTS                                       ;;CF2F|CF2F+CF2F/CF2F\CF2F; Return 
+                      RTS                                       ;;CF2F|CF2F+CF2F/CF2F\CF2F;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DCF30:          db $90,$91,$A2                            ;;CF30|CF30+CF30/CF30\CF30;
@@ -5271,7 +5271,7 @@ CODE_0DCF33:          LDY.B LevelLoadPos                        ;;CF33|CF33+CF33
                       JSR CODE_0DA97D                           ;;CF4B|CF4B+CF4B/CF4B\CF4B;
                       DEC.B _0                                  ;;CF4E|CF4E+CF4E/CF4E\CF4E;
                       BPL -                                     ;;CF50|CF50+CF50/CF50\CF50;
-                      RTS                                       ;;CF52|CF52+CF52/CF52\CF52; Return 
+                      RTS                                       ;;CF52|CF52+CF52/CF52\CF52;
                                                                 ;;                        ;
 CODE_0DCF53:          LDA.B LvlLoadObjSize                      ;;CF53|CF53+CF53/CF53\CF53;
                       AND.B #$0F                                ;;CF55|CF55+CF55/CF55\CF55;
@@ -5320,7 +5320,7 @@ CODE_0DCF7A:          JSR StzTo6ePointer                        ;;CF7A|CF7A+CF7A
 CODE_0DCFAB:          STY.B LevelLoadPos                        ;;CFAB|CFAB+CFAB/CFAB\CFAB;
                       DEX                                       ;;CFAD|CFAD+CFAD/CFAD\CFAD;
                       BPL CODE_0DCF7A                           ;;CFAE|CFAE+CFAE/CFAE\CFAE;
-                      RTS                                       ;;CFB0|CFB0+CFB0/CFB0\CFB0; Return 
+                      RTS                                       ;;CFB0|CFB0+CFB0/CFB0\CFB0;
                                                                 ;;                        ;
 CODE_0DCFB1:          LDA.B #$86                                ;;CFB1|CFB1+CFB1/CFB1\CFB1;
                       CPX.B #$04                                ;;CFB3|CFB3+CFB3/CFB3\CFB3;
@@ -5357,7 +5357,7 @@ CODE_0DCFC4:          JSR StzTo6ePointer                        ;;CFC4|CFC4+CFC4
 CODE_0DCFEA:          STY.B LevelLoadPos                        ;;CFEA|CFEA+CFEA/CFEA\CFEA;
                       DEX                                       ;;CFEC|CFEC+CFEC/CFEC\CFEC;
                       BPL CODE_0DCFC4                           ;;CFED|CFED+CFED/CFED\CFED;
-                      RTS                                       ;;CFEF|CFEF+CFEF/CFEF\CFEF; Return 
+                      RTS                                       ;;CFEF|CFEF+CFEF/CFEF\CFEF;
                                                                 ;;                        ;
 ADDR_0DCFF0:          LDY.B LevelLoadPos                        ;;CFF0|CFF0+CFF0/CFF0\CFF0;
                       LDA.B LvlLoadObjSize                      ;;CFF2|CFF2+CFF2/CFF2\CFF2;
@@ -5396,7 +5396,7 @@ ADDR_0DCFFC:          JSR StzTo6ePointer                        ;;CFFC|CFFC+CFFC
                     + STY.B LevelLoadPos                        ;;D02E|D02E+D02E/D02E\D02E;
                       DEX                                       ;;D030|D030+D030/D030\D030;
                       BPL ADDR_0DCFFC                           ;;D031|D031+D031/D031\D031;
-                      RTS                                       ;;D033|D033+D033/D033\D033; Return 
+                      RTS                                       ;;D033|D033+D033/D033\D033;
                                                                 ;;                        ;
 CODE_0DD034:          LDA.B #$87                                ;;D034|D034+D034/D034\D034;
                       CPX.B #$05                                ;;D036|D036+D036/D036\D036;
@@ -5433,7 +5433,7 @@ CODE_0DD047:          JSR StzTo6ePointer                        ;;D047|D047+D047
                     + STY.B LevelLoadPos                        ;;D06A|D06A+D06A/D06A\D06A;
                       DEX                                       ;;D06C|D06C+D06C/D06C\D06C;
                       BPL CODE_0DD047                           ;;D06D|D06D+D06D/D06D\D06D;
-                      RTS                                       ;;D06F|D06F+D06F/D06F\D06F; Return 
+                      RTS                                       ;;D06F|D06F+D06F/D06F\D06F;
                                                                 ;;                        ;
 ADDR_0DD070:          LDA.B LvlLoadObjSize                      ;;D070|D070+D070/D070\D070;
                       LSR A                                     ;;D072|D072+D072/D072\D072;
@@ -5481,7 +5481,7 @@ ADDR_0DD087:          JSR StzTo6ePointer                        ;;D087|D087+D087
 ADDR_0DD0BD:          STY.B LevelLoadPos                        ;;D0BD|D0BD+D0BD/D0BD\D0BD;
                       DEX                                       ;;D0BF|D0BF+D0BF/D0BF\D0BF;
                       BPL ADDR_0DD087                           ;;D0C0|D0C0+D0C0/D0C0\D0C0;
-                      RTS                                       ;;D0C2|D0C2+D0C2/D0C2\D0C2; Return 
+                      RTS                                       ;;D0C2|D0C2+D0C2/D0C2\D0C2;
                                                                 ;;                        ;
 ADDR_0DD0C3:          LDY.B LevelLoadPos                        ;;D0C3|D0C3+D0C3/D0C3\D0C3;
                       LDA.B LvlLoadObjSize                      ;;D0C5|D0C5+D0C5/D0C5\D0C5;
@@ -5519,7 +5519,7 @@ ADDR_0DD0CA:          JSR StzTo6ePointer                        ;;D0CA|D0CA+D0CA
                     + STY.B LevelLoadPos                        ;;D0FD|D0FD+D0FD/D0FD\D0FD;
                       DEX                                       ;;D0FF|D0FF+D0FF/D0FF\D0FF;
                       BPL ADDR_0DD0CA                           ;;D100|D100+D100/D100\D100;
-                      RTS                                       ;;D102|D102+D102/D102\D102; Return 
+                      RTS                                       ;;D102|D102+D102/D102\D102;
                                                                 ;;                        ;
 CODE_0DD103:          LDY.B LevelLoadPos                        ;;D103|D103+D103/D103\D103;
                       LDA.B LvlLoadObjSize                      ;;D105|D105+D105/D105\D105;
@@ -5552,7 +5552,7 @@ CODE_0DD12B:          DEC.B _0                                  ;;D12B|D12B+D12B
                       LDX.B #$0B                                ;;D13E|D13E+D13E/D13E\D13E;
                     + TXA                                       ;;D140|D140+D140/D140\D140;
                       JSR CODE_0DA95B                           ;;D141|D141+D141/D141\D141;
-                      RTS                                       ;;D144|D144+D144/D144\D144; Return 
+                      RTS                                       ;;D144|D144+D144/D144\D144;
                                                                 ;;                        ;
 CODE_0DD145:          LDY.B LevelLoadPos                        ;;D145|D145+D145/D145\D145;
                       LDA.B LvlLoadObjSize                      ;;D147|D147+D147/D147\D147;
@@ -5583,7 +5583,7 @@ CODE_0DD167:          JSR CODE_0DA95B                           ;;D167|D167+D167
                       JSR CODE_0DA97D                           ;;D17A|D17A+D17A/D17A\D17A;
                       DEC.B _1                                  ;;D17D|D17D+D17D/D17D\D17D;
                       BPL CODE_0DD158                           ;;D17F|D17F+D17F/D17F\D17F;
-                      RTS                                       ;;D181|D181+D181/D181\D181; Return 
+                      RTS                                       ;;D181|D181+D181/D181\D181;
                                                                 ;;                        ;
 ADDR_0DD182:          LDY.B LevelLoadPos                        ;;D182|D182+D182/D182\D182;
                       LDA.B LvlLoadObjSize                      ;;D184|D184+D184/D184\D184;
@@ -5601,7 +5601,7 @@ ADDR_0DD196:          JSR CODE_0DA95B                           ;;D196|D196+D196
                       JSR Sta1To6ePointer                       ;;D19C|D19C+D19C/D19C\D19C;
                       LDA.B #$5B                                ;;D19F|D19F+D19F/D19F\D19F;
                       JSR CODE_0DA95B                           ;;D1A1|D1A1+D1A1/D1A1\D1A1;
-                      RTS                                       ;;D1A4|D1A4+D1A4/D1A4\D1A4; Return 
+                      RTS                                       ;;D1A4|D1A4+D1A4/D1A4\D1A4;
                                                                 ;;                        ;
 ADDR_0DD1A5:          LDY.B LevelLoadPos                        ;;D1A5|D1A5+D1A5/D1A5\D1A5;
                       LDA.B LvlLoadObjSize                      ;;D1A7|D1A7+D1A7/D1A7\D1A7;
@@ -5623,7 +5623,7 @@ ADDR_0DD1BB:          STA.B [Map16LowPtr],Y                     ;;D1BB|D1BB+D1BB
                       JSR Sta1To6ePointer                       ;;D1C3|D1C3+D1C3/D1C3\D1C3;
                       LDA.B #$5E                                ;;D1C6|D1C6+D1C6/D1C6\D1C6;
                       STA.B [Map16LowPtr],Y                     ;;D1C8|D1C8+D1C8/D1C8\D1C8;
-                      RTS                                       ;;D1CA|D1CA+D1CA/D1CA\D1CA; Return 
+                      RTS                                       ;;D1CA|D1CA+D1CA/D1CA\D1CA;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DD1CB:          db $9A,$9C,$9E,$A0                        ;;D1CB|D1CB+D1CB/D1CB\D1CB;
@@ -5681,7 +5681,7 @@ CODE_0DD226:          JSR Sta1To6ePointer                       ;;D226|D226+D226
                       LDX.B #$00                                ;;D245|D245+D245/D245\D245;
                     + DEC.B _0                                  ;;D247|D247+D247/D247\D247;
                       BPL CODE_0DD226                           ;;D249|D249+D249/D249\D249;
-Return0DD24B:         RTS                                       ;;D24B|D24B+D24B/D24B\D24B; Return 
+Return0DD24B:         RTS                                       ;;D24B|D24B+D24B/D24B\D24B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DD24C:          db $A3,$0E                                ;;D24C|D24C+D24C/D24C\D24C;
@@ -5708,7 +5708,7 @@ CODE_0DD25D:          JSR StzTo6ePointer                        ;;D25D|D25D+D25D
                       INX                                       ;;D27C|D27C+D27C/D27C\D27C;
                       CPX.B #$02                                ;;D27D|D27D+D27D/D27D\D27D;
                       BNE CODE_0DD25D                           ;;D27F|D27F+D27F/D27F\D27F;
-                      RTS                                       ;;D281|D281+D281/D281\D281; Return 
+                      RTS                                       ;;D281|D281+D281/D281\D281;
                                                                 ;;                        ;
                       %insert_empty($17E,$17E,$17E,$17E,$17E)   ;;D282|D282+D282/D282\D282;
                                                                 ;;                        ;
@@ -5892,7 +5892,7 @@ Map16Tileset3:        db $F0,$B5                                ;;D400|D400+D400
                       db $36,$1C,$26,$5C,$36,$5C,$27,$1C        ;;D982|D982+D982/D982\D982;
                       db $37,$1C,$27,$5C,$37,$5C                ;;D98A|D98A+D98A/D98A\D98A;
                                                                 ;;                        ;
-CODE_0DD990:          SEP #$30                                  ;;D990|D990+D990/D990\D990; Index (8 bit) Accum (8 bit) 
+CODE_0DD990:          SEP #$30                                  ;;D990|D990+D990/D990\D990; AXY->8
                       LDX.B LvlLoadObjNo                        ;;D992|D992+D992/D992\D992;
                       DEX                                       ;;D994|D994+D994/D994\D994;
                       TXA                                       ;;D995|D995+D995/D995\D995;
@@ -5966,7 +5966,7 @@ CODE_0DDA57:          LDY.B LevelLoadPos                        ;;DA57|DA57+DA57
                       JSR Sta1To6ePointer                       ;;DA59|DA59+DA59/DA59\DA59;
                       LDA.B #$FE                                ;;DA5C|DA5C+DA5C/DA5C\DA5C;
                       STA.B [Map16LowPtr],Y                     ;;DA5E|DA5E+DA5E/DA5E\DA5E;
-                      RTS                                       ;;DA60|DA60+DA60/DA60\DA60; Return 
+                      RTS                                       ;;DA60|DA60+DA60/DA60\DA60;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DDA61:          db $7D,$7E,$7F,$80,$81,$82,$83            ;;DA61|DA61+DA61/DA61\DA61;
@@ -5979,7 +5979,7 @@ CODE_0DDA68:          LDY.B LevelLoadPos                        ;;DA68|DA68+DA68
                       JSR StzTo6ePointer                        ;;DA70|DA70+DA70/DA70\DA70;
                       LDA.L DATA_0DDA61,X                       ;;DA73|DA73+DA73/DA73\DA73;
                       STA.B [Map16LowPtr],Y                     ;;DA77|DA77+DA77/DA77\DA77;
-                      RTS                                       ;;DA79|DA79+DA79/DA79\DA79; Return 
+                      RTS                                       ;;DA79|DA79+DA79/DA79\DA79;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DDA7A:          db $81,$82,$83                            ;;DA7A|DA7A+DA7A/DA7A\DA7A;
@@ -5998,7 +5998,7 @@ CODE_0DDA80:          LDY.B LevelLoadPos                        ;;DA80|DA80+DA80
                       JSR StzTo6ePointer                        ;;DA94|DA94+DA94/DA94\DA94;
                       LDA.L DATA_0DDA7D,X                       ;;DA97|DA97+DA97/DA97\DA97;
                       STA.B [Map16LowPtr],Y                     ;;DA9B|DA9B+DA9B/DA9B\DA9B;
-                      RTS                                       ;;DA9D|DA9D+DA9D/DA9D\DA9D; Return 
+                      RTS                                       ;;DA9D|DA9D+DA9D/DA9D\DA9D;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DDA9E:          db $66,$67,$68,$69                        ;;DA9E|DA9E+DA9E/DA9E\DA9E;
@@ -6017,7 +6017,7 @@ CODE_0DDAA2:          LDY.B LevelLoadPos                        ;;DAA2|DAA2+DAA2
                       JSR CODE_0DA97D                           ;;DABC|DABC+DABC/DABC\DABC;
                       CPX.B #$04                                ;;DABF|DABF+DABF/DABF\DABF;
                       BNE -                                     ;;DAC1|DAC1+DAC1/DAC1\DAC1;
-                      RTS                                       ;;DAC3|DAC3+DAC3/DAC3\DAC3; Return 
+                      RTS                                       ;;DAC3|DAC3+DAC3/DAC3\DAC3;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DDAC4:          db $5A,$5B                                ;;DAC4|DAC4+DAC4/DAC4\DAC4;
@@ -6044,7 +6044,7 @@ CODE_0DDAE8:          STA.B [Map16LowPtr],Y                     ;;DAE8|DAE8+DAE8
                       JSR CODE_0DA97D                           ;;DAEA|DAEA+DAEA/DAEA\DAEA;
                       DEC.B _0                                  ;;DAED|DAED+DAED/DAED\DAED;
                       BPL -                                     ;;DAEF|DAEF+DAEF/DAEF\DAEF;
-                      RTS                                       ;;DAF1|DAF1+DAF1/DAF1\DAF1; Return 
+                      RTS                                       ;;DAF1|DAF1+DAF1/DAF1\DAF1;
                                                                 ;;                        ;
 CODE_0DDAF2:          LDA.B LvlLoadObjSize                      ;;DAF2|DAF2+DAF2/DAF2\DAF2;
                       AND.B #$03                                ;;DAF4|DAF4+DAF4/DAF4\DAF4;
@@ -6125,7 +6125,7 @@ CODE_0DDB84:          LDX.B _2                                  ;;DB84|DB84+DB84
                       JSR CODE_0DA97D                           ;;DB88|DB88+DB88/DB88\DB88;
                       JMP CODE_0DDB31                           ;;DB8B|DB8B+DB8B/DB8B\DB8B;
                                                                 ;;                        ;
-Return0DDB8E:         RTS                                       ;;DB8E|DB8E+DB8E/DB8E\DB8E; Return 
+Return0DDB8E:         RTS                                       ;;DB8E|DB8E+DB8E/DB8E\DB8E;
                                                                 ;;                        ;
 CODE_0DDB8F:          LDY.B LevelLoadPos                        ;;DB8F|DB8F+DB8F/DB8F\DB8F;
                       LDA.B #$00                                ;;DB91|DB91+DB91/DB91\DB91;
@@ -6186,7 +6186,7 @@ CODE_0DDBF9:          LDX.B _2                                  ;;DBF9|DBF9+DBF9
                       JSR CODE_0DA97D                           ;;DBFB|DBFB+DBFB/DBFB\DBFB;
                       JMP CODE_0DDBAE                           ;;DBFE|DBFE+DBFE/DBFE\DBFE;
                                                                 ;;                        ;
-Return0DDC01:         RTS                                       ;;DC01|DC01+DC01/DC01\DC01; Return 
+Return0DDC01:         RTS                                       ;;DC01|DC01+DC01/DC01\DC01;
                                                                 ;;                        ;
 ADDR_0DDC02:          LDY.B LevelLoadPos                        ;;DC02|DC02+DC02/DC02\DC02;
                       LDX.B #$01                                ;;DC04|DC04+DC04/DC04\DC04;
@@ -6231,7 +6231,7 @@ ADDR_0DDC3D:          JSR Sta1To6ePointer                       ;;DC3D|DC3D+DC3D
                       LDX.B _2                                  ;;DC57|DC57+DC57/DC57\DC57;
                       DEC.B _0                                  ;;DC59|DC59+DC59/DC59\DC59;
                       BPL +                                     ;;DC5B|DC5B+DC5B/DC5B\DC5B;
-Return0DDC5D:         RTS                                       ;;DC5D|DC5D+DC5D/DC5D\DC5D; Return 
+Return0DDC5D:         RTS                                       ;;DC5D|DC5D+DC5D/DC5D\DC5D;
                                                                 ;;                        ;
                     + JMP ADDR_0DDC23                           ;;DC5E|DC5E+DC5E/DC5E\DC5E;
                                                                 ;;                        ;
@@ -6269,7 +6269,7 @@ CODE_0DDC8E:          LDA.B _0                                  ;;DC8E|DC8E+DC8E
                       LDX.B _2                                  ;;DCA2|DCA2+DCA2/DCA2\DCA2;
                       DEC.B _0                                  ;;DCA4|DCA4+DCA4/DCA4\DCA4;
                       BPL CODE_0DDC82                           ;;DCA6|DCA6+DCA6/DCA6\DCA6;
-Return0DDCA8:         RTS                                       ;;DCA8|DCA8+DCA8/DCA8\DCA8; Return 
+Return0DDCA8:         RTS                                       ;;DCA8|DCA8+DCA8/DCA8\DCA8;
                                                                 ;;                        ;
 CODE_0DDCA9:          LDY.B LevelLoadPos                        ;;DCA9|DCA9+DCA9/DCA9\DCA9;
                       LDA.B LvlLoadObjSize                      ;;DCAB|DCAB+DCAB/DCAB\DCAB;
@@ -6304,7 +6304,7 @@ CODE_0DDCDD:          JSR CODE_0DA6BA                           ;;DCDD|DCDD+DCDD
                       LDX.B _0                                  ;;DCE3|DCE3+DCE3/DCE3\DCE3;
                       DEC.B _1                                  ;;DCE5|DCE5+DCE5/DCE5\DCE5;
                       BPL CODE_0DDCD2                           ;;DCE7|DCE7+DCE7/DCE7\DCE7;
-                      RTS                                       ;;DCE9|DCE9+DCE9/DCE9\DCE9; Return 
+                      RTS                                       ;;DCE9|DCE9+DCE9/DCE9\DCE9;
                                                                 ;;                        ;
 CODE_0DDCEA:          LDY.B LevelLoadPos                        ;;DCEA|DCEA+DCEA/DCEA\DCEA;
                       LDA.B LvlLoadObjSize                      ;;DCEC|DCEC+DCEC/DCEC\DCEC;
@@ -6335,7 +6335,7 @@ CODE_0DDD18:          LDX.B _1                                  ;;DD18|DD18+DD18
                       JSR CODE_0DA95B                           ;;DD1F|DD1F+DD1F/DD1F\DD1F;
                       DEX                                       ;;DD22|DD22+DD22/DD22\DD22;
                       BPL -                                     ;;DD23|DD23+DD23/DD23\DD23;
-                      RTS                                       ;;DD25|DD25+DD25/DD25\DD25; Return 
+                      RTS                                       ;;DD25|DD25+DD25/DD25\DD25;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DDD26:          db $50,$50,$51,$51                        ;;DD26|DD26+DD26/DD26\DD26;
@@ -6363,7 +6363,7 @@ CODE_0DDD2E:          LDY.B LevelLoadPos                        ;;DD2E|DD2E+DD2E
 CODE_0DDD51:          JSR Sta1To6ePointer                       ;;DD51|DD51+DD51/DD51\DD51;
                       LDA.L DATA_0DDD2A,X                       ;;DD54|DD54+DD54/DD54\DD54;
                       JSR CODE_0DA95B                           ;;DD58|DD58+DD58/DD58\DD58;
-                      RTS                                       ;;DD5B|DD5B+DD5B/DD5B\DD5B; Return 
+                      RTS                                       ;;DD5B|DD5B+DD5B/DD5B\DD5B;
                                                                 ;;                        ;
 CODE_0DDD5C:          LDY.B LevelLoadPos                        ;;DD5C|DD5C+DD5C/DD5C\DD5C;
                       LDA.B LvlLoadObjSize                      ;;DD5E|DD5E+DD5E/DD5E\DD5E;
@@ -6386,7 +6386,7 @@ CODE_0DDD6F:          LDX.B _1                                  ;;DD6F|DD6F+DD6F
                       JSR CODE_0DA97D                           ;;DD7F|DD7F+DD7F/DD7F\DD7F;
                       DEC.B _0                                  ;;DD82|DD82+DD82/DD82\DD82;
                       BPL CODE_0DDD6F                           ;;DD84|DD84+DD84/DD84\DD84;
-                      RTS                                       ;;DD86|DD86+DD86/DD86\DD86; Return 
+                      RTS                                       ;;DD86|DD86+DD86/DD86\DD86;
                                                                 ;;                        ;
 CODE_0DDD87:          LDA.B LvlLoadObjSize                      ;;DD87|DD87+DD87/DD87\DD87;
                       LSR A                                     ;;DD89|DD89+DD89/DD89\DD89;
@@ -6488,7 +6488,7 @@ CODE_0DDE2E:          STY.B LevelLoadPos                        ;;DE2E|DE2E+DE2E
                       BMI +                                     ;;DE36|DE36+DE36/DE36\DE36;
                       JMP CODE_0DDDA7                           ;;DE38|DE38+DE38/DE38\DE38;
                                                                 ;;                        ;
-                    + RTS                                       ;;DE3B|DE3B+DE3B/DE3B\DE3B; Return 
+                    + RTS                                       ;;DE3B|DE3B+DE3B/DE3B\DE3B;
                                                                 ;;                        ;
 CODE_0DDE3C:          LDY.B LevelLoadPos                        ;;DE3C|DE3C+DE3C/DE3C\DE3C;
                       LDA.B LvlLoadObjSize                      ;;DE3E|DE3E+DE3E/DE3E\DE3E;
@@ -6579,7 +6579,7 @@ CODE_0DDEAC:          DEX                                       ;;DEAC|DEAC+DEAC
                       BMI +                                     ;;DED6|DED6+DED6/DED6\DED6;
                       JMP CODE_0DDE4A                           ;;DED8|DED8+DED8/DED8\DED8;
                                                                 ;;                        ;
-                    + RTS                                       ;;DEDB|DEDB+DEDB/DEDB\DEDB; Return 
+                    + RTS                                       ;;DEDB|DEDB+DEDB/DEDB\DEDB;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DDEDC:          db $5C                                    ;;DEDC|DEDC+DEDC/DEDC\DEDC;
@@ -6722,7 +6722,7 @@ CODE_0DDF80:          LDA.B #$02                                ;;DF80|DF80+DF80
                       STA.B _8                                  ;;E010|E010+E010/E010\E010;
                       LDA.B #$00                                ;;E012|E012+E012/E012\E012;
                       STA.B _9                                  ;;E014|E014+E014/E014\E014;
-CODE_0DE016:          REP #$30                                  ;;E016|E016+E016/E016\E016; Index (16 bit) Accum (16 bit) 
+CODE_0DE016:          REP #$30                                  ;;E016|E016+E016/E016\E016; AXY->16
                       LDA.B _8                                  ;;E018|E018+E018/E018\E018;
                       ASL A                                     ;;E01A|E01A+E01A/E01A\E01A;
                       TAX                                       ;;E01B|E01B+E01B/E01B\E01B;
@@ -6750,13 +6750,13 @@ CODE_0DE016:          REP #$30                                  ;;E016|E016+E016
                       LDY.B _6                                  ;;E04C|E04C+E04C/E04C\E04C;
                       MVN $7F,$7F                               ;;E04E|E04E+E04E/E04E\E04E;
                       PLB                                       ;;E051|E051+E051/E051\E051;
-                      SEP #$30                                  ;;E052|E052+E052/E052\E052; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;E052|E052+E052/E052\E052; AXY->8
                       DEC.B LvlLoadObjSize                      ;;E054|E054+E054/E054\E054;
                       BEQ +                                     ;;E056|E056+E056/E056\E056;
                       INC.B _8                                  ;;E058|E058+E058/E058\E058;
                       JMP CODE_0DE016                           ;;E05A|E05A+E05A/E05A\E05A;
                                                                 ;;                        ;
-                    + RTS                                       ;;E05D|E05D+E05D/E05D\E05D; Return 
+                    + RTS                                       ;;E05D|E05D+E05D/E05D\E05D;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DE05E:          db $5C,$5D,$5E,$60,$73,$74,$75,$73        ;;E05E|E05E+E05E/E05E\E05E;
@@ -6825,7 +6825,7 @@ CODE_0DE0DB:          LDA.B #$02                                ;;E0DB|E0DB+E0DB
                       INX                                       ;;E126|E126+E126/E126\E126;
                       DEC.B _2                                  ;;E127|E127+E127/E127\E127;
                       BPL -                                     ;;E129|E129+E129/E129\E129;
-                      RTS                                       ;;E12B|E12B+E12B/E12B\E12B; Return 
+                      RTS                                       ;;E12B|E12B+E12B/E12B\E12B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DE12C:          db $45,$50,$4D                            ;;E12C|E12C+E12C/E12C\E12C;
@@ -6870,7 +6870,7 @@ CODE_0DE165:          DEC.B _2                                  ;;E165|E165+E165
                       LDX.B #$02                                ;;E180|E180+E180/E180\E180;
                     + JMP CODE_0DE14A                           ;;E182|E182+E182/E182\E182;
                                                                 ;;                        ;
-Return0DE185:         RTS                                       ;;E185|E185+E185/E185\E185; Return 
+Return0DE185:         RTS                                       ;;E185|E185+E185/E185\E185;
                                                                 ;;                        ;
                       %insert_empty($17A,$17A,$17A,$17A,$17A)   ;;E186|E186+E186/E186\E186;
                                                                 ;;                        ;
@@ -7054,7 +7054,7 @@ Map16Tileset4:        db $82,$1D,$82,$DD,$82,$DD                ;;E300|E300+E300
                       db $D1,$09,$F0,$09,$D1,$09,$BA,$09        ;;E886|E886+E886/E886\E886;
                       db $B5,$09                                ;;E88E|E88E+E88E/E88E\E88E;
                                                                 ;;                        ;
-CODE_0DE890:          SEP #$30                                  ;;E890|E890+E890/E890\E890; Index (8 bit) Accum (8 bit) 
+CODE_0DE890:          SEP #$30                                  ;;E890|E890+E890/E890\E890; AXY->8
                       LDX.B LvlLoadObjNo                        ;;E892|E892+E892/E892\E892;
                       DEX                                       ;;E894|E894+E894/E894\E894;
                       TXA                                       ;;E895|E895+E895/E895\E895;
@@ -7134,7 +7134,7 @@ CODE_0DE95F:          LDY.B LevelLoadPos                        ;;E95F|E95F+E95F
                       JSR StzTo6ePointer                        ;;E967|E967+E967/E967\E967;
                       LDA.L DATA_0DE957,X                       ;;E96A|E96A+E96A/E96A\E96A;
                       STA.B [Map16LowPtr],Y                     ;;E96E|E96E+E96E/E96E\E96E;
-                      RTS                                       ;;E970|E970+E970/E970\E970; Return 
+                      RTS                                       ;;E970|E970+E970/E970\E970;
                                                                 ;;                        ;
 ADDR_0DE971:          LDA.B #$03                                ;;E971|E971+E971/E971\E971;
                       STA.B _0                                  ;;E973|E973+E973/E973\E973;
@@ -7151,7 +7151,7 @@ ADDR_0DE971:          LDA.B #$03                                ;;E971|E971+E971
                       STA.B Map16HighPtr+1                      ;;E988|E988+E988/E988\E988;
                       DEC.B _0                                  ;;E98A|E98A+E98A/E98A\E98A;
                       BPL -                                     ;;E98C|E98C+E98C/E98C\E98C;
-                      RTS                                       ;;E98E|E98E+E98E/E98E\E98E; Return 
+                      RTS                                       ;;E98E|E98E+E98E/E98E\E98E;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DE98F:          db $97,$98,$99,$9A,$9B,$9C,$9D,$9E        ;;E98F|E98F+E98F/E98F\E98F;
@@ -7186,7 +7186,7 @@ CODE_0DE9AA:          LDY.B LevelLoadPos                        ;;E9AA|E9AA+E9AA
                       STA.B _0                                  ;;E9DA|E9DA+E9DA/E9DA\E9DA;
                       DEC.B _1                                  ;;E9DC|E9DC+E9DC/E9DC\E9DC;
                       BPL -                                     ;;E9DE|E9DE+E9DE/E9DE\E9DE;
-                      RTS                                       ;;E9E0|E9E0+E9E0/E9E0\E9E0; Return 
+                      RTS                                       ;;E9E0|E9E0+E9E0/E9E0\E9E0;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DE9E1:          db $8C,$8D,$25,$8E,$90,$91,$8F,$25        ;;E9E1|E9E1+E9E1/E9E1\E9E1;
@@ -7215,7 +7215,7 @@ CODE_0DE9F5:          LDY.B LevelLoadPos                        ;;E9F5|E9F5+E9F5
                       STA.B _0                                  ;;EA17|EA17+EA17/EA17\EA17;
                       DEC.B _1                                  ;;EA19|EA19+EA19/EA19\EA19;
                       BPL -                                     ;;EA1B|EA1B+EA1B/EA1B\EA1B;
-                      RTS                                       ;;EA1D|EA1D+EA1D/EA1D\EA1D; Return 
+                      RTS                                       ;;EA1D|EA1D+EA1D/EA1D\EA1D;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DEA1E:          db $25,$25,$7A,$7B,$25,$7C,$7D,$25        ;;EA1E|EA1E+EA1E/EA1E\EA1E;
@@ -7248,7 +7248,7 @@ ADDR_0DEA3E:          LDY.B LevelLoadPos                        ;;EA3E|EA3E+EA3E
                       STA.B _0                                  ;;EA6A|EA6A+EA6A/EA6A\EA6A;
                       DEC.B _1                                  ;;EA6C|EA6C+EA6C/EA6C\EA6C;
                       BPL -                                     ;;EA6E|EA6E+EA6E/EA6E\EA6E;
-                      RTS                                       ;;EA70|EA70+EA70/EA70\EA70; Return 
+                      RTS                                       ;;EA70|EA70+EA70/EA70\EA70;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DEA71:          db $A5,$A5,$A4,$A5,$A5,$A4,$A7,$A8        ;;EA71|EA71+EA71/EA71\EA71;
@@ -7275,7 +7275,7 @@ CODE_0DEAC3:          LDA.B #$05                                ;;EAC3|EAC3+EAC3
                       JSR CODE_0DA97D                           ;;EAD6|EAD6+EAD6/EAD6\EAD6;
                       CPX.B #$4E                                ;;EAD9|EAD9+EAD9/EAD9\EAD9;
                       BNE CODE_0DEAC3                           ;;EADB|EADB+EADB/EADB\EADB;
-                      RTS                                       ;;EADD|EADD+EADD/EADD\EADD; Return 
+                      RTS                                       ;;EADD|EADD+EADD/EADD\EADD;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DEADE:          db $A4,$A6,$A9,$A9,$A9,$A9,$A9,$A9        ;;EADE|EADE+EADE/EADE\EADE;
@@ -7314,7 +7314,7 @@ CODE_0DEB6E:          LDA.B #$09                                ;;EB6E|EB6E+EB6E
                       JSR CODE_0DA97D                           ;;EB8B|EB8B+EB8B/EB8B\EB8B;
                       CPX.B #$8C                                ;;EB8E|EB8E+EB8E/EB8E\EB8E;
                       BNE CODE_0DEB6E                           ;;EB90|EB90+EB90/EB90\EB90;
-                      RTS                                       ;;EB92|EB92+EB92/EB92\EB92; Return 
+                      RTS                                       ;;EB92|EB92+EB92/EB92\EB92;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DEB93:          db $25,$25,$25,$25,$25,$25,$25,$25        ;;EB93|EB93+EB93/EB93\EB93;
@@ -7355,13 +7355,13 @@ CODE_0DEC37:          LDA.B #$0F                                ;;EC37|EC37+EC37
                       JSR CODE_0DA97D                           ;;EC54|EC54+EC54/EC54\EC54;
                       CPX.B #$A0                                ;;EC57|EC57+EC57/EC57\EC57;
                       BNE CODE_0DEC37                           ;;EC59|EC59+EC59/EC59\EC59;
-                      RTS                                       ;;EC5B|EC5B+EC5B/EC5B\EC5B; Return 
+                      RTS                                       ;;EC5B|EC5B+EC5B/EC5B\EC5B;
                                                                 ;;                        ;
 CODE_0DEC5C:          LDY.B LevelLoadPos                        ;;EC5C|EC5C+EC5C/EC5C\EC5C;
                       JSR Sta1To6ePointer                       ;;EC5E|EC5E+EC5E/EC5E\EC5E;
                       LDA.B #$10                                ;;EC61|EC61+EC61/EC61\EC61;
                       STA.B [Map16LowPtr],Y                     ;;EC63|EC63+EC63/EC63\EC63;
-                      RTS                                       ;;EC65|EC65+EC65/EC65\EC65; Return 
+                      RTS                                       ;;EC65|EC65+EC65/EC65\EC65;
                                                                 ;;                        ;
 ADDR_0DEC66:          CMP.B #$CA                                ;;EC66|EC66+EC66/EC66\EC66;
 ADDR_0DEC68:          LDY.B LevelLoadPos                        ;;EC68|EC68+EC68/EC68\EC68;
@@ -7373,7 +7373,7 @@ ADDR_0DEC68:          LDY.B LevelLoadPos                        ;;EC68|EC68+EC68
                       INX                                       ;;EC78|EC78+EC78/EC78\EC78;
                       CPX.B #$02                                ;;EC79|EC79+EC79/EC79\EC79;
                       BNE -                                     ;;EC7B|EC7B+EC7B/EC7B\EC7B;
-                      RTS                                       ;;EC7D|EC7D+EC7D/EC7D\EC7D; Return 
+                      RTS                                       ;;EC7D|EC7D+EC7D/EC7D\EC7D;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DEC7E:          db $EC,$ED,$EE,$EF,$F0,$F1,$F2,$F3        ;;EC7E|EC7E+EC7E/EC7E\EC7E;
@@ -7404,7 +7404,7 @@ CODE_0DECA6:          LDA.B _0                                  ;;ECA5|ECA6+ECA6
                       JSR CODE_0DA97D                           ;;ECB8|ECB9+ECB9/ECB9\ECB9;
                       DEC.B _1                                  ;;ECBB|ECBC+ECBC/ECBC\ECBC;
                       BPL CODE_0DECA6                           ;;ECBD|ECBE+ECBE/ECBE\ECBE;
-Return0DECC0:         RTS                                       ;;ECBF|ECC0+ECC0/ECC0\ECC0; Return 
+Return0DECC0:         RTS                                       ;;ECBF|ECC0+ECC0/ECC0\ECC0;
                                                                 ;;                        ;
 CODE_0DECC1:          LDX.B #$08                                ;;ECC0|ECC1+ECC1/ECC1\ECC1;
                       JMP CODE_0DE9F5                           ;;ECC2|ECC3+ECC3/ECC3\ECC3;
@@ -7443,7 +7443,7 @@ CODE_0DECE3:          JSR StzTo6ePointer                        ;;ECE2|ECE3+ECE3
                       STA.B _2                                  ;;ED01|ED02+ED02/ED02\ED02;
                       DEC.B _1                                  ;;ED03|ED04+ED04/ED04\ED04;
                       BPL CODE_0DECE3                           ;;ED05|ED06+ED06/ED06\ED06;
-                      RTS                                       ;;ED07|ED08+ED08/ED08\ED08; Return 
+                      RTS                                       ;;ED07|ED08+ED08/ED08\ED08;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DED09:          db $82,$89,$88                            ;;ED08|ED09+ED09/ED09\ED09;
@@ -7474,7 +7474,7 @@ CODE_0DED32:          JSR CODE_0DA95B                           ;;ED31|ED32+ED32
                       JSR StzTo6ePointer                        ;;ED38|ED39+ED39/ED39\ED39;
                       LDA.L DATA_0DED0F,X                       ;;ED3B|ED3C+ED3C/ED3C\ED3C;
                       STA.B [Map16LowPtr],Y                     ;;ED3F|ED40+ED40/ED40\ED40;
-                      RTS                                       ;;ED41|ED42+ED42/ED42\ED42; Return 
+                      RTS                                       ;;ED41|ED42+ED42/ED42\ED42;
                                                                 ;;                        ;
 CODE_0DED43:          LDY.B LevelLoadPos                        ;;ED42|ED43+ED43/ED43\ED43;
                       LDA.B LvlLoadObjSize                      ;;ED44|ED45+ED45/ED45\ED45;
@@ -7492,7 +7492,7 @@ CODE_0DED57:          JSR CODE_0DA95B                           ;;ED56|ED57+ED57
                       JSR Sta1To6ePointer                       ;;ED5C|ED5D+ED5D/ED5D\ED5D;
                       LDA.B #$0C                                ;;ED5F|ED60+ED60/ED60\ED60;
                       STA.B [Map16LowPtr],Y                     ;;ED61|ED62+ED62/ED62\ED62;
-                      RTS                                       ;;ED63|ED64+ED64/ED64\ED64; Return 
+                      RTS                                       ;;ED63|ED64+ED64/ED64\ED64;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DED65:          db $83,$78,$79                            ;;ED64|ED65+ED65/ED65\ED65;
@@ -7519,7 +7519,7 @@ CODE_0DED8B:          STA.B [Map16LowPtr],Y                     ;;ED8A|ED8B+ED8B
                       JSR CODE_0DA97D                           ;;ED8C|ED8D+ED8D/ED8D\ED8D;
                       DEC.B _0                                  ;;ED8F|ED90+ED90/ED90\ED90;
                       BPL -                                     ;;ED91|ED92+ED92/ED92\ED92;
-                      RTS                                       ;;ED93|ED94+ED94/ED94\ED94; Return 
+                      RTS                                       ;;ED93|ED94+ED94/ED94\ED94;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DED95:          db $5F,$60,$5A,$5B                        ;;ED94|ED95+ED95/ED95\ED95;
@@ -7540,7 +7540,7 @@ CODE_0DED99:          LDA.B LvlLoadObjSize                      ;;ED98|ED99+ED99
                       JSR CODE_0DA97D                           ;;EDB0|EDB1+EDB1/EDB1\EDB1;
                       DEC.B _0                                  ;;EDB3|EDB4+EDB4/EDB4\EDB4;
                       BPL -                                     ;;EDB5|EDB6+EDB6/EDB6\EDB6;
-                      RTS                                       ;;EDB7|EDB8+EDB8/EDB8\EDB8; Return 
+                      RTS                                       ;;EDB7|EDB8+EDB8/EDB8\EDB8;
                                                                 ;;                        ;
 CODE_0DEDB9:          LDY.B LevelLoadPos                        ;;EDB8|EDB9+EDB9/EDB9\EDB9;
                       LDA.B LvlLoadObjSize                      ;;EDBA|EDBB+EDBB/EDBB\EDBB;
@@ -7558,7 +7558,7 @@ CODE_0DEDCD:          JSR CODE_0DA95B                           ;;EDCC|EDCD+EDCD
                       JSR Sta1To6ePointer                       ;;EDD2|EDD3+EDD3/EDD3\EDD3;
                       LDA.B #$09                                ;;EDD5|EDD6+EDD6/EDD6\EDD6;
                       STA.B [Map16LowPtr],Y                     ;;EDD7|EDD8+EDD8/EDD8\EDD8;
-                      RTS                                       ;;EDD9|EDDA+EDDA/EDDA\EDDA; Return 
+                      RTS                                       ;;EDD9|EDDA+EDDA/EDDA\EDDA;
                                                                 ;;                        ;
 CODE_0DEDDB:          LDY.B LevelLoadPos                        ;;EDDA|EDDB+EDDB/EDDB\EDDB;
                       LDA.B LvlLoadObjSize                      ;;EDDC|EDDD+EDDD/EDDD\EDDD;
@@ -7589,7 +7589,7 @@ CODE_0DEE0B:          JSR Sta1To6ePointer                       ;;EE0A|EE0B+EE0B
                       JSR CODE_0DA95B                           ;;EE0F|EE10+EE10/EE10\EE10;
                       DEX                                       ;;EE12|EE13+EE13/EE13\EE13;
                       BPL CODE_0DEE0B                           ;;EE13|EE14+EE14/EE14\EE14;
-                      RTS                                       ;;EE15|EE16+EE16/EE16\EE16; Return 
+                      RTS                                       ;;EE15|EE16+EE16/EE16\EE16;
                                                                 ;;                        ;
 CODE_0DEE17:          LDY.B LevelLoadPos                        ;;EE16|EE17+EE17/EE17\EE17;
                       LDA.B LvlLoadObjSize                      ;;EE18|EE19+EE19/EE19\EE19;
@@ -7620,7 +7620,7 @@ CODE_0DEE45:          JSR CODE_0DA6BA                           ;;EE44|EE45+EE45
                       LDX.B _0                                  ;;EE4A|EE4B+EE4B/EE4B\EE4B;
                       DEC.B _1                                  ;;EE4C|EE4D+EE4D/EE4D\EE4D;
                       BPL -                                     ;;EE4E|EE4F+EE4F/EE4F\EE4F;
-                      RTS                                       ;;EE50|EE51+EE51/EE51\EE51; Return 
+                      RTS                                       ;;EE50|EE51+EE51/EE51\EE51;
                                                                 ;;                        ;
 CODE_0DEE52:          LDY.B LevelLoadPos                        ;;EE51|EE52+EE52/EE52\EE52;
                       LDA.B LvlLoadObjSize                      ;;EE53|EE54+EE54/EE54\EE54;
@@ -7648,7 +7648,7 @@ CODE_0DEE74:          JSR Sta1To6ePointer                       ;;EE73|EE74+EE74
                       LDX.B _0                                  ;;EE81|EE82+EE82/EE82\EE82;
                       DEC.B _1                                  ;;EE83|EE84+EE84/EE84\EE84;
                       BPL CODE_0DEE65                           ;;EE85|EE86+EE86/EE86\EE86;
-                      RTS                                       ;;EE87|EE88+EE88/EE88\EE88; Return 
+                      RTS                                       ;;EE87|EE88+EE88/EE88\EE88;
                                                                 ;;                        ;
 CODE_0DEE89:          LDY.B LevelLoadPos                        ;;EE88|EE89+EE89/EE89\EE89;
                       LDA.B LvlLoadObjSize                      ;;EE8A|EE8B+EE8B/EE8B\EE8B;
@@ -7676,7 +7676,7 @@ CODE_0DEEB3:          JSR CODE_0DA6BA                           ;;EEB2|EEB3+EEB3
                       LDX.B _0                                  ;;EEB8|EEB9+EEB9/EEB9\EEB9;
                       DEC.B _1                                  ;;EEBA|EEBB+EEBB/EEBB\EEBB;
                       BPL CODE_0DEE9C                           ;;EEBC|EEBD+EEBD/EEBD\EEBD;
-                      RTS                                       ;;EEBE|EEBF+EEBF/EEBF\EEBF; Return 
+                      RTS                                       ;;EEBE|EEBF+EEBF/EEBF\EEBF;
                                                                 ;;                        ;
 CODE_0DEEC0:          LDY.B LevelLoadPos                        ;;EEBF|EEC0+EEC0/EEC0\EEC0;
                       LDA.B LvlLoadObjSize                      ;;EEC1|EEC2+EEC2/EEC2\EEC2;
@@ -7752,7 +7752,7 @@ CODE_0DEF0F:          STA.B [Map16LowPtr],Y                     ;;EF0E|EF0F+EF0F
                       BMI +                                     ;;EF3E|EF3F+EF3F/EF3F\EF3F;
                       JMP CODE_0DEEFD                           ;;EF40|EF41+EF41/EF41\EF41;
                                                                 ;;                        ;
-                    + RTS                                       ;;EF43|EF44+EF44/EF44\EF44; Return 
+                    + RTS                                       ;;EF43|EF44+EF44/EF44\EF44;
                                                                 ;;                        ;
 CODE_0DEF45:          LDY.B LevelLoadPos                        ;;EF44|EF45+EF45/EF45\EF45;
                       LDA.B LvlLoadObjSize                      ;;EF46|EF47+EF47/EF47\EF47;
@@ -7770,7 +7770,7 @@ CODE_0DEF59:          JSR CODE_0DA95B                           ;;EF58|EF59+EF59
                       JSR StzTo6ePointer                        ;;EF5E|EF5F+EF5F/EF5F\EF5F;
                       LDA.B #$A2                                ;;EF61|EF62+EF62/EF62\EF62;
                       STA.B [Map16LowPtr],Y                     ;;EF63|EF64+EF64/EF64\EF64;
-                      RTS                                       ;;EF65|EF66+EF66/EF66\EF66; Return 
+                      RTS                                       ;;EF65|EF66+EF66/EF66\EF66;
                                                                 ;;                        ;
 CODE_0DEF67:          LDY.B LevelLoadPos                        ;;EF66|EF67+EF67/EF67\EF67;
                       LDA.B LvlLoadObjSize                      ;;EF68|EF69+EF69/EF69\EF69;
@@ -7801,7 +7801,7 @@ CODE_0DEF87:          DEC.B _1                                  ;;EF86|EF87+EF87
                       BPL -                                     ;;EF9B|EF9C+EF9C/EF9C\EF9C;
                       JMP CODE_0DEF87                           ;;EF9D|EF9E+EF9E/EF9E\EF9E;
                                                                 ;;                        ;
-Return0DEFA1:         RTS                                       ;;EFA0|EFA1+EFA1/EFA1\EFA1; Return 
+Return0DEFA1:         RTS                                       ;;EFA0|EFA1+EFA1/EFA1\EFA1;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0DEFA2:          db $63,$65                                ;;EFA1|EFA2+EFA2/EFA2\EFA2;
@@ -7868,7 +7868,7 @@ CODE_0DEFFE:          JSR CODE_0DA6BA                           ;;EFFD|EFFE+EFFE
                       JSR Sta1To6ePointer                       ;;F022|F023+F023/F023\F023;
                       LDA.B #$6D                                ;;F025|F026+F026/F026\F026;
                       STA.B [Map16LowPtr],Y                     ;;F027|F028+F028/F028\F028;
-                      RTS                                       ;;F029|F02A+F02A/F02A\F02A; Return 
+                      RTS                                       ;;F029|F02A+F02A/F02A\F02A;
                                                                 ;;                        ;
 CODE_0DF02B:          LDY.B LevelLoadPos                        ;;F02A|F02B+F02B/F02B\F02B;
                       LDA.B LvlLoadObjSize                      ;;F02C|F02D+F02D/F02D\F02D;
@@ -7899,7 +7899,7 @@ CODE_0DF05B:          JSR CODE_0DA6BA                           ;;F05A|F05B+F05B
                       JSR CODE_0DA97D                           ;;F05D|F05E+F05E/F05E\F05E;
                       DEC.B _1                                  ;;F060|F061+F061/F061\F061;
                       BPL CODE_0DF04E                           ;;F062|F063+F063/F063\F063;
-                      RTS                                       ;;F064|F065+F065/F065\F065; Return 
+                      RTS                                       ;;F064|F065+F065/F065\F065;
                                                                 ;;                        ;
 ADDR_0DF066:          LDX.B #$02                                ;;F065|F066+F066/F066\F066;
                       JMP CODE_0DECCE                           ;;F067|F068+F068/F068\F068;
@@ -7922,7 +7922,7 @@ CODE_0DF06C:          LDY.B LevelLoadPos                        ;;F06B|F06C+F06C
                       JSR CODE_0DA95B                           ;;F081|F082+F082/F082\F082;
                       DEC.B _0                                  ;;F084|F085+F085/F085\F085;
                       BPL -                                     ;;F086|F087+F087/F087\F087;
-                      RTS                                       ;;F088|F089+F089/F089\F089; Return 
+                      RTS                                       ;;F088|F089+F089/F089\F089;
                                                                 ;;                        ;
                       %insert_empty($277,$276,$276,$276,$276)   ;;F089|F08A+F08A/F08A\F08A;
                                                                 ;;                        ;

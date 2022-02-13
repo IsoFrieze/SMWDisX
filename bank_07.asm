@@ -387,7 +387,7 @@ CODE_07F1CA:          LDA.W SpriteMisc1540,X                    ;;F1CA|F1CA+F1CA
                       STA.B _2                                  ;;F1F8|F1F8+F1F8/F1F8\F1F8;
                       LDY.B #$54                                ;;F1FA|F1FA+F1FA/F1FA\F1FA;
                       JSR CODE_07F200                           ;;F1FC|F1FC+F1FC/F1FC\F1FC;
-                      RTL                                       ;;F1FF|F1FF+F1FF/F1FF\F1FF; Return 
+                      RTL                                       ;;F1FF|F1FF+F1FF/F1FF\F1FF;
                                                                 ;;                        ;
 CODE_07F200:          LDA.L DATA_07F0C8,X                       ;;F200|F200+F200/F200\F200;
                       BMI CODE_07F24A                           ;;F204|F204+F204/F204\F204;
@@ -433,7 +433,7 @@ CODE_07F200:          LDA.L DATA_07F0C8,X                       ;;F200|F200+F200
                       BRA CODE_07F200                           ;;F248|F248+F248/F248\F248;
                                                                 ;;                        ;
 CODE_07F24A:          LDX.W CurSpriteProcess                    ;;F24A|F24A+F24A/F24A\F24A; X = Sprite index 
-                      RTS                                       ;;F24D|F24D+F24D/F24D\F24D; Return 
+                      RTS                                       ;;F24D|F24D+F24D/F24D\F24D;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_07F24E:          db $66,$66,$6E,$FF                        ;;F24E|F24E+F24E/F24E\F24E;
@@ -450,7 +450,7 @@ CODE_07F252:          PHX                                       ;;F252|F252+F252
                       BNE +                                     ;;F263|F263+F263/F263\F263;
                       LDA.B #$0A                                ;;F265|F265+F265/F265\F265;
                       JSL GivePoints                            ;;F267|F267+F267/F267\F267;
-                    + RTL                                       ;;F26B|F26B+F26B/F26B\F26B; Return 
+                    + RTL                                       ;;F26B|F26B+F26B/F26B\F26B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 Sprite1656Vals:       db $70,$70,$70,$70,$10,$10,$10,$10        ;;F26C|F26C+F26C/F26C\F26C;
@@ -680,7 +680,7 @@ ZeroSpriteTables:     STZ.W SpriteInLiquid,X                    ;;F722|F722+F722
                       STZ.W SpriteMisc1FD6,X                    ;;F782|F782+F782/F782\F782;
                       LDA.B #$01                                ;;F785|F785+F785/F785\F785;
                       STA.W SpriteOffscreenX,X                  ;;F787|F787+F787/F787\F787;
-                      RTL                                       ;;F78A|F78A+F78A/F78A\F78A; Return 
+                      RTL                                       ;;F78A|F78A+F78A/F78A\F78A;
                                                                 ;;                        ;
 LoadSpriteTables:     PHY                                       ;;F78B|F78B+F78B/F78B\F78B;
                       PHX                                       ;;F78C|F78C+F78C/F78C\F78C;
@@ -692,7 +692,7 @@ LoadSpriteTables:     PHY                                       ;;F78B|F78B+F78B
                       STA.W SpriteOBJAttribute,X                ;;F797|F797+F797/F797\F797;
                       JSL LoadTweakerBytes                      ;;F79A|F79A+F79A/F79A\F79A;
                       PLY                                       ;;F79E|F79E+F79E/F79E\F79E;
-                      RTL                                       ;;F79F|F79F+F79F/F79F\F79F; Return 
+                      RTL                                       ;;F79F|F79F+F79F/F79F\F79F;
                                                                 ;;                        ;
 LoadTweakerBytes:     PHY                                       ;;F7A0|F7A0+F7A0/F7A0\F7A0;
                       PHX                                       ;;F7A1|F7A1+F7A1/F7A1\F7A1;
@@ -712,11 +712,11 @@ LoadTweakerBytes:     PHY                                       ;;F7A0|F7A0+F7A0
                       STA.W SpriteTweakerF,Y                    ;;F7CC|F7CC+F7CC/F7CC\F7CC;
                       PLX                                       ;;F7CF|F7CF+F7CF/F7CF\F7CF;
                       PLY                                       ;;F7D0|F7D0+F7D0/F7D0\F7D0;
-                      RTL                                       ;;F7D1|F7D1+F7D1/F7D1\F7D1; Return 
+                      RTL                                       ;;F7D1|F7D1+F7D1/F7D1\F7D1;
                                                                 ;;                        ;
 InitSpriteTables:     JSL ZeroSpriteTables                      ;;F7D2|F7D2+F7D2/F7D2\F7D2;
                       JSL LoadSpriteTables                      ;;F7D6|F7D6+F7D6/F7D6\F7D6;
-                      RTL                                       ;;F7DA|F7DA+F7DA/F7DA\F7DA; Return 
+                      RTL                                       ;;F7DA|F7DA+F7DA/F7DA\F7DA;
                                                                 ;;                        ;
                                                                 ;;                        ;
 CircleCoords:         db $00,$00,$03,$00,$06,$00,$09,$00        ;;F7DB|F7DB+F7DB/F7DB\F7DB;
@@ -980,13 +980,13 @@ CODE_07FC3B:          PHX                                       ;;FC3B|FC3B+FC3B
                       DEX                                       ;;FC42|FC42+FC42/FC42\FC42;
                       BPL -                                     ;;FC43|FC43+FC43/FC43\FC43;
                       PLX                                       ;;FC45|FC45+FC45/FC45\FC45;
-                      RTL                                       ;;FC46|FC46+FC46/FC46\FC46; Return 
+                      RTL                                       ;;FC46|FC46+FC46/FC46\FC46;
                                                                 ;;                        ;
 CODE_07FC47:          LDY.B #$07                                ;;FC47|FC47+FC47/FC47\FC47; \ Find a free extended sprite slot 
-CODE_07FC49:          LDA.W ExtSpriteNumber,Y                   ;;FC49|FC49+FC49/FC49\FC49;  | 
-                      BEQ CODE_07FC52                           ;;FC4C|FC4C+FC4C/FC4C\FC4C;  | 
-                      DEY                                       ;;FC4E|FC4E+FC4E/FC4E\FC4E;  | 
-                      BPL CODE_07FC49                           ;;FC4F|FC4F+FC4F/FC4F\FC4F;  | 
+CODE_07FC49:          LDA.W ExtSpriteNumber,Y                   ;;FC49|FC49+FC49/FC49\FC49; | 
+                      BEQ CODE_07FC52                           ;;FC4C|FC4C+FC4C/FC4C\FC4C; | 
+                      DEY                                       ;;FC4E|FC4E+FC4E/FC4E\FC4E; | 
+                      BPL CODE_07FC49                           ;;FC4F|FC4F+FC4F/FC4F\FC4F; | 
                       RTL                                       ;;FC51|FC51+FC51/FC51\FC51; / Return if no free slots 
                                                                 ;;                        ;
 CODE_07FC52:          LDA.B #$10                                ;;FC52|FC52+FC52/FC52\FC52; \ Extended sprite = Spin jump stars 
@@ -1014,6 +1014,6 @@ CODE_07FC52:          LDA.B #$10                                ;;FC52|FC52+FC52
                       STA.W ExtSpriteYSpeed,Y                   ;;FC87|FC87+FC87/FC87\FC87;
                       LDA.B #$17                                ;;FC8A|FC8A+FC8A/FC8A\FC8A;
                       STA.W ExtSpriteMisc176F,Y                 ;;FC8C|FC8C+FC8C/FC8C\FC8C;
-                      RTL                                       ;;FC8F|FC8F+FC8F/FC8F\FC8F; Return 
+                      RTL                                       ;;FC8F|FC8F+FC8F/FC8F\FC8F;
                                                                 ;;                        ;
                       padbyte $FF : pad $088000                 ;;FC90|FC90+FC90/FC90\FC90;

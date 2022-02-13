@@ -48,15 +48,15 @@ JAPU_0535:            MOV A,#$5A                                ;;0535          
                       DEC X                                     ;;054B|0533+0533/0533\0533;
                       BPL -                                     ;;054C|0534+0534/0534\0534; set initial DSP reg values;
                       MOV A,#$F0                                ;;054E|0536+0536/0536\0536;
-                      MOV.W SPCCONTROL,A                        ;;0550|0538+0538/0538\0538; reset ports, disable timers 
+                      MOV.W HW_SPCCONTROL,A                     ;;0550|0538+0538/0538\0538; reset ports, disable timers 
                       MOV A,#$10                                ;;0553|053B+053B/053B\053B;
-                      MOV.W TIMER0,A                            ;;0555|053D+053D/053D\053D; set timer0 freq to 2ms 
+                      MOV.W HW_TIMER0,A                         ;;0555|053D+053D/053D\053D; set timer0 freq to 2ms 
                       MOV A,#$36                                ;;0558|0540+0540/0540\0540;
                       MOV.B MasterTempo+1,A                     ;;055A|0542+0542/0542\0542; set $51 to #$36 
                       MOV A,#$01                                ;;055C|0544+0544/0544\0544;
-                      MOV.W SPCCONTROL,A                        ;;055E|0546+0546/0546\0546; start timer 0 
+                      MOV.W HW_SPCCONTROL,A                     ;;055E|0546+0546/0546\0546; start timer 0 
                                                                 ;;                        ;
-APU_Loop:             MOV.W Y,COUNTER0                          ;;0561|0549+0549/0549\0549; main loop 
+APU_Loop:             MOV.W Y,HW_COUNTER0                       ;;0561|0549+0549/0549\0549; main loop 
                       BEQ APU_Loop                              ;;0564|054C+054C/054C\054C; wait for counter 0 increment;
                       PUSH Y                                    ;;0566|054E+054E/054E\054E;
                       MOV A,#$38                                ;;0567|054F+054F/054F\054F;
@@ -105,9 +105,9 @@ APU_058D:             MOV.B A,SPCOutBuffer+2                    ;;05A5|058D+058D
 CopyToSNES:           MOV A,X                                   ;;05BD|05A5+05A5/05A5\05A5; SEND 04+X TO APUX; get APUX to 00+X with "debounce"?;
                       MOV Y,A                                   ;;05BE|05A6+05A6/05A6\05A6;
                       MOV.B A,SPCOutBuffer+X                    ;;05BF|05A7+05A7/05A7\05A7;
-                      MOV.W SNESIO0+X,A                         ;;05C1|05A9+05A9/05A9\05A9;
-                    - MOV.W A,SNESIO0+X                         ;;05C4|05AC+05AC/05AC\05AC;
-                      CMP.W A,SNESIO0+X                         ;;05C7|05AF+05AF/05AF\05AF;
+                      MOV.W HW_SNESIO0+X,A                      ;;05C1|05A9+05A9/05A9\05A9;
+                    - MOV.W A,HW_SNESIO0+X                      ;;05C4|05AC+05AC/05AC\05AC;
+                      CMP.W A,HW_SNESIO0+X                      ;;05C7|05AF+05AF/05AF\05AF;
                       BNE -                                     ;;05CA|05B2+05B2/05B2\05B2;
                       MOV Y,A                                   ;;05CC|05B4+05B4/05B4\05B4;
                       MOV.B A,SPCInBuffer+X                     ;;05CD|05B5+05B5/05B5\05B5;
@@ -230,8 +230,8 @@ WriteDSPRegCond:      PUSH A                                    ;;06A7|068F+068F
                       AND.B A,ChannelsMuted                     ;;06AA|0692+0692/0692\0692;
                       POP A                                     ;;06AC|0694+0694/0694\0694;
                       BNE +                                     ;;06AD|0695+0695/0695\0695;
-WriteDSPReg:          MOV.W DSPDATA,Y                           ;;06AF|0697+0697/0697\0697; write A to DSP reg Y 
-                      MOV.W DSPADDR,A                           ;;06B2|069A+069A/069A\069A;
+WriteDSPReg:          MOV.W HW_DSPDATA,Y                        ;;06AF|0697+0697/0697\0697; write A to DSP reg Y 
+                      MOV.W HW_DSPADDR,A                        ;;06B2|069A+069A/069A\069A;
                     + RET                                       ;;06B5|069D+069D/069D\069D;
                                                                 ;;                        ;
 APU_069E:             MOV A,#$0A                                ;;06B6|069E+069E/069E\069E;
@@ -1098,8 +1098,8 @@ APU_0D56:             MUL YA                                    ;;0D6E|0D56+0D56
                       CALL WriteDSPReg                          ;;0D8A|0D72+0D72/0D72\0D72; clear noise vbit;
                       MOV Y,#$00                                ;;0D8D|0D75+0D75/0D75\0D75;
                     - MOV.B A,(ARam_14)+Y                       ;;0D8F|0D77+0D77/0D77\0D77;
-                      MOV.W DSPDATA,X                           ;;0D91|0D79+0D79/0D79\0D79;
-                      MOV.W DSPADDR,A                           ;;0D94|0D7C+0D7C/0D7C\0D7C;
+                      MOV.W HW_DSPDATA,X                        ;;0D91|0D79+0D79/0D79\0D79;
+                      MOV.W HW_DSPADDR,A                        ;;0D94|0D7C+0D7C/0D7C\0D7C;
                       INC X                                     ;;0D97|0D7F+0D7F/0D7F\0D7F;
                       INC Y                                     ;;0D98|0D80+0D80/0D80\0D80;
                       CMP Y,#$04                                ;;0D99|0D81+0D81/0D81\0D81;
@@ -1797,37 +1797,37 @@ PitchTable:           dw $10BE                                  ;;12F1|12D9+12D9
                       db $00                                    ;;1308|12F0+12F0/12F0\12F0;
                                                                 ;;                        ;
 StandardTransfer:     MOV A,#$AA                                ;;130A|12F2+12F2/12F2\12F2; do: standardish SPU transfer;
-                      MOV.W SNESIO0,A                           ;;130C|12F4+12F4/12F4\12F4;
+                      MOV.W HW_SNESIO0,A                        ;;130C|12F4+12F4/12F4\12F4;
                       MOV A,#$BB                                ;;130F|12F7+12F7/12F7\12F7;
-                      MOV.W SNESIO1,A                           ;;1311|12F9+12F9/12F9\12F9;
-                    - MOV.W A,SNESIO0                           ;;1314|12FC+12FC/12FC\12FC;
+                      MOV.W HW_SNESIO1,A                        ;;1311|12F9+12F9/12F9\12F9;
+                    - MOV.W A,HW_SNESIO0                        ;;1314|12FC+12FC/12FC\12FC;
                       CMP A,#$CC                                ;;1317|12FF+12FF/12FF\12FF;
                       BNE -                                     ;;1319|1301+1301/1301\1301;
                       BRA APU_1325                              ;;131B|1303+1303/1303\1303;
                                                                 ;;                        ;
-APU_1305:             MOV.W Y,SNESIO0                           ;;131D|1305+1305/1305\1305;
+APU_1305:             MOV.W Y,HW_SNESIO0                        ;;131D|1305+1305/1305\1305;
                       BNE APU_1305                              ;;1320|1308+1308/1308\1308;
-APU_130A:             CMP.W Y,SNESIO0                           ;;1322|130A+130A/130A\130A;
+APU_130A:             CMP.W Y,HW_SNESIO0                        ;;1322|130A+130A/130A\130A;
                       BNE APU_131E                              ;;1325|130D+130D/130D\130D;
-                      MOV.W A,SNESIO1                           ;;1327|130F+130F/130F\130F;
-                      MOV.W SNESIO0,Y                           ;;132A|1312+1312/1312\1312;
+                      MOV.W A,HW_SNESIO1                        ;;1327|130F+130F/130F\130F;
+                      MOV.W HW_SNESIO0,Y                        ;;132A|1312+1312/1312\1312;
                       MOV.B (ARam_14)+Y,A                       ;;132D|1315+1315/1315\1315;
                       INC Y                                     ;;132F|1317+1317/1317\1317;
                       BNE APU_130A                              ;;1330|1318+1318/1318\1318;
                       INC.B ARam_15                             ;;1332|131A+131A/131A\131A;
                       BRA APU_130A                              ;;1334|131C+131C/131C\131C;
 APU_131E:             BPL APU_130A                              ;;1336|131E+131E/131E\131E;
-                      CMP.W Y,SNESIO0                           ;;1338|1320+1320/1320\1320;
+                      CMP.W Y,HW_SNESIO0                        ;;1338|1320+1320/1320\1320;
                       BPL APU_130A                              ;;133B|1323+1323/1323\1323;
-APU_1325:             MOV.W A,SNESIO2                           ;;133D|1325+1325/1325\1325;
-                      MOV.W Y,SNESIO3                           ;;1340|1328+1328/1328\1328;
+APU_1325:             MOV.W A,HW_SNESIO2                        ;;133D|1325+1325/1325\1325;
+                      MOV.W Y,HW_SNESIO3                        ;;1340|1328+1328/1328\1328;
                       MOVW.B ARam_14,YA                         ;;1343|132B+132B/132B\132B;
-                      MOV.W Y,SNESIO0                           ;;1345|132D+132D/132D\132D;
-                      MOV.W A,SNESIO1                           ;;1348|1330+1330/1330\1330;
-                      MOV.W SNESIO0,Y                           ;;134B|1333+1333/1333\1333;
+                      MOV.W Y,HW_SNESIO0                        ;;1345|132D+132D/132D\132D;
+                      MOV.W A,HW_SNESIO1                        ;;1348|1330+1330/1330\1330;
+                      MOV.W HW_SNESIO0,Y                        ;;134B|1333+1333/1333\1333;
                       BNE APU_1305                              ;;134E|1336+1336/1336\1336;
                       MOV X,#$31                                ;;1350|1338+1338/1338\1338;
-                      MOV.W SPCCONTROL,X                        ;;1352|133A+133A/133A\133A; reset ports, keep timer running 
+                      MOV.W HW_SPCCONTROL,X                     ;;1352|133A+133A/133A\133A; reset ports, keep timer running 
                       RET                                       ;;1355|133D+133D/133D\133D;
                                                                 ;;1356|133E+133E/133E\133E;
                                                                 ;;                        ;

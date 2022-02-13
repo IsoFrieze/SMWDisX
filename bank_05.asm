@@ -17,31 +17,31 @@ TilesetMAP16Loc:      dw Map16Tileset0                          ;;8000|8000+8000
                       dw Map16Tileset3                          ;;801C|801C+801C/801C\801C;
                                                                 ;;                        ;
 CODE_05801E:          PHP                                       ;;801E|801E+801E/801E\801E;
-                      SEP #$20                                  ;;801F|801F+801F/801F\801F; 8 bit A ; Accum (8 bit) 
-                      REP #$10                                  ;;8021|8021+8021/8021\8021; 16 bit X,Y ; Index (16 bit) 
+                      SEP #$20                                  ;;801F|801F+801F/801F\801F; A->8
+                      REP #$10                                  ;;8021|8021+8021/8021\8021; XY->16
                       LDX.W #$0000                              ;;8023|8023+8023/8023\8023; \ 
-                    - LDA.B #$25                                ;;8026|8026+8026/8026\8026;  | 
-                      STA.L Layer2TilemapLow,X                  ;;8028|8028+8028/8028\8028;  |Set all background tiles (lower bytes) to x25 
-                      STA.L Layer2TilemapLow+$200,X             ;;802C|802C+802C/802C\802C;  | 
-                      INX                                       ;;8030|8030+8030/8030\8030;  | 
-                      CPX.W #$0200                              ;;8031|8031+8031/8031\8031;  | 
+                    - LDA.B #$25                                ;;8026|8026+8026/8026\8026; | 
+                      STA.L Layer2TilemapLow,X                  ;;8028|8028+8028/8028\8028; |Set all background tiles (lower bytes) to x25 
+                      STA.L Layer2TilemapLow+$200,X             ;;802C|802C+802C/802C\802C; | 
+                      INX                                       ;;8030|8030+8030/8030\8030; | 
+                      CPX.W #$0200                              ;;8031|8031+8031/8031\8031; | 
                       BNE -                                     ;;8034|8034+8034/8034\8034; / 
                       STZ.W LevelLoadObject                     ;;8036|8036+8036/8036\8036;
                       LDA.B Layer2DataPtr+2                     ;;8039|8039+8039/8039\8039; \ 
-                      CMP.B #$FF                                ;;803B|803B+803B/803B\803B;  |If the layer 2 data is a background, 
+                      CMP.B #$FF                                ;;803B|803B+803B/803B\803B; |If the layer 2 data is a background, 
                       BNE CODE_058074                           ;;803D|803D+803D/803D\803D; / branch to $8074 
-                      REP #$10                                  ;;803F|803F+803F/803F\803F; 16 bit X,Y ; Index (16 bit) 
+                      REP #$10                                  ;;803F|803F+803F/803F\803F; XY->16
                       LDY.W #$0000                              ;;8041|8041+8041/8041\8041; \ 
-                      LDX.B Layer2DataPtr                       ;;8044|8044+8044/8044\8044;  | 
-                      CPX.W #DATA_0CE8FE                        ;;8046|8046+8046/8046\8046;  |If Layer 2 pointer >= $E8FF, 
-                      BCC +                                     ;;8049|8049+8049/8049\8049;  |the background should use Map16 page x11 instead of x10 
-                      LDY.W #$0001                              ;;804B|804B+804B/804B\804B;  | 
+                      LDX.B Layer2DataPtr                       ;;8044|8044+8044/8044\8044; | 
+                      CPX.W #DATA_0CE8FE                        ;;8046|8046+8046/8046\8046; |If Layer 2 pointer >= $E8FF, 
+                      BCC +                                     ;;8049|8049+8049/8049\8049; |the background should use Map16 page x11 instead of x10 
+                      LDY.W #$0001                              ;;804B|804B+804B/804B\804B; | 
                     + LDX.W #$0000                              ;;804E|804E+804E/804E\804E; \ 
-                      TYA                                       ;;8051|8051+8051/8051\8051;  | 
-                    - STA.L Layer2TilemapHigh,X                 ;;8052|8052+8052/8052\8052;  |Set the background's Map16 page 
-                      STA.L Layer2TilemapHigh+$200,X            ;;8056|8056+8056/8056\8056;  |(i.e. setting all high tile bytes to Y) 
-                      INX                                       ;;805A|805A+805A/805A\805A;  | 
-                      CPX.W #$0200                              ;;805B|805B+805B/805B\805B;  | 
+                      TYA                                       ;;8051|8051+8051/8051\8051; | 
+                    - STA.L Layer2TilemapHigh,X                 ;;8052|8052+8052/8052\8052; |Set the background's Map16 page 
+                      STA.L Layer2TilemapHigh+$200,X            ;;8056|8056+8056/8056\8056; |(i.e. setting all high tile bytes to Y) 
+                      INX                                       ;;805A|805A+805A/805A\805A; | 
+                      CPX.W #$0200                              ;;805B|805B+805B/805B\805B; | 
                       BNE -                                     ;;805E|805E+805E/805E\805E; / 
                       LDA.B #$0C                                ;;8060|8060+8060/8060\8060; \ Set highest Layer 2 address to x0C 
                       STA.B Layer2DataPtr+2                     ;;8062|8062+8062/8062\8062; / (All backgrounds are stored in bank 0C) 
@@ -49,36 +49,36 @@ CODE_05801E:          PHP                                       ;;801E|801E+801E
                       STZ.W ObjectTileset                       ;;8067|8067+8067/8067\8067; / 
                       LDX.W #$B900                              ;;806A|806A+806A/806A\806A;
                       STX.B _D                                  ;;806D|806D+806D/806D\806D;
-                      REP #$20                                  ;;806F|806F+806F/806F\806F; 16 bit A ; Accum (16 bit) 
+                      REP #$20                                  ;;806F|806F+806F/806F\806F; A->16
                       JSR CODE_058126                           ;;8071|8071+8071/8071\8071;
-CODE_058074:          SEP #$20                                  ;;8074|8074+8074/8074\8074; 8 bit A ; Accum (8 bit) 
+CODE_058074:          SEP #$20                                  ;;8074|8074+8074/8074\8074; A->8
                       LDX.W #$0000                              ;;8076|8076+8076/8076\8076; \ 
-                    - LDA.B #$00                                ;;8079|8079+8079/8079\8079;  | 
-                      JSR CODE_05833A                           ;;807B|807B+807B/807B\807B;  |Clear level data 
-                      DEX                                       ;;807E|807E+807E/807E\807E;  | 
-                      LDA.B #$25                                ;;807F|807F+807F/807F\807F;  | 
-                      JSR CODE_0582C8                           ;;8081|8081+8081/8081\8081;  | 
-                      CPX.W #$0200                              ;;8084|8084+8084/8084\8084;  | 
+                    - LDA.B #$00                                ;;8079|8079+8079/8079\8079; | 
+                      JSR CODE_05833A                           ;;807B|807B+807B/807B\807B; |Clear level data 
+                      DEX                                       ;;807E|807E+807E/807E\807E; | 
+                      LDA.B #$25                                ;;807F|807F+807F/807F\807F; | 
+                      JSR CODE_0582C8                           ;;8081|8081+8081/8081\8081; | 
+                      CPX.W #$0200                              ;;8084|8084+8084/8084\8084; | 
                       BNE -                                     ;;8087|8087+8087/8087\8087; / 
                       STZ.W LevelLoadObject                     ;;8089|8089+8089/8089\8089;
                       JSR LoadLevel                             ;;808C|808C+808C/808C\808C; Load the level 
-                      SEP #$30                                  ;;808F|808F+808F/808F\808F; 8 bit A,X,Y ; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;808F|808F+808F/808F\808F; AXY->8
                       LDA.W GameMode                            ;;8091|8091+8091/8091\8091; \ 
-                      CMP.B #$22                                ;;8094|8094+8094/8094\8094;  | 
-                      BPL +                                     ;;8096|8096+8096/8096\8096;  |If level mode is less than x22, 
-                      JSL CODE_02A751                           ;;8098|8098+8098/8098\8098;  |JSL to $02A751 
+                      CMP.B #$22                                ;;8094|8094+8094/8094\8094; | 
+                      BPL +                                     ;;8096|8096+8096/8096\8096; |If level mode is less than x22, 
+                      JSL CODE_02A751                           ;;8098|8098+8098/8098\8098; |JSL to $02A751 
                     + PLP                                       ;;809C|809C+809C/809C\809C;
-                      RTL                                       ;;809D|809D+809D/809D\809D; Return 
+                      RTL                                       ;;809D|809D+809D/809D\809D;
                                                                 ;;                        ;
                    if ver_is_lores(!_VER)             ;\   IF   ;;++++++++++++++++++++++++; J, U, SS, & E0
 CODE_05809E:          PHP                                       ;;809E|809E+809E/809E     ;
-                      SEP #$20                                  ;;809F|809F+809F/809F     ; Accum (8 bit) 
+                      SEP #$20                                  ;;809F|809F+809F/809F     ; A->8
                    else                               ;<  ELSE  ;;------------------------; E1
 EDATA_05809E:         db $20,$00,$5F,$FE,$FA,$18,$30,$00        ;;                   \809E;
                       db $5F,$FE,$FA,$18,$FF                    ;;                   \80A6;
                                                                 ;;                        ;
 CODE_05809E:          PHP                                       ;;                   \80AB;
-                      SEP #$20                                  ;;                   \80AC;
+                      SEP #$20                                  ;;                   \80AC; A->8
                       LDX.B #$0C                                ;;                   \80AE;
                     - LDA.L EDATA_05809E,X                      ;;                   \80B0;
                       STA.L DynamicStripeImage,X                ;;                   \80B4;
@@ -90,7 +90,7 @@ CODE_05809E:          PHP                                       ;;              
                       STA.W HW_M7SEL                            ;;                   \80C3;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                       STZ.W LevelLoadObject                     ;;80A1|80A1+80A1/80A1\80C6; Zero a byte in the middle of the RAM table for the level header 
-                      REP #$30                                  ;;80A4|80A4+80A4/80A4\80C9; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;80A4|80A4+80A4/80A4\80C9; AXY->16
                       LDA.W #$FFFF                              ;;80A6|80A6+80A6/80A6\80CB;
                       STA.B Layer1PrevTileUp                    ;;80A9|80A9+80A9/80A9\80CE; $4D to $50 = #$FF 
                       STA.B Layer1PrevTileDown                  ;;80AB|80AB+80AB/80AB\80D0;
@@ -101,19 +101,19 @@ CODE_05809E:          PHP                                       ;;              
                       STA.B Layer2TileDown                      ;;80B6|80B6+80B6/80B6\80DB;
                       LDA.W #$0202                              ;;80B8|80B8+80B8/80B8\80DD;
                       STA.B Layer1ScrollDir                     ;;80BB|80BB+80BB/80BB\80E0;
-CODE_0580BD:          REP #$30                                  ;;80BD|80BD+80BD/80BD\80E2; Index (16 bit) Accum (16 bit) 
+CODE_0580BD:          REP #$30                                  ;;80BD|80BD+80BD/80BD\80E2; AXY->16
                       JSL CODE_0588EC                           ;;80BF|80BF+80BF/80BF\80E4;
                       JSL CODE_058955                           ;;80C3|80C3+80C3/80C3\80E8;
                       JSL CODE_0087AD                           ;;80C7|80C7+80C7/80C7\80EC;
-                      REP #$30                                  ;;80CB|80CB+80CB/80CB\80F0; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;80CB|80CB+80CB/80CB\80F0; AXY->16
                       INC.B Layer1TileDown                      ;;80CD|80CD+80CD/80CD\80F2;
                       INC.B Layer2TileDown                      ;;80CF|80CF+80CF/80CF\80F4;
-                      SEP #$30                                  ;;80D1|80D1+80D1/80D1\80F6; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;80D1|80D1+80D1/80D1\80F6; AXY->8
                       LDA.B Layer1TileDown                      ;;80D3|80D3+80D3/80D3\80F8;
                       LSR A                                     ;;80D5|80D5+80D5/80D5\80FA;
                       LSR A                                     ;;80D6|80D6+80D6/80D6\80FB;
                       LSR A                                     ;;80D7|80D7+80D7/80D7\80FC;
-                      REP #$30                                  ;;80D8|80D8+80D8/80D8\80FD; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;80D8|80D8+80D8/80D8\80FD; AXY->16
                       AND.W #$0006                              ;;80DA|80DA+80DA/80DA\80FF;
                       TAX                                       ;;80DD|80DD+80DD/80DD\8102;
                       LDA.W #$0133                              ;;80DE|80DE+80DE/80DE\8103;
@@ -129,43 +129,43 @@ CODE_0580BD:          REP #$30                                  ;;80BD|80BD+80BD
                       ADC.W #$0008                              ;;80F2|80F2+80F2/80F2\8117;
                       DEC.B _0                                  ;;80F5|80F5+80F5/80F5\811A;
                       BPL -                                     ;;80F7|80F7+80F7/80F7\811C;
-                      SEP #$20                                  ;;80F9|80F9+80F9/80F9\811E; Accum (8 bit) 
+                      SEP #$20                                  ;;80F9|80F9+80F9/80F9\811E; A->8
                       INC.W LevelLoadObject                     ;;80FB|80FB+80FB/80FB\8120;
                       LDA.W LevelLoadObject                     ;;80FE|80FE+80FE/80FE\8123;
                       CMP.B #$20                                ;;8101|8101+8101/8101\8126;
                       BNE CODE_0580BD                           ;;8103|8103+8103/8103\8128;
                       LDA.W ThroughMain                         ;;8105|8105+8105/8105\812A;
-                      STA.W HW_TM                               ;;8108|8108+8108/8108\812D; Background and Object Enable
-                      STA.W HW_TMW                              ;;810B|810B+810B/810B\8130; Window Mask Designation for Main Screen
+                      STA.W HW_TM                               ;;8108|8108+8108/8108\812D;
+                      STA.W HW_TMW                              ;;810B|810B+810B/810B\8130;
                       LDA.W ThroughSub                          ;;810E|810E+810E/810E\8133;
-                      STA.W HW_TS                               ;;8111|8111+8111/8111\8136; Sub Screen Designation
-                      STA.W HW_TSW                              ;;8114|8114+8114/8114\8139; Window Mask Designation for Sub Screen
-                      REP #$20                                  ;;8117|8117+8117/8117\813C; Accum (16 bit) 
+                      STA.W HW_TS                               ;;8111|8111+8111/8111\8136;
+                      STA.W HW_TSW                              ;;8114|8114+8114/8114\8139;
+                      REP #$20                                  ;;8117|8117+8117/8117\813C; A->16
                       LDA.W #$FFFF                              ;;8119|8119+8119/8119\813E;
                       STA.B Layer1PrevTileUp                    ;;811C|811C+811C/811C\8141;
                       STA.B Layer1PrevTileDown                  ;;811E|811E+811E/811E\8143;
                       STA.B Layer2PrevTileUp                    ;;8120|8120+8120/8120\8145;
                       STA.B Layer2PrevTileDown                  ;;8122|8122+8122/8122\8147;
                       PLP                                       ;;8124|8124+8124/8124\8149;
-                      RTL                                       ;;8125|8125+8125/8125\814A; Return 
+                      RTL                                       ;;8125|8125+8125/8125\814A;
                                                                 ;;                        ;
 CODE_058126:          PHP                                       ;;8126|8126+8126/8126\814B;
-                      REP #$30                                  ;;8127|8127+8127/8127\814C; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;8127|8127+8127/8127\814C; AXY->16
                       LDY.W #$0000                              ;;8129|8129+8129/8129\814E;
                       STY.B _3                                  ;;812C|812C+812C/812C\8151;
                       STY.B _5                                  ;;812E|812E+812E/812E\8153;
-                      SEP #$30                                  ;;8130|8130+8130/8130\8155; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;8130|8130+8130/8130\8155; AXY->8
                       LDA.B #$7E                                ;;8132|8132+8132/8132\8157;
                       STA.B _F                                  ;;8134|8134+8134/8134\8159;
-CODE_058136:          SEP #$20                                  ;;8136|8136+8136/8136\815B; Accum (8 bit) 
-                      REP #$10                                  ;;8138|8138+8138/8138\815D; Index (16 bit) 
+CODE_058136:          SEP #$20                                  ;;8136|8136+8136/8136\815B; A->8
+                      REP #$10                                  ;;8138|8138+8138/8138\815D; XY->16 
                       LDY.B _3                                  ;;813A|813A+813A/813A\815F;
                       LDA.B [Layer2DataPtr],Y                   ;;813C|813C+813C/813C\8161;
                       STA.B _7                                  ;;813E|813E+813E/813E\8163;
                       INY                                       ;;8140|8140+8140/8140\8165;
-                      REP #$20                                  ;;8141|8141+8141/8141\8166; Accum (16 bit) 
+                      REP #$20                                  ;;8141|8141+8141/8141\8166; A->16
                       STY.B _3                                  ;;8143|8143+8143/8143\8168;
-                      SEP #$20                                  ;;8145|8145+8145/8145\816A; Accum (8 bit) 
+                      SEP #$20                                  ;;8145|8145+8145/8145\816A; A->8
                       AND.B #$80                                ;;8147|8147+8147/8147\816C;
                       BEQ CODE_05816A                           ;;8149|8149+8149/8149\816E;
                       LDA.B _7                                  ;;814B|814B+814B/814B\8170;
@@ -173,37 +173,37 @@ CODE_058136:          SEP #$20                                  ;;8136|8136+8136
                       STA.B _7                                  ;;814F|814F+814F/814F\8174;
                       LDA.B [Layer2DataPtr],Y                   ;;8151|8151+8151/8151\8176;
                       INY                                       ;;8153|8153+8153/8153\8178;
-                      REP #$20                                  ;;8154|8154+8154/8154\8179; Accum (16 bit) 
+                      REP #$20                                  ;;8154|8154+8154/8154\8179; A->16
                       STY.B _3                                  ;;8156|8156+8156/8156\817B;
                       LDY.B _5                                  ;;8158|8158+8158/8158\817D;
-                    - SEP #$20                                  ;;815A|815A+815A/815A\817F; Accum (8 bit) 
+                    - SEP #$20                                  ;;815A|815A+815A/815A\817F; A->8
                       STA.B [_D],Y                              ;;815C|815C+815C/815C\8181;
                       INY                                       ;;815E|815E+815E/815E\8183;
                       DEC.B _7                                  ;;815F|815F+815F/815F\8184;
                       BPL -                                     ;;8161|8161+8161/8161\8186;
-                      REP #$20                                  ;;8163|8163+8163/8163\8188; Accum (16 bit) 
+                      REP #$20                                  ;;8163|8163+8163/8163\8188; A->16
                       STY.B _5                                  ;;8165|8165+8165/8165\818A;
                       JMP CODE_058188                           ;;8167|8167+8167/8167\818C;
                                                                 ;;                        ;
-CODE_05816A:          REP #$20                                  ;;816A|816A+816A/816A\818F; Accum (16 bit) 
+CODE_05816A:          REP #$20                                  ;;816A|816A+816A/816A\818F; A->16
                       LDY.B _3                                  ;;816C|816C+816C/816C\8191;
-                      SEP #$20                                  ;;816E|816E+816E/816E\8193; Accum (8 bit) 
+                      SEP #$20                                  ;;816E|816E+816E/816E\8193; A->8
                       LDA.B [Layer2DataPtr],Y                   ;;8170|8170+8170/8170\8195;
                       INY                                       ;;8172|8172+8172/8172\8197;
-                      REP #$20                                  ;;8173|8173+8173/8173\8198; Accum (16 bit) 
+                      REP #$20                                  ;;8173|8173+8173/8173\8198; A->16
                       STY.B _3                                  ;;8175|8175+8175/8175\819A;
                       LDY.B _5                                  ;;8177|8177+8177/8177\819C;
-                      SEP #$20                                  ;;8179|8179+8179/8179\819E; Accum (8 bit) 
+                      SEP #$20                                  ;;8179|8179+8179/8179\819E; A->8
                       STA.B [_D],Y                              ;;817B|817B+817B/817B\81A0;
-                      REP #$20                                  ;;817D|817D+817D/817D\81A2; Accum (16 bit) 
+                      REP #$20                                  ;;817D|817D+817D/817D\81A2; A->16
                       INY                                       ;;817F|817F+817F/817F\81A4;
                       STY.B _5                                  ;;8180|8180+8180/8180\81A5;
-                      SEP #$20                                  ;;8182|8182+8182/8182\81A7; Accum (8 bit) 
+                      SEP #$20                                  ;;8182|8182+8182/8182\81A7; A->8
                       DEC.B _7                                  ;;8184|8184+8184/8184\81A9;
                       BPL CODE_05816A                           ;;8186|8186+8186/8186\81AB;
-CODE_058188:          REP #$20                                  ;;8188|8188+8188/8188\81AD; Accum (16 bit) 
+CODE_058188:          REP #$20                                  ;;8188|8188+8188/8188\81AD; A->16
                       LDY.B _3                                  ;;818A|818A+818A/818A\81AF;
-                      SEP #$20                                  ;;818C|818C+818C/818C\81B1; Accum (8 bit) 
+                      SEP #$20                                  ;;818C|818C+818C/818C\81B1; A->8
                       LDA.B [Layer2DataPtr],Y                   ;;818E|818E+818E/818E\81B3;
                       CMP.B #$FF                                ;;8190|8190+8190/8190\81B5;
                       BNE CODE_058136                           ;;8192|8192+8192/8192\81B7;
@@ -211,7 +211,7 @@ CODE_058188:          REP #$20                                  ;;8188|8188+8188
                       LDA.B [Layer2DataPtr],Y                   ;;8195|8195+8195/8195\81BA;
                       CMP.B #$FF                                ;;8197|8197+8197/8197\81BC;
                       BNE CODE_058136                           ;;8199|8199+8199/8199\81BE;
-                      REP #$20                                  ;;819B|819B+819B/819B\81C0; Accum (16 bit) 
+                      REP #$20                                  ;;819B|819B+819B/819B\81C0; A->16
                       LDA.W #Map16BGTiles                       ;;819D|819D+819D/819D\81C2;
                       STA.B _0                                  ;;81A0|81A0+81A0/81A0\81C5;
                       LDX.W #$0000                              ;;81A2|81A2+81A2/81A2\81C7;
@@ -226,7 +226,7 @@ CODE_058188:          REP #$20                                  ;;8188|8188+8188
                       CPX.W #$0400                              ;;81B4|81B4+81B4/81B4\81D9;
                       BNE -                                     ;;81B7|81B7+81B7/81B7\81DC;
                       PLP                                       ;;81B9|81B9+81B9/81B9\81DE;
-                      RTS                                       ;;81BA|81BA+81BA/81BA\81DF; Return 
+                      RTS                                       ;;81BA|81BA+81BA/81BA\81DF;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0581BB:          db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF        ;;81BB|81BB+81BB/81BB\81E0;
@@ -238,9 +238,9 @@ DATA_0581BB:          db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF        ;;81BB|81BB+81BB
                       db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF        ;;81EB|81EB+81EB/81EB\8210;
                       db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF        ;;81F3|81F3+81F3/81F3\8218;
                                                                 ;;                        ;
-CODE_0581FB:          SEP #$30                                  ;;81FB|81FB+81FB/81FB\8220; Index (8 bit) Accum (8 bit) 
+CODE_0581FB:          SEP #$30                                  ;;81FB|81FB+81FB/81FB\8220; AXY->8
                       LDA.W ObjectTileset                       ;;81FD|81FD+81FD/81FD\8222; \ 
-                      ASL A                                     ;;8200|8200+8200/8200\8225;  |Store tileset*2 in X 
+                      ASL A                                     ;;8200|8200+8200/8200\8225; |Store tileset*2 in X 
                       TAX                                       ;;8201|8201+8201/8201\8226; / 
                       LDA.B #DATA_0581BB>>16                    ;;8202|8202+8202/8202\8227; \Store x05 in $0F 
                       STA.B _F                                  ;;8204|8204+8204/8204\8229; / 
@@ -250,7 +250,7 @@ CODE_0581FB:          SEP #$30                                  ;;81FB|81FB+81FB
                       STA.W SolidTileStart                      ;;820C|820C+820C/820C\8231; / 
                       LDA.B #$CA                                ;;820F|820F+820F/820F\8234; \Store xCA in $1431 
                       STA.W SolidTileEnd                        ;;8211|8211+8211/8211\8236; / 
-                      REP #$20                                  ;;8214|8214+8214/8214\8239; Accum (16 bit) 
+                      REP #$20                                  ;;8214|8214+8214/8214\8239; A->16
                       LDA.W #DATA_00E55E                        ;;8216|8216+8216/8216\823B; \Store xE55E in $82-$83 
                       STA.B SlopesPtr                           ;;8219|8219+8219/8219\823E; / 
                       LDA.L TilesetMAP16Loc,X                   ;;821B|821B+821B/821B\8240; \Store address to MAP16 data in $00-$01 
@@ -260,17 +260,17 @@ CODE_0581FB:          SEP #$30                                  ;;81FB|81FB+81FB
                       LDA.W #DATA_0581BB                        ;;8226|8226+8226/8226\824B; \Store x81BB in $0D-$0E 
                       STA.B _D                                  ;;8229|8229+8229/8229\824E; / 
                       STZ.B _4                                  ;;822B|822B+822B/822B\8250; \ 
-                      STZ.B _9                                  ;;822D|822D+822D/822D\8252;  |Store x00 in $04, $09 and $0B 
+                      STZ.B _9                                  ;;822D|822D+822D/822D\8252; |Store x00 in $04, $09 and $0B 
                       STZ.B _B                                  ;;822F|822F+822F/822F\8254; / 
-                      REP #$10                                  ;;8231|8231+8231/8231\8256; Index (16 bit) 
+                      REP #$10                                  ;;8231|8231+8231/8231\8256; XY->16 
                       LDY.W #$0000                              ;;8233|8233+8233/8233\8258; \Set X and Y to x0000 
                       TYX                                       ;;8236|8236+8236/8236\825B; / 
-CODE_058237:          SEP #$20                                  ;;8237|8237+8237/8237\825C; Accum (8 bit) 
+CODE_058237:          SEP #$20                                  ;;8237|8237+8237/8237\825C; A->8
                       LDA.B [_D],Y                              ;;8239|8239+8239/8239\825E;
                       STA.B _C                                  ;;823B|823B+823B/823B\8260;
 CODE_05823D:          ASL.B _C                                  ;;823D|823D+823D/823D\8262;
                       BCC +                                     ;;823F|823F+823F/823F\8264;
-                      REP #$20                                  ;;8241|8241+8241/8241\8266; Accum (16 bit) 
+                      REP #$20                                  ;;8241|8241+8241/8241\8266; A->16
                       LDA.B _2                                  ;;8243|8243+8243/8243\8268;
                       STA.W Map16Pointers,X                     ;;8245|8245+8245/8245\826A;
                       LDA.B _2                                  ;;8248|8248+8248/8248\826D;
@@ -279,14 +279,14 @@ CODE_05823D:          ASL.B _C                                  ;;823D|823D+823D
                       STA.B _2                                  ;;824E|824E+824E/824E\8273;
                       JMP CODE_058262                           ;;8250|8250+8250/8250\8275;
                                                                 ;;                        ;
-                    + REP #$20                                  ;;8253|8253+8253/8253\8278; Accum (16 bit) 
+                    + REP #$20                                  ;;8253|8253+8253/8253\8278; A->16
                       LDA.B _0                                  ;;8255|8255+8255/8255\827A;
                       STA.W Map16Pointers,X                     ;;8257|8257+8257/8257\827C;
                       LDA.B _0                                  ;;825A|825A+825A/825A\827F;
                       CLC                                       ;;825C|825C+825C/825C\8281;
                       ADC.W #$0008                              ;;825D|825D+825D/825D\8282;
                       STA.B _0                                  ;;8260|8260+8260/8260\8285;
-CODE_058262:          SEP #$20                                  ;;8262|8262+8262/8262\8287; Accum (8 bit) 
+CODE_058262:          SEP #$20                                  ;;8262|8262+8262/8262\8287; A->8
                       INX                                       ;;8264|8264+8264/8264\8289;
                       INX                                       ;;8265|8265+8265/8265\828A;
                       INC.B _9                                  ;;8266|8266+8266/8266\828B;
@@ -305,7 +305,7 @@ CODE_058262:          SEP #$20                                  ;;8262|8262+8262
 CODE_058281:          LDA.B #$FF                                ;;8281|8281+8281/8281\82A6;
                       STA.W SolidTileStart                      ;;8283|8283+8283/8283\82A8;
                       STA.W SolidTileEnd                        ;;8286|8286+8286/8286\82AB;
-                      REP #$30                                  ;;8289|8289+8289/8289\82AE; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;8289|8289+8289/8289\82AE; AXY->16
                       LDA.W #DATA_00E5C8                        ;;828B|828B+828B/828B\82B0;
                       STA.B SlopesPtr                           ;;828E|828E+828E/828E\82B3;
                       LDA.W #$01C4                              ;;8290|8290+8290/8290\82B5;
@@ -336,8 +336,8 @@ CODE_058281:          LDA.B #$FF                                ;;8281|8281+8281
                       INY                                       ;;82C1|82C1+82C1/82C1\82E6;
                       DEX                                       ;;82C2|82C2+82C2/82C2\82E7;
                       BPL -                                     ;;82C3|82C3+82C3/82C3\82E8;
-CODE_0582C5:          SEP #$30                                  ;;82C5|82C5+82C5/82C5\82EA; Index (8 bit) Accum (8 bit) 
-                      RTS                                       ;;82C7|82C7+82C7/82C7\82EC; Return 
+CODE_0582C5:          SEP #$30                                  ;;82C5|82C5+82C5/82C5\82EA; AXY->8
+                      RTS                                       ;;82C7|82C7+82C7/82C7\82EC;
                                                                 ;;                        ;
 CODE_0582C8:          STA.L Map16TilesLow,X                     ;;82C8|82C8+82C8/82C8\82ED;
                       STA.L Map16TilesLow+$200,X                ;;82CC|82CC+82CC/82CC\82F1;
@@ -368,7 +368,7 @@ CODE_0582C8:          STA.L Map16TilesLow,X                     ;;82C8|82C8+82C8
                       STA.L Map16TilesLow+$3400,X               ;;8330|8330+8330/8330\8355;
                       STA.L Map16TilesLow+$3600,X               ;;8334|8334+8334/8334\8359;
                       INX                                       ;;8338|8338+8338/8338\835D;
-                      RTS                                       ;;8339|8339+8339/8339\835E; Return 
+                      RTS                                       ;;8339|8339+8339/8339\835E;
                                                                 ;;                        ;
 CODE_05833A:          STA.L Map16TilesHigh,X                    ;;833A|833A+833A/833A\835F;
                       STA.L Map16TilesHigh+$200,X               ;;833E|833E+833E/833E\8363;
@@ -399,59 +399,59 @@ CODE_05833A:          STA.L Map16TilesHigh,X                    ;;833A|833A+833A
                       STA.L Map16TilesHigh+$3400,X              ;;83A2|83A2+83A2/83A2\83C7;
                       STA.L Map16TilesHigh+$3600,X              ;;83A6|83A6+83A6/83A6\83CB;
                       INX                                       ;;83AA|83AA+83AA/83AA\83CF;
-                      RTS                                       ;;83AB|83AB+83AB/83AB\83D0; Return 
+                      RTS                                       ;;83AB|83AB+83AB/83AB\83D0;
                                                                 ;;                        ;
 LoadLevel:            PHP                                       ;;83AC|83AC+83AC/83AC\83D1;
-                      SEP #$30                                  ;;83AD|83AD+83AD/83AD\83D2; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;83AD|83AD+83AD/83AD\83D2; AXY->8
                       STZ.W LayerProcessing                     ;;83AF|83AF+83AF/83AF\83D4; Layer number (0=Layer 1, 1=Layer 2) 
                       JSR CODE_0584E3                           ;;83B2|83B2+83B2/83B2\83D7; Loads level header 
                       JSR CODE_0581FB                           ;;83B5|83B5+83B5/83B5\83DA;
 LoadAgain:            LDA.W LevelModeSetting                    ;;83B8|83B8+83B8/83B8\83DD; Get current level mode 
                       CMP.B #$09                                ;;83BB|83BB+83BB/83BB\83E0; \ 
-                      BEQ LoadLevelDone                         ;;83BD|83BD+83BD/83BD\83E2;  | 
-                      CMP.B #$0B                                ;;83BF|83BF+83BF/83BF\83E4;  |If the current level is a boss level, 
-                      BEQ LoadLevelDone                         ;;83C1|83C1+83C1/83C1\83E6;  |don't load anything else. 
-                      CMP.B #$10                                ;;83C3|83C3+83C3/83C3\83E8;  | 
+                      BEQ LoadLevelDone                         ;;83BD|83BD+83BD/83BD\83E2; | 
+                      CMP.B #$0B                                ;;83BF|83BF+83BF/83BF\83E4; |If the current level is a boss level, 
+                      BEQ LoadLevelDone                         ;;83C1|83C1+83C1/83C1\83E6; |don't load anything else. 
+                      CMP.B #$10                                ;;83C3|83C3+83C3/83C3\83E8; | 
                       BEQ LoadLevelDone                         ;;83C5|83C5+83C5/83C5\83EA; / 
                       LDY.B #$00                                ;;83C7|83C7+83C7/83C7\83EC; \ 
-                      LDA.B [Layer1DataPtr],Y                   ;;83C9|83C9+83C9/83C9\83EE;  | 
-                      CMP.B #$FF                                ;;83CB|83CB+83CB/83CB\83F0;  |If level isn't empty, load the level. 
-                      BEQ +                                     ;;83CD|83CD+83CD/83CD\83F2;  | 
+                      LDA.B [Layer1DataPtr],Y                   ;;83C9|83C9+83C9/83C9\83EE; | 
+                      CMP.B #$FF                                ;;83CB|83CB+83CB/83CB\83F0; |If level isn't empty, load the level. 
+                      BEQ +                                     ;;83CD|83CD+83CD/83CD\83F2; | 
                       JSR LoadLevelData                         ;;83CF|83CF+83CF/83CF\83F4; / 
-                    + SEP #$30                                  ;;83D2|83D2+83D2/83D2\83F7; Index (8 bit) Accum (8 bit) 
+                    + SEP #$30                                  ;;83D2|83D2+83D2/83D2\83F7; AXY->8
                       LDA.W LevelModeSetting                    ;;83D4|83D4+83D4/83D4\83F9; Get current level mode 
                       BEQ LoadLevelDone                         ;;83D7|83D7+83D7/83D7\83FC; \ 
-                      CMP.B #$0A                                ;;83D9|83D9+83D9/83D9\83FE;  | 
-                      BEQ LoadLevelDone                         ;;83DB|83DB+83DB/83DB\8400;  | 
-                      CMP.B #$0C                                ;;83DD|83DD+83DD/83DD\8402;  | 
-                      BEQ LoadLevelDone                         ;;83DF|83DF+83DF/83DF\8404;  |If the current level isn't a Layer 2 level, 
-                      CMP.B #$0D                                ;;83E1|83E1+83E1/83E1\8406;  |branch to LoadLevelDone 
-                      BEQ LoadLevelDone                         ;;83E3|83E3+83E3/83E3\8408;  | 
-                      CMP.B #$0E                                ;;83E5|83E5+83E5/83E5\840A;  | 
-                      BEQ LoadLevelDone                         ;;83E7|83E7+83E7/83E7\840C;  | 
-                      CMP.B #$11                                ;;83E9|83E9+83E9/83E9\840E;  | 
-                      BEQ LoadLevelDone                         ;;83EB|83EB+83EB/83EB\8410;  | 
-                      CMP.B #$1E                                ;;83ED|83ED+83ED/83ED\8412;  | 
+                      CMP.B #$0A                                ;;83D9|83D9+83D9/83D9\83FE; | 
+                      BEQ LoadLevelDone                         ;;83DB|83DB+83DB/83DB\8400; | 
+                      CMP.B #$0C                                ;;83DD|83DD+83DD/83DD\8402; | 
+                      BEQ LoadLevelDone                         ;;83DF|83DF+83DF/83DF\8404; |If the current level isn't a Layer 2 level, 
+                      CMP.B #$0D                                ;;83E1|83E1+83E1/83E1\8406; |branch to LoadLevelDone 
+                      BEQ LoadLevelDone                         ;;83E3|83E3+83E3/83E3\8408; | 
+                      CMP.B #$0E                                ;;83E5|83E5+83E5/83E5\840A; | 
+                      BEQ LoadLevelDone                         ;;83E7|83E7+83E7/83E7\840C; | 
+                      CMP.B #$11                                ;;83E9|83E9+83E9/83E9\840E; | 
+                      BEQ LoadLevelDone                         ;;83EB|83EB+83EB/83EB\8410; | 
+                      CMP.B #$1E                                ;;83ED|83ED+83ED/83ED\8412; | 
                       BEQ LoadLevelDone                         ;;83EF|83EF+83EF/83EF\8414; / 
                       INC.W LayerProcessing                     ;;83F1|83F1+83F1/83F1\8416; \Increase layer number and load into A 
                       LDA.W LayerProcessing                     ;;83F4|83F4+83F4/83F4\8419; / 
                       CMP.B #$02                                ;;83F7|83F7+83F7/83F7\841C; \If it is x02, end. (Layer 1 and 2 are done) 
                       BEQ LoadLevelDone                         ;;83F9|83F9+83F9/83F9\841E; / 
                       LDA.B Layer2DataPtr                       ;;83FB|83FB+83FB/83FB\8420; \ 
-                      CLC                                       ;;83FD|83FD+83FD/83FD\8422;  | 
-                      ADC.B #$05                                ;;83FE|83FE+83FE/83FE\8423;  | 
-                      STA.B Layer1DataPtr                       ;;8400|8400+8400/8400\8425;  |Move address stored in $68-$6A to $65-$67. 
-                      LDA.B Layer2DataPtr+1                     ;;8402|8402+8402/8402\8427;  |(Move Layer 2 address to "Level to load" address) 
-                      ADC.B #$00                                ;;8404|8404+8404/8404\8429;  |It also increases the address by 5 (to ignore Layer 2's header) 
-                      STA.B Layer1DataPtr+1                     ;;8406|8406+8406/8406\842B;  | 
-                      LDA.B Layer2DataPtr+2                     ;;8408|8408+8408/8408\842D;  | 
+                      CLC                                       ;;83FD|83FD+83FD/83FD\8422; | 
+                      ADC.B #$05                                ;;83FE|83FE+83FE/83FE\8423; | 
+                      STA.B Layer1DataPtr                       ;;8400|8400+8400/8400\8425; |Move address stored in $68-$6A to $65-$67. 
+                      LDA.B Layer2DataPtr+1                     ;;8402|8402+8402/8402\8427; |(Move Layer 2 address to "Level to load" address) 
+                      ADC.B #$00                                ;;8404|8404+8404/8404\8429; |It also increases the address by 5 (to ignore Layer 2's header) 
+                      STA.B Layer1DataPtr+1                     ;;8406|8406+8406/8406\842B; | 
+                      LDA.B Layer2DataPtr+2                     ;;8408|8408+8408/8408\842D; | 
                       STA.B Layer1DataPtr+2                     ;;840A|840A+840A/840A\842F; / 
                       STZ.W LevelLoadObject                     ;;840C|840C+840C/840C\8431;
                       JMP LoadAgain                             ;;840F|840F+840F/840F\8434;
                                                                 ;;                        ;
 LoadLevelDone:        STZ.W LayerProcessing                     ;;8412|8412+8412/8412\8437;
                       PLP                                       ;;8415|8415+8415/8415\843A;
-                      RTS                                       ;;8416|8416+8416/8416\843B; Return 
+                      RTS                                       ;;8416|8416+8416/8416\843B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 VerticalTable:        db $00,$00,$80,$01,$81,$02,$82,$03        ;;8417|8417+8417/8417\843C; Vertical level settings for each level mode ; Format: 
@@ -492,15 +492,15 @@ LevelMusicTable:      db !BGM_OVERWORLD                         ;;84DB|84DB+84DB
 CODE_0584E3:          LDY.B #$00                                ;;84E3|84E3+84E3/84E3\8508;
                       LDA.B [Layer1DataPtr],Y                   ;;84E5|84E5+84E5/84E5\850A; Get first byte 
                       TAX                                       ;;84E7|84E7+84E7/84E7\850C; \ 
-                      AND.B #$1F                                ;;84E8|84E8+84E8/84E8\850D;  |Get amount of screens 
-                      INC A                                     ;;84EA|84EA+84EA/84EA\850F;  | 
+                      AND.B #$1F                                ;;84E8|84E8+84E8/84E8\850D; |Get amount of screens 
+                      INC A                                     ;;84EA|84EA+84EA/84EA\850F; | 
                       STA.B LevelScrLength                      ;;84EB|84EB+84EB/84EB\8510; / 
                       TXA                                       ;;84ED|84ED+84ED/84ED\8512; \ 
-                      LSR A                                     ;;84EE|84EE+84EE/84EE\8513;  | 
-                      LSR A                                     ;;84EF|84EF+84EF/84EF\8514;  | 
-                      LSR A                                     ;;84F0|84F0+84F0/84F0\8515;  |Get BG color setting 
-                      LSR A                                     ;;84F1|84F1+84F1/84F1\8516;  | 
-                      LSR A                                     ;;84F2|84F2+84F2/84F2\8517;  | 
+                      LSR A                                     ;;84EE|84EE+84EE/84EE\8513; | 
+                      LSR A                                     ;;84EF|84EF+84EF/84EF\8514; | 
+                      LSR A                                     ;;84F0|84F0+84F0/84F0\8515; |Get BG color setting 
+                      LSR A                                     ;;84F1|84F1+84F1/84F1\8516; | 
+                      LSR A                                     ;;84F2|84F2+84F2/84F2\8517; | 
                       STA.W BackgroundPalette                   ;;84F3|84F3+84F3/84F3\8518; / 
                       INY                                       ;;84F6|84F6+84F6/84F6\851B; \Get second byte 
                       LDA.B [Layer1DataPtr],Y                   ;;84F7|84F7+84F7/84F7\851C; / 
@@ -520,19 +520,19 @@ CODE_0584E3:          LDY.B #$00                                ;;84E3|84E3+84E3
                       LDA.L VerticalTable,X                     ;;8520|8520+8520/8520\8545; \Get vertical level setting from table 
                       STA.B ScreenMode                          ;;8524|8524+8524/8524\8549; / 
                       LSR A                                     ;;8526|8526+8526/8526\854B; \ 
-                      LDA.B LevelScrLength                      ;;8527|8527+8527/8527\854C;  | 
-                      LDX.B #$01                                ;;8529|8529+8529/8529\854E;  |If level mode is even: 
-                      BCC +                                     ;;852B|852B+852B/852B\8550;  |Store screen amount in $5E and x01 in $5F 
-                      TAX                                       ;;852D|852D+852D/852D\8552;  |Otherwise: 
-                      LDA.B #$01                                ;;852E|852E+852E/852E\8553;  |Store x01 in $5E and screen amount in $5F 
-                    + STA.B LastScreenHoriz                     ;;8530|8530+8530/8530\8555;  | 
+                      LDA.B LevelScrLength                      ;;8527|8527+8527/8527\854C; | 
+                      LDX.B #$01                                ;;8529|8529+8529/8529\854E; |If level mode is even: 
+                      BCC +                                     ;;852B|852B+852B/852B\8550; |Store screen amount in $5E and x01 in $5F 
+                      TAX                                       ;;852D|852D+852D/852D\8552; |Otherwise: 
+                      LDA.B #$01                                ;;852E|852E+852E/852E\8553; |Store x01 in $5E and screen amount in $5F 
+                    + STA.B LastScreenHoriz                     ;;8530|8530+8530/8530\8555; | 
                       STX.B LastScreenVert                      ;;8532|8532+8532/8532\8557; / 
                       LDA.B [Layer1DataPtr],Y                   ;;8534|8534+8534/8534\8559; Reload second byte 
                       LSR A                                     ;;8536|8536+8536/8536\855B; \ 
-                      LSR A                                     ;;8537|8537+8537/8537\855C;  | 
-                      LSR A                                     ;;8538|8538+8538/8538\855D;  |Get BG color settings 
-                      LSR A                                     ;;8539|8539+8539/8539\855E;  | 
-                      LSR A                                     ;;853A|853A+853A/853A\855F;  | 
+                      LSR A                                     ;;8537|8537+8537/8537\855C; | 
+                      LSR A                                     ;;8538|8538+8538/8538\855D; |Get BG color settings 
+                      LSR A                                     ;;8539|8539+8539/8539\855E; | 
+                      LSR A                                     ;;853A|853A+853A/853A\855F; | 
                       STA.W BackAreaColor                       ;;853B|853B+853B/853B\8560; / 
                       INY                                       ;;853E|853E+853E/853E\8563; \Get third byte 
                       LDA.B [Layer1DataPtr],Y                   ;;853F|853F+853F/853F\8564; / 
@@ -542,80 +542,80 @@ CODE_0584E3:          LDY.B #$00                                ;;84E3|84E3+84E3
                       STA.W SpriteTileset                       ;;8546|8546+8546/8546\856B; / 
                       TXA                                       ;;8549|8549+8549/8549\856E; "Pull" third byte 
                       LSR A                                     ;;854A|854A+854A/854A\856F; \ 
-                      LSR A                                     ;;854B|854B+854B/854B\8570;  | 
-                      LSR A                                     ;;854C|854C+854C/854C\8571;  | 
-                      LSR A                                     ;;854D|854D+854D/854D\8572;  | 
-                      AND.B #$07                                ;;854E|854E+854E/854E\8573;  | 
-                      TAX                                       ;;8550|8550+8550/8550\8575;  |Get music 
-                      LDA.L LevelMusicTable,X                   ;;8551|8551+8551/8551\8576;  | 
-                      LDX.W MusicBackup                         ;;8555|8555+8555/8555\857A;  | \ 
-                      BPL +                                     ;;8558|8558+8558/8558\857D;  |  | 
-                      ORA.B #$80                                ;;855A|855A+855A/855A\857F;  |  |Related to not restarting music if the new track 
-                    + CMP.W MusicBackup                         ;;855C|855C+855C/855C\8581;  |  |is the same as the old one? 
-                      BNE +                                     ;;855F|855F+855F/855F\8584;  |  | 
-                      ORA.B #$40                                ;;8561|8561+8561/8561\8586;  | / 
+                      LSR A                                     ;;854B|854B+854B/854B\8570; | 
+                      LSR A                                     ;;854C|854C+854C/854C\8571; | 
+                      LSR A                                     ;;854D|854D+854D/854D\8572; | 
+                      AND.B #$07                                ;;854E|854E+854E/854E\8573; | 
+                      TAX                                       ;;8550|8550+8550/8550\8575; |Get music 
+                      LDA.L LevelMusicTable,X                   ;;8551|8551+8551/8551\8576; | 
+                      LDX.W MusicBackup                         ;;8555|8555+8555/8555\857A; | \ 
+                      BPL +                                     ;;8558|8558+8558/8558\857D; |  | 
+                      ORA.B #$80                                ;;855A|855A+855A/855A\857F; |  |Related to not restarting music if the new track 
+                    + CMP.W MusicBackup                         ;;855C|855C+855C/855C\8581; |  |is the same as the old one? 
+                      BNE +                                     ;;855F|855F+855F/855F\8584; |  | 
+                      ORA.B #$40                                ;;8561|8561+8561/8561\8586; | / 
                     + STA.W MusicBackup                         ;;8563|8563+8563/8563\8588; / 
                       LDA.B _0                                  ;;8566|8566+8566/8566\858B; "Pull" third byte 
                       AND.B #$80                                ;;8568|8568+8568/8568\858D; \ 
-                      LSR A                                     ;;856A|856A+856A/856A\858F;  | 
-                      LSR A                                     ;;856B|856B+856B/856B\8590;  | 
-                      LSR A                                     ;;856C|856C+856C/856C\8591;  |Get Layer 3 priority 
-                      LSR A                                     ;;856D|856D+856D/856D\8592;  | 
-                      ORA.B #$01                                ;;856E|856E+856E/856E\8593;  | 
+                      LSR A                                     ;;856A|856A+856A/856A\858F; | 
+                      LSR A                                     ;;856B|856B+856B/856B\8590; | 
+                      LSR A                                     ;;856C|856C+856C/856C\8591; |Get Layer 3 priority 
+                      LSR A                                     ;;856D|856D+856D/856D\8592; | 
+                      ORA.B #$01                                ;;856E|856E+856E/856E\8593; | 
                       STA.B MainBGMode                          ;;8570|8570+8570/8570\8595; / 
                       INY                                       ;;8572|8572+8572/8572\8597; \Get fourth bit 
                       LDA.B [Layer1DataPtr],Y                   ;;8573|8573+8573/8573\8598; / 
                       STA.B _0                                  ;;8575|8575+8575/8575\859A; "Push" fourth bit 
                       LSR A                                     ;;8577|8577+8577/8577\859C; \ 
-                      LSR A                                     ;;8578|8578+8578/8578\859D;  | 
-                      LSR A                                     ;;8579|8579+8579/8579\859E;  | 
-                      LSR A                                     ;;857A|857A+857A/857A\859F;  | 
-                      LSR A                                     ;;857B|857B+857B/857B\85A0;  | 
-                      LSR A                                     ;;857C|857C+857C/857C\85A1;  | 
-                      TAX                                       ;;857D|857D+857D/857D\85A2;  |Get time 
-                      LDA.W SublevelCount                       ;;857E|857E+857E/857E\85A3;  | 
-                      BNE +                                     ;;8581|8581+8581/8581\85A6;  | 
-                      LDA.L TimerTable,X                        ;;8583|8583+8583/8583\85A8;  | 
-                      STA.W InGameTimerHundreds                 ;;8587|8587+8587/8587\85AC;  | 
-                      STZ.W InGameTimerTens                     ;;858A|858A+858A/858A\85AF;  | 
+                      LSR A                                     ;;8578|8578+8578/8578\859D; | 
+                      LSR A                                     ;;8579|8579+8579/8579\859E; | 
+                      LSR A                                     ;;857A|857A+857A/857A\859F; | 
+                      LSR A                                     ;;857B|857B+857B/857B\85A0; | 
+                      LSR A                                     ;;857C|857C+857C/857C\85A1; | 
+                      TAX                                       ;;857D|857D+857D/857D\85A2; |Get time 
+                      LDA.W SublevelCount                       ;;857E|857E+857E/857E\85A3; | 
+                      BNE +                                     ;;8581|8581+8581/8581\85A6; | 
+                      LDA.L TimerTable,X                        ;;8583|8583+8583/8583\85A8; | 
+                      STA.W InGameTimerHundreds                 ;;8587|8587+8587/8587\85AC; | 
+                      STZ.W InGameTimerTens                     ;;858A|858A+858A/858A\85AF; | 
                       STZ.W InGameTimerOnes                     ;;858D|858D+858D/858D\85B2; / 
                     + LDA.B _0                                  ;;8590|8590+8590/8590\85B5; "Pull" fourth bit 
                       AND.B #$07                                ;;8592|8592+8592/8592\85B7; \Get FG color settings 
                       STA.W ForegroundPalette                   ;;8594|8594+8594/8594\85B9; / 
                       LDA.B _0                                  ;;8597|8597+8597/8597\85BC; "Pull" fourth bit (again) 
                       AND.B #$38                                ;;8599|8599+8599/8599\85BE; \ 
-                      LSR A                                     ;;859B|859B+859B/859B\85C0;  | 
-                      LSR A                                     ;;859C|859C+859C/859C\85C1;  |Get sprite palette 
-                      LSR A                                     ;;859D|859D+859D/859D\85C2;  | 
+                      LSR A                                     ;;859B|859B+859B/859B\85C0; | 
+                      LSR A                                     ;;859C|859C+859C/859C\85C1; |Get sprite palette 
+                      LSR A                                     ;;859D|859D+859D/859D\85C2; | 
                       STA.W SpritePalette                       ;;859E|859E+859E/859E\85C3; / 
                       INY                                       ;;85A1|85A1+85A1/85A1\85C6; \Get fifth byte 
                       LDA.B [Layer1DataPtr],Y                   ;;85A2|85A2+85A2/85A2\85C7; / 
                       AND.B #$0F                                ;;85A4|85A4+85A4/85A4\85C9; \ 
-                      STA.W ObjectTileset                       ;;85A6|85A6+85A6/85A6\85CB;  |Get tileset 
+                      STA.W ObjectTileset                       ;;85A6|85A6+85A6/85A6\85CB; |Get tileset 
                       STA.W Empty1932                           ;;85A9|85A9+85A9/85A9\85CE; / 
                       LDA.B [Layer1DataPtr],Y                   ;;85AC|85AC+85AC/85AC\85D1; Reload fifth byte 
                       AND.B #$C0                                ;;85AE|85AE+85AE/85AE\85D3; \ 
-                      ASL A                                     ;;85B0|85B0+85B0/85B0\85D5;  | 
-                      ROL A                                     ;;85B1|85B1+85B1/85B1\85D6;  |Get item memory settings 
-                      ROL A                                     ;;85B2|85B2+85B2/85B2\85D7;  | 
+                      ASL A                                     ;;85B0|85B0+85B0/85B0\85D5; | 
+                      ROL A                                     ;;85B1|85B1+85B1/85B1\85D6; |Get item memory settings 
+                      ROL A                                     ;;85B2|85B2+85B2/85B2\85D7; | 
                       STA.W ItemMemorySetting                   ;;85B3|85B3+85B3/85B3\85D8; / 
                       LDA.B [Layer1DataPtr],Y                   ;;85B6|85B6+85B6/85B6\85DB; Reload fifth byte 
                       AND.B #$30                                ;;85B8|85B8+85B8/85B8\85DD; \ 
-                      LSR A                                     ;;85BA|85BA+85BA/85BA\85DF;  |Get horizontal/vertical scroll 
-                      LSR A                                     ;;85BB|85BB+85BB/85BB\85E0;  | 
-                      LSR A                                     ;;85BC|85BC+85BC/85BC\85E1;  | 
-                      LSR A                                     ;;85BD|85BD+85BD/85BD\85E2;  | 
-                      CMP.B #$03                                ;;85BE|85BE+85BE/85BE\85E3;  | \ 
-                      BNE +                                     ;;85C0|85C0+85C0/85C0\85E5;  |  |If scroll mode is x03, disable both 
-                      STZ.W HorizLayer1Setting                  ;;85C2|85C2+85C2/85C2\85E7;  |  |vertical and horizontal scroll 
-                      LDA.B #$00                                ;;85C5|85C5+85C5/85C5\85EA;  | / 
+                      LSR A                                     ;;85BA|85BA+85BA/85BA\85DF; |Get horizontal/vertical scroll 
+                      LSR A                                     ;;85BB|85BB+85BB/85BB\85E0; | 
+                      LSR A                                     ;;85BC|85BC+85BC/85BC\85E1; | 
+                      LSR A                                     ;;85BD|85BD+85BD/85BD\85E2; | 
+                      CMP.B #$03                                ;;85BE|85BE+85BE/85BE\85E3; | \ 
+                      BNE +                                     ;;85C0|85C0+85C0/85C0\85E5; |  |If scroll mode is x03, disable both 
+                      STZ.W HorizLayer1Setting                  ;;85C2|85C2+85C2/85C2\85E7; |  |vertical and horizontal scroll 
+                      LDA.B #$00                                ;;85C5|85C5+85C5/85C5\85EA; | / 
                     + STA.W VertLayer1Setting                   ;;85C7|85C7+85C7/85C7\85EC; / 
                       LDA.B Layer1DataPtr                       ;;85CA|85CA+85CA/85CA\85EF; \ 
-                      CLC                                       ;;85CC|85CC+85CC/85CC\85F1;  | 
-                      ADC.B #$05                                ;;85CD|85CD+85CD/85CD\85F2;  | 
-                      STA.B Layer1DataPtr                       ;;85CF|85CF+85CF/85CF\85F4;  |Make $65 point at the level data 
-                      LDA.B Layer1DataPtr+1                     ;;85D1|85D1+85D1/85D1\85F6;  |(Level data comes right after the header) 
-                      ADC.B #$00                                ;;85D3|85D3+85D3/85D3\85F8;  | 
+                      CLC                                       ;;85CC|85CC+85CC/85CC\85F1; | 
+                      ADC.B #$05                                ;;85CD|85CD+85CD/85CD\85F2; | 
+                      STA.B Layer1DataPtr                       ;;85CF|85CF+85CF/85CF\85F4; |Make $65 point at the level data 
+                      LDA.B Layer1DataPtr+1                     ;;85D1|85D1+85D1/85D1\85F6; |(Level data comes right after the header) 
+                      ADC.B #$00                                ;;85D3|85D3+85D3/85D3\85F8; | 
                       STA.B Layer1DataPtr+1                     ;;85D5|85D5+85D5/85D5\85FA; / 
                       RTS                                       ;;85D7|85D7+85D7/85D7\85FC; We're done! 
                                                                 ;;                        ;
@@ -638,69 +638,69 @@ CODE_0585E2:          LDA.B _A                                  ;;85E2|85E2+85E2
                       AND.B #$F0                                ;;85F8|85F8+85F8/85F8\861D;
                       ORA.B _0                                  ;;85FA|85FA+85FA/85FA\861F;
                       STA.B _B                                  ;;85FC|85FC+85FC/85FC\8621;
-                    + RTS                                       ;;85FE|85FE+85FE/85FE\8623; Return 
+                    + RTS                                       ;;85FE|85FE+85FE/85FE\8623;
                                                                 ;;                        ;
-LoadLevelData:        SEP #$30                                  ;;85FF|85FF+85FF/85FF\8624; Index (8 bit) Accum (8 bit) 
+LoadLevelData:        SEP #$30                                  ;;85FF|85FF+85FF/85FF\8624; AXY->8
                       LDY.B #$00                                ;;8601|8601+8601/8601\8626; \ 
-                      LDA.B [Layer1DataPtr],Y                   ;;8603|8603+8603/8603\8628;  | 
-                      STA.B _A                                  ;;8605|8605+8605/8605\862A;  | 
-                      INY                                       ;;8607|8607+8607/8607\862C;  | 
-                      LDA.B [Layer1DataPtr],Y                   ;;8608|8608+8608/8608\862D;  |Read three bytes of level data 
-                      STA.B _B                                  ;;860A|860A+860A/860A\862F;  |Store them in $0A, $0B and $59 
-                      INY                                       ;;860C|860C+860C/860C\8631;  | 
-                      LDA.B [Layer1DataPtr],Y                   ;;860D|860D+860D/860D\8632;  | 
-                      STA.B LvlLoadObjSize                      ;;860F|860F+860F/860F\8634;  | 
+                      LDA.B [Layer1DataPtr],Y                   ;;8603|8603+8603/8603\8628; | 
+                      STA.B _A                                  ;;8605|8605+8605/8605\862A; | 
+                      INY                                       ;;8607|8607+8607/8607\862C; | 
+                      LDA.B [Layer1DataPtr],Y                   ;;8608|8608+8608/8608\862D; |Read three bytes of level data 
+                      STA.B _B                                  ;;860A|860A+860A/860A\862F; |Store them in $0A, $0B and $59 
+                      INY                                       ;;860C|860C+860C/860C\8631; | 
+                      LDA.B [Layer1DataPtr],Y                   ;;860D|860D+860D/860D\8632; | 
+                      STA.B LvlLoadObjSize                      ;;860F|860F+860F/860F\8634; | 
                       INY                                       ;;8611|8611+8611/8611\8636; / 
                       TYA                                       ;;8612|8612+8612/8612\8637; \ 
-                      CLC                                       ;;8613|8613+8613/8613\8638;  | 
-                      ADC.B Layer1DataPtr                       ;;8614|8614+8614/8614\8639;  | 
-                      STA.B Layer1DataPtr                       ;;8616|8616+8616/8616\863B;  |Increase address by 3 (as 3 bytes were read) 
-                      LDA.B Layer1DataPtr+1                     ;;8618|8618+8618/8618\863D;  | 
-                      ADC.B #$00                                ;;861A|861A+861A/861A\863F;  | 
+                      CLC                                       ;;8613|8613+8613/8613\8638; | 
+                      ADC.B Layer1DataPtr                       ;;8614|8614+8614/8614\8639; | 
+                      STA.B Layer1DataPtr                       ;;8616|8616+8616/8616\863B; |Increase address by 3 (as 3 bytes were read) 
+                      LDA.B Layer1DataPtr+1                     ;;8618|8618+8618/8618\863D; | 
+                      ADC.B #$00                                ;;861A|861A+861A/861A\863F; | 
                       STA.B Layer1DataPtr+1                     ;;861C|861C+861C/861C\8641; / 
                       LDA.B _B                                  ;;861E|861E+861E/861E\8643; \ 
-                      LSR A                                     ;;8620|8620+8620/8620\8645;  | 
-                      LSR A                                     ;;8621|8621+8621/8621\8646;  | 
-                      LSR A                                     ;;8622|8622+8622/8622\8647;  | 
-                      LSR A                                     ;;8623|8623+8623/8623\8648;  | 
-                      STA.B LvlLoadObjNo                        ;;8624|8624+8624/8624\8649;  |Get block number, store in $5A 
-                      LDA.B _A                                  ;;8626|8626+8626/8626\864B;  | 
-                      AND.B #$60                                ;;8628|8628+8628/8628\864D;  | 
-                      LSR A                                     ;;862A|862A+862A/862A\864F;  | 
-                      ORA.B LvlLoadObjNo                        ;;862B|862B+862B/862B\8650;  | 
+                      LSR A                                     ;;8620|8620+8620/8620\8645; | 
+                      LSR A                                     ;;8621|8621+8621/8621\8646; | 
+                      LSR A                                     ;;8622|8622+8622/8622\8647; | 
+                      LSR A                                     ;;8623|8623+8623/8623\8648; | 
+                      STA.B LvlLoadObjNo                        ;;8624|8624+8624/8624\8649; |Get block number, store in $5A 
+                      LDA.B _A                                  ;;8626|8626+8626/8626\864B; | 
+                      AND.B #$60                                ;;8628|8628+8628/8628\864D; | 
+                      LSR A                                     ;;862A|862A+862A/862A\864F; | 
+                      ORA.B LvlLoadObjNo                        ;;862B|862B+862B/862B\8650; | 
                       STA.B LvlLoadObjNo                        ;;862D|862D+862D/862D\8652; / 
                       LDA.B ScreenMode                          ;;862F|862F+862F/862F\8654; A = vertical level setting 
                       LDY.W LayerProcessing                     ;;8631|8631+8631/8631\8656; \ 
-                      BEQ +                                     ;;8634|8634+8634/8634\8659;  |If $1933=x00, divide A by 2 
+                      BEQ +                                     ;;8634|8634+8634/8634\8659; |If $1933=x00, divide A by 2 
                       LSR A                                     ;;8636|8636+8636/8636\865B; / 
                     + AND.B #$01                                ;;8637|8637+8637/8637\865C; \ 
-                      BEQ +                                     ;;8639|8639+8639/8639\865E;  |If lowest bit of A is set, jump to sub 
+                      BEQ +                                     ;;8639|8639+8639/8639\865E; |If lowest bit of A is set, jump to sub 
                       JSR CODE_0585D8                           ;;863B|863B+863B/863B\8660; / 
                     + LDA.B _A                                  ;;863E|863E+863E/863E\8663; \ 
-                      AND.B #$0F                                ;;8640|8640+8640/8640\8665;  | 
-                      ASL A                                     ;;8642|8642+8642/8642\8667;  | 
-                      ASL A                                     ;;8643|8643+8643/8643\8668;  | 
-                      ASL A                                     ;;8644|8644+8644/8644\8669;  |Set upper half of $57 to Y pos 
-                      ASL A                                     ;;8645|8645+8645/8645\866A;  |and lower half of $57 to X pos 
-                      STA.B LevelLoadPos                        ;;8646|8646+8646/8646\866B;  | 
-                      LDA.B _B                                  ;;8648|8648+8648/8648\866D;  | 
-                      AND.B #$0F                                ;;864A|864A+864A/864A\866F;  | 
-                      ORA.B LevelLoadPos                        ;;864C|864C+864C/864C\8671;  | 
+                      AND.B #$0F                                ;;8640|8640+8640/8640\8665; | 
+                      ASL A                                     ;;8642|8642+8642/8642\8667; | 
+                      ASL A                                     ;;8643|8643+8643/8643\8668; | 
+                      ASL A                                     ;;8644|8644+8644/8644\8669; |Set upper half of $57 to Y pos 
+                      ASL A                                     ;;8645|8645+8645/8645\866A; |and lower half of $57 to X pos 
+                      STA.B LevelLoadPos                        ;;8646|8646+8646/8646\866B; | 
+                      LDA.B _B                                  ;;8648|8648+8648/8648\866D; | 
+                      AND.B #$0F                                ;;864A|864A+864A/864A\866F; | 
+                      ORA.B LevelLoadPos                        ;;864C|864C+864C/864C\8671; | 
                       STA.B LevelLoadPos                        ;;864E|864E+864E/864E\8673; / 
-                      REP #$20                                  ;;8650|8650+8650/8650\8675; Accum (16 bit) 
+                      REP #$20                                  ;;8650|8650+8650/8650\8675; A->16
                       LDA.W LayerProcessing                     ;;8652|8652+8652/8652\8677; \ 
-                      AND.W #$00FF                              ;;8655|8655+8655/8655\867A;  |Load $1993*2 into X 
-                      ASL A                                     ;;8658|8658+8658/8658\867D;  | 
+                      AND.W #$00FF                              ;;8655|8655+8655/8655\867A; |Load $1993*2 into X 
+                      ASL A                                     ;;8658|8658+8658/8658\867D; | 
                       TAX                                       ;;8659|8659+8659/8659\867E; / 
                       LDA.L LoadBlkPtrs,X                       ;;865A|865A+865A/865A\867F;
                       STA.B _3                                  ;;865E|865E+865E/865E\8683;
                       LDA.L LoadBlkTable2,X                     ;;8660|8660+8660/8660\8685;
                       STA.B _6                                  ;;8664|8664+8664/8664\8689;
                       LDA.W LevelModeSetting                    ;;8666|8666+8666/8666\868B; \ 
-                      AND.W #$001F                              ;;8669|8669+8669/8669\868E;  |Set Y to Level Mode*2 
-                      ASL A                                     ;;866C|866C+866C/866C\8691;  | 
+                      AND.W #$001F                              ;;8669|8669+8669/8669\868E; |Set Y to Level Mode*2 
+                      ASL A                                     ;;866C|866C+866C/866C\8691; | 
                       TAY                                       ;;866D|866D+866D/866D\8692; / 
-                      SEP #$20                                  ;;866E|866E+866E/866E\8693; Accum (8 bit) 
+                      SEP #$20                                  ;;866E|866E+866E/866E\8693; A->8
                       LDA.B #$00                                ;;8670|8670+8670/8670\8695;
                       STA.B _5                                  ;;8672|8672+8672/8672\8697;
                       STA.B _8                                  ;;8674|8674+8674/8674\8699;
@@ -717,14 +717,14 @@ LoadLevelData:        SEP #$30                                  ;;85FF|85FF+85FF
                       STA.B _2                                  ;;8689|8689+8689/8689\86AE;
                       STA.B _F                                  ;;868B|868B+868B/868B\86B0;
                       LDA.B _A                                  ;;868D|868D+868D/868D\86B2; \ 
-                      AND.B #$80                                ;;868F|868F+868F/868F\86B4;  | 
-                      ASL A                                     ;;8691|8691+8691/8691\86B6;  |If New Page flag is set, increase $1928 by 1 
-                      ADC.W LevelLoadObject                     ;;8692|8692+8692/8692\86B7;  |(A = $1928) 
+                      AND.B #$80                                ;;868F|868F+868F/868F\86B4; | 
+                      ASL A                                     ;;8691|8691+8691/8691\86B6; |If New Page flag is set, increase $1928 by 1 
+                      ADC.W LevelLoadObject                     ;;8692|8692+8692/8692\86B7; |(A = $1928) 
                       STA.W LevelLoadObject                     ;;8695|8695+8695/8695\86BA; / 
                       STA.W LevelLoadObjectTile                 ;;8698|8698+8698/8698\86BD; Store A in $1BA1 
                       ASL A                                     ;;869B|869B+869B/869B\86C0; \ 
-                      CLC                                       ;;869C|869C+869C/869C\86C1;  |Multiply A by 2 and add $1928 to it 
-                      ADC.W LevelLoadObject                     ;;869D|869D+869D/869D\86C2;  |Set Y to A 
+                      CLC                                       ;;869C|869C+869C/869C\86C1; |Multiply A by 2 and add $1928 to it 
+                      ADC.W LevelLoadObject                     ;;869D|869D+869D/869D\86C2; |Set Y to A 
                       TAY                                       ;;86A0|86A0+86A0/86A0\86C5; / 
                       LDA.B [_0],Y                              ;;86A1|86A1+86A1/86A1\86C6;
                       STA.B Map16LowPtr                         ;;86A3|86A3+86A3/86A3\86C8;
@@ -741,42 +741,42 @@ LoadLevelData:        SEP #$30                                  ;;85FF|85FF+85FF
                       LDA.B [_D],Y                              ;;86B7|86B7+86B7/86B7\86DC;
                       STA.B Map16HighPtr+2                      ;;86B9|86B9+86B9/86B9\86DE;
                       LDA.B _A                                  ;;86BB|86BB+86BB/86BB\86E0; \ 
-                      AND.B #$10                                ;;86BD|86BD+86BD/86BD\86E2;  |If high coordinate is set... 
-                      BEQ +                                     ;;86BF|86BF+86BF/86BF\86E4;  |(Lower half of horizontal level) 
-                      INC.B Map16LowPtr+1                       ;;86C1|86C1+86C1/86C1\86E6;  |(Right half of vertical level) 
-                      INC.B Map16HighPtr+1                      ;;86C3|86C3+86C3/86C3\86E8;  |...increase $6C and $6F 
+                      AND.B #$10                                ;;86BD|86BD+86BD/86BD\86E2; |If high coordinate is set... 
+                      BEQ +                                     ;;86BF|86BF+86BF/86BF\86E4; |(Lower half of horizontal level) 
+                      INC.B Map16LowPtr+1                       ;;86C1|86C1+86C1/86C1\86E6; |(Right half of vertical level) 
+                      INC.B Map16HighPtr+1                      ;;86C3|86C3+86C3/86C3\86E8; |...increase $6C and $6F 
                     + LDA.B LvlLoadObjNo                        ;;86C5|86C5+86C5/86C5\86EA; \ 
-                      BNE +                                     ;;86C7|86C7+86C7/86C7\86EC;  |If block number is x00 (extended object), 
-                      JSR LevLoadExtObj                         ;;86C9|86C9+86C9/86C9\86EE;  |Jump to sub LevLoadExtObj 
-                      JMP LevLoadContinue                       ;;86CC|86CC+86CC/86CC\86F1;  |                  (Why didn't they use BRA here?) 
+                      BNE +                                     ;;86C7|86C7+86C7/86C7\86EC; |If block number is x00 (extended object), 
+                      JSR LevLoadExtObj                         ;;86C9|86C9+86C9/86C9\86EE; |Jump to sub LevLoadExtObj 
+                      JMP LevLoadContinue                       ;;86CC|86CC+86CC/86CC\86F1; |                  (Why didn't they use BRA here?) 
                                                                 ;;                        ;
-                    + JSR LevLoadNrmObj                         ;;86CF|86CF+86CF/86CF\86F4;  |Jump to sub LevLoadNrmObj 
-LevLoadContinue:      SEP #$20                                  ;;86D2|86D2+86D2/86D2\86F7; Accum (8 bit) 
-                      REP #$10                                  ;;86D4|86D4+86D4/86D4\86F9; Index (16 bit) 
+                    + JSR LevLoadNrmObj                         ;;86CF|86CF+86CF/86CF\86F4; |Jump to sub LevLoadNrmObj 
+LevLoadContinue:      SEP #$20                                  ;;86D2|86D2+86D2/86D2\86F7; A->8
+                      REP #$10                                  ;;86D4|86D4+86D4/86D4\86F9; XY->16 
                       LDY.W #$0000                              ;;86D6|86D6+86D6/86D6\86FB; \ 
-                      LDA.B [Layer1DataPtr],Y                   ;;86D9|86D9+86D9/86D9\86FE;  | 
-                      CMP.B #$FF                                ;;86DB|86DB+86DB/86DB\8700;  |If the next byte is xFF, return (loading is done). 
-                      BEQ +                                     ;;86DD|86DD+86DD/86DD\8702;  |Otherwise, repeat this routine. 
-                      JMP LoadLevelData                         ;;86DF|86DF+86DF/86DF\8704;  | 
+                      LDA.B [Layer1DataPtr],Y                   ;;86D9|86D9+86D9/86D9\86FE; | 
+                      CMP.B #$FF                                ;;86DB|86DB+86DB/86DB\8700; |If the next byte is xFF, return (loading is done). 
+                      BEQ +                                     ;;86DD|86DD+86DD/86DD\8702; |Otherwise, repeat this routine. 
+                      JMP LoadLevelData                         ;;86DF|86DF+86DF/86DF\8704; | 
                                                                 ;;                        ;
                     + RTS                                       ;;86E2|86E2+86E2/86E2\8707; / 
                                                                 ;;                        ;
-LevLoadExtObj:        SEP #$30                                  ;;86E3|86E3+86E3/86E3\8708; Index (8 bit) Accum (8 bit) 
+LevLoadExtObj:        SEP #$30                                  ;;86E3|86E3+86E3/86E3\8708; AXY->8
                       JSL CODE_0DA100                           ;;86E5|86E5+86E5/86E5\870A;
-                      RTS                                       ;;86E9|86E9+86E9/86E9\870E; Return 
+                      RTS                                       ;;86E9|86E9+86E9/86E9\870E;
                                                                 ;;                        ;
-LevLoadNrmObj:        SEP #$30                                  ;;86EA|86EA+86EA/86EA\870F; Index (8 bit) Accum (8 bit) 
+LevLoadNrmObj:        SEP #$30                                  ;;86EA|86EA+86EA/86EA\870F; AXY->8
                       JSL CODE_0DA40F                           ;;86EC|86EC+86EC/86EC\8711;
-                      RTS                                       ;;86F0|86F0+86F0/86F0\8715; Return 
+                      RTS                                       ;;86F0|86F0+86F0/86F0\8715;
                                                                 ;;                        ;
 CODE_0586F1:          PHP                                       ;;86F1|86F1+86F1/86F1\8716;
-                      REP #$30                                  ;;86F2|86F2+86F2/86F2\8717; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;86F2|86F2+86F2/86F2\8717; AXY->16
                       JSR CODE_05877E                           ;;86F4|86F4+86F4/86F4\8719;
-                      SEP #$20                                  ;;86F7|86F7+86F7/86F7\871C; Accum (8 bit) 
+                      SEP #$20                                  ;;86F7|86F7+86F7/86F7\871C; A->8
                       LDA.B ScreenMode                          ;;86F9|86F9+86F9/86F9\871E;
                       AND.B #$01                                ;;86FB|86FB+86FB/86FB\8720;
                       BNE CODE_058713                           ;;86FD|86FD+86FD/86FD\8722;
-                      REP #$20                                  ;;86FF|86FF+86FF/86FF\8724; Accum (16 bit) 
+                      REP #$20                                  ;;86FF|86FF+86FF/86FF\8724; A->16
                       LDA.B Layer1ScrollDir                     ;;8701|8701+8701/8701\8726;
                       AND.W #$00FF                              ;;8703|8703+8703/8703\8728;
                       TAX                                       ;;8706|8706+8706/8706\872B;
@@ -786,7 +786,7 @@ CODE_0586F1:          PHP                                       ;;86F1|86F1+86F1
                       BEQ +                                     ;;870E|870E+870E/870E\8733;
                       JMP CODE_058724                           ;;8710|8710+8710/8710\8735;
                                                                 ;;                        ;
-CODE_058713:          REP #$20                                  ;;8713|8713+8713/8713\8738; Accum (16 bit) 
+CODE_058713:          REP #$20                                  ;;8713|8713+8713/8713\8738; A->16
                       LDA.B Layer1ScrollDir                     ;;8715|8715+8715/8715\873A;
                       AND.W #$00FF                              ;;8717|8717+8717/8717\873C;
                       TAX                                       ;;871A|871A+871A/871A\873F;
@@ -803,11 +803,11 @@ CODE_058724:          STA.B Layer1PrevTileUp,X                  ;;8724|8724+8724
                       JSL CODE_05881A                           ;;8730|8730+8730/8730\8755;
                       JMP CODE_058774                           ;;8734|8734+8734/8734\8759;
                                                                 ;;                        ;
-                    + SEP #$20                                  ;;8737|8737+8737/8737\875C; Accum (8 bit) 
+                    + SEP #$20                                  ;;8737|8737+8737/8737\875C; A->8
                       LDA.B ScreenMode                          ;;8739|8739+8739/8739\875E;
                       AND.B #$02                                ;;873B|873B+873B/873B\8760;
                       BNE CODE_058753                           ;;873D|873D+873D/873D\8762;
-                      REP #$20                                  ;;873F|873F+873F/873F\8764; Accum (16 bit) 
+                      REP #$20                                  ;;873F|873F+873F/873F\8764; A->16
                       LDA.B Layer2ScrollDir                     ;;8741|8741+8741/8741\8766;
                       AND.W #$00FF                              ;;8743|8743+8743/8743\8768;
                       TAX                                       ;;8746|8746+8746/8746\876B;
@@ -817,7 +817,7 @@ CODE_058724:          STA.B Layer1PrevTileUp,X                  ;;8724|8724+8724
                       BEQ CODE_058774                           ;;874E|874E+874E/874E\8773;
                       JMP CODE_058764                           ;;8750|8750+8750/8750\8775;
                                                                 ;;                        ;
-CODE_058753:          REP #$20                                  ;;8753|8753+8753/8753\8778; Accum (16 bit) 
+CODE_058753:          REP #$20                                  ;;8753|8753+8753/8753\8778; A->16
                       LDA.B Layer2ScrollDir                     ;;8755|8755+8755/8755\877A;
                       AND.W #$00FF                              ;;8757|8757+8757/8757\877C;
                       TAX                                       ;;875A|875A+875A/875A\877F;
@@ -833,21 +833,21 @@ CODE_058764:          STA.B Layer2PrevTileUp,X                  ;;8764|8764+8764
                       STA.B Layer2PrevTileUp,X                  ;;876E|876E+876E/876E\8793;
                       JSL CODE_058883                           ;;8770|8770+8770/8770\8795;
 CODE_058774:          PLP                                       ;;8774|8774+8774/8774\8799;
-                      RTL                                       ;;8775|8775+8775/8775\879A; Return 
+                      RTL                                       ;;8775|8775+8775/8775\879A;
                                                                 ;;                        ;
                                                                 ;;                        ;
 MAP16AppTable:        db $B0,$8A,$E0,$84,$F0,$8A,$30,$8B        ;;8776|8776+8776/8776\879B;
                                                                 ;;                        ;
 CODE_05877E:          PHP                                       ;;877E|877E+877E/877E\87A3;
-                      SEP #$20                                  ;;877F|877F+877F/877F\87A4; Accum (8 bit) 
+                      SEP #$20                                  ;;877F|877F+877F/877F\87A4; A->8
                       LDA.B ScreenMode                          ;;8781|8781+8781/8781\87A6;
                       AND.B #$01                                ;;8783|8783+8783/8783\87A8;
                       BNE CODE_0587CB                           ;;8785|8785+8785/8785\87AA;
-                      REP #$20                                  ;;8787|8787+8787/8787\87AC; Accum (16 bit) 
+                      REP #$20                                  ;;8787|8787+8787/8787\87AC; A->16
                       LDA.B Layer1XPos                          ;;8789|8789+8789/8789\87AE; Load "Xpos of Screen Boundary" 
                       LSR A                                     ;;878B|878B+878B/878B\87B0; \ 
-                      LSR A                                     ;;878C|878C+878C/878C\87B1;  |Multiply by 16 
-                      LSR A                                     ;;878D|878D+878D/878D\87B2;  | 
+                      LSR A                                     ;;878C|878C+878C/878C\87B1; |Multiply by 16 
+                      LSR A                                     ;;878D|878D+878D/878D\87B2; | 
                       LSR A                                     ;;878E|878E+878E/878E\87B3; / 
                       TAY                                       ;;878F|878F+878F/878F\87B4;
                       SEC                                       ;;8790|8790+8790/8790\87B5; \ 
@@ -857,14 +857,14 @@ CODE_05877E:          PHP                                       ;;877E|877E+877E
                       CLC                                       ;;8797|8797+8797/8797\87BC;
                       ADC.W #$0017                              ;;8798|8798+8798/8798\87BD; Add $17 
                       STA.B Layer1TileDown                      ;;879B|879B+879B/879B\87C0; Store to $47 (Seems to be Scratch RAM) 
-                      SEP #$30                                  ;;879D|879D+879D/879D\87C2; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;879D|879D+879D/879D\87C2; AXY->8
                       LDA.B Layer1ScrollDir                     ;;879F|879F+879F/879F\87C4; \ 
-                      TAX                                       ;;87A1|87A1+87A1/87A1\87C6;  | LDA $45,x  / $55 
+                      TAX                                       ;;87A1|87A1+87A1/87A1\87C6; | LDA $45,x  / $55 
                       LDA.B Layer1TileUp,X                      ;;87A2|87A2+87A2/87A2\87C7; / 
                       LSR A                                     ;;87A4|87A4+87A4/87A4\87C9; \ multiply by 8 
-                      LSR A                                     ;;87A5|87A5+87A5/87A5\87CA;  | 
+                      LSR A                                     ;;87A5|87A5+87A5/87A5\87CA; | 
                       LSR A                                     ;;87A6|87A6+87A6/87A6\87CB; / 
-                      REP #$30                                  ;;87A7|87A7+87A7/87A7\87CC; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;87A7|87A7+87A7/87A7\87CC; AXY->16
                       AND.W #$0006                              ;;87A9|87A9+87A9/87A9\87CE; AND to make it either 6, 4, 2, or 0. 
                       TAX                                       ;;87AC|87AC+87AC/87AC\87D1;
                       LDA.W #$0133                              ;;87AD|87AD+87AD/87AD\87D2; \LDY #$0266 
@@ -882,7 +882,7 @@ CODE_05877E:          PHP                                       ;;877E|877E+877E
                       BPL -                                     ;;87C6|87C6+87C6/87C6\87EB;
                       JMP CODE_0587E1                           ;;87C8|87C8+87C8/87C8\87ED;
                                                                 ;;                        ;
-CODE_0587CB:          REP #$20                                  ;;87CB|87CB+87CB/87CB\87F0; Accum (16 bit) 
+CODE_0587CB:          REP #$20                                  ;;87CB|87CB+87CB/87CB\87F0; A->16
                       LDA.B Layer1YPos                          ;;87CD|87CD+87CD/87CD\87F2;
                       LSR A                                     ;;87CF|87CF+87CF/87CF\87F4;
                       LSR A                                     ;;87D0|87D0+87D0/87D0\87F5;
@@ -896,11 +896,11 @@ CODE_0587CB:          REP #$20                                  ;;87CB|87CB+87CB
                       CLC                                       ;;87DB|87DB+87DB/87DB\8800;
                       ADC.W #$0017                              ;;87DC|87DC+87DC/87DC\8801;
                       STA.B Layer1TileDown                      ;;87DF|87DF+87DF/87DF\8804;
-CODE_0587E1:          SEP #$20                                  ;;87E1|87E1+87E1/87E1\8806; Accum (8 bit) 
+CODE_0587E1:          SEP #$20                                  ;;87E1|87E1+87E1/87E1\8806; A->8
                       LDA.B ScreenMode                          ;;87E3|87E3+87E3/87E3\8808; Load the vertical level flag 
                       AND.B #$02                                ;;87E5|87E5+87E5/87E5\880A; \if bit 1 is set, process based on that 
                       BNE +                                     ;;87E7|87E7+87E7/87E7\880C; / 
-                      REP #$20                                  ;;87E9|87E9+87E9/87E9\880E; Not a vertical level ; Accum (16 bit) 
+                      REP #$20                                  ;;87E9|87E9+87E9/87E9\880E; A->16, Not a vertical level
                       LDA.B Layer2XPos                          ;;87EB|87EB+87EB/87EB\8810; \Y = L2XPos * 16 
                       LSR A                                     ;;87ED|87ED+87ED/87ED\8812; | 
                       LSR A                                     ;;87EE|87EE+87EE/87EE\8813; | 
@@ -916,7 +916,7 @@ CODE_0587E1:          SEP #$20                                  ;;87E1|87E1+87E1
                       STA.B Layer2TileDown                      ;;87FD|87FD+87FD/87FD\8822;
                       JMP CODE_058818                           ;;87FF|87FF+87FF/87FF\8824;
                                                                 ;;                        ;
-                    + REP #$20                                  ;;8802|8802+8802/8802\8827; \A = Y = !4*16 (?)  ; Accum (16 bit) 
+                    + REP #$20                                  ;;8802|8802+8802/8802\8827; \ A->16, A = Y = !4*16 (?) 
                       LDA.B Layer2YPos                          ;;8804|8804+8804/8804\8829; | 
                       LSR A                                     ;;8806|8806+8806/8806\882B; | 
                       LSR A                                     ;;8807|8807+8807/8807\882C; | 
@@ -924,16 +924,16 @@ CODE_0587E1:          SEP #$20                                  ;;87E1|87E1+87E1
                       LSR A                                     ;;8809|8809+8809/8809\882E; | 
                       TAY                                       ;;880A|880A+880A/880A\882F; / 
                       SEC                                       ;;880B|880B+880B/880B\8830; \ 
-                      SBC.W #$0008                              ;;880C|880C+880C/880C\8831;  |Subtract x08 and store in $49 
+                      SBC.W #$0008                              ;;880C|880C+880C/880C\8831; |Subtract x08 and store in $49 
                       STA.B Layer2TileUp                        ;;880F|880F+880F/880F\8834; / 
                       TYA                                       ;;8811|8811+8811/8811\8836; \ 
-                      CLC                                       ;;8812|8812+8812/8812\8837;  |"Undo", add x17 and store in $4B 
-                      ADC.W #$0017                              ;;8813|8813+8813/8813\8838;  | 
+                      CLC                                       ;;8812|8812+8812/8812\8837; |"Undo", add x17 and store in $4B 
+                      ADC.W #$0017                              ;;8813|8813+8813/8813\8838; | 
                       STA.B Layer2TileDown                      ;;8816|8816+8816/8816\883B; / 
 CODE_058818:          PLP                                       ;;8818|8818+8818/8818\883D;
-                      RTS                                       ;;8819|8819+8819/8819\883E; Return 
+                      RTS                                       ;;8819|8819+8819/8819\883E;
                                                                 ;;                        ;
-CODE_05881A:          SEP #$30                                  ;;881A|881A+881A/881A\883F; Index (8 bit) Accum (8 bit) 
+CODE_05881A:          SEP #$30                                  ;;881A|881A+881A/881A\883F; AXY->8
                       LDA.W LevelModeSetting                    ;;881C|881C+881C/881C\8841;
                       JSL ExecutePtrLong                        ;;881F|881F+881F/881F\8844;
                                                                 ;;                        ;
@@ -970,7 +970,7 @@ CODE_05881A:          SEP #$30                                  ;;881A|881A+881A
                       dl CODE_0589CE                            ;;887D|887D+887D/887D\88A2;
                       dl CODE_0589CE                            ;;8880|8880+8880/8880\88A5;
                                                                 ;;                        ;
-CODE_058883:          SEP #$30                                  ;;8883|8883+8883/8883\88A8; Index (8 bit) Accum (8 bit) 
+CODE_058883:          SEP #$30                                  ;;8883|8883+8883/8883\88A8; AXY->8
                       LDA.W LevelModeSetting                    ;;8885|8885+8885/8885\88AA;
                       JSL ExecutePtrLong                        ;;8888|8888+8888/8888\88AD;
                                                                 ;;                        ;
@@ -1007,7 +1007,7 @@ CODE_058883:          SEP #$30                                  ;;8883|8883+8883
                       dl Return058C70                           ;;88E6|88E6+88E6/88E6\890B;
                       dl CODE_058B8D                            ;;88E9|88E9+88E9/88E9\890E;
                                                                 ;;                        ;
-CODE_0588EC:          SEP #$30                                  ;;88EC|88EC+88EC/88EC\8911; Index (8 bit) Accum (8 bit) 
+CODE_0588EC:          SEP #$30                                  ;;88EC|88EC+88EC/88EC\8911; AXY->8
                       LDA.W LevelModeSetting                    ;;88EE|88EE+88EE/88EE\8913;
                       JSL ExecutePtrLong                        ;;88F1|88F1+88F1/88F1\8916;
                                                                 ;;                        ;
@@ -1044,7 +1044,7 @@ CODE_0588EC:          SEP #$30                                  ;;88EC|88EC+88EC
                       dl CODE_0589CE                            ;;894F|894F+894F/894F\8974;
                       dl CODE_0589CE                            ;;8952|8952+8952/8952\8977;
                                                                 ;;                        ;
-CODE_058955:          SEP #$30                                  ;;8955|8955+8955/8955\897A; Index (8 bit) Accum (8 bit) 
+CODE_058955:          SEP #$30                                  ;;8955|8955+8955/8955\897A; AXY->8
                       LDA.W LevelModeSetting                    ;;8957|8957+8957/8957\897C;
                       JSL ExecutePtrLong                        ;;895A|895A+895A/895A\897F;
                                                                 ;;                        ;
@@ -1085,12 +1085,12 @@ CODE_058955:          SEP #$30                                  ;;8955|8955+8955
                       db $08,$00,$04,$00,$02,$00,$01,$00        ;;89C6|89C6+89C6/89C6\89EB;
                                                                 ;;                        ;
 CODE_0589CE:          PHP                                       ;;89CE|89CE+89CE/89CE\89F3;
-                      REP #$30                                  ;;89CF|89CF+89CF/89CF\89F4; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;89CF|89CF+89CF/89CF\89F4; AXY->16
                       LDA.W LevelModeSetting                    ;;89D1|89D1+89D1/89D1\89F6;
                       AND.W #$00FF                              ;;89D4|89D4+89D4/89D4\89F9;
                       ASL A                                     ;;89D7|89D7+89D7/89D7\89FC;
                       TAX                                       ;;89D8|89D8+89D8/89D8\89FD;
-                      SEP #$20                                  ;;89D9|89D9+89D9/89D9\89FE; Accum (8 bit) 
+                      SEP #$20                                  ;;89D9|89D9+89D9/89D9\89FE; A->8
                       LDA.L Ptrs00BDA8,X                        ;;89DB|89DB+89DB/89DB\8A00;
                       STA.B _A                                  ;;89DF|89DF+89DF/89DF\8A04;
                       LDA.L Ptrs00BDA8+1,X                      ;;89E1|89E1+89E1/89E1\8A06;
@@ -1115,7 +1115,7 @@ CODE_0589CE:          PHP                                       ;;89CE|89CE+89CE
                       LDY.W #$0024                              ;;8A0D|8A0D+8A0D/8A0D\8A32;
                     + TYA                                       ;;8A10|8A10+8A10/8A10\8A35;
                       STA.W Layer1VramAddr                      ;;8A11|8A11+8A11/8A11\8A36;
-                      REP #$20                                  ;;8A14|8A14+8A14/8A14\8A39; Accum (16 bit) 
+                      REP #$20                                  ;;8A14|8A14+8A14/8A14\8A39; A->16
                       LDA.B Layer1TileUp,X                      ;;8A16|8A16+8A16/8A16\8A3B;
                       AND.W #$01F0                              ;;8A18|8A18+8A18/8A18\8A3D;
                       LSR A                                     ;;8A1B|8A1B+8A1B/8A1B\8A40;
@@ -1131,21 +1131,21 @@ CODE_0589CE:          PHP                                       ;;89CE|89CE+89CE
                       STA.B Map16LowPtr                         ;;8A28|8A28+8A28/8A28\8A4D;
                       LDA.B [_D],Y                              ;;8A2A|8A2A+8A2A/8A2A\8A4F;
                       STA.B Map16HighPtr                        ;;8A2C|8A2C+8A2C/8A2C\8A51;
-                      SEP #$20                                  ;;8A2E|8A2E+8A2E/8A2E\8A53; Accum (8 bit) 
+                      SEP #$20                                  ;;8A2E|8A2E+8A2E/8A2E\8A53; A->8
                       INY                                       ;;8A30|8A30+8A30/8A30\8A55;
                       INY                                       ;;8A31|8A31+8A31/8A31\8A56;
                       LDA.B [_A],Y                              ;;8A32|8A32+8A32/8A32\8A57;
                       STA.B Map16LowPtr+2                       ;;8A34|8A34+8A34/8A34\8A59;
                       LDA.B [_D],Y                              ;;8A36|8A36+8A36/8A36\8A5B;
                       STA.B Map16HighPtr+2                      ;;8A38|8A38+8A38/8A38\8A5D;
-                      SEP #$10                                  ;;8A3A|8A3A+8A3A/8A3A\8A5F; Index (8 bit) 
+                      SEP #$10                                  ;;8A3A|8A3A+8A3A/8A3A\8A5F; XY->8
                       LDY.B #$0D                                ;;8A3C|8A3C+8A3C/8A3C\8A61;
                       LDA.W ObjectTileset                       ;;8A3E|8A3E+8A3E/8A3E\8A63;
                       CMP.B #$10                                ;;8A41|8A41+8A41/8A41\8A66;
                       BMI +                                     ;;8A43|8A43+8A43/8A43\8A68;
                       LDY.B #$05                                ;;8A45|8A45+8A45/8A45\8A6A;
                     + STY.B _C                                  ;;8A47|8A47+8A47/8A47\8A6C;
-                      REP #$30                                  ;;8A49|8A49+8A49/8A49\8A6E; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;8A49|8A49+8A49/8A49\8A6E; AXY->16
                       LDA.B Layer1TileUp,X                      ;;8A4B|8A4B+8A4B/8A4B\8A70;
                       AND.W #$000F                              ;;8A4D|8A4D+8A4D/8A4D\8A72;
                       STA.B _8                                  ;;8A50|8A50+8A50/8A50\8A75;
@@ -1187,15 +1187,15 @@ CODE_0589CE:          PHP                                       ;;89CE|89CE+89CE
                       CMP.W #$01B0                              ;;8A94|8A94+8A94/8A94\8AB9;
                       BCC -                                     ;;8A97|8A97+8A97/8A97\8ABC;
                       PLP                                       ;;8A99|8A99+8A99/8A99\8ABE;
-Return058A9A:         RTL                                       ;;8A9A|8A9A+8A9A/8A9A\8ABF; Return 
+Return058A9A:         RTL                                       ;;8A9A|8A9A+8A9A/8A9A\8ABF;
                                                                 ;;                        ;
 CODE_058A9B:          PHP                                       ;;8A9B|8A9B+8A9B/8A9B\8AC0;
-                      REP #$30                                  ;;8A9C|8A9C+8A9C/8A9C\8AC1; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;8A9C|8A9C+8A9C/8A9C\8AC1; AXY->16
                       LDA.W LevelModeSetting                    ;;8A9E|8A9E+8A9E/8A9E\8AC3;
                       AND.W #$00FF                              ;;8AA1|8AA1+8AA1/8AA1\8AC6;
                       ASL A                                     ;;8AA4|8AA4+8AA4/8AA4\8AC9;
                       TAX                                       ;;8AA5|8AA5+8AA5/8AA5\8ACA;
-                      SEP #$20                                  ;;8AA6|8AA6+8AA6/8AA6\8ACB; Accum (8 bit) 
+                      SEP #$20                                  ;;8AA6|8AA6+8AA6/8AA6\8ACB; A->8
                       LDA.L Ptrs00BDA8,X                        ;;8AA8|8AA8+8AA8/8AA8\8ACD;
                       STA.B _A                                  ;;8AAC|8AAC+8AAC/8AAC\8AD1;
                       LDA.L Ptrs00BDA8+1,X                      ;;8AAE|8AAE+8AAE/8AAE\8AD3;
@@ -1231,7 +1231,7 @@ CODE_058A9B:          PHP                                       ;;8A9B|8A9B+8A9B
                       ASL A                                     ;;8AEB|8AEB+8AEB/8AEB\8B10;
                       ASL A                                     ;;8AEC|8AEC+8AEC/8AEC\8B11;
                       STA.W Layer1VramAddr+1                    ;;8AED|8AED+8AED/8AED\8B12;
-                      REP #$20                                  ;;8AF0|8AF0+8AF0/8AF0\8B15; Accum (16 bit) 
+                      REP #$20                                  ;;8AF0|8AF0+8AF0/8AF0\8B15; A->16
                       LDA.B Layer1TileUp,X                      ;;8AF2|8AF2+8AF2/8AF2\8B17;
                       AND.W #$01F0                              ;;8AF4|8AF4+8AF4/8AF4\8B19;
                       LSR A                                     ;;8AF7|8AF7+8AF7/8AF7\8B1C;
@@ -1247,21 +1247,21 @@ CODE_058A9B:          PHP                                       ;;8A9B|8A9B+8A9B
                       STA.B Map16LowPtr                         ;;8B04|8B04+8B04/8B04\8B29;
                       LDA.B [_D],Y                              ;;8B06|8B06+8B06/8B06\8B2B;
                       STA.B Map16HighPtr                        ;;8B08|8B08+8B08/8B08\8B2D;
-                      SEP #$20                                  ;;8B0A|8B0A+8B0A/8B0A\8B2F; Accum (8 bit) 
+                      SEP #$20                                  ;;8B0A|8B0A+8B0A/8B0A\8B2F; A->8
                       INY                                       ;;8B0C|8B0C+8B0C/8B0C\8B31;
                       INY                                       ;;8B0D|8B0D+8B0D/8B0D\8B32;
                       LDA.B [_A],Y                              ;;8B0E|8B0E+8B0E/8B0E\8B33;
                       STA.B Map16LowPtr+2                       ;;8B10|8B10+8B10/8B10\8B35;
                       LDA.B [_D],Y                              ;;8B12|8B12+8B12/8B12\8B37;
                       STA.B Map16HighPtr+2                      ;;8B14|8B14+8B14/8B14\8B39;
-                      SEP #$10                                  ;;8B16|8B16+8B16/8B16\8B3B; Index (8 bit) 
+                      SEP #$10                                  ;;8B16|8B16+8B16/8B16\8B3B; XY->8
                       LDY.B #$0D                                ;;8B18|8B18+8B18/8B18\8B3D;
                       LDA.W ObjectTileset                       ;;8B1A|8B1A+8B1A/8B1A\8B3F;
                       CMP.B #$10                                ;;8B1D|8B1D+8B1D/8B1D\8B42;
                       BMI +                                     ;;8B1F|8B1F+8B1F/8B1F\8B44;
                       LDY.B #$05                                ;;8B21|8B21+8B21/8B21\8B46;
                     + STY.B _C                                  ;;8B23|8B23+8B23/8B23\8B48;
-                      REP #$30                                  ;;8B25|8B25+8B25/8B25\8B4A; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;8B25|8B25+8B25/8B25\8B4A; AXY->16
                       LDA.B Layer1TileUp,X                      ;;8B27|8B27+8B27/8B27\8B4C;
                       AND.W #$000F                              ;;8B29|8B29+8B29/8B29\8B4E;
                       ASL A                                     ;;8B2C|8B2C+8B2C/8B2C\8B51;
@@ -1316,15 +1316,15 @@ CODE_058B35:          LDY.B _8                                  ;;8B35|8B35+8B35
                       AND.W #$010F                              ;;8B86|8B86+8B86/8B86\8BAB;
                       BNE CODE_058B35                           ;;8B89|8B89+8B89/8B89\8BAE;
                       PLP                                       ;;8B8B|8B8B+8B8B/8B8B\8BB0;
-                      RTL                                       ;;8B8C|8B8C+8B8C/8B8C\8BB1; Return 
+                      RTL                                       ;;8B8C|8B8C+8B8C/8B8C\8BB1;
                                                                 ;;                        ;
 CODE_058B8D:          PHP                                       ;;8B8D|8B8D+8B8D/8B8D\8BB2;
-                      REP #$30                                  ;;8B8E|8B8E+8B8E/8B8E\8BB3; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;8B8E|8B8E+8B8E/8B8E\8BB3; AXY->16
                       LDA.W LevelModeSetting                    ;;8B90|8B90+8B90/8B90\8BB5;
                       AND.W #$00FF                              ;;8B93|8B93+8B93/8B93\8BB8;
                       ASL A                                     ;;8B96|8B96+8B96/8B96\8BBB;
                       TAX                                       ;;8B97|8B97+8B97/8B97\8BBC;
-                      SEP #$20                                  ;;8B98|8B98+8B98/8B98\8BBD; Accum (8 bit) 
+                      SEP #$20                                  ;;8B98|8B98+8B98/8B98\8BBD; A->8
                       LDY.W #$0000                              ;;8B9A|8B9A+8B9A/8B9A\8BBF;
                       LDA.W ObjectTileset                       ;;8B9D|8B9D+8B9D/8B9D\8BC2;
                       CMP.B #$03                                ;;8BA0|8BA0+8BA0/8BA0\8BC5;
@@ -1355,7 +1355,7 @@ CODE_058B8D:          PHP                                       ;;8B8D|8B8D+8B8D
                       LDY.W #$0034                              ;;8BDB|8BDB+8BDB/8BDB\8C00;
                     + TYA                                       ;;8BDE|8BDE+8BDE/8BDE\8C03;
                       STA.W Layer2VramAddr                      ;;8BDF|8BDF+8BDF/8BDF\8C04;
-                      REP #$30                                  ;;8BE2|8BE2+8BE2/8BE2\8C07; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;8BE2|8BE2+8BE2/8BE2\8C07; AXY->16
                       LDA.B Layer2TileUp,X                      ;;8BE4|8BE4+8BE4/8BE4\8C09;
                       AND.W #$01F0                              ;;8BE6|8BE6+8BE6/8BE6\8C0B;
                       LSR A                                     ;;8BE9|8BE9+8BE9/8BE9\8C0E;
@@ -1371,21 +1371,21 @@ CODE_058B8D:          PHP                                       ;;8B8D|8B8D+8B8D
                       STA.B Map16LowPtr                         ;;8BF6|8BF6+8BF6/8BF6\8C1B;
                       LDA.B [_D],Y                              ;;8BF8|8BF8+8BF8/8BF8\8C1D;
                       STA.B Map16HighPtr                        ;;8BFA|8BFA+8BFA/8BFA\8C1F;
-                      SEP #$20                                  ;;8BFC|8BFC+8BFC/8BFC\8C21; Accum (8 bit) 
+                      SEP #$20                                  ;;8BFC|8BFC+8BFC/8BFC\8C21; A->8
                       INY                                       ;;8BFE|8BFE+8BFE/8BFE\8C23;
                       INY                                       ;;8BFF|8BFF+8BFF/8BFF\8C24;
                       LDA.B [_A],Y                              ;;8C00|8C00+8C00/8C00\8C25;
                       STA.B Map16LowPtr+2                       ;;8C02|8C02+8C02/8C02\8C27;
                       LDA.B [_D],Y                              ;;8C04|8C04+8C04/8C04\8C29;
                       STA.B Map16HighPtr+2                      ;;8C06|8C06+8C06/8C06\8C2B;
-                      SEP #$10                                  ;;8C08|8C08+8C08/8C08\8C2D; Index (8 bit) 
+                      SEP #$10                                  ;;8C08|8C08+8C08/8C08\8C2D; XY->8
                       LDY.B #$0D                                ;;8C0A|8C0A+8C0A/8C0A\8C2F;
                       LDA.W ObjectTileset                       ;;8C0C|8C0C+8C0C/8C0C\8C31;
                       CMP.B #$10                                ;;8C0F|8C0F+8C0F/8C0F\8C34;
                       BMI +                                     ;;8C11|8C11+8C11/8C11\8C36;
                       LDY.B #$05                                ;;8C13|8C13+8C13/8C13\8C38;
                     + STY.B _C                                  ;;8C15|8C15+8C15/8C15\8C3A;
-                      REP #$30                                  ;;8C17|8C17+8C17/8C17\8C3C; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;8C17|8C17+8C17/8C17\8C3C; AXY->16
                       LDA.B Layer2TileUp,X                      ;;8C19|8C19+8C19/8C19\8C3E;
                       AND.W #$000F                              ;;8C1B|8C1B+8C1B/8C1B\8C40;
                       STA.B _8                                  ;;8C1E|8C1E+8C1E/8C1E\8C43;
@@ -1431,15 +1431,15 @@ CODE_058B8D:          PHP                                       ;;8B8D|8B8D+8B8D
                       CMP.W #$01B0                              ;;8C6A|8C6A+8C6A/8C6A\8C8F;
                       BCC -                                     ;;8C6D|8C6D+8C6D/8C6D\8C92;
                       PLP                                       ;;8C6F|8C6F+8C6F/8C6F\8C94;
-Return058C70:         RTL                                       ;;8C70|8C70+8C70/8C70\8C95; Return 
+Return058C70:         RTL                                       ;;8C70|8C70+8C70/8C70\8C95;
                                                                 ;;                        ;
 CODE_058C71:          PHP                                       ;;8C71|8C71+8C71/8C71\8C96;
-                      REP #$30                                  ;;8C72|8C72+8C72/8C72\8C97; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;8C72|8C72+8C72/8C72\8C97; AXY->16
                       LDA.W LevelModeSetting                    ;;8C74|8C74+8C74/8C74\8C99;
                       AND.W #$00FF                              ;;8C77|8C77+8C77/8C77\8C9C;
                       ASL A                                     ;;8C7A|8C7A+8C7A/8C7A\8C9F;
                       TAX                                       ;;8C7B|8C7B+8C7B/8C7B\8CA0;
-                      SEP #$20                                  ;;8C7C|8C7C+8C7C/8C7C\8CA1; Accum (8 bit) 
+                      SEP #$20                                  ;;8C7C|8C7C+8C7C/8C7C\8CA1; A->8
                       LDY.W #$0000                              ;;8C7E|8C7E+8C7E/8C7E\8CA3;
                       LDA.W ObjectTileset                       ;;8C81|8C81+8C81/8C81\8CA6;
                       CMP.B #$03                                ;;8C84|8C84+8C84/8C84\8CA9;
@@ -1481,7 +1481,7 @@ CODE_058C71:          PHP                                       ;;8C71|8C71+8C71
                       ASL A                                     ;;8CD0|8CD0+8CD0/8CD0\8CF5;
                       ASL A                                     ;;8CD1|8CD1+8CD1/8CD1\8CF6;
                       STA.W Layer2VramAddr+1                    ;;8CD2|8CD2+8CD2/8CD2\8CF7;
-                      REP #$20                                  ;;8CD5|8CD5+8CD5/8CD5\8CFA; Accum (16 bit) 
+                      REP #$20                                  ;;8CD5|8CD5+8CD5/8CD5\8CFA; A->16
                       LDA.B Layer2TileUp,X                      ;;8CD7|8CD7+8CD7/8CD7\8CFC;
                       AND.W #$01F0                              ;;8CD9|8CD9+8CD9/8CD9\8CFE;
                       LSR A                                     ;;8CDC|8CDC+8CDC/8CDC\8D01;
@@ -1497,21 +1497,21 @@ CODE_058C71:          PHP                                       ;;8C71|8C71+8C71
                       STA.B Map16LowPtr                         ;;8CE9|8CE9+8CE9/8CE9\8D0E;
                       LDA.B [_D],Y                              ;;8CEB|8CEB+8CEB/8CEB\8D10;
                       STA.B Map16HighPtr                        ;;8CED|8CED+8CED/8CED\8D12;
-                      SEP #$20                                  ;;8CEF|8CEF+8CEF/8CEF\8D14; Accum (8 bit) 
+                      SEP #$20                                  ;;8CEF|8CEF+8CEF/8CEF\8D14; A->8
                       INY                                       ;;8CF1|8CF1+8CF1/8CF1\8D16;
                       INY                                       ;;8CF2|8CF2+8CF2/8CF2\8D17;
                       LDA.B [_A],Y                              ;;8CF3|8CF3+8CF3/8CF3\8D18;
                       STA.B Map16LowPtr+2                       ;;8CF5|8CF5+8CF5/8CF5\8D1A;
                       LDA.B [_D],Y                              ;;8CF7|8CF7+8CF7/8CF7\8D1C;
                       STA.B Map16HighPtr+2                      ;;8CF9|8CF9+8CF9/8CF9\8D1E;
-                      SEP #$10                                  ;;8CFB|8CFB+8CFB/8CFB\8D20; Index (8 bit) 
+                      SEP #$10                                  ;;8CFB|8CFB+8CFB/8CFB\8D20; XY->8
                       LDY.B #$0D                                ;;8CFD|8CFD+8CFD/8CFD\8D22;
                       LDA.W ObjectTileset                       ;;8CFF|8CFF+8CFF/8CFF\8D24;
                       CMP.B #$10                                ;;8D02|8D02+8D02/8D02\8D27;
                       BMI +                                     ;;8D04|8D04+8D04/8D04\8D29;
                       LDY.B #$05                                ;;8D06|8D06+8D06/8D06\8D2B;
                     + STY.B _C                                  ;;8D08|8D08+8D08/8D08\8D2D;
-                      REP #$30                                  ;;8D0A|8D0A+8D0A/8D0A\8D2F; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;8D0A|8D0A+8D0A/8D0A\8D2F; AXY->16
                       LDA.B Layer2TileUp,X                      ;;8D0C|8D0C+8D0C/8D0C\8D31;
                       AND.W #$000F                              ;;8D0E|8D0E+8D0E/8D0E\8D33;
                       ASL A                                     ;;8D11|8D11+8D11/8D11\8D36;
@@ -1570,10 +1570,10 @@ CODE_058D1A:          LDY.B _8                                  ;;8D1A|8D1A+8D1A
                       AND.W #$010F                              ;;8D73|8D73+8D73/8D73\8D98;
                       BNE CODE_058D1A                           ;;8D76|8D76+8D76/8D76\8D9B;
                       PLP                                       ;;8D78|8D78+8D78/8D78\8D9D;
-                      RTL                                       ;;8D79|8D79+8D79/8D79\8D9E; Return 
+                      RTL                                       ;;8D79|8D79+8D79/8D79\8D9E;
                                                                 ;;                        ;
 CODE_058D7A:          PHP                                       ;;8D7A|8D7A+8D7A/8D7A\8D9F;
-                      SEP #$30                                  ;;8D7B|8D7B+8D7B/8D7B\8DA0; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;8D7B|8D7B+8D7B/8D7B\8DA0; AXY->8
                       LDA.W LevelLoadObject                     ;;8D7D|8D7D+8D7D/8D7D\8DA2;
                       AND.B #$0F                                ;;8D80|8D80+8D80/8D80\8DA5;
                       ASL A                                     ;;8D82|8D82+8D82/8D82\8DA7;
@@ -1585,7 +1585,7 @@ CODE_058D7A:          PHP                                       ;;8D7A|8D7A+8D7A
                       LDY.B #$34                                ;;8D8F|8D8F+8D8F/8D8F\8DB4;
                     + TYA                                       ;;8D91|8D91+8D91/8D91\8DB6;
                       STA.W Layer2VramAddr                      ;;8D92|8D92+8D92/8D92\8DB7;
-                      REP #$20                                  ;;8D95|8D95+8D95/8D95\8DBA; Accum (16 bit) 
+                      REP #$20                                  ;;8D95|8D95+8D95/8D95\8DBA; A->16
                       LDA.W #$B900                              ;;8D97|8D97+8D97/8D97\8DBC;
                       STA.B Map16LowPtr                         ;;8D9A|8D9A+8D9A/8D9A\8DBF;
                       LDA.W #$BD00                              ;;8D9C|8D9C+8D9C/8D9C\8DC1;
@@ -1603,14 +1603,14 @@ CODE_058D7A:          PHP                                       ;;8D7A|8D7A+8D7A
                       CLC                                       ;;8DB8|8DB8+8DB8/8DB8\8DDD;
                       ADC.W #$01B0                              ;;8DB9|8DB9+8DB9/8DB9\8DDE;
                       STA.B Map16HighPtr                        ;;8DBC|8DBC+8DBC/8DBC\8DE1;
-                    + SEP #$20                                  ;;8DBE|8DBE+8DBE/8DBE\8DE3; Accum (8 bit) 
+                    + SEP #$20                                  ;;8DBE|8DBE+8DBE/8DBE\8DE3; A->8
                       LDA.B #$7E                                ;;8DC0|8DC0+8DC0/8DC0\8DE5;
                       STA.B Map16LowPtr+2                       ;;8DC2|8DC2+8DC2/8DC2\8DE7;
                       LDA.B #$7E                                ;;8DC4|8DC4+8DC4/8DC4\8DE9;
                       STA.B Map16HighPtr+2                      ;;8DC6|8DC6+8DC6/8DC6\8DEB;
                       LDY.B #Map16BGTiles>>16                   ;;8DC8|8DC8+8DC8/8DC8\8DED;
                       STY.B _C                                  ;;8DCA|8DCA+8DCA/8DCA\8DEF;
-                      REP #$30                                  ;;8DCC|8DCC+8DCC/8DCC\8DF1; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;8DCC|8DCC+8DCC/8DCC\8DF1; AXY->16
                       LDA.W LevelLoadObject                     ;;8DCE|8DCE+8DCE/8DCE\8DF3;
                       AND.W #$000F                              ;;8DD1|8DD1+8DD1/8DD1\8DF6;
                       STA.B _8                                  ;;8DD4|8DD4+8DD4/8DD4\8DF9;
@@ -1651,7 +1651,7 @@ CODE_058D7A:          PHP                                       ;;8D7A|8D7A+8D7A
                       CMP.W #$01B0                              ;;8E12|8E12+8E12/8E12\8E37;
                       BCC -                                     ;;8E15|8E15+8E15/8E15\8E3A;
                       PLP                                       ;;8E17|8E17+8E17/8E17\8E3C;
-                      RTL                                       ;;8E18|8E18+8E18/8E18\8E3D; Return 
+                      RTL                                       ;;8E18|8E18+8E18/8E18\8E3D;
                                                                 ;;                        ;
                       %insert_empty($1E7,$1E7,$1E7,$1E7,$1C2)   ;;8E19|8E19+8E19/8E19\8E3E;
                                                                 ;;                        ;
@@ -3064,7 +3064,7 @@ DATA_05B108:          db $50,$00                                ;;ACB1|B108+B0E6
                                                                 ;;                        ;
 DATA_05B10A:          db $04,$FC                                ;;ACB3|B10A+B0E8/B10A\B10A;
                                                                 ;;                        ;
-CODE_05B10C:          PHB                                       ;;ACB5|B10C+B0EA/B10C\B10C; Accum (8 bit) 
+CODE_05B10C:          PHB                                       ;;ACB5|B10C+B0EA/B10C\B10C;
                       PHK                                       ;;ACB6|B10D+B0EB/B10D\B10D;
                       PLB                                       ;;ACB7|B10E+B0EC/B10E\B10E;
                       LDX.W MessageBoxExpand                    ;;ACB8|B10F+B0ED/B10F\B10F;
@@ -3133,9 +3133,9 @@ SubSideExit:          STZ.W OverworldOverride                   ;;AD03|B160+B139
                     + STA.W OWLevelExitMode                     ;;AD08|B165+B13E/B165\B165;
                       LDA.B #$0B                                ;;AD0B|B168+B141/B168\B168;
                       STA.W GameMode                            ;;AD0D|B16A+B143/B16A\B16A;
-                      RTL                                       ;;AD10|B16D+B146/B16D\B16D; Return 
+                      RTL                                       ;;AD10|B16D+B146/B16D\B16D;
                                                                 ;;                        ;
-CODE_05B16E:          LDA.B byetudlrHold                        ;;AD11|B16E+B147/B16E\B16E; Index (8 bit) 
+CODE_05B16E:          LDA.B byetudlrHold                        ;;AD11|B16E+B147/B16E\B16E;
                       AND.B #$F0                                ;;AD13|B170+B149/B170\B170;
                       BEQ CODE_05B18E                           ;;AD15|B172+B14B/B172\B172;
                       EOR.B byetudlrFrame                       ;;AD17|B174+B14D/B174\B174;
@@ -3197,10 +3197,10 @@ CODE_05B1BC:          LDY.W MessageBoxTrigger                   ;;AD5A|B1BC+B19A
                     + TXA                                       ;;AD79|B1DB+B1B9/B1DB\B1DB;
                       ASL A                                     ;;AD7A|B1DC+B1BA/B1DC\B1DC;
                       TAX                                       ;;AD7B|B1DD+B1BB/B1DD\B1DD;
-                      REP #$20                                  ;;AD7C|B1DE+B1BC/B1DE\B1DE; Accum (16 bit) 
+                      REP #$20                                  ;;AD7C|B1DE+B1BC/B1DE\B1DE; A->16
                       LDA.W DATA_05A5A7,X                       ;;AD7E|B1E0+B1BE/B1E0\B1E0;
                       STA.B _0                                  ;;AD81|B1E3+B1C1/B1E3\B1E3;
-                      REP #$10                                  ;;AD83|B1E5+B1C3/B1E5\B1E5; Index (16 bit) 
+                      REP #$10                                  ;;AD83|B1E5+B1C3/B1E5\B1E5; XY->16 
                       LDA.L DynStripeImgSize                    ;;AD85|B1E7+B1C5/B1E7\B1E7;
                       TAX                                       ;;AD89|B1EB+B1C9/B1EB\B1EB;
                    if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
@@ -3216,7 +3216,7 @@ CODE_05B1EF:          LDA.W DATA_05A580,Y                       ;;AD8D          
                       STA.L DynamicStripeImage+2,X              ;;ADA1                    ;
                       STA.L DynamicStripeImage+$2A,X            ;;ADA5                    ;
                       PHY                                       ;;ADA9                    ;
-                      SEP #$20                                  ;;ADAA                    ; Accum (8 bit) 
+                      SEP #$20                                  ;;ADAA                    ; A->8
                       LDA.B #$12                                ;;ADAC                    ;
                       STA.B _2                                  ;;ADAE                    ;
                       LDY.B _0                                  ;;ADB0                    ;
@@ -3240,7 +3240,7 @@ CODE_05B208:          LDA.W MessageBoxes,Y                      ;;ADB2          
                       DEC.B _2                                  ;;ADD9                    ;
                       BNE CODE_05B208                           ;;ADDB                    ;
                       STY.B _0                                  ;;ADDD                    ;
-                      REP #$20                                  ;;ADDF                    ;
+                      REP #$20                                  ;;ADDF                    ; A->16
                       TXA                                       ;;ADE1                    ;
                       CLC                                       ;;ADE2                    ;
                       ADC.W #$002C                              ;;ADE3                    ;
@@ -3252,7 +3252,7 @@ CODE_05B1EF:          LDA.W DATA_05A580,Y                       ;;    |B1EF+B1CD
                       LDA.W #$2300                              ;;    |B1F6+B1D4/B1F6\B1F6;
                       STA.L DynamicStripeImage+2,X              ;;    |B1F9+B1D7/B1F9\B1F9;
                       PHY                                       ;;    |B1FD+B1DB/B1FD\B1FD;
-                      SEP #$20                                  ;;    |B1FE+B1DC/B1FE\B1FE; Accum (8 bit) 
+                      SEP #$20                                  ;;    |B1FE+B1DC/B1FE\B1FE; A->8
                       LDA.B #$12                                ;;    |B200+B1DE/B200\B200;
                       STA.B _2                                  ;;    |B202+B1E0/B202\B202;
                       STZ.B _3                                  ;;    |B204+B1E2/B204\B204;
@@ -3272,7 +3272,7 @@ CODE_05B208:          LDA.B #$1F                                ;;    |B208+B1E6
                       DEC.B _2                                  ;;    |B224+B202/B224\B224;
                       BNE CODE_05B208                           ;;    |B226+B204/B226\B226;
                       STY.B _0                                  ;;    |B228+B206/B228\B228;
-                      REP #$20                                  ;;    |B22A+B208/B22A\B22A; Accum (16 bit) 
+                      REP #$20                                  ;;    |B22A+B208/B22A\B22A; A->16
                       INX                                       ;;    |B22C+B20A/B22C\B22C;
                       INX                                       ;;    |B22D+B20B/B22D\B22D;
                       INX                                       ;;    |B22E+B20C/B22E\B22E;
@@ -3286,7 +3286,7 @@ CODE_05B208:          LDA.B #$1F                                ;;    |B208+B1E6
                       STA.L DynamicStripeImage,X                ;;ADEF|B238+B216/B238\B238;
                       TXA                                       ;;ADF3|B23C+B21A/B23C\B23C;
                       STA.L DynStripeImgSize                    ;;ADF4|B23D+B21B/B23D\B23D;
-                      SEP #$30                                  ;;ADF8|B241+B21F/B241\B241; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;ADF8|B241+B21F/B241\B241; AXY->8
                       LDA.B #$01                                ;;ADFA|B243+B221/B243\B243;
                       STA.W Layer3ScrollType                    ;;ADFC|B245+B223/B245\B245;
                       STZ.B Layer3XPos                          ;;ADFF|B248+B226/B248\B248;
@@ -3304,7 +3304,7 @@ CODE_05B250:          LDX.W MessageBoxExpand                    ;;AE07|B250+B22E
                       LDA.B #$80                                ;;AE18|B261+B23F/B261\B261;
                       SEC                                       ;;AE1A|B263+B241/B263\B263;
                       SBC.W MessageBoxTimer                     ;;AE1B|B264+B242/B264\B264;
-                      REP #$20                                  ;;AE1E|B267+B245/B267\B267; Accum (16 bit) 
+                      REP #$20                                  ;;AE1E|B267+B245/B267\B267; A->16
                       LDX.B #$00                                ;;AE20|B269+B247/B269\B269;
                       LDY.B #$50                                ;;AE22|B26B+B249/B26B\B26B;
 CODE_05B26D:          CPX.W MessageBoxTimer                     ;;AE24|B26D+B24B/B26D\B26D;
@@ -3317,7 +3317,7 @@ CODE_05B26D:          CPX.W MessageBoxTimer                     ;;AE24|B26D+B24B
                       DEY                                       ;;AE34|B27D+B25B/B27D\B27D;
                       DEY                                       ;;AE35|B27E+B25C/B27E\B27E;
                       BNE CODE_05B26D                           ;;AE36|B27F+B25D/B27F\B27F;
-                      SEP #$20                                  ;;AE38|B281+B25F/B281\B281; Accum (8 bit) 
+                      SEP #$20                                  ;;AE38|B281+B25F/B281\B281; A->8
                       LDA.B #$22                                ;;AE3A|B283+B261/B283\B283;
                       STA.B Layer12Window                       ;;AE3C|B285+B263/B285\B285;
                       LDY.W SwitchPalaceColor                   ;;AE3E|B287+B265/B287\B287;
@@ -3329,7 +3329,7 @@ CODE_05B26D:          CPX.W MessageBoxTimer                     ;;AE24|B26D+B24B
                       LDA.B #$80                                ;;AE4B|B294+B272/B294\B294;
                       STA.W HDMAEnable                          ;;AE4D|B296+B274/B296\B296;
 CODE_05B299:          PLB                                       ;;AE50|B299+B277/B299\B299;
-                      RTL                                       ;;AE51|B29A+B278/B29A\B29A; Return 
+                      RTL                                       ;;AE51|B29A+B278/B29A\B29A;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_05B29B:          db $AD,$35,$AD,$75,$AD,$B5,$AD,$F5        ;;AE52|B29B+B279/B29B\B29B;
@@ -3360,7 +3360,7 @@ CODE_05B2EB:          PHX                                       ;;AEA2|B2EB+B2C9
                       ASL A                                     ;;AEA7|B2F0+B2CE/B2F0\B2F0;
                       TAX                                       ;;AEA8|B2F1+B2CF/B2F1\B2F1;
                       STZ.B _0                                  ;;AEA9|B2F2+B2D0/B2F2\B2F2;
-                      REP #$20                                  ;;AEAB|B2F4+B2D2/B2F4\B2F4; Accum (16 bit) 
+                      REP #$20                                  ;;AEAB|B2F4+B2D2/B2F4\B2F4; A->16
                       LDY.B #$1C                                ;;AEAD|B2F6+B2D4/B2F6\B2F6;
                     - LDA.W DATA_05B29B,X                       ;;AEAF|B2F8+B2D6/B2F8\B2F8;
                       STA.W OAMTileNo,Y                         ;;AEB2|B2FB+B2D9/B2FB\B2FB;
@@ -3379,9 +3379,9 @@ CODE_05B2EB:          PHX                                       ;;AEA2|B2EB+B2C9
                       DEY                                       ;;AEC8|B311+B2EF/B311\B311;
                       BPL -                                     ;;AEC9|B312+B2F0/B312\B312;
                       STZ.W OAMTileBitSize                      ;;AECB|B314+B2F2/B314\B314;
-                      SEP #$20                                  ;;AECE|B317+B2F5/B317\B317; Accum (8 bit) 
+                      SEP #$20                                  ;;AECE|B317+B2F5/B317\B317; A->8
                       PLX                                       ;;AED0|B319+B2F7/B319\B319;
-                      RTS                                       ;;AED1|B31A+B2F8/B31A\B31A; Return 
+                      RTS                                       ;;AED1|B31A+B2F8/B31A\B31A;
                                                                 ;;                        ;
 CODE_05B31B:          LDY.B #$1C                                ;;AED2|B31B+B2F9/B31B\B31B;
                       LDA.B #$F0                                ;;AED4|B31D+B2FB/B31D\B31D;
@@ -3391,7 +3391,7 @@ CODE_05B31B:          LDY.B #$1C                                ;;AED2|B31B+B2F9
                       DEY                                       ;;AEDB|B324+B302/B324\B324;
                       DEY                                       ;;AEDC|B325+B303/B325\B325;
                       BPL -                                     ;;AEDD|B326+B304/B326\B326;
-                      RTS                                       ;;AEDF|B328+B306/B328\B328; Return 
+                      RTS                                       ;;AEDF|B328+B306/B328\B328;
                                                                 ;;                        ;
 ADDR_05B329:          PHA                                       ;;AEE0|B329+B307/B329\B329;
                       LDA.B #!SFX_COIN                          ;;AEE1|B32A+B308/B32A\B32A;
@@ -3416,7 +3416,7 @@ CODE_05B34A:          INC.W CoinAdder                           ;;AF01|B34A+B328
                       LDA.W GreenStarBlockCoins                 ;;AF09|B352+B330/B352\B352;
                       BEQ Return05B35A                          ;;AF0C|B355+B333/B355\B355;
                       DEC.W GreenStarBlockCoins                 ;;AF0E|B357+B335/B357\B357;
-Return05B35A:         RTL                                       ;;AF11|B35A+B338/B35A\B35A; Return 
+Return05B35A:         RTL                                       ;;AF11|B35A+B338/B35A\B35A;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_05B35B:          db $80,$40,$20,$10,$08,$04,$02,$01        ;;AF12|B35B+B339/B35B\B35B;
@@ -3432,7 +3432,7 @@ DATA_05B35B:          db $80,$40,$20,$10,$08,$04,$02,$01        ;;AF12|B35B+B339
                       LDA.W OWEventsActivated,X                 ;;AF23|B36C+B34A/B36C\B36C;
                       PLX                                       ;;AF26|B36F+B34D/B36F\B36F;
                       AND.L DATA_05B35B,X                       ;;AF27|B370+B34E/B370\B370;
-                      RTL                                       ;;AF2B|B374+B352/B374\B374; / Return 
+                      RTL                                       ;;AF2B|B374+B352/B374\B374; / 
                                                                 ;;                        ;
                                                                 ;;                        ;
                    if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
@@ -4217,7 +4217,7 @@ CODE_05BB39:          PHB                                       ;;B609|BB39+BB0F
                       TAY                                       ;;B615|BB45+BB1B/BB45\BB55;
                       ASL A                                     ;;B616|BB46+BB1C/BB46\BB56;
                       TAX                                       ;;B617|BB47+BB1D/BB47\BB57;
-                      REP #$20                                  ;;B618|BB48+BB1E/BB48\BB58; Accum (16 bit) 
+                      REP #$20                                  ;;B618|BB48+BB1E/BB48\BB58; A->16
                       LDA.B EffFrame                            ;;B61A|BB4A+BB20/BB4A\BB5A;
                       AND.W #$0018                              ;;B61C|BB4C+BB22/BB4C\BB5C;
                       LSR A                                     ;;B61F|BB4F+BB25/BB4F\BB5F;
@@ -4232,7 +4232,7 @@ CODE_05BB39:          PHB                                       ;;B609|BB39+BB0F
                       LDX.B #$04                                ;;B635|BB65+BB3B/BB65\BB75;
 CODE_05BB67:          PHY                                       ;;B637|BB67+BB3D/BB67\BB77;
                       PHX                                       ;;B638|BB68+BB3E/BB68\BB78;
-                      SEP #$20                                  ;;B639|BB69+BB3F/BB69\BB79; Accum (8 bit) 
+                      SEP #$20                                  ;;B639|BB69+BB3F/BB69\BB79; A->8
                       TYA                                       ;;B63B|BB6B+BB41/BB6B\BB7B;
                       LDX.W DATA_05B96B,Y                       ;;B63C|BB6C+BB42/BB6C\BB7C;
                       BEQ CODE_05BB88                           ;;B63F|BB6F+BB45/BB6F\BB7F;
@@ -4248,7 +4248,7 @@ CODE_05BB67:          PHY                                       ;;B637|BB67+BB3D
 CODE_05BB81:          LDY.W ObjectTileset                       ;;B651|BB81+BB57/BB81\BB91;
                       CLC                                       ;;B654|BB84+BB5A/BB84\BB94;
                       ADC.W DATA_05B98B,Y                       ;;B655|BB85+BB5B/BB85\BB95;
-CODE_05BB88:          REP #$30                                  ;;B658|BB88+BB5E/BB88\BB98; Index (16 bit) Accum (16 bit) 
+CODE_05BB88:          REP #$30                                  ;;B658|BB88+BB5E/BB88\BB98; AXY->16
                       AND.W #$00FF                              ;;B65A|BB8A+BB60/BB8A\BB9A;
                       ASL A                                     ;;B65D|BB8D+BB63/BB8D\BB9D;
                       ASL A                                     ;;B65E|BB8E+BB64/BB8E\BB9E;
@@ -4256,7 +4256,7 @@ CODE_05BB88:          REP #$30                                  ;;B658|BB88+BB5E
                       ORA.B _0                                  ;;B660|BB90+BB66/BB90\BBA0;
                       TAY                                       ;;B662|BB92+BB68/BB92\BBA2;
                       LDA.W AnimatedTileData,Y                  ;;B663|BB93+BB69/BB93\BBA3;
-                      SEP #$10                                  ;;B666|BB96+BB6C/BB96\BBA6; Index (8 bit) 
+                      SEP #$10                                  ;;B666|BB96+BB6C/BB96\BBA6; XY->8
                       PLX                                       ;;B668|BB98+BB6E/BB98\BBA8;
                       STA.W Gfx33SrcAddrA,X                     ;;B669|BB99+BB6F/BB99\BBA9;
                       PLY                                       ;;B66C|BB9C+BB72/BB9C\BBAC;
@@ -4264,9 +4264,9 @@ CODE_05BB88:          REP #$30                                  ;;B658|BB88+BB5E
                       DEX                                       ;;B66E|BB9E+BB74/BB9E\BBAE;
                       DEX                                       ;;B66F|BB9F+BB75/BB9F\BBAF;
                       BPL CODE_05BB67                           ;;B670|BBA0+BB76/BBA0\BBB0;
-                      SEP #$20                                  ;;B672|BBA2+BB78/BBA2\BBB2; Accum (8 bit) 
+                      SEP #$20                                  ;;B672|BBA2+BB78/BBA2\BBB2; A->8
                       PLB                                       ;;B674|BBA4+BB7A/BBA4\BBB4;
-                      RTL                                       ;;B675|BBA5+BB7B/BBA5\BBB5; Return 
+                      RTL                                       ;;B675|BBA5+BB7B/BBA5\BBB5;
                                                                 ;;                        ;
                       %insert_empty($48A,$5A,$84,$5A,$4A)       ;;B676|BBA6+BB7C/BBA6\BBB6;
                                                                 ;;                        ;
@@ -4304,11 +4304,11 @@ CODE_05BC00:          PHB                                       ;;BB00|BC00+BC00
                       BNE +                                     ;;BB42|BC42+BC42/BC42\BC42;
                       JSR CODE_05C40C                           ;;BB44|BC44+BC44/BC44\BC44;
                     + PLB                                       ;;BB47|BC47+BC47/BC47\BC47;
-                      RTL                                       ;;BB48|BC48+BC48/BC48\BC48; Return 
+                      RTL                                       ;;BB48|BC48+BC48/BC48\BC48;
                                                                 ;;                        ;
-Return05BC49:         RTS                                       ;;BB49|BC49+BC49/BC49\BC49; Return 
+Return05BC49:         RTS                                       ;;BB49|BC49+BC49/BC49\BC49;
                                                                 ;;                        ;
-CODE_05BC4A:          REP #$20                                  ;;BB4A|BC4A+BC4A/BC4A\BC4A; Accum (16 bit) 
+CODE_05BC4A:          REP #$20                                  ;;BB4A|BC4A+BC4A/BC4A\BC4A; A->16
                       LDY.W Layer3TideSetting                   ;;BB4C|BC4C+BC4C/BC4C\BC4C;
                       BNE CODE_05BC5F                           ;;BB4F|BC4F+BC4F/BC4F\BC4F;
                       LDA.W NextLayer2XPos                      ;;BB51|BC51+BC51/BC51\BC51;
@@ -4326,11 +4326,11 @@ CODE_05BC5F:          LDA.B Layer3XPos                          ;;BB5F|BC5F+BC5F
                     + SEC                                       ;;BB69|BC69+BC69/BC69\BC69;
                       SBC.W NextLayer1YPos                      ;;BB6A|BC6A+BC6A/BC6A\BC6A;
                       STA.B Layer23YRelPos                      ;;BB6D|BC6D+BC6D/BC6D\BC6D;
-                      SEP #$20                                  ;;BB6F|BC6F+BC6F/BC6F\BC6F; Accum (8 bit) 
-                      RTS                                       ;;BB71|BC71+BC71/BC71\BC71; Return 
+                      SEP #$20                                  ;;BB6F|BC6F+BC6F/BC6F\BC6F; A->8
+                      RTS                                       ;;BB71|BC71+BC71/BC71\BC71;
                                                                 ;;                        ;
 CODE_05BC72:          JSR CODE_05BC4A                           ;;BB72|BC72+BC72/BC72\BC72;
-                      RTL                                       ;;BB75|BC75+BC75/BC75\BC75; Return 
+                      RTL                                       ;;BB75|BC75+BC75/BC75\BC75;
                                                                 ;;                        ;
 CODE_05BC76:          STZ.W ScrollLayerIndex                    ;;BB76|BC76+BC76/BC76\BC76;
                       LDA.W SpriteLock                          ;;BB79|BC79+BC79/BC79\BC79;
@@ -4388,7 +4388,7 @@ CODE_05BCD6:          PHB                                       ;;BBD6|BCD6+BCD6
                       STA.W ScrollLayerIndex                    ;;BBE1|BCE1+BCE1/BCE1\BCE1;
                       JSR CODE_05BD0E                           ;;BBE4|BCE4+BCE4/BCE4\BCE4;
                       PLB                                       ;;BBE7|BCE7+BCE7/BCE7\BCE7;
-                      RTL                                       ;;BBE8|BCE8+BCE8/BCE8\BCE8; Return 
+                      RTL                                       ;;BBE8|BCE8+BCE8/BCE8\BCE8;
                                                                 ;;                        ;
 CODE_05BCE9:          LDA.W Layer1ScrollCmd                     ;;BBE9|BCE9+BCE9/BCE9\BCE9;
                       JSL ExecutePtr                            ;;BBEC|BCEC+BCEC/BCEC\BCEC;
@@ -4429,24 +4429,24 @@ CODE_05BD0E:          LDA.W Layer2ScrollCmd                     ;;BC0E|BD0E+BD0E
                       dw Return05BC49                           ;;BC31|BD31+BD31/BD31\BD31;
                       dw Return05BC49                           ;;BC33|BD33+BD33/BD33\BD33;
                                                                 ;;                        ;
-Return05BD35:         RTS                                       ;;BC35|BD35+BD35/BD35\BD35; Return 
+Return05BD35:         RTS                                       ;;BC35|BD35+BD35/BD35\BD35;
                                                                 ;;                        ;
 CODE_05BD36:          STZ.W HorizLayer1Setting                  ;;BC36|BD36+BD36/BD36\BD36;
                       LDA.W Layer1ScrollBits                    ;;BC39|BD39+BD39/BD39\BD39;
                       ASL A                                     ;;BC3C|BD3C+BD3C/BD3C\BD3C;
                       TAY                                       ;;BC3D|BD3D+BD3D/BD3D\BD3D;
-                      REP #$20                                  ;;BC3E|BD3E+BD3E/BD3E\BD3E; Accum (16 bit) 
+                      REP #$20                                  ;;BC3E|BD3E+BD3E/BD3E\BD3E; A->16
                       LDA.W DATA_05C9D1,Y                       ;;BC40|BD40+BD40/BD40\BD40;
                       STA.W Layer1ScrollCmd                     ;;BC43|BD43+BD43/BD43\BD43;
                       LDA.W DATA_05C9DB,Y                       ;;BC46|BD46+BD46/BD46\BD46;
                       STA.W Layer1ScrollBits                    ;;BC49|BD49+BD49/BD49\BD49;
 CODE_05BD4C:          LDX.W ScrollLayerIndex                    ;;BC4C|BD4C+BD4C/BD4C\BD4C;
-                      REP #$20                                  ;;BC4F|BD4F+BD4F/BD4F\BD4F; Accum (16 bit) 
+                      REP #$20                                  ;;BC4F|BD4F+BD4F/BD4F\BD4F; A->16
                       STZ.W Layer1ScrollXSpeed,X                ;;BC51|BD51+BD51/BD51\BD51;
                       STZ.W Layer1ScrollYSpeed,X                ;;BC54|BD54+BD54/BD54\BD54;
                       STZ.W Layer1ScrollXPosUpd,X               ;;BC57|BD57+BD57/BD57\BD57;
                       STZ.W Layer1ScrollYPosUpd,X               ;;BC5A|BD5A+BD5A/BD5A\BD5A;
-                      SEP #$20                                  ;;BC5D|BD5D+BD5D/BD5D\BD5D; Accum (8 bit) 
+                      SEP #$20                                  ;;BC5D|BD5D+BD5D/BD5D\BD5D; A->8
                       TXA                                       ;;BC5F|BD5F+BD5F/BD5F\BD5F;
                       LSR A                                     ;;BC60|BD60+BD60/BD60\BD60;
                       LSR A                                     ;;BC61|BD61+BD61/BD61\BD61;
@@ -4459,17 +4459,17 @@ CODE_05BD4C:          LDX.W ScrollLayerIndex                    ;;BC4C|BD4C+BD4C
                       STA.W Layer1ScrollType,X                  ;;BC71|BD71+BD71/BD71\BD71;
                       LDA.W DATA_05CA68,Y                       ;;BC74|BD74+BD74/BD74\BD74;
                       STA.W Layer1ScrollTimer,X                 ;;BC77|BD77+BD77/BD77\BD77;
-                      RTS                                       ;;BC7A|BD7A+BD7A/BD7A\BD7A; Return 
+                      RTS                                       ;;BC7A|BD7A+BD7A/BD7A\BD7A;
                                                                 ;;                        ;
                       LDA.W Layer1ScrollBits                    ;;BC7B|BD7B+BD7B/BD7B\BD7B; \ Unreachable 
                       ASL A                                     ;;BC7E|BD7E+BD7E/BD7E\BD7E;
                       TAY                                       ;;BC7F|BD7F+BD7F/BD7F\BD7F;
-                      REP #$20                                  ;;BC80|BD80+BD80/BD80\BD80; Accum (16 bit) 
+                      REP #$20                                  ;;BC80|BD80+BD80/BD80\BD80; A->16
                       LDA.W DATA_05C9E5,Y                       ;;BC82|BD82+BD82/BD82\BD82;
                       STA.W Layer1ScrollCmd                     ;;BC85|BD85+BD85/BD85\BD85;
                       LDA.W DATA_05C9E7,Y                       ;;BC88|BD88+BD88/BD88\BD88;
                       STA.W Layer1ScrollBits                    ;;BC8B|BD8B+BD8B/BD8B\BD8B;
-                      REP #$20                                  ;;BC8E|BD8E+BD8E/BD8E\BD8E; Accum (16 bit) 
+                      REP #$20                                  ;;BC8E|BD8E+BD8E/BD8E\BD8E; A->16
                       LDY.W Layer1ScrollBits                    ;;BC90|BD90+BD90/BD90\BD90;
                       LDA.W ScrollLayerIndex                    ;;BC93|BD93+BD93/BD93\BD93;
                       AND.W #$00FF                              ;;BC96|BD96+BD96/BD96\BD96;
@@ -4495,7 +4495,7 @@ CODE_05BD4C:          LDX.W ScrollLayerIndex                    ;;BC4C|BD4C+BD4C
                       STZ.W Layer1ScrollYPosUpd,X               ;;BCC6|BDC6+BDC6/BDC6\BDC6;
 CODE_05BDC9:          STZ.W Layer1ScrollXSpeed,X                ;;BCC9|BDC9+BDC9/BDC9\BDC9;
                       STZ.W Layer1ScrollYSpeed,X                ;;BCCC|BDCC+BDCC/BDCC\BDCC;
-CODE_05BDCF:          SEP #$20                                  ;;BCCF|BDCF+BDCF/BDCF\BDCF; Accum (8 bit) 
+CODE_05BDCF:          SEP #$20                                  ;;BCCF|BDCF+BDCF/BDCF\BDCF; A->8
                       TXA                                       ;;BCD1|BDD1+BDD1/BDD1\BDD1;
                       LSR A                                     ;;BCD2|BDD2+BDD2/BDD2\BDD2;
                       LSR A                                     ;;BCD3|BDD3+BDD3/BDD3\BDD3;
@@ -4503,17 +4503,17 @@ CODE_05BDCF:          SEP #$20                                  ;;BCCF|BDCF+BDCF
                       TAX                                       ;;BCD6|BDD6+BDD6/BDD6\BDD6;
                       LDA.B #$FF                                ;;BCD7|BDD7+BDD7/BDD7\BDD7;
                       STA.W Layer1ScrollTimer,X                 ;;BCD9|BDD9+BDD9/BDD9\BDD9;
-                      RTS                                       ;;BCDC|BDDC+BDDC/BDDC\BDDC; Return 
+                      RTS                                       ;;BCDC|BDDC+BDDC/BDDC\BDDC;
                                                                 ;;                        ;
 ADDR_05BDDD:          LDA.W Layer1ScrollBits                    ;;BCDD|BDDD+BDDD/BDDD\BDDD;
                       ASL A                                     ;;BCE0|BDE0+BDE0/BDE0\BDE0;
                       TAY                                       ;;BCE1|BDE1+BDE1/BDE1\BDE1;
-                      REP #$20                                  ;;BCE2|BDE2+BDE2/BDE2\BDE2; Accum (16 bit) 
+                      REP #$20                                  ;;BCE2|BDE2+BDE2/BDE2\BDE2; A->16
                       LDA.W DATA_05CA08,Y                       ;;BCE4|BDE4+BDE4/BDE4\BDE4;
                       STA.W Layer1ScrollCmd                     ;;BCE7|BDE7+BDE7/BDE7\BDE7;
                       LDA.W DATA_05CA0C,Y                       ;;BCEA|BDEA+BDEA/BDEA\BDEA;
                       STA.W Layer1ScrollBits                    ;;BCED|BDED+BDED/BDED\BDED;
-ADDR_05BDF0:          REP #$20                                  ;;BCF0|BDF0+BDF0/BDF0\BDF0; Accum (16 bit) 
+ADDR_05BDF0:          REP #$20                                  ;;BCF0|BDF0+BDF0/BDF0\BDF0; A->16
                       LDY.W Layer1ScrollBits                    ;;BCF2|BDF2+BDF2/BDF2\BDF2;
                       LDA.W ScrollLayerIndex                    ;;BCF5|BDF5+BDF5/BDF5\BDF5;
                       AND.W #$00FF                              ;;BCF8|BDF8+BDF8/BDF8\BDF8;
@@ -4546,18 +4546,18 @@ ADDR_05BDF0:          REP #$20                                  ;;BCF0|BDF0+BDF0
                       STZ.W Layer1ScrollXSpeed,X                ;;BD2E|BE2E+BE2E/BE2E\BE2E;
                       STZ.W Layer1ScrollYSpeed,X                ;;BD31|BE31+BE31/BE31\BE31;
                       STZ.W Layer1ScrollYPosUpd,X               ;;BD34|BE34+BE34/BE34\BE34;
-                      SEP #$20                                  ;;BD37|BE37+BE37/BE37\BE37; Accum (8 bit) 
-                      RTS                                       ;;BD39|BE39+BE39/BE39\BE39; Return 
+                      SEP #$20                                  ;;BD37|BE37+BE37/BE37\BE37; A->8
+                      RTS                                       ;;BD39|BE39+BE39/BE39\BE39;
                                                                 ;;                        ;
 ADDR_05BE3A:          LDA.W Layer1ScrollBits                    ;;BD3A|BE3A+BE3A/BE3A\BE3A;
                       ASL A                                     ;;BD3D|BE3D+BE3D/BE3D\BE3D;
                       TAY                                       ;;BD3E|BE3E+BE3E/BE3E\BE3E;
-                      REP #$20                                  ;;BD3F|BE3F+BE3F/BE3F\BE3F; Accum (16 bit) 
+                      REP #$20                                  ;;BD3F|BE3F+BE3F/BE3F\BE3F; A->16
                       LDA.W DATA_05CA16,Y                       ;;BD41|BE41+BE41/BE41\BE41;
                       STA.W Layer1ScrollCmd                     ;;BD44|BE44+BE44/BE44\BE44;
                       LDA.W DATA_05CA1E,Y                       ;;BD47|BE47+BE47/BE47\BE47;
                       STA.W Layer1ScrollBits                    ;;BD4A|BE4A+BE4A/BE4A\BE4A;
-ADDR_05BE4D:          REP #$20                                  ;;BD4D|BE4D+BE4D/BE4D\BE4D; Accum (16 bit) 
+ADDR_05BE4D:          REP #$20                                  ;;BD4D|BE4D+BE4D/BE4D\BE4D; A->16
                       LDY.W Layer1ScrollBits                    ;;BD4F|BE4F+BE4F/BE4F\BE4F;
                       LDA.W ScrollLayerIndex                    ;;BD52|BE52+BE52/BE52\BE52;
                       AND.W #$00FF                              ;;BD55|BE55+BE55/BE55\BE55;
@@ -4581,13 +4581,13 @@ ADDR_05BE4D:          REP #$20                                  ;;BD4D|BE4D+BE4D
                       STZ.W Layer1ScrollXSpeed,X                ;;BD7E|BE7E+BE7E/BE7E\BE7E;
                       STZ.W Layer1ScrollYSpeed,X                ;;BD81|BE81+BE81/BE81\BE81;
                       STZ.W Layer1ScrollXPosUpd,X               ;;BD84|BE84+BE84/BE84\BE84;
-                      SEP #$20                                  ;;BD87|BE87+BE87/BE87\BE87; Accum (8 bit) 
-                      RTS                                       ;;BD89|BE89+BE89/BE89\BE89; Return 
+                      SEP #$20                                  ;;BD87|BE87+BE87/BE87\BE87; A->8
+                      RTS                                       ;;BD89|BE89+BE89/BE89\BE89;
                                                                 ;;                        ;
 CODE_05BE8A:          PHB                                       ;;BD8A|BE8A+BE8A/BE8A\BE8A;
                       PHK                                       ;;BD8B|BE8B+BE8B/BE8B\BE8B;
                       PLB                                       ;;BD8C|BE8C+BE8C/BE8C\BE8C;
-                      REP #$20                                  ;;BD8D|BE8D+BE8D/BE8D\BE8D; Accum (16 bit) 
+                      REP #$20                                  ;;BD8D|BE8D+BE8D/BE8D\BE8D; A->16
                       LDA.W DATA_05CA26                         ;;BD8F|BE8F+BE8F/BE8F\BE8F;
                       STA.W Layer3ScroolDir                     ;;BD92|BE92+BE92/BE92\BE92;
                       STZ.W Layer3ScrollXSpeed                  ;;BD95|BE95+BE95/BE95\BE95;
@@ -4595,15 +4595,15 @@ CODE_05BE8A:          PHB                                       ;;BD8A|BE8A+BE8A
                       STZ.W Layer3ScrollXPosUpd                 ;;BD9B|BE9B+BE9B/BE9B\BE9B;
                       LDA.B Layer1YPos                          ;;BD9E|BE9E+BE9E/BE9E\BE9E;
                       STA.B Layer3YPos                          ;;BDA0|BEA0+BEA0/BEA0\BEA0;
-                      SEP #$20                                  ;;BDA2|BEA2+BEA2/BEA2\BEA2; Accum (8 bit) 
+                      SEP #$20                                  ;;BDA2|BEA2+BEA2/BEA2\BEA2; A->8
                       PLB                                       ;;BDA4|BEA4+BEA4/BEA4\BEA4;
-                      RTL                                       ;;BDA5|BEA5+BEA5/BEA5\BEA5; Return 
+                      RTL                                       ;;BDA5|BEA5+BEA5/BEA5\BEA5;
                                                                 ;;                        ;
 CODE_05BEA6:          STZ.W HorizLayer1Setting                  ;;BDA6|BEA6+BEA6/BEA6\BEA6;
                       LDA.W Layer1ScrollBits                    ;;BDA9|BEA9+BEA9/BEA9\BEA9;
                       ASL A                                     ;;BDAC|BEAC+BEAC/BEAC\BEAC;
                       TAY                                       ;;BDAD|BEAD+BEAD/BEAD\BEAD;
-                      REP #$20                                  ;;BDAE|BEAE+BEAE/BEAE\BEAE; Accum (16 bit) 
+                      REP #$20                                  ;;BDAE|BEAE+BEAE/BEAE\BEAE; A->16
                       LDA.W DATA_05CA3E,Y                       ;;BDB0|BEB0+BEB0/BEB0\BEB0;
                       STA.W Layer1ScrollCmd                     ;;BDB3|BEB3+BEB3/BEB3\BEB3;
                       LDA.W DATA_05CA42,Y                       ;;BDB6|BEB6+BEB6/BEB6\BEB6;
@@ -4612,7 +4612,7 @@ CODE_05BEA6:          STZ.W HorizLayer1Setting                  ;;BDA6|BEA6+BEA6
                       STZ.W NextLayer1XPos                      ;;BDBE|BEBE+BEBE/BEBE\BEBE;
                       STZ.B Layer2XPos                          ;;BDC1|BEC1+BEC1/BEC1\BEC1;
                       STZ.W NextLayer2XPos                      ;;BDC3|BEC3+BEC3/BEC3\BEC3;
-CODE_05BEC6:          REP #$20                                  ;;BDC6|BEC6+BEC6/BEC6\BEC6; Accum (16 bit) 
+CODE_05BEC6:          REP #$20                                  ;;BDC6|BEC6+BEC6/BEC6\BEC6; A->16
                       LDY.W Layer1ScrollBits                    ;;BDC8|BEC8+BEC8/BEC8\BEC8;
                       LDA.W ScrollLayerIndex                    ;;BDCB|BECB+BECB/BECB\BECB;
                       AND.W #$00FF                              ;;BDCE|BECE+BECE/BECE\BECE;
@@ -4647,12 +4647,12 @@ CODE_05BF0A:          STZ.W VertLayer2Setting                   ;;BE0A|BF0A+BF0A
                       LDA.W Layer1ScrollBits                    ;;BE0D|BF0D+BF0D/BF0D\BF0D;
                       ASL A                                     ;;BE10|BF10+BF10/BF10\BF10;
                       TAY                                       ;;BE11|BF11+BF11/BF11\BF11;
-                      REP #$20                                  ;;BE12|BF12+BF12/BF12\BF12; Accum (16 bit) 
+                      REP #$20                                  ;;BE12|BF12+BF12/BF12\BF12; A->16
                       LDA.W DATA_05CA48,Y                       ;;BE14|BF14+BF14/BF14\BF14;
                       STA.W Layer1ScrollCmd                     ;;BE17|BF17+BF17/BF17\BF17;
                       LDA.W DATA_05CA52,Y                       ;;BE1A|BF1A+BF1A/BF1A\BF1A;
                       STA.W Layer1ScrollBits                    ;;BE1D|BF1D+BF1D/BF1D\BF1D;
-CODE_05BF20:          REP #$20                                  ;;BE20|BF20+BF20/BF20\BF20; Accum (16 bit) 
+CODE_05BF20:          REP #$20                                  ;;BE20|BF20+BF20/BF20\BF20; A->16
                       LDY.W Layer1ScrollBits                    ;;BE22|BF22+BF22/BF22\BF22;
                       LDA.W ScrollLayerIndex                    ;;BE25|BF25+BF25/BF25\BF25;
                       AND.W #$00FF                              ;;BE28|BF28+BF28/BF28\BF28;
@@ -4685,27 +4685,27 @@ CODE_05BF20:          REP #$20                                  ;;BE20|BF20+BF20
                       STZ.W Layer1ScrollYSpeed,X                ;;BE64|BF64+BF64/BF64\BF64;
                       JMP CODE_05BDCF                           ;;BE67|BF67+BF67/BF67\BF67;
                                                                 ;;                        ;
-CODE_05BF6A:          LDY.W Layer1ScrollBits                    ;;BE6A|BF6A+BF6A/BF6A\BF6A; Accum (8 bit) 
+CODE_05BF6A:          LDY.W Layer1ScrollBits                    ;;BE6A|BF6A+BF6A/BF6A\BF6A;
                       LDA.W DATA_05C94F,Y                       ;;BE6D|BF6D+BF6D/BF6D\BF6D;
                       STA.W Layer1ScrollBits                    ;;BE70|BF70+BF70/BF70\BF70;
                       LDA.W DATA_05C952,Y                       ;;BE73|BF73+BF73/BF73\BF73;
                       STA.W Layer2ScrollBits                    ;;BE76|BF76+BF76/BF76\BF76;
-                      REP #$20                                  ;;BE79|BF79+BF79/BF79\BF79; Accum (16 bit) 
+                      REP #$20                                  ;;BE79|BF79+BF79/BF79\BF79; A->16
                       LDA.W #$0200                              ;;BE7B|BF7B+BF7B/BF7B\BF7B;
                       JSR CODE_05BFD2                           ;;BE7E|BF7E+BF7E/BF7E\BF7E;
-                      LDA.W Layer1ScrollBits                    ;;BE81|BF81+BF81/BF81\BF81; Accum (8 bit) 
+                      LDA.W Layer1ScrollBits                    ;;BE81|BF81+BF81/BF81\BF81;
                       CLC                                       ;;BE84|BF84+BF84/BF84\BF84;
                       ADC.B #$0A                                ;;BE85|BF85+BF85/BF85\BF85;
                       TAX                                       ;;BE87|BF87+BF87/BF87\BF87;
                       LDY.B #$01                                ;;BE88|BF88+BF88/BF88\BF88;
                       JSR CODE_05C95B                           ;;BE8A|BF8A+BF8A/BF8A\BF8A;
-                      REP #$20                                  ;;BE8D|BF8D+BF8D/BF8D\BF8D; Accum (16 bit) 
+                      REP #$20                                  ;;BE8D|BF8D+BF8D/BF8D\BF8D; A->16
                       LDA.W NextLayer2YPos                      ;;BE8F|BF8F+BF8F/BF8F\BF8F;
                       STA.B Layer2YPos                          ;;BE92|BF92+BF92/BF92\BF92;
                       JMP CODE_05C32B                           ;;BE94|BF94+BF94/BF94\BF94;
                                                                 ;;                        ;
 ADDR_05BF97:          STZ.W HorizLayer1Setting                  ;;BE97|BF97+BF97/BF97\BF97;
-                      REP #$20                                  ;;BE9A|BF9A+BF9A/BF9A\BF9A; Accum (16 bit) 
+                      REP #$20                                  ;;BE9A|BF9A+BF9A/BF9A\BF9A; A->16
                       STZ.B Layer1XPos                          ;;BE9C|BF9C+BF9C/BF9C\BF9C;
                       STZ.W NextLayer1XPos                      ;;BE9E|BF9E+BF9E/BF9E\BF9E;
                       STZ.B Layer2XPos                          ;;BEA1|BFA1+BFA1/BFA1\BFA1;
@@ -4714,13 +4714,13 @@ ADDR_05BF97:          STZ.W HorizLayer1Setting                  ;;BE97|BF97+BF97
                       STA.W Layer1ScrollCmd                     ;;BEA9|BFA9+BFA9/BFA9\BFA9;
                       STZ.W Layer2ScrollYSpeed                  ;;BEAC|BFAC+BFAC/BFAC\BFAC;
                       STZ.W Layer2ScrollYPosUpd                 ;;BEAF|BFAF+BFAF/BFAF\BFAF;
-                      SEP #$20                                  ;;BEB2|BFB2+BFB2/BFB2\BFB2; Accum (8 bit) 
+                      SEP #$20                                  ;;BEB2|BFB2+BFB2/BFB2\BFB2; A->8
                       LDA.B #$60                                ;;BEB4|BFB4+BFB4/BFB4\BFB4;
                       STA.W Layer2ScrollBits                    ;;BEB6|BFB6+BFB6/BFB6\BFB6;
-                      RTS                                       ;;BEB9|BFB9+BFB9/BFB9\BFB9; Return 
+                      RTS                                       ;;BEB9|BFB9+BFB9/BFB9\BFB9;
                                                                 ;;                        ;
 ADDR_05BFBA:          STZ.W HorizLayer1Setting                  ;;BEBA|BFBA+BFBA/BFBA\BFBA;
-                      REP #$20                                  ;;BEBD|BFBD+BFBD/BFBD\BFBD; Accum (16 bit) 
+                      REP #$20                                  ;;BEBD|BFBD+BFBD/BFBD\BFBD; A->16
                       STZ.B Layer2XPos                          ;;BEBF|BFBF+BFBF/BFBF\BFBF;
                       STZ.W NextLayer2XPos                      ;;BEC1|BFC1+BFC1/BFC1\BFC1;
                       LDA.W #$03C0                              ;;BEC4|BFC4+BFC4/BFC4\BFC4;
@@ -4739,10 +4739,10 @@ CODE_05BFD5:          STZ.W Layer1ScrollType                    ;;BED5|BFD5+BFD5
                       STZ.W Layer2ScrollYSpeed                  ;;BEEA|BFEA+BFEA/BFEA\BFEA;
                       STZ.W Layer2ScrollXPosUpd                 ;;BEED|BFED+BFED/BFED\BFED;
                       STZ.W Layer2ScrollYPosUpd                 ;;BEF0|BFF0+BFF0/BFF0\BFF0;
-                      SEP #$20                                  ;;BEF3|BFF3+BFF3/BFF3\BFF3; Accum (8 bit) 
-Return05BFF5:         RTS                                       ;;BEF5|BFF5+BFF5/BFF5\BFF5; Return 
+                      SEP #$20                                  ;;BEF3|BFF3+BFF3/BFF3\BFF3; A->8
+Return05BFF5:         RTS                                       ;;BEF5|BFF5+BFF5/BFF5\BFF5;
                                                                 ;;                        ;
-CODE_05BFF6:          REP #$20                                  ;;BEF6|BFF6+BFF6/BFF6\BFF6; Accum (16 bit) 
+CODE_05BFF6:          REP #$20                                  ;;BEF6|BFF6+BFF6/BFF6\BFF6; A->16
                       LDA.W #$0B00                              ;;BEF8|BFF8+BFF8/BFF8\BFF8;
                       BRA CODE_05BFD2                           ;;BEFB|BFFB+BFFB/BFFB\BFFB;
                                                                 ;;                        ;
@@ -4755,30 +4755,30 @@ CODE_05C005:          STZ.W HorizLayer1Setting                  ;;BF05|C005+C005
                       LDA.W Layer1ScrollBits                    ;;BF08|C008+C008/C008\C008;
                       ASL A                                     ;;BF0B|C00B+C00B/C00B\C00B;
                       TAY                                       ;;BF0C|C00C+C00C/C00C\C00C;
-                      REP #$20                                  ;;BF0D|C00D+C00D/C00D\C00D; Accum (16 bit) 
+                      REP #$20                                  ;;BF0D|C00D+C00D/C00D\C00D; A->16
                       LDA.W DATA_05BFFD,Y                       ;;BF0F|C00F+C00F/C00F\C00F;
                       STA.W Layer1ScrollBits                    ;;BF12|C012+C012/C012\C012;
                       LDA.W #$000C                              ;;BF15|C015+C015/C015\C015;
                       BRA CODE_05BFD2                           ;;BF18|C018+C018/C018\C018;
                                                                 ;;                        ;
-CODE_05C01A:          REP #$20                                  ;;BF1A|C01A+C01A/C01A\C01A; Accum (16 bit) 
+CODE_05C01A:          REP #$20                                  ;;BF1A|C01A+C01A/C01A\C01A; A->16
                       LDA.W #$0D00                              ;;BF1C|C01C+C01C/C01C\C01C;
                       JSR CODE_05BFD2                           ;;BF1F|C01F+C01F/C01F\C01F;
 CODE_05C022:          STZ.W HorizLayer2Setting                  ;;BF22|C022+C022/C022\C022;
-                      REP #$20                                  ;;BF25|C025+C025/C025\C025; Accum (16 bit) 
+                      REP #$20                                  ;;BF25|C025+C025/C025\C025; A->16
                       STZ.W Layer2ScrollXSpeed                  ;;BF27|C027+C027/C027\C027;
                       STZ.W Layer2ScrollYSpeed                  ;;BF2A|C02A+C02A/C02A\C02A;
                       STZ.W Layer2ScrollXPosUpd                 ;;BF2D|C02D+C02D/C02D\C02D;
                       STZ.W Layer2ScrollYPosUpd                 ;;BF30|C030+C030/C030\C030;
-                      SEP #$20                                  ;;BF33|C033+C033/C033\C033; Accum (8 bit) 
-                      RTS                                       ;;BF35|C035+C035/C035\C035; Return 
+                      SEP #$20                                  ;;BF33|C033+C033/C033\C033; A->8
+                      RTS                                       ;;BF35|C035+C035/C035\C035;
                                                                 ;;                        ;
 CODE_05C036:          LDY.W Layer1ScrollBits                    ;;BF36|C036+C036/C036\C036;
                       LDA.W DATA_05C808,Y                       ;;BF39|C039+C039/C039\C039;
                       STA.W Layer1ScrollTimer                   ;;BF3C|C03C+C03C/C03C\C03C;
                       LDA.W DATA_05C80B,Y                       ;;BF3F|C03F+C03F/C03F\C03F;
                       STA.W Layer2ScrollTimer                   ;;BF42|C042+C042/C042\C042;
-                      REP #$20                                  ;;BF45|C045+C045/C045\C045; Accum (16 bit) 
+                      REP #$20                                  ;;BF45|C045+C045/C045\C045; A->16
                       LDA.W #$0E00                              ;;BF47|C047+C047/C047\C047;
                       JMP CODE_05BFD5                           ;;BF4A|C04A+C04A/C04A\C04A;
                                                                 ;;                        ;
@@ -4790,9 +4790,9 @@ CODE_05C04D:          LDA.W ScrollLayerIndex                    ;;BF4D|C04D+C04D
                       BNE +                                     ;;BF56|C056+C056/C056\C056;
                       LDX.W ScrollLayerIndex                    ;;BF58|C058+C058/C058\C058;
                       STZ.W Layer1ScrollXSpeed,X                ;;BF5B|C05B+C05B/C05B\C05B;
-                      RTS                                       ;;BF5E|C05E+C05E/C05E\C05E; Return 
+                      RTS                                       ;;BF5E|C05E+C05E/C05E\C05E;
                                                                 ;;                        ;
-                    + REP #$20                                  ;;BF5F|C05F+C05F/C05F\C05F; Accum (16 bit) 
+                    + REP #$20                                  ;;BF5F|C05F+C05F/C05F\C05F; A->16
                       LDA.W Layer1ScrollType,X                  ;;BF61|C061+C061/C061\C061;
                       TAY                                       ;;BF64|C064+C064/C064\C064;
                       LDA.W DATA_05CA6E,Y                       ;;BF65|C065+C065/C065\C065;
@@ -4869,18 +4869,18 @@ CODE_05C0D0:          LDA.B ScreenMode                          ;;BFD0|C0D0+C0D0
                       LDA.W #$0001                              ;;BFF0|C0F0+C0F0/C0F0\C0F0;
                       STA.B _8                                  ;;BFF3|C0F3+C0F3/C0F3\C0F3;
                     + LDA.B _A                                  ;;BFF5|C0F5+C0F5/C0F5\C0F5;
-                      STA.W HW_WRDIV                            ;;BFF7|C0F7+C0F7/C0F7\C0F7; Dividend (Low Byte)
-                      SEP #$20                                  ;;BFFA|C0FA+C0FA/C0FA\C0FA; Accum (8 bit) 
+                      STA.W HW_WRDIV                            ;;BFF7|C0F7+C0F7/C0F7\C0F7;
+                      SEP #$20                                  ;;BFFA|C0FA+C0FA/C0FA\C0FA; A->8
                       LDA.W DATA_05CB0F,Y                       ;;BFFC|C0FC+C0FC/C0FC\C0FC;
-                      STA.W HW_WRDIV+2                          ;;BFFF|C0FF+C0FF/C0FF\C0FF; Divisor B
+                      STA.W HW_WRDIV+2                          ;;BFFF|C0FF+C0FF/C0FF\C0FF;
                       NOP                                       ;;C002|C102+C102/C102\C102;
                       NOP                                       ;;C003|C103+C103/C103\C103;
                       NOP                                       ;;C004|C104+C104/C104\C104;
                       NOP                                       ;;C005|C105+C105/C105\C105;
                       NOP                                       ;;C006|C106+C106/C106\C106;
                       NOP                                       ;;C007|C107+C107/C107\C107;
-                      REP #$20                                  ;;C008|C108+C108/C108\C108; Accum (16 bit) 
-                      LDA.W HW_RDDIV                            ;;C00A|C10A+C10A/C10A\C10A; Quotient of Divide Result (Low Byte)
+                      REP #$20                                  ;;C008|C108+C108/C108\C108; A->16
+                      LDA.W HW_RDDIV                            ;;C00A|C10A+C10A/C10A\C10A;
                       BNE +                                     ;;C00D|C10D+C10D/C10D\C10D;
                       LDA.W ScrollLayerIndex                    ;;C00F|C10F+C10F/C10F\C10F;
                       AND.W #$00FF                              ;;C012|C112+C112/C112\C112;
@@ -4888,11 +4888,11 @@ CODE_05C0D0:          LDA.B ScreenMode                          ;;BFD0|C0D0+C0D0
                       LSR A                                     ;;C016|C116+C116/C116\C116;
                       TAX                                       ;;C017|C117+C117/C117\C117;
                       INC.W Layer1ScrollType,X                  ;;C018|C118+C118/C118\C118;
-                      SEP #$20                                  ;;C01B|C11B+C11B/C11B\C11B; Accum (8 bit) 
+                      SEP #$20                                  ;;C01B|C11B+C11B/C11B\C11B; A->8
                       DEC.W Layer1ScrollTimer,X                 ;;C01D|C11D+C11D/C11D\C11D;
                       JMP CODE_05C04D                           ;;C020|C120+C120/C120\C120;
                                                                 ;;                        ;
-                    + STA.B _A                                  ;;C023|C123+C123/C123\C123; Accum (16 bit) 
+                    + STA.B _A                                  ;;C023|C123+C123/C123\C123;
                       LDA.B _C                                  ;;C025|C125+C125/C125\C125;
                       ASL A                                     ;;C027|C127+C127/C127\C127;
                       ASL A                                     ;;C028|C128+C128/C128\C128;
@@ -4956,19 +4956,19 @@ CODE_05C18D:          JSR CODE_05C4F9                           ;;C08D|C18D+C18D
                       DEX                                       ;;C091|C191+C191/C191\C191;
                       DEX                                       ;;C092|C192+C192/C192\C192;
                       BPL CODE_05C15D                           ;;C093|C193+C193/C193\C193;
-                      SEP #$20                                  ;;C095|C195+C195/C195\C195; Accum (8 bit) 
-                      RTS                                       ;;C097|C197+C197/C197\C197; Return 
+                      SEP #$20                                  ;;C095|C195+C195/C195\C195; A->8
+                      RTS                                       ;;C097|C197+C197/C197\C197;
                                                                 ;;                        ;
 CODE_05C198:          JSR CODE_05C04D                           ;;C098|C198+C198/C198\C198;
-                      REP #$20                                  ;;C09B|C19B+C19B/C19B\C19B; Accum (16 bit) 
+                      REP #$20                                  ;;C09B|C19B+C19B/C19B\C19B; A->16
                       LDA.W NextLayer2XPos                      ;;C09D|C19D+C19D/C19D\C19D;
                       STA.W NextLayer1XPos                      ;;C0A0|C1A0+C1A0/C1A0\C1A0;
                       LDA.B Layer2YPos                          ;;C0A3|C1A3+C1A3/C1A3\C1A3;
                       CLC                                       ;;C0A5|C1A5+C1A5/C1A5\C1A5;
                       ADC.W ScreenShakeYOffset                  ;;C0A6|C1A6+C1A6/C1A6\C1A6;
                       STA.B Layer2YPos                          ;;C0A9|C1A9+C1A9/C1A9\C1A9;
-                      SEP #$20                                  ;;C0AB|C1AB+C1AB/C1AB\C1AB; Accum (8 bit) 
-                      RTS                                       ;;C0AD|C1AD+C1AD/C1AD\C1AD; Return 
+                      SEP #$20                                  ;;C0AB|C1AB+C1AB/C1AB\C1AB; A->8
+                      RTS                                       ;;C0AD|C1AD+C1AD/C1AD\C1AD;
                                                                 ;;                        ;
                       LDA.W ScrollLayerIndex                    ;;C0AE|C1AE+C1AE/C1AE\C1AE; \ Unreachable 
                       LSR A                                     ;;C0B1|C1B1+C1B1/C1B1\C1B1;
@@ -4980,14 +4980,14 @@ CODE_05C198:          JSR CODE_05C04D                           ;;C098|C198+C198
                       LDA.W Layer1ScrollTimer,X                 ;;C0BC|C1BC+C1BC/C1BC\C1BC;
                       CMP.B #$20                                ;;C0BF|C1BF+C1BF/C1BF\C1BF;
                       BCC +                                     ;;C0C1|C1C1+C1C1/C1C1\C1C1;
-                      REP #$20                                  ;;C0C3|C1C3+C1C3/C1C3\C1C3; Accum (16 bit) 
+                      REP #$20                                  ;;C0C3|C1C3+C1C3/C1C3\C1C3; A->16
                       LDX.W ScrollLayerIndex                    ;;C0C5|C1C5+C1C5/C1C5\C1C5;
                       LDA.W NextLayer1YPos,X                    ;;C0C8|C1C8+C1C8/C1C8\C1C8;
                       EOR.W #$0001                              ;;C0CB|C1CB+C1CB/C1CB\C1CB;
                       STA.W NextLayer1YPos,X                    ;;C0CE|C1CE+C1CE/C1CE\C1CE;
                     + JMP CODE_05C32B                           ;;C0D1|C1D1+C1D1/C1D1\C1D1;
                                                                 ;;                        ;
-ADDR_05C1D4:          REP #$30                                  ;;C0D4|C1D4+C1D4/C1D4\C1D4; Index (16 bit) Accum (16 bit) 
+ADDR_05C1D4:          REP #$30                                  ;;C0D4|C1D4+C1D4/C1D4\C1D4; AXY->16
                       LDY.W ScrollLayerIndex                    ;;C0D6|C1D6+C1D6/C1D6\C1D6;
                       LDA.W Layer1ScrollXPosUpd,Y               ;;C0D9|C1D9+C1D9/C1D9\C1D9;
                       TAX                                       ;;C0DC|C1DC+C1DC/C1DC\C1DC;
@@ -5000,11 +5000,11 @@ ADDR_05C1D4:          REP #$30                                  ;;C0D4|C1D4+C1D4
                                                                 ;;                        ;
 ADDR_05C1EB:          STA.B _2                                  ;;C0EB|C1EB+C1EB/C1EB\C1EB;
                       STX.B _4                                  ;;C0ED|C1ED+C1ED/C1ED\C1ED;
-                    + SEP #$10                                  ;;C0EF|C1EF+C1EF/C1EF\C1EF; Index (8 bit) 
+                    + SEP #$10                                  ;;C0EF|C1EF+C1EF/C1EF\C1EF; XY->8
                       LDA.B _2                                  ;;C0F1|C1F1+C1F1/C1F1\C1F1;
                       CMP.B _4                                  ;;C0F3|C1F3+C1F3/C1F3\C1F3;
                       BCC ADDR_05C24D                           ;;C0F5|C1F5+C1F5/C1F5\C1F5;
-                      SEP #$20                                  ;;C0F7|C1F7+C1F7/C1F7\C1F7; Accum (8 bit) 
+                      SEP #$20                                  ;;C0F7|C1F7+C1F7/C1F7\C1F7; A->8
                       LDA.W ScrollLayerIndex                    ;;C0F9|C1F9+C1F9/C1F9\C1F9;
                       AND.B #$FF                                ;;C0FC|C1FC+C1FC/C1FC\C1FC;
                       LSR A                                     ;;C0FE|C1FE+C1FE/C1FE\C1FE;
@@ -5012,7 +5012,7 @@ ADDR_05C1EB:          STA.B _2                                  ;;C0EB|C1EB+C1EB
                       TAX                                       ;;C100|C200+C200/C200\C200;
                       LDA.B #$30                                ;;C101|C201+C201/C201\C201;
                       STA.W Layer1ScrollTimer,X                 ;;C103|C203+C203/C203\C203;
-                      REP #$20                                  ;;C106|C206+C206/C206\C206; Accum (16 bit) 
+                      REP #$20                                  ;;C106|C206+C206/C206\C206; A->16
                       LDX.W ScrollLayerIndex                    ;;C108|C208+C208/C208\C208;
                       STZ.W Layer1ScrollYSpeed,X                ;;C10B|C20B+C20B/C20B\C20B;
                       STZ.W Layer1ScrollYPosUpd,X               ;;C10E|C20E+C20E/C20E\C20E;
@@ -5067,7 +5067,7 @@ ADDR_05C24D:          LDA.W ScrollLayerIndex                    ;;C14D|C24D+C24D
                       STA.W Layer1ScrollYSpeed,X                ;;C17D|C27D+C27D/C27D\C27D;
 ADDR_05C280:          JMP ADDR_05C31D                           ;;C180|C280+C280/C280\C280;
                                                                 ;;                        ;
-ADDR_05C283:          REP #$20                                  ;;C183|C283+C283/C283\C283; Accum (16 bit) 
+ADDR_05C283:          REP #$20                                  ;;C183|C283+C283/C283\C283; A->16
                       LDY.W ScrollLayerIndex                    ;;C185|C285+C285/C285\C285;
                       LDA.W Layer1ScrollXPosUpd,Y               ;;C188|C288+C288/C288\C288;
                       SEC                                       ;;C18B|C28B+C28B/C28B\C28B;
@@ -5087,18 +5087,18 @@ ADDR_05C283:          REP #$20                                  ;;C183|C283+C283
                       LSR A                                     ;;C1A7|C2A7+C2A7/C2A7\C2A7;
                       TAX                                       ;;C1A8|C2A8+C2A8/C2A8\C2A8;
                       LDA.B _2                                  ;;C1A9|C2A9+C2A9/C2A9\C2A9;
-                      STA.W HW_WRDIV                            ;;C1AB|C2AB+C2AB/C2AB\C2AB; Dividend (Low Byte)
-                      SEP #$20                                  ;;C1AE|C2AE+C2AE/C2AE\C2AE; Accum (8 bit) 
+                      STA.W HW_WRDIV                            ;;C1AB|C2AB+C2AB/C2AB\C2AB;
+                      SEP #$20                                  ;;C1AE|C2AE+C2AE/C2AE\C2AE; A->8
                       LDA.W DATA_05CBE3,X                       ;;C1B0|C2B0+C2B0/C2B0\C2B0;
-                      STA.W HW_WRDIV+2                          ;;C1B3|C2B3+C2B3/C2B3\C2B3; Divisor B
+                      STA.W HW_WRDIV+2                          ;;C1B3|C2B3+C2B3/C2B3\C2B3;
                       NOP                                       ;;C1B6|C2B6+C2B6/C2B6\C2B6;
                       NOP                                       ;;C1B7|C2B7+C2B7/C2B7\C2B7;
                       NOP                                       ;;C1B8|C2B8+C2B8/C2B8\C2B8;
                       NOP                                       ;;C1B9|C2B9+C2B9/C2B9\C2B9;
                       NOP                                       ;;C1BA|C2BA+C2BA/C2BA\C2BA;
                       NOP                                       ;;C1BB|C2BB+C2BB/C2BB\C2BB;
-                      REP #$20                                  ;;C1BC|C2BC+C2BC/C2BC\C2BC; Accum (16 bit) 
-                      LDA.W HW_RDDIV                            ;;C1BE|C2BE+C2BE/C2BE\C2BE; Quotient of Divide Result (Low Byte)
+                      REP #$20                                  ;;C1BC|C2BC+C2BC/C2BC\C2BC; A->16
+                      LDA.W HW_RDDIV                            ;;C1BE|C2BE+C2BE/C2BE\C2BE;
                       BNE ADDR_05C2E5                           ;;C1C1|C2C1+C2C1/C2C1\C2C1;
                       LDA.W ScrollLayerIndex                    ;;C1C3|C2C3+C2C3/C2C3\C2C3;
                       AND.W #$00FF                              ;;C1C6|C2C6+C2C6/C2C6\C2C6;
@@ -5147,10 +5147,10 @@ ADDR_05C31D:          LDA.W ScrollLayerIndex                    ;;C21D|C31D+C31D
                       ADC.W #$0002                              ;;C224|C324+C324/C324\C324;
                       TAX                                       ;;C227|C327+C327/C327\C327;
 CODE_05C328:          JSR CODE_05C4F9                           ;;C228|C328+C328/C328\C328;
-CODE_05C32B:          SEP #$20                                  ;;C22B|C32B+C32B/C32B\C32B; Accum (8 bit) 
-                      RTS                                       ;;C22D|C32D+C32D/C32D\C32D; Return 
+CODE_05C32B:          SEP #$20                                  ;;C22B|C32B+C32B/C32B\C32B; A->8
+                      RTS                                       ;;C22D|C32D+C32D/C32D\C32D;
                                                                 ;;                        ;
-ADDR_05C32E:          REP #$20                                  ;;C22E|C32E+C32E/C32E\C32E; Accum (16 bit) 
+ADDR_05C32E:          REP #$20                                  ;;C22E|C32E+C32E/C32E\C32E; A->16
                       LDY.W ScrollLayerIndex                    ;;C230|C330+C330/C330\C330;
                       LDA.W Layer1ScrollYPosUpd,Y               ;;C233|C333+C333/C333\C333;
                       SEC                                       ;;C236|C336+C336/C336\C336;
@@ -5170,18 +5170,18 @@ ADDR_05C32E:          REP #$20                                  ;;C22E|C32E+C32E
                       LSR A                                     ;;C252|C352+C352/C352\C352;
                       TAX                                       ;;C253|C353+C353/C353\C353;
                       LDA.B _2                                  ;;C254|C354+C354/C354\C354;
-                      STA.W HW_WRDIV                            ;;C256|C356+C356/C356\C356; Dividend (Low Byte)
-                      SEP #$20                                  ;;C259|C359+C359/C359\C359; Accum (8 bit) 
+                      STA.W HW_WRDIV                            ;;C256|C356+C356/C356\C356;
+                      SEP #$20                                  ;;C259|C359+C359/C359\C359; A->8
                       LDA.W DATA_05CBE5,X                       ;;C25B|C35B+C35B/C35B\C35B;
-                      STA.W HW_WRDIV+2                          ;;C25E|C35E+C35E/C35E\C35E; Divisor B
+                      STA.W HW_WRDIV+2                          ;;C25E|C35E+C35E/C35E\C35E;
                       NOP                                       ;;C261|C361+C361/C361\C361;
                       NOP                                       ;;C262|C362+C362/C362\C362;
                       NOP                                       ;;C263|C363+C363/C363\C363;
                       NOP                                       ;;C264|C364+C364/C364\C364;
                       NOP                                       ;;C265|C365+C365/C365\C365;
                       NOP                                       ;;C266|C366+C366/C366\C366;
-                      REP #$20                                  ;;C267|C367+C367/C367\C367; Accum (16 bit) 
-                      LDA.W HW_RDDIV                            ;;C269|C369+C369/C369\C369; Quotient of Divide Result (Low Byte)
+                      REP #$20                                  ;;C267|C367+C367/C367\C367; A->16
+                      LDA.W HW_RDDIV                            ;;C269|C369+C369/C369\C369;
                       BNE ADDR_05C39F                           ;;C26C|C36C+C36C/C36C\C36C;
                       LDA.W ScrollLayerIndex                    ;;C26E|C36E+C36E/C36E\C36E;
                       AND.W #$00FF                              ;;C271|C371+C371/C371\C371;
@@ -5212,7 +5212,7 @@ ADDR_05C39F:          LDA.W ScrollLayerIndex                    ;;C29F|C39F+C39F
                       LDA.W Layer1ScrollType,X                  ;;C2A8|C3A8+C3A8/C3A8\C3A8;
                       AND.W #$00FF                              ;;C2AB|C3AB+C3AB/C3AB\C3AB;
                       PHA                                       ;;C2AE|C3AE+C3AE/C3AE\C3AE;
-                      SEP #$20                                  ;;C2AF|C3AF+C3AF/C3AF\C3AF; Accum (8 bit) 
+                      SEP #$20                                  ;;C2AF|C3AF+C3AF/C3AF\C3AF; A->8
                       LDX.B #$02                                ;;C2B1|C3B1+C3B1/C3B1\C3B1;
                       LDY.B #$00                                ;;C2B3|C3B3+C3B3/C3B3\C3B3;
                       CMP.B #$01                                ;;C2B5|C3B5+C3B5/C3B5\C3B5;
@@ -5221,7 +5221,7 @@ ADDR_05C39F:          LDA.W ScrollLayerIndex                    ;;C29F|C39F+C39F
                       LDY.B #$01                                ;;C2BB|C3BB+C3BB/C3BB\C3BB;
                     + TXA                                       ;;C2BD|C3BD+C3BD/C3BD\C3BD;
                       STA.W Layer1ScrollDir,Y                   ;;C2BE|C3BE+C3BE/C3BE\C3BE;
-                      REP #$20                                  ;;C2C1|C3C1+C3C1/C3C1\C3C1; Accum (16 bit) 
+                      REP #$20                                  ;;C2C1|C3C1+C3C1/C3C1\C3C1; A->16
                       PLA                                       ;;C2C3|C3C3+C3C3/C3C3\C3C3;
                       TAY                                       ;;C2C4|C3C4+C3C4/C3C4\C3C4;
                       LDX.W Layer1ScrollBits                    ;;C2C5|C3C5+C3C5/C3C5\C3C5;
@@ -5251,8 +5251,8 @@ ADDR_05C39F:          LDA.W ScrollLayerIndex                    ;;C29F|C39F+C39F
                       STA.W Layer1ScrollXSpeed,X                ;;C2FA|C3FA+C3FA/C3FA\C3FA;
 ADDR_05C3FD:          LDX.W ScrollLayerIndex                    ;;C2FD|C3FD+C3FD/C3FD\C3FD;
                       JSR CODE_05C4F9                           ;;C300|C400+C400/C400\C400;
-                      SEP #$20                                  ;;C303|C403+C403/C403\C403; Accum (8 bit) 
-                      RTS                                       ;;C305|C405+C405/C405\C405; Return 
+                      SEP #$20                                  ;;C303|C403+C403/C403\C403; A->8
+                      RTS                                       ;;C305|C405+C405/C405\C405;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_05C406:          db $FF,$01                                ;;C306|C406+C406/C406\C406;
@@ -5265,7 +5265,7 @@ CODE_05C40C:          LDA.W Layer3TideSetting                   ;;C30C|C40C+C40C
                       BEQ +                                     ;;C30F|C40F+C40F/C40F\C40F;
                       JMP CODE_05C494                           ;;C311|C411+C411/C411\C411;
                                                                 ;;                        ;
-                    + REP #$20                                  ;;C314|C414+C414/C414\C414; Accum (16 bit) 
+                    + REP #$20                                  ;;C314|C414+C414/C414\C414; A->16
                       LDY.W ObjectTileset                       ;;C316|C416+C416/C416\C416;
                       CPY.B #$01                                ;;C319|C419+C419/C419\C419;
                       BEQ CODE_05C421                           ;;C31B|C41B+C41B/C41B\C41B;
@@ -5324,8 +5324,8 @@ CODE_05C45B:          LDA.W Layer3ScrollXPosUpd                 ;;C35B|C45B+C45B
                       STA.B Layer3XPos                          ;;C38B|C48B+C48B/C48B\C48B;
 CODE_05C48D:          LDA.B Layer1YPos                          ;;C38D|C48D+C48D/C48D\C48D;
                       STA.B Layer3YPos                          ;;C38F|C48F+C48F/C48F\C48F;
-CODE_05C491:          SEP #$20                                  ;;C391|C491+C491/C491\C491; Accum (8 bit) 
-                      RTS                                       ;;C393|C493+C493/C493\C493; Return 
+CODE_05C491:          SEP #$20                                  ;;C391|C491+C491/C491\C491; A->8
+                      RTS                                       ;;C393|C493+C493/C493\C493;
                                                                 ;;                        ;
 CODE_05C494:          DEC A                                     ;;C394|C494+C494/C494\C494;
                       BNE CODE_05C4EC                           ;;C395|C495+C495/C495\C495;
@@ -5377,9 +5377,9 @@ CODE_05C4EC:          LDA.B Layer3XPos                          ;;C3EC|C4EC+C4EC
                       STA.B Layer3XPos                          ;;C3F2|C4F2+C4F2/C4F2\C4F2;
                       LDA.B #$01                                ;;C3F4|C4F4+C4F4/C4F4\C4F4;
                       STA.B Layer3XPos+1                        ;;C3F6|C4F6+C4F6/C4F6\C4F6;
-                      RTS                                       ;;C3F8|C4F8+C4F8/C4F8\C4F8; Return 
+                      RTS                                       ;;C3F8|C4F8+C4F8/C4F8\C4F8;
                                                                 ;;                        ;
-CODE_05C4F9:          LDA.W Layer1ScrollXPosUpd,X               ;;C3F9|C4F9+C4F9/C4F9\C4F9; Accum (16 bit) 
+CODE_05C4F9:          LDA.W Layer1ScrollXPosUpd,X               ;;C3F9|C4F9+C4F9/C4F9\C4F9;
                       AND.W #$00FF                              ;;C3FC|C4FC+C4FC/C4FC\C4FC;
                       CLC                                       ;;C3FF|C4FF+C4FF/C4FF\C4FF;
                       ADC.W Layer1ScrollXSpeed,X                ;;C400|C500+C500/C500\C500;
@@ -5395,11 +5395,11 @@ CODE_05C4F9:          LDA.W Layer1ScrollXPosUpd,X               ;;C3F9|C4F9+C4F9
                       EOR.W #$FFFF                              ;;C418|C518+C518/C518\C518;
                       INC A                                     ;;C41B|C51B+C51B/C51B\C51B;
                       STA.B _8                                  ;;C41C|C51C+C51C/C51C\C51C;
-                      RTS                                       ;;C41E|C51E+C51E/C51E\C51E; Return 
+                      RTS                                       ;;C41E|C51E+C51E/C51E\C51E;
                                                                 ;;                        ;
-CODE_05C51F:          REP #$30                                  ;;C41F|C51F+C51F/C51F\C51F; Index (16 bit) Accum (16 bit) 
+CODE_05C51F:          REP #$30                                  ;;C41F|C51F+C51F/C51F\C51F; AXY->16
                       LDY.W ScrollLayerIndex                    ;;C421|C521+C521/C521\C521;
-                      REP #$30                                  ;;C424|C524+C524/C524\C524; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;C424|C524+C524/C524\C524; AXY->16
                       LDA.W Layer1ScrollYPosUpd,Y               ;;C426|C526+C526/C526\C526;
                       TAX                                       ;;C429|C529+C529/C529\C529;
                       LDA.W NextLayer1XPos,Y                    ;;C42A|C52A+C52A/C52A\C52A;
@@ -5411,7 +5411,7 @@ CODE_05C51F:          REP #$30                                  ;;C41F|C51F+C51F
                                                                 ;;                        ;
 CODE_05C538:          STA.B _2                                  ;;C438|C538+C538/C538\C538;
                       STX.B _4                                  ;;C43A|C53A+C53A/C53A\C53A;
-                    + SEP #$10                                  ;;C43C|C53C+C53C/C53C\C53C; Index (8 bit) 
+                    + SEP #$10                                  ;;C43C|C53C+C53C/C53C\C53C; XY->8
                       LDA.B _2                                  ;;C43E|C53E+C53E/C53E\C53E;
                       CMP.B _4                                  ;;C440|C540+C540/C540\C540;
                       BCC CODE_05C585                           ;;C442|C542+C542/C542\C542;
@@ -5469,9 +5469,9 @@ CODE_05C585:          LDA.W ScrollLayerIndex                    ;;C485|C585+C585
                       STA.W Layer1ScrollXSpeed,X                ;;C4B5|C5B5+C5B5/C5B5\C5B5;
 CODE_05C5B8:          JMP CODE_05C328                           ;;C4B8|C5B8+C5B8/C5B8\C5B8;
                                                                 ;;                        ;
-CODE_05C5BB:          REP #$30                                  ;;C4BB|C5BB+C5BB/C5BB\C5BB; Index (16 bit) Accum (16 bit) 
+CODE_05C5BB:          REP #$30                                  ;;C4BB|C5BB+C5BB/C5BB\C5BB; AXY->16
                       LDY.W ScrollLayerIndex                    ;;C4BD|C5BD+C5BD/C5BD\C5BD;
-                      REP #$30                                  ;;C4C0|C5C0+C5C0/C5C0\C5C0; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;C4C0|C5C0+C5C0/C5C0\C5C0; AXY->16
                       LDA.W Layer1ScrollXPosUpd,Y               ;;C4C2|C5C2+C5C2/C5C2\C5C2;
                       TAX                                       ;;C4C5|C5C5+C5C5/C5C5\C5C5;
                       LDA.W NextLayer1YPos,Y                    ;;C4C6|C5C6+C5C6/C5C6\C5C6;
@@ -5483,7 +5483,7 @@ CODE_05C5BB:          REP #$30                                  ;;C4BB|C5BB+C5BB
                                                                 ;;                        ;
 CODE_05C5D4:          STA.B _2                                  ;;C4D4|C5D4+C5D4/C5D4\C5D4;
                       STX.B _4                                  ;;C4D6|C5D6+C5D6/C5D6\C5D6;
-                    + SEP #$10                                  ;;C4D8|C5D8+C5D8/C5D8\C5D8; Index (8 bit) 
+                    + SEP #$10                                  ;;C4D8|C5D8+C5D8/C5D8\C5D8; XY->8
                       LDA.B _2                                  ;;C4DA|C5DA+C5DA/C5DA\C5DA;
                       CMP.B _4                                  ;;C4DC|C5DC+C5DC/C5DC\C5DC;
                       BCC CODE_05C621                           ;;C4DE|C5DE+C5DE/C5DE\C5DE;
@@ -5553,10 +5553,10 @@ ADDR_05C659:          LDA.W Layer2ScrollBits                    ;;C559|C659+C659
                       LDA.W NextLayer1YPos                      ;;C56B|C66B+C66B/C66B\C66B;
                       EOR.W #$8D01                              ;;C56E|C66E+C66E/C66E\C66E;
                       STZ.B EffFrame                            ;;C571|C671+C671/C671\C671;
-                      RTS                                       ;;C573|C673+C673/C673\C673; Return 
+                      RTS                                       ;;C573|C673+C673/C673\C673;
                                                                 ;;                        ;
                     + STZ.B Layer2ScrollDir                     ;;C574|C674+C674/C674\C674;
-                      REP #$20                                  ;;C576|C676+C676/C676\C676; Accum (16 bit) 
+                      REP #$20                                  ;;C576|C676+C676/C676\C676; A->16
                       LDA.W Layer2ScrollYSpeed                  ;;C578|C678+C678/C678\C678;
                       CMP.W #$FFC0                              ;;C57B|C67B+C67B/C67B\C67B;
                       BEQ +                                     ;;C57E|C67E+C67E/C67E\C67E;
@@ -5576,7 +5576,7 @@ ADDR_05C659:          LDA.W Layer2ScrollBits                    ;;C559|C659+C659
 ADDR_05C69E:          LDA.B #$02                                ;;C59E|C69E+C69E/C69E\C69E;
                       STA.B Layer1ScrollDir                     ;;C5A0|C6A0+C6A0/C6A0\C6A0;
                       STZ.B Layer2ScrollDir                     ;;C5A2|C6A2+C6A2/C6A2\C6A2;
-                      REP #$20                                  ;;C5A4|C6A4+C6A4/C6A4\C6A4;
+                      REP #$20                                  ;;C5A4|C6A4+C6A4/C6A4\C6A4; A->16
                       LDX.W Layer1ScrollBits                    ;;C5A6|C6A6+C6A6/C6A6\C6A6;
                       BNE ADDR_05C6CD                           ;;C5A9|C6A9+C6A9/C6A9\C6A9;
                       LDA.W Layer1ScrollXSpeed                  ;;C5AB|C6AB+C6AB/C6AB\C6AB;
@@ -5595,7 +5595,7 @@ ADDR_05C69E:          LDA.B #$02                                ;;C59E|C69E+C69E
                       BRA ADDR_05C6EC                           ;;C5CB|C6CB+C6CB/C6CB\C6CB;
                                                                 ;;                        ;
 ADDR_05C6CD:          LDY.B #$16                                ;;C5CD|C6CD+C6CD/C6CD\C6CD; \ Unreachable 
-                      STY.W HW_TM                               ;;C5CF|C6CF+C6CF/C6CF\C6CF; Background and Object Enable
+                      STY.W HW_TM                               ;;C5CF|C6CF+C6CF/C6CF\C6CF;
                       LDA.W Layer2ScrollYSpeed                  ;;C5D2|C6D2+C6D2/C6D2\C6D2;
                       CMP.W #$FF80                              ;;C5D5|C6D5+C6D5/C6D5\C6D5;
                       BEQ +                                     ;;C5D8|C6D8+C6D8/C6D8\C6D8;
@@ -5611,7 +5611,7 @@ ADDR_05C6EC:          LDX.B #$06                                ;;C5EC|C6EC+C6EC
                       DEX                                       ;;C5F1|C6F1+C6F1/C6F1\C6F1;
                       DEX                                       ;;C5F2|C6F2+C6F2/C6F2\C6F2;
                       BPL -                                     ;;C5F3|C6F3+C6F3/C6F3\C6F3;
-                      SEP #$20                                  ;;C5F5|C6F5+C6F5/C6F5\C6F5; Accum (8 bit) 
+                      SEP #$20                                  ;;C5F5|C6F5+C6F5/C6F5\C6F5; A->8
                       LDA.W NextLayer1XPos+1                    ;;C5F7|C6F7+C6F7/C6F7\C6F7;
                       SEC                                       ;;C5FA|C6FA+C6FA/C6FA\C6FA;
                       SBC.B LastScreenHoriz                     ;;C5FB|C6FB+C6FB/C6FB\C6FB;
@@ -5619,7 +5619,7 @@ ADDR_05C6EC:          LDX.B #$06                                ;;C5EC|C6EC+C6EC
                       INC A                                     ;;C5FE|C6FE+C6FE/C6FE\C6FE;
                       XBA                                       ;;C5FF|C6FF+C6FF/C6FF\C6FF;
                       LDA.W NextLayer1XPos                      ;;C600|C700+C700/C700\C700;
-                      REP #$20                                  ;;C603|C703+C703/C703\C703; Accum (16 bit) 
+                      REP #$20                                  ;;C603|C703+C703/C703\C703; A->16
                       LDY.B #$82                                ;;C605|C705+C705/C705\C705;
                       CMP.W #$0000                              ;;C607|C707+C707/C707\C707;
                       BPL +                                     ;;C60A|C70A+C70A/C70A\C70A;
@@ -5637,7 +5637,7 @@ DATA_05C71F:          db $C0,$FF,$40,$00                        ;;C61F|C71F+C71F
                                                                 ;;                        ;
 DATA_05C723:          db $FF,$FF,$01,$00                        ;;C623|C723+C723/C723\C723;
                                                                 ;;                        ;
-CODE_05C727:          LDX.W OnOffSwitch                         ;;C627|C727+C727/C727\C727; Accum (8 bit) 
+CODE_05C727:          LDX.W OnOffSwitch                         ;;C627|C727+C727/C727\C727;
                       BEQ +                                     ;;C62A|C72A+C72A/C72A\C72A;
                       LDX.B #$02                                ;;C62C|C72C+C72C/C72C\C72C;
                     + CPX.W Layer2ScrollType                    ;;C62E|C72E+C72E/C72E\C72E;
@@ -5650,11 +5650,11 @@ CODE_05C727:          LDX.W OnOffSwitch                         ;;C627|C727+C727
                       STA.W NextLayer2YPos                      ;;C640|C740+C740/C740\C740;
                       STZ.W Layer2ScrollYSpeed                  ;;C643|C743+C743/C743\C743;
                       STZ.W Layer2ScrollYSpeed+1                ;;C646|C746+C746/C746\C746;
-                      RTS                                       ;;C649|C749+C749/C749\C749; Return 
+                      RTS                                       ;;C649|C749+C749/C749\C749;
                                                                 ;;                        ;
 CODE_05C74A:          LDA.B #$10                                ;;C64A|C74A+C74A/C74A\C74A;
                       STA.W Layer2ScrollTimer                   ;;C64C|C74C+C74C/C74C\C74C;
-                      REP #$20                                  ;;C64F|C74F+C74F/C74F\C74F; Accum (16 bit) 
+                      REP #$20                                  ;;C64F|C74F+C74F/C74F\C74F; A->16
                       LDA.W NextLayer2YPos                      ;;C651|C751+C751/C751\C751;
                       CMP.W DATA_05C71B,X                       ;;C654|C754+C754/C754\C754;
                       BNE CODE_05C770                           ;;C657|C757+C757/C757\C757;
@@ -5668,7 +5668,7 @@ CODE_05C74A:          LDA.B #$10                                ;;C64A|C74A+C74A
                       STX.W OnOffSwitch                         ;;C66B|C76B+C76B/C76B\C76B;
                       BRA CODE_05C784                           ;;C66E|C76E+C76E/C76E\C76E;
                                                                 ;;                        ;
-CODE_05C770:          LDA.W Layer2ScrollYSpeed                  ;;C670|C770+C770/C770\C770; Accum (8 bit) 
+CODE_05C770:          LDA.W Layer2ScrollYSpeed                  ;;C670|C770+C770/C770\C770;
                       CMP.W DATA_05C71F,X                       ;;C673|C773+C773/C773\C773;
                       BEQ +                                     ;;C676|C776+C776/C776\C776;
                       CLC                                       ;;C678|C778+C778/C778\C778;
@@ -5687,7 +5687,7 @@ CODE_05C787:          LDA.B #$02                                ;;C687|C787+C787
                       TAX                                       ;;C692|C792+C792/C792\C792;
                       LDY.W Layer1ScrollBits,X                  ;;C693|C793+C793/C793\C793;
                       LDX.W ScrollLayerIndex                    ;;C696|C796+C796/C796\C796;
-                      REP #$20                                  ;;C699|C799+C799/C799\C799; Accum (16 bit) 
+                      REP #$20                                  ;;C699|C799+C799/C799\C799; A->16
                       LDA.W Layer1ScrollXSpeed,X                ;;C69B|C79B+C79B/C79B\C79B;
                       CMP.W DATA_05C001,Y                       ;;C69E|C79E+C79E/C79E\C79E;
                       BEQ +                                     ;;C6A1|C7A1+C7A1/C7A1\C7A1;
@@ -5703,11 +5703,11 @@ CODE_05C787:          LDA.B #$02                                ;;C687|C787+C787
                     + JSR CODE_05C4F9                           ;;C6B6|C7B6+C7B6/C7B6\C7B6;
                       JMP CODE_05C32B                           ;;C6B9|C7B9+C7B9/C7B9\C7B9;
                                                                 ;;                        ;
-CODE_05C7BC:          LDA.W BGFastScrollActive                  ;;C6BC|C7BC+C7BC/C7BC\C7BC; Accum (8 bit) 
+CODE_05C7BC:          LDA.W BGFastScrollActive                  ;;C6BC|C7BC+C7BC/C7BC\C7BC;
                       BEQ CODE_05C7ED                           ;;C6BF|C7BF+C7BF/C7BF\C7BF;
 CODE_05C7C1:          LDA.B #$02                                ;;C6C1|C7C1+C7C1/C7C1\C7C1;
                       STA.B Layer2ScrollDir                     ;;C6C3|C7C3+C7C3/C7C3\C7C3;
-                      REP #$20                                  ;;C6C5|C7C5+C7C5/C7C5\C7C5; Accum (16 bit) 
+                      REP #$20                                  ;;C6C5|C7C5+C7C5/C7C5\C7C5; A->16
                       LDA.W Layer2ScrollXSpeed                  ;;C6C7|C7C7+C7C7/C7C7\C7C7;
                       CMP.W #$0400                              ;;C6CA|C7CA+C7CA/C7CA\C7CA;
                       BEQ +                                     ;;C6CD|C7CD+C7CD/C7CD\C7CD;
@@ -5748,7 +5748,7 @@ DATA_05C818:          dw $FFFF,$0001                            ;;C718|C818+C818
 DATA_05C818:          dw $FFFE,$0002                            ;;              /C818\C818;
                    endif                              ;/ ENDIF  ;;++++++++++++++++++++++++;
                                                                 ;;                        ;
-CODE_05C81C:          REP #$20                                  ;;C71C|C81C+C81C/C81C\C81C; Accum (16 bit) 
+CODE_05C81C:          REP #$20                                  ;;C71C|C81C+C81C/C81C\C81C; A->16
                       STZ.B _0                                  ;;C71E|C81E+C81E/C81E\C81E;
                       LDY.W Layer2ScrollTimer                   ;;C720|C820+C820/C820\C820;
                       STY.B _0                                  ;;C723|C823+C823/C823\C823;
@@ -5771,12 +5771,12 @@ CODE_05C830:          LDA.W NextLayer2XPos                      ;;C730|C830+C830
                       INX                                       ;;C74D|C84D+C84D/C84D\C84D;
                       DEC.B _0                                  ;;C74E|C84E+C84E/C84E\C84E;
                       BNE CODE_05C830                           ;;C750|C850+C850/C850\C850;
-                      SEP #$20                                  ;;C752|C852+C852/C852\C852; Accum (8 bit) 
+                      SEP #$20                                  ;;C752|C852+C852/C852\C852; A->8
                       LDA.W Layer1ScrollType                    ;;C754|C854+C854/C854\C854;
                       ORA.W Layer2Touched                       ;;C757|C857+C857/C857\C857;
                       STA.W Layer1ScrollType                    ;;C75A|C85A+C85A/C85A\C85A;
                       BEQ CODE_05C87D                           ;;C75D|C85D+C85D/C85D\C85D;
-                      REP #$20                                  ;;C75F|C85F+C85F/C85F\C85F; Accum (16 bit) 
+                      REP #$20                                  ;;C75F|C85F+C85F/C85F\C85F; A->16
                       LDA.W NextLayer2YPos                      ;;C761|C861+C861/C861\C861;
                       CMP.W DATA_05C810,Y                       ;;C764|C864+C864/C864\C864;
                       BEQ CODE_05C87D                           ;;C767|C867+C867/C867\C867;
@@ -5788,8 +5788,8 @@ CODE_05C830:          LDA.W NextLayer2XPos                      ;;C730|C830+C830
 CODE_05C875:          STA.W Layer2ScrollYSpeed                  ;;C775|C875+C875/C875\C875;
                       LDX.B #$06                                ;;C778|C878+C878/C878\C878;
                       JSR CODE_05C4F9                           ;;C77A|C87A+C87A/C87A\C87A;
-CODE_05C87D:          SEP #$20                                  ;;C77D|C87D+C87D/C87D\C87D; Accum (8 bit) 
-                      RTS                                       ;;C77F|C87F+C87F/C87F\C87F; Return 
+CODE_05C87D:          SEP #$20                                  ;;C77D|C87D+C87D/C87D\C87D; A->8
+                      RTS                                       ;;C77F|C87F+C87F/C87F\C87F;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_05C880:          db $00,$00,$C0,$01,$00,$03,$00,$08        ;;C780|C880+C880/C880\C880;
@@ -5838,7 +5838,7 @@ DATA_05C952:          db $05,$05,$05                            ;;C852|C952+C952
                                                                 ;;                        ;
 CODE_05C955:          LDX.W Layer1ScrollBits                    ;;C855|C955+C955/C955\C955;
                       LDY.W Layer2ScrollBits                    ;;C858|C958+C958/C958\C958;
-CODE_05C95B:          REP #$20                                  ;;C85B|C95B+C95B/C95B\C95B; Accum (16 bit) 
+CODE_05C95B:          REP #$20                                  ;;C85B|C95B+C95B/C95B\C95B; A->16
 CODE_05C95D:          LDA.W NextLayer2XPos                      ;;C85D|C95D+C95D/C95D\C95D;
                       CMP.W DATA_05C880,X                       ;;C860|C960+C960/C960\C960;
                       BCC +                                     ;;C863|C963+C963/C963\C963;
@@ -5855,11 +5855,11 @@ CODE_05C95D:          LDA.W NextLayer2XPos                      ;;C85D|C95D+C95D
                       INX                                       ;;C87C|C97C+C97C/C97C\C97C;
                       DEY                                       ;;C87D|C97D+C97D/C97D\C97D;
                       BNE CODE_05C95D                           ;;C87E|C97E+C97E/C97E\C97E;
-                      SEP #$20                                  ;;C880|C980+C980/C980\C980; Accum (8 bit) 
+                      SEP #$20                                  ;;C880|C980+C980/C980\C980; A->8
                       LDA.W Layer1ScrollTimer                   ;;C882|C982+C982/C982\C982;
                       BEQ +                                     ;;C885|C985+C985/C985\C985;
                       DEC.W Layer1ScrollTimer                   ;;C887|C987+C987/C987\C987;
-                      RTS                                       ;;C88A|C98A+C98A/C98A\C98A; Return 
+                      RTS                                       ;;C88A|C98A+C98A/C98A\C98A;
                                                                 ;;                        ;
                     + LDA.W Layer1ScrollType                    ;;C88B|C98B+C98B/C98B\C98B;
                       CLC                                       ;;C88E|C98E+C98E/C98E\C98E;
@@ -5867,7 +5867,7 @@ CODE_05C95D:          LDA.W NextLayer2XPos                      ;;C85D|C95D+C95D
                       TAY                                       ;;C892|C992+C992/C992\C992;
                       LSR A                                     ;;C893|C993+C993/C993\C993;
                       TAX                                       ;;C894|C994+C994/C994\C994;
-                      REP #$20                                  ;;C895|C995+C995/C995\C995; Accum (16 bit) 
+                      REP #$20                                  ;;C895|C995+C995/C995\C995; A->16
                       LDA.W NextLayer2YPos                      ;;C897|C997+C997/C997\C997;
                       SEC                                       ;;C89A|C99A+C99A/C99A\C99A;
                       SBC.W DATA_05C8C8,Y                       ;;C89B|C99B+C99B/C99B\C99B;
@@ -5878,7 +5878,7 @@ CODE_05C95D:          LDA.W NextLayer2XPos                      ;;C85D|C95D+C95D
                                                                 ;;                        ;
                     + LDA.W DATA_05C8C8,Y                       ;;C8A9|C9A9+C9A9/C9A9\C9A9;
                       STA.W NextLayer2YPos                      ;;C8AC|C9AC+C9AC/C9AC\C9AC;
-                      SEP #$20                                  ;;C8AF|C9AF+C9AF/C9AF\C9AF; Accum (8 bit) 
+                      SEP #$20                                  ;;C8AF|C9AF+C9AF/C9AF\C9AF; A->8
                       LDA.W DATA_05C934,X                       ;;C8B1|C9B1+C9B1/C9B1\C9B1;
                       STA.W Layer1ScrollTimer                   ;;C8B4|C9B4+C9B4/C9B4\C9B4;
                       LDA.W Layer2ScrollType                    ;;C8B7|C9B7+C9B7/C9B7\C9B7;
@@ -5892,7 +5892,7 @@ CODE_05C95D:          LDA.W NextLayer2XPos                      ;;C85D|C95D+C95D
                       STA.W ScreenShakeTimer                    ;;C8C8|C9C8+C9C8/C9C8\C9C8; / 
                       LDA.B #$00                                ;;C8CB|C9CB+C9CB/C9CB\C9CB;
                     + STA.W Layer2ScrollType                    ;;C8CD|C9CD+C9CD/C9CD\C9CD;
-                      RTS                                       ;;C8D0|C9D0+C9D0/C9D0\C9D0; Return 
+                      RTS                                       ;;C8D0|C9D0+C9D0/C9D0\C9D0;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_05C9D1:          db $01,$01,$01,$00,$01,$01,$01,$00        ;;C8D1|C9D1+C9D1/C9D1\C9D1;
@@ -6026,7 +6026,7 @@ CODE_05CBFF:          PHB                                       ;;CAFF|CBFF+CBFF
                       PLB                                       ;;CB01|CC01+CC01/CC01\CC01;
                       JSR CODE_05CC07                           ;;CB02|CC02+CC02/CC02\CC02;
                       PLB                                       ;;CB05|CC05+CC05/CC05\CC05;
-                      RTL                                       ;;CB06|CC06+CC06/CC06\CC06; Return 
+                      RTL                                       ;;CB06|CC06+CC06/CC06\CC06;
                                                                 ;;                        ;
 CODE_05CC07:          LDA.W OverworldProcess                    ;;CB07|CC07+CC07/CC07\CC07;
                       JSL ExecutePtr                            ;;CB0A|CC0A+CC0A/CC0A\CC0A;
@@ -6067,7 +6067,7 @@ CODE_05CC77:          CPY.W InGameTimerTens                     ;;CB77|CC77+CC77
                       STA.W Layer3ScrollType                    ;;CB86|CC86+CC86/CC86\CC86;
                       LDA.B #$08                                ;;CB89|CC89+CC89/CC89\CC89;
                       TSB.B MainBGMode                          ;;CB8B|CC8B+CC8B/CC8B\CC8B;
-                      REP #$30                                  ;;CB8D|CC8D+CC8D/CC8D\CC8D; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;CB8D|CC8D+CC8D/CC8D\CC8D; AXY->16
                       STZ.B Layer3XPos                          ;;CB8F|CC8F+CC8F/CC8F\CC8F;
                       STZ.B Layer3YPos                          ;;CB91|CC91+CC91/CC91\CC91;
                       LDY.W #$004A                              ;;CB93|CC93+CC93/CC93\CC93;
@@ -6084,7 +6084,7 @@ CODE_05CC77:          CPY.W InGameTimerTens                     ;;CB77|CC77+CC77
                       BPL -                                     ;;CBA8|CCA8+CCA8/CCA8\CCA8;
                       LDA.L DynStripeImgSize                    ;;CBAA|CCAA+CCAA/CCAA\CCAA;
                       TAX                                       ;;CBAE|CCAE+CCAE/CCAE\CCAE;
-                      SEP #$20                                  ;;CBAF|CCAF+CCAF/CCAF\CCAF; Accum (8 bit) 
+                      SEP #$20                                  ;;CBAF|CCAF+CCAF/CCAF\CCAF; A->8
                       LDA.W PlayerTurnLvl                       ;;CBB1|CCB1+CCB1/CCB1\CCB1;
                       BEQ CODE_05CCC8                           ;;CBB4|CCB4+CCB4/CCB4\CCB4;
                       LDY.W #$0000                              ;;CBB6|CCB6+CCB6/CCB6\CCB6;
@@ -6117,9 +6117,9 @@ CODE_05CCE4:          LDA.L DynamicStripeImage+$32,X            ;;CBE4|CCE4+CCE4
                       INX                                       ;;CBF3|CCF3+CCF3/CCF3\CCF3;
                       CPX.W #$0004                              ;;CBF4|CCF4+CCF4/CCF4\CCF4;
                       BNE CODE_05CCE4                           ;;CBF7|CCF7+CCF7/CCF7\CCF7;
-CODE_05CCF9:          SEP #$10                                  ;;CBF9|CCF9+CCF9/CCF9\CCF9; Index (8 bit) 
+CODE_05CCF9:          SEP #$10                                  ;;CBF9|CCF9+CCF9/CCF9\CCF9; XY->8
                       JSR CODE_05CE4C                           ;;CBFB|CCFB+CCFB/CCFB\CCFB;
-                      REP #$20                                  ;;CBFE|CCFE+CCFE/CCFE\CCFE; Accum (16 bit) 
+                      REP #$20                                  ;;CBFE|CCFE+CCFE/CCFE\CCFE; A->16
                       STZ.B _0                                  ;;CC00|CD00+CD00/CD00\CD00;
                       LDA.B _2                                  ;;CC02|CD02+CD02/CD02\CD02;
                       STA.W ScoreIncrement                      ;;CC04|CD04+CD04/CD04\CD04;
@@ -6136,7 +6136,7 @@ CODE_05CD10:          LDA.L DynamicStripeImage+$40,X            ;;CC10|CD10+CD10
                       INX                                       ;;CC21|CD21+CD21/CD21\CD21;
                       CPX.B #$08                                ;;CC22|CD22+CD22/CD22\CD22;
                       BNE CODE_05CD10                           ;;CC24|CD24+CD24/CD24\CD24;
-CODE_05CD26:          SEP #$20                                  ;;CC26|CD26+CD26/CD26\CD26; Accum (8 bit) 
+CODE_05CD26:          SEP #$20                                  ;;CC26|CD26+CD26/CD26\CD26; A->8
                       INC.W OverworldProcess                    ;;CC28|CD28+CD28/CD28\CD28;
                       LDA.B #$28                                ;;CC2B|CD2B+CD2B/CD2B\CD2B;
                       STA.W DisplayBonusStars                   ;;CC2D|CD2D+CD2D/CD2D\CD2D;
@@ -6145,8 +6145,8 @@ CODE_05CD26:          SEP #$20                                  ;;CC26|CD26+CD26
                       ADC.L DynStripeImgSize                    ;;CC33|CD33+CD33/CD33\CD33;
                       INC A                                     ;;CC37|CD37+CD37/CD37\CD37;
                       STA.L DynStripeImgSize                    ;;CC38|CD38+CD38/CD38\CD38;
-                      SEP #$30                                  ;;CC3C|CD3C+CD3C/CD3C\CD3C; Index (8 bit) Accum (8 bit) 
-                      RTS                                       ;;CC3E|CD3E+CD3E/CD3E\CD3E; Return 
+                      SEP #$30                                  ;;CC3C|CD3C+CD3C/CD3C\CD3C; AXY->8
+                      RTS                                       ;;CC3E|CD3E+CD3E/CD3E\CD3E;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_05CD3F:          db $52,$0A,$00,$15,$0B,$38,$18,$38        ;;CC3F|CD3F+CD3F/CD3F\CD3F;
@@ -6210,7 +6210,7 @@ CODE_05CDD5:          DEC.W DrumrollTimer                       ;;CCD5|CDD5+CDD5
                       INC.W OverworldProcess                    ;;CCE0|CDE0+CDE0/CDE0\CDE0;
                       LDA.B #!SFX_DRUMROLLSTART                 ;;CCE3|CDE3+CDE3/CDE3\CDE3;
                       STA.W SPCIO3                              ;;CCE5|CDE5+CDE5/CDE5\CDE5; / Play sound effect 
-Return05CDE8:         RTS                                       ;;CCE8|CDE8+CDE8/CDE8\CDE8; Return 
+Return05CDE8:         RTS                                       ;;CCE8|CDE8+CDE8/CDE8\CDE8;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_05CDE9:          db $00,$00                                ;;CCE9|CDE9+CDE9/CDE9\CDE9;
@@ -6219,7 +6219,7 @@ DATA_05CDEB:          db $10,$27,$00,$00,$E8,$03,$00,$00        ;;CCEB|CDEB+CDEB
                       db $64,$00,$00,$00,$0A,$00,$00,$00        ;;CCF3|CDF3+CDF3/CDF3\CDF3;
                       db $01,$00                                ;;CCFB|CDFB+CDFB/CDFB\CDFB;
                                                                 ;;                        ;
-CODE_05CDFD:          LDA.L DynStripeImgSize,X                  ;;CCFD|CDFD+CDFD/CDFD\CDFD; Accum (16 bit) 
+CODE_05CDFD:          LDA.L DynStripeImgSize,X                  ;;CCFD|CDFD+CDFD/CDFD\CDFD;
                       AND.W #$FF00                              ;;CD01|CE01+CE01/CE01\CE01;
                       STA.L DynStripeImgSize,X                  ;;CD04|CE04+CE04/CE04\CE04;
 CODE_05CE08:          PHX                                       ;;CD08|CE08+CE08/CE08\CE08;
@@ -6250,14 +6250,14 @@ CODE_05CE2F:          INX                                       ;;CD31|CE2F+CE2F
                       INY                                       ;;CD36|CE34+CE34/CE34\CE34;
                       CPY.B #$14                                ;;CD37|CE35+CE35/CE35\CE35;
                       BNE CODE_05CDFD                           ;;CD39|CE37+CE37/CE37\CE37;
-                      RTS                                       ;;CD3B|CE39+CE39/CE39\CE39; Return 
+                      RTS                                       ;;CD3B|CE39+CE39/CE39\CE39;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_05CE3A:          db $00,$00,$64,$00,$C8,$00,$2C,$01        ;;CD3C|CE3A+CE3A/CE3A\CE3A;
 DATA_05CE42:          db $00,$0A,$14,$1E,$28,$32,$3C,$46        ;;CD44|CE42+CE42/CE42\CE42;
                       db $50,$5A                                ;;CD4C|CE4A+CE4A/CE4A\CE4A;
                                                                 ;;                        ;
-CODE_05CE4C:          REP #$20                                  ;;CD4E|CE4C+CE4C/CE4C\CE4C; Accum (16 bit) 
+CODE_05CE4C:          REP #$20                                  ;;CD4E|CE4C+CE4C/CE4C\CE4C; A->16
                       LDA.W InGameTimerHundreds                 ;;CD50|CE4E+CE4E/CE4E\CE4E;
                       ASL A                                     ;;CD53|CE51+CE51/CE51\CE51;
                       TAX                                       ;;CD54|CE52+CE52/CE52\CE52;
@@ -6275,32 +6275,32 @@ CODE_05CE4C:          REP #$20                                  ;;CD4E|CE4C+CE4C
                       CLC                                       ;;CD6F|CE6D+CE6D/CE6D\CE6D;
                       ADC.B _0                                  ;;CD70|CE6E+CE6E/CE6E\CE6E;
                       STA.B _0                                  ;;CD72|CE70+CE70/CE70\CE70;
-                      SEP #$20                                  ;;CD74|CE72+CE72/CE72\CE72; Accum (8 bit) 
+                      SEP #$20                                  ;;CD74|CE72+CE72/CE72\CE72; A->8
                       LDA.B _0                                  ;;CD76|CE74+CE74/CE74\CE74;
-                      STA.W HW_WRMPYA                           ;;CD78|CE76+CE76/CE76\CE76; Multiplicand A
+                      STA.W HW_WRMPYA                           ;;CD78|CE76+CE76/CE76\CE76;
                       LDA.B #$32                                ;;CD7B|CE79+CE79/CE79\CE79;
-                      STA.W HW_WRMPYB                           ;;CD7D|CE7B+CE7B/CE7B\CE7B; Multplier B
+                      STA.W HW_WRMPYB                           ;;CD7D|CE7B+CE7B/CE7B\CE7B;
                       NOP                                       ;;CD80|CE7E+CE7E/CE7E\CE7E;
                       NOP                                       ;;CD81|CE7F+CE7F/CE7F\CE7F;
                       NOP                                       ;;CD82|CE80+CE80/CE80\CE80;
                       NOP                                       ;;CD83|CE81+CE81/CE81\CE81;
-                      LDA.W HW_RDMPY                            ;;CD84|CE82+CE82/CE82\CE82; Product/Remainder Result (Low Byte)
+                      LDA.W HW_RDMPY                            ;;CD84|CE82+CE82/CE82\CE82;
                       STA.B _2                                  ;;CD87|CE85+CE85/CE85\CE85;
-                      LDA.W HW_RDMPY+1                          ;;CD89|CE87+CE87/CE87\CE87; Product/Remainder Result (High Byte)
+                      LDA.W HW_RDMPY+1                          ;;CD89|CE87+CE87/CE87\CE87;
                       STA.B _3                                  ;;CD8C|CE8A+CE8A/CE8A\CE8A;
                       LDA.B _1                                  ;;CD8E|CE8C+CE8C/CE8C\CE8C;
-                      STA.W HW_WRMPYA                           ;;CD90|CE8E+CE8E/CE8E\CE8E; Multiplicand A
+                      STA.W HW_WRMPYA                           ;;CD90|CE8E+CE8E/CE8E\CE8E;
                       LDA.B #$32                                ;;CD93|CE91+CE91/CE91\CE91;
-                      STA.W HW_WRMPYB                           ;;CD95|CE93+CE93/CE93\CE93; Multplier B
+                      STA.W HW_WRMPYB                           ;;CD95|CE93+CE93/CE93\CE93;
                       NOP                                       ;;CD98|CE96+CE96/CE96\CE96;
                       NOP                                       ;;CD99|CE97+CE97/CE97\CE97;
                       NOP                                       ;;CD9A|CE98+CE98/CE98\CE98;
                       NOP                                       ;;CD9B|CE99+CE99/CE99\CE99;
-                      LDA.W HW_RDMPY                            ;;CD9C|CE9A+CE9A/CE9A\CE9A; Product/Remainder Result (Low Byte)
+                      LDA.W HW_RDMPY                            ;;CD9C|CE9A+CE9A/CE9A\CE9A;
                       CLC                                       ;;CD9F|CE9D+CE9D/CE9D\CE9D;
                       ADC.B _3                                  ;;CDA0|CE9E+CE9E/CE9E\CE9E;
                       STA.B _3                                  ;;CDA2|CEA0+CEA0/CEA0\CEA0;
-                      RTS                                       ;;CDA4|CEA2+CEA2/CEA2\CEA2; Return 
+                      RTS                                       ;;CDA4|CEA2+CEA2/CEA2\CEA2;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_05CEA3:          db $51,$B1,$00,$09,$FC,$38,$FC,$38        ;;CDA5|CEA3+CEA3/CEA3\CEA3;
@@ -6315,7 +6315,7 @@ DATA_05CEC6:          db $01,$00,$0A,$00                        ;;CDC8|CEC6+CEC6
 CODE_05CECA:          PHB                                       ;;CDCC|CECA+CECA/CECA\CECA;
                       PHK                                       ;;CDCD|CECB+CECB/CECB\CECB;
                       PLB                                       ;;CDCE|CECC+CECC/CECC\CECC;
-                      REP #$20                                  ;;CDCF|CECD+CECD/CECD\CECD; Accum (16 bit) 
+                      REP #$20                                  ;;CDCF|CECD+CECD/CECD\CECD; A->16
                       LDX.B #$00                                ;;CDD1|CECF+CECF/CECF\CECF;
                       LDA.W PlayerTurnLvl                       ;;CDD3|CED1+CED1/CED1\CED1;
                       AND.W #$00FF                              ;;CDD6|CED4+CED4/CED4\CED4;
@@ -6340,7 +6340,7 @@ CODE_05CECA:          PHB                                       ;;CDCC|CECA+CECA
                       STA.W PlayerScore+2,X                     ;;CE04|CF02+CF02/CF02\CF02;
 CODE_05CF05:          LDX.W BonusStarsGained                    ;;CE07|CF05+CF05/CF05\CF05;
                       BEQ CODE_05CF36                           ;;CE0A|CF08+CF08/CF08\CF08;
-                      SEP #$20                                  ;;CE0C|CF0A+CF0A/CF0A\CF0A; Accum (8 bit) 
+                      SEP #$20                                  ;;CE0C|CF0A+CF0A/CF0A\CF0A; A->8
                       LDA.B TrueFrame                           ;;CE0E|CF0C+CF0C/CF0C\CF0C;
                       AND.B #$03                                ;;CE10|CF0E+CF0E/CF0E\CF0E;
                       BNE +                                     ;;CE12|CF10+CF10/CF10\CF10;
@@ -6359,7 +6359,7 @@ CODE_05CF05:          LDX.W BonusStarsGained                    ;;CE07|CF05+CF05
                       SEC                                       ;;CE30|CF2E+CF2E/CF2E\CF2E;
                       SBC.B #$06                                ;;CE31|CF2F+CF2F/CF2F\CF2F;
                       STA.W BonusStarsGained                    ;;CE33|CF31+CF31/CF31\CF31;
-                    + REP #$20                                  ;;CE36|CF34+CF34/CF34\CF34; Accum (16 bit) 
+                    + REP #$20                                  ;;CE36|CF34+CF34/CF34\CF34; A->16
 CODE_05CF36:          LDA.W ScoreIncrement                      ;;CE38|CF36+CF36/CF36\CF36;
                       BNE +                                     ;;CE3B|CF39+CF39/CF39\CF39;
                       LDX.W BonusStarsGained                    ;;CE3D|CF3B+CF3B/CF3B\CF3B;
@@ -6407,8 +6407,8 @@ CODE_05CF8A:          LDA.L DynamicStripeImage+4,X              ;;CE8C|CF8A+CF8A
                       INX                                       ;;CE9D|CF9B+CF9B/CF9B\CF9B;
                       CPX.B _0                                  ;;CE9E|CF9C+CF9C/CF9C\CF9C;
                       BNE CODE_05CF8A                           ;;CEA0|CF9E+CF9E/CF9E\CF9E;
-CODE_05CFA0:          SEP #$20                                  ;;CEA2|CFA0+CFA0/CFA0\CFA0; Accum (8 bit) 
-                      REP #$10                                  ;;CEA4|CFA2+CFA2/CFA2\CFA2; Index (16 bit) 
+CODE_05CFA0:          SEP #$20                                  ;;CEA2|CFA0+CFA0/CFA0\CFA0; A->8
+                      REP #$10                                  ;;CEA4|CFA2+CFA2/CFA2\CFA2; XY->16 
                       LDA.W DisplayBonusStars                   ;;CEA6|CFA4+CFA4/CFA4\CFA4;
                       BEQ +                                     ;;CEA9|CFA7+CFA7/CFA7\CFA7;
                       LDA.L DynStripeImgSize                    ;;CEAB|CFA9+CFA9/CFA9\CFA9;
@@ -6432,13 +6432,13 @@ CODE_05CFA0:          SEP #$20                                  ;;CEA2|CFA0+CFA0
                       STA.L DynamicStripeImage+$12,X            ;;CED3|CFD1+CFD1/CFD1\CFD1;
                       LDA.W DATA_05CD63,Y                       ;;CED7|CFD5+CFD5/CFD5\CFD5;
                       STA.L DynamicStripeImage+$1A,X            ;;CEDA|CFD8+CFD8/CFD8\CFD8;
-                    + REP #$20                                  ;;CEDE|CFDC+CFDC/CFDC\CFDC; Accum (16 bit) 
-                      SEP #$10                                  ;;CEE0|CFDE+CFDE/CFDE\CFDE; Index (8 bit) 
+                    + REP #$20                                  ;;CEDE|CFDC+CFDC/CFDC\CFDC; A->16
+                      SEP #$10                                  ;;CEE0|CFDE+CFDE/CFDE\CFDE; XY->8
                       LDA.B _A                                  ;;CEE2|CFE0+CFE0/CFE0\CFE0;
                       STA.L DynStripeImgSize                    ;;CEE4|CFE2+CFE2/CFE2\CFE2;
-                      SEP #$30                                  ;;CEE8|CFE6+CFE6/CFE6\CFE6; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;CEE8|CFE6+CFE6/CFE6\CFE6; AXY->8
                       PLB                                       ;;CEEA|CFE8+CFE8/CFE8\CFE8;
-Return05CFE9:         RTS                                       ;;CEEB|CFE9+CFE9/CFE9\CFE9; Return 
+Return05CFE9:         RTS                                       ;;CEEB|CFE9+CFE9/CFE9\CFE9;
                                                                 ;;                        ;
                       %insert_empty($114,$16,$16,$16,$16)       ;;CEEC|CFEA+CFEA/CFEA\CFEA;
                                                                 ;;                        ;
@@ -6689,7 +6689,7 @@ DATA_05D790:          db $70,$70,$60,$70,$70,$70                ;;D790|D790+D790
 CODE_05D796:          PHB                                       ;;D796|D796+D796/D796\D796;
                       PHK                                       ;;D797|D797+D797/D797\D797;
                       PLB                                       ;;D798|D798+D798/D798\D798;
-                      SEP #$30                                  ;;D799|D799+D799/D799\D799; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;D799|D799+D799/D799\D799; AXY->8
                       STZ.W SkipMidwayCastleIntro               ;;D79B|D79B+D79B/D79B\D79B;
                       LDA.W YoshiHeavenFlag                     ;;D79E|D79E+D79E/D79E\D79E;
                       BNE CODE_05D7A8                           ;;D7A1|D7A1+D7A1/D7A1\D7A1;
@@ -6718,9 +6718,9 @@ CODE_05D7A8:          JSR CODE_05DBAC                           ;;D7A8|D7A8+D7A8
                     + STA.B _F                                  ;;D7D2|D7D2+D7D2/D7D2\D7D2;
                       LDA.W UseSecondaryExit                    ;;D7D4|D7D4+D7D4/D7D4\D7D4;
                       BEQ +                                     ;;D7D7|D7D7+D7D7/D7D7\D7D7;
-                      REP #$30                                  ;;D7D9|D7D9+D7D9/D7D9\D7D9; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;D7D9|D7D9+D7D9/D7D9\D7D9; AXY->16
                       LDA.W #$0000                              ;;D7DB|D7DB+D7DB/D7DB\D7DB;
-                      SEP #$20                                  ;;D7DE|D7DE+D7DE/D7DE\D7DE; Accum (8 bit) 
+                      SEP #$20                                  ;;D7DE|D7DE+D7DE/D7DE\D7DE; A->8
                       LDY.B _E                                  ;;D7E0|D7E0+D7E0/D7E0\D7E0;
                       LDA.W DATA_05F800,Y                       ;;D7E2|D7E2+D7E2/D7E2\D7E2;
                       STA.B _E                                  ;;D7E5|D7E5+D7E5/D7E5\D7E5;
@@ -6769,11 +6769,11 @@ CODE_05D7A8:          JSR CODE_05DBAC                           ;;D7A8|D7A8+D7A8
                       STA.W LevelEntranceType                   ;;D838|D838+D838/D838\D838;
                     + JMP CODE_05D8B7                           ;;D83B|D83B+D83B/D83B\D83B;
                                                                 ;;                        ;
-CODE_05D83E:          STZ.B _F                                  ;;D83E|D83E+D83E/D83E\D83E; Index (8 bit) 
+CODE_05D83E:          STZ.B _F                                  ;;D83E|D83E+D83E/D83E\D83E;
                       LDY.B #$00                                ;;D840|D840+D840/D840\D840;
                       LDA.W OverworldOverride                   ;;D842|D842+D842/D842\D842;
                       BNE CODE_05D8A2                           ;;D845|D845+D845/D845\D845;
-                      REP #$30                                  ;;D847|D847+D847/D847\D847; 16 bit A,X,Y ; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;D847|D847+D847/D847\D847; AXY->16
                       STZ.B Layer1XPos                          ;;D849|D849+D849/D849\D849; Set "X position of screen boundary" to 0 
                       STZ.B Layer2XPos                          ;;D84B|D84B+D84B/D84B\D84B; Set "Layer 2 X position" to 0 
                       LDX.W PlayerTurnOW                        ;;D84D|D84D+D84D/D84D\D84D;
@@ -6806,69 +6806,69 @@ CODE_05D83E:          STZ.B _F                                  ;;D83E|D83E+D83E
                       ORA.B _0                                  ;;D87F|D87F+D87F/D87F\D87F;
                       TAX                                       ;;D881|D881+D881/D881\D881;
                       LDA.W PlayerTurnOW                        ;;D882|D882+D882/D882\D882; \ 
-                      AND.W #$00FF                              ;;D885|D885+D885/D885\D885;  | 
-                      LSR A                                     ;;D888|D888+D888/D888\D888;  |Set Y to current player 
-                      LSR A                                     ;;D889|D889+D889/D889\D889;  | 
+                      AND.W #$00FF                              ;;D885|D885+D885/D885\D885; | 
+                      LSR A                                     ;;D888|D888+D888/D888\D888; |Set Y to current player 
+                      LSR A                                     ;;D889|D889+D889/D889\D889; | 
                       TAY                                       ;;D88A|D88A+D88A/D88A\D88A; / 
                       LDA.W OWPlayerSubmap,Y                    ;;D88B|D88B+D88B/D88B\D88B; \ Get current player's submap 
                       AND.W #$000F                              ;;D88E|D88E+D88E/D88E\D88E; / 
                       BEQ +                                     ;;D891|D891+D891/D891\D891; \ 
-                      TXA                                       ;;D893|D893+D893/D893\D893;  | 
-                      CLC                                       ;;D894|D894+D894/D894\D894;  |If on submap, increase X by x400 
-                      ADC.W #$0400                              ;;D895|D895+D895/D895\D895;  | 
-                      TAX                                       ;;D898|D898+D898/D898\D898;  | 
-                    + SEP #$20                                  ;;D899|D899+D899/D899\D899; 8 bit A ; Accum (8 bit) 
+                      TXA                                       ;;D893|D893+D893/D893\D893; | 
+                      CLC                                       ;;D894|D894+D894/D894\D894; |If on submap, increase X by x400 
+                      ADC.W #$0400                              ;;D895|D895+D895/D895\D895; | 
+                      TAX                                       ;;D898|D898+D898/D898\D898; | 
+                    + SEP #$20                                  ;;D899|D899+D899/D899\D899; A->8
                       LDA.L OWLayer1Translevel,X                ;;D89B|D89B+D89B/D89B\D89B;
                       STA.W TranslevelNo                        ;;D89F|D89F+D89F/D89F\D89F; Store overworld level number 
 CODE_05D8A2:          CMP.B #$25                                ;;D8A2|D8A2+D8A2/D8A2\D8A2; \ 
-                      BCC +                                     ;;D8A4|D8A4+D8A4/D8A4\D8A4;  | 
-                      SEC                                       ;;D8A6|D8A6+D8A6/D8A6\D8A6;  |If A>= x25, 
-                      SBC.B #$24                                ;;D8A7|D8A7+D8A7/D8A7\D8A7;  |subtract x24 
+                      BCC +                                     ;;D8A4|D8A4+D8A4/D8A4\D8A4; | 
+                      SEC                                       ;;D8A6|D8A6+D8A6/D8A6\D8A6; |If A>= x25, 
+                      SBC.B #$24                                ;;D8A7|D8A7+D8A7/D8A7\D8A7; |subtract x24 
                     + STA.W LoadingLevelNumber                  ;;D8A9|D8A9+D8A9/D8A9\D8A9;
                       STA.B _E                                  ;;D8AC|D8AC+D8AC/D8AC\D8AC; Store A as lower level number byte 
                       LDA.W OWPlayerSubmap,Y                    ;;D8AE|D8AE+D8AE/D8AE\D8AE; \ 
-                      BEQ +                                     ;;D8B1|D8B1+D8B1/D8B1\D8B1;  |Set higher level number byte to: 
-                      LDA.B #$01                                ;;D8B3|D8B3+D8B3/D8B3\D8B3;  |0 if on overworld 
+                      BEQ +                                     ;;D8B1|D8B1+D8B1/D8B1\D8B1; |Set higher level number byte to: 
+                      LDA.B #$01                                ;;D8B3|D8B3+D8B3/D8B3\D8B3; |0 if on overworld 
                     + STA.B _F                                  ;;D8B5|D8B5+D8B5/D8B5\D8B5; / 
-CODE_05D8B7:          REP #$30                                  ;;D8B7|D8B7+D8B7/D8B7\D8B7; 16 bit A,X,Y ; Index (16 bit) Accum (16 bit) 
+CODE_05D8B7:          REP #$30                                  ;;D8B7|D8B7+D8B7/D8B7\D8B7; AXY->16
                       LDA.B _E                                  ;;D8B9|D8B9+D8B9/D8B9\D8B9; \ 
-                      ASL A                                     ;;D8BB|D8BB+D8BB/D8BB\D8BB;  | 
-                      CLC                                       ;;D8BC|D8BC+D8BC/D8BC\D8BC;  |Multiply level number by 3 and store in Y 
-                      ADC.B _E                                  ;;D8BD|D8BD+D8BD/D8BD\D8BD;  |(Each L1/2 pointer table entry is 3 bytes long) 
+                      ASL A                                     ;;D8BB|D8BB+D8BB/D8BB\D8BB; | 
+                      CLC                                       ;;D8BC|D8BC+D8BC/D8BC\D8BC; |Multiply level number by 3 and store in Y 
+                      ADC.B _E                                  ;;D8BD|D8BD+D8BD/D8BD\D8BD; |(Each L1/2 pointer table entry is 3 bytes long) 
                       TAY                                       ;;D8BF|D8BF+D8BF/D8BF\D8BF; / 
-                      SEP #$20                                  ;;D8C0|D8C0+D8C0/D8C0\D8C0; 8 bit A ; Accum (8 bit) 
+                      SEP #$20                                  ;;D8C0|D8C0+D8C0/D8C0\D8C0; A->8
                       LDA.W Layer1Ptrs,Y                        ;;D8C2|D8C2+D8C2/D8C2\D8C2; \ 
-                      STA.B Layer1DataPtr                       ;;D8C5|D8C5+D8C5/D8C5\D8C5;  | 
-                      LDA.W Layer1Ptrs+1,Y                      ;;D8C7|D8C7+D8C7/D8C7\D8C7;  |Load Layer 1 pointer into $65-$67 
-                      STA.B Layer1DataPtr+1                     ;;D8CA|D8CA+D8CA/D8CA\D8CA;  | 
-                      LDA.W Layer1Ptrs+2,Y                      ;;D8CC|D8CC+D8CC/D8CC\D8CC;  | 
+                      STA.B Layer1DataPtr                       ;;D8C5|D8C5+D8C5/D8C5\D8C5; | 
+                      LDA.W Layer1Ptrs+1,Y                      ;;D8C7|D8C7+D8C7/D8C7\D8C7; |Load Layer 1 pointer into $65-$67 
+                      STA.B Layer1DataPtr+1                     ;;D8CA|D8CA+D8CA/D8CA\D8CA; | 
+                      LDA.W Layer1Ptrs+2,Y                      ;;D8CC|D8CC+D8CC/D8CC\D8CC; | 
                       STA.B Layer1DataPtr+2                     ;;D8CF|D8CF+D8CF/D8CF\D8CF; / 
                       LDA.W Layer2Ptrs,Y                        ;;D8D1|D8D1+D8D1/D8D1\D8D1; \ 
-                      STA.B Layer2DataPtr                       ;;D8D4|D8D4+D8D4/D8D4\D8D4;  | 
-                      LDA.W Layer2Ptrs+1,Y                      ;;D8D6|D8D6+D8D6/D8D6\D8D6;  |Load Layer 2 pointer into $68-$6A 
-                      STA.B Layer2DataPtr+1                     ;;D8D9|D8D9+D8D9/D8D9\D8D9;  | 
-                      LDA.W Layer2Ptrs+2,Y                      ;;D8DB|D8DB+D8DB/D8DB\D8DB;  | 
+                      STA.B Layer2DataPtr                       ;;D8D4|D8D4+D8D4/D8D4\D8D4; | 
+                      LDA.W Layer2Ptrs+1,Y                      ;;D8D6|D8D6+D8D6/D8D6\D8D6; |Load Layer 2 pointer into $68-$6A 
+                      STA.B Layer2DataPtr+1                     ;;D8D9|D8D9+D8D9/D8D9\D8D9; | 
+                      LDA.W Layer2Ptrs+2,Y                      ;;D8DB|D8DB+D8DB/D8DB\D8DB; | 
                       STA.B Layer2DataPtr+2                     ;;D8DE|D8DE+D8DE/D8DE\D8DE; / 
-                      REP #$20                                  ;;D8E0|D8E0+D8E0/D8E0\D8E0; 16 bit A ; Accum (16 bit) 
+                      REP #$20                                  ;;D8E0|D8E0+D8E0/D8E0\D8E0; A->16
                       LDA.B _E                                  ;;D8E2|D8E2+D8E2/D8E2\D8E2; \ 
-                      ASL A                                     ;;D8E4|D8E4+D8E4/D8E4\D8E4;  |Multiply level number by 2 and store in Y 
+                      ASL A                                     ;;D8E4|D8E4+D8E4/D8E4\D8E4; |Multiply level number by 2 and store in Y 
                       TAY                                       ;;D8E5|D8E5+D8E5/D8E5\D8E5; / (Each sprite pointer table entry is 2 bytes long) 
                       LDA.W #$0000                              ;;D8E6|D8E6+D8E6/D8E6\D8E6;
-                      SEP #$20                                  ;;D8E9|D8E9+D8E9/D8E9\D8E9; 8 bit A ; Accum (8 bit) 
+                      SEP #$20                                  ;;D8E9|D8E9+D8E9/D8E9\D8E9; A->8
                       LDA.W Ptrs05EC00,Y                        ;;D8EB|D8EB+D8EB/D8EB\D8EB; \ 
-                      STA.B SpriteDataPtr                       ;;D8EE|D8EE+D8EE/D8EE\D8EE;  |Store location of sprite level Y in $CE-$CF 
-                      LDA.W Ptrs05EC00+1,Y                      ;;D8F0|D8F0+D8F0/D8F0\D8F0;  | 
+                      STA.B SpriteDataPtr                       ;;D8EE|D8EE+D8EE/D8EE\D8EE; |Store location of sprite level Y in $CE-$CF 
+                      LDA.W Ptrs05EC00+1,Y                      ;;D8F0|D8F0+D8F0/D8F0\D8F0; | 
                       STA.B SpriteDataPtr+1                     ;;D8F3|D8F3+D8F3/D8F3\D8F3; / 
                       LDA.B #$07                                ;;D8F5|D8F5+D8F5/D8F5\D8F5; \ Set highest byte to x07 
                       STA.B SpriteDataPtr+2                     ;;D8F7|D8F7+D8F7/D8F7\D8F7; / (All sprite data is stored in bank 07) 
                       LDA.B [SpriteDataPtr]                     ;;D8F9|D8F9+D8F9/D8F9\D8F9; \ Get first byte of sprite data (header) 
-                      AND.B #$3F                                ;;D8FB|D8FB+D8FB/D8FB\D8FB;  |Get level's sprite memory 
+                      AND.B #$3F                                ;;D8FB|D8FB+D8FB/D8FB\D8FB; |Get level's sprite memory 
                       STA.W SpriteMemorySetting                 ;;D8FD|D8FD+D8FD/D8FD\D8FD; / Store in $1692 
                       LDA.B [SpriteDataPtr]                     ;;D900|D900+D900/D900\D900; \ Get first byte of sprite data (header) again 
-                      AND.B #$C0                                ;;D902|D902+D902/D902\D902;  |Get level's sprite buoyancy settings 
+                      AND.B #$C0                                ;;D902|D902+D902/D902\D902; |Get level's sprite buoyancy settings 
                       STA.W SpriteBuoyancy                      ;;D904|D904+D904/D904\D904; / Store in $190E 
-                      REP #$10                                  ;;D907|D907+D907/D907\D907; 16 bit X,Y ; Index (16 bit) 
-                      SEP #$20                                  ;;D909|D909+D909/D909\D909; 8 bit A ; Accum (8 bit) 
+                      REP #$10                                  ;;D907|D907+D907/D907\D907; XY->16
+                      SEP #$20                                  ;;D909|D909+D909/D909\D909; A->8
                       LDY.B _E                                  ;;D90B|D90B+D90B/D90B\D90B;
                       LDA.W DATA_05F000,Y                       ;;D90D|D90D+D90D/D90D\D90D;
                       LSR A                                     ;;D910|D910+D910/D910\D910;
@@ -6963,7 +6963,7 @@ CODE_05D8B7:          REP #$30                                  ;;D8B7|D8B7+D8B7
                       LDY.W TranslevelNo                        ;;D9C9|D9C9+D9C9/D9C9\D9C9;
                       LDA.W DATA_05D608,Y                       ;;D9CC|D9CC+D9CC/D9CC\D9CC;
                       STA.W OverworldEvent                      ;;D9CF|D9CF+D9CF/D9CF\D9CF;
-                      SEP #$10                                  ;;D9D2|D9D2+D9D2/D9D2\D9D2; Index (8 bit) 
+                      SEP #$10                                  ;;D9D2|D9D2+D9D2/D9D2\D9D2; XY->8
                       LDX.W TranslevelNo                        ;;D9D4|D9D4+D9D4/D9D4\D9D4;
                       LDA.W OWLevelTileSettings,X               ;;D9D7|D9D7+D9D7/D9D7\D9D7;
                       AND.B #$40                                ;;D9DA|D9DA+D9DA/D9DA\D9DA;
@@ -6977,7 +6977,7 @@ CODE_05D8B7:          REP #$30                                  ;;D8B7|D8B7+D8B7
                       STA.B PlayerXPosNext+1                    ;;D9E7|D9E7+D9E7/D9E7\D9E7;
                       JMP CODE_05DA17                           ;;D9E9|D9E9+D9E9/D9E9\D9E9;
                                                                 ;;                        ;
-                    + REP #$10                                  ;;D9EC|D9EC+D9EC/D9EC\D9EC; Index (16 bit) 
+                    + REP #$10                                  ;;D9EC|D9EC+D9EC/D9EC\D9EC; XY->16 
                       LDA.B _1                                  ;;D9EE|D9EE+D9EE/D9EE\D9EE;
                       AND.B #$1F                                ;;D9F0|D9F0+D9F0/D9F0\D9F0;
                       STA.B _1                                  ;;D9F2|D9F2+D9F2/D9F2\D9F2;
@@ -6991,14 +6991,14 @@ CODE_05D8B7:          REP #$30                                  ;;D8B7|D8B7+D8B7
                     + LDA.B _1                                  ;;DA01|DA01+DA01/DA01\DA01;
                       STA.B PlayerYPosNext+1                    ;;DA03|DA03+DA03/DA03\DA03;
                       STA.B Layer1YPos+1                        ;;DA05|DA05+DA05/DA05\DA05;
-                      SEP #$10                                  ;;DA07|DA07+DA07/DA07\DA07; Index (8 bit) 
+                      SEP #$10                                  ;;DA07|DA07+DA07/DA07\DA07; XY->8
                       LDY.W VertLayer2Setting                   ;;DA09|DA09+DA09/DA09\DA09;
                       CPY.B #$03                                ;;DA0C|DA0C+DA0C/DA0C\DA0C;
                       BEQ +                                     ;;DA0E|DA0E+DA0E/DA0E\DA0E;
                       STA.B Layer2YPos+1                        ;;DA10|DA10+DA10/DA10\DA10;
                     + LDA.B #$01                                ;;DA12|DA12+DA12/DA12\DA12;
                       STA.W VertLayer1Setting                   ;;DA14|DA14+DA14/DA14\DA14;
-CODE_05DA17:          SEP #$30                                  ;;DA17|DA17+DA17/DA17\DA17; Index (8 bit) Accum (8 bit) 
+CODE_05DA17:          SEP #$30                                  ;;DA17|DA17+DA17/DA17\DA17; AXY->8
                       LDA.W TranslevelNo                        ;;DA19|DA19+DA19/DA19\DA19;
                       CMP.B #$52                                ;;DA1C|DA1C+DA1C/DA1C\DA1C;
                       BCC CODE_05DA24                           ;;DA1E|DA1E+DA1E/DA1E\DA1E;
@@ -7093,10 +7093,10 @@ CODE_05DAD7:          LDA.W SublevelCount                       ;;DAD7|DAD7+DAD7
                       BNE +                                     ;;DAE6|DAE6+DAE6/DAE6\DAE6;
                       JSR CODE_05DAEF                           ;;DAE8|DAE8+DAE8/DAE8\DAE8;
                     + PLB                                       ;;DAEB|DAEB+DAEB/DAEB\DAEB;
-                      SEP #$30                                  ;;DAEC|DAEC+DAEC/DAEC\DAEC; Index (8 bit) Accum (8 bit) 
-                      RTL                                       ;;DAEE|DAEE+DAEE/DAEE\DAEE; Return 
+                      SEP #$30                                  ;;DAEC|DAEC+DAEC/DAEC\DAEC; AXY->8
+                      RTL                                       ;;DAEE|DAEE+DAEE/DAEE\DAEE;
                                                                 ;;                        ;
-CODE_05DAEF:          SEP #$30                                  ;;DAEF|DAEF+DAEF/DAEF\DAEF; Index (8 bit) Accum (8 bit) 
+CODE_05DAEF:          SEP #$30                                  ;;DAEF|DAEF+DAEF/DAEF\DAEF; AXY->8
                       LDY.B #$04                                ;;DAF1|DAF1+DAF1/DAF1\DAF1;
                       LDA.B [Layer1DataPtr],Y                   ;;DAF3|DAF3+DAF3/DAF3\DAF3;
                       AND.B #$C0                                ;;DAF5|DAF5+DAF5/DAF5\DAF5;
@@ -7145,21 +7145,21 @@ CODE_05DB3E:          LDX.B #$00                                ;;DB3E|DB3E+DB3E
                       CMP.B #$04                                ;;DB43|DB43+DB43/DB43\DB43;
                       BEQ CODE_05DB49                           ;;DB45|DB45+DB45/DB45\DB45;
                       LDX.B #$02                                ;;DB47|DB47+DB47/DB47\DB47;
-CODE_05DB49:          REP #$20                                  ;;DB49|DB49+DB49/DB49\DB49; Accum (16 bit) 
+CODE_05DB49:          REP #$20                                  ;;DB49|DB49+DB49/DB49\DB49; A->16
                       LDA.L ChocIsld2Layer1,X                   ;;DB4B|DB4B+DB4B/DB4B\DB4B;
                       STA.B Layer1DataPtr                       ;;DB4F|DB4F+DB4F/DB4F\DB4F;
                       LDA.L ChocIsld2Sprites,X                  ;;DB51|DB51+DB51/DB51\DB51;
                       STA.B SpriteDataPtr                       ;;DB55|DB55+DB55/DB55\DB55;
                       LDA.L ChocIsld2Layer2,X                   ;;DB57|DB57+DB57/DB57\DB57;
                       STA.B Layer2DataPtr                       ;;DB5B|DB5B+DB5B/DB5B\DB5B;
-                      SEP #$20                                  ;;DB5D|DB5D+DB5D/DB5D\DB5D; Accum (8 bit) 
+                      SEP #$20                                  ;;DB5D|DB5D+DB5D/DB5D\DB5D; A->8
                       LDA.B [SpriteDataPtr]                     ;;DB5F|DB5F+DB5F/DB5F\DB5F;
                       AND.B #$7F                                ;;DB61|DB61+DB61/DB61\DB61;
                       STA.W SpriteMemorySetting                 ;;DB63|DB63+DB63/DB63\DB63;
                       LDA.B [SpriteDataPtr]                     ;;DB66|DB66+DB66/DB66\DB66;
                       AND.B #$80                                ;;DB68|DB68+DB68/DB68\DB68;
                       STA.W SpriteBuoyancy                      ;;DB6A|DB6A+DB6A/DB6A\DB6A;
-                      RTS                                       ;;DB6D|DB6D+DB6D/DB6D\DB6D; Return 
+                      RTS                                       ;;DB6D|DB6D+DB6D/DB6D\DB6D;
                                                                 ;;                        ;
 CODE_05DB6E:          LDX.B #$0A                                ;;DB6E|DB6E+DB6E/DB6E\DB6E;
                       LDA.W GreenStarBlockCoins                 ;;DB70|DB70+DB70/DB70\DB70;
@@ -7204,7 +7204,7 @@ CODE_05DBAC:          LDY.B #$00                                ;;DBAC|DBAC+DBAC
                     + LDA.W DATA_05DBA9,Y                       ;;DBBF|DBBF+DBBF/DBBF\DBBF;
                       STA.W ExitTableLow,X                      ;;DBC2|DBC2+DBC2/DBC2\DBC2;
                       INC.W SublevelCount                       ;;DBC5|DBC5+DBC5/DBC5\DBC5;
-                      RTS                                       ;;DBC8|DBC8+DBC8/DBC8\DBC8; Return 
+                      RTS                                       ;;DBC8|DBC8+DBC8/DBC8\DBC8;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_05DBC9:          db $50,$88,$00,$03,$FE,$38,$FE,$38        ;;DBC9|DBC9+DBC9/DBC9\DBC9;
@@ -7244,9 +7244,9 @@ CODE_05DBF2:          PHB                                       ;;DBF2|DBF2+DBF2
                       STA.L DynamicStripeImage+5                ;;DC2C|DC2C+DC2C/DC2C\DC2C;
                       LDA.B #$08                                ;;DC30|DC30+DC30/DC30\DC30;
                       STA.L DynStripeImgSize                    ;;DC32|DC32+DC32/DC32\DC32;
-                      SEP #$20                                  ;;DC36|DC36+DC36/DC36\DC36; Accum (8 bit) 
+                      SEP #$20                                  ;;DC36|DC36+DC36/DC36\DC36; A->8
                       PLB                                       ;;DC38|DC38+DC38/DC38\DC38;
-                      RTL                                       ;;DC39|DC39+DC39/DC39\DC39; Return 
+                      RTL                                       ;;DC39|DC39+DC39/DC39\DC39;
                                                                 ;;                        ;
 CODE_05DC3A:          LDX.B #$00                                ;;DC3A|DC3A+DC3A/DC3A\DC3A;
 CODE_05DC3C:          CMP.B #$0A                                ;;DC3C|DC3C+DC3C/DC3C\DC3C;
@@ -7255,7 +7255,7 @@ CODE_05DC3C:          CMP.B #$0A                                ;;DC3C|DC3C+DC3C
                       INX                                       ;;DC42|DC42+DC42/DC42\DC42;
                       BRA CODE_05DC3C                           ;;DC43|DC43+DC43/DC43\DC43;
                                                                 ;;                        ;
-Return05DC45:         RTS                                       ;;DC45|DC45+DC45/DC45\DC45; Return 
+Return05DC45:         RTS                                       ;;DC45|DC45+DC45/DC45\DC45;
                                                                 ;;                        ;
                       %insert_empty($3BA,$3BA,$3BA,$3BA,$3BA)   ;;DC46|DC46+DC46/DC46\DC46;
                                                                 ;;                        ;

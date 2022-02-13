@@ -52,7 +52,7 @@ CODE_028042:          LDA.B #$08                                ;;8042|8042+8042
                       STA.W SpriteXPosHigh,X                    ;;806A|806A+806A/806A\806A;
                       INC.W SpriteMisc1534,X                    ;;806D|806D+806D/806D\806D;
 CODE_028070:          PLX                                       ;;8070|8070+8070/8070\8070;
-                      RTL                                       ;;8071|8071+8071/8071\8071; Return 
+                      RTL                                       ;;8071|8071+8071/8071\8071;
                                                                 ;;                        ;
                                                                 ;;                        ;
 BombExplosionX:       db $00,$08,$06,$FA,$F8,$06,$08,$00        ;;8072|8072+8072/8072\8072;
@@ -62,19 +62,19 @@ BombExplosionY:       db $F8,$FE,$06,$06,$FE,$FA,$02,$08        ;;807C|807C+807C
                       db $02,$FA                                ;;8084|8084+8084/8084\8084;
                                                                 ;;                        ;
 ExplodeBombRt:        JSR ExplodeBombSubRt                      ;;8086|8086+8086/8086\8086;BOMB 
-                      RTL                                       ;;8089|8089+8089/8089\8089; Return 
+                      RTL                                       ;;8089|8089+8089/8089\8089;
                                                                 ;;                        ;
 ExplodeBombSubRt:     STZ.W SpriteTweakerA,X                    ;;808A|808A+808A/808A\808A; Make sprite unstompable 
                       LDA.B #$11                                ;;808D|808D+808D/808D\808D; \ Set new clipping area for explosion 
                       STA.W SpriteTweakerB,X                    ;;808F|808F+808F/808F\808F; / 
                       JSR GetDrawInfo2                          ;;8092|8092+8092/8092\8092;
                       LDA.B SpriteLock                          ;;8095|8095+8095/8095\8095; \ Increase frame count if sprites not locked 
-                      BNE +                                     ;;8097|8097+8097/8097\8097;  | 
+                      BNE +                                     ;;8097|8097+8097/8097\8097; | 
                       INC.W SpriteMisc1570,X                    ;;8099|8099+8099/8099\8099; / 
                     + LDA.W SpriteMisc1540,X                    ;;809C|809C+809C/809C\809C; \ When timer is up free up sprite slot 
-                      BNE +                                     ;;809F|809F+809F/809F\809F;  | 
+                      BNE +                                     ;;809F|809F+809F/809F\809F; | 
                       STZ.W SpriteStatus,X                      ;;80A1|80A1+80A1/80A1\80A1; / 
-                      RTS                                       ;;80A4|80A4+80A4/80A4\80A4; Return 
+                      RTS                                       ;;80A4|80A4+80A4/80A4\80A4;
                                                                 ;;                        ;
                     + LDA.W SpriteMisc1540,X                    ;;80A5|80A5+80A5/80A5\80A5;
                       LSR A                                     ;;80A8|80A8+80A8/80A8\80A8;
@@ -157,27 +157,27 @@ CODE_0280ED:          LDA.B _0                                  ;;80ED|80ED+80ED
                       JMP CODE_02B7A7                           ;;8136|8136+8136/8136\8136;
                                                                 ;;                        ;
 ExplodeSprites:       LDY.B #$09                                ;;8139|8139+8139/8139\8139; \ Loop over sprites: 
-ExplodeLoopStart:     CPY.W CurSpriteProcess                    ;;813B|813B+813B/813B\813B;  | Don't attempt to kill self 
-                      BEQ CODE_02814C                           ;;813E|813E+813E/813E\813E;  | 
-                      PHY                                       ;;8140|8140+8140/8140\8140;  | 
-                      LDA.W SpriteStatus,Y                      ;;8141|8141+8141/8141\8141;  | Skip sprite if it's already dying/dead 
-                      CMP.B #$08                                ;;8144|8144+8144/8144\8144;  | 
-                      BCC +                                     ;;8146|8146+8146/8146\8146;  | 
-                      JSR ExplodeKillSpr                        ;;8148|8148+8148/8148\8148;  | Check for contact 
-                    + PLY                                       ;;814B|814B+814B/814B\814B;  | 
-CODE_02814C:          DEY                                       ;;814C|814C+814C/814C\814C;  | Next 
+ExplodeLoopStart:     CPY.W CurSpriteProcess                    ;;813B|813B+813B/813B\813B; | Don't attempt to kill self 
+                      BEQ CODE_02814C                           ;;813E|813E+813E/813E\813E; | 
+                      PHY                                       ;;8140|8140+8140/8140\8140; | 
+                      LDA.W SpriteStatus,Y                      ;;8141|8141+8141/8141\8141; | Skip sprite if it's already dying/dead 
+                      CMP.B #$08                                ;;8144|8144+8144/8144\8144; | 
+                      BCC +                                     ;;8146|8146+8146/8146\8146; | 
+                      JSR ExplodeKillSpr                        ;;8148|8148+8148/8148\8148; | Check for contact 
+                    + PLY                                       ;;814B|814B+814B/814B\814B; | 
+CODE_02814C:          DEY                                       ;;814C|814C+814C/814C\814C; | Next 
                       BPL ExplodeLoopStart                      ;;814D|814D+814D/814D\814D; / 
-                      RTS                                       ;;814F|814F+814F/814F\814F; Return 
+                      RTS                                       ;;814F|814F+814F/814F\814F;
                                                                 ;;                        ;
 ExplodeKillSpr:       PHX                                       ;;8150|8150+8150/8150\8150;
                       TYX                                       ;;8151|8151+8151/8151\8151; \ Return if no sprite contact 
-                      JSL GetSpriteClippingB                    ;;8152|8152+8152/8152\8152;  | 
-                      PLX                                       ;;8156|8156+8156/8156\8156;  | 
-                      JSL GetSpriteClippingA                    ;;8157|8157+8157/8157\8157;  | 
-                      JSL CheckForContact                       ;;815B|815B+815B/815B\815B;  | 
+                      JSL GetSpriteClippingB                    ;;8152|8152+8152/8152\8152; | 
+                      PLX                                       ;;8156|8156+8156/8156\8156; | 
+                      JSL GetSpriteClippingA                    ;;8157|8157+8157/8157\8157; | 
+                      JSL CheckForContact                       ;;815B|815B+815B/815B\815B; | 
                       BCC +                                     ;;815F|815F+815F/815F\815F; / 
                       LDA.W SpriteTweakerD,Y                    ;;8161|8161+8161/8161\8161; \ Return if sprite is invincible 
-                      AND.B #$02                                ;;8164|8164+8164/8164\8164;  | to explosions 
+                      AND.B #$02                                ;;8164|8164+8164/8164\8164; | to explosions 
                       BNE +                                     ;;8166|8166+8166/8166\8166; / 
                       LDA.B #$02                                ;;8168|8168+8168/8168\8168; \ Sprite status = Killed 
                       STA.W SpriteStatus,Y                      ;;816A|816A+816A/816A\816A; / 
@@ -185,7 +185,7 @@ ExplodeKillSpr:       PHX                                       ;;8150|8150+8150
                       STA.W SpriteYSpeed,Y                      ;;816F|816F+816F/816F\816F; / 
                       LDA.B #$00                                ;;8172|8172+8172/8172\8172; \ Sprite X speed = #$00 
                       STA.W SpriteXSpeed,Y                      ;;8174|8174+8174/8174\8174; / 
-                    + RTS                                       ;;8177|8177+8177/8177\8177; Return 
+                    + RTS                                       ;;8177|8177+8177/8177\8177;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_028178:          db $F8,$38,$78,$B8,$00,$10,$20,$D0        ;;8178|8178+8178/8178\8178;
@@ -244,7 +244,7 @@ CODE_02827D:          LDA.B Layer1XPos                          ;;827D|827D+827D
                       EOR.B #$FF                                ;;829E|829E+829E/829E\829E;
                       INC A                                     ;;82A0|82A0+82A0/82A0\82A0;
                       STA.W BossBGSpriteXCalc                   ;;82A1|82A1+82A1/82A1\82A1;
-                      REP #$10                                  ;;82A4|82A4+82A4/82A4\82A4; Index (16 bit) 
+                      REP #$10                                  ;;82A4|82A4+82A4/82A4\82A4; XY->16 
                       LDY.W #$0164                              ;;82A6|82A6+82A6/82A6\82A6;
                       LDA.B #$66                                ;;82A9|82A9+82A9/82A9\82A9;
                       STY.B _3                                  ;;82AB|82AB+82AB/82AB\82AB;
@@ -268,12 +268,12 @@ CODE_02827D:          LDA.B Layer1XPos                          ;;827D|827D+827D
                       LDX.W #$001D                              ;;82D2|82D2+82D2/82D2\82D2;
                       LDY.W #$00FC                              ;;82D5|82D5+82D5/82D5\82D5;
 CODE_0282D8:          STX.B _0                                  ;;82D8|82D8+82D8/82D8\82D8;
-                      REP #$20                                  ;;82DA|82DA+82DA/82DA\82DA; Accum (16 bit) 
+                      REP #$20                                  ;;82DA|82DA+82DA/82DA\82DA; A->16
                       TXA                                       ;;82DC|82DC+82DC/82DC\82DC;
                       CLC                                       ;;82DD|82DD+82DD/82DD\82DD;
                       ADC.B _C                                  ;;82DE|82DE+82DE/82DE\82DE;
                       STA.B _A                                  ;;82E0|82E0+82E0/82E0\82E0;
-                      SEP #$20                                  ;;82E2|82E2+82E2/82E2\82E2; Accum (8 bit) 
+                      SEP #$20                                  ;;82E2|82E2+82E2/82E2\82E2; A->8
                       LDA.B _6                                  ;;82E4|82E4+82E4/82E4\82E4;
                       CLC                                       ;;82E6|82E6+82E6/82E6\82E6;
                       LDX.B _A                                  ;;82E7|82E7+82E7/82E7\82E7;
@@ -296,13 +296,13 @@ CODE_0282D8:          STX.B _0                                  ;;82D8|82D8+82D8
                       STA.W OAMTileNo+$0C,Y                     ;;8310|8310+8310/8310\8310;
                       LDA.B #$0D                                ;;8313|8313+8313/8313\8313;
                       STA.W OAMTileAttr+$0C,Y                   ;;8315|8315+8315/8315\8315;
-                    + REP #$20                                  ;;8318|8318+8318/8318\8318; Accum (16 bit) 
+                    + REP #$20                                  ;;8318|8318+8318/8318\8318; A->16
                       PHY                                       ;;831A|831A+831A/831A\831A;
                       TYA                                       ;;831B|831B+831B/831B\831B;
                       LSR A                                     ;;831C|831C+831C/831C\831C;
                       LSR A                                     ;;831D|831D+831D/831D\831D;
                       TAY                                       ;;831E|831E+831E/831E\831E;
-                      SEP #$20                                  ;;831F|831F+831F/831F\831F; Accum (8 bit) 
+                      SEP #$20                                  ;;831F|831F+831F/831F\831F; A->8
                       LDA.B #$02                                ;;8321|8321+8321/8321\8321;
                       STA.W OAMTileSize+3,Y                     ;;8323|8323+8323/8323\8323;
                       LDA.B _2                                  ;;8326|8326+8326/8326\8326;
@@ -322,12 +322,12 @@ CODE_0282D8:          STX.B _0                                  ;;82D8|82D8+82D8
                       STA.W OAMTileNo+$0C,X                     ;;8346|8346+8346/8346\8346;
                       LDA.W OAMTileAttr+$0C,Y                   ;;8349|8349+8349/8349\8349;
                       STA.W OAMTileAttr+$0C,X                   ;;834C|834C+834C/834C\834C;
-                      REP #$20                                  ;;834F|834F+834F/834F\834F; Accum (16 bit) 
+                      REP #$20                                  ;;834F|834F+834F/834F\834F; A->16
                       TXA                                       ;;8351|8351+8351/8351\8351;
                       LSR A                                     ;;8352|8352+8352/8352\8352;
                       LSR A                                     ;;8353|8353+8353/8353\8353;
                       TAY                                       ;;8354|8354+8354/8354\8354;
-                      SEP #$20                                  ;;8355|8355+8355/8355\8355; Accum (8 bit) 
+                      SEP #$20                                  ;;8355|8355+8355/8355\8355; A->8
                       LDA.B #$03                                ;;8357|8357+8357/8357\8357;
                       STA.W OAMTileSize+3,Y                     ;;8359|8359+8359/8359\8359;
                       LDA.B _3                                  ;;835C|835C+835C/835C\835C;
@@ -346,7 +346,7 @@ CODE_0282D8:          STX.B _0                                  ;;82D8|82D8+82D8
                       BMI +                                     ;;836F|836F+836F/836F\836F;
                       JMP CODE_0282D8                           ;;8371|8371+8371/8371\8371;
                                                                 ;;                        ;
-                    + SEP #$10                                  ;;8374|8374+8374/8374\8374; Index (8 bit) 
+                    + SEP #$10                                  ;;8374|8374+8374/8374\8374; XY->8
                       LDA.B #$01                                ;;8376|8376+8376/8376\8376;
                       STA.W BossBGSpriteUpdate                  ;;8378|8378+8378/8378\8378;
                       LDA.W SpriteMisc187B+9                    ;;837B|837B+837B/837B\837B;
@@ -381,7 +381,7 @@ CODE_0283A0:          LDX.B _0                                  ;;83A0|83A0+83A0
                       CMP.B #$04                                ;;83C0|83C0+83C0/83C0\83C0;
                       BNE CODE_0283A0                           ;;83C2|83C2+83C2/83C2\83C2;
 CODE_0283C4:          JSR CODE_0283CE                           ;;83C4|83C4+83C4/83C4\83C4;
-                      RTL                                       ;;83C7|83C7+83C7/83C7\83C7; Return 
+                      RTL                                       ;;83C7|83C7+83C7/83C7\83C7;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0283C8:          db $00,$04,$08,$0C                        ;;83C8|83C8+83C8/83C8\83C8;
@@ -407,7 +407,7 @@ CODE_0283E0:          STX.B _F                                  ;;83E0|83E0+83E0
                     + JSR CODE_028439                           ;;83F1|83F1+83F1/83F1\83F1;
 CODE_0283F4:          DEX                                       ;;83F4|83F4+83F4/83F4\83F4;
                       BPL CODE_0283E0                           ;;83F5|83F5+83F5/83F5\83F5;
-                      RTS                                       ;;83F7|83F7+83F7/83F7\83F7; Return 
+                      RTS                                       ;;83F7|83F7+83F7/83F7\83F7;
                                                                 ;;                        ;
 CODE_0283F8:          LDA.W BossPillarYPos,X                    ;;83F8|83F8+83F8/83F8\83F8;
                       LSR A                                     ;;83FB|83FB+83FB/83FB\83FB;
@@ -440,7 +440,7 @@ CODE_02842A:          CPX.B #$01                                ;;842A|842A+842A
                       STZ.W PlayerIsFrozen                      ;;8430|8430+8430/8430\8430;
                     + LDA.B #$B0                                ;;8433|8433+8433/8433\8433;
 CODE_028435:          STA.W BossPillarYPos,X                    ;;8435|8435+8435/8435\8435;
-                      RTS                                       ;;8438|8438+8438/8438\8438; Return 
+                      RTS                                       ;;8438|8438+8438/8438\8438;
                                                                 ;;                        ;
 CODE_028439:          LDA.L DATA_0283CC,X                       ;;8439|8439+8439/8439\8439;
                       TAY                                       ;;843D|843D+843D/843D\843D;
@@ -485,7 +485,7 @@ CODE_028440:          LDA.B #$F0                                ;;8440|8440+8440
                       STA.B _0                                  ;;8486|8486+8486/8486\8486;
                       CMP.B #$90                                ;;8488|8488+8488/8488\8488;
                       BCC CODE_028440                           ;;848A|848A+848A/848A\848A;
-Return02848C:         RTS                                       ;;848C|848C+848C/848C\848C; Return 
+Return02848C:         RTS                                       ;;848C|848C+848C/848C\848C;
                                                                 ;;                        ;
 SubHorzPosBnk2:       LDY.B #$00                                ;;848D|848D+848D/848D\848D;
                       LDA.B PlayerXPosNext                      ;;848F|848F+848F/848F\848F;
@@ -496,11 +496,11 @@ SubHorzPosBnk2:       LDY.B #$00                                ;;848D|848D+848D
                       SBC.W SpriteYPosHigh,X                    ;;8498|8498+8498/8498\8498;
                       BPL +                                     ;;849B|849B+849B/849B\849B;
                       INY                                       ;;849D|849D+849D/849D\849D;
-                    + RTS                                       ;;849E|849E+849E/849E\849E; Return 
+                    + RTS                                       ;;849E|849E+849E/849E\849E;
                                                                 ;;                        ;
 IsOffScreenBnk2:      LDA.W SpriteOffscreenX,X                  ;;849F|849F+849F/849F\849F;
                       ORA.W SpriteOffscreenVert,X               ;;84A2|84A2+84A2/84A2\84A2;
-                      RTS                                       ;;84A5|84A5+84A5/84A5\84A5; Return 
+                      RTS                                       ;;84A5|84A5+84A5/84A5\84A5;
                                                                 ;;                        ;
 CODE_0284A6:          STA.B _3                                  ;;84A6|84A6+84A6/84A6\84A6;
                       LDA.B #$02                                ;;84A8|84A8+84A8/84A8\84A8;
@@ -512,7 +512,7 @@ CODE_0284A6:          STA.B _3                                  ;;84A6|84A6+84A6
                       STA.B _2                                  ;;84B5|84B5+84B5/84B5\84B5;
                       DEC.B _1                                  ;;84B7|84B7+84B7/84B7\84B7;
                       BPL -                                     ;;84B9|84B9+84B9/84B9\84B9;
-                      RTL                                       ;;84BB|84BB+84BB/84BB\84BB; Return 
+                      RTL                                       ;;84BB|84BB+84BB/84BB\84BB;
                                                                 ;;                        ;
 CODE_0284BC:          LDA.B #$12                                ;;84BC|84BC+84BC/84BC\84BC;
                       BRA +                                     ;;84BE|84BE+84BE/84BE\84BE;
@@ -537,7 +537,7 @@ CODE_0284DF:          LDA.W MinExtSpriteNumber,Y                ;;84DF|84DF+84DF
                       BEQ CODE_0284E8                           ;;84E2|84E2+84E2/84E2\84E2;
                       DEY                                       ;;84E4|84E4+84E4/84E4\84E4;
                       BPL CODE_0284DF                           ;;84E5|84E5+84E5/84E5\84E5;
-Return0284E7:         RTL                                       ;;84E7|84E7+84E7/84E7\84E7; Return 
+Return0284E7:         RTL                                       ;;84E7|84E7+84E7/84E7\84E7;
                                                                 ;;                        ;
 CODE_0284E8:          LDA.B SpriteYPosLow,X                     ;;84E8|84E8+84E8/84E8\84E8;
                       CLC                                       ;;84EA|84EA+84EA/84EA\84EA;
@@ -557,7 +557,7 @@ CODE_0284E8:          LDA.B SpriteYPosLow,X                     ;;84E8|84E8+84E8
                       STA.W MinExtSpriteNumber,Y                ;;8507|8507+8507/8507\8507;
                       LDA.B _0                                  ;;850A|850A+850A/850A\850A;
                       STA.W MinExtSpriteTimer,Y                 ;;850C|850C+850C/850C\850C;
-                      RTL                                       ;;850F|850F+850F/850F\850F; Return 
+                      RTL                                       ;;850F|850F+850F/850F\850F;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_028510:          db $04,$FC,$06,$FA,$08,$F8,$0A,$F6        ;;8510|8510+8510/8510\8510;
@@ -570,10 +570,10 @@ CODE_028528:          JSR IsOffScreenBnk2                       ;;8528|8528+8528
                       LDA.B #$04                                ;;8530|8530+8530/8530\8530;
                       STA.B _0                                  ;;8532|8532+8532/8532\8532;
                       LDY.B #$07                                ;;8534|8534+8534/8534\8534; \ Find a free extended sprite slot 
-CODE_028536:          LDA.W ExtSpriteNumber,Y                   ;;8536|8536+8536/8536\8536;  | 
-                      BEQ CODE_02853F                           ;;8539|8539+8539/8539\8539;  | 
-                      DEY                                       ;;853B|853B+853B/853B\853B;  | 
-                      BPL CODE_028536                           ;;853C|853C+853C/853C\853C;  | 
+CODE_028536:          LDA.W ExtSpriteNumber,Y                   ;;8536|8536+8536/8536\8536; | 
+                      BEQ CODE_02853F                           ;;8539|8539+8539/8539\8539; | 
+                      DEY                                       ;;853B|853B+853B/853B\853B; | 
+                      BPL CODE_028536                           ;;853C|853C+853C/853C\853C; | 
                       RTL                                       ;;853E|853E+853E/853E\853E; / Return if no free slots 
                                                                 ;;                        ;
 CODE_02853F:          LDA.B #$07                                ;;853F|853F+853F/853F\853F; \ Extended sprite = Lava splash 
@@ -608,13 +608,13 @@ CODE_02853F:          LDA.B #$07                                ;;853F|853F+853F
                       PLX                                       ;;8589|8589+8589/8589\8589;
                       DEC.B _0                                  ;;858A|858A+858A/858A\858A;
                       BPL CODE_028536                           ;;858C|858C+858C/858C\858C;
-                      RTL                                       ;;858E|858E+858E/858E\858E; Return 
+                      RTL                                       ;;858E|858E+858E/858E\858E;
                                                                 ;;                        ;
 CODE_02858F:          LDY.B #$1F                                ;;858F|858F+858F/858F\858F; \ If Big Mario: 
-                      LDX.B #$00                                ;;8591|8591+8591/8591\8591;  | Y = #$1F 
-                      LDA.B Powerup                             ;;8593|8593+8593/8593\8593;  | X = #$00 
-                      BNE +                                     ;;8595|8595+8595/8595\8595;  | Small Mario: 
-                      LDY.B #$0F                                ;;8597|8597+8597/8597\8597;  | Y = #$0F 
+                      LDX.B #$00                                ;;8591|8591+8591/8591\8591; | Y = #$1F 
+                      LDA.B Powerup                             ;;8593|8593+8593/8593\8593; | X = #$00 
+                      BNE +                                     ;;8595|8595+8595/8595\8595; | Small Mario: 
+                      LDY.B #$0F                                ;;8597|8597+8597/8597\8597; | Y = #$0F 
                       LDX.B #$10                                ;;8599|8599+8599/8599\8599; / X = #$10 
                     + STX.B _1                                  ;;859B|859B+859B/859B\859B;
                       JSL GetRand                               ;;859D|859D+859D/859D\859D;
@@ -637,7 +637,7 @@ CODE_0285BC:          LDA.W MinExtSpriteNumber,Y                ;;85BC|85BC+85BC
                       BEQ CODE_0285C5                           ;;85BF|85BF+85BF/85BF\85BF;
                       DEY                                       ;;85C1|85C1+85C1/85C1\85C1;
                       BPL CODE_0285BC                           ;;85C2|85C2+85C2/85C2\85C2;
-                      RTL                                       ;;85C4|85C4+85C4/85C4\85C4; Return 
+                      RTL                                       ;;85C4|85C4+85C4/85C4\85C4;
                                                                 ;;                        ;
 CODE_0285C5:          LDA.B #$05                                ;;85C5|85C5+85C5/85C5\85C5;
                       STA.W MinExtSpriteNumber,Y                ;;85C7|85C7+85C7/85C7\85C7;
@@ -649,7 +649,7 @@ CODE_0285C5:          LDA.B #$05                                ;;85C5|85C5+85C5
                       STA.W MinExtSpriteXPosLow,Y               ;;85D6|85D6+85D6/85D6\85D6;
                       LDA.B #$17                                ;;85D9|85D9+85D9/85D9\85D9;
                       STA.W MinExtSpriteTimer,Y                 ;;85DB|85DB+85DB/85DB\85DB;
-                      RTL                                       ;;85DE|85DE+85DE/85DE\85DE; Return 
+                      RTL                                       ;;85DE|85DE+85DE/85DE\85DE;
                                                                 ;;                        ;
 CODE_0285DF:          JSR IsOffScreenBnk2                       ;;85DF|85DF+85DF/85DF\85DF;
                       BNE Return0285EE                          ;;85E2|85E2+85E2/85E2\85E2;
@@ -658,7 +658,7 @@ CODE_0285E6:          LDA.W MinExtSpriteNumber,Y                ;;85E6|85E6+85E6
                       BEQ CODE_0285EF                           ;;85E9|85E9+85E9/85E9\85E9;
                       DEY                                       ;;85EB|85EB+85EB/85EB\85EB;
                       BPL CODE_0285E6                           ;;85EC|85EC+85EC/85EC\85EC;
-Return0285EE:         RTL                                       ;;85EE|85EE+85EE/85EE\85EE; Return 
+Return0285EE:         RTL                                       ;;85EE|85EE+85EE/85EE\85EE;
                                                                 ;;                        ;
 CODE_0285EF:          JSL GetRand                               ;;85EF|85EF+85EF/85EF\85EF;
                       LDA.B #$04                                ;;85F3|85F3+85F3/85F3\85F3;
@@ -687,7 +687,7 @@ CODE_0285EF:          JSL GetRand                               ;;85EF|85EF+85EF
                       STA.W MinExtSpriteYPosHigh,Y              ;;8626|8626+8626/8626\8626;
                       LDA.B #$17                                ;;8629|8629+8629/8629\8629;
                       STA.W MinExtSpriteTimer,Y                 ;;862B|862B+862B/862B\862B;
-                      RTL                                       ;;862E|862E+862E/862E\862E; Return 
+                      RTL                                       ;;862E|862E+862E/862E\862E;
                                                                 ;;                        ;
 CODE_02862F:          JSL FindFreeSprSlot                       ;;862F|862F+862F/862F\862F; \ Return if no free slots 
                       BMI +                                     ;;8633|8633+8633/8633\8633; / 
@@ -710,7 +710,7 @@ CODE_02862F:          JSL FindFreeSprSlot                       ;;862F|862F+862F
                       LDA.B #$08                                ;;865A|865A+865A/865A\865A;
                       STA.W PickUpItemTimer                     ;;865C|865C+865C/865C\865C;
                       STA.W IsCarryingItem                      ;;865F|865F+865F/865F\865F;
-                    + RTL                                       ;;8662|8662+8662/8662\8662; Return 
+                    + RTL                                       ;;8662|8662+8662/8662\8662;
                                                                 ;;                        ;
 ShatterBlock:         PHX                                       ;;8663|8663+8663/8663\8663;
                       STA.B _0                                  ;;8664|8664+8664/8664\8664;
@@ -752,7 +752,7 @@ CODE_02867F:          LDA.B #!SFX_SHATTER                       ;;867F|867F+867F
                       DEY                                       ;;86BA|86BA+86BA/86BA\86BA;
                       BPL CODE_02866F                           ;;86BB|86BB+86BB/86BB\86BB;
                       PLX                                       ;;86BD|86BD+86BD/86BD\86BD;
-                      RTL                                       ;;86BE|86BE+86BE/86BE\86BE; Return 
+                      RTL                                       ;;86BE|86BE+86BE/86BE\86BE;
                                                                 ;;                        ;
 YoshiStompRoutine:    LDA.W SpriteStompCounter                  ;;86BF|86BF+86BF/86BF\86BF;
                       BNE +                                     ;;86C2|86C2+86C2/86C2\86C2;
@@ -775,7 +775,7 @@ YoshiStompRoutine:    LDA.W SpriteStompCounter                  ;;86BF|86BF+86BF
                       STA.W QuakeSpriteYPosHigh,Y               ;;86E5|86E5+86E5/86E5\86E5;
                       JSR CODE_029BE4                           ;;86E8|86E8+86E8/86E8\86E8;
                       PLB                                       ;;86EB|86EB+86EB/86EB\86EB;
-                    + RTL                                       ;;86EC|86EC+86EC/86EC\86EC; Return 
+                    + RTL                                       ;;86EC|86EC+86EC/86EC\86EC;
                                                                 ;;                        ;
 SprBlkInteract:       LDY.B #$03                                ;;86ED|86ED+86ED/86ED\86ED;
 CODE_0286EF:          LDA.W QuakeSpriteNumber,Y                 ;;86EF|86EF+86EF/86EF\86EF;
@@ -811,7 +811,7 @@ CODE_0286F8:          LDA.B TouchBlockXPos                      ;;86F8|86F8+86F8
                       STA.W QuakeSpriteNumber,Y                 ;;8731|8731+8731/8731\8731;
                       LDA.B #$06                                ;;8734|8734+8734/8734\8734;
                       STA.W BounceSpriteIntTimer,Y              ;;8736|8736+8736/8736\8736;
-                      RTS                                       ;;8739|8739+8739/8739\8739; Return 
+                      RTS                                       ;;8739|8739+8739/8739\8739;
                                                                 ;;                        ;
                                                                 ;;                        ;
 BlockBounceSpeedY:    db $C0,$00,$00,$40                        ;;873A|873A+873A/873A\873A;
@@ -830,16 +830,16 @@ CODE_028752:          LDA.B _4                                  ;;8752|8752+8752
                       CMP.B #$07                                ;;8754|8754+8754/8754\8754;
                       BNE NotBreakable                          ;;8756|8756+8756/8756\8756;
                       LDA.W PlayerTurnLvl                       ;;8758|8758+8758/8758\8758; \ Increase points 
-                      ASL A                                     ;;875B|875B+875B/875B\875B;  | 
-                      ADC.W PlayerTurnLvl                       ;;875C|875C+875C/875C\875C;  | 
-                      TAX                                       ;;875F|875F+875F/875F\875F;  | 
-                      LDA.W PlayerScore,X                       ;;8760|8760+8760/8760\8760;  | 
-                      CLC                                       ;;8763|8763+8763/8763\8763;  | 
-                      ADC.B #$05                                ;;8764|8764+8764/8764\8764;  | 
-                      STA.W PlayerScore,X                       ;;8766|8766+8766/8766\8766;  | 
-                      BCC +                                     ;;8769|8769+8769/8769\8769;  | 
-                      INC.W PlayerScore+1,X                     ;;876B|876B+876B/876B\876B;  | 
-                      BNE +                                     ;;876E|876E+876E/876E\876E;  | 
+                      ASL A                                     ;;875B|875B+875B/875B\875B; | 
+                      ADC.W PlayerTurnLvl                       ;;875C|875C+875C/875C\875C; | 
+                      TAX                                       ;;875F|875F+875F/875F\875F; | 
+                      LDA.W PlayerScore,X                       ;;8760|8760+8760/8760\8760; | 
+                      CLC                                       ;;8763|8763+8763/8763\8763; | 
+                      ADC.B #$05                                ;;8764|8764+8764/8764\8764; | 
+                      STA.W PlayerScore,X                       ;;8766|8766+8766/8766\8766; | 
+                      BCC +                                     ;;8769|8769+8769/8769\8769; | 
+                      INC.W PlayerScore+1,X                     ;;876B|876B+876B/876B\876B; | 
+                      BNE +                                     ;;876E|876E+876E/876E\876E; | 
                       INC.W PlayerScore+2,X                     ;;8770|8770+8770/8770\8770; / 
                     + LDA.B #$D0                                ;;8773|8773+8773/8773\8773; Deflect Mario downward 
                       STA.B PlayerYSpeed                        ;;8775|8775+8775/8775\8775; / 
@@ -847,18 +847,18 @@ CODE_028752:          LDA.B _4                                  ;;8752|8752+8752
                       JSL ShatterBlock                          ;;8779|8779+8779/8779\8779; Actually break the block 
                       JSR SprBlkInteract                        ;;877D|877D+877D/877D\877D; Handle sprite/block interaction  
 CODE_028780:          LDA.B #$02                                ;;8780|8780+8780/8780\8780; \ Replace block with "nothing" tile 
-                      STA.B Map16TileGenerate                   ;;8782|8782+8782/8782\8782;  | 
+                      STA.B Map16TileGenerate                   ;;8782|8782+8782/8782\8782; | 
                       JSL GenerateTile                          ;;8784|8784+8784/8784\8784; / 
-                      RTL                                       ;;8788|8788+8788/8788\8788; Return 
+                      RTL                                       ;;8788|8788+8788/8788\8788;
                                                                 ;;                        ;
                                                                 ;;                        ;
 BlockBounce:          db $00,$03,$00,$00,$01,$07,$00,$04        ;;8789|8789+8789/8789\8789;
                       db $0A                                    ;;8791|8791+8791/8791\8791;
                                                                 ;;                        ;
 NotBreakable:         LDY.B #$03                                ;;8792|8792+8792/8792\8792; \ Reset turning block 
-FindTurningBlkSlot:   LDA.W BounceSpriteNumber,Y                ;;8794|8794+8794/8794\8794;  | 
-                      BEQ CODE_028807                           ;;8797|8797+8797/8797\8797;  | 
-                      DEY                                       ;;8799|8799+8799/8799\8799;  | 
+FindTurningBlkSlot:   LDA.W BounceSpriteNumber,Y                ;;8794|8794+8794/8794\8794; | 
+                      BEQ CODE_028807                           ;;8797|8797+8797/8797\8797; | 
+                      DEY                                       ;;8799|8799+8799/8799\8799; | 
                       BPL FindTurningBlkSlot                    ;;879A|879A+879A/879A\879A; / 
                       DEC.W BounceSpriteSlotIdx                 ;;879C|879C+879C/879C\879C;
                       BPL +                                     ;;879F|879F+879F/879F\879F;
@@ -866,54 +866,54 @@ FindTurningBlkSlot:   LDA.W BounceSpriteNumber,Y                ;;8794|8794+8794
                       STA.W BounceSpriteSlotIdx                 ;;87A3|87A3+87A3/87A3\87A3;
                     + LDY.W BounceSpriteSlotIdx                 ;;87A6|87A6+87A6/87A6\87A6;
                       LDA.W BounceSpriteNumber,Y                ;;87A9|87A9+87A9/87A9\87A9; \ Branch if not a turn block 
-                      CMP.B #$07                                ;;87AC|87AC+87AC/87AC\87AC;  | 
+                      CMP.B #$07                                ;;87AC|87AC+87AC/87AC\87AC; | 
                       BNE +                                     ;;87AE|87AE+87AE/87AE\87AE; / 
                       LDA.B TouchBlockXPos                      ;;87B0|87B0+87B0/87B0\87B0; \ Save [$98-$9A] 
-                      PHA                                       ;;87B2|87B2+87B2/87B2\87B2;  | 
-                      LDA.B TouchBlockXPos+1                    ;;87B3|87B3+87B3/87B3\87B3;  | 
-                      PHA                                       ;;87B5|87B5+87B5/87B5\87B5;  | 
-                      LDA.B TouchBlockYPos                      ;;87B6|87B6+87B6/87B6\87B6;  | 
-                      PHA                                       ;;87B8|87B8+87B8/87B8\87B8;  | 
-                      LDA.B TouchBlockYPos+1                    ;;87B9|87B9+87B9/87B9\87B9;  | 
+                      PHA                                       ;;87B2|87B2+87B2/87B2\87B2; | 
+                      LDA.B TouchBlockXPos+1                    ;;87B3|87B3+87B3/87B3\87B3; | 
+                      PHA                                       ;;87B5|87B5+87B5/87B5\87B5; | 
+                      LDA.B TouchBlockYPos                      ;;87B6|87B6+87B6/87B6\87B6; | 
+                      PHA                                       ;;87B8|87B8+87B8/87B8\87B8; | 
+                      LDA.B TouchBlockYPos+1                    ;;87B9|87B9+87B9/87B9\87B9; | 
                       PHA                                       ;;87BB|87BB+87BB/87BB\87BB; / 
                       LDA.W BounceSpriteXPosLow,Y               ;;87BC|87BC+87BC/87BC\87BC; \ Block Y position = Bounce Y sprite position 
-                      STA.B TouchBlockXPos                      ;;87BF|87BF+87BF/87BF\87BF;  | 
-                      LDA.W BounceSpriteXPosHigh,Y              ;;87C1|87C1+87C1/87C1\87C1;  | 
+                      STA.B TouchBlockXPos                      ;;87BF|87BF+87BF/87BF\87BF; | 
+                      LDA.W BounceSpriteXPosHigh,Y              ;;87C1|87C1+87C1/87C1\87C1; | 
                       STA.B TouchBlockXPos+1                    ;;87C4|87C4+87C4/87C4\87C4; / 
                       LDA.W BounceSpriteYPosLow,Y               ;;87C6|87C6+87C6/87C6\87C6; \ Block X position = Bounce X sprite position 
-                      CLC                                       ;;87C9|87C9+87C9/87C9\87C9;  | 
-                      ADC.B #$0C                                ;;87CA|87CA+87CA/87CA\87CA;  | (Round to nearest #$10) 
-                      AND.B #$F0                                ;;87CC|87CC+87CC/87CC\87CC;  | 
-                      STA.B TouchBlockYPos                      ;;87CE|87CE+87CE/87CE\87CE;  | 
-                      LDA.W BounceSpriteYPosHigh,Y              ;;87D0|87D0+87D0/87D0\87D0;  | 
-                      ADC.B #$00                                ;;87D3|87D3+87D3/87D3\87D3;  | 
+                      CLC                                       ;;87C9|87C9+87C9/87C9\87C9; | 
+                      ADC.B #$0C                                ;;87CA|87CA+87CA/87CA\87CA; | (Round to nearest #$10) 
+                      AND.B #$F0                                ;;87CC|87CC+87CC/87CC\87CC; | 
+                      STA.B TouchBlockYPos                      ;;87CE|87CE+87CE/87CE\87CE; | 
+                      LDA.W BounceSpriteYPosHigh,Y              ;;87D0|87D0+87D0/87D0\87D0; | 
+                      ADC.B #$00                                ;;87D3|87D3+87D3/87D3\87D3; | 
                       STA.B TouchBlockYPos+1                    ;;87D5|87D5+87D5/87D5\87D5; / 
                       LDA.W BounceSpriteTile,Y                  ;;87D7|87D7+87D7/87D7\87D7; \ Block to generate = Bounce sprite block 
                       STA.B Map16TileGenerate                   ;;87DA|87DA+87DA/87DA\87DA; / 
                       LDA.B _4                                  ;;87DC|87DC+87DC/87DC\87DC; \ Save [$04-$07] 
-                      PHA                                       ;;87DE|87DE+87DE/87DE\87DE;  | 
-                      LDA.B _5                                  ;;87DF|87DF+87DF/87DF\87DF;  | 
-                      PHA                                       ;;87E1|87E1+87E1/87E1\87E1;  | 
-                      LDA.B _6                                  ;;87E2|87E2+87E2/87E2\87E2;  | 
-                      PHA                                       ;;87E4|87E4+87E4/87E4\87E4;  | 
-                      LDA.B _7                                  ;;87E5|87E5+87E5/87E5\87E5;  | 
+                      PHA                                       ;;87DE|87DE+87DE/87DE\87DE; | 
+                      LDA.B _5                                  ;;87DF|87DF+87DF/87DF\87DF; | 
+                      PHA                                       ;;87E1|87E1+87E1/87E1\87E1; | 
+                      LDA.B _6                                  ;;87E2|87E2+87E2/87E2\87E2; | 
+                      PHA                                       ;;87E4|87E4+87E4/87E4\87E4; | 
+                      LDA.B _7                                  ;;87E5|87E5+87E5/87E5\87E5; | 
                       PHA                                       ;;87E7|87E7+87E7/87E7\87E7; / 
                       JSL GenerateTile                          ;;87E8|87E8+87E8/87E8\87E8;
                       PLA                                       ;;87EC|87EC+87EC/87EC\87EC; \ Restore [$04-$07] 
-                      STA.B _7                                  ;;87ED|87ED+87ED/87ED\87ED;  | 
-                      PLA                                       ;;87EF|87EF+87EF/87EF\87EF;  | 
-                      STA.B _6                                  ;;87F0|87F0+87F0/87F0\87F0;  | 
-                      PLA                                       ;;87F2|87F2+87F2/87F2\87F2;  | 
-                      STA.B _5                                  ;;87F3|87F3+87F3/87F3\87F3;  | 
-                      PLA                                       ;;87F5|87F5+87F5/87F5\87F5;  | 
+                      STA.B _7                                  ;;87ED|87ED+87ED/87ED\87ED; | 
+                      PLA                                       ;;87EF|87EF+87EF/87EF\87EF; | 
+                      STA.B _6                                  ;;87F0|87F0+87F0/87F0\87F0; | 
+                      PLA                                       ;;87F2|87F2+87F2/87F2\87F2; | 
+                      STA.B _5                                  ;;87F3|87F3+87F3/87F3\87F3; | 
+                      PLA                                       ;;87F5|87F5+87F5/87F5\87F5; | 
                       STA.B _4                                  ;;87F6|87F6+87F6/87F6\87F6; / 
                       PLA                                       ;;87F8|87F8+87F8/87F8\87F8; \ Restore [$98-$9A] 
-                      STA.B TouchBlockYPos+1                    ;;87F9|87F9+87F9/87F9\87F9;  | 
-                      PLA                                       ;;87FB|87FB+87FB/87FB\87FB;  | 
-                      STA.B TouchBlockYPos                      ;;87FC|87FC+87FC/87FC\87FC;  | 
-                      PLA                                       ;;87FE|87FE+87FE/87FE\87FE;  | 
-                      STA.B TouchBlockXPos+1                    ;;87FF|87FF+87FF/87FF\87FF;  | 
-                      PLA                                       ;;8801|8801+8801/8801\8801;  | 
+                      STA.B TouchBlockYPos+1                    ;;87F9|87F9+87F9/87F9\87F9; | 
+                      PLA                                       ;;87FB|87FB+87FB/87FB\87FB; | 
+                      STA.B TouchBlockYPos                      ;;87FC|87FC+87FC/87FC\87FC; | 
+                      PLA                                       ;;87FE|87FE+87FE/87FE\87FE; | 
+                      STA.B TouchBlockXPos+1                    ;;87FF|87FF+87FF/87FF\87FF; | 
+                      PLA                                       ;;8801|8801+8801/8801\8801; | 
                       STA.B TouchBlockXPos                      ;;8802|8802+8802/8802\8802; / 
                     + LDY.W BounceSpriteSlotIdx                 ;;8804|8804+8804/8804\8804;
 CODE_028807:          LDA.B _4                                  ;;8807|8807+8807/8807\8807;
@@ -926,25 +926,25 @@ CODE_028807:          LDA.B _4                                  ;;8807|8807+8807
                       BRA CODE_02882A                           ;;8816|8816+8816/8816\8816;
                                                                 ;;                        ;
 CODE_028818:          LDA.B _4                                  ;;8818|8818+8818/8818\8818; \ Play on/off sound if appropriate 
-                      CMP.B #$05                                ;;881A|881A+881A/881A\881A;  | 
-                      BNE +                                     ;;881C|881C+881C/881C\881C;  | 
-                      LDX.B #!SFX_SWITCH                        ;;881E|881E+881E/881E\881E;  | 
+                      CMP.B #$05                                ;;881A|881A+881A/881A\881A; | 
+                      BNE +                                     ;;881C|881C+881C/881C\881C; | 
+                      LDX.B #!SFX_SWITCH                        ;;881E|881E+881E/881E\881E; | 
                       STX.W SPCIO0                              ;;8820|8820+8820/8820\8820; / 
                     + TAX                                       ;;8823|8823+8823/8823\8823;
                       LDA.W BlockBounce,X                       ;;8824|8824+8824/8824\8824;
                       STA.W BounceSpriteYXPPCCCT,Y              ;;8827|8827+8827/8827\8827;
 CODE_02882A:          LDA.B _4                                  ;;882A|882A+882A/882A\882A; \ Set block bounce sprite type 
-                      INC A                                     ;;882C|882C+882C/882C\882C;  | 
+                      INC A                                     ;;882C|882C+882C/882C\882C; | 
                       STA.W BounceSpriteNumber,Y                ;;882D|882D+882D/882D\882D; / 
                       LDA.B #$00                                ;;8830|8830+8830/8830\8830; \ set (times can be hit?) 
                       STA.W BounceSpriteInit,Y                  ;;8832|8832+8832/8832\8832; / 
                       LDA.B TouchBlockXPos                      ;;8835|8835+8835/8835\8835; \ Set bounce block y position 
-                      STA.W BounceSpriteXPosLow,Y               ;;8837|8837+8837/8837\8837;  | 
-                      LDA.B TouchBlockXPos+1                    ;;883A|883A+883A/883A\883A;  | 
+                      STA.W BounceSpriteXPosLow,Y               ;;8837|8837+8837/8837\8837; | 
+                      LDA.B TouchBlockXPos+1                    ;;883A|883A+883A/883A\883A; | 
                       STA.W BounceSpriteXPosHigh,Y              ;;883C|883C+883C/883C\883C; / 
                       LDA.B TouchBlockYPos                      ;;883F|883F+883F/883F\883F; \ Set bounce block x position 
-                      STA.W BounceSpriteYPosLow,Y               ;;8841|8841+8841/8841\8841;  | 
-                      LDA.B TouchBlockYPos+1                    ;;8844|8844+8844/8844\8844;  | 
+                      STA.W BounceSpriteYPosLow,Y               ;;8841|8841+8841/8841\8841; | 
+                      LDA.B TouchBlockYPos+1                    ;;8844|8844+8844/8844\8844; | 
                       STA.W BounceSpriteYPosHigh,Y              ;;8846|8846+8846/8846\8846; / 
                       LDA.W LayerProcessing                     ;;8849|8849+8849/8849\8849;
                       LSR A                                     ;;884C|884C+884C/884C\884C;
@@ -984,7 +984,7 @@ CODE_02887D:          LDA.B _5                                  ;;887F|887D+887D
                       LDA.B #$FF                                ;;889A|8898+8898/8898\8898;
                       STA.W MulticoinTimer                      ;;889C|889A+889A/889A\889A;
 CODE_02889D:          JSR CODE_028A66                           ;;889F|889D+889D/889D\889D;
-Return0288A0:         RTL                                       ;;88A2|88A0+88A0/88A0\88A0; Return 
+Return0288A0:         RTL                                       ;;88A2|88A0+88A0/88A0\88A0;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0288A1:          db $35,$78                                ;;88A3|88A1+88A1/88A1\88A1;
@@ -1024,13 +1024,13 @@ CODE_0288F9:          CPY.B #$0C                                ;;88FB|88F9+88F9
 CODE_0288FD:          JSL FindFreeSprSlot                       ;;88FF|88FD+88FD/88FD\88FD;
                       TYX                                       ;;8903|8901+8901/8901\8901;
                       BPL CODE_028922                           ;;8904|8902+8902/8902\8902;
-                      RTL                                       ;;8906|8904+8904/8904\8904; Return 
+                      RTL                                       ;;8906|8904+8904/8904\8904;
                                                                 ;;                        ;
 GenSpriteFromBlk:     LDX.B #$0B                                ;;8907|8905+8905/8905\8905; \ Find a last free sprite slot from 00-0B 
-CODE_028907:          LDA.W SpriteStatus,X                      ;;8909|8907+8907/8907\8907;  | 
-                      BEQ CODE_028922                           ;;890C|890A+890A/890A\890A;  | 
-                      DEX                                       ;;890E|890C+890C/890C\890C;  | 
-                      CPX.B #$FF                                ;;890F|890D+890D/890D\890D;  | 
+CODE_028907:          LDA.W SpriteStatus,X                      ;;8909|8907+8907/8907\8907; | 
+                      BEQ CODE_028922                           ;;890C|890A+890A/890A\890A; | 
+                      DEX                                       ;;890E|890C+890C/890C\890C; | 
+                      CPX.B #$FF                                ;;890F|890D+890D/890D\890D; | 
                       BNE CODE_028907                           ;;8911|890F+890F/890F\890F; / 
                       DEC.W SpriteToOverwrite                   ;;8913|8911+8911/8911\8911;
                       BPL +                                     ;;8916|8914+8914/8914\8914;
@@ -1119,7 +1119,7 @@ CODE_028972:          LDA.B TouchBlockXPos                      ;;8974|8972+8972
                       CMP.B #$7D                                ;;89C7|89C5+89C5/89C5\89C5;
                       BNE +                                     ;;89C9|89C7+89C7/89C7\89C7;
                       INC.W SpriteMisc157C,X                    ;;89CB|89C9+89C9/89C9\89C9;
-                      RTL                                       ;;89CE|89CC+89CC/89CC\89CC; Return 
+                      RTL                                       ;;89CE|89CC+89CC/89CC\89CC;
                                                                 ;;                        ;
                     + CMP.B #$7E                                ;;89CF|89CD+89CD/89CD\89CD;
                       BEQ CODE_028A03                           ;;89D1|89CF+89CF/89CF\89CF;
@@ -1151,7 +1151,7 @@ CODE_028A01:          BRA CODE_028A0D                           ;;8A03|8A01+8A01
                                                                 ;;                        ;
 CODE_028A03:          INC.B SpriteTableC2,X                     ;;8A05|8A03+8A03/8A03\8A03;
                       INC.B SpriteTableC2,X                     ;;8A07|8A05+8A05/8A05\8A05;
-                      RTL                                       ;;8A09|8A07+8A07/8A07\8A07; Return 
+                      RTL                                       ;;8A09|8A07+8A07/8A07\8A07;
                                                                 ;;                        ;
 ADDR_028A08:          LDA.B #$FF                                ;;8A0A|8A08+8A08/8A08\8A08;
                       STA.W SpriteMisc1540,X                    ;;8A0C|8A0A+8A0A/8A0A\8A0A;
@@ -1168,7 +1168,7 @@ CODE_028A11:          LDA.B #$3E                                ;;8A13|8A11+8A11
                       BPL +                                     ;;8A24|8A22+8A22/8A22\8A22;
                       LDA.B #$10                                ;;8A26|8A24+8A24/8A24\8A24;
                       STA.W SpriteMisc15AC,X                    ;;8A28|8A26+8A26/8A26\8A26;
-                    + RTL                                       ;;8A2B|8A29+8A29/8A29\8A29; Return 
+                    + RTL                                       ;;8A2B|8A29+8A29/8A29\8A29;
                                                                 ;;                        ;
 CODE_028A2A:          LDA.B SpriteXPosLow,X                     ;;8A2C|8A2A+8A2A/8A2A\8A2A;
                       LSR A                                     ;;8A2E|8A2C+8A2C/8A2C\8A2C;
@@ -1202,7 +1202,7 @@ CODE_028A50:          LDA.B #$01                                ;;8A52|8A50+8A50
                       LDA.B #$1B                                ;;8A61|8A5F+8A5F/8A5F\8A5F;
                       STA.W SmokeSpriteTimer,X                  ;;8A63|8A61+8A61/8A61\8A61;
                       PLX                                       ;;8A66|8A64+8A64/8A64\8A64;
-                      RTL                                       ;;8A67|8A65+8A65/8A65\8A65; Return 
+                      RTL                                       ;;8A67|8A65+8A65/8A65\8A65;
                                                                 ;;                        ;
 CODE_028A66:          LDX.B #$03                                ;;8A68|8A66+8A66/8A66\8A66;
 CODE_028A68:          LDA.W CoinSpriteExists,X                  ;;8A6A|8A68+8A68/8A68\8A68;
@@ -1231,7 +1231,7 @@ CODE_028A7D:          JSL CODE_05B34A                           ;;8A7F|8A7D+8A7D
                       STA.W CoinSpriteLayer,X                   ;;8AA2|8AA0+8AA0/8AA0\8AA0;
                       LDA.B #$D0                                ;;8AA5|8AA3+8AA3/8AA3\8AA3;
                       STA.W CoinSpriteYSpeed,X                  ;;8AA7|8AA5+8AA5/8AA5\8AA5;
-                      RTS                                       ;;8AAA|8AA8+8AA8/8AA8\8AA8; Return 
+                      RTS                                       ;;8AAA|8AA8+8AA8/8AA8\8AA8;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_028AA9:          db $07,$03,$03,$01,$01,$01,$01,$01        ;;8AAB|8AA9+8AA9/8AA9\8AA9;
@@ -1290,10 +1290,10 @@ CODE_028AF5:          ORA.B PlayerXPosScrRel+1                  ;;8AF7|8AF5+8AF5
                       LDA.W SpriteRespawnTimer                  ;;8B22|8B20+8B20/8B20\8B20; \ Return if timer not set 
                       BEQ +                                     ;;8B25|8B23+8B23/8B23\8B23; / 
                       LDA.B TrueFrame                           ;;8B27|8B25+8B25/8B25\8B25; \ Decrement every other frame... 
-                      AND.B #$01                                ;;8B29|8B27+8B27/8B27\8B27;  | 
-                      ORA.B SpriteLock                          ;;8B2B|8B29+8B29/8B29\8B29;  | ...as long as sprites not locked... 
+                      AND.B #$01                                ;;8B29|8B27+8B27/8B27\8B27; | 
+                      ORA.B SpriteLock                          ;;8B2B|8B29+8B29/8B29\8B29; | ...as long as sprites not locked... 
                       ORA.W SpriteWillAppear                    ;;8B2D|8B2B+8B2B/8B2B\8B2B;
-                      BNE +                                     ;;8B30|8B2E+8B2E/8B2E\8B2E;  | 
+                      BNE +                                     ;;8B30|8B2E+8B2E/8B2E\8B2E; | 
                       DEC.W SpriteRespawnTimer                  ;;8B32|8B30+8B30/8B30\8B30; / 
                       BNE +                                     ;;8B35|8B33+8B33/8B33\8B33; Return if the timer hasn't just run out 
                       JSL FindFreeSprSlot                       ;;8B37|8B35+8B35/8B35\8B35; \ Return if no free slots 
@@ -1317,7 +1317,7 @@ CODE_028AF5:          ORA.B PlayerXPosScrRel+1                  ;;8AF7|8AF5+8AF5
                       STA.W SpriteXPosHigh,X                    ;;8B60|8B5E+8B5E/8B5E\8B5E;
                       JSL InitSpriteTables                      ;;8B63|8B61+8B61/8B61\8B61; Reset sprite tables 
                     + PLB                                       ;;8B67|8B65+8B65/8B65\8B65;
-                      RTL                                       ;;8B68|8B66+8B66/8B66\8B66; Return 
+                      RTL                                       ;;8B68|8B66+8B66/8B66\8B66;
                                                                 ;;                        ;
 CODE_028B67:          LDX.B #$0B                                ;;8B69|8B67+8B67/8B67\8B67;
 CODE_028B69:          LDA.W MinExtSpriteNumber,X                ;;8B6B|8B69+8B69/8B69\8B69;
@@ -1326,7 +1326,7 @@ CODE_028B69:          LDA.W MinExtSpriteNumber,X                ;;8B6B|8B69+8B69
                       JSR CODE_028B94                           ;;8B73|8B71+8B71/8B71\8B71;
                     + DEX                                       ;;8B76|8B74+8B74/8B74\8B74;
                       BPL CODE_028B69                           ;;8B77|8B75+8B75/8B75\8B75;
-Return028B77:         RTS                                       ;;8B79|8B77+8B77/8B77\8B77; Return 
+Return028B77:         RTS                                       ;;8B79|8B77+8B77/8B77\8B77;
                                                                 ;;                        ;
                                                                 ;;                        ;
 BrokenBlock:          db $50,$54,$58,$5C,$60,$64,$68,$6C        ;;8B7A|8B78+8B78/8B78\8B78;
@@ -1351,23 +1351,23 @@ CODE_028B94:          JSL ExecutePtr                            ;;8B96|8B94+8B94
                       dw ADDR_028C0F                            ;;8BB0|8BAE+8BAE/8BAE\8BAE;
                                                                 ;;                        ;
 DisabledAddSmokeRt:   PHB                                       ;;8BB2|8BB0+8BB0/8BB0\8BB0; \ This routine does nothing at all 
-                      PHK                                       ;;8BB3|8BB1+8BB1/8BB1\8BB1;  | I believe it used to call the below 
-                      PLB                                       ;;8BB4|8BB2+8BB2/8BB2\8BB2;  | routine to add smoke when boarding 
-                      JSR Return028BB8                          ;;8BB5|8BB3+8BB3/8BB3\8BB3;  | Yoshi 
-                      PLB                                       ;;8BB8|8BB6+8BB6/8BB6\8BB6;  | 
-                      RTL                                       ;;8BB9|8BB7+8BB7/8BB7\8BB7; / Return 
+                      PHK                                       ;;8BB3|8BB1+8BB1/8BB1\8BB1; | I believe it used to call the below 
+                      PLB                                       ;;8BB4|8BB2+8BB2/8BB2\8BB2; | routine to add smoke when boarding 
+                      JSR Return028BB8                          ;;8BB5|8BB3+8BB3/8BB3\8BB3; | Yoshi 
+                      PLB                                       ;;8BB8|8BB6+8BB6/8BB6\8BB6; | 
+                      RTL                                       ;;8BB9|8BB7+8BB7/8BB7\8BB7; / 
                                                                 ;;                        ;
-Return028BB8:         RTS                                       ;;8BBA|8BB8+8BB8/8BB8\8BB8; Return 
+Return028BB8:         RTS                                       ;;8BBA|8BB8+8BB8/8BB8\8BB8;
                                                                 ;;                        ;
                       STZ.B _0                                  ;;8BBB|8BB9+8BB9/8BB9\8BB9; \ Display smoke when getting on Yoshi 
-                      JSR ADDR_028BC0                           ;;8BBD|8BBB+8BBB/8BBB\8BBB;  | 
-                      INC.B _0                                  ;;8BC0|8BBE+8BBE/8BBE\8BBE;  | 
-ADDR_028BC0:          LDY.B #$0B                                ;;8BC2|8BC0+8BC0/8BC0\8BC0;  | 
-ADDR_028BC2:          LDA.W MinExtSpriteNumber,Y                ;;8BC4|8BC2+8BC2/8BC2\8BC2;  | 
-                      BEQ ADDR_028BCB                           ;;8BC7|8BC5+8BC5/8BC5\8BC5;  | 
-                      DEY                                       ;;8BC9|8BC7+8BC7/8BC7\8BC7;  | 
-                      BPL ADDR_028BC2                           ;;8BCA|8BC8+8BC8/8BC8\8BC8;  | 
-                      RTS                                       ;;8BCC|8BCA+8BCA/8BCA\8BCA; / Return 
+                      JSR ADDR_028BC0                           ;;8BBD|8BBB+8BBB/8BBB\8BBB; | 
+                      INC.B _0                                  ;;8BC0|8BBE+8BBE/8BBE\8BBE; | 
+ADDR_028BC0:          LDY.B #$0B                                ;;8BC2|8BC0+8BC0/8BC0\8BC0; | 
+ADDR_028BC2:          LDA.W MinExtSpriteNumber,Y                ;;8BC4|8BC2+8BC2/8BC2\8BC2; | 
+                      BEQ ADDR_028BCB                           ;;8BC7|8BC5+8BC5/8BC5\8BC5; | 
+                      DEY                                       ;;8BC9|8BC7+8BC7/8BC7\8BC7; | 
+                      BPL ADDR_028BC2                           ;;8BCA|8BC8+8BC8/8BC8\8BC8; | 
+                      RTS                                       ;;8BCC|8BCA+8BCA/8BCA\8BCA; / 
                                                                 ;;                        ;
 ADDR_028BCB:          LDA.B #$0B                                ;;8BCD|8BCB+8BCB/8BCB\8BCB;
                       STA.W MinExtSpriteNumber,Y                ;;8BCF|8BCD+8BCD/8BCD\8BCD;
@@ -1396,7 +1396,7 @@ ADDR_028BCB:          LDA.B #$0B                                ;;8BCD|8BCB+8BCB
                       ADC.W DATA_028C0D,X                       ;;8C03|8C01+8C01/8C01\8C01;
                       STA.W MinExtSpriteXPosHigh,Y              ;;8C06|8C04+8C04/8C04\8C04;
                       PLX                                       ;;8C09|8C07+8C07/8C07\8C07;
-                      RTS                                       ;;8C0A|8C08+8C08/8C08\8C08; Return 
+                      RTS                                       ;;8C0A|8C08+8C08/8C08\8C08;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_028C09:          db $40,$C0                                ;;8C0B|8C09+8C09/8C09\8C09;
@@ -1427,7 +1427,7 @@ ADDR_028C32:          LDA.W MinExtSpriteNumber,Y                ;;8C34|8C32+8C32
                       BEQ ADDR_028C3B                           ;;8C37|8C35+8C35/8C35\8C35;
                       DEY                                       ;;8C39|8C37+8C37/8C37\8C37;
                       BPL ADDR_028C32                           ;;8C3A|8C38+8C38/8C38\8C38;
-                      RTS                                       ;;8C3C|8C3A+8C3A/8C3A\8C3A; Return 
+                      RTS                                       ;;8C3C|8C3A+8C3A/8C3A\8C3A;
                                                                 ;;                        ;
 ADDR_028C3B:          LDA.B #$0B                                ;;8C3D|8C3B+8C3B/8C3B\8C3B;
                       STA.W MinExtSpriteNumber,Y                ;;8C3F|8C3D+8C3D/8C3D\8C3D;
@@ -1442,12 +1442,12 @@ ADDR_028C3B:          LDA.B #$0B                                ;;8C3D|8C3B+8C3B
                       STA.W MinExtSpriteYPosHigh,Y              ;;8C5A|8C58+8C58/8C58\8C58;
                       LDA.B #$10                                ;;8C5D|8C5B+8C5B/8C5B\8C5B;
                       STA.W MinExtSpriteTimer,Y                 ;;8C5F|8C5D+8C5D/8C5D\8C5D;
-Return028C60:         RTS                                       ;;8C62|8C60+8C60/8C60\8C60; Return 
+Return028C60:         RTS                                       ;;8C62|8C60+8C60/8C60\8C60;
                                                                 ;;                        ;
 ADDR_028C61:          DEC.W MinExtSpriteTimer,X                 ;;8C63|8C61+8C61/8C61\8C61;
                       BNE +                                     ;;8C66|8C64+8C64/8C64\8C64;
 ADDR_028C66:          STZ.W MinExtSpriteNumber,X                ;;8C68|8C66+8C66/8C66\8C66;
-                      RTS                                       ;;8C6B|8C69+8C69/8C69\8C69; Return 
+                      RTS                                       ;;8C6B|8C69+8C69/8C69\8C69;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_028C6A:          db $66,$66,$64,$62                        ;;8C6C|8C6A+8C6A/8C6A\8C6A;
@@ -1488,7 +1488,7 @@ DATA_028C6A:          db $66,$66,$64,$62                        ;;8C6C|8C6A+8C6A
                       TAY                                       ;;8CB3|8CB1+8CB1/8CB1\8CB1;
                       LDA.B #$00                                ;;8CB4|8CB2+8CB2/8CB2\8CB2;
                       STA.W OAMTileSize,Y                       ;;8CB6|8CB4+8CB4/8CB4\8CB4;
-                      RTS                                       ;;8CB9|8CB7+8CB7/8CB7\8CB7; Return 
+                      RTS                                       ;;8CB9|8CB7+8CB7/8CB7\8CB7;
                                                                 ;;                        ;
                                                                 ;;                        ;
 BooStreamTiles:       db $88,$A8,$AA,$8C,$8E,$AE,$88,$A8        ;;8CBA|8CB8+8CB8/8CB8\8CB8;
@@ -1550,7 +1550,7 @@ CODE_028CFF:          LDY.W BrokenBlock,X                       ;;8D01|8CFF+8CFF
                       TAY                                       ;;8D3D|8D3B+8D3B/8D3B\8D3B;
                       LDA.B #$02                                ;;8D3E|8D3C+8D3C/8D3C\8D3C;
                       STA.W OAMTileSize,Y                       ;;8D40|8D3E+8D3E/8D3E\8D3E;
-Return028D41:         RTS                                       ;;8D43|8D41+8D41/8D41\8D41; Return 
+Return028D41:         RTS                                       ;;8D43|8D41+8D41/8D41\8D41;
                                                                 ;;                        ;
                                                                 ;;                        ;
 WaterSplashTiles:     db $68,$68,$6A,$6A,$6A,$62,$62,$62        ;;8D44|8D42+8D42/8D42\8D42;
@@ -1565,7 +1565,7 @@ CODE_028D4F:          LDA.W MinExtSpriteXPosLow,X               ;;8D51|8D4F+8D4F
                       CMP.B #$20                                ;;8D60|8D5E+8D5E/8D5E\8D5E;
                       BNE +                                     ;;8D62|8D60+8D60/8D60\8D60;
 CODE_028D62:          STZ.W MinExtSpriteNumber,X                ;;8D64|8D62+8D62/8D62\8D62;
-                      RTS                                       ;;8D67|8D65+8D65/8D65\8D65; Return 
+                      RTS                                       ;;8D67|8D65+8D65/8D65\8D65;
                                                                 ;;                        ;
                     + STZ.B _0                                  ;;8D68|8D66+8D66/8D66\8D66;
                       CMP.B #$10                                ;;8D6A|8D68+8D68/8D68\8D68;
@@ -1623,7 +1623,7 @@ CODE_028D8B:          LDY.W BrokenBlock,X                       ;;8D8D|8D8B+8D8B
                       LDA.B SpriteLock                          ;;8DD2|8DCF+8DCF/8DCF\8DCF; \ Branch if sprites locked 
                       BNE +                                     ;;8DD4|8DD1+8DD1/8DD1\8DD1; / 
                       INC.W MinExtSpriteTimer,X                 ;;8DD6|8DD3+8DD3/8DD3\8DD3;
-                    + RTS                                       ;;8DD9|8DD6+8DD6/8DD6\8DD6; Return 
+                    + RTS                                       ;;8DD9|8DD6+8DD6/8DD6\8DD6;
                                                                 ;;                        ;
                                                                 ;;                        ;
 RipVanFishZsTiles:    db $F1,$F0,$E1,$E0                        ;;8DDA|8DD7+8DD7/8DD7\8DD7;
@@ -1699,10 +1699,10 @@ CODE_028E20:          LDY.W BrokenBlock,X                       ;;8E23|8E20+8E20
                       LDA.B #$00                                ;;8E71|8E6D+8E6D/8E6D\8E6D;
                       STA.W OAMTileSize,Y                       ;;8E73|8E6F+8E6F/8E6F\8E6F;
                       LDX.W MinorSpriteProcIndex                ;;8E76|8E72+8E72/8E72\8E72;
-                      RTS                                       ;;8E79|8E75+8E75/8E75\8E75; Return 
+                      RTS                                       ;;8E79|8E75+8E75/8E75\8E75;
                                                                 ;;                        ;
 CODE_028E76:          STZ.W MinExtSpriteNumber,X                ;;8E7A|8E76+8E76/8E76\8E76;
-                      RTS                                       ;;8E7D|8E79+8E79/8E79\8E79; Return 
+                      RTS                                       ;;8E7D|8E79+8E79/8E79\8E79;
                                                                 ;;                        ;
                                                                 ;;                        ;
                       db $03,$43,$83,$C3                        ;;8E7E|8E7A+8E7A/8E7A\8E7A;
@@ -1741,7 +1741,7 @@ CODE_028E7E:          DEC.W MinExtSpriteTimer,X                 ;;8E82|8E7E+8E7E
                       TAY                                       ;;8EC9|8EC5+8EC5/8EC5\8EC5;
                       LDA.B #$00                                ;;8ECA|8EC6+8EC6/8EC6\8EC6;
                       STA.W OAMTileSize,Y                       ;;8ECC|8EC8+8EC8/8EC8\8EC8;
-                      RTS                                       ;;8ECF|8ECB+8ECB/8ECB\8ECB; Return 
+                      RTS                                       ;;8ECF|8ECB+8ECB/8ECB\8ECB;
                                                                 ;;                        ;
                                                                 ;;                        ;
 StarSparkleTiles:     db $66,$6E,$FF,$6D,$6C,$5C                ;;8ED0|8ECC+8ECC/8ECC\8ECC;
@@ -1791,7 +1791,7 @@ CODE_028ED7:          JMP CODE_028F87                           ;;8EDB|8ED7+8ED7
                       TAY                                       ;;8F29|8F24+8F24/8F24\8F24;
                       LDA.B #$00                                ;;8F2A|8F25+8F25/8F25\8F25;
                       STA.W OAMTileSize,Y                       ;;8F2C|8F27+8F27/8F27\8F27;
-                      RTS                                       ;;8F2F|8F2A+8F2A/8F2A\8F2A; Return 
+                      RTS                                       ;;8F2F|8F2A+8F2A/8F2A\8F2A;
                                                                 ;;                        ;
                                                                 ;;                        ;
 LavaSplashTiles:      db $D7,$C7,$D6,$C6                        ;;8F30|8F2B+8F2B/8F2B\8F2B;
@@ -1836,10 +1836,10 @@ CODE_028F2F:          LDA.W MinExtSpriteXPosLow,X               ;;8F34|8F2F+8F2F
                       TAY                                       ;;8F86|8F80+8F80/8F80\8F80;
                       LDA.B #$00                                ;;8F87|8F81+8F81/8F81\8F81;
                       STA.W OAMTileSize,Y                       ;;8F89|8F83+8F83/8F83\8F83;
-                      RTS                                       ;;8F8C|8F86+8F86/8F86\8F86; Return 
+                      RTS                                       ;;8F8C|8F86+8F86/8F86\8F86;
                                                                 ;;                        ;
 CODE_028F87:          STZ.W MinExtSpriteNumber,X                ;;8F8D|8F87+8F87/8F87\8F87;
-                      RTS                                       ;;8F90|8F8A+8F8A/8F8A\8F8A; Return 
+                      RTS                                       ;;8F90|8F8A+8F8A/8F8A\8F8A;
                                                                 ;;                        ;
 CODE_028F8B:          LDA.B SpriteLock                          ;;8F91|8F8B+8F8B/8F8B\8F8B; \ Branch if sprites locked 
                       BNE CODE_028FCA                           ;;8F93|8F8D+8F8D/8F8D\8F8D; / 
@@ -1917,7 +1917,7 @@ CODE_028FDD:          LDY.W BrokenBlock,X                       ;;8FE3|8FDD+8FDD
                       TAY                                       ;;902E|9026+9026/9026\9026;
                       LDA.B #$00                                ;;902F|9027+9027/9027\9027;
                       STA.W OAMTileSize,Y                       ;;9031|9029+9029/9029\9029;
-Return02902C:         RTS                                       ;;9034|902C+902C/902C\902C; Return 
+Return02902C:         RTS                                       ;;9034|902C+902C/902C\902C;
                                                                 ;;                        ;
 CODE_02902D:          LDA.W MulticoinTimer                      ;;9035|902D+902D/902D\902D;
                       CMP.B #$02                                ;;9038|9030+9030/9030\9030;
@@ -1932,7 +1932,7 @@ CODE_02902D:          LDA.W MulticoinTimer                      ;;9035|902D+902D
                       JSR CODE_0296C0                           ;;904E|9046+9046/9046\9046;
                       DEX                                       ;;9051|9049+9049/9049\9049;
                       BPL -                                     ;;9052|904A+904A/904A\904A;
-Return02904C:         RTS                                       ;;9054|904C+904C/904C\904C; Return 
+Return02904C:         RTS                                       ;;9054|904C+904C/904C\904C;
                                                                 ;;                        ;
 CODE_02904D:          LDA.W BounceSpriteNumber,X                ;;9055|904D+904D/904D\904D;
                       BEQ Return02904C                          ;;9058|9050+9050/9050\9050;
@@ -1957,8 +1957,8 @@ DATA_029072:          db $13,$00,$00,$ED                        ;;907A|9072+9072
 TurnBlockSpr:         LDA.B SpriteLock                          ;;907E|9076+9076/9076\9076; \ Return if sprites locked 
                       BNE Return0290CD                          ;;9080|9078+9078/9078\9078; / 
                       LDA.W BounceSpriteInit,X                  ;;9082|907A+907A/907A\907A; \ Initialize only once 
-                      BNE +                                     ;;9085|907D+907D/907D\907D;  | (Generate invisible tile sprite) 
-                      INC.W BounceSpriteInit,X                  ;;9087|907F+907F/907F\907F;  | 
+                      BNE +                                     ;;9085|907D+907D/907D\907D; | (Generate invisible tile sprite) 
+                      INC.W BounceSpriteInit,X                  ;;9087|907F+907F/907F\907F; | 
                       JSR InvisSldFromBncSpr                    ;;908A|9082+9082/9082\9082; / 
                     + LDA.W BounceSpriteTimer,X                 ;;908D|9085+9085/9085\9085;
                       BEQ CODE_0290BB                           ;;9090|9088+9088/9088\9088;
@@ -1986,12 +1986,12 @@ CODE_0290A8:          JSR CODE_02B526                           ;;90B0|90A8+90A8
 CODE_0290BB:          LDA.W TurnBlockSpinTimer,X                ;;90C3|90BB+90BB/90BB\90BB;
                       BEQ +                                     ;;90C6|90BE+90BE/90BE\90BE;
                       DEC.W TurnBlockSpinTimer,X                ;;90C8|90C0+90C0/90C0\90C0;
-                      RTS                                       ;;90CB|90C3+90C3/90C3\90C3; Return 
+                      RTS                                       ;;90CB|90C3+90C3/90C3\90C3;
                                                                 ;;                        ;
                     + LDA.W BounceSpriteTile,X                  ;;90CC|90C4+90C4/90C4\90C4;
                       JSR TileFromBounceSpr1                    ;;90CF|90C7+90C7/90C7\90C7;
                       STZ.W BounceSpriteNumber,X                ;;90D2|90CA+90CA/90CA\90CA;
-Return0290CD:         RTS                                       ;;90D5|90CD+90CD/90CD\90CD; Return 
+Return0290CD:         RTS                                       ;;90D5|90CD+90CD/90CD\90CD;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0290CE:          db $10,$00,$00,$F0                        ;;90D6|90CE+90CE/90CE\90CE;
@@ -2081,18 +2081,18 @@ CODE_02915E:          LDA.W BounceSpriteTimer,X                 ;;9166|915E+915E
                       LDA.B #!SFX_SWITCH                        ;;9194|918C+918C/918C\918C; \ Play sound effect 
                       STA.W SPCIO0                              ;;9196|918E+918E/918E\918E; / 
                       LDA.W OnOffSwitch                         ;;9199|9191+9191/9191\9191; \ Toggle On/Off 
-                      EOR.B #$01                                ;;919C|9194+9194/9194\9194;  | 
+                      EOR.B #$01                                ;;919C|9194+9194/9194\9194; | 
                       STA.W OnOffSwitch                         ;;919E|9196+9196/9196\9196; / 
                     + STZ.W BounceSpriteNumber,X                ;;91A1|9199+9199/9199\9199;
-Return02919C:         RTS                                       ;;91A4|919C+919C/919C\919C; Return 
+Return02919C:         RTS                                       ;;91A4|919C+919C/919C\919C;
                                                                 ;;                        ;
                                                                 ;;                        ;
                       db $01,$00                                ;;91A5|919D+919D/919D\919D;
                                                                 ;;                        ;
 TileFromBounceSpr0:   LDA.W BounceSpriteTile,X                  ;;91A7|919F+919F/919F\919F; \ If doesn't turn into multiple coin block, 
-                      CMP.B #$0A                                ;;91AA|91A2+91A2/91A2\91A2;  | 
-                      BEQ CODE_0291AA                           ;;91AC|91A4+91A4/91A4\91A4;  | 
-                      CMP.B #$0B                                ;;91AE|91A6+91A6/91A6\91A6;  | 
+                      CMP.B #$0A                                ;;91AA|91A2+91A2/91A2\91A2; | 
+                      BEQ CODE_0291AA                           ;;91AC|91A4+91A4/91A4\91A4; | 
+                      CMP.B #$0B                                ;;91AE|91A6+91A6/91A6\91A6; | 
                       BNE +                                     ;;91B0|91A8+91A8/91A8\91A8; / Block to generate = Bounce sprite block to turn into 
 CODE_0291AA:          LDY.W MulticoinTimer                      ;;91B2|91AA+91AA/91AA\91AA;
                       CPY.B #$01                                ;;91B5|91AD+91AD/91AD\91AD;
@@ -2104,20 +2104,20 @@ CODE_0291AA:          LDY.W MulticoinTimer                      ;;91B2|91AA+91AA
 InvisSldFromBncSpr:   LDA.B #$09                                ;;91C0|91B8+91B8/91B8\91B8; Block to generate = Invisible solid 
 TileFromBounceSpr1:   STA.B Map16TileGenerate                   ;;91C2|91BA+91BA/91BA\91BA; Set block to generate 
                       LDA.W BounceSpriteXPosLow,X               ;;91C4|91BC+91BC/91BC\91BC; \ Block Y position = Bounce sprite Y position 
-                      CLC                                       ;;91C7|91BF+91BF/91BF\91BF;  | 
-                      ADC.B #$08                                ;;91C8|91C0+91C0/91C0\91C0;  | (Rounded to nearest #$10) 
-                      AND.B #$F0                                ;;91CA|91C2+91C2/91C2\91C2;  | 
-                      STA.B TouchBlockXPos                      ;;91CC|91C4+91C4/91C4\91C4;  | 
-                      LDA.W BounceSpriteXPosHigh,X              ;;91CE|91C6+91C6/91C6\91C6;  | 
-                      ADC.B #$00                                ;;91D1|91C9+91C9/91C9\91C9;  | 
+                      CLC                                       ;;91C7|91BF+91BF/91BF\91BF; | 
+                      ADC.B #$08                                ;;91C8|91C0+91C0/91C0\91C0; | (Rounded to nearest #$10) 
+                      AND.B #$F0                                ;;91CA|91C2+91C2/91C2\91C2; | 
+                      STA.B TouchBlockXPos                      ;;91CC|91C4+91C4/91C4\91C4; | 
+                      LDA.W BounceSpriteXPosHigh,X              ;;91CE|91C6+91C6/91C6\91C6; | 
+                      ADC.B #$00                                ;;91D1|91C9+91C9/91C9\91C9; | 
                       STA.B TouchBlockXPos+1                    ;;91D3|91CB+91CB/91CB\91CB; / 
                       LDA.W BounceSpriteYPosLow,X               ;;91D5|91CD+91CD/91CD\91CD; \ Block X position = Bounce sprite X position 
-                      CLC                                       ;;91D8|91D0+91D0/91D0\91D0;  | 
-                      ADC.B #$08                                ;;91D9|91D1+91D1/91D1\91D1;  | (Rounded to nearest #$10) 
-                      AND.B #$F0                                ;;91DB|91D3+91D3/91D3\91D3;  | 
-                      STA.B TouchBlockYPos                      ;;91DD|91D5+91D5/91D5\91D5;  | 
-                      LDA.W BounceSpriteYPosHigh,X              ;;91DF|91D7+91D7/91D7\91D7;  | 
-                      ADC.B #$00                                ;;91E2|91DA+91DA/91DA\91DA;  | 
+                      CLC                                       ;;91D8|91D0+91D0/91D0\91D0; | 
+                      ADC.B #$08                                ;;91D9|91D1+91D1/91D1\91D1; | (Rounded to nearest #$10) 
+                      AND.B #$F0                                ;;91DB|91D3+91D3/91D3\91D3; | 
+                      STA.B TouchBlockYPos                      ;;91DD|91D5+91D5/91D5\91D5; | 
+                      LDA.W BounceSpriteYPosHigh,X              ;;91DF|91D7+91D7/91D7\91D7; | 
+                      ADC.B #$00                                ;;91E2|91DA+91DA/91DA\91DA; | 
                       STA.B TouchBlockYPos+1                    ;;91E4|91DC+91DC/91DC\91DC; / 
                       LDA.W BounceSpriteFlags,X                 ;;91E6|91DE+91DE/91DE\91DE;
                       ASL A                                     ;;91E9|91E1+91E1/91E1\91E1;
@@ -2125,7 +2125,7 @@ TileFromBounceSpr1:   STA.B Map16TileGenerate                   ;;91C2|91BA+91BA
                       AND.B #$01                                ;;91EB|91E3+91E3/91E3\91E3;
                       STA.W LayerProcessing                     ;;91ED|91E5+91E5/91E5\91E5;
                       JSL GenerateTile                          ;;91F0|91E8+91E8/91E8\91E8;
-Return0291EC:         RTS                                       ;;91F4|91EC+91EC/91EC\91EC; Return 
+Return0291EC:         RTS                                       ;;91F4|91EC+91EC/91EC\91EC;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0291ED:          db $10,$14,$18                            ;;91F5|91ED+91ED/91ED\91ED;
@@ -2179,7 +2179,7 @@ BounceSprGfx:         LDY.B #$00                                ;;9200|91F8+91F8
                       LDA.B #$02                                ;;9265|925C+925C/925C\925C;
                       STA.W OAMTileSize,Y                       ;;9267|925E+925E/925E\925E;
                       LDX.W MinorSpriteProcIndex                ;;926A|9261+9261/9261\9261;
-                      RTS                                       ;;926D|9264+9264/9264\9264; Return 
+                      RTS                                       ;;926D|9264+9264/9264\9264;
                                                                 ;;                        ;
 CODE_029265:          LDA.B #$01                                ;;926E|9265+9265/9265\9265;
                       LDY.W BounceSpriteFlags,X                 ;;9270|9267+9267/9267\9267;
@@ -2229,7 +2229,7 @@ CODE_029265:          LDA.B #$01                                ;;926E|9265+9265
                       STA.B _6                                  ;;92CE|92C5+92C5/92C5\92C5;
                       BRA CODE_02931A                           ;;92D0|92C7+92C7/92C7\92C7;
                                                                 ;;                        ;
-Return0292C9:         RTS                                       ;;92D2|92C9+92C9/92C9\92C9; Return 
+Return0292C9:         RTS                                       ;;92D2|92C9+92C9/92C9\92C9;
                                                                 ;;                        ;
 CODE_0292CA:          LDA.W BounceSpriteYPosLow,X               ;;92D3|92CA+92CA/92CA\92CA;
                       SEC                                       ;;92D6|92CD+92CD/92CD\92CD;
@@ -2294,7 +2294,7 @@ CODE_02931A:          LDA.B #$7E                                ;;9323|931A+931A
                       STA.W BounceSpriteYPosHigh,X              ;;9357|934E+934E/934E\934E;
                       PLA                                       ;;935A|9351+9351/9351\9351;
                       STA.W BounceSpriteYPosLow,X               ;;935B|9352+9352/9352\9352;
-                    + RTS                                       ;;935E|9355+9355/9355\9355; Return 
+                    + RTS                                       ;;935E|9355+9355/9355\9355;
                                                                 ;;                        ;
 ADDR_029356:          LDY.B #$03                                ;;935F|9356+9356/9356\9356;
 ADDR_029358:          LDA.W CoinSpriteExists,Y                  ;;9361|9358+9358/9358\9358;
@@ -2320,13 +2320,13 @@ ADDR_029361:          LDA.B #$01                                ;;936A|9361+9361
                       STA.W CoinSpriteLayer,Y                   ;;9392|9389+9389/9389\9389;
                       LDA.B #$D0                                ;;9395|938C+938C/938C\938C;
                       STA.W CoinSpriteYSpeed,Y                  ;;9397|938E+938E/938E\938E;
-Return029391:         RTS                                       ;;939A|9391+9391/9391\9391; Return 
+Return029391:         RTS                                       ;;939A|9391+9391/9391\9391;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_029392:          db $F8,$08                                ;;939B|9392+9392/9392\9392;
                                                                 ;;                        ;
 CODE_029394:          STZ.W QuakeSpriteNumber,X                 ;;939D|9394+9394/9394\9394;
-                    - RTS                                       ;;93A0|9397+9397/9397\9397; Return 
+                    - RTS                                       ;;93A0|9397+9397/9397\9397;
                                                                 ;;                        ;
 CODE_029398:          LDA.W QuakeSpriteNumber,X                 ;;93A1|9398+9398/9398\9398;
                       BEQ -                                     ;;93A4|939B+939B/939B\939B;
@@ -2374,7 +2374,7 @@ CODE_0293F7:          LDY.W MinorSpriteProcIndex                ;;9400|93F7+93F7
                       JMP CODE_0293B0                           ;;9406|93FD+93FD/93FD\93FD;
                                                                 ;;                        ;
                     + LDX.W MinorSpriteProcIndex                ;;9409|9400+9400/9400\9400;
-                      RTS                                       ;;940C|9403+9403/9403\9403; Return 
+                      RTS                                       ;;940C|9403+9403/9403\9403;
                                                                 ;;                        ;
 CODE_029404:          LDA.B #$08                                ;;940D|9404+9404/9404\9404;
                       STA.W SpriteMisc154C,X                    ;;940F|9406+9406/9406\9406;
@@ -2391,7 +2391,7 @@ CODE_029404:          LDA.B #$08                                ;;940D|9404+9404
                       STZ.W SpriteMisc157C,X                    ;;9427|941E+941E/941E\941E;
                       LDA.B #$20                                ;;942A|9421+9421/9421\9421;
                       STA.W SpriteMisc1558,X                    ;;942C|9423+9423/9423\9423;
-                    + RTS                                       ;;942F|9426+9426/9426\9426; Return 
+                    + RTS                                       ;;942F|9426+9426/9426\9426;
                                                                 ;;                        ;
 CODE_029427:          CMP.B #$2D                                ;;9430|9427+9427/9427\9427;
                       BEQ CODE_029448                           ;;9432|9429+9429/9429\9429;
@@ -2426,10 +2426,10 @@ CODE_029448:          STZ.W SpriteMisc1558,X                    ;;9451|9448+9448
                       AND.B #$80                                ;;9477|946E+946E/946E\946E;
                       BNE CODE_0294A2                           ;;9479|9470+9470/9470\9470;
                       LDA.W SpriteTweakerA,X                    ;;947B|9472+9472/9472\9472; \ Branch if can't be jumped on 
-                      AND.B #$10                                ;;947E|9475+9475/9475\9475;  | 
+                      AND.B #$10                                ;;947E|9475+9475/9475\9475; | 
                       BEQ CODE_0294A2                           ;;9480|9477+9477/9477\9477; / 
                       LDA.W SpriteTweakerA,X                    ;;9482|9479+9479/9479\9479; \ Branch if dies when jumped on 
-                      AND.B #$20                                ;;9485|947C+947C/947C\947C;  | 
+                      AND.B #$20                                ;;9485|947C+947C/947C\947C; | 
                       BNE CODE_0294A2                           ;;9487|947E+947E/947E\947E; / 
                       LDA.B #$09                                ;;9489|9480+9480/9480\9480; \ Sprite status = Carryable 
                       STA.W SpriteStatus,X                      ;;948B|9482+9482/9482\9482; / 
@@ -2460,7 +2460,7 @@ CODE_0294A2:          LDA.B #$C0                                ;;94AB|94A2+94A2
                       TYA                                       ;;94C3|94BA+94BA/94BA\94BA;
                       EOR.B #$01                                ;;94C4|94BB+94BB/94BB\94BB;
                       STA.W SpriteMisc157C,X                    ;;94C6|94BD+94BD/94BD\94BD;
-                      RTS                                       ;;94C9|94C0+94C0/94C0\94C0; Return 
+                      RTS                                       ;;94C9|94C0+94C0/94C0\94C0;
                                                                 ;;                        ;
 GroundPound:          LDA.B #$30                                ;;94CA|94C1+94C1/94C1\94C1; \ Set ground shake timer 
                       STA.W ScreenShakeTimer                    ;;94CC|94C3+94C3/94C3\94C3; / 
@@ -2470,15 +2470,15 @@ GroundPound:          LDA.B #$30                                ;;94CA|94C1+94C1
                       PLB                                       ;;94D4|94CB+94CB/94CB\94CB;
                       LDX.B #$09                                ;;94D5|94CC+94CC/94CC\94CC; Loop over sprites: 
 KillSprLoopStart:     LDA.W SpriteStatus,X                      ;;94D7|94CE+94CE/94CE\94CE; \ Skip current sprite if status < 8 
-                      CMP.B #$08                                ;;94DA|94D1+94D1/94D1\94D1;  | 
+                      CMP.B #$08                                ;;94DA|94D1+94D1/94D1\94D1; | 
                       BCC +                                     ;;94DC|94D3+94D3/94D3\94D3; / 
                       LDA.W SpriteBlockedDirs,X                 ;;94DE|94D5+94D5/94D5\94D5; \ Skip current sprite if not on ground 
-                      AND.B #$04                                ;;94E1|94D8+94D8/94D8\94D8;  | 
+                      AND.B #$04                                ;;94E1|94D8+94D8/94D8\94D8; | 
                       BEQ +                                     ;;94E3|94DA+94DA/94DA\94DA; / 
                       LDA.W SpriteTweakerC,X                    ;;94E5|94DC+94DC/94DC\94DC; \ Skip current sprite if... 
-                      AND.B #$20                                ;;94E8|94DF+94DF/94DF\94DF;  | ...can't be killed by cape... 
-                      ORA.W SpriteOnYoshiTongue,X               ;;94EA|94E1+94E1/94E1\94E1;  | ...or sprite being eaten... 
-                      ORA.W SpriteMisc154C,X                    ;;94ED|94E4+94E4/94E4\94E4;  | ...or interaction disabled 
+                      AND.B #$20                                ;;94E8|94DF+94DF/94DF\94DF; | ...can't be killed by cape... 
+                      ORA.W SpriteOnYoshiTongue,X               ;;94EA|94E1+94E1/94E1\94E1; | ...or sprite being eaten... 
+                      ORA.W SpriteMisc154C,X                    ;;94ED|94E4+94E4/94E4\94E4; | ...or interaction disabled 
                       BNE +                                     ;;94F0|94E7+94E7/94E7\94E7; / 
                       LDA.B #$35                                ;;94F2|94E9+94E9/94E9\94E9;
                       STA.B _E                                  ;;94F4|94EB+94EB/94EB\94EB;
@@ -2486,7 +2486,7 @@ KillSprLoopStart:     LDA.W SpriteStatus,X                      ;;94D7|94CE+94CE
                     + DEX                                       ;;94F9|94F0+94F0/94F0\94F0;
                       BPL KillSprLoopStart                      ;;94FA|94F1+94F1/94F1\94F1;
                       PLB                                       ;;94FC|94F3+94F3/94F3\94F3;
-                      RTL                                       ;;94FD|94F4+94F4/94F4\94F4; Return 
+                      RTL                                       ;;94FD|94F4+94F4/94F4\94F4;
                                                                 ;;                        ;
 CODE_0294F5:          LDA.W CapeInteracts                       ;;94FE|94F5+94F5/94F5\94F5;
                       BEQ Return02950A                          ;;9501|94F8+94F8/94F8\94F8;
@@ -2497,7 +2497,7 @@ CODE_0294F5:          LDA.W CapeInteracts                       ;;94FE|94F5+94F5
                       JSR CODE_0293AE                           ;;950A|9501+9501/9501\9501;
                       JSR CODE_029631                           ;;950D|9504+9504/9504\9504;
                     + JSR CODE_02950B                           ;;9510|9507+9507/9507\9507;
-Return02950A:         RTS                                       ;;9513|950A+950A/950A\950A; Return 
+Return02950A:         RTS                                       ;;9513|950A+950A/950A\950A;
                                                                 ;;                        ;
 CODE_02950B:          STZ.B _F                                  ;;9514|950B+950B/950B\950B;
                       JSR CODE_029540                           ;;9516|950D+950D/950D\950D;
@@ -2519,7 +2519,7 @@ CODE_02950B:          STZ.B _F                                  ;;9514|950B+950B
                       ADC.B Layer23YRelPos+1                    ;;953C|9533+9533/9533\9533;
                       STA.W CapeInteractionYPos+1               ;;953E|9535+9535/9535\9535;
                       JSR CODE_029540                           ;;9541|9538+9538/9538\9538;
-                    + RTS                                       ;;9544|953B+953B/953B\953B; Return 
+                    + RTS                                       ;;9544|953B+953B/953B\953B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02953C:          db $08,$08                                ;;9545|953C+953C/953C\953C;
@@ -2579,7 +2579,7 @@ CODE_029540:          LDA.B TrueFrame                           ;;9549|9540+9540
                       STA.B _6                                  ;;95B2|95A9+95A9/95A9\95A9;
                       BRA CODE_02960D                           ;;95B4|95AB+95AB/95AB\95AB;
                                                                 ;;                        ;
-Return0295AD:         RTS                                       ;;95B6|95AD+95AD/95AD\95AD; Return 
+Return0295AD:         RTS                                       ;;95B6|95AD+95AD/95AD\95AD;
                                                                 ;;                        ;
 CODE_0295AE:          LDA.W CapeInteractionYPos                 ;;95B7|95AE+95AE/95AE\95AE;
                       CLC                                       ;;95BA|95B1+95B1/95B1\95B1;
@@ -2639,7 +2639,7 @@ CODE_02960D:          LDA.B #$7E                                ;;9616|960D+960D
                       LDA.W Map16TileNumber                     ;;9630|9627+9627/9627\9627;
                       LDY.B #$00                                ;;9633|962A+962A/962A\962A;
                       JSL CODE_00F160                           ;;9635|962C+962C/962C\962C;
-                    + RTS                                       ;;9639|9630+9630/9630\9630; Return 
+                    + RTS                                       ;;9639|9630+9630/9630\9630;
                                                                 ;;                        ;
 CODE_029631:          LDX.B #$07                                ;;963A|9631+9631/9631\9631;
 CODE_029633:          STX.W CurSpriteProcess                    ;;963C|9633+9633/9633\9633;
@@ -2656,7 +2656,7 @@ CODE_029633:          STX.W CurSpriteProcess                    ;;963C|9633+9633
                       JSR CODE_02A4DE                           ;;9659|9650+9650/9650\9650;
                     + DEX                                       ;;965C|9653+9653/9653\9653;
                       BPL CODE_029633                           ;;965D|9654+9654/9654\9654;
-Return029656:         RTS                                       ;;965F|9656+9656/9656\9656; Return 
+Return029656:         RTS                                       ;;965F|9656+9656/9656\9656;
                                                                 ;;                        ;
                                                                 ;;                        ;
                       db $FC                                    ;;9660|9657+9657/9657\9657;
@@ -2693,7 +2693,7 @@ CODE_029663:          PHX                                       ;;966C|9663+9663
                       LDA.W DATA_029660,X                       ;;9698|968F+968F/968F\968F;
                       STA.B _3                                  ;;969B|9692+9692/9692\9692;
                       PLX                                       ;;969D|9694+9694/9694\9694;
-                      RTS                                       ;;969E|9695+9695/9695\9695; Return 
+                      RTS                                       ;;969E|9695+9695/9695\9695;
                                                                 ;;                        ;
 CODE_029696:          LDA.W CapeInteractionXPos                 ;;969F|9696+9696/9696\9696;
                       SEC                                       ;;96A2|9699+9699/9699\9699;
@@ -2710,7 +2710,7 @@ CODE_029696:          LDA.W CapeInteractionXPos                 ;;969F|9696+9696
                       STA.B _9                                  ;;96BA|96B1+96B1/96B1\96B1;
                       LDA.B #$10                                ;;96BC|96B3+96B3/96B3\96B3;
                       STA.B _3                                  ;;96BE|96B5+96B5/96B5\96B5;
-                      RTS                                       ;;96C0|96B7+96B7/96B7\96B7; Return 
+                      RTS                                       ;;96C0|96B7+96B7/96B7\96B7;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0296B8:          db $20,$24,$28,$2C                        ;;96C1|96B8+96B8/96B8\96B8;
@@ -2729,13 +2729,13 @@ CODE_0296C0:          LDA.W SmokeSpriteNumber,X                 ;;96C9|96C0+96C0
                       dw Return0296D7                           ;;96DC|96D3+96D3/96D3\96D3;
                       dw CODE_0298CA                            ;;96DE|96D5+96D5/96D5\96D5;
                                                                 ;;                        ;
-Return0296D7:         RTS                                       ;;96E0|96D7+96D7/96D7\96D7; Return 
+Return0296D7:         RTS                                       ;;96E0|96D7+96D7/96D7\96D7;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0296D8:          db $66,$66,$64,$62,$60,$62,$60            ;;96E1|96D8+96D8/96D8\96D8;
                                                                 ;;                        ;
 CODE_0296DF:          STZ.W SmokeSpriteNumber,X                 ;;96E8|96DF+96DF/96DF\96DF;
-                      RTS                                       ;;96EB|96E2+96E2/96E2\96E2; Return 
+                      RTS                                       ;;96EB|96E2+96E2/96E2\96E2;
                                                                 ;;                        ;
 CODE_0296E3:          LDA.W SmokeSpriteTimer,X                  ;;96EC|96E3+96E3/96E3\96E3;
                       BEQ CODE_0296DF                           ;;96EF|96E6+96E6/96E6\96E6;
@@ -2788,7 +2788,7 @@ CODE_0296F1:          DEC.W SmokeSpriteTimer,X                  ;;96FA|96F1+96F1
                       TAY                                       ;;974C|9743+9743/9743\9743;
                       LDA.B #$02                                ;;974D|9744+9744/9744\9744;
                       STA.W OAMTileSize+$40,Y                   ;;974F|9746+9746/9746\9746;
-                      RTS                                       ;;9752|9749+9749/9749\9749; Return 
+                      RTS                                       ;;9752|9749+9749/9749\9749;
                                                                 ;;                        ;
 CODE_02974A:          LDY.W DATA_0296B8,X                       ;;9753|974A+974A/974A\974A;
                       LDA.W SmokeSpriteXPos,X                   ;;9756|974D+974D/974D\974D;
@@ -2828,10 +2828,10 @@ CODE_02974A:          LDY.W DATA_0296B8,X                       ;;9753|974A+974A
                       TAY                                       ;;9795|978C+978C/978C\978C;
                       LDA.B #$02                                ;;9796|978D+978D/978D\978D;
                       STA.W OAMTileSize,Y                       ;;9798|978F+978F/978F\978F;
-                      RTS                                       ;;979B|9792+9792/9792\9792; Return 
+                      RTS                                       ;;979B|9792+9792/9792\9792;
                                                                 ;;                        ;
 CODE_029793:          STZ.W SmokeSpriteNumber,X                 ;;979C|9793+9793/9793\9793;
-                      RTS                                       ;;979F|9796+9796/9796\9796; Return 
+                      RTS                                       ;;979F|9796+9796/9796\9796;
                                                                 ;;                        ;
 CODE_029797:          LDA.W SmokeSpriteTimer,X                  ;;97A0|9797+9797/9797\9797;
                       BEQ CODE_029793                           ;;97A3|979A+979A/979A\979A;
@@ -2905,7 +2905,7 @@ CODE_029815:          LDA.B #$7D                                ;;981E|9815+9815
                       STA.W OAMTileSize+1,Y                     ;;9837|982E+982E/982E\982E;
                       STA.W OAMTileSize+2,Y                     ;;983A|9831+9831/9831\9831;
                       STA.W OAMTileSize+3,Y                     ;;983D|9834+9834/9834\9834;
-                      RTS                                       ;;9840|9837+9837/9837\9837; Return 
+                      RTS                                       ;;9840|9837+9837/9837\9837;
                                                                 ;;                        ;
 CODE_029838:          LDY.B #$90                                ;;9841|9838+9838/9838\9838;
                       LDA.W SmokeSpriteXPos,X                   ;;9843|983A+983A/983A\983A;
@@ -2967,10 +2967,10 @@ CODE_02989B:          LDA.B #$7D                                ;;98A4|989B+989B
                       STA.W OAMTileSize+$41,Y                   ;;98BD|98B4+98B4/98B4\98B4;
                       STA.W OAMTileSize+$42,Y                   ;;98C0|98B7+98B7/98B7\98B7;
                       STA.W OAMTileSize+$43,Y                   ;;98C3|98BA+98BA/98BA\98BA;
-                      RTS                                       ;;98C6|98BD+98BD/98BD\98BD; Return 
+                      RTS                                       ;;98C6|98BD+98BD/98BD\98BD;
                                                                 ;;                        ;
 CODE_0298BE:          STZ.W SmokeSpriteNumber,X                 ;;98C7|98BE+98BE/98BE\98BE;
-                      RTS                                       ;;98CA|98C1+98C1/98C1\98C1; Return 
+                      RTS                                       ;;98CA|98C1+98C1/98C1\98C1;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0298C2:          db $04,$08,$04,$00                        ;;98CB|98C2+98C2/98C2\98C2;
@@ -3017,7 +3017,7 @@ CODE_0298F1:          LDA.B #$02                                ;;98FA|98F1+98F1
                       PLX                                       ;;9924|991B+991B/991B\991B;
                       LDA.B #$17                                ;;9925|991C+991C/991C\991C;
                       STA.W MinExtSpriteTimer,Y                 ;;9927|991E+991E/991E\991E;
-Return029921:         RTS                                       ;;992A|9921+9921/9921\9921; Return 
+Return029921:         RTS                                       ;;992A|9921+9921/9921\9921;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_029922:          db $66,$66,$64,$62,$62                    ;;992B|9922+9922/9922\9922;
@@ -3077,7 +3077,7 @@ CODE_02996C:          LDY.W DATA_0296B8,X                       ;;9975|996C+996C
                       TAY                                       ;;99A2|9998+9998/9998\9998;
                       LDA.B #$00                                ;;99A3|9999+9999/9999\9999;
                       STA.W OAMTileSize,Y                       ;;99A5|999B+999B/999B\999B;
-                      RTS                                       ;;99A8|999E+999E/999E\999E; Return 
+                      RTS                                       ;;99A8|999E+999E/999E\999E;
                                                                 ;;                        ;
 CODE_02999F:          LDY.W DATA_0296BC,X                       ;;99A9|999F+999F/999F\999F;
                       LDA.W SmokeSpriteXPos,X                   ;;99AC|99A2+99A2/99A2\99A2;
@@ -3103,7 +3103,7 @@ CODE_02999F:          LDY.W DATA_0296BC,X                       ;;99A9|999F+999F
                       TAY                                       ;;99D6|99CB+99CB/99CB\99CB;
                       LDA.B #$00                                ;;99D7|99CC+99CC/99CC\99CC;
                       STA.W OAMTileSize+$40,Y                   ;;99D9|99CE+99CE/99CE\99CE;
-                      RTS                                       ;;99DC|99D1+99D1/99D1\99D1; Return 
+                      RTS                                       ;;99DC|99D1+99D1/99D1\99D1;
                                                                 ;;                        ;
 CODE_0299D2:          LDX.B #$03                                ;;99DD|99D2+99D2/99D2\99D2;
 CODE_0299D4:          STX.W CurSpriteProcess                    ;;99DF|99D4+99D4/99D4\99D4;
@@ -3112,11 +3112,11 @@ CODE_0299D4:          STX.W CurSpriteProcess                    ;;99DF|99D4+99D4
                       JSR CODE_0299F1                           ;;99E7|99DC+99DC/99DC\99DC;
                     + DEX                                       ;;99EA|99DF+99DF/99DF\99DF;
                       BPL CODE_0299D4                           ;;99EB|99E0+99E0/99E0\99E0;
-                      RTS                                       ;;99ED|99E2+99E2/99E2\99E2; Return 
+                      RTS                                       ;;99ED|99E2+99E2/99E2\99E2;
                                                                 ;;                        ;
 CODE_0299E3:          LDA.B #$00                                ;;99EE|99E3+99E3/99E3\99E3;
                       STA.W CoinSpriteExists,X                  ;;99F0|99E5+99E5/99E5\99E5;
-                      RTS                                       ;;99F3|99E8+99E8/99E8\99E8; Return 
+                      RTS                                       ;;99F3|99E8+99E8/99E8\99E8;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_0299E9:          db $30,$38,$40,$48,$EC,$EA,$E8,$EC        ;;99F4|99E9+99E9/99E9\99E9;
@@ -3182,7 +3182,7 @@ CODE_0299F1:          LDA.B SpriteLock                          ;;99FC|99F1+99F1
                       LSR A                                     ;;9A73|9A68+9A68/9A68\9A68;
                       AND.B #$03                                ;;9A74|9A69+9A69/9A69\9A69;
                       BNE +                                     ;;9A76|9A6B+9A6B/9A6B\9A6B;
-Return029A6D:         RTS                                       ;;9A78|9A6D+9A6D/9A6D\9A6D; Return 
+Return029A6D:         RTS                                       ;;9A78|9A6D+9A6D/9A6D\9A6D;
                                                                 ;;                        ;
                                                                 ;;                        ;
                       db $EA,$FA,$EA                            ;;9A79|9A6E+9A6E/9A6E\9A6E;
@@ -3213,7 +3213,7 @@ Return029A6D:         RTS                                       ;;9A78|9A6D+9A6D
                       STA.W OAMTileSize,Y                       ;;9AAB|9AA0+9AA0/9AA0\9AA0;
                       STA.W OAMTileSize+1,Y                     ;;9AAE|9AA3+9AA3/9AA3\9AA3;
                       PLX                                       ;;9AB1|9AA6+9AA6/9AA6\9AA6;
-                      RTS                                       ;;9AB2|9AA7+9AA7/9AA7\9AA7; Return 
+                      RTS                                       ;;9AB2|9AA7+9AA7/9AA7\9AA7;
                                                                 ;;                        ;
 CODE_029AA8:          JSL CODE_02AD34                           ;;9AB3|9AA8+9AA8/9AA8\9AA8; Find next usable location in score sprite table 
                       LDA.B #$01                                ;;9AB7|9AAC+9AAC/9AAC\9AAC;
@@ -3256,14 +3256,14 @@ CODE_029AE5:          LDA.B #$05                                ;;9AF0|9AE5+9AE5
                     + STA.W SmokeSpriteYPos,Y                   ;;9B0C|9B01+9B01/9B01\9B01; store y-coord 
                       LDA.B #$10                                ;;9B0F|9B04+9B04/9B04\9B04;
                       STA.W SmokeSpriteTimer,Y                  ;;9B11|9B06+9B06/9B06\9B06; duration = 10 
-                      RTS                                       ;;9B14|9B09+9B09/9B09\9B09; Return 
+                      RTS                                       ;;9B14|9B09+9B09/9B09\9B09;
                                                                 ;;                        ;
 CODE_029B0A:          LDX.B #$09                                ;;9B15|9B0A+9B0A/9B0A\9B0A;
                     - STX.W CurSpriteProcess                    ;;9B17|9B0C+9B0C/9B0C\9B0C;
                       JSR CODE_029B16                           ;;9B1A|9B0F+9B0F/9B0F\9B0F;
                       DEX                                       ;;9B1D|9B12+9B12/9B12\9B12;
                       BPL -                                     ;;9B1E|9B13+9B13/9B13\9B13;
-Return029B15:         RTS                                       ;;9B20|9B15+9B15/9B15\9B15; Return 
+Return029B15:         RTS                                       ;;9B20|9B15+9B15/9B15\9B15;
                                                                 ;;                        ;
 CODE_029B16:          LDA.W ExtSpriteNumber,X                   ;;9B21|9B16+9B16/9B16\9B16;
                       BEQ Return029B15                          ;;9B24|9B19+9B19/9B19\9B19;
@@ -3360,10 +3360,10 @@ CODE_029BA5:          LDA.B SpriteLock                          ;;9BB0|9BA5+9BA5
                       LDY.B #$F8                                ;;9BDE|9BD3+9BD3/9BD3\9BD3;
                     + TYA                                       ;;9BE0|9BD5+9BD5/9BD5\9BD5;
                       STA.W ExtSpriteXSpeed,X                   ;;9BE1|9BD6+9BD6/9BD6\9BD6;
-Return029BD9:         RTS                                       ;;9BE4|9BD9+9BD9/9BD9\9BD9; Return 
+Return029BD9:         RTS                                       ;;9BE4|9BD9+9BD9/9BD9\9BD9;
                                                                 ;;                        ;
 CODE_029BDA:          STZ.W ExtSpriteNumber,X                   ;;9BE5|9BDA+9BDA/9BDA\9BDA; Clear extended sprite 
-                      RTS                                       ;;9BE8|9BDD+9BDD/9BDD\9BDD; Return 
+                      RTS                                       ;;9BE8|9BDD+9BDD/9BDD\9BDD;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_029BDE:          db $08,$F8                                ;;9BE9|9BDE+9BDE/9BDE\9BDE;
@@ -3380,10 +3380,10 @@ CODE_029BE4:          LDA.B #$05                                ;;9BEF|9BE4+9BE4
                       JSR CODE_029BF5                           ;;9BFB|9BF0+9BF0/9BF0\9BF0;
                       INC.B _0                                  ;;9BFE|9BF3+9BF3/9BF3\9BF3;
 CODE_029BF5:          LDY.B #$07                                ;;9C00|9BF5+9BF5/9BF5\9BF5; \ Find a free extended sprite slot 
-CODE_029BF7:          LDA.W ExtSpriteNumber,Y                   ;;9C02|9BF7+9BF7/9BF7\9BF7;  | 
-                      BEQ CODE_029C00                           ;;9C05|9BFA+9BFA/9BFA\9BFA;  | 
-                      DEY                                       ;;9C07|9BFC+9BFC/9BFC\9BFC;  | 
-                      BPL CODE_029BF7                           ;;9C08|9BFD+9BFD/9BFD\9BFD;  | 
+CODE_029BF7:          LDA.W ExtSpriteNumber,Y                   ;;9C02|9BF7+9BF7/9BF7\9BF7; | 
+                      BEQ CODE_029C00                           ;;9C05|9BFA+9BFA/9BFA\9BFA; | 
+                      DEY                                       ;;9C07|9BFC+9BFC/9BFC\9BFC; | 
+                      BPL CODE_029BF7                           ;;9C08|9BFD+9BFD/9BFD\9BFD; | 
                       RTS                                       ;;9C0A|9BFF+9BFF/9BFF\9BFF; / Return if no free slots 
                                                                 ;;                        ;
 CODE_029C00:          LDA.B #$0F                                ;;9C0B|9C00+9C00/9C00\9C00; \ Extended sprite = Yoshi stomp smoke 
@@ -3407,7 +3407,7 @@ CODE_029C00:          LDA.B #$0F                                ;;9C0B|9C00+9C00
                       STA.W ExtSpriteXSpeed,Y                   ;;9C35|9C2A+9C2A/9C2A\9C2A;
                       LDA.B #$15                                ;;9C38|9C2D+9C2D/9C2D\9C2D;
                       STA.W ExtSpriteMisc176F,Y                 ;;9C3A|9C2F+9C2F/9C2F\9C2F;
-                      RTS                                       ;;9C3D|9C32+9C32/9C32\9C32; Return 
+                      RTS                                       ;;9C3D|9C32+9C32/9C32\9C32;
                                                                 ;;                        ;
                                                                 ;;                        ;
 SmokeTrailTiles:      db $66,$64,$62,$60,$60,$60,$60,$60        ;;9C3E|9C33+9C33/9C33\9C33;
@@ -3446,10 +3446,10 @@ SmokeTrail:           JSR CODE_02A1A4                           ;;9C49|9C3E+9C3E
                       ASL A                                     ;;9C83|9C77+9C77/9C77\9C77;
                       ROR.W ExtSpriteXSpeed,X                   ;;9C84|9C78+9C78/9C78\9C78;
                     + JSR CODE_02B554                           ;;9C87|9C7B+9C7B/9C7B\9C7B;
-Return029C7E:         RTS                                       ;;9C8A|9C7E+9C7E/9C7E\9C7E; Return 
+Return029C7E:         RTS                                       ;;9C8A|9C7E+9C7E/9C7E\9C7E;
                                                                 ;;                        ;
 CODE_029C7F:          STZ.W ExtSpriteNumber,X                   ;;9C8B|9C7F+9C7F/9C7F\9C7F; Clear extended sprite 
-                      RTS                                       ;;9C8E|9C82+9C82/9C82\9C82; Return 
+                      RTS                                       ;;9C8E|9C82+9C82/9C82\9C82;
                                                                 ;;                        ;
 SpinJumpStars:        LDA.W ExtSpriteMisc176F,X                 ;;9C8F|9C83+9C83/9C83\9C83;
                       BEQ CODE_029C7F                           ;;9C92|9C86+9C86/9C86\9C86;
@@ -3470,7 +3470,7 @@ SpinJumpStars:        LDA.W ExtSpriteMisc176F,X                 ;;9C8F|9C83+9C83
                       BNE +                                     ;;9CB3|9CA7+9CA7/9CA7\9CA7;
                       JSR CODE_02B554                           ;;9CB5|9CA9+9CA9/9CA9\9CA9;
                       JSR CODE_02B560                           ;;9CB8|9CAC+9CAC/9CAC\9CAC;
-                    + RTS                                       ;;9CBB|9CAF+9CAF/9CAF\9CAF; Return 
+                    + RTS                                       ;;9CBB|9CAF+9CAF/9CAF\9CAF;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_029CB0:          db $FF,$07,$01,$00,$00                    ;;9CBC|9CB0+9CB0/9CB0\9CB0;
@@ -3541,7 +3541,7 @@ CODE_029D36:          ORA.B SpriteProperties                    ;;9D42|9D36+9D36
                       TAY                                       ;;9D4A|9D3E+9D3E/9D3E\9D3E;
                       LDA.B #$00                                ;;9D4B|9D3F+9D3F/9D3F\9D3F;
                       STA.W OAMTileSize,Y                       ;;9D4D|9D41+9D41/9D41\9D41;
-                      RTS                                       ;;9D50|9D44+9D44/9D44\9D44; Return 
+                      RTS                                       ;;9D50|9D44+9D44/9D44\9D44;
                                                                 ;;                        ;
                     + LDA.B _1                                  ;;9D51|9D45+9D45/9D45\9D45;
                       STA.W OAMTileYPos,Y                       ;;9D53|9D47+9D47/9D47\9D47;
@@ -3551,10 +3551,10 @@ CODE_029D36:          ORA.B SpriteProperties                    ;;9D42|9D36+9D36
                       JSR CODE_029D36                           ;;9D5D|9D51+9D51/9D51\9D51;
                       LDA.B #$02                                ;;9D60|9D54+9D54/9D54\9D54;
                       STA.W OAMTileSize,Y                       ;;9D62|9D56+9D56/9D56\9D56;
-                      RTS                                       ;;9D65|9D59+9D59/9D59\9D59; Return 
+                      RTS                                       ;;9D65|9D59+9D59/9D59\9D59;
                                                                 ;;                        ;
 CODE_029D5A:          STZ.W ExtSpriteNumber,X                   ;;9D66|9D5A+9D5A/9D5A\9D5A; Clear extended sprite 
-Return029D5D:         RTS                                       ;;9D69|9D5D+9D5D/9D5D\9D5D; Return 
+Return029D5D:         RTS                                       ;;9D69|9D5D+9D5D/9D5D\9D5D;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_029D5E:          db $00,$01,$02,$03,$02,$03,$02,$03        ;;9D6A|9D5E+9D5E/9D5E\9D5E;
@@ -3573,7 +3573,7 @@ UnusedExSprGfxProp:   db $69,$29,$29                            ;;9D9E|9D92+9D92
 UnusedExSprTileSize:  db $00,$00,$02,$02                        ;;9DA1|9D95+9D95/9D95\9D95;
                                                                 ;;                        ;
                     - STZ.W ExtSpriteNumber,X                   ;;9DA5|9D99+9D99/9D99\9D99; Clear extended sprite 
-                      RTS                                       ;;9DA8|9D9C+9D9C/9D9C\9D9C; Return 
+                      RTS                                       ;;9DA8|9D9C+9D9C/9D9C\9D9C;
                                                                 ;;                        ;
 UnusedExtendedSpr:    JSR CODE_02A3F6                           ;;9DA9|9D9D+9D9D/9D9D\9D9D;
                       LDY.W ExtSpriteXSpeed,X                   ;;9DAC|9DA0+9DA0/9DA0\9DA0;
@@ -3652,13 +3652,13 @@ UnusedExtendedSpr:    JSR CODE_02A3F6                           ;;9DA9|9D9D+9D9D
                       BCS +                                     ;;9E3F|9E30+9E30/9E30\9E30;
                       JMP CODE_02A469                           ;;9E41|9E32+9E32/9E32\9E32;
                                                                 ;;                        ;
-                    + RTS                                       ;;9E44|9E35+9E35/9E35\9E35; Return 
+                    + RTS                                       ;;9E44|9E35+9E35/9E35\9E35;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_029E36:          db $08,$00,$F8                            ;;9E45|9E36+9E36/9E36\9E36;
                                                                 ;;                        ;
 CODE_029E39:          STZ.W ExtSpriteNumber,X                   ;;9E48|9E39+9E39/9E39\9E39;
-                      RTS                                       ;;9E4B|9E3C+9E3C/9E3C\9E3C; Return 
+                      RTS                                       ;;9E4B|9E3C+9E3C/9E3C\9E3C;
                                                                 ;;                        ;
 LauncherArm:          LDY.B #$00                                ;;9E4C|9E3D+9E3D/9E3D\9E3D;
                       LDA.W ExtSpriteMisc176F,X                 ;;9E4E|9E3F+9E3F/9E3F\9E3F;
@@ -3693,7 +3693,7 @@ LauncherArm:          LDY.B #$00                                ;;9E4C|9E3D+9E3D
                       TAY                                       ;;9E8A|9E7B+9E7B/9E7B\9E7B;
                       LDA.B #$02                                ;;9E8B|9E7C+9E7C/9E7C\9E7C;
                       STA.W OAMTileSize,Y                       ;;9E8D|9E7E+9E7E/9E7E\9E7E;
-                      RTS                                       ;;9E90|9E81+9E81/9E81\9E81; Return 
+                      RTS                                       ;;9E90|9E81+9E81/9E81\9E81;
                                                                 ;;                        ;
                                                                 ;;                        ;
 LavaSplashTiles2:     db $D7,$C7,$D6,$C6                        ;;9E91|9E82+9E82/9E82\9E82;
@@ -3744,10 +3744,10 @@ CODE_029E9D:          LDY.W DATA_02A153,X                       ;;9EAC|9E9D+9E9D
                       LDA.B #$00                                ;;9EED|9EDD+9EDD/9EDD\9EDD;
                       STA.W OAMTileSize,Y                       ;;9EEF|9EDF+9EDF/9EDF\9EDF;
                       LDX.W CurSpriteProcess                    ;;9EF2|9EE2+9EE2/9EE2\9EE2; X = Sprite index 
-                      RTS                                       ;;9EF5|9EE5+9EE5/9EE5\9EE5; Return 
+                      RTS                                       ;;9EF5|9EE5+9EE5/9EE5\9EE5;
                                                                 ;;                        ;
                     + STZ.W ExtSpriteNumber,X                   ;;9EF6|9EE6+9EE6/9EE6\9EE6; Clear extended sprite 
-                      RTS                                       ;;9EF9|9EE9+9EE9/9EE9\9EE9; Return 
+                      RTS                                       ;;9EF9|9EE9+9EE9/9EE9\9EE9;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_029EEA:          db $00,$01,$00,$FF                        ;;9EFA|9EEA+9EEA/9EEA\9EEA;
@@ -3805,7 +3805,7 @@ CODE_029F2A:          LDA.W ExtSpriteYPosLow,X                  ;;9F3A|9F2A+9F2A
                       STA.W OAMTileYPos,Y                       ;;9F68|9F58+9F58/9F58\9F58;
                       LDA.B #$1C                                ;;9F6B|9F5B+9F5B/9F5B\9F5B;
                       STA.W OAMTileNo,Y                         ;;9F6D|9F5D+9F5D/9F5D\9F5D;
-                      RTS                                       ;;9F70|9F60+9F60/9F60\9F60; Return 
+                      RTS                                       ;;9F70|9F60+9F60/9F60\9F60;
                                                                 ;;                        ;
 YoshiFireball:        LDA.B SpriteLock                          ;;9F71|9F61+9F61/9F61\9F61;
                       BNE +                                     ;;9F73|9F63+9F63/9F63\9F63;
@@ -3834,7 +3834,7 @@ YoshiFireball:        LDA.B SpriteLock                          ;;9F71|9F61+9F61
                       TAY                                       ;;9FA2|9F92+9F92/9F92\9F92;
                       LDA.B #$02                                ;;9FA3|9F93+9F93/9F93\9F93;
                       STA.W OAMTileSize,Y                       ;;9FA5|9F95+9F95/9F95\9F95;
-                      RTS                                       ;;9FA8|9F98+9F98/9F98\9F98; Return 
+                      RTS                                       ;;9FA8|9F98+9F98/9F98\9F98;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_029F99:          db $00,$B8,$C0,$C8,$D0,$D8,$E0,$E8        ;;9FA9|9F99+9F99/9F99\9F99;
@@ -3912,7 +3912,7 @@ CODE_02A02C:          LDA.B SpriteNumber+7                      ;;A03C|A02C+A02C
                       BNE +                                     ;;A049|A039+A039/A039\A039;
 CODE_02A03B:          LDY.W DATA_029FA3,X                       ;;A04B|A03B+A03B/A03B\A03B;
                       JSR CODE_02A1A7                           ;;A04E|A03E+A03E/A03E\A03E;
-                      RTS                                       ;;A051|A041+A041/A041\A041; Return 
+                      RTS                                       ;;A051|A041+A041/A041\A041;
                                                                 ;;                        ;
 CODE_02A042:          JSR CODE_02A02C                           ;;A052|A042+A042/A042\A042;
 CODE_02A045:          LDA.B #!SFX_BONK                          ;;A055|A045+A045/A045\A045; \ Play sound effect 
@@ -3962,13 +3962,13 @@ CODE_02A045:          LDA.B #!SFX_BONK                          ;;A055|A045+A045
                       LDA.B #$00                                ;;A0B0|A0A0+A0A0/A0A0\A0A0;
                       STA.W OAMTileSize+$40,Y                   ;;A0B2|A0A2+A0A2/A0A2\A0A2;
                       LDX.W CurSpriteProcess                    ;;A0B5|A0A5+A0A5/A0A5\A0A5; X = Sprite index 
-                    - RTS                                       ;;A0B8|A0A8+A0A8/A0A8\A0A8; Return 
+                    - RTS                                       ;;A0B8|A0A8+A0A8/A0A8\A0A8;
                                                                 ;;                        ;
 ADDR_02A0A9:          JMP CODE_02A211                           ;;A0B9|A0A9+A0A9/A0A9\A0A9;
                                                                 ;;                        ;
 ProcessFireball:      TXA                                       ;;A0BC|A0AC+A0AC/A0AC\A0AC; \ Return every other frame 
-                      EOR.B TrueFrame                           ;;A0BD|A0AD+A0AD/A0AD\A0AD;  | 
-                      AND.B #$03                                ;;A0BF|A0AF+A0AF/A0AF\A0AF;  | 
+                      EOR.B TrueFrame                           ;;A0BD|A0AD+A0AD/A0AD\A0AD; | 
+                      AND.B #$03                                ;;A0BF|A0AF+A0AF/A0AF\A0AF; | 
                       BNE -                                     ;;A0C1|A0B1+A0B1/A0B1\A0B1; / 
                       PHX                                       ;;A0C3|A0B3+A0B3/A0B3\A0B3;
                       TXY                                       ;;A0C4|A0B4+A0B4/A0B4\A0B4;
@@ -3976,12 +3976,12 @@ ProcessFireball:      TXA                                       ;;A0BC|A0AC+A0AC
                       LDX.B #$09                                ;;A0C8|A0B8+A0B8/A0B8\A0B8; Loop over sprites: 
 FireRtLoopStart:      STX.W CurSpriteProcess                    ;;A0CA|A0BA+A0BA/A0BA\A0BA;
                       LDA.W SpriteStatus,X                      ;;A0CD|A0BD+A0BD/A0BD\A0BD; \ Skip current sprite if status < 8 
-                      CMP.B #$08                                ;;A0D0|A0C0+A0C0/A0C0\A0C0;  | 
+                      CMP.B #$08                                ;;A0D0|A0C0+A0C0/A0C0\A0C0; | 
                       BCC FireRtNextSprite                      ;;A0D2|A0C2+A0C2/A0C2\A0C2; / 
                       LDA.W SpriteTweakerD,X                    ;;A0D4|A0C4+A0C4/A0C4\A0C4; \ Skip current sprite if... 
-                      AND.B #$02                                ;;A0D7|A0C7+A0C7/A0C7\A0C7;  | ...invincible to fire/cape/etc 
-                      ORA.W SpriteOnYoshiTongue,X               ;;A0D9|A0C9+A0C9/A0C9\A0C9;  | ...sprite being eaten... 
-                      ORA.W SpriteBehindScene,X                 ;;A0DC|A0CC+A0CC/A0CC\A0CC;  | ...interactions disabled... 
+                      AND.B #$02                                ;;A0D7|A0C7+A0C7/A0C7\A0C7; | ...invincible to fire/cape/etc 
+                      ORA.W SpriteOnYoshiTongue,X               ;;A0D9|A0C9+A0C9/A0C9\A0C9; | ...sprite being eaten... 
+                      ORA.W SpriteBehindScene,X                 ;;A0DC|A0CC+A0CC/A0CC\A0CC; | ...interactions disabled... 
                       EOR.W ExtSpritePriority,Y                 ;;A0DF|A0CF+A0CF/A0CF\A0CF;
                       BNE FireRtNextSprite                      ;;A0E2|A0D2+A0D2/A0D2\A0D2; / 
                       JSL GetSpriteClippingA                    ;;A0E4|A0D4+A0D4/A0D4\A0D4;
@@ -3989,44 +3989,44 @@ FireRtLoopStart:      STX.W CurSpriteProcess                    ;;A0CA|A0BA+A0BA
                       JSL CheckForContact                       ;;A0EB|A0DB+A0DB/A0DB\A0DB;
                       BCC FireRtNextSprite                      ;;A0EF|A0DF+A0DF/A0DF\A0DF;
                       LDA.W ExtSpriteNumber,Y                   ;;A0F1|A0E1+A0E1/A0E1\A0E1; \ if Yoshi fireball... 
-                      CMP.B #$11                                ;;A0F4|A0E4+A0E4/A0E4\A0E4;  | 
-                      BEQ +                                     ;;A0F6|A0E6+A0E6/A0E6\A0E6;  | 
-                      PHX                                       ;;A0F8|A0E8+A0E8/A0E8\A0E8;  | 
-                      TYX                                       ;;A0F9|A0E9+A0E9/A0E9\A0E9;  | 
-                      JSR CODE_02A045                           ;;A0FA|A0EA+A0EA/A0EA\A0EA;  | ...? 
+                      CMP.B #$11                                ;;A0F4|A0E4+A0E4/A0E4\A0E4; | 
+                      BEQ +                                     ;;A0F6|A0E6+A0E6/A0E6\A0E6; | 
+                      PHX                                       ;;A0F8|A0E8+A0E8/A0E8\A0E8; | 
+                      TYX                                       ;;A0F9|A0E9+A0E9/A0E9\A0E9; | 
+                      JSR CODE_02A045                           ;;A0FA|A0EA+A0EA/A0EA\A0EA; | ...? 
                       PLX                                       ;;A0FD|A0ED+A0ED/A0ED\A0ED; / 
                     + LDA.W SpriteTweakerC,X                    ;;A0FE|A0EE+A0EE/A0EE\A0EE; \ Skip sprite if fire killing is disabled 
-                      AND.B #$10                                ;;A101|A0F1+A0F1/A0F1\A0F1;  | 
+                      AND.B #$10                                ;;A101|A0F1+A0F1/A0F1\A0F1; | 
                       BNE FireRtNextSprite                      ;;A103|A0F3+A0F3/A0F3\A0F3; / 
                       LDA.W SpriteTweakerF,X                    ;;A105|A0F5+A0F5/A0F5\A0F5; \ Branch if takes 1 fireball to kill 
-                      AND.B #$08                                ;;A108|A0F8+A0F8/A0F8\A0F8;  | 
+                      AND.B #$08                                ;;A108|A0F8+A0F8/A0F8\A0F8; | 
                       BEQ TurnSpriteToCoin                      ;;A10A|A0FA+A0FA/A0FA\A0FA; / 
                       INC.W SpriteMisc1528,X                    ;;A10C|A0FC+A0FC/A0FC\A0FC; Increase times Chuck hit by fireball 
                       LDA.W SpriteMisc1528,X                    ;;A10F|A0FF+A0FF/A0FF\A0FF; \ If fire count >= 5, kill Chuck: 
-                      CMP.B #$05                                ;;A112|A102+A102/A102\A102;  | 
-                      BCC FireRtNextSprite                      ;;A114|A104+A104/A104\A104;  | 
-                      LDA.B #!SFX_SPLAT                         ;;A116|A106+A106/A106\A106;  | Play sound effect 
-                      STA.W SPCIO0                              ;;A118|A108+A108/A108\A108;  | 
-                      LDA.B #$02                                ;;A11B|A10B+A10B/A10B\A10B;  | Sprite status = Killed 
-                      STA.W SpriteStatus,X                      ;;A11D|A10D+A10D/A10D\A10D;  | 
-                      LDA.B #$D0                                ;;A120|A110+A110/A110\A110;  | Set death Y speed 
-                      STA.B SpriteYSpeed,X                      ;;A122|A112+A112/A112\A112;  | 
+                      CMP.B #$05                                ;;A112|A102+A102/A102\A102; | 
+                      BCC FireRtNextSprite                      ;;A114|A104+A104/A104\A104; | 
+                      LDA.B #!SFX_SPLAT                         ;;A116|A106+A106/A106\A106; | Play sound effect 
+                      STA.W SPCIO0                              ;;A118|A108+A108/A108\A108; | 
+                      LDA.B #$02                                ;;A11B|A10B+A10B/A10B\A10B; | Sprite status = Killed 
+                      STA.W SpriteStatus,X                      ;;A11D|A10D+A10D/A10D\A10D; | 
+                      LDA.B #$D0                                ;;A120|A110+A110/A110\A110; | Set death Y speed 
+                      STA.B SpriteYSpeed,X                      ;;A122|A112+A112/A112\A112; | 
                       JSR SubHorzPosBnk2                        ;;A124|A114+A114/A114\A114;
-                      LDA.W FireKillSpeedX,Y                    ;;A127|A117+A117/A117\A117;  | Set death X speed 
-                      STA.B SpriteXSpeed,X                      ;;A12A|A11A+A11A/A11A\A11A;  | 
-                      LDA.B #$04                                ;;A12C|A11C+A11C/A11C\A11C;  | Increase points 
-                      JSL GivePoints                            ;;A12E|A11E+A11E/A11E\A11E;  | 
+                      LDA.W FireKillSpeedX,Y                    ;;A127|A117+A117/A117\A117; | Set death X speed 
+                      STA.B SpriteXSpeed,X                      ;;A12A|A11A+A11A/A11A\A11A; | 
+                      LDA.B #$04                                ;;A12C|A11C+A11C/A11C\A11C; | Increase points 
+                      JSL GivePoints                            ;;A12E|A11E+A11E/A11E\A11E; | 
                       BRA FireRtNextSprite                      ;;A132|A122+A122/A122\A122; / 
                                                                 ;;                        ;
 TurnSpriteToCoin:     LDA.B #!SFX_KICK                          ;;A134|A124+A124/A124\A124; \ Turn sprite into coin: 
-                      STA.W SPCIO0                              ;;A136|A126+A126/A126\A126;  | Play sound effect 
-                      LDA.B #$21                                ;;A139|A129+A129/A129\A129;  | Sprite = Moving Coin 
-                      STA.B SpriteNumber,X                      ;;A13B|A12B+A12B/A12B\A12B;  | 
-                      LDA.B #$08                                ;;A13D|A12D+A12D/A12D\A12D;  | Sprite status = Normal 
-                      STA.W SpriteStatus,X                      ;;A13F|A12F+A12F/A12F\A12F;  | 
-                      JSL InitSpriteTables                      ;;A142|A132+A132/A132\A132;  | Reset sprite tables 
-                      LDA.B #$D0                                ;;A146|A136+A136/A136\A136;  | Set upward speed 
-                      STA.B SpriteYSpeed,X                      ;;A148|A138+A138/A138\A138;  | 
+                      STA.W SPCIO0                              ;;A136|A126+A126/A126\A126; | Play sound effect 
+                      LDA.B #$21                                ;;A139|A129+A129/A129\A129; | Sprite = Moving Coin 
+                      STA.B SpriteNumber,X                      ;;A13B|A12B+A12B/A12B\A12B; | 
+                      LDA.B #$08                                ;;A13D|A12D+A12D/A12D\A12D; | Sprite status = Normal 
+                      STA.W SpriteStatus,X                      ;;A13F|A12F+A12F/A12F\A12F; | 
+                      JSL InitSpriteTables                      ;;A142|A132+A132/A132\A132; | Reset sprite tables 
+                      LDA.B #$D0                                ;;A146|A136+A136/A136\A136; | Set upward speed 
+                      STA.B SpriteYSpeed,X                      ;;A148|A138+A138/A138\A138; | 
                       JSR SubHorzPosBnk2                        ;;A14A|A13A+A13A/A13A\A13A;
                       TYA                                       ;;A14D|A13D+A13D/A13D\A13D;
                       EOR.B #$01                                ;;A14E|A13E+A13E/A13E\A13E;
@@ -4038,7 +4038,7 @@ FireRtNextSprite:     LDY.W TileGenerateTrackA                  ;;A153|A143+A143
                                                                 ;;                        ;
                     + PLX                                       ;;A15C|A14C+A14C/A14C\A14C; $15E9 = Sprite index 
                       STX.W CurSpriteProcess                    ;;A15D|A14D+A14D/A14D\A14D; $15E9 = Sprite index 
-                      RTS                                       ;;A160|A150+A150/A150\A150; Return 
+                      RTS                                       ;;A160|A150+A150/A150\A150;
                                                                 ;;                        ;
                                                                 ;;                        ;
 FireKillSpeedX:       db $F0,$10                                ;;A161|A151+A151/A151\A151;
@@ -4079,7 +4079,7 @@ CODE_02A178:          LDA.W IRQNMICommand                       ;;A188|A178+A178
                       LDA.B #$02                                ;;A1AD|A19D+A19D/A19D\A19D;
                       STA.W OAMTileSize,X                       ;;A1AF|A19F+A19F/A19F\A19F;
                       PLX                                       ;;A1B2|A1A2+A1A2/A1A2\A1A2;
-                      RTS                                       ;;A1B3|A1A3+A1A3/A1A3\A1A3; Return 
+                      RTS                                       ;;A1B3|A1A3+A1A3/A1A3\A1A3;
                                                                 ;;                        ;
 CODE_02A1A4:          LDY.W DATA_02A153,X                       ;;A1B4|A1A4+A1A4/A1A4\A1A4;
 CODE_02A1A7:          LDA.W ExtSpriteXSpeed,X                   ;;A1B7|A1A7+A1A7/A1A7\A1A7;
@@ -4132,11 +4132,11 @@ CODE_02A1A7:          LDA.W ExtSpriteXSpeed,X                   ;;A1B7|A1A7+A1A7
                       LDA.B #$00                                ;;A21A|A208+A208/A208\A208;
                       STA.W OAMTileSize,Y                       ;;A21C|A20A+A20A/A20A\A20A;
                       LDX.W CurSpriteProcess                    ;;A21F|A20D+A20D/A20D\A20D; X = Sprite index 
-                      RTS                                       ;;A222|A210+A210/A210\A210; Return 
+                      RTS                                       ;;A222|A210+A210/A210\A210;
                                                                 ;;                        ;
 CODE_02A211:          LDA.B #$00                                ;;A223|A211+A211/A211\A211; \ Clear extended sprite 
                       STA.W ExtSpriteNumber,X                   ;;A225|A213+A213/A213\A213; / 
-                      RTS                                       ;;A228|A216+A216/A216\A216; Return 
+                      RTS                                       ;;A228|A216+A216/A216\A216;
                                                                 ;;                        ;
                                                                 ;;                        ;
 SmallFlameTiles:      db $AC,$AD                                ;;A229|A217+A217/A217\A217;
@@ -4166,7 +4166,7 @@ CODE_02A22F:          JSR CODE_02A3F6                           ;;A241|A22F+A22F
                       ORA.B #$05                                ;;A25E|A24B+A24B/A24B\A24B;
                       STA.W OAMTileAttr,Y                       ;;A260|A24D+A24D/A24D\A24D;
                       LDX.W CurSpriteProcess                    ;;A263|A250+A250/A250\A250; X = Sprite index 
-Return02A253:         RTS                                       ;;A266|A253+A253/A253\A253; Return 
+Return02A253:         RTS                                       ;;A266|A253+A253/A253\A253;
                                                                 ;;                        ;
 Baseball:             LDA.B SpriteLock                          ;;A267|A254+A254/A254\A254;
                       BNE CODE_02A26A                           ;;A269|A256+A256/A256\A256;
@@ -4218,10 +4218,10 @@ CODE_02A287:          LDY.W DATA_02A153,X                       ;;A29A|A287+A287
                       TAY                                       ;;A2CB|A2B8+A2B8/A2B8\A2B8;
                       LDA.B #$00                                ;;A2CC|A2B9+A2B9/A2B9\A2B9;
                       STA.W OAMTileSize,Y                       ;;A2CE|A2BB+A2BB/A2BB\A2BB;
-Return02A2BE:         RTS                                       ;;A2D1|A2BE+A2BE/A2BE\A2BE; Return 
+Return02A2BE:         RTS                                       ;;A2D1|A2BE+A2BE/A2BE\A2BE;
                                                                 ;;                        ;
 CODE_02A2BF:          STZ.W ExtSpriteNumber,X                   ;;A2D2|A2BF+A2BF/A2BF\A2BF; Clear extended sprite 
-                      RTS                                       ;;A2D5|A2C2+A2C2/A2C2\A2C2; Return 
+                      RTS                                       ;;A2D5|A2C2+A2C2/A2C2\A2C2;
                                                                 ;;                        ;
 CODE_02A2C3:          JSR CODE_02A317                           ;;A2D6|A2C3+A2C3/A2C3\A2C3;
                       LDA.W OAMTileNo,Y                         ;;A2D9|A2C6+A2C6/A2C6\A2C6;
@@ -4234,7 +4234,7 @@ CODE_02A2C3:          JSR CODE_02A317                           ;;A2D6|A2C3+A2C3
                       AND.B #$F1                                ;;A2EA|A2D7+A2D7/A2D7\A2D7;
                       ORA.B #$02                                ;;A2EC|A2D9+A2D9/A2D9\A2D9;
                       STA.W OAMTileAttr,Y                       ;;A2EE|A2DB+A2DB/A2DB\A2DB;
-                      RTS                                       ;;A2F1|A2DE+A2DE/A2DE\A2DE; Return 
+                      RTS                                       ;;A2F1|A2DE+A2DE/A2DE\A2DE;
                                                                 ;;                        ;
                                                                 ;;                        ;
 HammerTiles:          db $08,$6D,$6D,$08,$08,$6D,$6D,$08        ;;A2F2|A2DF+A2DF/A2DF\A2DF;
@@ -4255,7 +4255,7 @@ CODE_02A30C:          LDA.W ExtSpriteNumber,X                   ;;A31F|A30C+A30C
                       CMP.B #$0B                                ;;A322|A30F+A30F/A30F\A30F;
                       BNE CODE_02A317                           ;;A324|A311+A311/A311\A311;
                       JSR CODE_02A178                           ;;A326|A313+A313/A313\A313;
-                      RTS                                       ;;A329|A316+A316/A316\A316; Return 
+                      RTS                                       ;;A329|A316+A316/A316\A316;
                                                                 ;;                        ;
 CODE_02A317:          JSR CODE_02A1A4                           ;;A32A|A317+A317/A317\A317;
                       LDY.W DATA_02A153,X                       ;;A32D|A31A+A31A/A31A\A31A;
@@ -4280,7 +4280,7 @@ CODE_02A317:          JSR CODE_02A1A4                           ;;A32A|A317+A317
                       LDA.B #$02                                ;;A352|A33D+A33D/A33D\A33D;
                       STA.W OAMTileSize,X                       ;;A354|A33F+A33F/A33F\A33F;
                       PLX                                       ;;A357|A342+A342/A342\A342;
-                      RTS                                       ;;A358|A343+A343/A343\A343; Return 
+                      RTS                                       ;;A358|A343+A343/A343\A343;
                                                                 ;;                        ;
                     - JMP CODE_02A211                           ;;A359|A344+A344/A344\A344;
                                                                 ;;                        ;
@@ -4334,7 +4334,7 @@ CODE_02A362:          LDY.W DATA_02A153,X                       ;;A377|A362+A362
                       LDA.B #$02                                ;;A3BC|A3A5+A3A5/A3A5\A3A5;
                       STA.W OAMTileSize,Y                       ;;A3BE|A3A7+A3A7/A3A7\A3A7;
                       LDX.W CurSpriteProcess                    ;;A3C1|A3AA+A3AA/A3AA\A3AA; X = Sprite index 
-                      RTS                                       ;;A3C4|A3AD+A3AD/A3AD\A3AD; Return 
+                      RTS                                       ;;A3C4|A3AD+A3AD/A3AD\A3AD;
                                                                 ;;                        ;
                    if ver_is_japanese(!_VER)          ;\   IF   ;;++++++++++++++++++++++++; J
 CODE_02A3AE:          JML CODE_02A211                           ;;A3C5                    ;
@@ -4376,7 +4376,7 @@ ADDR_02A3B1:          LDY.W DATA_029FA5,X                       ;;A3C9|A3B1+A3B1
                       TAY                                       ;;A409|A3EF+A3EF/A3EF\A3EF;
                       LDA.B #$02                                ;;A40A|A3F0+A3F0/A3F0\A3F0;
                       STA.W OAMTileSize+$40,Y                   ;;A40C|A3F2+A3F2/A3F2\A3F2;
-                      RTS                                       ;;A40F|A3F5+A3F5/A3F5\A3F5; Return 
+                      RTS                                       ;;A40F|A3F5+A3F5/A3F5\A3F5;
                                                                 ;;                        ;
 CODE_02A3F6:          LDA.W PlayerBehindNet                     ;;A410|A3F6+A3F6/A3F6\A3F6;
                       EOR.W ExtSpritePriority,X                 ;;A413|A3F9+A3F9/A3F9\A3F9;
@@ -4420,7 +4420,7 @@ ADDR_02A427:          LDA.B #$05                                ;;A441|A427+A427
                       STA.W ScoreSpriteTimer,Y                  ;;A47A|A460+A460/A460\A460;
                       LDA.B #$00                                ;;A47D|A463+A463/A463\A463;
                       STA.W ScoreSpriteLayer,Y                  ;;A47F|A465+A465/A465\A465;
-Return02A468:         RTS                                       ;;A482|A468+A468/A468\A468; Return 
+Return02A468:         RTS                                       ;;A482|A468+A468/A468\A468;
                                                                 ;;                        ;
 CODE_02A469:          LDA.W InvinsibilityTimer                  ;;A483|A469+A469/A469\A469; \ Branch if Mario has star 
                       BNE CODE_02A4B5                           ;;A486|A46C+A46C/A46C\A46C; / 
@@ -4450,10 +4450,10 @@ CODE_02A473:          PHX                                       ;;A48D|A473+A473
                       LDA.B #$30                                ;;A4C1|A4A7+A4A7/A4A7\A4A7;
                       STA.W IFrameTimer                         ;;A4C3|A4A9+A4A9/A4A9\A4A9;
                       PLX                                       ;;A4C6|A4AC+A4AC/A4AC\A4AC;
-                      RTS                                       ;;A4C7|A4AD+A4AD/A4AD\A4AD; Return 
+                      RTS                                       ;;A4C7|A4AD+A4AD/A4AD\A4AD;
                                                                 ;;                        ;
                     + JSL HurtMario                             ;;A4C8|A4AE+A4AE/A4AE\A4AE;
-                      RTS                                       ;;A4CC|A4B2+A4B2/A4B2\A4B2; Return 
+                      RTS                                       ;;A4CC|A4B2+A4B2/A4B2\A4B2;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02A4B3:          db $10,$F0                                ;;A4CD|A4B3+A4B3/A4B3\A4B3;
@@ -4479,7 +4479,7 @@ CODE_02A4DE:          LDA.B #$07                                ;;A4F8|A4DE+A4DE
 CODE_02A4E0:          STA.W ExtSpriteMisc176F,X                 ;;A4FA|A4E0+A4E0/A4E0\A4E0;
                       LDA.B #$01                                ;;A4FD|A4E3+A4E3/A4E3\A4E3;
                       STA.W ExtSpriteNumber,X                   ;;A4FF|A4E5+A4E5/A4E5\A4E5;
-                      RTS                                       ;;A502|A4E8+A4E8/A4E8\A4E8; Return 
+                      RTS                                       ;;A502|A4E8+A4E8/A4E8\A4E8;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02A4E9:          db $03,$03,$04,$03,$04,$00,$00,$00        ;;A503|A4E9+A4E9/A4E9\A4E9;
@@ -4513,7 +4513,7 @@ CODE_02A519:          LDY.W ExtSpriteNumber,X                   ;;A533|A519+A519
                       STA.B _B                                  ;;A559|A53F+A53F/A53F\A53F;
                       LDA.W DATA_02A50B,Y                       ;;A55B|A541+A541/A541\A541;
                       STA.B _7                                  ;;A55E|A544+A544/A544\A544;
-                      RTS                                       ;;A560|A546+A546/A546\A546; Return 
+                      RTS                                       ;;A560|A546+A546/A546\A546;
                                                                 ;;                        ;
 CODE_02A547:          LDA.W ExtSpriteXPosLow,Y                  ;;A561|A547+A547/A547\A547;
                       SEC                                       ;;A564|A54A+A54A/A54A\A54A;
@@ -4533,7 +4533,7 @@ CODE_02A547:          LDA.W ExtSpriteXPosLow,Y                  ;;A561|A547+A547
                       STA.B _9                                  ;;A581|A567+A567/A567\A567;
                       LDA.B #$13                                ;;A583|A569+A569/A569\A569;
                       STA.B _3                                  ;;A585|A56B+A56B/A56B\A56B;
-                      RTS                                       ;;A587|A56D+A56D/A56D\A56D; Return 
+                      RTS                                       ;;A587|A56D+A56D/A56D\A56D;
                                                                 ;;                        ;
 CODE_02A56E:          STZ.B _F                                  ;;A588|A56E+A56E/A56E\A56E;
                       STZ.B _E                                  ;;A58A|A570+A570/A570\A570;
@@ -4550,7 +4550,7 @@ CODE_02A56E:          STZ.B _F                                  ;;A588|A56E+A56E
                       BEQ CODE_02A5BC                           ;;A5A4|A58A+A58A/A58A\A58A;
                       LDA.W ExtSpriteYPosLow,X                  ;;A5A6|A58C+A58C/A58C\A58C;
                       CMP.B #$A8                                ;;A5A9|A58F+A58F/A58F\A58F;
-                      RTS                                       ;;A5AB|A591+A591/A591\A591; Return 
+                      RTS                                       ;;A5AB|A591+A591/A591\A591;
                                                                 ;;                        ;
 CODE_02A592:          LDA.W ExtSpriteXPosLow,X                  ;;A5AC|A592+A592/A592\A592;
                       CLC                                       ;;A5AF|A595+A595/A595\A595;
@@ -4568,7 +4568,7 @@ CODE_02A592:          LDA.W ExtSpriteXPosLow,X                  ;;A5AC|A592+A592
                       STA.W BrSwingYDist+1                      ;;A5CB|A5B1+A5B1/A5B1\A5B1;
                       JSL CODE_01CC9D                           ;;A5CE|A5B4+A5B4/A5B4\A5B4;
                       LDX.W CurSpriteProcess                    ;;A5D2|A5B8+A5B8/A5B8\A5B8; X = Sprite index 
-                      RTS                                       ;;A5D5|A5BB+A5BB/A5BB\A5BB; Return 
+                      RTS                                       ;;A5D5|A5BB+A5BB/A5BB\A5BB;
                                                                 ;;                        ;
 CODE_02A5BC:          JSR CODE_02A611                           ;;A5D6|A5BC+A5BC/A5BC\A5BC;
                       ROL.B _E                                  ;;A5D9|A5BF+A5BF/A5BF\A5BF;
@@ -4609,7 +4609,7 @@ CODE_02A5BC:          JSR CODE_02A611                           ;;A5D6|A5BC+A5BC
                       STA.W ExtSpriteXPosLow,X                  ;;A623|A609+A609/A609\A609;
                     + LDA.B _E                                  ;;A626|A60C+A60C/A60C\A60C;
                       CMP.B #$01                                ;;A628|A60E+A60E/A60E\A60E;
-                      RTS                                       ;;A62A|A610+A610/A610\A610; Return 
+                      RTS                                       ;;A62A|A610+A610/A610\A610;
                                                                 ;;                        ;
 CODE_02A611:          LDA.B _F                                  ;;A62B|A611+A611/A611\A611;
                       INC A                                     ;;A62D|A613+A613/A613\A613;
@@ -4662,7 +4662,7 @@ CODE_02A611:          LDA.B _F                                  ;;A62B|A611+A611
                       BRA CODE_02A6DB                           ;;A68F|A675+A675/A675\A675;
                                                                 ;;                        ;
 CODE_02A677:          CLC                                       ;;A691|A677+A677/A677\A677;
-                      RTS                                       ;;A692|A678+A678/A678\A678; Return 
+                      RTS                                       ;;A692|A678+A678/A678\A678;
                                                                 ;;                        ;
 CODE_02A679:          LDA.W ExtSpriteYPosLow,X                  ;;A693|A679+A679/A679\A679;
                       CLC                                       ;;A696|A67C+A67C/A67C\A67C;
@@ -4746,17 +4746,17 @@ CODE_02A718:          LDA.B [_5],Y                              ;;A732|A718+A718
                       PLX                                       ;;A73E|A724+A724/A724\A724;
                       STA.B _B                                  ;;A73F|A725+A725/A725\A725;
 CODE_02A727:          SEC                                       ;;A741|A727+A727/A727\A727;
-                      RTS                                       ;;A742|A728+A728/A728\A728; Return 
+                      RTS                                       ;;A742|A728+A728/A728\A728;
                                                                 ;;                        ;
 CODE_02A729:          CLC                                       ;;A743|A729+A729/A729\A729;
-                      RTS                                       ;;A744|A72A+A72A/A72A\A72A; Return 
+                      RTS                                       ;;A744|A72A+A72A/A72A\A72A;
                                                                 ;;                        ;
 CODE_02A72B:          LDA.B TouchBlockYPos                      ;;A745|A72B+A72B/A72B\A72B;
                       AND.B #$0F                                ;;A747|A72D+A72D/A72D\A72D;
                       CMP.B #$06                                ;;A749|A72F+A72F/A72F\A72F;
                       BCS CODE_02A729                           ;;A74B|A731+A731/A731\A731;
                       SEC                                       ;;A74D|A733+A733/A733\A733;
-                      RTS                                       ;;A74E|A734+A734/A734\A734; Return 
+                      RTS                                       ;;A74E|A734+A734/A734\A734;
                                                                 ;;                        ;
 CODE_02A735:          LDA.B TouchBlockYPos                      ;;A74F|A735+A735/A735\A735;
                       AND.B #$0F                                ;;A751|A737+A737/A737\A737;
@@ -4785,7 +4785,7 @@ CODE_02A751:          PHB                                       ;;A76B|A751+A751
                       BNE +                                     ;;A785|A76B+A76B/A76B\A76B;
                       JSL CODE_00FC7A                           ;;A787|A76D+A76D/A76D\A76D;
                     + PLB                                       ;;A78B|A771+A771/A771\A771;
-                      RTL                                       ;;A78C|A772+A772/A772\A772; Return 
+                      RTL                                       ;;A78C|A772+A772/A772\A772;
                                                                 ;;                        ;
                                                                 ;;                        ;
 SpriteSlotMax:        db $09,$05,$07,$07,$07,$06,$07,$06        ;;A78D|A773+A773/A773\A773;
@@ -4821,28 +4821,28 @@ DATA_02A7F6:          db $D0,$00,$20                            ;;A810|A7F6+A7F6
 DATA_02A7F9:          db $FF,$00,$01                            ;;A813|A7F9+A7F9/A7F9\A7F9;
                                                                 ;;                        ;
 LoadSprFromLevel:     LDA.B TrueFrame                           ;;A816|A7FC+A7FC/A7FC\A7FC; \ Return every other frame 
-                      AND.B #$01                                ;;A818|A7FE+A7FE/A7FE\A7FE;  | 
+                      AND.B #$01                                ;;A818|A7FE+A7FE/A7FE\A7FE; | 
                       BNE Return02A84B                          ;;A81A|A800+A800/A800\A800; / 
 CODE_02A802:          LDY.B Layer1ScrollDir                     ;;A81C|A802+A802/A802\A802;
                       LDA.B ScreenMode                          ;;A81E|A804+A804/A804\A804; \ Branch if horizontal level 
-                      LSR A                                     ;;A820|A806+A806/A806\A806;  | 
+                      LSR A                                     ;;A820|A806+A806/A806\A806; | 
                       BCC CODE_02A817                           ;;A821|A807+A807/A807\A807; / 
                       LDA.B Layer1YPos                          ;;A823|A809+A809/A809\A809; \ Vertical level: 
-                      CLC                                       ;;A825|A80B+A80B/A80B\A80B;  | $00,$01 = Screen boundary Y + offset 
-                      ADC.W DATA_02A7F6,Y                       ;;A826|A80C+A80C/A80C\A80C;  | 
-                      AND.B #$F0                                ;;A829|A80F+A80F/A80F\A80F;  | 
-                      STA.B _0                                  ;;A82B|A811+A811/A811\A811;  | 
-                      LDA.B Layer1YPos+1                        ;;A82D|A813+A813/A813\A813;  | 
+                      CLC                                       ;;A825|A80B+A80B/A80B\A80B; | $00,$01 = Screen boundary Y + offset 
+                      ADC.W DATA_02A7F6,Y                       ;;A826|A80C+A80C/A80C\A80C; | 
+                      AND.B #$F0                                ;;A829|A80F+A80F/A80F\A80F; | 
+                      STA.B _0                                  ;;A82B|A811+A811/A811\A811; | 
+                      LDA.B Layer1YPos+1                        ;;A82D|A813+A813/A813\A813; | 
                       BRA +                                     ;;A82F|A815+A815/A815\A815; / 
                                                                 ;;                        ;
 CODE_02A817:          LDA.B Layer1XPos                          ;;A831|A817+A817/A817\A817; \ Horizontal level: 
-                      CLC                                       ;;A833|A819+A819/A819\A819;  | $00,$01 = Screen boundary X + offset 
-                      ADC.W DATA_02A7F6,Y                       ;;A834|A81A+A81A/A81A\A81A;  | 
-                      AND.B #$F0                                ;;A837|A81D+A81D/A81D\A81D;  | 
-                      STA.B _0                                  ;;A839|A81F+A81F/A81F\A81F;  | 
-                      LDA.B Layer1XPos+1                        ;;A83B|A821+A821/A821\A821;  | 
-                    + ADC.W DATA_02A7F9,Y                       ;;A83D|A823+A823/A823\A823;  | 
-                      BMI Return02A84B                          ;;A840|A826+A826/A826\A826;  | 
+                      CLC                                       ;;A833|A819+A819/A819\A819; | $00,$01 = Screen boundary X + offset 
+                      ADC.W DATA_02A7F6,Y                       ;;A834|A81A+A81A/A81A\A81A; | 
+                      AND.B #$F0                                ;;A837|A81D+A81D/A81D\A81D; | 
+                      STA.B _0                                  ;;A839|A81F+A81F/A81F\A81F; | 
+                      LDA.B Layer1XPos+1                        ;;A83B|A821+A821/A821\A821; | 
+                    + ADC.W DATA_02A7F9,Y                       ;;A83D|A823+A823/A823\A823; | 
+                      BMI Return02A84B                          ;;A840|A826+A826/A826\A826; | 
                       STA.B _1                                  ;;A842|A828+A828/A828\A828; / 
                       LDX.B #$00                                ;;A844|A82A+A82A/A82A\A82A; X = #$00 (Number of sprite in level) 
                       LDY.B #$01                                ;;A846|A82C+A82C/A82C\A82C; Y = #$01 (Index into level data) 
@@ -4850,27 +4850,27 @@ LoadSpriteLoopStrt:   LDA.B [SpriteDataPtr],Y                   ;;A848|A82E+A82E
                       CMP.B #$FF                                ;;A84A|A830+A830/A830\A830; \ Return when we encounter $FF, as it signals the end 
                       BEQ Return02A84B                          ;;A84C|A832+A832/A832\A832; / 
                       ASL A                                     ;;A84E|A834+A834/A834\A834; \ If 's' is set, $02 = #$10 
-                      ASL A                                     ;;A84F|A835+A835/A835\A835;  | Else, $02 = #$00 
-                      ASL A                                     ;;A850|A836+A836/A836\A836;  | 
-                      AND.B #$10                                ;;A851|A837+A837/A837\A837;  | 
+                      ASL A                                     ;;A84F|A835+A835/A835\A835; | Else, $02 = #$00 
+                      ASL A                                     ;;A850|A836+A836/A836\A836; | 
+                      AND.B #$10                                ;;A851|A837+A837/A837\A837; | 
                       STA.B _2                                  ;;A853|A839+A839/A839\A839; / 
                       INY                                       ;;A855|A83B+A83B/A83B\A83B; Next byte 
                       LDA.B [SpriteDataPtr],Y                   ;;A856|A83C+A83C/A83C\A83C; Byte format: XXXXSSSS 
                       AND.B #$0F                                ;;A858|A83E+A83E/A83E\A83E; \ Skip all sprites until we find one at the adjusted screen boundary: 
-                      ORA.B _2                                  ;;A85A|A840+A840/A840\A840;  | 
-                      CMP.B _1                                  ;;A85C|A842+A842/A842\A842;  | If sprite screen (sSSSS) < adjusted screen boundary... 
+                      ORA.B _2                                  ;;A85A|A840+A840/A840\A840; | 
+                      CMP.B _1                                  ;;A85C|A842+A842/A842\A842; | If sprite screen (sSSSS) < adjusted screen boundary... 
                       BCS CODE_02A84C                           ;;A85E|A844+A844/A844\A844; / ...skip the sprite 
 LoadNextSprite:       INY                                       ;;A860|A846+A846/A846\A846; \ Move on to the next sprite 
-                      INY                                       ;;A861|A847+A847/A847\A847;  | 
-                      INX                                       ;;A862|A848+A848/A848\A848;  | 
+                      INY                                       ;;A861|A847+A847/A847\A847; | 
+                      INX                                       ;;A862|A848+A848/A848\A848; | 
                       BRA LoadSpriteLoopStrt                    ;;A863|A849+A849/A849\A849; / 
                                                                 ;;                        ;
-Return02A84B:         RTS                                       ;;A865|A84B+A84B/A84B\A84B; Return 
+Return02A84B:         RTS                                       ;;A865|A84B+A84B/A84B\A84B;
                                                                 ;;                        ;
 CODE_02A84C:          BNE Return02A84B                          ;;A866|A84C+A84C/A84C\A84C; Return if sprite screen > adjusted screen boundary 
                       LDA.B [SpriteDataPtr],Y                   ;;A868|A84E+A84E/A84E\A84E; Byte format: XXXXSSSS 
                       AND.B #$F0                                ;;A86A|A850+A850/A850\A850; \ Skip sprite if not right at the screen boundary 
-                      CMP.B _0                                  ;;A86C|A852+A852/A852\A852;  | 
+                      CMP.B _0                                  ;;A86C|A852+A852/A852\A852; | 
                       BNE LoadNextSprite                        ;;A86E|A854+A854/A854\A854; / 
                       LDA.W SpriteLoadStatus,X                  ;;A870|A856+A856/A856\A856; \ This table has a flag for every sprite in the level (not just those onscreen) 
                       BNE LoadNextSprite                        ;;A873|A859+A859/A859\A859; / Skip sprite if it's already been loaded/permanently killed 
@@ -4888,8 +4888,8 @@ CODE_02A84C:          BNE Return02A84B                          ;;A866|A84C+A84C
                       PHY                                       ;;A88C|A872+A872/A872\A872;
                       PHX                                       ;;A88D|A873+A873/A873\A873;
                       LDA.B _5                                  ;;A88E|A874+A874/A874\A874; \ $143E = Type of scroll sprite 
-                      SEC                                       ;;A890|A876+A876/A876\A876;  | (Sprite number - #$E7) 
-                      SBC.B #$E7                                ;;A891|A877+A877/A877\A877;  | 
+                      SEC                                       ;;A890|A876+A876/A876\A876; | (Sprite number - #$E7) 
+                      SBC.B #$E7                                ;;A891|A877+A877/A877\A877; | 
                       STA.W Layer1ScrollCmd                     ;;A893|A879+A879/A879\A879; / 
                       DEY                                       ;;A896|A87C+A87C/A87C\A87C; Previous byte 
                       LDA.B [SpriteDataPtr],Y                   ;;A897|A87D+A87D/A87D\A87D; Byte format: YYYYEEsy 
@@ -4928,8 +4928,8 @@ CODE_02A8AC:          CMP.B #$CB                                ;;A8C6|A8AC+A8AC
                       CMP.B #$DA                                ;;A8CA|A8B0+A8B0/A8B0\A8B0; \ Branch if sprite number >= #$DA 
                       BCS CODE_02A8C0                           ;;A8CC|A8B2+A8B2/A8B2\A8B2; / 
                       SEC                                       ;;A8CE|A8B4+A8B4/A8B4\A8B4; \ $18B9 = Type of generator 
-                      SBC.B #$CB                                ;;A8CF|A8B5+A8B5/A8B5\A8B5;  | (Sprite number - #$CA) 
-                      INC A                                     ;;A8D1|A8B7+A8B7/A8B7\A8B7;  | 
+                      SBC.B #$CB                                ;;A8CF|A8B5+A8B5/A8B5\A8B5; | (Sprite number - #$CA) 
+                      INC A                                     ;;A8D1|A8B7+A8B7/A8B7\A8B7; | 
                       STA.W CurrentGenerator                    ;;A8D2|A8B8+A8B8/A8B8\A8B8; / 
                       STZ.W SpriteLoadStatus,X                  ;;A8D5|A8BB+A8BB/A8BB\A8BB; Allow sprite to be reloaded by level loading routine 
                       BRA CODE_02A89A                           ;;A8D8|A8BE+A8BE/A8BE\A8BE;
@@ -4996,35 +4996,35 @@ ADDR_02A92A:          LDA.W SpriteTweakerD,X                    ;;A944|A92A+A92A
                       BNE ADDR_02A92A                           ;;A94E|A934+A934/A934\A934;
 CODE_02A936:          LDX.B _2                                  ;;A950|A936+A936/A936\A936;
                       STZ.W SpriteLoadStatus,X                  ;;A952|A938+A938/A938\A938; Allow sprite to be reloaded by level loading routine 
-                      RTS                                       ;;A955|A93B+A93B/A93B\A93B; Return 
+                      RTS                                       ;;A955|A93B+A93B/A93B\A93B;
                                                                 ;;                        ;
 CODE_02A93C:          LDY.B _3                                  ;;A956|A93C+A93C/A93C\A93C;
                       LDA.B ScreenMode                          ;;A958|A93E+A93E/A93E\A93E; \ Branch if horizontal level 
-                      LSR A                                     ;;A95A|A940+A940/A940\A940;  | 
+                      LSR A                                     ;;A95A|A940+A940/A940\A940; | 
                       BCC CODE_02A95B                           ;;A95B|A941+A941/A941\A941; / 
                       LDA.B [SpriteDataPtr],Y                   ;;A95D|A943+A943/A943\A943; \ Vertical level: 
-                      PHA                                       ;;A95F|A945+A945/A945\A945;  | Same as below with X and Y coords swapped 
-                      AND.B #$F0                                ;;A960|A946+A946/A946\A946;  | 
-                      STA.B SpriteXPosLow,X                     ;;A962|A948+A948/A948\A948;  | 
-                      PLA                                       ;;A964|A94A+A94A/A94A\A94A;  | 
-                      AND.B #$0D                                ;;A965|A94B+A94B/A94B\A94B;  | 
-                      STA.W SpriteYPosHigh,X                    ;;A967|A94D+A94D/A94D\A94D;  | 
-                      LDA.B _0                                  ;;A96A|A950+A950/A950\A950;  | 
-                      STA.B SpriteYPosLow,X                     ;;A96C|A952+A952/A952\A952;  | 
-                      LDA.B _1                                  ;;A96E|A954+A954/A954\A954;  | 
-                      STA.W SpriteXPosHigh,X                    ;;A970|A956+A956/A956\A956;  | 
+                      PHA                                       ;;A95F|A945+A945/A945\A945; | Same as below with X and Y coords swapped 
+                      AND.B #$F0                                ;;A960|A946+A946/A946\A946; | 
+                      STA.B SpriteXPosLow,X                     ;;A962|A948+A948/A948\A948; | 
+                      PLA                                       ;;A964|A94A+A94A/A94A\A94A; | 
+                      AND.B #$0D                                ;;A965|A94B+A94B/A94B\A94B; | 
+                      STA.W SpriteYPosHigh,X                    ;;A967|A94D+A94D/A94D\A94D; | 
+                      LDA.B _0                                  ;;A96A|A950+A950/A950\A950; | 
+                      STA.B SpriteYPosLow,X                     ;;A96C|A952+A952/A952\A952; | 
+                      LDA.B _1                                  ;;A96E|A954+A954/A954\A954; | 
+                      STA.W SpriteXPosHigh,X                    ;;A970|A956+A956/A956\A956; | 
                       BRA +                                     ;;A973|A959+A959/A959\A959; / 
                                                                 ;;                        ;
 CODE_02A95B:          LDA.B [SpriteDataPtr],Y                   ;;A975|A95B+A95B/A95B\A95B; Byte format: YYYYEEsy 
                       PHA                                       ;;A977|A95D+A95D/A95D\A95D; \ Bits 11110000 are low byte of Y position 
-                      AND.B #$F0                                ;;A978|A95E+A95E/A95E\A95E;  | 
+                      AND.B #$F0                                ;;A978|A95E+A95E/A95E\A95E; | 
                       STA.B SpriteYPosLow,X                     ;;A97A|A960+A960/A960\A960; / 
                       PLA                                       ;;A97C|A962+A962/A962\A962; \ Bits 00001101 are high byte of Y position 
-                      AND.B #$0D                                ;;A97D|A963+A963/A963\A963;  | (Extra bits are stored in Y position) 
+                      AND.B #$0D                                ;;A97D|A963+A963/A963\A963; | (Extra bits are stored in Y position) 
                       STA.W SpriteXPosHigh,X                    ;;A97F|A965+A965/A965\A965; / 
                       LDA.B _0                                  ;;A982|A968+A968/A968\A968; \ X position = adjusted screen boundary 
-                      STA.B SpriteXPosLow,X                     ;;A984|A96A+A96A/A96A\A96A;  | 
-                      LDA.B _1                                  ;;A986|A96C+A96C/A96C\A96C;  | 
+                      STA.B SpriteXPosLow,X                     ;;A984|A96A+A96A/A96A\A96A; | 
+                      LDA.B _1                                  ;;A986|A96C+A96C/A96C\A96C; | 
                       STA.W SpriteYPosHigh,X                    ;;A988|A96E+A96E/A96E\A96E; / 
                     + INY                                       ;;A98B|A971+A971/A971\A971;
                       INY                                       ;;A98C|A972+A972/A972\A972;
@@ -5081,7 +5081,7 @@ CODE_02A9C9:          JSL InitSpriteTables                      ;;A9E3|A9C9+A9C9
                       JMP LoadSpriteLoopStrt                    ;;A9F5|A9DB+A9DB/A9DB\A9DB;
                                                                 ;;                        ;
 FindFreeSlotLowPri:   LDA.B #$02                                ;;A9F8|A9DE+A9DE/A9DE\A9DE; \ Number of slots to leave free = 2 
-                      STA.B _E                                  ;;A9FA|A9E0+A9E0/A9E0\A9E0;  | 
+                      STA.B _E                                  ;;A9FA|A9E0+A9E0/A9E0\A9E0; | 
                       BRA +                                     ;;A9FC|A9E2+A9E2/A9E2\A9E2; / 
                                                                 ;;                        ;
 FindFreeSprSlot:      STZ.B _E                                  ;;A9FE|A9E4+A9E4/A9E4\A9E4; Number of slots tp leave free = 0 
@@ -5091,21 +5091,21 @@ FindFreeSprSlot:      STZ.B _E                                  ;;A9FE|A9E4+A9E4
                       JSR FindFreeSlotRt                        ;;AA03|A9E9+A9E9/A9E9\A9E9;
                       PLB                                       ;;AA06|A9EC+A9EC/A9EC\A9EC;
                       TYA                                       ;;AA07|A9ED+A9ED/A9ED\A9ED;
-                      RTL                                       ;;AA08|A9EE+A9EE/A9EE\A9EE; Return 
+                      RTL                                       ;;AA08|A9EE+A9EE/A9EE\A9EE;
                                                                 ;;                        ;
 FindFreeSlotRt:       LDY.W SpriteMemorySetting                 ;;AA09|A9EF+A9EF/A9EF\A9EF; \ Subroutine: Return the first free sprite slot in Y (#$FF if not found) 
-                      LDA.W SpriteSlotStart,Y                   ;;AA0C|A9F2+A9F2/A9F2\A9F2;  | Y = Sprite memory index 
-                      STA.B _F                                  ;;AA0F|A9F5+A9F5/A9F5\A9F5;  | 
-                      LDA.W SpriteSlotMax,Y                     ;;AA11|A9F7+A9F7/A9F7\A9F7;  | 
-                      SEC                                       ;;AA14|A9FA+A9FA/A9FA\A9FA;  | 
-                      SBC.B _E                                  ;;AA15|A9FB+A9FB/A9FB\A9FB;  | 
-                      TAY                                       ;;AA17|A9FD+A9FD/A9FD\A9FD;  | 
-CODE_02A9FE:          LDA.W SpriteStatus,Y                      ;;AA18|A9FE+A9FE/A9FE\A9FE;  | If free slot... 
-                      BEQ Return02AA0A                          ;;AA1B|AA01+AA01/AA01\AA01;  |  ...return 
-                      DEY                                       ;;AA1D|AA03+AA03/AA03\AA03;  | 
-                      CPY.B _F                                  ;;AA1E|AA04+AA04/AA04\AA04;  | 
-                      BNE CODE_02A9FE                           ;;AA20|AA06+AA06/AA06\AA06;  | 
-                      LDY.B #$FF                                ;;AA22|AA08+AA08/AA08\AA08;  | If no free slots, Y=#$FF 
+                      LDA.W SpriteSlotStart,Y                   ;;AA0C|A9F2+A9F2/A9F2\A9F2; | Y = Sprite memory index 
+                      STA.B _F                                  ;;AA0F|A9F5+A9F5/A9F5\A9F5; | 
+                      LDA.W SpriteSlotMax,Y                     ;;AA11|A9F7+A9F7/A9F7\A9F7; | 
+                      SEC                                       ;;AA14|A9FA+A9FA/A9FA\A9FA; | 
+                      SBC.B _E                                  ;;AA15|A9FB+A9FB/A9FB\A9FB; | 
+                      TAY                                       ;;AA17|A9FD+A9FD/A9FD\A9FD; | 
+CODE_02A9FE:          LDA.W SpriteStatus,Y                      ;;AA18|A9FE+A9FE/A9FE\A9FE; | If free slot... 
+                      BEQ Return02AA0A                          ;;AA1B|AA01+AA01/AA01\AA01; |  ...return 
+                      DEY                                       ;;AA1D|AA03+AA03/AA03\AA03; | 
+                      CPY.B _F                                  ;;AA1E|AA04+AA04/AA04\AA04; | 
+                      BNE CODE_02A9FE                           ;;AA20|AA06+AA06/AA06\AA06; | 
+                      LDY.B #$FF                                ;;AA22|AA08+AA08/AA08\AA08; | If no free slots, Y=#$FF 
 Return02AA0A:         RTS                                       ;;AA24|AA0A+AA0A/AA0A\AA0A; / 
                                                                 ;;                        ;
                                                                 ;;                        ;
@@ -5118,7 +5118,7 @@ DATA_02AA1F:          db $01,$51,$91,$D1,$22,$62,$A2,$73        ;;AA39|AA1F+AA1F
                       db $8C,$CC,$FC,$5D                        ;;AA49|AA2F+AA2F/AA2F\AA2F;
                                                                 ;;                        ;
 CODE_02AA33:          LDX.B #$0E                                ;;AA4D|AA33+AA33/AA33\AA33; \ Unreachable 
-                    - STZ.W ClusterSpriteMisc1E66,X             ;;AA4F|AA35+AA35/AA35\AA35;  | Loop X = 00 to 0E 
+                    - STZ.W ClusterSpriteMisc1E66,X             ;;AA4F|AA35+AA35/AA35\AA35; | Loop X = 00 to 0E 
                       STZ.W ClusterSpriteMisc0F86,X             ;;AA52|AA38+AA38/AA38\AA38;
                       LDA.B #$08                                ;;AA55|AA3B+AA3B/AA3B\AA3B;
                       STA.W ClusterSpriteNumber,X               ;;AA57|AA3D+AA3D/AA3D\AA3D;
@@ -5140,7 +5140,7 @@ CODE_02AA33:          LDX.B #$0E                                ;;AA4D|AA33+AA33
                       STA.W ClusterSpriteYPosHigh,X             ;;AA7B|AA61+AA61/AA61\AA61;
                       DEX                                       ;;AA7E|AA64+AA64/AA64\AA64;
                       BPL -                                     ;;AA7F|AA65+AA65/AA65\AA65;
-                      RTS                                       ;;AA81|AA67+AA67/AA67\AA67; / Return 
+                      RTS                                       ;;AA81|AA67+AA67/AA67\AA67; / 
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02AA68:          db $50,$90,$D0,$10                        ;;AA82|AA68+AA68/AA68\AA68;
@@ -5160,7 +5160,7 @@ CODE_02AA6C:          LDA.B #$07                                ;;AA86|AA6C+AA6C
                       STA.W ClusterSpriteMisc0F4A,X             ;;AAA1|AA86+AA86/AA86\AA86;
                       DEX                                       ;;AAA4|AA89+AA89/AA89\AA89;
                       BPL -                                     ;;AAA5|AA8A+AA8A/AA8A\AA8A;
-                      RTS                                       ;;AAA7|AA8C+AA8C/AA8C\AA8C; Return 
+                      RTS                                       ;;AAA7|AA8C+AA8C/AA8C\AA8C;
                                                                 ;;                        ;
 CODE_02AA8D:          STZ.W BooCloudTimer                       ;;AAA8|AA8D+AA8D/AA8D\AA8D;
                       LDX.B #$13                                ;;AAAB|AA90+AA90/AA90\AA90;
@@ -5188,7 +5188,7 @@ CODE_02AA8D:          STZ.W BooCloudTimer                       ;;AAA8|AA8D+AA8D
                       STA.W ClusterSpriteMisc1E7A,X             ;;AAD1|AAB6+AAB6/AAB6\AAB6;
                       DEX                                       ;;AAD4|AAB9+AAB9/AAB9\AAB9;
                       BPL -                                     ;;AAD5|AABA+AABA/AABA\AABA;
-                      RTS                                       ;;AAD7|AABC+AABC/AABC\AABC; Return 
+                      RTS                                       ;;AAD7|AABC+AABC/AABC\AABC;
                                                                 ;;                        ;
                     - JMP CODE_02AA33                           ;;AAD8|AABD+AABD/AABD\AABD;
                                                                 ;;                        ;
@@ -5227,7 +5227,7 @@ CODE_02AAC0:          LDY.B #$01                                ;;AADB|AAC0+AAC0
                       DEX                                       ;;AB25|AB0A+AB0A/AB0A\AB0A;
                       BPL -                                     ;;AB26|AB0B+AB0B/AB0B\AB0B;
                       INC.W BooRingIndex                        ;;AB28|AB0D+AB0D/AB0D\AB0D;
-                      RTS                                       ;;AB2B|AB10+AB10/AB10\AB10; Return 
+                      RTS                                       ;;AB2B|AB10+AB10/AB10\AB10;
                                                                 ;;                        ;
 CODE_02AB11:          LDY.W BooRingIndex                        ;;AB2C|AB11+AB11/AB11\AB11;
                       CPY.B #$02                                ;;AB2F|AB14+AB14/AB14\AB14;
@@ -5274,7 +5274,7 @@ CODE_02AB28:          LDA.W ClusterSpriteNumber,X               ;;AB43|AB28+AB28
 CODE_02AB71:          DEX                                       ;;AB8C|AB71+AB71/AB71\AB71;
                       BPL CODE_02AB28                           ;;AB8D|AB72+AB72/AB72\AB72;
 CODE_02AB74:          INC.W BooRingIndex                        ;;AB8F|AB74+AB74/AB74\AB74;
-Return02AB77:         RTS                                       ;;AB92|AB77+AB77/AB77\AB77; Return 
+Return02AB77:         RTS                                       ;;AB92|AB77+AB77/AB77\AB77;
                                                                 ;;                        ;
 LoadShooter:          STX.B _2                                  ;;AB93|AB78+AB78/AB78\AB78;
                       DEY                                       ;;AB95|AB7A+AB7A/AB7A\AB7A;
@@ -5375,15 +5375,15 @@ CODE_02AC11:          STX.B _0                                  ;;AC2C|AC11+AC11
                       JSL InitSpriteTables                      ;;AC5B|AC40+AC40/AC40\AC40;
                       PLA                                       ;;AC5F|AC44+AC44/AC44\AC44;
                       STA.W SpriteOBJAttribute                  ;;AC60|AC45+AC45/AC45\AC45;
-                    + REP #$10                                  ;;AC63|AC48+AC48/AC48\AC48; Index (16 bit) 
+                    + REP #$10                                  ;;AC63|AC48+AC48/AC48\AC48; XY->16 
                       LDX.W #$027A                              ;;AC65|AC4A+AC4A/AC4A\AC4A;
                     - STZ.W Map16TileNumber,X                   ;;AC68|AC4D+AC4D/AC4D\AC4D; clear ram before entering new stage/area 
                       DEX                                       ;;AC6B|AC50+AC50/AC50\AC50;
                       BPL -                                     ;;AC6C|AC51+AC51/AC51\AC51;
-                      SEP #$10                                  ;;AC6E|AC53+AC53/AC53\AC53; Index (8 bit) 
+                      SEP #$10                                  ;;AC6E|AC53+AC53/AC53\AC53; XY->8
                       STZ.W Layer1ScrollCmd                     ;;AC70|AC55+AC55/AC55\AC55;
                       STZ.W Layer2ScrollCmd                     ;;AC73|AC58+AC58/AC58\AC58;
-                      RTS                                       ;;AC76|AC5B+AC5B/AC5B\AC5B; Return 
+                      RTS                                       ;;AC76|AC5B+AC5B/AC5B\AC5B;
                                                                 ;;                        ;
 CODE_02AC5C:          LDA.B ScreenMode                          ;;AC77|AC5C+AC5C/AC5C\AC5C;
                       LSR A                                     ;;AC79|AC5E+AC5E/AC5E\AC5E;
@@ -5421,7 +5421,7 @@ CODE_02AC5C:          LDA.B ScreenMode                          ;;AC77|AC5C+AC5C
                       STA.B Layer1YPos                          ;;ACB6|AC9B+AC9B/AC9B\AC9B;
                       PLA                                       ;;ACB8|AC9D+AC9D/AC9D\AC9D;
                       STA.B Layer1ScrollDir                     ;;ACB9|AC9E+AC9E/AC9E\AC9E;
-                      RTS                                       ;;ACBB|ACA0+ACA0/ACA0\ACA0; Return 
+                      RTS                                       ;;ACBB|ACA0+ACA0/ACA0\ACA0;
                                                                 ;;                        ;
 CODE_02ACA1:          LDA.B Layer1ScrollDir                     ;;ACBC|ACA1+ACA1/ACA1\ACA1;
                       PHA                                       ;;ACBE|ACA3+ACA3/ACA3\ACA3;
@@ -5456,7 +5456,7 @@ CODE_02ACA1:          LDA.B Layer1ScrollDir                     ;;ACBC|ACA1+ACA1
                       STA.B Layer1XPos                          ;;ACF6|ACDB+ACDB/ACDB\ACDB;
                       PLA                                       ;;ACF8|ACDD+ACDD/ACDD\ACDD;
                       STA.B Layer1ScrollDir                     ;;ACF9|ACDE+ACDE/ACDE\ACDE;
-                      RTS                                       ;;ACFB|ACE0+ACE0/ACE0\ACE0; Return 
+                      RTS                                       ;;ACFB|ACE0+ACE0/ACE0\ACE0;
                                                                 ;;                        ;
 CODE_02ACE1:          PHX                                       ;;ACFC|ACE1+ACE1/ACE1\ACE1;
                       TYX                                       ;;ACFD|ACE2+ACE2/ACE2\ACE2;
@@ -5467,7 +5467,7 @@ GivePoints:           PHX                                       ;;AD00|ACE5+ACE5
                       ADC.B #$05                                ;;AD02|ACE7+ACE7/ACE7\ACE7; Add 5 to sprite type (200,400,1up) 
                       JSL CODE_02ACEF                           ;;AD04|ACE9+ACE9/ACE9\ACE9; Set score sprite type/initial position 
                       PLX                                       ;;AD08|ACED+ACED/ACED\ACED;
-                      RTL                                       ;;AD09|ACEE+ACEE/ACEE\ACEE; Return 
+                      RTL                                       ;;AD09|ACEE+ACEE/ACEE\ACEE;
                                                                 ;;                        ;
 CODE_02ACEF:          PHY                                       ;;AD0A|ACEF+ACEF/ACEF\ACEF;  - note coordinates are level coords, not screen 
                       PHA                                       ;;AD0B|ACF0+ACF0/ACF0\ACF0;    sprite type 1=10,2=20,3=40,4=80,5=100,6=200,7=400,8=800,9=1000,A=2000,B=4000,C=8000,D=1up 
@@ -5500,7 +5500,7 @@ CODE_02ACEF:          PHY                                       ;;AD0A|ACEF+ACEF
                       LDA.B #$30                                ;;AD48|AD2D+AD2D/AD2D\AD2D; \ 
                       STA.W ScoreSpriteTimer,Y                  ;;AD4A|AD2F+AD2F/AD2F\AD2F; /scoreSpriteSpeed = #$30 
                       PLY                                       ;;AD4D|AD32+AD32/AD32\AD32;
-                      RTL                                       ;;AD4E|AD33+AD33/AD33\AD33; Return 
+                      RTL                                       ;;AD4E|AD33+AD33/AD33\AD33;
                                                                 ;;                        ;
 CODE_02AD34:          LDY.B #$05                                ;;AD4F|AD34+AD34/AD34\AD34; (here css is used to index through the table of score sprites in table at $16E1 
 CODE_02AD36:          LDA.W ScoreSpriteNumber,Y                 ;;AD51|AD36+AD36/AD36\AD36; for (css=5;css>=0;css--){ 
@@ -5512,7 +5512,7 @@ CODE_02AD36:          LDA.W ScoreSpriteNumber,Y                 ;;AD51|AD36+AD36
                       LDA.B #$05                                ;;AD5E|AD43+AD43/AD43\AD43;   $18f7=5; 
                       STA.W ScoreSpriteSlotIdx                  ;;AD60|AD45+AD45/AD45\AD45;
                     + LDY.W ScoreSpriteSlotIdx                  ;;AD63|AD48+AD48/AD48\AD48; return $18f7 in Y; 
-Return02AD4B:         RTL                                       ;;AD66|AD4B+AD4B/AD4B\AD4B; Return 
+Return02AD4B:         RTL                                       ;;AD66|AD4B+AD4B/AD4B\AD4B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 PointTile1:           db $00,$83,$83,$83,$83,$44,$54,$46        ;;AD67|AD4C+AD4C/AD4C\AD4C;
@@ -5550,7 +5550,7 @@ CODE_02ADBA:          STX.W CurSpriteProcess                    ;;ADD5|ADBA+ADBA
                       JSR CODE_02ADC9                           ;;ADDD|ADC2+ADC2/ADC2\ADC2;
                     + DEX                                       ;;ADE0|ADC5+ADC5/ADC5\ADC5;
                       BPL CODE_02ADBA                           ;;ADE1|ADC6+ADC6/ADC6\ADC6;
-Return02ADC8:         RTS                                       ;;ADE3|ADC8+ADC8/ADC8\ADC8; Return 
+Return02ADC8:         RTS                                       ;;ADE3|ADC8+ADC8/ADC8\ADC8;
                                                                 ;;                        ;
 CODE_02ADC9:          LDA.B SpriteLock                          ;;ADE4|ADC9+ADC9/ADC9\ADC9;
                       BEQ +                                     ;;ADE6|ADCB+ADCB/ADCB\ADCB;
@@ -5558,7 +5558,7 @@ CODE_02ADC9:          LDA.B SpriteLock                          ;;ADE4|ADC9+ADC9
                     + LDA.W ScoreSpriteTimer,X                  ;;ADEB|ADD0+ADD0/ADD0\ADD0;
                       BNE +                                     ;;ADEE|ADD3+ADD3/ADD3\ADD3;
                       STZ.W ScoreSpriteNumber,X                 ;;ADF0|ADD5+ADD5/ADD5\ADD5;
-                      RTS                                       ;;ADF3|ADD8+ADD8/ADD8\ADD8; Return 
+                      RTS                                       ;;ADF3|ADD8+ADD8/ADD8\ADD8;
                                                                 ;;                        ;
 DATA_02ADD9:          db $01,$02,$03,$05,$05,$0A,$0F,$14        ;;ADF4|ADD9+ADD9/ADD9\ADD9;
                       db $19                                    ;;ADFC|ADE1+ADE1/ADE1\ADE1;
@@ -5626,12 +5626,12 @@ CODE_02AE5B:          LDA.W ScoreSpriteLayer,X                  ;;AE76|AE5B+AE5B
                       ASL A                                     ;;AE79|AE5E+AE5E/AE5E\AE5E;
                       ASL A                                     ;;AE7A|AE5F+AE5F/AE5F\AE5F;
                       TAY                                       ;;AE7B|AE60+AE60/AE60\AE60;
-                      REP #$20                                  ;;AE7C|AE61+AE61/AE61\AE61; Accum (16 bit) 
+                      REP #$20                                  ;;AE7C|AE61+AE61/AE61\AE61; A->16
                       LDA.W Layer1YPos,Y                        ;;AE7E|AE63+AE63/AE63\AE63;
                       STA.B _2                                  ;;AE81|AE66+AE66/AE66\AE66;
                       LDA.W Layer1XPos,Y                        ;;AE83|AE68+AE68/AE68\AE68;
                       STA.B _4                                  ;;AE86|AE6B+AE6B/AE6B\AE6B;
-                      SEP #$20                                  ;;AE88|AE6D+AE6D/AE6D\AE6D; Accum (8 bit) 
+                      SEP #$20                                  ;;AE88|AE6D+AE6D/AE6D\AE6D; A->8
                       LDA.W ScoreSpriteXPosLow,X                ;;AE8A|AE6F+AE6F/AE6F\AE6F;
                       CLC                                       ;;AE8D|AE72+AE72/AE72\AE72;
                       ADC.B #$0C                                ;;AE8E|AE73+AE73/AE73\AE73;
@@ -5697,7 +5697,7 @@ CODE_02AE5B:          LDA.W ScoreSpriteLayer,X                  ;;AE76|AE5B+AE5B
                       LDA.W ScoreSpriteNumber,X                 ;;AF11|AEF4+AEF4/AEF4\AEF4;
                       CMP.B #$11                                ;;AF14|AEF7+AEF7/AEF7\AEF7;
                       BCS +                                     ;;AF16|AEF9+AEF9/AEF9\AEF9;
-Return02AEFB:         RTS                                       ;;AF18|AEFB+AEFB/AEFB\AEFB; Return 
+Return02AEFB:         RTS                                       ;;AF18|AEFB+AEFB/AEFB\AEFB;
                                                                 ;;                        ;
                     + LDY.B #$4C                                ;;AF19|AEFC+AEFC/AEFC\AEFC;
                       LDA.W ScoreSpriteXPosLow,X                ;;AF1B|AEFE+AEFE/AEFE\AEFE;
@@ -5721,7 +5721,7 @@ Return02AEFB:         RTS                                       ;;AF18|AEFB+AEFB
                       TAY                                       ;;AF3F|AF22+AF22/AF22\AF22;
                       LDA.B #$00                                ;;AF40|AF23+AF23/AF23\AF23;
                       STA.W OAMTileSize,Y                       ;;AF42|AF25+AF25/AF25\AF25;
-                      RTS                                       ;;AF45|AF28+AF28/AF28\AF28; Return 
+                      RTS                                       ;;AF45|AF28+AF28/AF28\AF28;
                                                                 ;;                        ;
                       STZ.W ScoreSpriteNumber,X                 ;;AF46|AF29+AF29/AF29\AF29; \ Unreachable 
                       RTS                                       ;;AF49|AF2C+AF2C/AF2C\AF2C; / 
@@ -5768,7 +5768,7 @@ CODE_02AF45:          JSL FindFreeSprSlot                       ;;AF62|AF45+AF45
                       STA.W SpriteLoadIndex,X                   ;;AF9C|AF7F+AF7F/AF7F\AF7F;
                     + DEC.B _4                                  ;;AF9F|AF82+AF82/AF82\AF82;
                       BPL CODE_02AF45                           ;;AFA1|AF84+AF84/AF84\AF84;
-Return02AF86:         RTS                                       ;;AFA3|AF86+AF86/AF86\AF86; Return 
+Return02AF86:         RTS                                       ;;AFA3|AF86+AF86/AF86\AF86;
                                                                 ;;                        ;
                                                                 ;;                        ;
 EerieGroupDispXLo:    db $E0,$F0,$00,$10,$20                    ;;AFA4|AF87+AF87/AF87\AF87;
@@ -5824,7 +5824,7 @@ CODE_02AFAF:          JSL FindFreeSprSlot                       ;;AFCC|AFAF+AFAF
                       STA.B SpriteXSpeed,X                      ;;B014|AFF7+AFF7/AFF7\AFF7;
                       DEC.B _4                                  ;;B016|AFF9+AFF9/AFF9\AFF9;
                       BPL CODE_02AFAF                           ;;B018|AFFB+AFFB/AFFB\AFFB;
-Return02AFFD:         RTS                                       ;;B01A|AFFD+AFFD/AFFD\AFFD; Return 
+Return02AFFD:         RTS                                       ;;B01A|AFFD+AFFD/AFFD\AFFD;
                                                                 ;;                        ;
 CallGenerator:        LDA.W CurrentGenerator                    ;;B01B|AFFE+AFFE/AFFE\AFFE;
                       BEQ +                                     ;;B01E|B001+B001/B001\B001;
@@ -5849,14 +5849,14 @@ CallGenerator:        LDA.W CurrentGenerator                    ;;B01B|AFFE+AFFE
                       dw GenerateFire                           ;;B043|B026+B026/B026\B026; 0D - Bowser statue fire breath, generator      
                       dw TurnOffGenerators                      ;;B045|B028+B028/B028\B028; 0E - Turn off standard generators              
                                                                 ;;                        ;
-                    + RTS                                       ;;B047|B02A+B02A/B02A\B02A; Return 
+                    + RTS                                       ;;B047|B02A+B02A/B02A\B02A;
                                                                 ;;                        ;
 TurnOffGen2:          INC.W SpriteWillAppear                    ;;B048|B02B+B02B/B02B\B02B;
                       STZ.W SpriteRespawnTimer                  ;;B04B|B02E+B02E/B02E\B02E; Don't respawn any sprites 
-                      RTS                                       ;;B04E|B031+B031/B031\B031; Return 
+                      RTS                                       ;;B04E|B031+B031/B031\B031;
                                                                 ;;                        ;
 TurnOffGenerators:    STZ.W CurrentGenerator                    ;;B04F|B032+B032/B032\B032;
-                      RTS                                       ;;B052|B035+B035/B035\B035; Return 
+                      RTS                                       ;;B052|B035+B035/B035\B035;
                                                                 ;;                        ;
 GenerateFire:         LDA.B EffFrame                            ;;B053|B036+B036/B036\B036;
                       AND.B #$7F                                ;;B055|B038+B038/B038\B038;
@@ -5888,10 +5888,10 @@ GenerateFire:         LDA.B EffFrame                            ;;B053|B036+B036
                       ADC.B #$00                                ;;B090|B073+B073/B073\B073;
                       STA.W SpriteYPosHigh,X                    ;;B092|B075+B075/B075\B075;
                       INC.W SpriteMisc157C,X                    ;;B095|B078+B078/B078\B078;
-                    + RTS                                       ;;B098|B07B+B07B/B07B\B07B; Return 
+                    + RTS                                       ;;B098|B07B+B07B/B07B\B07B;
                                                                 ;;                        ;
 GenerateBullet:       LDA.B EffFrame                            ;;B099|B07C+B07C/B07C\B07C;
-                      AND.B #$7F                                ;;B09B|B07E+B07E/B07E\B07E;  | 
+                      AND.B #$7F                                ;;B09B|B07E+B07E/B07E\B07E; | 
                       BNE +                                     ;;B09D|B080+B080/B080\B080; / 
                       JSL FindFreeSlotLowPri                    ;;B09F|B082+B082/B082\B082;
                       BMI +                                     ;;B0A3|B086+B086/B086\B086;
@@ -5925,7 +5925,7 @@ CODE_02B0BF:          ADC.W DATA_02B1BA,Y                       ;;B0DC|B0BF+B0BF
                       STA.W SpriteYPosHigh,X                    ;;B0DF|B0C2+B0C2/B0C2\B0C2;
                       TYA                                       ;;B0E2|B0C5+B0C5/B0C5\B0C5;
                       STA.B SpriteTableC2,X                     ;;B0E3|B0C6+B0C6/B0C6\B0C6;
-                    + RTS                                       ;;B0E5|B0C8+B0C8/B0C8\B0C8; Return 
+                    + RTS                                       ;;B0E5|B0C8+B0C8/B0C8\B0C8;
                                                                 ;;                        ;
                                                                 ;;                        ;
                       db $04,$08,$04,$03                        ;;B0E6|B0C9+B0C9/B0C9\B0C9;
@@ -5950,7 +5950,7 @@ GenMultiBullets:      LDA.B EffFrame                            ;;B0EA|B0CD+B0CD
                       PLX                                       ;;B112|B0F5+B0F5/B0F5\B0F5;
                       DEX                                       ;;B113|B0F6+B0F6/B0F6\B0F6;
                       BPL -                                     ;;B114|B0F7+B0F7/B0F7\B0F7;
-Return02B0F9:         RTS                                       ;;B116|B0F9+B0F9/B0F9\B0F9; Return 
+Return02B0F9:         RTS                                       ;;B116|B0F9+B0F9/B0F9\B0F9;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02B0FA:          db $00,$00,$40,$C0,$F0,$00,$00,$F0        ;;B117|B0FA+B0FA/B0FA\B0FA;
@@ -5987,7 +5987,7 @@ CODE_02B115:          JSL FindFreeSlotLowPri                    ;;B132|B115+B115
                       STA.W SpriteXPosHigh,Y                    ;;B166|B149+B149/B149\B149;
                       LDA.W DATA_02B10C,X                       ;;B169|B14C+B14C/B14C\B14C;
                       STA.W SpriteTableC2,Y                     ;;B16C|B14F+B14F/B14F\B14F;
-                    + RTS                                       ;;B16F|B152+B152/B152\B152; Return 
+                    + RTS                                       ;;B16F|B152+B152/B152\B152;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02B153:          db $10,$18,$20,$28                        ;;B170|B153+B153/B153\B153;
@@ -6039,7 +6039,7 @@ GenerateFish:         LDA.B EffFrame                            ;;B178|B15B+B15B
                     + STA.B SpriteXSpeed,X                      ;;B1CE|B1B1+B1B1/B1B1\B1B1;
                       LDA.B #$B8                                ;;B1D0|B1B3+B1B3/B1B3\B1B3;
                       STA.B SpriteYSpeed,X                      ;;B1D2|B1B5+B1B5/B1B5\B1B5;
-Return02B1B7:         RTS                                       ;;B1D4|B1B7+B1B7/B1B7\B1B7; Return 
+Return02B1B7:         RTS                                       ;;B1D4|B1B7+B1B7/B1B7\B1B7;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02B1B8:          db $E0,$10                                ;;B1D5|B1B8+B1B8/B1B8\B1B8;
@@ -6080,7 +6080,7 @@ GenSuperKoopa:        LDA.B EffFrame                            ;;B1D9|B1BC+B1BC
                       STA.W SpriteYPosHigh,X                    ;;B21C|B1FF+B1FF/B1FF\B1FF;
                       TYA                                       ;;B21F|B202+B202/B202\B202;
                       STA.W SpriteMisc157C,X                    ;;B220|B203+B203/B203\B203;
-                    + RTS                                       ;;B223|B206+B206/B206\B206; Return 
+                    + RTS                                       ;;B223|B206+B206/B206\B206;
                                                                 ;;                        ;
 GenerateBubble:       LDA.B EffFrame                            ;;B224|B207+B207/B207\B207;
                       AND.B #$7F                                ;;B226|B209+B209/B209\B209;
@@ -6119,7 +6119,7 @@ GenerateBubble:       LDA.B EffFrame                            ;;B224|B207+B207
                       TAY                                       ;;B270|B253+B253/B253\B253;
                       LDA.W DATA_02B25A,Y                       ;;B271|B254+B254/B254\B254;
                       STA.B SpriteTableC2,X                     ;;B274|B257+B257/B257\B257;
-Return02B259:         RTS                                       ;;B276|B259+B259/B259\B259; Return 
+Return02B259:         RTS                                       ;;B276|B259+B259/B259\B259;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02B25A:          db $00                                    ;;B277|B25A+B25A/B25A\B25A;
@@ -6146,7 +6146,7 @@ CODE_02B27D:          LDA.W SpriteStatus,X                      ;;B29A|B27D+B27D
                       DEX                                       ;;B29F|B282+B282/B282\B282;
                       CPX.B _0                                  ;;B2A0|B283+B283/B283\B283;
                       BNE CODE_02B27D                           ;;B2A2|B285+B285/B285\B285;
-                      RTS                                       ;;B2A4|B287+B287/B287\B287; Return 
+                      RTS                                       ;;B2A4|B287+B287/B287\B287;
                                                                 ;;                        ;
 CODE_02B288:          LDA.B #$08                                ;;B2A5|B288+B288/B288\B288; \ Sprite status = Normal 
                       STA.W SpriteStatus,X                      ;;B2A7|B28A+B28A/B28A\B28A; / 
@@ -6177,7 +6177,7 @@ CODE_02B288:          LDA.B #$08                                ;;B2A5|B288+B288
                       LDA.W DATA_02B25D,Y                       ;;B2E4|B2C7+B2C7/B2C7\B2C7;
                       STA.B SpriteXSpeed,X                      ;;B2E7|B2CA+B2CA/B2CA\B2CA;
                       INC.W SpriteMisc151C,X                    ;;B2E9|B2CC+B2CC/B2CC\B2CC;
-Return02B2CF:         RTS                                       ;;B2EC|B2CF+B2CF/B2CF\B2CF; Return 
+Return02B2CF:         RTS                                       ;;B2EC|B2CF+B2CF/B2CF\B2CF;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02B2D0:          db $F0,$FF                                ;;B2ED|B2D0+B2D0/B2D0\B2D0;
@@ -6217,7 +6217,7 @@ GenerateEerie:        LDA.B EffFrame                            ;;B2F3|B2D6+B2D6
                       STA.W SpriteYPosHigh,X                    ;;B333|B316+B316/B316\B316;
                       LDA.W DATA_02B2D4,Y                       ;;B336|B319+B319/B319\B319;
                       STA.B SpriteXSpeed,X                      ;;B339|B31C+B31C/B31C\B31C;
-                    + RTS                                       ;;B33B|B31E+B31E/B31E\B31E; Return 
+                    + RTS                                       ;;B33B|B31E+B31E/B31E\B31E;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02B31F:          db $3F,$40,$3F,$3F,$40,$40                ;;B33C|B31F+B31F/B31F\B31F;
@@ -6270,7 +6270,7 @@ GenParaEnemy:         LDA.B EffFrame                            ;;B346|B329+B329
                       PLP                                       ;;B39D|B380+B380/B380\B380;
                       ADC.B #$00                                ;;B39E|B381+B381/B381\B381;
                       STA.W SpriteYPosHigh,X                    ;;B3A0|B383+B383/B383\B383;
-Return02B386:         RTS                                       ;;B3A3|B386+B386/B386\B386; Return 
+Return02B386:         RTS                                       ;;B3A3|B386+B386/B386\B386;
                                                                 ;;                        ;
 CODE_02B387:          LDA.B SpriteLock                          ;;B3A4|B387+B387/B387\B387;
                       BNE Return02B3AA                          ;;B3A6|B389+B389/B389\B389;
@@ -6289,7 +6289,7 @@ CODE_02B38D:          STX.W CurSpriteProcess                    ;;B3AA|B38D+B38D
 CODE_02B3A4:          JSR CODE_02B3AB                           ;;B3C1|B3A4+B3A4/B3A4\B3A4;
 CODE_02B3A7:          DEX                                       ;;B3C4|B3A7+B3A7/B3A7\B3A7;
                       BPL CODE_02B38D                           ;;B3C5|B3A8+B3A8/B3A8\B3A8;
-Return02B3AA:         RTS                                       ;;B3C7|B3AA+B3AA/B3AA\B3AA; Return 
+Return02B3AA:         RTS                                       ;;B3C7|B3AA+B3AA/B3AA\B3AA;
                                                                 ;;                        ;
 CODE_02B3AB:          DEC A                                     ;;B3C8|B3AB+B3AB/B3AB\B3AB;
                       JSL ExecutePtr                            ;;B3C9|B3AC+B3AC/B3AC\B3AC;
@@ -6326,28 +6326,28 @@ LaunchTorpedo:        LDA.W ShooterTimer,X                      ;;B3D3|B3B6+B3B6
                       LDA.B #$44                                ;;B40D|B3F0+B3F0/B3F0\B3F0; \ Sprite = Torpedo Ted 
                       STA.W SpriteNumber,Y                      ;;B40F|B3F2+B3F2/B3F2\B3F2; / 
                       LDA.W ShooterXPosLow,X                    ;;B412|B3F5+B3F5/B3F5\B3F5; \ Sprite position = Shooter position 
-                      STA.W SpriteXPosLow,Y                     ;;B415|B3F8+B3F8/B3F8\B3F8;  | 
-                      LDA.W ShooterXPosHigh,X                   ;;B418|B3FB+B3FB/B3FB\B3FB;  | 
-                      STA.W SpriteYPosHigh,Y                    ;;B41B|B3FE+B3FE/B3FE\B3FE;  | 
-                      LDA.W ShooterYPosLow,X                    ;;B41E|B401+B401/B401\B401;  | 
-                      STA.W SpriteYPosLow,Y                     ;;B421|B404+B404/B404\B404;  | 
-                      LDA.W ShooterYPosHigh,X                   ;;B424|B407+B407/B407\B407;  | 
+                      STA.W SpriteXPosLow,Y                     ;;B415|B3F8+B3F8/B3F8\B3F8; | 
+                      LDA.W ShooterXPosHigh,X                   ;;B418|B3FB+B3FB/B3FB\B3FB; | 
+                      STA.W SpriteYPosHigh,Y                    ;;B41B|B3FE+B3FE/B3FE\B3FE; | 
+                      LDA.W ShooterYPosLow,X                    ;;B41E|B401+B401/B401\B401; | 
+                      STA.W SpriteYPosLow,Y                     ;;B421|B404+B404/B404\B404; | 
+                      LDA.W ShooterYPosHigh,X                   ;;B424|B407+B407/B407\B407; | 
                       STA.W SpriteXPosHigh,Y                    ;;B427|B40A+B40A/B40A\B40A; / 
                       PHX                                       ;;B42A|B40D+B40D/B40D\B40D;
                       TYX                                       ;;B42B|B40E+B40E/B40E\B40E; X = sprite index 
                       JSL InitSpriteTables                      ;;B42C|B40F+B40F/B40F\B40F; Setup sprite tables 
                       JSR SubHorzPosBnk2                        ;;B430|B413+B413/B413\B413; \ Direction = Towards Mario 
-                      TYA                                       ;;B433|B416+B416/B416\B416;  | 
+                      TYA                                       ;;B433|B416+B416/B416\B416; | 
                       STA.W SpriteMisc157C,X                    ;;B434|B417+B417/B417\B417; / 
                       STA.B _0                                  ;;B437|B41A+B41A/B41A\B41A; $00 = sprite direction 
                       LDA.B #$30                                ;;B439|B41C+B41C/B41C\B41C; \ Set time to stay behind objects 
                       STA.W SpriteMisc1540,X                    ;;B43B|B41E+B41E/B41E\B41E; / 
                       PLX                                       ;;B43E|B421+B421/B421\B421; X = shooter index 
                       LDY.B #$07                                ;;B43F|B422+B422/B422\B422; \ Find a free extended sprite slot 
-CODE_02B424:          LDA.W ExtSpriteNumber,Y                   ;;B441|B424+B424/B424\B424;  | 
-                      BEQ CODE_02B42D                           ;;B444|B427+B427/B427\B427;  | 
-                      DEY                                       ;;B446|B429+B429/B429\B429;  | 
-                      BPL CODE_02B424                           ;;B447|B42A+B42A/B42A\B42A;  | 
+CODE_02B424:          LDA.W ExtSpriteNumber,Y                   ;;B441|B424+B424/B424\B424; | 
+                      BEQ CODE_02B42D                           ;;B444|B427+B427/B427\B427; | 
+                      DEY                                       ;;B446|B429+B429/B429\B429; | 
+                      BPL CODE_02B424                           ;;B447|B42A+B42A/B42A\B42A; | 
 Return02B42C:         RTS                                       ;;B449|B42C+B42C/B42C\B42C; / Return if no free slots 
                                                                 ;;                        ;
 CODE_02B42D:          LDA.B #$08                                ;;B44A|B42D+B42D/B42D\B42D; \ Extended sprite = Torpedo Ted arm 
@@ -6373,7 +6373,7 @@ CODE_02B42D:          LDA.B #$08                                ;;B44A|B42D+B42D
                       LDA.W DATA_02B464,X                       ;;B479|B45C+B45C/B45C\B45C;
                       STA.W ExtSpriteXSpeed,Y                   ;;B47C|B45F+B45F/B45F\B45F;
                       PLX                                       ;;B47F|B462+B462/B462\B462;
-                      RTS                                       ;;B480|B463+B463/B463\B463; Return 
+                      RTS                                       ;;B480|B463+B463/B463\B463;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02B464:          db $01,$FF                                ;;B481|B464+B464/B464\B464;
@@ -6383,27 +6383,27 @@ ShootBullet:          LDA.W ShooterTimer,X                      ;;B483|B466+B466
                       LDA.B #$60                                ;;B488|B46B+B46B/B46B\B46B; \ Set time till next generation = 60        
                       STA.W ShooterTimer,X                      ;;B48A|B46D+B46D/B46D\B46D; /        
                       LDA.W ShooterYPosLow,X                    ;;B48D|B470+B470/B470\B470; \ Don't generate if off screen vertically        
-                      CMP.B Layer1YPos                          ;;B490|B473+B473/B473\B473;  |        
-                      LDA.W ShooterYPosHigh,X                   ;;B492|B475+B475/B475\B475;  |        
-                      SBC.B Layer1YPos+1                        ;;B495|B478+B478/B478\B478;  |        
+                      CMP.B Layer1YPos                          ;;B490|B473+B473/B473\B473; |        
+                      LDA.W ShooterYPosHigh,X                   ;;B492|B475+B475/B475\B475; |        
+                      SBC.B Layer1YPos+1                        ;;B495|B478+B478/B478\B478; |        
                       BNE +                                     ;;B497|B47A+B47A/B47A\B47A; /        
                       LDA.W ShooterXPosLow,X                    ;;B499|B47C+B47C/B47C\B47C; \ Don't generate if off screen horizontally        
-                      CMP.B Layer1XPos                          ;;B49C|B47F+B47F/B47F\B47F;  |        
-                      LDA.W ShooterXPosHigh,X                   ;;B49E|B481+B481/B481\B481;  |        
-                      SBC.B Layer1XPos+1                        ;;B4A1|B484+B484/B484\B484;  |        
+                      CMP.B Layer1XPos                          ;;B49C|B47F+B47F/B47F\B47F; |        
+                      LDA.W ShooterXPosHigh,X                   ;;B49E|B481+B481/B481\B481; |        
+                      SBC.B Layer1XPos+1                        ;;B4A1|B484+B484/B484\B484; |        
                       BNE +                                     ;;B4A3|B486+B486/B486\B486; /         
                       LDA.W ShooterXPosLow,X                    ;;B4A5|B488+B488/B488\B488; \ ?? something else related to x position of generator??        
-                      SEC                                       ;;B4A8|B48B+B48B/B48B\B48B;  |         
-                      SBC.B Layer1XPos                          ;;B4A9|B48C+B48C/B48C\B48C;  |        
-                      CLC                                       ;;B4AB|B48E+B48E/B48E\B48E;  |        
-                      ADC.B #$10                                ;;B4AC|B48F+B48F/B48F\B48F;  |        
-                      CMP.B #$10                                ;;B4AE|B491+B491/B491\B491;  |        
+                      SEC                                       ;;B4A8|B48B+B48B/B48B\B48B; |         
+                      SBC.B Layer1XPos                          ;;B4A9|B48C+B48C/B48C\B48C; |        
+                      CLC                                       ;;B4AB|B48E+B48E/B48E\B48E; |        
+                      ADC.B #$10                                ;;B4AC|B48F+B48F/B48F\B48F; |        
+                      CMP.B #$10                                ;;B4AE|B491+B491/B491\B491; |        
                       BCC +                                     ;;B4B0|B493+B493/B493\B493; /        
                       LDA.B PlayerXPosNext                      ;;B4B2|B495+B495/B495\B495; \ Don't fire if mario is next to generator        
-                      SBC.W ShooterXPosLow,X                    ;;B4B4|B497+B497/B497\B497;  |        
-                      CLC                                       ;;B4B7|B49A+B49A/B49A\B49A;  |        
-                      ADC.B #$11                                ;;B4B8|B49B+B49B/B49B\B49B;  |        
-                      CMP.B #$22                                ;;B4BA|B49D+B49D/B49D\B49D;  |        
+                      SBC.W ShooterXPosLow,X                    ;;B4B4|B497+B497/B497\B497; |        
+                      CLC                                       ;;B4B7|B49A+B49A/B49A\B49A; |        
+                      ADC.B #$11                                ;;B4B8|B49B+B49B/B49B\B49B; |        
+                      CMP.B #$22                                ;;B4BA|B49D+B49D/B49D\B49D; |        
                       BCC +                                     ;;B4BC|B49F+B49F/B49F\B49F; /        
                       JSL FindFreeSlotLowPri                    ;;B4BE|B4A1+B4A1/B4A1\B4A1; \ Get an index to an unused sprite slot, return if all slots full 
                       BMI +                                     ;;B4C2|B4A5+B4A5/B4A5\B4A5; / After: Y has index of sprite being generated 
@@ -6414,28 +6414,28 @@ ShootBullet:          LDA.W ShooterTimer,X                      ;;B483|B466+B466
                       LDA.B #$1C                                ;;B4CE|B4B1+B4B1/B4B1\B4B1; \ New sprite = Bullet Bill 
                       STA.W SpriteNumber,Y                      ;;B4D0|B4B3+B4B3/B4B3\B4B3; / 
                       LDA.W ShooterXPosLow,X                    ;;B4D3|B4B6+B4B6/B4B6\B4B6; \ Set x position for new sprite 
-                      STA.W SpriteXPosLow,Y                     ;;B4D6|B4B9+B4B9/B4B9\B4B9;  | 
-                      LDA.W ShooterXPosHigh,X                   ;;B4D9|B4BC+B4BC/B4BC\B4BC;  | 
+                      STA.W SpriteXPosLow,Y                     ;;B4D6|B4B9+B4B9/B4B9\B4B9; | 
+                      LDA.W ShooterXPosHigh,X                   ;;B4D9|B4BC+B4BC/B4BC\B4BC; | 
                       STA.W SpriteYPosHigh,Y                    ;;B4DC|B4BF+B4BF/B4BF\B4BF; / 
                       LDA.W ShooterYPosLow,X                    ;;B4DF|B4C2+B4C2/B4C2\B4C2; \ Set y position for new sprite 
-                      SEC                                       ;;B4E2|B4C5+B4C5/B4C5\B4C5;  | (y position of generator - 1) 
-                      SBC.B #$01                                ;;B4E3|B4C6+B4C6/B4C6\B4C6;  | 
-                      STA.W SpriteYPosLow,Y                     ;;B4E5|B4C8+B4C8/B4C8\B4C8;  | 
-                      LDA.W ShooterYPosHigh,X                   ;;B4E8|B4CB+B4CB/B4CB\B4CB;  | 
-                      SBC.B #$00                                ;;B4EB|B4CE+B4CE/B4CE\B4CE;  | 
+                      SEC                                       ;;B4E2|B4C5+B4C5/B4C5\B4C5; | (y position of generator - 1) 
+                      SBC.B #$01                                ;;B4E3|B4C6+B4C6/B4C6\B4C6; | 
+                      STA.W SpriteYPosLow,Y                     ;;B4E5|B4C8+B4C8/B4C8\B4C8; | 
+                      LDA.W ShooterYPosHigh,X                   ;;B4E8|B4CB+B4CB/B4CB\B4CB; | 
+                      SBC.B #$00                                ;;B4EB|B4CE+B4CE/B4CE\B4CE; | 
                       STA.W SpriteXPosHigh,Y                    ;;B4ED|B4D0+B4D0/B4D0\B4D0; / 
                       PHX                                       ;;B4F0|B4D3+B4D3/B4D3\B4D3; \ Before: X must have index of sprite being generated 
-                      TYX                                       ;;B4F1|B4D4+B4D4/B4D4\B4D4;  | Routine clears *all* old sprite values... 
-                      JSL InitSpriteTables                      ;;B4F2|B4D5+B4D5/B4D5\B4D5;  | ...and loads in new values for the 6 main sprite tables 
+                      TYX                                       ;;B4F1|B4D4+B4D4/B4D4\B4D4; | Routine clears *all* old sprite values... 
+                      JSL InitSpriteTables                      ;;B4F2|B4D5+B4D5/B4D5\B4D5; | ...and loads in new values for the 6 main sprite tables 
                       PLX                                       ;;B4F6|B4D9+B4D9/B4D9\B4D9; /  
                       JSR ShowShooterSmoke                      ;;B4F7|B4DA+B4DA/B4DA\B4DA; Display smoke graphic                                      
-                    + RTS                                       ;;B4FA|B4DD+B4DD/B4DD\B4DD; Return 
+                    + RTS                                       ;;B4FA|B4DD+B4DD/B4DD\B4DD;
                                                                 ;;                        ;
 ShowShooterSmoke:     LDY.B #$03                                ;;B4FB|B4DE+B4DE/B4DE\B4DE; \ Find a free slot to display effect 
-FindFreeSmokeSlot:    LDA.W SmokeSpriteNumber,Y                 ;;B4FD|B4E0+B4E0/B4E0\B4E0;  | 
-                      BEQ SetShooterSmoke                       ;;B500|B4E3+B4E3/B4E3\B4E3;  | 
-                      DEY                                       ;;B502|B4E5+B4E5/B4E5\B4E5;  | 
-                      BPL FindFreeSmokeSlot                     ;;B503|B4E6+B4E6/B4E6\B4E6;  | 
+FindFreeSmokeSlot:    LDA.W SmokeSpriteNumber,Y                 ;;B4FD|B4E0+B4E0/B4E0\B4E0; | 
+                      BEQ SetShooterSmoke                       ;;B500|B4E3+B4E3/B4E3\B4E3; | 
+                      DEY                                       ;;B502|B4E5+B4E5/B4E5\B4E5; | 
+                      BPL FindFreeSmokeSlot                     ;;B503|B4E6+B4E6/B4E6\B4E6; | 
                       RTS                                       ;;B505|B4E8+B4E8/B4E8\B4E8; / Return if no free slots 
                                                                 ;;                        ;
                                                                 ;;                        ;
@@ -6450,18 +6450,18 @@ SetShooterSmoke:      LDA.B #$01                                ;;B508|B4EB+B4EB
                       LDA.W ShooterXPosLow,X                    ;;B518|B4FB+B4FB/B4FB\B4FB; \ Load generator x position and store it for later  
                       PHA                                       ;;B51B|B4FE+B4FE/B4FE\B4FE; /  
                       LDA.B PlayerXPosNext                      ;;B51C|B4FF+B4FF/B4FF\B4FF; \ Determine which side of the generator mario is on 
-                      CMP.W ShooterXPosLow,X                    ;;B51E|B501+B501/B501\B501;  |  
-                      LDA.B PlayerXPosNext+1                    ;;B521|B504+B504/B504\B504;  |  
-                      SBC.W ShooterXPosHigh,X                   ;;B523|B506+B506/B506\B506;  |  
-                      LDX.B #$00                                ;;B526|B509+B509/B509\B509;  |  
-                      BCC +                                     ;;B528|B50B+B50B/B50B\B50B;  |  
+                      CMP.W ShooterXPosLow,X                    ;;B51E|B501+B501/B501\B501; |  
+                      LDA.B PlayerXPosNext+1                    ;;B521|B504+B504/B504\B504; |  
+                      SBC.W ShooterXPosHigh,X                   ;;B523|B506+B506/B506\B506; |  
+                      LDX.B #$00                                ;;B526|B509+B509/B509\B509; |  
+                      BCC +                                     ;;B528|B50B+B50B/B50B\B50B; |  
                       INX                                       ;;B52A|B50D+B50D/B50D\B50D; /  
                     + PLA                                       ;;B52B|B50E+B50E/B50E\B50E; \ Set smoke x position from generator position  
-                      CLC                                       ;;B52C|B50F+B50F/B50F\B50F;  |  
-                      %LorW_X(ADC,ShooterSmokeDispX)            ;;B52D|B510+B510/B510\B510;  |  
+                      CLC                                       ;;B52C|B50F+B50F/B50F\B50F; |  
+                      %LorW_X(ADC,ShooterSmokeDispX)            ;;B52D|B510+B510/B510\B510; |  
                       STA.W SmokeSpriteXPos,Y                   ;;B531|B513+B513/B513\B513; /   
                       LDX.W CurSpriteProcess                    ;;B534|B516+B516/B516\B516; X = Sprite index 
-                      RTS                                       ;;B537|B519+B519/B519\B519; Return 
+                      RTS                                       ;;B537|B519+B519/B519\B519;
                                                                 ;;                        ;
 CODE_02B51A:          TXA                                       ;;B538|B51A+B51A/B51A\B51A;
                       CLC                                       ;;B539|B51B+B51B/B51B\B51B;
@@ -6469,7 +6469,7 @@ CODE_02B51A:          TXA                                       ;;B538|B51A+B51A
                       TAX                                       ;;B53C|B51E+B51E/B51E\B51E;
                       JSR CODE_02B526                           ;;B53D|B51F+B51F/B51F\B51F;
                       LDX.W MinorSpriteProcIndex                ;;B540|B522+B522/B522\B522;
-                      RTS                                       ;;B543|B525+B525/B525\B525; Return 
+                      RTS                                       ;;B543|B525+B525/B525\B525;
                                                                 ;;                        ;
 CODE_02B526:          LDA.W BounceSpriteYSpeed,X                ;;B544|B526+B526/B526\B526;
                       ASL A                                     ;;B547|B529+B529/B529\B529;
@@ -6496,7 +6496,7 @@ CODE_02B526:          LDA.W BounceSpriteYSpeed,X                ;;B544|B526+B526
                       TYA                                       ;;B56A|B54C+B54C/B54C\B54C;
                       ADC.W BounceSpriteYPosHigh,X              ;;B56B|B54D+B54D/B54D\B54D;
                       STA.W BounceSpriteYPosHigh,X              ;;B56E|B550+B550/B550\B550;
-                      RTS                                       ;;B571|B553+B553/B553\B553; Return 
+                      RTS                                       ;;B571|B553+B553/B553\B553;
                                                                 ;;                        ;
 CODE_02B554:          TXA                                       ;;B572|B554+B554/B554\B554;
                       CLC                                       ;;B573|B555+B555/B555\B555;
@@ -6504,7 +6504,7 @@ CODE_02B554:          TXA                                       ;;B572|B554+B554
                       TAX                                       ;;B576|B558+B558/B558\B558;
                       JSR CODE_02B560                           ;;B577|B559+B559/B559\B559;
                       LDX.W CurSpriteProcess                    ;;B57A|B55C+B55C/B55C\B55C; X = Sprite index 
-                      RTS                                       ;;B57D|B55F+B55F/B55F\B55F; Return 
+                      RTS                                       ;;B57D|B55F+B55F/B55F\B55F;
                                                                 ;;                        ;
 CODE_02B560:          LDA.W ExtSpriteYSpeed,X                   ;;B57E|B560+B560/B560\B560;
                       ASL A                                     ;;B581|B563+B563/B563\B563;
@@ -6531,7 +6531,7 @@ CODE_02B560:          LDA.W ExtSpriteYSpeed,X                   ;;B57E|B560+B560
                       TYA                                       ;;B5A4|B586+B586/B586\B586;
                       ADC.W ExtSpriteYPosHigh,X                 ;;B5A5|B587+B587/B587\B587;
                       STA.W ExtSpriteYPosHigh,X                 ;;B5A8|B58A+B58A/B58A\B58A;
-                      RTS                                       ;;B5AB|B58D+B58D/B58D\B58D; Return 
+                      RTS                                       ;;B5AB|B58D+B58D/B58D\B58D;
                                                                 ;;                        ;
 CODE_02B58E:          LDA.W CoinSpriteYSpeed,X                  ;;B5AC|B58E+B58E/B58E\B58E;
                       ASL A                                     ;;B5AF|B591+B591/B591\B591;
@@ -6558,7 +6558,7 @@ CODE_02B58E:          LDA.W CoinSpriteYSpeed,X                  ;;B5AC|B58E+B58E
                       TYA                                       ;;B5D2|B5B4+B5B4/B5B4\B5B4;
                       ADC.W CoinSpriteYPosHigh,X                ;;B5D3|B5B5+B5B5/B5B5\B5B5;
                       STA.W CoinSpriteYPosHigh,X                ;;B5D6|B5B8+B5B8/B5B8\B5B8;
-                      RTS                                       ;;B5D9|B5BB+B5BB/B5BB\B5BB; Return 
+                      RTS                                       ;;B5D9|B5BB+B5BB/B5BB\B5BB;
                                                                 ;;                        ;
 CODE_02B5BC:          TXA                                       ;;B5DA|B5BC+B5BC/B5BC\B5BC;
                       CLC                                       ;;B5DB|B5BD+B5BD/B5BD\B5BD;
@@ -6566,7 +6566,7 @@ CODE_02B5BC:          TXA                                       ;;B5DA|B5BC+B5BC
                       TAX                                       ;;B5DE|B5C0+B5C0/B5C0\B5C0;
                       JSR CODE_02B5C8                           ;;B5DF|B5C1+B5C1/B5C1\B5C1;
                       LDX.W MinorSpriteProcIndex                ;;B5E2|B5C4+B5C4/B5C4\B5C4;
-                      RTS                                       ;;B5E5|B5C7+B5C7/B5C7\B5C7; Return 
+                      RTS                                       ;;B5E5|B5C7+B5C7/B5C7\B5C7;
                                                                 ;;                        ;
 CODE_02B5C8:          LDA.W MinExtSpriteYSpeed,X                ;;B5E6|B5C8+B5C8/B5C8\B5C8;
                       ASL A                                     ;;B5E9|B5CB+B5CB/B5CB\B5CB;
@@ -6588,7 +6588,7 @@ CODE_02B5C8:          LDA.W MinExtSpriteYSpeed,X                ;;B5E6|B5C8+B5C8
                     + PLP                                       ;;B602|B5E4+B5E4/B5E4\B5E4;
                       ADC.W MinExtSpriteYPosLow,X               ;;B603|B5E5+B5E5/B5E5\B5E5;
                       STA.W MinExtSpriteYPosLow,X               ;;B606|B5E8+B5E8/B5E8\B5E8;
-                      RTS                                       ;;B609|B5EB+B5EB/B5EB\B5EB; Return 
+                      RTS                                       ;;B609|B5EB+B5EB/B5EB\B5EB;
                                                                 ;;                        ;
                       %insert_empty($26,$44,$44,$44,$44)        ;;B60A|B5EC+B5EC/B5EC\B5EC;
                                                                 ;;                        ;
@@ -6599,19 +6599,19 @@ PokeyMain:            PHB                                       ;;B636|B636+B636
                       PLB                                       ;;B638|B638+B638/B638\B638;
                       JSR PokeyMainRt                           ;;B639|B639+B639/B639\B639;
                       LDA.B SpriteTableC2,X                     ;;B63C|B63C+B63C/B63C\B63C; \ After: Y = number of segments 
-                      PHX                                       ;;B63E|B63E+B63E/B63E\B63E;  | $C2,x has a bit set for each segment remaining 
-                      LDX.B #$04                                ;;B63F|B63F+B63F/B63F\B63F;  | for X=0 to X=4... 
-                      LDY.B #$00                                ;;B641|B641+B641/B641\B641;  | 
-PokeyLoopStart:       LSR A                                     ;;B643|B643+B643/B643\B643;  | 
-                      BCC +                                     ;;B644|B644+B644/B644\B644;  | 
-                      INY                                       ;;B646|B646+B646/B646\B646;  | ...Increment Y if bit X is set 
-                    + DEX                                       ;;B647|B647+B647/B647\B647;  | 
-                      BPL PokeyLoopStart                        ;;B648|B648+B648/B648\B648;  | 
+                      PHX                                       ;;B63E|B63E+B63E/B63E\B63E; | $C2,x has a bit set for each segment remaining 
+                      LDX.B #$04                                ;;B63F|B63F+B63F/B63F\B63F; | for X=0 to X=4... 
+                      LDY.B #$00                                ;;B641|B641+B641/B641\B641; | 
+PokeyLoopStart:       LSR A                                     ;;B643|B643+B643/B643\B643; | 
+                      BCC +                                     ;;B644|B644+B644/B644\B644; | 
+                      INY                                       ;;B646|B646+B646/B646\B646; | ...Increment Y if bit X is set 
+                    + DEX                                       ;;B647|B647+B647/B647\B647; | 
+                      BPL PokeyLoopStart                        ;;B648|B648+B648/B648\B648; | 
                       PLX                                       ;;B64A|B64A+B64A/B64A\B64A; / 
                       LDA.W PokeyClipIndex,Y                    ;;B64B|B64B+B64B/B64B\B64B; \ Update the index into the clipping table 
                       STA.W SpriteTweakerB,X                    ;;B64E|B64E+B64E/B64E\B64E; / 
                       PLB                                       ;;B651|B651+B651/B651\B651;
-                      RTL                                       ;;B652|B652+B652/B652\B652; Return 
+                      RTL                                       ;;B652|B652+B652/B652\B652;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02B653:          db $01,$02,$04,$08                        ;;B653|B653+B653/B653\B653;
@@ -6630,7 +6630,7 @@ DATA_02B665:          db $00,$05,$09,$0C,$0E,$0F,$10,$10        ;;B665|B665+B665
 PokeyMainRt:          LDA.W SpriteMisc1534,X                    ;;B672|B672+B672/B672\B672;
                       BNE CODE_02B681                           ;;B675|B675+B675/B675\B675;
                       LDA.W SpriteStatus,X                      ;;B677|B677+B677/B677\B677; \ Branch if Status == Normal 
-                      CMP.B #$08                                ;;B67A|B67A+B67A/B67A\B67A;  | 
+                      CMP.B #$08                                ;;B67A|B67A+B67A/B67A\B67A; | 
                       BEQ CODE_02B6A7                           ;;B67C|B67C+B67C/B67C\B67C; / 
                       JMP CODE_02B726                           ;;B67E|B67E+B67E/B67E\B67E;
                                                                 ;;                        ;
@@ -6649,12 +6649,12 @@ CODE_02B681:          JSL GenericSprGfxRt2                      ;;B681|B681+B681
                       INC.B SpriteYSpeed,X                      ;;B69F|B69F+B69F/B69F\B69F;
                       INC.B SpriteYSpeed,X                      ;;B6A1|B6A1+B6A1/B6A1\B6A1;
                       JSR SubOffscreen0Bnk2                     ;;B6A3|B6A3+B6A3/B6A3\B6A3;
-                    + RTS                                       ;;B6A6|B6A6+B6A6/B6A6\B6A6; Return 
+                    + RTS                                       ;;B6A6|B6A6+B6A6/B6A6\B6A6;
                                                                 ;;                        ;
 CODE_02B6A7:          LDA.B SpriteTableC2,X                     ;;B6A7|B6A7+B6A7/B6A7\B6A7; \ Erase sprite if no segments remain 
-                      BNE +                                     ;;B6A9|B6A9+B6A9/B6A9\B6A9;  | 
-                    - STZ.W SpriteStatus,X                      ;;B6AB|B6AB+B6AB/B6AB\B6AB;  | 
-                      RTS                                       ;;B6AE|B6AE+B6AE/B6AE\B6AE; Return 
+                      BNE +                                     ;;B6A9|B6A9+B6A9/B6A9\B6A9; | 
+                    - STZ.W SpriteStatus,X                      ;;B6AB|B6AB+B6AB/B6AB\B6AB; | 
+                      RTS                                       ;;B6AE|B6AE+B6AE/B6AE\B6AE;
                                                                 ;;                        ;
                     + CMP.B #$20                                ;;B6AF|B6AF+B6AF/B6AF\B6AF;
                       BCS -                                     ;;B6B1|B6B1+B6B1/B6B1\B6B1;
@@ -6682,7 +6682,7 @@ CODE_02B6A7:          LDA.B SpriteTableC2,X                     ;;B6A7|B6A7+B6A7
                       STA.B SpriteYSpeed,X                      ;;B6E6|B6E6+B6E6/B6E6\B6E6;
                     + JSL CODE_019138                           ;;B6E8|B6E8+B6E8/B6E8\B6E8;
                       LDA.W SpriteBlockedDirs,X                 ;;B6EC|B6EC+B6EC/B6EC\B6EC; \ Branch if not on ground 
-                      AND.B #$04                                ;;B6EF|B6EF+B6EF/B6EF\B6EF;  | 
+                      AND.B #$04                                ;;B6EF|B6EF+B6EF/B6EF\B6EF; | 
                       BEQ +                                     ;;B6F1|B6F1+B6F1/B6F1\B6F1; / 
                       STZ.B SpriteYSpeed,X                      ;;B6F3|B6F3+B6F3/B6F3\B6F3; Sprite Y Speed = 0 
                     + LDA.W SpriteBlockedDirs,X                 ;;B6F5|B6F5+B6F5/B6F5\B6F5;
@@ -6778,7 +6778,7 @@ CODE_02B781:          LDA.B _1                                  ;;B781|B781+B781
                       LDA.B #$04                                ;;B7A3|B7A3+B7A3/B7A3\B7A3;
                       LDY.B #$02                                ;;B7A5|B7A5+B7A5/B7A5\B7A5;
 CODE_02B7A7:          JSL FinishOAMWrite                        ;;B7A7|B7A7+B7A7/B7A7\B7A7;
-                      RTS                                       ;;B7AB|B7AB+B7AB/B7AB\B7AB; Return 
+                      RTS                                       ;;B7AB|B7AB+B7AB/B7AB\B7AB;
                                                                 ;;                        ;
 CODE_02B7AC:          LDY.B #$09                                ;;B7AC|B7AC+B7AC/B7AC\B7AC;
 CODE_02B7AE:          TYA                                       ;;B7AE|B7AE+B7AE/B7AE\B7AE;
@@ -6802,7 +6802,7 @@ CODE_02B7AE:          TYA                                       ;;B7AE|B7AE+B7AE
                       BCS CODE_02B7D6                           ;;B7D0|B7D0+B7D0/B7D0\B7D0;
 CODE_02B7D2:          DEY                                       ;;B7D2|B7D2+B7D2/B7D2\B7D2;
                       BPL CODE_02B7AE                           ;;B7D3|B7D3+B7D3/B7D3\B7D3;
-                    - RTS                                       ;;B7D5|B7D5+B7D5/B7D5\B7D5; Return 
+                    - RTS                                       ;;B7D5|B7D5+B7D5/B7D5\B7D5;
                                                                 ;;                        ;
 CODE_02B7D6:          LDA.W SpriteMisc1558,X                    ;;B7D6|B7D6+B7D6/B7D6\B7D6;
                       BNE -                                     ;;B7D9|B7D9+B7D9/B7D9\B7D9;
@@ -6814,7 +6814,7 @@ CODE_02B7D6:          LDA.W SpriteMisc1558,X                    ;;B7D6|B7D6+B7D6
                       JSR RemovePokeySgmntRt                    ;;B7E5|B7E5+B7E5/B7E5\B7E5;
                       PLY                                       ;;B7E8|B7E8+B7E8/B7E8\B7E8;
                       JSR CODE_02B82E                           ;;B7E9|B7E9+B7E9/B7E9\B7E9;
-                      RTS                                       ;;B7EC|B7EC+B7EC/B7EC\B7EC; Return 
+                      RTS                                       ;;B7EC|B7EC+B7EC/B7EC\B7EC;
                                                                 ;;                        ;
 RemovePokeySgmntRt:   LDY.B #$00                                ;;B7ED|B7ED+B7ED/B7ED\B7ED;
                       CMP.B #$09                                ;;B7EF|B7EF+B7EF/B7EF\B7EF;
@@ -6830,7 +6830,7 @@ RemovePokeySgmntRt:   LDY.B #$00                                ;;B7ED|B7ED+B7ED
                       BMI +                                     ;;B800|B800+B800/B800\B800;
                       INY                                       ;;B802|B802+B802/B802\B802;
                     + LDA.B SpriteTableC2,X                     ;;B803|B803+B803/B803\B803; \ Take away a segment by unsetting a bit 
-                      AND.W PokeyUnsetBit,Y                     ;;B805|B805+B805/B805\B805;  | 
+                      AND.W PokeyUnsetBit,Y                     ;;B805|B805+B805/B805\B805; | 
                       STA.B SpriteTableC2,X                     ;;B808|B808+B808/B808\B808; / 
                       STA.W SpriteMisc151C,X                    ;;B80A|B80A+B80A/B80A\B80A;
                       LDA.W DATA_02B829,Y                       ;;B80D|B80D+B80D/B80D\B80D;
@@ -6839,14 +6839,14 @@ RemovePokeySgmntRt:   LDY.B #$00                                ;;B7ED|B7ED+B7ED
                       STA.W SpriteMisc1540,X                    ;;B814|B814+B814/B814\B814;
                       ASL A                                     ;;B817|B817+B817/B817\B817;
                       STA.W SpriteMisc1558,X                    ;;B818|B818+B818/B818\B818;
-                      RTS                                       ;;B81B|B81B+B81B/B81B\B81B; Return 
+                      RTS                                       ;;B81B|B81B+B81B/B81B\B81B;
                                                                 ;;                        ;
 RemovePokeySegment:   PHB                                       ;;B81C|B81C+B81C/B81C\B81C; Wrapper 
                       PHK                                       ;;B81D|B81D+B81D/B81D\B81D;
                       PLB                                       ;;B81E|B81E+B81E/B81E\B81E;
                       JSR RemovePokeySgmntRt                    ;;B81F|B81F+B81F/B81F\B81F;
                       PLB                                       ;;B822|B822+B822/B822\B822;
-                      RTL                                       ;;B823|B823+B823/B823\B823; Return 
+                      RTL                                       ;;B823|B823+B823/B823\B823;
                                                                 ;;                        ;
                                                                 ;;                        ;
 PokeyUnsetBit:        db $EF,$F7,$FB,$FD,$FE                    ;;B824|B824+B824/B824\B824;
@@ -6887,20 +6887,20 @@ CODE_02B82E:          JSL FindFreeSprSlot                       ;;B82E|B82E+B82E
                       STA.W SpriteMisc1534,Y                    ;;B878|B878+B878/B878\B878;
                       LDA.B #$01                                ;;B87B|B87B+B87B/B87B\B87B;
                       JSL CODE_02ACE1                           ;;B87D|B87D+B87D/B87D\B87D;
-                    + RTS                                       ;;B881|B881+B881/B881\B881; Return 
+                    + RTS                                       ;;B881|B881+B881/B881\B881;
                                                                 ;;                        ;
 TorpedoTedMain:       PHB                                       ;;B882|B882+B882/B882\B882;
                       PHK                                       ;;B883|B883+B883/B883\B883;
                       PLB                                       ;;B884|B884+B884/B884\B884;
                       JSR CODE_02B88A                           ;;B885|B885+B885/B885\B885;
                       PLB                                       ;;B888|B888+B888/B888\B888;
-                      RTL                                       ;;B889|B889+B889/B889\B889; Return 
+                      RTL                                       ;;B889|B889+B889/B889\B889;
                                                                 ;;                        ;
 CODE_02B88A:          LDA.B SpriteProperties                    ;;B88A|B88A+B88A/B88A\B88A; \ Save $64 
                       PHA                                       ;;B88C|B88C+B88C/B88C\B88C; / 
                       LDA.W SpriteMisc1540,X                    ;;B88D|B88D+B88D/B88D\B88D; \ If being launched... 
-                      BEQ +                                     ;;B890|B890+B890/B890\B890;  | ...set $64 = #$10... 
-                      LDA.B #$10                                ;;B892|B892+B892/B892\B892;  | ...so it will be drawn behind objects 
+                      BEQ +                                     ;;B890|B890+B890/B890\B890; | ...set $64 = #$10... 
+                      LDA.B #$10                                ;;B892|B892+B892/B892\B892; | ...so it will be drawn behind objects 
                       STA.B SpriteProperties                    ;;B894|B894+B894/B894\B894; / 
                     + JSR TorpedoGfxRt                          ;;B896|B896+B896/B896\B896; Draw sprite 
                       PLA                                       ;;B899|B899+B899/B899\B899; \ Restore $64 
@@ -6916,7 +6916,7 @@ CODE_02B88A:          LDA.B SpriteProperties                    ;;B88A|B88A+B88A
                       JSR UpdateYPosNoGrvty                     ;;B8B0|B8B0+B8B0/B8B0\B8B0; Apply speed to position 
                       LDA.B #$10                                ;;B8B3|B8B3+B8B3/B8B3\B8B3; \ Sprite Y speed = #$10 
                       STA.B SpriteYSpeed,X                      ;;B8B5|B8B5+B8B5/B8B5\B8B5; / 
-Return02B8B7:         RTS                                       ;;B8B7|B8B7+B8B7/B8B7\B8B7; Return 
+Return02B8B7:         RTS                                       ;;B8B7|B8B7+B8B7/B8B7\B8B7;
                                                                 ;;                        ;
                                                                 ;;                        ;
 TorpedoMaxSpeed:      db $20,$F0                                ;;B8B8|B8B8+B8B8/B8B8\B8B8;
@@ -6924,30 +6924,30 @@ TorpedoMaxSpeed:      db $20,$F0                                ;;B8B8|B8B8+B8B8
 TorpedoAccel:         db $01,$FF                                ;;B8BA|B8BA+B8BA/B8BA\B8BA;
                                                                 ;;                        ;
                     + LDA.B TrueFrame                           ;;B8BC|B8BC+B8BC/B8BC\B8BC; \ Only increase X speed every 4 frames 
-                      AND.B #$03                                ;;B8BE|B8BE+B8BE/B8BE\B8BE;  | 
+                      AND.B #$03                                ;;B8BE|B8BE+B8BE/B8BE\B8BE; | 
                       BNE +                                     ;;B8C0|B8C0+B8C0/B8C0\B8C0; / 
                       LDY.W SpriteMisc157C,X                    ;;B8C2|B8C2+B8C2/B8C2\B8C2; \ If not at maximum, increase X speed 
-                      LDA.B SpriteXSpeed,X                      ;;B8C5|B8C5+B8C5/B8C5\B8C5;  | 
-                      CMP.W TorpedoMaxSpeed,Y                   ;;B8C7|B8C7+B8C7/B8C7\B8C7;  | 
-                      BEQ +                                     ;;B8CA|B8CA+B8CA/B8CA\B8CA;  | 
-                      CLC                                       ;;B8CC|B8CC+B8CC/B8CC\B8CC;  | 
-                      ADC.W TorpedoAccel,Y                      ;;B8CD|B8CD+B8CD/B8CD\B8CD;  | 
+                      LDA.B SpriteXSpeed,X                      ;;B8C5|B8C5+B8C5/B8C5\B8C5; | 
+                      CMP.W TorpedoMaxSpeed,Y                   ;;B8C7|B8C7+B8C7/B8C7\B8C7; | 
+                      BEQ +                                     ;;B8CA|B8CA+B8CA/B8CA\B8CA; | 
+                      CLC                                       ;;B8CC|B8CC+B8CC/B8CC\B8CC; | 
+                      ADC.W TorpedoAccel,Y                      ;;B8CD|B8CD+B8CD/B8CD\B8CD; | 
                       STA.B SpriteXSpeed,X                      ;;B8D0|B8D0+B8D0/B8D0\B8D0; / 
                     + JSR UpdateXPosNoGrvty                     ;;B8D2|B8D2+B8D2/B8D2\B8D2; \ Apply speed to position 
                       JSR UpdateYPosNoGrvty                     ;;B8D5|B8D5+B8D5/B8D5\B8D5; / 
                       LDA.B SpriteYSpeed,X                      ;;B8D8|B8D8+B8D8/B8D8\B8D8; \ If sprite has Y speed... 
-                      BEQ +                                     ;;B8DA|B8DA+B8DA/B8DA\B8DA;  | 
-                      LDA.B TrueFrame                           ;;B8DC|B8DC+B8DC/B8DC\B8DC;  | ...Decrease Y speed every other frame 
-                      AND.B #$01                                ;;B8DE|B8DE+B8DE/B8DE\B8DE;  | 
-                      BNE +                                     ;;B8E0|B8E0+B8E0/B8E0\B8E0;  | 
+                      BEQ +                                     ;;B8DA|B8DA+B8DA/B8DA\B8DA; | 
+                      LDA.B TrueFrame                           ;;B8DC|B8DC+B8DC/B8DC\B8DC; | ...Decrease Y speed every other frame 
+                      AND.B #$01                                ;;B8DE|B8DE+B8DE/B8DE\B8DE; | 
+                      BNE +                                     ;;B8E0|B8E0+B8E0/B8E0\B8E0; | 
                       DEC.B SpriteYSpeed,X                      ;;B8E2|B8E2+B8E2/B8E2\B8E2; / 
                     + TXA                                       ;;B8E4|B8E4+B8E4/B8E4\B8E4; \ Run $02B952 every 8 frames 
-                      CLC                                       ;;B8E5|B8E5+B8E5/B8E5\B8E5;  | 
-                      ADC.B EffFrame                            ;;B8E6|B8E6+B8E6/B8E6\B8E6;  | 
-                      AND.B #$07                                ;;B8E8|B8E8+B8E8/B8E8\B8E8;  | 
-                      BNE +                                     ;;B8EA|B8EA+B8EA/B8EA\B8EA;  | 
+                      CLC                                       ;;B8E5|B8E5+B8E5/B8E5\B8E5; | 
+                      ADC.B EffFrame                            ;;B8E6|B8E6+B8E6/B8E6\B8E6; | 
+                      AND.B #$07                                ;;B8E8|B8E8+B8E8/B8E8\B8E8; | 
+                      BNE +                                     ;;B8EA|B8EA+B8EA/B8EA\B8EA; | 
                       JSR CODE_02B952                           ;;B8EC|B8EC+B8EC/B8EC\B8EC; / 
-                    + RTS                                       ;;B8EF|B8EF+B8EF/B8EF\B8EF; Return 
+                    + RTS                                       ;;B8EF|B8EF+B8EF/B8EF\B8EF;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02B8F0:          db $10                                    ;;B8F0|B8F0+B8F0/B8F0\B8F0;
@@ -7039,19 +7039,19 @@ CODE_02B969:          LDA.B SpriteXPosLow,X                     ;;B96C|B969+B969
                       STA.W SmokeSpriteYPos,Y                   ;;B99E|B99B+B99B/B99B\B99B;
                       LDA.B #$0F                                ;;B9A1|B99E+B99E/B99E\B99E;
                       STA.W SmokeSpriteTimer,Y                  ;;B9A3|B9A0+B9A0/B9A0\B9A0;
-                    + RTS                                       ;;B9A6|B9A3+B9A3/B9A3\B9A3; Return 
+                    + RTS                                       ;;B9A6|B9A3+B9A3/B9A3\B9A3;
                                                                 ;;                        ;
                       STA.B Map16TileGenerate                   ;;B9A7|B9A4+B9A4/B9A4\B9A4; $9C = tile to generate 
                       LDA.B SpriteXPosLow,X                     ;;B9A9|B9A6+B9A6/B9A6\B9A6; \ $9A = Sprite X position 
-                      STA.B TouchBlockXPos                      ;;B9AB|B9A8+B9A8/B9A8\B9A8;  | for block creation 
-                      LDA.W SpriteYPosHigh,X                    ;;B9AD|B9AA+B9AA/B9AA\B9AA;  | 
+                      STA.B TouchBlockXPos                      ;;B9AB|B9A8+B9A8/B9A8\B9A8; | for block creation 
+                      LDA.W SpriteYPosHigh,X                    ;;B9AD|B9AA+B9AA/B9AA\B9AA; | 
                       STA.B TouchBlockXPos+1                    ;;B9B0|B9AD+B9AD/B9AD\B9AD; / 
                       LDA.B SpriteYPosLow,X                     ;;B9B2|B9AF+B9AF/B9AF\B9AF; \ $98 = Sprite Y position 
-                      STA.B TouchBlockYPos                      ;;B9B4|B9B1+B9B1/B9B1\B9B1;  | for block creation 
-                      LDA.W SpriteXPosHigh,X                    ;;B9B6|B9B3+B9B3/B9B3\B9B3;  | 
+                      STA.B TouchBlockYPos                      ;;B9B4|B9B1+B9B1/B9B1\B9B1; | for block creation 
+                      LDA.W SpriteXPosHigh,X                    ;;B9B6|B9B3+B9B3/B9B3\B9B3; | 
                       STA.B TouchBlockYPos+1                    ;;B9B9|B9B6+B9B6/B9B6\B9B6; / 
                       JSL GenerateTile                          ;;B9BB|B9B8+B9B8/B9B8\B9B8; Generate the tile 
-                      RTL                                       ;;B9BF|B9BC+B9BC/B9BC\B9BC; Return 
+                      RTL                                       ;;B9BF|B9BC+B9BC/B9BC\B9BC;
                                                                 ;;                        ;
 CODE_02B9BD:          LDA.B #$02                                ;;B9C0|B9BD+B9BD/B9BD\B9BD;
                       STA.W SilverCoinsCollected                ;;B9C2|B9BF+B9BF/B9BF\B9BF;
@@ -7065,7 +7065,7 @@ CODE_02B9C4:          LDA.W SpriteStatus,Y                      ;;B9C7|B9C4+B9C4
                       JSR CODE_02B9D9                           ;;B9D5|B9D2+B9D2/B9D2\B9D2;
                     + DEY                                       ;;B9D8|B9D5+B9D5/B9D5\B9D5;
                       BPL CODE_02B9C4                           ;;B9D9|B9D6+B9D6/B9D6\B9D6;
-                      RTL                                       ;;B9DB|B9D8+B9D8/B9D8\B9D8; Return 
+                      RTL                                       ;;B9DB|B9D8+B9D8/B9D8\B9D8;
                                                                 ;;                        ;
 CODE_02B9D9:          LDA.B #$21                                ;;B9DC|B9D9+B9D9/B9D9\B9D9;
                       STA.W SpriteNumber,Y                      ;;B9DE|B9DB+B9DB/B9DB\B9DB;
@@ -7081,13 +7081,13 @@ CODE_02B9D9:          LDA.B #$21                                ;;B9DC|B9D9+B9D9
                       LDA.B #$D8                                ;;B9F6|B9F3+B9F3/B9F3\B9F3;
                       STA.W SpriteYSpeed,X                      ;;B9F8|B9F5+B9F5/B9F5\B9F5;
                       PLX                                       ;;B9FB|B9F8+B9F8/B9F8\B9F8;
-                      RTS                                       ;;B9FC|B9F9+B9F9/B9F9\B9F9; Return 
+                      RTS                                       ;;B9FC|B9F9+B9F9/B9F9\B9F9;
                                                                 ;;                        ;
 CODE_02B9FA:          STZ.B _F                                  ;;B9FD|B9FA+B9FA/B9FA\B9FA;
                       BRA CODE_02BA48                           ;;B9FF|B9FC+B9FC/B9FC\B9FC;
                                                                 ;;                        ;
                       LDA.B _1                                  ;;BA01|B9FE+B9FE/B9FE\B9FE; \ Unreachable 
-                      AND.B #$F0                                ;;BA03|BA00+BA00/BA00\BA00;  | Very similar to code below 
+                      AND.B #$F0                                ;;BA03|BA00+BA00/BA00\BA00; | Very similar to code below 
                       STA.B _4                                  ;;BA05|BA02+BA02/BA02\BA02;
                       LDA.B _9                                  ;;BA07|BA04+BA04/BA04\BA04;
                       CMP.B LevelScrLength                      ;;BA09|BA06+BA06/BA06\BA06;
@@ -7122,7 +7122,7 @@ CODE_02B9FA:          STZ.B _F                                  ;;B9FD|B9FA+B9FA
                       STA.B _6                                  ;;BA46|BA43+BA43/BA43\BA43;
                       BRA CODE_02BA92                           ;;BA48|BA45+BA45/BA45\BA45;
                                                                 ;;                        ;
-Return02BA47:         RTL                                       ;;BA4A|BA47+BA47/BA47\BA47; Return 
+Return02BA47:         RTL                                       ;;BA4A|BA47+BA47/BA47\BA47;
                                                                 ;;                        ;
 CODE_02BA48:          LDA.B _1                                  ;;BA4B|BA48+BA48/BA48\BA48;
                       AND.B #$F0                                ;;BA4D|BA4A+BA4A/BA4A\BA4A;
@@ -7168,17 +7168,17 @@ CODE_02BA92:          LDX.W CurSpriteProcess                    ;;BA95|BA92+BA92
                       LDA.B [_5]                                ;;BAA3|BAA0+BAA0/BAA0\BAA0;
                       BNE Return02BABF                          ;;BAA5|BAA2+BAA2/BAA2\BAA2;
                       LDA.W Map16TileNumber                     ;;BAA7|BAA4+BAA4/BAA4\BAA4;
-                      CMP.B #$45                                ;;BAAA|BAA7+BAA7/BAA7\BAA7;If it is <= the Red Berry map16 tile
-                      BCC Return02BABF                          ;;BAAC|BAA9+BAA9/BAA9\BAA9;Return
-                      CMP.B #$48                                ;;BAAE|BAAB+BAAB/BAAB\BAAB;If it is => Map16 always turning block
-                      BCS Return02BABF                          ;;BAB0|BAAD+BAAD/BAAD\BAAD;Return
+                      CMP.B #$45                                ;;BAAA|BAA7+BAA7/BAA7\BAA7; If it is <= the Red Berry map16 tile
+                      BCC Return02BABF                          ;;BAAC|BAA9+BAA9/BAA9\BAA9;
+                      CMP.B #$48                                ;;BAAE|BAAB+BAAB/BAAB\BAAB; If it is => Map16 always turning block
+                      BCS Return02BABF                          ;;BAB0|BAAD+BAAD/BAAD\BAAD;
                       SEC                                       ;;BAB2|BAAF+BAAF/BAAF\BAAF;
                       SBC.B #$44                                ;;BAB3|BAB0+BAB0/BAB0\BAB0;
                       STA.W EatenBerryType                      ;;BAB5|BAB2+BAB2/BAB2\BAB2;Berry Type
                       LDY.B #$0B                                ;;BAB8|BAB5+BAB5/BAB5\BAB5;
 CODE_02BAB7:          LDA.W SpriteStatus,Y                      ;;BABA|BAB7+BAB7/BAB7\BAB7; \ Find a free sprite slot and branch 
-                      BEQ CODE_02BAC0                           ;;BABD|BABA+BABA/BABA\BABA;  | 
-                      DEY                                       ;;BABF|BABC+BABC/BABC\BABC;  | 
+                      BEQ CODE_02BAC0                           ;;BABD|BABA+BABA/BABA\BABA; | 
+                      DEY                                       ;;BABF|BABC+BABC/BABC\BABC; | 
                       BPL CODE_02BAB7                           ;;BAC0|BABD+BABD/BABD\BABD; / 
 Return02BABF:         RTL                                       ;;BAC2|BABF+BABF/BABF\BABF; Return if no slots found 
                                                                 ;;                        ;
@@ -7187,33 +7187,33 @@ CODE_02BAC0:          LDA.B #$08                                ;;BAC3|BAC0+BAC0
                       LDA.B #$74                                ;;BAC8|BAC5+BAC5/BAC5\BAC5; \ Sprite number = Mushroom 
                       STA.W SpriteNumber,Y                      ;;BACA|BAC7+BAC7/BAC7\BAC7; / 
                       LDA.B _0                                  ;;BACD|BACA+BACA/BACA\BACA; \ Sprite and block X position = $00,$08 
-                      STA.W SpriteXPosLow,Y                     ;;BACF|BACC+BACC/BACC\BACC;  | 
-                      STA.B TouchBlockXPos                      ;;BAD2|BACF+BACF/BACF\BACF;  | 
-                      LDA.B _8                                  ;;BAD4|BAD1+BAD1/BAD1\BAD1;  | 
-                      STA.W SpriteYPosHigh,Y                    ;;BAD6|BAD3+BAD3/BAD3\BAD3;  | 
+                      STA.W SpriteXPosLow,Y                     ;;BACF|BACC+BACC/BACC\BACC; | 
+                      STA.B TouchBlockXPos                      ;;BAD2|BACF+BACF/BACF\BACF; | 
+                      LDA.B _8                                  ;;BAD4|BAD1+BAD1/BAD1\BAD1; | 
+                      STA.W SpriteYPosHigh,Y                    ;;BAD6|BAD3+BAD3/BAD3\BAD3; | 
                       STA.B TouchBlockXPos+1                    ;;BAD9|BAD6+BAD6/BAD6\BAD6; / 
                       LDA.B _1                                  ;;BADB|BAD8+BAD8/BAD8\BAD8; \ Sprite and block Y position = $01,$09 
-                      STA.W SpriteYPosLow,Y                     ;;BADD|BADA+BADA/BADA\BADA;  | 
-                      STA.B TouchBlockYPos                      ;;BAE0|BADD+BADD/BADD\BADD;  | 
-                      LDA.B _9                                  ;;BAE2|BADF+BADF/BADF\BADF;  | 
-                      STA.W SpriteXPosHigh,Y                    ;;BAE4|BAE1+BAE1/BAE1\BAE1;  | 
+                      STA.W SpriteYPosLow,Y                     ;;BADD|BADA+BADA/BADA\BADA; | 
+                      STA.B TouchBlockYPos                      ;;BAE0|BADD+BADD/BADD\BADD; | 
+                      LDA.B _9                                  ;;BAE2|BADF+BADF/BADF\BADF; | 
+                      STA.W SpriteXPosHigh,Y                    ;;BAE4|BAE1+BAE1/BAE1\BAE1; | 
                       STA.B TouchBlockYPos+1                    ;;BAE7|BAE4+BAE4/BAE4\BAE4; / 
                       PHX                                       ;;BAE9|BAE6+BAE6/BAE6\BAE6;
                       TYX                                       ;;BAEA|BAE7+BAE7/BAE7\BAE7;
                       JSL InitSpriteTables                      ;;BAEB|BAE8+BAE8/BAE8\BAE8; Reset sprite tables 
                       INC.W SpriteMisc160E,X                    ;;BAEF|BAEC+BAEC/BAEC\BAEC; ? 
                       LDA.W SpriteTweakerB,X                    ;;BAF2|BAEF+BAEF/BAEF\BAEF; \ Change the index into sprite clipping table 
-                      AND.B #$F0                                ;;BAF5|BAF2+BAF2/BAF2\BAF2;  | to "resize" the sprite 
-                      ORA.B #$0C                                ;;BAF7|BAF4+BAF4/BAF4\BAF4;  | 
+                      AND.B #$F0                                ;;BAF5|BAF2+BAF2/BAF2\BAF2; | to "resize" the sprite 
+                      ORA.B #$0C                                ;;BAF7|BAF4+BAF4/BAF4\BAF4; | 
                       STA.W SpriteTweakerB,X                    ;;BAF9|BAF6+BAF6/BAF6\BAF6; / 
                       LDA.W SpriteTweakerD,X                    ;;BAFC|BAF9+BAF9/BAF9\BAF9; \ No longer gives powerup when eaten 
-                      AND.B #$BF                                ;;BAFF|BAFC+BAFC/BAFC\BAFC;  | 
+                      AND.B #$BF                                ;;BAFF|BAFC+BAFC/BAFC\BAFC; | 
                       STA.W SpriteTweakerD,X                    ;;BB01|BAFE+BAFE/BAFE\BAFE; / 
                       PLX                                       ;;BB04|BB01+BB01/BB01\BB01;
                       LDA.B #$04                                ;;BB05|BB02+BB02/BB02\BB02; \ Block to generate = Tree behind berry 
                       STA.B Map16TileGenerate                   ;;BB07|BB04+BB04/BB04\BB04; / 
                       JSL GenerateTile                          ;;BB09|BB06+BB06/BB06\BB06; Generate the tile 
-                      RTL                                       ;;BB0D|BB0A+BB0A/BB0A\BB0A; Return 
+                      RTL                                       ;;BB0D|BB0A+BB0A/BB0A\BB0A;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02BB0B:          db $02,$FA,$06,$06                        ;;BB0E|BB0B+BB0B/BB0B\BB0B;
@@ -7275,7 +7275,7 @@ CODE_02BB23:          STA.B _2                                  ;;BB26|BB23+BB23
                       LDA.L YoshiWingsSize,X                    ;;BB82|BB7F+BB7F/BB7F\BB7F;
                       STA.W OAMTileSize,Y                       ;;BB86|BB83+BB83/BB83\BB83;
                     + PLX                                       ;;BB89|BB86+BB86/BB86\BB86;
-Return02BB87:         RTL                                       ;;BB8A|BB87+BB87/BB87\BB87; Return 
+Return02BB87:         RTL                                       ;;BB8A|BB87+BB87/BB87\BB87;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02BB88:          db $FF,$01,$FF,$01,$00,$00                ;;BB8B|BB88+BB88/BB88\BB88;
@@ -7334,7 +7334,7 @@ CODE_02BBB7:          TXA                                       ;;BBBA|BBB7+BBB7
 CODE_02BBF7:          LDA.B #$C0                                ;;BBFA|BBF7+BBF7/BBF7\BBF7;
                       STA.B SpriteYSpeed,X                      ;;BBFC|BBF9+BBF9/BBF9\BBF9;
 CODE_02BBFB:          JSL InvisBlkMainRt                        ;;BBFE|BBFB+BBFB/BBFB\BBFB;
-Return02BBFF:         RTL                                       ;;BC02|BBFF+BBFF/BBFF\BBFF; Return 
+Return02BBFF:         RTL                                       ;;BC02|BBFF+BBFF/BBFF\BBFF;
                                                                 ;;                        ;
 CODE_02BC00:          LDA.B EffFrame                            ;;BC03|BC00+BC00/BC00\BC00;
                       AND.B #$04                                ;;BC05|BC02+BC02/BC02\BC02;
@@ -7342,7 +7342,7 @@ CODE_02BC00:          LDA.B EffFrame                            ;;BC03|BC00+BC00
                       LSR A                                     ;;BC08|BC05+BC05/BC05\BC05;
                       STA.W SpriteMisc157C,X                    ;;BC09|BC06+BC06/BC06\BC06;
                       JSL GenericSprGfxRt1                      ;;BC0C|BC09+BC09/BC09\BC09;
-                      RTS                                       ;;BC10|BC0D+BC0D/BC0D\BC0D; Return 
+                      RTS                                       ;;BC10|BC0D+BC0D/BC0D\BC0D;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DolphinTiles1:        db $E2,$88                                ;;BC11|BC0E+BC0E/BC0E\BC0E;
@@ -7431,7 +7431,7 @@ WallFollowersMain:    JSL SprSprInteract                        ;;BCDE|BCDB+BCDB
                       LDA.B #$0C                                ;;BCEC|BCE9+BCE9/BCE9\BCE9;
                       STA.W SpriteMisc1558,X                    ;;BCEE|BCEB+BCEB/BCEB\BCEB;
                     + LDA.B SpriteNumber,X                      ;;BCF1|BCEE+BCEE/BCEE\BCEE; \ Branch if not Spike Top 
-                      CMP.B #$2E                                ;;BCF3|BCF0+BCF0/BCF0\BCF0;  | 
+                      CMP.B #$2E                                ;;BCF3|BCF0+BCF0/BCF0\BCF0; | 
                       BNE CODE_02BD23                           ;;BCF5|BCF2+BCF2/BCF2\BCF2; / 
                       LDY.B SpriteTableC2,X                     ;;BCF7|BCF4+BCF4/BCF4\BCF4;
                       LDA.W SpriteMisc1564,X                    ;;BCF9|BCF6+BCF6/BCF6\BCF6;
@@ -7470,14 +7470,14 @@ CODE_02BD2F:          LDA.W SpriteStatus,X                      ;;BD32|BD2F+BD2F
                       STZ.W SpriteMisc1528,X                    ;;BD39|BD36+BD36/BD36\BD36;
                       LDA.B #$FF                                ;;BD3C|BD39+BD39/BD39\BD39;
                       STA.W SpriteMisc1558,X                    ;;BD3E|BD3B+BD3B/BD3B\BD3B;
-                      RTL                                       ;;BD41|BD3E+BD3E/BD3E\BD3E; Return 
+                      RTL                                       ;;BD41|BD3E+BD3E/BD3E\BD3E;
                                                                 ;;                        ;
                     + LDA.B SpriteLock                          ;;BD42|BD3F+BD3F/BD3F\BD3F;
                       BNE Return02BD74                          ;;BD44|BD41+BD41/BD41\BD41;
                       JSR SubOffscreen3Bnk2                     ;;BD46|BD43+BD43/BD43\BD43;
                       JSL MarioSprInteract                      ;;BD49|BD46+BD46/BD46\BD46;
                       LDA.B SpriteNumber,X                      ;;BD4D|BD4A+BD4A/BD4A\BD4A; \ Branch if Spike Top 
-                      CMP.B #$2E                                ;;BD4F|BD4C+BD4C/BD4C\BD4C;  | 
+                      CMP.B #$2E                                ;;BD4F|BD4C+BD4C/BD4C\BD4C; | 
                       BEQ CODE_02BDA7                           ;;BD51|BD4E+BD4E/BD4E\BD4E; / 
                       CMP.B #$3C                                ;;BD53|BD50+BD50/BD50\BD50; \ Branch if Wall-follow Urchin 
                       BEQ CODE_02BDB3                           ;;BD55|BD52+BD52/BD52\BD52; / 
@@ -7497,10 +7497,10 @@ CODE_02BD68:          LDA.W SpriteMisc1540,X                    ;;BD6B|BD68+BD68
                       LDA.B #$80                                ;;BD70|BD6D+BD6D/BD6D\BD6D;
                       STA.W SpriteMisc1540,X                    ;;BD72|BD6F+BD6F/BD6F\BD6F;
                       INC.B SpriteTableC2,X                     ;;BD75|BD72+BD72/BD72\BD72;
-Return02BD74:         RTL                                       ;;BD77|BD74+BD74/BD74\BD74; Return 
+Return02BD74:         RTL                                       ;;BD77|BD74+BD74/BD74\BD74;
                                                                 ;;                        ;
 CODE_02BD75:          LDA.B SpriteNumber,X                      ;;BD78|BD75+BD75/BD75\BD75; \ Branch if Wall-detect Urchin 
-                      CMP.B #$3B                                ;;BD7A|BD77+BD77/BD77\BD77;  | 
+                      CMP.B #$3B                                ;;BD7A|BD77+BD77/BD77\BD77; | 
                       BEQ CODE_02BD80                           ;;BD7C|BD79+BD79/BD79\BD79; / 
                       LDA.W SpriteMisc1540,X                    ;;BD7E|BD7B+BD7B/BD7B\BD7B;
                       BEQ CODE_02BD91                           ;;BD81|BD7E+BD7E/BD7E\BD7E;
@@ -7521,7 +7521,7 @@ CODE_02BD91:          LDA.B SpriteXSpeed,X                      ;;BD94|BD91+BD91
                       LDA.B #$40                                ;;BDA2|BD9F+BD9F/BD9F\BD9F;
                       STA.W SpriteMisc1540,X                    ;;BDA4|BDA1+BDA1/BDA1\BDA1;
                       INC.B SpriteTableC2,X                     ;;BDA7|BDA4+BDA4/BDA4\BDA4;
-                    + RTL                                       ;;BDA9|BDA6+BDA6/BDA6\BDA6; Return 
+                    + RTL                                       ;;BDA9|BDA6+BDA6/BDA6\BDA6;
                                                                 ;;                        ;
 CODE_02BDA7:          LDA.B SpriteYPosLow,X                     ;;BDAA|BDA7+BDA7/BDA7\BDA7;
                       SEC                                       ;;BDAC|BDA9+BDA9/BDA9\BDA9;
@@ -7544,7 +7544,7 @@ CODE_02BDB3:          LDA.W SpriteMisc1540,X                    ;;BDB6|BDB3+BDB3
                       STA.W SpriteMisc1564,X                    ;;BDD4|BDD1+BDD1/BDD1\BDD1;
                       LDA.B #$38                                ;;BDD7|BDD4+BDD4/BDD4\BDD4;
                       LDY.B SpriteNumber,X                      ;;BDD9|BDD6+BDD6/BDD6\BDD6; \ Branch if Wall-follow Urchin 
-                      CPY.B #$3C                                ;;BDDB|BDD8+BDD8/BDD8\BDD8;  | 
+                      CPY.B #$3C                                ;;BDDB|BDD8+BDD8/BDD8\BDD8; | 
                       BEQ +                                     ;;BDDD|BDDA+BDDA/BDDA\BDDA; / 
                       LDA.B #$1A                                ;;BDDF|BDDC+BDDC/BDDC\BDDC;
                       CPY.B #$A5                                ;;BDE1|BDDE+BDDE/BDDE\BDDE;
@@ -7554,7 +7554,7 @@ CODE_02BDB3:          LDA.W SpriteMisc1540,X                    ;;BDB6|BDB3+BDB3
                     + STA.W SpriteMisc1540,X                    ;;BDE7|BDE4+BDE4/BDE4\BDE4;
 CODE_02BDE7:          LDA.B #$20                                ;;BDEA|BDE7+BDE7/BDE7\BDE7;
                       LDY.B SpriteNumber,X                      ;;BDEC|BDE9+BDE9/BDE9\BDE9; \ Branch if Wall-follow Urchin 
-                      CPY.B #$3C                                ;;BDEE|BDEB+BDEB/BDEB\BDEB;  | 
+                      CPY.B #$3C                                ;;BDEE|BDEB+BDEB/BDEB\BDEB; | 
                       BEQ +                                     ;;BDF0|BDED+BDED/BDED\BDED; / 
                       LDA.B #$10                                ;;BDF2|BDEF+BDEF/BDEF\BDEF;
                       CPY.B #$A5                                ;;BDF4|BDF1+BDF1/BDF1\BDF1;
@@ -7594,13 +7594,13 @@ CODE_02BE2F:          LDY.B SpriteTableC2,X                     ;;BE32|BE2F+BE2F
                       LDA.W DATA_02BC8F,Y                       ;;BE39|BE36+BE36/BE36\BE36;
                       STA.B SpriteXSpeed,X                      ;;BE3C|BE39+BE39/BE39\BE39;
                       LDA.B SpriteNumber,X                      ;;BE3E|BE3B+BE3B/BE3B\BE3B; \ Branch if not Ground-guided Fuzzball/Sparky 
-                      CMP.B #$A5                                ;;BE40|BE3D+BE3D/BE3D\BE3D;  | 
+                      CMP.B #$A5                                ;;BE40|BE3D+BE3D/BE3D\BE3D; | 
                       BNE +                                     ;;BE42|BE3F+BE3F/BE3F\BE3F; / 
                       ASL.B SpriteXSpeed,X                      ;;BE44|BE41+BE41/BE41\BE41;
                       ASL.B SpriteYSpeed,X                      ;;BE46|BE43+BE43/BE43\BE43;
                     + JSR UpdateXPosNoGrvty                     ;;BE48|BE45+BE45/BE45\BE45;
                       JSR UpdateYPosNoGrvty                     ;;BE4B|BE48+BE48/BE48\BE48;
-                      RTL                                       ;;BE4E|BE4B+BE4B/BE4B\BE4B; Return 
+                      RTL                                       ;;BE4E|BE4B+BE4B/BE4B\BE4B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02BE4C:          db $05,$45                                ;;BE4F|BE4C+BE4C/BE4C\BE4C;
@@ -7625,7 +7625,7 @@ CODE_02BE4E:          LDA.B SpriteNumber,X                      ;;BE51|BE4E+BE4E
                       ORA.B SpriteProperties                    ;;BE75|BE72+BE72/BE72\BE72;
                       STA.W OAMTileAttr+$100,Y                  ;;BE77|BE74+BE74/BE74\BE74;
                       PLX                                       ;;BE7A|BE77+BE77/BE77\BE77;
-                      RTS                                       ;;BE7B|BE78+BE78/BE78\BE78; Return 
+                      RTS                                       ;;BE7B|BE78+BE78/BE78\BE78;
                                                                 ;;                        ;
                     + LDA.B #$0A                                ;;BE7C|BE79+BE79/BE79\BE79;
                       STA.W OAMTileNo+$100,Y                    ;;BE7E|BE7B+BE7B/BE7B\BE7B;
@@ -7637,7 +7637,7 @@ CODE_02BE4E:          LDA.B SpriteNumber,X                      ;;BE51|BE4E+BE4E
                       ASL A                                     ;;BE88|BE85+BE85/BE85\BE85;
                       EOR.W OAMTileAttr+$100,Y                  ;;BE89|BE86+BE86/BE86\BE86;
                       STA.W OAMTileAttr+$100,Y                  ;;BE8C|BE89+BE89/BE89\BE89;
-                      RTS                                       ;;BE8F|BE8C+BE8C/BE8C\BE8C; Return 
+                      RTS                                       ;;BE8F|BE8C+BE8C/BE8C\BE8C;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02BE8D:          db $F8,$08,$F8,$08                        ;;BE90|BE8D+BE8D/BE8D\BE8D;
@@ -7791,7 +7791,7 @@ DATA_02BFC8:          db $10,$F0                                ;;BFCF|BFC8+BFC8
                                                                 ;;                        ;
 DATA_02BFCA:          db $01,$FF                                ;;BFD1|BFCA+BFCA/BFCA\BFCA;
                                                                 ;;                        ;
-                    - RTL                                       ;;BFD3|BFCC+BFCC/BFCC\BFCC; Return 
+                    - RTL                                       ;;BFD3|BFCC+BFCC/BFCC\BFCC;
                                                                 ;;                        ;
 RipVanFishMain:       JSL GenericSprGfxRt2                      ;;BFD4|BFCD+BFCD/BFCD\BFCD;
                       LDA.B SpriteLock                          ;;BFD8|BFD1+BFD1/BFD1\BFD1;
@@ -7821,7 +7821,7 @@ RipVanFishMain:       JSL GenericSprGfxRt2                      ;;BFD4|BFCD+BFCD
                       STA.B SpriteXSpeed,X                      ;;C00B|C004+C004/C004\C004;
                       INC.W SpriteMisc1570,X                    ;;C00D|C006+C006/C006\C006;
                       LDA.W SpriteBlockedDirs,X                 ;;C010|C009+C009/C009\C009; \ Branch if not touching object 
-                      AND.B #$03                                ;;C013|C00C+C00C/C00C\C00C;  | 
+                      AND.B #$03                                ;;C013|C00C+C00C/C00C\C00C; | 
                       BEQ +                                     ;;C015|C00E+C00E/C00E\C00E; / 
                       STZ.B SpriteXSpeed,X                      ;;C017|C010+C010/C010\C010; Sprite X Speed = 0 
                     + LDA.W SpriteBlockedDirs,X                 ;;C019|C012+C012/C012\C012;
@@ -7851,7 +7851,7 @@ CODE_02C02E:          LDA.B #$02                                ;;C035|C02E+C02E
                                                                 ;;                        ;
 CODE_02C042:          DEC.B SpriteXSpeed,X                      ;;C049|C042+C042/C042\C042;
 CODE_02C044:          LDA.W SpriteBlockedDirs,X                 ;;C04B|C044+C044/C044\C044; \ Branch if not on ground 
-                      AND.B #$04                                ;;C04E|C047+C047/C047\C047;  | 
+                      AND.B #$04                                ;;C04E|C047+C047/C047\C047; | 
                       BEQ +                                     ;;C050|C049+C049/C049\C049; / 
                       STZ.B SpriteYSpeed,X                      ;;C052|C04B+C04B/C04B\C04B; Sprite Y Speed = 0 
                       LDA.B SpriteYPosLow,X                     ;;C054|C04D+C04D/C04D\C04D;
@@ -7882,7 +7882,7 @@ CODE_02C07B:          LDY.B #$02                                ;;C082|C07B+C07B
                       INY                                       ;;C08B|C084+C084/C084\C084;
                     + TYA                                       ;;C08C|C085+C085/C085\C085;
                       STA.W SpriteMisc1602,X                    ;;C08D|C086+C086/C086\C086;
-                      RTL                                       ;;C090|C089+C089/C089\C089; Return 
+                      RTL                                       ;;C090|C089+C089/C089\C089;
                                                                 ;;                        ;
 CODE_02C08A:          LDA.B TrueFrame                           ;;C091|C08A+C08A/C08A\C08A;
                       AND.B #$01                                ;;C093|C08C+C08C/C08C\C08C;
@@ -7913,21 +7913,21 @@ CODE_02C0BB:          LDY.B #$00                                ;;C0C2|C0BB+C0BB
                       INY                                       ;;C0CB|C0C4+C0C4/C0C4\C0C4;
                     + TYA                                       ;;C0CC|C0C5+C0C5/C0C5\C0C5;
                       STA.W SpriteMisc1602,X                    ;;C0CD|C0C6+C0C6/C0C6\C0C6;
-                      RTL                                       ;;C0D0|C0C9+C0C9/C0C9\C0C9; Return 
+                      RTL                                       ;;C0D0|C0C9+C0C9/C0C9\C0C9;
                                                                 ;;                        ;
 CODE_02C0CA:          STZ.B SpriteTableC2,X                     ;;C0D1|C0CA+C0CA/C0CA\C0CA;
                       JMP CODE_02C02E                           ;;C0D3|C0CC+C0CC/C0CC\C0CC;
                                                                 ;;                        ;
 ADDR_02C0CF:          LDA.B #$08                                ;;C0D6|C0CF+C0CF/C0CF\C0CF; \ Unreachable 
-                      LDY.W SpriteMisc157C,X                    ;;C0D8|C0D1+C0D1/C0D1\C0D1;  | A = #$08 or #$09 depending on sprite direction 
-                      BEQ +                                     ;;C0DB|C0D4+C0D4/C0D4\C0D4;  | 
+                      LDY.W SpriteMisc157C,X                    ;;C0D8|C0D1+C0D1/C0D1\C0D1; | A = #$08 or #$09 depending on sprite direction 
+                      BEQ +                                     ;;C0DB|C0D4+C0D4/C0D4\C0D4; | 
                       INC A                                     ;;C0DD|C0D6+C0D6/C0D6\C0D6; / 
                     + BRA +                                     ;;C0DE|C0D7+C0D7/C0D7\C0D7;
                                                                 ;;                        ;
 CODE_02C0D9:          LDA.B #$06                                ;;C0E0|C0D9+C0D9/C0D9\C0D9;
                     + TAY                                       ;;C0E2|C0DB+C0DB/C0DB\C0DB;
                       LDA.W SpriteOffscreenX,X                  ;;C0E3|C0DC+C0DC/C0DC\C0DC; \ Return if sprite is offscreen 
-                      ORA.W SpriteOffscreenVert,X               ;;C0E6|C0DF+C0DF/C0DF\C0DF;  | 
+                      ORA.W SpriteOffscreenVert,X               ;;C0E6|C0DF+C0DF/C0DF\C0DF; | 
                       BNE Return02C125                          ;;C0E9|C0E2+C0E2/C0E2\C0E2; / 
                       TYA                                       ;;C0EB|C0E4+C0E4/C0E4\C0E4;
                       DEC.W SpriteMisc1528,X                    ;;C0EC|C0E5+C0E5/C0E5\C0E5;
@@ -7959,7 +7959,7 @@ CODE_02C107:          PLA                                       ;;C10E|C107+C107
                       STA.W MinExtSpriteTimer,Y                 ;;C124|C11D+C11D/C11D\C11D;
                       LDA.B #$FA                                ;;C127|C120+C120/C120\C120;
                       STA.W MinExtSpriteXSpeed,Y                ;;C129|C122+C122/C122\C122;
-Return02C125:         RTL                                       ;;C12C|C125+C125/C125\C125; Return 
+Return02C125:         RTL                                       ;;C12C|C125+C125/C125\C125;
                                                                 ;;                        ;
 CODE_02C126:          LDY.B #$00                                ;;C12D|C126+C126/C126\C126;
                       LDA.B SpriteXSpeed,X                      ;;C12F|C128+C128/C128\C128;
@@ -7967,7 +7967,7 @@ CODE_02C126:          LDY.B #$00                                ;;C12D|C126+C126
                       INY                                       ;;C133|C12C+C12C/C12C\C12C;
                     + TYA                                       ;;C134|C12D+C12D/C12D\C12D;
                       STA.W SpriteMisc157C,X                    ;;C135|C12E+C12E/C12E\C12E;
-                      RTS                                       ;;C138|C131+C131/C131\C131; Return 
+                      RTS                                       ;;C138|C131+C131/C131\C131;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C132:          db $30,$20,$0A,$30                        ;;C139|C132+C132/C132\C132;
@@ -7985,7 +7985,7 @@ CODE_02C13A:          LDA.W SpriteMisc1558,X                    ;;C141|C13A+C13A
                       STZ.W SpriteMisc1570,X                    ;;C154|C14D+C14D/C14D\C14D;
                     + LDA.B #$02                                ;;C157|C150+C150/C150\C150;
                       STA.W SpriteMisc151C,X                    ;;C159|C152+C152/C152\C152;
-                      RTS                                       ;;C15C|C155+C155/C155\C155; Return 
+                      RTS                                       ;;C15C|C155+C155/C155\C155;
                                                                 ;;                        ;
 CODE_02C156:          LDA.W SpriteMisc1540,X                    ;;C15D|C156+C156/C156\C156;
                       BNE CODE_02C181                           ;;C160|C159+C159/C159\C159;
@@ -8003,7 +8003,7 @@ CODE_02C156:          LDA.W SpriteMisc1540,X                    ;;C15D|C156+C156
                       BNE +                                     ;;C17D|C176+C176/C176\C176;
                       LDA.B #$40                                ;;C17F|C178+C178/C178\C178;
                       STA.W SpriteMisc1558,X                    ;;C181|C17A+C17A/C17A\C17A;
-                      RTS                                       ;;C184|C17D+C17D/C17D\C17D; Return 
+                      RTS                                       ;;C184|C17D+C17D/C17D\C17D;
                                                                 ;;                        ;
                     + JSR CODE_02C19A                           ;;C185|C17E+C17E/C17E\C17E;
 CODE_02C181:          LDY.W SpriteMisc1570,X                    ;;C188|C181+C181/C181\C181;
@@ -8012,7 +8012,7 @@ CODE_02C181:          LDY.W SpriteMisc1570,X                    ;;C188|C181+C181
                       LDY.W SpriteMisc157C,X                    ;;C191|C18A+C18A/C18A\C18A;
                       LDA.W DATA_02C1F3,Y                       ;;C194|C18D+C18D/C18D\C18D;
                       STA.W SpriteMisc151C,X                    ;;C197|C190+C190/C190\C190;
-                      RTS                                       ;;C19A|C193+C193/C193\C193; Return 
+                      RTS                                       ;;C19A|C193+C193/C193\C193;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C194:          db $14,$EC                                ;;C19B|C194+C194/C194\C194;
@@ -8058,7 +8058,7 @@ CODE_02C19A:          JSL FindFreeSprSlot                       ;;C1A1|C19A+C19A
                       STA.W SpriteYSpeed,Y                      ;;C1F1|C1EA+C1EA/C1EA\C1EA;
                       LDA.B #$2C                                ;;C1F4|C1ED+C1ED/C1ED\C1ED;
                       STA.W SpriteMisc1540,Y                    ;;C1F6|C1EF+C1EF/C1EF\C1EF;
-                    + RTS                                       ;;C1F9|C1F2+C1F2/C1F2\C1F2; Return 
+                    + RTS                                       ;;C1F9|C1F2+C1F2/C1F2\C1F2;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C1F3:          db $01,$03                                ;;C1FA|C1F3+C1F3/C1F3\C1F3;
@@ -8078,7 +8078,7 @@ ChucksMain:           PHB                                       ;;C1FC|C1F5+C1F5
                       LDA.B #$28                                ;;C213|C20C+C20C/C20C\C20C;
                       STA.W SpriteMisc163E,X                    ;;C215|C20E+C20E/C20E\C20E;
                     + PLB                                       ;;C218|C211+C211/C211\C211;
-                      RTL                                       ;;C219|C212+C212/C212\C212; Return 
+                      RTL                                       ;;C219|C212+C212/C212\C212;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C213:          db $01,$02,$03,$02                        ;;C21A|C213+C213/C213\C213;
@@ -8091,7 +8091,7 @@ DATA_02C213:          db $01,$02,$03,$02                        ;;C21A|C213+C213
                       LDA.W DATA_02C213,Y                       ;;C225|C21E+C21E/C21E\C21E;
                       STA.W SpriteMisc151C,X                    ;;C228|C221+C221/C221\C221;
                       JSR CODE_02C81A                           ;;C22B|C224+C224/C224\C224;
-                      RTS                                       ;;C22E|C227+C227/C227\C227; Return 
+                      RTS                                       ;;C22E|C227+C227/C227\C227;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C228:          db $40,$10                                ;;C22F|C228+C228/C228\C228;
@@ -8106,7 +8106,7 @@ CODE_02C22C:          LDA.W SpriteStatus,X                      ;;C233|C22C+C22C
                       LDA.B #$05                                ;;C23F|C238+C238/C238\C238;
                       STA.W SpriteMisc1602,X                    ;;C241|C23A+C23A/C23A\C23A;
                     + LDA.W SpriteBlockedDirs,X                 ;;C244|C23D+C23D/C23D\C23D; \ Branch if on ground 
-                      AND.B #$04                                ;;C247|C240+C240/C240\C240;  | 
+                      AND.B #$04                                ;;C247|C240+C240/C240\C240; | 
                       BNE +                                     ;;C249|C242+C242/C242\C242; / 
                       LDA.B SpriteYSpeed,X                      ;;C24B|C244+C244/C244\C244;
                       BPL +                                     ;;C24D|C246+C246/C246\C246;
@@ -8118,7 +8118,7 @@ CODE_02C22C:          LDA.W SpriteStatus,X                      ;;C233|C22C+C22C
                     + JSR CODE_02C81A                           ;;C25A|C253+C253/C253\C253;
                       LDA.B SpriteLock                          ;;C25D|C256+C256/C256\C256;
                       BEQ +                                     ;;C25F|C258+C258/C258\C258;
-                      RTS                                       ;;C261|C25A+C25A/C25A\C25A; Return 
+                      RTS                                       ;;C261|C25A+C25A/C25A\C25A;
                                                                 ;;                        ;
                     + JSR SubOffscreen0Bnk2                     ;;C262|C25B+C25B/C25B\C25B;
                       JSR CODE_02C79D                           ;;C265|C25E+C25E/C25E\C25E;
@@ -8130,7 +8130,7 @@ CODE_02C22C:          LDA.W SpriteStatus,X                      ;;C233|C22C+C22C
                       LDA.B #$10                                ;;C277|C270+C270/C270\C270;
                       STA.B SpriteYSpeed,X                      ;;C279|C272+C272/C272\C272;
                     + LDA.W SpriteBlockedDirs,X                 ;;C27B|C274+C274/C274\C274; \ Branch if not touching object 
-                      AND.B #$03                                ;;C27E|C277+C277/C277\C277;  | 
+                      AND.B #$03                                ;;C27E|C277+C277/C277\C277; | 
                       BEQ CODE_02C2F4                           ;;C280|C279+C279/C279\C279; / 
                       LDA.W SpriteOffscreenX,X                  ;;C282|C27B+C27B/C27B\C27B;
                       ORA.W SpriteOffscreenVert,X               ;;C285|C27E+C27E/C27E\C27E;
@@ -8145,7 +8145,7 @@ CODE_02C22C:          LDA.W SpriteStatus,X                      ;;C233|C22C+C22C
                       CMP.B #$1C                                ;;C297|C290+C290/C290\C290;
                       BCC CODE_02C2E4                           ;;C299|C292+C292/C292\C292;
                       LDA.W SpriteBlockedDirs,X                 ;;C29B|C294+C294/C294\C294; \ Branch if on ground 
-                      AND.B #$40                                ;;C29E|C297+C297/C297\C297;  | 
+                      AND.B #$40                                ;;C29E|C297+C297/C297\C297; | 
                       BNE CODE_02C2E4                           ;;C2A0|C299+C299/C299\C299; / 
                       LDA.W Map16TileDestroy                    ;;C2A2|C29B+C29B/C29B\C29B;
                       CMP.B #$2E                                ;;C2A5|C29E+C29E/C29E\C29E;
@@ -8153,7 +8153,7 @@ CODE_02C22C:          LDA.W SpriteStatus,X                      ;;C233|C22C+C22C
                       CMP.B #$1E                                ;;C2A9|C2A2+C2A2/C2A2\C2A2;
                       BNE CODE_02C2E4                           ;;C2AB|C2A4+C2A4/C2A4\C2A4;
 CODE_02C2A6:          LDA.W SpriteBlockedDirs,X                 ;;C2AD|C2A6+C2A6/C2A6\C2A6; \ Branch if not on ground 
-                      AND.B #$04                                ;;C2B0|C2A9+C2A9/C2A9\C2A9;  | 
+                      AND.B #$04                                ;;C2B0|C2A9+C2A9/C2A9\C2A9; | 
                       BEQ CODE_02C2F7                           ;;C2B2|C2AB+C2AB/C2AB\C2AB; / 
                       LDA.B TouchBlockXPos+1                    ;;C2B4|C2AD+C2AD/C2AD\C2AD;
                       PHA                                       ;;C2B6|C2AF+C2AF/C2AF\C2AF;
@@ -8185,7 +8185,7 @@ CODE_02C2A6:          LDA.W SpriteBlockedDirs,X                 ;;C2AD|C2A6+C2A6
                       BRA CODE_02C2F4                           ;;C2E9|C2E2+C2E2/C2E2\C2E2;
                                                                 ;;                        ;
 CODE_02C2E4:          LDA.W SpriteBlockedDirs,X                 ;;C2EB|C2E4+C2E4/C2E4\C2E4; \ Branch if not on ground 
-                      AND.B #$04                                ;;C2EE|C2E7+C2E7/C2E7\C2E7;  | 
+                      AND.B #$04                                ;;C2EE|C2E7+C2E7/C2E7\C2E7; | 
                       BEQ CODE_02C2F7                           ;;C2F0|C2E9+C2E9/C2E9\C2E9; / 
                       LDA.B #$C0                                ;;C2F2|C2EB+C2EB/C2EB\C2EB;
                       STA.B SpriteYSpeed,X                      ;;C2F4|C2ED+C2ED/C2ED\C2ED;
@@ -8194,7 +8194,7 @@ CODE_02C2E4:          LDA.W SpriteBlockedDirs,X                 ;;C2EB|C2E4+C2E4
                                                                 ;;                        ;
 CODE_02C2F4:          JSR UpdateXPosNoGrvty                     ;;C2FB|C2F4+C2F4/C2F4\C2F4;
 CODE_02C2F7:          LDA.W SpriteBlockedDirs,X                 ;;C2FE|C2F7+C2F7/C2F7\C2F7; \ Branch if not on ground 
-                      AND.B #$04                                ;;C301|C2FA+C2FA/C2FA\C2FA;  | 
+                      AND.B #$04                                ;;C301|C2FA+C2FA/C2FA\C2FA; | 
                       BEQ +                                     ;;C303|C2FC+C2FC/C2FC\C2FC; / 
                       JSR CODE_02C579                           ;;C305|C2FE+C2FE/C2FE\C2FE;
                     + JSR UpdateYPosNoGrvty                     ;;C308|C301+C301/C301\C301;
@@ -8286,7 +8286,7 @@ CODE_02C37B:          LDA.B EffFrame                            ;;C382|C37B+C37B
                       BCC +                                     ;;C3B1|C3AA+C3AA/C3AA\C3AA;
                       STA.W CurrentGenerator                    ;;C3B3|C3AC+C3AC/C3AC\C3AC;
                     + STA.W ChuckIsWhistling                    ;;C3B6|C3AF+C3AF/C3AF\C3AF;
-                      RTS                                       ;;C3B9|C3B2+C3B2/C3B2\C3B2; Return 
+                      RTS                                       ;;C3B9|C3B2+C3B2/C3B2\C3B2;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C3B3:          db $7F,$BF,$FF,$DF                        ;;C3BA|C3B3+C3B3/C3B3\C3B3;
@@ -8328,7 +8328,7 @@ CODE_02C3CB:          LDA.W SpriteMisc1534,X                    ;;C3D2|C3CB+C3CB
                       BCS +                                     ;;C418|C411+C411/C411\C411;
                       LDA.B #$00                                ;;C41A|C413+C413/C413\C413;
                       STA.W SpriteMisc1602,X                    ;;C41C|C415+C415/C415\C415;
-                      RTS                                       ;;C41F|C418+C418/C418\C418; Return 
+                      RTS                                       ;;C41F|C418+C418/C418\C418;
                                                                 ;;                        ;
                     + SEC                                       ;;C420|C419+C419/C419\C419;
                       SBC.B #$40                                ;;C421|C41A+C41A/C41A\C41A;
@@ -8346,7 +8346,7 @@ CODE_02C3CB:          LDA.W SpriteMisc1534,X                    ;;C3D2|C3CB+C3CB
                       JSR CODE_02C466                           ;;C438|C431+C431/C431\C431;
                       LDA.B #$08                                ;;C43B|C434+C434/C434\C434;
                       STA.W SpriteMisc1558,X                    ;;C43D|C436+C436/C436\C436;
-Return02C439:         RTS                                       ;;C440|C439+C439/C439\C439; Return 
+Return02C439:         RTS                                       ;;C440|C439+C439/C439\C439;
                                                                 ;;                        ;
 CODE_02C43A:          LDA.W SpriteMisc1540,X                    ;;C441|C43A+C43A/C43A\C43A;
                       BEQ CODE_02C45C                           ;;C444|C43D+C43D/C43D\C43D;
@@ -8365,10 +8365,10 @@ CODE_02C43A:          LDA.W SpriteMisc1540,X                    ;;C441|C43A+C43A
                       CMP.B #$26                                ;;C45B|C454+C454/C454\C454;
                       BNE +                                     ;;C45D|C456+C456/C456\C456;
                       JSR CODE_02C466                           ;;C45F|C458+C458/C458\C458;
-                    + RTS                                       ;;C462|C45B+C45B/C45B\C45B; Return 
+                    + RTS                                       ;;C462|C45B+C45B/C45B\C45B;
                                                                 ;;                        ;
 CODE_02C45C:          STZ.W SpriteMisc1534,X                    ;;C463|C45C+C45C/C45C\C45C;
-                      RTS                                       ;;C466|C45F+C45F/C45F\C45F; Return 
+                      RTS                                       ;;C466|C45F+C45F/C45F\C45F;
                                                                 ;;                        ;
                                                                 ;;                        ;
 BaseballTileDispX:    db $10,$F8                                ;;C467|C460+C460/C460\C460;
@@ -8381,10 +8381,10 @@ CODE_02C466:          LDA.W SpriteMisc1558,X                    ;;C46D|C466+C466
                       ORA.W SpriteOffscreenVert,X               ;;C470|C469+C469/C469\C469;
                       BNE Return02C439                          ;;C473|C46C+C46C/C46C\C46C;
                       LDY.B #$07                                ;;C475|C46E+C46E/C46E\C46E; \ Find a free extended sprite slot 
-CODE_02C470:          LDA.W ExtSpriteNumber,Y                   ;;C477|C470+C470/C470\C470;  | 
-                      BEQ CODE_02C479                           ;;C47A|C473+C473/C473\C473;  | 
-                      DEY                                       ;;C47C|C475+C475/C475\C475;  | 
-                      BPL CODE_02C470                           ;;C47D|C476+C476/C476\C476;  | 
+CODE_02C470:          LDA.W ExtSpriteNumber,Y                   ;;C477|C470+C470/C470\C470; | 
+                      BEQ CODE_02C479                           ;;C47A|C473+C473/C473\C473; | 
+                      DEY                                       ;;C47C|C475+C475/C475\C475; | 
+                      BPL CODE_02C470                           ;;C47D|C476+C476/C476\C476; | 
                       RTS                                       ;;C47F|C478+C478/C478\C478; / Return if no free slots 
                                                                 ;;                        ;
 CODE_02C479:          LDA.B #$0D                                ;;C480|C479+C479/C479\C479; \ Extended sprite = Baseball 
@@ -8413,7 +8413,7 @@ CODE_02C479:          LDA.B #$0D                                ;;C480|C479+C479
                       LDA.W BaseballSpeed,X                     ;;C4B4|C4AD+C4AD/C4AD\C4AD;
                       STA.W ExtSpriteXSpeed,Y                   ;;C4B7|C4B0+C4B0/C4B0\C4B0;
                       PLX                                       ;;C4BA|C4B3+C4B3/C4B3\C4B3;
-                      RTS                                       ;;C4BB|C4B4+C4B4/C4B4\C4B4; Return 
+                      RTS                                       ;;C4BB|C4B4+C4B4/C4B4\C4B4;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C4B5:          db $00,$00,$11,$11,$11,$11,$00,$00        ;;C4BC|C4B5+C4B5/C4B5\C4B5;
@@ -8438,7 +8438,7 @@ CODE_02C4BD:          STZ.W SpriteMisc1602,X                    ;;C4C4|C4BD+C4BD
                       TAY                                       ;;C4E2|C4DB+C4DB/C4DB\C4DB;
                       LDA.W DATA_02C4B5,Y                       ;;C4E3|C4DC+C4DC/C4DC\C4DC;
                       STA.W SpriteMisc1602,X                    ;;C4E6|C4DF+C4DF/C4DF\C4DF;
-                    + RTS                                       ;;C4E9|C4E2+C4E2/C4E2\C4E2; Return 
+                    + RTS                                       ;;C4E9|C4E2+C4E2/C4E2\C4E2;
                                                                 ;;                        ;
 CODE_02C4E3:          JSR CODE_02C556                           ;;C4EA|C4E3+C4E3/C4E3\C4E3;
                       LDA.B #$06                                ;;C4ED|C4E6+C4E6/C4E6\C4E6;
@@ -8456,7 +8456,7 @@ CODE_02C4E3:          JSR CODE_02C556                           ;;C4EA|C4E3+C4E3
                     + LDA.B #$07                                ;;C509|C502+C502/C502\C502;
 CODE_02C504:          STA.W SpriteMisc1602,X                    ;;C50B|C504+C504/C504\C504;
                       LDA.W SpriteBlockedDirs,X                 ;;C50E|C507+C507/C507\C507; \ Branch if not on ground 
-                      AND.B #$04                                ;;C511|C50A+C50A/C50A\C50A;  | 
+                      AND.B #$04                                ;;C511|C50A+C50A/C50A\C50A; | 
                       BEQ +                                     ;;C513|C50C+C50C/C50C\C50C; / 
                       STZ.W SpriteMisc160E,X                    ;;C515|C50E+C50E/C50E\C50E;
                       LDA.B #$04                                ;;C518|C511+C511/C511\C511;
@@ -8477,39 +8477,39 @@ CODE_02C504:          STA.W SpriteMisc1602,X                    ;;C50B|C504+C504
                       INC.W SpriteMisc160E,X                    ;;C53A|C533+C533/C533\C533;
 CODE_02C536:          LDA.B #!SFX_SPRING                        ;;C53D|C536+C536/C536\C536; \ Play sound effect 
                       STA.W SPCIO3                              ;;C53F|C538+C538/C538\C538; / 
-                    + RTS                                       ;;C542|C53B+C53B/C53B\C53B; Return 
+                    + RTS                                       ;;C542|C53B+C53B/C53B\C53B;
                                                                 ;;                        ;
 CODE_02C53C:          LDA.B #$06                                ;;C543|C53C+C53C/C53C\C53C;
                       STA.W SpriteMisc1602,X                    ;;C545|C53E+C53E/C53E\C53E;
                       LDA.W SpriteBlockedDirs,X                 ;;C548|C541+C541/C541\C541; \ Branch if not on ground 
-                      AND.B #$04                                ;;C54B|C544+C544/C544\C544;  | 
+                      AND.B #$04                                ;;C54B|C544+C544/C544\C544; | 
                       BEQ +                                     ;;C54D|C546+C546/C546\C546; / 
                       JSR CODE_02C579                           ;;C54F|C548+C548/C548\C548;
                       JSR CODE_02C556                           ;;C552|C54B+C54B/C54B\C54B;
                       LDA.B #$08                                ;;C555|C54E+C54E/C54E\C54E;
                       STA.W SpriteMisc1540,X                    ;;C557|C550+C550/C550\C550;
                       INC.B SpriteTableC2,X                     ;;C55A|C553+C553/C553\C553;
-                    + RTS                                       ;;C55C|C555+C555/C555\C555; Return 
+                    + RTS                                       ;;C55C|C555+C555/C555\C555;
                                                                 ;;                        ;
 CODE_02C556:          JSR CODE_02D4FA                           ;;C55D|C556+C556/C556\C556;
                       TYA                                       ;;C560|C559+C559/C559\C559;
                       STA.W SpriteMisc157C,X                    ;;C561|C55A+C55A/C55A\C55A;
                       LDA.W DATA_02C639,Y                       ;;C564|C55D+C55D/C55D\C55D;
                       STA.W SpriteMisc151C,X                    ;;C567|C560+C560/C560\C560;
-                      RTS                                       ;;C56A|C563+C563/C563\C563; Return 
+                      RTS                                       ;;C56A|C563+C563/C563\C563;
                                                                 ;;                        ;
 CODE_02C564:          LDA.B #$03                                ;;C56B|C564+C564/C564\C564;
                       STA.W SpriteMisc1602,X                    ;;C56D|C566+C566/C566\C566;
                       LDA.W SpriteMisc1540,X                    ;;C570|C569+C569/C569\C569;
                       BNE CODE_02C579                           ;;C573|C56C+C56C/C56C\C56C;
                       LDA.W SpriteBlockedDirs,X                 ;;C575|C56E+C56E/C56E\C56E; \ Branch if not on ground 
-                      AND.B #$04                                ;;C578|C571+C571/C571\C571;  | 
+                      AND.B #$04                                ;;C578|C571+C571/C571\C571; | 
                       BEQ +                                     ;;C57A|C573+C573/C573\C573; / 
                       LDA.B #$05                                ;;C57C|C575+C575/C575\C575;
                       STA.B SpriteTableC2,X                     ;;C57E|C577+C577/C577\C577;
 CODE_02C579:          STZ.B SpriteXSpeed,X                      ;;C580|C579+C579/C579\C579; Sprite X Speed = 0 
                       STZ.B SpriteYSpeed,X                      ;;C582|C57B+C57B/C57B\C57B; Sprite Y Speed = 0 
-                    + RTS                                       ;;C584|C57D+C57D/C57D\C57D; Return 
+                    + RTS                                       ;;C584|C57D+C57D/C57D\C57D;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C57E:          db $10,$F0                                ;;C585|C57E+C57E/C57E\C57E;
@@ -8568,7 +8568,7 @@ CODE_02C5BC:          JSL FindFreeSprSlot                       ;;C5C3|C5BC+C5BC
                       STA.W SpriteMisc1540,Y                    ;;C600|C5F9+C5F9/C5F9\C5F9;
 CODE_02C5FC:          LDA.B #$09                                ;;C603|C5FC+C5FC/C5FC\C5FC;
                       STA.W SpriteMisc1602,X                    ;;C605|C5FE+C5FE/C5FE\C5FE;
-                      RTS                                       ;;C608|C601+C601/C601\C601; Return 
+                      RTS                                       ;;C608|C601+C601/C601\C601;
                                                                 ;;                        ;
 CODE_02C602:          JSR CODE_02D4FA                           ;;C609|C602+C602/C602\C602;
                       TYA                                       ;;C60C|C605+C605/C605\C605;
@@ -8580,7 +8580,7 @@ CODE_02C602:          JSR CODE_02D4FA                           ;;C609|C602+C602
                       BCS +                                     ;;C617|C610+C610/C610\C610;
                       LDA.B #$40                                ;;C619|C612+C612/C612\C612;
                       STA.W SpriteMisc1540,X                    ;;C61B|C614+C614/C614\C614;
-                      RTS                                       ;;C61E|C617+C617/C617\C617; Return 
+                      RTS                                       ;;C61E|C617+C617/C617\C617;
                                                                 ;;                        ;
                     + LDA.B #$03                                ;;C61F|C618+C618/C618\C618;
                       STA.W SpriteMisc1602,X                    ;;C621|C61A+C61A/C61A\C61A;
@@ -8589,11 +8589,11 @@ CODE_02C602:          JSR CODE_02D4FA                           ;;C609|C602+C602
                       BNE +                                     ;;C628|C621+C621/C621\C621;
                       LDA.B #$E0                                ;;C62A|C623+C623/C623\C623;
                       STA.B SpriteYSpeed,X                      ;;C62C|C625+C625/C625\C625;
-                    + RTS                                       ;;C62E|C627+C627/C627\C627; Return 
+                    + RTS                                       ;;C62E|C627+C627/C627\C627;
                                                                 ;;                        ;
 CODE_02C628:          LDA.B #$08                                ;;C62F|C628+C628/C628\C628;
                       STA.W SpriteMisc15AC,X                    ;;C631|C62A+C62A/C62A\C62A;
-                      RTS                                       ;;C634|C62D+C62D/C62D\C62D; Return 
+                      RTS                                       ;;C634|C62D+C62D/C62D\C62D;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C62E:          db $00,$00,$00,$00,$01,$02,$03,$04        ;;C635|C62E+C62E/C62E\C62E;
@@ -8619,7 +8619,7 @@ CODE_02C65C:          LDA.B #$02                                ;;C663|C65C+C65C
                       STA.B SpriteTableC2,X                     ;;C665|C65E+C65E/C65E\C65E;
                       LDA.B #$18                                ;;C667|C660+C660/C660\C660;
                       STA.W SpriteMisc1540,X                    ;;C669|C662+C662/C662\C662;
-                      RTS                                       ;;C66C|C665+C665/C665\C665; Return 
+                      RTS                                       ;;C66C|C665+C665/C665\C665;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C666:          db $01,$FF                                ;;C66D|C666+C666/C666\C666;
@@ -8646,10 +8646,10 @@ CODE_02C677:          LDA.B EffFrame                            ;;C67E|C677+C677
 CODE_02C691:          LDY.W SpriteMisc1594,X                    ;;C698|C691+C691/C691\C691;
                       LDA.W DATA_02C62E,Y                       ;;C69B|C694+C694/C694\C694;
                       STA.W SpriteMisc151C,X                    ;;C69E|C697+C697/C697\C697;
-                      RTS                                       ;;C6A1|C69A+C69A/C69A\C69A; Return 
+                      RTS                                       ;;C6A1|C69A+C69A/C69A\C69A;
                                                                 ;;                        ;
                     + INC.W SpriteMisc1534,X                    ;;C6A2|C69B+C69B/C69B\C69B;
-                      RTS                                       ;;C6A5|C69E+C69E/C69E\C69E; Return 
+                      RTS                                       ;;C6A5|C69E+C69E/C69E\C69E;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C69F:          db $10,$F0,$18,$E8                        ;;C6A6|C69F+C69F/C69F\C69F;
@@ -8657,7 +8657,7 @@ DATA_02C69F:          db $10,$F0,$18,$E8                        ;;C6A6|C69F+C69F
 DATA_02C6A3:          db $12,$13,$12,$13                        ;;C6AA|C6A3+C6A3/C6A3\C6A3;
                                                                 ;;                        ;
 CODE_02C6A7:          LDA.W SpriteBlockedDirs,X                 ;;C6AE|C6A7+C6A7/C6A7\C6A7; \ Branch if not on ground 
-                      AND.B #$04                                ;;C6B1|C6AA+C6AA/C6AA\C6AA;  | 
+                      AND.B #$04                                ;;C6B1|C6AA+C6AA/C6AA\C6AA; | 
                       BEQ +                                     ;;C6B3|C6AC+C6AC/C6AC\C6AC; / 
                       LDA.W SpriteMisc163E,X                    ;;C6B5|C6AE+C6AE/C6AE\C6AE;
                       CMP.B #$01                                ;;C6B8|C6B1+C6B1/C6B1\C6B1;
@@ -8690,7 +8690,7 @@ CODE_02C6A7:          LDA.W SpriteBlockedDirs,X                 ;;C6AE|C6A7+C6A7
                       LDA.W DATA_02C639,Y                       ;;C6F6|C6EF+C6EF/C6EF\C6EF;
                       STA.W SpriteMisc151C,X                    ;;C6F9|C6F2+C6F2/C6F2\C6F2;
                       LDA.W SpriteBlockedDirs,X                 ;;C6FC|C6F5+C6F5/C6F5\C6F5; \ Branch if not on ground 
-                      AND.B #$04                                ;;C6FF|C6F8+C6F8/C6F8\C6F8;  | 
+                      AND.B #$04                                ;;C6FF|C6F8+C6F8/C6F8\C6F8; | 
                       BEQ CODE_02C713                           ;;C701|C6FA+C6FA/C6FA\C6FA; / 
                       LDA.W SpriteMisc187B,X                    ;;C703|C6FC+C6FC/C6FC\C6FC;
                       BEQ CODE_02C70E                           ;;C706|C6FF+C6FF/C6FF\C6FF;
@@ -8712,7 +8712,7 @@ CODE_02C713:          LDA.B TrueFrame                           ;;C71A|C713+C713
                       TAY                                       ;;C725|C71E+C71E/C71E\C71E;
                       LDA.W DATA_02C6A3,Y                       ;;C726|C71F+C71F/C71F\C71F;
                       STA.W SpriteMisc1602,X                    ;;C729|C722+C722/C722\C722;
-                      RTS                                       ;;C72C|C725+C725/C725\C725; Return 
+                      RTS                                       ;;C72C|C725+C725/C725\C725;
                                                                 ;;                        ;
 CODE_02C726:          LDA.B #$03                                ;;C72D|C726+C726/C726\C726;
                       STA.W SpriteMisc1602,X                    ;;C72F|C728+C728/C728\C728;
@@ -8723,7 +8723,7 @@ CODE_02C726:          LDA.B #$03                                ;;C72D|C726+C726
                       STA.B SpriteTableC2,X                     ;;C73C|C735+C735/C735\C735;
                       LDA.B #$40                                ;;C73E|C737+C737/C737\C737;
                       STA.W SpriteMisc1540,X                    ;;C740|C739+C739/C739\C739;
-                    + RTS                                       ;;C743|C73C+C73C/C73C\C73C; Return 
+                    + RTS                                       ;;C743|C73C+C73C/C73C\C73C;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C73D:          db $0A,$0B,$0A,$0C,$0D,$0C                ;;C744|C73D+C73D/C73D\C73D;
@@ -8750,7 +8750,7 @@ CODE_02C760:          LDA.W DATA_02C73D,Y                       ;;C767|C760+C760
                       AND.B #$02                                ;;C777|C770+C770/C770\C770;
                       INC A                                     ;;C779|C772+C772/C772\C772;
                     + STA.W SpriteMisc151C,X                    ;;C77A|C773+C773/C773\C773;
-                      RTS                                       ;;C77D|C776+C776/C776\C776; Return 
+                      RTS                                       ;;C77D|C776+C776/C776\C776;
                                                                 ;;                        ;
 CODE_02C777:          LDA.B SpriteNumber,X                      ;;C77E|C777+C777/C777\C777;
                       CMP.B #$94                                ;;C780|C779+C779/C779\C779;
@@ -8768,7 +8768,7 @@ CODE_02C777:          LDA.B SpriteNumber,X                      ;;C77E|C777+C777
                                                                 ;;                        ;
 CODE_02C794:          LDA.B #$0C                                ;;C79B|C794+C794/C794\C794;
                       STA.B SpriteTableC2,X                     ;;C79D|C796+C796/C796\C796;
-                      RTS                                       ;;C79F|C798+C798/C798\C798; Return 
+                      RTS                                       ;;C79F|C798+C798/C798\C798;
                                                                 ;;                        ;
                                                                 ;;                        ;
                       db $F0,$10                                ;;C7A0|C799+C799/C799\C799;
@@ -8790,7 +8790,7 @@ CODE_02C7B1:          STZ.B SpriteXSpeed,X                      ;;C7B8|C7B1+C7B1
                       STA.W SPCIO0                              ;;C7C1|C7BA+C7BA/C7BA\C7BA; / 
                       LDA.B #$03                                ;;C7C4|C7BD+C7BD/C7BD\C7BD;
                       JSL GivePoints                            ;;C7C6|C7BF+C7BF/C7BF\C7BF;
-                      RTS                                       ;;C7CA|C7C3+C7C3/C7C3\C7C3; Return 
+                      RTS                                       ;;C7CA|C7C3+C7C3/C7C3\C7C3;
                                                                 ;;                        ;
                     + JSR CODE_02D50C                           ;;C7CB|C7C4+C7C4/C7C4\C7C4;
                       LDA.B _E                                  ;;C7CE|C7C7+C7C7/C7C7\C7C7;
@@ -8808,9 +8808,9 @@ CODE_02C7B1:          STZ.B SpriteXSpeed,X                      ;;C7B8|C7B1+C7B1
                       BEQ Return02C80F                          ;;C7ED|C7E6+C7E6/C7E6\C7E6;
                       INC.W SpriteMisc1528,X                    ;;C7EF|C7E8+C7E8/C7E8\C7E8; Increase Chuck stomp count 
                       LDA.W SpriteMisc1528,X                    ;;C7F2|C7EB+C7EB/C7EB\C7EB; \ Kill Chuck if stomp count >= 3 
-                      CMP.B #$03                                ;;C7F5|C7EE+C7EE/C7EE\C7EE;  | 
-                      BCC CODE_02C7F6                           ;;C7F7|C7F0+C7F0/C7F0\C7F0;  | 
-                      STZ.B SpriteYSpeed,X                      ;;C7F9|C7F2+C7F2/C7F2\C7F2;  | Sprite Y Speed = 0 
+                      CMP.B #$03                                ;;C7F5|C7EE+C7EE/C7EE\C7EE; | 
+                      BCC CODE_02C7F6                           ;;C7F7|C7F0+C7F0/C7F0\C7F0; | 
+                      STZ.B SpriteYSpeed,X                      ;;C7F9|C7F2+C7F2/C7F2\C7F2; | Sprite Y Speed = 0 
                       BRA CODE_02C7B1                           ;;C7FB|C7F4+C7F4/C7F4\C7F4; / 
                                                                 ;;                        ;
 CODE_02C7F6:          LDA.B #!SFX_ENEMYHURT                     ;;C7FD|C7F6+C7F6/C7F6\C7F6; \ Play sound effect 
@@ -8823,12 +8823,12 @@ CODE_02C7F6:          LDA.B #!SFX_ENEMYHURT                     ;;C7FD|C7F6+C7F6
                       JSR CODE_02D4FA                           ;;C80E|C807+C807/C807\C807;
                       LDA.W DATA_02C79B,Y                       ;;C811|C80A+C80A/C80A\C80A;
                       STA.B PlayerXSpeed                        ;;C814|C80D+C80D/C80D\C80D;
-Return02C80F:         RTS                                       ;;C816|C80F+C80F/C80F\C80F; Return 
+Return02C80F:         RTS                                       ;;C816|C80F+C80F/C80F\C80F;
                                                                 ;;                        ;
 CODE_02C810:          LDA.W PlayerRidingYoshi                   ;;C817|C810+C810/C810\C810;
                       BNE +                                     ;;C81A|C813+C813/C813\C813;
                       JSL HurtMario                             ;;C81C|C815+C815/C815\C815;
-                    + RTS                                       ;;C820|C819+C819/C819\C819; Return 
+                    + RTS                                       ;;C820|C819+C819/C819\C819;
                                                                 ;;                        ;
 CODE_02C81A:          JSR GetDrawInfo2                          ;;C821|C81A+C81A/C81A\C81A;
                       JSR CODE_02C88C                           ;;C824|C81D+C81D/C81D\C81D;
@@ -8923,7 +8923,7 @@ CODE_02C88C:          STZ.B _7                                  ;;C893|C88C+C88C
                       LDA.B #$02                                ;;C90B|C900+C900/C900\C900;
                       STA.W OAMTileSize+$40,Y                   ;;C90D|C902+C902/C902\C902;
                       LDX.W CurSpriteProcess                    ;;C910|C905+C905/C905\C905; X = Sprite index 
-                      RTS                                       ;;C913|C908+C908/C908\C908; Return 
+                      RTS                                       ;;C913|C908+C908/C908\C908;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02C909:          db $F8,$F8,$F8,$FC,$FC,$FC,$FC,$F8        ;;C914|C909+C909/C909\C909;
@@ -9027,7 +9027,7 @@ CODE_02CA27:          STZ.B _6                                  ;;CA32|CA27+CA27
                       LDA.B #$02                                ;;CA9D|CA8A+CA8A/CA8A\CA8A;
                       STA.W OAMTileSize+$41,Y                   ;;CA9F|CA8C+CA8C/CA8C\CA8C;
                       LDX.W CurSpriteProcess                    ;;CAA2|CA8F+CA8F/CA8F\CA8F; X = Sprite index 
-                      RTS                                       ;;CAA5|CA92+CA92/CA92\CA92; Return 
+                      RTS                                       ;;CAA5|CA92+CA92/CA92\CA92;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02CA93:          db $FA,$00                                ;;CAA6|CA93+CA93/CA93\CA93;
@@ -9083,7 +9083,7 @@ CODE_02CA9D:          LDA.B _4                                  ;;CAB0|CA9D+CA9D
                       STA.W OAMTileSize+$40,Y                   ;;CB08|CAF0+CAF0/CAF0\CAF0;
                       STA.W OAMTileSize+$41,Y                   ;;CB0B|CAF3+CAF3/CAF3\CAF3;
                       LDX.W CurSpriteProcess                    ;;CB0E|CAF6+CAF6/CAF6\CAF6; X = Sprite index 
-                    + RTS                                       ;;CB11|CAF9+CAF9/CAF9\CAF9; Return 
+                    + RTS                                       ;;CB11|CAF9+CAF9/CAF9\CAF9;
                                                                 ;;                        ;
                                                                 ;;                        ;
 ChuckGfxProp:         db $47,$07                                ;;CB12|CAFA+CAFA/CAFA\CAFA;
@@ -9124,7 +9124,7 @@ CODE_02CB2D:          ORA.B SpriteProperties                    ;;CB45|CB2D+CB2D
 CODE_02CB39:          STZ.W OAMTileSize+$40,X                   ;;CB51|CB39+CB39/CB39\CB39;
                       STZ.W OAMTileSize+$41,X                   ;;CB54|CB3C+CB3C/CB3C\CB3C;
                       PLX                                       ;;CB57|CB3F+CB3F/CB3F\CB3F;
-                      RTS                                       ;;CB58|CB40+CB40/CB40\CB40; Return 
+                      RTS                                       ;;CB58|CB40+CB40/CB40\CB40;
                                                                 ;;                        ;
                                                                 ;;                        ;
                       db $FA,$0A,$06,$00,$00,$01,$0E,$FE        ;;CB59|CB41+CB41/CB41\CB41;
@@ -9163,7 +9163,7 @@ CODE_02CB53:          PHX                                       ;;CB6B|CB53+CB53
                       TAX                                       ;;CBA2|CB8A+CB8A/CB8A\CB8A;
                       STZ.W OAMTileSize+$40,X                   ;;CBA3|CB8B+CB8B/CB8B\CB8B;
                     + PLX                                       ;;CBA6|CB8E+CB8E/CB8E\CB8E;
-                      RTS                                       ;;CBA7|CB8F+CB8F/CB8F\CB8F; Return 
+                      RTS                                       ;;CBA7|CB8F+CB8F/CB8F\CB8F;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DigChuckTileDispX:    db $FC,$04,$10,$F0,$12,$EE                ;;CBA8|CB90+CB90/CB90\CB90;
@@ -9223,14 +9223,14 @@ CODE_02CBB9:          STA.B _2                                  ;;CBD1|CBB9+CBB9
                       LDA.W DigChuckTileSize,X                  ;;CC0C|CBF4+CBF4/CBF4\CBF4;
                       STA.W OAMTileSize+$40,Y                   ;;CC0F|CBF7+CBF7/CBF7\CBF7;
                       PLX                                       ;;CC12|CBFA+CBFA/CBFA\CBFA;
-Return02CBFB:         RTS                                       ;;CC13|CBFB+CBFB/CBFB\CBFB; Return 
+Return02CBFB:         RTS                                       ;;CC13|CBFB+CBFB/CBFB\CBFB;
                                                                 ;;                        ;
-                      RTS                                       ;;CC14|CBFC+CBFC/CBFC\CBFC; Return 
+                      RTS                                       ;;CC14|CBFC+CBFC/CBFC\CBFC;
                                                                 ;;                        ;
-Return02CBFD:         RTL                                       ;;CC15|CBFD+CBFD/CBFD\CBFD; Return 
+Return02CBFD:         RTL                                       ;;CC15|CBFD+CBFD/CBFD\CBFD;
                                                                 ;;                        ;
 WingedCageMain:       LDA.B SpriteLock                          ;;CC16|CBFE+CBFE/CBFE\CBFE; \ If sprites not locked, 
-                      BNE +                                     ;;CC18|CC00+CC00/CC00\CC00;  | increment sprite frame counter 
+                      BNE +                                     ;;CC18|CC00+CC00/CC00\CC00; | increment sprite frame counter 
                       INC.W SpriteMisc1570,X                    ;;CC1A|CC02+CC02/CC02\CC02; / 
                     + JSR ADDR_02CCB9                           ;;CC1D|CC05+CC05/CC05\CC05;
                       PHX                                       ;;CC20|CC08+CC08/CC08\CC08;
@@ -9244,7 +9244,7 @@ WingedCageMain:       LDA.B SpriteLock                          ;;CC16|CBFE+CBFE
                       ADC.B #$00                                ;;CC31|CC19+CC19/CC19\CC19;
                       STA.W SpriteYPosHigh,X                    ;;CC33|CC1B+CC1B/CC1B\CC1B;
                       LDA.B PlayerAnimation                     ;;CC36|CC1E+CC1E/CC1E\CC1E; \ Return if Mario animation sequence active 
-                      CMP.B #$01                                ;;CC38|CC20+CC20/CC20\CC20;  | 
+                      CMP.B #$01                                ;;CC38|CC20+CC20/CC20\CC20; | 
                       BCS Return02CBFD                          ;;CC3A|CC22+CC22/CC22\CC22; / 
                       LDA.W StandingOnCage                      ;;CC3C|CC24+CC24/CC24\CC24;
                       BEQ +                                     ;;CC3F|CC27+CC27/CC27\CC27;
@@ -9260,14 +9260,14 @@ WingedCageMain:       LDA.B SpriteLock                          ;;CC16|CBFE+CBFE
                       ADC.W SpriteXPosHigh,X                    ;;CC53|CC3B+CC3B/CC3B\CC3B;
                       STA.W SpriteXPosHigh,X                    ;;CC56|CC3E+CC3E/CC3E\CC3E;
                       LDA.B SpriteXPosLow,X                     ;;CC59|CC41+CC41/CC41\CC41; \ $00 = Sprite X position 
-                      STA.B _0                                  ;;CC5B|CC43+CC43/CC43\CC43;  | 
-                      LDA.W SpriteYPosHigh,X                    ;;CC5D|CC45+CC45/CC45\CC45;  | 
+                      STA.B _0                                  ;;CC5B|CC43+CC43/CC43\CC43; | 
+                      LDA.W SpriteYPosHigh,X                    ;;CC5D|CC45+CC45/CC45\CC45; | 
                       STA.B _1                                  ;;CC60|CC48+CC48/CC48\CC48; / 
                       LDA.B SpriteYPosLow,X                     ;;CC62|CC4A+CC4A/CC4A\CC4A; \ $02 = Sprite Y position 
-                      STA.B _2                                  ;;CC64|CC4C+CC4C/CC4C\CC4C;  | 
-                      LDA.W SpriteXPosHigh,X                    ;;CC66|CC4E+CC4E/CC4E\CC4E;  | 
+                      STA.B _2                                  ;;CC64|CC4C+CC4C/CC4C\CC4C; | 
+                      LDA.W SpriteXPosHigh,X                    ;;CC66|CC4E+CC4E/CC4E\CC4E; | 
                       STA.B _3                                  ;;CC69|CC51+CC51/CC51\CC51; / 
-                      REP #$20                                  ;;CC6B|CC53+CC53/CC53\CC53; Accum (16 bit) 
+                      REP #$20                                  ;;CC6B|CC53+CC53/CC53\CC53; A->16
                       LDA.B _0                                  ;;CC6D|CC55+CC55/CC55\CC55;
                       LDY.B PlayerXSpeed                        ;;CC6F|CC57+CC57/CC57\CC57;
                       DEY                                       ;;CC71|CC59+CC59/CC59\CC59;
@@ -9313,8 +9313,8 @@ ADDR_02CC93:          CLC                                       ;;CCAB|CC93+CC93
                       LDY.B #$01                                ;;CCBE|CCA6+CCA6/CCA6\CCA6;
                       STY.W StandOnSolidSprite                  ;;CCC0|CCA8+CCA8/CCA8\CCA8;
                       STY.W StandingOnCage                      ;;CCC3|CCAB+CCAB/CCAB\CCAB;
-                    + SEP #$20                                  ;;CCC6|CCAE+CCAE/CCAE\CCAE; Accum (8 bit) 
-                      RTL                                       ;;CCC8|CCB0+CCB0/CCB0\CCB0; Return 
+                    + SEP #$20                                  ;;CCC6|CCAE+CCAE/CCAE\CCAE; A->8
+                      RTL                                       ;;CCC8|CCB0+CCB0/CCB0\CCB0;
                                                                 ;;                        ;
                                                                 ;;                        ;
 CageWingTileDispX:    db $00,$30,$60,$90                        ;;CCC9|CCB1+CCB1/CCB1\CCB1;
@@ -9378,14 +9378,14 @@ ADDR_02CCD0:          LDY.B _2                                  ;;CCE8|CCD0+CCD0
                       STA.B _2                                  ;;CD40|CD26+CD26/CD26\CD26;
                       DEC.B _8                                  ;;CD42|CD28+CD28/CD28\CD28;
                       BPL ADDR_02CCD0                           ;;CD44|CD2A+CD2A/CD2A\CD2A;
-                      RTS                                       ;;CD46|CD2C+CD2C/CD2C\CD2C; Return 
+                      RTS                                       ;;CD46|CD2C+CD2C/CD2C\CD2C;
                                                                 ;;                        ;
 CODE_02CD2D:          PHB                                       ;;CD47|CD2D+CD2D/CD2D\CD2D; Wrapper 
                       PHK                                       ;;CD48|CD2E+CD2E/CD2E\CD2E;
                       PLB                                       ;;CD49|CD2F+CD2F/CD2F\CD2F;
                       JSR CODE_02CD59                           ;;CD4A|CD30+CD30/CD30\CD30;
                       PLB                                       ;;CD4D|CD33+CD33/CD33\CD33;
-                      RTL                                       ;;CD4E|CD34+CD34/CD34\CD34; Return 
+                      RTL                                       ;;CD4E|CD34+CD34/CD34\CD34;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02CD35:          db $00,$08,$10,$18,$00,$08,$10,$18        ;;CD4F|CD35+CD35/CD35\CD35;
@@ -9444,7 +9444,7 @@ CODE_02CD91:          LDA.B _0                                  ;;CDAB|CD91+CD91
                       LDA.B #$07                                ;;CDD9|CDBF+CDBF/CDBF\CDBF;
                       JMP CODE_02B7A7                           ;;CDDB|CDC1+CDC1/CDC1\CDC1;
                                                                 ;;                        ;
-                      RTS                                       ;;CDDE|CDC4+CDC4/CDC4\CDC4; Return 
+                      RTS                                       ;;CDDE|CDC4+CDC4/CDC4\CDC4;
                                                                 ;;                        ;
                                                                 ;;                        ;
                       db $00,$07,$F9,$00,$01,$FF                ;;CDDF|CDC5+CDC5/CDC5\CDC5;
@@ -9471,7 +9471,7 @@ PeaBouncerMain:       JSR SubOffscreen0Bnk2                     ;;CDE5|CDCB+CDCB
                       dw CODE_02CE0F                            ;;CE14|CDFA+CDFA/CDFA\CDFA;
                       dw CODE_02CE3A                            ;;CE16|CDFC+CDFC/CDFC\CDFC;
                                                                 ;;                        ;
-Return02CDFE:         RTL                                       ;;CE18|CDFE+CDFE/CDFE\CDFE; Return 
+Return02CDFE:         RTL                                       ;;CE18|CDFE+CDFE/CDFE\CDFE;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02CDFF:          db $B6,$B4,$B0,$A8,$A0,$98,$90,$88        ;;CE19|CDFF+CDFF/CDFF\CDFF;
@@ -9484,7 +9484,7 @@ CODE_02CE0F:          LDA.W SpriteMisc1540,X                    ;;CE29|CE0F+CE0F
                       INC.W SpriteMisc1528,X                    ;;CE31|CE17+CE17/CE17\CE17;
                       LDA.B #$01                                ;;CE34|CE1A+CE1A/CE1A\CE1A;
                       STA.W SpriteMisc157C,X                    ;;CE36|CE1C+CE1C/CE1C\CE1C;
-                    + RTL                                       ;;CE39|CE1F+CE1F/CE1F\CE1F; Return 
+                    + RTL                                       ;;CE39|CE1F+CE1F/CE1F\CE1F;
                                                                 ;;                        ;
 CODE_02CE20:          LDA.B SpriteTableC2,X                     ;;CE3A|CE20+CE20/CE20\CE20;
                       BMI CODE_02CE29                           ;;CE3C|CE22+CE22/CE22\CE22;
@@ -9493,13 +9493,13 @@ CODE_02CE20:          LDA.B SpriteTableC2,X                     ;;CE3A|CE20+CE20
 CODE_02CE29:          CLC                                       ;;CE43|CE29+CE29/CE29\CE29;
                       ADC.B #$01                                ;;CE44|CE2A+CE2A/CE2A\CE2A;
                       STA.B SpriteTableC2,X                     ;;CE46|CE2C+CE2C/CE2C\CE2C;
-                      RTL                                       ;;CE48|CE2E+CE2E/CE2E\CE2E; Return 
+                      RTL                                       ;;CE48|CE2E+CE2E/CE2E\CE2E;
                                                                 ;;                        ;
                     + LDA.W SpriteMisc151C,X                    ;;CE49|CE2F+CE2F/CE2F\CE2F;
                       STA.B SpriteTableC2,X                     ;;CE4C|CE32+CE32/CE32\CE32;
                       LDA.B #$08                                ;;CE4E|CE34+CE34/CE34\CE34;
                       STA.W SpriteMisc1540,X                    ;;CE50|CE36+CE36/CE36\CE36;
-                      RTL                                       ;;CE53|CE39+CE39/CE39\CE39; Return 
+                      RTL                                       ;;CE53|CE39+CE39/CE39\CE39;
                                                                 ;;                        ;
 CODE_02CE3A:          INC.W SpriteMisc1570,X                    ;;CE54|CE3A+CE3A/CE3A\CE3A;
                       LDA.W SpriteMisc1570,X                    ;;CE57|CE3D+CE3D/CE3D\CE3D;
@@ -9521,12 +9521,12 @@ CODE_02CE49:          LDA.W SpriteMisc151C,X                    ;;CE63|CE49+CE49
                       BMI Return02CE66                          ;;CE79|CE5F+CE5F/CE5F\CE5F;
                       CMP.W SpriteMisc151C,X                    ;;CE7B|CE61+CE61/CE61\CE61;
                       BCS +                                     ;;CE7E|CE64+CE64/CE64\CE64;
-Return02CE66:         RTL                                       ;;CE80|CE66+CE66/CE66\CE66; Return 
+Return02CE66:         RTL                                       ;;CE80|CE66+CE66/CE66\CE66;
                                                                 ;;                        ;
                     + LDA.W SpriteMisc151C,X                    ;;CE81|CE67+CE67/CE67\CE67;
                       STA.B SpriteTableC2,X                     ;;CE84|CE6A+CE6A/CE6A\CE6A;
                       INC.W SpriteMisc157C,X                    ;;CE86|CE6C+CE6C/CE6C\CE6C;
-                      RTL                                       ;;CE89|CE6F+CE6F/CE6F\CE6F; Return 
+                      RTL                                       ;;CE89|CE6F+CE6F/CE6F\CE6F;
                                                                 ;;                        ;
 CODE_02CE70:          LDA.B SpriteTableC2,X                     ;;CE8A|CE70+CE70/CE70\CE70;
                       SEC                                       ;;CE8C|CE72+CE72/CE72\CE72;
@@ -9535,16 +9535,16 @@ CODE_02CE70:          LDA.B SpriteTableC2,X                     ;;CE8A|CE70+CE70
                       BPL Return02CE7D                          ;;CE91|CE77+CE77/CE77\CE77;
                       CMP.B _0                                  ;;CE93|CE79+CE79/CE79\CE79;
                       BCC +                                     ;;CE95|CE7B+CE7B/CE7B\CE7B;
-Return02CE7D:         RTL                                       ;;CE97|CE7D+CE7D/CE7D\CE7D; Return 
+Return02CE7D:         RTL                                       ;;CE97|CE7D+CE7D/CE7D\CE7D;
                                                                 ;;                        ;
                     + LDA.B _0                                  ;;CE98|CE7E+CE7E/CE7E\CE7E;
                       STA.B SpriteTableC2,X                     ;;CE9A|CE80+CE80/CE80\CE80;
                       INC.W SpriteMisc157C,X                    ;;CE9C|CE82+CE82/CE82\CE82;
-                      RTL                                       ;;CE9F|CE85+CE85/CE85\CE85; Return 
+                      RTL                                       ;;CE9F|CE85+CE85/CE85\CE85;
                                                                 ;;                        ;
 CODE_02CE86:          STZ.B SpriteTableC2,X                     ;;CEA0|CE86+CE86/CE86\CE86;
                       STZ.W SpriteMisc1528,X                    ;;CEA2|CE88+CE88/CE88\CE88;
-                      RTL                                       ;;CEA5|CE8B+CE8B/CE8B\CE8B; Return 
+                      RTL                                       ;;CEA5|CE8B+CE8B/CE8B\CE8B;
                                                                 ;;                        ;
                       JSR CODE_02CEE0                           ;;CEA6|CE8C+CE8C/CE8C\CE8C; \ Unreachable 
                       RTL                                       ;;CEA9|CE8F+CE8F/CE8F\CE8F; / Wrapper for Pea Bouncer gfx routine 
@@ -9622,7 +9622,7 @@ CODE_02CEFC:          LDA.B _4                                  ;;CF16|CEFC+CEFC
                       LDA.B #$04                                ;;CF68|CF4C+CF4C/CF4C\CF4C;
                       JMP CODE_02B7A7                           ;;CF6A|CF4E+CF4E/CF4E\CF4E;
                                                                 ;;                        ;
-                    - RTS                                       ;;CF6D|CF51+CF51/CF51\CF51; Return 
+                    - RTS                                       ;;CF6D|CF51+CF51/CF51\CF51;
                                                                 ;;                        ;
 CODE_02CF52:          LDA.B PlayerAnimation                     ;;CF6E|CF52+CF52/CF52\CF52;
                       CMP.B #$01                                ;;CF70|CF54+CF54/CF54\CF54;
@@ -9700,7 +9700,7 @@ CODE_02CF52:          LDA.B PlayerAnimation                     ;;CF6E|CF52+CF52
                       LDY.B SpriteTableC2,X                     ;;CFFF|CFE3+CFE3/CFE3\CFE3;
                       LDA.W DATA_02CE07,Y                       ;;D001|CFE5+CFE5/CFE5\CFE5;
                       STA.B PlayerYSpeed                        ;;D004|CFE8+CFE8/CFE8\CFE8;
-                    + RTS                                       ;;D006|CFEA+CFEA/CFEA\CFEA; Return 
+                    + RTS                                       ;;D006|CFEA+CFEA/CFEA\CFEA;
                                                                 ;;                        ;
 CODE_02CFEB:          STZ.B PlayerXSpeed                        ;;D007|CFEB+CFEB/CFEB\CFEB;
                       LDY.B _2                                  ;;D009|CFED+CFED/CFED\CFED;
@@ -9709,7 +9709,7 @@ CODE_02CFEB:          STZ.B PlayerXSpeed                        ;;D007|CFEB+CFEB
                       LDA.B #$01                                ;;D011|CFF5+CFF5/CFF5\CFF5;
                       STA.W SpriteMisc1528,X                    ;;D013|CFF7+CFF7/CFF7\CFF7;
                       STZ.W SpriteMisc1570,X                    ;;D016|CFFA+CFFA/CFFA\CFFA;
-Return02CFFD:         RTS                                       ;;D019|CFFD+CFFD/CFFD\CFFD; Return 
+Return02CFFD:         RTS                                       ;;D019|CFFD+CFFD/CFFD\CFFD;
                                                                 ;;                        ;
                                                                 ;;                        ;
 PeaBouncerPhysics:    db $01,$01,$03,$05,$07                    ;;D01A|CFFE+CFFE/CFFE\CFFE;
@@ -9722,33 +9722,33 @@ DATA_02D007:          db $30,$C0,$A0,$C0,$A0,$70,$60,$B0        ;;D023|D007+D007
 DATA_02D00F:          db $01,$FF,$01,$FF,$01,$FF,$01,$FF        ;;D02B|D00F+D00F/D00F\D00F;
                                                                 ;;                        ;
 SubOffscreen3Bnk2:    LDA.B #$06                                ;;D033|D017+D017/D017\D017; \ Entry point of routine determines value of $03 
-                      BRA +                                     ;;D035|D019+D019/D019\D019;  | 
+                      BRA +                                     ;;D035|D019+D019/D019\D019; | 
                                                                 ;;                        ;
-SubOffscreen2Bnk2:    LDA.B #$04                                ;;D037|D01B+D01B/D01B\D01B;  | 
-                      BRA +                                     ;;D039|D01D+D01D/D01D\D01D;  | 
+SubOffscreen2Bnk2:    LDA.B #$04                                ;;D037|D01B+D01B/D01B\D01B; | 
+                      BRA +                                     ;;D039|D01D+D01D/D01D\D01D; | 
                                                                 ;;                        ;
-SubOffscreen1Bnk2:    LDA.B #$02                                ;;D03B|D01F+D01F/D01F\D01F;  | 
-                    + STA.B _3                                  ;;D03D|D021+D021/D021\D021;  | 
-                      BRA +                                     ;;D03F|D023+D023/D023\D023;  | 
+SubOffscreen1Bnk2:    LDA.B #$02                                ;;D03B|D01F+D01F/D01F\D01F; | 
+                    + STA.B _3                                  ;;D03D|D021+D021/D021\D021; | 
+                      BRA +                                     ;;D03F|D023+D023/D023\D023; | 
                                                                 ;;                        ;
 SubOffscreen0Bnk2:    STZ.B _3                                  ;;D041|D025+D025/D025\D025; / 
                     + JSR IsSprOffScreenBnk2                    ;;D043|D027+D027/D027\D027; \ if sprite is not off screen, return 
                       BEQ Return02D090                          ;;D046|D02A+D02A/D02A\D02A; / 
                       LDA.B ScreenMode                          ;;D048|D02C+D02C/D02C\D02C; \  vertical level 
-                      AND.B #$01                                ;;D04A|D02E+D02E/D02E\D02E;  | 
+                      AND.B #$01                                ;;D04A|D02E+D02E/D02E\D02E; | 
                       BNE VerticalLevelBnk2                     ;;D04C|D030+D030/D030\D030; / 
                       LDA.B _3                                  ;;D04E|D032+D032/D032\D032;
                       CMP.B #$04                                ;;D050|D034+D034/D034\D034;
                       BEQ CODE_02D04D                           ;;D052|D036+D036/D036\D036;
                       LDA.B SpriteYPosLow,X                     ;;D054|D038+D038/D038\D038; \ 
-                      CLC                                       ;;D056|D03A+D03A/D03A\D03A;  | 
-                      ADC.B #$50                                ;;D057|D03B+D03B/D03B\D03B;  | if the sprite has gone off the bottom of the level... 
-                      LDA.W SpriteXPosHigh,X                    ;;D059|D03D+D03D/D03D\D03D;  | (if adding 0x50 to the sprite y position would make the high byte >= 2) 
-                      ADC.B #$00                                ;;D05C|D040+D040/D040\D040;  | 
-                      CMP.B #$02                                ;;D05E|D042+D042/D042\D042;  | 
+                      CLC                                       ;;D056|D03A+D03A/D03A\D03A; | 
+                      ADC.B #$50                                ;;D057|D03B+D03B/D03B\D03B; | if the sprite has gone off the bottom of the level... 
+                      LDA.W SpriteXPosHigh,X                    ;;D059|D03D+D03D/D03D\D03D; | (if adding 0x50 to the sprite y position would make the high byte >= 2) 
+                      ADC.B #$00                                ;;D05C|D040+D040/D040\D040; | 
+                      CMP.B #$02                                ;;D05E|D042+D042/D042\D042; | 
                       BPL OffScrEraseSprBnk2                    ;;D060|D044+D044/D044\D044; /    ...erase the sprite 
                       LDA.W SpriteTweakerD,X                    ;;D062|D046+D046/D046\D046; \ if "process offscreen" flag is set, return 
-                      AND.B #$04                                ;;D065|D049+D049/D049\D049;  | 
+                      AND.B #$04                                ;;D065|D049+D049/D049\D049; | 
                       BNE Return02D090                          ;;D067|D04B+D04B/D04B\D04B; / 
 CODE_02D04D:          LDA.B TrueFrame                           ;;D069|D04D+D04D/D04D\D04D;
                       AND.B #$01                                ;;D06B|D04F+D04F/D04F\D04F;
@@ -9774,21 +9774,21 @@ CODE_02D04D:          LDA.B TrueFrame                           ;;D069|D04D+D04D
                     + LDA.B _0                                  ;;D092|D076+D076/D076\D076;
                       BPL Return02D090                          ;;D094|D078+D078/D078\D078;
 OffScrEraseSprBnk2:   LDA.W SpriteStatus,X                      ;;D096|D07A+D07A/D07A\D07A; \ If sprite status < 8, permanently erase sprite 
-                      CMP.B #$08                                ;;D099|D07D+D07D/D07D\D07D;  | 
+                      CMP.B #$08                                ;;D099|D07D+D07D/D07D\D07D; | 
                       BCC +                                     ;;D09B|D07F+D07F/D07F\D07F; / 
                       LDY.W SpriteLoadIndex,X                   ;;D09D|D081+D081/D081\D081; \ Branch if should permanently erase sprite 
-                      CPY.B #$FF                                ;;D0A0|D084+D084/D084\D084;  | 
+                      CPY.B #$FF                                ;;D0A0|D084+D084/D084\D084; | 
                       BEQ +                                     ;;D0A2|D086+D086/D086\D086; / 
                       LDA.B #$00                                ;;D0A4|D088+D088/D088\D088; \ Allow sprite to be reloaded by level loading routine 
                       STA.W SpriteLoadStatus,Y                  ;;D0A6|D08A+D08A/D08A\D08A; / 
                     + STZ.W SpriteStatus,X                      ;;D0A9|D08D+D08D/D08D\D08D; Erase sprite 
-Return02D090:         RTS                                       ;;D0AC|D090+D090/D090\D090; Return 
+Return02D090:         RTS                                       ;;D0AC|D090+D090/D090\D090;
                                                                 ;;                        ;
 VerticalLevelBnk2:    LDA.W SpriteTweakerD,X                    ;;D0AD|D091+D091/D091\D091; \ If "process offscreen" flag is set, return 
-                      AND.B #$04                                ;;D0B0|D094+D094/D094\D094;  | 
+                      AND.B #$04                                ;;D0B0|D094+D094/D094\D094; | 
                       BNE Return02D090                          ;;D0B2|D096+D096/D096\D096; / 
                       LDA.B TrueFrame                           ;;D0B4|D098+D098/D098\D098; \ Return every other frame 
-                      LSR A                                     ;;D0B6|D09A+D09A/D09A\D09A;  | 
+                      LSR A                                     ;;D0B6|D09A+D09A/D09A\D09A; | 
                       BCS Return02D090                          ;;D0B7|D09B+D09B/D09B\D09B; / 
                       AND.B #$01                                ;;D0B9|D09D+D09D/D09D\D09D;
                       STA.B _1                                  ;;D0BB|D09F+D09F/D09F\D09F;
@@ -9814,7 +9814,7 @@ VerticalLevelBnk2:    LDA.W SpriteTweakerD,X                    ;;D0AD|D091+D091
                       BMI OffScrEraseSprBnk2                    ;;D0E3|D0C7+D0C7/D0C7\D0C7;
 IsSprOffScreenBnk2:   LDA.W SpriteOffscreenX,X                  ;;D0E5|D0C9+D0C9/D0C9\D0C9;
                       ORA.W SpriteOffscreenVert,X               ;;D0E8|D0CC+D0CC/D0CC\D0CC;
-                      RTS                                       ;;D0EB|D0CF+D0CF/D0CF\D0CF; Return 
+                      RTS                                       ;;D0EB|D0CF+D0CF/D0CF\D0CF;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02D0D0:          db $14,$FC                                ;;D0EC|D0D0+D0D0/D0D0\D0D0;
@@ -9830,13 +9830,13 @@ CODE_02D0D4:          LDA.W SpriteMisc1564,X                    ;;D0F0|D0D4+D0D4
                       PLB                                       ;;D0FC|D0E0+D0E0/D0E0\D0E0;
                       JSR CODE_02D0E6                           ;;D0FD|D0E1+D0E1/D0E1\D0E1;
                       PLB                                       ;;D100|D0E4+D0E4/D0E4\D0E4;
-                    + RTL                                       ;;D101|D0E5+D0E5/D0E5\D0E5; Return 
+                    + RTL                                       ;;D101|D0E5+D0E5/D0E5\D0E5;
                                                                 ;;                        ;
 CODE_02D0E6:          STZ.B _F                                  ;;D102|D0E6+D0E6/D0E6\D0E6;
                       BRA CODE_02D149                           ;;D104|D0E8+D0E8/D0E8\D0E8;
                                                                 ;;                        ;
                       LDA.B SpriteYPosLow,X                     ;;D106|D0EA+D0EA/D0EA\D0EA; \ Unreachable 
-                      CLC                                       ;;D108|D0EC+D0EC/D0EC\D0EC;  | Something to do with Yoshi? 
+                      CLC                                       ;;D108|D0EC+D0EC/D0EC\D0EC; | Something to do with Yoshi? 
                       ADC.B #$08                                ;;D109|D0ED+D0ED/D0ED\D0ED;
                       AND.B #$F0                                ;;D10B|D0EF+D0EF/D0EF\D0EF;
                       STA.B _0                                  ;;D10D|D0F1+D0F1/D0F1\D0F1;
@@ -9880,38 +9880,38 @@ CODE_02D0E6:          STZ.B _F                                  ;;D102|D0E6+D0E6
                       STA.B _6                                  ;;D160|D144+D144/D144\D144;
                       BRA CODE_02D1AD                           ;;D162|D146+D146/D146\D146;
                                                                 ;;                        ;
-Return02D148:         RTS                                       ;;D164|D148+D148/D148\D148; Return 
+Return02D148:         RTS                                       ;;D164|D148+D148/D148\D148;
                                                                 ;;                        ;
 CODE_02D149:          LDA.B SpriteYPosLow,X                     ;;D165|D149+D149/D149\D149; \ $18B2 = Sprite Y position + #$08 
-                      CLC                                       ;;D167|D14B+D14B/D14B\D14B;  | 
-                      ADC.B #$08                                ;;D168|D14C+D14C/D14C\D14C;  | 
+                      CLC                                       ;;D167|D14B+D14B/D14B\D14B; | 
+                      ADC.B #$08                                ;;D168|D14C+D14C/D14C\D14C; | 
                       STA.W YoshiYPos                           ;;D16A|D14E+D14E/D14E\D14E; / 
                       AND.B #$F0                                ;;D16D|D151+D151/D151\D151; \ $00 = (Sprite Y position + #$08) rounded down to closest #$10 low byte 
                       STA.B _0                                  ;;D16F|D153+D153/D153\D153; / 
                       LDA.W SpriteXPosHigh,X                    ;;D171|D155+D155/D155\D155; \ 
-                      ADC.B #$00                                ;;D174|D158+D158/D158\D158;  | Return if off screen 
-                      CMP.B #$02                                ;;D176|D15A+D15A/D15A\D15A;  | 
-                      BCS Return02D148                          ;;D178|D15C+D15C/D15C\D15C;  | 
-                      STA.B _2                                  ;;D17A|D15E+D15E/D15E\D15E;  | $02 = (Sprite Y position + #$08) High byte 
+                      ADC.B #$00                                ;;D174|D158+D158/D158\D158; | Return if off screen 
+                      CMP.B #$02                                ;;D176|D15A+D15A/D15A\D15A; | 
+                      BCS Return02D148                          ;;D178|D15C+D15C/D15C\D15C; | 
+                      STA.B _2                                  ;;D17A|D15E+D15E/D15E\D15E; | $02 = (Sprite Y position + #$08) High byte 
                       STA.W YoshiYPos+1                         ;;D17C|D160+D160/D160\D160; / 
                       LDY.W SpriteMisc157C,X                    ;;D17F|D163+D163/D163\D163; \ $18B0 = Sprite X position + $0014/$FFFC 
-                      LDA.B SpriteXPosLow,X                     ;;D182|D166+D166/D166\D166;  | 
-                      CLC                                       ;;D184|D168+D168/D168\D168;  | 
-                      ADC.W DATA_02D0D0,Y                       ;;D185|D169+D169/D169\D169;  | 
-                      STA.B _1                                  ;;D188|D16C+D16C/D16C\D16C;  | $01 = (Sprite X position + $0014/$FFFC) Low byte 
-                      STA.W YoshiXPos                           ;;D18A|D16E+D16E/D16E\D16E;  | 
-                      LDA.W SpriteYPosHigh,X                    ;;D18D|D171+D171/D171\D171;  | 
-                      ADC.W DATA_02D0D2,Y                       ;;D190|D174+D174/D174\D174;  | 
-                      CMP.B LevelScrLength                      ;;D193|D177+D177/D177\D177;  | Return if past end of level 
-                      BCS Return02D148                          ;;D195|D179+D179/D179\D179;  | 
-                      STA.W YoshiXPos+1                         ;;D197|D17B+D17B/D17B\D17B;  | 
+                      LDA.B SpriteXPosLow,X                     ;;D182|D166+D166/D166\D166; | 
+                      CLC                                       ;;D184|D168+D168/D168\D168; | 
+                      ADC.W DATA_02D0D0,Y                       ;;D185|D169+D169/D169\D169; | 
+                      STA.B _1                                  ;;D188|D16C+D16C/D16C\D16C; | $01 = (Sprite X position + $0014/$FFFC) Low byte 
+                      STA.W YoshiXPos                           ;;D18A|D16E+D16E/D16E\D16E; | 
+                      LDA.W SpriteYPosHigh,X                    ;;D18D|D171+D171/D171\D171; | 
+                      ADC.W DATA_02D0D2,Y                       ;;D190|D174+D174/D174\D174; | 
+                      CMP.B LevelScrLength                      ;;D193|D177+D177/D177\D177; | Return if past end of level 
+                      BCS Return02D148                          ;;D195|D179+D179/D179\D179; | 
+                      STA.W YoshiXPos+1                         ;;D197|D17B+D17B/D17B\D17B; | 
                       STA.B _3                                  ;;D19A|D17E+D17E/D17E\D17E; / $03 = (Sprite X position + $0014/$FFFC) High byte 
                       LDA.B _1                                  ;;D19C|D180+D180/D180\D180; \ $00 = bits 4-7 of Y position, bits 4-7 of X position 
-                      LSR A                                     ;;D19E|D182+D182/D182\D182;  | 
-                      LSR A                                     ;;D19F|D183+D183/D183\D183;  | 
-                      LSR A                                     ;;D1A0|D184+D184/D184\D184;  | 
-                      LSR A                                     ;;D1A1|D185+D185/D185\D185;  | 
-                      ORA.B _0                                  ;;D1A2|D186+D186/D186\D186;  | 
+                      LSR A                                     ;;D19E|D182+D182/D182\D182; | 
+                      LSR A                                     ;;D19F|D183+D183/D183\D183; | 
+                      LSR A                                     ;;D1A0|D184+D184/D184\D184; | 
+                      LSR A                                     ;;D1A1|D185+D185/D185\D185; | 
+                      ORA.B _0                                  ;;D1A2|D186+D186/D186\D186; | 
                       STA.B _0                                  ;;D1A4|D188+D188/D188\D188; / 
                       LDX.B _3                                  ;;D1A6|D18A+D18A/D18A\D18A;
                       LDA.L DATA_00BA60,X                       ;;D1A8|D18C+D18C/D18C\D18C;
@@ -9957,23 +9957,23 @@ CODE_02D1AD:          LDA.B #$7E                                ;;D1C9|D1AD+D1AD
                       LDA.B PlayerYPosNext+1                    ;;D206|D1EA+D1EA/D1EA\D1EA;
                       ADC.B #$00                                ;;D208|D1EC+D1EC/D1EC\D1EC;
                       STA.B PlayerYPosNext+1                    ;;D20A|D1EE+D1EE/D1EE\D1EE;
-                    + RTS                                       ;;D20C|D1F0+D1F0/D1F0\D1F0; Return 
+                    + RTS                                       ;;D20C|D1F0+D1F0/D1F0\D1F0;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02D1F1:          db $00,$04                                ;;D20D|D1F1+D1F1/D1F1\D1F1;
                                                                 ;;                        ;
 SetTreeTile:          LDA.W YoshiXPos                           ;;D20F|D1F3+D1F3/D1F3\D1F3; \ Set X position of block 
-                      STA.B TouchBlockXPos                      ;;D212|D1F6+D1F6/D1F6\D1F6;  | 
-                      LDA.W YoshiXPos+1                         ;;D214|D1F8+D1F8/D1F8\D1F8;  | 
+                      STA.B TouchBlockXPos                      ;;D212|D1F6+D1F6/D1F6\D1F6; | 
+                      LDA.W YoshiXPos+1                         ;;D214|D1F8+D1F8/D1F8\D1F8; | 
                       STA.B TouchBlockXPos+1                    ;;D217|D1FB+D1FB/D1FB\D1FB; / 
                       LDA.W YoshiYPos                           ;;D219|D1FD+D1FD/D1FD\D1FD; \ Set Y position of block 
-                      STA.B TouchBlockYPos                      ;;D21C|D200+D200/D200\D200;  | 
-                      LDA.W YoshiYPos+1                         ;;D21E|D202+D202/D202\D202;  | 
+                      STA.B TouchBlockYPos                      ;;D21C|D200+D200/D200\D200; | 
+                      LDA.W YoshiYPos+1                         ;;D21E|D202+D202/D202\D202; | 
                       STA.B TouchBlockYPos+1                    ;;D221|D205+D205/D205\D205; / 
                       LDA.B #$04                                ;;D223|D207+D207/D207\D207; \ Block to generate = Tree behind berry 
                       STA.B Map16TileGenerate                   ;;D225|D209+D209/D209\D209; / 
                       JSL GenerateTile                          ;;D227|D20B+D20B/D20B\D20B;
-Return02D20F:         RTL                                       ;;D22B|D20F+D20F/D20F\D20F; Return 
+Return02D20F:         RTL                                       ;;D22B|D20F+D20F/D20F\D20F;
                                                                 ;;                        ;
                                                                 ;;                        ;
                       db $01                                    ;;D22C|D210+D210/D210\D210;
@@ -10040,77 +10040,77 @@ CODE_02D27F:          LDA.B SpriteXSpeed,X                      ;;D29B|D27F+D27F
                       STA.B PlayerXSpeed                        ;;D29D|D281+D281/D281\D281;
                       LDA.B SpriteYSpeed,X                      ;;D29F|D283+D283/D283\D283;
                       STA.B PlayerYSpeed                        ;;D2A1|D285+D285/D285\D285;
-                      RTL                                       ;;D2A3|D287+D287/D287\D287; Return 
+                      RTL                                       ;;D2A3|D287+D287/D287\D287;
                                                                 ;;                        ;
 UpdateXPosNoGrvty:    TXA                                       ;;D2A4|D288+D288/D288\D288; \ Adjust index so we use X values rather than Y 
-                      CLC                                       ;;D2A5|D289+D289/D289\D289;  | 
-                      ADC.B #$0C                                ;;D2A6|D28A+D28A/D28A\D28A;  | 
+                      CLC                                       ;;D2A5|D289+D289/D289\D289; | 
+                      ADC.B #$0C                                ;;D2A6|D28A+D28A/D28A\D28A; | 
                       TAX                                       ;;D2A8|D28C+D28C/D28C\D28C; / 
                       JSR UpdateYPosNoGrvty                     ;;D2A9|D28D+D28D/D28D\D28D;
                       LDX.W CurSpriteProcess                    ;;D2AC|D290+D290/D290\D290; X = sprite index 
-                      RTS                                       ;;D2AF|D293+D293/D293\D293; Return 
+                      RTS                                       ;;D2AF|D293+D293/D293\D293;
                                                                 ;;                        ;
 UpdateYPosNoGrvty:    LDA.B SpriteYSpeed,X                      ;;D2B0|D294+D294/D294\D294; \ $14EC or $14F8 += 16 * speed 
-                      ASL A                                     ;;D2B2|D296+D296/D296\D296;  | 
-                      ASL A                                     ;;D2B3|D297+D297/D297\D297;  | 
-                      ASL A                                     ;;D2B4|D298+D298/D298\D298;  | 
-                      ASL A                                     ;;D2B5|D299+D299/D299\D299;  | 
-                      CLC                                       ;;D2B6|D29A+D29A/D29A\D29A;  | 
-                      ADC.W SpriteYPosSpx,X                     ;;D2B7|D29B+D29B/D29B\D29B;  | 
+                      ASL A                                     ;;D2B2|D296+D296/D296\D296; | 
+                      ASL A                                     ;;D2B3|D297+D297/D297\D297; | 
+                      ASL A                                     ;;D2B4|D298+D298/D298\D298; | 
+                      ASL A                                     ;;D2B5|D299+D299/D299\D299; | 
+                      CLC                                       ;;D2B6|D29A+D29A/D29A\D29A; | 
+                      ADC.W SpriteYPosSpx,X                     ;;D2B7|D29B+D29B/D29B\D29B; | 
                       STA.W SpriteYPosSpx,X                     ;;D2BA|D29E+D29E/D29E\D29E; / 
                       PHP                                       ;;D2BD|D2A1+D2A1/D2A1\D2A1;
                       PHP                                       ;;D2BE|D2A2+D2A2/D2A2\D2A2;
                       LDY.B #$00                                ;;D2BF|D2A3+D2A3/D2A3\D2A3;
                       LDA.B SpriteYSpeed,X                      ;;D2C1|D2A5+D2A5/D2A5\D2A5; \ Amount to move sprite = speed / 16 
-                      LSR A                                     ;;D2C3|D2A7+D2A7/D2A7\D2A7;  | 
-                      LSR A                                     ;;D2C4|D2A8+D2A8/D2A8\D2A8;  | 
-                      LSR A                                     ;;D2C5|D2A9+D2A9/D2A9\D2A9;  | 
+                      LSR A                                     ;;D2C3|D2A7+D2A7/D2A7\D2A7; | 
+                      LSR A                                     ;;D2C4|D2A8+D2A8/D2A8\D2A8; | 
+                      LSR A                                     ;;D2C5|D2A9+D2A9/D2A9\D2A9; | 
                       LSR A                                     ;;D2C6|D2AA+D2AA/D2AA\D2AA; / 
                       CMP.B #$08                                ;;D2C7|D2AB+D2AB/D2AB\D2AB; \ If speed was negative... 
-                      BCC +                                     ;;D2C9|D2AD+D2AD/D2AD\D2AD;  | 
-                      ORA.B #$F0                                ;;D2CB|D2AF+D2AF/D2AF\D2AF;  | ...set high bits 
+                      BCC +                                     ;;D2C9|D2AD+D2AD/D2AD\D2AD; | 
+                      ORA.B #$F0                                ;;D2CB|D2AF+D2AF/D2AF\D2AF; | ...set high bits 
                       DEY                                       ;;D2CD|D2B1+D2B1/D2B1\D2B1; / 
                     + PLP                                       ;;D2CE|D2B2+D2B2/D2B2\D2B2;
                       PHA                                       ;;D2CF|D2B3+D2B3/D2B3\D2B3; \ Add to position 
-                      ADC.B SpriteYPosLow,X                     ;;D2D0|D2B4+D2B4/D2B4\D2B4;  | 
-                      STA.B SpriteYPosLow,X                     ;;D2D2|D2B6+D2B6/D2B6\D2B6;  | 
-                      TYA                                       ;;D2D4|D2B8+D2B8/D2B8\D2B8;  | 
-                      ADC.W SpriteXPosHigh,X                    ;;D2D5|D2B9+D2B9/D2B9\D2B9;  | 
-                      STA.W SpriteXPosHigh,X                    ;;D2D8|D2BC+D2BC/D2BC\D2BC;  | 
+                      ADC.B SpriteYPosLow,X                     ;;D2D0|D2B4+D2B4/D2B4\D2B4; | 
+                      STA.B SpriteYPosLow,X                     ;;D2D2|D2B6+D2B6/D2B6\D2B6; | 
+                      TYA                                       ;;D2D4|D2B8+D2B8/D2B8\D2B8; | 
+                      ADC.W SpriteXPosHigh,X                    ;;D2D5|D2B9+D2B9/D2B9\D2B9; | 
+                      STA.W SpriteXPosHigh,X                    ;;D2D8|D2BC+D2BC/D2BC\D2BC; | 
                       PLA                                       ;;D2DB|D2BF+D2BF/D2BF\D2BF; / 
                       PLP                                       ;;D2DC|D2C0+D2C0/D2C0\D2C0;
                       ADC.B #$00                                ;;D2DD|D2C1+D2C1/D2C1\D2C1;
                       STA.W SpriteXMovement                     ;;D2DF|D2C3+D2C3/D2C3\D2C3; $1491 = amount sprite was moved 
-                      RTS                                       ;;D2E2|D2C6+D2C6/D2C6\D2C6; Return 
+                      RTS                                       ;;D2E2|D2C6+D2C6/D2C6\D2C6;
                                                                 ;;                        ;
                       STA.B _0                                  ;;D2E3|D2C7+D2C7/D2C7\D2C7; Unreachable 
                       LDA.B PlayerXPosNext                      ;;D2E5|D2C9+D2C9/D2C9\D2C9; \ Save Mario's position 
-                      PHA                                       ;;D2E7|D2CB+D2CB/D2CB\D2CB;  | 
-                      LDA.B PlayerXPosNext+1                    ;;D2E8|D2CC+D2CC/D2CC\D2CC;  | 
-                      PHA                                       ;;D2EA|D2CE+D2CE/D2CE\D2CE;  | 
-                      LDA.B PlayerYPosNext                      ;;D2EB|D2CF+D2CF/D2CF\D2CF;  | 
-                      PHA                                       ;;D2ED|D2D1+D2D1/D2D1\D2D1;  | 
-                      LDA.B PlayerYPosNext+1                    ;;D2EE|D2D2+D2D2/D2D2\D2D2;  | 
+                      PHA                                       ;;D2E7|D2CB+D2CB/D2CB\D2CB; | 
+                      LDA.B PlayerXPosNext+1                    ;;D2E8|D2CC+D2CC/D2CC\D2CC; | 
+                      PHA                                       ;;D2EA|D2CE+D2CE/D2CE\D2CE; | 
+                      LDA.B PlayerYPosNext                      ;;D2EB|D2CF+D2CF/D2CF\D2CF; | 
+                      PHA                                       ;;D2ED|D2D1+D2D1/D2D1\D2D1; | 
+                      LDA.B PlayerYPosNext+1                    ;;D2EE|D2D2+D2D2/D2D2\D2D2; | 
                       PHA                                       ;;D2F0|D2D4+D2D4/D2D4\D2D4; / 
                       LDA.W SpriteXPosLow,Y                     ;;D2F1|D2D5+D2D5/D2D5\D2D5; \ Mario's position = Sprite position 
-                      STA.B PlayerXPosNext                      ;;D2F4|D2D8+D2D8/D2D8\D2D8;  | 
-                      LDA.W SpriteYPosHigh,Y                    ;;D2F6|D2DA+D2DA/D2DA\D2DA;  | 
-                      STA.B PlayerXPosNext+1                    ;;D2F9|D2DD+D2DD/D2DD\D2DD;  | 
-                      LDA.W SpriteYPosLow,Y                     ;;D2FB|D2DF+D2DF/D2DF\D2DF;  | 
-                      STA.B PlayerYPosNext                      ;;D2FE|D2E2+D2E2/D2E2\D2E2;  | 
-                      LDA.W SpriteXPosHigh,Y                    ;;D300|D2E4+D2E4/D2E4\D2E4;  | 
+                      STA.B PlayerXPosNext                      ;;D2F4|D2D8+D2D8/D2D8\D2D8; | 
+                      LDA.W SpriteYPosHigh,Y                    ;;D2F6|D2DA+D2DA/D2DA\D2DA; | 
+                      STA.B PlayerXPosNext+1                    ;;D2F9|D2DD+D2DD/D2DD\D2DD; | 
+                      LDA.W SpriteYPosLow,Y                     ;;D2FB|D2DF+D2DF/D2DF\D2DF; | 
+                      STA.B PlayerYPosNext                      ;;D2FE|D2E2+D2E2/D2E2\D2E2; | 
+                      LDA.W SpriteXPosHigh,Y                    ;;D300|D2E4+D2E4/D2E4\D2E4; | 
                       STA.B PlayerYPosNext+1                    ;;D303|D2E7+D2E7/D2E7\D2E7; / 
                       LDA.B _0                                  ;;D305|D2E9+D2E9/D2E9\D2E9;
                       JSR CODE_02D2FB                           ;;D307|D2EB+D2EB/D2EB\D2EB;
                       PLA                                       ;;D30A|D2EE+D2EE/D2EE\D2EE; \ Restore Mario's position 
-                      STA.B PlayerYPosNext+1                    ;;D30B|D2EF+D2EF/D2EF\D2EF;  | 
-                      PLA                                       ;;D30D|D2F1+D2F1/D2F1\D2F1;  | 
-                      STA.B PlayerYPosNext                      ;;D30E|D2F2+D2F2/D2F2\D2F2;  | 
-                      PLA                                       ;;D310|D2F4+D2F4/D2F4\D2F4;  | 
-                      STA.B PlayerXPosNext+1                    ;;D311|D2F5+D2F5/D2F5\D2F5;  | 
-                      PLA                                       ;;D313|D2F7+D2F7/D2F7\D2F7;  | 
+                      STA.B PlayerYPosNext+1                    ;;D30B|D2EF+D2EF/D2EF\D2EF; | 
+                      PLA                                       ;;D30D|D2F1+D2F1/D2F1\D2F1; | 
+                      STA.B PlayerYPosNext                      ;;D30E|D2F2+D2F2/D2F2\D2F2; | 
+                      PLA                                       ;;D310|D2F4+D2F4/D2F4\D2F4; | 
+                      STA.B PlayerXPosNext+1                    ;;D311|D2F5+D2F5/D2F5\D2F5; | 
+                      PLA                                       ;;D313|D2F7+D2F7/D2F7\D2F7; | 
                       STA.B PlayerXPosNext                      ;;D314|D2F8+D2F8/D2F8\D2F8; / 
-                      RTS                                       ;;D316|D2FA+D2FA/D2FA\D2FA; Return 
+                      RTS                                       ;;D316|D2FA+D2FA/D2FA\D2FA;
                                                                 ;;                        ;
 CODE_02D2FB:          STA.B _1                                  ;;D317|D2FB+D2FB/D2FB\D2FB;
                       PHX                                       ;;D319|D2FD+D2FD/D2FD\D2FD;
@@ -10179,7 +10179,7 @@ CODE_02D338:          LDA.B _B                                  ;;D354|D338+D338
                       STA.B _1                                  ;;D38B|D36F+D36F/D36F\D36F;
                     + PLY                                       ;;D38D|D371+D371/D371\D371;
                       PLX                                       ;;D38E|D372+D372/D372\D372;
-                      RTS                                       ;;D38F|D373+D373/D373\D373; Return 
+                      RTS                                       ;;D38F|D373+D373/D373\D373;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02D374:          db $0C,$1C                                ;;D390|D374+D374/D374\D374;
@@ -10197,13 +10197,13 @@ GetDrawInfo2:         STZ.W SpriteOffscreenVert,X               ;;D394|D378+D378
                     + LDA.W SpriteYPosHigh,X                    ;;D3A8|D38C+D38C/D38C\D38C;
                       XBA                                       ;;D3AB|D38F+D38F/D38F\D38F;
                       LDA.B SpriteXPosLow,X                     ;;D3AC|D390+D390/D390\D390;
-                      REP #$20                                  ;;D3AE|D392+D392/D392\D392; Accum (16 bit) 
+                      REP #$20                                  ;;D3AE|D392+D392/D392\D392; A->16
                       SEC                                       ;;D3B0|D394+D394/D394\D394;
                       SBC.B Layer1XPos                          ;;D3B1|D395+D395/D395\D395;
                       CLC                                       ;;D3B3|D397+D397/D397\D397;
                       ADC.W #$0040                              ;;D3B4|D398+D398/D398\D398;
                       CMP.W #$0180                              ;;D3B7|D39B+D39B/D39B\D39B;
-                      SEP #$20                                  ;;D3BA|D39E+D39E/D39E\D39E; Accum (8 bit) 
+                      SEP #$20                                  ;;D3BA|D39E+D39E/D39E\D39E; A->8
                       ROL A                                     ;;D3BC|D3A0+D3A0/D3A0\D3A0;
                       AND.B #$01                                ;;D3BD|D3A1+D3A1/D3A1\D3A1;
                       STA.W SpriteWayOffscreenX,X               ;;D3BF|D3A3+D3A3/D3A3\D3A3;
@@ -10239,11 +10239,11 @@ CODE_02D3B2:          LDA.B SpriteYPosLow,X                     ;;D3CE|D3B2+D3B2
                       SEC                                       ;;D3FD|D3E1+D3E1/D3E1\D3E1;
                       SBC.B Layer1YPos                          ;;D3FE|D3E2+D3E2/D3E2\D3E2;
                       STA.B _1                                  ;;D400|D3E4+D3E4/D3E4\D3E4;
-                      RTS                                       ;;D402|D3E6+D3E6/D3E6\D3E6; Return 
+                      RTS                                       ;;D402|D3E6+D3E6/D3E6\D3E6;
                                                                 ;;                        ;
 CODE_02D3E7:          PLA                                       ;;D403|D3E7+D3E7/D3E7\D3E7;
                       PLA                                       ;;D404|D3E8+D3E8/D3E8\D3E8;
-                      RTS                                       ;;D405|D3E9+D3E9/D3E9\D3E9; Return 
+                      RTS                                       ;;D405|D3E9+D3E9/D3E9\D3E9;
                                                                 ;;                        ;
 Layer3SmashMain:      JSL CODE_00FF61                           ;;D406|D3EA+D3EA/D3EA\D3EA;
                       LDA.B SpriteLock                          ;;D40A|D3EE+D3EE/D3EE\D3EE;
@@ -10271,7 +10271,7 @@ Layer3SmashMain:      JSL CODE_00FF61                           ;;D406|D3EA+D3EA
 CODE_02D419:          LDA.W SpriteWillAppear                    ;;D435|D419+D419/D419\D419;
                       BEQ +                                     ;;D438|D41C+D41C/D41C\D41C;
                       JSR OffScrEraseSprBnk2                    ;;D43A|D41E+D41E/D41E\D41E;
-                      RTS                                       ;;D43D|D421+D421/D421\D421; Return 
+                      RTS                                       ;;D43D|D421+D421/D421\D421;
                                                                 ;;                        ;
                     + LDA.W SpriteMisc1540,X                    ;;D43E|D422+D422/D422\D422;
                       BNE Return02D444                          ;;D441|D425+D425/D425\D425;
@@ -10287,17 +10287,17 @@ CODE_02D419:          LDA.W SpriteWillAppear                    ;;D435|D419+D419
                       STZ.B SpriteYPosLow,X                     ;;D459|D43D+D43D/D43D\D43D;
                       STZ.W SpriteXPosHigh,X                    ;;D45B|D43F+D43F/D43F\D43F;
                       STZ.B SpriteYSpeed,X                      ;;D45E|D442+D442/D442\D442; Sprite Y Speed = 0 
-Return02D444:         RTL                                       ;;D460|D444+D444/D444\D444; Return 
+Return02D444:         RTL                                       ;;D460|D444+D444/D444\D444;
                                                                 ;;                        ;
 CODE_02D445:          LDA.W SpriteMisc1540,X                    ;;D461|D445+D445/D445\D445;
                       BEQ +                                     ;;D464|D448+D448/D448\D448;
                       LDA.B #con($04,$04,$04,$06,$06)           ;;D466|D44A+D44A/D44A\D44A;
                       STA.B SpriteYSpeed,X                      ;;D468|D44C+D44C/D44C\D44C;
                       JSR UpdateYPosNoGrvty                     ;;D46A|D44E+D44E/D44E\D44E;
-                      RTL                                       ;;D46D|D451+D451/D451\D451; Return 
+                      RTL                                       ;;D46D|D451+D451/D451\D451;
                                                                 ;;                        ;
                     + INC.B SpriteTableC2,X                     ;;D46E|D452+D452/D452\D452;
-                      RTL                                       ;;D470|D454+D454/D454\D454; Return 
+                      RTL                                       ;;D470|D454+D454/D454\D454;
                                                                 ;;                        ;
 CODE_02D455:          JSR UpdateYPosNoGrvty                     ;;D471|D455+D455/D455\D455;
                       LDA.B SpriteYSpeed,X                      ;;D474|D458+D458/D458\D458;
@@ -10319,12 +10319,12 @@ CODE_02D460:          CLC                                       ;;D47C|D460+D460
                       LDA.B #$30                                ;;D495|D479+D479/D479\D479;
                       STA.W SpriteMisc1540,X                    ;;D497|D47B+D47B/D47B\D47B;
                       INC.B SpriteTableC2,X                     ;;D49A|D47E+D47E/D47E\D47E;
-                    + RTL                                       ;;D49C|D480+D480/D480\D480; Return 
+                    + RTL                                       ;;D49C|D480+D480/D480\D480;
                                                                 ;;                        ;
 CODE_02D481:          LDA.W SpriteMisc1540,X                    ;;D49D|D481+D481/D481\D481;
                       BNE +                                     ;;D4A0|D484+D484/D484\D484;
                       INC.B SpriteTableC2,X                     ;;D4A2|D486+D486/D486\D486;
-                    + RTL                                       ;;D4A4|D488+D488/D488\D488; Return 
+                    + RTL                                       ;;D4A4|D488+D488/D488\D488;
                                                                 ;;                        ;
 CODE_02D489:          LDA.B #con($E0,$E0,$E0,$D8,$D8)           ;;D4A5|D489+D489/D489\D489;
                       STA.B SpriteYSpeed,X                      ;;D4A7|D48B+D48B/D48B\D48B;
@@ -10334,7 +10334,7 @@ CODE_02D489:          LDA.B #con($E0,$E0,$E0,$D8,$D8)           ;;D4A5|D489+D489
                       STZ.B SpriteTableC2,X                     ;;D4B0|D494+D494/D494\D494;
                       LDA.B #con($A0,$A0,$A0,$88,$88)           ;;D4B2|D496+D496/D496\D496;
                       STA.W SpriteMisc1540,X                    ;;D4B4|D498+D498/D498\D498;
-                    + RTL                                       ;;D4B7|D49B+D49B/D49B\D49B; Return 
+                    + RTL                                       ;;D4B7|D49B+D49B/D49B\D49B;
                                                                 ;;                        ;
 CODE_02D49C:          LDA.B #$00                                ;;D4B8|D49C+D49C/D49C\D49C;
                       LDY.B Powerup                             ;;D4BA|D49E+D49E/D49E\D49E;
@@ -10350,7 +10350,7 @@ CODE_02D49C:          LDA.B #$00                                ;;D4B8|D49C+D49C
                       STA.B _0                                  ;;D4CD|D4B1+D4B1/D4B1\D4B1;
                       LDA.W SpriteYPosHigh,X                    ;;D4CF|D4B3+D4B3/D4B3\D4B3;
                       STA.B _1                                  ;;D4D2|D4B6+D4B6/D4B6\D4B6;
-                      REP #$20                                  ;;D4D4|D4B8+D4B8/D4B8\D4B8; Accum (16 bit) 
+                      REP #$20                                  ;;D4D4|D4B8+D4B8/D4B8\D4B8; A->16
                       LDA.B PlayerXPosScrRel                    ;;D4D6|D4BA+D4BA/D4BA\D4BA;
                       CLC                                       ;;D4D8|D4BC+D4BC/D4BC\D4BC;
                       ADC.B _0                                  ;;D4D9|D4BD+D4BD/D4BD\D4BD;
@@ -10361,18 +10361,18 @@ CODE_02D49C:          LDA.B #$00                                ;;D4B8|D49C+D49C
                       SEC                                       ;;D4E4|D4C8+D4C8/D4C8\D4C8;
                       SBC.W #$0008                              ;;D4E5|D4C9+D4C9/D4C9\D4C9;
                       CMP.W #$0080                              ;;D4E8|D4CC+D4CC/D4CC\D4CC;
-                      SEP #$20                                  ;;D4EB|D4CF+D4CF/D4CF\D4CF; Accum (8 bit) 
+                      SEP #$20                                  ;;D4EB|D4CF+D4CF/D4CF\D4CF; A->8
                       BCS CODE_02D4E5                           ;;D4ED|D4D1+D4D1/D4D1\D4D1;
                       LDA.B PlayerInAir                         ;;D4EF|D4D3+D4D3/D4D3\D4D3;
                       BNE +                                     ;;D4F1|D4D5+D4D5/D4D5\D4D5;
                       JSL HurtMario                             ;;D4F3|D4D7+D4D7/D4D7\D4D7;
-                      RTS                                       ;;D4F7|D4DB+D4DB/D4DB\D4DB; Return 
+                      RTS                                       ;;D4F7|D4DB+D4DB/D4DB\D4DB;
                                                                 ;;                        ;
                     + STZ.B PlayerYSpeed                        ;;D4F8|D4DC+D4DC/D4DC\D4DC;
                       LDA.B SpriteYSpeed,X                      ;;D4FA|D4DE+D4DE/D4DE\D4DE;
                       BMI +                                     ;;D4FC|D4E0+D4E0/D4E0\D4E0;
                       STA.B PlayerYSpeed                        ;;D4FE|D4E2+D4E2/D4E2\D4E2;
-                    + RTS                                       ;;D500|D4E4+D4E4/D4E4\D4E4; Return 
+                    + RTS                                       ;;D500|D4E4+D4E4/D4E4\D4E4;
                                                                 ;;                        ;
 CODE_02D4E5:          PHP                                       ;;D501|D4E5+D4E5/D4E5\D4E5;
                       LDA.B #$08                                ;;D502|D4E6+D4E6/D4E6\D4E6;
@@ -10380,8 +10380,8 @@ CODE_02D4E5:          PHP                                       ;;D501|D4E5+D4E5
                       BPL +                                     ;;D505|D4E9+D4E9/D4E9\D4E9;
                       LDA.B #$F8                                ;;D507|D4EB+D4EB/D4EB\D4EB;
                     + STA.B PlayerXSpeed                        ;;D509|D4ED+D4ED/D4ED\D4ED;
-CODE_02D4EF:          SEP #$20                                  ;;D50B|D4EF+D4EF/D4EF\D4EF; Accum (8 bit) 
-                      RTS                                       ;;D50D|D4F1+D4F1/D4F1\D4F1; Return 
+CODE_02D4EF:          SEP #$20                                  ;;D50B|D4EF+D4EF/D4EF\D4EF; A->8
+                      RTS                                       ;;D50D|D4F1+D4F1/D4F1\D4F1;
                                                                 ;;                        ;
                                                                 ;;                        ;
                       db $80,$40,$20,$10,$08,$04,$02,$01        ;;D50E|D4F2+D4F2/D4F2\D4F2;
@@ -10395,7 +10395,7 @@ CODE_02D4FA:          LDY.B #$00                                ;;D516|D4FA+D4FA
                       SBC.W SpriteYPosHigh,X                    ;;D521|D505+D505/D505\D505;
                       BPL +                                     ;;D524|D508+D508/D508\D508;
                       INY                                       ;;D526|D50A+D50A/D50A\D50A;
-                    + RTS                                       ;;D527|D50B+D50B/D50B\D50B; Return 
+                    + RTS                                       ;;D527|D50B+D50B/D50B\D50B;
                                                                 ;;                        ;
 CODE_02D50C:          LDY.B #$00                                ;;D528|D50C+D50C/D50C\D50C;
                       LDA.B PlayerYPosNext                      ;;D52A|D50E+D50E/D50E\D50E;
@@ -10406,7 +10406,7 @@ CODE_02D50C:          LDY.B #$00                                ;;D528|D50C+D50C
                       SBC.W SpriteXPosHigh,X                    ;;D533|D517+D517/D517\D517;
                       BPL +                                     ;;D536|D51A+D51A/D51A\D51A;
                       INY                                       ;;D538|D51C+D51C/D51C\D51C;
-                    + RTS                                       ;;D539|D51D+D51D/D51D\D51D; Return 
+                    + RTS                                       ;;D539|D51D+D51D/D51D\D51D;
                                                                 ;;                        ;
                       %insert_empty($46,$62,$62,$62,$62)        ;;D53A|D51E+D51E/D51E\D51E;
                                                                 ;;                        ;
@@ -10429,7 +10429,7 @@ CODE_02D587:          JSR CODE_02D5E4                           ;;D587|D587+D587
                       STA.B SpriteXSpeed,X                      ;;D59A|D59A+D59A/D59A\D59A;
                       JSR UpdateXPosNoGrvty                     ;;D59C|D59C+D59C/D59C\D59C;
                       JSL MarioSprInteract                      ;;D59F|D59F+D59F/D59F\D59F;
-                    + RTS                                       ;;D5A3|D5A3+D5A3/D5A3\D5A3; Return 
+                    + RTS                                       ;;D5A3|D5A3+D5A3/D5A3\D5A3;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02D5A4:          db $00,$10,$20,$30,$00,$10,$20,$30        ;;D5A4|D5A4+D5A4/D5A4\D5A4;
@@ -10478,7 +10478,7 @@ Banzai_Rotating:      PHB                                       ;;D617|D617+D617
                                                                 ;;                        ;
 CODE_02D625:          JSR CODE_02D62A                           ;;D625|D625+D625/D625\D625;
                     + PLB                                       ;;D628|D628+D628/D628\D628;
-                      RTL                                       ;;D629|D629+D629/D629\D629; Return 
+                      RTL                                       ;;D629|D629+D629/D629\D629;
                                                                 ;;                        ;
 CODE_02D62A:          JSR SubOffscreen3Bnk2                     ;;D62A|D62A+D62A/D62A\D62A;
                       LDA.B SpriteLock                          ;;D62D|D62D+D62D/D62D\D62D;
@@ -10504,7 +10504,7 @@ CODE_02D653:          LDA.W SpriteMisc151C,X                    ;;D653|D653+D653
                       STA.B _1                                  ;;D656|D656+D656/D656\D656;
                       LDA.W SpriteMisc1602,X                    ;;D658|D658+D658/D658\D658;
                       STA.B _0                                  ;;D65B|D65B+D65B/D65B\D65B;
-                      REP #$30                                  ;;D65D|D65D+D65D/D65D\D65D; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;D65D|D65D+D65D/D65D\D65D; AXY->16
                       LDA.B _0                                  ;;D65F|D65F+D65F/D65F\D65F;
                       CLC                                       ;;D661|D661+D661/D661\D661;
                       ADC.W #$0080                              ;;D662|D662+D662/D662\D662;
@@ -10522,17 +10522,17 @@ CODE_02D653:          LDA.W SpriteMisc151C,X                    ;;D653|D653+D653
                       TAX                                       ;;D67D|D67D+D67D/D67D\D67D;
                       LDA.L CircleCoords,X                      ;;D67E|D67E+D67E/D67E\D67E;
                       STA.B _6                                  ;;D682|D682+D682/D682\D682;
-                      SEP #$30                                  ;;D684|D684+D684/D684\D684; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;D684|D684+D684/D684\D684; AXY->8
                       LDX.W CurSpriteProcess                    ;;D686|D686+D686/D686\D686; X = Sprite index 
                       LDA.B _4                                  ;;D689|D689+D689/D689\D689;
-                      STA.W HW_WRMPYA                           ;;D68B|D68B+D68B/D68B\D68B; Multiplicand A
+                      STA.W HW_WRMPYA                           ;;D68B|D68B+D68B/D68B\D68B;
                       LDA.W SpriteMisc187B,X                    ;;D68E|D68E+D68E/D68E\D68E;
                       LDY.B _5                                  ;;D691|D691+D691/D691\D691;
                       BNE +                                     ;;D693|D693+D693/D693\D693;
-                      STA.W HW_WRMPYB                           ;;D695|D695+D695/D695\D695; Multplier B
+                      STA.W HW_WRMPYB                           ;;D695|D695+D695/D695\D695;
                       JSR CODE_02D800                           ;;D698|D698+D698/D698\D698;
-                      ASL.W HW_RDMPY                            ;;D69B|D69B+D69B/D69B\D69B; Product/Remainder Result (Low Byte)
-                      LDA.W HW_RDMPY+1                          ;;D69E|D69E+D69E/D69E\D69E; Product/Remainder Result (High Byte)
+                      ASL.W HW_RDMPY                            ;;D69B|D69B+D69B/D69B\D69B;
+                      LDA.W HW_RDMPY+1                          ;;D69E|D69E+D69E/D69E\D69E;
                       ADC.B #$00                                ;;D6A1|D6A1+D6A1/D6A1\D6A1;
                     + LSR.B _1                                  ;;D6A3|D6A3+D6A3/D6A3\D6A3;
                       BCC +                                     ;;D6A5|D6A5+D6A5/D6A5\D6A5;
@@ -10540,14 +10540,14 @@ CODE_02D653:          LDA.W SpriteMisc151C,X                    ;;D653|D653+D653
                       INC A                                     ;;D6A9|D6A9+D6A9/D6A9\D6A9;
                     + STA.B _4                                  ;;D6AA|D6AA+D6AA/D6AA\D6AA;
                       LDA.B _6                                  ;;D6AC|D6AC+D6AC/D6AC\D6AC;
-                      STA.W HW_WRMPYA                           ;;D6AE|D6AE+D6AE/D6AE\D6AE; Multiplicand A
+                      STA.W HW_WRMPYA                           ;;D6AE|D6AE+D6AE/D6AE\D6AE;
                       LDA.W SpriteMisc187B,X                    ;;D6B1|D6B1+D6B1/D6B1\D6B1;
                       LDY.B _7                                  ;;D6B4|D6B4+D6B4/D6B4\D6B4;
                       BNE +                                     ;;D6B6|D6B6+D6B6/D6B6\D6B6;
-                      STA.W HW_WRMPYB                           ;;D6B8|D6B8+D6B8/D6B8\D6B8; Multplier B
+                      STA.W HW_WRMPYB                           ;;D6B8|D6B8+D6B8/D6B8\D6B8;
                       JSR CODE_02D800                           ;;D6BB|D6BB+D6BB/D6BB\D6BB;
-                      ASL.W HW_RDMPY                            ;;D6BE|D6BE+D6BE/D6BE\D6BE; Product/Remainder Result (Low Byte)
-                      LDA.W HW_RDMPY+1                          ;;D6C1|D6C1+D6C1/D6C1\D6C1; Product/Remainder Result (High Byte)
+                      ASL.W HW_RDMPY                            ;;D6BE|D6BE+D6BE/D6BE\D6BE;
+                      LDA.W HW_RDMPY+1                          ;;D6C1|D6C1+D6C1/D6C1\D6C1;
                       ADC.B #$00                                ;;D6C4|D6C4+D6C4/D6C4\D6C4;
                     + LSR.B _3                                  ;;D6C6|D6C6+D6C6/D6C6\D6C6;
                       BCC +                                     ;;D6C8|D6C8+D6C8/D6C8\D6C8;
@@ -10721,7 +10721,7 @@ CODE_02D800:          NOP                                       ;;D800|D800+D800
                       NOP                                       ;;D803|D803+D803/D803\D803;
                       NOP                                       ;;D804|D804+D804/D804\D804;
                       NOP                                       ;;D805|D805+D805/D805\D805;
-Return02D806:         RTS                                       ;;D806|D806+D806/D806\D806; Return 
+Return02D806:         RTS                                       ;;D806|D806+D806/D806\D806;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02D807:          db $F8,$08,$F8,$08                        ;;D807|D807+D807/D807\D807;
@@ -10752,7 +10752,7 @@ CODE_02D813:          JSR GetDrawInfo2                          ;;D813|D813+D813
                       DEX                                       ;;D83B|D83B+D83B/D83B\D83B;
                       BPL -                                     ;;D83C|D83C+D83C/D83C\D83C;
                       PLX                                       ;;D83E|D83E+D83E/D83E\D83E;
-                      RTS                                       ;;D83F|D83F+D83F/D83F\D83F; Return 
+                      RTS                                       ;;D83F|D83F+D83F/D83F\D83F;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02D840:          db $00,$F0,$00,$10                        ;;D840|D840+D840/D840\D840;
@@ -10779,21 +10779,21 @@ CODE_02D848:          JSR GetDrawInfo2                          ;;D848|D848+D848
                       DEX                                       ;;D86B|D86B+D86B/D86B\D86B;
                       BPL -                                     ;;D86C|D86C+D86C/D86C\D86C;
                       PLX                                       ;;D86E|D86E+D86E/D86E\D86E;
-                      RTS                                       ;;D86F|D86F+D86F/D86F\D86F; Return 
+                      RTS                                       ;;D86F|D86F+D86F/D86F\D86F;
                                                                 ;;                        ;
 CODE_02D870:          PHP                                       ;;D870|D870+D870/D870\D870;
                       BPL +                                     ;;D871|D871+D871/D871\D871;
                       EOR.B #$FF                                ;;D873|D873+D873/D873\D873;
                       INC A                                     ;;D875|D875+D875/D875\D875;
-                    + STA.W HW_WRDIV+1                          ;;D876|D876+D876/D876\D876; Dividend (High-Byte)
-                      STZ.W HW_WRDIV                            ;;D879|D879+D879/D879\D879; Dividend (Low Byte)
+                    + STA.W HW_WRDIV+1                          ;;D876|D876+D876/D876\D876;
+                      STZ.W HW_WRDIV                            ;;D879|D879+D879/D879\D879;
                       LDA.W SpriteMisc187B,X                    ;;D87C|D87C+D87C/D87C\D87C;
                       LSR A                                     ;;D87F|D87F+D87F/D87F\D87F;
-                      STA.W HW_WRDIV+2                          ;;D880|D880+D880/D880\D880; Divisor B
+                      STA.W HW_WRDIV+2                          ;;D880|D880+D880/D880\D880;
                       JSR CODE_02D800                           ;;D883|D883+D883/D883\D883;
-                      LDA.W HW_RDDIV                            ;;D886|D886+D886/D886\D886; Quotient of Divide Result (Low Byte)
+                      LDA.W HW_RDDIV                            ;;D886|D886+D886/D886\D886;
                       STA.B _E                                  ;;D889|D889+D889/D889\D889;
-                      LDA.W HW_RDDIV+1                          ;;D88B|D88B+D88B/D88B\D88B; Quotient of Divide Result (High Byte)
+                      LDA.W HW_RDDIV+1                          ;;D88B|D88B+D88B/D88B\D88B;
                       ASL.B _E                                  ;;D88E|D88E+D88E/D88E\D88E;
                       ROL A                                     ;;D890|D890+D890/D890\D890;
                       ASL.B _E                                  ;;D891|D891+D891/D891\D891;
@@ -10806,7 +10806,7 @@ CODE_02D870:          PHP                                       ;;D870|D870+D870
                       BPL +                                     ;;D89B|D89B+D89B/D89B\D89B;
                       EOR.B #$FF                                ;;D89D|D89D+D89D/D89D\D89D;
                       INC A                                     ;;D89F|D89F+D89F/D89F\D89F;
-                    + RTS                                       ;;D8A0|D8A0+D8A0/D8A0\D8A0; Return 
+                    + RTS                                       ;;D8A0|D8A0+D8A0/D8A0\D8A0;
                                                                 ;;                        ;
                                                                 ;;                        ;
 BubbleSprTiles1:      db $A8,$CA,$67,$24                        ;;D8A1|D8A1+D8A1/D8A1\D8A1;
@@ -10820,7 +10820,7 @@ BubbleSpriteMain:     PHB                                       ;;D8AD|D8AD+D8AD
                       PLB                                       ;;D8AF|D8AF+D8AF/D8AF\D8AF;
                       JSR CODE_02D8BB                           ;;D8B0|D8B0+D8B0/D8B0\D8B0;
                       PLB                                       ;;D8B3|D8B3+D8B3/D8B3\D8B3;
-                      RTL                                       ;;D8B4|D8B4+D8B4/D8B4\D8B4; Return 
+                      RTL                                       ;;D8B4|D8B4+D8B4/D8B4\D8B4;
                                                                 ;;                        ;
                                                                 ;;                        ;
 BubbleSprGfxProp2:    db $08,$F8                                ;;D8B5|D8B5+D8B5/D8B5\D8B5;
@@ -10911,7 +10911,7 @@ CODE_02D96B:          LDA.W SpriteMisc1534,X                    ;;D96B|D96B+D96B
                       BCC Return02D977                          ;;D970|D970+D970/D970\D970;
                       LDA.B #$06                                ;;D972|D972+D972/D972\D972;
                       STA.W SpriteMisc1534,X                    ;;D974|D974+D974/D974\D974;
-Return02D977:         RTS                                       ;;D977|D977+D977/D977\D977; Return 
+Return02D977:         RTS                                       ;;D977|D977+D977/D977\D977;
                                                                 ;;                        ;
 CODE_02D978:          LDY.B SpriteTableC2,X                     ;;D978|D978+D978/D978\D978;
                       LDA.W BubbleSprites,Y                     ;;D97A|D97A+D97A/D97A\D97A;
@@ -10931,7 +10931,7 @@ CODE_02D978:          LDY.B SpriteTableC2,X                     ;;D978|D978+D978
                     + JSR CODE_02D4FA                           ;;D999|D999+D999/D999\D999;
                       TYA                                       ;;D99C|D99C+D99C/D99C\D99C;
                       STA.W SpriteMisc157C,X                    ;;D99D|D99D+D99D/D99D\D99D;
-Return02D9A0:         RTS                                       ;;D9A0|D9A0+D9A0/D9A0\D9A0; Return 
+Return02D9A0:         RTS                                       ;;D9A0|D9A0+D9A0/D9A0\D9A0;
                                                                 ;;                        ;
                                                                 ;;                        ;
 BubbleSprites:        db $0F,$0D,$15,$74                        ;;D9A1|D9A1+D9A1/D9A1\D9A1;
@@ -11022,7 +11022,7 @@ HammerBrotherMain:    PHB                                       ;;DA52|DA52+DA52
                       PLB                                       ;;DA54|DA54+DA54/DA54\DA54;
                       JSR CODE_02DA5A                           ;;DA55|DA55+DA55/DA55\DA55;
                       PLB                                       ;;DA58|DA58+DA58/DA58\DA58;
-Return02DA59:         RTL                                       ;;DA59|DA59+DA59/DA59\DA59; Return 
+Return02DA59:         RTL                                       ;;DA59|DA59+DA59/DA59\DA59;
                                                                 ;;                        ;
 CODE_02DA5A:          STZ.W SpriteMisc157C,X                    ;;DA5A|DA5A+DA5A/DA5A\DA5A;
                       LDA.W SpriteStatus,X                      ;;DA5D|DA5D+DA5D/DA5D\DA5D;
@@ -11041,8 +11041,8 @@ HammerFreq:           db $1F,$0F,$0F,$0F,$0F,$0F,$0F            ;;DA67|DA67+DA67
                       LDA.W OWPlayerSubmap,Y                    ;;DA7C|DA7C+DA7C/DA7C\DA7C;
                       TAY                                       ;;DA7F|DA7F+DA7F/DA7F\DA7F;
                       LDA.B TrueFrame                           ;;DA80|DA80+DA80/DA80\DA80; \ Increment $1570,x 3 out of every 4 frames 
-                      AND.B #$03                                ;;DA82|DA82+DA82/DA82\DA82;  | 
-                      BEQ +                                     ;;DA84|DA84+DA84/DA84\DA84;  | 
+                      AND.B #$03                                ;;DA82|DA82+DA82/DA82\DA82; | 
+                      BEQ +                                     ;;DA84|DA84+DA84/DA84\DA84; | 
                       INC.W SpriteMisc1570,X                    ;;DA86|DA86+DA86/DA86\DA86; / 
                     + LDA.W SpriteMisc1570,X                    ;;DA89|DA89+DA89/DA89\DA89;
                       ASL A                                     ;;DA8C|DA8C+DA8C/DA8C\DA8C;
@@ -11052,40 +11052,40 @@ HammerFreq:           db $1F,$0F,$0F,$0F,$0F,$0F,$0F            ;;DA67|DA67+DA67
                     + AND.B #$40                                ;;DA92|DA92+DA92/DA92\DA92;
                       STA.W SpriteMisc157C,X                    ;;DA94|DA94+DA94/DA94\DA94;
                       LDA.W SpriteMisc1570,X                    ;;DA97|DA97+DA97/DA97\DA97; \ Don't throw if... 
-                      AND.W HammerFreq,Y                        ;;DA9A|DA9A+DA9A/DA9A\DA9A;  | ...not yet time 
-                      ORA.W SpriteOffscreenX,X                  ;;DA9D|DA9D+DA9D/DA9D\DA9D;  | ...sprite offscreen 
-                      ORA.W SpriteOffscreenVert,X               ;;DAA0|DAA0+DAA0/DAA0\DAA0;  | 
-                      ORA.W SpriteMisc1540,X                    ;;DAA3|DAA3+DAA3/DAA3\DAA3;  | ...we just threw one 
+                      AND.W HammerFreq,Y                        ;;DA9A|DA9A+DA9A/DA9A\DA9A; | ...not yet time 
+                      ORA.W SpriteOffscreenX,X                  ;;DA9D|DA9D+DA9D/DA9D\DA9D; | ...sprite offscreen 
+                      ORA.W SpriteOffscreenVert,X               ;;DAA0|DAA0+DAA0/DAA0\DAA0; | 
+                      ORA.W SpriteMisc1540,X                    ;;DAA3|DAA3+DAA3/DAA3\DAA3; | ...we just threw one 
                       BNE Return02DAE8                          ;;DAA6|DAA6+DAA6/DAA6\DAA6; / 
                       LDA.B #$03                                ;;DAA8|DAA8+DAA8/DAA8\DAA8; \ Set minimum time in between throws 
                       STA.W SpriteMisc1540,X                    ;;DAAA|DAAA+DAAA/DAAA\DAAA; / 
                       LDY.B #$10                                ;;DAAD|DAAD+DAAD/DAAD\DAAD; \ $00 = Hammer X speed, 
-                      LDA.W SpriteMisc157C,X                    ;;DAAF|DAAF+DAAF/DAAF\DAAF;  | based on sprite's direction 
-                      BNE +                                     ;;DAB2|DAB2+DAB2/DAB2\DAB2;  | 
-                      LDY.B #$F0                                ;;DAB4|DAB4+DAB4/DAB4\DAB4;  | 
+                      LDA.W SpriteMisc157C,X                    ;;DAAF|DAAF+DAAF/DAAF\DAAF; | based on sprite's direction 
+                      BNE +                                     ;;DAB2|DAB2+DAB2/DAB2\DAB2; | 
+                      LDY.B #$F0                                ;;DAB4|DAB4+DAB4/DAB4\DAB4; | 
                     + STY.B _0                                  ;;DAB6|DAB6+DAB6/DAB6\DAB6; / 
                       LDY.B #$07                                ;;DAB8|DAB8+DAB8/DAB8\DAB8; \ Find a free extended sprite slots 
-CODE_02DABA:          LDA.W ExtSpriteNumber,Y                   ;;DABA|DABA+DABA/DABA\DABA;  | 
-                      BEQ GenerateHammer                        ;;DABD|DABD+DABD/DABD\DABD;  | 
-                      DEY                                       ;;DABF|DABF+DABF/DABF\DABF;  | 
-                      BPL CODE_02DABA                           ;;DAC0|DAC0+DAC0/DAC0\DAC0;  | 
+CODE_02DABA:          LDA.W ExtSpriteNumber,Y                   ;;DABA|DABA+DABA/DABA\DABA; | 
+                      BEQ GenerateHammer                        ;;DABD|DABD+DABD/DABD\DABD; | 
+                      DEY                                       ;;DABF|DABF+DABF/DABF\DABF; | 
+                      BPL CODE_02DABA                           ;;DAC0|DAC0+DAC0/DAC0\DAC0; | 
                       RTS                                       ;;DAC2|DAC2+DAC2/DAC2\DAC2; / Return if no free slots 
                                                                 ;;                        ;
 GenerateHammer:       LDA.B #$04                                ;;DAC3|DAC3+DAC3/DAC3\DAC3; \ Extended sprite = Hammer 
                       STA.W ExtSpriteNumber,Y                   ;;DAC5|DAC5+DAC5/DAC5\DAC5; / 
                       LDA.B SpriteXPosLow,X                     ;;DAC8|DAC8+DAC8/DAC8\DAC8; \ Hammer X pos = sprite X pos 
-                      STA.W ExtSpriteXPosLow,Y                  ;;DACA|DACA+DACA/DACA\DACA;  | 
-                      LDA.W SpriteYPosHigh,X                    ;;DACD|DACD+DACD/DACD\DACD;  | 
+                      STA.W ExtSpriteXPosLow,Y                  ;;DACA|DACA+DACA/DACA\DACA; | 
+                      LDA.W SpriteYPosHigh,X                    ;;DACD|DACD+DACD/DACD\DACD; | 
                       STA.W ExtSpriteXPosHigh,Y                 ;;DAD0|DAD0+DAD0/DAD0\DAD0; / 
                       LDA.B SpriteYPosLow,X                     ;;DAD3|DAD3+DAD3/DAD3\DAD3; \ Hammer Y pos = sprite Y pos 
-                      STA.W ExtSpriteYPosLow,Y                  ;;DAD5|DAD5+DAD5/DAD5\DAD5;  | 
-                      LDA.W SpriteXPosHigh,X                    ;;DAD8|DAD8+DAD8/DAD8\DAD8;  | 
+                      STA.W ExtSpriteYPosLow,Y                  ;;DAD5|DAD5+DAD5/DAD5\DAD5; | 
+                      LDA.W SpriteXPosHigh,X                    ;;DAD8|DAD8+DAD8/DAD8\DAD8; | 
                       STA.W ExtSpriteYPosHigh,Y                 ;;DADB|DADB+DADB/DADB\DADB; / 
                       LDA.B #$D0                                ;;DADE|DADE+DADE/DADE\DADE; \ Hammer Y speed = #$D0 
                       STA.W ExtSpriteYSpeed,Y                   ;;DAE0|DAE0+DAE0/DAE0\DAE0; / 
                       LDA.B _0                                  ;;DAE3|DAE3+DAE3/DAE3\DAE3; \ Hammer X speed = $00 
                       STA.W ExtSpriteXSpeed,Y                   ;;DAE5|DAE5+DAE5/DAE5\DAE5; / 
-Return02DAE8:         RTS                                       ;;DAE8|DAE8+DAE8/DAE8\DAE8; Return 
+Return02DAE8:         RTS                                       ;;DAE8|DAE8+DAE8/DAE8\DAE8;
                                                                 ;;                        ;
                                                                 ;;                        ;
 HammerBroDispX:       db $08,$10,$00,$10                        ;;DAE9|DAE9+DAE9/DAE9\DAE9;
@@ -11146,7 +11146,7 @@ FlyingPlatformMain:   PHB                                       ;;DB4C|DB4C+DB4C
                       PLB                                       ;;DB4E|DB4E+DB4E/DB4E\DB4E;
                       JSR CODE_02DB5C                           ;;DB4F|DB4F+DB4F/DB4F\DB4F;
                       PLB                                       ;;DB52|DB52+DB52/DB52\DB52;
-                      RTL                                       ;;DB53|DB53+DB53/DB53\DB53; Return 
+                      RTL                                       ;;DB53|DB53+DB53/DB53\DB53;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02DB54:          db $01,$FF                                ;;DB54|DB54+DB54/DB54\DB54;
@@ -11161,32 +11161,32 @@ CODE_02DB5C:          JSR FlyingPlatformGfx                     ;;DB5C|DB5C+DB5C
                       LDA.B #$FF                                ;;DB5F|DB5F+DB5F/DB5F\DB5F; \ $1594 = #$FF 
                       STA.W SpriteMisc1594,X                    ;;DB61|DB61+DB61/DB61\DB61; / 
                       LDY.B #$09                                ;;DB64|DB64+DB64/DB64\DB64; \ Check sprite slots 0-9 for Hammer Brother 
-CODE_02DB66:          LDA.W SpriteStatus,Y                      ;;DB66|DB66+DB66/DB66\DB66;  | 
-                      CMP.B #$08                                ;;DB69|DB69+DB69/DB69\DB69;  | 
-                      BNE CODE_02DB74                           ;;DB6B|DB6B+DB6B/DB6B\DB6B;  | 
-                      LDA.W SpriteNumber,Y                      ;;DB6D|DB6D+DB6D/DB6D\DB6D;  | 
-                      CMP.B #$9B                                ;;DB70|DB70+DB70/DB70\DB70;  | 
-                      BEQ PutHammerBroOnPlat                    ;;DB72|DB72+DB72/DB72\DB72;  | 
-CODE_02DB74:          DEY                                       ;;DB74|DB74+DB74/DB74\DB74;  | 
-                      BPL CODE_02DB66                           ;;DB75|DB75+DB75/DB75\DB75;  | 
+CODE_02DB66:          LDA.W SpriteStatus,Y                      ;;DB66|DB66+DB66/DB66\DB66; | 
+                      CMP.B #$08                                ;;DB69|DB69+DB69/DB69\DB69; | 
+                      BNE CODE_02DB74                           ;;DB6B|DB6B+DB6B/DB6B\DB6B; | 
+                      LDA.W SpriteNumber,Y                      ;;DB6D|DB6D+DB6D/DB6D\DB6D; | 
+                      CMP.B #$9B                                ;;DB70|DB70+DB70/DB70\DB70; | 
+                      BEQ PutHammerBroOnPlat                    ;;DB72|DB72+DB72/DB72\DB72; | 
+CODE_02DB74:          DEY                                       ;;DB74|DB74+DB74/DB74\DB74; | 
+                      BPL CODE_02DB66                           ;;DB75|DB75+DB75/DB75\DB75; | 
                       BRA +                                     ;;DB77|DB77+DB77/DB77\DB77; / Branch if no Hammer Brother 
                                                                 ;;                        ;
 PutHammerBroOnPlat:   TYA                                       ;;DB79|DB79+DB79/DB79\DB79; \ $1594 = index of Hammer Bro 
                       STA.W SpriteMisc1594,X                    ;;DB7A|DB7A+DB7A/DB7A\DB7A; / 
                       LDA.B SpriteXPosLow,X                     ;;DB7D|DB7D+DB7D/DB7D\DB7D; \ Hammer Bro X postion = Platform X position 
-                      STA.W SpriteXPosLow,Y                     ;;DB7F|DB7F+DB7F/DB7F\DB7F;  | 
-                      LDA.W SpriteYPosHigh,X                    ;;DB82|DB82+DB82/DB82\DB82;  | 
+                      STA.W SpriteXPosLow,Y                     ;;DB7F|DB7F+DB7F/DB7F\DB7F; | 
+                      LDA.W SpriteYPosHigh,X                    ;;DB82|DB82+DB82/DB82\DB82; | 
                       STA.W SpriteYPosHigh,Y                    ;;DB85|DB85+DB85/DB85\DB85; / 
                       LDA.B SpriteYPosLow,X                     ;;DB88|DB88+DB88/DB88\DB88; \ Hammer Bro Y position = Platform Y position - #$10 
-                      SEC                                       ;;DB8A|DB8A+DB8A/DB8A\DB8A;  | 
-                      SBC.B #$10                                ;;DB8B|DB8B+DB8B/DB8B\DB8B;  | 
-                      STA.W SpriteYPosLow,Y                     ;;DB8D|DB8D+DB8D/DB8D\DB8D;  | 
-                      LDA.W SpriteXPosHigh,X                    ;;DB90|DB90+DB90/DB90\DB90;  | 
-                      SBC.B #$00                                ;;DB93|DB93+DB93/DB93\DB93;  | 
+                      SEC                                       ;;DB8A|DB8A+DB8A/DB8A\DB8A; | 
+                      SBC.B #$10                                ;;DB8B|DB8B+DB8B/DB8B\DB8B; | 
+                      STA.W SpriteYPosLow,Y                     ;;DB8D|DB8D+DB8D/DB8D\DB8D; | 
+                      LDA.W SpriteXPosHigh,X                    ;;DB90|DB90+DB90/DB90\DB90; | 
+                      SBC.B #$00                                ;;DB93|DB93+DB93/DB93\DB93; | 
                       STA.W SpriteXPosHigh,Y                    ;;DB95|DB95+DB95/DB95\DB95; / 
                       PHX                                       ;;DB98|DB98+DB98/DB98\DB98; \ Draw Hammer Bro 
-                      TYX                                       ;;DB99|DB99+DB99/DB99\DB99;  | 
-                      JSR HammerBroGfx                          ;;DB9A|DB9A+DB9A/DB9A\DB9A;  | 
+                      TYX                                       ;;DB99|DB99+DB99/DB99\DB99; | 
+                      JSR HammerBroGfx                          ;;DB9A|DB9A+DB9A/DB9A\DB9A; | 
                       PLX                                       ;;DB9D|DB9D+DB9D/DB9D\DB9D; / 
                     + LDA.B SpriteLock                          ;;DB9E|DB9E+DB9E/DB9E\DB9E;
                       BNE Return02DC0E                          ;;DBA0|DBA0+DBA0/DBA0\DBA0;
@@ -11237,7 +11237,7 @@ CODE_02DBD7:          JSR UpdateYPosNoGrvty                     ;;DBD7|DBD7+DBD7
                       TYX                                       ;;DC08|DC08+DC08/DC08\DC08;
                       JSL CODE_01AB6F                           ;;DC09|DC09+DC09/DC09\DC09;
                       PLX                                       ;;DC0D|DC0D+DC0D/DC0D\DC0D;
-Return02DC0E:         RTS                                       ;;DC0E|DC0E+DC0E/DC0E\DC0E; Return 
+Return02DC0E:         RTS                                       ;;DC0E|DC0E+DC0E/DC0E\DC0E;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02DC0F:          db $00,$10,$F2,$1E,$00,$10,$FA,$1E        ;;DC0F|DC0F+DC0F/DC0F\DC0F;
@@ -11312,7 +11312,7 @@ SumoBrotherMain:      PHB                                       ;;DCAF|DCAF+DCAF
                       PLB                                       ;;DCB1|DCB1+DCB1/DCB1\DCB1;
                       JSR CODE_02DCB7                           ;;DCB2|DCB2+DCB2/DCB2\DCB2;
                       PLB                                       ;;DCB5|DCB5+DCB5/DCB5\DCB5;
-                      RTL                                       ;;DCB6|DCB6+DCB6/DCB6\DCB6; Return 
+                      RTL                                       ;;DCB6|DCB6+DCB6/DCB6\DCB6;
                                                                 ;;                        ;
 CODE_02DCB7:          JSR SumoBroGfx                            ;;DCB7|DCB7+DCB7/DCB7\DCB7;
                       LDA.B SpriteLock                          ;;DCBA|DCBA+DCBA/DCBA\DCBA;
@@ -11324,7 +11324,7 @@ CODE_02DCB7:          JSR SumoBroGfx                            ;;DCB7|DCB7+DCB7
                       JSL SprSpr_MarioSprRts                    ;;DCC8|DCC8+DCC8/DCC8\DCC8;
                       JSL UpdateSpritePos                       ;;DCCC|DCCC+DCCC/DCCC\DCCC;
                       LDA.W SpriteBlockedDirs,X                 ;;DCD0|DCD0+DCD0/DCD0\DCD0; \ Branch if not on ground 
-                      AND.B #$04                                ;;DCD3|DCD3+DCD3/DCD3\DCD3;  | 
+                      AND.B #$04                                ;;DCD3|DCD3+DCD3/DCD3\DCD3; | 
                       BEQ +                                     ;;DCD5|DCD5+DCD5/DCD5\DCD5; / 
                       STZ.B SpriteYSpeed,X                      ;;DCD7|DCD7+DCD7/DCD7\DCD7; Sprite Y Speed = 0 
                       STZ.B SpriteXSpeed,X                      ;;DCD9|DCD9+DCD9/DCD9\DCD9; Sprite X Speed = 0 
@@ -11336,7 +11336,7 @@ CODE_02DCB7:          JSR SumoBroGfx                            ;;DCB7|DCB7+DCB7
                       dw CODE_02DD0E                            ;;DCE5|DCE5+DCE5/DCE5\DCE5;
                       dw CODE_02DD4B                            ;;DCE7|DCE7+DCE7/DCE7\DCE7;
                                                                 ;;                        ;
-Return02DCE9:         RTS                                       ;;DCE9|DCE9+DCE9/DCE9\DCE9; Return 
+Return02DCE9:         RTS                                       ;;DCE9|DCE9+DCE9/DCE9\DCE9;
                                                                 ;;                        ;
 CODE_02DCEA:          LDA.B #$01                                ;;DCEA|DCEA+DCEA/DCEA\DCEA;
                       STA.W SpriteMisc1602,X                    ;;DCEC|DCEC+DCEC/DCEC\DCEC;
@@ -11346,7 +11346,7 @@ CODE_02DCEA:          LDA.B #$01                                ;;DCEA|DCEA+DCEA
                       LDA.B #$03                                ;;DCF7|DCF7+DCF7/DCF7\DCF7;
 CODE_02DCF9:          STA.W SpriteMisc1540,X                    ;;DCF9|DCF9+DCF9/DCF9\DCF9;
                       INC.B SpriteTableC2,X                     ;;DCFC|DCFC+DCFC/DCFC\DCFC;
-                    + RTS                                       ;;DCFE|DCFE+DCFE/DCFE\DCFE; Return 
+                    + RTS                                       ;;DCFE|DCFE+DCFE/DCFE\DCFE;
                                                                 ;;                        ;
 CODE_02DCFF:          LDA.W SpriteMisc1540,X                    ;;DCFF|DCFF+DCFF/DCFF\DCFF;
                       BNE Return02DD0B                          ;;DD02|DD02+DD02/DD02\DD02;
@@ -11354,7 +11354,7 @@ CODE_02DCFF:          LDA.W SpriteMisc1540,X                    ;;DCFF|DCFF+DCFF
                       LDA.B #$03                                ;;DD07|DD07+DD07/DD07\DD07;
                       BRA CODE_02DCF9                           ;;DD09|DD09+DD09/DD09\DD09;
                                                                 ;;                        ;
-Return02DD0B:         RTS                                       ;;DD0B|DD0B+DD0B/DD0B\DD0B; Return 
+Return02DD0B:         RTS                                       ;;DD0B|DD0B+DD0B/DD0B\DD0B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02DD0C:          db $20,$E0                                ;;DD0C|DD0C+DD0C/DD0C\DD0C;
@@ -11382,11 +11382,11 @@ CODE_02DD0E:          LDA.W SpriteMisc1558,X                    ;;DD0E|DD0E+DD0E
 CODE_02DD3D:          LDA.B #$03                                ;;DD3D|DD3D+DD3D/DD3D\DD3D;
 CODE_02DD3F:          JSR CODE_02DCF9                           ;;DD3F|DD3F+DD3F/DD3F\DD3F;
                       STZ.B SpriteTableC2,X                     ;;DD42|DD42+DD42/DD42\DD42;
-Return02DD44:         RTS                                       ;;DD44|DD44+DD44/DD44\DD44; Return 
+Return02DD44:         RTS                                       ;;DD44|DD44+DD44/DD44\DD44;
                                                                 ;;                        ;
 CODE_02DD45:          LDA.B #$01                                ;;DD45|DD45+DD45/DD45\DD45;
                       STA.W SpriteMisc1602,X                    ;;DD47|DD47+DD47/DD47\DD47;
-                      RTS                                       ;;DD4A|DD4A+DD4A/DD4A\DD4A; Return 
+                      RTS                                       ;;DD4A|DD4A+DD4A/DD4A\DD4A;
                                                                 ;;                        ;
 CODE_02DD4B:          LDA.B #$03                                ;;DD4B|DD4B+DD4B/DD4B\DD4B;
                       LDY.W SpriteMisc1540,X                    ;;DD4D|DD4D+DD4D/DD4D\DD4D;
@@ -11414,14 +11414,14 @@ CODE_02DD6F:          CPY.B #$30                                ;;DD6F|DD6F+DD6F
                       BCS +                                     ;;DD7A|DD7A+DD7A/DD7A\DD7A;
                       INC A                                     ;;DD7C|DD7C+DD7C/DD7C\DD7C;
                     + STA.W SpriteMisc1602,X                    ;;DD7D|DD7D+DD7D/DD7D\DD7D;
-                      RTS                                       ;;DD80|DD80+DD80/DD80\DD80; Return 
+                      RTS                                       ;;DD80|DD80+DD80/DD80\DD80;
                                                                 ;;                        ;
 CODE_02DD81:          LDA.W SpriteMisc157C,X                    ;;DD81|DD81+DD81/DD81\DD81;
                       EOR.B #$01                                ;;DD84|DD84+DD84/DD84\DD84;
                       STA.W SpriteMisc157C,X                    ;;DD86|DD86+DD86/DD86\DD86;
                       LDA.B #$40                                ;;DD89|DD89+DD89/DD89\DD89;
                       JSR CODE_02DD3F                           ;;DD8B|DD8B+DD8B/DD8B\DD8B;
-                      RTS                                       ;;DD8E|DD8E+DD8E/DD8E\DD8E; Return 
+                      RTS                                       ;;DD8E|DD8E+DD8E/DD8E\DD8E;
                                                                 ;;                        ;
 GenSumoLightning:     JSL FindFreeSprSlot                       ;;DD8F|DD8F+DD8F/DD8F\DD8F; \ Return if no free slots 
                       BMI +                                     ;;DD93|DD93+DD93/DD93\DD93; / 
@@ -11430,14 +11430,14 @@ GenSumoLightning:     JSL FindFreeSprSlot                       ;;DD8F|DD8F+DD8F
                       LDA.B #$08                                ;;DD9A|DD9A+DD9A/DD9A\DD9A; \ Sprite status = Normal 
                       STA.W SpriteStatus,Y                      ;;DD9C|DD9C+DD9C/DD9C\DD9C; / 
                       LDA.B SpriteXPosLow,X                     ;;DD9F|DD9F+DD9F/DD9F\DD9F; \ Lightning X position = Sprite X position + #$04 
-                      ADC.B #$04                                ;;DDA1|DDA1+DDA1/DDA1\DDA1;  | 
-                      STA.W SpriteXPosLow,Y                     ;;DDA3|DDA3+DDA3/DDA3\DDA3;  | 
-                      LDA.W SpriteYPosHigh,X                    ;;DDA6|DDA6+DDA6/DDA6\DDA6;  | 
-                      ADC.B #$00                                ;;DDA9|DDA9+DDA9/DDA9\DDA9;  | 
+                      ADC.B #$04                                ;;DDA1|DDA1+DDA1/DDA1\DDA1; | 
+                      STA.W SpriteXPosLow,Y                     ;;DDA3|DDA3+DDA3/DDA3\DDA3; | 
+                      LDA.W SpriteYPosHigh,X                    ;;DDA6|DDA6+DDA6/DDA6\DDA6; | 
+                      ADC.B #$00                                ;;DDA9|DDA9+DDA9/DDA9\DDA9; | 
                       STA.W SpriteYPosHigh,Y                    ;;DDAB|DDAB+DDAB/DDAB\DDAB; / 
                       LDA.B SpriteYPosLow,X                     ;;DDAE|DDAE+DDAE/DDAE\DDAE; \ Lightning Y position = Sprite Y position 
-                      STA.W SpriteYPosLow,Y                     ;;DDB0|DDB0+DDB0/DDB0\DDB0;  | 
-                      LDA.W SpriteXPosHigh,X                    ;;DDB3|DDB3+DDB3/DDB3\DDB3;  | 
+                      STA.W SpriteYPosLow,Y                     ;;DDB0|DDB0+DDB0/DDB0\DDB0; | 
+                      LDA.W SpriteXPosHigh,X                    ;;DDB3|DDB3+DDB3/DDB3\DDB3; | 
                       STA.W SpriteXPosHigh,Y                    ;;DDB6|DDB6+DDB6/DDB6\DDB6; / 
                       PHX                                       ;;DDB9|DDB9+DDB9/DDB9\DDB9;
                       TYX                                       ;;DDBA|DDBA+DDBA/DDBA\DDBA; \ Reset sprite tables 
@@ -11445,7 +11445,7 @@ GenSumoLightning:     JSL FindFreeSprSlot                       ;;DD8F|DD8F+DD8F
                       LDA.B #$10                                ;;DDBF|DDBF+DDBF/DDBF\DDBF; \ $1FE2,x = #$10 
                       STA.W SpriteMisc1FE2,X                    ;;DDC1|DDC1+DDC1/DDC1\DDC1; / Time to not interact with ground?? 
                       PLX                                       ;;DDC4|DDC4+DDC4/DDC4\DDC4;
-                    + RTS                                       ;;DDC5|DDC5+DDC5/DDC5\DDC5; Return 
+                    + RTS                                       ;;DDC5|DDC5+DDC5/DDC5\DDC5;
                                                                 ;;                        ;
                                                                 ;;                        ;
 SumoBrosDispX:        db $FF,$07,$FC,$04,$FF,$07,$FC,$04        ;;DDC6|DDC6+DDC6/DDC6\DDC6;
@@ -11530,7 +11530,7 @@ SumosLightningMain:   PHB                                       ;;DEA8|DEA8+DEA8
                       PLB                                       ;;DEAA|DEAA+DEAA/DEAA\DEAA;
                       JSR CODE_02DEB0                           ;;DEAB|DEAB+DEAB/DEAB\DEAB;
                       PLB                                       ;;DEAE|DEAE+DEAE/DEAE\DEAE;
-                      RTL                                       ;;DEAF|DEAF+DEAF/DEAF\DEAF; Return 
+                      RTL                                       ;;DEAF|DEAF+DEAF/DEAF\DEAF;
                                                                 ;;                        ;
 CODE_02DEB0:          LDA.W SpriteMisc1540,X                    ;;DEB0|DEB0+DEB0/DEB0\DEB0;
                       BNE CODE_02DEFC                           ;;DEB3|DEB3+DEB3/DEB3\DEB3;
@@ -11541,7 +11541,7 @@ CODE_02DEB0:          LDA.W SpriteMisc1540,X                    ;;DEB0|DEB0+DEB0
                       BNE +                                     ;;DEBF|DEBF+DEBF/DEBF\DEBF;
                       JSL CODE_019138                           ;;DEC1|DEC1+DEC1/DEC1\DEC1;
                       LDA.W SpriteBlockedDirs,X                 ;;DEC5|DEC5+DEC5/DEC5\DEC5; \ Branch if not on ground 
-                      AND.B #$04                                ;;DEC8|DEC8+DEC8/DEC8\DEC8;  | 
+                      AND.B #$04                                ;;DEC8|DEC8+DEC8/DEC8\DEC8; | 
                       BEQ +                                     ;;DECA|DECA+DECA/DECA\DECA; / 
                       LDA.B #!SFX_FIRESPIT                      ;;DECC|DECC+DECC/DECC\DECC; \ Play sound effect 
                       STA.W SPCIO3                              ;;DECE|DECE+DECE/DECE\DECE; / 
@@ -11561,7 +11561,7 @@ CODE_02DEB0:          LDA.W SpriteMisc1540,X                    ;;DEB0|DEB0+DEB0
                       LDA.W OAMTileAttr+$104,Y                  ;;DEF3|DEF3+DEF3/DEF3\DEF3;
                       EOR.B #$C0                                ;;DEF6|DEF6+DEF6/DEF6\DEF6;
                       STA.W OAMTileAttr+$104,Y                  ;;DEF8|DEF8+DEF8/DEF8\DEF8;
-                      RTS                                       ;;DEFB|DEFB+DEFB/DEFB\DEFB; Return 
+                      RTS                                       ;;DEFB|DEFB+DEFB/DEFB\DEFB;
                                                                 ;;                        ;
 CODE_02DEFC:          STA.B _2                                  ;;DEFC|DEFC+DEFC/DEFC\DEFC;
                       CMP.B #$01                                ;;DEFE|DEFE+DEFE/DEFE\DEFE;
@@ -11578,7 +11578,7 @@ CODE_02DEFC:          STA.B _2                                  ;;DEFC|DEFC+DEFC
                       BEQ +                                     ;;DF19|DF19+DF19/DF19\DF19;
                       JSR CODE_02DF2C                           ;;DF1B|DF1B+DF1B/DF1B\DF1B;
                       INC.W SpriteMisc1570,X                    ;;DF1E|DF1E+DF1E/DF1E\DF1E;
-                    + RTS                                       ;;DF21|DF21+DF21/DF21\DF21; Return 
+                    + RTS                                       ;;DF21|DF21+DF21/DF21\DF21;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02DF22:          db $FC,$0C,$EC,$1C,$DC                    ;;DF22|DF22+DF22/DF22\DF22;
@@ -11627,14 +11627,14 @@ CODE_02DF4C:          PHX                                       ;;DF4C|DF4C+DF4C
                       BNE +                                     ;;DF83|DF83+DF83/DF83\DF83;
                       LDA.B #$06                                ;;DF85|DF85+DF85/DF85\DF85;
                       STA.W ClusterSpriteNumber,Y               ;;DF87|DF87+DF87/DF87\DF87;
-                    + RTS                                       ;;DF8A|DF8A+DF8A/DF8A\DF8A; Return 
+                    + RTS                                       ;;DF8A|DF8A+DF8A/DF8A\DF8A;
                                                                 ;;                        ;
 VolcanoLotusMain:     PHB                                       ;;DF8B|DF8B+DF8B/DF8B\DF8B;
                       PHK                                       ;;DF8C|DF8C+DF8C/DF8C\DF8C;
                       PLB                                       ;;DF8D|DF8D+DF8D/DF8D\DF8D;
                       JSR CODE_02DF93                           ;;DF8E|DF8E+DF8E/DF8E\DF8E;
                       PLB                                       ;;DF91|DF91+DF91/DF91\DF91;
-                      RTL                                       ;;DF92|DF92+DF92/DF92\DF92; Return 
+                      RTL                                       ;;DF92|DF92+DF92/DF92\DF92;
                                                                 ;;                        ;
 CODE_02DF93:          JSR VolcanoLotusGfx                       ;;DF93|DF93+DF93/DF93\DF93;
                       LDA.B SpriteLock                          ;;DF96|DF96+DF96/DF96\DF96;
@@ -11649,7 +11649,7 @@ CODE_02DF93:          JSR VolcanoLotusGfx                       ;;DF93|DF93+DF93
                       INC.B SpriteYSpeed,X                      ;;DFAD|DFAD+DFAD/DFAD\DFAD;
                     + JSL CODE_019138                           ;;DFAF|DFAF+DFAF/DFAF\DFAF;
                       LDA.W SpriteBlockedDirs,X                 ;;DFB3|DFB3+DFB3/DFB3\DFB3; \ Branch if not on ground 
-                      AND.B #$04                                ;;DFB6|DFB6+DFB6/DFB6\DFB6;  | 
+                      AND.B #$04                                ;;DFB6|DFB6+DFB6/DFB6\DFB6; | 
                       BEQ +                                     ;;DFB8|DFB8+DFB8/DFB8\DFB8; / 
                       STZ.B SpriteYSpeed,X                      ;;DFBA|DFBA+DFBA/DFBA\DFBA; Sprite Y Speed = 0 
                     + LDA.B SpriteTableC2,X                     ;;DFBC|DFBC+DFBC/DFBC\DFBC;
@@ -11659,21 +11659,21 @@ CODE_02DF93:          JSR VolcanoLotusGfx                       ;;DF93|DF93+DF93
                       dw CODE_02DFDF                            ;;DFC4|DFC4+DFC4/DFC4\DFC4;
                       dw CODE_02DFEF                            ;;DFC6|DFC6+DFC6/DFC6\DFC6;
                                                                 ;;                        ;
-Return02DFC8:         RTS                                       ;;DFC8|DFC8+DFC8/DFC8\DFC8; Return 
+Return02DFC8:         RTS                                       ;;DFC8|DFC8+DFC8/DFC8\DFC8;
                                                                 ;;                        ;
 CODE_02DFC9:          LDA.W SpriteMisc1540,X                    ;;DFC9|DFC9+DFC9/DFC9\DFC9;
                       BNE +                                     ;;DFCC|DFCC+DFCC/DFCC\DFCC;
                       LDA.B #$40                                ;;DFCE|DFCE+DFCE/DFCE\DFCE;
 CODE_02DFD0:          STA.W SpriteMisc1540,X                    ;;DFD0|DFD0+DFD0/DFD0\DFD0;
                       INC.B SpriteTableC2,X                     ;;DFD3|DFD3+DFD3/DFD3\DFD3;
-                      RTS                                       ;;DFD5|DFD5+DFD5/DFD5\DFD5; Return 
+                      RTS                                       ;;DFD5|DFD5+DFD5/DFD5\DFD5;
                                                                 ;;                        ;
                     + LSR A                                     ;;DFD6|DFD6+DFD6/DFD6\DFD6;
                       LSR A                                     ;;DFD7|DFD7+DFD7/DFD7\DFD7;
                       LSR A                                     ;;DFD8|DFD8+DFD8/DFD8\DFD8;
                       AND.B #$01                                ;;DFD9|DFD9+DFD9/DFD9\DFD9;
                       STA.W SpriteMisc1602,X                    ;;DFDB|DFDB+DFDB/DFDB\DFDB;
-                      RTS                                       ;;DFDE|DFDE+DFDE/DFDE\DFDE; Return 
+                      RTS                                       ;;DFDE|DFDE+DFDE/DFDE\DFDE;
                                                                 ;;                        ;
 CODE_02DFDF:          LDA.W SpriteMisc1540,X                    ;;DFDF|DFDF+DFDF/DFDF\DFDF;
                       BNE CODE_02DFE8                           ;;DFE2|DFE2+DFE2/DFE2\DFE2;
@@ -11683,7 +11683,7 @@ CODE_02DFDF:          LDA.W SpriteMisc1540,X                    ;;DFDF|DFDF+DFDF
 CODE_02DFE8:          LSR A                                     ;;DFE8|DFE8+DFE8/DFE8\DFE8;
                       AND.B #$01                                ;;DFE9|DFE9+DFE9/DFE9\DFE9;
                       STA.W SpriteMisc151C,X                    ;;DFEB|DFEB+DFEB/DFEB\DFEB;
-                      RTS                                       ;;DFEE|DFEE+DFEE/DFEE\DFEE; Return 
+                      RTS                                       ;;DFEE|DFEE+DFEE/DFEE\DFEE;
                                                                 ;;                        ;
 CODE_02DFEF:          LDA.W SpriteMisc1540,X                    ;;DFEF|DFEF+DFEF/DFEF\DFEF;
                       BNE +                                     ;;DFF2|DFF2+DFF2/DFF2\DFF2;
@@ -11695,7 +11695,7 @@ CODE_02DFEF:          LDA.W SpriteMisc1540,X                    ;;DFEF|DFEF+DFEF
                       JSR CODE_02E079                           ;;DFFF|DFFF+DFFF/DFFF\DFFF;
                     + LDA.B #$02                                ;;E002|E002+E002/E002\E002;
                       STA.W SpriteMisc1602,X                    ;;E004|E004+E004/E004\E004;
-                      RTS                                       ;;E007|E007+E007/E007\E007; Return 
+                      RTS                                       ;;E007|E007+E007/E007\E007;
                                                                 ;;                        ;
                                                                 ;;                        ;
 VolcanoLotusTiles:    db $8E,$9E,$E2                            ;;E008|E008+E008/E008\E008;
@@ -11755,10 +11755,10 @@ CODE_02E079:          LDA.W SpriteOffscreenX,X                  ;;E079|E079+E079
                       LDA.B #$03                                ;;E081|E081+E081/E081\E081;
                       STA.B _0                                  ;;E083|E083+E083/E083\E083;
 CODE_02E085:          LDY.B #$07                                ;;E085|E085+E085/E085\E085; \ Find a free extended sprite slot 
-CODE_02E087:          LDA.W ExtSpriteNumber,Y                   ;;E087|E087+E087/E087\E087;  | 
-                      BEQ CODE_02E090                           ;;E08A|E08A+E08A/E08A\E08A;  | 
-                      DEY                                       ;;E08C|E08C+E08C/E08C\E08C;  | 
-                      BPL CODE_02E087                           ;;E08D|E08D+E08D/E08D\E08D;  | 
+CODE_02E087:          LDA.W ExtSpriteNumber,Y                   ;;E087|E087+E087/E087\E087; | 
+                      BEQ CODE_02E090                           ;;E08A|E08A+E08A/E08A\E08A; | 
+                      DEY                                       ;;E08C|E08C+E08C/E08C\E08C; | 
+                      BPL CODE_02E087                           ;;E08D|E08D+E08D/E08D\E08D; | 
                       RTS                                       ;;E08F|E08F+E08F/E08F\E08F; / Return if no free slots 
                                                                 ;;                        ;
 CODE_02E090:          LDA.B #$0C                                ;;E090|E090+E090/E090\E090; \ Extended sprite = Volcano Lotus fire 
@@ -11783,14 +11783,14 @@ CODE_02E090:          LDA.B #$0C                                ;;E090|E090+E090
                       PLX                                       ;;E0BF|E0BF+E0BF/E0BF\E0BF;
                       DEC.B _0                                  ;;E0C0|E0C0+E0C0/E0C0\E0C0;
                       BPL CODE_02E085                           ;;E0C2|E0C2+E0C2/E0C2\E0C2;
-Return02E0C4:         RTS                                       ;;E0C4|E0C4+E0C4/E0C4\E0C4; Return 
+Return02E0C4:         RTS                                       ;;E0C4|E0C4+E0C4/E0C4\E0C4;
                                                                 ;;                        ;
 JumpingPiranhaMain:   PHB                                       ;;E0C5|E0C5+E0C5/E0C5\E0C5;
                       PHK                                       ;;E0C6|E0C6+E0C6/E0C6\E0C6;
                       PLB                                       ;;E0C7|E0C7+E0C7/E0C7\E0C7;
                       JSR CODE_02E0CD                           ;;E0C8|E0C8+E0C8/E0C8\E0C8;
                       PLB                                       ;;E0CB|E0CB+E0CB/E0CB\E0CB;
-                      RTL                                       ;;E0CC|E0CC+E0CC/E0CC\E0CC; Return 
+                      RTL                                       ;;E0CC|E0CC+E0CC/E0CC\E0CC;
                                                                 ;;                        ;
 CODE_02E0CD:          JSL LoadSpriteTables                      ;;E0CD|E0CD+E0CD/E0CD\E0CD;
                       LDA.B SpriteProperties                    ;;E0D1|E0D1+E0D1/E0D1\E0D1;
@@ -11858,7 +11858,7 @@ CODE_02E13C:          STZ.B SpriteYSpeed,X                      ;;E13C|E13C+E13C
                       STA.B SpriteYSpeed,X                      ;;E151|E151+E151/E151\E151;
                       INC.B SpriteTableC2,X                     ;;E153|E153+E153/E153\E153;
                       STZ.W SpriteMisc1602,X                    ;;E155|E155+E155/E155\E155;
-                    + RTS                                       ;;E158|E158+E158/E158\E158; Return 
+                    + RTS                                       ;;E158|E158+E158/E158\E158;
                                                                 ;;                        ;
 CODE_02E159:          LDA.B SpriteYSpeed,X                      ;;E159|E159+E159/E159\E159;
                       BMI CODE_02E161                           ;;E15B|E15B+E15B/E15B\E15B;
@@ -11874,7 +11874,7 @@ CODE_02E161:          CLC                                       ;;E161|E161+E161
                       LDA.B #$50                                ;;E16F|E16F+E16F/E16F\E16F;
                       STA.W SpriteMisc1540,X                    ;;E171|E171+E171/E171\E171;
                       INC.B SpriteTableC2,X                     ;;E174|E174+E174/E174\E174;
-Return02E176:         RTS                                       ;;E176|E176+E176/E176\E176; Return 
+Return02E176:         RTS                                       ;;E176|E176+E176/E176\E176;
                                                                 ;;                        ;
 CODE_02E177:          INC.W SpriteMisc151C,X                    ;;E177|E177+E177/E177\E177;
                       LDA.W SpriteMisc1540,X                    ;;E17A|E17A+E17A/E17A\E17A;
@@ -11890,12 +11890,12 @@ CODE_02E17F:          INC.W SpriteMisc1570,X                    ;;E17F|E17F+E17F
                       STA.B SpriteYSpeed,X                      ;;E18F|E18F+E18F/E18F\E18F;
                     + JSL CODE_019138                           ;;E191|E191+E191/E191\E191;
                       LDA.W SpriteBlockedDirs,X                 ;;E195|E195+E195/E195\E195; \ Branch if not on ground 
-                      AND.B #$04                                ;;E198|E198+E198/E198\E198;  | 
+                      AND.B #$04                                ;;E198|E198+E198/E198\E198; | 
                       BEQ Return02E176                          ;;E19A|E19A+E19A/E19A\E19A; / 
                       STZ.B SpriteTableC2,X                     ;;E19C|E19C+E19C/E19C\E19C;
                       LDA.B #$40                                ;;E19E|E19E+E19E/E19E\E19E;
                       STA.W SpriteMisc1540,X                    ;;E1A0|E1A0+E1A0/E1A0\E1A0;
-                      RTS                                       ;;E1A3|E1A3+E1A3/E1A3\E1A3; Return 
+                      RTS                                       ;;E1A3|E1A3+E1A3/E1A3\E1A3;
                                                                 ;;                        ;
 CODE_02E1A4:          LDY.B SpriteNumber,X                      ;;E1A4|E1A4+E1A4/E1A4\E1A4;
                       CPY.B #$50                                ;;E1A6|E1A6+E1A6/E1A6\E1A6;
@@ -11911,10 +11911,10 @@ CODE_02E1A4:          LDY.B SpriteNumber,X                      ;;E1A4|E1A4+E1A4
                       LDA.B #$F0                                ;;E1BE|E1BE+E1BE/E1BE\E1BE;
 CODE_02E1C0:          STA.B _0                                  ;;E1C0|E1C0+E1C0/E1C0\E1C0;
                       LDY.B #$07                                ;;E1C2|E1C2+E1C2/E1C2\E1C2; \ Find a free extended sprite slot 
-CODE_02E1C4:          LDA.W ExtSpriteNumber,Y                   ;;E1C4|E1C4+E1C4/E1C4\E1C4;  | 
-                      BEQ CODE_02E1CD                           ;;E1C7|E1C7+E1C7/E1C7\E1C7;  | 
-                      DEY                                       ;;E1C9|E1C9+E1C9/E1C9\E1C9;  | 
-                      BPL CODE_02E1C4                           ;;E1CA|E1CA+E1CA/E1CA\E1CA;  | 
+CODE_02E1C4:          LDA.W ExtSpriteNumber,Y                   ;;E1C4|E1C4+E1C4/E1C4\E1C4; | 
+                      BEQ CODE_02E1CD                           ;;E1C7|E1C7+E1C7/E1C7\E1C7; | 
+                      DEY                                       ;;E1C9|E1C9+E1C9/E1C9\E1C9; | 
+                      BPL CODE_02E1C4                           ;;E1CA|E1CA+E1CA/E1CA\E1CA; | 
                       RTS                                       ;;E1CC|E1CC+E1CC/E1CC\E1CC; / Return if no free slots 
                                                                 ;;                        ;
 CODE_02E1CD:          LDA.B #$0B                                ;;E1CD|E1CD+E1CD/E1CD\E1CD; \ Extended sprite = Piranha fireball 
@@ -11950,7 +11950,7 @@ DirectionCoinsMain:   PHB                                       ;;E215|E215+E215
                       PLB                                       ;;E217|E217+E217/E217\E217;
                       JSR CODE_02E21D                           ;;E218|E218+E218/E218\E218;
                       PLB                                       ;;E21B|E21B+E21B/E21B\E21B;
-                      RTL                                       ;;E21C|E21C+E21C/E21C\E21C; Return 
+                      RTL                                       ;;E21C|E21C+E21C/E21C\E21C;
                                                                 ;;                        ;
 CODE_02E21D:          LDA.B SpriteProperties                    ;;E21D|E21D+E21D/E21D\E21D;
                       PHA                                       ;;E21F|E21F+E21F/E21F\E21F;
@@ -12001,7 +12001,7 @@ CODE_02E271:          STZ.W DirectCoinTimer                     ;;E271|E271+E271
                       LDA.W MusicBackup                         ;;E27F|E27F+E27F/E27F\E27F;
                       BMI +                                     ;;E282|E282+E282/E282\E282;
                       STA.W SPCIO2                              ;;E284|E284+E284/E284\E284; / Change music 
-                    + RTS                                       ;;E287|E287+E287/E287\E287; Return 
+                    + RTS                                       ;;E287|E287+E287/E287\E287;
                                                                 ;;                        ;
 CODE_02E288:          LDY.B SpriteTableC2,X                     ;;E288|E288+E288/E288\E288;
                       LDA.W DATA_02E1F9,Y                       ;;E28A|E28A+E28A/E28A\E28A;
@@ -12031,17 +12031,17 @@ CODE_02E288:          LDY.B SpriteTableC2,X                     ;;E288|E288+E288
                       LDA.W SpriteMisc151C,X                    ;;E2BE|E2BE+E2BE/E2BE\E2BE;
                       STA.B SpriteTableC2,X                     ;;E2C1|E2C1+E2C1/E2C1\E2C1;
                       LDA.B SpriteXPosLow,X                     ;;E2C3|E2C3+E2C3/E2C3\E2C3; \ $9A = Sprite X position 
-                      STA.B TouchBlockXPos                      ;;E2C5|E2C5+E2C5/E2C5\E2C5;  | for block creation 
-                      LDA.W SpriteYPosHigh,X                    ;;E2C7|E2C7+E2C7/E2C7\E2C7;  | 
+                      STA.B TouchBlockXPos                      ;;E2C5|E2C5+E2C5/E2C5\E2C5; | for block creation 
+                      LDA.W SpriteYPosHigh,X                    ;;E2C7|E2C7+E2C7/E2C7\E2C7; | 
                       STA.B TouchBlockXPos+1                    ;;E2CA|E2CA+E2CA/E2CA\E2CA; / 
                       LDA.B SpriteYPosLow,X                     ;;E2CC|E2CC+E2CC/E2CC\E2CC; \ $98 = Sprite Y position 
-                      STA.B TouchBlockYPos                      ;;E2CE|E2CE+E2CE/E2CE\E2CE;  | for block creation 
-                      LDA.W SpriteXPosHigh,X                    ;;E2D0|E2D0+E2D0/E2D0\E2D0;  | 
+                      STA.B TouchBlockYPos                      ;;E2CE|E2CE+E2CE/E2CE\E2CE; | for block creation 
+                      LDA.W SpriteXPosHigh,X                    ;;E2D0|E2D0+E2D0/E2D0\E2D0; | 
                       STA.B TouchBlockYPos+1                    ;;E2D3|E2D3+E2D3/E2D3\E2D3; / 
                       LDA.B #$06                                ;;E2D5|E2D5+E2D5/E2D5\E2D5; \ Block to generate = Coin 
                       STA.B Map16TileGenerate                   ;;E2D7|E2D7+E2D7/E2D7\E2D7; / 
                       JSL GenerateTile                          ;;E2D9|E2D9+E2D9/E2D9\E2D9;
-                      RTS                                       ;;E2DD|E2DD+E2DD/E2DD\E2DD; Return 
+                      RTS                                       ;;E2DD|E2DD+E2DD/E2DD\E2DD;
                                                                 ;;                        ;
 CODE_02E2DE:          JSL CODE_019138                           ;;E2DE|E2DE+E2DE/E2DE\E2DE;
                       LDA.B SpriteXSpeed,X                      ;;E2E2|E2E2+E2E2/E2E2\E2E2;
@@ -12051,7 +12051,7 @@ CODE_02E2DE:          JSL CODE_019138                           ;;E2DE|E2DE+E2DE
                       LDA.W SprMap16TouchVertLow                ;;E2EB|E2EB+E2EB/E2EB\E2EB;
                       CMP.B #$25                                ;;E2EE|E2EE+E2EE/E2EE\E2EE;
                       BNE CODE_02E2FF                           ;;E2F0|E2F0+E2F0/E2F0\E2F0;
-                      RTS                                       ;;E2F2|E2F2+E2F2/E2F2\E2F2; Return 
+                      RTS                                       ;;E2F2|E2F2+E2F2/E2F2\E2F2;
                                                                 ;;                        ;
 CODE_02E2F3:          LDA.W SprMap16TouchHorizHigh              ;;E2F3|E2F3+E2F3/E2F3\E2F3;
                       BNE CODE_02E2FF                           ;;E2F6|E2F6+E2F6/E2F6\E2F6;
@@ -12059,14 +12059,14 @@ CODE_02E2F3:          LDA.W SprMap16TouchHorizHigh              ;;E2F3|E2F3+E2F3
                       CMP.B #$25                                ;;E2FB|E2FB+E2FB/E2FB\E2FB;
                       BEQ +                                     ;;E2FD|E2FD+E2FD/E2FD\E2FD;
 CODE_02E2FF:          JSR CODE_02E271                           ;;E2FF|E2FF+E2FF/E2FF\E2FF;
-                    + RTS                                       ;;E302|E302+E302/E302\E302; Return 
+                    + RTS                                       ;;E302|E302+E302/E302\E302;
                                                                 ;;                        ;
 GasBubbleMain:        PHB                                       ;;E303|E303+E303/E303\E303;
                       PHK                                       ;;E304|E304+E304/E304\E304;
                       PLB                                       ;;E305|E305+E305/E305\E305;
                       JSR CODE_02E311                           ;;E306|E306+E306/E306\E306;
                       PLB                                       ;;E309|E309+E309/E309\E309;
-                      RTL                                       ;;E30A|E30A+E30A/E30A\E30A; Return 
+                      RTL                                       ;;E30A|E30A+E30A/E30A\E30A;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02E30B:          db $10,$F0                                ;;E30B|E30B+E30B/E30B\E30B;
@@ -12102,7 +12102,7 @@ CODE_02E311:          JSR GasBubbleGfx                          ;;E311|E311+E311
                       INC.W SpriteMisc1570,X                    ;;E347|E347+E347/E347\E347;
                       JSR SubOffscreen0Bnk2                     ;;E34A|E34A+E34A/E34A\E34A;
                       JSL MarioSprInteract                      ;;E34D|E34D+E34D/E34D\E34D;
-Return02E351:         RTS                                       ;;E351|E351+E351/E351\E351; Return 
+Return02E351:         RTS                                       ;;E351|E351+E351/E351\E351;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02E352:          db $00,$10,$20,$30,$00,$10,$20,$30        ;;E352|E352+E352/E352\E352;
@@ -12185,7 +12185,7 @@ ExplodingBlkMain:     PHB                                       ;;E417|E417+E417
                       PLB                                       ;;E419|E419+E419/E419\E419;
                       JSR CODE_02E41F                           ;;E41A|E41A+E41A/E41A\E41A;
                       PLB                                       ;;E41D|E41D+E41D/E41D\E41D;
-                      RTL                                       ;;E41E|E41E+E41E/E41E\E41E; Return 
+                      RTL                                       ;;E41E|E41E+E41E/E41E\E41E;
                                                                 ;;                        ;
 CODE_02E41F:          JSL GenericSprGfxRt2                      ;;E41F|E41F+E41F/E41F\E41F;
                       LDA.B SpriteLock                          ;;E423|E423+E423/E423\E423;
@@ -12215,7 +12215,7 @@ CODE_02E41F:          JSL GenericSprGfxRt2                      ;;E41F|E41F+E41F
                       LDY.W SpriteOffscreenX,X                  ;;E459|E459+E459/E459\E459;
                       BNE Return02E462                          ;;E45C|E45C+E45C/E45C\E45C;
                       JSL CODE_02E463                           ;;E45E|E45E+E45E/E45E\E45E;
-Return02E462:         RTS                                       ;;E462|E462+E462/E462\E462; Return 
+Return02E462:         RTS                                       ;;E462|E462+E462/E462\E462;
                                                                 ;;                        ;
 CODE_02E463:          LDA.B SpriteTableC2,X                     ;;E463|E463+E463/E463\E463;
                       STA.B SpriteNumber,X                      ;;E465|E465+E465/E465\E465;
@@ -12240,7 +12240,7 @@ CODE_02E463:          LDA.B SpriteTableC2,X                     ;;E463|E463+E463
                       LDA.B #$00                                ;;E48D|E48D+E48D/E48D\E48D;
                       JSL ShatterBlock                          ;;E48F|E48F+E48F/E48F\E48F;
                       PLB                                       ;;E493|E493+E493/E493\E493;
-                      RTL                                       ;;E494|E494+E494/E494\E494; Return 
+                      RTL                                       ;;E494|E494+E494/E494\E494;
                                                                 ;;                        ;
 ScalePlatformMain:    LDA.W SpriteOAMIndex,X                    ;;E495|E495+E495/E495\E495;
                       PHA                                       ;;E498|E498+E498/E498\E498;
@@ -12251,7 +12251,7 @@ ScalePlatformMain:    LDA.W SpriteOAMIndex,X                    ;;E495|E495+E495
                       PLB                                       ;;E49F|E49F+E49F/E49F\E49F;
                       PLA                                       ;;E4A0|E4A0+E4A0/E4A0\E4A0;
                       STA.W SpriteOAMIndex,X                    ;;E4A1|E4A1+E4A1/E4A1\E4A1;
-                      RTL                                       ;;E4A4|E4A4+E4A4/E4A4\E4A4; Return 
+                      RTL                                       ;;E4A4|E4A4+E4A4/E4A4\E4A4;
                                                                 ;;                        ;
 CODE_02E4A5:          JSR SubOffscreen2Bnk2                     ;;E4A5|E4A5+E4A5/E4A5\E4A5;
                       STZ.W TileGenerateTrackA                  ;;E4A8|E4A8+E4A8/E4A8\E4A8;
@@ -12307,7 +12307,7 @@ CODE_02E4A5:          JSR SubOffscreen2Bnk2                     ;;E4A5|E4A5+E4A5
                       LDY.B #$FE                                ;;E519|E519+E519/E519\E519;
                     + TYA                                       ;;E51B|E51B+E51B/E51B\E51B;
                       JSR CODE_02E559                           ;;E51C|E51C+E51C/E51C\E51C;
-Return02E51F:         RTS                                       ;;E51F|E51F+E51F/E51F\E51F; Return 
+Return02E51F:         RTS                                       ;;E51F|E51F+E51F/E51F\E51F;
                                                                 ;;                        ;
                                                                 ;;                        ;
 MushrmScaleTiles:     db $02,$07,$07,$02                        ;;E520|E520+E520/E520\E520;
@@ -12323,18 +12323,18 @@ CODE_02E524:          LDA.B SpriteYPosLow,X                     ;;E524|E524+E524
                     + LDA.W MushrmScaleTiles,Y                  ;;E533|E533+E533/E533\E533;
                       STA.B Map16TileGenerate                   ;;E536|E536+E536/E536\E536; $9C = tile to generate 
                       LDA.B SpriteXPosLow,X                     ;;E538|E538+E538/E538\E538; \ $9A = Sprite X position 
-                      STA.B TouchBlockXPos                      ;;E53A|E53A+E53A/E53A\E53A;  | for block creation 
-                      LDA.W SpriteYPosHigh,X                    ;;E53C|E53C+E53C/E53C\E53C;  | 
+                      STA.B TouchBlockXPos                      ;;E53A|E53A+E53A/E53A\E53A; | for block creation 
+                      LDA.W SpriteYPosHigh,X                    ;;E53C|E53C+E53C/E53C\E53C; | 
                       STA.B TouchBlockXPos+1                    ;;E53F|E53F+E53F/E53F\E53F; / 
                       LDA.B SpriteYPosLow,X                     ;;E541|E541+E541/E541\E541; \ $98 = Sprite Y position 
-                      STA.B TouchBlockYPos                      ;;E543|E543+E543/E543\E543;  | for block creation 
-                      LDA.W SpriteXPosHigh,X                    ;;E545|E545+E545/E545\E545;  | 
+                      STA.B TouchBlockYPos                      ;;E543|E543+E543/E543\E543; | for block creation 
+                      LDA.W SpriteXPosHigh,X                    ;;E545|E545+E545/E545\E545; | 
                       STA.B TouchBlockYPos+1                    ;;E548|E548+E548/E548\E548; / 
                       JSL GenerateTile                          ;;E54A|E54A+E54A/E54A\E54A; Generate the tile 
 CODE_02E54E:          JSR MushroomScaleGfx                      ;;E54E|E54E+E54E/E54E\E54E;
                       STZ.W SpriteMisc1528,X                    ;;E551|E551+E551/E551\E551;
                       JSL InvisBlkMainRt                        ;;E554|E554+E554/E554\E554;
-                      RTS                                       ;;E558|E558+E558/E558\E558; Return 
+                      RTS                                       ;;E558|E558+E558/E558\E558;
                                                                 ;;                        ;
 CODE_02E559:          LDY.B SpriteLock                          ;;E559|E559+E559/E559\E559;
                       BNE Return02E57D                          ;;E55B|E55B+E55B/E55B\E55B;
@@ -12354,7 +12354,7 @@ CODE_02E559:          LDY.B SpriteLock                          ;;E559|E559+E559
                       TYA                                       ;;E576|E576+E576/E576\E576;
                       ADC.W SpriteMisc151C,X                    ;;E577|E577+E577/E577\E577;
                       STA.W SpriteMisc151C,X                    ;;E57A|E57A+E57A/E57A\E57A;
-Return02E57D:         RTS                                       ;;E57D|E57D+E57D/E57D\E57D; Return 
+Return02E57D:         RTS                                       ;;E57D|E57D+E57D/E57D\E57D;
                                                                 ;;                        ;
 MushroomScaleGfx:     JSR GetDrawInfo2                          ;;E57E|E57E+E57E/E57E\E57E;
                       LDA.B _0                                  ;;E581|E581+E581/E581\E581;
@@ -12385,7 +12385,7 @@ MovingLedgeMain:      PHB                                       ;;E5B4|E5B4+E5B4
                       PLB                                       ;;E5B6|E5B6+E5B6/E5B6\E5B6;
                       JSR CODE_02E5BC                           ;;E5B7|E5B7+E5B7/E5B7\E5B7;
                       PLB                                       ;;E5BA|E5BA+E5BA/E5BA\E5BA;
-                      RTL                                       ;;E5BB|E5BB+E5BB/E5BB\E5BB; Return 
+                      RTL                                       ;;E5BB|E5BB+E5BB/E5BB\E5BB;
                                                                 ;;                        ;
 CODE_02E5BC:          JSR SubOffscreen0Bnk2                     ;;E5BC|E5BC+E5BC/E5BC\E5BC;
                       LDA.B SpriteLock                          ;;E5BF|E5BF+E5BF/E5BF\E5BF;
@@ -12412,7 +12412,7 @@ CODE_02E5E8:          JSL MarioSprInteract                      ;;E5E8|E5E8+E5E8
                       INX                                       ;;E5F1|E5F1+E5F1/E5F1\E5F1;
                       STX.W PlayerDisableObjInt                 ;;E5F2|E5F2+E5F2/E5F2\E5F2;
                       DEX                                       ;;E5F5|E5F5+E5F5/E5F5\E5F5;
-                    + RTS                                       ;;E5F6|E5F6+E5F6/E5F6\E5F6; Return 
+                    + RTS                                       ;;E5F6|E5F6+E5F6/E5F6\E5F6;
                                                                 ;;                        ;
 CODE_02E5F7:          LDY.B #$0B                                ;;E5F7|E5F7+E5F7/E5F7\E5F7;
 CODE_02E5F9:          CPY.W CurSpriteProcess                    ;;E5F9|E5F9+E5F9/E5F9\E5F9;
@@ -12442,7 +12442,7 @@ CODE_02E617:          TYX                                       ;;E617|E617+E617
                       STA.W SpriteDisableObjInt,Y               ;;E630|E630+E630/E630\E630;
 CODE_02E633:          DEY                                       ;;E633|E633+E633/E633\E633;
                       BPL CODE_02E5F9                           ;;E634|E634+E634/E634\E634;
-                      RTS                                       ;;E636|E636+E636/E636\E636; Return 
+                      RTS                                       ;;E636|E636+E636/E636\E636;
                                                                 ;;                        ;
 CODE_02E637:          JSR GetDrawInfo2                          ;;E637|E637+E637/E637\E637;
                       PHX                                       ;;E63A|E63A+E63A/E63A\E63A;
@@ -12480,7 +12480,7 @@ CODE_02E672:          PHB                                       ;;E672|E672+E672
                       PLB                                       ;;E674|E674+E674/E674\E674;
                       JSR CODE_02E67A                           ;;E675|E675+E675/E675\E675;
                       PLB                                       ;;E678|E678+E678/E678\E678;
-                      RTL                                       ;;E679|E679+E679/E679\E679; Return 
+                      RTL                                       ;;E679|E679+E679/E679\E679;
                                                                 ;;                        ;
 CODE_02E67A:          JSR GetDrawInfo2                          ;;E67A|E67A+E67A/E67A\E67A;
                       TYA                                       ;;E67D|E67D+E67D/E67D\E67D;
@@ -12566,7 +12566,7 @@ SwimJumpFishMain:     PHB                                       ;;E71F|E71F+E71F
                       PLB                                       ;;E721|E721+E721/E721\E721;
                       JSR CODE_02E727                           ;;E722|E722+E722/E722\E722;
                       PLB                                       ;;E725|E725+E725/E725\E725;
-                      RTL                                       ;;E726|E726+E726/E726\E726; Return 
+                      RTL                                       ;;E726|E726+E726/E726\E726;
                                                                 ;;                        ;
 CODE_02E727:          JSL GenericSprGfxRt2                      ;;E727|E727+E727/E727\E727;
                       LDA.B SpriteLock                          ;;E72B|E72B+E72B/E72B\E72B;
@@ -12583,7 +12583,7 @@ CODE_02E727:          JSL GenericSprGfxRt2                      ;;E727|E727+E727
                       dw CODE_02E74E                            ;;E747|E747+E747/E747\E747;
                       dw CODE_02E788                            ;;E749|E749+E749/E749\E749;
                                                                 ;;                        ;
-                    + RTS                                       ;;E74B|E74B+E74B/E74B\E74B; Return 
+                    + RTS                                       ;;E74B|E74B+E74B/E74B\E74B;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02E74C:          db $14,$EC                                ;;E74C|E74C+E74C/E74C\E74C;
@@ -12606,14 +12606,14 @@ CODE_02E74E:          LDY.W SpriteMisc157C,X                    ;;E74E|E74E+E74E
                       BEQ +                                     ;;E774|E774+E774/E774\E774;
                       LDA.B #$40                                ;;E776|E776+E776/E776\E776;
                     + STA.W SpriteMisc1540,X                    ;;E778|E778+E778/E778\E778;
-Return02E77B:         RTS                                       ;;E77B|E77B+E77B/E77B\E77B; Return 
+Return02E77B:         RTS                                       ;;E77B|E77B+E77B/E77B\E77B;
                                                                 ;;                        ;
 CODE_02E77C:          INC.B SpriteTableC2,X                     ;;E77C|E77C+E77C/E77C\E77C;
                       LDA.B #$80                                ;;E77E|E77E+E77E/E77E\E77E;
                       STA.W SpriteMisc1540,X                    ;;E780|E780+E780/E780\E780;
                       LDA.B #$A0                                ;;E783|E783+E783/E783\E783;
                       STA.B SpriteYSpeed,X                      ;;E785|E785+E785/E785\E785;
-                      RTS                                       ;;E787|E787+E787/E787\E787; Return 
+                      RTS                                       ;;E787|E787+E787/E787\E787;
                                                                 ;;                        ;
 CODE_02E788:          LDA.W SpriteMisc1540,X                    ;;E788|E788+E788/E788\E788;
                       BEQ CODE_02E7A4                           ;;E78B|E78B+E78B/E78B\E78B;
@@ -12628,7 +12628,7 @@ CODE_02E788:          LDA.W SpriteMisc1540,X                    ;;E788|E788+E788
 CODE_02E79E:          CLC                                       ;;E79E|E79E+E79E/E79E\E79E;
                       ADC.B #$02                                ;;E79F|E79F+E79F/E79F\E79F;
                       STA.B SpriteYSpeed,X                      ;;E7A1|E7A1+E7A1/E7A1\E7A1;
-Return02E7A3:         RTS                                       ;;E7A3|E7A3+E7A3/E7A3\E7A3; Return 
+Return02E7A3:         RTS                                       ;;E7A3|E7A3+E7A3/E7A3\E7A3;
                                                                 ;;                        ;
 CODE_02E7A4:          LDA.B SpriteYPosLow,X                     ;;E7A4|E7A4+E7A4/E7A4\E7A4;
                       AND.B #$F0                                ;;E7A6|E7A6+E7A6/E7A6\E7A6;
@@ -12637,14 +12637,14 @@ CODE_02E7A4:          LDA.B SpriteYPosLow,X                     ;;E7A4|E7A4+E7A4
                       STZ.W SpriteMisc1570,X                    ;;E7AC|E7AC+E7AC/E7AC\E7AC;
                       LDA.B #$20                                ;;E7AF|E7AF+E7AF/E7AF\E7AF;
                       STA.W SpriteMisc1540,X                    ;;E7B1|E7B1+E7B1/E7B1\E7B1;
-                      RTS                                       ;;E7B4|E7B4+E7B4/E7B4\E7B4; Return 
+                      RTS                                       ;;E7B4|E7B4+E7B4/E7B4\E7B4;
                                                                 ;;                        ;
 ChucksRockMain:       PHB                                       ;;E7B5|E7B5+E7B5/E7B5\E7B5;
                       PHK                                       ;;E7B6|E7B6+E7B6/E7B6\E7B6;
                       PLB                                       ;;E7B7|E7B7+E7B7/E7B7\E7B7;
                       JSR CODE_02E7BD                           ;;E7B8|E7B8+E7B8/E7B8\E7B8;
                       PLB                                       ;;E7BB|E7BB+E7BB/E7BB\E7BB;
-                      RTL                                       ;;E7BC|E7BC+E7BC/E7BC\E7BC; Return 
+                      RTL                                       ;;E7BC|E7BC+E7BC/E7BC\E7BC;
                                                                 ;;                        ;
 CODE_02E7BD:          LDA.B SpriteProperties                    ;;E7BD|E7BD+E7BD/E7BD\E7BD;
                       PHA                                       ;;E7BF|E7BF+E7BF/E7BF\E7BF;
@@ -12669,7 +12669,7 @@ CODE_02E7BD:          LDA.B SpriteProperties                    ;;E7BD|E7BD+E7BD
                       LDA.W SpriteMisc1540,X                    ;;E7EA|E7EA+E7EA/E7EA\E7EA;
                       BNE CODE_02E828                           ;;E7ED|E7ED+E7ED/E7ED\E7ED;
                       LDA.W SpriteBlockedDirs,X                 ;;E7EF|E7EF+E7EF/E7EF\E7EF; \ Branch if not touching object 
-                      AND.B #$03                                ;;E7F2|E7F2+E7F2/E7F2\E7F2;  | 
+                      AND.B #$03                                ;;E7F2|E7F2+E7F2/E7F2\E7F2; | 
                       BEQ +                                     ;;E7F4|E7F4+E7F4/E7F4\E7F4; / 
                       LDA.B SpriteXSpeed,X                      ;;E7F6|E7F6+E7F6/E7F6\E7F6;
                       EOR.B #$FF                                ;;E7F8|E7F8+E7F8/E7F8\E7F8;
@@ -12681,7 +12681,7 @@ CODE_02E7BD:          LDA.B SpriteProperties                    ;;E7BD|E7BD+E7BD
                       LDA.B #$10                                ;;E804|E804+E804/E804\E804;
                       STA.B SpriteYSpeed,X                      ;;E806|E806+E806/E806\E806;
                     + LDA.W SpriteBlockedDirs,X                 ;;E808|E808+E808/E808\E808; \ Branch if not on ground 
-                      AND.B #$04                                ;;E80B|E80B+E80B/E80B\E80B;  | 
+                      AND.B #$04                                ;;E80B|E80B+E80B/E80B\E80B; | 
                       BEQ CODE_02E828                           ;;E80D|E80D+E80D/E80D\E80D; / 
                       LDA.B SpriteYSpeed,X                      ;;E80F|E80F+E80F/E80F\E80F;
                       CMP.B #$38                                ;;E811|E811+E811/E811\E811;
@@ -12696,14 +12696,14 @@ CODE_02E7BD:          LDA.B SpriteProperties                    ;;E7BD|E7BD+E7BD
                       LDA.B #$F8                                ;;E824|E824+E824/E824\E824;
                     + STA.B SpriteXSpeed,X                      ;;E826|E826+E826/E826\E826;
 CODE_02E828:          JSL SprSpr_MarioSprRts                    ;;E828|E828+E828/E828\E828;
-Return02E82C:         RTS                                       ;;E82C|E82C+E82C/E82C\E82C; Return 
+Return02E82C:         RTS                                       ;;E82C|E82C+E82C/E82C\E82C;
                                                                 ;;                        ;
 GrowingPipeMain:      PHB                                       ;;E82D|E82D+E82D/E82D\E82D;
                       PHK                                       ;;E82E|E82E+E82E/E82E\E82E;
                       PLB                                       ;;E82F|E82F+E82F/E82F\E82F;
                       JSR CODE_02E845                           ;;E830|E830+E830/E830\E830;
                       PLB                                       ;;E833|E833+E833/E833\E833;
-                      RTL                                       ;;E834|E834+E834/E834\E834; Return 
+                      RTL                                       ;;E834|E834+E834/E834\E834;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02E835:          db $00,$F0,$00,$10                        ;;E835|E835+E835/E835\E835;
@@ -12735,7 +12735,7 @@ CODE_02E845:          LDA.W SpriteMisc1534,X                    ;;E845|E845+E845
                       SEC                                       ;;E86B|E86B+E86B/E86B\E86B;
                       SBC.B #$10                                ;;E86C|E86C+E86C/E86C\E86C;
                       STA.W SpriteMisc1534,X                    ;;E86E|E86E+E86E/E86E\E86E;
-                      RTS                                       ;;E871|E871+E871/E871\E871; Return 
+                      RTS                                       ;;E871|E871+E871/E871\E871;
                                                                 ;;                        ;
                     + JSR CODE_02E902                           ;;E872|E872+E872/E872\E872;
                       JSR SubOffscreen0Bnk2                     ;;E875|E875+E875/E875\E875;
@@ -12768,7 +12768,7 @@ CODE_02E8A2:          LDA.W DATA_02E835,Y                       ;;E8A2|E8A2+E8A2
                       JSR GrowingPipeGfx                        ;;E8AF|E8AF+E8AF/E8AF\E8AF;
                     + JSR UpdateYPosNoGrvty                     ;;E8B2|E8B2+E8B2/E8B2\E8B2;
 CODE_02E8B5:          JSL InvisBlkMainRt                        ;;E8B5|E8B5+E8B5/E8B5\E8B5;
-                      RTS                                       ;;E8B9|E8B9+E8B9/E8B9\E8B9; Return 
+                      RTS                                       ;;E8B9|E8B9+E8B9/E8B9\E8B9;
                                                                 ;;                        ;
 GrowingPipeGfx:       LDA.W GrowingPipeTiles1,Y                 ;;E8BA|E8BA+E8BA/E8BA\E8BA;
                       STA.W TileGenerateTrackA                  ;;E8BD|E8BD+E8BD/E8BD\E8BD;
@@ -12777,29 +12777,29 @@ GrowingPipeGfx:       LDA.W GrowingPipeTiles1,Y                 ;;E8BA|E8BA+E8BA
                       LDA.W TileGenerateTrackA                  ;;E8C6|E8C6+E8C6/E8C6\E8C6;
                       STA.B Map16TileGenerate                   ;;E8C9|E8C9+E8C9/E8C9\E8C9; $9C = tile to generate 
                       LDA.B SpriteXPosLow,X                     ;;E8CB|E8CB+E8CB/E8CB\E8CB; \ $9A = Sprite X position 
-                      STA.B TouchBlockXPos                      ;;E8CD|E8CD+E8CD/E8CD\E8CD;  | for block creation 
-                      LDA.W SpriteYPosHigh,X                    ;;E8CF|E8CF+E8CF/E8CF\E8CF;  | 
+                      STA.B TouchBlockXPos                      ;;E8CD|E8CD+E8CD/E8CD\E8CD; | for block creation 
+                      LDA.W SpriteYPosHigh,X                    ;;E8CF|E8CF+E8CF/E8CF\E8CF; | 
                       STA.B TouchBlockXPos+1                    ;;E8D2|E8D2+E8D2/E8D2\E8D2; / 
                       LDA.B SpriteYPosLow,X                     ;;E8D4|E8D4+E8D4/E8D4\E8D4; \ $98 = Sprite Y position 
-                      STA.B TouchBlockYPos                      ;;E8D6|E8D6+E8D6/E8D6\E8D6;  | for block creation 
-                      LDA.W SpriteXPosHigh,X                    ;;E8D8|E8D8+E8D8/E8D8\E8D8;  | 
+                      STA.B TouchBlockYPos                      ;;E8D6|E8D6+E8D6/E8D6\E8D6; | for block creation 
+                      LDA.W SpriteXPosHigh,X                    ;;E8D8|E8D8+E8D8/E8D8\E8D8; | 
                       STA.B TouchBlockYPos+1                    ;;E8DB|E8DB+E8DB/E8DB\E8DB; / 
                       JSL GenerateTile                          ;;E8DD|E8DD+E8DD/E8DD\E8DD; Generate the tile 
                       LDA.W TileGenerateTrackB                  ;;E8E1|E8E1+E8E1/E8E1\E8E1;
                       STA.B Map16TileGenerate                   ;;E8E4|E8E4+E8E4/E8E4\E8E4; $9C = tile to generate 
                       LDA.B SpriteXPosLow,X                     ;;E8E6|E8E6+E8E6/E8E6\E8E6; \ $9A = Sprite X position + #$10 
-                      CLC                                       ;;E8E8|E8E8+E8E8/E8E8\E8E8;  | for block creation 
-                      ADC.B #$10                                ;;E8E9|E8E9+E8E9/E8E9\E8E9;  | 
-                      STA.B TouchBlockXPos                      ;;E8EB|E8EB+E8EB/E8EB\E8EB;  | 
-                      LDA.W SpriteYPosHigh,X                    ;;E8ED|E8ED+E8ED/E8ED\E8ED;  | 
-                      ADC.B #$00                                ;;E8F0|E8F0+E8F0/E8F0\E8F0;  | 
+                      CLC                                       ;;E8E8|E8E8+E8E8/E8E8\E8E8; | for block creation 
+                      ADC.B #$10                                ;;E8E9|E8E9+E8E9/E8E9\E8E9; | 
+                      STA.B TouchBlockXPos                      ;;E8EB|E8EB+E8EB/E8EB\E8EB; | 
+                      LDA.W SpriteYPosHigh,X                    ;;E8ED|E8ED+E8ED/E8ED\E8ED; | 
+                      ADC.B #$00                                ;;E8F0|E8F0+E8F0/E8F0\E8F0; | 
                       STA.B TouchBlockXPos+1                    ;;E8F2|E8F2+E8F2/E8F2\E8F2; / 
                       LDA.B SpriteYPosLow,X                     ;;E8F4|E8F4+E8F4/E8F4\E8F4; \ $98 = Sprite Y position 
-                      STA.B TouchBlockYPos                      ;;E8F6|E8F6+E8F6/E8F6\E8F6;  | for block creation 
-                      LDA.W SpriteXPosHigh,X                    ;;E8F8|E8F8+E8F8/E8F8\E8F8;  | 
+                      STA.B TouchBlockYPos                      ;;E8F6|E8F6+E8F6/E8F6\E8F6; | for block creation 
+                      LDA.W SpriteXPosHigh,X                    ;;E8F8|E8F8+E8F8/E8F8\E8F8; | 
                       STA.B TouchBlockYPos+1                    ;;E8FB|E8FB+E8FB/E8FB\E8FB; / 
                       JSL GenerateTile                          ;;E8FD|E8FD+E8FD/E8FD\E8FD; Generate the tile 
-                      RTS                                       ;;E901|E901+E901/E901\E901; Return 
+                      RTS                                       ;;E901|E901+E901/E901\E901;
                                                                 ;;                        ;
 CODE_02E902:          JSR GetDrawInfo2                          ;;E902|E902+E902/E902\E902;
                       LDA.B _0                                  ;;E905|E905+E905/E905\E905;
@@ -12828,7 +12828,7 @@ PipeLakituMain:       PHB                                       ;;E935|E935+E935
                       PLB                                       ;;E937|E937+E937/E937\E937;
                       JSR CODE_02E93D                           ;;E938|E938+E938/E938\E938;
                       PLB                                       ;;E93B|E93B+E93B/E93B\E93B;
-                      RTL                                       ;;E93C|E93C+E93C/E93C\E93C; Return 
+                      RTL                                       ;;E93C|E93C+E93C/E93C\E93C;
                                                                 ;;                        ;
 CODE_02E93D:          LDA.W SpriteStatus,X                      ;;E93D|E93D+E93D/E93D\E93D;
                       CMP.B #$02                                ;;E940|E940+E940/E940\E940;
@@ -12863,7 +12863,7 @@ CODE_02E96D:          LDA.W SpriteMisc1540,X                    ;;E96D|E96D+E96D
                       LDA.B #$90                                ;;E97E|E97E+E97E/E97E\E97E;
 CODE_02E980:          STA.W SpriteMisc1540,X                    ;;E980|E980+E980/E980\E980;
                       INC.B SpriteTableC2,X                     ;;E983|E983+E983/E983\E983;
-                    + RTS                                       ;;E985|E985+E985/E985\E985; Return 
+                    + RTS                                       ;;E985|E985+E985/E985\E985;
                                                                 ;;                        ;
 CODE_02E986:          LDA.W SpriteMisc1540,X                    ;;E986|E986+E986/E986\E986;
                       BNE CODE_02E996                           ;;E989|E989+E989/E989\E989;
@@ -12878,7 +12878,7 @@ CODE_02E996:          CMP.B #$7C                                ;;E996|E996+E996
 CODE_02E99A:          LDA.B #$F8                                ;;E99A|E99A+E99A/E99A\E99A;
 CODE_02E99C:          STA.B SpriteYSpeed,X                      ;;E99C|E99C+E99C/E99C\E99C;
                       JSR UpdateYPosNoGrvty                     ;;E99E|E99E+E99E/E99E\E99E;
-                      RTS                                       ;;E9A1|E9A1+E9A1/E9A1\E9A1; Return 
+                      RTS                                       ;;E9A1|E9A1+E9A1/E9A1\E9A1;
                                                                 ;;                        ;
                     + CMP.B #$50                                ;;E9A2|E9A2+E9A2/E9A2\E9A2;
                       BCS Return02E9B3                          ;;E9A4|E9A4+E9A4/E9A4\E9A4;
@@ -12889,7 +12889,7 @@ CODE_02E99C:          STA.B SpriteYSpeed,X                      ;;E99C|E99C+E99C
                       INY                                       ;;E9AE|E9AE+E9AE/E9AE\E9AE;
                     + TYA                                       ;;E9AF|E9AF+E9AF/E9AF\E9AF;
                       STA.W SpriteMisc157C,X                    ;;E9B0|E9B0+E9B0/E9B0\E9B0;
-Return02E9B3:         RTS                                       ;;E9B3|E9B3+E9B3/E9B3\E9B3; Return 
+Return02E9B3:         RTS                                       ;;E9B3|E9B3+E9B3/E9B3\E9B3;
                                                                 ;;                        ;
 CODE_02E9B4:          LDA.W SpriteMisc1540,X                    ;;E9B4|E9B4+E9B4/E9B4\E9B4;
                       BNE CODE_02E99A                           ;;E9B7|E9B7+E9B7/E9B7\E9B7;
@@ -12904,18 +12904,18 @@ CODE_02E9BD:          LDA.W SpriteMisc1540,X                    ;;E9BD|E9BD+E9BD
 CODE_02E9C6:          CMP.B #$40                                ;;E9C6|E9C6+E9C6/E9C6\E9C6;
                       BNE +                                     ;;E9C8|E9C8+E9C8/E9C8\E9C8;
                       JSL CODE_01EA19                           ;;E9CA|E9CA+E9CA/E9CA\E9CA;
-                      RTS                                       ;;E9CE|E9CE+E9CE/E9CE\E9CE; Return 
+                      RTS                                       ;;E9CE|E9CE+E9CE/E9CE\E9CE;
                                                                 ;;                        ;
                     + BCS +                                     ;;E9CF|E9CF+E9CF/E9CF\E9CF;
                       INC.W SpriteMisc1602,X                    ;;E9D1|E9D1+E9D1/E9D1\E9D1;
-                    + RTS                                       ;;E9D4|E9D4+E9D4/E9D4\E9D4; Return 
+                    + RTS                                       ;;E9D4|E9D4+E9D4/E9D4\E9D4;
                                                                 ;;                        ;
 CODE_02E9D5:          LDA.W SpriteMisc1540,X                    ;;E9D5|E9D5+E9D5/E9D5\E9D5;
                       BNE +                                     ;;E9D8|E9D8+E9D8/E9D8\E9D8;
                       LDA.B #$50                                ;;E9DA|E9DA+E9DA/E9DA\E9DA;
                       JSR CODE_02E980                           ;;E9DC|E9DC+E9DC/E9DC\E9DC;
                       STZ.B SpriteTableC2,X                     ;;E9DF|E9DF+E9DF/E9DF\E9DF;
-                      RTS                                       ;;E9E1|E9E1+E9E1/E9E1\E9E1; Return 
+                      RTS                                       ;;E9E1|E9E1+E9E1/E9E1\E9E1;
                                                                 ;;                        ;
                     + LDA.B #$08                                ;;E9E2|E9E2+E9E2/E9E2\E9E2;
                       BRA CODE_02E99C                           ;;E9E4|E9E4+E9E4/E9E4\E9E4;
@@ -12957,7 +12957,7 @@ CODE_02EA25:          LDY.W SpriteOAMIndex,X                    ;;EA25|EA25+EA25
                       STZ.B _1                                  ;;EA2D|EA2D+EA2D/EA2D\EA2D;
                       LDA.B #$06                                ;;EA2F|EA2F+EA2F/EA2F\EA2F;
                       STA.W OAMTileNo+$100,Y                    ;;EA31|EA31+EA31/EA31\EA31;
-                      REP #$20                                  ;;EA34|EA34+EA34/EA34\EA34; Accum (16 bit) 
+                      REP #$20                                  ;;EA34|EA34+EA34/EA34\EA34; A->16
                       LDA.B _0                                  ;;EA36|EA36+EA36/EA36\EA36;
                       ASL A                                     ;;EA38|EA38+EA38/EA38\EA38;
                       ASL A                                     ;;EA39|EA39+EA39/EA39\EA39;
@@ -12970,8 +12970,8 @@ CODE_02EA25:          LDY.W SpriteOAMIndex,X                    ;;EA25|EA25+EA25
                       CLC                                       ;;EA44|EA44+EA44/EA44\EA44;
                       ADC.W #$0200                              ;;EA45|EA45+EA45/EA45\EA45;
                       STA.W DynGfxTilePtr+$10                   ;;EA48|EA48+EA48/EA48\EA48;
-                      SEP #$20                                  ;;EA4B|EA4B+EA4B/EA4B\EA4B; Accum (8 bit) 
-                      RTL                                       ;;EA4D|EA4D+EA4D/EA4D\EA4D; Return 
+                      SEP #$20                                  ;;EA4B|EA4B+EA4B/EA4B\EA4B; A->8
+                      RTL                                       ;;EA4D|EA4D+EA4D/EA4D\EA4D;
                                                                 ;;                        ;
 CODE_02EA4E:          LDY.B #$0B                                ;;EA4E|EA4E+EA4E/EA4E\EA4E;
 CODE_02EA50:          TYA                                       ;;EA50|EA50+EA50/EA50\EA50;
@@ -13000,7 +13000,7 @@ CODE_02EA50:          TYA                                       ;;EA50|EA50+EA50
 CODE_02EA83:          JSR CODE_02EA8A                           ;;EA83|EA83+EA83/EA83\EA83;
 CODE_02EA86:          DEY                                       ;;EA86|EA86+EA86/EA86\EA86;
                       BPL CODE_02EA50                           ;;EA87|EA87+EA87/EA87\EA87;
-                      RTL                                       ;;EA89|EA89+EA89/EA89\EA89; Return 
+                      RTL                                       ;;EA89|EA89+EA89/EA89\EA89;
                                                                 ;;                        ;
 CODE_02EA8A:          PHX                                       ;;EA8A|EA8A+EA8A/EA8A\EA8A;
                       TYX                                       ;;EA8B|EA8B+EA8B/EA8B\EA8B;
@@ -13027,17 +13027,17 @@ CODE_02EAA9:          LDA.B #$37                                ;;EAA9|EAA9+EAA9
                       SBC.W SpriteYPosHigh,Y                    ;;EAC5|EAC5+EAC5/EAC5\EAC5;
                       BCC Return02EACD                          ;;EAC8|EAC8+EAC8/EAC8\EAC8;
                       INC.W SpriteMisc157C,X                    ;;EACA|EACA+EACA/EACA\EACA;
-Return02EACD:         RTS                                       ;;EACD|EACD+EACD/EACD\EACD; Return 
+Return02EACD:         RTS                                       ;;EACD|EACD+EACD/EACD\EACD;
                                                                 ;;                        ;
 ADDR_02EACE:          STZ.W SpriteMisc163E,X                    ;;EACE|EACE+EACE/EACE\EACE;
-                      RTS                                       ;;EAD1|EAD1+EAD1/EAD1\EAD1; Return 
+                      RTS                                       ;;EAD1|EAD1+EAD1/EAD1\EAD1;
                                                                 ;;                        ;
 WarpBlocksMain:       PHB                                       ;;EAD2|EAD2+EAD2/EAD2\EAD2;
                       PHK                                       ;;EAD3|EAD3+EAD3/EAD3\EAD3;
                       PLB                                       ;;EAD4|EAD4+EAD4/EAD4\EAD4;
                       JSR CODE_02EADA                           ;;EAD5|EAD5+EAD5/EAD5\EAD5;
                       PLB                                       ;;EAD8|EAD8+EAD8/EAD8\EAD8;
-                      RTL                                       ;;EAD9|EAD9+EAD9/EAD9\EAD9; Return 
+                      RTL                                       ;;EAD9|EAD9+EAD9/EAD9\EAD9;
                                                                 ;;                        ;
 CODE_02EADA:          JSL MarioSprInteract                      ;;EADA|EADA+EADA/EADA\EADA;
                       BCC +                                     ;;EADE|EADE+EADE/EADE\EADE;
@@ -13049,7 +13049,7 @@ CODE_02EADA:          JSL MarioSprInteract                      ;;EADA|EADA+EADA
                       LDA.W SpriteYPosHigh,X                    ;;EAE9|EAE9+EAE9/EAE9\EAE9;
                       ADC.B #$00                                ;;EAEC|EAEC+EAEC/EAEC\EAEC;
                       STA.B PlayerXPosNext+1                    ;;EAEE|EAEE+EAEE/EAEE\EAEE;
-                    + RTS                                       ;;EAF0|EAF0+EAF0/EAF0\EAF0; Return 
+                    + RTS                                       ;;EAF0|EAF0+EAF0/EAF0\EAF0;
                                                                 ;;                        ;
                       RTS                                       ;;EAF1|EAF1+EAF1/EAF1\EAF1;
                                                                 ;;                        ;
@@ -13073,14 +13073,14 @@ CODE_02EAF2:          JSL FindFreeSprSlot                       ;;EAF2|EAF2+EAF2
                       STA.W SpriteMisc154C,X                    ;;EB1F|EB1F+EB1F/EB1F\EB1F;
                       LDA.B #$D0                                ;;EB22|EB22+EB22/EB22\EB22;
                       STA.B SpriteYSpeed,X                      ;;EB24|EB24+EB24/EB24\EB24;
-                    + RTL                                       ;;EB26|EB26+EB26/EB26\EB26; Return 
+                    + RTL                                       ;;EB26|EB26+EB26/EB26\EB26;
                                                                 ;;                        ;
 SuperKoopaMain:       PHB                                       ;;EB27|EB27+EB27/EB27\EB27;
                       PHK                                       ;;EB28|EB28+EB28/EB28\EB28;
                       PLB                                       ;;EB29|EB29+EB29/EB29\EB29;
                       JSR CODE_02EB31                           ;;EB2A|EB2A+EB2A/EB2A\EB2A;
                       PLB                                       ;;EB2D|EB2D+EB2D/EB2D\EB2D;
-                      RTL                                       ;;EB2E|EB2E+EB2E/EB2E\EB2E; Return 
+                      RTL                                       ;;EB2E|EB2E+EB2E/EB2E\EB2E;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02EB2F:          db $18,$E8                                ;;EB2F|EB2F+EB2F/EB2F\EB2F;
@@ -13096,7 +13096,7 @@ CODE_02EB3D:          LDA.B EffFrame                            ;;EB3D|EB3D+EB3D
                       INY                                       ;;EB43|EB43+EB43/EB43\EB43;
                     + TYA                                       ;;EB44|EB44+EB44/EB44\EB44;
                       STA.W SpriteMisc1602,X                    ;;EB45|EB45+EB45/EB45\EB45;
-                      RTS                                       ;;EB48|EB48+EB48/EB48\EB48; Return 
+                      RTS                                       ;;EB48|EB48+EB48/EB48\EB48;
                                                                 ;;                        ;
 CODE_02EB49:          LDA.B SpriteLock                          ;;EB49|EB49+EB49/EB49\EB49;
                       BNE Return02EB7C                          ;;EB4B|EB4B+EB4B/EB4B\EB4B;
@@ -13120,7 +13120,7 @@ CODE_02EB49:          LDA.B SpriteLock                          ;;EB49|EB49+EB49
                       CLC                                       ;;EB77|EB77+EB77/EB77\EB77;
                       ADC.B #$FF                                ;;EB78|EB78+EB78/EB78\EB78;
                       STA.B SpriteYSpeed,X                      ;;EB7A|EB7A+EB7A/EB7A\EB7A;
-Return02EB7C:         RTS                                       ;;EB7C|EB7C+EB7C/EB7C\EB7C; Return 
+Return02EB7C:         RTS                                       ;;EB7C|EB7C+EB7C/EB7C\EB7C;
                                                                 ;;                        ;
 CODE_02EB7D:          LDA.B SpriteTableC2,X                     ;;EB7D|EB7D+EB7D/EB7D\EB7D;
                       JSL ExecutePtr                            ;;EB7F|EB7F+EB7F/EB7F\EB7F;
@@ -13162,12 +13162,12 @@ CODE_02EBB5:          LDY.B #$00                                ;;EBB5|EBB5+EBB5
                       CLC                                       ;;EBC3|EBC3+EBC3/EBC3\EBC3;
                       ADC.B #$06                                ;;EBC4|EBC4+EBC4/EBC4\EBC4;
                     + STA.W SpriteMisc1602,X                    ;;EBC6|EBC6+EBC6/EBC6\EBC6;
-                      RTS                                       ;;EBC9|EBC9+EBC9/EBC9\EBC9; Return 
+                      RTS                                       ;;EBC9|EBC9+EBC9/EBC9\EBC9;
                                                                 ;;                        ;
 CODE_02EBCA:          INC.B SpriteTableC2,X                     ;;EBCA|EBCA+EBCA/EBCA\EBCA;
                       LDA.B #$D0                                ;;EBCC|EBCC+EBCC/EBCC\EBCC;
                       STA.B SpriteYSpeed,X                      ;;EBCE|EBCE+EBCE/EBCE\EBCE;
-                      RTS                                       ;;EBD0|EBD0+EBD0/EBD0\EBD0; Return 
+                      RTS                                       ;;EBD0|EBD0+EBD0/EBD0\EBD0;
                                                                 ;;                        ;
 CODE_02EBD1:          LDA.B SpriteYSpeed,X                      ;;EBD1|EBD1+EBD1/EBD1\EBD1;
                       CLC                                       ;;EBD3|EBD3+EBD3/EBD3\EBD3;
@@ -13179,7 +13179,7 @@ CODE_02EBD1:          LDA.B SpriteYSpeed,X                      ;;EBD1|EBD1+EBD1
                     + STZ.B _0                                  ;;EBDE|EBDE+EBDE/EBDE\EBDE;
                       JSR CODE_02EBB5                           ;;EBE0|EBE0+EBE0/EBE0\EBE0;
                       INC.W SpriteMisc1602,X                    ;;EBE3|EBE3+EBE3/EBE3\EBE3;
-                      RTS                                       ;;EBE6|EBE6+EBE6/EBE6\EBE6; Return 
+                      RTS                                       ;;EBE6|EBE6+EBE6/EBE6\EBE6;
                                                                 ;;                        ;
 CODE_02EBE7:          LDY.W SpriteMisc157C,X                    ;;EBE7|EBE7+EBE7/EBE7\EBE7;
                       LDA.W DATA_02EB89,Y                       ;;EBEA|EBEA+EBEA/EBEA\EBEA;
@@ -13196,7 +13196,7 @@ CODE_02EBF8:          LDY.B #$02                                ;;EBF8|EBF8+EBF8
                       INY                                       ;;EC00|EC00+EC00/EC00\EC00;
                     + TYA                                       ;;EC01|EC01+EC01/EC01\EC01;
                       STA.W SpriteMisc1602,X                    ;;EC02|EC02+EC02/EC02\EC02;
-                      RTS                                       ;;EC05|EC05+EC05/EC05\EC05; Return 
+                      RTS                                       ;;EC05|EC05+EC05/EC05\EC05;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02EC06:          db $08,$08,$10,$00,$08,$08,$10,$00        ;;EC06|EC06+EC06/EC06\EC06;
@@ -13332,7 +13332,7 @@ FloatingSkullInit:    PHB                                       ;;ED82|ED82+ED82
                       PLB                                       ;;ED84|ED84+ED84/ED84\ED84;
                       JSR CODE_02ED8A                           ;;ED85|ED85+ED85/ED85\ED85;
                       PLB                                       ;;ED88|ED88+ED88/ED88\ED88;
-                      RTL                                       ;;ED89|ED89+ED89/ED89\ED89; Return 
+                      RTL                                       ;;ED89|ED89+ED89/ED89\ED89;
                                                                 ;;                        ;
 CODE_02ED8A:          STZ.W SkullRaftSpeed                      ;;ED8A|ED8A+ED8A/ED8A\ED8A;
                       INC.B SpriteTableC2,X                     ;;ED8D|ED8D+ED8D/ED8D\ED8D;
@@ -13363,14 +13363,14 @@ CODE_02ED93:          JSL FindFreeSprSlot                       ;;ED93|ED93+ED93
                       PLX                                       ;;EDCB|EDCA+EDCA/EDCA\EDCA;
                     + DEC.B _0                                  ;;EDCC|EDCB+EDCB/EDCB\EDCB;
                       BPL CODE_02ED93                           ;;EDCE|EDCD+EDCD/EDCD\EDCD;
-                      RTS                                       ;;EDD0|EDCF+EDCF/EDCF\EDCF; Return 
+                      RTS                                       ;;EDD0|EDCF+EDCF/EDCF\EDCF;
                                                                 ;;                        ;
 FloatingSkullMain:    PHB                                       ;;EDD1|EDD0+EDD0/EDD0\EDD0;
                       PHK                                       ;;EDD2|EDD1+EDD1/EDD1\EDD1;
                       PLB                                       ;;EDD3|EDD2+EDD2/EDD2\EDD2;
                       JSR CODE_02EDD8                           ;;EDD4|EDD3+EDD3/EDD3\EDD3;
                       PLB                                       ;;EDD7|EDD6+EDD6/EDD6\EDD6;
-                      RTL                                       ;;EDD8|EDD7+EDD7/EDD7\EDD7; Return 
+                      RTL                                       ;;EDD8|EDD7+EDD7/EDD7\EDD7;
                                                                 ;;                        ;
 CODE_02EDD8:          LDA.B SpriteTableC2,X                     ;;EDD9|EDD8+EDD8/EDD8\EDD8;
                       BEQ CODE_02EDF6                           ;;EDDB|EDDA+EDDA/EDDA\EDDA;IF SKULLS DIEING           
@@ -13385,7 +13385,7 @@ CODE_02EDE6:          LDA.W SpriteNumber,Y                      ;;EDE7|EDE6+EDE6
                       STA.W SpriteStatus,Y                      ;;EDF0|EDEF+EDEF/EDEF\EDEF;
                     + DEY                                       ;;EDF3|EDF2+EDF2/EDF2\EDF2;
                       BPL CODE_02EDE6                           ;;EDF4|EDF3+EDF3/EDF3\EDF3;
-Return02EDF5:         RTS                                       ;;EDF6|EDF5+EDF5/EDF5\EDF5; Return 
+Return02EDF5:         RTS                                       ;;EDF6|EDF5+EDF5/EDF5\EDF5;
                                                                 ;;                        ;
 CODE_02EDF6:          JSL GenericSprGfxRt2                      ;;EDF7|EDF6+EDF6/EDF6\EDF6;
                       LDY.W SpriteOAMIndex,X                    ;;EDFB|EDFA+EDFA/EDFA\EDFA; Y = Index into sprite OAM 
@@ -13428,7 +13428,7 @@ CODE_02EE21:          LDA.W SpriteStatus,Y                      ;;EE22|EE21+EE21
                       STA.B SpriteYSpeed,X                      ;;EE47|EE46+EE46/EE46\EE46;
                     + JSL UpdateSpritePos                       ;;EE49|EE48+EE48/EE48\EE48;
                       LDA.W SpriteBlockedDirs,X                 ;;EE4D|EE4C+EE4C/EE4C\EE4C; \ Branch if not on ground 
-                      AND.B #$04                                ;;EE50|EE4F+EE4F/EE4F\EE4F;  | 
+                      AND.B #$04                                ;;EE50|EE4F+EE4F/EE4F\EE4F; | 
                       BEQ +                                     ;;EE52|EE51+EE51/EE51\EE51; / 
                       LDA.B #$10                                ;;EE54|EE53+EE53/EE53\EE53;
                       STA.B SpriteYSpeed,X                      ;;EE56|EE55+EE55/EE55\EE55;
@@ -13470,14 +13470,14 @@ CODE_02EE21:          LDA.W SpriteStatus,Y                      ;;EE22|EE21+EE21
                       TYA                                       ;;EEA4|EEA3+EEA3/EEA3\EEA3;
                       ADC.B PlayerXPosNext+1                    ;;EEA5|EEA4+EEA4/EEA4\EEA4;
                       STA.B PlayerXPosNext+1                    ;;EEA7|EEA6+EEA6/EEA6\EEA6;
-Return02EEA8:         RTS                                       ;;EEA9|EEA8+EEA8/EEA8\EEA8; Return 
+Return02EEA8:         RTS                                       ;;EEA9|EEA8+EEA8/EEA8\EEA8;
                                                                 ;;                        ;
 CoinCloudMain:        PHB                                       ;;EEAA|EEA9+EEA9/EEA9\EEA9;
                       PHK                                       ;;EEAB|EEAA+EEAA/EEAA\EEAA;
                       PLB                                       ;;EEAC|EEAB+EEAB/EEAB\EEAB;
                       JSR ADDR_02EEB5                           ;;EEAD|EEAC+EEAC/EEAC\EEAC;
                       PLB                                       ;;EEB0|EEAF+EEAF/EEAF\EEAF;
-                      RTL                                       ;;EEB1|EEB0+EEB0/EEB0\EEB0; Return 
+                      RTL                                       ;;EEB1|EEB0+EEB0/EEB0\EEB0;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02EEB1:          db $01,$FF                                ;;EEB2|EEB1+EEB1/EEB1\EEB1;
@@ -13509,10 +13509,10 @@ ADDR_02EEB5:          LDA.B SpriteTableC2,X                     ;;EEB6|EEB5+EEB5
                       STA.B _2                                  ;;EEE7|EEE6+EEE6/EEE6\EEE6;
                       LDA.B #$01                                ;;EEE9|EEE8+EEE8/EEE8\EEE8;
                       STA.B _3                                  ;;EEEB|EEEA+EEEA/EEEA\EEEA;
-                      REP #$20                                  ;;EEED|EEEC+EEEC/EEEC\EEEC; Accum (16 bit) 
+                      REP #$20                                  ;;EEED|EEEC+EEEC/EEEC\EEEC; A->16
                       LDA.B _0                                  ;;EEEF|EEEE+EEEE/EEEE\EEEE;
                       CMP.B _2                                  ;;EEF1|EEF0+EEF0/EEF0\EEF0;
-                      SEP #$20                                  ;;EEF3|EEF2+EEF2/EEF2\EEF2; Accum (8 bit) 
+                      SEP #$20                                  ;;EEF3|EEF2+EEF2/EEF2\EEF2; A->8
                       LDY.B #$00                                ;;EEF5|EEF4+EEF4/EEF4\EEF4;
                       BCC +                                     ;;EEF7|EEF6+EEF6/EEF6\EEF6;
                       INY                                       ;;EEF9|EEF8+EEF8/EEF8\EEF8;
@@ -13565,7 +13565,7 @@ ADDR_02EF1C:          LDA.W SpriteOAMIndex,X                    ;;EF1D|EF1C+EF1C
                       LDY.B #$00                                ;;EF60|EF5F+EF5F/EF5F\EF5F;
                       LDA.B #$00                                ;;EF62|EF61+EF61/EF61\EF61;
                       JSR CODE_02B7A7                           ;;EF64|EF63+EF63/EF63\EF63;
-                      RTS                                       ;;EF67|EF66+EF66/EF66\EF66; Return 
+                      RTS                                       ;;EF67|EF66+EF66/EF66\EF66;
                                                                 ;;                        ;
 ADDR_02EF67:          LDA.W GameCloudCoinCount                  ;;EF68|EF67+EF67/EF67\EF67;
                       CMP.B #$0A                                ;;EF6B|EF6A+EF6A/EF6A\EF6A;
@@ -13576,7 +13576,7 @@ ADDR_02EF70:          LDA.W SpriteStatus,Y                      ;;EF71|EF70+EF70
                       DEY                                       ;;EF76|EF75+EF75/EF75\EF75;
                       CPY.B #$09                                ;;EF77|EF76+EF76/EF76\EF76;
                       BNE ADDR_02EF70                           ;;EF79|EF78+EF78/EF78\EF78;
-                      RTS                                       ;;EF7B|EF7A+EF7A/EF7A\EF7A; Return 
+                      RTS                                       ;;EF7B|EF7A+EF7A/EF7A\EF7A;
                                                                 ;;                        ;
 ADDR_02EF7B:          LDA.B #$08                                ;;EF7C|EF7B+EF7B/EF7B\EF7B; \ Sprite status = Normal 
                       STA.W SpriteStatus,Y                      ;;EF7E|EF7D+EF7D/EF7D\EF7D; / 
@@ -13597,16 +13597,16 @@ ADDR_02EF7B:          LDA.B #$08                                ;;EF7C|EF7B+EF7B
                       STA.B SpriteYSpeed,X                      ;;EFA4|EFA3+EFA3/EFA3\EFA3;
                       INC.W SpriteMisc157C,X                    ;;EFA6|EFA5+EFA5/EFA5\EFA5;
                       PLX                                       ;;EFA9|EFA8+EFA8/EFA8\EFA8;
-                      RTS                                       ;;EFAA|EFA9+EFA9/EFA9\EFA9; Return 
+                      RTS                                       ;;EFAA|EFA9+EFA9/EFA9\EFA9;
                                                                 ;;                        ;
 ADDR_02EFAA:          LDA.W SpriteMisc1570,X                    ;;EFAB|EFAA+EFAA/EFAA\EFAA;
                       CMP.B #$0B                                ;;EFAE|EFAD+EFAD/EFAD\EFAD;
                       BCS Return02EFBB                          ;;EFB0|EFAF+EFAF/EFAF\EFAF;
                       LDY.B #$07                                ;;EFB2|EFB1+EFB1/EFB1\EFB1; \ Find a free extended sprite slot 
-ADDR_02EFB3:          LDA.W ExtSpriteNumber,Y                   ;;EFB4|EFB3+EFB3/EFB3\EFB3;  | 
-                      BEQ ADDR_02EFBC                           ;;EFB7|EFB6+EFB6/EFB6\EFB6;  | 
-                      DEY                                       ;;EFB9|EFB8+EFB8/EFB8\EFB8;  | 
-                      BPL ADDR_02EFB3                           ;;EFBA|EFB9+EFB9/EFB9\EFB9;  | 
+ADDR_02EFB3:          LDA.W ExtSpriteNumber,Y                   ;;EFB4|EFB3+EFB3/EFB3\EFB3; | 
+                      BEQ ADDR_02EFBC                           ;;EFB7|EFB6+EFB6/EFB6\EFB6; | 
+                      DEY                                       ;;EFB9|EFB8+EFB8/EFB8\EFB8; | 
+                      BPL ADDR_02EFB3                           ;;EFBA|EFB9+EFB9/EFB9\EFB9; | 
 Return02EFBB:         RTS                                       ;;EFBC|EFBB+EFBB/EFBB\EFBB; / Return if no free slots 
                                                                 ;;                        ;
 ADDR_02EFBC:          LDA.B #$0A                                ;;EFBD|EFBC+EFBC/EFBC\EFBC; \ Extended sprite = Cloud game coin 
@@ -13627,7 +13627,7 @@ ADDR_02EFBC:          LDA.B #$0A                                ;;EFBD|EFBC+EFBC
                       LDA.B #$00                                ;;EFE2|EFE1+EFE1/EFE1\EFE1;
                       STA.W ExtSpriteXSpeed,Y                   ;;EFE4|EFE3+EFE3/EFE3\EFE3;
                       STA.W ExtSpriteMisc1765,Y                 ;;EFE7|EFE6+EFE6/EFE6\EFE6;
-                      RTS                                       ;;EFEA|EFE9+EFE9/EFE9\EFE9; Return 
+                      RTS                                       ;;EFEA|EFE9+EFE9/EFE9\EFE9;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02EFEA:          db $00,$80,$00,$80                        ;;EFEB|EFEA+EFEA/EFEA\EFEA;
@@ -13652,7 +13652,7 @@ WigglerInit:          PHB                                       ;;EFF3|EFF2+EFF2
                       TYA                                       ;;F00C|F00B+F00B/F00B\F00B;
                       STA.W SpriteMisc157C,X                    ;;F00D|F00C+F00C/F00C\F00C;
                       PLB                                       ;;F010|F00F+F00F/F00F\F00F;
-                      RTL                                       ;;F011|F010+F010/F010\F010; Return 
+                      RTL                                       ;;F011|F010+F010/F010\F010;
                                                                 ;;                        ;
 CODE_02F011:          TXA                                       ;;F012|F011+F011/F011\F011;
                       AND.B #$03                                ;;F013|F012+F012/F012\F012;
@@ -13666,14 +13666,14 @@ CODE_02F011:          TXA                                       ;;F012|F011+F011
                       STA.B WigglerSegmentPtr+1                 ;;F023|F022+F022/F022\F022;
                       LDA.B #WigglerTable>>16                   ;;F025|F024+F024/F024\F024;
                       STA.B WigglerSegmentPtr+2                 ;;F027|F026+F026/F026\F026;
-                      RTS                                       ;;F029|F028+F028/F028\F028; Return 
+                      RTS                                       ;;F029|F028+F028/F028\F028;
                                                                 ;;                        ;
 WigglerMain:          PHB                                       ;;F02A|F029+F029/F029\F029;
                       PHK                                       ;;F02B|F02A+F02A/F02A\F02A;
                       PLB                                       ;;F02C|F02B+F02B/F02B\F02B;
                       JSR WigglerMainRt                         ;;F02D|F02C+F02C/F02C\F02C;
                       PLB                                       ;;F030|F02F+F02F/F02F\F02F;
-                      RTL                                       ;;F031|F030+F030/F030\F030; Return 
+                      RTL                                       ;;F031|F030+F030/F030\F030;
                                                                 ;;                        ;
                                                                 ;;                        ;
 WigglerSpeed:         db $08,$F8,$10,$F0                        ;;F032|F031+F031/F031\F031;
@@ -13723,10 +13723,10 @@ CODE_02F061:          JSR UpdateXPosNoGrvty                     ;;F062|F061+F061
                       INC.B SpriteYSpeed,X                      ;;F096|F095+F095/F095\F095;
                       JSL CODE_019138                           ;;F098|F097+F097/F097\F097;
                       LDA.W SpriteBlockedDirs,X                 ;;F09C|F09B+F09B/F09B\F09B; \ Branch if touching object 
-                      AND.B #$03                                ;;F09F|F09E+F09E/F09E\F09E;  | 
+                      AND.B #$03                                ;;F09F|F09E+F09E/F09E\F09E; | 
                       BNE CODE_02F0AE                           ;;F0A1|F0A0+F0A0/F0A0\F0A0; / 
                       LDA.W SpriteBlockedDirs,X                 ;;F0A3|F0A2+F0A2/F0A2\F0A2; \ Branch if not on ground 
-                      AND.B #$04                                ;;F0A6|F0A5+F0A5/F0A5\F0A5;  | 
+                      AND.B #$04                                ;;F0A6|F0A5+F0A5/F0A5\F0A5; | 
                       BEQ CODE_02F0AE                           ;;F0A8|F0A7+F0A7/F0A7\F0A7; / 
                       JSR CODE_02FFD1                           ;;F0AA|F0A9+F0A9/F0A9\F0A9;
                       BRA +                                     ;;F0AD|F0AC+F0AC/F0AC\F0AC;
@@ -13752,7 +13752,7 @@ CODE_02F0D8:          JMP CODE_02F110                           ;;F0D9|F0D8+F0D8
                                                                 ;;                        ;
 CODE_02F0DB:          PHX                                       ;;F0DC|F0DB+F0DB/F0DB\F0DB;
                       PHB                                       ;;F0DD|F0DC+F0DC/F0DC\F0DC;
-                      REP #$30                                  ;;F0DE|F0DD+F0DD/F0DD\F0DD; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;F0DE|F0DD+F0DD/F0DD\F0DD; AXY->16
                       LDA.B WigglerSegmentPtr                   ;;F0E0|F0DF+F0DF/F0DF\F0DF;
                       CLC                                       ;;F0E2|F0E1+F0E1/F0E1\F0E1;
                       ADC.W #$007D                              ;;F0E3|F0E2+F0E2/F0E2\F0E2;
@@ -13763,7 +13763,7 @@ CODE_02F0DB:          PHX                                       ;;F0DC|F0DB+F0DB
                       TAY                                       ;;F0ED|F0EC+F0EC/F0EC\F0EC;
                       LDA.W #$007D                              ;;F0EE|F0ED+F0ED/F0ED\F0ED;
                       MVP WigglerTable>>16,WigglerTable>>16     ;;F0F1|F0F0+F0F0/F0F0\F0F0;
-                      SEP #$30                                  ;;F0F4|F0F3+F0F3/F0F3\F0F3; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;F0F4|F0F3+F0F3/F0F3\F0F3; AXY->8
                       PLB                                       ;;F0F6|F0F5+F0F5/F0F5\F0F5;
                       PLX                                       ;;F0F7|F0F6+F0F6/F0F6\F0F6;
                       LDY.B #$00                                ;;F0F8|F0F7+F0F7/F0F7\F0F7;
@@ -13772,7 +13772,7 @@ CODE_02F0DB:          PHX                                       ;;F0DC|F0DB+F0DB
                       LDA.B SpriteYPosLow,X                     ;;F0FE|F0FD+F0FD/F0FD\F0FD;
                       INY                                       ;;F100|F0FF+F0FF/F0FF\F0FF;
                       STA.B [WigglerSegmentPtr],Y               ;;F101|F100+F100/F100\F100;
-                      RTS                                       ;;F103|F102+F102/F102\F102; Return 
+                      RTS                                       ;;F103|F102+F102/F102\F102;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02F103:          db $00,$1E,$3E,$5E,$7E                    ;;F104|F103+F103/F103\F103;
@@ -13915,14 +13915,14 @@ CODE_02F1C7:          PHX                                       ;;F1CA|F1C7+F1C7
                       STA.B _0                                  ;;F207|F204+F204/F204\F204;
                       LDA.W SpriteYPosHigh,X                    ;;F209|F206+F206/F206\F206;
                       STA.B _1                                  ;;F20C|F209+F209/F209\F209;
-                      REP #$20                                  ;;F20E|F20B+F20B/F20B\F20B; Accum (16 bit) 
+                      REP #$20                                  ;;F20E|F20B+F20B/F20B\F20B; A->16
                       LDA.B _0                                  ;;F210|F20D+F20D/F20D\F20D;
                       SEC                                       ;;F212|F20F+F20F/F20F\F20F;
                       SBC.B PlayerXPosNext                      ;;F213|F210+F210/F210\F210;
                       CLC                                       ;;F215|F212+F212/F212\F212;
                       ADC.W #$0050                              ;;F216|F213+F213/F213\F213;
                       CMP.W #$00A0                              ;;F219|F216+F216/F216\F216;
-                      SEP #$20                                  ;;F21C|F219+F219/F219\F219; Accum (8 bit) 
+                      SEP #$20                                  ;;F21C|F219+F219/F219\F219; A->8
                       BCS Return02F295                          ;;F21E|F21B+F21B/F21B\F21B;
                       LDA.W SpriteStatus,X                      ;;F220|F21D+F21D/F21D\F21D;
                       CMP.B #$08                                ;;F223|F220+F220/F220\F220;
@@ -13975,10 +13975,10 @@ CODE_02F26B:          LDA.B #!SFX_KICK                          ;;F26E|F26B+F26B
                       STA.W SpriteMisc1540,X                    ;;F28F|F28C+F28C/F28C\F28C;
                       INC.W SpriteMisc151C,X                    ;;F292|F28F+F28F/F28F\F28F;
                       JSR CODE_02F2D7                           ;;F295|F292+F292/F292\F292;
-Return02F295:         RTS                                       ;;F298|F295+F295/F295\F295; Return 
+Return02F295:         RTS                                       ;;F298|F295+F295/F295\F295;
                                                                 ;;                        ;
 CODE_02F296:          JSL HurtMario                             ;;F299|F296+F296/F296\F296;
-                      RTS                                       ;;F29D|F29A+F29A/F29A\F29A; Return 
+                      RTS                                       ;;F29D|F29A+F29A/F29A\F29A;
                                                                 ;;                        ;
 CODE_02F29B:          BRA CODE_02F2C7                           ;;F29E|F29B+F29B/F29B\F29B;
                                                                 ;;                        ;
@@ -13998,7 +13998,7 @@ ADDR_02F29D:          LDA.B #$02                                ;;F2A0|F29D+F29D
                       BCS +                                     ;;F2C1|F2BE+F2BE/F2BE\F2BE;
                       LDA.W StompSFX2-1,Y                       ;;F2C3|F2C0+F2C0/F2C0\F2C0; \ Play sound effect 
                       STA.W SPCIO0                              ;;F2C6|F2C3+F2C3/F2C3\F2C3; / 
-                    + RTS                                       ;;F2C9|F2C6+F2C6/F2C6\F2C6; Return 
+                    + RTS                                       ;;F2C9|F2C6+F2C6/F2C6\F2C6;
                                                                 ;;                        ;
 CODE_02F2C7:          INY                                       ;;F2CA|F2C7+F2C7/F2C7\F2C7;
                       INY                                       ;;F2CB|F2C8+F2C8/F2C8\F2C8;
@@ -14008,7 +14008,7 @@ CODE_02F2C7:          INY                                       ;;F2CA|F2C7+F2C7
                       BMI +                                     ;;F2D0|F2CD+F2CD/F2CD\F2CD;
                       JMP CODE_02F22B                           ;;F2D2|F2CF+F2CF/F2CF\F2CF;
                                                                 ;;                        ;
-                    + RTS                                       ;;F2D5|F2D2+F2D2/F2D2\F2D2; Return 
+                    + RTS                                       ;;F2D5|F2D2+F2D2/F2D2\F2D2;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02F2D3:          db $00,$08                                ;;F2D6|F2D3+F2D3/F2D3\F2D3;
@@ -14016,10 +14016,10 @@ DATA_02F2D3:          db $00,$08                                ;;F2D6|F2D3+F2D3
 WigglerEyesX:         db $04,$04                                ;;F2D8|F2D5+F2D5/F2D5\F2D5;
                                                                 ;;                        ;
 CODE_02F2D7:          LDY.B #$07                                ;;F2DA|F2D7+F2D7/F2D7\F2D7; \ Find a free extended sprite slot 
-CODE_02F2D9:          LDA.W ExtSpriteNumber,Y                   ;;F2DC|F2D9+F2D9/F2D9\F2D9;  | 
-                      BEQ CODE_02F2E2                           ;;F2DF|F2DC+F2DC/F2DC\F2DC;  | 
-                      DEY                                       ;;F2E1|F2DE+F2DE/F2DE\F2DE;  | 
-                      BPL CODE_02F2D9                           ;;F2E2|F2DF+F2DF/F2DF\F2DF;  | 
+CODE_02F2D9:          LDA.W ExtSpriteNumber,Y                   ;;F2DC|F2D9+F2D9/F2D9\F2D9; | 
+                      BEQ CODE_02F2E2                           ;;F2DF|F2DC+F2DC/F2DC\F2DC; | 
+                      DEY                                       ;;F2E1|F2DE+F2DE/F2DE\F2DE; | 
+                      BPL CODE_02F2D9                           ;;F2E2|F2DF+F2DF/F2DF\F2DF; | 
                       RTS                                       ;;F2E4|F2E1+F2E1/F2E1\F2E1; / Return if no free slots 
                                                                 ;;                        ;
 CODE_02F2E2:          LDA.B #$0E                                ;;F2E5|F2E2+F2E2/F2E2\F2E2; \ Extended sprite = Wiggler flower 
@@ -14040,14 +14040,14 @@ CODE_02F2E2:          LDA.B #$0E                                ;;F2E5|F2E2+F2E2
                       EOR.B #$FF                                ;;F30B|F308+F308/F308\F308;
                       INC A                                     ;;F30D|F30A+F30A/F30A\F30A;
                       STA.W ExtSpriteXSpeed,Y                   ;;F30E|F30B+F30B/F30B\F30B;
-                      RTS                                       ;;F311|F30E+F30E/F30E\F30E; Return 
+                      RTS                                       ;;F311|F30E+F30E/F30E\F30E;
                                                                 ;;                        ;
 BirdsMain:            PHB                                       ;;F312|F30F+F30F/F30F\F30F;
                       PHK                                       ;;F313|F310+F310/F310\F310;
                       PLB                                       ;;F314|F311+F311/F311\F311;
                       JSR CODE_02F317                           ;;F315|F312+F312/F312\F312;
                       PLB                                       ;;F318|F315+F315/F315\F315;
-                      RTL                                       ;;F319|F316+F316/F316\F316; Return 
+                      RTL                                       ;;F319|F316+F316/F316\F316;
                                                                 ;;                        ;
 CODE_02F317:          LDA.W SpriteMisc15AC,X                    ;;F31A|F317+F317/F317\F317;
                       BEQ +                                     ;;F31D|F31A+F31A/F31A\F31A;
@@ -14094,7 +14094,7 @@ CODE_02F342:          LDY.W SpriteMisc157C,X                    ;;F345|F342+F342
                       LDA.W SpriteMisc1570,X                    ;;F36B|F368+F368/F368\F368;
                       BEQ +                                     ;;F36E|F36B+F36B/F36B\F36B;
                       DEC.W SpriteMisc1570,X                    ;;F370|F36D+F36D/F36D\F36D;
-Return02F370:         RTS                                       ;;F373|F370+F370/F370\F370; Return 
+Return02F370:         RTS                                       ;;F373|F370+F370/F370\F370;
                                                                 ;;                        ;
                     + INC.B SpriteTableC2,X                     ;;F374|F371+F371/F371\F371;
                       JSL GetRand                               ;;F376|F373+F373/F373\F373;
@@ -14102,14 +14102,14 @@ Return02F370:         RTS                                       ;;F373|F370+F370
                       TAY                                       ;;F37C|F379+F379/F379\F379;
                       LDA.W DATA_02F33C,Y                       ;;F37D|F37A+F37A/F37A\F37A;
                       STA.W SpriteMisc1570,X                    ;;F380|F37D+F37D/F37D\F37D;
-                      RTS                                       ;;F383|F380+F380/F380\F380; Return 
+                      RTS                                       ;;F383|F380+F380/F380\F380;
                                                                 ;;                        ;
 CODE_02F381:          LDA.W SpriteMisc154C,X                    ;;F384|F381+F381/F381\F381;
                       BNE +                                     ;;F387|F384+F384/F384\F384;
                       JSR CODE_02F3C1                           ;;F389|F386+F386/F386\F386;
                       LDA.B #$10                                ;;F38C|F389+F389/F389\F389;
                       STA.W SpriteMisc154C,X                    ;;F38E|F38B+F38B/F38B\F38B;
-                    + RTS                                       ;;F391|F38E+F38E/F38E\F38E; Return 
+                    + RTS                                       ;;F391|F38E+F38E/F38E\F38E;
                                                                 ;;                        ;
 CODE_02F38F:          STZ.B SpriteYSpeed,X                      ;;F392|F38F+F38F/F38F\F38F; Sprite Y Speed = 0 
                       STZ.B SpriteXSpeed,X                      ;;F394|F391+F391/F391\F391; Sprite X Speed = 0 
@@ -14119,7 +14119,7 @@ CODE_02F38F:          STZ.B SpriteYSpeed,X                      ;;F392|F38F+F38F
                       CMP.B #$08                                ;;F39E|F39B+F39B/F39B\F39B;
                       BCS +                                     ;;F3A0|F39D+F39D/F39D\F39D;
                       INC.W SpriteMisc1602,X                    ;;F3A2|F39F+F39F/F39F\F39F;
-                    + RTS                                       ;;F3A5|F3A2+F3A2/F3A2\F3A2; Return 
+                    + RTS                                       ;;F3A5|F3A2+F3A2/F3A2\F3A2;
                                                                 ;;                        ;
 CODE_02F3A3:          LDA.W SpriteMisc1570,X                    ;;F3A6|F3A3+F3A3/F3A3\F3A3;
                       BEQ +                                     ;;F3A9|F3A6+F3A6/F3A6\F3A6;
@@ -14128,7 +14128,7 @@ CODE_02F3A3:          LDA.W SpriteMisc1570,X                    ;;F3A6|F3A3+F3A3
                       AND.B #$1F                                ;;F3B2|F3AF+F3AF/F3AF\F3AF;
                       ORA.B #$0A                                ;;F3B4|F3B1+F3B1/F3B1\F3B1;
                       STA.W SpriteMisc1540,X                    ;;F3B6|F3B3+F3B3/F3B3\F3B3;
-                      RTS                                       ;;F3B9|F3B6+F3B6/F3B6\F3B6; Return 
+                      RTS                                       ;;F3B9|F3B6+F3B6/F3B6\F3B6;
                                                                 ;;                        ;
                     + STZ.B SpriteTableC2,X                     ;;F3BA|F3B7+F3B7/F3B7\F3B7;
                       JSL GetRand                               ;;F3BC|F3B9+F3B9/F3B9\F3B9;
@@ -14144,7 +14144,7 @@ CODE_02F3C1:          LDA.W SpriteMisc157C,X                    ;;F3C4|F3C1+F3C1
                       CLC                                       ;;F3D7|F3D4+F3D4/F3D4\F3D4;
                       ADC.B #$02                                ;;F3D8|F3D5+F3D5/F3D5\F3D5;
                       STA.W SpriteMisc1570,X                    ;;F3DA|F3D7+F3D7/F3D7\F3D7;
-                      RTS                                       ;;F3DD|F3DA+F3DA/F3DA\F3DA; Return 
+                      RTS                                       ;;F3DD|F3DA+F3DA/F3DA\F3DA;
                                                                 ;;                        ;
                                                                 ;;                        ;
 BirdsTilemap:         db $D2,$D3,$D0,$D1,$9B                    ;;F3DE|F3DB+F3DB/F3DB\F3DB;
@@ -14189,14 +14189,14 @@ CODE_02F3EA:          TXA                                       ;;F3ED|F3EA+F3EA
                       TAY                                       ;;F429|F425+F425/F425\F425;
                       LDA.B #$00                                ;;F42A|F426+F426/F426\F426;
                       STA.W OAMTileSize,Y                       ;;F42C|F428+F428/F428\F428;
-                      RTS                                       ;;F42F|F42B+F42B/F42B\F42B; Return 
+                      RTS                                       ;;F42F|F42B+F42B/F42B\F42B;
                                                                 ;;                        ;
 SmokeMain:            PHB                                       ;;F430|F42C+F42C/F42C\F42C;
                       PHK                                       ;;F431|F42D+F42D/F42D\F42D;
                       PLB                                       ;;F432|F42E+F42E/F42E\F42E;
                       JSR CODE_02F434                           ;;F433|F42F+F42F/F42F\F42F;
                       PLB                                       ;;F436|F432+F432/F432\F432;
-                      RTL                                       ;;F437|F433+F433/F433\F433; Return 
+                      RTL                                       ;;F437|F433+F433/F433\F433;
                                                                 ;;                        ;
 CODE_02F434:          INC.W SpriteMisc1570,X                    ;;F438|F434+F434/F434\F434;
                       LDY.B #$04                                ;;F43B|F437+F437/F437\F437;
@@ -14218,7 +14218,7 @@ CODE_02F434:          INC.W SpriteMisc1570,X                    ;;F438|F434+F434
                       CMP.B #$F0                                ;;F45F|F45B+F45B/F45B\F45B;
                       BNE +                                     ;;F461|F45D+F45D/F45D\F45D;
                       STZ.W SpriteStatus,X                      ;;F463|F45F+F45F/F45F\F45F;
-                    + RTS                                       ;;F466|F462+F462/F462\F462; Return 
+                    + RTS                                       ;;F466|F462+F462/F462\F462;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02F463:          db $03,$04,$05,$04,$05,$06,$05,$06        ;;F467|F463+F463/F463\F463;
@@ -14264,14 +14264,14 @@ CODE_02F47C:          LDA.B EffFrame                            ;;F480|F47C+F47C
                       LDA.B #$02                                ;;F4C8|F4C4+F4C4/F4C4\F4C4;
                       STA.W OAMTileSize+$40,Y                   ;;F4CA|F4C6+F4C6/F4C6\F4C6;
                       STA.W OAMTileSize+$41,Y                   ;;F4CD|F4C9+F4C9/F4C9\F4C9;
-                      RTS                                       ;;F4D0|F4CC+F4CC/F4CC\F4CC; Return 
+                      RTS                                       ;;F4D0|F4CC+F4CC/F4CC\F4CC;
                                                                 ;;                        ;
 SideExitMain:         PHB                                       ;;F4D1|F4CD+F4CD/F4CD\F4CD;
                       PHK                                       ;;F4D2|F4CE+F4CE/F4CE\F4CE;
                       PLB                                       ;;F4D3|F4CF+F4CF/F4CF\F4CF;
                       JSR CODE_02F4D5                           ;;F4D4|F4D0+F4D0/F4D0\F4D0;
                       PLB                                       ;;F4D7|F4D3+F4D3/F4D3\F4D3;
-                      RTL                                       ;;F4D8|F4D4+F4D4/F4D4\F4D4; Return 
+                      RTL                                       ;;F4D8|F4D4+F4D4/F4D4\F4D4;
                                                                 ;;                        ;
 CODE_02F4D5:          LDA.B #$01                                ;;F4D9|F4D5+F4D5/F4D5\F4D5;
                       STA.W SideExitEnabled                     ;;F4DB|F4D7+F4D7/F4D7\F4D7;
@@ -14280,7 +14280,7 @@ CODE_02F4D5:          LDA.B #$01                                ;;F4D9|F4D5+F4D5
                       BNE +                                     ;;F4E2|F4DE+F4DE/F4DE\F4DE;
                       JSR CODE_02F4EB                           ;;F4E4|F4E0+F4E0/F4E0\F4E0;
                       JSR CODE_02F53E                           ;;F4E7|F4E3+F4E3/F4E3\F4E3;
-                    + RTS                                       ;;F4EA|F4E6+F4E6/F4E6\F4E6; Return 
+                    + RTS                                       ;;F4EA|F4E6+F4E6/F4E6\F4E6;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02F4E7:          db $D4,$AB                                ;;F4EB|F4E7+F4E7/F4E7\F4E7;
@@ -14331,20 +14331,20 @@ CODE_02F4EB:          LDA.W SpriteOAMIndex,X                    ;;F4EF|F4EB+F4EB
                       STA.W OAMTileSize+$40,Y                   ;;F53C|F536+F536/F536\F52A;
                       STA.W OAMTileSize+$41,Y                   ;;F53F|F539+F539/F539\F52D;
                       PLX                                       ;;F542|F53C+F53C/F53C\F530;
-                      RTS                                       ;;F543|F53D+F53D/F53D\F531; Return 
+                      RTS                                       ;;F543|F53D+F53D/F53D\F531;
                                                                 ;;                        ;
 CODE_02F53E:          LDA.B EffFrame                            ;;F544|F53E+F53E/F53E\F532;
                       AND.B #$3F                                ;;F546|F540+F540/F540\F534;
                       BNE +                                     ;;F548|F542+F542/F542\F536;
                       JSR CODE_02F548                           ;;F54A|F544+F544/F544\F538;
-                    + RTS                                       ;;F54D|F547+F547/F547\F53B; Return 
+                    + RTS                                       ;;F54D|F547+F547/F547\F53B;
                                                                 ;;                        ;
 CODE_02F548:          LDY.B #$09                                ;;F54E|F548+F548/F548\F53C;
 CODE_02F54A:          LDA.W SpriteStatus,Y                      ;;F550|F54A+F54A/F54A\F53E;
                       BEQ CODE_02F553                           ;;F553|F54D+F54D/F54D\F541;
                       DEY                                       ;;F555|F54F+F54F/F54F\F543;
                       BPL CODE_02F54A                           ;;F556|F550+F550/F550\F544;
-                      RTS                                       ;;F558|F552+F552/F552\F546; Return 
+                      RTS                                       ;;F558|F552+F552/F552\F546;
                                                                 ;;                        ;
 CODE_02F553:          LDA.B #$8B                                ;;F559|F553+F553/F553\F547;
                       STA.W SpriteNumber,Y                      ;;F55B|F555+F555/F555\F549;
@@ -14364,28 +14364,28 @@ CODE_02F553:          LDA.B #$8B                                ;;F559|F553+F553
                       LDA.B #$20                                ;;F57B|F575+F575/F575\F569;
                       STA.W SpriteMisc1540,X                    ;;F57D|F577+F577/F577\F56B;
                       PLX                                       ;;F580|F57A+F57A/F57A\F56E;
-                      RTS                                       ;;F581|F57B+F57B/F57B\F56F; Return 
+                      RTS                                       ;;F581|F57B+F57B/F57B\F56F;
                                                                 ;;                        ;
 CODE_02F57C:          PHB                                       ;;F582|F57C+F57C/F57C\F570; Wrapper 
                       PHK                                       ;;F583|F57D+F57D/F57D\F571;
                       PLB                                       ;;F584|F57E+F57E/F57E\F572;
                       JSR CODE_02F759                           ;;F585|F57F+F57F/F57F\F573;
                       PLB                                       ;;F588|F582+F582/F582\F576;
-                      RTL                                       ;;F589|F583+F583/F583\F577; Return 
+                      RTL                                       ;;F589|F583+F583/F583\F577;
                                                                 ;;                        ;
 CODE_02F584:          PHB                                       ;;F58A|F584+F584/F584\F578; Wrapper 
                       PHK                                       ;;F58B|F585+F585/F585\F579;
                       PLB                                       ;;F58C|F586+F586/F586\F57A;
                       JSR CODE_02F66E                           ;;F58D|F587+F587/F587\F57B;
                       PLB                                       ;;F590|F58A+F58A/F58A\F57E;
-                      RTL                                       ;;F591|F58B+F58B/F58B\F57F; Return 
+                      RTL                                       ;;F591|F58B+F58B/F58B\F57F;
                                                                 ;;                        ;
 ADDR_02F58C:          PHB                                       ;;F592|F58C+F58C/F58C\F580; Wrapper 
                       PHK                                       ;;F593|F58D+F58D/F58D\F581;
                       PLB                                       ;;F594|F58E+F58E/F58E\F582;
                       JSR ADDR_02F639                           ;;F595|F58F+F58F/F58F\F583;
                       PLB                                       ;;F598|F592+F592/F592\F586;
-                      RTL                                       ;;F599|F593+F593/F593\F587; Return 
+                      RTL                                       ;;F599|F593+F593/F593\F587;
                                                                 ;;                        ;
 GhostExitMain:        PHB                                       ;;F59A|F594+F594/F594\F588;
                       PHK                                       ;;F59B|F595+F595/F595\F589;
@@ -14394,7 +14394,7 @@ GhostExitMain:        PHB                                       ;;F59A|F594+F594
                       JSR CODE_02F5D0                           ;;F59E|F598+F598/F598\F58C;
                       PLX                                       ;;F5A1|F59B+F59B/F59B\F58F;
                       PLB                                       ;;F5A2|F59C+F59C/F59C\F590;
-                      RTL                                       ;;F5A3|F59D+F59D/F59D\F591; Return 
+                      RTL                                       ;;F5A3|F59D+F59D/F59D\F591;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02F59E:          db $08,$18,$F8,$F8,$F8,$F8,$28,$28        ;;F5A4|F59E+F59E/F59E\F592;
@@ -14449,7 +14449,7 @@ CODE_02F5DA:          STZ.B _2                                  ;;F5E0|F5DA+F5DA
                       INY                                       ;;F61A|F614+F614/F614\F608;
                       DEX                                       ;;F61B|F615+F615/F615\F609;
                       BPL CODE_02F5DA                           ;;F61C|F616+F616/F616\F60A;
-Return02F618:         RTS                                       ;;F61E|F618+F618/F618\F60C; Return 
+Return02F618:         RTS                                       ;;F61E|F618+F618/F618\F60C;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02F619:          db $F8,$08,$F8,$08,$00,$00,$00,$00        ;;F61F|F619+F619/F619\F60D;
@@ -14485,7 +14485,7 @@ ADDR_02F639:          LDX.B #$07                                ;;F63F|F639+F639
                       INY                                       ;;F673|F669+F669/F669\F65D;
                       DEX                                       ;;F674|F66A+F66A/F66A\F65E;
                       BPL -                                     ;;F675|F66B+F66B/F66B\F65F;
-                      RTS                                       ;;F677|F66D+F66D/F66D\F661; Return 
+                      RTS                                       ;;F677|F66D+F66D/F66D\F661;
                                                                 ;;                        ;
 CODE_02F66E:          LDA.W NoYoshiIntroTimer                   ;;F678|F66E+F66E/F66E\F662;
                       BEQ +                                     ;;F67B|F671+F671/F671\F665;
@@ -14511,7 +14511,7 @@ CODE_02F66E:          LDA.W NoYoshiIntroTimer                   ;;F678|F66E+F66E
 CODE_02F698:          LDA.B #$30                                ;;F6A2|F698+F698/F698\F68C;
 CODE_02F69A:          STA.B _0                                  ;;F6A4|F69A+F69A/F69A\F68E;
                       JSR CODE_02F6B8                           ;;F6A6|F69C+F69C/F69C\F690;
-                      RTS                                       ;;F6A9|F69F+F69F/F69F\F693; Return 
+                      RTS                                       ;;F6A9|F69F+F69F/F69F\F693;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02F6A0:          db $00,$10,$20,$00,$10,$20,$00,$10        ;;F6AA|F6A0+F6A0/F6A0\F694;
@@ -14552,7 +14552,7 @@ CODE_02F6B8:          LDX.B #$0B                                ;;F6C2|F6B8+F6B8
                       INY                                       ;;F6F8|F6EC+F6EC/F6EC\F6E0;
                       DEX                                       ;;F6F9|F6ED+F6ED/F6ED\F6E1;
                       BPL -                                     ;;F6FA|F6EE+F6EE/F6EE\F6E2;
-                      RTS                                       ;;F6FC|F6F0+F6F0/F6F0\F6E4; Return 
+                      RTS                                       ;;F6FC|F6F0+F6F0/F6F0\F6E4;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02F6F1:          db $00,$00,$00,$00,$10,$10,$10,$10        ;;F6FD|F6F1+F6F1/F6F1\F6E5;
@@ -14658,14 +14658,14 @@ CODE_02F801:          DEX                                       ;;F815|F801+F801
                       BMI +                                     ;;F816|F802+F802/F802\F7F6;
                       JMP CODE_02F78C                           ;;F818|F804+F804/F804\F7F8;
                                                                 ;;                        ;
-                    + RTS                                       ;;F81B|F807+F807/F807\F7FB; Return 
+                    + RTS                                       ;;F81B|F807+F807/F807\F7FB;
                                                                 ;;                        ;
 CODE_02F808:          PHB                                       ;;F81C|F808+F808/F808\F7FC; Wrapper 
                       PHK                                       ;;F81D|F809+F809/F809\F7FD;
                       PLB                                       ;;F81E|F80A+F80A/F80A\F7FE;
                       JSR CODE_02F810                           ;;F81F|F80B+F80B/F80B\F7FF;
                       PLB                                       ;;F822|F80E+F80E/F80E\F802;
-                      RTL                                       ;;F823|F80F+F80F/F80F\F803; Return 
+                      RTL                                       ;;F823|F80F+F80F/F80F\F803;
                                                                 ;;                        ;
 CODE_02F810:          LDX.B #$13                                ;;F824|F810+F810/F810\F804;
 CODE_02F812:          STX.W CurSpriteProcess                    ;;F826|F812+F812/F812\F806;
@@ -14674,7 +14674,7 @@ CODE_02F812:          STX.W CurSpriteProcess                    ;;F826|F812+F812
                       JSR CODE_02F821                           ;;F82E|F81A+F81A/F81A\F80E;
                     + DEX                                       ;;F831|F81D+F81D/F81D\F811;
                       BPL CODE_02F812                           ;;F832|F81E+F81E/F81E\F812;
-Return02F820:         RTS                                       ;;F834|F820+F820/F820\F814; Return 
+Return02F820:         RTS                                       ;;F834|F820+F820/F820\F814;
                                                                 ;;                        ;
 CODE_02F821:          JSL ExecutePtr                            ;;F835|F821+F821/F821\F815;
                                                                 ;;                        ;
@@ -14708,7 +14708,7 @@ CODE_02F83D:          LDA.W BooCloudTimer                       ;;F851|F83D+F83D
                       BEQ +                                     ;;F870|F85C+F85C/F85C\F850;
                       STZ.W ClusterSpriteNumber,X               ;;F872|F85E+F85E/F85E\F852;
                       STZ.W BooRingIndex                        ;;F875|F861+F861/F861\F855;
-                      RTS                                       ;;F878|F864+F864/F864\F858; Return 
+                      RTS                                       ;;F878|F864+F864/F864\F858;
                                                                 ;;                        ;
                     + LDA.W ClusterSpriteMisc1E66,X             ;;F879|F865+F865/F865\F859;
                       STA.B _0                                  ;;F87C|F868+F868/F868\F85C;
@@ -14785,7 +14785,7 @@ CODE_02F8E6:          JSR CODE_02FBB0                           ;;F8FA|F8E6+F8E6
                       JSL CODE_038239                           ;;F906|F8F2+F8F2/F8F2\F8E6;
                     + LDA.B #$0F                                ;;F90A|F8F6+F8F6/F8F6\F8EA;
                       JSR CODE_02FD48                           ;;F90C|F8F8+F8F8/F8F8\F8EC;
-Return02F8FB:         RTS                                       ;;F90F|F8FB+F8FB/F8FB\F8EF; Return 
+Return02F8FB:         RTS                                       ;;F90F|F8FB+F8FB/F8FB\F8EF;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02F8FC:          db $00,$10,$00,$10,$08,$10,$FF,$10        ;;F910|F8FC+F8FC/F8FC\F8F0;
@@ -14809,10 +14809,10 @@ CODE_02F91C:          LDA.W ClusterSpriteMisc0F4A,X             ;;F930|F91C+F91C
                       PHX                                       ;;F94A|F936+F936/F936\F92A;
                       JSR CODE_02F940                           ;;F94B|F937+F937/F937\F92B;
                       PLX                                       ;;F94E|F93A+F93A/F93A\F92E;
-                      RTS                                       ;;F94F|F93B+F93B/F93B\F92F; Return 
+                      RTS                                       ;;F94F|F93B+F93B/F93B\F92F;
                                                                 ;;                        ;
 CODE_02F93C:          STZ.W ClusterSpriteNumber,X               ;;F950|F93C+F93C/F93C\F930;
-                      RTS                                       ;;F953|F93F+F93F/F93F\F933; Return 
+                      RTS                                       ;;F953|F93F+F93F/F93F\F933;
                                                                 ;;                        ;
 CODE_02F940:          TXA                                       ;;F954|F940+F940/F940\F934;
                       ASL A                                     ;;F955|F941+F941/F941\F935;
@@ -14865,10 +14865,10 @@ CODE_02F967:          PHX                                       ;;F97B|F967+F967
                       LDY.B #$02                                ;;F9B1|F99D+F99D/F99D\F991;
                       LDA.B #$01                                ;;F9B3|F99F+F99F/F99F\F993;
                       JSL FinishOAMWrite                        ;;F9B5|F9A1+F9A1/F9A1\F995;
-                      RTS                                       ;;F9B9|F9A5+F9A5/F9A5\F999; Return 
+                      RTS                                       ;;F9B9|F9A5+F9A5/F9A5\F999;
                                                                 ;;                        ;
 ADDR_02F9A6:          STZ.W ClusterSpriteNumber,X               ;;F9BA|F9A6+F9A6/F9A6\F99A;
-                      RTS                                       ;;F9BD|F9A9+F9A9/F9A9\F99D; Return 
+                      RTS                                       ;;F9BD|F9A9+F9A9/F9A9\F99D;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02F9AA:          db $02,$0A,$12,$1A                        ;;F9BE|F9AA+F9AA/F9AA\F99E;
@@ -14907,7 +14907,7 @@ CODE_02F9AE:          TXA                                       ;;F9C2|F9AE+F9AE
 CODE_02F9F5:          LDA.W PlayerRidingYoshi                   ;;FA09|F9F5+F9F5/F9F5\F9E9;
                       BNE +                                     ;;FA0C|F9F8+F9F8/F9F8\F9EC;
                       JSL HurtMario                             ;;FA0E|F9FA+F9FA/F9FA\F9EE;
-Return02F9FE:         RTS                                       ;;FA12|F9FE+F9FE/F9FE\F9F2; Return 
+Return02F9FE:         RTS                                       ;;FA12|F9FE+F9FE/F9FE\F9F2;
                                                                 ;;                        ;
                     + JMP CODE_02A473                           ;;FA13|F9FF+F9FF/F9FF\F9F3;
                                                                 ;;                        ;
@@ -14967,7 +14967,7 @@ CODE_02FA16:          LDA.B SpriteLock                          ;;FA2A|FA16+FA16
                       STA.W OAMTileAttr+$1EC                    ;;FA91|FA7B+FA7B/FA7B\FA6F;
                       LDA.B #$03                                ;;FA94|FA7E+FA7E/FA7E\FA72;
                       STA.W OAMTileSize+$7B                     ;;FA96|FA80+FA80/FA80\FA74;
-                    + RTS                                       ;;FA99|FA83+FA83/FA83\FA77; Return 
+                    + RTS                                       ;;FA99|FA83+FA83/FA83\FA77;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02FA84:          db $00                                    ;;FA9A|FA84+FA84/FA84\FA78;
@@ -14980,7 +14980,7 @@ CODE_02FA98:          LDY.W ClusterSpriteMisc0F86,X             ;;FAAE|FA98+FA98
                       LDA.W BooRingOffscreen,Y                  ;;FAB1|FA9B+FA9B/FA9B\FA8F;
                       BEQ +                                     ;;FAB4|FA9E+FA9E/FA9E\FA92;
                       STZ.W ClusterSpriteNumber,X               ;;FAB6|FAA0+FAA0/FAA0\FA94;
-                      RTS                                       ;;FAB9|FAA3+FAA3/FAA3\FA97; Return 
+                      RTS                                       ;;FAB9|FAA3+FAA3/FAA3\FA97;
                                                                 ;;                        ;
                     + LDA.B SpriteLock                          ;;FABA|FAA4+FAA4/FAA4\FA98;
                       BNE CODE_02FAF0                           ;;FABC|FAA6+FAA6/FAA6\FA9A;
@@ -15000,14 +15000,14 @@ CODE_02FA98:          LDY.W ClusterSpriteMisc0F86,X             ;;FAAE|FA98+FA98
                       STA.B _0                                  ;;FADD|FAC7+FAC7/FAC7\FABB;
                       LDA.W BooRingXPosHigh,Y                   ;;FADF|FAC9+FAC9/FAC9\FABD;
                       STA.B _1                                  ;;FAE2|FACC+FACC/FACC\FAC0;
-                      REP #$20                                  ;;FAE4|FACE+FACE/FACE\FAC2; Accum (16 bit) 
+                      REP #$20                                  ;;FAE4|FACE+FACE/FACE\FAC2; A->16
                       LDA.B _0                                  ;;FAE6|FAD0+FAD0/FAD0\FAC4;
                       SEC                                       ;;FAE8|FAD2+FAD2/FAD2\FAC6;
                       SBC.B Layer1XPos                          ;;FAE9|FAD3+FAD3/FAD3\FAC7;
                       CLC                                       ;;FAEB|FAD5+FAD5/FAD5\FAC9;
                       ADC.W #$0080                              ;;FAEC|FAD6+FAD6/FAD6\FACA;
                       CMP.W #$0200                              ;;FAEF|FAD9+FAD9/FAD9\FACD;
-                      SEP #$20                                  ;;FAF2|FADC+FADC/FADC\FAD0; Accum (8 bit) 
+                      SEP #$20                                  ;;FAF2|FADC+FADC/FADC\FAD0; A->8
                       BCC CODE_02FAF0                           ;;FAF4|FADE+FADE/FADE\FAD2;
                       LDA.B #$01                                ;;FAF6|FAE0+FAE0/FAE0\FAD4;
                       STA.W BooRingOffscreen,Y                  ;;FAF8|FAE2+FAE2/FAE2\FAD6;
@@ -15029,7 +15029,7 @@ CODE_02FAF0:          PHX                                       ;;FB06|FAF0+FAF0
                       AND.B #$01                                ;;FB1D|FB05+FB05/FB05\FAF9;
                       STA.B _1                                  ;;FB1F|FB07+FB07/FB07\FAFB;
                       PLX                                       ;;FB21|FB09+FB09/FB09\FAFD;
-                      REP #$30                                  ;;FB22|FB0A+FB0A/FB0A\FAFE; Index (16 bit) Accum (16 bit) 
+                      REP #$30                                  ;;FB22|FB0A+FB0A/FB0A\FAFE; AXY->16
                       LDA.B _0                                  ;;FB24|FB0C+FB0C/FB0C\FB00;
                       CLC                                       ;;FB26|FB0E+FB0E/FB0E\FB02;
                       ADC.W #$0080                              ;;FB27|FB0F+FB0F/FB0F\FB03;
@@ -15047,19 +15047,19 @@ CODE_02FAF0:          PHX                                       ;;FB06|FAF0+FAF0
                       TAX                                       ;;FB42|FB2A+FB2A/FB2A\FB1E;
                       LDA.L CircleCoords,X                      ;;FB43|FB2B+FB2B/FB2B\FB1F;
                       STA.B _6                                  ;;FB47|FB2F+FB2F/FB2F\FB23;
-                      SEP #$30                                  ;;FB49|FB31+FB31/FB31\FB25; Index (8 bit) Accum (8 bit) 
+                      SEP #$30                                  ;;FB49|FB31+FB31/FB31\FB25; AXY->8
                       LDA.B _4                                  ;;FB4B|FB33+FB33/FB33\FB27;
-                      STA.W HW_WRMPYA                           ;;FB4D|FB35+FB35/FB35\FB29; Multiplicand A
+                      STA.W HW_WRMPYA                           ;;FB4D|FB35+FB35/FB35\FB29;
                       LDA.B #$50                                ;;FB50|FB38+FB38/FB38\FB2C;
                       LDY.B _5                                  ;;FB52|FB3A+FB3A/FB3A\FB2E;
                       BNE +                                     ;;FB54|FB3C+FB3C/FB3C\FB30;
-                      STA.W HW_WRMPYB                           ;;FB56|FB3E+FB3E/FB3E\FB32; Multplier B
+                      STA.W HW_WRMPYB                           ;;FB56|FB3E+FB3E/FB3E\FB32;
                       NOP                                       ;;FB59|FB41+FB41/FB41\FB35;
                       NOP                                       ;;FB5A|FB42+FB42/FB42\FB36;
                       NOP                                       ;;FB5B|FB43+FB43/FB43\FB37;
                       NOP                                       ;;FB5C|FB44+FB44/FB44\FB38;
-                      ASL.W HW_RDMPY                            ;;FB5D|FB45+FB45/FB45\FB39; Product/Remainder Result (Low Byte)
-                      LDA.W HW_RDMPY+1                          ;;FB60|FB48+FB48/FB48\FB3C; Product/Remainder Result (High Byte)
+                      ASL.W HW_RDMPY                            ;;FB5D|FB45+FB45/FB45\FB39;
+                      LDA.W HW_RDMPY+1                          ;;FB60|FB48+FB48/FB48\FB3C;
                       ADC.B #$00                                ;;FB63|FB4B+FB4B/FB4B\FB3F;
                     + LSR.B _1                                  ;;FB65|FB4D+FB4D/FB4D\FB41;
                       BCC +                                     ;;FB67|FB4F+FB4F/FB4F\FB43;
@@ -15067,17 +15067,17 @@ CODE_02FAF0:          PHX                                       ;;FB06|FAF0+FAF0
                       INC A                                     ;;FB6B|FB53+FB53/FB53\FB47;
                     + STA.B _4                                  ;;FB6C|FB54+FB54/FB54\FB48;
                       LDA.B _6                                  ;;FB6E|FB56+FB56/FB56\FB4A;
-                      STA.W HW_WRMPYA                           ;;FB70|FB58+FB58/FB58\FB4C; Multiplicand A
+                      STA.W HW_WRMPYA                           ;;FB70|FB58+FB58/FB58\FB4C;
                       LDA.B #$50                                ;;FB73|FB5B+FB5B/FB5B\FB4F;
                       LDY.B _7                                  ;;FB75|FB5D+FB5D/FB5D\FB51;
                       BNE +                                     ;;FB77|FB5F+FB5F/FB5F\FB53;
-                      STA.W HW_WRMPYB                           ;;FB79|FB61+FB61/FB61\FB55; Multplier B
+                      STA.W HW_WRMPYB                           ;;FB79|FB61+FB61/FB61\FB55;
                       NOP                                       ;;FB7C|FB64+FB64/FB64\FB58;
                       NOP                                       ;;FB7D|FB65+FB65/FB65\FB59;
                       NOP                                       ;;FB7E|FB66+FB66/FB66\FB5A;
                       NOP                                       ;;FB7F|FB67+FB67/FB67\FB5B;
-                      ASL.W HW_RDMPY                            ;;FB80|FB68+FB68/FB68\FB5C; Product/Remainder Result (Low Byte)
-                      LDA.W HW_RDMPY+1                          ;;FB83|FB6B+FB6B/FB6B\FB5F; Product/Remainder Result (High Byte)
+                      ASL.W HW_RDMPY                            ;;FB80|FB68+FB68/FB68\FB5C;
+                      LDA.W HW_RDMPY+1                          ;;FB83|FB6B+FB6B/FB6B\FB5F;
                       ADC.B #$00                                ;;FB86|FB6E+FB6E/FB6E\FB62;
                     + LSR.B _3                                  ;;FB88|FB70+FB70/FB70\FB64;
                       BCC +                                     ;;FB8A|FB72+FB72/FB72\FB66;
@@ -15112,7 +15112,7 @@ CODE_02FBB0:          TXA                                       ;;FBC8|FBB0+FBB0
                       AND.B #$03                                ;;FBCB|FBB3+FBB3/FBB3\FBA7;
                       BNE +                                     ;;FBCD|FBB5+FBB5/FBB5\FBA9;
                       JSR CODE_02FE71                           ;;FBCF|FBB7+FBB7/FBB7\FBAB;
-                    + RTS                                       ;;FBD2|FBBA+FBBA/FBBA\FBAE; Return 
+                    + RTS                                       ;;FBD2|FBBA+FBBA/FBBA\FBAE;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02FBBB:          db $01,$FF                                ;;FBD3|FBBB+FBBB/FBBB\FBAF;
@@ -15212,14 +15212,14 @@ CODE_02FC8D:          LDA.W ClusterSpriteXPosLow,X              ;;FCA5|FC8D+FC8D
                       STA.B _0                                  ;;FCA8|FC90+FC90/FC90\FC84;
                       LDA.W ClusterSpriteXPosHigh,X             ;;FCAA|FC92+FC92/FC92\FC86;
                       STA.B _1                                  ;;FCAD|FC95+FC95/FC95\FC89;
-                      REP #$20                                  ;;FCAF|FC97+FC97/FC97\FC8B; Accum (16 bit) 
+                      REP #$20                                  ;;FCAF|FC97+FC97/FC97\FC8B; A->16
                       LDA.B _0                                  ;;FCB1|FC99+FC99/FC99\FC8D;
                       SEC                                       ;;FCB3|FC9B+FC9B/FC9B\FC8F;
                       SBC.B Layer1XPos                          ;;FCB4|FC9C+FC9C/FC9C\FC90;
                       CLC                                       ;;FCB6|FC9E+FC9E/FC9E\FC92;
                       ADC.W #$0040                              ;;FCB7|FC9F+FC9F/FC9F\FC93;
                       CMP.W #$0180                              ;;FCBA|FCA2+FCA2/FCA2\FC96;
-                      SEP #$20                                  ;;FCBD|FCA5+FCA5/FCA5\FC99; Accum (8 bit) 
+                      SEP #$20                                  ;;FCBD|FCA5+FCA5/FCA5\FC99; A->8
                       BCS Return02FCD8                          ;;FCBF|FCA7+FCA7/FCA7\FC9B;
                       LDA.B #$02                                ;;FCC1|FCA9+FCA9/FCA9\FC9D;
                       JSR CODE_02FD48                           ;;FCC3|FCAB+FCAB/FCAB\FC9F;
@@ -15244,12 +15244,12 @@ CODE_02FC8D:          LDA.W ClusterSpriteXPosLow,X              ;;FCA5|FC8D+FC8D
                       TAY                                       ;;FCEA|FCD2+FCD2/FCD2\FCC6;
                       LDA.B #$03                                ;;FCEB|FCD3+FCD3/FCD3\FCC7;
                       STA.W OAMTileSize+$40,Y                   ;;FCED|FCD5+FCD5/FCD5\FCC9;
-Return02FCD8:         RTS                                       ;;FCF0|FCD8+FCD8/FCD8\FCCC; Return 
+Return02FCD8:         RTS                                       ;;FCF0|FCD8+FCD8/FCD8\FCCC;
                                                                 ;;                        ;
 CODE_02FCD9:          LDY.W DATA_02FF50,X                       ;;FCF1|FCD9+FCD9/FCD9\FCCD;
                       LDA.B #$F0                                ;;FCF4|FCDC+FCDC/FCDC\FCD0;
                       STA.W OAMTileYPos+$100,Y                  ;;FCF6|FCDE+FCDE/FCDE\FCD2;
-                      RTS                                       ;;FCF9|FCE1+FCE1/FCE1\FCD5; Return 
+                      RTS                                       ;;FCF9|FCE1+FCE1/FCE1\FCD5;
                                                                 ;;                        ;
 CODE_02FCE2:          LDA.B SpriteLock                          ;;FCFA|FCE2+FCE2/FCE2\FCD6;
                       BNE CODE_02FD46                           ;;FCFC|FCE4+FCE4/FCE4\FCD8;
@@ -15357,7 +15357,7 @@ CODE_02FD48:          STA.B _2                                  ;;FD60|FD48+FD48
                       LDA.B #$37                                ;;FDCA|FDB1+FDB1/FDB1\FDA5;
                       STA.W OAMTileAttr+$100,Y                  ;;FDCC|FDB3+FDB3/FDB3\FDA7;
                       PLX                                       ;;FDCF|FDB6+FDB6/FDB6\FDAA;
-                    + RTS                                       ;;FDD0|FDB7+FDB7/FDB7\FDAB; Return 
+                    + RTS                                       ;;FDD0|FDB7+FDB7/FDB7\FDAB;
                                                                 ;;                        ;
                                                                 ;;                        ;
 BatCeilingTiles:      db $AE,$AE,$C0,$EB                        ;;FDD1|FDB8+FDB8/FDB8\FDAC;
@@ -15447,7 +15447,7 @@ CODE_02FE48:          LDY.W DATA_02FF64,X                       ;;FE61|FE48+FE48
                       TAY                                       ;;FE83|FE6A+FE6A/FE64\FE58;
                       LDA.B #$02                                ;;FE84|FE6B+FE6B/FE65\FE59;
                       STA.W OAMTileSize,Y                       ;;FE86|FE6D+FE6D/FE67\FE5B;
-                      RTS                                       ;;FE89|FE70+FE70/FE6A\FE5E; Return 
+                      RTS                                       ;;FE89|FE70+FE70/FE6A\FE5E;
                                                                 ;;                        ;
 CODE_02FE71:          LDA.B #$14                                ;;FE8A|FE71+FE71/FE6B\FE5F;
                       BRA +                                     ;;FE8C|FE73+FE73/FE6D\FE61;
@@ -15459,14 +15459,14 @@ CODE_02FE71:          LDA.B #$14                                ;;FE8A|FE71+FE71
                       STA.B _0                                  ;;FE97|FE7E+FE7E/FE78\FE6C;
                       LDA.W ClusterSpriteXPosHigh,X             ;;FE99|FE80+FE80/FE7A\FE6E;
                       STA.B _1                                  ;;FE9C|FE83+FE83/FE7D\FE71;
-                      REP #$20                                  ;;FE9E|FE85+FE85/FE7F\FE73; Accum (16 bit) 
+                      REP #$20                                  ;;FE9E|FE85+FE85/FE7F\FE73; A->16
                       LDA.B PlayerXPosNext                      ;;FEA0|FE87+FE87/FE81\FE75;
                       SEC                                       ;;FEA2|FE89+FE89/FE83\FE77;
                       SBC.B _0                                  ;;FEA3|FE8A+FE8A/FE84\FE78;
                       CLC                                       ;;FEA5|FE8C+FE8C/FE86\FE7A;
                       ADC.W #$000A                              ;;FEA6|FE8D+FE8D/FE87\FE7B;
                       CMP.B _2                                  ;;FEA9|FE90+FE90/FE8A\FE7E;
-                      SEP #$20                                  ;;FEAB|FE92+FE92/FE8C\FE80; Accum (8 bit) 
+                      SEP #$20                                  ;;FEAB|FE92+FE92/FE8C\FE80; A->8
                       BCS Return02FEC4                          ;;FEAD|FE94+FE94/FE8E\FE82;
                       LDA.W ClusterSpriteYPosLow,X              ;;FEAF|FE96+FE96/FE90\FE84;
                       ADC.B #$03                                ;;FEB2|FE99+FE99/FE93\FE87;
@@ -15474,7 +15474,7 @@ CODE_02FE71:          LDA.B #$14                                ;;FE8A|FE71+FE71
                       LDA.W ClusterSpriteYPosHigh,X             ;;FEB6|FE9D+FE9D/FE97\FE8B;
                       ADC.B #$00                                ;;FEB9|FEA0+FEA0/FE9A\FE8E;
                       STA.B _3                                  ;;FEBB|FEA2+FEA2/FE9C\FE90;
-                      REP #$20                                  ;;FEBD|FEA4+FEA4/FE9E\FE92; Accum (16 bit) 
+                      REP #$20                                  ;;FEBD|FEA4+FEA4/FE9E\FE92; A->16
                       LDA.W #$0014                              ;;FEBF|FEA6+FEA6/FEA0\FE94;
                       LDY.B Powerup                             ;;FEC2|FEA9+FEA9/FEA3\FE97;
                       BEQ +                                     ;;FEC4|FEAB+FEAB/FEA5\FE99;
@@ -15486,10 +15486,10 @@ CODE_02FE71:          LDA.B #$14                                ;;FE8A|FE71+FE71
                       CLC                                       ;;FED0|FEB7+FEB7/FEB1\FEA5;
                       ADC.W #$001C                              ;;FED1|FEB8+FEB8/FEB2\FEA6;
                       CMP.B _4                                  ;;FED4|FEBB+FEBB/FEB5\FEA9;
-                      SEP #$20                                  ;;FED6|FEBD+FEBD/FEB7\FEAB; Accum (8 bit) 
+                      SEP #$20                                  ;;FED6|FEBD+FEBD/FEB7\FEAB; A->8
                       BCS Return02FEC4                          ;;FED8|FEBF+FEBF/FEB9\FEAD;
                       JSR CODE_02F9F5                           ;;FEDA|FEC1+FEC1/FEBB\FEAF;
-Return02FEC4:         RTS                                       ;;FEDD|FEC4+FEC4/FEBE\FEB2; Return 
+Return02FEC4:         RTS                                       ;;FEDD|FEC4+FEC4/FEBE\FEB2;
                                                                 ;;                        ;
                                                                 ;;                        ;
 DATA_02FEC5:          db $40,$B0                                ;;FEDE|FEC5+FEC5/FEBF\FEB3;
@@ -15538,7 +15538,7 @@ ADDR_02FF0E:          LDY.W ClusterSpriteMisc0F86,X             ;;FF27|FF0E+FF0E
                       LDA.B #$00                                ;;FF2E|FF15+FF15/FF0F\FF03; \ Allow sprite to be reloaded by level loading routine 
                       STA.W SpriteLoadStatus,Y                  ;;FF30|FF17+FF17/FF11\FF05; / 
                     + STZ.W ClusterSpriteNumber,X               ;;FF33|FF1A+FF1A/FF14\FF08;
-Return02FF1D:         RTS                                       ;;FF36|FF1D+FF1D/FF17\FF0B; / Return 
+Return02FF1D:         RTS                                       ;;FF36|FF1D+FF1D/FF17\FF0B; / 
                                                                 ;;                        ;
 ADDR_02FF1E:          LDA.B TrueFrame                           ;;FF37|FF1E+FF1E/FF18\FF0C; \ Unreachable, called from above routine 
                       LSR A                                     ;;FF39|FF20+FF20/FF1A\FF0E;
@@ -15588,7 +15588,7 @@ CODE_02FF6C:          JSL CODE_02AD34                           ;;FF85|FF6C+FF6C
                       STA.W ScoreSpriteXPosHigh,Y               ;;FFA8|FF8F+FF8F/FF89\FF7D;
                       LDA.B #$30                                ;;FFAB|FF92+FF92/FF8C\FF80;
                       STA.W ScoreSpriteTimer,Y                  ;;FFAD|FF94+FF94/FF8E\FF82;
-                      RTS                                       ;;FFB0|FF97+FF97/FF91\FF85; Return 
+                      RTS                                       ;;FFB0|FF97+FF97/FF91\FF85;
                                                                 ;;                        ;
 CODE_02FF98:          PHX                                       ;;FFB1|FF98+FF98/FF92\FF86;
                       TXA                                       ;;FFB2|FF99+FF99/FF93\FF87;
@@ -15597,7 +15597,7 @@ CODE_02FF98:          PHX                                       ;;FFB1|FF98+FF98
                       TAX                                       ;;FFB6|FF9D+FF9D/FF97\FF8B;
                       JSR CODE_02FFA3                           ;;FFB7|FF9E+FF9E/FF98\FF8C;
                       PLX                                       ;;FFBA|FFA1+FFA1/FF9B\FF8F;
-                      RTS                                       ;;FFBB|FFA2+FFA2/FF9C\FF90; Return 
+                      RTS                                       ;;FFBB|FFA2+FFA2/FF9C\FF90;
                                                                 ;;                        ;
 CODE_02FFA3:          LDA.W ClusterSpriteMisc1E52,X             ;;FFBC|FFA3+FFA3/FF9D\FF91;
                       ASL A                                     ;;FFBF|FFA6+FFA6/FFA0\FF94;
@@ -15624,7 +15624,7 @@ CODE_02FFA3:          LDA.W ClusterSpriteMisc1E52,X             ;;FFBC|FFA3+FFA3
                       TYA                                       ;;FFE2|FFC9+FFC9/FFC3\FFB7;
                       ADC.W ClusterSpriteYPosHigh,X             ;;FFE3|FFCA+FFCA/FFC4\FFB8;
                       STA.W ClusterSpriteYPosHigh,X             ;;FFE6|FFCD+FFCD/FFC7\FFBB;
-                      RTS                                       ;;FFE9|FFD0+FFD0/FFCA\FFBE; Return 
+                      RTS                                       ;;FFE9|FFD0+FFD0/FFCA\FFBE;
                                                                 ;;                        ;
 CODE_02FFD1:          LDA.W SpriteBlockedDirs,X                 ;;FFEA|FFD1+FFD1/FFCB\FFBF;
                       BMI ADDR_02FFDD                           ;;FFED|FFD4+FFD4/FFCE\FFC2;
@@ -15633,6 +15633,6 @@ CODE_02FFD1:          LDA.W SpriteBlockedDirs,X                 ;;FFEA|FFD1+FFD1
                       BEQ +                                     ;;FFF4|FFDB+FFDB/FFD5\FFC9;
 ADDR_02FFDD:          LDA.B #$18                                ;;FFF6|FFDD+FFDD/FFD7\FFCB;
                     + STA.B SpriteYSpeed,X                      ;;FFF8|FFDF+FFDF/FFD9\FFCD;
-                      RTS                                       ;;FFFA|FFE1+FFE1/FFDB\FFCF; Return 
+                      RTS                                       ;;FFFA|FFE1+FFE1/FFDB\FFCF;
                                                                 ;;                        ;
                       padbyte $FF : pad $038000                 ;;FFFB|FFE2+FFE2/FFDC\FFD0;
