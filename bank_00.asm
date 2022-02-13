@@ -2689,9 +2689,9 @@ CODE_00983B:          LDA.B #$13
                     + STA.W SpriteTileset
                       JSR UploadSpriteGFX
                       LDA.B #$11
-                      STA.W HW_TMW                              ; Window Mask Designation for Main Screen
-                      STZ.W HW_TS                               ; Sub Screen Designation
-                      STZ.W HW_TSW                              ; Window Mask Designation for Sub Screen
+                      STA.W HW_TMW
+                      STZ.W HW_TS
+                      STZ.W HW_TSW
                       LDA.B #$02
                       STA.B Layer12Window
                       LDA.B #$32
@@ -3007,7 +3007,7 @@ Return009B16:         RTS
 
                    if ver_is_console(!_VER)                     ;\=============== J, U, E0, & E1 ================
 DATA_009B17:          db $04,$02,$01                            ;!
-													            ;!
+                                                                ;!
 GameMdoe09:           REP #$20                                  ;! A->16
                       LDA.W #$39C9                              ;!
                       LDY.B #$60                                ;!
@@ -3050,7 +3050,7 @@ CODE_009B43:          LSR.W SaveFileDelete                      ;!
 CODE_009B67:          DEY                                       ;!
                       BPL CODE_009B43                           ;!
                       JMP CODE_009C89                           ;!
-													            ;!
+                                                                ;!
 CODE_009B6D:          STX.W BlinkCursorPos                      ;!
                       LDA.W DATA_009B17,X                       ;!
                       ORA.W SaveFileDelete                      ;!
@@ -3062,40 +3062,40 @@ CODE_009B6D:          STX.W BlinkCursorPos                      ;!
                       LDX.B #$00                                ;!!
                    endif                                        ;!/==============================================
                       JMP CODE_009D3C                           ;!
-													            ;!
+                                                                ;!
 CODE_009B80:          PHB                                       ;! Wrapper
                       PHK                                       ;!
                       PLB                                       ;!
                       JSR CODE_009B88                           ;!
                       PLB                                       ;!
                       RTL                                       ;!
-													            ;!
+                                                                ;!
 CODE_009B88:          DEC A                                     ;!
                       JSL ExecutePtr                            ;!
-													            ;!
+                                                                ;!
                       dw CODE_009B91                            ;!
                       dw CODE_009B9A                            ;!
-													            ;!
+                                                                ;!
 CODE_009B91:          LDY.B #$0C                                ;!
                       JSR CODE_009D29                           ;!
                       INC.W ShowContinueEnd                     ;!
                       RTS                                       ;!
-													            ;!
+                                                                ;!
 CODE_009B9A:          LDY.B #$00                                ;!
                       JSR CODE_009AD0                           ;!
                       TXA                                       ;!
                       BNE +                                     ;!
                       JMP CODE_009E17                           ;!
-													            ;!
+                                                                ;!
                     + JMP CODE_009C89                           ;!
-													            ;!
+                                                                ;!
 CODE_009BA8:          PHB                                       ;! Wrapper
                       PHK                                       ;!
                       PLB                                       ;!
                       JSR CODE_009BB0                           ;!
                       PLB                                       ;!
                       RTL                                       ;!
-													            ;!
+                                                                ;!
 CODE_009BB0:          LDY.B #$06                                ;!
                       JSR CODE_009AD0                           ;!
                       TXA                                       ;!
@@ -3106,7 +3106,7 @@ CODE_009BB0:          LDY.B #$06                                ;!
                       JSL CODE_009BC9                           ;!
                     + JSL CODE_009C13                           ;!
                       RTS                                       ;!
-													            ;!
+                                                                ;!
 CODE_009BC9:          PHB                                       ;!
                       PHK                                       ;!
                       PLB                                       ;!
@@ -3141,7 +3141,7 @@ CODE_009BDE:          LDA.W SaveDataBuffer,Y                    ;!
                       TAX                                       ;!
                       SEP #$20                                  ;! A->8
                       BRA CODE_009BD9                           ;!
-													            ;!
+                                                                ;!
 CODE_009C0F:          SEP #$30                                  ;! AXY->8
                       PLB                                       ;!
                       RTL                                       ;!
@@ -3256,12 +3256,12 @@ DATA_009CCE:          db SaveData
 SSDATA_009BE2:        db $52,$06,$C0,$0C,$FC,$38,$52,$10        ;!
                       db $C0,$08,$FC,$38,$52,$06,$00,$01        ;!
                       db $FC,$38,$FF                            ;!
-																;!
+                                                                ;!
 SSDATA_009BF5:        db $06,$46,$86,$C6,$10,$50,$90            ;!
-																;!
+                                                                ;!
 SSDATA_009BFC:        db $07,$FF                                ;!
 SSDATA_009BFE:        db $00,$06                                ;!
-																;!
+                                                                ;!
 GameMode08:           REP #$20                                  ;! A->16
                       LDA.W #$7393                              ;!
                       LDY.B #$20                                ;!
@@ -3312,7 +3312,7 @@ SSCODE_009C3B:        REP #$10                                  ;! XY->16
                       STA.L DynamicStripeImage+$10              ;!
                       SEP #$30                                  ;! AXY->8
                       RTS                                       ;!
-																;!
+                                                                ;!
 SSCODE_009C6D:        LDA.B #!SFX_COIN                          ;!
                       STA.W SPCIO3                              ;!
                       SEP #$10                                  ;! XY->8
@@ -3338,7 +3338,7 @@ GameMode08:           REP #$20                                  ;! A->16
                       LDX.B #$00                                ;!!
                    endif                                        ;!/==============================================
                       JMP CODE_009D3A                           ;!
-																;!
+                                                                ;!
                     + STX.W SaveFile                            ;!
                       JSR CODE_009DB5                           ;!
                       BNE CODE_009D22                           ;!
@@ -3379,7 +3379,7 @@ CODE_009D30:          STA.W BackgroundColor                     ; Store A in BG 
                    if ver_is_japanese(!_VER)                    ;\======================== J ====================
 DATA_009CD2:          db $D4,$31,$FC,$38,$9D,$31,$FC,$38        ;!
                       db $8D,$31,$FC,$38,$FC,$38,$FC,$38        ;!
-																;!
+                                                                ;!
 CODE_009D3A:          STZ.B _5                                  ;!
 CODE_009D3C:          STY.B _6                                  ;!
                       LDX.B #$B0                                ;!
@@ -3437,7 +3437,7 @@ CODE_009D5B:          STX.B _4                                  ;!
                       LDA.B #$88                                ;!!
                       BRA +                                     ;!!
                    endif                                        ;!/==============================================
-																;!
+                                                                ;!
 CODE_009D76:          JSR HexToDec                              ;!
                       TXY                                       ;!
                     + LDX.B _0                                  ;!
@@ -3488,7 +3488,7 @@ CODE_009DA6:          SEP #$10                                  ;!! XY->8
                       DEX                                       ;!
                       BPL CODE_009D5B                           ;!
                       RTS                                       ;!
-																;!
+                                                                ;!
 CODE_009DB5:          LDA.W DATA_009CCB,X                       ;!
                       XBA                                       ;!
                       LDA.W DATA_009CCE,X                       ;!
@@ -3524,12 +3524,12 @@ CODE_009DD1:          LDA.L SaveData,X                          ;!
                       TYX                                       ;!
                       PLY                                       ;!
                       BRA CODE_009DC4                           ;!
-																;!
+                                                                ;!
 CODE_009DF7:          SEP #$20                                  ;! A->8
                       RTS                                       ;!
                    else                                         ;<========================= SS ==================  ELSE
                       RTS                                       ;!
-																;!
+                                                                ;!
                       RTS                                       ;! unused?
                    endif                                        ;/=============================================== ENDIF
 
@@ -3659,11 +3659,11 @@ TBL_009EE0:           db $28,$03                                ;! enable left/r
                       db $5C,$02                                ;! enable left on star world bottom right star warp
                       db $57,$04                                ;! enable down on star world right star warp
                       db $30,$01                                ;! enable right on valley of bowser star warp
-																;!
+                                                                ;!
 TBL_009EF0:           db $01,$01,$02,$00,$02,$00,$68,$00        ;! players submap, animation
                       db $78,$00,$68,$00,$78,$00,$06,$00        ;! players overworld X & Y
                       db $07,$00,$06,$00,$07,$00                ;!
-																;!
+                                                                ;!
 CODE_WRITEOW:         LDX.B #$8D                                ;!
                     - STZ.W SaveDataBuffer-1,X                  ;!
                       DEX                                       ;!
@@ -3694,9 +3694,9 @@ TBL_009EE0:           db $28,$83,$4D,$81,$52,$81,$53,$81        ;!
                       db $22,$08,$22,$8A,$21,$85,$24,$8A        ;!
                       db $23,$83,$1B,$85,$1D,$8A,$1C,$89        ;!
                       db $1A,$8C,$18,$02                        ;!
-																;!
+                                                                ;!
 SSTBL_009DF5:         db $00,$10,$1C,$2A,$38,$40,$4A,$5C        ;!
-																;!
+                                                                ;!
 TBL_009EF0:           db $00,$00,$00,$00,$00,$00,$00,$00        ;!
                       db $00,$00,$00,$00,$00,$00,$00,$01        ;!
                       db $01,$02,$00,$02,$00,$68,$00,$78        ;!
@@ -3733,10 +3733,10 @@ TBL_009EF0:           db $00,$00,$00,$00,$00,$00,$00,$00        ;!
                       db $00,$02,$00,$E8,$00,$78,$01,$E8        ;!
                       db $00,$78,$01,$0E,$00,$17,$00,$0E        ;!
                       db $00,$17,$00,$01,$01,$01,$01            ;!
-																;!
+                                                                ;!
 SSTBL_009F1C:         dw $0028,$0051,$007A,$00A3                ;!
                       dw $00CC,$00F5,$011E                      ;!
-																;!
+                                                                ;!
 CODE_WRITEOW:         LDX.B #$8D                                ;!
                     - STZ.W SaveDataBuffer-1,X                  ;!
                       DEX                                       ;!
@@ -3977,7 +3977,7 @@ GameMode0C:           JSR TurnOffIO
                       BNE +                                     ;!
                       JSR CODE_009C89                           ;!
                       JMP CODE_0093F4                           ;!
-													            ;!
+                                                                ;!
                     + JSL CODE_04DAAD                           ;!
                       REP #$20                                  ;! A->16
                       LDA.W #$318C                              ;!
@@ -4149,7 +4149,7 @@ CODE_00A25B:
                       BPL Return00A289                          ;!
 CODE_00A270:          LDA.B #$80                                ;!
                       BRA CODE_00A27E                           ;!
-													            ;!
+                                                                ;!
                       LDA.B #$01                                ;! \ Unreachable
                       BIT.B byetudlrHold                        ;! | Debug: Beat level with Start+Select
                       BPL +                                     ;! |
@@ -4917,7 +4917,7 @@ CODE_00A9A3:          LDA.B _E
                       LDX.W #$03FF
                       LDY.W #$0000
                     - LDA.B [_0],Y
-                      STA.W HW_VMDATA                           ; Data for VRAM Write (Low Byte)
+                      STA.W HW_VMDATA
                       INY
                       INY
                       DEX
@@ -7408,7 +7408,7 @@ CODE_00C569:          JSR CODE_00C593
                       LDA.B byetudlrHold                        ;!
                       AND.B #$08                                ;!
                       BRA CODE_00C585                           ;! Change to BEQ to reach debug routine below
-													            ;!
+                                                                ;!
                       LDA.B Powerup                             ;! \ Unreachable
                       INC A                                     ;! | Debug: Cycle through powerups
                       CMP.B #$04                                ;! |
@@ -7470,7 +7470,7 @@ DATA_00C5E1:          db $10,$30,$31,$32,$33,$34,$0E
 DATA_00C5E8:          db $26,$11,$02,$48,$00,$60,$01,$09        ;!
                       db $80,$08,$00,$20,$04,$60,$00,$01        ;!
                       db $FF,$01                                ;!
-																;!
+                                                                ;!
 DATA_00C5F9:          db $02,$48,$00,$60,$41,$2C,$C1,$04        ;!
                       db $27,$04,$2F,$08,$25,$01,$2F,$04        ;!
                       db $27,$04,$00,$08,$41,$1B,$C1,$04        ;!
@@ -7479,7 +7479,7 @@ DATA_00C5F9:          db $02,$48,$00,$60,$41,$2C,$C1,$04        ;!
                       db $01,$10,$00,$08,$41,$12,$81,$0A        ;!
                       db $00,$40,$82,$10,$02,$20,$00,$30        ;!
                       db $01,$01,$00,$50,$22,$01,$FF,$01        ;!
-																;!
+                                                                ;!
 DATA_00C639:          db $02,$48,$00,$60,$01,$09,$80,$08        ;!
                       db $00,$20,$04,$60,$00,$20,$10,$20        ;!
                       db $01,$58,$00,$2C,$31,$01,$3A,$10        ;!
@@ -7487,22 +7487,22 @@ DATA_00C639:          db $02,$48,$00,$60,$01,$09,$80,$08        ;!
                       db $28,$A0,$28,$40,$29,$04,$28,$04        ;!
                       db $29,$04,$28,$04,$29,$04,$28,$40        ;!
                       db $22,$01,$FF,$01                        ;!
-																;!
+                                                                ;!
 DATA_00C66D:          db $02,$48,$00,$60,$01,$09,$80,$08        ;!
                       db $00,$20,$04,$60,$10,$20,$31,$01        ;!
                       db $18,$60,$31,$01,$3B,$80,$31,$01        ;!
                       db $3C,$40,$FF,$01                        ;!
-																;!
+                                                                ;!
 DATA_00C689:          db $02,$48,$00,$60,$02,$30,$01,$84        ;!
                       db $00,$20,$23,$01,$01,$16,$02,$20        ;!
                       db $20,$01,$01,$20,$02,$20,$01,$02        ;!
                       db $00,$80,$FF,$01                        ;!
-																;!
+                                                                ;!
 DATA_00C6A5:          db $02,$48,$00,$60,$02,$28,$01,$83        ;!
                       db $00,$28,$24,$01,$02,$01,$00,$FF        ;!
                       db $00,$40,$20,$01,$00,$40,$02,$60        ;!
                       db $00,$30,$FF,$01                        ;!
-																;!
+                                                                ;!
 DATA_00C6C1:          db $02,$48,$00,$60,$01,$4E,$00,$40        ;!
                       db $26,$01,$00,$1E,$20,$01,$00,$20        ;!
                       db $08,$10,$20,$01,$2D,$18,$00,$A0        ;!
@@ -7511,7 +7511,7 @@ DATA_00C6C1:          db $02,$48,$00,$60,$01,$4E,$00,$40        ;!
 DATA_00C5E8:          db $26,$11,$02,$3E,$00,$60,$01,$09        ;!
                       db $80,$08,$00,$20,$04,$60,$00,$01        ;!
                       db $FF,$01                                ;!
-																;!
+                                                                ;!
 DATA_00C5F9:          db $02,$3E,$00,$60,$41,$25,$C1,$04        ;!
                       db $27,$04,$2F,$08,$25,$01,$2F,$04        ;!
                       db $27,$04,$00,$08,$41,$16,$C1,$04        ;!
@@ -7520,7 +7520,7 @@ DATA_00C5F9:          db $02,$3E,$00,$60,$41,$25,$C1,$04        ;!
                       db $01,$04,$00,$08,$41,$14,$81,$1A        ;!
                       db $00,$40,$82,$10,$02,$20,$00,$30        ;!
                       db $01,$01,$00,$50,$22,$01,$FF,$01        ;!
-																;!
+                                                                ;!
 DATA_00C639:          db $02,$3E,$00,$60,$01,$09,$80,$08        ;!
                       db $00,$20,$04,$60,$00,$20,$10,$20        ;!
                       db $01,$44,$00,$2C,$31,$01,$3A,$10        ;!
@@ -7528,22 +7528,22 @@ DATA_00C639:          db $02,$3E,$00,$60,$01,$09,$80,$08        ;!
                       db $28,$A0,$28,$40,$29,$04,$28,$04        ;!
                       db $29,$04,$28,$04,$29,$04,$28,$40        ;!
                       db $22,$01,$FF,$01                        ;!
-																;!
+                                                                ;!
 DATA_00C66D:          db $02,$3E,$00,$60,$01,$09,$80,$08        ;!
                       db $00,$20,$04,$60,$10,$20,$31,$01        ;!
                       db $18,$60,$31,$01,$3B,$80,$31,$01        ;!
                       db $3C,$40,$FF,$01                        ;!
-																;!
+                                                                ;!
 DATA_00C689:          db $02,$3E,$00,$60,$02,$30,$01,$6E        ;!
                       db $00,$20,$23,$01,$01,$16,$02,$20        ;!
                       db $20,$01,$01,$20,$02,$20,$01,$02        ;!
                       db $00,$80,$FF,$01                        ;!
-																;!
+                                                                ;!
 DATA_00C6A5:          db $02,$3E,$00,$60,$02,$27,$01,$69        ;!
                       db $00,$28,$24,$01,$02,$01,$00,$FF        ;!
                       db $00,$40,$20,$01,$00,$30,$02,$40        ;!
                       db $00,$30,$FF,$01                        ;!
-																;!
+                                                                ;!
 DATA_00C6C1:          db $02,$3E,$00,$4C,$01,$43,$00,$40        ;!
                       db $26,$01,$00,$1E,$20,$01,$00,$20        ;!
                       db $08,$10,$20,$01,$2D,$18,$00,$A0        ;!
@@ -8180,7 +8180,7 @@ ResetAni:
                       STZ.W DebugFreeRoam                       ;!
                     + LDA.W DebugFreeRoam                       ;!
                       BRA CODE_00CCBB                           ;! Change to BEQ to enable debug code below
-																;!
+                                                                ;!
                       LSR A                                     ;! \ Unreachable
                       BEQ ADDR_00CCB3                           ;! | Debug: Free roaming mode
                       LDA.B #$FF                                ;! |
@@ -8205,7 +8205,7 @@ ADDR_00CC9F:          BIT.B byetudlrHold                        ;! |
                       STA.B PlayerXPosNext,X                    ;! |
                       SEP #$20                                  ;! | A->8
                       RTS                                       ;! /
-																;!
+                                                                ;!
 ADDR_00CCB3:          LDA.B #$70                                ;!
                       STA.W PlayerPMeter                        ;!
                       STA.W TakeoffTimer                        ;!
@@ -8963,7 +8963,7 @@ DATA_00D2CD:          dw $FF00,$0100,$FF00,$0100                ;!
                       dw $FFC0,$0200,$FC00,$FF00                ;!
                       dw $0100,$0400,$FF00,$0100                ;!
                       dw $FF00,$0100                            ;!
-																;!
+                                                                ;!
 DATA_00D309:          dw $FFE0,$0020,$FFE0,$0020                ;!
                       dw $FFE0,$0020,$FFC0,$0020                ;!
                       dw $FFE0,$0040,$FF80,$0020                ;!
@@ -8972,7 +8972,7 @@ DATA_00D309:          dw $FFE0,$0020,$FFE0,$0020                ;!
                       dw $FFE0,$0080,$FE00,$FF80                ;!
                       dw $0080,$0200,$FF00,$0100                ;!
                       dw $FF00,$0100                            ;!
-																;!
+                                                                ;!
 MarioAccel_:          dw $FE80,$FE80,$0180,$0180                ;!
                       dw $FE80,$FE80,$0180,$0180                ;!
                       dw $FE80,$FE80,$0180,$0180                ;!
@@ -9004,7 +9004,7 @@ MarioAccel_:          dw $FE80,$FE80,$0180,$0180                ;!
                       dw $FE00,$FC00,$0300,$0600                ;!
                       dw $FD00,$FA00,$FD00,$FA00                ;!
                       dw $0300,$0600,$0300,$0600                ;!
-																;!
+                                                                ;!
 DATA_00D43D:          dw $FF80,$FE80,$0080,$0180                ;!
                       dw $FF80,$FE80,$0080,$0180                ;!
                       dw $FF80,$FE80,$0080,$0180                ;!
@@ -9036,7 +9036,7 @@ DATA_00D43D:          dw $FF80,$FE80,$0080,$0180                ;!
                       dw $FFC0,$FE00,$0300,$0300                ;!
                       dw $FD00,$FD00,$FD00,$FD00                ;!
                       dw $0300,$0300,$0300,$0300                ;!
-																;!
+                                                                ;!
 DATA_00D535:          db $EC,$14,$DC,$24,$DC,$24,$D0,$30        ;!
                       db $EC,$14,$DC,$24,$DC,$24,$D0,$30        ;!
                       db $EC,$14,$DC,$24,$DC,$24,$D0,$30        ;!
@@ -9056,7 +9056,7 @@ DATA_00D535:          db $EC,$14,$DC,$24,$DC,$24,$D0,$30        ;!
                       db $F0,$10,$E0,$20,$EC,$0C,$D8,$18        ;!
                       db $D8,$28,$D4,$2C,$D0,$30,$D0,$D0        ;!
                       db $30,$30,$E0,$20                        ;!
-																;!
+                                                                ;!
 DATA_00D5C9:          db $00,$00,$00,$00,$00,$00,$00,$00        ;!
                       db $00,$00,$00,$F0,$00,$10,$00,$00        ;!
                       db $00,$00,$00,$00,$00,$00,$00,$E0        ;!
@@ -9071,7 +9071,7 @@ DATA_00D2CD:          dw $FEC0,$0140,$FEC0,$0140                ;!
                       dw $FFB0,$0280,$FB00,$FEC0                ;!
                       dw $0140,$0500,$FEC0,$0140                ;!
                       dw $FEC0,$0140                            ;!
-																;!
+                                                                ;!
 DATA_00D309:          dw $FFD8,$0028,$FFD8,$0028                ;!
                       dw $FFD8,$0028,$FFB0,$0028                ;!
                       dw $FFD8,$0050,$FF60,$0028                ;!
@@ -9080,7 +9080,7 @@ DATA_00D309:          dw $FFD8,$0028,$FFD8,$0028                ;!
                       dw $FFD8,$00A0,$FD80,$FF60                ;!
                       dw $00A0,$0280,$FEC0,$0140                ;!
                       dw $FEC0,$0140                            ;!
-																;!
+                                                                ;!
 MarioAccel_:          dw $FE20,$FE20,$01E0,$01E0                ;!
                       dw $FE20,$FE20,$01E0,$01E0                ;!
                       dw $FE20,$FE20,$01E0,$01E0                ;!
@@ -9112,7 +9112,7 @@ MarioAccel_:          dw $FE20,$FE20,$01E0,$01E0                ;!
                       dw $FD80,$FB00,$03C0,$0780                ;!
                       dw $FC40,$F880,$FC40,$F880                ;!
                       dw $03C0,$0780,$03C0,$0780                ;!
-																;!
+                                                                ;!
 DATA_00D43D:          dw $FF60,$FE20,$00A0,$01E0                ;!
                       dw $FF60,$FE20,$00A0,$01E0                ;!
                       dw $FF60,$FE20,$00A0,$01E0                ;!
@@ -9144,7 +9144,7 @@ DATA_00D43D:          dw $FF60,$FE20,$00A0,$01E0                ;!
                       dw $FFB0,$FD80,$03C0,$03C0                ;!
                       dw $FC40,$FC40,$FC40,$FC40                ;!
                       dw $03C0,$03C0,$03C0,$03C0                ;!
-																;!
+                                                                ;!
 DATA_00D535:          db $E7,$19,$D3,$2D,$D3,$2D,$C4,$3C        ;!
                       db $E7,$19,$D3,$2D,$D3,$2D,$C4,$3C        ;!
                       db $E7,$19,$D3,$2D,$D3,$2D,$C4,$3C        ;!
@@ -9164,7 +9164,7 @@ DATA_00D535:          db $E7,$19,$D3,$2D,$D3,$2D,$C4,$3C        ;!
                       db $EC,$14,$D8,$28,$E7,$0F,$CE,$1E        ;!
                       db $CE,$32,$C9,$37,$C4,$3C,$C4,$C4        ;!
                       db $3C,$3C,$D8,$28                        ;!
-																;!
+                                                                ;!
 DATA_00D5C9:          db $00,$00,$00,$00,$00,$00,$00,$00        ;!
                       db $00,$00,$00,$EC,$00,$14,$00,$00        ;!
                       db $00,$00,$00,$00,$00,$00,$00,$D8        ;!
@@ -9406,26 +9406,26 @@ Return00D7A4:         RTS
                    if ver_is_ntsc(!_VER)                        ;\==================== J, U, & SS ===============
 DATA_00D7A5:          db $06,$03,$04,$10,$F4,$01,$03,$04        ;!
                       db $05,$06                                ;!
-																;!
+                                                                ;!
 DATA_00D7AF:          db $40,$40,$20,$40,$40,$40,$40,$40        ;!
                       db $40,$40                                ;!
-																;!
+                                                                ;!
 DATA_00D7B9:          db $10,$C8,$E0,$02,$03,$03,$04,$03        ;!
                       db $02,$00,$01,$00,$00,$00,$00            ;!
-																;!
+                                                                ;!
 DATA_00D7C8:          db $01,$10,$30,$30,$38,$38,$40            ;!
                    else                                         ;<===================== E0 & E1 =================
 DATA_00D7A5:          dw $06E6,$0373,$0499,$1266                ;!
                       dw $F220,$0126,$0373,$0499                ;!
                       dw $05C0,$06E6                            ;!
-																;!
+                                                                ;!
 DATA_00D7AF:          dw $4000,$4000,$2000,$4000                ;!
                       dw $4000,$4000,$4000,$4000                ;!
                       dw $4000,$4000                            ;!
-																;!
+                                                                ;!
 DATA_00D7B9:          db $10,$C8,$E0,$02,$03,$03,$04,$03        ;!
                       db $02,$00,$01,$00,$00,$00,$00            ;!
-																;!
+                                                                ;!
 DATA_00D7C8:          dw $0001,$0010,$0030,$0030                ;!
                       dw $0038,$0038                            ;!
                       db $40                                    ;!
@@ -9520,7 +9520,7 @@ CODE_00D87E:          STX.W NextFlightPhase
                       BCS +                                     ;!
                       LDA.B #$C8                                ;!
                       BRA +                                     ;!
-																;!
+                                                                ;!
 CODE_00D892:          CMP.W DATA_00D7C8,Y                       ;!
                       BCC +                                     ;!
                       LDA.W DATA_00D7C8,Y                       ;!
@@ -9534,7 +9534,7 @@ CODE_00D892:          CMP.W DATA_00D7C8,Y                       ;!
                       LDA.B #!SFX_CAPE                          ;! \ Play sound effect
                       STA.W SPCIO0                              ;! /
                       BRA +                                     ;!
-																;!
+                                                                ;!
 CODE_00D8AF:          CMP.W MaxStageOfFlight                    ;!
                       BCS +                                     ;!
                       STX.B PlayerYSpeed                        ;!
@@ -9561,7 +9561,7 @@ CODE_00D8C6:          PLA                                       ;!
                       BCS +                                     ;!
                       LDA.W #$00C8                              ;!
                       BRA +                                     ;!
-																;!
+                                                                ;!
 CODE_00D892:          CMP.W DATA_00D7C8-1,Y                     ;!
                       BCC +                                     ;!
                       LDA.W DATA_00D7C8-1,Y                     ;!
@@ -9577,7 +9577,7 @@ CODE_00D892:          CMP.W DATA_00D7C8-1,Y                     ;!
                       LDA.B #!SFX_CAPE                          ;!
                       STA.W SPCIO0                              ;!
                       BRA +                                     ;!
-																;!
+                                                                ;!
 CODE_00D8AF:          CMP.W MaxStageOfFlight                    ;!
                       BCS +                                     ;!
                       STX.B PlayerYSpeed                        ;!
