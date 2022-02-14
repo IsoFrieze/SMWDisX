@@ -221,7 +221,8 @@ J $0093DF | U $00944A | SS $00944A | E0 $00944A | E1 $00944C
     J, U, SS, E0: $70
     E1: $78
     
-    ?
+    The Y position of the spotlight on the title screen.
+    A larger screen means it had to be moved down to stay centered on the screen.
     
     J +0 | U +0 | SS +0 | E0 +0 | E1 +0
 
@@ -257,7 +258,9 @@ J $0098E4 | U $00994F | SS $00994F | E0 $009954 | E1 $009956
     J, U, SS, E0: X = #$C0, A = #$A0.
     E1: X = #$D0, A = #$B0.
     
-    ?
+    X = Y Position of floor in boss battles
+    A = Y Position of Mario in boss battles
+    Bigger screen means everything needs to be lower down.
     
     J +0 | U +0 | SS +0 | E0 +0 | E1 +0
     
@@ -266,7 +269,9 @@ J $0098FA | U $009965 | SS $009965 | E0 $00996A | E1 $00996C
     J, U, SS, E0: Y = #$02C0.
     E1: Y = #$0300.
     
-    ?
+    VRAM offset for drawing the Morton & Roy ceiling.
+    Bigger screen means the ceiling is higher up relative
+    to the lava below.
     
     J +0 | U +0 | SS +0 | E0 +0 | E1 +0
     
@@ -275,7 +280,9 @@ J $009902 | U $00996D | SS $00996D | E0 $009972 | E1 $009974
     J, U, SS, E0: Y = #$FB80.
     E1: Y = #$FBC0.
     
-    ?
+    VRAM offset for drawing the Reznor ceiling.
+    Bigger screen means the ceiling is higher up relative
+    to the lava below.
     
     J +0 | U +0 | SS +0 | E0 +0 | E1 +0
     
@@ -284,7 +291,9 @@ J $00990A | U $009975 | SS $009975 | E0 $00997A | E1 $00997C
     J, U, SS, E0: Y = #$0320.
     E1: Y = #$0360.
     
-    ?
+    VRAM offset for drawing the Ludwig ceiling.
+    Bigger screen means the ceiling is higher up relative
+    to the lava below.
     
     J +0 | U +0 | SS +0 | E0 +0 | E1 +0
     
@@ -293,7 +302,10 @@ J $00991B | U $009986 | SS $009986 | E0 $00998B | E1 $00998D
     J, U, SS, E0: Y = #$0080.
     E1: Y = #$00C0.
     
-    ?
+    This is an offset for the lava + ceiling position in boss fights.
+    Bigger screen means the lava needs to be lower down.
+    Notice this is +$40, so all the ceiling offsets above must
+    be +$40 as well to counter this.
     
     J +0 | U +0 | SS +0 | E0 +0 | E1 +0
     
@@ -302,7 +314,10 @@ J $0099D0 | U $009A3B | SS $009A3B | E0 $009A40 | E1 $009A42
     J, U, SS, E0: X = #$D0.
     E1: X = #$E0.
     
-    ?
+    Offset for the floors in boss fights.
+    This actually controls the collision, since it writes to
+    the Map16 tiles.
+    Bigger screen means the floor is lower down.
     
     J +0 | U +0 | SS +0 | E0 +0 | E1 +0
     
@@ -856,7 +871,8 @@ J $00EEC6 | U $00EF26 | SS $00EF26 | E0 $00EF16 | E1 $00EF16
     J, U, SS: Compare to #$28.
     E0, E1: Compare to #$34.
     
-    ?
+    Speed threshold to slow down Mario more when sliding.
+    Due to the different framerate and physics, this value had to be updated.
     
     J +0 | U +0 | SS +0 | E0 +0 | E1 +0
     
