@@ -58,18 +58,35 @@ endmacro
 ; J & U: all $FF
 ; E0 & E1 & SS: alternating $00 and $FF every $20 bytes
 ; many stray bits are set/reset in the PAL/SS empty pattern.
-; until I find a way to replicate this easily, I'm just treating the freespace the same as U/J versions.
+; All of these fill patterns are found in the /empty/ folder.
+; This macro just copies the correct amount of fill from those files.
 macro insert_empty(j, u, ss, e0, e1)
+    ?start:
+    ; Since J and U versions are just plain $FF,
+    ; this is faster than reading from a file
     if !_VER == !__VER_J
         rep <j> : db $FF
     elseif !_VER == !__VER_U
         rep <u> : db $FF
-    elseif !_VER == !__VER_SS
-        rep <ss> : db $FF
-    elseif !_VER == !__VER_E0
-        rep <e0> : db $FF
-    else;if !_VER == !__VER_E1
-        rep <e1> : db $FF
+    else
+        !n = con(<j>,<u>,<ss>,<e0>,<e1>)
+        !i = 0
+        while !i < !n
+            if !_VER == !__VER_J
+                !b = readfile1("empty/J_fill.bin", snestopc(?start)+!i)
+            elseif !_VER == !__VER_U
+                !b = readfile1("empty/U_fill.bin", snestopc(?start)+!i)
+            elseif !_VER == !__VER_SS
+                !b = readfile1("empty/SS_fill.bin", snestopc(?start)+!i)
+            elseif !_VER == !__VER_E0
+                !b = readfile1("empty/E0_fill.bin", snestopc(?start)+!i)
+            else;if !_VER == !__VER_E1
+                !b = readfile1("empty/E1_fill.bin", snestopc(?start)+!i)
+            endif
+            
+            db !b
+            !i #= !i+1
+        endif
     endif
 endmacro
 
@@ -97,4 +114,4 @@ endmacro
 
 ; select a constant value depending on the region
 ; easier to read than an if/else block for a single LDA instruction for example
-function con(u, j, ss, e0, e1) = select(equal(!_VER,!__VER_J),u,select(equal(!_VER,!__VER_U),j,select(equal(!_VER,!__VER_SS),ss,select(equal(!_VER,!__VER_E0),e0,e1))))
+function con(j, u, ss, e0, e1) = select(equal(!_VER,!__VER_J),j,select(equal(!_VER,!__VER_U),u,select(equal(!_VER,!__VER_SS),ss,select(equal(!_VER,!__VER_E0),e0,e1))))

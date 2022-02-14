@@ -1016,4 +1016,4 @@ CODE_07FC52:          LDA.B #$10                                ; \ Extended spr
                       STA.W ExtSpriteMisc176F,Y
                       RTL
 
-                      padbyte $FF : pad $088000
+                      %insert_empty($370,$370,$370,$370,$370)

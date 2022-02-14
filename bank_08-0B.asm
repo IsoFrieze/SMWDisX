@@ -163,6 +163,6 @@ GFX30:                incbin "gfx/u/GFX30_comp.bin"             ;! Mario & Luigi
 GFX31:                incbin "gfx/u/GFX31_comp.bin"             ;! Special Beaten Enemies
                    endif                                        ;/===============================================
 
-                      padbyte $FF : pad $8C8000                 ; asar bug thinks its FastROM when bankcross check is disabled
+                      %insert_empty($17E,$2F3,$2F3,$2F3,$265)
 
                       check bankcross on

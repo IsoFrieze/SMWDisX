@@ -15635,4 +15635,4 @@ ADDR_02FFDD:          LDA.B #$18
                     + STA.B SpriteYSpeed,X
                       RTS
 
-                      padbyte $FF : pad $038000
+                      %insert_empty($05,$1E,$1E,$24,$30)

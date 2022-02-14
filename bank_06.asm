@@ -183,4 +183,4 @@ CSSub3LvlL21EC:       incbin "lvl/obj/1EC_CSroom3_l2.bin"
 CSSub4Level1EE:       incbin "lvl/obj/1EE_CSend.bin"
 CSSub1Level1C0:       incbin "lvl/obj/1C0_CSsub.bin"
 
-                      padbyte $FF : pad $078000
+                      %insert_empty($ACD,$AC7,$AC7,$AC7,$AC7)

@@ -8671,4 +8671,4 @@ SpecEneNameStripe0B:  db $FF,$FF                                ;!
 SpecEneNameStripe0C:  db $FF,$FF                                ;!
                    endif                                        ;/===============================================
 
-                      padbyte $FF : pad $0E8000
+                      %insert_empty($315,$161,$161,$161,$161)

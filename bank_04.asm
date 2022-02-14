@@ -8440,4 +8440,4 @@ ADDR_04FF73:          STZ.W HW_WRDIV
                       STA.W OWSpriteZSpeed,X
                       RTS
 
-                      padbyte $FF : pad $058000
+                      %insert_empty($57,$4F,$4F,$4F,$4F)

@@ -13624,4 +13624,4 @@ CODE_00FF73:          LDA.W #$0100
                       SEP #$20                                  ; A->8
                       RTL
 
-                      padbyte $FF : pad $00FFC0
+                      %insert_empty($90,$2D,$2D,$0B,$0B)

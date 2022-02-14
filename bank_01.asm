@@ -15735,4 +15735,4 @@ CODE_01FF98:          LDA.B SpriteXPosLow,X                     ; \ $14B4,$14B5 
                       PLX
                       RTS
 
-                      padbyte $FF : pad $028000
+                      %insert_empty($3E,$41,$41,$41,$41)
