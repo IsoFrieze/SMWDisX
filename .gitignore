@@ -2,6 +2,5 @@
 *.smc
 *.sfc
 __*
-empty/*
 /asar
 *.diz*
