@@ -13,7 +13,7 @@ You'll need the assembler, Asar v1.61 (you can find it [here](https://www.smwcen
 On Linux, steps are the same but use asar instead of asar.exe and PATCH.sh instead of PATCH.bat.
 
 # Status
-All 5 versions assemble and play exactly like they should. The only difference at the moment is the PAL & SS versions' empty space patterns, since they don't just use a $FF fill. Either I have bad dumps of these two versions, or there is no pattern to which bits are flipped in these areas. It *looks* like it alternates between $FF and $00 every $20 bytes but there is some other weirdness going on. I won't include these in the disassembly until I can find a clean way of doing it. I was hoping to write a macro that pulled the empty space pattern from a separate file, but Asar won't allow variable input to the `incbin` command.
+All 5 versions assemble and play exactly like they should. The only difference at the moment is the SS version's checksum is inverted. Every ROM has a spot for a 16-bit checksum and the checksum's complement. The SS version has the main checksum and the complement switched, so I don't know how to deal with that since Asar deals with the checksum on its own.
 
 # Contribution
 Anyone can contribute as long as they follow the format rules below. This isn't like a personal project or anything. Just make sure every commit that the ROM will properly assemble.
@@ -35,7 +35,5 @@ I'm focusing on readability so its important that everything is nice and consist
 # Bugs
 The assembler Asar is an open source project still under development. Some bugs exist which require the disassembly to go against formatting protocol in order to assembly correctly. Here is a list of things I've run into to remind myself to go back and fix if the bugs are ever fixed:
 1. Turning `check bankcross off` will cause the pc to always act as FastROM. This causes labels to have $80 added to their bank.
-   - `padbyte pad` requires the FastROM address. See bank_08-0B.asm.
-     - Temp fix: set the high byte of the bank in the `pad` command.
    - All references to labels in a non-bankcross-checked area will have the high bit set. See `GFXFilesBank` label in bank_00.asm.
      - Temp fix: Mask away the high bit of the bank by using `&$7F`.
