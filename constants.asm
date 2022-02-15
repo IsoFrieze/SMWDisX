@@ -5,6 +5,13 @@
 !__VER_E0 = 3
 !__VER_E1 = 4
 
+; number of frames in one in-game second
+!FramesInOneIGT = con($28,$28,$28,$22,$22)
+
+; effective size of screen in lines
+; used a lot for windowing effects
+!ScreenHeight = con($E0,$E0,$E0,$E0,$F0)
+
 ; values for SPC commands to trigger music and sound effects
 ; port 0
 !SFX_BONK = $01
