@@ -509,7 +509,7 @@ CODE_0083E3:
 
 CODE_0083F3:                                  ; IRQ done; wait for H-blank, then update registers.
     STA.W HW_NMITIMEN                         ;
-    JSR CODE_008439                           ; Wait until we enter an H-blank, then update the registers.
+    JSR WaitLongForHBlank                     ; Wait until we enter an H-blank, then update the registers.
     NOP
     NOP
     LDA.B #$07
@@ -541,7 +541,8 @@ SETL1SCROLL:
     STA.W HW_BG1VOFS
     RTS
 
-  - LDY.B #$20                                ;\ Subroutine to wait for a horizontal interrupt.
+WaitLongForHBlank:                            ; Subroutine to wait for a horizontal interrupt.
+  - LDY.B #$20                                ;\
 WaitForHBlank:                                ;|
     BIT.W HW_HVBJOY                           ;| If in one already, wait for it to end.
     BVS -                                     ;/
@@ -1554,8 +1555,8 @@ DrawStatusBar:                                ; Routine to upload the status bar
     RTS                                        
 
 StatusBarDMASettings:
-    %DMASettings($01,HW_VMDATA,StatusBar,$1C)
-    %DMASettings($01,HW_VMDATA,StatusBar+$1C,$1B)
+    %DMASettings($00,HW_VMDATA,StatusBar,$1C)
+    %DMASettings($00,HW_VMDATA,StatusBar+$1C,$1B)
 
 LuigiNameTiles:
     db $40,$41,$42,$43,$44                    ; "LUIGI"
@@ -1695,7 +1696,7 @@ HandleScores:                                 ; Handle Mario and Luigi's scores 
     STA.W StatusBar+$30,X                     ;|
     INX                                       ;|
     CPX.B #$06                                ;|
-    BNE CODE-008F0E                           ;/
+    BNE -                                     ;/
                       
 HandleCoins:                                  ; Handle the current player's coins.
     LDA.W CoinAdder                           ;\ 
