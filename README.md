@@ -28,6 +28,7 @@ Anyone can contribute as long as they follow the format rules below. This isn't 
     - documentation on all verions other than the U version, and including their differences in the project.
     - pulling data like graphics, palettes, and level data out of the text files and into binary files.
     - extracting constants and magic numbers from code and turning them into assembler variables.
+- All contributors, which can be found on the GitHub page for this repo.
 
 # Format
 I'm focusing on readability so its important that everything is nice and consistent. This has, can, and will change in the future.
