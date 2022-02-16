@@ -3244,15 +3244,15 @@ CODE_0CAE48:          PLX                                       ;!
                       PLY                                       ;!
                    endif                                        ;/===============================================
                       LDA.W DATA_0CADB5,Y
-                      STA.W WindowTable+3
-                      STA.W WindowTable+$0D
-                      STA.W WindowTable+$17
+                      STA.W CreditsL1HDMATable+3
+                      STA.W CreditsL2HDMATable+3
+                      STA.W CreditsL3HDMATable+3
                       LDA.B #$88
                       SEC
                       SBC.W DATA_0CADB5,Y
-                      STA.W WindowTable+6
-                      STA.W WindowTable+$10
-                      STA.W WindowTable+$1A
+                      STA.W CreditsL1HDMATable+6
+                      STA.W CreditsL2HDMATable+6
+                      STA.W CreditsL3HDMATable+6
                       REP #$20                                  ; A->16
                       %LorW_X(LDA,DATA_0CADC2)
                       STA.B Layer2YPos

@@ -2115,12 +2115,12 @@ WindowDMAData:
 
 WindowDMASizes:
 if ver_is_lores(!_VER)                        ;\================ J, U, SS, & E0 ===============
-    db $F0 : dw $04A0                         ;!
-    db $F0 : dw $0580                         ;!
+    db $F0 : dw $04A0                         ;! Screen is split into two halves
+    db $F0 : dw $0580                         ;! Each $F0 lines long
     db $00                                    ;!
 else                                          ;<======================= E1 ====================
-    db $F8 : dw $04A0                         ;!
-    db $F8 : dw $0590                         ;!
+    db $F8 : dw $04A0                         ;! Screen is split into two halves
+    db $F8 : dw $0590                         ;! Each $F8 lines long
     db $00                                    ;!
 endif                                         ;/===============================================
 
