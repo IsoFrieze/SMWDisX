@@ -100,11 +100,19 @@ macro Ptr16_Table_Entry(ptr, start, end)
     db <ptr>>>8
 endmacro
 
+; Write a block of DMA settings
 macro DMASettings(settings, dest, source, num)
     db <settings>
     db <dest>
     dl <source>
     dw <num>
+endmacro
+
+; Write a block of HDMA settings
+macro HDMASettings(settings, dest, source)
+    db <settings>
+    db <dest>
+    dl <source>
 endmacro
 
 ; convert a *.pal palette file into SNES 15-bit color and insert it into the ROM.

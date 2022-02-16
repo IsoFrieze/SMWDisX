@@ -43,7 +43,7 @@ I_RESET:
     STZ.W OverworldOverride                   ; Clear OW bypass level number.
     JSR ClearStack                            ; Clear out $0000-$1FFF and $7F837B/D.
     JSR UploadSamples                         ; Upload SPC samples.
-    JSR CODE_009250                           ; Set up DMA for window settings.
+    JSR WindowDMASetup                        ; Set up DMA for window settings.
     LDA.B #$03                                ;\ Set OAM character sizes to be 8x8 and 16x16.
     STA.W HW_OBJSEL                           ;/
     INC.B LagFlag                             ;
@@ -53,7 +53,7 @@ GameLoop:                                     ; Main game loop.
     BEQ GameLoop                              ;/
     CLI                                       ; Enable interrupts.
     INC.B TrueFrame                           ; Increment global frame counter.
-    JSR GetGameMode                           ; Run the game.
+    JSR RunGameMode                           ; Run the game.
     STZ.B LagFlag                             ; Indicate that the current frame has finished.
     BRA GameLoop                              ;
 
@@ -1995,252 +1995,260 @@ TitleTextPropBottom:
     db $B4,$B4,$34,$34,$34,$34,$F4,$B4        ; "BONUS GAME" bottom
     db $F4,$B4,$B4
 
-CODE_00919B:          LDA.B PlayerAnimation
-                      CMP.B #$0A
-                      BNE CODE_0091A6
-                      JSR CODE_00C593
-                      BRA +
+CODE_00919B:                                  ; Subroutine to prepare No-Yoshi entrances and the green star block count.
+    LDA.B PlayerAnimation                     ;\ 
+    CMP.B #$0A                                ;| If performing a No Yoshi entrance, prepare the scene.
+    BNE +                                     ;|
+    JSR CODE_00C593                           ;/
+    BRA ++
 
-CODE_0091A6:          LDA.W SublevelCount
-                      BNE +
-                      LDA.B #$1E
-                      STA.W GreenStarBlockCoins
-                    + RTS
+  + LDA.W SublevelCount                       ;\ 
+    BNE ++                                    ;| Reset coin counter for the green star block only when entering the main level (not sublevels).
+    LDA.B #$1E                                ;| Amount of coins needed to get 1up from green star block.
+    STA.W GreenStarBlockCoins                 ;/
+ ++ RTS
 
-CODE_0091B1:          JSR CODE_00A82D
-                      LDX.B #$00
-                      LDA.B #$B0
-                      LDY.W BonusGameActivate
-                      BEQ +
-                      STZ.W InGameTimerHundreds                 ; \
-                      STZ.W InGameTimerTens                     ; |Set timer to 000
-                      STZ.W InGameTimerOnes                     ; /
-                      LDX.B #$26
-                      LDA.B #$A4
-                    + STA.B _0
-                      STZ.B _1
-                      LDY.B #$70
-CODE_0091D0:          JSR CODE_0091E9
-                      INX
-                      CPX.B #$08
-                      BNE +
-                      LDA.W PlayerTurnLvl
-                      BEQ +
-                      LDX.B #$0E
-                    + TYA
-                      SEC
-                      SBC.B #$08
-                      TAY
-                      BNE CODE_0091D0
-                      JMP CODE_008494
+CODE_0091B1:                                  ; Routine to display text during level load.
+    JSR CODE_00A82D                           ; Load "MARIO/LUIGI START !" tiles.
+    LDX.B #$00                                ;\ Load "MARIO START !".
+    LDA.B #$B0                                ;/ X position of the rightmost tile of the "MARIO START !" message.
+    LDY.W BonusGameActivate                   ;\ 
+    BEQ +                                     ;| If loading a bonus game, change the text display to "BONUS GAME".
+    STZ.W InGameTimerHundreds                 ;|\ 
+    STZ.W InGameTimerTens                     ;|| Clear the timer.
+    STZ.W InGameTimerOnes                     ;|/
+    LDX.B #$26                                ;|
+    LDA.B #$A4                                ;/ X position of the rightmost tile of the "BONUS GAME" message.
+  + STA.B _0
+    STZ.B _1
+    LDY.B #$70                                ; Number of tiles to draw, x8.
+  - JSR CODE_0091E9                           ; Draw the message to the screen.
+    INX
+    CPX.B #$08                                ;\ 
+    BNE +                                     ;|
+    LDA.W PlayerTurnLvl                       ;| If playing as Luigi, load "LUIGI" instead of "MARIO".
+    BEQ +                                     ;|
+    LDX.B #$0E                                ;/
+  + TYA                                       ;\ 
+    SEC                                       ;| Move to next letter.
+    SBC.B #$08                                ;|
+    TAY                                       ;/
+    BNE -
+    JMP CODE_008494                           ; Prep OAM for upload.
 
-CODE_0091E9:          LDA.W TitleTextPropTop,X
-                      STA.W OAMTileAttr+$108,Y
-                      LDA.W TitleTextPropBottom,X
-                      STA.W OAMTileAttr+$10C,Y
-                      LDA.B _0
-                      STA.W OAMTileXPos+$108,Y
-                      STA.W OAMTileXPos+$10C,Y
-                      SEC
-                      SBC.B #$08
-                      STA.B _0
-                      BCS +
-                      DEC.B _1
-                    + PHY
-                      TYA
-                      LSR A
-                      LSR A
-                      TAY
-                      LDA.B _1
-                      AND.B #$01
-                      STA.W OAMTileSize+$42,Y
-                      STA.W OAMTileSize+$43,Y
-                      PLY
-                      LDA.W TitleTextTileTop,X
-                      BMI +
-                      STA.W OAMTileNo+$108,Y
-                      LDA.W TitleTextTileBottom,X
-                      STA.W OAMTileNo+$10C,Y
-                      LDA.B #$68
-                      STA.W OAMTileYPos+$108,Y
-                      LDA.B #$70
-                      STA.W OAMTileYPos+$10C,Y
-                    + RTS
+CODE_0091E9:                                  ; Subroutine to upload loading screen text to OAM.
+    LDA.W TitleTextPropTop,X                  ;\ 
+    STA.W OAMTileAttr+$108,Y                  ;| Store the YXPPCCCT properties to OAM.
+    LDA.W TitleTextPropBottom,X               ;|
+    STA.W OAMTileAttr+$10C,Y                  ;/
+    LDA.B _0                                  ;\ 
+    STA.W OAMTileXPos+$108,Y                  ;| Set the X position of each letter to OAM.
+    STA.W OAMTileXPos+$10C,Y                  ;/
+    SEC                                       ;\ 
+    SBC.B #$08                                ;|
+    STA.B _0                                  ;| Move next letter 8 pixels to the left.
+    BCS +                                     ;|
+    DEC.B _1                                  ;/
+  + PHY
+    TYA
+    LSR A
+    LSR A
+    TAY
+    LDA.B _1                                  ;\ 
+    AND.B #$01                                ;| Set size.
+    STA.W OAMTileSize+$42,Y                   ;|
+    STA.W OAMTileSize+$43,Y                   ;/
+    PLY
+    LDA.W TitleTextTileTop,X                  ;\ 
+    BMI +                                     ;|
+    STA.W OAMTileNo+$108,Y                    ;| Store the tile numbers to OAM.
+    LDA.W TitleTextTileBottom,X               ;|
+    STA.W OAMTileNo+$10C,Y                    ;/
+    LDA.B #$68                                ;\ Y position of the top half of the loading screen messages.
+    STA.W OAMTileYPos+$108,Y                  ;/
+    LDA.B #$70                                ;\ Y position of the bottom half of the loading screen messages.
+    STA.W OAMTileYPos+$10C,Y                  ;/
+  + RTS
 
-CODE_00922F:          STZ.W MainPalette
-                      STZ.W MainPalette+1
-                      STZ.W HW_CGADD                            ; Set "Address for CG-RAM Write" to 0
-                      LDX.B #$06
-                    - LDA.W DATA_009249,X
-                      STA.W HW_DMAPARAM+$20,X
-                      DEX
-                      BPL -
-                      LDA.B #$04
-                      STA.W HW_MDMAEN
-                      RTS
+CODE_00922F:                                  ; Upload palettes from $0703 to CGRAM.
+    STZ.W MainPalette                         ;\ 
+    STZ.W MainPalette+1                       ;| Clear first color of palette data.
+    STZ.W HW_CGADD                            ;/
+    LDX.B #$06                                ;\ Set up and enable DMA on channel 2.
+  - LDA.W MainPaletteDMAData,X                ;| $4320: Increment, one register write once.
+    STA.W HW_DMAPARAM+$20,X                   ;| $4321: Destination is $2122 (CGRAM).
+    DEX                                       ;| $4322: Source is $000703.
+    BPL -                                     ;| $4325: Write x200 bytes.
+    LDA.B #$04                                ;|
+    STA.W HW_MDMAEN                           ;/
+    RTS
 
+MainPaletteDMAData:
+    %DMASettings($00,HW_CGDATA,MainPalette,$0200)
 
-DATA_009249:          db $00,$22
-                      dl MainPalette
-                      dw $0200
+WindowDMASetup:                               ; Routine to initialize window HDMA at power on. 
+    LDX.B #$04                                ; Index for DMA set up
+  - LDA.W WindowDMAData,X                     ;\ Set up DMA settings for $4370-$4374.
+    STA.W HW_DMAPARAM+$70,X                   ;|  (controls, destination, source)
+    DEX                                       ;|
+    BPL -                                     ;/
+    LDA.B #$00                                ; Set HDMA data bank to $00.
+    STA.W HW_HDMABANK+$70
 
-CODE_009250:          LDX.B #$04
-                    - LDA.W DATA_009277,X
-                      STA.W HW_DMAPARAM+$70,X
-                      DEX
-                      BPL -
-                      LDA.B #$00
-                      STA.W HW_HDMABANK+$70
-CODE_009260:          STZ.W HDMAEnable                          ; Disable all HDMA channels
-CODE_009263:          REP #$10                                  ; XY->16
-                      LDX.W #2*(!ScreenHeight-1)                ; \
-                      LDA.B #$FF                                ; |
-                    - STA.W WindowTable,X                       ; |Clear "HDMA table for windowing effects"
-                      STZ.W WindowTable+1,X                     ; |...hang on again.  It clears one set of RAM here, but not the same
-                      DEX                                       ; |
-                      DEX                                       ; |
-                      BPL -                                     ; /
-                      SEP #$10                                  ; \ XY->8
-                      RTS                                       ; /
-
-
-DATA_009277:          db $41,$26
-                      dl DATA_00927C
-
-                   if ver_is_lores(!_VER)                       ;\================ J, U, SS, & E0 ===============
-DATA_00927C:          db $F0                                    ;!
-                      db $A0,$04                                ;!
-                      db $F0                                    ;!
-                      db $80,$05                                ;!
-                      db $00                                    ;!
-                   else                                         ;<======================= E1 ====================
-DATA_00927C:          db $F8                                    ;!
-                      db $A0,$04                                ;!
-                      db $F8                                    ;!
-                      db $90,$05                                ;!
-                      db $00                                    ;!
-                   endif                                        ;/===============================================
-
-CODE_009283:          JSR CODE_009263
-                      LDA.W IRQNMICommand
-                      LSR A
-                      BCS CODE_0092A0
-                      REP #$10                                  ; XY->16
-                      LDX.W #2*(!ScreenHeight-1)
-                    - STZ.W WindowTable,X                       ; out?
-                      LDA.B #$FF                                ; *note to self: ctrl+insert, not shift+insert*
-                      STA.W WindowTable+1,X                     ; ...  This is, uh, strange.  It pastes $00FF into the $04A0,x table
-                      INX                                       ; instead of $FF00 o_O
-                      INX
-                      CPX.W #2*!ScreenHeight
-                      BCC -
-CODE_0092A0:          LDA.B #$80                                ;  Enable channel 7 in HDMA, disable all other HDMA channels
-                      STA.W HDMAEnable                          ;  $7E:0D9F - H-DMA Channel Enable RAM Mirror
-                      SEP #$10                                  ; XY->8
-                      RTS
-
-CODE_0092A8:          JSR CODE_009263                           ; these are somewhat the same subroutine, but also not >_>
-                      REP #$10                                  ; XY->16
-                      LDX.W #$0198
-                      BRA -
-
-CODE_0092B2:          LDA.B #$58
-                      STA.W WindowTable
-                      STA.W WindowTable+$0A
-                      STA.W WindowTable+$14
-                      STZ.W WindowTable+9
-                      STZ.W WindowTable+$13
-                      STZ.W WindowTable+$1D
-                      LDX.B #$04
-                    - LDA.W DATA_009313,X
-                      STA.W HW_DMAPARAM+$50,X
-                      LDA.W DATA_009318,X
-                      STA.W HW_DMAPARAM+$60,X
-                      LDA.W DATA_00931D,X
-                      STA.W HW_DMAPARAM+$70,X
-                      DEX
-                      BPL -
-                      LDA.B #$00
-                      STA.W HW_HDMABANK+$50
-                      STA.W HW_HDMABANK+$60
-                      STA.W HW_HDMABANK+$70
-                      LDA.B #$E0
-                      STA.W HDMAEnable
-CODE_0092ED:          REP #$30                                  ; AXY->16
-                      LDY.W #$0008
-                      LDX.W #$0014
-                    - LDA.W Layer1XPos,Y
-                      STA.W WindowTable+1,X
-                      STA.W WindowTable+4,X
-                      LDA.W NextLayer1XPos,Y
-                      STA.W WindowTable+7,X
-                      TXA
-                      SEC
-                      SBC.W #$000A
-                      TAX
-                      DEY
-                      DEY
-                      DEY
-                      DEY
-                      BPL -
-                      SEP #$30                                  ; AXY->8
-                      RTS
+DisableHDMA:
+    STZ.W HDMAEnable                          ; Disable HDMA.
+ClearWindowHDMA:                              ; Subroutine to reset the HDMA table.
+    REP #$10                                  ; XY->16
+    LDX.W #2*(!ScreenHeight-1)                ;\
+    LDA.B #$FF                                ;|
+  - STA.W WindowTable,X                       ;| Initialize entries in the HDMA table to #$FF00.
+    STZ.W WindowTable+1,X                     ;|
+    DEX                                       ;|
+    DEX                                       ;|
+    BPL -                                     ;/
+    SEP #$10                                  ; XY->8
+    RTS                                       ;
 
 
-DATA_009313:          db $02,$0D
-                      dl WindowTable
+WindowDMAData:
+    %HDMASettings($41,HW_WH0,WindowDMASizes)
 
-DATA_009318:          db $02,$0F
-                      dl WindowTable+$0A
+WindowDMASizes:
+if ver_is_lores(!_VER)                        ;\================ J, U, SS, & E0 ===============
+    db $F0 : dw $04A0                         ;!
+    db $F0 : dw $0580                         ;!
+    db $00                                    ;!
+else                                          ;<======================= E1 ====================
+    db $F8 : dw $04A0                         ;!
+    db $F8 : dw $0590                         ;!
+    db $00                                    ;!
+endif                                         ;/===============================================
 
-DATA_00931D:          db $02,$11
-                      dl WindowTable+$14
+ClearWindowTable:                             ; Subroutine to clear the windowing table.
+    JSR ClearWindowHDMA                       ; Clear out the windowing table.
+    LDA.W IRQNMICommand                       ;\ 
+    LSR A                                     ;| If running a level, overworld, or non-Bowser battle...
+    BCS EnableWindowHDMA                      ;|
+    REP #$10                                  ;| XY->16
+    LDX.W #2*(!ScreenHeight-1)                ;|
+SolidWindowTable:                             ;|
+    STZ.W WindowTable,X                       ;|\ 
+    LDA.B #$FF                                ;||
+    STA.W WindowTable+1,X                     ;||
+    INX                                       ;|| Set the HDMA table values to 0x00FF (full screen).
+    INX                                       ;||
+    CPX.W #2*!ScreenHeight                    ;||
+    BCC SolidWindowTable                      ;//
 
-GetGameMode:          LDA.W GameMode                            ; Load game mode
-                      JSL ExecutePtr
+EnableWindowHDMA:
+    LDA.B #$80                                ;\ Enable HDMA on channel 7.
+    STA.W HDMAEnable                          ;/
+    SEP #$10                                  ; XY->8
+    RTS
 
-                      dw GameMode00                             ; 00 - load nintendo presents
-                      dw GameMode01                             ; 01 - nintendo presents
-                      dw GMTransition                           ; 02 - fade out to title screen
-                      dw GameMode03                             ; 03 - load title screen
-                      dw GameMode04                             ; 04 - prepare title screen
-                      dw GMTransition                           ; 05 - fade in to title screen
-                      dw GameMode06                             ; 06 - title screen spotlight
-                      dw GameMode07                             ; 07 - title screen
-                      dw GameMode08                             ; 08 - file select
-                      dw GameMode09                             ; 09 - file delete
-                      dw GameMode0A                             ; 0A - player select
-                      dw GMTransition                           ; 0B - fade out to overworld
-                      dw GameMode0C                             ; 0C - load overworld
-                      dw GMTransition                           ; 0D - fade in to overworld
-                      dw GameMode0E                             ; 0E - overworld
-                      dw TempFade                               ; 0F - fade out to level
-                      dw GameMode10                             ; 10 - finish fade to level
-                      dw GameMode11                             ; 11 - load level
-                      dw GameMode12                             ; 12 - prepare level
-                      dw TempFade                               ; 13 - fade in to level
-                      dw GameMode14                             ; 14 - level
-                      dw GMTransition                           ; 15 - fade out to game over/time up
-                      dw GameMode16                             ; 16 - load game over/time up
-                      dw GameMode17                             ; 17 - game over/time up
-                      dw GMTransition                           ; 18 - fade out to credits
-                      dw GameMode19                             ; 19 - load credits
-                      dw GMTransition                           ; 1A - fade in to credits
-                      dw GameMode1B                             ; 1B - staff credits
-                      dw GMTransition                           ; 1C - fade out to credits yoshi house
-                      dw GameMode1D                             ; 1D - load credits yoshi house
-                      dw GMTransition                           ; 1E - fade in to credits yoshi house
-                      dw GameMode1F                             ; 1F - credits yoshi house
-                      dw GMTransition                           ; 20 - fade out to load credits enemy list
-                      dw GameMode21                             ; 21 - load credits enemy list
-                      dw GMTransition                           ; 22 - fade out to credits enemy list
-                      dw GameMode23                             ; 23 - prepare credits enemy list
-                      dw GMTransition                           ; 24 - fade in to credits enemy list
-                      dw GameMode25                             ; 25 - credits enemy list
-                      dw GMTransition                           ; 26 - fade out to the end screen
-                      dw GameMode27                             ; 27 - load the end screen
-                      dw GameMode28                             ; 28 - fade in to the end screen
-                      dw GameMode29                             ; 29 - the end screen
+CODE_0092A8:                                  ; Subroutine to handle the solid lava BG color in Iggy/Larry's room.
+    JSR ClearWindowHDMA                       ;
+    REP #$10                                  ; XY->16
+    LDX.W #$0198                              ;\ Scanline (x2) where the solid lava color in Iggy/Larry's fight begins.
+    BRA SolidWindowTable                      ;/
+
+SetupCreditsBGHDMA:
+    LDA.B #$58
+    STA.W CreditsL1HDMATable
+    STA.W CreditsL2HDMATable
+    STA.W CreditsL3HDMATable
+    STZ.W CreditsL1HDMATable+9
+    STZ.W CreditsL2HDMATable+9
+    STZ.W CreditsL3HDMATable+9
+    LDX.B #$04
+  - LDA.W CreditsHDMAData,X
+    STA.W HW_DMAPARAM+$50,X
+    LDA.W CreditsHDMAData+5,X
+    STA.W HW_DMAPARAM+$60,X
+    LDA.W CreditsHDMAData+5*2,X
+    STA.W HW_DMAPARAM+$70,X
+    DEX
+    BPL -
+    LDA.B #$00
+    STA.W HW_HDMABANK+$50
+    STA.W HW_HDMABANK+$60
+    STA.W HW_HDMABANK+$70
+    LDA.B #$E0                                ;\ Enable HDMAs on channels 5, 6, and 7.
+    STA.W HDMAEnable                          ;/
+
+ProcessCreditsBGHDMA:
+    REP #$30                                  ; AXY->16
+    LDY.W #$0008
+    LDX.W #$0014
+  - LDA.W Layer1XPos,Y
+    STA.W CreditsL1HDMATable+1,X
+    STA.W CreditsL1HDMATable+4,X
+    LDA.W NextLayer1XPos,Y
+    STA.W CreditsL1HDMATable+7,X
+    TXA
+    SEC
+    SBC.W #$000A
+    TAX
+    DEY
+    DEY
+    DEY
+    DEY
+    BPL -
+    SEP #$30                                  ; AXY->8
+    RTS
+
+CreditsHDMAData:
+    %HDMASettings($02,HW_BG1HOFS,CreditsL1HDMATable)
+    %HDMASettings($02,HW_BG2HOFS,CreditsL2HDMATable)
+    %HDMASettings($02,HW_BG3HOFS,CreditsL3HDMATable)
+
+
+RunGameMode:
+    LDA.W GameMode                            ; Load game mode
+    JSL ExecutePtr
+
+    dw GameMode00                             ; 00 - load nintendo presents
+    dw GameMode01                             ; 01 - nintendo presents
+    dw GMTransition                           ; 02 - fade out to title screen
+    dw GameMode03                             ; 03 - load title screen
+    dw GameMode04                             ; 04 - prepare title screen
+    dw GMTransition                           ; 05 - fade in to title screen
+    dw GameMode06                             ; 06 - title screen spotlight
+    dw GameMode07                             ; 07 - title screen
+    dw GameMode08                             ; 08 - file select
+    dw GameMode09                             ; 09 - file delete
+    dw GameMode0A                             ; 0A - player select
+    dw GMTransition                           ; 0B - fade out to overworld
+    dw GameMode0C                             ; 0C - load overworld
+    dw GMTransition                           ; 0D - fade in to overworld
+    dw GameMode0E                             ; 0E - overworld
+    dw TempFade                               ; 0F - fade out to level
+    dw GameMode10                             ; 10 - finish fade to level
+    dw GameMode11                             ; 11 - load level
+    dw GameMode12                             ; 12 - prepare level
+    dw TempFade                               ; 13 - fade in to level
+    dw GameMode14                             ; 14 - level
+    dw GMTransition                           ; 15 - fade out to game over/time up
+    dw GameMode16                             ; 16 - load game over/time up
+    dw GameMode17                             ; 17 - game over/time up
+    dw GMTransition                           ; 18 - fade out to credits
+    dw GameMode19                             ; 19 - load credits
+    dw GMTransition                           ; 1A - fade in to credits
+    dw GameMode1B                             ; 1B - staff credits
+    dw GMTransition                           ; 1C - fade out to credits yoshi house
+    dw GameMode1D                             ; 1D - load credits yoshi house
+    dw GMTransition                           ; 1E - fade in to credits yoshi house
+    dw GameMode1F                             ; 1F - credits yoshi house
+    dw GMTransition                           ; 20 - fade out to load credits enemy list
+    dw GameMode21                             ; 21 - load credits enemy list
+    dw GMTransition                           ; 22 - fade out to credits enemy list
+    dw GameMode23                             ; 23 - prepare credits enemy list
+    dw GMTransition                           ; 24 - fade in to credits enemy list
+    dw GameMode25                             ; 25 - credits enemy list
+    dw GMTransition                           ; 26 - fade out to the end screen
+    dw GameMode27                             ; 27 - load the end screen
+    dw GameMode28                             ; 28 - fade in to the end screen
+    dw GameMode29                             ; 29 - the end screen
 
 TurnOffIO:            STZ.W HW_NMITIMEN                         ; Disable NMI ,VIRQ, HIRQ, Joypads
                       STZ.W HW_HDMAEN                           ; Turn off all HDMA
@@ -2372,7 +2380,7 @@ GameMode19:           JSR CODE_0085FA
                       JSR LoadScrnImage
                       JSR UploadCreditsMusic
                       JSL CODE_0C93DD
-                      JSR CODE_009260
+                      JSR DisableHDMA
                       INC.W ObjectTileset
                       INC.W SpriteTileset
                       BRA +
@@ -2527,7 +2535,7 @@ CODE_0095E0:          CMP.B #$0C
                       DEX
                       BPL -
 CODE_009612:          JSR CODE_00922F
-                      JSR CODE_0092B2
+                      JSR SetupCreditsBGHDMA
                       JSR LoadScrnImage
                       JSR GameMode25
 CODE_00961E:          LDX.B #$15
@@ -2538,7 +2546,7 @@ CODE_009622:          JSR KeepGameModeActive
                       JMP CODE_0093EA
 
 GameMode25:           STZ.W PlayerGfxTileCount
-                      JSR CODE_0092ED
+                      JSR ProcessCreditsBGHDMA
                       JSL OAMResetRoutine
                       JSL CODE_0C93A5
                       JMP CODE_008494
@@ -2964,7 +2972,7 @@ CODE_009980:          STA.L DynamicStripeImage,X
                       LDA.B #$90
 CODE_009A17:          STA.B PlayerYPosNext
                       JSR CODE_009A1F
-                      JMP CODE_009283
+                      JMP ClearWindowTable
 
 CODE_009A1F:          LDY.B #$10
                       LDA.B #$32
@@ -4121,7 +4129,7 @@ CODE_00A11B:          LDY.B #$02
                       DEX
                       DEX
                       BPL -
-                      JSR CODE_0092A0
+                      JSR EnableWindowHDMA
                       JMP CODE_0093F4
 
 CODE_00A195:          REP #$10                                  ; XY->16
@@ -4596,7 +4604,7 @@ CODE_00A5B9:          JSR UploadSpriteGFX
                       JSL CODE_05BE8A
                       JSR CODE_009FB8
                       JSR CODE_00A5F9
-                      JSR CODE_009260
+                      JSR DisableHDMA
                       JSR CODE_009860
                     + JSR CODE_00922F
                       JSR KeepGameModeActive

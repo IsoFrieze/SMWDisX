@@ -378,7 +378,10 @@ ORG $000400
 
 OAMTileBitSize: skip 32
 OAMTileSize: skip 128
-WindowTable: skip 480
+WindowTable:
+CreditsL1HDMATable: skip 10
+CreditsL2HDMATable: skip 10
+CreditsL3HDMATable: skip 460
 PaletteIndexTable: skip 1
 DynPaletteIndex: skip 1
 DynPaletteTable:
