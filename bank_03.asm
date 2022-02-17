@@ -9220,7 +9220,7 @@ CODE_03DD7D:          PHX
                       STZ.W HW_VMADD+1
                       TXY
                       BEQ CODE_03DDD7
-                      JSL CODE_00BA28
+                      JSL PrepareGraphicsFile
                       LDA.B #$80
                       STA.B _3
                     - JSR CODE_03DDE5

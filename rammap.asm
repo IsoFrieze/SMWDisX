@@ -1341,6 +1341,7 @@ VRam_M7Tilemap:
 VRam_L1L2Tiles: skip 8192
 VRam_L1Tilemap: skip 4096
 VRam_L2Tilemap: skip 4096
-VRam_L3Tiles: skip 4096
+VRam_L3Tiles: skip 1536
+VRam_CreditsLetters: skip 2560
 VRam_L3Tilemap: skip 4096
 VRam_OBJTiles:

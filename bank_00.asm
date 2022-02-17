@@ -1981,7 +1981,7 @@ CODE_00919B:                                  ; Subroutine to prepare No-Yoshi e
     STA.W GreenStarBlockCoins                 ;/
  ++ RTS
 
-CODE_0091B1:                                  ; Routine to display text during level load.
+ShowLevelLoadingText:                         ; Routine to display text during level load.
     JSR CODE_00A82D                           ; Load "MARIO/LUIGI START !" tiles.
     LDX.B #0                                  ;\ Load "MARIO START !".
     LDA.B #!MarioStartXPos                    ;/ X position of the rightmost tile of the "MARIO START !" message.
@@ -2181,48 +2181,48 @@ RunGameMode:
     LDA.W GameMode                            ; Load game mode
     JSL ExecutePtr
 
-    dw GameMode00                             ; 00 - load nintendo presents
-    dw GameMode01                             ; 01 - nintendo presents
-    dw GMTransition                           ; 02 - fade out to title screen
-    dw GameMode03                             ; 03 - load title screen
-    dw GameMode04                             ; 04 - prepare title screen
-    dw GMTransition                           ; 05 - fade in to title screen
-    dw GameMode06                             ; 06 - title screen spotlight
-    dw GameMode07                             ; 07 - title screen
-    dw GameMode08                             ; 08 - file select
-    dw GameMode09                             ; 09 - file delete
-    dw GameMode0A                             ; 0A - player select
-    dw GMTransition                           ; 0B - fade out to overworld
-    dw GameMode0C                             ; 0C - load overworld
-    dw GMTransition                           ; 0D - fade in to overworld
-    dw GameMode0E                             ; 0E - overworld
-    dw TempFade                               ; 0F - fade out to level
-    dw GameMode10                             ; 10 - finish fade to level
-    dw GameMode11                             ; 11 - load level
-    dw GameMode12                             ; 12 - prepare level
-    dw TempFade                               ; 13 - fade in to level
-    dw GameMode14                             ; 14 - level
-    dw GMTransition                           ; 15 - fade out to game over/time up
-    dw GameMode16                             ; 16 - load game over/time up
-    dw GameMode17                             ; 17 - game over/time up
-    dw GMTransition                           ; 18 - fade out to credits
-    dw GameMode19                             ; 19 - load credits
-    dw GMTransition                           ; 1A - fade in to credits
-    dw GameMode1B                             ; 1B - staff credits
-    dw GMTransition                           ; 1C - fade out to credits yoshi house
-    dw GameMode1D                             ; 1D - load credits yoshi house
-    dw GMTransition                           ; 1E - fade in to credits yoshi house
-    dw GameMode1F                             ; 1F - credits yoshi house
-    dw GMTransition                           ; 20 - fade out to load credits enemy list
-    dw GameMode21                             ; 21 - load credits enemy list
-    dw GMTransition                           ; 22 - fade out to credits enemy list
-    dw GameMode23                             ; 23 - prepare credits enemy list
-    dw GMTransition                           ; 24 - fade in to credits enemy list
-    dw GameMode25                             ; 25 - credits enemy list
-    dw GMTransition                           ; 26 - fade out to the end screen
-    dw GameMode27                             ; 27 - load the end screen
-    dw GameMode28                             ; 28 - fade in to the end screen
-    dw GameMode29                             ; 29 - the end screen
+    dw GM00LoadPresents                       ; 00 - load nintendo presents
+    dw GM01Presents                           ; 01 - nintendo presents
+    dw GMTransitionFade                       ; 02 - fade out to title screen
+    dw GM03LoadTitleScreen                    ; 03 - load title screen
+    dw GM04PrepTitleScreen                    ; 04 - prepare title screen
+    dw GMTransitionFade                       ; 05 - fade in to title screen
+    dw GM06TitleSpotlight                     ; 06 - title screen spotlight
+    dw GM07TitleScreen                        ; 07 - title screen
+    dw GM08FileSelect                         ; 08 - file select
+    dw GM09FileDelete                         ; 09 - file delete
+    dw GM0APlayerSelect                       ; 0A - player select
+    dw GMTransitionFade                       ; 0B - fade out to overworld
+    dw GM0CLoadOverworld                      ; 0C - load overworld
+    dw GMTransitionFade                       ; 0D - fade in to overworld
+    dw GM0EOverworld                          ; 0E - overworld
+    dw GMTransitionMosaic                     ; 0F - fade out to level
+    dw GM10FadeToLevel                        ; 10 - finish fade to level
+    dw GM11LoadLevel                          ; 11 - load level
+    dw GM12PrepLevel                          ; 12 - prepare level
+    dw GMTransitionMosaic                     ; 13 - fade in to level
+    dw GM14Level                              ; 14 - level
+    dw GMTransitionFade                       ; 15 - fade out to game over/time up
+    dw GM16LoadGameOver                       ; 16 - load game over/time up
+    dw GM17GameOver                           ; 17 - game over/time up
+    dw GMTransitionFade                       ; 18 - fade out to credits
+    dw GM19LoadCutscene                       ; 19 - load castle cutscene/credits
+    dw GMTransitionFade                       ; 1A - fade in to castle cutscene/credits
+    dw GM1BCutscene                           ; 1B - castle cutscene/credits
+    dw GMTransitionFade                       ; 1C - fade out to credits yoshi house
+    dw GM1DLoadThankYou                       ; 1D - load credits yoshi house
+    dw GMTransitionFade                       ; 1E - fade in to credits yoshi house
+    dw GM1FThankYou                           ; 1F - credits yoshi house
+    dw GMTransitionFade                       ; 20 - fade out to load credits enemy list
+    dw GM21LoadEnemyList                      ; 21 - load credits enemy list
+    dw GMTransitionFade                       ; 22 - fade out to credits enemy list
+    dw GM23PrepEnemyList                      ; 23 - prepare credits enemy list
+    dw GMTransitionFade                       ; 24 - fade in to credits enemy list
+    dw GM25EnemyList                          ; 25 - credits enemy list
+    dw GMTransitionFade                       ; 26 - fade out to the end screen
+    dw GM27LoadTheEnd                         ; 27 - load the end screen
+    dw GM28FadeInTheEnd                       ; 28 - fade in to the end screen
+    dw GM29TheEnd                             ; 29 - the end screen
 
 TurnOffIO:                                    ; Subroutine to turn off the screen while loading.
     STZ.W HW_NMITIMEN                         ; Disable interupts.
@@ -2237,7 +2237,7 @@ NintendoPos:                                  ; X positions for the "Nintendo Pr
 NintendoTile:                                 ; Tilemap for the "Nintendo Presents" tiles.
     db $02,$04,$06,$08
 
-GameMode00:                                   ; Game Mode 00 - Load Nintendo Presents
+GM00LoadPresents:                             ; Game Mode 00 - Load Nintendo Presents
     JSR ClearOutLayer3                        ; Clean out Layer 3.
     JSR SetUpScreen                           ; Set up various registers (screen mode, CGADDSUB, windows...).
     JSR CODE_00A993                           ; Load Layer 3 GFX.
@@ -2294,7 +2294,7 @@ ScreenSettings:                               ; Subroutine to upload settings to
     STZ.W HW_TSW                              ;/
     RTS                                       ;
 
-GameMode01:                                   ; Game Mode 01 - Nintendo Presents logo
+GM01Presents:                                 ; Game Mode 01 - Nintendo Presents logo
     DEC.W VariousPromptTimer                  ;\ Return if not time for the logo to fade away.
     BNE FinishGameMode                        ;/
     JSR CODE_00B888                           ; Decompress GFX32/GFX33.
@@ -2303,7 +2303,7 @@ NextGameMode:
 FinishGameMode:
     RTS
 
-GameMode06:                                   ; Game Mode 06 - Title Screen: Circle effect
+GM06TitleSpotlight:                           ; Game Mode 06 - Title Screen: Circle effect
     JSR DetermineJoypadInput                  ; Get the current controller port to accept data from.
     JSR IsFaceButtonPressed                   ;\ Branch if A/B/X/Y is not pressed.
     BEQ +                                     ;/
@@ -2346,7 +2346,7 @@ CutsceneBackground:                           ; Stripe pointers to the BG for th
     db OtherStripes-StripeImages+3
     db OtherStripes-StripeImages
 
-GameMode19:                                   ; Game Mode 19 - Load Credits / Castle Cutscene
+GM19LoadCutscene:                             ; Game Mode 19 - Load Credits / Castle Cutscene
     JSR ClearOutLayer3                        ; Clean out Layer 3.
     JSR Clear_1A_13D3                         ; Clean out a large chunk of RAM.
     JSR SetUpScreen                           ; Set up various registers (screen mode, CGADDSUB, windows...).
@@ -2364,7 +2364,7 @@ GameMode19:                                   ; Game Mode 19 - Load Credits / Ca
     STA.W ForegroundPalette                   ;/      
     CPX.B #!Cutscene_Credits                  ;\ Branch if loading a castle destruction scene, not credits.
     BNE LoadCastleCutscene                    ;/
-    JSR CODE_00955E                           ;
+    JSR LoadCredits                           ;
     LDA.B #OtherStripes-StripeImages+9        ;\ 
     STA.B StripeImage                         ;| Turn Layer 3 completely black.
     JSR LoadScrnImage                         ;/
@@ -2408,7 +2408,7 @@ LoadCastleCutscene:                           ; Loading castle cutscene.
     LDY.B #%00000000                          ;/ 
     JSR CODE_009622
 
-GameMode1B:                                   ; Game Mode 1B - Credits / Castle Cutscene
+GM1BCutscene:                                 ; Game Mode 1B - Credits / Castle Cutscene
     JSL OAMResetRoutine                       ; Clear OAM.
     LDA.W CutsceneID                          ;\ 
     CMP.B #!Cutscene_Credits                  ;| Branch down if specifically running the credits.
@@ -2460,265 +2460,291 @@ ProccessCredits:                              ; Specifically running credits.
     JSL CODE_0C938D                           ; Run the main routine.
     JMP ConsolidateOAM                        ; Prep OAM for upload.
 
-CODE_00955E:          LDY.B #$2F
-                      JSL CODE_00BA28
-                      LDA.B #$80
-                      STA.W HW_VMAINC
-                      REP #$30                                  ; AXY->16
-                      LDA.W #$4600
-                      STA.W HW_VMADD
-                      LDX.W #$0200
-                    - LDA.B [_0]
-                      STA.W HW_VMDATA
-                      INC.B _0
-                      INC.B _0
-                      DEX
-                      BNE -
-                      SEP #$30                                  ; AXY->8
-                      RTS
+LoadCredits:
+    LDY.B #!GFX2F_CreditsLetters              ;\ Decompress GFX2F to RAM.
+    JSL PrepareGraphicsFile                   ;/
+    LDA.B #%10000000
+    STA.W HW_VMAINC
+    REP #$30                                  ; AXY->16
+    LDA.W #VRam_CreditsLetters                ;\
+    STA.W HW_VMADD                            ;| Copy from WRAM to VRAM
+    LDX.W #!GFX2F_DecompSize/2                ;|  manually, no DMA
+  - LDA.B [_0]                                ;|
+    STA.W HW_VMDATA                           ;|
+    INC.B _0                                  ;|
+    INC.B _0                                  ;|
+    DEX                                       ;|
+    BNE -                                     ;/
+    SEP #$30                                  ; AXY->8
+    RTS
 
-GameMode1D:           INC.W CutsceneID
-                      LDA.B #$28
-                      LDY.B #$01
-                      JSR CODE_0096CF
-                      DEC.W GameMode
-                      LDA.B #$16
-                      STA.W SpriteTileset
-                      JSR GameMode12
-                      DEC.W GameMode
-                      JSR TurnOffIO
-                      JSR ClearOutLayer3
-                      JSR CODE_00A993
-                      JSL CODE_0CA3C9
-                      JSR CODE_00961E
-GameMode1F:           JSL OAMResetRoutine
-                      JSL CODE_0C939A
-                      INC.B EffFrame
-                      JSL CODE_05BB39
-                      JMP ConsolidateOAM
+GM1DLoadThankYou:                             ; Game Mode 1D - Ending: Load Yoshi's House
+    INC.W CutsceneID                          ;
+    LDA.B #$04+!MainMapLvls                   ;\ 
+    LDY.B #1                                  ;| Set to load level 104.
+    JSR CODE_0096CF                           ;/
+    DEC.W GameMode                            ;
+    LDA.B #!SprTileset_CreditsThankYou        ;\ Set sprite GFX list.
+    STA.W SpriteTileset                       ;/
+    JSR GM12PrepLevel                         ; Load level data.
+    DEC.W GameMode                            ;
+    JSR TurnOffIO                             ; Turn off the screen.
+    JSR ClearOutLayer3                        ; Clean out Layer 3.
+    JSR CODE_00A993                           ; Load Layer 3 GFX.
+    JSL CODE_0CA3C9                           ; Initialize misc data?
+    JSR CODE_00961E                           ; Set up screen data (CGADSUB/etc.)
 
-GameMode21:           JSL CODE_0C93AD
-                      RTS
+GM1FThankYou:                                 ; Game Mode 1F - Ending: Yoshi's House
+    JSL OAMResetRoutine                       ; Clear OAM.
+    JSL CODE_0C939A                           ; Run main routines.
+    INC.B EffFrame                            ;
+    JSL CODE_05BB39                           ; Handle tile animation.
+    JMP ConsolidateOAM                        ; Prep OAM for upload.
 
-GameMode23:           JSR ClearOutLayer3
-                      JSR Clear_1A_13D3
-                      JSR SetUpScreen
-                      JSL CODE_0CAD8C
-                      JSL CODE_05801E
-                      LDA.W CreditsScreenNumber
-                      CMP.B #$0A
-                      BNE CODE_0095E0
-                      LDA.B #$13
-                      STA.W SpriteTileset
-                      BRA +
+GM21LoadEnemyList:                            ; Game Mode 21 - Fade to Enemy Credits (black)
+    JSL CODE_0C93AD                           ; Fade.
+    RTS                                       ;
 
-CODE_0095E0:          CMP.B #$0C
-                      BNE +
-                      LDA.B #$17
-                      STA.W SpriteTileset
-                    + JSR UploadSpriteGFX
-                      JSR LoadPalette
-                      JSL CODE_05809E
-                      JSR CODE_00A5F9
-                      JSL CODE_0CADF6
-                      LDA.W CreditsScreenNumber
-                      CMP.B #$0C
-                      BNE CODE_009612
-                      LDX.B #$0B
-                    - LDA.W SpriteColors+$A8,X
-                      STA.W MainPalette+$104,X
-                      LDA.W SpriteColors+$B4,X
-                      STA.W MainPalette+$124,X
-                      DEX
-                      BPL -
-CODE_009612:          JSR CODE_00922F
-                      JSR SetupCreditsBGHDMA
-                      JSR LoadScrnImage
-                      JSR GameMode25
-CODE_00961E:          LDX.B #$15
-                      LDY.B #$02
-CODE_009622:          JSR KeepGameModeActive
-                      LDA.B #$09
-                      STA.B MainBGMode
-                      JMP CODE_0093EA
+GM23PrepEnemyList:                            ; Game Mode 23 - Load Enemy Credits (per scene)
+    JSR ClearOutLayer3                        ; Clean out Layer 3.
+    JSR Clear_1A_13D3                         ; Clean out a large chunk of RAM.
+    JSR SetUpScreen                           ; Set up various registers (screen mode, CGADDSUB, windows...).
+    JSL CODE_0CAD8C                           ;
+    JSL CODE_05801E                           ; Load level data.
+    LDA.W CreditsScreenNumber                 ;\
+    CMP.B #10                                 ;|
+    BNE ++                                    ;|
+    LDA.B #!SprTileset_ReznorIggyLarry        ;|
+    STA.W SpriteTileset                       ;| Set sprite GFX list based off of screen number.
+    BRA +                                     ;|
+ ++ CMP.B #12                                 ;|
+    BNE +                                     ;|
+    LDA.B #!SprTileset_CreditsKoopalings      ;|
+    STA.W SpriteTileset                       ;/
+  + JSR UploadSpriteGFX                       ; Upload GFX files.
+    JSR LoadPalette                           ; Load palette data from ROM to RAM.
+    JSL CODE_05809E                           ; Upload Map16 data to VRAM.
+    JSR CODE_00A5F9                           ; Handle animated tiles.
+    JSL CODE_0CADF6                           ; Load the enemy credits scene.
+    LDA.W CreditsScreenNumber
+    CMP.B #12
+    BNE +
+    LDX.B #11
+  - LDA.W BowserEndPalette,X
+    STA.W MainPalette+2*$82,X
+    LDA.W BowserEndPalette+2*6,X
+    STA.W MainPalette+2*$92,X
+    DEX
+    BPL -
+    
+CODE_009612:
+  + JSR CODE_00922F                           ; Upload palettes to CGRAM.
+    JSR SetupCreditsBGHDMA                    ; Initialize HDMA table.
+    JSR LoadScrnImage                         ; Upload tilemap data from $12.
+    JSR GM25EnemyList
+                      
+CODE_00961E:
+    LDX.B #%00010101                          ;\ Main/sub screen settings.
+    LDY.B #%00000010                          ;/
+CODE_009622:
+    JSR KeepGameModeActive
+    LDA.B #%00001001
+    STA.B MainBGMode
+    JMP CODE_0093EA
 
-GameMode25:           STZ.W PlayerGfxTileCount
-                      JSR ProcessCreditsBGHDMA
-                      JSL OAMResetRoutine
-                      JSL CODE_0C93A5
-                      JMP ConsolidateOAM
+GM25EnemyList:                                ; Game Mode 25 - Ending: Enemies
+    STZ.W PlayerGfxTileCount                  ;
+    JSR ProcessCreditsBGHDMA                  ; Initialize HDMA table.
+    JSL OAMResetRoutine                       ; Clear OAM.
+    JSL CODE_0C93A5                           ; Run main routines for the game mode.
+    JMP ConsolidateOAM                        ; Prep OAM for upload.
 
-GameMode27:           JSR ClearOutLayer3
-                      JSR Clear_1A_13D3
-                      JSR SetUpScreen
-                      JSR CODE_00955E
-                      LDA.B #$19
-                      STA.W SpriteTileset
-                      LDA.B #$03
-                      STA.W BackAreaColor
-                      LDA.B #$03
-                      STA.W BackgroundPalette
-                      JSR UploadSpriteGFX
-                      JSR LoadPalette
-                      LDX.B #$0B
-                    - LDA.W TheEndColors,X
-                      STA.W MainPalette+$1A4,X
-                      LDA.W TheEndColors+$0C,X
-                      STA.W MainPalette+$1C4,X
-                      LDA.W TheEndColors+$18,X
-                      STA.W MainPalette+$1E4,X
-                      DEX
-                      BPL -
-                      JSR CODE_00922F
-                      LDA.B #OtherStripes-StripeImages+$0C
-                      STA.B StripeImage
-                      JSR LoadScrnImage
-                      JSL CODE_0CAADF
-                      JSR ConsolidateOAM
-                      LDX.B #$14
-                      LDY.B #$00
-                      JMP CODE_009622
+GM27LoadTheEnd:                               ; Game Mode 27 - Ending: Load The End
+    JSR ClearOutLayer3                        ; Clean out Layer 3.
+    JSR Clear_1A_13D3                         ; Clean out a large chunk of RAM.
+    JSR SetUpScreen                           ; Set up various registers (screen mode, CGADDSUB, windows...).
+    JSR LoadCredits
+    LDA.B #!SprTileset_TheEnd                 ;\ Set sprite GFX list.
+    STA.W SpriteTileset                       ;/
+    LDA.B #3
+    STA.W BackAreaColor
+    LDA.B #3
+    STA.W BackgroundPalette
+    JSR UploadSpriteGFX                       ; Upload GFX files.
+    JSR LoadPalette
+    LDX.B #11
+  - LDA.W TheEndColors,X
+    STA.W MainPalette+2*$D2,X
+    LDA.W TheEndColors+12,X
+    STA.W MainPalette+2*$E2,X
+    LDA.W TheEndColors+24,X
+    STA.W MainPalette+2*$F2,X
+    DEX
+    BPL -
+    JSR CODE_00922F                           ; Upload palettes to CGRAM.
+    LDA.B #OtherStripes-StripeImages+$0C      ;
+    STA.B StripeImage                         ;
+    JSR LoadScrnImage                         ; Upload tilemap data from $12.
+    JSL CODE_0CAADF                           ;
+    JSR ConsolidateOAM                        ; Prep OAM for upload.
+    LDX.B #%00010100
+    LDY.B #%00000000
+    JMP CODE_009622
 
-GameMode29:           RTS
+GM29TheEnd:                                   ; Game Mode 29 - The End
+    RTS                                       ; We did it!
 
-GameMode10:           JSR ClearOutLayer3
-                      LDA.W BonusGameActivate
-                      BNE CODE_0096A8
-                      LDA.W SublevelCount
-                      ORA.W ShowMarioStart
-                      ORA.W OverworldOverride
-                      BNE +
-                      LDA.W OverworldLayer1Tile
-                      CMP.B #$56
-                      BEQ +
-CODE_0096A8:          JSR CODE_0091B1
-                    + JMP CODE_0093CA
+GM10FadeToLevel:                              ; Game Mode 10 -  Fade to Level (black)
+    JSR ClearOutLayer3                        ; Clean out Layer 3.
+    LDA.W BonusGameActivate                   ;\ Branch if bonus game should be loaded.
+    BNE .ShowText                             ;/
+    LDA.W SublevelCount                       ;\ Don't show "MARIO START!" if:
+    ORA.W ShowMarioStart                      ;|  - entering sublevel
+    ORA.W OverworldOverride                   ;|  - no yoshi intro
+    BNE .DontShowText                         ;|  - exiting to overworld
+    LDA.W OverworldLayer1Tile                 ;|  - entering yoshi's house
+    CMP.B #!LevelTileNoStart                  ;|| Tile to not use "Mario Start!" on (default Yoshi's House)
+    BEQ .DontShowText                         ;/
+.ShowText:                                    ;
+    JSR ShowLevelLoadingText                  ; Show MARIO START!
+.DontShowText:                                ;
+    JMP CODE_0093CA                           ; Load palettes and initialize screen settings.
 
-GameMode03:           STZ.W HW_NMITIMEN
-                      JSR ClearMemory
-                      LDX.B #$07
-                      LDA.B #$FF
-                    - STA.W SpriteGFXFile,X
-                      DEX
-                      BPL -
-                      LDA.W OverworldOverride
-                      BNE +
-                      JSR UploadMusicBank1
-                      LDA.B #!BGM_TITLESCREEN                   ; \ Set title screen music
-                      STA.W SPCIO2                              ; /
-                    + LDA.B #$EB
-                      LDY.B #$00
-CODE_0096CF:          STA.W OverworldOverride
-                      STY.W OWPlayerSubmap
-GameMode11:           STZ.W HW_NMITIMEN
-                      JSR NoButtons
-                      LDA.W SublevelCount
-                      BNE +
-                      LDA.W ShowMarioStart
-                      BEQ +
-                      JSL CODE_04DC09
-                    + STZ.W Layer3ScrollType
-                      STZ.W OverworldProcess
-                      LDA.B #$50
-                      STA.W DrumrollTimer
-                      JSL CODE_05D796
-                      LDX.B #$07
-                    - LDA.B Layer1XPos,X
-                      STA.W NextLayer1XPos,X
-                      DEX
-                      BPL -
-                      JSR UploadLevelMusic
-                      JSR CODE_00A635
-                      LDA.B #$20
-                      STA.B LastScreenHoriz
-                      JSR CODE_00A796
-                      INC.W ScreenScrollAtWill
-                      JSL CODE_00F6DB
-                      JSL CODE_05801E
-                      LDA.W OverworldOverride
-                      BEQ CODE_009728
-                      CMP.B #$E9
-                      BNE CODE_009740
-                      LDA.B #$13
-                      STA.W MusicBackup
-CODE_009728:          LDA.W MusicBackup
-                      CMP.B #$40
-                      BCS CODE_00973B
-                      LDY.W IRQNMICommand
-                      CPY.B #$C1
-                      BNE +
-                      LDA.B #!BGM_BOWSERINTERLUDE
-                    + STA.W SPCIO2
-CODE_00973B:          AND.B #$BF
-                      STA.W MusicBackup
-CODE_009740:          STZ.W Brightness
-                      STZ.W MosaicDirection
-                      INC.W GameMode
-                      JMP Mode04Finish
+GM03LoadTitleScreen:                          ; Game Mode 03 - Load Title Screen
+    STZ.W HW_NMITIMEN
+    JSR ClearMemory                           ; Clear out $0000-$1FFF and $7F837B/D.
+    LDX.B #7                                  ;\ 
+    LDA.B #-1                                 ;|
+  - STA.W SpriteGFXFile,X                     ;| Write #$FF to $0101-$0108.
+    DEX                                       ;|
+    BPL -                                     ;/
+    LDA.W OverworldOverride
+    BNE +
+    JSR UploadMusicBank1
+    LDA.B #!BGM_TITLESCREEN                   ;\ Set title screen music
+    STA.W SPCIO2                              ;/
+  + LDA.B #$C7+!MainMapLvls
+    LDY.B #0
+CODE_0096CF:
+    STA.W OverworldOverride
+    STY.W OWPlayerSubmap
 
-CODE_00974C:          JSR HexToDec
-                      RTL
+GM11LoadLevel:                                ; Game Mode 11 - Load Level (Mario Start!)
+    STZ.W HW_NMITIMEN                         ;
+    JSR NoButtons                             ; Disable input.
+    LDA.W SublevelCount                       ;\ 
+    BNE +                                     ;| If entering a level that doesn't show Mario Start (e.g. castle entrance),
+    LDA.W ShowMarioStart                      ;|  reload the overworld map...?
+    BEQ +                                     ;/
+    JSL CODE_04DC09                           ; Upload the overworld Layer 1 tilemap.
+  + STZ.W Layer3ScrollType                    ;
+    STZ.W OverworldProcess                    ;
+    LDA.B #!DrumrollInit                      ;\ Initialize the end-level drumroll timer.
+    STA.W DrumrollTimer                       ;/
+    JSL CODE_05D796                           ; Load primary header data.
+    LDX.B #7                                  ;\ 
+  - LDA.B Layer1XPos,X                        ;|
+    STA.W NextLayer1XPos,X                    ;| Reset Layer 1/2 position calculations.
+    DEX                                       ;|
+    BPL -                                     ;/
+    JSR UploadLevelMusic                      ; Upload the level's music.
+    JSR CODE_00A635                           ; Initialize RAM, prepare Mario's entrance animation.
+    LDA.B #!LevelMaxScreens                   ;\ Set maximum screen number to 0x20.
+    STA.B LastScreenHoriz                     ;/
+    JSR CODE_00A796                           ; Get initial Layer 2 scroll positions.
+    INC.W ScreenScrollAtWill                  ; Enable "vertical scroll at will" by default.
+    JSL CODE_00F6DB                           ; Reset layer positions.
+    JSL CODE_05801E                           ; Load level data.
+    LDA.W OverworldOverride                   ;\ 
+    BEQ +                                     ;|
+    CMP.B #$C5+!MainMapLvls                   ;|
+    BNE +++                                   ;|
+    LDA.B #!BGM_CUTSCENEFULL                  ;|] Intro song number.
+    STA.W MusicBackup                         ;|
+  + LDA.W MusicBackup                         ;|
+    CMP.B #%01000000                          ;| Keep music from resetting except under certain conditions:
+    BCS ++                                    ;| - Level other than intro level is being force-loaded via $0109
+    LDY.W IRQNMICommand                       ;| - Bit 6 of $0DDA is set
+    CPY.B #%11000001                          ;|
+    BNE +                                     ;|
+    LDA.B #!BGM_BOWSERINTERLUDE               ;|] Bowser music.
+  + STA.W SPCIO2                              ;|
+ ++ AND.B #%10111111                          ;|
+    STA.W MusicBackup                         ;/
++++ STZ.W Brightness                          ;\ 
+    STZ.W MosaicDirection                     ;| Start fade-in.
+    INC.W GameMode                            ;/
+    JMP Mode04Finish                          ; Re-enable NMI and auto-joypad read.
 
-GameMode16:           JSR ClearOutLayer3
-                      JSR CODE_00A82D
-                      JMP CODE_0093CA
+HexToDecLong:                                 ; Wrapper for Hex conversion routine.
+    JSR HexToDec
+    RTL
 
-GameMode17:           JSL OAMResetRoutine
-                      LDA.W GameOverAnimation
-                      BNE CODE_00978B
-                      DEC.W GameOverTimer
-                   if ver_is_ntsc(!_VER)                        ;\================== J, U, & SS =================
-                      BNE CODE_00978E                           ;! GAME OVER disappears when timer hits $00
-                   else                                         ;<=================== E0, & E1 ==================
-                      LDY.W GameOverTimer                       ;! GAME OVER disappears when timer hits $30
-                      CPY.B #$30                                ;!
-                      BCS CODE_00978E                           ;!
-                   endif                                        ;/===============================================
-                      LDA.W PlayerLives
-                      BPL CODE_009788
-                      STZ.W CarryYoshiThruLvls
-                      LDA.W SavedPlayerLives
-                      ORA.W SavedPlayerLives+1
-                      BPL CODE_009788
-                      LDX.B #$0C
-                    - STZ.W AllDragonCoinsCollected,X
-                   if ver_is_japanese(!_VER)                    ;\======================= J =====================
-                      STZ.W Checkpoint1upCollected,X            ;! it was correct...
-                   else                                         ;<=============== U, SS, E0, & E1 ===============
-                      STZ.W _6,X                                ;! then they f'd it up
-                   endif                                        ;/===============================================
-                      STZ.W MoonCollected,X
-                      DEX
-                      BPL -
-                      INC.W ShowContinueEnd
-CODE_009788:          JMP CODE_009E62
+GM16LoadGameOver:                             ; Game Mode 16 - Load Game Over / Time Up
+    JSR ClearOutLayer3                        ; Clean out Layer 3.
+    JSR CODE_00A82D                           ; Load TIME UP/GAME OVER tiles.
+    JMP CODE_0093CA                           ; Load palettes and initialize screen settings.
 
-CODE_00978B:          SEC
-                      SBC.B #$04
-CODE_00978E:          STA.W GameOverAnimation
-                      CLC
-                      ADC.B #$A0
-                      STA.B _0
-                      ROL.B _1
-                      LDX.W DeathMessage
-                      LDY.B #$48
-CODE_00979D:          CPY.B #$28
-                      BNE +
-                      LDA.B #$78
-                      SEC
-                      SBC.W GameOverAnimation
-                      STA.B _0
-                      ROL A
-                      EOR.B #$01
-                      STA.B _1
-                    + JSR DrawOneStartScreenLetter
-                      INX
-                      TYA
-                      SEC
-                      SBC.B #$08
-                      TAY
-                      BNE CODE_00979D
-                      JMP ConsolidateOAM
+GM17GameOver:                                 ; Game Mode 17 - Game Over / Time Up
+    JSL OAMResetRoutine                       ; Clear OAM.
+    LDA.W GameOverAnimation
+    BNE .SlideTextTogether
+    DEC.W GameOverTimer
+if ver_is_ntsc(!_VER)                         ;\================== J, U, & SS =================
+    BNE .DisplayText                          ;! GAME OVER disappears when timer hits $00
+else                                          ;<=================== E0, & E1 ==================
+    LDY.W GameOverTimer                       ;! GAME OVER disappears when timer hits $30
+    CPY.B #!GameOverThreshold                 ;!
+    BCS .DisplayText                          ;!
+endif                                         ;/===============================================
+    LDA.W PlayerLives                         ;\ Branch out if the player is not out of lives yet.
+    BPL .NoGameOverYet                        ;/
+    STZ.W CarryYoshiThruLvls                  ; Get rid of Yoshi for this player
+    LDA.W SavedPlayerLives                    ;\ Branch out if this was a game over,
+    ORA.W SavedPlayerLives+1                  ;|  but the other player still has lives left.
+    BPL .NoGameOverYet                        ;/
+    LDX.B #12                                 ;\ 
+  - STZ.W AllDragonCoinsCollected,X           ;| Clear all Dragon Coin, checkpoint 1up, and 3up moon flags.
+if ver_is_japanese(!_VER)                     ;|\======================= J =====================
+    STZ.W Checkpoint1upCollected,X            ;|! J version resets checkpoint 1ups correctly
+else                                          ;|<=============== U, SS, E0, & E1 ===============
+    STZ.W _6,X                                ;|! then they f'd it up for the other releases
+endif                                         ;|/===============================================
+    STZ.W MoonCollected,X                     ;|
+    DEX                                       ;|
+    BPL -                                     ;/
+    INC.W ShowContinueEnd
+.NoGameOverYet:
+    JMP CODE_009E62
+
+.SlideTextTogether:
+    SEC                                       ;\ 
+    SBC.B #4                                  ;// Speed at which the "GAME OVER" / "TIME UP !" messages slide together.
+.DisplayText:                                 ;
+    STA.W GameOverAnimation                   ;\ 
+    CLC                                       ;| Set X position for the right half of the message.
+    ADC.B #!GameOverXPosRight                 ;| X position of the right side of the "OVER" / "UP !" half of the messages when they slide together.
+    STA.B _0                                  ;|
+    ROL.B _1                                  ;/
+    LDX.W DeathMessage                        ;
+    LDY.B #8*9                                ;
+  - CPY.B #8*5                                ;\ Branch if currently loading the right half of the message.
+    BNE +                                     ;/
+    LDA.B #!GameOverXPosLeft                  ;\ X position of the right side of the "GAME " / "TIME " half of the messages when they slide together.
+    SEC                                       ;|
+    SBC.W GameOverAnimation                   ;|
+    STA.B _0                                  ;| Set X position for the left half of the message.
+    ROL A                                     ;|
+    EOR.B #%00000001                          ;|
+    STA.B _1                                  ;/
+  + JSR DrawOneStartScreenLetter              ; Load the selected death screen message.
+    INX                                       ;
+    TYA                                       ;\ 
+    SEC                                       ;|
+    SBC.B #8                                  ;| Move to next letter.
+    TAY                                       ;|
+    BNE -                                     ;/
+    JMP ConsolidateOAM                        ; Prep OAM for upload.
 
 CODE_0097BC:          LDA.B #$0F
                       STA.W Brightness                          ; Set brightness to full (RAM mirror)
@@ -3023,8 +3049,8 @@ DetermineJoypadInput: LDA.W HW_JOY1                             ; \Read old-styl
 CODE_009A87:          STA.W ControllersPresent
                       RTS                                       ; *yawn*
 
-GameMode04:           JSR DetermineJoypadInput
-                      JSR GameMode12
+GM04PrepTitleScreen:  JSR DetermineJoypadInput
+                      JSR GM12PrepLevel
                       STZ.W InGameTimerHundreds                 ; Zero the timer
                       JSR ClearOutLayer3
                       LDA.B #$03                                ; \ Load title screen Layer 3 image
@@ -3096,7 +3122,7 @@ Return009B16:         RTS
                    if ver_is_console(!_VER)                     ;\=============== J, U, E0, & E1 ================
 DATA_009B17:          db $04,$02,$01                            ;!
                                                                 ;!
-GameMode09:           REP #$20                                  ;! A->16
+GM09FileDelete:       REP #$20                                  ;! A->16
                       LDA.W #$39C9                              ;!
                       LDY.B #$60                                ;!
                       JSR CODE_009D30                           ;!
@@ -3105,7 +3131,7 @@ GameMode09:           REP #$20                                  ;! A->16
                       AND.B #$40                                ;!
                       BEQ +                                     ;!
                    else                                         ;<======================== SS ===================
-GameMode09:                                                     ;!
+GM09FileDelete:                                                 ;!
                    endif                                        ;/===============================================
 CODE_009B2C:          DEC.W GameMode
                       DEC.W GameMode
@@ -3269,7 +3295,7 @@ ItrCntrlrSqnc:        db $41,$0D,$C1,$30,$00,$10,$42,$26        ;!
                       db $C1,$30,$00,$30,$FF                    ;!
                    endif                                        ;/===============================================
 
-GameMode07:           JSR DetermineJoypadInput
+GM07TitleScreen:      JSR DetermineJoypadInput
                       JSR IsFaceButtonPressed
                       BNE CODE_009C9F
                       JSR NoButtons                             ; Zero controller RAM mirror
@@ -3294,7 +3320,7 @@ CODE_009C8B:          STY.W GameMode
                       BNE +
                       AND.B #$9F
                     + STA.B byetudlrFrame                       ; Write to byte 01, Just-pressed variant
-                      JMP GameMode14                            ; Jump to another section of this routine
+                      JMP GM14Level                             ; Jump to another section of this routine
 
 CODE_009C9F:          JSL OAMResetRoutine                       ; IIRC, this contains a lot of STZ instructions
                       LDA.B #$04
@@ -3350,7 +3376,7 @@ SSDATA_009BF5:        db $06,$46,$86,$C6,$10,$50,$90            ;!
 SSDATA_009BFC:        db $07,$FF                                ;!
 SSDATA_009BFE:        db $00,$06                                ;!
                                                                 ;!
-GameMode08:           REP #$20                                  ;! A->16
+GM08FileSelect:       REP #$20                                  ;! A->16
                       LDA.W #$7393                              ;!
                       LDY.B #$20                                ;!
                       JSR CODE_009D30                           ;!
@@ -3410,7 +3436,7 @@ SSCODE_009C6D:        LDA.B #!SFX_COIN                          ;!
                     + INC.W GameMode                            ;!
                       JSR CODE_WRITEOW                          ;!
                    else                                         ;<================= J, U, E0, & E1 ==============
-GameMode08:           REP #$20                                  ;! A->16
+GM08FileSelect:       REP #$20                                  ;! A->16
                       LDA.W #$7393                              ;!
                       LDY.B #$20                                ;!
                       JSR CODE_009D30                           ;!
@@ -3621,7 +3647,7 @@ CODE_009DF7:          SEP #$20                                  ;! A->8
                       RTS                                       ;! unused?
                    endif                                        ;/=============================================== ENDIF
 
-GameMode0A:           LDA.B byetudlrFrame
+GM0APlayerSelect:     LDA.B byetudlrFrame
                       ORA.B axlr0000Frame
                       AND.B #$40
                       BEQ +
@@ -3865,7 +3891,7 @@ DATA_009F31:          db $F0,$10
 DATA_009F33:          db $0F,$00
                       db $00,$F0
 
-TempFade:             DEC.W KeepModeActive                      ; \If 0DB1 = 0 Then Exit Ssub
+GMTransitionMosaic:   DEC.W KeepModeActive                      ; \If 0DB1 = 0 Then Exit Ssub
                       BPL Return009F6E                          ; /Decrease it either way.
                       JSR KeepGameModeActive                    ; #$01 -> $0DB1
                       LDY.W MosaicDirection
@@ -3888,13 +3914,13 @@ GM__Mosaic:           INC.W GameMode                            ; Game Mode += 1
                       STA.W HW_MOSAIC                           ; /
 Return009F6E:         RTS                                       ; I think we're done here
 
-GMTransition:         DEC.W KeepModeActive                      ; Decrement something...  Seems like it might be a timing counter
+GMTransitionFade:     DEC.W KeepModeActive                      ; Decrement something...  Seems like it might be a timing counter
                       BPL Return009F6E                          ; If positive, return from subroutine.
                       JSR KeepGameModeActive                    ; Remain in this mode
 CODE_009F77:          LDY.W MosaicDirection                     ; $0DAF -> Y,
                       BRA CODE_009F4C                           ; BRA to the fade control routine
 
-GameMode28:           DEC.W KeepModeActive
+GM28FadeInTheEnd:     DEC.W KeepModeActive
                       BPL Return009F6E
                       LDA.B #$08
                       JSR CODE_009F2B
@@ -4016,7 +4042,7 @@ DATA_00A06B:          dw $0000,$FFEF,$FFEF,$FFEF
 DATA_00A079:          dw $0000,$FFD8,$0080,$0128
                       dw $FFD8,$0080,$0128
 
-GameMode0C:           JSR TurnOffIO
+GM0CLoadOverworld:    JSR TurnOffIO
                       LDA.W EnteringStarWarp
                       BEQ +
                       JSL CODE_04853B
@@ -4100,7 +4126,7 @@ CODE_00A11B:          LDY.B #$02
                       SEP #$20                                  ; A->8
                       JSR UploadSpriteGFX
                       LDY.B #$14
-                      JSL CODE_00BA28
+                      JSL PrepareGraphicsFile
                       JSR CODE_00AD25
                       JSR CODE_00922F
                       LDA.B #$06                                ; \ Load overworld border
@@ -4151,7 +4177,7 @@ Clear_1A_13D3:        REP #$10                                  ; XY->16
                       SEP #$10                                  ; XY->8
                       RTS
 
-GameMode0E:           JSR DetermineJoypadInput
+GM0EOverworld:        JSR DetermineJoypadInput
                       INC.B EffFrame                            ; Increase alternate frame counter
                       JSL OAMResetRoutine
                       JSL GameMode_0E_Prim                      ; (Bank 4.asm)
@@ -4164,7 +4190,7 @@ GrndShakeDispYHi:     db $FF,$00,$00,$00
 
                       db $12,$22,$12,$02
 
-GameMode14:           LDA.W MessageBoxTrigger
+GM14Level:            LDA.W MessageBoxTrigger
                       BEQ +
                       JSL CODE_05B10C
                       RTS
@@ -4585,7 +4611,7 @@ CODE_00A594:          PHB                                       ; Wrapper
                       PLB
                       RTL
 
-GameMode12:           JSR ClearOutLayer3                        ; gah, stupid keyboard >_<
+GM12PrepLevel:        JSR ClearOutLayer3                        ; gah, stupid keyboard >_<
                       JSR NoButtons
                       STZ.W UploadMarioStart
                       JSR SetUpScreen
@@ -4869,7 +4895,7 @@ CODE_00A7C2:          REP #$20                                  ; A->16
                       RTS
 
 CODE_00A82D:          LDY.B #$0F
-                      JSL CODE_00BA28
+                      JSL PrepareGraphicsFile
                       LDA.W BonusGameActivate
                       REP #$30                                  ; AXY->16
                       BEQ +
@@ -4900,7 +4926,7 @@ CODE_00A845:          LDY.W #$0008
                       BCC CODE_00A845
                       SEP #$30                                  ; AXY->8
                       LDY.B #$00
-                      JSL CODE_00BA28
+                      JSL PrepareGraphicsFile
                       REP #$30                                  ; AXY->16
                       LDA.W #$B3F0
                       STA.B _0
@@ -5000,7 +5026,7 @@ CODE_00A993:          STZ.W HW_VMADD                            ; \
                       STA.B _E
 CODE_00A9A3:          LDA.B _E
                       TAY
-                      JSL CODE_00BA28
+                      JSL PrepareGraphicsFile
                       REP #$30                                  ; AXY->16
                       LDX.W #$03FF
                       LDY.W #$0000
@@ -5097,13 +5123,13 @@ SetallFGBG80:         BEQ +                                     ; If zero flag s
                       BPL -
                       RTS
 
-UploadGFXFile:        JSL CODE_00BA28
+UploadGFXFile:        JSL PrepareGraphicsFile
                       CPY.B #$01
                       BNE +
                       LDA.W OWLevelTileSettings+$49
                       BPL +                                     ; handle the post-special world graphics and koopa color swap.
                       LDY.B #$31
-                      JSL CODE_00BA28
+                      JSL PrepareGraphicsFile
                       LDY.B #$01
                     + REP #$20                                  ; A->16
                       LDA.W #$0000
@@ -5202,7 +5228,7 @@ Upload____ToVRAM:     CPY.B #$08                                ; \Completely po
                       RTS
 
 CODE_00AB42:          LDY.B #$27
-                      JSL CODE_00BA28
+                      JSL PrepareGraphicsFile
                       REP #$10                                  ; XY->16
                       LDY.W #$0000
                       LDX.W #$03FF
@@ -5821,7 +5847,7 @@ SpriteColors:         %incpal("col/lvl/spr_00.pal")
                       %incpal("col/lvl/spr_04.pal")
                       %incpal("col/lvl/spr_05.pal")
                       %incpal("col/lvl/spr_06.pal")
-                      %incpal("col/lvl/spr_07.pal")
+BowserEndPalette:     %incpal("col/lvl/spr_07.pal")
 
 OverworldColors:      %incpal("col/ow/YI_normal.pal")
                       %incpal("col/ow/main_normal.pal")
@@ -6184,7 +6210,7 @@ GFXFilesBank:         db GFX00>>16&$7F
                       db GFX30>>16&$7F
                       db GFX31>>16&$7F
 
-CODE_00BA28:          PHB
+PrepareGraphicsFile:  PHB
                       PHY
                       PHK
                       PLB

@@ -7295,7 +7295,7 @@ CODE_04F56C:          REP #$20                                  ; A->16
                       LDA.W SavedPlayerLives+1
 CODE_04F60E:          INC A
                       PHX
-                      JSL CODE_00974C
+                      JSL HexToDecLong
                       TXY
                       BNE +
                       LDX.B #$FC

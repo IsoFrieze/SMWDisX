@@ -52,6 +52,9 @@
 ; tile used for dragon coin on layer 3
 !HUDDragonCoinTile = $2E
 
+; maximum number of screens in a level
+!LevelMaxScreens = 32
+
 ; --- In-Level Properties ---
 
 ; height of status bar in lines
@@ -105,8 +108,14 @@
 !BonusGameXPos = $A4
 ; Y position of all starting screen text
 !StartScreenTextYPos = $68
+; X positions of "GAME OVER" and "TIME UP !"
+!GameOverXPosLeft = $78
+!GameOverXPosRight = $A0
 ; OAM slot to start using for starting screen text
 !SrtOAMSlot = 66
+
+; GAME OVER disappears when timer reaches this value
+!GameOverThreshold = con(0,0,0,48,48)
 
 ; Y position of Nintendo Presents logo
 !NintendoPresentsYPos = $70
@@ -123,6 +132,9 @@
 ; number of interpolated palette values when fading
 ; to and from black at the end of a level
 !PaletteFadeCount = 32
+
+; number of frames to wait until drumroll starts
+!DrumrollInit = 80
 
 ; -- Boss Fights --
 
@@ -145,6 +157,9 @@
 
 ; number of levels on the main map
 !MainMapLvls = 36
+
+; level tile ID to not show MARIO START !
+!LevelTileNoStart = $56
 
 ; --- Credits Properties ---
 
@@ -418,3 +433,59 @@
 !SFX_BOWSERFIRE6 = 50
 !SFX_BOWSERFIRE7 = 51
 !SFX_BOWSERFIRE8 = 52
+
+; -- Graphics File IDs --
+    !GFX_DecompSize = $C00
+!GFX00_Powerups = 0
+!GFX01_KoopaGoomba = 1
+!GFX02_SpinyLakitu = 2
+!GFX03_ThwompMagikoopa = 3
+!GFX04_BuzzyBlargg = 4
+!GFX05_Chainsaw = 5
+!GFX06_UrchinDolphin = 6
+!GFX07_GhostHouse = 7
+!GFX08_YoshisHouse = 8
+!GFX09_SumoPokey = 9
+!GFX0A_WendyLemmy = 10
+!GFX0B_RoyMortonLudwig = 11
+!GFX0C_Underground = 12
+!GFX0D_PrincessPeach = 13
+!GFX0E_NinjiDisco = 14
+!GFX0F_MarioStart = 15
+!GFX10_OWSprites = 16
+!GFX11_BigBooEerie = 17
+!GFX12_DryBonesGrinder = 18
+!GFX13_HammerBroChuck = 19
+!GFX14_OWAnimation = 20
+!GFX15_GrassTiles = 21
+!GFX16_RopeTiles = 22
+!GFX17_DiagonalPipe = 23
+!GFX18_CastleTiles = 24
+!GFX19_ForestHillBG = 25
+!GFX1A_CaveTiles = 26
+!GFX1B_PillarCastleBG = 27
+!GFX1C_OWTiles1 = 28
+!GFX1D_OWTiles2 = 29
+!GFX1E_OELevelIcons = 30
+!GFX1F_ForestTiles = 31
+!GFX20_RexMegaMole = 32
+!GFX21_Bowser = 33
+!GFX22_BossBackground = 34
+!GFX23_DinoRhino = 35
+!GFX24_Mechakoopa = 36
+!GFX25_IggyLarryReznor = 37
+!GFX26_CreditsYoshi = 38
+!GFX27_IggyReznorPlat = 39
+!GFX28_HUDTiles = 40
+!GFX29_TitleScreen = 41
+!GFX2A_MessageTiles = 42
+!GFX2B_CastleCrusher = 43
+!GFX2C_CutsceneTiles = 44
+!GFX2D_CutsceneSprites = 45
+!GFX2E_ThankYou = 46
+!GFX2F_CreditsLetters = 47
+    !GFX2F_DecompSize = $400
+!GFX30_TheEnd = 48
+!GFX31_SpecialEnemies = 49
+!GFX32_Mario = 50
+!GFX33_AnimatedTiles = 51
