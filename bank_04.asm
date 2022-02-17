@@ -4929,7 +4929,7 @@ CODE_04D6E9:          REP #$30                                  ; AXY->16
                       LDA.W #$0200
                       STA.B Layer1YPos
 CODE_04D714:          JSL CODE_05881A
-                      JSL CODE_0087AD
+                      JSL UploadOneMap16Strip
                       REP #$30                                  ; AXY->16
                       INC.B Layer1TileDown
                       LDA.B Layer1YPos

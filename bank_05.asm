@@ -104,7 +104,7 @@ CODE_05809E:          PHP                                       ;!
 CODE_0580BD:          REP #$30                                  ; AXY->16
                       JSL CODE_0588EC
                       JSL CODE_058955
-                      JSL CODE_0087AD
+                      JSL UploadOneMap16Strip
                       REP #$30                                  ; AXY->16
                       INC.B Layer1TileDown
                       INC.B Layer2TileDown

@@ -356,6 +356,7 @@ SpriteXPosLow: skip 12
 
 ORG $000100
 
+StackPage:
 GameMode: skip 1
 SpriteGFXFile: skip 4
 BackgroundGFXFile: skip 4
@@ -367,8 +368,10 @@ CreditsLetterbox: skip 1
 
 ; $7E0112 - $7E01FF used as stack
 
-ORG $000200
+ORG $0001FF
+StackStart: skip 1
 
+OAMMirror:
 OAMTileXPos: skip 1
 OAMTileYPos: skip 1
 OAMTileNo: skip 1
@@ -1138,6 +1141,7 @@ skip 1
 
 ORG $7E2000
 
+NonMirroredWRAM:
 MarioGraphics: skip 23808
 AnimatedTiles: skip 15360
 Layer2TilemapLow:
@@ -1327,3 +1331,16 @@ SoundEffectTable:
 ORG $008000
 SamplePtrTable: skip 256
 SampleTable:
+
+
+; VIDEO RAM
+
+ORG $000000
+
+VRam_M7Tilemap:
+VRam_L1L2Tiles: skip 8192
+VRam_L1Tilemap: skip 4096
+VRam_L2Tilemap: skip 4096
+VRam_L3Tiles: skip 4096
+VRam_L3Tilemap: skip 4096
+VRam_OBJTiles:

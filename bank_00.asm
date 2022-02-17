@@ -9,42 +9,40 @@ I_RESET:
     STZ.W HW_APUIO1                           ;|
     STZ.W HW_APUIO2                           ;|
     STZ.W HW_APUIO3                           ;/
-    LDA.B #$80                                ;\ Enable F-blank.
+    LDA.B #%10000000                          ;\ Enable F-blank.
     STA.W HW_INIDISP                          ;/
     CLC                                       ;\ Disable emulation mode.
     XCE                                       ;/
     REP #$38                                  ; AXY->16, Disable decimal mode.
-    LDA.W #$0000                              ;\ Initialize direct page to 0x0000.
+    LDA.W #0                                  ;\ Initialize direct page to 0x0000.
     TCD                                       ;/
-    LDA.W #$01FF                              ;\ Initialize stack pointer to $01FF.
+    LDA.W #StackStart                         ;\ Initialize stack pointer to $01FF.
     TCS                                       ;/
 
-    LDA.W #$F0A9                              ;\ "LDA #$F0"
+    LDA.W #$A9|(!OBJOffscreen<<8)             ;\ "LDA #$F0"
     STA.L OAMResetRoutine                     ;/
-    LDX.W #$017D                              ;
-    LDY.W #$03FD                              ; Starting address to clear ($03FD).
+    LDX.W #3*(!OBJCount-1)                    ;
+    LDY.W #OAMMirror+4*(!OBJCount-1)+1        ; Starting address to clear ($03FD).
   - LDA.W #$008D                              ;\ 
     STA.L OAMResetRoutine+2,X                 ;| "STA $xxxx" for each OAM slot
     TYA                                       ;|
     STA.L OAMResetRoutine+3,X                 ;/
     SEC                                       ;\ 
-    SBC.W #$0004                              ;|
+    SBC.W #4                                  ;|
     TAY                                       ;|
-    DEX                                       ;| Loop for all OAM slots.
-    DEX                                       ;|
-    DEX                                       ;|
+    DEX #3                                    ;| Loop for all OAM slots.
     BPL -                                     ;/
     SEP #$30                                  ; AXY->8
     LDA.B #$6B                                ;\ "RTL"
-    STA.L OAMResetRoutine+$182                ;/
+    STA.L OAMResetRoutine+386                 ;/
 
     JSR UploadSPCEngine                       ; Upload the SPC engine.
     STZ.W GameMode                            ; Clear game mode.
     STZ.W OverworldOverride                   ; Clear OW bypass level number.
-    JSR ClearStack                            ; Clear out $0000-$1FFF and $7F837B/D.
+    JSR ClearMemory                           ; Clear out $0000-$1FFF and $7F837B/D.
     JSR UploadSamples                         ; Upload SPC samples.
     JSR WindowDMASetup                        ; Set up DMA for window settings.
-    LDA.B #$03                                ;\ Set OAM character sizes to be 8x8 and 16x16.
+    LDA.B #%00000011                          ;\ Set OAM character sizes to be 8x8 and 16x16.
     STA.W HW_OBJSEL                           ;/
     INC.B LagFlag                             ;
 
@@ -60,7 +58,7 @@ GameLoop:                                     ; Main game loop.
 SPC700UploadLoop:                             ; Subroutine to upload data to the SPC chip. 24-bit pointer to data should be in $00.
     PHP                                       ;
     REP #$30                                  ; AXY->16
-    LDY.W #$0000                              ;
+    LDY.W #0                                  ;
     LDA.W #$BBAA                              ; Value to check for when the SPC chip is ready.
   - CMP.W HW_APUIO0                           ;\ Wait for the SPC to be ready.
     BNE -                                     ;/
@@ -72,7 +70,7 @@ TransferBytes:                                ; Block upload loop. Entry point a
     LDA.B [_0],Y                              ;\ 
     INY                                       ;| Load first byte to upload.
     XBA                                       ;|
-    LDA.B #$00                                ;/ Validation byte for SPC.
+    LDA.B #0                                  ;/ Validation byte for SPC.
     BRA StartTransfer                         ;
 
 NextByte:                                     ; Inner byte loop for each block. Entry point below.
@@ -92,23 +90,21 @@ StartTransfer:                                ;| Entry point for the inner byte 
 
   - CMP.W HW_APUIO0                           ;\ Wait for the SPC to respond from the last byte of the block.
     BNE -                                     ;/
-  - ADC.B #$03                                ;\ Add 3; if A becomes 0, add 3 once more so it's still positive.
+  - ADC.B #3                                  ;\ Add 3; if A becomes 0, add 3 once more so it's still positive.
     BEQ -                                     ;/
 
 SendSPCBlock:                                 ; Entry point for the SPC engine upload loop.
     PHA                                       ;
     REP #$20                                  ; A->16
     LDA.B [_0],Y                              ;\ 
-    INY                                       ;| Get data length.
-    INY                                       ;|
+    INY #2                                    ;| Get data length.
     TAX                                       ;/
     LDA.B [_0],Y                              ;\ 
-    INY                                       ;| Send the ARAM address to write to.
-    INY                                       ;|
+    INY #2                                    ;| Send the ARAM address to write to.
     STA.W HW_APUIO2                           ;/
     SEP #$20                                  ; A->8
-    CPX.W #$0001                              ;\ 
-    LDA.B #$00                                ;| If at the end of the data block, send #$00.
+    CPX.W #1                                  ;\ 
+    LDA.B #0                                  ;| If at the end of the data block, send #$00.
     ROL A                                     ;|  Else, send #$01.
     STA.W HW_APUIO1                           ;/
     ADC.B #$7F                                ; Set overflow flag if there are still bytes left to write.
@@ -154,10 +150,10 @@ UploadMusicBank1:                             ; Routine to upload overworld musi
     LDA.B #MusicBank1>>16                     ;|
     %BorW(STA, _2)                            ;/
 StartMusicUpload:                             ;
-    LDA.B #$FF                                ;\ Tell the SPC that music data is being sent.
+    LDA.B #-1                                 ;\ Tell the SPC that music data is being sent.
     STA.W HW_APUIO1                           ;/
     JSR UploadDataToSPC                       ; Upload data.
-    LDX.B #$03                                ;\ 
+    LDX.B #3                                  ;\ 
   - STZ.W HW_APUIO0,X                         ;|
     STZ.W SPCIO0,X                            ;|
     STZ.W Empty1DFD,X                         ;| Clear out all SPC I/O ports and mirrors.
@@ -170,7 +166,7 @@ UploadLevelMusic:                             ; Routine to upload level music da
     LDA.W BonusGameActivate                   ;\ 
     BNE UploadOverworldMusic                  ;| Upload the level music bank on one of 3 conditions:
     LDA.W OverworldOverride                   ;|  1. Going to a bonus game.
-    CMP.B #$E9                                ;|  2. Loading the intro level.
+    CMP.B #$C5+!MainMapLvls                   ;|  2. Loading the intro level.
     BEQ UploadOverworldMusic                  ;|  3. Going to a new level (not primary).
     ORA.W SublevelCount                       ;| If none of these conditions are met, return.
     ORA.W ShowMarioStart                      ;|
@@ -223,7 +219,7 @@ I_NMI:                                        ; NMI routine.
     STZ.W SPCIO0                              ;|
     STZ.W SPCIO1                              ;|
     STZ.W SPCIO3                              ;/
-    LDA.B #$80                                ;\ Force blank.
+    LDA.B #%10000000                          ;\ Force blank.
     STA.W HW_INIDISP                          ;/
     STZ.W HW_HDMAEN                           ; Disable HDMA.
     LDA.B Layer12Window                       ;\ Update layer 1 and 2 window mask settings.
@@ -240,9 +236,9 @@ I_NMI:                                        ; NMI routine.
 
 RegularLevelNMI:                              ;\ Set color math on all layers in $40 but 3.
     LDA.B ColorSettings                       ;|
-    AND.B #$FB                                ;/
+    AND.B #%11111011                          ;/
     STA.W HW_CGADSUB                          ;\ Mode 1 with layer 3 priority.
-    LDA.B #$09                                ;/
+    LDA.B #%00001001                          ;/
     STA.W HW_BGMODE                           ;\ 
     LDA.B LagFlag                             ;|
     BEQ +                                     ;| If the game is lagging, skip updating stuff like sprite OAM and controller data.
@@ -259,14 +255,14 @@ RegularLevelNMI:                              ;\ Set color math on all layers in
     BCS +                                     ;|\ Draw status bar if in a regular level.
     JSR DrawStatusBar                         ;|/
   + LDA.W CutsceneID                          ;|\ 
-    CMP.B #$08                                ;||
+    CMP.B #8                                  ;||
     BNE CODE_008209                           ;||
     LDA.W CreditsUpdateBG                     ;|| Handle DMA for the background during the credits staff roll, if applicable.
     BEQ CODE_00821A                           ;||
     JSL CODE_0C9567                           ;||
     BRA CODE_00821A                           ;|/
 CODE_008209:                                  ;|
-    JSL CODE_0087AD                           ;| Update Layer 1/2 tilemaps.
+    JSL UploadOneMap16Strip                   ;| Update Layer 1/2 tilemaps.
     LDA.W UploadMarioStart                    ;|\ 
     BEQ CODE_008217                           ;|| If set to do so, upload graphics for black screen messages (MARIO START/GAME OVER/TIME UP/etc).
     JSR CODE_00A7C2                           ;||  Then skip way down to the $12 tilemap handling.
@@ -280,12 +276,11 @@ CODE_00821A:                                  ;|
 
 CODE_008222:                                  ; On overworld.
     LDA.W OverworldProcess                    ;\\ 
-    CMP.B #$0A                                ;||
+    CMP.B #10                                 ;||
     BNE CODE_008237                           ;||
     LDY.W OWSubmapSwapProcess                 ;|| If switching between two submaps on the overworld,
-    DEY                                       ;||  and currently updating Layer 1, do exactly that.
-    DEY                                       ;||
-    CPY.B #$04                                ;|| Then skip down to controller updating.
+    DEY #2                                    ;||  and currently updating Layer 1, do exactly that.
+    CPY.B #$4                                 ;|| Then skip down to controller updating.
     BCS CODE_008237                           ;||
     JSR CODE_00A529                           ;||
     BRA +                                     ;|/
@@ -320,9 +315,9 @@ NotSpecialLevelNMI:                           ; All paths rejoin.
     LDA.W IRQNMICommand
     BEQ CODE_008292
 SpecialLevelNMI:
-    LDA.B #$81
+    LDA.B #%10000001
     LDY.W CutsceneID
-    CPY.B #$08
+    CPY.B #8
     BNE NotCredits
     LDY.W Brightness
     STY.W HW_INIDISP
@@ -331,13 +326,13 @@ SpecialLevelNMI:
     JMP IRQNMIEnding
 
 CODE_008292:          
-    LDY.B #$24                                ;\ How many scanlines the status bar uses in a general.
+    LDY.B #!StatusBarHeight                   ;\ How many scanlines the status bar uses in general.
 CODE_008294:                                  ;|
     LDA.W HW_TIMEUP                           ;|
     STY.W HW_VTIME                            ;| Enable IRQ #1 on this scanline, for the status bar.
     STZ.W HW_VTIME+1                          ;|
     STZ.B IRQType                             ;/
-    LDA.B #$A1
+    LDA.B #%10100001
 NotCredits:
     STA.W HW_NMITIMEN
     STZ.W HW_BG3HOFS
@@ -382,21 +377,21 @@ CODE_0082E8:                                  ;|
     JSR ControllerUpdate                      ; Get controller data.
 
 Mode7Lagging:                                 ; Transfer various RAM mirrors to the registers
-    LDA.B #$09
+    LDA.B #%00001001
     STA.W HW_BGMODE
     LDA.B Mode7CenterX
     CLC
     ADC.B #$80
     STA.W HW_M7X
     LDA.B Mode7CenterX+1
-    ADC.B #$00
+    ADC.B #0
     STA.W HW_M7X
     LDA.B Mode7CenterY
     CLC
     ADC.B #$80
     STA.W HW_M7Y
     LDA.B Mode7CenterY+1
-    ADC.B #$00
+    ADC.B #0
     STA.W HW_M7Y
     LDA.B Mode7ParamA
     STA.W HW_M7A
@@ -422,19 +417,19 @@ Mode7Lagging:                                 ; Transfer various RAM mirrors to 
     STA.W HW_INIDISP
     LDA.W HDMAEnable
     STA.W HW_HDMAEN
-    LDA.B #$81                                ;\ Skip the status bar IRQ and immediately prepare the registers after.
+    LDA.B #%10000001                          ;\ Skip the status bar IRQ and immediately prepare the registers after.
     JMP CODE_0083F3                           ;/
                                               ; Not in Bowser's room.
-  + LDY.B #$24                                ;\ Scanline the status bar ends at in Iggy/Larry/Ludwig/Reznor's rooms.
+  + LDY.B #!StatusBarHeight                   ;\ Scanline the status bar ends at in Iggy/Larry/Ludwig/Reznor's rooms.
     BIT.W IRQNMICommand                       ;|
     BVC +                                     ;|
     LDA.W ActiveBoss                          ;| 
     ASL A                                     ;|
     TAX                                       ;|
-    LDA.W DATA_00F8E8,X                       ;|
-    CMP.B #$2A                                ;|
+    LDA.W BossCeilingHeights,X                ;|
+    CMP.B #!RoyMortonCeilingHeight            ;|
     BNE +                                     ;|
-    LDY.B #$2D                                ;/ Scanline the status bar ends at in Morton/Roy's rooms.
+    LDY.B #!StatusBarHeight+9                 ;/ Scanline the status bar ends at in Morton/Roy's rooms.
   + JMP CODE_008294                           ; Prepare IRQ, and set up a couple more registers.
 
 I_IRQ:                                        ; IRQ routine.
@@ -450,12 +445,12 @@ I_IRQ:                                        ; IRQ routine.
     SEP #$30                                  ; AXY->8
     LDA.W HW_TIMEUP                           ; Read the IRQ register, 'unapply' the interrupt
     BPL ExitIRQ                               ; If "Timer IRQ" is clear, skip the next code block
-    LDA.B #$81
+    LDA.B #%10000001
     LDY.W IRQNMICommand
     BMI CODE_0083BA                           ; If Bit 7 (negative flag) is set, branch to a different IRQ mode
 IRQNMIEnding:
     STA.W HW_NMITIMEN                         ; Enable NMI Interrupt and Automatic Joypad reading
-    LDY.B #$1F
+    LDY.B #31
     JSR WaitForHBlank
     LDA.B Layer3XPos                          ;\ Adjust scroll settings for layer 3
     STA.W HW_BG3HOFS                          ;|
@@ -485,26 +480,26 @@ CODE_0083BA:
     LDY.B IRQType                             ;\ Skip if $11 = 0
     BEQ CODE_0083D0                           ;/
     STA.W HW_NMITIMEN                         ; #$81 -> NMI / Controller Enable reg
-    LDY.B #$14
+    LDY.B #20
     JSR WaitForHBlank
     JSR SETL1SCROLL
     BRA CODE_0083A8
 CODE_0083D0:
     INC.B IRQType                             ; $11++
     LDA.W HW_TIMEUP                           ;\ Set up the IRQ routine for layer 3
-    LDA.B #$AE                                ;|\
+    LDA.B #!BossFloorHeight                   ;|\ <- Scanline where floor starts in Morton/Roy/Ludwig battles
     SEC                                       ;|| Vertical Counter trigger at 174 - $1888
     SBC.W ScreenShakeYOffset                  ;|/ Oddly enough, $1888 seems to be 16-bit, but the
     STA.W HW_VTIME                            ;| Store to Vertical Counter Timer
     STZ.W HW_VTIME+1                          ;/ Make the high byte of said timer 0
-    LDA.B #$A1                                ; A = NMI enable, V count enable, joypad automatic read enable, H count disable
+    LDA.B #%10100001                          ; A = NMI enable, V count enable, joypad automatic read enable, H count disable
 CODE_0083E3:
     LDY.W EndLevelTimer                       ; if $1493 = 0 skip down
     BEQ CODE_0083F3                           ;
     LDY.W ColorFadeTimer                      ;\ If $1495 is <#$40
-    CPY.B #$40                                ;|
+    CPY.B #2*!PaletteFadeCount                ;|
     BCC CODE_0083F3                           ;/ Skip down
-    LDA.B #$81                                ;
+    LDA.B #%10000001                          ;
     BRA IRQNMIEnding                          ; Jump up to IRQNMIEnding
 
 CODE_0083F3:                                  ; IRQ done; wait for H-blank, then update registers.
@@ -512,7 +507,7 @@ CODE_0083F3:                                  ; IRQ done; wait for H-blank, then
     JSR WaitLongForHBlank                     ; Wait until we enter an H-blank, then update the registers.
     NOP
     NOP
-    LDA.B #$07
+    LDA.B #%00000111
     STA.W HW_BGMODE
     LDA.B Mode7XPos
     STA.W HW_BG1HOFS
@@ -525,9 +520,9 @@ CODE_0083F3:                                  ; IRQ done; wait for H-blank, then
     BRA ExitIRQ
 
 SETL1SCROLL:
-    LDA.B #$59
+    LDA.B #%01011001
     STA.W HW_BG1SC
-    LDA.B #$07
+    LDA.B #%00000111
     STA.W HW_BG12NBA
     LDA.B Layer1XPos
     STA.W HW_BG1HOFS
@@ -542,7 +537,7 @@ SETL1SCROLL:
     RTS
 
 WaitLongForHBlank:                            ; Subroutine to wait for a horizontal interrupt.
-  - LDY.B #$20                                ;\
+  - LDY.B #32                                 ;\
 WaitForHBlank:                                ;|
     BIT.W HW_HVBJOY                           ;| If in one already, wait for it to end.
     BVS -                                     ;/
@@ -556,16 +551,16 @@ DoSomeSpriteDMA:                              ; Routine to upload sprite OAM to 
     STZ.W HW_DMAPARAM                         ; Use DMA channel 0; increment, one register write once.
     REP #$20                                  ; A->16
     STZ.W HW_OAMADD                           ; Clear the sprite OAM index.
-    LDA.W #$0004                              ;\ 
+    LDA.W #(OAMMirror<<8)|(HW_OAMDATA&$FF)    ;\ 
     STA.W HW_DMAREG                           ;| Set channel 0's destination to $2104 (data for OAM write)
-    LDA.W #OAMTileXPos>>8&$FF                 ;| and the source to $000200 (OAM table).
+    LDA.W #OAMMirror>>8                       ;| and the source to $000200 (OAM table).
     STA.W HW_DMAADDR+1                        ;/
-    LDA.W #$0220                              ;\ Set the size to be 544 bytes.
+    LDA.W #4*!OBJCount+!OBJCount/4            ;\ Set the size to be 544 bytes.
     STA.W HW_DMACNT                           ;/
-    LDY.B #$01                                ;\ Begin DMA transfer on channel 0.
+    LDY.B #!Ch0                               ;\ Begin DMA transfer on channel 0.
     STY.W HW_MDMAEN                           ;/
     SEP #$20                                  ; A->8
-    LDA.B #$80                                ;\ Set OAM object priority bit.
+    LDA.B #%10000000                          ;\ Set OAM object priority bit.
     STA.W HW_OAMADD+1                         ;/
     LDA.B OAMAddress                          ;\ Set OAM index to $3F.
     STA.W HW_OAMADD                           ;/
@@ -578,32 +573,25 @@ OAMTileSizeOffsets:                           ; Indices to $0420 for upload to t
     db 120
 
 CODE_008494:                                  ; Routine to upload OAM tile sizes ($0420) to the OAM table (at $0400).
-    LDY.B #$1E                                ;
+    LDY.B #!OBJCount/4-2                      ;
   - LDX.W OAMTileSizeOffsets,Y                ;\ 
     LDA.W OAMTileSize+3,X                     ;|
-    ASL A                                     ;|
-    ASL A                                     ;|
+    ASL #2                                    ;|
     ORA.W OAMTileSize+2,X                     ;|
-    ASL A                                     ;| Turn four tile size bytes into one and store to the OAM table.
-    ASL A                                     ;|
+    ASL #2                                    ;| Turn four tile size bytes into one and store to the OAM table.
     ORA.W OAMTileSize+1,X                     ;|
-    ASL A                                     ;|
-    ASL A                                     ;|
+    ASL #2                                    ;|
     ORA.W OAMTileSize,X                       ;|
     STA.W OAMTileBitSize,Y                    ;/
     LDA.W OAMTileSize+7,X                     ;\ 
-    ASL A                                     ;|
-    ASL A                                     ;|
+    ASL #2                                    ;|
     ORA.W OAMTileSize+6,X                     ;|
-    ASL A                                     ;|
-    ASL A                                     ;| And four more. Minimal loops yo.
+    ASL #2                                    ;| And four more. Minimal loops yo.
     ORA.W OAMTileSize+5,X                     ;|
-    ASL A                                     ;|
-    ASL A                                     ;|
+    ASL #2                                    ;|
     ORA.W OAMTileSize+4,X                     ;|
     STA.W OAMTileBitSize+1,Y                  ;/
-    DEY                                       ;\ 
-    DEY                                       ;| If not at the end of the table, loop.
+    DEY #2                                    ;\ If not at the end of the table, loop.
     BPL -                                     ;/
     RTS                                       ;
 
@@ -760,32 +748,32 @@ LoadScrnImage:                                ; Routine to upload a stripe image
 
 CODE_0085FA:                                  ; DMA upload routine to clean out the layer 3 tilemap.
     JSR TurnOffIO                             ;
-    LDA.B #$FC                                ;\ Tile to use as the blank tile.
+    LDA.B #!EmptyTile                         ;\ Tile to use as the blank tile.
     STA.B _0                                  ;/
     STZ.W HW_VMAINC                           ;] Single byte VRAM upload.
     STZ.W HW_VMADD                            ;\ 
-    LDA.B #$50                                ;| Upload tilemap to Layer 3.
+    LDA.B #VRam_L3Tilemap>>8                  ;| Upload tilemap to Layer 3.
     STA.W HW_VMADD+1                          ;/
-    LDX.B #$06                                ;\ Set up and enable DMA on channel 1.
+    LDX.B #6                                  ;\ Set up and enable DMA on channel 1.
   - LDA.W ClearTilemapDMAData,X               ;| $4310: Fixed transfer, one register write once.
     STA.W HW_DMAPARAM+$10,X                   ;| $4311: Destination is $2118 (VRAM low byte).
     DEX                                       ;| $4312: Source is $000000.
     BPL -                                     ;| $4315: Write x1000 bytes.
-    LDY.B #$02                                ;|
+    LDY.B #!Ch1                               ;|
     STY.W HW_MDMAEN                           ;/
-    LDA.B #$38                                ;\ YXPCCCTT to use for the blank tile.
+    LDA.B #!EmptyTile>>8                      ;\ YXPCCCTT to use for the blank tile.
     STA.B _0                                  ;/
-    LDA.B #$80                                ;\ Two byte VRAM upload.
+    LDA.B #%10000000                          ;\ Two byte VRAM upload.
     STA.W HW_VMAINC                           ;/
     STZ.W HW_VMADD                            ;\ 
-    LDA.B #$50                                ;| Upload tilemap to Layer 3.
+    LDA.B #VRam_L3Tilemap>>8                  ;| Upload tilemap to Layer 3.
     STA.W HW_VMADD+1                          ;/
-    LDX.B #$06                                ;\ 
+    LDX.B #6                                  ;\ 
   - LDA.W ClearTilemapDMAData,X               ;| Set up and enable DMA on channel 1.
     STA.W HW_DMAPARAM+$10,X                   ;| Settings are the same as the previous one.
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$19                                ;|\ Change destination to $2119 (VRAM high byte).
+    LDA.B #HW_VMDATA+1                        ;|\ Change destination to $2119 (VRAM high byte).
     STA.W HW_DMAREG+$10                       ;|/
     STY.W HW_MDMAEN                           ;/
     STZ.B OAMAddress                          ; Clear the current OAM address.
@@ -794,11 +782,11 @@ CODE_0085FA:                                  ; DMA upload routine to clean out 
 
 
 ClearTilemapDMAData:                          ; DMA setting data for channel 1; $4310-$4316, in reverse order.
-    %DMASettings($08,HW_VMDATA,0,$1000)
+    %DMASettings(%00001000,HW_VMDATA,0,$1000)
 
 ControllerUpdate:                             ; Routine to read controller data and upload to $15-$18. Part of NMI.
     LDA.W HW_CNTRL1                           ;\\  
-    AND.B #$F0                                ;|| Get controller 1 data 2.
+    AND.B #%11110000                          ;|| Get controller 1 data 2.
     STA.W axlr0000P1Hold                      ;|/
     TAY                                       ;|\ 
     EOR.W axlr0000P1Mask                      ;|| Get controller 1 data 2, one frame.
@@ -813,7 +801,7 @@ ControllerUpdate:                             ; Routine to read controller data 
     STA.W byetudlrP1Frame                     ;||
     STY.W byetudlrP1Mask                      ;//
     LDA.W HW_CNTRL2                           ;\\ 
-    AND.B #$F0                                ;|| Get controller 2 data 2.
+    AND.B #%11110000                          ;|| Get controller 2 data 2.
     STA.W axlr0000P2Hold                      ;|/
     TAY                                       ;|\ 
     EOR.W axlr0000P2Mask                      ;|| Get controller 2 data 2, one frame.
@@ -831,13 +819,13 @@ ControllerUpdate:                             ; Routine to read controller data 
     BPL +                                     ;| If $0DA0 is set to use separate controllers, use the current player number as the controller port to accept input from.
     LDX.W PlayerTurnLvl                       ;/
   + LDA.W axlr0000P1Hold,X                    ;\ 
-    AND.B #$C0                                ;| Set up $15, sharing the top two bits of controller data 2 (for A/X).
+    AND.B #%11000000                          ;| Set up $15, sharing the top two bits of controller data 2 (for A/X).
     ORA.W byetudlrP1Hold,X                    ;|
     STA.B byetudlrHold                        ;/
     LDA.W axlr0000P1Hold,X                    ;\ Set up $17.
     STA.B axlr0000Hold                        ;/
     LDA.W axlr0000P1Frame,X                   ;\ 
-    AND.B #$40                                ;| Set up $16, sharing the top two bits of controller data 2 (for A/X).
+    AND.B #%01000000                          ;| Set up $16, sharing the top two bits of controller data 2 (for A/X).
     ORA.W byetudlrP1Frame,X                   ;|
     STA.B byetudlrFrame                       ;/
     LDA.W axlr0000P1Frame,X                   ;\ Set up $18.
@@ -846,15 +834,14 @@ ControllerUpdate:                             ; Routine to read controller data 
 
 CODE_0086C7:                                  ; Subroutine to initialize OAM in Roy/Morton/Ludwig's rooms.
     REP #$30                                  ; AXY->16
-    LDX.W #$0062                              ;\
-    LDA.W #$0202                              ;|
-  - STA.W OAMTileSize,X                       ;| Initialize every tile as 16x16.
-    DEX                                       ;|
-    DEX                                       ;|
+    LDX.W #!BossBGOBJCount-2                  ;\
+    LDA.W #!OBJBigSize|(!OBJBigSize<<8)       ;|
+  - STA.W OAMTileSize,X                       ;| Initialize first 100 OBJs as 16x16.
+    DEX #2                                    ;|
     BPL -                                     ;/ 
     SEP #$30                                  ; AXY->8
-    LDA.B #$F0                                ;\ Clear out OAM.
-    JSL OAMResetRoutine+$12E                  ;/
+    LDA.B #!OBJOffscreen                      ;\ Clear out OAM.
+    JSL OAMResetRoutine+302                   ;/
     RTS                                       ;
 
 ExecutePtr:                                   ; Routine to jump to a 16-bit address in a table. Basically JSR (addr,x). A contains the index to jump to.
@@ -862,7 +849,7 @@ ExecutePtr:                                   ; Routine to jump to a 16-bit addr
     PLY
     STY.B _0
     REP #$30                                  ; AXY->16
-    AND.W #$00FF
+    AND.W #%0000000011111111
     ASL A
     TAY
     PLA
@@ -879,7 +866,7 @@ ExecutePtrLong:                               ; Routine to jump to a 24-bit addr
     PLY
     STY.B _2
     REP #$30                                  ; AXY->16
-    AND.W #$00FF
+    AND.W #%0000000011111111
     STA.B _3
     ASL A
     ADC.B _3
@@ -898,8 +885,8 @@ ExecutePtrLong:                               ; Routine to jump to a 24-bit addr
 
 LoadStripeImage:                              ; Subroutine to upload a specific Layer 3 tilemap (pointer in $00) to VRAM.
     REP #$10                                  ; XY->16
-    STA.W HW_DMAADDR+$12                      ;
-    LDY.W #$0000                              ;
+    STA.W HW_DMAADDR+2+$10                    ;
+    LDY.W #0                                  ;
   - LDA.B [_0],Y                              ;\ Branch if bit 7 isn't set (i.e. end of data).
     BPL +                                     ;/
     SEP #$30                                  ; AXY->8
@@ -914,27 +901,24 @@ LoadStripeImage:                              ; Subroutine to upload a specific 
     STZ.B _7                                  ;|
     ASL A                                     ;|
     ROL.B _7                                  ;/
-    LDA.B #$18                                ;\ Set register to $2118.
+    LDA.B #HW_VMDATA                          ;\ Set register to $2118.
     STA.W HW_DMAREG+$10                       ;/
     LDA.B [_0],Y                              ;\ 
-    AND.B #$40                                ;|
-    LSR A                                     ;|
-    LSR A                                     ;|
-    LSR A                                     ;| Enable RLE if applicable.
+    AND.B #%01000000                          ;|
+    LSR #3                                    ;| Enable RLE if applicable.
     STA.B _5                                  ;|
     STZ.B _6                                  ;|
-    ORA.B #$01                                ;|
+    ORA.B #%00000001                          ;|
     STA.W HW_DMAPARAM+$10                     ;/
     REP #$20                                  ; A->16
     LDA.B _3                                  ;\ Set destination.
     STA.W HW_VMADD                            ;/
     LDA.B [_0],Y                              ;\ 
     XBA                                       ;|
-    AND.W #$3FFF                              ;|
+    AND.W #%0011111111111111                  ;|
     TAX                                       ;|
     INX                                       ;|
-    INY                                       ;| Set data source and length.
-    INY                                       ;|
+    INY #2                                    ;| Set data source and length.
     TYA                                       ;|
     CLC                                       ;|
     ADC.B _0                                  ;|
@@ -945,9 +929,9 @@ LoadStripeImage:                              ; Subroutine to upload a specific 
     SEP #$20                                  ;| A->8
     LDA.B _7                                  ;|
     STA.W HW_VMAINC                           ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;|
-    LDA.B #$19                                ;|
+    LDA.B #HW_VMDATA+1                        ;|
     STA.W HW_DMAREG+$10                       ;| Set up RLE if applicable.
     REP #$21                                  ;| A->16, CLC
     LDA.B _3                                  ;|
@@ -957,7 +941,7 @@ LoadStripeImage:                              ; Subroutine to upload a specific 
     INC A                                     ;|
     STA.W HW_DMAADDR+$10                      ;|
     STX.W HW_DMACNT+$10                       ;/
-    LDX.W #$0002                              ;
+    LDX.W #2                                  ;
   + STX.B _3                                  ;
     TYA                                       ;
     CLC                                       ;
@@ -965,62 +949,63 @@ LoadStripeImage:                              ; Subroutine to upload a specific 
     TAY                                       ;
     SEP #$20                                  ; A->8
     LDA.B _7                                  ;\ 
-    ORA.B #$80                                ;| Set direction.
+    ORA.B #%10000000                          ;| Set direction.
     STA.W HW_VMAINC                           ;/
-    LDA.B #$02                                ;\ Enable DMA on channel 1.
+    LDA.B #!Ch1                               ;\ Enable DMA on channel 1.
     STA.W HW_MDMAEN                           ;/
     JMP -                                     ;
 
-CODE_0087AD:                                  ; DMA routine to upload one row/column of Map16 data to VRAM for Layer 1/2.
+UploadOneMap16Strip:                          ; DMA routine to upload one row/column of Map16 data to VRAM for Layer 1/2.
     SEP #$30                                  ; AXY->8
     LDA.W Layer1VramAddr                      ;\ 
     BNE +                                     ;| If $1BE4 is non-zero, update Layer 1. Else, skip to Layer 2.
-    JMP CODE_0088DD                           ;/
+    JMP UploadL2Map16Strip                    ;/
  
   + LDA.B ScreenMode                          ;\ Need to update Layer 1.
-    AND.B #$01                                ;| Jump down if in a vertical level.
-    BEQ +                                     ;|
-    JMP CODE_008849                           ;/
- 
-  + LDY.B #$81                                ;\ Updating horizontal Layer 1.
+    AND.B #%00000001                          ;| Jump down if in a vertical level.
+    BEQ UploadOneL1Column                     ;|
+    JMP UploadOneL1Row                        ;/
+
+UploadOneL1Column:
+    LDY.B #%10000001                          ;\ Updating horizontal Layer 1.
     STY.W HW_VMAINC                           ;| Upload the top-left column of tiles.
     LDA.W Layer1VramAddr+1                    ;|\ 
     STA.W HW_VMADD                            ;|| Set VRAM address to write to.
     LDA.W Layer1VramAddr                      ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer1Map16DMAData,X                ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;|
     STY.W HW_VMAINC                           ;/
     LDA.W Layer1VramAddr+1                    ;\ Upload the bottom-left column of tiles.
     STA.W HW_VMADD                            ;|\ 
     LDA.W Layer1VramAddr                      ;||
     CLC                                       ;|| Set VRAM address to write to (1 screen below origin).
-    ADC.B #$08                                ;||
+    ADC.B #(2*!TilesPerBGPage)>>8             ;|| One screen below = 2 screens forward
     STA.W HW_VMADD+1                          ;||
-    LDX.B #$06                                ;|/
+    LDX.B #6                                  ;|/
   - LDA.W Layer1Map16DMAData+7,X              ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;|
     STY.W HW_VMAINC                           ;/
     LDA.W Layer1VramAddr+1                    ;\ Upload the rop-right column of tiles.
     INC A                                     ;|\ 
     STA.W HW_VMADD                            ;||
     LDA.W Layer1VramAddr                      ;|| Set VRAM address to write to (1 tile right of origin).
-    STA.W HW_VMADD+1                          ;||
-    LDX.B #$06                                ;|/
+    STA.W HW_VMADD+1                          ;|| One tile right = 1 word forward
+    LDX.B #6                                  ;|/
   - LDA.W Layer1Map16DMAData+2*7,X            ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;|
     STY.W HW_VMAINC                           ;/
     LDA.W Layer1VramAddr+1                    ;\ Upload the bottom-right column of tiles.
@@ -1028,247 +1013,247 @@ CODE_0087AD:                                  ; DMA routine to upload one row/co
     STA.W HW_VMADD                            ;||
     LDA.W Layer1VramAddr                      ;||
     CLC                                       ;|| Set VRAM address to write to (1 screen below, 1 tile right of origin).
-    ADC.B #$08                                ;||
+    ADC.B #(2*!TilesPerBGPage)>>8             ;|| One screen below & one tile right = 2 screens & 1 word forward
     STA.W HW_VMADD+1                          ;||
-    LDX.B #$06                                ;|/
+    LDX.B #6                                  ;|/
   - LDA.W Layer1Map16DMAData+3*7,X            ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
-    JMP CODE_0088DD                           ; Done with Layer 1, skip down to handle Layer 2.
+    JMP UploadL2Map16Strip                    ; Done with Layer 1, skip down to handle Layer 2.
 
-CODE_008849:                                  ; Updating vertical Layer 1.
-    LDY.B #$80                                ;\ 
+UploadOneL1Row:                               ; Updating vertical Layer 1.
+    LDY.B #%10000000                          ;\ 
     STY.W HW_VMAINC                           ;| Upload the top-left row of tiles.
     LDA.W Layer1VramAddr+1                    ;|\ 
     STA.W HW_VMADD                            ;|| Set VRAM address to write to.
     LDA.W Layer1VramAddr                      ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer1Map16DMAData,X                ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     STY.W HW_VMAINC                           ;\ Upload the top-right row of tiles.
     LDA.W Layer1VramAddr+1                    ;|\ 
     STA.W HW_VMADD                            ;||
     LDA.W Layer1VramAddr                      ;|| Set VRAM address to write to (1 screen right of origin).
-    CLC                                       ;||
-    ADC.B #$04                                ;||
+    CLC                                       ;|| One screen right = 1 screen forward
+    ADC.B #!TilesPerBGPage>>8                 ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer1Map16DMAData+7,X              ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$40                                ;|\ Change size to a full screen's worth.
+    LDA.B #2*!BGWidthInTiles                  ;|\ Change size to a full screen's worth.
     STA.W HW_DMACNT+$10                       ;|/
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     STY.W HW_VMAINC                           ;\ Upload the bottom-left row of tiles.
     LDA.W Layer1VramAddr+1                    ;|\ 
     CLC                                       ;||
-    ADC.B #$20                                ;|| Set VRAM address to write to (1 tile below origin).
-    STA.W HW_VMADD                            ;||
+    ADC.B #!BGWidthInTiles                    ;|| Set VRAM address to write to (1 tile below origin).
+    STA.W HW_VMADD                            ;|| One tile below = 1 row forward
     LDA.W Layer1VramAddr                      ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer1Map16DMAData+2*7,X            ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     STY.W HW_VMAINC                           ;\ Upload the bottom-right row of tiles.
     LDA.W Layer1VramAddr+1                    ;|\ 
     CLC                                       ;||
-    ADC.B #$20                                ;||
+    ADC.B #!BGWidthInTiles                    ;||
     STA.W HW_VMADD                            ;|| Set VRAM address to write to (1 screen right, 1 tile below origin).
-    LDA.W Layer1VramAddr                      ;||
+    LDA.W Layer1VramAddr                      ;|| One screen right & one tile below = 1 screen & 1 row forward
     CLC                                       ;||
-    ADC.B #$04                                ;||
+    ADC.B #!TilesPerBGPage>>8                 ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer1Map16DMAData+3*7,X            ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$40                                ;|\ Change size to a full screen's worth.
+    LDA.B #2*!BGWidthInTiles                  ;|\ Change size to a full screen's worth.
     STA.W HW_DMACNT+$10                       ;|/
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     
-CODE_0088DD:                                  ; Done with Layer 1.
-    LDA.B #$00                                ;\ Clear update flag for Layer 1.
+UploadL2Map16Strip:                           ; Done with Layer 1.
+    LDA.B #0                                  ;\ Clear update flag for Layer 1.
     STA.W Layer1VramAddr                      ;/ 
     LDA.W Layer2VramAddr                      ;\ If $1CE6 is non-zero, update Layer 2.
     BNE +                                     ;/
-    JMP CODE_008A10                           ; Else, return.
+    JMP FinishUploadMap16Strip                ; Else, return.
 
   + LDA.B ScreenMode                          ;\ Need to update Layer 2.
-    AND.B #$02                                ;| Jump down if in a vertical level.
-    BEQ +                                     ;|
-    JMP CODE_00897C                           ;/
+    AND.B #%00000010                          ;| Jump down if in a vertical level.
+    BEQ UploadOneL2Column                     ;|
+    JMP UploadOneL2Row                        ;/
 
-  + LDY.B #$81                                ;\ Updating horizontal Layer 2.
+UploadOneL2Column:
+    LDY.B #%10000001                          ;\ Updating horizontal Layer 2.
     STY.W HW_VMAINC                           ;| Upload the top-left column of tiles.
     LDA.W Layer2VramAddr+1                    ;|\ 
     STA.W HW_VMADD                            ;|| Set VRAM address to write to.
     LDA.W Layer2VramAddr                      ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer2Map16DMAData,X                ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     STY.W HW_VMAINC                           ;\ Upload the bottom-left column of tiles.
     LDA.W Layer2VramAddr+1                    ;|\ 
     STA.W HW_VMADD                            ;||
     LDA.W Layer2VramAddr                      ;|| Set VRAM address to write to (1 screen below origin).
-    CLC                                       ;||
-    ADC.B #$08                                ;||
+    CLC                                       ;|| One screen below = 2 screens forward
+    ADC.B #(2*!TilesPerBGPage)>>8             ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer2Map16DMAData+7,X              ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     STY.W HW_VMAINC                           ;\ Upload the rop-right column of tiles.
     LDA.W Layer2VramAddr+1                    ;|\ 
     INC A                                     ;||
     STA.W HW_VMADD                            ;|| Set VRAM address to write to (1 tile right of origin).
-    LDA.W Layer2VramAddr                      ;||
+    LDA.W Layer2VramAddr                      ;|| One tile right = 1 word forward
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer2Map16DMAData+2*7,X            ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     STY.W HW_VMAINC                           ;\ Upload the bottom-right column of tiles.
     LDA.W Layer2VramAddr+1                    ;|\ 
     INC A                                     ;||
     STA.W HW_VMADD                            ;||
     LDA.W Layer2VramAddr                      ;|| Set VRAM address to write to (1 screen below, 1 tile right of origin).
-    CLC                                       ;||
-    ADC.B #$08                                ;||
+    CLC                                       ;|| One screen below & one tile right = 2 screens & 1 word forward
+    ADC.B #(2*!TilesPerBGPage)>>8             ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer2Map16DMAData+3*7,X            ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
-    JMP CODE_008A10                           ; Done with Layer 2; return.
+    JMP FinishUploadMap16Strip                ; Done with Layer 2; return.
 
-CODE_00897C:                                  ; Updating horizontal Layer 2.
-    LDY.B #$80                                ;\ 
+UploadOneL2Row:                               ; Updating horizontal Layer 2.
+    LDY.B #%10000000                          ;\ 
     STY.W HW_VMAINC                           ;| Upload the top-left row of tiles.
     LDA.W Layer2VramAddr+1                    ;|\ 
     STA.W HW_VMADD                            ;|| Set VRAM address to write to.
     LDA.W Layer2VramAddr                      ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer2Map16DMAData,X                ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     STY.W HW_VMAINC                           ;\ Upload the top-right row of tiles.
     LDA.W Layer2VramAddr+1                    ;|\ 
     STA.W HW_VMADD                            ;||
     LDA.W Layer2VramAddr                      ;|| Set VRAM address to write to (1 screen right of origin).
-    CLC                                       ;||
-    ADC.B #$04                                ;||
+    CLC                                       ;|| One screen right = 1 screen forward
+    ADC.B #!TilesPerBGPage>>8                 ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer2Map16DMAData+7,X              ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$40                                ;|\ Change size to a full screen's worth.
+    LDA.B #2*!BGWidthInTiles                  ;|\ Change size to a full screen's worth.
     STA.W HW_DMACNT+$10                       ;|/
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     STY.W HW_VMAINC                           ;\ Upload the bottom-left row of tiles.
     LDA.W Layer2VramAddr+1                    ;|\ 
     CLC                                       ;||
-    ADC.B #$20                                ;|| Set VRAM address to write to (1 tile below origin).
-    STA.W HW_VMADD                            ;||
+    ADC.B #!BGWidthInTiles                    ;|| Set VRAM address to write to (1 tile below origin).
+    STA.W HW_VMADD                            ;|| One tile below = 1 row forward
     LDA.W Layer2VramAddr                      ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer2Map16DMAData+2*7,X            ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     STY.W HW_VMAINC                           ;\ Upload the bottom-right row of tiles.
     LDA.W Layer2VramAddr+1                    ;|\ 
     CLC                                       ;||
-    ADC.B #$20                                ;||
+    ADC.B #!BGWidthInTiles                    ;||
     STA.W HW_VMADD                            ;|| Set VRAM address to write to (1 screen right, 1 tile below origin).
-    LDA.W Layer2VramAddr                      ;||
+    LDA.W Layer2VramAddr                      ;|| One screen right & one tile below = 1 screen & 1 row forward
     CLC                                       ;||
-    ADC.B #$04                                ;||
+    ADC.B #!TilesPerBGPage>>8                 ;||
     STA.W HW_VMADD+1                          ;|/
-    LDX.B #$06                                ;|
+    LDX.B #6                                  ;|
   - LDA.W Layer2Map16DMAData+3*7,X            ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$40                                ;|\ Change size to a full screen's worth.
+    LDA.B #2*!BGWidthInTiles                  ;|\ Change size to a full screen's worth.
     STA.W HW_DMACNT+$10                       ;|/
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     
-CODE_008A10:                                  ; Done with Layer 2.
-    LDA.B #$00                                ;\ Clear update flag for Layer 2.
+FinishUploadMap16Strip:                       ; Done with Layer 2.
+    LDA.B #0                                  ;\ Clear update flag for Layer 2.
     STA.W Layer2VramAddr                      ;/
     RTL                                       ;
 
 
 Layer1Map16DMAData:                           ; DMA settings for uploading rows/columns of Layer 1 Map16 data:
-    %DMASettings($01,HW_VMDATA,Layer1VramBuffer,$40)
-    %DMASettings($01,HW_VMDATA,Layer1VramBuffer+$40,$2C)
-    %DMASettings($01,HW_VMDATA,Layer1VramBuffer+$80,$40)
-    %DMASettings($01,HW_VMDATA,Layer1VramBuffer+$C0,$2C)
+    %DMASettings($01,HW_VMDATA,Layer1VramBuffer,2*!BGWidthInTiles)
+    %DMASettings($01,HW_VMDATA,Layer1VramBuffer+$40,2*!BGHeightInTiles)
+    %DMASettings($01,HW_VMDATA,Layer1VramBuffer+$80,2*!BGWidthInTiles)
+    %DMASettings($01,HW_VMDATA,Layer1VramBuffer+$C0,2*!BGHeightInTiles)
     
 Layer2Map16DMAData:                           ; DMA settings for uploading rows/columns of Layer 2 Map16 data:
-    %DMASettings($01,HW_VMDATA,Layer2VramBuffer,$40)
-    %DMASettings($01,HW_VMDATA,Layer2VramBuffer+$40,$2C)
-    %DMASettings($01,HW_VMDATA,Layer2VramBuffer+$80,$40)
-    %DMASettings($01,HW_VMDATA,Layer2VramBuffer+$C0,$2C)
+    %DMASettings($01,HW_VMDATA,Layer2VramBuffer,2*!BGWidthInTiles)
+    %DMASettings($01,HW_VMDATA,Layer2VramBuffer+$40,2*!BGHeightInTiles)
+    %DMASettings($01,HW_VMDATA,Layer2VramBuffer+$80,2*!BGWidthInTiles)
+    %DMASettings($01,HW_VMDATA,Layer2VramBuffer+$C0,2*!BGHeightInTiles)
 
-ClearStack:                                   ; Routine to clear RAM on reset, specifically $00-$FF, $0200-$1FFF, and $7F837B/D.
+ClearMemory:                                  ; Routine to clear RAM on reset, specifically $00-$FF, $0200-$1FFF, and $7F837B/D.
     REP #$30                                  ; AXY->16
-    LDX.W #$1FFE                              ;\ 
+    LDX.W #NonMirroredWRAM-2                  ;\ Clear out $00-$FF and $0200-$1FFF.
  -- STZ.B _0,X                                ;|
-  - DEX                                       ;|
-    DEX                                       ;|
-    CPX.W #$01FF                              ;| Clear out $00-$FF and $0200-$1FFF.
-    BPL +                                     ;|
-    CPX.W #$0100                              ;|
-    BPL -                                     ;|
-  + CPX.W #$FFFE                              ;|
+  - DEX #2                                    ;|
+    CPX.W #StackStart                         ;|\ Specifically don't clear out $0100-$01FF (Stack area)
+    BPL +                                     ;||
+    CPX.W #StackPage                          ;||
+    BPL -                                     ;|/
+  + CPX.W #-2                                 ;|
     BNE --                                    ;/
-    LDA.W #$0000                              ;\ 
+    LDA.W #0                                  ;\ 
     STA.L DynStripeImgSize                    ;| Initialize the stripe image and palette upload tables.
     STZ.W DynPaletteIndex                     ;| (the palette upload table is unnecessary though since it's cleared above).
     SEP #$30                                  ;| AXY->8
-    LDA.B #$FF                                ;|
+    LDA.B #-1                                 ;|
     STA.L DynamicStripeImage                  ;/
     RTS                                       ;
 
@@ -1276,19 +1261,19 @@ SetUpScreen:                                  ; Routine to set up certain VRAM-r
 if ver_is_lores(!_VER)                        ;\=============== J, U, SS, & E0 ================
     STZ.W HW_SETINI                           ;! 224 lines (vertical resolution)
 else                                          ;<===================== E1 ======================
-    LDA.B #$04                                ;! 239 lines
+    LDA.B #%00000100                          ;! 239 lines
     STA.W HW_SETINI                           ;!
 endif                                         ;/===============================================
     STZ.W HW_MOSAIC                           ; Turn off mosaic
-    LDA.B #$23                                ;\ Layer 1 tilemap VRAM address and size ($2000, 512x512).
+    LDA.B #%00100011                          ;\ Layer 1 tilemap VRAM address and size ($2000, 512x512).
     STA.W HW_BG1SC                            ;/
-    LDA.B #$33                                ;\ Layer 2 tilemap VRAM address and size ($3000, 512x512).
+    LDA.B #%00110011                          ;\ Layer 2 tilemap VRAM address and size ($3000, 512x512).
     STA.W HW_BG2SC                            ;/
-    LDA.B #$53                                ;\ Layer 3 tilemap VRAM address and size ($5000, 512x512).
+    LDA.B #%01010011                          ;\ Layer 3 tilemap VRAM address and size ($5000, 512x512).
     STA.W HW_BG3SC                            ;/
-    LDA.B #$00                                ;\ Base VRAM address for Layer 1/2 GFX files ($0000/$0000).
+    LDA.B #%00000000                          ;\ Base VRAM address for Layer 1/2 GFX files ($0000/$0000).
     STA.W HW_BG12NBA                          ;/
-    LDA.B #$04                                ;\ Base address for Layer 3/4 GFX files ($4000/$0000).
+    LDA.B #%00000100                          ;\ Base address for Layer 3/4 GFX files ($4000/$0000).
     STA.W HW_BG34NBA                          ;/
     STZ.B Layer12Window                       ;
     STZ.B Layer34Window                       ;
@@ -1297,100 +1282,96 @@ endif                                         ;/================================
     STZ.W HW_WOBJLOG                          ;
     STZ.W HW_TMW                              ;
     STZ.W HW_TSW                              ;
-    LDA.B #$02                                ;\ Color addition - add subscreen.
+    LDA.B #%00000010                          ;\ Color addition - add subscreen.
     STA.B ColorAddition                       ;/
-    LDA.B #$80                                ;\ Set Mode7 "Screen Over" to %10000000, disable Mode7 flipping
+    LDA.B #%10000000                          ;\ Set Mode7 "Screen Over" to %10000000, disable Mode7 flipping
     STA.W HW_M7SEL                            ;/
     RTS
 
 
-DATA_008AB4:
-    dw $0000,$00FE,$0000,$00FE
-DATA_008ABC:
-    dw $0000,$0002,$0000,$0002
+AnglePerQuadMask:                             ; These two tables are used to convert an angle to its negative
+    dw %0000000000000000
+    dw %0000000011111110
+    dw %0000000000000000
+    dw %0000000011111110
+AnglePerQuadOffset:
+    dw 0,2,0,2
 
     dw $0000,$0100,$FFFF,$1000                ; unused table?
     db $F0
 
-CODE_008ACD:                                  ; Subroutine to handle scaling and rotation for Mode 7.
-    LDA.B Mode7YScale
-    STA.B _0
+CalculateMode7Values:                         ; Subroutine to convert mode 7 X/Y Scale and angle into A/B/C/D Matrix values.
+    LDA.B Mode7YScale                         ;\ Prep Y Scale value
+    STA.B _0                                  ;/
     REP #$30                                  ; AXY->16
-    JSR CODE_008AE8
-    LDA.B Mode7XScale
-    STA.B _0
+    JSR CalcBasisVector                       ; Calculate Y axis basis vector first, then X axis
+    LDA.B Mode7XScale                         ;\ Prep X Scale value
+    STA.B _0                                  ;/
     REP #$30                                  ; AXY->16
-    LDA.B Mode7ParamA
-    STA.B Mode7ParamD
-    LDA.B Mode7ParamB
-    EOR.W #$FFFF
-    INC A
-    STA.B Mode7ParamC
-CODE_008AE8:
-    LDA.B Mode7Angle
-    ASL A
-    PHA
-    XBA
-    AND.W #$0003
-    ASL A
-    TAY
-    PLA
-    AND.W #$00FE
-    EOR.W DATA_008AB4,Y
-    CLC
-    ADC.W DATA_008ABC,Y
-    TAX
-    JSR CODE_008B2B
-    CPY.W #$0004
-    BCC +
-    EOR.W #$FFFF
-    INC A
-  + STA.B Mode7ParamB
-    TXA
-    EOR.W #$00FE
-    CLC
-    ADC.W #$0002
-    AND.W #$01FF
-    TAX
-    JSR CODE_008B2B
-    DEY
-    DEY
-    CPY.W #$0004
-    BCS +
-    EOR.W #$FFFF
-    INC A
-  + STA.B Mode7ParamA
+    LDA.B Mode7ParamA                         ;\ D <- A
+    STA.B Mode7ParamD                         ;| C <- -B
+    LDA.B Mode7ParamB                         ;| Essentially converting values from X axis to Y axis by rotating by 90 degrees.
+    EOR.W #%1111111111111111                  ;|  Since the same subroutine is used for both axes.
+    INC A                                     ;|
+    STA.B Mode7ParamC                         ;/
+
+CalcBasisVector:                              ; Subroutine to calculate a basis vector given a scale and a rotation.
+    LDA.B Mode7Angle                          ; A value of $0200 here equals 360 degrees.
+    ASL A                                     ;\
+    PHA                                       ;| Y = quadrant of angle
+    XBA                                       ;|
+    AND.W #%0000000000000011                  ;|
+    ASL A                                     ;|
+    TAY                                       ;/
+    PLA                                       ;\
+    AND.W #%0000000011111110                  ;| X = angle from the X axis * 2
+    EOR.W AnglePerQuadMask,Y                  ;|  Q1 & Q3 angles are positive
+    CLC                                       ;|  Q2 & Q4 angles are negative
+    ADC.W AnglePerQuadOffset,Y                ;| Angle is * 2 because M7SineWave entries are 2 bytes wide
+    TAX                                       ;/
+    JSR SineAndScale                          ;
+    CPY.W #4                                  ;\
+    BCC +                                     ;| Result is negative if angle is below X axis (Q3 or Q4)
+    EOR.W #%1111111111111111                  ;|
+    INC A                                     ;|
+  + STA.B Mode7ParamB                         ;/
+    TXA                                       ;\
+    EOR.W #%0000000011111110                  ;| Now negate the angle and find its value
+    CLC                                       ;|
+    ADC.W #2                                  ;|
+    AND.W #%0000000111111111                  ;|
+    TAX                                       ;/
+    JSR SineAndScale                          ;
+    DEY #2                                    ;\
+    CPY.W #4                                  ;| Result is negative if angle is left of Y axis (Q2 or Q3)
+    BCS +                                     ;|
+    EOR.W #%1111111111111111                  ;|
+    INC A                                     ;|
+  + STA.B Mode7ParamA                         ;/
     SEP #$30                                  ; AXY->8
     RTS
 
-CODE_008B2B:
+SineAndScale:                                 ; Looks up the sine of the angle in X, and multiplies it by the scale in $00.
     SEP #$20                                  ; A->8
-    LDA.W DATA_008B57+1,X
-    BEQ +
-    LDA.B _0
-  + STA.B _1
-    LDA.W DATA_008B57,X
-    STA.W HW_WRMPYA
-    LDA.B _0
-    STA.W HW_WRMPYB
-    NOP
-    NOP
-    NOP
-    NOP
+    LDA.W M7SineWave+1,X                      ;\
+    BEQ +                                     ;| $01 is used for the special case when sin(angle) is more than 8 bits
+    LDA.B _0                                  ;|
+  + STA.B _1                                  ;/
+    LDA.W M7SineWave,X                        ;\ sin(angle) * scale = result
+    STA.W HW_WRMPYA                           ;|
+    LDA.B _0                                  ;|
+    STA.W HW_WRMPYB                           ;/
+    NOP #4
     LDA.W HW_RDMPY+1
-    CLC
-    ADC.B _1
+    CLC                                       ;\ If sin(angle) is more than 8 bits, the only result is $0100 = 1.0.
+    ADC.B _1                                  ;/ Therefore, the result is just the scale.
     XBA
     LDA.W HW_RDMPY
     REP #$20                                  ; A->16
-    LSR A
-    LSR A
-    LSR A
-    LSR A
-    LSR A
+    LSR #5                                    ; Scale of $20 = 1.0
     RTS
 
-DATA_008B57:                                  ; Tile array for numbers in the bonus star counter.
+M7SineWave:                                   ; Sine LUT, from 0->pi/2 rad, 129 entries
     dw $0000,$0003,$0006,$0009
     dw $000C,$000F,$0012,$0015
     dw $0019,$001C,$001F,$0022
@@ -1425,7 +1406,7 @@ DATA_008B57:                                  ; Tile array for numbers in the bo
     dw $00FF,$00FF,$00FF,$00FF
     dw $0100
 
-TallNumbers:
+TallNumbers:                                  ; Tile array for numbers in the bonus star counter.
     db $B7,$3C,$B7,$BC,$B8,$3C,$B9,$3C
     db $BA,$3C,$BB,$3C,$BA,$3C,$BA,$BC
     db $BC,$3C,$BD,$3C,$BE,$3C,$BF,$3C
@@ -1456,118 +1437,117 @@ StatusBarRow3:                                ; Third line of the status bar.
 StatusBarRow4:                                ; Fourth line of the status bar (bottom of item box).
     db $3A,$B8,$3B,$B8,$3B,$B8,$3A,$F8
 
-GM04DoDMA:                                    ; Subroutine to upload the base status bar tilemap to VRAM.
-    LDA.B #$80                                ;\ 
+UploadStaticBar:                              ; Subroutine to upload the base status bar tilemap to VRAM.
+    LDA.B #%10000000                          ;\ 
     STA.W HW_VMAINC                           ;|
-    LDA.B #$2E                                ;|
+    LDA.B #!VRAMAddrHUD1                      ;|
     STA.W HW_VMADD                            ;|
-    LDA.B #$50                                ;|
+    LDA.B #!VRAMAddrHUD1>>8                   ;|
     STA.W HW_VMADD+1                          ;|
-    LDX.B #$06                                ;| Execute DMA for the top line.
+    LDX.B #6                                  ;| Execute DMA for the top line.
   - LDA.W StaticBarDMASettings,X              ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
-    LDA.B #$80                                ;\ 
+    LDA.B #%10000000                          ;\ 
     STA.W HW_VMAINC                           ;|
-    LDA.B #$42                                ;|
+    LDA.B #!VRAMAddrHUD2                      ;|
     STA.W HW_VMADD                            ;|
-    LDA.B #$50                                ;|
+    LDA.B #!VRAMAddrHUD2>>8                   ;|
     STA.W HW_VMADD+1                          ;|
-    LDX.B #$06                                ;| Execute DMA for the second line.
+    LDX.B #6                                  ;| Execute DMA for the second line.
   - LDA.W StaticBarDMASettings+7,X            ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
-    LDA.B #$80                                ;\ 
+    LDA.B #%10000000                          ;\ 
     STA.W HW_VMAINC                           ;|
-    LDA.B #$63                                ;|
+    LDA.B #!VRAMAddrHUD3                      ;|
     STA.W HW_VMADD                            ;|
-    LDA.B #$50                                ;|
+    LDA.B #!VRAMAddrHUD3>>8                   ;|
     STA.W HW_VMADD+1                          ;|
-    LDX.B #$06                                ;| Execute DMA for the third line.
+    LDX.B #6                                  ;| Execute DMA for the third line.
   - LDA.W StaticBarDMASettings+2*7,X          ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
-    LDA.B #$80                                ;\ 
+    LDA.B #%10000000                          ;\ 
     STA.W HW_VMAINC                           ;|
-    LDA.B #$8E                                ;|
+    LDA.B #!VRAMAddrHUD4                      ;|
     STA.W HW_VMADD                            ;|
-    LDA.B #$50                                ;|
+    LDA.B #!VRAMAddrHUD4>>8                   ;|
     STA.W HW_VMADD+1                          ;|
-    LDX.B #$06                                ;| Execute DMA for the last line.
+    LDX.B #6                                  ;| Execute DMA for the last line.
   - LDA.W StaticBarDMASettings+3*7,X          ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
-    LDX.B #$36                                ;\ 
-    LDY.B #$6C                                ;|
+    LDX.B #!StatusBarTileCount-1              ;\
+    LDY.B #2*(!StatusBarTileCount-1)          ;|
   - LDA.W StatusBarRow2,Y                     ;|
     STA.W StatusBar,X                         ;|
-    DEY                                       ;| Clear out RAM tilemap.
-    DEY                                       ;|
+    DEY #2                                    ;| Clear out RAM tilemap.
     DEX                                       ;|
     BPL -                                     ;/
-    LDA.B #!FramesInOneIGT                    ;\ Number of frames one in game second lasts
+    LDA.B #!FramesInOneIGT-1                  ;\ Number of frames one in game second lasts
     STA.W InGameTimerFrames                   ;/
     RTS
 
 StaticBarDMASettings:
-    %DMASettings($01,HW_VMDATA,StatusBarRow1,$08)
-    %DMASettings($01,HW_VMDATA,StatusBarRow2,$38)
-    %DMASettings($01,HW_VMDATA,StatusBarRow3,$36)
-    %DMASettings($01,HW_VMDATA,StatusBarRow4,$08)
+    %DMASettings(%00000001,HW_VMDATA,StatusBarRow1,2*!WidthOfItemBox)
+    %DMASettings(%00000001,HW_VMDATA,StatusBarRow2,2*!WidthOfHUDL1)
+    %DMASettings(%00000001,HW_VMDATA,StatusBarRow3,2*!WidthOfHUDL2)
+    %DMASettings(%00000001,HW_VMDATA,StatusBarRow4,2*!WidthOfItemBox)
 
 DrawStatusBar:                                ; Routine to upload the status bar tilemap from RAM to VRAM.
     STZ.W HW_VMAINC                           ;\ 
-    LDA.B #$42                                ;|
+    LDA.B #!VRAMAddrHUD2                      ;|
     STA.W HW_VMADD                            ;|
-    LDA.B #$50                                ;|
+    LDA.B #!VRAMAddrHUD2>>8                   ;|
     STA.W HW_VMADD+1                          ;|
-    LDX.B #$06                                ;| Execute DMA for the top line.
+    LDX.B #6                                  ;| Execute DMA for the top line.
   - LDA.W StatusBarDMASettings,X              ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     STZ.W HW_VMAINC                           ;\ 
-    LDA.B #$63                                ;|
+    LDA.B #!VRAMAddrHUD3                      ;|
     STA.W HW_VMADD                            ;|
-    LDA.B #$50                                ;|
+    LDA.B #!VRAMAddrHUD3>>8                   ;|
     STA.W HW_VMADD+1                          ;|
-    LDX.B #$06                                ;| Execute DMA for the bottom line.
+    LDX.B #6                                  ;| Execute DMA for the bottom line.
   - LDA.W StatusBarDMASettings+7,X            ;|
     STA.W HW_DMAPARAM+$10,X                   ;|
     DEX                                       ;|
     BPL -                                     ;|
-    LDA.B #$02                                ;|
+    LDA.B #!Ch1                               ;|
     STA.W HW_MDMAEN                           ;/
     RTS                                        
 
 StatusBarDMASettings:
-    %DMASettings($00,HW_VMDATA,StatusBar,$1C)
-    %DMASettings($00,HW_VMDATA,StatusBar+$1C,$1B)
+    %DMASettings(%00000000,HW_VMDATA,StatusBar,!WidthOfHUDL1)
+    %DMASettings(%00000000,HW_VMDATA,StatusBar+!WidthOfHUDL1,!WidthOfHUDL2)
 
-LuigiNameTiles:
-    db $40,$41,$42,$43,$44                    ; "LUIGI"
-ItemBoxOBJNos:
-    db $24,$26,$48,$0E                        ; item box item OBJ numbers
-ItemBoxStarProps:
-    db $00,$02,$04,$02                        ; star item box palettes
-ItemBoxOBJProps:
-    db $08,$0A,$00,$04                        ; item box item palettes
-TallNumberTiles:
-    db $B7,$C3                                ; Tall numbers for status bar
+LuigiNameTiles:                               ; "LUIGI"
+    db $40,$41,$42,$43,$44
+ItemBoxOBJNos:                                ; item box item OBJ numbers
+    db $24,$26,$48,$0E
+ItemBoxStarProps:                             ; star item box palettes
+    db %00000000,%00000010,%00000100,%00000010
+ItemBoxOBJProps:                              ; item box item palettes
+    db %00001000,%00001010,%00000000,%00000100
+TallNumberTiles:                              ; Tall numbers for status bar
+    db $B7,$C3
     db $B8,$B9
     db $BA,$BB
     db $BA,$BF
@@ -1583,22 +1563,22 @@ UpdateStatusBar:                              ; Routine to update the status bar
     ORA.B SpriteLock                          ;| Don't decrement the timer if:
     BNE UpdateTime                            ;|  - Ending a level
     LDA.W IRQNMICommand                       ;|  - Game frozen
-    CMP.B #$C1                                ;|  - In Bowser
+    CMP.B #%11000001                          ;|  - In Bowser
     BEQ UpdateTime                            ;|  - A second hasn't passed
     DEC.W InGameTimerFrames                   ;|
     BPL UpdateTime                            ;/
 
-    LDA.B #!FramesInOneIGT                    ;
+    LDA.B #!FramesInOneIGT-1                  ;
     STA.W InGameTimerFrames                   ;
     LDA.W InGameTimerHundreds                 ;\ 
     ORA.W InGameTimerTens                     ;| If timer is already zero, skip "time up".
     ORA.W InGameTimerOnes                     ;|
     BEQ UpdateTime                            ;/
 
-    LDX.B #$02                                ;\
+    LDX.B #2                                  ;\
   - DEC.W InGameTimerHundreds,X               ;|
     BPL +                                     ;| Decrement timer.
-    LDA.B #$09                                ;|
+    LDA.B #9                                  ;|
     STA.W InGameTimerHundreds,X               ;|
     DEX                                       ;|
     BPL -                                     ;/
@@ -1606,7 +1586,7 @@ UpdateStatusBar:                              ; Routine to update the status bar
     BNE +                                     ;|
     LDA.W InGameTimerTens                     ;|
     AND.W InGameTimerOnes                     ;| If time is 99, speed up music.
-    CMP.B #$09                                ;|
+    CMP.B #9                                  ;|
     BNE +                                     ;|
     LDA.B #!SFX_HURRYUP                       ;|\ SFX for the "time is running out!" effect.
     STA.W SPCIO0                              ;//
@@ -1618,40 +1598,40 @@ UpdateStatusBar:                              ; Routine to update the status bar
                       
 UpdateTime:
     LDA.W InGameTimerHundreds                 ;\ 
-    STA.W StatusBar+$2C                       ;|
+    STA.W StatusBar+!HUDTimerOffset           ;|
     LDA.W InGameTimerTens                     ;| Copy time to status bar tilemap.
-    STA.W StatusBar+$2D                       ;|
+    STA.W StatusBar+!HUDTimerOffset+1         ;|
     LDA.W InGameTimerOnes                     ;|
-    STA.W StatusBar+$2E                       ;/
-    LDX.B #$10                                ;\
-    LDY.B #$00                                ;|
+    STA.W StatusBar+!HUDTimerOffset+2         ;/
+    LDX.B #16                                 ;\
+    LDY.B #0                                  ;|
   - LDA.W InGameTimerHundreds,Y               ;|
     BNE HandleScores                          ;| Replace leadings 0s in timer with spaces.
-    LDA.B #$FC                                ;| (i.e. 099 vs. _99)
-    STA.W StatusBar+$1C,X                     ;|
+    LDA.B #!EmptyTile                         ;| (i.e. 099 vs. _99)
+    STA.W StatusBar+!WidthOfHUDL1,X           ;| <- Interesting, instead of timer offset
     INY                                       ;|
     INX                                       ;|
-    CPY.B #$02                                ;|
+    CPY.B #2                                  ;|
     BNE -                                     ;/
 
 HandleScores:                                 ; Handle Mario and Luigi's scores and write them to the status bar.
-    LDX.B #$03                                ;\
+    LDX.B #3                                  ;\
   - LDA.W PlayerScore+2,X                     ;|
     STA.B _0                                  ;|
     STZ.B _1                                  ;|
     REP #$20                                  ;| A->16
     LDA.W PlayerScore,X                       ;| Check if the player has reached a score of over 999999.
     SEC                                       ;|
-    SBC.W #$423F                              ;|
+    SBC.W #!MaximumScore                      ;|
     LDA.B _0                                  ;|
-    SBC.W #$000F                              ;|
+    SBC.W #!MaximumScore>>16                  ;|
     BCC +                                     ;|
     SEP #$20                                  ;| A->8
-    LDA.B #$0F                                ;|\ 
+    LDA.B #!MaximumScore>>16                  ;|\ 
     STA.W PlayerScore+2,X                     ;||
-    LDA.B #$42                                ;|| Limit the maximum score to 999999.
+    LDA.B #!MaximumScore>>8                   ;|| Limit the maximum score to 999999.
     STA.W PlayerScore+1,X                     ;||
-    LDA.B #$3F                                ;||
+    LDA.B #!MaximumScore                      ;||
     STA.W PlayerScore,X                       ;|/
   + SEP #$20                                  ;| A->8
     DEX                                       ;|\ 
@@ -1666,16 +1646,16 @@ HandleScores:                                 ; Handle Mario and Luigi's scores 
     STA.B _3
     LDA.W PlayerScore
     STA.B _2
-    LDX.B #$14                                ;\ Status bar position offset from $0F15 to start writing Mario's score to.
-    LDY.B #$00                                ;| Write Mario's score to the status bar.
+    LDX.B #!HUDScoreOffsetL2                  ;\ Status bar position offset from $0F15 to start writing Mario's score to.
+    LDY.B #0                                  ;| Write Mario's score to the status bar.
     JSR DrawScore                             ;/
-    LDX.B #$00                                ;\
-  - LDA.W StatusBar+$30,X                     ;|
+    LDX.B #0                                  ;\
+  - LDA.W StatusBar+!HUDScoreOffset,X         ;|
     BNE +                                     ;|
-    LDA.B #$FC                                ;| Replace leading 0s in Mario's score with spaces.
-    STA.W StatusBar+$30,X                     ;|
+    LDA.B #!EmptyTile                         ;| Replace leading 0s in Mario's score with spaces.
+    STA.W StatusBar+!HUDScoreOffset,X         ;|
     INX                                       ;|
-    CPX.B #$06                                ;|
+    CPX.B #6                                  ;|
     BNE -                                     ;/
   + LDA.W PlayerTurnLvl                       ;\ If playing as Mario, branch and don't overwrite with Luigi's score.
     BEQ HandleCoins                           ;/
@@ -1686,16 +1666,16 @@ HandleScores:                                 ; Handle Mario and Luigi's scores 
     STA.B _3
     LDA.W PlayerScore+3
     STA.B _2
-    LDX.B #$14                                ;\ Status bar position offset from $0F15 to start writing Luigi's score to.
-    LDY.B #$00                                ;| Write Luigi's score to the status bar.
+    LDX.B #!HUDScoreOffsetL2                  ;\ Status bar position offset from $0F15 to start writing Luigi's score to.
+    LDY.B #0                                  ;| Write Luigi's score to the status bar.
     JSR DrawScore                             ;/
-    LDX.B #$00                                ;\
-  - LDA.W StatusBar+$30,X                     ;|
+    LDX.B #0                                  ;\
+  - LDA.W StatusBar+!HUDScoreOffset,X         ;|
     BNE HandleCoins                           ;|
-    LDA.B #$FC                                ;| Replace leading 0s in Luigi's score with spaces.
-    STA.W StatusBar+$30,X                     ;|
+    LDA.B #!EmptyTile                         ;| Replace leading 0s in Luigi's score with spaces.
+    STA.W StatusBar+!HUDScoreOffset,X         ;|
     INX                                       ;|
-    CPX.B #$06                                ;|
+    CPX.B #6                                  ;|
     BNE -                                     ;/
                       
 HandleCoins:                                  ; Handle the current player's coins.
@@ -1704,40 +1684,40 @@ HandleCoins:                                  ; Handle the current player's coin
     DEC.W CoinAdder                           ;|
     INC.W PlayerCoins                         ;/
     LDA.W PlayerCoins                         ;\ 
-    CMP.B #$64                                ;| How many coins the player needs to get a 1up (100).
+    CMP.B #!CoinsPer1up                       ;| How many coins the player needs to get a 1up (100).
     BCC HandleLives                           ;/
     INC.W GivePlayerLives                     ; Give he player a life.
     LDA.W PlayerCoins                         ;\ 
     SEC                                       ;|
-    SBC.B #$64                                ;| How many coins to take away after giving the player a 1up (100).
+    SBC.B #!CoinsPer1up                       ;| How many coins to take away after giving the player a 1up (100).
     STA.W PlayerCoins                         ;/
 
 HandleLives:                                  ; Handle the current player's lives and write them to the status bar.
     LDA.W PlayerLives                         ;\ If Mario has a negative number of lives (i.e. game over), don't max out the life count.
     BMI +                                     ;/
-    CMP.B #$62                                ;\ Maximum number of lives the player can have.
+    CMP.B #!MaximumLives-1                    ;\ Maximum number of lives the player can have.
     BCC +                                     ;|
-    LDA.B #$62                                ;| Amount of lives to use if the maximum life limit is reached.
+    LDA.B #!MaximumLives-1                    ;| Amount of lives to use if the maximum life limit is reached.
     STA.W PlayerLives                         ;/
   + LDA.W PlayerLives                         ;\ 
     INC A                                     ;|
     JSR HexToDec                              ;| Write the life count to the status bar.
     TXY                                       ;|
     BNE +                                     ;|
-    LDX.B #$FC                                ;| Tile to use for the tens digit of the life counter if 0 (blank tile).
-  + STX.W StatusBar+$1D                       ;|\ Positions in the status bar to write the life count to.
-    STA.W StatusBar+$1E                       ;//
+    LDX.B #!EmptyTile                         ;| Tile to use for the tens digit of the life counter if 0 (blank tile).
+  + STX.W StatusBar+!HUDLivesOffset           ;|\ Positions in the status bar to write the life count to.
+    STA.W StatusBar+!HUDLivesOffset+1         ;//
 
 HandleBonusStars:                             ; Handle the current player's bonus stars.
     LDX.W PlayerTurnLvl                       ;\ 
     LDA.W PlayerBonusStars,X                  ;|
-    CMP.B #$64                                ;| Number of bonus stars required to enter the bonus game (100).
+    CMP.B #!MaximumBonusStars                 ;| Number of bonus stars required to enter the bonus game (100).
     BCC DrawCoinCount                         ;|
-    LDA.B #$FF                                ;|\ Set the flag to activate the bonus game after the level is beaten.
+    LDA.B #-1                                 ;|\ Set the flag to activate the bonus game after the level is beaten.
     STA.W BonusGameActivate                   ;|/
     LDA.W PlayerBonusStars,X                  ;|\ 
     SEC                                       ;||
-    SBC.B #$64                                ;|| Number of bonus stars to subtract from the counter after getting a bonus game (100).
+    SBC.B #!MaximumBonusStars                 ;|| Number of bonus stars to subtract from the counter after getting a bonus game (100).
     STA.W PlayerBonusStars,X                  ;//
 
 DrawCoinCount:                                ; Write the current player's coin count to the status bar.
@@ -1745,9 +1725,9 @@ DrawCoinCount:                                ; Write the current player's coin 
     JSR HexToDec                              ;|
     TXY                                       ;|
     BNE +                                     ;|
-    LDX.B #$FC                                ;|| Tile to use for the tens digit of the coin counter if 0 (blank tile).
-  + STA.W StatusBar+$1B                       ;|\ Positions in the status bar to write the coin count to.
-    STX.W StatusBar+$1A                       ;//
+    LDX.B #!EmptyTile                         ;|| Tile to use for the tens digit of the coin counter if 0 (blank tile).
+  + STA.W StatusBar+!HUDCoinsOffset+1         ;|\ Positions in the status bar to write the coin count to.
+    STX.W StatusBar+!HUDCoinsOffset           ;//
 
 HandleSmallBonusStars:                        ; Write the small bonus star counter to the status bar.
     SEP #$20                                  ; A->8
@@ -1757,29 +1737,29 @@ HandleSmallBonusStars:                        ; Write the small bonus star count
     STZ.B _3                                  ;
     LDA.W PlayerBonusStars,X                  ;
     STA.B _2                                  ;
-    LDX.B #$09                                ;\\ Status bar position offset from $0F15 to start writing the current player's bonus stars to.
-    LDY.B #$10                                ;| Write the small bonus stars to the status bar.
+    LDX.B #!HUDSmallStarsOffsetL2             ;\\ Status bar position offset from $0F15 to start writing the current player's bonus stars to.
+    LDY.B #4*4                                ;| Write the small bonus stars to the status bar.
     JSR DrawSmallBonusStars                   ;/
-    LDX.B #$00                                ;
-  - LDA.W StatusBar+$25,X                     ;\ 
+    LDX.B #0                                  ;
+  - LDA.W StatusBar+!HUDSmallStarsOffset,X    ;\ 
     BNE DrawBigBonusStars                     ;|
-    LDA.B #$FC                                ;|| Tile to use for the tens digit of the small bonus stars counter if 0 (blank tile).
-    STA.W StatusBar+$25,X                     ;|
-    STA.W StatusBar+$0A,X                     ;| Write the small counter's digits to the status bar.
+    LDA.B #!EmptyTile                         ;|| Tile to use for the tens digit of the small bonus stars counter if 0 (blank tile).
+    STA.W StatusBar+!HUDSmallStarsOffset,X    ;|
+    STA.W StatusBar+!HUDBigStarsOffset,X      ;| Write the small counter's digits to the status bar.
     INX                                       ;|
-    CPX.B #$01                                ;|
+    CPX.B #1                                  ;|
     BNE -                                     ;/
                       
 DrawBigBonusStars:                            ; Write the large bonus star counter to the status bar.
-    LDA.W StatusBar+$25,X                     ;\ 
+    LDA.W StatusBar+!HUDSmallStarsOffset,X    ;\ 
     ASL A                                     ;| Write the big numbers to the status bar.
     TAY                                       ;|
     LDA.W TallNumberTiles,Y                   ;|\ Write the top of the number.
-    STA.W StatusBar+$0A,X                     ;|/
+    STA.W StatusBar+!HUDBigStarsOffset,X      ;|/
     LDA.W TallNumberTiles+1,Y                 ;|\ Write the bottom of the number.
-    STA.W StatusBar+$25,X                     ;|/
+    STA.W StatusBar+!HUDSmallStarsOffset,X    ;|/
     INX                                       ;|
-    CPX.B #$02                                ;|
+    CPX.B #2                                  ;|
     BNE DrawBigBonusStars                     ;/
 
     JSR DrawReserveItem                       ; Draw the reserve item to the status bar.
@@ -1787,7 +1767,7 @@ DrawBigBonusStars:                            ; Write the large bonus star count
 DrawLuigiName:                                ; Write LUIGI to the status bar if using player 2.
     LDA.W PlayerTurnLvl                       ;\ If playing as Mario, skip.
     BEQ DrawDragonCoins                       ;/
-    LDX.B #$04                                ;\ 
+    LDX.B #4                                  ;\ 
   - LDA.W LuigiNameTiles,X                    ;| Write LUIGI to the status bar.
     STA.W StatusBar,X                         ;|
     DEX                                       ;|
@@ -1795,21 +1775,21 @@ DrawLuigiName:                                ; Write LUIGI to the status bar if
 
 DrawDragonCoins:                              ; Write the Dragon Coins collected to the status bar.
   + LDA.W DragonCoinsShown                    ;
-    CMP.B #$05                                ; Number of Yoshi coins to remove the counter from the status bar at.
+    CMP.B #!MaximumDragonCoins                ; Number of Yoshi coins to remove the counter from the status bar at.
     BCC +                                     ;
-    LDA.B #$00                                ;
+    LDA.B #0                                  ;
   + DEC A                                     ;
     STA.B _0                                  ;
-    LDX.B #$00                                ;\
-  - LDY.B #$FC                                ;| Tile used for empty Yoshi coin spot in the status bar.
+    LDX.B #0                                  ;\
+  - LDY.B #!EmptyTile                         ;| Tile used for empty Yoshi coin spot in the status bar.
     LDA.B _0                                  ;| 
     BMI +                                     ;| 
-    LDY.B #$2E                                ;| Tile used for Yoshi coin spot in the status bar.
+    LDY.B #!HUDDragonCoinTile                 ;| Tile used for Yoshi coin spot in the status bar.
   + TYA                                       ;| 
-    STA.W StatusBar+6,X                       ;| Write the Yoshi coins to the status bar.
+    STA.W StatusBar+!HUDDragonsOffset,X       ;| Write the Yoshi coins to the status bar.
     DEC.B _0                                  ;| 
     INX                                       ;| 
-    CPX.B #$04                                ;| Maximum number of Yoshi coins to draw to the status bar.
+    CPX.B #!MaximumDragonCoins-1              ;| Maximum number of Yoshi coins to draw to the status bar.
     BNE -                                     ;/ 
     RTS                                       ;
 
@@ -1824,7 +1804,7 @@ ScorePlaces:                                  ; Values used for converting score
 
 DrawScore:                                    ; Routine to load a player's score to the status bar.
     SEP #$20                                  ; A->8
-    STZ.W StatusBar+$1C,X                     ; Zero the current status bar tile.
+    STZ.W StatusBar+!WidthOfHUDL1,X           ; Zero the current status bar tile.
   - REP #$20                                  ; A->16
     LDA.B _2                                  ;\ 
     SEC                                       ;|
@@ -1839,31 +1819,28 @@ DrawScore:                                    ; Routine to load a player's score
     LDA.B _4                                  ;|
     STA.B _0                                  ;/
     SEP #$20                                  ; A->8
-    INC.W StatusBar+$1C,X                     ; Increase the current status bar tile's value for each value subtracted.
+    INC.W StatusBar+!WidthOfHUDL1,X           ; Increase the current status bar tile's value for each value subtracted.
     BRA -
   
   + INX
-    INY
-    INY
-    INY
-    INY
-    CPY.B #$18
+    INY #4
+    CPY.B #4*6
     BNE DrawScore
     SEP #$20                                  ; A->8
     RTS
 
 HexToDec:                                     ; SMW's hex-to-dec conversion routine (JSR). Returns ones digit in A, and tens in X.
-    LDX.B #$00                                ;\
-  - CMP.B #$0A                                ;|
+    LDX.B #0                                  ;\
+  - CMP.B #10                                 ;|
     BCC +                                     ;| Sets A to 10s of original A
-    SBC.B #$0A                                ;| Sets X to 1s of original A
+    SBC.B #10                                 ;| Sets X to 1s of original A
     INX                                       ;|
     BRA -                                     ;|
   + RTS                                       ;/
 
 DrawSmallBonusStars:                          ; Routine to load the small bonus star counter to the status bar. 
     SEP #$20                                  ; A->8
-    STZ.W StatusBar+$1C,X                     ; Zero the current status bar tile.
+    STZ.W StatusBar+!WidthOfHUDL1,X           ; Zero the current status bar tile.
   - REP #$20                                  ; A->16
     LDA.B _2                                  ;\ 
     SEC                                       ;|
@@ -1873,179 +1850,175 @@ DrawSmallBonusStars:                          ; Routine to load the small bonus 
     LDA.B _6                                  ;|
     STA.B _2                                  ;/
     SEP #$20                                  ; A->8
-    INC.W StatusBar+$1C,X
+    INC.W StatusBar+!WidthOfHUDL1,X
     BRA -
 
   + INX
-    INY
-    INY
-    INY
-    INY
-    CPY.B #$18
+    INY #4
+    CPY.B #4*6
     BNE DrawSmallBonusStars
     SEP #$20                                  ; A->8
     RTS
 
 DrawReserveItem:                              ; Subroutine to draw the reserve item to the item box.
-    LDY.B #$E0
+    LDY.B #%11100000
     BIT.W IRQNMICommand
     BVC +
-    LDY.B #$00
+    LDY.B #0
     LDA.W IRQNMICommand
-    CMP.B #$C1
+    CMP.B #%11000001
     BEQ +
-    LDA.B #$F0
+    LDA.B #!OBJOffscreen
     STA.W OAMTileYPos,Y
   + STY.B _1
     LDY.W PlayerItembox
     BEQ ++
     LDA.W ItemBoxOBJProps-1,Y
     STA.B _0
-    CPY.B #$03
+    CPY.B #3
     BNE +
     LDA.B TrueFrame
     LSR A
-    AND.B #$03
+    AND.B #%00000011
     PHY
     TAY
     LDA.W ItemBoxStarProps,Y
     PLY
     STA.B _0
   + LDY.B _1
-    LDA.B #$78                                ;\ X position of the item box item.
+    LDA.B #!ReserveItemXPos                   ;\ X position of the item box item.
     STA.W OAMTileXPos,Y                       ;/
-    LDA.B #$0F                                ;\ Y position of the item box item.
+    LDA.B #!ReserveItemYPos                   ;\ Y position of the item box item.
     STA.W OAMTileYPos,Y                       ;/
-    LDA.B #$30                                ;\ 
+    LDA.B #%00110000                          ;\ 
     ORA.B _0                                  ;| Set YXPPCCCT of the item box item.
     STA.W OAMTileAttr,Y                       ;/
     LDX.W PlayerItembox                       ;\ 
     LDA.W ItemBoxOBJNos-1,X                   ;| Set the tile number for the item box item.
     STA.W OAMTileNo,Y                         ;/
     TYA                                       ;\ 
-    LSR A                                     ;|
-    LSR A                                     ;| Set the tile size of the item box item (16x16).
+    LSR A #2                                  ;| Set the tile size of the item box item (16x16).
     TAY                                       ;|
-    LDA.B #$02                                ;|
+    LDA.B #!OBJBigSize                        ;|
     STA.W OAMTileSize,Y                       ;/
  ++ RTS
 
 
-TitleTextTileTop:
-    db $00,$FF,$4D,$4C,$03,$4D,$5D,$FF        ; "MARIO START!" top
-    db $03,$00,$4C,$03,$04,$15
-    
+SrtTxtStartTop:
+    db $00,$FF,$4D,$4C,$03,$4D,$5D,$FF        ; " START!" top
+SrtTxtMarioTop:
+    db $03,$00,$4C,$03,$04,$15                ; "MARIO" top
+SrtTxtLuigiTop:
     db $00,$02,$00,$4A,$4E,$FF                ; "LUIGI" top
-    
+SrtTxtGameOverTop:
     db $4C,$4B,$4A,$03,$5F,$05,$04,$03        ; "GAME OVER" top
     db $02
-    
+SrtTxtTimeUpTop:
     db $00,$FF,$01,$4A,$5F,$05,$04,$00        ; "TIME UP" top
     db $4D
-    
+SrtTxtBonusTop:
     db $5D,$03,$02,$01,$00,$FF,$5B,$14        ; "BONUS GAME" top
-    db $5F,$01,$5E
-    
-    db $FF,$FF,$FF
+    db $5F,$01,$5E,$FF,$FF,$FF
 
-TitleTextTileBottom:
-    db $10,$FF,$00,$5C,$13,$00,$5D,$FF        ; "MARIO START!" bottom
-    db $03,$00,$5C,$13,$14,$15
-    
+SrtTxtTileBtm:
+    db $10,$FF,$00,$5C,$13,$00,$5D,$FF        ; " START!" bottom
+SrtTxtMarioBtm:
+    db $03,$00,$5C,$13,$14,$15                ; "MARIO" bottom
+SrtTxtLuigiBtm:
     db $00,$12,$00,$03,$5E,$FF                ; "LUIGI" bottom
-    
+SrtTxtGameOverBtm:
     db $5C,$4B,$5A,$03,$5F,$05,$14,$13        ; "GAME OVER" bottom
     db $12
-    
+SrtTxtTimeUpBtm:
     db $10,$FF,$11,$03,$5F,$05,$14,$00        ; "TIME UP" bottom
     db $00
-    
+SrtTxtBonusBtm:
     db $5D,$03,$12,$11,$10,$FF,$5B,$01        ; "BONUS GAME" bottom
-    db $5F,$01,$5E
-    
-    db $FF,$FF,$FF
+    db $5F,$01,$5E,$FF,$FF,$FF
 
-TitleTextPropTop:
-    db $34,$00,$34,$34,$34,$34,$30,$00        ; "MARIO START!" top
-    db $34,$34,$34,$34,$74,$34
-    
+SrtPropStartTop:
+    db $34,$00,$34,$34,$34,$34,$30,$00        ; " START!" top
+SrtPropMarioTop:
+    db $34,$34,$34,$34,$74,$34                ; "MARIO" top
+SrtPropLuigiTop:
     db $34,$34,$34,$34,$34,$00                ; "LUIGI" top
-    
+SrtPropGameOverTop:
     db $34,$34,$34,$34,$34,$34,$34,$34        ; "GAME OVER" top
     db $34
-    
+SrtPropTimeUpTop:
     db $34,$00,$34,$34,$34,$34,$34,$34        ; "TIME UP" top
     db $34
-    
+SrtPropBonusGameTop:
     db $34,$34,$34,$34,$34,$34,$34,$34        ; "BONUS GAME" top
     db $34,$34,$34
 
-TitleTextPropBottom:
-    db $34,$00,$B4,$34,$34,$B4,$F0,$00        ; "MARIO START!" bottom
-    db $B4,$B4,$34,$34,$74,$B4
-    
+SrtPropStartBtm:
+    db $34,$00,$B4,$34,$34,$B4,$F0,$00        ; " START!" bottom
+SrtPropMarioBtm:
+    db $B4,$B4,$34,$34,$74,$B4                ; "MARIO" bottom
+SrtPropLuigiBtm:
     db $B4,$34,$B4,$B4,$34,$00                ; "LUIGI" bottom
-    
+SrtPropGameOverBtm:
     db $34,$B4,$34,$B4,$B4,$B4,$34,$34        ; "GAME OVER" bottom
     db $34
-    
+SrtPropTimeUpBtm:
     db $34,$00,$34,$B4,$B4,$B4,$34,$B4        ; "TIME UP" bottom
     db $B4
-    
+SrtPropBonusBtm:
     db $B4,$B4,$34,$34,$34,$34,$F4,$B4        ; "BONUS GAME" bottom
     db $F4,$B4,$B4
 
 CODE_00919B:                                  ; Subroutine to prepare No-Yoshi entrances and the green star block count.
     LDA.B PlayerAnimation                     ;\ 
-    CMP.B #$0A                                ;| If performing a No Yoshi entrance, prepare the scene.
+    CMP.B #!PAni_CastleEntrance               ;| If performing a No Yoshi entrance, prepare the scene.
     BNE +                                     ;|
     JSR CODE_00C593                           ;/
     BRA ++
 
   + LDA.W SublevelCount                       ;\ 
     BNE ++                                    ;| Reset coin counter for the green star block only when entering the main level (not sublevels).
-    LDA.B #$1E                                ;| Amount of coins needed to get 1up from green star block.
+    LDA.B #!GreenStarBlockCoins               ;| Amount of coins needed to get 1up from green star block.
     STA.W GreenStarBlockCoins                 ;/
  ++ RTS
 
 CODE_0091B1:                                  ; Routine to display text during level load.
     JSR CODE_00A82D                           ; Load "MARIO/LUIGI START !" tiles.
-    LDX.B #$00                                ;\ Load "MARIO START !".
-    LDA.B #$B0                                ;/ X position of the rightmost tile of the "MARIO START !" message.
+    LDX.B #0                                  ;\ Load "MARIO START !".
+    LDA.B #!MarioStartXPos                    ;/ X position of the rightmost tile of the "MARIO START !" message.
     LDY.W BonusGameActivate                   ;\ 
     BEQ +                                     ;| If loading a bonus game, change the text display to "BONUS GAME".
     STZ.W InGameTimerHundreds                 ;|\ 
     STZ.W InGameTimerTens                     ;|| Clear the timer.
     STZ.W InGameTimerOnes                     ;|/
-    LDX.B #$26                                ;|
-    LDA.B #$A4                                ;/ X position of the rightmost tile of the "BONUS GAME" message.
+    LDX.B #SrtTxtBonusBtm-SrtTxtBonusTop      ;|
+    LDA.B #!BonusGameXPos                     ;/ X position of the rightmost tile of the "BONUS GAME" message.
   + STA.B _0
     STZ.B _1
-    LDY.B #$70                                ; Number of tiles to draw, x8.
-  - JSR CODE_0091E9                           ; Draw the message to the screen.
+    LDY.B #8*(SrtTxtLuigiTop-SrtTxtBonusTop)  ; Number of tiles to draw, x8.
+  - JSR DrawOneStartScreenLetter              ; Draw the message to the screen.
     INX
-    CPX.B #$08                                ;\ 
+    CPX.B #8                                  ;\ 
     BNE +                                     ;|
     LDA.W PlayerTurnLvl                       ;| If playing as Luigi, load "LUIGI" instead of "MARIO".
     BEQ +                                     ;|
-    LDX.B #$0E                                ;/
+    LDX.B #SrtTxtLuigiTop-SrtTxtBonusTop      ;/
   + TYA                                       ;\ 
     SEC                                       ;| Move to next letter.
-    SBC.B #$08                                ;|
+    SBC.B #8                                  ;|
     TAY                                       ;/
     BNE -
     JMP CODE_008494                           ; Prep OAM for upload.
 
-CODE_0091E9:                                  ; Subroutine to upload loading screen text to OAM.
+DrawOneStartScreenLetter:                     ; Subroutine to upload loading screen text to OAM.
     LDA.W TitleTextPropTop,X                  ;\ 
-    STA.W OAMTileAttr+$108,Y                  ;| Store the YXPPCCCT properties to OAM.
+    STA.W OAMTileAttr+4*!SrtOAMSlot,Y         ;| Store the YXPPCCCT properties to OAM.
     LDA.W TitleTextPropBottom,X               ;|
-    STA.W OAMTileAttr+$10C,Y                  ;/
+    STA.W OAMTileAttr+4*(!SrtOAMSlot+1),Y     ;/
     LDA.B _0                                  ;\ 
-    STA.W OAMTileXPos+$108,Y                  ;| Set the X position of each letter to OAM.
-    STA.W OAMTileXPos+$10C,Y                  ;/
+    STA.W OAMTileXPos+4*!SrtOAMSlot,Y         ;| Set the X position of each letter to OAM.
+    STA.W OAMTileXPos+4*(!SrtOAMSlot+1),Y     ;/
     SEC                                       ;\ 
-    SBC.B #$08                                ;|
+    SBC.B #8                                  ;|
     STA.B _0                                  ;| Move next letter 8 pixels to the left.
     BCS +                                     ;|
     DEC.B _1                                  ;/
@@ -2055,31 +2028,31 @@ CODE_0091E9:                                  ; Subroutine to upload loading scr
     LSR A
     TAY
     LDA.B _1                                  ;\ 
-    AND.B #$01                                ;| Set size.
-    STA.W OAMTileSize+$42,Y                   ;|
-    STA.W OAMTileSize+$43,Y                   ;/
+    AND.B #%00000001                          ;| Set size.
+    STA.W OAMTileSize+!SrtOAMSlot,Y           ;|
+    STA.W OAMTileSize+!SrtOAMSlot+1,Y         ;/
     PLY
     LDA.W TitleTextTileTop,X                  ;\ 
     BMI +                                     ;|
-    STA.W OAMTileNo+$108,Y                    ;| Store the tile numbers to OAM.
+    STA.W OAMTileNo+4*!SrtOAMSlot,Y           ;| Store the tile numbers to OAM.
     LDA.W TitleTextTileBottom,X               ;|
-    STA.W OAMTileNo+$10C,Y                    ;/
-    LDA.B #$68                                ;\ Y position of the top half of the loading screen messages.
-    STA.W OAMTileYPos+$108,Y                  ;/
-    LDA.B #$70                                ;\ Y position of the bottom half of the loading screen messages.
-    STA.W OAMTileYPos+$10C,Y                  ;/
+    STA.W OAMTileNo+4*(!SrtOAMSlot+1),Y       ;/
+    LDA.B #!StartScreenTextYPos               ;\ Y position of the top half of the loading screen messages.
+    STA.W OAMTileYPos+4*!SrtOAMSlot,Y         ;/
+    LDA.B #!StartScreenTextYPos+8             ;\ Y position of the bottom half of the loading screen messages.
+    STA.W OAMTileYPos+4*(!SrtOAMSlot+1),Y     ;/
   + RTS
 
 CODE_00922F:                                  ; Upload palettes from $0703 to CGRAM.
     STZ.W MainPalette                         ;\ 
     STZ.W MainPalette+1                       ;| Clear first color of palette data.
     STZ.W HW_CGADD                            ;/
-    LDX.B #$06                                ;\ Set up and enable DMA on channel 2.
+    LDX.B #6                                  ;\ Set up and enable DMA on channel 2.
   - LDA.W MainPaletteDMAData,X                ;| $4320: Increment, one register write once.
     STA.W HW_DMAPARAM+$20,X                   ;| $4321: Destination is $2122 (CGRAM).
     DEX                                       ;| $4322: Source is $000703.
     BPL -                                     ;| $4325: Write x200 bytes.
-    LDA.B #$04                                ;|
+    LDA.B #!Ch2                               ;|
     STA.W HW_MDMAEN                           ;/
     RTS
 
@@ -2087,12 +2060,12 @@ MainPaletteDMAData:
     %DMASettings($00,HW_CGDATA,MainPalette,$0200)
 
 WindowDMASetup:                               ; Routine to initialize window HDMA at power on. 
-    LDX.B #$04                                ; Index for DMA set up
+    LDX.B #4                                  ; Index for DMA set up
   - LDA.W WindowDMAData,X                     ;\ Set up DMA settings for $4370-$4374.
     STA.W HW_DMAPARAM+$70,X                   ;|  (controls, destination, source)
     DEX                                       ;|
     BPL -                                     ;/
-    LDA.B #$00                                ; Set HDMA data bank to $00.
+    LDA.B #0                                  ; Set HDMA data bank to $00.
     STA.W HW_HDMABANK+$70
 
 DisableHDMA:
@@ -2115,13 +2088,17 @@ WindowDMAData:
 
 WindowDMASizes:
 if ver_is_lores(!_VER)                        ;\================ J, U, SS, & E0 ===============
-    db $F0 : dw $04A0                         ;! Screen is split into two halves
-    db $F0 : dw $0580                         ;! Each $F0 lines long
-    db $00                                    ;!
+    db !ScreenHeight+16                       ;! Screen is split into two halves
+    dw WindowTable                            ;! Each $F0 lines long
+    db !ScreenHeight+16                       ;!
+    dw WindowTable+!ScreenHeight              ;!
+    db 0                                      ;!
 else                                          ;<======================= E1 ====================
-    db $F8 : dw $04A0                         ;! Screen is split into two halves
-    db $F8 : dw $0590                         ;! Each $F8 lines long
-    db $00                                    ;!
+    db !ScreenHeight+8                        ;! Screen is split into two halves
+    dw WindowTable                            ;! Each $F8 lines long
+    db !ScreenHeight+8                        ;!
+    dw WindowTable+!ScreenHeight              ;!
+    db 0                                      ;!
 endif                                         ;/===============================================
 
 ClearWindowTable:                             ; Subroutine to clear the windowing table.
@@ -2141,7 +2118,7 @@ SolidWindowTable:                             ;|
     BCC SolidWindowTable                      ;//
 
 EnableWindowHDMA:
-    LDA.B #$80                                ;\ Enable HDMA on channel 7.
+    LDA.B #!Ch7                               ;\ Enable HDMA on channel 7.
     STA.W HDMAEnable                          ;/
     SEP #$10                                  ; XY->8
     RTS
@@ -2149,18 +2126,18 @@ EnableWindowHDMA:
 CODE_0092A8:                                  ; Subroutine to handle the solid lava BG color in Iggy/Larry's room.
     JSR ClearWindowHDMA                       ;
     REP #$10                                  ; XY->16
-    LDX.W #$0198                              ;\ Scanline (x2) where the solid lava color in Iggy/Larry's fight begins.
+    LDX.W #2*!IggyLavaHeight                  ;\ Scanline (x2) where the solid lava color in Iggy/Larry's fight begins.
     BRA SolidWindowTable                      ;/
 
 SetupCreditsBGHDMA:
-    LDA.B #$58
+    LDA.B #!CreditsBGOffsetStart
     STA.W CreditsL1HDMATable
     STA.W CreditsL2HDMATable
     STA.W CreditsL3HDMATable
     STZ.W CreditsL1HDMATable+9
     STZ.W CreditsL2HDMATable+9
     STZ.W CreditsL3HDMATable+9
-    LDX.B #$04
+    LDX.B #4
   - LDA.W CreditsHDMAData,X
     STA.W HW_DMAPARAM+$50,X
     LDA.W CreditsHDMAData+5,X
@@ -2169,17 +2146,17 @@ SetupCreditsBGHDMA:
     STA.W HW_DMAPARAM+$70,X
     DEX
     BPL -
-    LDA.B #$00
+    LDA.B #0
     STA.W HW_HDMABANK+$50
     STA.W HW_HDMABANK+$60
     STA.W HW_HDMABANK+$70
-    LDA.B #$E0                                ;\ Enable HDMAs on channels 5, 6, and 7.
+    LDA.B #!Ch5|!Ch6|!Ch7                     ;\ Enable HDMAs on channels 5, 6, and 7.
     STA.W HDMAEnable                          ;/
 
 ProcessCreditsBGHDMA:
     REP #$30                                  ; AXY->16
-    LDY.W #$0008
-    LDX.W #$0014
+    LDY.W #8
+    LDX.W #20
   - LDA.W Layer1XPos,Y
     STA.W CreditsL1HDMATable+1,X
     STA.W CreditsL1HDMATable+4,X
@@ -2187,20 +2164,17 @@ ProcessCreditsBGHDMA:
     STA.W CreditsL1HDMATable+7,X
     TXA
     SEC
-    SBC.W #$000A
+    SBC.W #10
     TAX
-    DEY
-    DEY
-    DEY
-    DEY
+    DEY #4
     BPL -
     SEP #$30                                  ; AXY->8
     RTS
 
 CreditsHDMAData:
-    %HDMASettings($02,HW_BG1HOFS,CreditsL1HDMATable)
-    %HDMASettings($02,HW_BG2HOFS,CreditsL2HDMATable)
-    %HDMASettings($02,HW_BG3HOFS,CreditsL3HDMATable)
+    %HDMASettings(%00000010,HW_BG1HOFS,CreditsL1HDMATable)
+    %HDMASettings(%00000010,HW_BG2HOFS,CreditsL2HDMATable)
+    %HDMASettings(%00000010,HW_BG3HOFS,CreditsL3HDMATable)
 
 
 RunGameMode:
@@ -2250,75 +2224,84 @@ RunGameMode:
     dw GameMode28                             ; 28 - fade in to the end screen
     dw GameMode29                             ; 29 - the end screen
 
-TurnOffIO:            STZ.W HW_NMITIMEN                         ; Disable NMI ,VIRQ, HIRQ, Joypads
-                      STZ.W HW_HDMAEN                           ; Turn off all HDMA
-                      LDA.B #$80                                ; \
-                      STA.W HW_INIDISP                          ; /Disable Screen
-                      RTS                                       ; And return
+TurnOffIO:                                    ; Subroutine to turn off the screen while loading.
+    STZ.W HW_NMITIMEN                         ; Disable interupts.
+    STZ.W HW_HDMAEN                           ; Disable HDMA.
+    LDA.B #%10000000                          ;\ Force blank (turn the screen off).
+    STA.W HW_INIDISP                          ;/
+    RTS                                       ;
 
 
-NintendoPos:          db $60,$70,$80,$90
-NintendoTile:         db $02,$04,$06,$08                        ; Nintendo Presents tilemap
+NintendoPos:                                  ; X positions for the "Nintendo Presents" tiles.
+    db $60,$70,$80,$90
+NintendoTile:                                 ; Tilemap for the "Nintendo Presents" tiles.
+    db $02,$04,$06,$08
 
-GameMode00:           JSR CODE_0085FA
-                      JSR SetUpScreen
-                      JSR CODE_00A993
-                      LDY.B #$0C                                ; \ Load Nintendo Presents logo
-                      LDX.B #$03                                ; |
-                    - LDA.W NintendoPos,X                       ; |
-                      STA.W OAMTileXPos,Y                       ; |
-                      LDA.B #$70                                ; |   <-Y position of logo
-                      STA.W OAMTileYPos,Y                       ; |
-                      LDA.W NintendoTile,X                      ; |
-                      STA.W OAMTileNo,Y                         ; |
-                      LDA.B #$30                                ; |
-                      STA.W OAMTileAttr,Y                       ; |
-                      DEY                                       ; |
-                      DEY                                       ; |
-                      DEY                                       ; |
-                      DEY                                       ; |
-                      DEX                                       ; |
-                      BPL -                                     ; /
-                      LDA.B #$AA                                ; \ Related to making the sprites 16x16?
-                      STA.W OAMTileBitSize                      ; /
-                      LDA.B #!SFX_COIN                          ;; \ Play "Bing" sound?
-                      STA.W SPCIO3                              ; /
-                      LDA.B #$40                                ; \ Set timer to x40
-                      STA.W VariousPromptTimer                  ; /
-CODE_0093CA:          LDA.B #$0F                                ; \ Set brightness to max
-                      STA.W Brightness                          ; /
-                      LDA.B #$01
-                      STA.W MosaicDirection
-                      STZ.W SpritePalette                       ; Sprite palette setting = 0
-                      JSR LoadPalette                           ; Load the palette
-                      STZ.W BackgroundColor                     ; \ Black background
-                      STZ.W BackgroundColor+1                   ; /
-                      JSR CODE_00922F
-                      STZ.W BlinkCursorPos                      ; Set menu pointer position to 0
-                      LDX.B #$10                                ; Enable sprites, disable layers
-                      LDY.B #$04                                ; Set Layer 3 to subscreen
-CODE_0093EA:          LDA.B #$01
-                      STA.W IRQNMICommand
-                      LDA.B #$20                                ; CGADSUB = 20
-                      JSR ScreenSettings                        ; Apply above settings
-CODE_0093F4:          INC.W GameMode                            ; Move on to Game Mode 01
-Mode04Finish:         LDA.B #$81                                ; \ Enable NMI and joypad, Disable V-count and H-cout
-                      STA.W HW_NMITIMEN                         ; /
-                      RTS
+GameMode00:                                   ; Game Mode 00 - Load Nintendo Presents
+    JSR CODE_0085FA                           ; Clean out Layer 3.
+    JSR SetUpScreen                           ; Set up various registers (screen mode, CGADDSUB, windows...).
+    JSR CODE_00A993                           ; Load Layer 3 GFX.
+    LDY.B #4*(4-1)                            ;\ Load Nintendo Presents logo
+    LDX.B #4-1                                ;|
+  - LDA.W NintendoPos,X                       ;|
+    STA.W OAMTileXPos,Y                       ;|
+    LDA.B #!NintendoPresentsYPos              ;| Y position of logo
+    STA.W OAMTileYPos,Y                       ;|
+    LDA.W NintendoTile,X                      ;|
+    STA.W OAMTileNo,Y                         ;|
+    LDA.B #%00110000                          ;|
+    STA.W OAMTileAttr,Y                       ;|
+    DEY #4                                    ;|
+    DEX                                       ;|
+    BPL -                                     ;/
+    LDA.B #!QuadOBJBigSize                    ;\ Make OBJs 16x16
+    STA.W OAMTileBitSize                      ;/
+    LDA.B #!SFX_COIN                          ;\ Play "Bing" sound
+    STA.W SPCIO3                              ;/
+    LDA.B #!NintendoPresentsTimer             ;
+    STA.W VariousPromptTimer                  ;
+CODE_0093CA:                                  ;
+    LDA.B #%00001111                          ;\ Set brightness to max
+    STA.W Brightness                          ;/
+    LDA.B #1                                  ;
+    STA.W MosaicDirection                     ;
+    STZ.W SpritePalette                       ; Sprite palette setting = 0
+    JSR LoadPalette                           ; Load palettes from ROM to RAM.
+    STZ.W BackgroundColor                     ;\ Black background
+    STZ.W BackgroundColor+1                   ;/
+    JSR CODE_00922F                           ;
+    STZ.W BlinkCursorPos                      ; Set menu pointer position to 0
+    LDX.B #%00010000                          ; Enable sprites, disable layers
+    LDY.B #%00000100                          ; Set Layer 3 to subscreen
+CODE_0093EA:                                  ;
+    LDA.B #%00000001                          ;
+    STA.W IRQNMICommand                       ;
+    LDA.B #%00100000                          ;
+    JSR ScreenSettings                        ; Set up CGADSUB, main/sub screen designation, and windowing.
+CODE_0093F4:                                  ; Commonly jumped to after gamemodes involved in loading.
+    INC.W GameMode                            ; Move on to Game Mode 01
+Mode04Finish:                                 ;
+    LDA.B #%10000001                          ;\ Enable NMI and auto-joypad reading.
+    STA.W HW_NMITIMEN                         ;/
+    RTS                                       ;
 
-ScreenSettings:       STA.W HW_CGADSUB                          ; \ Set CGADSUB settings to A
-                      STA.B ColorSettings                       ; /
-                      STX.W HW_TM                               ; Set "Background and Object Enable" to X
-                      STY.W HW_TS                               ; Set "Sub Screen Designation" Y
-                      STZ.W HW_TMW                              ; \ Set "Window Mask Designation" for main and sub screen to x00
-                      STZ.W HW_TSW                              ; /
-                      RTS
+ScreenSettings:                               ; Subroutine to upload settings to the color math registers.
+    STA.W HW_CGADSUB                          ;\ Set CGADSUB.
+    STA.B ColorSettings                       ;/
+    STX.W HW_TM                               ;\ Set main/sub screen settings.
+    STY.W HW_TS                               ;/
+    STZ.W HW_TMW                              ;\ Disable windowing.
+    STZ.W HW_TSW                              ;/
+    RTS                                       ;
 
-GameMode01:           DEC.W VariousPromptTimer                  ; Decrease timer
-                      BNE Return00941A                          ; \ If timer is 0:
-                      JSR CODE_00B888                           ; |Jump to sub $B888
-CODE_009417:          INC.W GameMode                            ; |Move on to Game Mode 02
-Return00941A:         RTS
+GameMode01:                                   ; Game Mode 01 - Nintendo Presents logo
+    DEC.W VariousPromptTimer                  ;\ Return if not time for the logo to fade away.
+    BNE FinishGameMode                        ;/
+    JSR CODE_00B888                           ; Decompress GFX32/GFX33.
+NextGameMode:
+    INC.W GameMode
+FinishGameMode:
+    RTS
 
 GameMode06:           JSR SetUp0DA0GM4
                       JSR CODE_009CBE
@@ -2329,13 +2312,13 @@ GameMode06:           JSR SetUp0DA0GM4
                       JMP CODE_009C9F
 
                     + DEC.W VariousPromptTimer
-                      BNE Return00941A
+                      BNE FinishGameMode
                       INC.W VariousPromptTimer
                       LDA.W SpotlightSize
                       CLC
                       ADC.B #$04
                       CMP.B #$F0
-                      BCS CODE_009417
+                      BCS NextGameMode
 CODE_009440:          STA.W SpotlightSize
 CODE_009443:          JSR CODE_00CA61
                       LDA.B #$80                                ; \ X Position of spotlight
@@ -2598,7 +2581,7 @@ CODE_0096A8:          JSR CODE_0091B1
                     + JMP CODE_0093CA
 
 GameMode03:           STZ.W HW_NMITIMEN
-                      JSR ClearStack
+                      JSR ClearMemory
                       LDX.B #$07
                       LDA.B #$FF
                     - STA.W SpriteGFXFile,X
@@ -2789,8 +2772,8 @@ CODE_00983B:          LDA.B #$13
                       STA.B OBJCWWindow
                       LDA.B #$20
                       STA.B ColorAddition
-                      JSR GM04DoDMA
-                      JSR CODE_008ACD
+                      JSR UploadStaticBar
+                      JSR CalculateMode7Values
 CODE_009860:          JSL CODE_00E2BD
                       JSR CODE_00A2F3
                       JSR CODE_00C593
@@ -2802,7 +2785,7 @@ CODE_009860:          JSL CODE_00E2BD
 
                       db $01,$00,$FF,$FF,$40,$00,$C0,$01
 
-CODE_00987D:          JSR CODE_008ACD
+CODE_00987D:          JSR CalculateMode7Values
                       BIT.W IRQNMICommand
                       BVC +
                       JMP CODE_009A52
@@ -2900,7 +2883,7 @@ CODE_009925:          STZ.B PlayerYPosNext+1
                       ASL A
                       TAX
                       LDY.W #con($02C0,$02C0,$02C0,$02C0,$0300) ; ceiling offset for Morton & Roy
-                      LDA.W DATA_00F8E8,X
+                      LDA.W BossCeilingHeights,X
                       BPL +
                       LDY.W #con($FB80,$FB80,$FB80,$FB80,$FBC0) ; ceiling offset for Reznor
                     + CMP.W #$0012
@@ -3324,7 +3307,7 @@ CODE_009CB0:          LDA.B #$E9                                ;!
                       JSR CODE_WRITEOW                          ;!
                       JSR CODE_009D38                           ;! -> here
                    endif                                        ;/===============================================
-                      JMP CODE_009417                           ; Increase the Game mode and return (at jump point)
+                      JMP NextGameMode                          ; Increase the Game mode and return (at jump point)
 
 CODE_009CBE:          LDA.B axlr0000Hold
                       AND.B #$C0
@@ -4592,7 +4575,7 @@ GameMode12:           JSR CODE_0085FA                           ; gah, stupid ke
                       JSR NoButtons
                       STZ.W UploadMarioStart
                       JSR SetUpScreen
-                      JSR GM04DoDMA
+                      JSR UploadStaticBar
                       JSL CODE_05809E                           ; ->here
                       LDA.W IRQNMICommand
                       BPL CODE_00A5B9
@@ -12888,8 +12871,11 @@ Return00F8DE:         RTS
 DATA_00F8DF:          db $0C,$0C,$08,$00,$20,$04,$0A,$0D
                       db $0D
 
-DATA_00F8E8:          db $2A,$00,$2A,$00,$12,$00,$00,$00
-                      db $ED,$FF
+BossCeilingHeights:   dw !RoyMortonCeilingHeight
+                      dw !RoyMortonCeilingHeight
+                      dw !LudwigCeilingHeight
+                      dw !BowserCeilingHeight
+                      dw !ReznorCeilingHeight
 
 CODE_00F8F2:          JSR CODE_00EAA6
                       BIT.W IRQNMICommand
@@ -12903,9 +12889,9 @@ CODE_00F8F2:          JSR CODE_00EAA6
                       BPL +
                       REP #$20                                  ; A->16
                       LDA.B PlayerYPosNext
-                      CMP.W DATA_00F8E8,X
+                      CMP.W BossCeilingHeights,X
                       BPL +
-                      LDA.W DATA_00F8E8,X
+                      LDA.W BossCeilingHeights,X
                       STA.B PlayerYPosNext
                       SEP #$20                                  ; A->8
                       STZ.B PlayerYSpeed
@@ -12913,7 +12899,7 @@ CODE_00F8F2:          JSR CODE_00EAA6
                       STA.W SPCIO0                              ; / Play sound effect
                     + SEP #$20                                  ; A->8
                       PLX
-                      LDA.W DATA_00F8E8,X
+                      LDA.W BossCeilingHeights,X
                       CMP.B #$2A
                       BNE Return00F94D
                       REP #$20                                  ; A->16
