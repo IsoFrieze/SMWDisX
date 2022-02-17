@@ -17,10 +17,13 @@
 
 ; bit for making OBJs large in size
 !OBJBigSize = %10
+    !QuadOBJBigSize = %10101010
 
 ; effective size of screen in lines
 ; used a lot for windowing effects
 !ScreenHeight = con(224,224,224,224,240)
+; screen of screen in dots
+!ScreenWidth = 256
 
 ; number of tiles across in one BG page
 !BGWidthInTiles = 32
@@ -77,32 +80,49 @@
 
 ; number of frames in one in-game second
 !FramesInOneIGT = con(41,41,41,35,35)
-
 ; maximum score
 !MaximumScore = 999999
-
 ; maximum lives
 !MaximumLives = 99
-
 ; coins in one 1up
 !CoinsPer1up = 100
-
 ; bonus stars for bonus game
 !MaximumBonusStars = 100
-
 ; number of dragon coins to display
 !MaximumDragonCoins = 5
-
 ; position of reserve item
 !ReserveItemXPos = $78
 !ReserveItemYPos = 15
 
+; number of coins to get a 1up from a green star block
+!GreenStarBlockCoins = 30
+
+; -- Cutscenes --
+
+; X position of "MARIO START !"
+!MarioStartXPos = $B0
+; X position of "BONUS GAME"
+!BonusGameXPos = $A4
+; Y position of all starting screen text
+!StartScreenTextYPos = $68
+; OAM slot to start using for starting screen text
+!SrtOAMSlot = 66
+
+; Y position of Nintendo Presents logo
+!NintendoPresentsYPos = $70
+; Number of frames Nintendo Presents exists
+!NintendoPresentsTimer = 64
+
+; maximum size of spotlight on title screen
+!MaxTitleSpotlightSize = 59
+
+; starting position of Mario in castle cutscenes
+!CastleCutsceneMarioXPos = $90
+!CastleCutsceneMarioYPos = $58
+
 ; number of interpolated palette values when fading
 ; to and from black at the end of a level
 !PaletteFadeCount = 32
-
-; number of coins to get a 1up from a green star block
-!GreenStarBlockCoins = 30
 
 ; -- Boss Fights --
 
@@ -115,6 +135,9 @@
 ; floor heights for mode 7 boss rooms
 !BossFloorHeight = 174
 
+; height of solid lava in Iggy/Larry
+!IggyLavaHeight = 204
+
 ; number of OBJs to reserve for background in Roy/Morton/Ludwig
 !BossBGOBJCount = 100
 
@@ -122,6 +145,11 @@
 
 ; number of levels on the main map
 !MainMapLvls = 36
+
+; --- Credits Properties ---
+
+; Scanline that background HDMA table starts to use
+!CreditsBGOffsetStart = 88
 
 
 ; -- Values for PlayerAnimation --
@@ -139,6 +167,113 @@
 !PAni_Frozen = 11
 !PAni_CastleDestroy = 12
 !PAni_EnterDoor = 13
+
+; -- Values for GameMode --
+!GameMode_LoadPresents = 0
+!GameMode_Presents = 1
+!GameMode_FadeToTitleScreen = 2
+!GameMode_LoadTitleScreen = 3
+!GameMode_PrepareTitleScreen = 4
+!GameMode_FadeInTitleScreen = 5
+!GameMode_SpotlightTitleScreen = 6
+!GameMode_TitleScreen = 7
+!GameMode_FileSelect = 8
+!GameMode_FileDelete = 9
+!GameMode_PlayerSelect = 10
+!GameMode_FadeToOverworld = 11
+!GameMode_LoadOverworld = 12
+!GameMode_FadeInOverworld = 13
+!GameMode_Overworld = 14
+!GameMode_FadeToLevel = 15
+!GameMode_FadeLevelBlack = 16
+!GameMode_LoadLevel = 17
+!GameMode_PrepareLevel = 18
+!GameMode_FadeInLevel = 19
+!GameMode_Level = 20
+!GameMode_FadeToGameOver = 21
+!GameMode_LoadGameOver = 22
+!GameMode_GameOver = 23
+!GameMode_FadeToCutscene = 24
+!GameMode_LoadCutscene = 25
+!GameMode_FadeInCutscene = 26
+!GameMode_Cutscene = 27
+!GameMode_FadeToThankYou = 28
+!GameMode_LoadThankYou = 29
+!GameMode_FadeInThankYou = 30
+!GameMode_ThankYou = 31
+!GameMode_FadeToEnemyList = 32
+!GameMode_LoadEnemyList = 33
+!GameMode_FadeInEnemyList = 34
+!GameMode_EnemyList = 35
+!GameMode_FadeToTheEnd = 36
+!GameMode_LoadTheEnd = 37
+!GameMode_FadeInTheEnd = 38
+!GameMode_TheEnd = 39
+
+; -- Values for CutsceneID --
+!Cutscene_Iggy = 1
+!Cutscene_Morton = 2
+!Cutscene_Lemmy = 3
+!Cutscene_Ludwig = 4
+!Cutscene_Roy = 5
+!Cutscene_Wendy = 6
+!Cutscene_Larry = 7
+!Cutscene_Credits = 8
+
+; -- Values for SpriteTileset --
+!SprTileset_Forest = 0
+!SprTileset_Castle = 1
+!SprTileset_Mushroom = 2
+!SprTileset_Underground1 = 3
+!SprTileset_Water = 4
+!SprTileset_Pokey = 5
+!SprTileset_Underground2 = 6
+!SprTileset_GhostHouse = 7
+!SprTileset_BanzaiBill = 8
+!SprTileset_YoshisHouse = 9
+!SprTileset_DinoRhino = 10
+!SprTileset_SwitchPalace = 11
+!SprTileset_MechaKoopa = 12
+!SprTileset_WendyLemmy = 13
+!SprTileset_Ninji = 14
+!SprTileset_Unused = 15
+!SprTileset_Overworld = 17
+!SprTileset_RoyMortonLudwig = 18
+!SprTileset_ReznorIggyLarry = 19
+!SprTileset_CastleCutscene = 20
+!SprTileset_CreditsParade = 21
+!SprTileset_CreditsThankYou = 22
+!SprTileset_CreditsKoopalings = 23
+!SprTileset_Bowser = 24
+!SprTileset_TheEnd = 25
+
+; -- Values for ObjectTileset --
+!ObjTileset_Normal1 = 0
+!ObjTileset_Castle1 = 1
+!ObjTileset_Rope1 = 2
+!ObjTileset_Underground1 = 3
+!ObjTileset_SwitchPalace1 = 4
+!ObjTileset_GhostHouse1 = 5
+!ObjTileset_Rope2 = 6
+!ObjTileset_Normal2 = 7
+!ObjTileset_Rope3 = 8
+!ObjTileset_Underground2 = 9
+!ObjTileset_SwitchPalace2 = 10
+!ObjTileset_Castle2 = 11
+!ObjTileset_CloudForest = 12
+!ObjTileset_GhostHouse2 = 13
+!ObjTileset_Underground3 = 14
+!ObjTileset_MainMap = 17
+!ObjTileset_YoshisIsland = 18
+!ObjTileset_VanillaDome = 19
+!ObjTileset_ForestOfIllusion = 20
+!ObjTileset_ValleyOfBowser = 21
+!ObjTileset_SpecialWorld = 22
+!ObjTileset_StarWorld = 23
+!ObjTileset_CastleCutscene = 24
+!ObjTileset_CreditsParade = 25
+!ObjTileset_ReznorIggyLarry = -1
+!ObjTileset_RoyMortonLudwig = -2
 
 ; --- SFX & BGM ID Numbers ---
 
@@ -228,7 +363,7 @@
 !BGM_FORESTOFILLUSION = 6
 !BGM_VALLEYOFBOWSER = 7
 !BGM_VALLEYOPENS = 8
-!BGM_SPECIALWORLD =9
+!BGM_SPECIALWORLD = 9
 !BGM_STAFFCREDITS = 9
 !BGM_CREDITSYOSHISHOUSE = 10
 !BGM_CREDITSTHANKYOU = 11

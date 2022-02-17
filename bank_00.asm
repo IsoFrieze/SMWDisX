@@ -572,7 +572,7 @@ OAMTileSizeOffsets:                           ; Indices to $0420 for upload to t
     dw 64, 72, 80, 88, 96, 104, 112
     db 120
 
-CODE_008494:                                  ; Routine to upload OAM tile sizes ($0420) to the OAM table (at $0400).
+ConsolidateOAM:                               ; Routine to upload OAM tile sizes ($0420) to the OAM table (at $0400).
     LDY.B #!OBJCount/4-2                      ;
   - LDX.W OAMTileSizeOffsets,Y                ;\ 
     LDA.W OAMTileSize+3,X                     ;|
@@ -746,7 +746,7 @@ LoadScrnImage:                                ; Routine to upload a stripe image
   + STZ.B StripeImage                         ; Do not reload the same thing next frame
     RTS
 
-CODE_0085FA:                                  ; DMA upload routine to clean out the layer 3 tilemap.
+ClearOutLayer3:                               ; DMA upload routine to clean out the layer 3 tilemap.
     JSR TurnOffIO                             ;
     LDA.B #!EmptyTile                         ;\ Tile to use as the blank tile.
     STA.B _0                                  ;/
@@ -1897,7 +1897,7 @@ DrawReserveItem:                              ; Subroutine to draw the reserve i
     LDA.W ItemBoxOBJNos-1,X                   ;| Set the tile number for the item box item.
     STA.W OAMTileNo,Y                         ;/
     TYA                                       ;\ 
-    LSR A #2                                  ;| Set the tile size of the item box item (16x16).
+    LSR #2                                    ;| Set the tile size of the item box item (16x16).
     TAY                                       ;|
     LDA.B #!OBJBigSize                        ;|
     STA.W OAMTileSize,Y                       ;/
@@ -1920,7 +1920,7 @@ SrtTxtBonusTop:
     db $5D,$03,$02,$01,$00,$FF,$5B,$14        ; "BONUS GAME" top
     db $5F,$01,$5E,$FF,$FF,$FF
 
-SrtTxtTileBtm:
+SrtTxtStartBtm:
     db $10,$FF,$00,$5C,$13,$00,$5D,$FF        ; " START!" bottom
 SrtTxtMarioBtm:
     db $03,$00,$5C,$13,$14,$15                ; "MARIO" bottom
@@ -1990,29 +1990,29 @@ CODE_0091B1:                                  ; Routine to display text during l
     STZ.W InGameTimerHundreds                 ;|\ 
     STZ.W InGameTimerTens                     ;|| Clear the timer.
     STZ.W InGameTimerOnes                     ;|/
-    LDX.B #SrtTxtBonusBtm-SrtTxtBonusTop      ;|
+    LDX.B #SrtTxtBonusTop-SrtTxtStartTop      ;|
     LDA.B #!BonusGameXPos                     ;/ X position of the rightmost tile of the "BONUS GAME" message.
   + STA.B _0
     STZ.B _1
-    LDY.B #8*(SrtTxtLuigiTop-SrtTxtBonusTop)  ; Number of tiles to draw, x8.
+    LDY.B #8*(SrtTxtLuigiTop-SrtTxtStartTop)  ; Number of tiles to draw, x8.
   - JSR DrawOneStartScreenLetter              ; Draw the message to the screen.
     INX
     CPX.B #8                                  ;\ 
     BNE +                                     ;|
     LDA.W PlayerTurnLvl                       ;| If playing as Luigi, load "LUIGI" instead of "MARIO".
     BEQ +                                     ;|
-    LDX.B #SrtTxtLuigiTop-SrtTxtBonusTop      ;/
+    LDX.B #SrtTxtLuigiTop-SrtTxtStartTop      ;/
   + TYA                                       ;\ 
     SEC                                       ;| Move to next letter.
     SBC.B #8                                  ;|
     TAY                                       ;/
     BNE -
-    JMP CODE_008494                           ; Prep OAM for upload.
+    JMP ConsolidateOAM                        ; Prep OAM for upload.
 
 DrawOneStartScreenLetter:                     ; Subroutine to upload loading screen text to OAM.
-    LDA.W TitleTextPropTop,X                  ;\ 
+    LDA.W SrtPropStartTop,X                   ;\ 
     STA.W OAMTileAttr+4*!SrtOAMSlot,Y         ;| Store the YXPPCCCT properties to OAM.
-    LDA.W TitleTextPropBottom,X               ;|
+    LDA.W SrtPropStartBtm,X                   ;|
     STA.W OAMTileAttr+4*(!SrtOAMSlot+1),Y     ;/
     LDA.B _0                                  ;\ 
     STA.W OAMTileXPos+4*!SrtOAMSlot,Y         ;| Set the X position of each letter to OAM.
@@ -2032,10 +2032,10 @@ DrawOneStartScreenLetter:                     ; Subroutine to upload loading scr
     STA.W OAMTileSize+!SrtOAMSlot,Y           ;|
     STA.W OAMTileSize+!SrtOAMSlot+1,Y         ;/
     PLY
-    LDA.W TitleTextTileTop,X                  ;\ 
+    LDA.W SrtTxtStartTop,X                    ;\ 
     BMI +                                     ;|
     STA.W OAMTileNo+4*!SrtOAMSlot,Y           ;| Store the tile numbers to OAM.
-    LDA.W TitleTextTileBottom,X               ;|
+    LDA.W SrtTxtStartBtm,X                    ;|
     STA.W OAMTileNo+4*(!SrtOAMSlot+1),Y       ;/
     LDA.B #!StartScreenTextYPos               ;\ Y position of the top half of the loading screen messages.
     STA.W OAMTileYPos+4*!SrtOAMSlot,Y         ;/
@@ -2238,7 +2238,7 @@ NintendoTile:                                 ; Tilemap for the "Nintendo Presen
     db $02,$04,$06,$08
 
 GameMode00:                                   ; Game Mode 00 - Load Nintendo Presents
-    JSR CODE_0085FA                           ; Clean out Layer 3.
+    JSR ClearOutLayer3                        ; Clean out Layer 3.
     JSR SetUpScreen                           ; Set up various registers (screen mode, CGADDSUB, windows...).
     JSR CODE_00A993                           ; Load Layer 3 GFX.
     LDY.B #4*(4-1)                            ;\ Load Nintendo Presents logo
@@ -2303,148 +2303,162 @@ NextGameMode:
 FinishGameMode:
     RTS
 
-GameMode06:           JSR SetUp0DA0GM4
-                      JSR CODE_009CBE
-                      BEQ +
-                      LDA.B #$EC
-                      JSR CODE_009440
-                      INC.W GameMode
-                      JMP CODE_009C9F
+GameMode06:                                   ; Game Mode 06 - Title Screen: Circle effect
+    JSR DetermineJoypadInput                  ; Get the current controller port to accept data from.
+    JSR IsFaceButtonPressed                   ;\ Branch if A/B/X/Y is not pressed.
+    BEQ +                                     ;/
+    LDA.B #4*!MaxTitleSpotlightSize           ;\ Size to make the window if the opening animation is skipped with A/B/X/Y.
+    JSR CODE_009440                           ;/
+    INC.W GameMode                            ;\ Prepare the file select menu.
+    JMP CODE_009C9F                           ;/
 
-                    + DEC.W VariousPromptTimer
-                      BNE FinishGameMode
-                      INC.W VariousPromptTimer
-                      LDA.W SpotlightSize
-                      CLC
-                      ADC.B #$04
-                      CMP.B #$F0
-                      BCS NextGameMode
-CODE_009440:          STA.W SpotlightSize
-CODE_009443:          JSR CODE_00CA61
-                      LDA.B #$80                                ; \ X Position of spotlight
-                      STA.B _0                                  ; |
-                      LDA.B #!ScreenHeight/2                    ; | Y Position of spotlight
-                      STA.B _1                                  ; /
-                      JMP CODE_00CA88
+  + DEC.W VariousPromptTimer                  ; A/B/X/Y is not pressed, handle the window.
+    BNE FinishGameMode                        ;\ Return if not time to grow the window yet.
+    INC.W VariousPromptTimer                  ;/
+    LDA.W SpotlightSize                       ;
+    CLC                                       ;\ 
+    ADC.B #4                                  ;|
+    CMP.B #4*(!MaxTitleSpotlightSize+1)       ;|
+    BCS NextGameMode                          ;| Increase the size of the title screen window.
+CODE_009440:                                  ;|
+    STA.W SpotlightSize                       ;|
+CODE_009443:                                  ;/
+    JSR CODE_00CA61                           ;
+    LDA.B #!ScreenWidth/2                     ;\ X Position of spotlight
+    STA.B _0                                  ;|
+    LDA.B #!ScreenHeight/2                    ;| Y Position of spotlight
+    STA.B _1                                  ;/
+    JMP CODE_00CA88
 
 
-CutsceneBgColor:      db $02,$00,$04,$01,$00,$06,$04,$03
+CutsceneBgColor:                              ; Back area colors for the various castle destruction cutscenes and credits.
+    db $02,$00,$04,$01,$00,$06,$04,$03
 
-CutsceneCastlePal:    db $06,$05,$06,$03,$03,$06,$06,$03        ; Castle palette to use for cutscenes ; Purpose of first byte is unknown
+CutsceneCastlePal:                            ; FG palette numbers for the various castle destruction cutscenes and credits.
+    db $06,$05,$06,$03,$03,$06,$06,$03
 
-CutsceneBackground:   db OtherStripes-StripeImages+$36
-                      db OtherStripes-StripeImages+$36
-                      db OtherStripes-StripeImages
-                      db OtherStripes-OtherStripes+$0F
-                      db OtherStripes-StripeImages+$36
-                      db OtherStripes-StripeImages+3
-                      db OtherStripes-StripeImages
+CutsceneBackground:                           ; Stripe pointers to the BG for the various castle destruction cutscenes.
+    db OtherStripes-StripeImages+54
+    db OtherStripes-StripeImages+54
+    db OtherStripes-StripeImages
+    db OtherStripes-OtherStripes+15
+    db OtherStripes-StripeImages+54
+    db OtherStripes-StripeImages+3
+    db OtherStripes-StripeImages
 
-GameMode19:           JSR CODE_0085FA
-                      JSR Clear_1A_13D3
-                      JSR SetUpScreen
-                      LDX.W CutsceneID                          ; Cutscene number
-                      LDA.B #$18
-                      STA.W ObjectTileset
-                      LDA.B #$14
-                      STA.W SpriteTileset
-                      LDA.W CutsceneBgColor-1,X
-                      STA.W BackAreaColor
-                      LDA.W CutsceneCastlePal-1,X
-                      STA.W BackgroundPalette
-                      STZ.W SpritePalette
-                      LDA.B #$01
-                      STA.W ForegroundPalette
-                      CPX.B #$08
-                      BNE CODE_0094B2
-                      JSR CODE_00955E
-                      LDA.B #OtherStripes-StripeImages+9
-                      STA.B StripeImage
-                      JSR LoadScrnImage
-                      JSR UploadCreditsMusic
-                      JSL CODE_0C93DD
-                      JSR DisableHDMA
-                      INC.W ObjectTileset
-                      INC.W SpriteTileset
-                      BRA +
+GameMode19:                                   ; Game Mode 19 - Load Credits / Castle Cutscene
+    JSR ClearOutLayer3                        ; Clean out Layer 3.
+    JSR Clear_1A_13D3                         ; Clean out a large chunk of RAM.
+    JSR SetUpScreen                           ; Set up various registers (screen mode, CGADDSUB, windows...).
+    LDX.W CutsceneID                          ;
+    LDA.B #!ObjTileset_CastleCutscene         ;\ 
+    STA.W ObjectTileset                       ;| Set FG/BG and sprite GFX lists.
+    LDA.B #!SprTileset_CastleCutscene         ;|
+    STA.W SpriteTileset                       ;/
+    LDA.W CutsceneBgColor-1,X                 ;\ Set back area color.
+    STA.W BackAreaColor                       ;/
+    LDA.W CutsceneCastlePal-1,X               ;\ Set FG palette number.
+    STA.W BackgroundPalette                   ;/
+    STZ.W SpritePalette                       ;
+    LDA.B #1                                  ;\ BG always uses #$01.
+    STA.W ForegroundPalette                   ;/      
+    CPX.B #!Cutscene_Credits                  ;\ Branch if loading a castle destruction scene, not credits.
+    BNE LoadCastleCutscene                    ;/
+    JSR CODE_00955E                           ;
+    LDA.B #OtherStripes-StripeImages+9        ;\ 
+    STA.B StripeImage                         ;| Turn Layer 3 completely black.
+    JSR LoadScrnImage                         ;/
+    JSR UploadCreditsMusic                    ; Upload the credits music bank.
+    JSL CODE_0C93DD                           ; Load the credits backgrounds.
+    JSR DisableHDMA                           ; Disable HDMA.
+    INC.W ObjectTileset
+    INC.W SpriteTileset
+    BRA +
 
-CODE_0094B2:          LDA.B #!BGM_CUTSCENEINTRO
-                      STA.W SPCIO2
-                      LDA.W CutsceneBackground-1,X
-                      STA.B StripeImage
-                      JSR LoadScrnImage
-                      LDA.B #OtherStripes-StripeImages+6
-                      STA.B StripeImage
-                      JSR LoadScrnImage
-                      REP #$20                                  ; A->16
-                      LDA.W #$0090
-                      STA.B PlayerXPosNext
-                      LDA.W #$0058
-                      STA.B PlayerYPosNext
-                      SEP #$20                                  ; A->8
-                      INC.W IsCarryingItem
-                    + JSR UploadSpriteGFX
-                      JSR LoadPalette
-                      JSR CODE_00922F
-                      LDX.B #$0B
-                    - STZ.B Layer1XPos,X
-                      DEX
-                      BPL -
-                      LDA.B #$20
-                      STA.B SpriteProperties
-                      JSR CODE_00A635
-                      STZ.B PlayerDirection
-                      STZ.B PlayerInAir
-                      JSL CODE_00CEB1
-                      LDX.B #$17
-                      LDY.B #$00
-                      JSR CODE_009622
-GameMode1B:           JSL OAMResetRoutine
-                      LDA.W CutsceneID
-                      CMP.B #$08
-                      BEQ CODE_009557
-                      LDA.B axlr0000Hold
-                      AND.B #$00                                ; Change to #$30 to enter debug region below
-                      CMP.B #$30
-                      BNE CODE_009529
-                      LDA.B byetudlrHold                        ; \ Unreachable
-                      AND.B #$08                                ; | Debug: Boss defeated scene select
-                      BEQ ADDR_009523                           ; |
-                      LDA.W CutsceneID                          ; |
-                      INC A                                     ; |
-                      CMP.B #$09                                ; |
-                      BCC +                                     ; |
-                      LDA.B #$01                                ; |
-                    + STA.W CutsceneID                          ; |
-ADDR_009523:          LDA.B #$18                                ; |
-                      STA.W GameMode                            ; |
-                      RTS                                       ; /
+LoadCastleCutscene:                           ; Loading castle cutscene.
+    LDA.B #!BGM_CUTSCENEINTRO                 ;\ SFX to use for the castle destruction cutscene.
+    STA.W SPCIO2                              ;/
+    LDA.W CutsceneBackground-1,X              ;\ 
+    STA.B StripeImage                         ;| Load BG tilemap.
+    JSR LoadScrnImage                         ;/
+    LDA.B #OtherStripes-StripeImages+6        ;\ 
+    STA.B StripeImage                         ;| Load FG tilemap.
+    JSR LoadScrnImage                         ;/
+    REP #$20                                  ; A->16
+    LDA.W #!CastleCutsceneMarioXPos
+    STA.B PlayerXPosNext
+    LDA.W #!CastleCutsceneMarioYPos
+    STA.B PlayerYPosNext
+    SEP #$20                                  ; A->8
+    INC.W IsCarryingItem
+  + JSR UploadSpriteGFX                       ; Upload GFX files.
+    JSR LoadPalette                           ; Load palettes from ROM to RAM.
+    JSR CODE_00922F                           ; Upload palettes to CGRAM.
+    LDX.B #11
+  - STZ.B Layer1XPos,X
+    DEX
+    BPL -
+    LDA.B #$20
+    STA.B SpriteProperties
+    JSR CODE_00A635
+    STZ.B PlayerDirection
+    STZ.B PlayerInAir
+    JSL CODE_00CEB1                           ; Animate Mario (and his cape).
+    LDX.B #%00010111                          ;\ Put all layers and OBJ on the main screen
+    LDY.B #%00000000                          ;/ 
+    JSR CODE_009622
 
-CODE_009529:          JSL CODE_0CC97E
-                      REP #$20                                  ; A->16
-                      LDA.B Layer1XPos
-                      PHA
-                      LDA.B Layer1YPos
-                      PHA
-                      LDA.B Layer2XPos
-                      STA.B Layer1XPos
-                      LDA.B Layer2YPos
-                      STA.B Layer1YPos
-                      SEP #$20                                  ; A->8
-                      JSL CODE_00E2BD
-                      REP #$20                                  ; A->16
-                      PLA
-                      STA.B Layer1YPos
-                      PLA
-                      STA.B Layer1XPos
-                      SEP #$20                                  ; A->8
-                      LDA.B #$0C
-                      STA.B PlayerAnimation
-                      JSR CODE_00C47E
-                      JMP CODE_008494
+GameMode1B:                                   ; Game Mode 1B - Credits / Castle Cutscene
+    JSL OAMResetRoutine                       ; Clear OAM.
+    LDA.W CutsceneID                          ;\ 
+    CMP.B #!Cutscene_Credits                  ;| Branch down if specifically running the credits.
+    BEQ ProccessCredits                       ;/
+    LDA.B axlr0000Hold                        ;\ 
+    AND.B #%00000000                          ;|] DEBUG: Change #%00000000 to #%00110000 to enable the boss cutscene select.
+    CMP.B #%00110000                          ;| Pressing L + R will then reload the cutscene.
+    BNE ProcessCastleCutscene                 ;/
 
-CODE_009557:          JSL CODE_0C938D
-                      JMP CODE_008494
+DebugCutsceneSelect:                          ;# DEBUG: Boss cutscene select.
+    LDA.B byetudlrHold                        ;#\ 
+    AND.B #%00001000                          ;#|
+    BEQ ++                                    ;#|
+    LDA.W CutsceneID                          ;#| If up is also being held,
+    INC A                                     ;#|  advance to the next boss cutscene.
+    CMP.B #!Cutscene_Credits+1                ;#|
+    BCC +                                     ;#|
+    LDA.B #!Cutscene_Iggy                     ;#|
+  + STA.W CutsceneID                          ;#/
+ ++ LDA.B #!GameMode_FadeToCutscene           ;#\ Reload the scene.
+    STA.W GameMode                            ;#/
+    RTS                                       ;#
+
+ProcessCastleCutscene:                        ; Debug code skipped; boss beaten cutscene continues.
+    JSL CODE_0CC97E                           ; Run the general cutscene routines (text writing, sprites, etc.)
+    REP #$20                                  ; A->16
+    LDA.B Layer1XPos                          ;\ 
+    PHA                                       ;|
+    LDA.B Layer1YPos                          ;|
+    PHA                                       ;| Draw Mario/Yoshi relative to Layer 2 rather than Layer 1,
+    LDA.B Layer2XPos                          ;|  since Layer 1 is being used for the castle object.
+    STA.B Layer1XPos                          ;|
+    LDA.B Layer2YPos                          ;|
+    STA.B Layer1YPos                          ;/
+    SEP #$20                                  ; A->8
+    JSL CODE_00E2BD                           ; Draw Mario/Yoshi.
+    REP #$20                                  ; A->16
+    PLA                                       ;\ 
+    STA.B Layer1YPos                          ;| Restore that position.
+    PLA                                       ;|
+    STA.B Layer1XPos                          ;/
+    SEP #$20                                  ; A->8
+    LDA.B #!PAni_CastleDestroy                ;\ Set Mario's animation routine so that it can be automatically handled.
+    STA.B PlayerAnimation                     ;/
+    JSR CODE_00C47E                           ; Handle various gameplay-related routines (e.g. Mario-object interaction).
+    JMP ConsolidateOAM                        ; Prep OAM for upload.
+
+ProccessCredits:                              ; Specifically running credits.
+    JSL CODE_0C938D                           ; Run the main routine.
+    JMP ConsolidateOAM                        ; Prep OAM for upload.
 
 CODE_00955E:          LDY.B #$2F
                       JSL CODE_00BA28
@@ -2473,7 +2487,7 @@ GameMode1D:           INC.W CutsceneID
                       JSR GameMode12
                       DEC.W GameMode
                       JSR TurnOffIO
-                      JSR CODE_0085FA
+                      JSR ClearOutLayer3
                       JSR CODE_00A993
                       JSL CODE_0CA3C9
                       JSR CODE_00961E
@@ -2481,12 +2495,12 @@ GameMode1F:           JSL OAMResetRoutine
                       JSL CODE_0C939A
                       INC.B EffFrame
                       JSL CODE_05BB39
-                      JMP CODE_008494
+                      JMP ConsolidateOAM
 
 GameMode21:           JSL CODE_0C93AD
                       RTS
 
-GameMode23:           JSR CODE_0085FA
+GameMode23:           JSR ClearOutLayer3
                       JSR Clear_1A_13D3
                       JSR SetUpScreen
                       JSL CODE_0CAD8C
@@ -2532,9 +2546,9 @@ GameMode25:           STZ.W PlayerGfxTileCount
                       JSR ProcessCreditsBGHDMA
                       JSL OAMResetRoutine
                       JSL CODE_0C93A5
-                      JMP CODE_008494
+                      JMP ConsolidateOAM
 
-GameMode27:           JSR CODE_0085FA
+GameMode27:           JSR ClearOutLayer3
                       JSR Clear_1A_13D3
                       JSR SetUpScreen
                       JSR CODE_00955E
@@ -2560,14 +2574,14 @@ GameMode27:           JSR CODE_0085FA
                       STA.B StripeImage
                       JSR LoadScrnImage
                       JSL CODE_0CAADF
-                      JSR CODE_008494
+                      JSR ConsolidateOAM
                       LDX.B #$14
                       LDY.B #$00
                       JMP CODE_009622
 
 GameMode29:           RTS
 
-GameMode10:           JSR CODE_0085FA
+GameMode10:           JSR ClearOutLayer3
                       LDA.W BonusGameActivate
                       BNE CODE_0096A8
                       LDA.W SublevelCount
@@ -2645,7 +2659,7 @@ CODE_009740:          STZ.W Brightness
 CODE_00974C:          JSR HexToDec
                       RTL
 
-GameMode16:           JSR CODE_0085FA
+GameMode16:           JSR ClearOutLayer3
                       JSR CODE_00A82D
                       JMP CODE_0093CA
 
@@ -2697,14 +2711,14 @@ CODE_00979D:          CPY.B #$28
                       ROL A
                       EOR.B #$01
                       STA.B _1
-                    + JSR CODE_0091E9
+                    + JSR DrawOneStartScreenLetter
                       INX
                       TYA
                       SEC
                       SBC.B #$08
                       TAY
                       BNE CODE_00979D
-                      JMP CODE_008494
+                      JMP ConsolidateOAM
 
 CODE_0097BC:          LDA.B #$0F
                       STA.W Brightness                          ; Set brightness to full (RAM mirror)
@@ -2714,7 +2728,7 @@ CODE_0097BC:          LDA.B #$0F
                       STA.B Mode7XScale                         ; |Not sure what these bytes are used for yet, unless they're just more
                       STA.B Mode7YScale                         ; /scratch (I find that unlikely)
                       STZ.W ScreenShakeYOffset
-                      JSR CODE_0085FA
+                      JSR ClearOutLayer3
                       LDA.B #$FF
                       STA.W ObjectTileset
                       JSL CODE_03D958
@@ -2996,7 +3010,7 @@ CODE_009A52:          LDA.W IRQNMICommand
                     + JSL OAMResetRoutine
                       RTS
 
-SetUp0DA0GM4:         LDA.W HW_JOY1                             ; \Read old-style controller register for player 1
+DetermineJoypadInput: LDA.W HW_JOY1                             ; \Read old-style controller register for player 1
                       LSR A                                     ; /LSR A, but then discard (Is this for carry flag or something?)
                       LDA.W HW_JOY2                             ; \Load And Rotate left A (player 2 old-style controller regs)
                       ROL A                                     ; /
@@ -3009,10 +3023,10 @@ SetUp0DA0GM4:         LDA.W HW_JOY1                             ; \Read old-styl
 CODE_009A87:          STA.W ControllersPresent
                       RTS                                       ; *yawn*
 
-GameMode04:           JSR SetUp0DA0GM4
+GameMode04:           JSR DetermineJoypadInput
                       JSR GameMode12
                       STZ.W InGameTimerHundreds                 ; Zero the timer
-                      JSR CODE_0085FA
+                      JSR ClearOutLayer3
                       LDA.B #$03                                ; \ Load title screen Layer 3 image
                       STA.B StripeImage                         ; |
                       JSR LoadScrnImage                         ; /
@@ -3038,7 +3052,7 @@ GameMode04:           JSR SetUp0DA0GM4
 DATA_009AC8:          db $01,$FF,$FF
 
 CODE_009ACB:          PHY
-                      JSR SetUp0DA0GM4
+                      JSR DetermineJoypadInput
                       PLY
 CODE_009AD0:          INC.W BlinkCursorTimer                    ; Blinking cursor frame counter (file select, save prompt, etc)
                       JSR CODE_009E82
@@ -3255,8 +3269,8 @@ ItrCntrlrSqnc:        db $41,$0D,$C1,$30,$00,$10,$42,$26        ;!
                       db $C1,$30,$00,$30,$FF                    ;!
                    endif                                        ;/===============================================
 
-GameMode07:           JSR SetUp0DA0GM4
-                      JSR CODE_009CBE
+GameMode07:           JSR DetermineJoypadInput
+                      JSR IsFaceButtonPressed
                       BNE CODE_009C9F
                       JSR NoButtons                             ; Zero controller RAM mirror
                       LDX.W TitleInputIndex                     ; (Unknown byte) -> X
@@ -3309,7 +3323,7 @@ CODE_009CB0:          LDA.B #$E9                                ;!
                    endif                                        ;/===============================================
                       JMP NextGameMode                          ; Increase the Game mode and return (at jump point)
 
-CODE_009CBE:          LDA.B axlr0000Hold
+IsFaceButtonPressed:  LDA.B axlr0000Hold
                       AND.B #$C0
                       BNE +
                       LDA.B byetudlrHold
@@ -4018,7 +4032,7 @@ GameMode0C:           JSR TurnOffIO
                       STA.W GameMode
                       JMP Mode04Finish
 
-                    + JSR CODE_0085FA
+                    + JSR ClearOutLayer3
                       JSR UploadMusicBank1
                       JSR SetUpScreen
                       STZ.W MusicBackup
@@ -4098,7 +4112,7 @@ CODE_00A11B:          LDY.B #$02
                       JSL CODE_04D6E9
                       LDA.B #$F0
                       STA.B OAMAddress
-                      JSR CODE_008494
+                      JSR ConsolidateOAM
                       JSR LoadScrnImage
                       STZ.W OverworldProcess
                       JSR KeepGameModeActive
@@ -4137,11 +4151,11 @@ Clear_1A_13D3:        REP #$10                                  ; XY->16
                       SEP #$10                                  ; XY->8
                       RTS
 
-GameMode0E:           JSR SetUp0DA0GM4
+GameMode0E:           JSR DetermineJoypadInput
                       INC.B EffFrame                            ; Increase alternate frame counter
                       JSL OAMResetRoutine
                       JSL GameMode_0E_Prim                      ; (Bank 4.asm)
-                      JMP CODE_008494
+                      JMP ConsolidateOAM
 
 
 GrndShakeDispYLo:     db $FE,$00,$02,$00
@@ -4276,7 +4290,7 @@ CODE_00A2A9:          LDA.B Layer1YPos
                       STA.B Layer1YPos+1
                       PLA
                       STA.B Layer1YPos
-                      JMP CODE_008494
+                      JMP ConsolidateOAM
 
 CODE_00A2F3:          REP #$20                                  ; A->16
                       LDA.B PlayerXPosNext
@@ -4571,7 +4585,7 @@ CODE_00A594:          PHB                                       ; Wrapper
                       PLB
                       RTL
 
-GameMode12:           JSR CODE_0085FA                           ; gah, stupid keyboard >_<
+GameMode12:           JSR ClearOutLayer3                        ; gah, stupid keyboard >_<
                       JSR NoButtons
                       STZ.W UploadMarioStart
                       JSR SetUpScreen
@@ -4603,7 +4617,7 @@ CODE_00A5B9:          JSR UploadSpriteGFX
                       STX.W CopyBGColor
                       SEP #$30                                  ; AXY->8
                       JSR CODE_00919B
-                      JSR CODE_008494
+                      JSR ConsolidateOAM
                       JMP CODE_0093F4
 
 CODE_00A5F9:          LDA.B #$E7
