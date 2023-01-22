@@ -230,8 +230,8 @@ WriteDSPRegCond:      PUSH A                                    ; write A to DSP
                       AND.B A,ChannelsMuted
                       POP A
                       BNE +
-WriteDSPReg:          MOV.W HW_DSPDATA,Y                        ; write A to DSP reg Y
-                      MOV.W HW_DSPADDR,A
+WriteDSPReg:          MOV.W HW_DSPADDR,Y                        ; write A to DSP reg Y
+                      MOV.W HW_DSPDATA,A
                     + RET
 
 APU_069E:             MOV A,#$0A
@@ -1098,8 +1098,8 @@ APU_0D56:             MUL YA                                    ; set sample A i
                       CALL WriteDSPReg                          ; clear noise vbit;
                       MOV Y,#$00
                     - MOV.B A,(ARam_14)+Y
-                      MOV.W HW_DSPDATA,X
-                      MOV.W HW_DSPADDR,A
+                      MOV.W HW_DSPADDR,X
+                      MOV.W HW_DSPDATA,A
                       INC X
                       INC Y
                       CMP Y,#$04

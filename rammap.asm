@@ -1264,8 +1264,8 @@ VoInstrument: skip 16
 skip 32
 HW_SPCTEST: skip 1
 HW_SPCCONTROL: skip 1
-HW_DSPDATA: skip 1
 HW_DSPADDR: skip 1
+HW_DSPDATA: skip 1
 HW_SNESIO0: skip 1
 HW_SNESIO1: skip 1
 HW_SNESIO2: skip 1
