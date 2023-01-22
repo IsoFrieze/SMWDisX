@@ -113,3 +113,42 @@ HW_DMACNT: skip 2
 HW_HDMABANK: skip 1
 HW_DMAIDX: skip 2
 HW_HDMALINES: skip 1
+
+
+; DSP REGISTERS
+
+ORG $000000
+
+DSP_VoVOLL: skip 1
+DSP_VoVOLR: skip 1
+DSP_VoPITCH: skip 2
+DSP_VoSRCN: skip 1
+DSP_VoADSR: skip 2
+DSP_VoGAIN: skip 1
+DSP_VoENVX: skip 1
+DSP_VoOUTX: skip 1
+skip 2
+DSP_MVOLL: skip 1
+DSP_EFB: skip 1
+skip 1
+DSP_FFC: skip 1
+skip 12
+DSP_MVOLR: skip 1
+skip 15
+DSP_EVOLL: skip 1
+DSP_PMON: skip 1
+skip 14
+DSP_EVOLR: skip 1
+DSP_NON: skip 1
+skip 14
+DSP_KON: skip 1
+DSP_EON: skip 1
+skip 14
+DSP_KOFF: skip 1
+DSP_DIR: skip 1
+skip 14
+DSP_FLG: skip 1
+DSP_ESA: skip 1
+skip 14
+DSP_ENDX: skip 1
+DSP_EDL: skip 1
