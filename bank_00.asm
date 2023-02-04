@@ -832,7 +832,7 @@ ControllerUpdate:                             ; Routine to read controller data 
     STA.B axlr0000Frame                       ;/
     RTS                                       ;
 
-CODE_0086C7:                                  ; Subroutine to initialize OAM in Roy/Morton/Ludwig's rooms.
+InitM7BossOAM:                                ; Subroutine to initialize OAM in Roy/Morton/Ludwig's rooms.
     REP #$30                                  ; AXY->16
     LDX.W #!BossBGOBJCount-2                  ;\
     LDA.W #!OBJBigSize|(!OBJBigSize<<8)       ;|
@@ -1563,7 +1563,7 @@ UpdateStatusBar:                              ; Routine to update the status bar
     ORA.B SpriteLock                          ;| Don't decrement the timer if:
     BNE UpdateTime                            ;|  - Ending a level
     LDA.W IRQNMICommand                       ;|  - Game frozen
-    CMP.B #%11000001                          ;|  - In Bowser
+    CMP.B #!IRQNMI_Bowser                     ;|  - In Bowser
     BEQ UpdateTime                            ;|  - A second hasn't passed
     DEC.W InGameTimerFrames                   ;|
     BPL UpdateTime                            ;/
@@ -1866,7 +1866,7 @@ DrawReserveItem:                              ; Subroutine to draw the reserve i
     BVC +
     LDY.B #0
     LDA.W IRQNMICommand
-    CMP.B #%11000001
+    CMP.B #!IRQNMI_Bowser
     BEQ +
     LDA.B #!OBJOffscreen
     STA.W OAMTileYPos,Y
@@ -1972,7 +1972,7 @@ CODE_00919B:                                  ; Subroutine to prepare No-Yoshi e
     LDA.B PlayerAnimation                     ;\ 
     CMP.B #!PAni_CastleEntrance               ;| If performing a No Yoshi entrance, prepare the scene.
     BNE +                                     ;|
-    JSR CODE_00C593                           ;/
+    JSR ProcessPlayerAnimation                ;/
     BRA ++
 
   + LDA.W SublevelCount                       ;\ 
@@ -2123,7 +2123,7 @@ EnableWindowHDMA:
     SEP #$10                                  ; XY->8
     RTS
 
-CODE_0092A8:                                  ; Subroutine to handle the solid lava BG color in Iggy/Larry's room.
+HandleIggyLarryLavaColor:                     ; Subroutine to handle the solid lava BG color in Iggy/Larry's room.
     JSR ClearWindowHDMA                       ;
     REP #$10                                  ; XY->16
     LDX.W #2*!IggyLavaHeight                  ;\ Scanline (x2) where the solid lava color in Iggy/Larry's fight begins.
@@ -2274,7 +2274,7 @@ CODE_0093CA:                                  ;
     LDX.B #%00010000                          ; Enable sprites, disable layers
     LDY.B #%00000100                          ; Set Layer 3 to subscreen
 CODE_0093EA:                                  ;
-    LDA.B #%00000001                          ;
+    LDA.B #!IRQNMI_Cutscenes                  ;
     STA.W IRQNMICommand                       ;
     LDA.B #%00100000                          ;
     JSR ScreenSettings                        ; Set up CGADSUB, main/sub screen designation, and windowing.
@@ -2444,7 +2444,7 @@ ProcessCastleCutscene:                        ; Debug code skipped; boss beaten 
     LDA.B Layer2YPos                          ;|
     STA.B Layer1YPos                          ;/
     SEP #$20                                  ; A->8
-    JSL CODE_00E2BD                           ; Draw Mario/Yoshi.
+    JSL DrawMarioAndYoshi                     ; Draw Mario/Yoshi.
     REP #$20                                  ; A->16
     PLA                                       ;\ 
     STA.B Layer1YPos                          ;| Restore that position.
@@ -2653,7 +2653,7 @@ GM11LoadLevel:                                ; Game Mode 11 - Load Level (Mario
     STA.B LastScreenHoriz                     ;/
     JSR CODE_00A796                           ; Get initial Layer 2 scroll positions.
     INC.W ScreenScrollAtWill                  ; Enable "vertical scroll at will" by default.
-    JSL CODE_00F6DB                           ; Reset layer positions.
+    JSL UpdateScreenPosition                  ; Reset layer positions.
     JSL CODE_05801E                           ; Load level data.
     LDA.W OverworldOverride                   ;\ 
     BEQ +                                     ;|
@@ -2665,7 +2665,7 @@ GM11LoadLevel:                                ; Game Mode 11 - Load Level (Mario
     CMP.B #%01000000                          ;| Keep music from resetting except under certain conditions:
     BCS ++                                    ;| - Level other than intro level is being force-loaded via $0109
     LDY.W IRQNMICommand                       ;| - Bit 6 of $0DDA is set
-    CPY.B #%11000001                          ;|
+    CPY.B #!IRQNMI_Bowser                     ;|
     BNE +                                     ;|
     LDA.B #!BGM_BOWSERINTERLUDE               ;|] Bowser music.
   + STA.W SPCIO2                              ;|
@@ -2746,531 +2746,578 @@ endif                                         ;|/===============================
     BNE -                                     ;/
     JMP ConsolidateOAM                        ; Prep OAM for upload.
 
-CODE_0097BC:          LDA.B #%00001111
-                      STA.W Brightness                          ; Set brightness to full (RAM mirror)
-                      STZ.W MosaicSize
-                      JSR GM__Mosaic
-                      LDA.B #$20                                ; \
-                      STA.B Mode7XScale                         ; |Not sure what these bytes are used for yet, unless they're just more
-                      STA.B Mode7YScale                         ; /scratch (I find that unlikely)
-                      STZ.W ScreenShakeYOffset
-                      JSR ClearOutLayer3
-                      LDA.B #!ObjTileset_ReznorIggyLarry
-                      STA.W ObjectTileset
-                      JSL CODE_03D958
-                      BIT.W IRQNMICommand
-                      BVC CODE_009801
-                      JSR CODE_009925
-                      LDY.W ActiveBoss
-                      CPY.B #$03
-                      BCC CODE_0097F1
-                      BNE CODE_00983B
-                      LDA.B #!SprTileset_Bowser
-                      BRA +
+CODE_0097BC:
+    LDA.B #%00001111
+    STA.W Brightness                          ; Set brightness to full (RAM mirror)
+    STZ.W MosaicSize
+    JSR GM__Mosaic
+    LDA.B #m7scale(1.0)                       ;\
+    STA.B Mode7XScale                         ;| Set X and Y scale to 1.0
+    STA.B Mode7YScale                         ;/
+    STZ.W ScreenShakeYOffset
+    JSR ClearOutLayer3
+    LDA.B #!ObjTileset_ReznorIggyLarry
+    STA.W ObjectTileset
+    JSL CODE_03D958
+    BIT.W IRQNMICommand
+    BVC .IggyLarry
+    JSR CODE_009925
+    LDY.W ActiveBoss
+    CPY.B #!ActiveBoss_Bowser
+    BCC .RoyMortonLudwig
+    BNE .Reznor
+    LDA.B #!SprTileset_Bowser
+    BRA +
 
-CODE_0097F1:          LDA.B #$03
-                      STA.W PlayerBehindNet
-                      LDA.B #$C8
-                      STA.B OAMAddress
-                      LDA.B #!SprTileset_RoyMortonLudwig
-                    + DEC.W ObjectTileset
-                      BRA +
+.RoyMortonLudwig:                             ; Roy, Morton, & Ludwig
+    LDA.B #3
+    STA.W PlayerBehindNet                     ; Disable player interaction with sprites
+    LDA.B #100*2                              ;\
+    STA.B OAMAddress                          ;/ OAM slot 100 gets highest priority
+    LDA.B #!SprTileset_RoyMortonLudwig
+  + DEC.W ObjectTileset                       ; ObjectTileset = !ObjTileset_RoyMortonLudwig
+    BRA +
 
-CODE_009801:          JSR CODE_00ADD9
-                      JSR CODE_0092A8
-                      LDX.B #$50
-                      JSR CODE_009A3D
-                      REP #$20                                  ; A->16
-                      LDA.W #$0050
-                      STA.B PlayerXPosNext
-                      LDA.W #$FFD0
-                      STA.B PlayerYPosNext
-                      STZ.B Layer1XPos
-                      STZ.W NextLayer1XPos
-                      LDA.W #$FF90
-                      STA.B Layer1YPos
-                      STA.W NextLayer1YPos
-                      LDA.W #$0080
-                      STA.B Mode7CenterX
-                      LDA.W #$0050
-                      STA.B Mode7CenterY
-                      LDA.W #$0080
-                      STA.B Mode7XPos
-                      LDA.W #$0010
-                      STA.B Mode7YPos
-                      SEP #$20                                  ; A->8
-CODE_00983B:          LDA.B #$13
-                    + STA.W SpriteTileset
-                      JSR UploadSpriteGFX
-                      LDA.B #$11
-                      STA.W HW_TMW
-                      STZ.W HW_TS
-                      STZ.W HW_TSW
-                      LDA.B #$02
-                      STA.B Layer12Window
-                      LDA.B #$32
-                      STA.B OBJCWWindow
-                      LDA.B #$20
-                      STA.B ColorAddition
-                      JSR UploadStaticBar
-                      JSR CalculateMode7Values
-CODE_009860:          JSL CODE_00E2BD
-                      JSR CODE_00A2F3
-                      JSR CODE_00C593
-                      STZ.B PlayerYSpeed                        ; Y speed = 0
-                      JSL CODE_01808C
-                      JSL OAMResetRoutine
-                      RTS
+.IggyLarry:
+    JSR LoadIggyLarryPalette
+    JSR HandleIggyLarryLavaColor
+    LDX.B #$50                                ;\ Y Position of floor
+    JSR MakeASolidFloor                       ;/
+    REP #$20                                  ; A->16
+    LDA.W #80                                 ;\
+    STA.B PlayerXPosNext                      ;| Player starting position
+    LDA.W #-48                                ;| (80, -48)
+    STA.B PlayerYPosNext                      ;/
+    STZ.B Layer1XPos                          ;\
+    STZ.W NextLayer1XPos                      ;| Camera starting position
+    LDA.W #-112                               ;| (0, -112)
+    STA.B Layer1YPos                          ;|
+    STA.W NextLayer1YPos                      ;/
+    LDA.W #m7center(256)                      ;\
+    STA.B Mode7CenterX                        ;| Mode 7 center point
+    LDA.W #m7center(208)                      ;| (256, 208)
+    STA.B Mode7CenterY                        ;/
+    LDA.W #128                                ;\
+    STA.B Mode7XPos                           ;| Mode 7 scroll position
+    LDA.W #16                                 ;| (128, 16)
+    STA.B Mode7YPos                           ;/
+    SEP #$20                                  ; A->8
+.Reznor:
+    LDA.B #!SprTileset_ReznorIggyLarry
+  + STA.W SpriteTileset
+    JSR UploadSpriteGFX
+    LDA.B #%00010001                          ; Objects + Layer 1
+    STA.W HW_TMW
+    STZ.W HW_TS
+    STZ.W HW_TSW
+    LDA.B #%00000010                          ;\ Enable Window 1 on Layer 1
+    STA.B Layer12Window                       ;/
+    LDA.B #%00110010                          ;\ Enable Window 1 on Objects & Color Window
+    STA.B OBJCWWindow                         ;/ Color Window is inverted for lava
+    LDA.B #%00100000                          ;\ Turn on Color Window for sub screen
+    STA.B ColorAddition                       ;/
+    JSR UploadStaticBar
+    JSR CalculateMode7Values
+CODE_009860:
+    JSL DrawMarioAndYoshi
+    JSR AdvancePlayerPosition
+    JSR ProcessPlayerAnimation
+    STZ.B PlayerYSpeed                        ; Y speed = 0
+    JSL CODE_01808C
+    JSL OAMResetRoutine
+    RTS
 
+DATA_009875:                                  ; unknown usage
+    dw 1, -1, 64, 448
 
-                      db $01,$00,$FF,$FF,$40,$00,$C0,$01
-
-CODE_00987D:          JSR CalculateMode7Values
-                      BIT.W IRQNMICommand
-                      BVC +
-                      JMP CODE_009A52
-
-                    + JSL OAMResetRoutine
-                      JSL CODE_03C0C6
-                      RTS
-
-
-DATA_009891:          dw $129E,$121E,$119E,$111E
-                      dw $161E,$159E,$151E,$149E
-                      dw $141E,$139E,$131E,$169E
-
-CODE_0098A9:          LDA.W IRQNMICommand                       ; \
-                      LSR A                                     ; |If "Special level" is even,
-                      BCS +                                     ; / branch to $98E1
-                      LDA.B EffFrame
-                      LSR A
-                      LSR A
-                      AND.B #$06
-                      TAX
-                      REP #$20                                  ; A->16
-                      LDY.B #$80
-                      STY.W HW_VMAINC
-                      LDA.W #$1801
-                      STA.W HW_DMAPARAM+$20
-                      LDA.W #$7800
-                      STA.W HW_VMADD
-                      LDA.L DATA_05BA39,X
-                      STA.W HW_DMAADDR+$20
-                      LDY.B #AnimatedTiles>>16
-                      STY.W HW_DMAADDR+$22
-                      LDA.W #$0080
-                      STA.W HW_DMACNT+$20
-                      LDY.B #$04
-                      STY.W HW_MDMAEN
-                      CLC
-                    + REP #$20                                  ; A->16
-                      LDA.W #$0004
-                      LDY.B #$06
-                      BCC +
-                      LDA.W #$0008
-                      LDY.B #$16
-                    + STA.B _0
-                      LDA.W #Mode7BossTilemap
-                      STA.B _2
-                      STZ.W HW_VMAINC
-                      LDA.W #$1800
-                      STA.W HW_DMAPARAM+$20
-                      LDX.B #Mode7BossTilemap>>16
-                      STX.W HW_DMAADDR+$22
-                      LDX.B #$04
-                    - LDA.W DATA_009891,Y
-                      STA.W HW_VMADD
-                      LDA.B _2
-                      STA.W HW_DMAADDR+$20
-                      CLC
-                      ADC.B _0
-                      STA.B _2
-                      LDA.B _0
-                      STA.W HW_DMACNT+$20
-                      STX.W HW_MDMAEN
-                      DEY
-                      DEY
-                      BPL -
-                      SEP #$20                                  ; A->8
-                      RTS
-
-CODE_009925:          STZ.B PlayerYPosNext+1
-                      REP #$20                                  ; A->16
-                      LDA.W #$0020
-                      STA.B PlayerXPosNext
-                      STZ.B Layer1XPos
-                      STZ.W NextLayer1XPos
-                      STZ.B Layer1YPos
-                      STZ.W NextLayer1YPos
-                      LDA.W #$0080
-                      STA.B Mode7CenterX
-                      LDA.W #$00A0
-                      STA.B Mode7CenterY
-                      SEP #$20                                  ; A->8
-                      JSR CODE_00AE15
-                      JSL CODE_01808C
-                      LDA.W IRQNMICommand
-                      LSR A
-                      LDX.B #con($C0,$C0,$C0,$C0,$D0)           ; Y position of floor
-                      LDA.B #con($A0,$A0,$A0,$A0,$B0)           ; Y position of Mario
-                      BCC +
-                      STZ.W HorizLayer1Setting
-                      JMP CODE_009A17
-
-                    + REP #$30                                  ; AXY->16
-                      LDA.W ActiveBoss
-                      AND.W #$00FF
-                      ASL A
-                      TAX
-                      LDY.W #con($02C0,$02C0,$02C0,$02C0,$0300) ; ceiling offset for Morton & Roy
-                      LDA.W BossCeilingHeights,X
-                      BPL +
-                      LDY.W #con($FB80,$FB80,$FB80,$FB80,$FBC0) ; ceiling offset for Reznor
-                    + CMP.W #$0012
-                      BNE +
-                      LDY.W #con($0320,$0320,$0320,$0320,$0360) ; ceiling offset for Ludwig
-                    + STY.B _0
-                      LDX.W #$0000
-                      LDA.W #$C05A
-CODE_009980:          STA.L DynamicStripeImage,X
-                      XBA
-                      CLC
-                      ADC.W #con($0080,$0080,$0080,$0080,$00C0) ; Y position of lava + ceiling
-                      XBA
-                      STA.L DynamicStripeImage+$84,X
-                      XBA
-                      SEC
-                      SBC.B _0
-                      XBA
-                      STA.L DynamicStripeImage+$108,X
-                      LDA.W #$7F00
-                      STA.L DynamicStripeImage+2,X
-                      STA.L DynamicStripeImage+$86,X
-                      STA.L DynamicStripeImage+$10A,X
-                      LDY.W #$0010
-                    - LDA.W #$38A2
-                      STA.L DynamicStripeImage+4,X
-                      INC A
-                      STA.L DynamicStripeImage+6,X
-                      LDA.W #$38B2
-                      STA.L DynamicStripeImage+$44,X
-                      INC A
-                      STA.L DynamicStripeImage+$46,X
-                      LDA.W #$2C80
-                      STA.L DynamicStripeImage+$88,X
-                      INC A
-                      STA.L DynamicStripeImage+$8A,X
-                      INC A
-                      STA.L DynamicStripeImage+$C8,X
-                      INC A
-                      STA.L DynamicStripeImage+$CA,X
-                      LDA.W #$28A0
-                      STA.L DynamicStripeImage+$10C,X
-                      INC A
-                      STA.L DynamicStripeImage+$10E,X
-                      LDA.W #$28B0
-                      STA.L DynamicStripeImage+$14C,X
-                      INC A
-                      STA.L DynamicStripeImage+$14E,X
-                      INX
-                      INX
-                      INX
-                      INX
-                      DEY
-                      BNE -
-                      TXA
-                      CLC
-                      ADC.W #$014C
-                      TAX
-                      LDA.W #$C05E
-                      CPX.W #$0318
-                      BCS +
-                      JMP CODE_009980
-
-                    + LDA.W #$00FF
-                      STA.L DynamicStripeImage,X
-                      SEP #$30                                  ; AXY->8
-                      JSR LoadScrnImage
-                      LDX.B #$B0
-                      LDA.B #$90
-CODE_009A17:          STA.B PlayerYPosNext
-                      JSR CODE_009A1F
-                      JMP ClearWindowTable
-
-CODE_009A1F:          LDY.B #$10
-                      LDA.B #$32
-                    - STA.L Map16TilesLow,X
-                      STA.L Map16TilesLow+$1B0,X
-                      STA.L Map16TilesHigh,X
-                      STA.L Map16TilesHigh+$1B0,X
-                      INX
-                      DEY
-                      BNE -
-                      CPX.B #$C0
-                      BNE Return009A4D
-                      LDX.B #con($D0,$D0,$D0,$D0,$E0)           ; Y position of floor collision
-CODE_009A3D:          LDY.B #$10
-                      LDA.B #$05
-                    - STA.L Map16TilesLow,X
-                      STA.L Map16TilesLow+$1B0,X
-                      INX
-                      DEY
-                      BNE -
-Return009A4D:         RTS
+CODE_00987D:                                  ; Mode 7 room stuff?
+    JSR CalculateMode7Values
+    BIT.W IRQNMICommand
+    BVC +
+    JMP CODE_009A52
+    
+  + JSL OAMResetRoutine                       ; Iggy & Larry
+    JSL CODE_03C0C6                           ; Draw the top of the lava and handle their platform's movement.
+    RTS
 
 
-                      db $FF,$01,$18,$30
+Mode7BossTileLocations:                       ; VRAM Addresses to upload M7 Boss Tilemaps
+    dw $129E,$121E,$119E,$111E                ; Morton, Roy, & Ludwig
+    dw $161E,$159E,$151E,$149E                ;\ Bowser
+    dw $141E,$139E,$131E,$169E                ;/
 
-CODE_009A52:          LDA.W IRQNMICommand
-                      LSR A
-                      BCS +
-                      JSL CODE_00F6DB
-                      JSL CODE_05BC00
-                      LDA.W ActiveBoss
-                      CMP.B #$04
-                      BEQ +
-                      JSR CODE_0086C7
-                      JSL CODE_02827D
-                      RTS
+CODE_0098A9:                                  ; Routine to handle uploading a boss's Mode 7 tilemap to VRAM, as well as animating the lava.
+    LDA.W IRQNMICommand                       ;\
+    LSR A                                     ;| Branch if in Bowser's battle (don't animate lava).
+    BCS UploadBossTilemap                     ;/
+    LDA.B EffFrame                            ;\
+    LSR A                                     ;|
+    LSR A                                     ;| Get frame of animation for the lava.
+    AND.B #%00000110                          ;|
+    TAX                                       ;/
+    REP #$20                                  ; A->16
+    LDY.B #%10000000                          ;\\
+    STY.W HW_VMAINC                           ;||
+    LDA.W #(HW_VMDATA<<8)|%00000001           ;|| Set as uploading to VRAM at $7800 (SP4).
+    STA.W HW_DMAPARAM+$20                     ;||
+    LDA.W #$7800                              ;||
+    STA.W HW_VMADD                            ;|/
+    LDA.L DATA_05BA39,X                       ;|\
+    STA.W HW_DMAADDR+$20                      ;|| Set source address of the lava animation frame.
+    LDY.B #AnimatedTiles>>16                  ;||
+    STY.W HW_DMAADDR+$22                      ;|/
+    LDA.W #128                                ;|\ Upload 0x80 bytes (one block).
+    STA.W HW_DMACNT+$20                       ;|/
+    LDY.B #!Ch2                               ;|
+    STY.W HW_MDMAEN                           ;/
+    CLC                                       ;
+    
+UploadBossTilemap:                            ; Done animating the lava; now upload the boss's tilemap.
+    REP #$20                                  ; A->16
+    LDA.W #4                                  ;\ 4 rows of 4 tiles
+    LDY.B #3*2                                ;/
+    BCC +                                     ;
+    LDA.W #8                                  ;\ Except Bowser--12 rows of 8 tiles
+    LDY.B #11*2                               ;/
+  + STA.B _0                                  ;
+    LDA.W #Mode7BossTilemap                   ;
+    STA.B _2                                  ;
+    STZ.W HW_VMAINC                           ;
+    LDA.W #HW_VMDATA<<8                       ;
+    STA.W HW_DMAPARAM+$20                     ;
+    LDX.B #Mode7BossTilemap>>16               ;
+    STX.W HW_DMAADDR+$22                      ;
+    LDX.B #!Ch2                               ;
+  - LDA.W Mode7BossTileLocations,Y            ;
+    STA.W HW_VMADD                            ;
+    LDA.B _2                                  ;
+    STA.W HW_DMAADDR+$20                      ;
+    CLC                                       ;
+    ADC.B _0                                  ;
+    STA.B _2                                  ;
+    LDA.B _0                                  ;
+    STA.W HW_DMACNT+$20                       ;
+    STX.W HW_MDMAEN                           ;
+    DEY                                       ;
+    DEY                                       ;
+    BPL -                                     ;
+    SEP #$20                                  ; A->8
+    RTS                                       ;
 
-                    + JSL OAMResetRoutine
-                      RTS
+CODE_009925:                                  ; Roy, Morton, Ludwig, Reznor, & Bowser
+    STZ.B PlayerYPosNext+1
+    REP #$20                                  ; A->16
+    LDA.W #$0020
+    STA.B PlayerXPosNext
+    STZ.B Layer1XPos
+    STZ.W NextLayer1XPos
+    STZ.B Layer1YPos
+    STZ.W NextLayer1YPos
+    LDA.W #m7center(256)                      ;\
+    STA.B Mode7CenterX                        ;| Pivot point of M7 bosses
+    LDA.W #m7center(288)                      ;| (256, 288)
+    STA.B Mode7CenterY                        ;/
+    SEP #$20                                  ; A->8
+    JSR CODE_00AE15
+    JSL CODE_01808C                           ; Run normal sprite routines
+    LDA.W IRQNMICommand
+    LSR A
+    LDX.B #con($C0,$C0,$C0,$C0,$D0)           ; Y position of floor
+    LDA.B #con($A0,$A0,$A0,$A0,$B0)           ; Y position of Mario
+    BCC +
+    STZ.W HorizLayer1Setting                  ;\ Bowser has no ceiling or lava
+    JMP CODE_009A17                           ;/
 
-DetermineJoypadInput: LDA.W HW_JOY1                             ; \Read old-style controller register for player 1
-                      LSR A                                     ; /LSR A, but then discard (Is this for carry flag or something?)
-                      LDA.W HW_JOY2                             ; \Load And Rotate left A (player 2 old-style controller regs)
-                      ROL A                                     ; /
-                      AND.B #$03                                ; AND A with #$03
-                      BEQ CODE_009A87                           ; If A AND #$03 = 0 Then STA $0DA0 (A=0)
-                      CMP.B #$03
-                      BNE +
-                      ORA.B #$80
-                    + DEC A
-CODE_009A87:          STA.W ControllersPresent
-                      RTS                                       ; *yawn*
+  + REP #$30                                  ; AXY->16
+    LDA.W ActiveBoss
+    AND.W #%0000000011111111
+    ASL A
+    TAX
+    LDY.W #con($02C0,$02C0,$02C0,$02C0,$0300) ; ceiling offset for Morton & Roy
+    LDA.W BossCeilingHeights,X
+    BPL +                                     ; if not Reznor, branch
+    LDY.W #con($FB80,$FB80,$FB80,$FB80,$FBC0) ; ceiling offset for Reznor
+  + CMP.W #18                                 ;\ if not Ludwig, branch
+    BNE +                                     ;/
+    LDY.W #con($0320,$0320,$0320,$0320,$0360) ; ceiling offset for Ludwig
+  + STY.B _0
+    LDX.W #0
+    LDA.W #$C05A                              ; $5AC0 = VRAM address of bridge tiles
 
-GM04PrepTitleScreen:  JSR DetermineJoypadInput
-                      JSR GM12PrepLevel
-                      STZ.W InGameTimerHundreds                 ; Zero the timer
-                      JSR ClearOutLayer3
-                      LDA.B #$03                                ; \ Load title screen Layer 3 image
-                      STA.B StripeImage                         ; |
-                      JSR LoadScrnImage                         ; /
-                      JSR CODE_00ADA6
-                      JSR CODE_00922F
-                      JSL CODE_04F675                           ; todo: NOTE TO SELF: Check this routine out after making Bank4.asm
-                      LDA.B #$01                                ; \ Set special level to x01
-                      STA.W IRQNMICommand                       ; /
-                      LDA.B #$33
-                      STA.B Layer12Window
-                      LDA.B #$00
-                      STA.B Layer34Window
-                      LDA.B #$23
-                      STA.B OBJCWWindow
-                      LDA.B #$12
-                      STA.B ColorAddition
-                      JSR CODE_009443
-                      LDA.B #$10
-                      STA.W VariousPromptTimer
-                      JMP Mode04Finish
+DrawMode7BossArena:
+    STA.L DynamicStripeImage,X                ; Write location of top of bridge
+    XBA                                       ;
+    CLC                                       ;
+    ADC.W #con($0080,$0080,$0080,$0080,$00C0) ; Y position of lava + ceiling
+    XBA                                       ;
+    STA.L DynamicStripeImage+$84,X            ; Write location of top of lava
+    XBA                                       ;
+    SEC                                       ;
+    SBC.B _0                                  ;
+    XBA                                       ;
+    STA.L DynamicStripeImage+$108,X           ; Write location of ceiling
+    LDA.W #(64*2-1)<<8                        ; 64 tiles (2 rows of 32)
+    STA.L DynamicStripeImage+2,X              ;
+    STA.L DynamicStripeImage+$86,X            ;
+    STA.L DynamicStripeImage+$10A,X           ;
+
+    LDY.W #16                                 ; Write tiles in pairs (32 pairs of 2)
+  - LDA.W #$38A2                              ;\ Write bridge tiles
+    STA.L DynamicStripeImage+4,X              ;|
+    INC A                                     ;|
+    STA.L DynamicStripeImage+6,X              ;|
+    LDA.W #$38B2                              ;|
+    STA.L DynamicStripeImage+$44,X            ;|
+    INC A                                     ;|
+    STA.L DynamicStripeImage+$46,X            ;/
+    LDA.W #$2C80                              ;\ Write lava tiles
+    STA.L DynamicStripeImage+$88,X            ;|
+    INC A                                     ;|
+    STA.L DynamicStripeImage+$8A,X            ;|
+    INC A                                     ;|
+    STA.L DynamicStripeImage+$C8,X            ;|
+    INC A                                     ;|
+    STA.L DynamicStripeImage+$CA,X            ;/
+    LDA.W #$28A0                              ;\ Write brick ceiling tiles
+    STA.L DynamicStripeImage+$10C,X           ;|
+    INC A                                     ;|
+    STA.L DynamicStripeImage+$10E,X           ;|
+    LDA.W #$28B0                              ;|
+    STA.L DynamicStripeImage+$14C,X           ;|
+    INC A                                     ;|
+    STA.L DynamicStripeImage+$14E,X           ;/
+    INX #4                                    ;
+    DEY                                       ;
+    BNE -                                     ;
+
+    TXA                                       ;\ Advance to next screen
+    CLC                                       ;|
+    ADC.W #$014C                              ;|
+    TAX                                       ;/
+    LDA.W #$C05E                              ; $5EC0 = VRAM address of bridge tiles
+    CPX.W #$0318                              ;\ Branch out when done
+    BCS +                                     ;/
+    JMP DrawMode7BossArena                    ; Draw the second screen
+
+  + LDA.W #$00FF                              ;\ Write sentinel
+    STA.L DynamicStripeImage,X                ;/
+    SEP #$30                                  ; AXY->8
+    JSR LoadScrnImage
+    LDX.B #$B0                                ; Y position of floor
+    LDA.B #$90                                ; Y position of Mario
+
+CODE_009A17:
+    STA.B PlayerYPosNext
+    JSR MakeMode7BossArenaMap16
+    JMP ClearWindowTable
+
+MakeMode7BossArenaMap16:
+    LDY.B #16                                 ;\ 16 * 2 tiles of floor
+    LDA.B #$32                                ;/
+  - STA.L Map16TilesLow,X
+    STA.L Map16TilesLow+$1B0,X
+    STA.L Map16TilesHigh,X
+    STA.L Map16TilesHigh+$1B0,X
+    INX
+    DEY
+    BNE -
+
+    CPX.B #$C0                                ;\ Branch if not Ludwig, Roy, Morton, Reznor
+    BNE +                                     ;/
+    LDX.B #con($D0,$D0,$D0,$D0,$E0)           ; Y position of lava collision
+
+MakeASolidFloor:                              ; Run by All but Bowser
+    LDY.B #16                                 ;\ 16 * 2 tiles of lava
+    LDA.B #$05                                ;/
+  - STA.L Map16TilesLow,X
+    STA.L Map16TilesLow+$1B0,X
+    INX
+    DEY
+    BNE -
+  + RTS
+
+DATA_009A4E:                                  ; unknown usage
+    db $FF,$01,$18,$30
+
+CODE_009A52:
+    LDA.W IRQNMICommand
+    LSR A
+    BCS +
+    JSL UpdateScreenPosition                  ; Morton, Ludwig, Roy, Reznor
+    JSL ProcScreenScrollCmds
+    LDA.W ActiveBoss
+    CMP.B #!ActiveBoss_Reznor
+    BEQ +
+    JSR InitM7BossOAM                         ;\ Morton, Ludwig, Roy only
+    JSL ProcM7BossObjBG                       ;/
+    RTS
+
+  + JSL OAMResetRoutine                       ; Bowser: just reset OAM and that's it
+    RTS
+
+DetermineJoypadInput:                         ; Routine to decide which controller ports to use as input data.
+    LDA.W HW_JOY1                             ;\
+    LSR A                                     ;| Connected controllers will read a 1 here
+    LDA.W HW_JOY2                             ;|
+    ROL A                                     ;|
+    AND.B #$03                                ;/ Format ------21
+    BEQ ++
+    CMP.B #$03
+    BNE +
+    ORA.B #$80                                ; Set high bit if both controllers present
+  + DEC A                                     ;\ 0 for port 1, 1 for port 2
+ ++ STA.W ControllersPresent                  ;/ $82 for both
+    RTS
+
+GM04PrepTitleScreen:                          ; Game Mode 04 - Prepare Title Screen
+    JSR DetermineJoypadInput                  ; Get the current controller port to accept data from.
+    JSR GM12PrepLevel                         ; Load the title screen level.
+    STZ.W InGameTimerHundreds                 ; Set the time limit to 0.
+    JSR ClearOutLayer3                        ; Clean out Layer 3.
+    LDA.B #3                                  ;\ 
+    STA.B StripeImage                         ;| Upload the title screen stripe image.
+    JSR LoadScrnImage                         ;/
+    JSR CODE_00ADA6                           ; Load palettes to RAM.
+    JSR CODE_00922F                           ; Upload palettes to CGRAM.
+    JSL CODE_04F675                           ; Initialize overworld sprites.
+    LDA.B #!IRQNMI_Cutscenes                  ;
+    STA.W IRQNMICommand                       ;
+    LDA.B #%00110011                          ;\ 
+    STA.B Layer12Window                       ;|
+    LDA.B #0                                  ;|
+    STA.B Layer34Window                       ;| Set up window and math settings for the title screen circle.
+    LDA.B #%00100011                          ;|
+    STA.B OBJCWWindow                         ;|
+    LDA.B #%00010010                          ;|
+    STA.B ColorAddition                       ;/
+    JSR CODE_009443                           ;
+    LDA.B #16                                 ;
+    STA.W VariousPromptTimer                  ;
+    JMP Mode04Finish                          ; Re-enable NMI and auto-joypad read.
 
 
-DATA_009AC8:          db $01,$FF,$FF
+TitleScreenCursorMoveOffsets:                 ; Distances to move the cursor when up/down/select are pressed. 
+    db 1, -1, -1                              ; Values are down/select, up, and both.
 
-CODE_009ACB:          PHY
-                      JSR DetermineJoypadInput
-                      PLY
-CODE_009AD0:          INC.W BlinkCursorTimer                    ; Blinking cursor frame counter (file select, save prompt, etc)
-                      JSR CODE_009E82
-                      LDX.W BlinkCursorPos
-                      LDA.B byetudlrFrame
-                      AND.B #$90
-                      BNE CODE_009AE3
-                      LDA.B axlr0000Frame
-                      BPL CODE_009AEA
-CODE_009AE3:          LDA.B #!SFX_COIN
-                      STA.W SPCIO3
-                      BRA CODE_009B11
+HandleTitleScreenCursor:                      ; Routine to handle the cursor in menus. Y = which menu
+    PHY
+    JSR DetermineJoypadInput
+    PLY
+HandleSelectionCursor:
+    INC.W BlinkCursorTimer                    ; Blinking cursor frame counter (file select, save prompt, etc)
+    JSR DrawSelectionCursor
+    LDX.W BlinkCursorPos
+    LDA.B byetudlrFrame                       ;\
+    AND.B #%10010000                          ;| If A, B, or start is pressed
+    BNE +                                     ;|
+    LDA.B axlr0000Frame                       ;|
+    BPL .CheckMovement                        ;/
+  + LDA.B #!SFX_COIN                          ;\ Play coin sound effect
+    STA.W SPCIO3                              ;/
+    BRA .ResetCursorPos
 
-CODE_009AEA:          PLA
-                      PLA
-                      LDA.B byetudlrFrame
-                      AND.B #$20
-                      LSR A
-                      LSR A
-                      LSR A
-                      ORA.B byetudlrFrame
-                      AND.B #$0C
-                      BEQ Return009B16
-                      LDY.B #!SFX_FIREBALL
-                      STY.W SPCIO3
-                      STZ.W BlinkCursorTimer
-                      LSR A
-                      LSR A
-                      TAY
-                      TXA
-                      ADC.W DATA_009AC8-1,Y
-                      BPL +
-                      LDA.B GraphicsCompPtr
-                      DEC A
-                    + CMP.B GraphicsCompPtr
-                      BCC +
-CODE_009B11:          LDA.B #$00
-                    + STA.W BlinkCursorPos
-Return009B16:         RTS
+.CheckMovement:
+    PLA                                       ;\ Eat up last return address
+    PLA                                       ;/ (We don't advance game mode)
+    LDA.B byetudlrFrame                       ;\
+    AND.B #%00100000                          ;|
+    LSR #3                                    ;| select is equivalent to down
+    ORA.B byetudlrFrame                       ;|
+    AND.B #%00001100                          ;| If select, up, or down is pressed
+    BEQ .Return                               ;/
+    LDY.B #!SFX_FIREBALL                      ;\ Play fireball sound effect
+    STY.W SPCIO3                              ;/
+    STZ.W BlinkCursorTimer
+    LSR #2                                    ;
+    TAY                                       ;
+    TXA                                       ;
+    ADC.W TitleScreenCursorMoveOffsets-1,Y    ; Add offset to cursor index
+    BPL +                                     ;\
+    LDA.B MaxMenuOptions                      ;| Wrap if necessary
+    DEC A                                     ;|
+  + CMP.B MaxMenuOptions                      ;|
+    BCC +                                     ;|
+.ResetCursorPos:                              ;|
+    LDA.B #$00                                ;|
+  + STA.W BlinkCursorPos                      ;/ Store cursor index
+.Return:
+    RTS
 
-                   if ver_is_console(!_VER)                     ;\=============== J, U, E0, & E1 ================
-DATA_009B17:          db $04,$02,$01                            ;!
-                                                                ;!
-GM09FileDelete:       REP #$20                                  ;! A->16
-                      LDA.W #$39C9                              ;!
-                      LDY.B #$60                                ;!
-                      JSR CODE_009D30                           ;!
-                      LDA.B byetudlrFrame                       ;!
-                      ORA.B axlr0000Frame                       ;!
-                      AND.B #$40                                ;!
-                      BEQ +                                     ;!
-                   else                                         ;<======================== SS ===================
-GM09FileDelete:                                                 ;!
-                   endif                                        ;/===============================================
-CODE_009B2C:          DEC.W GameMode
-                      DEC.W GameMode
-                      JSR CODE_009B11
-                      JMP CODE_009CB0
+ if ver_is_console(!_VER)                     ;\=============== J, U, E0, & E1 ================
+SaveFileBits:                                 ;!
+    db %00000100,%00000010,%00000001          ;!
+ endif                                        ;/===============================================
+                   
+GM09FileDelete:
+ if ver_is_console(!_VER)                     ;\=============== J, U, E0, & E1 ================
+    REP #$20                                  ;! A->16
+    LDA.W #$39C9                              ;!\ Make the screen darker
+    LDY.B #%01100000                          ;!|
+    JSR CODE_009D30                           ;!/
+    LDA.B byetudlrFrame                       ;!\ If Y or X is pressed
+    ORA.B axlr0000Frame                       ;!| go back to file select
+    AND.B #%01000000                          ;!|
+    BEQ +                                     ;!/
+ endif                                        ;/===============================================
 
-                   if ver_is_console(!_VER)                     ;\================= J, U, E0, & E1 ==============
-                    + LDY.B #$08                                ;!
-                      JSR CODE_009AD0                           ;!
-                      CPX.B #$03                                ;!
-                      BNE CODE_009B6D                           ;!
-                      LDY.B #$02                                ;!
-CODE_009B43:          LSR.W SaveFileDelete                      ;!
-                      BCC CODE_009B67                           ;!
-                      PHY                                       ;!
-                      LDA.W DATA_009CCB,Y                       ;!
-                      XBA                                       ;!
-                      LDA.W DATA_009CCE,Y                       ;!
-                      REP #$10                                  ;! XY->16
-                      TAX                                       ;!
-                      LDY.W #$008F                              ;!
-                      LDA.B #$00                                ;!
-                    - STA.L SaveData,X                          ;!
-                      STA.L SaveDataBackup,X                    ;!
-                      INX                                       ;!
-                      DEY                                       ;!
-                      BNE -                                     ;!
-                      SEP #$10                                  ;! XY->8
-                      PLY                                       ;!
-CODE_009B67:          DEY                                       ;!
-                      BPL CODE_009B43                           ;!
-                      JMP CODE_009C89                           ;!
-                                                                ;!
-CODE_009B6D:          STX.W BlinkCursorPos                      ;!
-                      LDA.W DATA_009B17,X                       ;!
-                      ORA.W SaveFileDelete                      ;!
-                      STA.W SaveFileDelete                      ;!
-                      STA.B _5                                  ;!
-                   if ver_is_japanese(!_VER)                    ;!\======================= J ====================
-                      LDY.B #$0C                                ;!!
-                   else                                         ;!<================== U, E0, & E1 ===============
-                      LDX.B #$00                                ;!!
-                   endif                                        ;!/==============================================
-                      JMP CODE_009D3C                           ;!
-                                                                ;!
-CODE_009B80:          PHB                                       ;! Wrapper
-                      PHK                                       ;!
-                      PLB                                       ;!
-                      JSR CODE_009B88                           ;!
-                      PLB                                       ;!
-                      RTL                                       ;!
-                                                                ;!
-CODE_009B88:          DEC A                                     ;!
-                      JSL ExecutePtr                            ;!
-                                                                ;!
-                      dw CODE_009B91                            ;!
-                      dw CODE_009B9A                            ;!
-                                                                ;!
-CODE_009B91:          LDY.B #$0C                                ;!
-                      JSR CODE_009D29                           ;!
-                      INC.W ShowContinueEnd                     ;!
-                      RTS                                       ;!
-                                                                ;!
-CODE_009B9A:          LDY.B #$00                                ;!
-                      JSR CODE_009AD0                           ;!
-                      TXA                                       ;!
-                      BNE +                                     ;!
-                      JMP CODE_009E17                           ;!
-                                                                ;!
-                    + JMP CODE_009C89                           ;!
-                                                                ;!
-CODE_009BA8:          PHB                                       ;! Wrapper
-                      PHK                                       ;!
-                      PLB                                       ;!
-                      JSR CODE_009BB0                           ;!
-                      PLB                                       ;!
-                      RTL                                       ;!
-                                                                ;!
-CODE_009BB0:          LDY.B #$06                                ;!
-                      JSR CODE_009AD0                           ;!
-                      TXA                                       ;!
-                      BNE +                                     ;!
-                      STZ.W SPCIO3                              ;!
-                      LDA.B #!SFX_MIDWAY                        ;!
-                      STA.W SPCIO0                              ;!
-                      JSL CODE_009BC9                           ;!
-                    + JSL CODE_009C13                           ;!
-                      RTS                                       ;!
-                                                                ;!
-CODE_009BC9:          PHB                                       ;!
-                      PHK                                       ;!
-                      PLB                                       ;!
-                      LDX.W SaveFile                            ;!
-                      LDA.W DATA_009CCB,X                       ;!
-                      XBA                                       ;!
-                      LDA.W DATA_009CCE,X                       ;!
-                      REP #$10                                  ;! XY->16
-                      TAX                                       ;!
-CODE_009BD9:          LDY.W #$0000                              ;!
-                      STY.B GraphicsCompPtr                     ;!
-CODE_009BDE:          LDA.W SaveDataBuffer,Y                    ;!
-                      STA.L SaveData,X                          ;!
-                      CLC                                       ;!
-                      ADC.B GraphicsCompPtr                     ;!
-                      STA.B GraphicsCompPtr                     ;!
-                      BCC +                                     ;!
-                      INC.B GraphicsCompPtr+1                   ;!
-                    + INX                                       ;!
-                      INY                                       ;!
-                      CPY.W #$008D                              ;!
-                      BCC CODE_009BDE                           ;!
-                      REP #$20                                  ;! A->16
-                      LDA.W #$5A5A                              ;!
-                      SEC                                       ;!
-                      SBC.B GraphicsCompPtr                     ;!
-                      STA.L SaveData,X                          ;!
-                      CPX.W #$01AD                              ;!
-                      BCS CODE_009C0F                           ;!
-                      TXA                                       ;!
-                      ADC.W #$0120                              ;!
-                      TAX                                       ;!
-                      SEP #$20                                  ;! A->8
-                      BRA CODE_009BD9                           ;!
-                                                                ;!
-CODE_009C0F:          SEP #$30                                  ;! AXY->8
-                      PLB                                       ;!
-                      RTL                                       ;!
-                   else                                         ;<====================== SS =====================
-CODE_009B80:          RTL                                       ;!
-CODE_009B88:          RTS                                       ;! unused?
-CODE_009BA8:          RTL                                       ;!
-CODE_009BC9:          RTL                                       ;!
-                   endif                                        ;/===============================================
+BackToFileSelect:
+    DEC.W GameMode                            ;\ Go back 2 game modes
+    DEC.W GameMode                            ;/ and advance forward 1 later
+    JSR HandleSelectionCursor_ResetCursorPos
+    JMP CODE_009CB0
 
-CODE_009C13:          INC.W OverworldPromptProcess
-                      INC.W MessageBoxExpand
-                      LDY.B #$1B
-                      JSR CODE_009D29
-                      RTL
+ if ver_is_console(!_VER)                     ;\================= J, U, E0, & E1 ==============
+  + LDY.B #!CursorEraseFile                   ;!\ Process erase file menu
+    JSR HandleSelectionCursor                 ;!/ Returning from this routine means A/B/start was pressed
+    CPX.B #3                                  ;!
+    BNE EraseFileSelected                     ;!
+                                              ;!
+    LDY.B #2                                  ;! loop over each file
+ -- LSR.W SaveFileDelete                      ;!
+    BCC +                                     ;!
+    PHY                                       ;!
+    LDA.W SaveDataLocationsHi,Y               ;!\ Get the location of this file
+    XBA                                       ;!|
+    LDA.W SaveDataLocationsLo,Y               ;!/
+    REP #$10                                  ;! XY->16
+    TAX                                       ;!
+                                              ;!
+    LDY.W #144-1                              ;! Clear all 144 bytes of the save file
+    LDA.B #$00                                ;!
+  - STA.L SaveData,X                          ;!
+    STA.L SaveDataBackup,X                    ;!
+    INX                                       ;!
+    DEY                                       ;!
+    BNE -                                     ;!
+                                              ;!
+    SEP #$10                                  ;! XY->8
+    PLY                                       ;!
+  + DEY                                       ;!
+    BPL --                                    ;!
+    JMP FadeOutBackToTitle                    ;!
+                                              ;!
+EraseFileSelected:                            ;!
+    STX.W BlinkCursorPos                      ;!\ Add the selected file to the list
+    LDA.W SaveFileBits,X                      ;!| of files to delete when the erase button is selected
+    ORA.W SaveFileDelete                      ;!|
+    STA.W SaveFileDelete                      ;!|
+    STA.B _5                                  ;!/
+ if ver_is_japanese(!_VER)                    ;!\======================= J ====================
+    LDY.B #12                                 ;!! Index into tiles--draw 4 tiles "_okesu"
+ else                                         ;!<================== U, E0, & E1 ===============
+    LDX.B #0                                  ;!! Index into stripe images--draw the erase files stripe
+ endif                                        ;!/==============================================
+    JMP CODE_009D3C                           ;!
+                                              ;!
+ProcContinueEndMenu:                          ;!
+    PHB                                       ;! Wrapper
+    PHK                                       ;!
+    PLB                                       ;!
+    JSR .Unwrapped                            ;!
+    PLB                                       ;!
+    RTL                                       ;!
+                                              ;!
+.Unwrapped:                                   ;!
+    DEC A                                     ;!
+    JSL ExecutePtr                            ;!
+                                              ;!
+    dw InitContinueEndMenu                    ;!
+    dw DispContinueEndMenu                    ;!
+                                              ;!
+InitContinueEndMenu:                          ;!
+    LDY.B #12                                 ;!\ Draw "Continue/End" stripe image
+    JSR ShowStripeAndFinish                   ;!/
+    INC.W ShowContinueEnd                     ;! move to next process
+    RTS                                       ;!
+                                              ;!
+DispContinueEndMenu:                          ;!
+    LDY.B #!CursorContinueEnd                 ;!\ Process continue/end menu
+    JSR HandleSelectionCursor                 ;!/ Returning from this routine means A/B/start was pressed
+    TXA                                       ;!
+    BNE +                                     ;!
+    JMP LoadSaveAndFadeToOW                   ;!
+                                              ;!
+  + JMP FadeOutBackToTitle                    ;!
+                                              ;!
+ProcSaveMenu:                                 ;!
+    PHB                                       ;! Wrapper
+    PHK                                       ;!
+    PLB                                       ;!
+    JSR .Unwrapped                            ;!
+    PLB                                       ;!
+    RTL                                       ;!
+                                              ;!
+.Unwrapped:                                   ;!
+    LDY.B #!CursorSaveNoSave                  ;!\ Process save menu
+    JSR HandleSelectionCursor                 ;!/ Returning from this routine means A/B/start was pressed
+    TXA                                       ;!
+    BNE +                                     ;! If save was selected
+    STZ.W SPCIO3                              ;!\
+    LDA.B #!SFX_MIDWAY                        ;!| Play a sound
+    STA.W SPCIO0                              ;!/
+    JSL SaveTheGame                           ;! Save the game
+  + JSL CloseOverworldPrompt                  ;! And close the save box
+    RTS                                       ;!
+                                              ;!
+SaveTheGame:                                  ;!
+    PHB                                       ;!
+    PHK                                       ;!
+    PLB                                       ;!
+    LDX.W SaveFile                            ;!\ Put location of save data in X
+    LDA.W SaveDataLocationsHi,X               ;!|
+    XBA                                       ;!|
+    LDA.W SaveDataLocationsLo,X               ;!|
+    REP #$10                                  ;!| XY->16
+    TAX                                       ;!/
+                                              ;!
+ -- LDY.W #0                                  ;!\ Clear the checksum counter
+    STY.B PartialChecksum                     ;!/
+  - LDA.W SaveDataBuffer,Y                    ;!\ Move a byte into SRAM
+    STA.L SaveData,X                          ;!/
+    CLC                                       ;!\
+    ADC.B PartialChecksum                     ;!| Add it to the checksum
+    STA.B PartialChecksum                     ;!|
+    BCC +                                     ;!| And carry if needed
+    INC.B PartialChecksum+1                   ;!/
+  + INX                                       ;!\
+    INY                                       ;!| Move to next byte
+    CPY.W #!SaveFileSize-2                    ;!/
+    BCC -                                     ;! And repeat
+                                              ;!
+    REP #$20                                  ;! A->16
+    LDA.W #$5A5A                              ;!\
+    SEC                                       ;!| Subtract checksum from base value
+    SBC.B PartialChecksum                     ;!| And write it to the save file
+    STA.L SaveData,X                          ;!/
+    CPX.W #3*!SaveFileSize                    ;!\ Make a copy of the save file
+    BCS +                                     ;!/
+    TXA                                       ;!\ By offseting a bit into SRAM
+    ADC.W #2*!SaveFileSize+2                  ;!|
+    TAX                                       ;!/
+    SEP #$20                                  ;! A->8
+    BRA --                                    ;!
+                                              ;!
+  + SEP #$30                                  ;! AXY->8
+    PLB                                       ;!
+    RTL                                       ;!
+                                              ;!
+ else                                         ;<====================== SS =====================
+ProcContinueEndMenu:                          ;! Saving the game was removed
+    RTL                                       ;!
+.Unwrapped:                                   ;!\ unused
+    RTS                                       ;!/
+ProcSaveMenu:                                 ;!
+    RTL                                       ;!
+SaveTheGame:                                  ;!
+    RTL                                       ;!
+ endif                                        ;/===============================================
+
+CloseOverworldPrompt:
+    INC.W OverworldPromptProcess
+    INC.W MessageBoxExpand
+    LDY.B #$1B
+    JSR ShowStripeAndFinish
+    RTL
 
 
                    if ver_is_ntsc(!_VER)                        ;\=================== J, U, & SS ================
@@ -3310,7 +3357,7 @@ GM07TitleScreen:      JSR DetermineJoypadInput
                     + LDA.W ItrCntrlrSqnc-2,X                   ; With the +=2 above, this is effectively LDA $9C20,$1DF4
                       CMP.B #$FF
                       BNE +
-CODE_009C89:          LDY.B #$02                                ; If = #$FF, switch to game mode #$02...
+FadeOutBackToTitle:   LDY.B #$02                                ; If = #$FF, switch to game mode #$02...
 CODE_009C8B:          STY.W GameMode
                       RTS                                       ; ...And finish
 
@@ -3331,7 +3378,7 @@ CODE_009C9F:          JSL OAMResetRoutine                       ; IIRC, this con
 CODE_009CB0:          LDA.B #$E9                                ;!
                       STA.W OverworldOverride                   ;!
                       JSR CODE_WRITEOW                          ;!
-                      LDY.B #$0E                                ;!
+                      LDY.B #14                                 ;! Index into tiles--draw 4 empty tiles
                       JSR CODE_009D3A                           ;!
                       LDA.B #$FF                                ;!
                       STA.L DynamicStripeImage+$9C              ;!
@@ -3358,11 +3405,11 @@ IsFaceButtonPressed:  LDA.B axlr0000Hold
                     + RTS
 
 
-DATA_009CCB:          db SaveData>>8
+SaveDataLocationsHi:  db SaveData>>8
                       db SaveDataFile2>>8
                       db SaveDataFile3>>8
 
-DATA_009CCE:          db SaveData
+SaveDataLocationsLo:  db SaveData
                       db SaveDataFile2
                       db SaveDataFile3
 
@@ -3440,8 +3487,8 @@ GM08FileSelect:       REP #$20                                  ;! A->16
                       LDA.W #$7393                              ;!
                       LDY.B #$20                                ;!
                       JSR CODE_009D30                           ;!
-                      LDY.B #$02                                ;!
-                      JSR CODE_009ACB                           ;!
+                      LDY.B #!CursorFileSelect                  ;!\ Process file select menu
+                      JSR HandleTitleScreenCursor               ;!/ Returning from this routine means A/B/start was pressed
                       INC.W GameMode                            ;!
                       CPX.B #$03                                ;!
                       BNE +                                     ;!
@@ -3481,7 +3528,7 @@ CODE_009D22:          SEP #$10                                  ;! XY->8
                    endif                                        ;/===============================================
                       LDY.B #$12                                ; \ Draw 1 PLAYER GAME/2 PLAYER GAME text
                       INC.W GameMode                            ; |Increase Game Mode
-CODE_009D29:          STY.B StripeImage                         ; /
+ShowStripeAndFinish:  STY.B StripeImage                         ; /
                       LDX.B #$00
                       JMP CODE_009ED4
 
@@ -3491,44 +3538,44 @@ CODE_009D30:          STA.W BackgroundColor                     ; Store A in BG 
                       RTS
 
                    if ver_is_japanese(!_VER)                    ;\======================== J ====================
-DATA_009CD2:          db $D4,$31,$FC,$38,$9D,$31,$FC,$38        ;!
-                      db $8D,$31,$FC,$38,$FC,$38,$FC,$38        ;!
+EraseFileTiles:       db $D4,$31,$FC,$38,$9D,$31,$FC,$38        ;!\ append "okesu" to files (erase)
+                      db $8D,$31,$FC,$38,$FC,$38,$FC,$38        ;!/ or blank tiles
                                                                 ;!
-CODE_009D3A:          STZ.B _5                                  ;!
+CODE_009D3A:          STZ.B _5                                  ;! Don't erase any files
 CODE_009D3C:          STY.B _6                                  ;!
                       LDX.B #$B0                                ;!
-                    - LDA.L DATA_05B6FE-1,X                     ;! X =  read index
+                    - LDA.L FileSelectStripe-1,X                ;! X =  read index
                       STA.L DynamicStripeImage-1,X              ;! Layer 3-related table
                       DEX                                       ;!
                       BNE -                                     ;!
                       LDA.B #$76                                ;!
                    elseif ver_is_arcade(!_VER)                  ;<======================== SS ===================
-CODE_009D38:          LDX.B #$CB                                ;!
+CODE_009D38:          LDX.B #FileSelectStripe-EraseFileStripe   ;! Index into stripe images--draw the file select stripe
 CODE_009D3C:          REP #$10                                  ;! XY->16
                       LDY.W #$0000                              ;!
-                    - LDA.L DATA_05B6FE,X                       ;! X =  read index
+                    - LDA.L EraseFileStripe,X                   ;! X =  read index
                       PHX                                       ;! Y = write index
                       TYX                                       ;!
                       STA.L DynamicStripeImage,X                ;! Layer 3-related table
                       PLX                                       ;!
                       INX                                       ;!
                       INY                                       ;!
-                      CPY.W #$00CC                              ;! If not at end of loop, continue
+                      CPY.W #FileSelectStripe-EraseFileStripe+1 ;! If not at end of loop, continue
                       BNE -                                     ;!
                       SEP #$10                                  ;! XY->8
                    else                                         ;<=================== U, E0, & E1 ===============
-CODE_009D38:          LDX.B #$CB                                ;!
-CODE_009D3A:          STZ.B _5                                  ;!
+CODE_009D38:          LDX.B #FileSelectStripe-EraseFileStripe   ;! Index into stripe images--draw the file select stripe
+CODE_009D3A:          STZ.B _5                                  ;! Don't erase any files
 CODE_009D3C:          REP #$10                                  ;! XY->16
                       LDY.W #$0000                              ;!
-                    - LDA.L DATA_05B6FE,X                       ;! X =  read index
+                    - LDA.L EraseFileStripe,X                   ;! X =  read index
                       PHX                                       ;! Y = write index
                       TYX                                       ;!
                       STA.L DynamicStripeImage,X                ;! Layer 3-related table
                       PLX                                       ;!
                       INX                                       ;!
                       INY                                       ;!
-                      CPY.W #$00CC                              ;! If not at end of loop, continue
+                      CPY.W #FileSelectStripe-EraseFileStripe+1 ;! If not at end of loop, continue
                       BNE -                                     ;!
                       SEP #$10                                  ;! XY->8
                       LDA.B #$84                                ;!
@@ -3569,7 +3616,7 @@ CODE_009D76:          JSR HexToDec                              ;!
                       LDA.W #$38FC                              ;!!
                       STA.L DynamicStripeImage+$12,X            ;!!
                       LDY.B _6                                  ;!!
-                    - LDA.W DATA_009CD2,Y                       ;!!
+                    - LDA.W EraseFileTiles,Y                    ;!!
                       STA.L DynamicStripeImage+6,X              ;!!
                       INX                                       ;!!
                       INX                                       ;!!
@@ -3614,22 +3661,22 @@ CODE_009DB5:          LDA.W DATA_009CCB,X                       ;!
 CODE_009DC4:          PHX                                       ;!
                       PHY                                       ;!
                       LDA.L SaveDataChecksum+1,X                ;!
-                      STA.B GraphicsCompPtr                     ;!
+                      STA.B PartialChecksum                     ;!
                       SEP #$20                                  ;! A->8
                       LDY.W #$008D                              ;!
 CODE_009DD1:          LDA.L SaveData,X                          ;!
                       CLC                                       ;!
-                      ADC.B GraphicsCompPtr                     ;!
-                      STA.B GraphicsCompPtr                     ;!
+                      ADC.B PartialChecksum                     ;!
+                      STA.B PartialChecksum                     ;!
                       BCC +                                     ;!
-                      INC.B GraphicsCompPtr+1                   ;!
+                      INC.B PartialChecksum+1                   ;!
                     + INX                                       ;!
                       DEY                                       ;!
                       BNE CODE_009DD1                           ;!
                       REP #$20                                  ;! A->16
                       PLY                                       ;!
                       PLX                                       ;!
-                      LDA.B GraphicsCompPtr                     ;!
+                      LDA.B PartialChecksum                     ;!
                       CMP.W #$5A5A                              ;!
                       BEQ CODE_009DF7                           ;!
                       CPX.W #$01AC                              ;!
@@ -3652,14 +3699,14 @@ GM0APlayerSelect:     LDA.B byetudlrFrame
                       AND.B #$40
                       BEQ +
                       DEC.W GameMode
-                      JMP CODE_009B2C
+                      JMP BackToFileSelect
 
-                    + LDY.B #$04
-                      JSR CODE_009ACB
+                    + LDY.B #!CursorPlayerSelect                ;\ Process player select menu
+                      JSR HandleTitleScreenCursor               ;/ Returning from this routine means A/B/start was pressed
                       STX.W IsTwoPlayerGame
                       JSR CODE_00A195
                       JSL CODE_04DAAD
-CODE_009E17:          LDA.B #!BGM_FADEOUT
+LoadSaveAndFadeToOW:  LDA.B #!BGM_FADEOUT
                       STA.W SPCIO2
                       LDA.B #$FF
                       STA.W SavedPlayerLives+1
@@ -3719,7 +3766,8 @@ CursorCoords:         dw $51CB                                  ;! continue/end
 
 DATA_009E7E:          db $01,$02,$04,$08
 
-CODE_009E82:          LDX.W BlinkCursorPos
+DrawSelectionCursor:
+    LDX.W BlinkCursorPos
                       LDA.W DATA_009E7E,X
                       TAX
                       LDA.W BlinkCursorTimer
@@ -3732,7 +3780,7 @@ CODE_009E82:          LDX.W BlinkCursorPos
                       TAX
                       REP #$20                                  ; A->16
                       LDA.W CursorOptCount,Y
-                      STA.B GraphicsCompPtr
+                      STA.B MaxMenuOptions
                       STA.B _2
                       LDA.W CursorCoords,Y
 CODE_009EA7:          XBA
@@ -4089,7 +4137,7 @@ GM0CLoadOverworld:    JSR TurnOffIO
                       JSR CODE_00A195                           ;!
                       LDA.W ExitsCompleted                      ;!
                       BNE +                                     ;!
-                      JSR CODE_009C89                           ;!
+                      JSR FadeOutBackToTitle                    ;!
                       JMP CODE_0093F4                           ;!
                                                                 ;!
                     + JSL CODE_04DAAD                           ;!
@@ -4104,7 +4152,7 @@ GM0CLoadOverworld:    JSR TurnOffIO
                       LDA.B #$B3                                ;!
                       LDX.B #$17                                ;!
                    else                                         ;<======================== SS ===================
-                      JSR CODE_009C89                           ;!
+                      JSR FadeOutBackToTitle                    ;!
                       JMP CODE_0093F4                           ;!
                    endif                                        ;/===============================================
 CODE_00A11B:          LDY.B #$02
@@ -4142,7 +4190,7 @@ CODE_00A11B:          LDY.B #$02
                       JSR LoadScrnImage
                       STZ.W OverworldProcess
                       JSR KeepGameModeActive
-                      LDA.B #$02
+                      LDA.B #!IRQNMI_Overworld
                       STA.W IRQNMICommand
                       REP #$10                                  ; XY->16
                       LDX.W #con($01BE,$01BE,$01BE,$01BE,$01DE)
@@ -4282,8 +4330,8 @@ CODE_00A28A:          LDA.W IRQNMICommand
                       JMP CODE_00A2A9
 
                     + JSL OAMResetRoutine
-                      JSL CODE_00F6DB
-                      JSL CODE_05BC00
+                      JSL UpdateScreenPosition
+                      JSL ProcScreenScrollCmds
                       JSL CODE_0586F1
                       JSL CODE_05BB39
 CODE_00A2A9:          LDA.B Layer1YPos
@@ -4307,8 +4355,8 @@ CODE_00A2A9:          LDA.B Layer1YPos
                       ADC.B Layer1YPos+1                        ; |
                       STA.B Layer1YPos+1                        ; /
                     + JSR UpdateStatusBar
-                      JSL CODE_00E2BD
-                      JSR CODE_00A2F3
+                      JSL DrawMarioAndYoshi
+                      JSR AdvancePlayerPosition
                       JSR CODE_00C47E
                       JSL CODE_01808C
                       JSL CODE_028AB1
@@ -4318,7 +4366,8 @@ CODE_00A2A9:          LDA.B Layer1YPos
                       STA.B Layer1YPos
                       JMP ConsolidateOAM
 
-CODE_00A2F3:          REP #$20                                  ; A->16
+AdvancePlayerPosition:
+                      REP #$20                                  ; A->16
                       LDA.B PlayerXPosNext
                       STA.B PlayerXPosNow
                       LDA.B PlayerYPosNext
@@ -5517,7 +5566,8 @@ CODE_00ADA6:          REP #$30                                  ; AXY->16
                       SEP #$30                                  ; AXY->8
                       RTS
 
-CODE_00ADD9:          JSR LoadPalette
+LoadIggyLarryPalette:
+                      JSR LoadPalette
                       REP #$30                                  ; AXY->16
                       LDA.W #$0017
                       STA.W BackgroundColor
@@ -7514,7 +7564,7 @@ CODE_00C55E:          LDA.W EmptyTimer14A8,X
                       DEC.W EmptyTimer14A8,X
                     + DEX
                       BNE CODE_00C55E
-CODE_00C569:          JSR CODE_00C593
+CODE_00C569:          JSR ProcessPlayerAnimation
                       LDA.B byetudlrFrame
                       AND.B #$20
                       BEQ CODE_00C58F
@@ -7541,7 +7591,8 @@ CODE_00C585:          PHB
 CODE_00C58F:          STZ.W NoteBlockActive
 Return00C592:         RTS
 
-CODE_00C593:          LDA.B PlayerAnimation
+ProcessPlayerAnimation:          
+                      LDA.B PlayerAnimation
                       JSL ExecutePtr
 
                       dw ResetAni                               ; 0 - Reset
@@ -8386,13 +8437,13 @@ CODE_00CD39:          STZ.W PlayerTurningPose
                       LDA.W PlayerClimbingRope
                       BEQ +
                       LDA.B #$1F
-                      STA.B GraphicsCompPtr+1
+                      STA.B InteractionPtsClimbable
                     + LDA.B PlayerIsClimbing
                       BNE CODE_00CD72
                       LDA.W IsCarryingItem
                       ORA.W PlayerRidingYoshi
                       BNE CODE_00CD79
-                      LDA.B GraphicsCompPtr+1
+                      LDA.B InteractionPtsClimbable
                       AND.B #$1B
                       CMP.B #$1B
                       BNE CODE_00CD79
@@ -8403,10 +8454,10 @@ CODE_00CD39:          STZ.W PlayerTurningPose
                       BNE CODE_00CD72
                       AND.B #$08
                       BNE CODE_00CD72
-                      LDA.B GraphicsCompPtr+1
+                      LDA.B InteractionPtsClimbable
                       AND.B #$04
                       BEQ CODE_00CD79
-CODE_00CD72:          LDA.B GraphicsCompPtr+1
+CODE_00CD72:          LDA.B InteractionPtsClimbable
                       STA.B PlayerIsClimbing
                       JMP CODE_00DB17
 
@@ -10116,13 +10167,13 @@ CODE_00DBAC:          BVC +
                       BEQ CODE_00DBF2
                       LSR A
                       TAX
-                      LDA.B GraphicsCompPtr+1
+                      LDA.B InteractionPtsClimbable
                       AND.B #$18
                       CMP.B #$18
                       BEQ CODE_00DBE8
                       LDA.B PlayerIsClimbing
                       BPL CODE_00DC00
-                      CPX.B GraphicsCompPtr+2
+                      CPX.B InteractionPtDirection
                       BEQ CODE_00DBF2
 CODE_00DBE8:          TXA
                       ASL A
@@ -10135,14 +10186,14 @@ CODE_00DBF2:          LDA.B byetudlrHold                        ; \
                       BEQ CODE_00DC16                           ; /
                       AND.B #$08                                ; \ If up is pressed, branch to $DC03
                       BNE CODE_00DC03                           ; /
-                      LSR.B GraphicsCompPtr+1
+                      LSR.B InteractionPtsClimbable
                       BCS CODE_00DC0B
 CODE_00DC00:          STZ.B PlayerIsClimbing                    ; Mario isn't climbing
                       RTS
 
 CODE_00DC03:          INY
                       INY
-                      LDA.B GraphicsCompPtr+1
+                      LDA.B InteractionPtsClimbable
                       AND.B #$02
                       BEQ CODE_00DC16
 CODE_00DC0B:          LDA.B PlayerIsClimbing
@@ -10163,7 +10214,7 @@ CODE_00DC16:          ORA.B PlayerXSpeed
                     + RTS
 
 CODE_00DC2D:          LDA.B PlayerYSpeed                        ; \ Store Mario's Y speed in $8A
-                      STA.B GraphicsCompPtr                     ; /
+                      STA.B TempPlayerYSpeed                    ; /
                       LDA.W WallrunningType
                       BEQ CODE_00DC40
                       LSR A
@@ -10176,7 +10227,7 @@ CODE_00DC40:          LDX.B #$00
                       JSR CODE_00DC4F
                       LDX.B #$02
                       JSR CODE_00DC4F
-                      LDA.B GraphicsCompPtr
+                      LDA.B TempPlayerYSpeed
                       STA.B PlayerYSpeed
                       RTS
 
@@ -10518,7 +10569,8 @@ DATA_00E2B6:          db $08,$CC,$08
 
 DATA_00E2B9:          db $E0,$10,$10,$30
 
-CODE_00E2BD:          PHB
+DrawMarioAndYoshi:
+                      PHB
                       PHK
                       PLB
                       LDA.B PlayerHiddenTiles
@@ -11070,19 +11122,19 @@ CODE_00EA32:          STZ.B PlayerXSpeed
                     + LDA.W PlayerBehindNet
                       CMP.B #$01
                       BNE +
-                      LDA.B GraphicsCompPtr+1
+                      LDA.B InteractionPtsClimbable
                       BNE +
                       STZ.W PlayerBehindNet
                     + STZ.W PlayerCanJumpWater
                       LDA.B LevelIsWater
                       BNE CODE_00EA5E
-                      LSR.B GraphicsCompPtr
+                      LSR.B InteractionPtsInWater
                       BCC CODE_00EAA3
                       LDA.B PlayerInWater
                       BNE CODE_00EA65
                       LDA.B PlayerYSpeed
                       BMI CODE_00EA65
-                      LSR.B GraphicsCompPtr
+                      LSR.B InteractionPtsInWater
                       BCC Return00EAA5
                       JSR CODE_00FDA5
                       STZ.B PlayerYSpeed
@@ -11090,7 +11142,7 @@ CODE_00EA5E:          LDA.B #$01
                       STA.B PlayerInWater
 CODE_00EA62:          JMP CODE_00FD08
 
-CODE_00EA65:          LSR.B GraphicsCompPtr
+CODE_00EA65:          LSR.B InteractionPtsInWater
                       BCS CODE_00EA5E
                       LDA.B PlayerInWater
                       BEQ Return00EAA5
@@ -11126,8 +11178,8 @@ CODE_00EAA6:          STZ.W PlayerPoseLenTimer
                       STZ.B PlayerBlockedDir
                       STZ.W SlopeType
                       STZ.W CurrentSlope
-                      STZ.B GraphicsCompPtr
-                      STZ.B GraphicsCompPtr+1
+                      STZ.B InteractionPtsInWater
+                      STZ.B InteractionPtsClimbable
                       STZ.W Layer2Touched
                       RTS
 
@@ -11269,7 +11321,7 @@ CODE_00EB77:          LDX.B #$00
                       JSL CODE_00F04D
                       BCC CODE_00EC24
                       LDA.B #$01
-                      TSB.B GraphicsCompPtr
+                      TSB.B InteractionPtsInWater
                       BRA CODE_00EC24
 
 CODE_00EBC9:          INX
@@ -12125,7 +12177,7 @@ CODE_00F2A8:          INC A
 CODE_00F2C0:          LDA.B #$01
 CODE_00F2C2:          CPY.B #$06
                       BCS CODE_00F2C9
-                      TSB.B GraphicsCompPtr
+                      TSB.B InteractionPtsInWater
                       RTS
 
 CODE_00F2C9:          CPY.B #$38
@@ -12155,9 +12207,9 @@ CODE_00F2EE:          CPY.B #$06
 CODE_00F2FC:          CMP.B #$01
                       BNE +
                       ORA.B #$18
-                    + TSB.B GraphicsCompPtr+1
+                    + TSB.B InteractionPtsClimbable
                       LDA.B PlayerBlockXSide
-                      STA.B GraphicsCompPtr+2
+                      STA.B InteractionPtDirection
                       RTS
 
 CODE_00F309:          CPY.B #$2F
@@ -12656,7 +12708,8 @@ DATA_00F6CB:          db $00,$00,$20,$00
 DATA_00F6CF:          db $D0,$00,$00,$00,$20,$00,$D0,$00
                       db $01,$00,$FF,$FF
 
-CODE_00F6DB:          PHB
+UpdateScreenPosition:
+                      PHB
                       PHK
                       PLB
                       REP #$20                                  ; A->16

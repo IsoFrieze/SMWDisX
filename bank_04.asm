@@ -221,7 +221,7 @@ CODE_048261:          DEX
 
                     + LDA.W ShowContinueEnd                     ; \ If not showing Continue/End message,
                       BEQ +                                     ; / branch to $8281
-                      JSL CODE_009B80
+                      JSL ProcContinueEndMenu
                       JMP CODE_048410
 
                     + LDA.W OverworldPromptProcess
@@ -581,7 +581,7 @@ CODE_0485A7:          REP #$20                                  ; A->16
                       PLB
                       LDA.B #$03
                       STA.W PlayerBehindNet
-                      JSL CODE_00E2BD
+                      JSL DrawMarioAndYoshi
                       LDA.B #$06
                       STA.W PlayerGfxTileCount
                       LDA.W PlayerAniTimer
@@ -2526,7 +2526,7 @@ CODE_0498C6:          STZ.W OWPlayerAnimation
                       CMP.B #$78
                       BNE +
                       STZ.W OverworldProcess
-                      JSL CODE_009BC9
+                      JSL SaveTheGame
                     + RTS
 
 
@@ -7056,7 +7056,7 @@ CODE_04F3E5:          DEC A
                       dw CODE_04F3FA
                       dw CODE_04F415
 
-CODE_04F3FA:          JSL CODE_009BA8
+CODE_04F3FA:          JSL ProcContinueEndMenu
                       RTS
 
 CODE_04F3FF:          LDA.B #!SFX_MESSAGE
@@ -7198,7 +7198,7 @@ CODE_04F513:          LDA.W byetudlrP1Frame
                       LDX.W PlayerTurnLvl
                       LDA.W SavedPlayerLives,X
                       STA.W PlayerLives
-                      JSL CODE_009C13
+                      JSL CloseOverworldPrompt
                       RTS
 
                     + LDA.W byetudlrP1Frame

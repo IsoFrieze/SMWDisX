@@ -130,3 +130,9 @@ endmacro
 ; select a constant value depending on the region
 ; easier to read than an if/else block for a single LDA instruction for example
 function con(j, u, ss, e0, e1) = select(equal(!_VER,!__VER_J),j,select(equal(!_VER,!__VER_U),u,select(equal(!_VER,!__VER_SS),ss,select(equal(!_VER,!__VER_E0),e0,e1))))
+
+; convert a decimal scale value to mode 7 scale
+function m7scale(val) = $20/val
+
+; convert an offset to mode 7 center value (offset by 128)
+function m7center(val) = val-$80

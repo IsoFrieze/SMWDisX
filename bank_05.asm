@@ -3805,7 +3805,7 @@ DATA_05B6FE:          db $52,$28,$40,$1C,$FC,$38,$52,$68        ;!
                       db $9D,$31,$D4,$31,$52,$CA,$00,$0D        ;!
                       db $86,$30,$7A,$30,$88,$30,$FC,$38        ;!
                       db $FC,$38,$FC,$38,$FC,$38,$FF            ;!
-																;!
+																                                ;!
 PlayerSelectStripe:   db $51,$F5,$00,$01,$FC,$38,$52,$08        ;!
                       db $40,$23,$FC,$38,$52,$48,$40,$23        ;!
                       db $FC,$38,$52,$88,$40,$23,$FC,$38        ;!
@@ -4270,7 +4270,7 @@ CODE_05BB88:          REP #$30                                  ; AXY->16
 
                       %insert_empty($48A,$5A,$84,$5A,$4A)
 
-CODE_05BC00:          PHB
+ProcScreenScrollCmds: PHB
                       PHK
                       PLB
                       JSR CODE_05BC76

@@ -9211,7 +9211,7 @@ CODE_01C9DA:          LDA.W SpriteMisc160E,X
                       BEQ +
                       STZ.W SpriteMisc160E,X
 CODE_01C9E2:          PHX
-                      JSL CODE_00E2BD
+                      JSL DrawMarioAndYoshi
                       PLX
                       STX.W CurSpriteProcess
                     + RTS

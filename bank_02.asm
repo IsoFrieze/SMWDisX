@@ -224,7 +224,7 @@ DATA_028226:          db $E8,$E8,$E8,$E8,$E4,$E4,$E4,$E4
                       db $C8,$CC,$CE,$CC,$CE,$CC,$CE,$CC
                       db $CE,$CC,$CE,$CC,$CE,$CC,$CE
 
-CODE_02827D:          LDA.B Layer1XPos
+ProcM7BossObjBG:      LDA.B Layer1XPos
                       STA.W BossBGSpriteXCalc
                       EOR.B #$FF
                       INC A
@@ -10602,7 +10602,7 @@ CODE_02D653:          LDA.W SpriteMisc151C,X
                       LDA.W PlayerRidingYoshi
                       BNE +
                       PHX
-                      JSL CODE_00E2BD
+                      JSL DrawMarioAndYoshi
                       PLX
                       LDA.B #$FF
                       STA.B PlayerHiddenTiles
@@ -10612,7 +10612,7 @@ CODE_02D73D:          LDA.W SpriteMisc160E,X
                       BEQ +
                       STZ.W SpriteMisc160E,X
                       PHX
-                      JSL CODE_00E2BD
+                      JSL DrawMarioAndYoshi
                       PLX
                     + JSR CODE_02D848
                       BRA +

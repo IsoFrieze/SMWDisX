@@ -290,6 +290,21 @@
 !ObjTileset_ReznorIggyLarry = -1
 !ObjTileset_RoyMortonLudwig = -2
 
+; -- Values for IRQNMICommand --
+!IRQNMI_Standard = 0
+!IRQNMI_Cutscenes = 1
+!IRQNMI_Overworld = 2
+!IRQNMI_IggyLarry = %10000000
+!IRQNMI_ReznorMortonRoy = %11000000
+!IRQNMI_Bowser = %11000001
+
+; -- Values for ActiveBoss --
+!ActiveBoss_Morton = 0
+!ActiveBoss_Roy = 1
+!ActiveBoss_Ludwig = 2
+!ActiveBoss_Bowser = 3
+!ActiveBoss_Reznor = 4
+
 ; --- SFX & BGM ID Numbers ---
 
 ; values for SPC commands to trigger music and sound effects

@@ -2555,7 +2555,7 @@ CODE_0CA778:          LDX.B #$00
                       STZ.W SpriteMisc1602
                     + LDA.B #$01
                       STA.W YoshiIsLoose
-CODE_0CA7B4:          JSL CODE_00E2BD
+CODE_0CA7B4:          JSL DrawMarioAndYoshi
                       RTS
 
 
