@@ -230,8 +230,8 @@ WriteDSPRegCond:      PUSH A                                    ; write A to DSP
                       AND.B A,ChannelsMuted
                       POP A
                       BNE +
-WriteDSPReg:          MOV.W HW_DSPDATA,Y                        ; write A to DSP reg Y
-                      MOV.W HW_DSPADDR,A
+WriteDSPReg:          MOV.W HW_DSPADDR,Y                        ; write A to DSP reg Y
+                      MOV.W HW_DSPDATA,A
                     + RET
 
 APU_069E:             MOV A,#$0A
@@ -271,10 +271,10 @@ APU_06D2:             MOV.B SPCOutBuffer,A
                     + MOV A,#$16
                       MOV.B EchoVolLeft+1,A
                       MOV.B EchoVolRight+1,A
-                      CALL APU_0EEB                             ; set echo vol L/R to #$16;
+                      CALL WriteDSPEchoVol                      ; set echo vol L/R to #$16;
                       MOV A,#$00
-APU_06F2:             MOV Y,#$6C
-                      CALL WriteDSPReg                          ; enable echo write;
+APU_06F2:             MOV Y,#DSP_FLG
+                      CALL WriteDSPReg                          ; unmute sound, enable echo write;
 APU_06F7:             MOV A,#$02
                       MOV.W ARam_0382,A
                       CMP.B SPCOutBuffer,#$11
@@ -284,14 +284,14 @@ APU_06F7:             MOV A,#$02
                       MOV A,#$00
                       CALL APU_0F22
                     + MOV A,#$10
-                      MOV Y,#$5C
+                      MOV Y,#DSP_KOFF
                       CALL WriteDSPReg                          ; key off voice 4;
                       SET4.B ChannelsMuted
                       MOV A,#$00
                       MOV.W ARam_0300+8,A
                       RET
 
-APU_071A:             DEC.W ARam_0382                           ; 0382 nonzero
+APU_071A:             DEC.W ARam_0382                           ; 0382 nonzero;
                       BNE APU_06D1                              ; ret;
 APU_071F:             MOV.B A,SPCOutBuffer
                       ASL A
@@ -305,8 +305,8 @@ APU_072F:             CMP.B SPCOutBuffer,#$11
                       BNE +
                       MOV A,#$60
                       MOV.W ARam_0388,A
-                      MOV Y,#$6C
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_FLG
+                      CALL WriteDSPReg                          ; mute sound, disable echo write;
                     + MOV SPCOutBuffer,#$00
                       CLR4.B ChannelsMuted
                       MOV X,#$08
@@ -327,20 +327,20 @@ APU_0754:             MOV X,#$00
                       MOV.B A,(SFX1DF9PhrasePtr+X)
                       MOV.B ARam_10,A
                       BMI APU_0786
-                      MOV Y,#$40
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_VoVOLL+$40
+                      CALL WriteDSPReg                          ; set voice 4 vol L;
                       INCW.B SFX1DF9PhrasePtr
                       MOV.B A,(SFX1DF9PhrasePtr+X)
                       BPL APU_077D
                       MOV X,A
                       MOV.B A,ARam_10
-                      MOV Y,#$41
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_VoVOLR+$40
+                      CALL WriteDSPReg                          ; set voice 4 vol R (same as vol L);
                       MOV A,X
                       BRA APU_0786
 
-APU_077D:             MOV Y,#$41
-                      CALL WriteDSPReg
+APU_077D:             MOV Y,#DSP_VoVOLR+$40
+                      CALL WriteDSPReg                          ; set voice 4 vol R (different from vol L);
                       INCW.B SFX1DF9PhrasePtr
                       MOV.B A,(SFX1DF9PhrasePtr+X)
 APU_0786:             CMP A,#$DA
@@ -354,7 +354,7 @@ APU_0786:             CMP A,#$DA
                       MOV X,#$08
                       CALL HandleVCmd
                       MOV A,#$10
-                      CALL APU_0D32
+                      CALL APU_0D32                             ; key on voice 4;
 APU_07A0:             MOV.W A,ARam_0381
                       MOV.W ARam_0380,A
 APU_07A6:             CLR7.B ARam_13
@@ -367,8 +367,8 @@ APU_07B3:             MOV A,#$02
                       CMP.W A,ARam_0380
                       BNE +
                       MOV A,#$10
-                      MOV Y,#$5C
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_KOFF
+                      CALL WriteDSPReg                          ; key off voice 4;
                     + RET
 
 APU_07C2:             MOV X,#$00
@@ -378,7 +378,7 @@ APU_07C2:             MOV X,#$00
                       MOV X,#$08
                       CALL HandleVCmd
                       MOV A,#$10
-                      CALL APU_0D32
+                      CALL APU_0D32                             ; key on voice 4;
 APU_07D5:             MOV X,#$00
                       INCW.B SFX1DF9PhrasePtr
                       MOV.B A,(SFX1DF9PhrasePtr+X)
@@ -398,10 +398,10 @@ APU_07D5:             MOV X,#$00
 APU_07F3:             MOV X,#$00
                       INCW.B SFX1DF9PhrasePtr
                       MOV.B A,(SFX1DF9PhrasePtr+X)
-                      MOV Y,#$09
+                      MOV Y,#$09                                ; set DSP regs for voice 4 from 5570+(9*A);
                       MUL YA
                       MOV X,A
-                      MOV Y,#$40
+                      MOV Y,#DSP_VoVOLL+$40
                       MOV ARam_12,#$08
                     - MOV.W A,SFXDSPSettings+X
                       CALL WriteDSPReg
@@ -431,7 +431,7 @@ APU_0816:             CMP.B SPCOutBuffer+3,#$24
 APU_0837:             MOV.B SPCOutBuffer+3,A
                       MOV.B ARam_0C+1,#$02
                       MOV A,#$40
-                      MOV Y,#$5C
+                      MOV Y,#DSP_KOFF
                       CALL WriteDSPReg                          ; key off voice 6 now;
                       SET6.B ChannelsMuted                      ; don't set vol DSP for voice 6
                       MOV A,#$00
@@ -450,7 +450,7 @@ APU_085E:             MOV.B SPCOutBuffer+3,#$00
                       CLR6.B ChannelsMuted                      ; OK to use voice 6 again
                       MOV A,#$00
                       MOV.B ARam_2F,A
-                      MOV Y,#$3D
+                      MOV Y,#DSP_NON
                       CALL WriteDSPReg                          ; noise vbits off;
                       MOV X,#$0C
                       MOV.B A,VoInstrument+$0D
@@ -470,19 +470,19 @@ APU_087D:             MOV X,#$00
                       MOV.B A,(SFX1DFCPhrasePtr+X)
                       MOV.B ARam_10,A
                       BMI APU_08AF
-                      MOV Y,#$60
+                      MOV Y,#DSP_VoVOLL+$60
                       CALL WriteDSPReg                          ; set voice 6 vol L;
                       INCW.B SFX1DFCPhrasePtr
                       MOV.B A,(SFX1DFCPhrasePtr+X)
                       BPL +
                       MOV X,A
                       MOV.B A,ARam_10
-                      MOV Y,#$61
-                      CALL WriteDSPReg                          ; set voice 6 vol R from $10;
+                      MOV Y,#DSP_VoVOLR+$60
+                      CALL WriteDSPReg                          ; set voice 6 vol R (same as vol L);
                       MOV A,X
                       BRA APU_08AF
-                    + MOV Y,#$61
-                      CALL WriteDSPReg                          ; set voice 6 vol R;
+                    + MOV Y,#DSP_VoVOLR+$60
+                      CALL WriteDSPReg                          ; set voice 6 vol R (different from vol R);
                       INCW.B SFX1DFCPhrasePtr
                       MOV.B A,(SFX1DFCPhrasePtr+X)
 APU_08AF:             CMP A,#$DA
@@ -499,7 +499,7 @@ APU_08AF:             CMP A,#$DA
                     + MOV X,#$0C                                ; other $80+;
                       CALL HandleVCmd
                       MOV A,#$40
-                      CALL APU_0D32
+                      CALL APU_0D32                             ; key on voice 6;
 APU_08CD:             MOV.W A,ARam_0385
                       MOV.W ARam_0384,A
 APU_08D3:             CLR7.B ARam_13
@@ -512,7 +512,7 @@ APU_08E0:             MOV A,#$02
                       CMP.W A,ARam_0384
                       BNE +
                       MOV A,#$40
-                      MOV Y,#$5C
+                      MOV Y,#DSP_KOFF
                       CALL WriteDSPReg                          ; key off voice 6 now;
                     + RET
 
@@ -523,7 +523,7 @@ APU_08EF:             MOV X,#$00                                ; DD;
                       MOV X,#$0C
                       CALL HandleVCmd
                       MOV A,#$40
-                      CALL APU_0D32
+                      CALL APU_0D32                             ; key on voice 6;
 
 APU_0902:             MOV X,#$00                                ; EB;
                       INCW.B SFX1DFCPhrasePtr
@@ -543,16 +543,16 @@ APU_0902:             MOV X,#$00                                ; EB;
 
 APU_0920:             MOV A,#$00                                ; DA;
                       MOV.B ARam_2F,A
-                      MOV Y,#$3D
+                      MOV Y,#DSP_NON
                       CALL WriteDSPReg
 APU_0929:             MOV X,#$00
                       INCW.B SFX1DFCPhrasePtr
                       MOV.B A,(SFX1DFCPhrasePtr+X)
                       BMI +
-                      MOV Y,#$09
+                      MOV Y,#$09                                ; set DSP regs for voice 6 from 5570+(9*A);
                       MUL YA
                       MOV X,A
-                      MOV Y,#$60
+                      MOV Y,#DSP_VoVOLL+$60
                       MOV ARam_12,#$08
                     - MOV.W A,SFXDSPSettings+X
                       CALL WriteDSPReg
@@ -564,18 +564,18 @@ APU_0929:             MOV X,#$00
                       JMP APU_087B
                     + AND A,#$1F
                       MOV.B ARam_2E,A
-                      MOV Y,#$6C
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_FLG
+                      CALL WriteDSPReg                          ; set noise frequency;
                       MOV A,#$40
                       MOV.B ARam_2F,A
-                      MOV Y,#$3D
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_NON
+                      CALL WriteDSPReg                          ; enable noise on voice 6;
                       BRA APU_0929
 
 SFXDSPRegs:           MOV Y,#$09                                ; set DSP regs for voice 5 from 5570+(9*A);
                       MUL YA
                       MOV X,A
-                      MOV Y,#$50
+                      MOV Y,#DSP_VoVOLL+$50
                       MOV ARam_12,#$08
                     - MOV.W A,SFXDSPSettings+X
                       CALL WriteDSPReg
@@ -583,10 +583,10 @@ SFXDSPRegs:           MOV Y,#$09                                ; set DSP regs f
                       INC Y
                       DBNZ.B ARam_12,-
                       MOV.W A,SFXDSPSettings+X
-                      MOV.W ARam_0210+$0A,A                     ; set voice 5 pitch mult from 5570+X
+                      MOV.W ARam_0210+$0A,A                     ; set voice 5 pitch mult from 5570+X;
                       RET
 
-APU_097D:             MOV.B A,SPCOutBuffer+2                    ; $01 = 02
+APU_097D:             MOV.B A,SPCOutBuffer+2                    ; $01 = 02;
                       CMP A,#$06
                       BEQ +
                       AND A,#$FC
@@ -602,10 +602,10 @@ APU_0995:             MOV A,#$00                                ; $01 = 03;
 APU_099A:             BRA APU_0A03
 
 APU_099C:             MOV A,#$60                                ; $01 = FF (reset?);
-                      MOV Y,#$6C
+                      MOV Y,#DSP_FLG
                       CALL WriteDSPReg                          ; mute all voices;
                       MOV A,#$FF
-                      MOV Y,#$5C
+                      MOV Y,#DSP_KOFF
                       CALL WriteDSPReg                          ; key off all voices now;
                       CALL StandardTransfer                     ; do standardish SPC transfer;
                       MOV A,#$00
@@ -619,7 +619,7 @@ APU_099C:             MOV A,#$60                                ; $01 = FF (rese
                       MOV.W ARam_0386,A
                       MOV.W ARam_0389,A
                       MOV A,#$20
-                      MOV Y,#$6C
+                      MOV Y,#DSP_FLG
                       CALL WriteDSPReg                          ; unmute voices;
                       RET
 
@@ -631,7 +631,7 @@ PitchSlideDelta:      MOV A,#$B0                                ; add pitch slid
                       MOV Y,A
                       MOV.W A,ARam_02B0+X
                       MOVW.B ARam_10,YA
-                      MOV.B CurrentChannel,#$00                 ; vbit flags = 0 (to force DSP set)
+                      MOV.B CurrentChannel,#$00                 ; vbit flags = 0 (to force DSP set);
                       JMP APU_0634                              ; force voice DSP pitch from 02B0/1;
 
 APU_09E5:             MOV.B A,SPCInEdge+1
@@ -664,8 +664,8 @@ APU_0A14:             MOV.B SPCOutBuffer+1,A                    ; $01 = 01
                       MOV A,#$04
                       MOV.W ARam_0383,A
                       MOV A,#$80
-                      MOV Y,#$5C
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_KOFF
+                      CALL WriteDSPReg                          ; key off voice 7;
                       SET7.B ChannelsMuted
                       MOV A,#$00
                       MOV Y,#$20
@@ -713,19 +713,19 @@ APU_0A68:             CALL APU_0AB1
                       CALL APU_0F5D
                       MOV A,#$38
                       MOV.B ARam_10,A
-                      MOV Y,#$70
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_VoVOLL+$70
+                      CALL WriteDSPReg                          ; set voice 7 vol L to #$38;
                       MOV A,#$38
                       MOV.B ARam_10,A
-                      MOV Y,#$71
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_VoVOLR+$70
+                      CALL WriteDSPReg                          ; set voice 7 vol R to #$38;
                       MOV A,#$80
-                      CALL APU_0D32
+                      CALL APU_0D32                             ; key on voice 7;
 APU_0A99:             MOV A,#$02
                       CBNE.B ARam_1C,+
                       MOV A,#$80
-                      MOV Y,#$5C
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_KOFF
+                      CALL WriteDSPReg                          ; key off voice 7;
                     + CLR7.B ARam_13
                       MOV.B A,VoPitchSlide+$0E
                       BEQ +
@@ -734,10 +734,10 @@ APU_0A99:             MOV A,#$02
                     + RET
 
 APU_0AB1:             MOV A,#$08
-APU_0AB3:             MOV Y,#$09
+APU_0AB3:             MOV Y,#$09                                ; set DSP regs for voice 7 from 5570+(9*A);
                       MUL YA
                       MOV X,A
-                      MOV Y,#$70
+                      MOV Y,#DSP_VoVOLL+$70
                       MOV.B ARam_12,#$08
                     - MOV.W A,SFXDSPSettings+X
                       CALL WriteDSPReg
@@ -752,7 +752,7 @@ APU_0ACE:             MOV.B SPCOutBuffer+1,A                    ; $01 = 04 && $0
                       MOV A,#$04
                       MOV.W ARam_0383,A
                       MOV A,#$80
-                      MOV Y,#$5C
+                      MOV Y,#DSP_KOFF
                       CALL WriteDSPReg                          ; key off voice 7 now;
                       SET7.B ChannelsMuted
                       MOV A,#$00
@@ -785,19 +785,19 @@ APU_0B08:             MOV.W A,ARam_0383
                       JMP APU_0D4B
 APU_0B1C:             MOV A,#$28
                       MOV.B ARam_10,A
-                      MOV Y,#$70
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_VoVOLL+$70
+                      CALL WriteDSPReg                          ; set voice 7 vol L to #$28;
                       MOV A,#$28
                       MOV.B ARam_10,A
-                      MOV Y,#$71
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_VoVOLR+$70
+                      CALL WriteDSPReg                          ; set voice 7 vol R to #$28;
                       MOV A,#$80
-                      CALL APU_0D32
+                      CALL APU_0D32                             ; key on voice 7;
 APU_0B33:             MOV A,#$02
                       CBNE.B ARam_1C,+
                       MOV A,#$80
-                      MOV Y,#$5C
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_KOFF
+                      CALL WriteDSPReg                          ; key off voice 7;
                     + RET
 
 APU_0B40:             SETC                                      ; play song in A?;
@@ -852,8 +852,8 @@ APU_0B40:             SETC                                      ; play song in A
 APU_0BA3:             MOV.B SPCOutBuffer+2,A
                     + MOV.B A,ChannelsMuted
                       EOR A,#$FF
-                      MOV Y,#$5C
-                      JMP WriteDSPReg
+                      MOV Y,#DSP_KOFF
+                      JMP WriteDSPReg                           ; key off all unmuted voices;
 
 APU_0BAE:             MOV X,#$F0                                ; fade volume out over 240 counts;
                       MOV.B VolFadeTimer,X
@@ -874,8 +874,8 @@ APU_0BC0:             MOV.B A,SPCOutBuffer+2
                    ++ MOV.W A,ARam_0386
                       BNE +
                       MOV A,#$20
-                      MOV Y,#$5C
-                      CALL WriteDSPReg
+                      MOV Y,#DSP_KOFF
+                      CALL WriteDSPReg                          ; key off voice 5;
                       SET5.B ChannelsMuted
                       BRA APU_0BDE
                     + CLR5.B ChannelsMuted
@@ -1031,7 +1031,7 @@ APU_0CE3:             MOV.B A,ARam_60
                       MOVW.B YA,ARam_67
                       ADDW.B YA,EchoVolRight
 APU_0CFE:             MOVW.B EchoVolRight,YA
-                      CALL APU_0EEB
+                      CALL WriteDSPEchoVol
 APU_0D03:             MOV.B A,VolFadeTimer
                       BEQ APU_0D17
                       DBNZ.B VolFadeTimer,+
@@ -1057,11 +1057,11 @@ APU_0D17:             MOV X,#$0E
                       EOR A,#$FF
                       AND.B A,ARam_47
 APU_0D32:             PUSH A                                    ; key on voices in A;
-                      MOV Y,#$5C
+                      MOV Y,#DSP_KOFF
                       MOV A,#$00
                       CALL WriteDSPReg                          ; key off none;
                       POP A
-                      MOV Y,#$4C
+                      MOV Y,#DSP_KON
                       JMP WriteDSPReg                           ; key on voices from A;
 
 APU_0D40:             ASL A                                     ; dispatch vcmd in A;
@@ -1094,12 +1094,12 @@ APU_0D56:             MUL YA                                    ; set sample A i
                       EOR A,#$FF
                       AND.B A,ARam_2F
                       MOV.B ARam_2F,A
-                      MOV Y,#$3D
+                      MOV Y,#DSP_NON
                       CALL WriteDSPReg                          ; clear noise vbit;
                       MOV Y,#$00
                     - MOV.B A,(ARam_14)+Y
-                      MOV.W HW_DSPDATA,X
-                      MOV.W HW_DSPADDR,A
+                      MOV.W HW_DSPADDR,X
+                      MOV.W HW_DSPDATA,A
                       INC X
                       INC Y
                       CMP Y,#$04
@@ -1269,7 +1269,7 @@ VCmd_E9:              CALL NextVCmd46                           ; vcmd E9: call 
 
 VCmd_EF:              CALL NextVCmd46                           ; vcmd EF: set echo vbits/volume;
                       MOV.W ARam_0389,A                         ; set echo vbit shadow from op1
-                      MOV Y,#$4D
+                      MOV Y,#DSP_EON
                       CALL WriteDSPReg                          ; set echo vbits DSP from shadow;
                       CALL NextVCmd
                       MOV A,#$00
@@ -1279,14 +1279,14 @@ VCmd_EF:              CALL NextVCmd46                           ; vcmd EF: set e
                       MOVW.B EchoVolRight,YA                    ; set 63/4 from op3 * $100 (evol R)
                       MOV.B ARam_2E,A                           ; zero 2e
                       AND A,#$1F
-                      MOV Y,#$6C
+                      MOV Y,#DSP_FLG
                       CALL WriteDSPReg                          ; zero noise freq, enable echo write;
 
-APU_0EEB:             MOV.B A,EchoVolLeft+1                     ; set echo vol's from shadows
-                      MOV Y,#$2C
+WriteDSPEchoVol:      MOV.B A,EchoVolLeft+1                     ; set echo vol's from shadows
+                      MOV Y,#DSP_EVOLL
                       CALL WriteDSPReg                          ; set echo vol L DSP from $62;
                       MOV.B A,EchoVolRight+1
-                      MOV Y,#$3C
+                      MOV Y,#DSP_EVOLR
                       JMP WriteDSPReg                           ; set echo vol R DSP from $64;
 
 VCmd_F2:              CALL NextVCmd46                           ; vcmd F2: echo volume fade;
@@ -1312,23 +1312,23 @@ VCmd_F0:              MOV.B X,CurrentChannel2                   ; vcmd F0: disab
 APU_0F22:             MOV Y,A
                       MOVW.B EchoVolLeft,YA                     ; zero echo vol L shadow
                       MOVW.B EchoVolRight,YA                    ; zero echo vol R shadow
-                      CALL APU_0EEB                             ; set echo vol DSP regs from shadows;
+                      CALL WriteDSPEchoVol                      ; set echo vol DSP regs from shadows;
                       MOV.B ARam_2E,A                           ; zero 2E
                       OR A,#$20
-                      MOV Y,#$6C
+                      MOV Y,#DSP_FLG
                       JMP WriteDSPReg                           ; disable echo write, noise freq 0;
 
 VCmd_F1:              CALL NextVCmd46                           ; vcmd F1: set echo delay, feedback, filter;
-                      MOV Y,#$7D
+                      MOV Y,#DSP_EDL
                       CALL WriteDSPReg                          ; set echo delay from op1;
                       CALL NextVCmd
-                      MOV Y,#$0D
+                      MOV Y,#DSP_EFB
                       CALL WriteDSPReg                          ; set echo feedback from op2;
                       CALL NextVCmd
                       MOV Y,#$08
                       MUL YA
                       MOV X,A
-                      MOV Y,#$0F
+                      MOV Y,#DSP_FFC
                     - MOV.W A,EchoFilters+X                     ; filter table;
                       CALL WriteDSPReg
                       INC X
@@ -1543,7 +1543,7 @@ APU_10BF:             CMP A,#$C6
                       BRA APU_10B4
 
 APU_10D1:             MOV.B A,CurrentChannel
-                      MOV Y,#$5C
+                      MOV Y,#DSP_KOFF
                       CALL WriteDSPRegCond                      ; key off current voice now;
 APU_10D8:             CLR7.B ARam_13
                       MOV.B A,VoPitchSlide+X
