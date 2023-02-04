@@ -55,6 +55,9 @@
 ; maximum number of screens in a level
 !LevelMaxScreens = 32
 
+; size of a save file
+!SaveFileSize = 143
+
 ; --- In-Level Properties ---
 
 ; height of status bar in lines
@@ -304,6 +307,13 @@
 !ActiveBoss_Ludwig = 2
 !ActiveBoss_Bowser = 3
 !ActiveBoss_Reznor = 4
+
+; -- Values for BlinkCursor
+!CursorContinueEnd = 0
+!CursorFileSelect = 2
+!CursorPlayerSelect = 4
+!CursorSaveNoSave = 6
+!CursorEraseFile = 8
 
 ; --- SFX & BGM ID Numbers ---
 

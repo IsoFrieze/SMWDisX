@@ -274,8 +274,8 @@ OBJCWWindow: skip 1
 ; mmss--fd
 ; ||||  |+ set if direct color is enabled
 ; ||||  +- set for color math between subscreens, clear for fixed color math
-; ||++---- color window, in/out bit for window 1
-; ++------ color window, in/out bit for window 2
+; ||++---- color window sub screen (00 = on, 01 = inside, 10 = outside, 11 = off)
+; ++------ color window main screen (00 = on, 01 = inside, 10 = outside, 11 = off)
 ; 1 byte
 ColorAddition: skip 1
 
@@ -330,7 +330,13 @@ LevelIsSlippery: skip 1
 skip 1
 PipeTimer: skip 1
 PlayerPipeAction: skip 1
-GraphicsCompPtr: skip 3
+TempPlayerYSpeed:
+PartialChecksum:
+MaxMenuOptions:
+GraphicsCompPtr:
+InteractionPtsInWater: skip 1
+InteractionPtsClimbable: skip 1
+InteractionPtDirection: skip 1
 GraphicsUncompPtr: skip 3
 PlayerYPosInBlock: skip 1
 PlayerBlockMoveY: skip 1

@@ -3650,9 +3650,9 @@ CODE_009DA6:          SEP #$10                                  ;!! XY->8
                       BPL CODE_009D5B                           ;!
                       RTS                                       ;!
                                                                 ;!
-CODE_009DB5:          LDA.W DATA_009CCB,X                       ;!
+CODE_009DB5:          LDA.W SaveDataLocationsHi,X               ;!
                       XBA                                       ;!
-                      LDA.W DATA_009CCE,X                       ;!
+                      LDA.W SaveDataLocationsLo,X               ;!
                       REP #$30                                  ;! AXY->16
                       TAX                                       ;!
                       CLC                                       ;!

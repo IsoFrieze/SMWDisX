@@ -7056,7 +7056,7 @@ CODE_04F3E5:          DEC A
                       dw CODE_04F3FA
                       dw CODE_04F415
 
-CODE_04F3FA:          JSL ProcContinueEndMenu
+CODE_04F3FA:          JSL ProcSaveMenu
                       RTS
 
 CODE_04F3FF:          LDA.B #!SFX_MESSAGE
