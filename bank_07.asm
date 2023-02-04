@@ -997,14 +997,14 @@ CODE_07FC52:          LDA.B #$10                                ; \ Extended spr
                       CLC
                       ADC.B #$04
                       STA.W ExtSpriteYPosLow,Y
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       STA.W ExtSpriteYPosHigh,Y
                       LDA.B SpriteXPosLow,X
                       CLC
                       ADC.B #$04
                       STA.W ExtSpriteXPosLow,Y
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
                       STA.W ExtSpriteXPosHigh,Y
                       PLX

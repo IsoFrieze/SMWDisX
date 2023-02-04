@@ -754,8 +754,8 @@ BrSwingCosine: skip 2
 ; 7E14C7 unused
 skip 1
 SpriteStatus: skip 12
-SpriteXPosHigh: skip 12
 SpriteYPosHigh: skip 12
+SpriteXPosHigh: skip 12
 SpriteYPosSpx: skip 12
 SpriteXPosSpx: skip 12
 SpriteMisc1504: skip 12

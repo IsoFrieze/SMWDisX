@@ -1644,10 +1644,10 @@ CODE_0C9FEA:          REP #$20                                  ; A->16
                       JSR CODE_0CA75A
                       LDA.B #$52
                       STA.B SpriteXPosLow
-                      STZ.W SpriteYPosHigh
+                      STZ.W SpriteXPosHigh
                       LDA.B #$8F
                       STA.B SpriteYPosLow
-                      STZ.W SpriteXPosHigh
+                      STZ.W SpriteYPosHigh
                       LDA.B #$A0
                       STA.W SpriteOAMIndex
                       JSR CODE_0CA778
@@ -1922,11 +1922,11 @@ CODE_0CA24F:          LDA.B #$F8
                       STA.B SpriteXPosLow
                       LDA.W CreditsSprXPosHigh
                       ADC.B #$00
-                      STA.W SpriteYPosHigh
+                      STA.W SpriteXPosHigh
                       LDA.B #$60
                       STA.B SpriteYPosLow
                       LDA.B #$01
-                      STA.W SpriteXPosHigh
+                      STA.W SpriteYPosHigh
                       LDA.B #$30
                       STA.W SpriteOAMIndex
                       JSR CODE_0CA778

@@ -455,9 +455,9 @@ InitWoodSpike:        LDA.B SpriteYPosLow,X
                       SEC
                       SBC.B #$40
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       RTS
 
 InitWoodSpike2:       JMP InitMontyMole
@@ -513,7 +513,7 @@ DATA_0183B3:          db $80,$40
 
 InitScalePlats:       LDA.B SpriteYPosLow,X
                       STA.W SpriteMisc1534,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       STA.W SpriteMisc151C,X
                       LDA.B SpriteXPosLow,X
                       AND.B #$10
@@ -526,7 +526,7 @@ InitScalePlats:       LDA.B SpriteYPosLow,X
                       CLC
                       ADC.W DATA_0183B3,Y
                       STA.B SpriteTableC2,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
                       STA.W SpriteMisc1602,X
                       RTS
@@ -560,7 +560,7 @@ InitSpikeTop:         JSR SubHorizPos
 
 InitUrchinWallFllw:   INC.B SpriteYPosLow,X
                       BNE InitFuzzBall_Spark
-                      INC.W SpriteXPosHigh,X
+                      INC.W SpriteYPosHigh,X
 InitFuzzBall_Spark:   JSR InitUrchin
 CODE_01840E:          LDA.W SpriteMisc151C,X
                       EOR.B #$10
@@ -594,9 +594,9 @@ InitPeaBouncer:       LDA.B SpriteXPosLow,X
                       SEC
                       SBC.B #$08
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       SBC.B #$00
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       RTS
 
 InitPSwitch:          LDA.B SpriteXPosLow,X                     ; \ $151C,x = Blue/Silver,
@@ -636,7 +636,7 @@ CODE_018484:          DEY
                       STZ.W CurrentGenerator
                       LDA.B SpriteYPosLow,X
                       STA.W SpriteRespawnYPos
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       STA.W SpriteRespawnYPos+1
                       JSL FindFreeSprSlot
                       BMI InitMontyMole
@@ -647,12 +647,12 @@ CODE_018484:          DEY
                       STA.W SpriteStatus,Y                      ; /
                       LDA.B SpriteXPosLow,X
                       STA.W SpriteXPosLow,Y
-                      LDA.W SpriteYPosHigh,X
-                      STA.W SpriteYPosHigh,Y
-                      LDA.B SpriteYPosLow,X
-                      STA.W SpriteYPosLow,Y
                       LDA.W SpriteXPosHigh,X
                       STA.W SpriteXPosHigh,Y
+                      LDA.B SpriteYPosLow,X
+                      STA.W SpriteYPosLow,Y
+                      LDA.W SpriteYPosHigh,X
+                      STA.W SpriteYPosHigh,Y
                       PHX
                       TYX
                       JSL InitSpriteTables
@@ -781,9 +781,9 @@ InitDownPiranha:      ASL.W SpriteOBJAttribute,X
                       SEC
                       SBC.B #$10
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
 InitPiranha:          LDA.B SpriteXPosLow,X                     ; \ Center sprite between two tiles
                       CLC                                       ; |
                       ADC.B #$08                                ; |
@@ -792,7 +792,7 @@ InitPiranha:          LDA.B SpriteXPosLow,X                     ; \ Center sprit
                       LDA.B SpriteYPosLow,X
                       CMP.B #$FF
                       BNE Return0185C2
-                      DEC.W SpriteXPosHigh,X
+                      DEC.W SpriteYPosHigh,X
 Return0185C2:         RTS
 
 CallSpriteMain:       STZ.W SpriteXMovement                     ; CallSpriteMain
@@ -1212,14 +1212,14 @@ HandleJumpOver:       LDA.W SpriteXPosLow,Y
                       SEC
                       SBC.B #$1A
                       STA.B _0
-                      LDA.W SpriteYPosHigh,Y
+                      LDA.W SpriteXPosHigh,Y
                       SBC.B #$00
                       STA.B _8
                       LDA.B #$44
                       STA.B _2
                       LDA.W SpriteYPosLow,Y
                       STA.B _1
-                      LDA.W SpriteXPosHigh,Y
+                      LDA.W SpriteYPosHigh,Y
                       STA.B _9
                       LDA.B #$10
                       STA.B _3
@@ -1590,13 +1590,13 @@ CODE_018BEC:          LDA.W SpriteMisc1602,X                    ; \ Nothing?
                       PHA                                       ; |
                       SBC.B #$0F                                ; |
                       STA.B SpriteYPosLow,X                     ; |
-                      LDA.W SpriteXPosHigh,X                    ; |
+                      LDA.W SpriteYPosHigh,X                    ; |
                       PHA                                       ; |
                       SBC.B #$00                                ; |
-                      STA.W SpriteXPosHigh,X                    ; /
+                      STA.W SpriteYPosHigh,X                    ; /
                       JSR SubSprGfx1                            ; Draw sprite
                       PLA                                       ; \ Restore Y position
-                      STA.W SpriteXPosHigh,X                    ; |
+                      STA.W SpriteYPosHigh,X                    ; |
                       PLA                                       ; |
                       STA.B SpriteYPosLow,X                     ; /
                       LDA.B SpriteNumber,X                      ; \ Add wings if sprite number > #$08
@@ -2010,14 +2010,14 @@ CODE_018F50:          JSL GetRand
                       CLC
                       ADC.B #$04
                       STA.W ExtSpriteXPosLow,Y
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
                       STA.W ExtSpriteXPosHigh,Y
                       LDA.B SpriteYPosLow,X
                       CLC
                       ADC.B #$08
                       STA.W ExtSpriteYPosLow,Y
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       STA.W ExtSpriteYPosHigh,Y
                       LDA.B #$03                                ; \ Extended sprite = Hopping flame's flame
@@ -2204,31 +2204,31 @@ CODE_019140:          STZ.W SpriteBlockOffset
                       CLC                                       ; | for call to below routine
                       ADC.B Layer23XRelPos                      ; |
                       STA.B SpriteXPosLow,X                     ; |
-                      LDA.W SpriteYPosHigh,X                    ; |
+                      LDA.W SpriteXPosHigh,X                    ; |
                       ADC.B Layer23XRelPos+1                    ; |
-                      STA.W SpriteYPosHigh,X                    ; /
+                      STA.W SpriteXPosHigh,X                    ; /
                       LDA.B SpriteYPosLow,X                     ; \ Sprite's Y position += $28
                       CLC                                       ; | for call to below routine
                       ADC.B Layer23YRelPos                      ; |
                       STA.B SpriteYPosLow,X                     ; |
-                      LDA.W SpriteXPosHigh,X                    ; |
+                      LDA.W SpriteYPosHigh,X                    ; |
                       ADC.B Layer23YRelPos+1                    ; |
-                      STA.W SpriteXPosHigh,X                    ; /
+                      STA.W SpriteYPosHigh,X                    ; /
                       JSR CODE_019211
                       LDA.B SpriteXPosLow,X                     ; \ Restore sprite's original position
                       SEC                                       ; |
                       SBC.B Layer23XRelPos                      ; |
                       STA.B SpriteXPosLow,X                     ; |
-                      LDA.W SpriteYPosHigh,X                    ; |
+                      LDA.W SpriteXPosHigh,X                    ; |
                       SBC.B Layer23XRelPos+1                    ; |
-                      STA.W SpriteYPosHigh,X                    ; |
+                      STA.W SpriteXPosHigh,X                    ; |
                       LDA.B SpriteYPosLow,X                     ; |
                       SEC                                       ; |
                       SBC.B Layer23YRelPos                      ; |
                       STA.B SpriteYPosLow,X                     ; |
-                      LDA.W SpriteXPosHigh,X                    ; |
+                      LDA.W SpriteYPosHigh,X                    ; |
                       SBC.B Layer23YRelPos+1                    ; |
-                      STA.W SpriteXPosHigh,X                    ; /
+                      STA.W SpriteYPosHigh,X                    ; /
                       LDA.W SpriteBlockedDirs,X
                       BPL CODE_0191BE
                       AND.B #$03
@@ -2243,8 +2243,8 @@ CODE_019140:          STZ.W SpriteBlockOffset
                       ADC.B SpriteXPosLow,X
                       STA.B SpriteXPosLow,X
                       TYA
-                      ADC.W SpriteYPosHigh,X
-                      STA.W SpriteYPosHigh,X
+                      ADC.W SpriteXPosHigh,X
+                      STA.W SpriteXPosHigh,X
 CODE_0191BE:          LDA.W SpriteTweakerF,X                    ; \ Branch if "Don't get stuck in walls" is not set
                       BPL +                                     ; /
                       LDA.W SpriteBlockedDirs,X                 ; \ Branch if not touching object
@@ -2257,9 +2257,9 @@ CODE_0191BE:          LDA.W SpriteTweakerF,X                    ; \ Branch if "D
                       CLC
                       ADC.W Return019283,Y
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.W DATA_019285,Y
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.B SpriteXSpeed,X
                       BNE +
                       LDA.W SpriteBlockedDirs,X
@@ -2489,9 +2489,9 @@ CODE_019386:          LDA.B _C
                       SEC
                       SBC.B #$01
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       JSR CODE_0192C9
 Return0193AF:         RTS
 
@@ -2532,9 +2532,9 @@ ADDR_0193EF:          TYA
                       CLC
                       ADC.W DATA_0192C5,Y
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.W DATA_0192C7,Y
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
 CODE_019405:          LDA.W SpriteOnYoshiTongue,X
                       BNE CODE_019414
                       LDA.B SpriteYPosLow,X
@@ -2581,7 +2581,7 @@ CODE_01944D:          LDA.W TileGenerateTrackA
                       STA.B _C
                       AND.B #$F0
                       STA.B _0
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       CMP.B LevelScrLength
                       BCS CODE_0194B4
@@ -2591,7 +2591,7 @@ CODE_01944D:          LDA.W TileGenerateTrackA
                       ADC.W SpriteObjClippingX,Y
                       STA.B _A
                       STA.B _1
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
                       CMP.B #$02
                       BCS CODE_0194B4
@@ -2632,7 +2632,7 @@ CODE_0194BF:          LDA.B SpriteYPosLow,X
                       STA.B _C
                       AND.B #$F0
                       STA.B _0
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       STA.B _D
                       REP #$20                                  ; A->16
@@ -2645,7 +2645,7 @@ CODE_0194BF:          LDA.B SpriteYPosLow,X
                       ADC.W SpriteObjClippingX,Y
                       STA.B _A
                       STA.B _1
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
                       STA.B _B
                       BMI CODE_0194B4
@@ -2740,13 +2740,13 @@ CODE_019598:          JSR IsTouchingCeiling
                       CLC                                       ; |
                       ADC.B #$08                                ; |
                       STA.B TouchBlockXPos                      ; |
-                      LDA.W SpriteYPosHigh,X                    ; |
+                      LDA.W SpriteXPosHigh,X                    ; |
                       ADC.B #$00                                ; |
                       STA.B TouchBlockXPos+1                    ; /
                       LDA.B SpriteYPosLow,X                     ; \ $9A = Sprite X position
                       AND.B #$F0                                ; | (Rounded down to nearest #$10)
                       STA.B TouchBlockYPos                      ; |
-                      LDA.W SpriteXPosHigh,X                    ; |
+                      LDA.W SpriteYPosHigh,X                    ; |
                       STA.B TouchBlockYPos+1                    ; /
                       LDA.W SpriteBlockedDirs,X
                       AND.B #$20
@@ -2887,12 +2887,12 @@ GeneralResetSpr:      JSL FindFreeSprSlot                       ; \ Return if no
                       LDX.W CurSpriteProcess                    ; /
                       LDA.B SpriteXPosLow,X                     ; \ Shelless Koopa position = Koopa position
                       STA.W SpriteXPosLow,Y                     ; |
-                      LDA.W SpriteYPosHigh,X                    ; |
-                      STA.W SpriteYPosHigh,Y                    ; |
+                      LDA.W SpriteXPosHigh,X                    ; |
+                      STA.W SpriteXPosHigh,Y                    ; |
                       LDA.B SpriteYPosLow,X                     ; |
                       STA.W SpriteYPosLow,Y                     ; |
-                      LDA.W SpriteXPosHigh,X                    ; |
-                      STA.W SpriteXPosHigh,Y                    ; /
+                      LDA.W SpriteYPosHigh,X                    ; |
+                      STA.W SpriteYPosHigh,Y                    ; /
                       LDA.B #$00                                ; \ Direction = 0
                       STA.W SpriteMisc157C,Y                    ; /
                       LDA.B #$10
@@ -2947,12 +2947,12 @@ SpawnMovingCoin:      LDA.B #$08                                ; \ Sprite statu
                       STA.W SpriteNumber,Y                      ; /
                       LDA.B SpriteXPosLow,X                     ; \ Copy X position to coin
                       STA.W SpriteXPosLow,Y                     ; |
-                      LDA.W SpriteYPosHigh,X                    ; |
-                      STA.W SpriteYPosHigh,Y                    ; /
-                      LDA.B SpriteYPosLow,X                     ; \ Copy Y position to coin
-                      STA.W SpriteYPosLow,Y                     ; |
                       LDA.W SpriteXPosHigh,X                    ; |
                       STA.W SpriteXPosHigh,Y                    ; /
+                      LDA.B SpriteYPosLow,X                     ; \ Copy Y position to coin
+                      STA.W SpriteYPosLow,Y                     ; |
+                      LDA.W SpriteYPosHigh,X                    ; |
+                      STA.W SpriteYPosHigh,Y                    ; /
                       PHX                                       ; \
                       TYX                                       ; |
                       JSL InitSpriteTables                      ; | Clear all sprite tables, and load new values
@@ -3236,11 +3236,11 @@ CODE_0199E1:          JSR IsSprOffScreen                        ; \ Return if of
                       BNE +                                     ; /
                       LDA.B SpriteXPosLow,X                     ; \ Store Y position in $9A-$9B
                       STA.B TouchBlockXPos                      ; |
-                      LDA.W SpriteYPosHigh,X                    ; |
+                      LDA.W SpriteXPosHigh,X                    ; |
                       STA.B TouchBlockXPos+1                    ; /
                       LDA.B SpriteYPosLow,X                     ; \ Store X position in $98-$99
                       STA.B TouchBlockYPos                      ; |
-                      LDA.W SpriteXPosHigh,X                    ; |
+                      LDA.W SpriteYPosHigh,X                    ; |
                       STA.B TouchBlockYPos+1                    ; /
                       PHB                                       ; \ Shatter the brick
                       LDA.B #$02                                ; |
@@ -3670,7 +3670,7 @@ CODE_019E37:          LDA.W SpriteOffscreenVert,X               ; \ Return if of
                       BNE Return019E94                          ; /
                       LDA.B SpriteXPosLow,X                     ; \ $00 = X position low
                       STA.B _0                                  ; /
-                      LDA.W SpriteYPosHigh,X                    ; \ $04 = X position high
+                      LDA.W SpriteXPosHigh,X                    ; \ $04 = X position high
                       STA.B _4                                  ; /
                       LDA.B SpriteYPosLow,X                     ; \ $01 = Y position low
                       STA.B _1                                  ; /
@@ -3719,19 +3719,19 @@ CODE_019E95:          LDA.B SpriteYPosLow,X
                       CLC
                       ADC.B #$02
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       PHA
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       LDA.B SpriteXPosLow,X
                       PHA
                       SEC
                       SBC.B #$02
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       PHA
                       SBC.B #$00
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.W SpriteOAMIndex,X
                       PHA
                       CLC
@@ -3751,9 +3751,9 @@ CODE_019E95:          LDA.B SpriteYPosLow,X
                       CLC
                       ADC.B #$04
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.W SpriteOAMIndex,X
                       CLC
                       ADC.B #$04
@@ -3765,11 +3765,11 @@ CODE_019E95:          LDA.B SpriteYPosLow,X
                       PLA
                       STA.W SpriteOAMIndex,X
                       PLA
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       PLA
                       STA.B SpriteXPosLow,X
                       PLA
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       PLA
                       STA.B SpriteYPosLow,X
                       RTS
@@ -3944,7 +3944,7 @@ CODE_01A047:          LDY.B PlayerDirection
                       STA.B SpriteXPosLow,X
                       LDA.B PlayerXPosNow+1
                       ADC.W DATA_019F69,Y
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       JSR SubHorizPos
                       LDA.W DATA_019F99,Y
                       CLC
@@ -4029,7 +4029,7 @@ CODE_01A0D4:          LDY.B #$05
                       STA.B SpriteXPosLow,X
                       LDA.B _1
                       ADC.W DATA_019F61,Y
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.B #$0D
                       LDY.B PlayerIsDucking                     ; \ Branch if ducking
                       BNE CODE_01A111                           ; /
@@ -4044,7 +4044,7 @@ CODE_01A111:          LDA.B #$0F
                       STA.B SpriteYPosLow,X
                       LDA.B _3
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       LDA.B #$01
                       STA.W IsCarryingItem
                       STA.W CarryingFlag                        ; Set carrying enemy flag
@@ -4184,14 +4184,14 @@ StunBabyYoshi:        LDA.B SpriteLock                          ; \ Branch if sp
                       CLC
                       ADC.B #$08
                       STA.B _0
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
                       STA.B _8
                       LDA.B SpriteYPosLow,X
                       CLC
                       ADC.B #$08
                       STA.B _1
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       STA.B _9
                       JSL CODE_02B9FA
@@ -4254,9 +4254,9 @@ CODE_01A2B5:          STZ.W YoshiSwallowTimer
                       LDA.B SpriteYPosLow,X
                       SBC.B #$10
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       LDA.W SpriteOBJAttribute,X
                       PHA                                       ; \ Reset sprite tables
                       JSL InitSpriteTables                      ; |
@@ -4302,16 +4302,16 @@ CODE_01A30A:          LDA.W SpriteMisc163E,X
                       CLC
                       ADC.B SpriteXPosLow,X
                       STA.W SpriteXPosLow,Y
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B _1
-                      STA.W SpriteYPosHigh,Y
+                      STA.W SpriteXPosHigh,Y
                       LDA.B SpriteYPosLow,X
                       SEC
                       SBC.B #$02
                       STA.W SpriteYPosLow,Y
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
-                      STA.W SpriteXPosHigh,Y
+                      STA.W SpriteYPosHigh,Y
 CODE_01A34F:          JSR CODE_01A169
                       JSR SubSprGfx2Entry1
                       JSL CODE_02EA25
@@ -4328,11 +4328,11 @@ GetDrawInfoBnk1:      STZ.W SpriteOffscreenVert,X
                       STZ.W SpriteOffscreenX,X
                       LDA.B SpriteXPosLow,X
                       CMP.B Layer1XPos
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       SBC.B Layer1XPos+1
                       BEQ +
                       INC.W SpriteOffscreenX,X
-                    + LDA.W SpriteYPosHigh,X
+                    + LDA.W SpriteXPosHigh,X
                       XBA
                       LDA.B SpriteXPosLow,X
                       REP #$20                                  ; A->16
@@ -4361,7 +4361,7 @@ CODE_01A3A6:          LDA.B SpriteYPosLow,X
                       CMP.B Layer1YPos
                       ROL.B _0
                       PLP
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       LSR.B _0
                       SBC.B Layer1YPos+1
@@ -4441,11 +4441,11 @@ CODE_01A417:          LDA.W SpriteStatus,X                      ; \ Jump to $01A
                       STX.W SpriteInterIndex
                       LDA.B SpriteXPosLow,X
                       STA.B _0
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       STA.B _1
                       LDA.W SpriteXPosLow,Y
                       STA.B _2
-                      LDA.W SpriteYPosHigh,Y
+                      LDA.W SpriteXPosHigh,Y
                       STA.B _3
                       REP #$20                                  ; A->16
                       LDA.B _0
@@ -4465,7 +4465,7 @@ CODE_01A417:          LDA.W SpriteStatus,X                      ; \ Jump to $01A
                       CLC
                       ADC.W DATA_01A40B,Y
                       STA.B _0
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       STA.B _1
                       LDY.W CurSpriteProcess                    ; Y = Sprite index
@@ -4478,7 +4478,7 @@ CODE_01A417:          LDA.W SpriteStatus,X                      ; \ Jump to $01A
                       CLC
                       %LorW_X(ADC,DATA_01A40B)
                       STA.B _2
-                      LDA.W SpriteXPosHigh,Y
+                      LDA.W SpriteYPosHigh,Y
                       ADC.B #$00
                       STA.B _3
                       LDX.W SpriteInterIndex
@@ -4601,8 +4601,8 @@ CODE_01A555:          LDA.W SpriteStatus,X
 CODE_01A56D:          LDA.B SpriteXPosLow,X
                       SEC
                       SBC.W SpriteXPosLow,Y
-                      LDA.W SpriteYPosHigh,X
-                      SBC.W SpriteYPosHigh,Y
+                      LDA.W SpriteXPosHigh,X
+                      SBC.W SpriteXPosHigh,Y
                       ROL A
                       AND.B #$01
                       STA.B _0
@@ -4884,11 +4884,11 @@ CODE_01A77C:          LDA.B SpriteNumber,X
                       ADC.W DATA_01A778,Y
                       LDY.B _1
                       STA.W SpriteXPosLow,Y
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       LDY.B _0
                       ADC.W DATA_01A77A,Y
                       LDY.B _1
-                      STA.W SpriteYPosHigh,Y
+                      STA.W SpriteXPosHigh,Y
                       TYA
                       STA.W SpriteMisc160E,X
                       LDA.B #$01
@@ -5283,7 +5283,7 @@ CODE_01AAB7:          STZ.W SpriteMisc154C,X
                       SEC
                       SBC.B _0
                       STA.B PlayerYPosNext
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
                       STA.B PlayerYPosNext+1
                       LDA.B SpriteNumber,X
@@ -5430,8 +5430,8 @@ SubSprYPosNoGrvty:    LDA.B SpriteYSpeed,X                      ; Load current s
                       ADC.B SpriteYPosLow,X                     ; \ Add value to current sprite's Y position
                       STA.B SpriteYPosLow,X                     ; /
                       TYA
-                      ADC.W SpriteXPosHigh,X
-                      STA.W SpriteXPosHigh,X
+                      ADC.W SpriteYPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       PLA
                       PLP
                       ADC.B #$00
@@ -5466,7 +5466,7 @@ SubOffscreen0Bnk1:    STZ.B _3                                  ; /
                       LDA.B SpriteYPosLow,X                     ; \
                       CLC                                       ; |
                       ADC.B #$50                                ; | if the sprite has gone off the bottom of the level...
-                      LDA.W SpriteXPosHigh,X                    ; | (if adding 0x50 to the sprite y position would make the high byte >= 2)
+                      LDA.W SpriteYPosHigh,X                    ; | (if adding 0x50 to the sprite y position would make the high byte >= 2)
                       ADC.B #$00                                ; |
                       CMP.B #$02                                ; |
                       BPL OffScrEraseSprite                     ; /    ...erase the sprite
@@ -5488,7 +5488,7 @@ SubOffscreen0Bnk1:    STZ.B _3                                  ; /
                       LSR.B _0
                       ADC.W SpriteOffScreen4,Y
                       PLP
-                      SBC.W SpriteYPosHigh,X
+                      SBC.W SpriteXPosHigh,X
                       STA.B _0
                       LSR.B _1
                       BCC +
@@ -5521,7 +5521,7 @@ VerticalLevel:        LDA.W SpriteTweakerD,X                    ; \ If "process 
                       BCS Return01ACA4                          ; /
                       LDA.B SpriteXPosLow,X                     ; \
                       CMP.B #$00                                ; | If the sprite has gone off the side of the level...
-                      LDA.W SpriteYPosHigh,X                    ; |
+                      LDA.W SpriteXPosHigh,X                    ; |
                       SBC.B #$00                                ; |
                       CMP.B #$02                                ; |
                       BCS OffScrEraseSprite                     ; /  ...erase the sprite
@@ -5546,7 +5546,7 @@ CODE_01ACD2:          LDA.B Layer1YPos
                       LSR.B _0
                       ADC.W SpriteOffScreen2,Y
                       PLP
-                      SBC.W SpriteXPosHigh,X
+                      SBC.W SpriteYPosHigh,X
                       STA.B _0
                       LDY.B _1
                       BEQ +
@@ -5588,7 +5588,7 @@ SubHorizPos:          LDY.B #$00
                       SBC.B SpriteXPosLow,X
                       STA.B _F
                       LDA.B PlayerXPosNow+1
-                      SBC.W SpriteYPosHigh,X
+                      SBC.W SpriteXPosHigh,X
                       BPL +
                       INY
                     + RTS
@@ -5599,7 +5599,7 @@ CODE_01AD42:          LDY.B #$00
                       SBC.B SpriteYPosLow,X
                       STA.B _E
                       LDA.B PlayerYPosNow+1
-                      SBC.W SpriteXPosHigh,X
+                      SBC.W SpriteYPosHigh,X
                       BPL +
                       INY
                     + RTS
@@ -5698,11 +5698,11 @@ CODE_01ADF8:          JSR SubSprSprInteract
                       STA.W SpriteMisc163E,X
                       LDA.B SpriteXPosLow,X
                       STA.B TouchBlockXPos
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       STA.B TouchBlockXPos+1
                       LDA.B SpriteYPosLow,X
                       STA.B TouchBlockYPos
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       STA.B TouchBlockYPos+1
                       LDA.B #$FF                                ; \ Set to permanently erase sprite
                       STA.W SpriteLoadIndex,X                   ; /
@@ -6104,7 +6104,7 @@ CODE_01B152:          ORA.W SpriteOffscreenVert,X
                       ADC.B SpriteXPosLow,X
                       STA.B _2
                       TYA
-                      ADC.W SpriteYPosHigh,X
+                      ADC.W SpriteXPosHigh,X
                       PHA
                       LDA.B _2
                       CMP.B Layer1XPos
@@ -6117,7 +6117,7 @@ CODE_01B152:          ORA.W SpriteOffscreenVert,X
                       ADC.B #$FE
                       ADC.B SpriteYPosLow,X
                       STA.B _0
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       STA.B _1
                       JSL CODE_0285BA
@@ -6215,9 +6215,9 @@ CODE_01B23B:          JSR CODE_019140
                       CLC
                       ADC.B #$08
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       CMP.B #$02
                       BCS Return01B25D
                       BRA CODE_01B23B
@@ -6495,7 +6495,7 @@ CODE_01B457:          JSR ProcessInteract
                       SEC
                       SBC.B _1
                       STA.B PlayerYPosNext
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
                       STA.B PlayerYPosNext+1
                       LDA.B PlayerBlockedDir
@@ -6578,7 +6578,7 @@ CODE_01B520:          INY
                       ADC.B SpriteXPosLow,X
                       STA.B PlayerXPosNext
                       LDA.W DATA_01B4FF,Y
-                      ADC.W SpriteYPosHigh,X
+                      ADC.W SpriteXPosHigh,X
                       STA.B PlayerXPosNext+1
                       STZ.B PlayerXSpeed
                       CLC
@@ -6714,13 +6714,13 @@ CODE_01B624:          LDY.W TileGenerateTrackA
                       SEC
                       SBC.B _0
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       PHA
                       SBC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       JSR CODE_019140
                       PLA
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       PLA
                       STA.B SpriteYPosLow,X
 CODE_01B64E:          JSR SubOffscreen0Bnk1
@@ -6926,14 +6926,14 @@ FinishOAMWriteRt:     STY.B _B
                       SEC
                       SBC.B Layer1YPos
                       STA.B _6
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       STA.B _1
                       LDA.B SpriteXPosLow,X
                       STA.B _2
                       SEC
                       SBC.B Layer1XPos
                       STA.B _7
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       STA.B _3
 CODE_01B7DE:          TYA
                       LSR A
@@ -7039,7 +7039,7 @@ CODE_01B852:          LDA.W SpriteWayOffscreenX,X
                       SEC
                       SBC.B _0
                       STA.B PlayerYPosNext
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
                       STA.B PlayerYPosNext+1
                       LDY.B #$00
@@ -7094,7 +7094,7 @@ ADDR_01B8D5:          LDA.B _E
                       ADC.B _0
                       STA.B PlayerXPosNext
                       TYA
-                      ADC.W SpriteYPosHigh,X
+                      ADC.W SpriteXPosHigh,X
                       STA.B PlayerXPosNext+1
                       STZ.B PlayerXSpeed
                       RTS
@@ -7107,7 +7107,7 @@ CODE_01B8FF:          LDA.B _0
                       SEC
                       SBC.B _0
                       STA.B _4
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       SBC.B #$00
                       STA.B _A
                       LDA.B _0
@@ -7119,7 +7119,7 @@ CODE_01B8FF:          LDA.B _0
                       SEC
                       SBC.B _2
                       STA.B _5
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
                       STA.B _B
                       LDA.B _2
@@ -7184,7 +7184,7 @@ CODE_01B9A0:          JMP CODE_01BA37
 
 CODE_01B9A3:          LDY.B SpriteYPosLow,X
                       PHY
-                      LDY.W SpriteXPosHigh,X
+                      LDY.W SpriteYPosHigh,X
                       PHY
                       LDY.B #$00
                       CMP.B #$38
@@ -7198,9 +7198,9 @@ CODE_01B9A3:          LDY.B SpriteYPosLow,X
                       SEC
                       SBC.B #$0C
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       LDA.W SpriteBehindScene,X
                       BEQ +
                       INY
@@ -7224,7 +7224,7 @@ CODE_01B9A3:          LDY.B SpriteYPosLow,X
                       PLA
                       STA.W SpriteOBJAttribute,X
                       PLA
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       PLA
                       STA.B SpriteYPosLow,X
                       RTS
@@ -7537,12 +7537,12 @@ MagikoopasMagic:      LDA.B SpriteLock
                       STA.W SpriteStatus,X                      ; /
                       JSL InitSpriteTables
                       LDA.B TouchBlockXPos+1                    ; \ Sprite X position = block X position
-                      STA.W SpriteYPosHigh,X                    ; |
+                      STA.W SpriteXPosHigh,X                    ; |
                       LDA.B TouchBlockXPos                      ; |
                       AND.B #$F0                                ; |
                       STA.B SpriteXPosLow,X                     ; |
                       LDA.B TouchBlockYPos+1                    ; /
-                      STA.W SpriteXPosHigh,X                    ; \ Sprite Y position = block Y position
+                      STA.W SpriteYPosHigh,X                    ; \ Sprite Y position = block Y position
                       LDA.B TouchBlockYPos                      ; |
                       AND.B #$F0                                ; |
                       STA.B SpriteYPosLow,X                     ; /
@@ -7724,7 +7724,7 @@ CODE_01BDF2:          LDA.W SpriteWillAppear
                       STA.B SpriteYPosLow,X
                       LDA.B Layer1YPos+1
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       JSL GetRand
                       CLC
                       ADC.B Layer1XPos
@@ -7732,7 +7732,7 @@ CODE_01BDF2:          LDA.W SpriteWillAppear
                       STA.B SpriteXPosLow,X
                       LDA.B Layer1XPos+1
                       ADC.B #$00
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       JSR SubHorizPos
                       LDA.B _F
                       CLC
@@ -7869,15 +7869,15 @@ CODE_01BF28:          LDA.B #!SFX_MAGIC                         ; \ Play sound e
                       STA.W SpriteNumber,Y
                       LDA.B SpriteXPosLow,X
                       STA.W SpriteXPosLow,Y
-                      LDA.W SpriteYPosHigh,X
-                      STA.W SpriteYPosHigh,Y
+                      LDA.W SpriteXPosHigh,X
+                      STA.W SpriteXPosHigh,Y
                       LDA.B SpriteYPosLow,X
                       CLC
                       ADC.B #$0A
                       STA.W SpriteYPosLow,Y
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,Y
+                      STA.W SpriteYPosHigh,Y
                       TYX
                       JSL InitSpriteTables
                       LDA.B #$20
@@ -8027,24 +8027,24 @@ CODE_01C05E:          LDX.W CurSpriteProcess                    ; X = Sprite ind
                       SEC                                       ; | Sprite Y position -= #$4C
                       SBC.B #$4C                                ; |
                       STA.B SpriteYPosLow,X                     ; |
-                      LDA.W SpriteXPosHigh,X                    ; |
+                      LDA.W SpriteYPosHigh,X                    ; |
                       SBC.B #$00                                ; |
-                      STA.W SpriteXPosHigh,X                    ; |
+                      STA.W SpriteYPosHigh,X                    ; |
                       RTS                                       ; /
 
 InitGoalTape:         LDA.B SpriteXPosLow,X
                       SEC
                       SBC.B #$08
                       STA.B SpriteTableC2,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       SBC.B #$00
                       STA.W SpriteMisc151C,X
                       LDA.B SpriteYPosLow,X
                       STA.W SpriteMisc1528,X
-                      LDA.W SpriteXPosHigh,X                    ; \ Save extra bits into $187B,x
+                      LDA.W SpriteYPosHigh,X                    ; \ Save extra bits into $187B,x
                       STA.W SpriteMisc187B,X                    ; /
                       AND.B #$01                                ; \ Clear extra bits out of position
-                      STA.W SpriteXPosHigh,X                    ; /
+                      STA.W SpriteYPosHigh,X                    ; /
                       STA.W SpriteMisc1534,X
                       RTS
 
@@ -8187,7 +8187,7 @@ GrowingVine:          LDA.B SpriteProperties
                       JSR CODE_019140
                       LDA.W SpriteBlockedDirs,X
                       BNE CODE_01C1C8
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       BPL CODE_01C1CB
 CODE_01C1C8:          JMP OffScrEraseSprite
 
@@ -8197,11 +8197,11 @@ CODE_01C1CB:          LDA.B SpriteYPosLow,X
                       BNE Return01C1ED
                       LDA.B SpriteXPosLow,X                     ; \ $9A = Sprite X position
                       STA.B TouchBlockXPos                      ; | for block creation
-                      LDA.W SpriteYPosHigh,X                    ; |
+                      LDA.W SpriteXPosHigh,X                    ; |
                       STA.B TouchBlockXPos+1                    ; /
                       LDA.B SpriteYPosLow,X                     ; \ $98 = Sprite Y position
                       STA.B TouchBlockYPos                      ; | for block creation
-                      LDA.W SpriteXPosHigh,X                    ; |
+                      LDA.W SpriteYPosHigh,X                    ; |
                       STA.B TouchBlockYPos+1                    ; /
                       LDA.B #$03                                ; \ Block to generate = Vine
                       STA.B Map16TileGenerate                   ; /
@@ -8476,7 +8476,7 @@ CODE_01C3F3:          LDA.W IRQNMICommand
                       BVC CODE_01C42C
                       STZ.W SpriteBlockedDirs,X
                       STZ.B SpriteXSpeed,X                      ; Sprite X Speed = 0
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       BNE +
                       LDA.B SpriteYPosLow,X
                       CMP.B #$A0
@@ -8885,16 +8885,16 @@ InitBrwnChainPlat:    LDA.B #$80
                       CLC
                       ADC.B #$78
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.B SpriteYPosLow,X
                       CLC
                       ADC.B #$68
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       RTS
 
 BrownChainedPlat:     JSR SubOffscreen2Bnk1
@@ -9348,7 +9348,7 @@ CODE_01CACB:          LDA.B #$50
                       STZ.W BrSwingRadiusY+1
                       LDA.B SpriteXPosLow,X
                       STA.W BrSwingXDist
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       STA.W BrSwingXDist+1
                       LDA.W BrSwingXDist
                       SEC
@@ -9359,7 +9359,7 @@ CODE_01CACB:          LDA.B #$50
                       STA.W BrSwingCenterXPos+1
                       LDA.B SpriteYPosLow,X
                       STA.W BrSwingYDist
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       STA.W BrSwingYDist+1
                       LDA.W BrSwingYDist
                       SEC
@@ -9650,7 +9650,7 @@ InitKoopaKid:         LDA.B SpriteYPosLow,X
                       LDA.B #$40
                       STA.B SpriteYPosLow,X
                       LDA.B #$01
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       LDA.B #$80
                       STA.W SpriteMisc1540,X
                       RTS
@@ -9679,7 +9679,7 @@ InitKoopaKid:         LDA.B SpriteYPosLow,X
                       LDA.B #$70
                       STA.B SpriteXPosLow,X
                     + LDA.B #$01
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       RTS
 
 CODE_01CD87:          LDA.B #$26
@@ -9835,7 +9835,7 @@ CODE_01CEB6:          LDA.W SpriteMisc1540,X
                       BNE +
                       JSR SubHorizPos
                       TYA
-                      CMP.W SpriteYPosHigh,X
+                      CMP.W SpriteXPosHigh,X
                       BNE +
                       INC.W SpriteMisc1528,X
                       LDA.W DATA_01CEB4,Y
@@ -9988,7 +9988,7 @@ CODE_01CFE0:          LDY.W SpriteMisc1540,X
                       SBC.B #$01
                       STA.B SpriteYPosLow,X
                       BCS +
-                      DEC.W SpriteXPosHigh,X
+                      DEC.W SpriteYPosHigh,X
                     + DEC.B Mode7YScale
                       TYA
                       AND.B #$03
@@ -10056,15 +10056,15 @@ CODE_01D069:          LDA.B #$08                                ; \ Sprite statu
                       STA.W SpriteNumber,Y
                       LDA.B SpriteXPosLow,X
                       STA.B _0
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       STA.B _1
                       LDA.B SpriteYPosLow,X
                       CLC
                       ADC.B #$03
                       STA.W SpriteYPosLow,Y
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,Y
+                      STA.W SpriteYPosHigh,Y
                       LDA.W SpriteMisc157C,X
                       PHX
                       TAX
@@ -10074,7 +10074,7 @@ CODE_01D069:          LDA.B #$08                                ; \ Sprite statu
                       STA.W SpriteXPosLow,Y
                       LDA.B _1
                       ADC.B #$FF
-                      STA.W SpriteYPosHigh,Y
+                      STA.W SpriteXPosHigh,Y
                       PLX
                       PHX
                       TYX
@@ -10096,7 +10096,7 @@ DATA_01D0BE:          db $20,$E0
 
 CODE_01D0C0:          LDA.B SpriteYSpeed,X
                       BMI +
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       BNE +
                       LDA.B Mode7YScale
                       LSR A
@@ -10406,10 +10406,10 @@ CODE_01D351:          LDA.B SpriteXPosLow,X
                       SEC
                       SBC.B #$08
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       PHA
                       SBC.B #$00
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.B SpriteYPosLow,X
                       PHA
                       CLC
@@ -10419,7 +10419,7 @@ CODE_01D351:          LDA.B SpriteXPosLow,X
                       PLA
                       STA.B SpriteYPosLow,X
                       PLA
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       PLA
                       STA.B SpriteXPosLow,X
                       RTS
@@ -10441,9 +10441,9 @@ CODE_01D379:          LDA.B #$18
                       CLC
                       ADC.B SpriteYPosLow,X
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       STZ.B SpriteXSpeed,X                      ; \ Sprite Speed = 0
                       STZ.B SpriteYSpeed,X                      ; /
                       LDA.B #$80
@@ -10498,7 +10498,7 @@ CODE_01D40B:          LDA.B SpriteXPosLow,X
                       SEC
                       SBC.B #$08
                       STA.B _4
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       SBC.B #$00
                       STA.B _A
                       LDA.B #$10
@@ -10513,7 +10513,7 @@ CODE_01D40B:          LDA.B SpriteXPosLow,X
                     + CLC
                       ADC.B SpriteYPosLow,X
                       STA.B _5
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       STA.B _B
                       RTS
@@ -10547,7 +10547,7 @@ BossFireball:         LDA.B SpriteLock
                       CLC
                       ADC.B #$20
                       STA.B _0
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
                       STA.B _1
                       REP #$20                                  ; A->16
@@ -10633,7 +10633,7 @@ ParachuteSprites:     LDA.W SpriteStatus,X
                       BCC +
                       INC.B SpriteYPosLow,X
                       BNE +
-                      INC.W SpriteXPosHigh,X
+                      INC.W SpriteYPosHigh,X
                     + LDA.W SpriteMisc151C,X
                       BNE CODE_01D558
                       LDA.B TrueFrame
@@ -10700,10 +10700,10 @@ CODE_01D5B3:          STZ.W TileGenerateTrackA
                       CLC
                       ADC.B _0
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       PHA
                       ADC.B #$FF
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       LDA.W SpriteOBJAttribute,X
                       PHA
                       AND.B #$F1
@@ -10727,10 +10727,10 @@ CODE_01D5B3:          STZ.W TileGenerateTrackA
                       CLC
                       ADC.W DATA_01D57E,Y
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       PHA
                       ADC.W DATA_01D58E,Y
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       STZ.B _0
                       LDA.W DATA_01D59E,Y
                       SEC
@@ -10740,9 +10740,9 @@ CODE_01D5B3:          STZ.W TileGenerateTrackA
                     + CLC
                       ADC.B SpriteYPosLow,X
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B _0
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       LDA.W SpriteMisc1602,X
                       SEC
                       SBC.B #$0C
@@ -10766,7 +10766,7 @@ CODE_01D5B3:          STZ.W TileGenerateTrackA
                       PLA
                       PLA
                       PLA
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       PLA
                       STA.B SpriteYPosLow,X
                       LDA.B #$80
@@ -10804,11 +10804,11 @@ CODE_01D693:          TXA
                       LDA.B #$20
                       STA.W SpriteMisc1540,X
 CODE_01D6B5:          PLA
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       PLA
                       STA.B SpriteXPosLow,X
                       PLA
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       PLA
                       STA.B SpriteYPosLow,X
 Return01D6C3:         RTS
@@ -10840,9 +10840,9 @@ InitLineGuidedSpr:    INC.W SpriteMisc187B,X
                       SEC
                       SBC.B #$40
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       SBC.B #$01
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       BRA InitLineBrwnPlat
 
 CODE_01D707:          INC.W SpriteMisc157C,X
@@ -10979,14 +10979,14 @@ CODE_01D7F6:          STY.W SpriteInterIndex
                       CLC
                       ADC.W DATA_01D7E1,Y
                       STA.B _2
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.W DATA_01D7E5,Y
                       STA.B _3
                       LDA.B SpriteYPosLow,X
                       CLC
                       ADC.W DATA_01D7E9,Y
                       STA.B _0
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.W DATA_01D7ED,Y
                       STA.B _1
                       LDA.W SpriteMisc1540,X
@@ -11063,20 +11063,20 @@ CODE_01D89F:          LDY.W SpriteMisc160E,X
 
 CODE_01D8A4:          LDA.B SpriteYPosLow,X
                       STA.B _8
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       STA.B _9
                       LDA.B SpriteXPosLow,X
                       STA.B _A
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       STA.B _B
                       LDA.B _0
                       STA.B SpriteYPosLow,X
                       LDA.B _1
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       LDA.B _2
                       STA.B SpriteXPosLow,X
                       LDA.B _3
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                     + PHB
                       LDA.B #$07
                       PHA
@@ -11137,11 +11137,11 @@ CODE_01D933:          LDA.B #$01
                     + LDA.B _8
                       STA.B SpriteYPosLow,X
                       LDA.B _9
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       LDA.B _A
                       STA.B SpriteXPosLow,X
                       LDA.B _B
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       JMP CODE_01D861
 
 CODE_01D94D:          LDA.B _0
@@ -11278,7 +11278,7 @@ CODE_01DA37:          STZ.W PlayerClimbingRope
                       STA.B PlayerYPosNext+1
                       LDA.B SpriteYPosLow,X
                       STA.B _0
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       STA.B _1
                       REP #$20                                  ; A->16
                       LDA.B PlayerYPosNext
@@ -11329,26 +11329,26 @@ CODE_01DAA2:          LDY.B #$18                                ;LINE GUIDED PLA
                       SEC
                       SBC.B _0
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       PHA
                       SBC.B #$00
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.B SpriteYPosLow,X
                       PHA
                       SEC
                       SBC.B #$08
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       PHA
                       SBC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       JSR CODE_01B2DF                           ;DRAW GFX  .  RELIES ON NEW POSITIONS MADE UP THERE.
                       PLA                                       ;RESTORE POSITIONS
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       PLA
                       STA.B SpriteYPosLow,X
                       PLA
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       PLA
                       STA.B SpriteXPosLow,X
                       LDA.B SpriteXPosLow,X
@@ -11372,19 +11372,19 @@ CODE_01DAA2:          LDY.B #$18                                ;LINE GUIDED PLA
                       SEC
                       SBC.B _0
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       PHA
                       SBC.B #$00
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.B SpriteYPosLow,X
                       PHA
                       SEC
                       SBC.B #$08
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       PHA
                       SBC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       JSR CODE_01B457                           ;CUSTOM INTERACTION HANDLER
                       BCC +
                       LDA.W SpriteMisc1626,X
@@ -11392,11 +11392,11 @@ CODE_01DAA2:          LDY.B #$18                                ;LINE GUIDED PLA
                       STZ.W SpriteMisc1626,X
                       STZ.W SpriteMisc1540,X
                     + PLA
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       PLA
                       STA.B SpriteYPosLow,X
                       PLA
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       PLA
                       STA.B SpriteXPosLow,X
                       PLA
@@ -11654,14 +11654,14 @@ CODE_01DDB7:          LDA.B #$08                                ; \ Sprite statu
                       %LorW_X(LDA,DATA_01DD90)
                       STA.B SpriteXPosLow,X
                       LDA.B #$00
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       %LorW_X(LDA,DATA_01DD99)
                       STA.B SpriteYPosLow,X
                       ASL A
                       LDA.B #$00
                       BCS +
                       INC A
-                    + STA.W SpriteXPosHigh,X
+                    + STA.W SpriteYPosHigh,X
                       JSL InitSpriteTables
                       %LorW_X(LDA,DATA_01DDA2)
                       STA.W SpriteMisc157C,X
@@ -11951,15 +11951,15 @@ CODE_01E00D:          LDA.W SpriteMisc1570,Y
 
 InitFireball:         LDA.B SpriteYPosLow,X
                       STA.W SpriteMisc1528,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       STA.W SpriteMisc151C,X
                     - LDA.B SpriteYPosLow,X
                       CLC
                       ADC.B #$10
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       JSR CODE_019140
                       LDA.W SpriteInLiquid,X
                       BEQ -
@@ -12013,7 +12013,7 @@ CODE_01E0E2:          LDA.B SpriteYPosLow,X
                       SEC
                       SBC.W SpriteMisc1528,X
                       STA.B _0
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.W SpriteMisc151C,X
                       LSR A
                       ROR.B _0
@@ -12124,9 +12124,9 @@ InitKeyHole:          LDA.B SpriteXPosLow,X
                       CLC
                       ADC.B #$08
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       RTS
 
 Keyhole:              LDY.B #$0B
@@ -12168,11 +12168,11 @@ CODE_01E201:          JSL GetSpriteClippingA
                       STA.W SPCIO2                              ; / Change music
                       INC.W PlayerIsFrozen
                       INC.B SpriteLock
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       STA.W KeyholeXPos+1
                       LDA.B SpriteXPosLow,X
                       STA.W KeyholeXPos
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       STA.W KeyholeYPos+1
                       LDA.B SpriteYPosLow,X
                       STA.W KeyholeYPos
@@ -12282,11 +12282,11 @@ CODE_01E309:          LDA.W SpriteMisc1540,X
                       BNE CODE_01E343
                       LDA.B SpriteXPosLow,X                     ; \ $9A = Sprite X position
                       STA.B TouchBlockXPos                      ; | for block creation
-                      LDA.W SpriteYPosHigh,X                    ; |
+                      LDA.W SpriteXPosHigh,X                    ; |
                       STA.B TouchBlockXPos+1                    ; /
                       LDA.B SpriteYPosLow,X                     ; \ $98 = Sprite Y position
                       STA.B TouchBlockYPos                      ; | for block creation
-                      LDA.W SpriteXPosHigh,X                    ; |
+                      LDA.W SpriteYPosHigh,X                    ; |
                       STA.B TouchBlockYPos+1                    ; /
                       LDA.B #$08                                ; \ Block to generate = Mole hole
                       STA.B Map16TileGenerate                   ; /
@@ -12684,7 +12684,7 @@ SpringBoard:          LDA.B SpriteLock
                       SEC
                       SBC.B _0
                       STA.B PlayerYPosNext
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
                       STA.B PlayerYPosNext+1
                       STZ.B PlayerInAir
@@ -12880,11 +12880,11 @@ CODE_01E7DD:          LDA.W SpriteStatus,Y
                       STA.B SpriteYPosLow,X
                       LDA.B PlayerYPosNow+1
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       LDA.B PlayerXPosNow
                       STA.B SpriteXPosLow,X
                       LDA.B PlayerXPosNow+1
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.B #$10
                       STA.B SpriteYSpeed,X
                       STA.W SpriteMisc151C,X
@@ -12918,14 +12918,14 @@ CODE_01E840:          JSR LakituCloudGfx
                     + LDA.B PlayerXPosNow
                       STA.B SpriteXPosLow,X
                       LDA.B PlayerXPosNow+1
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.B PlayerYPosNow
                       CLC
                       ADC.W DATA_01E793,Y
                       STA.B SpriteYPosLow,X
                       LDA.B PlayerYPosNow+1
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       STZ.B PlayerInAir
                       INC.W StandOnSolidSprite
                       INC.W PlayerInCloud
@@ -12952,15 +12952,15 @@ CODE_01E898:          PHY
                       PLY
                       LDA.B SpriteXPosLow,X
                       STA.W SpriteXPosLow,Y
-                      LDA.W SpriteYPosHigh,X
-                      STA.W SpriteYPosHigh,Y
+                      LDA.W SpriteXPosHigh,X
+                      STA.W SpriteXPosHigh,Y
                       LDA.B SpriteYPosLow,X
                       SEC
                       SBC.B _0
                       STA.W SpriteYPosLow,Y
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
-                      STA.W SpriteXPosHigh,Y
+                      STA.W SpriteYPosHigh,Y
                       LDA.B #$10
                       STA.W SpriteMisc154C,X
 LakituCloudGfx:       JSR GetDrawInfoBnk1
@@ -13148,12 +13148,12 @@ CODE_01EA21:          JSL FindFreeSprSlot                       ; \ Return if no
                     + STA.W SpriteNumber,Y
                       LDA.B SpriteXPosLow,X
                       STA.W SpriteXPosLow,Y
-                      LDA.W SpriteYPosHigh,X
-                      STA.W SpriteYPosHigh,Y
-                      LDA.B SpriteYPosLow,X
-                      STA.W SpriteYPosLow,Y
                       LDA.W SpriteXPosHigh,X
                       STA.W SpriteXPosHigh,Y
+                      LDA.B SpriteYPosLow,X
+                      STA.W SpriteYPosLow,Y
+                      LDA.W SpriteYPosHigh,X
+                      STA.W SpriteYPosHigh,Y
                       PHX
                       TYX
                       JSL InitSpriteTables
@@ -13292,7 +13292,7 @@ CODE_01EB48:          LDA.B SpriteTableC2,X
                       STA.B SpriteXPosLow,X
                       LDA.B PlayerXPosNext+1
                       ADC.W DATA_01EDF3,Y
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDY.W SpriteMisc1602,X
                       LDA.B PlayerYPosNext
                       CLC
@@ -13300,7 +13300,7 @@ CODE_01EB48:          LDA.B SpriteTableC2,X
                       STA.B SpriteYPosLow,X
                       LDA.B PlayerYPosNext+1
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       LDA.W DATA_01EDE4,Y
                       STA.W ScrShakePlayerYOffset
                       LDA.B #$01
@@ -13449,17 +13449,17 @@ Return01EC8A:         RTS                                       ; /
                       PLY
                       STA.W SpriteXPosLow,Y
                       LDY.W SpriteMisc157C,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.W DATA_01EC5F,Y
                       PLY
-                      STA.W SpriteYPosHigh,Y
+                      STA.W SpriteXPosHigh,Y
                       LDA.B SpriteYPosLow,X
                       CLC
                       ADC.B #$08
                       STA.W SpriteYPosLow,Y
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,Y
+                      STA.W SpriteYPosHigh,Y
                       PHX
                       TYX
                       JSL InitSpriteTables
@@ -13498,14 +13498,14 @@ CODE_01ECE1:          LDA.B SpriteTableC2,X
                       CLC
                       ADC.B SpriteXPosLow,X
                       STA.B _4
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
                       STA.B _A
                       LDA.B #$13
                       CLC
                       ADC.B SpriteYPosLow,X
                       STA.B _5
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       STA.B _B
                       LDA.B #$08
@@ -13584,7 +13584,7 @@ CODE_01EDCE:          LDA.B SpriteYPosLow,X
                       SBC.W DATA_01EDE2,Y
                       STA.B PlayerYPosNext
                       STA.B PlayerYPosNow
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       SBC.B #$00
                       STA.B PlayerYPosNext+1
                       STA.B PlayerYPosNow+1
@@ -13727,10 +13727,10 @@ CODE_01EF18:          LDY.W SpriteMisc1602,X
                       CLC
                       ADC.W YoshiPositionY,Y
                       STA.B SpriteYPosLow,X
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       PHA
                       ADC.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       TYA
                       LDY.W SpriteMisc157C,X
                       BEQ +
@@ -13742,10 +13742,10 @@ CODE_01EF18:          LDY.W SpriteMisc1602,X
                       CLC
                       ADC.W YoshiHeadDispX,Y
                       STA.B SpriteXPosLow,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       PHA
                       ADC.W DATA_01EE2D,Y
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.W SpriteOAMIndex,X
                       PHA
                       LDA.W SpriteMisc15AC,X
@@ -13769,7 +13769,7 @@ CODE_01EF18:          LDY.W SpriteMisc1602,X
                       ADC.B #$04
                       STA.W SpriteOAMIndex,X
                       PLA
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       PLA
                       STA.B SpriteXPosLow,X
                       LDY.W TileGenerateTrackA
@@ -13780,10 +13780,10 @@ CODE_01EF18:          LDY.W SpriteMisc1602,X
                       ADC.B #$10
                       STA.B SpriteYPosLow,X
                       BCC +
-                      INC.W SpriteXPosHigh,X
+                      INC.W SpriteYPosHigh,X
                     + JSR SubSprGfx2Entry1
                       PLA
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       PLA
                       STA.B SpriteYPosLow,X
                       LDY.B _E
@@ -14071,14 +14071,14 @@ CODE_01F1DF:          LDA.B SpriteTableC2,X
                       PLY
                       STA.W SpriteXPosLow,Y
                       LDY.W SpriteMisc157C,X
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.W DATA_01F307,Y
                       PLY
-                      STA.W SpriteYPosHigh,Y
+                      STA.W SpriteXPosHigh,Y
                       LDA.B SpriteYPosLow,X
                       STA.W SpriteYPosLow,Y
-                      LDA.W SpriteXPosHigh,X
-                      STA.W SpriteXPosHigh,Y
+                      LDA.W SpriteYPosHigh,X
+                      STA.W SpriteYPosHigh,Y
                       LDA.B #$00
                       STA.W SpriteTableC2,Y
                       STA.W SpriteOnYoshiTongue,Y
@@ -14138,11 +14138,11 @@ CODE_01F295:          JSR CODE_018EEF
                       STA.W ExtSpriteNumber,Y                   ; /
                       LDA.B SpriteXPosLow,X
                       STA.W ExtSpriteXPosLow,Y
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       STA.W ExtSpriteXPosHigh,Y
                       LDA.B SpriteYPosLow,X
                       STA.W ExtSpriteYPosLow,Y
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       STA.W ExtSpriteYPosHigh,Y
                       LDA.B #$00
                       STA.W ExtSpritePriority,Y
@@ -14438,9 +14438,9 @@ CODE_01F4C3:          LDA.W SpriteMisc151C,X
                       STA.W SpriteXPosLow,Y
                       PLY
                       TYA
-                      ADC.W SpriteYPosHigh,X
+                      ADC.W SpriteXPosHigh,X
                       LDY.W SpriteMisc160E,X
-                      STA.W SpriteYPosHigh,Y
+                      STA.W SpriteXPosHigh,Y
                       LDA.B #$FC
                       STA.B _0
                       LDA.W SpriteTweakerB,Y
@@ -14460,9 +14460,9 @@ CODE_01F4C3:          LDA.W SpriteMisc151C,X
                     + CLC
                       ADC.B SpriteYPosLow,X
                       STA.W SpriteYPosLow,Y
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B _1
-                      STA.W SpriteXPosHigh,Y
+                      STA.W SpriteYPosHigh,Y
                       LDA.B #$00
                       STA.W SpriteYSpeed,Y
                       STA.W SpriteXSpeed,Y
@@ -14491,7 +14491,7 @@ CODE_01F531:          LDA.W SpriteMisc151C,X
                       ADC.B SpriteXPosLow,X
                       STA.B _0
                       TYA
-                      ADC.W SpriteYPosHigh,X
+                      ADC.W SpriteXPosHigh,X
                       STA.B _8
                       PLY
                       LDA.W TileGenerateTrackA
@@ -14500,7 +14500,7 @@ CODE_01F531:          LDA.W SpriteMisc151C,X
                       CLC
                       ADC.B SpriteYPosLow,X
                       STA.B _1
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       STA.B _9
                       LDA.B #$08
@@ -14561,11 +14561,11 @@ TryEatSprite:         PHX
                       LDA.B _0
                       STA.W SpriteXPosLow,Y
                       LDA.B _8
-                      STA.W SpriteYPosHigh,Y
+                      STA.W SpriteXPosHigh,Y
                       LDA.B _1
                       STA.W SpriteYPosLow,Y
                       LDA.B _9
-                      STA.W SpriteXPosHigh,Y
+                      STA.W SpriteYPosHigh,Y
                       PHX
                       TYX                                       ; X = Index of new sprite
                       JSL InitSpriteTables                      ; Reset sprite tables
@@ -14797,7 +14797,7 @@ CODE_01F7C8:          JSR IsSprOffScreen
                       STA.B _0
                       LDA.B SpriteYPosLow,X
                       STA.B _2
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       STA.B _3
                       PHX
                       LDY.B #$03
@@ -15490,14 +15490,14 @@ CODE_01FD50:          LDA.B SpriteXPosLow,X
                       CLC
                       ADC.B #$08
                       STA.W BrSwingXDist
-                      LDA.W SpriteYPosHigh,X
+                      LDA.W SpriteXPosHigh,X
                       ADC.B #$00
                       STA.W BrSwingXDist+1
                       LDA.B SpriteYPosLow,X
                       CLC
                       ADC.B #$2F
                       STA.W BrSwingYDist
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       ADC.B #$00
                       STA.W BrSwingYDist+1
                       REP #$20                                  ; A->16
@@ -15551,14 +15551,14 @@ GenerateBall:         LDA.B #!SFX_SPIT                          ; \ Play sound e
                       ADC.W BallPositionDispX,X                 ; |
                       STA.W SpriteXPosLow,Y                     ; |
                       LDA.B #$00                                ; |
-                      STA.W SpriteYPosHigh,Y                    ; /
+                      STA.W SpriteXPosHigh,Y                    ; /
                       LDA.W BrSwingPlatYPos                     ; \ Set Ball Y position
                       SEC                                       ; |
                       SBC.B #$18                                ; |
                       STA.W SpriteYPosLow,Y                     ; |
                       LDA.B #$00                                ; |
                       SBC.B #$00                                ; |
-                      STA.W SpriteXPosHigh,Y                    ; /
+                      STA.W SpriteYPosHigh,Y                    ; /
                       PLX                                       ; X = Iggy's sprite index
                       RTS
 
@@ -15720,14 +15720,14 @@ CODE_01FF98:          LDA.B SpriteXPosLow,X                     ; \ $14B4,$14B5 
                       CLC                                       ; |
                       ADC.B #$08                                ; |
                       STA.W BrSwingXDist                        ; |
-                      LDA.W SpriteYPosHigh,X                    ; |
+                      LDA.W SpriteXPosHigh,X                    ; |
                       ADC.B #$00                                ; |
                       STA.W BrSwingXDist+1                      ; /
                       LDA.B SpriteYPosLow,X                     ; \ $14B6,$14B7 = Sprite Y position + #$0F
                       CLC                                       ; |
                       ADC.B #$0F                                ; |
                       STA.W BrSwingYDist                        ; |
-                      LDA.W SpriteXPosHigh,X                    ; |
+                      LDA.W SpriteYPosHigh,X                    ; |
                       ADC.B #$00                                ; |
                       STA.W BrSwingYDist+1                      ; /
                       PHX

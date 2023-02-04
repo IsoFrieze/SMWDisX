@@ -2746,7 +2746,7 @@ endif                                         ;|/===============================
     BNE -                                     ;/
     JMP ConsolidateOAM                        ; Prep OAM for upload.
 
-CODE_0097BC:          LDA.B #$0F
+CODE_0097BC:          LDA.B #%00001111
                       STA.W Brightness                          ; Set brightness to full (RAM mirror)
                       STZ.W MosaicSize
                       JSR GM__Mosaic
@@ -2755,7 +2755,7 @@ CODE_0097BC:          LDA.B #$0F
                       STA.B Mode7YScale                         ; /scratch (I find that unlikely)
                       STZ.W ScreenShakeYOffset
                       JSR ClearOutLayer3
-                      LDA.B #$FF
+                      LDA.B #!ObjTileset_ReznorIggyLarry
                       STA.W ObjectTileset
                       JSL CODE_03D958
                       BIT.W IRQNMICommand
@@ -2765,14 +2765,14 @@ CODE_0097BC:          LDA.B #$0F
                       CPY.B #$03
                       BCC CODE_0097F1
                       BNE CODE_00983B
-                      LDA.B #$18
+                      LDA.B #!SprTileset_Bowser
                       BRA +
 
 CODE_0097F1:          LDA.B #$03
                       STA.W PlayerBehindNet
                       LDA.B #$C8
                       STA.B OAMAddress
-                      LDA.B #$12
+                      LDA.B #!SprTileset_RoyMortonLudwig
                     + DEC.W ObjectTileset
                       BRA +
 
@@ -13090,7 +13090,7 @@ FlatPalaceSwitch:     LDA.B #$20                                ; \ Set "Time to
                       AND.B #$F0                                ; |Set sprite X (low) to $9A & 0xF0
                       STA.W SpriteXPosLow,Y                     ; /
                       LDA.B TouchBlockXPos+1                    ; \ Set sprite X (high) to $9B
-                      STA.W SpriteYPosHigh,Y                    ; /
+                      STA.W SpriteXPosHigh,Y                    ; /
                       LDA.B TouchBlockYPos                      ; \
                       AND.B #$F0                                ; |
                       CLC                                       ; |Set sprite Y (low) to ($98 & 0xF0) + 0x10
@@ -13098,7 +13098,7 @@ FlatPalaceSwitch:     LDA.B #$20                                ; \ Set "Time to
                       STA.W SpriteYPosLow,Y                     ; /
                       LDA.B TouchBlockYPos+1                    ; \
                       ADC.B #$00                                ; |Set sprite Y (high) to $99 + carry
-                      STA.W SpriteXPosHigh,Y                    ; / (Carry carried over from previous addition)
+                      STA.W SpriteYPosHigh,Y                    ; / (Carry carried over from previous addition)
                       PHX
                       TYX
                       JSL InitSpriteTables
@@ -13259,8 +13259,8 @@ LvlEndSprCoinsRt:     LDY.B #$00
                       ADC.B SpriteXPosLow,X
                       STA.B SpriteXPosLow,X
                       TYA
-                      ADC.W SpriteYPosHigh,X
-                      STA.W SpriteYPosHigh,X
+                      ADC.W SpriteXPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.W SpriteMisc1540,X
                       BEQ CODE_00FBF0
                       CMP.B #$01
@@ -13324,11 +13324,11 @@ ADDR_00FC25:          LDA.W SpriteStatus,Y                      ; / Status = Car
                       STA.W SpriteXPosLow,Y
                       LDA.B Layer1XPos+1
                       SBC.B #$00
-                      STA.W SpriteYPosHigh,Y
+                      STA.W SpriteXPosHigh,Y
                       LDA.B PlayerYPosNext
                       STA.W SpriteYPosLow,Y
                       LDA.B PlayerYPosNext+1
-                      STA.W SpriteXPosHigh,Y
+                      STA.W SpriteYPosHigh,Y
                       LDA.B #$03
                       STA.W SpriteTableC2,Y
                       LDA.B #$00
@@ -13362,7 +13362,7 @@ CODE_00FC7A:          LDA.B #!SFX_YOSHIDRUMON
                       LDA.B PlayerXPosNext                      ; \ Yoshi X position = Mario X position
                       STA.B SpriteXPosLow,X                     ; |
                       LDA.B PlayerXPosNext+1                    ; |
-                      STA.W SpriteYPosHigh,X                    ; /
+                      STA.W SpriteXPosHigh,X                    ; /
                       LDA.B PlayerYPosNext                      ; \ Yoshi's Y position = Mario Y position - #$10
                       SEC                                       ; | Mario Y position = Mario Y position - #$10
                       SBC.B #$10                                ; |
@@ -13371,7 +13371,7 @@ CODE_00FC7A:          LDA.B #!SFX_YOSHIDRUMON
                       LDA.B PlayerYPosNext+1                    ; |
                       SBC.B #$00                                ; |
                       STA.B PlayerYPosNext+1                    ; |
-                      STA.W SpriteXPosHigh,X                    ; /
+                      STA.W SpriteYPosHigh,X                    ; /
                       JSL InitSpriteTables                      ; Reset sprite tables
                       LDA.B #$04
                       STA.W SpriteMisc1FE2,X
@@ -13401,11 +13401,11 @@ CODE_00FCEC:          LDX.B #$0B
 CODE_00FCF5:          LDA.B #$A0
                       STA.B SpriteXPosLow,X
                       LDA.B #$00
-                      STA.W SpriteYPosHigh,X
+                      STA.W SpriteXPosHigh,X
                       LDA.B #$00
                       STA.B SpriteYPosLow,X
                       LDA.B #$00
-                      STA.W SpriteXPosHigh,X
+                      STA.W SpriteYPosHigh,X
                       RTL
 
 CODE_00FD08:          LDY.B #$3F
@@ -13690,7 +13690,7 @@ ADDR_00FF07:          REP #$20                                  ; A->16
                       SEP #$20                                  ; A->8
                       RTL
 
-ADDR_00FF32:          LDA.W SpriteYPosHigh,X
+ADDR_00FF32:          LDA.W SpriteXPosHigh,X
                       XBA
                       LDA.B SpriteXPosLow,X
                       REP #$20                                  ; A->16
@@ -13702,7 +13702,7 @@ ADDR_00FF32:          LDA.W SpriteYPosHigh,X
                       SBC.B _0
                       STA.B Layer3XPos
                       SEP #$20                                  ; A->8
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       XBA
                       LDA.B SpriteYPosLow,X
                       REP #$20                                  ; A->16
@@ -13716,7 +13716,7 @@ ADDR_00FF32:          LDA.W SpriteYPosHigh,X
                       SEP #$20                                  ; A->8
                       RTL
 
-CODE_00FF61:          LDA.W SpriteYPosHigh,X
+CODE_00FF61:          LDA.W SpriteXPosHigh,X
                       XBA
                       LDA.B SpriteXPosLow,X
                       REP #$20                                  ; A->16
@@ -13727,7 +13727,7 @@ CODE_00FF61:          LDA.W SpriteYPosHigh,X
 CODE_00FF73:          LDA.W #$0100
                     + STA.B Layer3XPos
                       SEP #$20                                  ; A->8
-                      LDA.W SpriteXPosHigh,X
+                      LDA.W SpriteYPosHigh,X
                       XBA
                       LDA.B SpriteYPosLow,X
                       REP #$20                                  ; A->16
