@@ -58,6 +58,9 @@
 ; size of a save file
 !SaveFileSize = 143
 
+; number of exits to make *96 appear on title screen
+!TotalExitCount = 96
+
 ; --- In-Level Properties ---
 
 ; height of status bar in lines
@@ -160,9 +163,16 @@
 
 ; number of levels on the main map
 !MainMapLvls = 36
+; special translevel numbers
+!IntroCutsceneLevel = $C5
+!TitleScreenLevel = $C7
 
 ; level tile ID to not show MARIO START !
 !LevelTileNoStart = $56
+
+; initial position of players on the overworld
+!InitOWPosX = $68
+!InitOWPosY = $78
 
 ; --- Credits Properties ---
 
@@ -308,12 +318,21 @@
 !ActiveBoss_Bowser = 3
 !ActiveBoss_Reznor = 4
 
-; -- Values for BlinkCursor
+; -- Values for BlinkCursor --
 !CursorContinueEnd = 0
 !CursorFileSelect = 2
 !CursorPlayerSelect = 4
 !CursorSaveNoSave = 6
 !CursorEraseFile = 8
+
+; -- Values for Overworld Submaps --
+!Submap_Main = 0
+!Submap_YoshisIsland = 1
+!Submap_VanillaDome = 2
+!Submap_ForestOfIllusion = 3
+!Submap_ValleyOfBowser = 4
+!Submap_SpecialWorld = 5
+!Submap_StarWorld = 6
 
 ; --- SFX & BGM ID Numbers ---
 

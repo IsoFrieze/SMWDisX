@@ -8,6 +8,7 @@ function ver_is_ntsc(v) = nor(equal(v,!__VER_E0),equal(v,!__VER_E1))
 function ver_is_arcade(v) = equal(v,!__VER_SS)
 function ver_is_console(v) = notequal(v,!__VER_SS)
 function ver_has_rev_gfx(v) = or(equal(v,!__VER_J),equal(v,!__VER_E1))
+function ver_is_english_console(v) = nor(equal(v,!__VER_SS),equal(v,!__VER_J))
 
 ; instruction address mode $byte if J, $word otherwise
 macro BorW(cmd, addr)

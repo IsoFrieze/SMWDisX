@@ -646,6 +646,8 @@ Layer2ScrollCmd: skip 1
 Layer1ScrollBits: skip 1
 Layer2ScrollBits: skip 1
 Layer1ScrollType: skip 1
+CutsceneTextTimer:
+SelectedStartingZone:
 Layer2ScrollType: skip 1
 Layer1ScrollTimer: skip 1
 Layer2ScrollTimer: skip 1
@@ -1202,7 +1204,8 @@ Map16TilesHigh: skip 14336
 ORG $700000
 
 SaveData: skip 140
-SaveDataChecksum: skip 3
+SaveDataExitCount: skip 1
+SaveDataChecksum: skip 2
 SaveDataFile2: skip 143
 SaveDataFile3: skip 143
 SaveDataBackup: skip 429

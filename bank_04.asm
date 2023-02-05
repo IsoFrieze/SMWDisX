@@ -5170,7 +5170,8 @@ CODE_04DA9D:          LDA.B _F
                       JSR CODE_04E9F1
 Return04DAAC:         RTS
 
-CODE_04DAAD:          PHP
+DecompressOverworldL2:
+                      PHP
                       JSR CODE_04DC6A
                       PLP
                       RTL

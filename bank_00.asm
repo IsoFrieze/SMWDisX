@@ -166,7 +166,7 @@ UploadLevelMusic:                             ; Routine to upload level music da
     LDA.W BonusGameActivate                   ;\ 
     BNE UploadOverworldMusic                  ;| Upload the level music bank on one of 3 conditions:
     LDA.W OverworldOverride                   ;|  1. Going to a bonus game.
-    CMP.B #$C5+!MainMapLvls                   ;|  2. Loading the intro level.
+    CMP.B #!MainMapLvls+!IntroCutsceneLevel   ;|  2. Loading the intro level.
     BEQ UploadOverworldMusic                  ;|  3. Going to a new level (not primary).
     ORA.W SublevelCount                       ;| If none of these conditions are met, return.
     ORA.W ShowMarioStart                      ;|
@@ -2310,7 +2310,7 @@ GM06TitleSpotlight:                           ; Game Mode 06 - Title Screen: Cir
     LDA.B #4*!MaxTitleSpotlightSize           ;\ Size to make the window if the opening animation is skipped with A/B/X/Y.
     JSR CODE_009440                           ;/
     INC.W GameMode                            ;\ Prepare the file select menu.
-    JMP CODE_009C9F                           ;/
+    JMP PrepareFileSelect                     ;/
 
   + DEC.W VariousPromptTimer                  ; A/B/X/Y is not pressed, handle the window.
     BNE FinishGameMode                        ;\ Return if not time to grow the window yet.
@@ -2623,7 +2623,7 @@ GM03LoadTitleScreen:                          ; Game Mode 03 - Load Title Screen
     JSR UploadMusicBank1
     LDA.B #!BGM_TITLESCREEN                   ;\ Set title screen music
     STA.W SPCIO2                              ;/
-  + LDA.B #$C7+!MainMapLvls
+  + LDA.B #!MainMapLvls+!TitleScreenLevel
     LDY.B #0
 CODE_0096CF:
     STA.W OverworldOverride
@@ -2657,7 +2657,7 @@ GM11LoadLevel:                                ; Game Mode 11 - Load Level (Mario
     JSL CODE_05801E                           ; Load level data.
     LDA.W OverworldOverride                   ;\ 
     BEQ +                                     ;|
-    CMP.B #$C5+!MainMapLvls                   ;|
+    CMP.B #!MainMapLvls+!IntroCutsceneLevel   ;|
     BNE +++                                   ;|
     LDA.B #!BGM_CUTSCENEFULL                  ;|] Intro song number.
     STA.W MusicBackup                         ;|
@@ -2715,7 +2715,7 @@ endif                                         ;|/===============================
     BPL -                                     ;/
     INC.W ShowContinueEnd
 .NoGameOverYet:
-    JMP CODE_009E62
+    JMP FadeToOverworld
 
 .SlideTextTogether:
     SEC                                       ;\ 
@@ -3153,7 +3153,7 @@ GM09FileDelete:
     REP #$20                                  ;! A->16
     LDA.W #$39C9                              ;!\ Make the screen darker
     LDY.B #%01100000                          ;!|
-    JSR CODE_009D30                           ;!/
+    JSR ChangeBackgroundColor                 ;!/
     LDA.B byetudlrFrame                       ;!\ If Y or X is pressed
     ORA.B axlr0000Frame                       ;!| go back to file select
     AND.B #%01000000                          ;!|
@@ -3164,7 +3164,7 @@ BackToFileSelect:
     DEC.W GameMode                            ;\ Go back 2 game modes
     DEC.W GameMode                            ;/ and advance forward 1 later
     JSR HandleSelectionCursor_ResetCursorPos
-    JMP CODE_009CB0
+    JMP EnterFileSelect
 
  if ver_is_console(!_VER)                     ;\================= J, U, E0, & E1 ==============
   + LDY.B #!CursorEraseFile                   ;!\ Process erase file menu
@@ -3207,7 +3207,7 @@ EraseFileSelected:                            ;!
  else                                         ;!<================== U, E0, & E1 ===============
     LDX.B #0                                  ;!! Index into stripe images--draw the erase files stripe
  endif                                        ;!/==============================================
-    JMP CODE_009D3C                           ;!
+    JMP DrawEraseFiles                        ;!
                                               ;!
 ProcContinueEndMenu:                          ;!
     PHB                                       ;! Wrapper
@@ -3320,615 +3320,742 @@ CloseOverworldPrompt:
     RTL
 
 
-                   if ver_is_ntsc(!_VER)                        ;\=================== J, U, & SS ================
-ItrCntrlrSqnc:        db $41,$0F,$C1,$30,$00,$10,$42,$20        ;!
-                      db $41,$70,$81,$11,$00,$80,$82,$0C        ;!
-                      db $00,$30,$C1,$30,$41,$60,$C1,$10        ;!
-                      db $00,$40,$01,$30,$E1,$01,$00,$60        ;!
-                      db $41,$4E,$80,$10,$00,$30,$41,$58        ;!
-                      db $00,$20,$60,$01,$00,$30,$60,$01        ;!
-                      db $00,$30,$60,$01,$00,$30,$60,$01        ;!
-                      db $00,$30,$60,$01,$00,$30,$41,$1A        ;!
-                      db $C1,$30,$00,$30,$FF                    ;!
-                   else                                         ;<===================== E0 & E1 =================
-ItrCntrlrSqnc:        db $41,$0D,$C1,$30,$00,$10,$42,$26        ;!
-                      db $41,$58,$81,$17,$00,$7A,$82,$0C        ;!
-                      db $00,$34,$C1,$2A,$41,$50,$C1,$0C        ;!
-                      db $00,$30,$01,$20,$E1,$01,$00,$60        ;!
-                      db $41,$30,$80,$10,$00,$30,$41,$4E        ;!
-                      db $00,$20,$60,$01,$00,$30,$60,$01        ;!
-                      db $00,$30,$60,$01,$00,$30,$60,$01        ;!
-                      db $00,$30,$60,$01,$00,$30,$41,$15        ;!
-                      db $C1,$30,$00,$30,$FF                    ;!
-                   endif                                        ;/===============================================
+TitleScreenInputSeq:                          ; Controller input for title screen movement
+ if ver_is_ntsc(!_VER)                        ;\=================== J, U, & SS ================
+    db $41,$0F,$C1,$30,$00,$10,$42,$20        ;!
+    db $41,$70,$81,$11,$00,$80,$82,$0C        ;!
+    db $00,$30,$C1,$30,$41,$60,$C1,$10        ;!
+    db $00,$40,$01,$30,$E1,$01,$00,$60        ;!
+    db $41,$4E,$80,$10,$00,$30,$41,$58        ;!
+    db $00,$20,$60,$01,$00,$30,$60,$01        ;!
+    db $00,$30,$60,$01,$00,$30,$60,$01        ;!
+    db $00,$30,$60,$01,$00,$30,$41,$1A        ;!
+    db $C1,$30,$00,$30,$FF                    ;!
+ else                                         ;<===================== E0 & E1 =================
+    db $41,$0D,$C1,$30,$00,$10,$42,$26        ;!
+    db $41,$58,$81,$17,$00,$7A,$82,$0C        ;!
+    db $00,$34,$C1,$2A,$41,$50,$C1,$0C        ;!
+    db $00,$30,$01,$20,$E1,$01,$00,$60        ;!
+    db $41,$30,$80,$10,$00,$30,$41,$4E        ;!
+    db $00,$20,$60,$01,$00,$30,$60,$01        ;!
+    db $00,$30,$60,$01,$00,$30,$60,$01        ;!
+    db $00,$30,$60,$01,$00,$30,$41,$15        ;!
+    db $C1,$30,$00,$30,$FF                    ;!
+ endif                                        ;/===============================================
 
-GM07TitleScreen:      JSR DetermineJoypadInput
-                      JSR IsFaceButtonPressed
-                      BNE CODE_009C9F
-                      JSR NoButtons                             ; Zero controller RAM mirror
-                      LDX.W TitleInputIndex                     ; (Unknown byte) -> X
-                      DEC.W VariousPromptTimer                  ; Decrement $1DF5 (unknown byte)
-                      BNE +                                     ; if !=  0 branch forward
-                      LDA.W ItrCntrlrSqnc+1,X                   ; Load $00/9C20,$1DF4
-                      STA.W VariousPromptTimer                  ; And store to $1DF5
-                      INX
-                      INX                                       ; $1DF4+=2
-                      STX.W TitleInputIndex
-                    + LDA.W ItrCntrlrSqnc-2,X                   ; With the +=2 above, this is effectively LDA $9C20,$1DF4
-                      CMP.B #$FF
-                      BNE +
-FadeOutBackToTitle:   LDY.B #$02                                ; If = #$FF, switch to game mode #$02...
-CODE_009C8B:          STY.W GameMode
-                      RTS                                       ; ...And finish
+GM07TitleScreen:                              ; Game mode 07 - Title Screen (title screen movements).
+    JSR DetermineJoypadInput                  ;
+    JSR IsFaceButtonPressed                   ;\ If button is pressed, load file select
+    BNE PrepareFileSelect                     ;/
 
-                    + AND.B #$DF
-                      STA.B byetudlrHold                        ; Write to controller RAM byte 01
-                      CMP.W ItrCntrlrSqnc-2,X
-                      BNE +
-                      AND.B #$9F
-                    + STA.B byetudlrFrame                       ; Write to byte 01, Just-pressed variant
-                      JMP GM14Level                             ; Jump to another section of this routine
+    JSR NoButtons                             ;
+    LDX.W TitleInputIndex                     ;
+    DEC.W VariousPromptTimer                  ;
+    BNE +                                     ;\ Advance to the next input if necessary
+    LDA.W TitleScreenInputSeq+1,X             ;| 
+    STA.W VariousPromptTimer                  ;|
+    INX #2                                    ;|
+    STX.W TitleInputIndex                     ;/
+  + LDA.W TitleScreenInputSeq-2,X             ;
+    CMP.B #-1                                 ;\ If this isn't the end of the data
+    BNE WriteControllerInput                  ;/ Write it to the controller input
 
-CODE_009C9F:          JSL OAMResetRoutine                       ; IIRC, this contains a lot of STZ instructions
-                      LDA.B #$04
-                      STA.W HW_TM                               ; Zero something related to PPU
-                      LDA.B #$13
-                      STA.W HW_TS
-                   if ver_is_japanese(!_VER)                    ;\======================= J =====================
-CODE_009CB0:          LDA.B #$E9                                ;!
-                      STA.W OverworldOverride                   ;!
-                      JSR CODE_WRITEOW                          ;!
-                      LDY.B #14                                 ;! Index into tiles--draw 4 empty tiles
-                      JSR CODE_009D3A                           ;!
-                      LDA.B #$FF                                ;!
-                      STA.L DynamicStripeImage+$9C              ;!
-                   elseif ver_is_arcade(!_VER)                  ;<====================== SS =====================
-CODE_009CB0:          LDA.B #$E9                                ;!
-                      STA.W OverworldOverride                   ;! #$E9 -> Uknown RAM byte
-                      JSR CODE_WRITEOW                          ;!
-                      JSR CODE_009D38                           ;! -> here
-                   else                                         ;<================== U, E0, & E1 ================
-                      STZ.W HDMAEnable                          ;! Disable all HDMA
-CODE_009CB0:          LDA.B #$E9                                ;!
-                      STA.W OverworldOverride                   ;! #$E9 -> Uknown RAM byte
-                      JSR CODE_WRITEOW                          ;!
-                      JSR CODE_009D38                           ;! -> here
-                   endif                                        ;/===============================================
-                      JMP NextGameMode                          ; Increase the Game mode and return (at jump point)
+FadeOutBackToTitle:
+    LDY.B #!GameMode_FadeToTitleScreen
+WriteGameModeAndReturn:
+    STY.W GameMode
+    RTS
 
-IsFaceButtonPressed:  LDA.B axlr0000Hold
-                      AND.B #$C0
-                      BNE +
-                      LDA.B byetudlrHold
-                      AND.B #$F0
-                      BNE +
-                    + RTS
+WriteControllerInput:
+    AND.B #%11011111                          ;\ Write all bits except select button
+    STA.B byetudlrHold                        ;/ to controller held register
+    CMP.W TitleScreenInputSeq-2,X             ;\ Write all bits except select and Y button
+    BNE +                                     ;| to controller pressed register
+    AND.B #%10011111                          ;| Unless bit 5 (select) is set,
+  + STA.B byetudlrFrame                       ;/ Then Y button is pressed as well
+    JMP GM14Level
+
+PrepareFileSelect:
+    JSL OAMResetRoutine
+    LDA.B #%00000100
+    STA.W HW_TM
+    LDA.B #%00010011
+    STA.W HW_TS
+ if ver_is_english_console(!_VER)             ;\================== U, E0, & E1 ================
+    STZ.W HDMAEnable                          ;! Disable all HDMA
+ endif                                        ;/===============================================
+
+EnterFileSelect:
+    LDA.B #!MainMapLvls+!IntroCutsceneLevel   ;\ Upon entering file select,
+    STA.W OverworldOverride                   ;| Set overworld override to intro cutscene
+    JSR InitSaveData                          ;/ And initialize save data for new game
+
+ if ver_is_japanese(!_VER)                    ;\======================= J =====================
+    LDY.B #14                                 ;! Index into tiles--draw 4 empty tiles
+    JSR DrawFileSelect                        ;!
+    LDA.B #-1                                 ;!\ Write sentinel for stripe image
+    STA.L DynamicStripeImage+$9C              ;!/
+ else                                         ;<================ U, SS, E0, & E1 ==============
+    JSR DrawFileSelect                        ;!
+ endif                                        ;/===============================================
+    JMP NextGameMode
+
+IsFaceButtonPressed:                          ; Subroutine to check for any input of A/B/X/Y. Returns result in zero flag.
+    LDA.B axlr0000Hold
+    AND.B #%11000000
+    BNE +
+    LDA.B byetudlrHold
+    AND.B #%11110000
+    BNE +
+  + RTS
 
 
-SaveDataLocationsHi:  db SaveData>>8
-                      db SaveDataFile2>>8
-                      db SaveDataFile3>>8
+SaveDataLocationsHi:
+    db SaveData>>8
+    db SaveDataFile2>>8
+    db SaveDataFile3>>8
 
-SaveDataLocationsLo:  db SaveData
-                      db SaveDataFile2
-                      db SaveDataFile3
+SaveDataLocationsLo:
+    db SaveData
+    db SaveDataFile2
+    db SaveDataFile3
 
-                   if ver_is_arcade(!_VER)                      ;\======================= SS ====================
-SSDATA_009BE2:        db $52,$06,$C0,$0C,$FC,$38,$52,$10        ;!
-                      db $C0,$08,$FC,$38,$52,$06,$00,$01        ;!
-                      db $FC,$38,$FF                            ;!
-                                                                ;!
-SSDATA_009BF5:        db $06,$46,$86,$C6,$10,$50,$90            ;!
-                                                                ;!
-SSDATA_009BFC:        db $07,$FF                                ;!
-SSDATA_009BFE:        db $00,$06                                ;!
-                                                                ;!
-GM08FileSelect:       REP #$20                                  ;! A->16
-                      LDA.W #$7393                              ;!
-                      LDY.B #$20                                ;!
-                      JSR CODE_009D30                           ;!
-                      LDA.B byetudlrFrame                       ;!
-                      AND.B #$90                                ;!
-                      BNE SSCODE_009C6D                         ;!
-                      LDA.B axlr0000Frame                       ;!
-                      BMI SSCODE_009C6D                         ;!
-                      LDA.B byetudlrFrame                       ;!
-                      AND.B #$0C                                ;!
-                      BEQ SSCODE_009C3B                         ;!
-                      LDY.B #!SFX_FIREBALL                      ;!
-                      STY.W SPCIO3                              ;!
-                      LSR A                                     ;!
-                      LSR A                                     ;!
-                      LSR A                                     ;!
-                      TAX                                       ;!
-                      LDY.W Layer2ScrollType                    ;!
-                      INY                                       ;!
-                      CMP.B #$01                                ;!
-                      BNE +                                     ;!
-                      DEY                                       ;!
-                      DEY                                       ;!
-                    + TYA                                       ;!
-                      CMP.W SSDATA_009BFC,X                     ;!
-                      BNE +                                     ;!
-                      LDY.W SSDATA_009BFE,X                     ;!
-                    + STY.W Layer2ScrollType                    ;!
-SSCODE_009C3B:        REP #$10                                  ;! XY->16
-                      LDY.W #$3D2E                              ;!
-                      LDA.B TrueFrame                           ;!
-                      AND.B #$1F                                ;!
-                      CMP.B #$18                                ;!
-                      BCC +                                     ;!
-                      LDY.W #$38FC                              ;!
-                    + LDX.W #$0000                              ;!
-                    - LDA.W SSDATA_009BE2,X                     ;!
-                      STA.L DynamicStripeImage,X                ;!
-                      INX                                       ;!
-                      CPX.W #$0013                              ;!
-                      BNE -                                     ;!
-                      LDX.W Layer2ScrollType                    ;!
-                      LDA.W SSDATA_009BF5,X                     ;!
-                      STA.L DynamicStripeImage+$0D              ;!
-                      REP #$20                                  ;! A->16
-                      TYA                                       ;!
-                      STA.L DynamicStripeImage+$10              ;!
-                      SEP #$30                                  ;! AXY->8
-                      RTS                                       ;!
-                                                                ;!
-SSCODE_009C6D:        LDA.B #!SFX_COIN                          ;!
-                      STA.W SPCIO3                              ;!
-                      SEP #$10                                  ;! XY->8
-                      LDA.W Layer2ScrollType                    ;!
-                      BEQ +                                     ;!
-                      STZ.W OverworldOverride                   ;!
-                    + INC.W GameMode                            ;!
-                      JSR CODE_WRITEOW                          ;!
-                   else                                         ;<================= J, U, E0, & E1 ==============
-GM08FileSelect:       REP #$20                                  ;! A->16
-                      LDA.W #$7393                              ;!
-                      LDY.B #$20                                ;!
-                      JSR CODE_009D30                           ;!
-                      LDY.B #!CursorFileSelect                  ;!\ Process file select menu
-                      JSR HandleTitleScreenCursor               ;!/ Returning from this routine means A/B/start was pressed
-                      INC.W GameMode                            ;!
-                      CPX.B #$03                                ;!
-                      BNE +                                     ;!
-                      STZ.W SaveFileDelete                      ;!
-                   if ver_is_japanese(!_VER)                    ;!\====================== J =====================
-                      LDY.B #$0C                                ;!!
-                   else                                         ;!<================= U, E0, & E1 ================
-                      LDX.B #$00                                ;!!
-                   endif                                        ;!/==============================================
-                      JMP CODE_009D3A                           ;!
-                                                                ;!
-                    + STX.W SaveFile                            ;!
-                      JSR CODE_009DB5                           ;!
-                      BNE CODE_009D22                           ;!
-                      PHX                                       ;!
-                      STZ.W OverworldOverride                   ;!
-                      LDA.B #$8F                                ;!
-                      STA.B _0                                  ;!
-                    - LDA.L SaveData,X                          ;!
-                      PHX                                       ;!
-                      TYX                                       ;!
-                      STA.L SaveData,X                          ;!
-                      PLX                                       ;!
-                      INX                                       ;!
-                      INY                                       ;!
-                      DEC.B _0                                  ;!
-                      BNE -                                     ;!
-                      PLX                                       ;!
-                      LDY.W #$0000                              ;!
-                    - LDA.L SaveData,X                          ;!
-                      STA.W SaveDataBuffer,Y                    ;!
-                      INX                                       ;!
-                      INY                                       ;!
-                      CPY.W #$008D                              ;!
-                      BCC -                                     ;!
-CODE_009D22:          SEP #$10                                  ;! XY->8
-                   endif                                        ;/===============================================
-                      LDY.B #$12                                ; \ Draw 1 PLAYER GAME/2 PLAYER GAME text
-                      INC.W GameMode                            ; |Increase Game Mode
-ShowStripeAndFinish:  STY.B StripeImage                         ; /
-                      LDX.B #$00
-                      JMP CODE_009ED4
+ if ver_is_arcade(!_VER)                      ;\======================= SS ====================
+ZoneCursorStripe:                             ;!
+    db $52,$06,$C0,$0C,$FC,$38                ;!\ Empty tiles next to zones
+    db $52,$10,$C0,$08,$FC,$38                ;!/
+    db $52,$06,$00,$01,$FC,$38                ;! cursor next to selected zone
+    db $FF                                    ;!
+                                              ;!
+ZoneCursorPositions:                          ;!
+    db $06,$46,$86,$C6,$10,$50,$90            ;! Low byte of VRAM address for cursor position
+                                              ;!
+ZoneCursorOutOfBounds:                        ;!
+    db $07,$FF                                ;! Cursor position out of bounds (down, up)
+                                              ;!
+ZoneCursorLimits:                             ;!
+    db $00,$06                                ;! Cursor position limits (top, bottom)
+                                              ;!
+GM08FileSelect:                               ;!
+    REP #$20                                  ;! A->16
+    LDA.W #$7393                              ;!\ Brighten the background
+    LDY.B #%00100000                          ;!|
+    JSR ChangeBackgroundColor                 ;!/
+                                              ;!
+    LDA.B byetudlrFrame                       ;!\ If A, B, Start pressed, select that zone
+    AND.B #%10010000                          ;!|
+    BNE ZoneSelected                          ;!|
+    LDA.B axlr0000Frame                       ;!|
+    BMI ZoneSelected                          ;!/
+                                              ;!
+    LDA.B byetudlrFrame                       ;!\ If up, down pressed, move the cursor
+    AND.B #%00001100                          ;!|
+    BEQ .NoCursorMovement                     ;!/
+    LDY.B #!SFX_FIREBALL                      ;!\ Play fireball sound
+    STY.W SPCIO3                              ;!/
+    LSR #3                                    ;!
+    TAX                                       ;!
+    LDY.W SelectedStartingZone                ;!\ Increase or decrease selected zone
+    INY                                       ;!| Based on up/down pressed
+    CMP.B #%00000001                          ;!|
+    BNE +                                     ;!|
+    DEY #2                                    ;!/
+  + TYA                                       ;!\ Bounds check
+    CMP.W ZoneCursorOutOfBounds,X             ;!|
+    BNE +                                     ;!|
+    LDY.W ZoneCursorLimits,X                  ;!|
+  + STY.W SelectedStartingZone                ;!/
+                                              ;!
+.NoCursorMovement:                            ;!
+    REP #$10                                  ;! XY->16
+    LDY.W #$3D2E                              ;! Cursor tile
+    LDA.B TrueFrame                           ;!\ Make the cursor blink
+    AND.B #%00011111                          ;!|
+    CMP.B #%00011000                          ;!|
+    BCC +                                     ;!|
+    LDY.W #!EmptyTile                         ;!/ Empty tile
+                                              ;!
+  + LDX.W #0                                  ;!\ Upload empty spaces next to zones stripe
+  - LDA.W ZoneCursorStripe,X                  ;!|
+    STA.L DynamicStripeImage,X                ;!|
+    INX                                       ;!|
+    CPX.W #19                                 ;!|
+    BNE -                                     ;!/
+                                              ;!
+    LDX.W SelectedStartingZone                ;!\ Write position of cursor
+    LDA.W ZoneCursorPositions,X               ;!|
+    STA.L DynamicStripeImage+13               ;!/
+                                              ;!
+    REP #$20                                  ;!\ A->16
+    TYA                                       ;!| Write the cursor
+    STA.L DynamicStripeImage+16               ;!|
+    SEP #$30                                  ;!/ AXY->8
+                                              ;!
+    RTS                                       ;!
+                                              ;!
+ZoneSelected:                                 ;!
+    LDA.B #!SFX_COIN                          ;!\ Play coin sound effect
+    STA.W SPCIO3                              ;!/
+    SEP #$10                                  ;! XY->8
+    LDA.W SelectedStartingZone                ;!\ Disable intro cutscene if not starting at zone 1
+    BEQ +                                     ;!|
+    STZ.W OverworldOverride                   ;!/
+  + INC.W GameMode                            ;!
+    JSR InitSaveData                          ;!
+                                              ;!
+ else                                         ;<================= J, U, E0, & E1 ==============
+                                              ;!
+GM08FileSelect:                               ;!
+    REP #$20                                  ;! A->16
+    LDA.W #$7393                              ;!\ Brighten the background
+    LDY.B #$20                                ;!|
+    JSR ChangeBackgroundColor                 ;!/
+    LDY.B #!CursorFileSelect                  ;!\ Process file select menu
+    JSR HandleTitleScreenCursor               ;!/ Returning from this routine means A/B/start was pressed
+    INC.W GameMode                            ;!
+    CPX.B #3                                  ;!\ If the fourth option was selected, enter
+    BNE FileSelected                          ;!| file erase mode
+    STZ.W SaveFileDelete                      ;!|
+ if ver_is_japanese(!_VER)                    ;!|\====================== J =====================
+    LDY.B #12                                 ;!|! Index into tiles--draw 4 tiles "_okesu"
+ else                                         ;!|<================= U, E0, & E1 ================
+    LDX.B #0                                  ;!|! Index into stripe images--draw the erase files stripe
+ endif                                        ;!|/==============================================
+    JMP DrawEraseFirstTime                    ;!/
+                                              ;!
+FileSelected:                                 ;!
+    STX.W SaveFile                            ;!
+    JSR VerifySaveFile                        ;!\ If save file is corrupted, don't load it
+    BNE .NotValid                             ;!/
+                                              ;! X = pointer to save data
+    PHX                                       ;! Y = pointer to copy of save data (potentially corrupt)
+    STZ.W OverworldOverride                   ;! Don't to go intro cutscene
+                                              ;!
+    LDA.B #!SaveFileSize                      ;!
+    STA.B _0                                  ;!
+  - LDA.L SaveData,X                          ;!\ Copy the save data in SRAM
+    PHX                                       ;!| (potentially fixing corrupted copy)
+    TYX                                       ;!|
+    STA.L SaveData,X                          ;!/
+    PLX                                       ;!
+    INX                                       ;!
+    INY                                       ;!
+    DEC.B _0                                  ;!
+    BNE -                                     ;!
+                                              ;!
+    PLX                                       ;!
+    LDY.W #0                                  ;!
+  - LDA.L SaveData,X                          ;!\ Copy the save data from SRAM to WRAM
+    STA.W SaveDataBuffer,Y                    ;!/
+    INX                                       ;!
+    INY                                       ;!
+    CPY.W #!SaveFileSize-2                    ;!
+    BCC -                                     ;!
+                                              ;!
+.NotValid:                                    ;!
+    SEP #$10                                  ;! XY->8
+ endif                                        ;/===============================================
 
-CODE_009D30:          STA.W BackgroundColor                     ; Store A in BG color
-                      STY.B ColorSettings                       ; Store Y in CGADSUB
-                      SEP #$20                                  ; A->8
-                      RTS
+    LDY.B #$12                                ; Draw "1/2 player game" stripe image
+    INC.W GameMode
 
-                   if ver_is_japanese(!_VER)                    ;\======================== J ====================
-EraseFileTiles:       db $D4,$31,$FC,$38,$9D,$31,$FC,$38        ;!\ append "okesu" to files (erase)
-                      db $8D,$31,$FC,$38,$FC,$38,$FC,$38        ;!/ or blank tiles
-                                                                ;!
-CODE_009D3A:          STZ.B _5                                  ;! Don't erase any files
-CODE_009D3C:          STY.B _6                                  ;!
-                      LDX.B #$B0                                ;!
-                    - LDA.L FileSelectStripe-1,X                ;! X =  read index
-                      STA.L DynamicStripeImage-1,X              ;! Layer 3-related table
-                      DEX                                       ;!
-                      BNE -                                     ;!
-                      LDA.B #$76                                ;!
-                   elseif ver_is_arcade(!_VER)                  ;<======================== SS ===================
-CODE_009D38:          LDX.B #FileSelectStripe-EraseFileStripe   ;! Index into stripe images--draw the file select stripe
-CODE_009D3C:          REP #$10                                  ;! XY->16
-                      LDY.W #$0000                              ;!
-                    - LDA.L EraseFileStripe,X                   ;! X =  read index
-                      PHX                                       ;! Y = write index
-                      TYX                                       ;!
-                      STA.L DynamicStripeImage,X                ;! Layer 3-related table
-                      PLX                                       ;!
-                      INX                                       ;!
-                      INY                                       ;!
-                      CPY.W #FileSelectStripe-EraseFileStripe+1 ;! If not at end of loop, continue
-                      BNE -                                     ;!
-                      SEP #$10                                  ;! XY->8
-                   else                                         ;<=================== U, E0, & E1 ===============
-CODE_009D38:          LDX.B #FileSelectStripe-EraseFileStripe   ;! Index into stripe images--draw the file select stripe
-CODE_009D3A:          STZ.B _5                                  ;! Don't erase any files
-CODE_009D3C:          REP #$10                                  ;! XY->16
-                      LDY.W #$0000                              ;!
-                    - LDA.L EraseFileStripe,X                   ;! X =  read index
-                      PHX                                       ;! Y = write index
-                      TYX                                       ;!
-                      STA.L DynamicStripeImage,X                ;! Layer 3-related table
-                      PLX                                       ;!
-                      INX                                       ;!
-                      INY                                       ;!
-                      CPY.W #FileSelectStripe-EraseFileStripe+1 ;! If not at end of loop, continue
-                      BNE -                                     ;!
-                      SEP #$10                                  ;! XY->8
-                      LDA.B #$84                                ;!
-                   endif                                        ;/===============================================
+ShowStripeAndFinish:
+    STY.B StripeImage
+    LDX.B #0
+    JMP WrapUpDynStripeImg
 
-                   if ver_is_console(!_VER)                     ;\================= J, U, E0, & E1 ==============
-                      STA.B _0                                  ;!
-                      LDX.B #$02                                ;!
-CODE_009D5B:          STX.B _4                                  ;!
-                      LSR.B _5                                  ;! $05 = $05 / 2
-                      BCS CODE_009DA6                           ;!
-                      JSR CODE_009DB5                           ;!
-                      BNE CODE_009DA6                           ;!
-                      LDA.L SaveDataChecksum,X                  ;!
-                      SEP #$10                                  ;! XY->8
-                   if ver_is_english(!_VER)                     ;!\=================== U, E0, & E1 ==============
-                      CMP.B #$60                                ;!!
-                      BCC CODE_009D76                           ;!!
-                      LDY.B #$87                                ;!!
-                      LDA.B #$88                                ;!!
-                      BRA +                                     ;!!
-                   endif                                        ;!/==============================================
-                                                                ;!
-CODE_009D76:          JSR HexToDec                              ;!
-                      TXY                                       ;!
-                    + LDX.B _0                                  ;!
-                      STA.L DynamicStripeImage+4,X              ;!
-                      TYA                                       ;!
-                      BNE +                                     ;!
-                      LDY.B #$FC                                ;!
-                    + TYA                                       ;!
-                      STA.L DynamicStripeImage+2,X              ;!
-                      LDA.B #$38                                ;!
-                      STA.L DynamicStripeImage+3,X              ;!
-                      STA.L DynamicStripeImage+5,X              ;!
-                      REP #$20                                  ;! A->16
-                   if ver_is_japanese(!_VER)                    ;!\======================= J ====================
-                      LDA.W #$38FC                              ;!!
-                      STA.L DynamicStripeImage+$12,X            ;!!
-                      LDY.B _6                                  ;!!
-                    - LDA.W EraseFileTiles,Y                    ;!!
-                      STA.L DynamicStripeImage+6,X              ;!!
-                      INX                                       ;!!
-                      INX                                       ;!!
-                      DEY                                       ;!!
-                      DEY                                       ;!!
-                      DEY                                       ;!!
-                      DEY                                       ;!!
-                      BPL -                                     ;!!
-                      SEP #$20                                  ;!! A->8
-CODE_009DA6:          SEP #$10                                  ;!! XY->8
-                      LDA.B _0                                  ;!!
-                      SEC                                       ;!!
-                      SBC.B #$2A                                ;!!
-                   else                                         ;!<=================== U, E0, & E1 ==============
-                      LDY.B #$03                                ;!!
-                    - LDA.W #$38FC                              ;!!
-                      STA.L DynamicStripeImage+6,X              ;!!
-                      INX                                       ;!!
-                      INX                                       ;!!
-                      DEY                                       ;!!
-                      BNE -                                     ;!!
-                      SEP #$20                                  ;!! A->8
-CODE_009DA6:          SEP #$10                                  ;!! XY->8
-                      LDA.B _0                                  ;!!
-                      SEC                                       ;!!
-                      SBC.B #$24                                ;!!
-                   endif                                        ;!/==============================================
-                      STA.B _0                                  ;!
-                      LDX.B _4                                  ;!
-                      DEX                                       ;!
-                      BPL CODE_009D5B                           ;!
-                      RTS                                       ;!
-                                                                ;!
-CODE_009DB5:          LDA.W SaveDataLocationsHi,X               ;!
-                      XBA                                       ;!
-                      LDA.W SaveDataLocationsLo,X               ;!
-                      REP #$30                                  ;! AXY->16
-                      TAX                                       ;!
-                      CLC                                       ;!
-                      ADC.W #$01AD                              ;!
-                      TAY                                       ;!
-CODE_009DC4:          PHX                                       ;!
-                      PHY                                       ;!
-                      LDA.L SaveDataChecksum+1,X                ;!
-                      STA.B PartialChecksum                     ;!
-                      SEP #$20                                  ;! A->8
-                      LDY.W #$008D                              ;!
-CODE_009DD1:          LDA.L SaveData,X                          ;!
-                      CLC                                       ;!
-                      ADC.B PartialChecksum                     ;!
-                      STA.B PartialChecksum                     ;!
-                      BCC +                                     ;!
-                      INC.B PartialChecksum+1                   ;!
-                    + INX                                       ;!
-                      DEY                                       ;!
-                      BNE CODE_009DD1                           ;!
-                      REP #$20                                  ;! A->16
-                      PLY                                       ;!
-                      PLX                                       ;!
-                      LDA.B PartialChecksum                     ;!
-                      CMP.W #$5A5A                              ;!
-                      BEQ CODE_009DF7                           ;!
-                      CPX.W #$01AC                              ;!
-                      BCS CODE_009DF7                           ;!
-                      PHX                                       ;!
-                      TYX                                       ;!
-                      PLY                                       ;!
-                      BRA CODE_009DC4                           ;!
-                                                                ;!
-CODE_009DF7:          SEP #$20                                  ;! A->8
-                      RTS                                       ;!
-                   else                                         ;<========================= SS ==================  ELSE
-                      RTS                                       ;!
-                                                                ;!
-                      RTS                                       ;! unused?
-                   endif                                        ;/=============================================== ENDIF
+ChangeBackgroundColor:
+    STA.W BackgroundColor                     ; Store A in BG color
+    STY.B ColorSettings                       ; Store Y in CGADSUB
+    SEP #$20                                  ; A->8
+    RTS
 
-GM0APlayerSelect:     LDA.B byetudlrFrame
-                      ORA.B axlr0000Frame
-                      AND.B #$40
-                      BEQ +
-                      DEC.W GameMode
-                      JMP BackToFileSelect
+ if ver_is_japanese(!_VER)                    ;\======================== J ====================
+EraseFileTiles:                               ;!
+    db $D4,$31,$FC,$38,$9D,$31,$FC,$38        ;!\ append "okesu" to files (erase)
+    db $8D,$31,$FC,$38,$FC,$38,$FC,$38        ;!/ or blank tiles
+                                              ;!
+DrawFileSelect:                               ;!
+DrawEraseFirstTime:                           ;!
+    STZ.B _5                                  ;! Don't erase any files
+DrawEraseFiles:                               ;!
+    STY.B _6                                  ;!
+    LDX.B #176                                ;!\ Draw file select stripe image
+  - LDA.L FileSelectStripe-1,X                ;!| regardless if in file select mode or file erase mode
+    STA.L DynamicStripeImage-1,X              ;!|
+    DEX                                       ;!|
+    BNE -                                     ;!/
+    LDA.B #118                                ;! location within stripe image to write exit count
+                                              ;!
+ else                                         ;<================ U, SS, E0, & E1 ==============
+                                              ;!
+DrawFileSelect:                               ;!
+    LDX.B #FileSelectStripe-EraseFileStripe   ;! Index into stripe images--draw the file select stripe
+ if ver_is_console(!_VER)                     ;!\=================== U, E0, & E1 ==============
+DrawEraseFirstTime:                           ;!!
+    STZ.B _5                                  ;!! Don't erase any files
+ endif                                        ;!/==============================================
+DrawEraseFiles:                               ;!
+    REP #$10                                  ;! XY->16
+    LDY.W #0                                  ;!
+  - LDA.L EraseFileStripe,X                   ;!\ Draw file select or file erase stripe image
+    PHX                                       ;!| Depending on what mode we are in
+    TYX                                       ;!|
+    STA.L DynamicStripeImage,X                ;!/
+    PLX                                       ;!
+    INX                                       ;!
+    INY                                       ;!
+    CPY.W #FileSelectStripe-EraseFileStripe+1 ;!
+    BNE -                                     ;!
+    SEP #$10                                  ;! XY->8
+ if ver_is_console(!_VER)                     ;!\=================== U, E0, & E1 ==============
+    LDA.B #132                                ;!! location within stripe image to write exit count
+ endif                                        ;!/==============================================
+ endif                                        ;/===============================================
 
-                    + LDY.B #!CursorPlayerSelect                ;\ Process player select menu
-                      JSR HandleTitleScreenCursor               ;/ Returning from this routine means A/B/start was pressed
-                      STX.W IsTwoPlayerGame
-                      JSR CODE_00A195
-                      JSL CODE_04DAAD
-LoadSaveAndFadeToOW:  LDA.B #!BGM_FADEOUT
-                      STA.W SPCIO2
-                      LDA.B #$FF
-                      STA.W SavedPlayerLives+1
-                      LDX.W IsTwoPlayerGame
-                      LDA.B #$04
-                    - STA.W SavedPlayerLives,X
-                      DEX
-                      BPL -
-                      STA.W PlayerLives
-                      STZ.W PlayerCoins
-                      STZ.W CarryYoshiThruLvls
-                      STZ.B Powerup
-                      STZ.W PlayerItembox
-                      STZ.W ShowContinueEnd
-                      REP #$20                                  ; A->16
-                      STZ.W SavedPlayerCoins
-                      STZ.W SavedPlayerPowerup
-                      STZ.W SavedPlayerYoshi
-                      STZ.W PlayerItembox
-                      STZ.W PlayerBonusStars
-                      STZ.W PlayerScore
-                      STZ.W PlayerScore+3
-                      SEP #$20                                  ; A->8
-                      STZ.W PlayerScore+2
-                      STZ.W PlayerScore+5
-                      STZ.W OWLevelExitMode
-                      STZ.W PlayerTurnLvl
-CODE_009E62:          JSR KeepGameModeActive
-                      LDY.B #$0B
-                      JMP CODE_009C8B
+ if ver_is_console(!_VER)                     ;\================= J, U, E0, & E1 ==============
+    STA.B _0                                  ;!
+    LDX.B #2                                  ;! loop over each file
+DrawFileExitCount:                            ;!
+    STX.B _4                                  ;!
+    LSR.B _5                                  ;!\ If this file is marked to be erased
+    BCS .EmptyFile                            ;!/ show it as empty
+    JSR VerifySaveFile                        ;!\ If this file is corrupted
+    BNE .EmptyFile                            ;!/ show it as empty
+    LDA.L SaveDataExitCount,X                 ;!
+    SEP #$10                                  ;! XY->8
+ if ver_is_english(!_VER)                     ;!\=================== U, E0, & E1 ==============
+    CMP.B #!TotalExitCount                    ;!! If all the exits are collected
+    BCC .NoStar                               ;!! use special tiles for the counter next to the file
+    LDY.B #$87                                ;!!
+    LDA.B #$88                                ;!!
+    BRA +                                     ;!!
+ endif                                        ;!/==============================================
+                                              ;!
+.NoStar:                                      ;!
+    JSR HexToDec                              ;!\ Otherwise, convert number of exits to decimal
+    TXY                                       ;!/
+  + LDX.B _0                                  ;! X = location within stripe image to write exit count
+    STA.L DynamicStripeImage+4,X              ;!
+    TYA                                       ;!
+    BNE +                                     ;!\ Leading zero is a blank space
+    LDY.B #$FC                                ;!/
+  + TYA                                       ;!
+    STA.L DynamicStripeImage+2,X              ;!
+    LDA.B #$38                                ;!\ Exit count uses different palette
+    STA.L DynamicStripeImage+3,X              ;!|
+    STA.L DynamicStripeImage+5,X              ;!/
+    REP #$20                                  ;! A->16
+ if ver_is_japanese(!_VER)                    ;!\======================= J ====================
+    LDA.W #!EmptyTile                         ;!!\ Clear dakuten from hajimekara
+    STA.L DynamicStripeImage+18,X             ;!!/
+    LDY.B _6                                  ;!!
+  - LDA.W EraseFileTiles,Y                    ;!!\ Write empty spaces or word "okesu"
+    STA.L DynamicStripeImage+6,X              ;!!/ overtop of hajimekara
+    INX #2                                    ;!!
+    DEY #4                                    ;!!
+    BPL -                                     ;!!
+    SEP #$20                                  ;!! A->8
+.EmptyFile:                                   ;!!
+    SEP #$10                                  ;!! XY->8
+ else                                         ;!<=================== U, E0, & E1 ==============
+    LDY.B #3                                  ;!!
+  - LDA.W #!EmptyTile                         ;!!\ Clear out the rest of the word "empty"
+    STA.L DynamicStripeImage+6,X              ;!!/
+    INX #2                                    ;!!
+    DEY                                       ;!!
+    BNE -                                     ;!!
+    SEP #$20                                  ;!! A->8
+.EmptyFile:                                   ;!!
+    SEP #$10                                  ;!! XY->8
+ endif                                        ;!/==============================================
+    LDA.B _0                                  ;!\
+    SEC                                       ;!| Move to next file
+    SBC.B #con(42,36,-1,36,36)                ;!| bytes backward within stripe image
+    STA.B _0                                  ;!|
+    LDX.B _4                                  ;!|
+    DEX                                       ;!|
+    BPL DrawFileExitCount                     ;!/
+    RTS                                       ;!
+                                              ;!
+VerifySaveFile:                               ;! Check if save file is valid, X = file index
+    LDA.W SaveDataLocationsHi,X               ;!
+    XBA                                       ;!
+    LDA.W SaveDataLocationsLo,X               ;!
+                                              ;!
+    REP #$30                                  ;! AXY->16
+    TAX                                       ;!\ X = pointer to save data
+    CLC                                       ;!|
+    ADC.W #3*!SaveFileSize                    ;!|
+    TAY                                       ;!/ Y = pointer to the other copy
+                                              ;!
+.CheckCopy:                                   ;!
+    PHX                                       ;!
+    PHY                                       ;!
+    LDA.L SaveDataChecksum,X                  ;!\ Start with the checksum in the save file
+    STA.B PartialChecksum                     ;!/
+    SEP #$20                                  ;! A->8
+    LDY.W #!SaveFileSize-2                    ;!
+  - LDA.L SaveData,X                          ;!\ Add up all the bytes
+    CLC                                       ;!|
+    ADC.B PartialChecksum                     ;!|
+    STA.B PartialChecksum                     ;!|
+    BCC +                                     ;!| Carry if needed
+    INC.B PartialChecksum+1                   ;!/
+  + INX                                       ;!
+    DEY                                       ;!
+    BNE -                                     ;!
+                                              ;!
+    REP #$20                                  ;! A->16
+    PLY                                       ;!
+    PLX                                       ;!
+    LDA.B PartialChecksum                     ;!\ Valid result should be this base value
+    CMP.W #$5A5A                              ;!|
+    BEQ .Done                                 ;!/ Exit if the save is valid
+    CPX.W #3*!SaveFileSize-1                  ;!\
+    BCS .Done                                 ;!/ Exit if both copies are invalid
+    PHX                                       ;!\
+    TYX                                       ;!| If the first save is invalid, swap X/Y and check the copy
+    PLY                                       ;!/
+    BRA .CheckCopy                            ;!
+                                              ;!
+.Done:                                        ;!
+    SEP #$20                                  ;! A->8
+    RTS                                       ;!
+                                              ;!
+ else                                         ;<========================= SS ==================
+    RTS                                       ;! Don't have to write exit counts for zones
+                                              ;!
+    RTS                                       ;! Don't have to verify save data
+ endif                                        ;/===============================================
 
-CursorOptCount:       dw $0002                                  ; continue/end
-                      dw $0004                                  ; file select
-                      dw $0002                                  ; 1/2 player
-                      dw $0002                                  ; save/no save
-                      dw $0004                                  ; erase file select
+GM0APlayerSelect:
+    LDA.B byetudlrFrame                       ;\
+    ORA.B axlr0000Frame                       ;| If X/Y pressed, go back to file select
+    AND.B #%01000000                          ;|
+    BEQ +                                     ;|
+    DEC.W GameMode                            ;|
+    JMP BackToFileSelect                      ;/
 
-                   if ver_is_japanese(!_VER)                    ;\======================= J =====================
-CursorCoords:         dw $51CC                                  ;! continue/end
-                      dw $5208                                  ;! file select
-                      dw $5228                                  ;! 1/2 player
-                      dw $5208                                  ;! save/no save
-                      dw $5208                                  ;! erase file select
-                   elseif ver_is_arcade(!_VER)                  ;<====================== SS =====================
-CursorCoords:         dw $51CB                                  ;! continue/end
-                      dw $5208                                  ;! file select
-                      dw $5208                                  ;! 1/2 player
-                      dw $51C4                                  ;! save/no save
-                      dw $5205                                  ;! erase file select
-                   else                                         ;<================== U, E0, & E1 ================
-CursorCoords:         dw $51CB                                  ;! continue/end
-                      dw $51E8                                  ;! file select
-                      dw $5208                                  ;! 1/2 player
-                      dw $51C4                                  ;! save/no save
-                      dw $51E5                                  ;! erase file select
-                   endif                                        ;/===============================================
+  + LDY.B #!CursorPlayerSelect                ;\ Process player select menu
+    JSR HandleTitleScreenCursor               ;/ Returning from this routine means A/B/start was pressed
+    STX.W IsTwoPlayerGame
+    JSR CopyFromSaveBuffer
+    JSL DecompressOverworldL2
 
-DATA_009E7E:          db $01,$02,$04,$08
+LoadSaveAndFadeToOW:
+    LDA.B #!BGM_FADEOUT                       ;\ Fade music
+    STA.W SPCIO2                              ;/
+    LDA.B #-1                                 ;\ Set player 2 lives to -1 first
+    STA.W SavedPlayerLives+1                  ;/
+    LDX.W IsTwoPlayerGame                     ;\
+    LDA.B #4                                  ;| Set initial lives to 4
+  - STA.W SavedPlayerLives,X                  ;|
+    DEX                                       ;|
+    BPL -                                     ;/
+    STA.W PlayerLives                         ; Current lives is also 4
+    STZ.W PlayerCoins                         ;\
+    STZ.W CarryYoshiThruLvls                  ;| Initialize a lot of stuff to zero
+    STZ.B Powerup                             ;|
+    STZ.W PlayerItembox                       ;|
+    STZ.W ShowContinueEnd                     ;|
+    REP #$20                                  ;| A->16
+    STZ.W SavedPlayerCoins                    ;|
+    STZ.W SavedPlayerPowerup                  ;|
+    STZ.W SavedPlayerYoshi                    ;|
+    STZ.W PlayerItembox                       ;| Supposed to be SavedPlayerPowerup?
+    STZ.W PlayerBonusStars                    ;|
+    STZ.W PlayerScore                         ;|
+    STZ.W PlayerScore+3                       ;|
+    SEP #$20                                  ;| A->8
+    STZ.W PlayerScore+2                       ;|
+    STZ.W PlayerScore+5                       ;/
+    STZ.W OWLevelExitMode                     ; Enter overworld normally
+    STZ.W PlayerTurnLvl                       ; Player 1's turn
+FadeToOverworld:
+    JSR KeepGameModeActive
+    LDY.B #!GameMode_FadeToOverworld
+    JMP WriteGameModeAndReturn
+
+CursorOptCount:                               ; Number of options per menu
+    dw 2,4,2,2,4
+
+CursorCoords:                                 ; VRAM address of cursor on first option of each menu
+ if ver_is_japanese(!_VER)                    ;\======================= J =====================
+    dw $51CC                                  ;! continue/end
+    dw $5208                                  ;! file select
+    dw $5228                                  ;! 1/2 player
+    dw $5208                                  ;! save/no save
+    dw $5208                                  ;! erase file select
+ elseif ver_is_arcade(!_VER)                  ;<====================== SS =====================
+    dw $51CB                                  ;! continue/end
+    dw $5208                                  ;! file select
+    dw $5208                                  ;! 1/2 player
+    dw $51C4                                  ;! save/no save
+    dw $5205                                  ;! erase file select
+ else                                         ;<================== U, E0, & E1 ================
+    dw $51CB                                  ;! continue/end
+    dw $51E8                                  ;! file select
+    dw $5208                                  ;! 1/2 player
+    dw $51C4                                  ;! save/no save
+    dw $51E5                                  ;! erase file select
+ endif                                        ;/===============================================
+
+CursorBitfields:
+    db %00000001,%00000010,%00000100,%00001000
 
 DrawSelectionCursor:
-    LDX.W BlinkCursorPos
-                      LDA.W DATA_009E7E,X
-                      TAX
-                      LDA.W BlinkCursorTimer
-                      EOR.B #$1F
-                      AND.B #$18
-                      BNE +
-                      LDX.B #$00
-                    + STX.B _0
-                      LDA.L DynStripeImgSize
-                      TAX
-                      REP #$20                                  ; A->16
-                      LDA.W CursorOptCount,Y
-                      STA.B MaxMenuOptions
-                      STA.B _2
-                      LDA.W CursorCoords,Y
-CODE_009EA7:          XBA
-                      STA.L DynamicStripeImage,X
-                      XBA
-                      CLC
-                      ADC.W #$0040
-                      PHA
-                      LDA.W #$0100
-                      STA.L DynamicStripeImage+2,X
-                      LDA.W #$38FC
-                      LSR.B _0
-                      BCC +
-                      LDA.W #$3D2E
-                    + STA.L DynamicStripeImage+4,X
-                      PLA
-                      INX
-                      INX
-                      INX
-                      INX
-                      INX
-                      INX
-                      DEC.B _2
-                      BNE CODE_009EA7
-                      SEP #$20                                  ; A->8
-CODE_009ED4:          TXA
-                      STA.L DynStripeImgSize
-                      LDA.B #$FF
-                      STA.L DynamicStripeImage,X
-                      RTS
+    LDX.W BlinkCursorPos                      ;\ Convert cursor index into bitmask
+    LDA.W CursorBitfields,X                   ;|
+    TAX                                       ;/
+    LDA.W BlinkCursorTimer                    ;\
+    EOR.B #%00011111                          ;| Make the cursor blink
+    AND.B #%00011000                          ;|
+    BNE +                                     ;|
+    LDX.B #0                                  ;|
+  + STX.B _0                                  ;/
+    LDA.L DynStripeImgSize
+    TAX
+    
+    REP #$20                                  ; A->16
+    LDA.W CursorOptCount,Y
+    STA.B MaxMenuOptions
+    STA.B _2
+    
+    LDA.W CursorCoords,Y
+  - XBA
+    STA.L DynamicStripeImage,X                ; Write VRAM address of stripe image
+    XBA
+    CLC                                       ;\ Advance 64 tiles per cursor slot
+    ADC.W #64                                 ;/
+    PHA
+    LDA.W #(2-1)<<8                           ;\ Stripe image payload is 2 bytes
+    STA.L DynamicStripeImage+2,X              ;/
+    LDA.W #!EmptyTile                         ;\
+    LSR.B _0                                  ;| Write an empty tile or cursor tile depending on bitmask
+    BCC +                                     ;|
+    LDA.W #$3D2E                              ;|
+  + STA.L DynamicStripeImage+4,X              ;/
+    PLA
+    INX #6                                    ; Each stripe image is 6 bytes long
+    DEC.B _2
+    BNE -
+    
+    SEP #$20                                  ; A->8
+WrapUpDynStripeImg:
+    TXA                                       ;\ Preserve length of dynamic stripe image buffer
+    STA.L DynStripeImgSize                    ;/
+    LDA.B #-1                                 ;\ Write sentinel value
+    STA.L DynamicStripeImage,X                ;/
+    RTS
 
-                   if ver_is_console(!_VER)                     ;\================ J, U, E0, & E1 ===============
-TBL_009EE0:           db $28,$03                                ;! enable left/right on yoshi's house
-                      db $4D,$01                                ;! enable right on special world star warp
-                      db $52,$01                                ;! enable right on star world top star warp
-                      db $53,$01                                ;! enable right on star world left star warp
-                      db $5B,$08                                ;! enable up on star world bottom left star warp
-                      db $5C,$02                                ;! enable left on star world bottom right star warp
-                      db $57,$04                                ;! enable down on star world right star warp
-                      db $30,$01                                ;! enable right on valley of bowser star warp
-                                                                ;!
-TBL_009EF0:           db $01,$01,$02,$00,$02,$00,$68,$00        ;! players submap, animation
-                      db $78,$00,$68,$00,$78,$00,$06,$00        ;! players overworld X & Y
-                      db $07,$00,$06,$00,$07,$00                ;!
-                                                                ;!
-CODE_WRITEOW:         LDX.B #$8D                                ;!
-                    - STZ.W SaveDataBuffer-1,X                  ;!
-                      DEX                                       ;!
-                      BNE -                                     ;!
-                      LDX.B #$0E                                ;!
-                    - LDY.W TBL_009EE0,X                        ;! \
-                      LDA.W TBL_009EE0+1,X                      ;! |Write overworld settings to OW L1 table
-                      STA.W SaveDataBuffer,Y                    ;! /
-                      DEX                                       ;!
-                      DEX                                       ;!
-                      BPL -                                     ;!
-                      LDX.B #$15                                ;!
-                    - LDA.W TBL_009EF0,X                        ;!
-                      STA.W SaveDataBufferSubmap,X              ;! <- This probably means that the table above ends at 1FB7
-                      DEX                                       ;!
-                      BPL -                                     ;!
-                      RTS                                       ;!
-                   else                                         ;<========================= SS ==================
-TBL_009EE0:           db $28,$83,$4D,$81,$52,$81,$53,$81        ;!
-                      db $5B,$88,$5C,$82,$57,$84,$30,$81        ;!
-                      db $29,$89,$2A,$8A,$27,$85,$26,$8C        ;!
-                      db $25,$89,$15,$04,$15,$86,$09,$8E        ;!
-                      db $04,$83,$05,$83,$06,$8A,$07,$8A        ;!
-                      db $3E,$04,$3E,$85,$3C,$8D,$2B,$85        ;!
-                      db $2E,$8C,$3D,$8C,$40,$8C,$0F,$02        ;!
-                      db $0F,$83,$10,$86,$0E,$85,$42,$08        ;!
-                      db $42,$89,$44,$8D,$47,$85,$20,$85        ;!
-                      db $22,$08,$22,$8A,$21,$85,$24,$8A        ;!
-                      db $23,$83,$1B,$85,$1D,$8A,$1C,$89        ;!
-                      db $1A,$8C,$18,$02                        ;!
-                                                                ;!
-SSTBL_009DF5:         db $00,$10,$1C,$2A,$38,$40,$4A,$5C        ;!
-                                                                ;!
-TBL_009EF0:           db $00,$00,$00,$00,$00,$00,$00,$00        ;!
-                      db $00,$00,$00,$00,$00,$00,$00,$01        ;!
-                      db $01,$02,$00,$02,$00,$68,$00,$78        ;!
-                      db $00,$68,$00,$78,$00,$06,$00,$07        ;!
-                      db $00,$06,$00,$07,$00,$00,$00,$00        ;!
-                      db $00,$7E,$00,$00,$00,$00,$00,$00        ;!
-                      db $00,$00,$00,$00,$00,$00,$00,$00        ;!
-                      db $00,$00,$02,$00,$02,$00,$58,$00        ;!
-                      db $18,$01,$58,$00,$18,$01,$05,$00        ;!
-                      db $11,$00,$05,$00,$11,$00,$00,$01        ;!
-                      db $00,$00,$7F,$6F,$00,$00,$00,$80        ;!
-                      db $00,$00,$00,$00,$00,$00,$00,$00        ;!
-                      db $00,$02,$02,$02,$00,$02,$00,$58        ;!
-                      db $00,$28,$01,$58,$00,$28,$01,$05        ;!
-                      db $00,$12,$00,$05,$00,$12,$00,$01        ;!
-                      db $01,$00,$00,$7F,$6F,$05,$F8,$00        ;!
-                      db $C0,$00,$00,$00,$00,$00,$00,$00        ;!
-                      db $00,$00,$00,$00,$02,$00,$02,$00        ;!
-                      db $48,$01,$58,$00,$48,$01,$58,$00        ;!
-                      db $14,$00,$05,$00,$14,$00,$05,$00        ;!
-                      db $01,$01,$00,$01,$7F,$6F,$05,$F8        ;!
-                      db $0D,$C0,$00,$00,$00,$00,$00,$00        ;!
-                      db $00,$00,$00,$03,$03,$02,$00,$02        ;!
-                      db $00,$88,$00,$78,$01,$88,$00,$78        ;!
-                      db $01,$08,$00,$17,$00,$08,$00,$17        ;!
-                      db $00,$01,$01,$00,$01,$7F,$6F,$05        ;!
-                      db $F8,$0D,$ED,$01,$00,$00,$00,$00        ;!
-                      db $00,$40,$00,$00,$00,$00,$02,$00        ;!
-                      db $02,$00,$88,$01,$68,$01,$88,$01        ;!
-                      db $68,$01,$18,$00,$16,$00,$18,$00        ;!
-                      db $16,$00,$01,$01,$01,$01,$7F,$6F        ;!
-                      db $05,$F8,$0D,$ED,$01,$00,$02,$7C        ;!
-                      db $00,$00,$70,$00,$00,$00,$00,$02        ;!
-                      db $00,$02,$00,$E8,$00,$78,$01,$E8        ;!
-                      db $00,$78,$01,$0E,$00,$17,$00,$0E        ;!
-                      db $00,$17,$00,$01,$01,$01,$01            ;!
-                                                                ;!
-SSTBL_009F1C:         dw $0028,$0051,$007A,$00A3                ;!
-                      dw $00CC,$00F5,$011E                      ;!
-                                                                ;!
-CODE_WRITEOW:         LDX.B #$8D                                ;!
-                    - STZ.W SaveDataBuffer-1,X                  ;!
-                      DEX                                       ;!
-                      BNE -                                     ;!
-                      LDX.W Layer2ScrollType                    ;!
-                      LDA.W SSTBL_009DF5+1,X                    ;!
-                      STA.B _0                                  ;!
-                      LDA.W SSTBL_009DF5                        ;!
-                      TAX                                       ;!
-                    - LDY.W TBL_009EE0,X                        ;!
-                      LDA.W TBL_009EE0+1,X                      ;!
-                      STA.W SaveDataBuffer,Y                    ;!
-                      INX                                       ;!
-                      INX                                       ;!
-                      CPX.B _0                                  ;!
-                      BNE -                                     ;!
-                      REP #$30                                  ;! AXY->16
-                      LDA.W Layer2ScrollType                    ;!
-                      ASL A                                     ;!
-                      TAX                                       ;!
-                      LDY.W SSTBL_009F1C,X                      ;!
-                      LDX.W #$0028                              ;!
-                    - LDA.W TBL_009EF0,Y                        ;!
-                      STA.W SaveDataBufferEvents,X              ;!
-                      DEY                                       ;!
-                      DEX                                       ;!
-                      BPL -                                     ;!
-                      SEP #$30                                  ;! AXY->8
-                      RTS                                       ;!
-                   endif                                        ;/===============================================
+ if ver_is_console(!_VER)                     ;\================ J, U, E0, & E1 ===============
+InitLevelTileMovementData:                    ;!
+    db $28,$03                                ;! enable left/right on yoshi's house
+    db $4D,$01                                ;! enable right on special world star warp
+    db $52,$01                                ;! enable right on star world top star warp
+    db $53,$01                                ;! enable right on star world left star warp
+    db $5B,$08                                ;! enable up on star world bottom left star warp
+    db $5C,$02                                ;! enable left on star world bottom right star warp
+    db $57,$04                                ;! enable down on star world right star warp
+    db $30,$01                                ;! enable right on valley of bowser star warp
+                                              ;!
+InitPlayerOverworldData:                      ;!
+    db !Submap_YoshisIsland                   ;!\ initial players submap
+    db !Submap_YoshisIsland                   ;!/
+    dw 2                                      ;!\ initial players animation
+    dw 2                                      ;!/
+    dw !InitOWPosX,!InitOWPosY                ;!\ initial players position
+    dw !InitOWPosX,!InitOWPosY                ;!/
+    dw !InitOWPosX>>4,!InitOWPosY>>4          ;!\ initial players position / $10
+    dw !InitOWPosX>>4,!InitOWPosY>>4          ;!/
+                                              ;!
+InitSaveData:                                 ;!
+    LDX.B #!SaveFileSize-2                    ;!\
+  - STZ.W SaveDataBuffer-1,X                  ;!| Initialize all values to zero
+    DEX                                       ;!|
+    BNE -                                     ;!/
+                                              ;!
+    LDX.B #16-2                               ;!\
+  - LDY.W InitLevelTileMovementData,X         ;!| Unlock movement directions on certain level tiles
+    LDA.W InitLevelTileMovementData+1,X       ;!|
+    STA.W SaveDataBuffer,Y                    ;!|
+    DEX #2                                    ;!|
+    BPL -                                     ;!/
+                                              ;!
+    LDX.B #22-1                               ;!\
+  - LDA.W InitPlayerOverworldData,X           ;!| Initialize player overworld data
+    STA.W SaveDataBufferSubmap,X              ;!|
+    DEX                                       ;!|
+    BPL -                                     ;!/
+                                              ;!
+    RTS                                       ;!
+                                              ;!
+ else                                         ;<========================= SS ==================
+                                              ;!
+InitLevelTileMovementData:                    ;!
+.Zone1:                                       ;!
+    db $28,$83,$4D,$81,$52,$81,$53,$81        ;!\ Yoshi's House & Star Warps
+    db $5B,$88,$5C,$82,$57,$84,$30,$81        ;!/
+.Zone2:                                       ;!
+    db $29,$89,$2A,$8A,$27,$85,$26,$8C        ;!\ Yoshi's Island completed
+    db $25,$89,$15,$04                        ;!/
+.Zone3:                                       ;!
+    db $15,$86,$09,$8E,$04,$83,$05,$83        ;!\ Donut Plains completed
+    db $06,$8A,$07,$8A,$3E,$04                ;!/
+.Zone4:                                       ;!
+    db $3E,$85,$3C,$8D,$2B,$85,$2E,$8C        ;!\ Vanilla Dome completed
+    db $3D,$8C,$40,$8C,$0F,$02                ;!/
+.Zone5:                                       ;!
+    db $0F,$83,$10,$86,$0E,$85,$42,$08        ;! Cheese Bridge completed
+.Zone6:                                       ;!
+    db $42,$89,$44,$8D,$47,$85,$20,$85        ;!\ Forest of Illusion completed
+    db $22,$08                                ;!/
+.Zone7:                                       ;!
+    db $22,$8A,$21,$85,$24,$8A,$23,$83        ;!\ Chocolate Island completed
+    db $1B,$85,$1D,$8A,$1C,$89,$1A,$8C        ;!|
+    db $18,$02                                ;!/
+.End:                                         ;!
+                                              ;!
+#InitLevelTileMoveIndices:                    ;!
+    db .Zone1-InitLevelTileMovementData       ;!
+    db .Zone2-InitLevelTileMovementData       ;!
+    db .Zone3-InitLevelTileMovementData       ;!
+    db .Zone4-InitLevelTileMovementData       ;!
+    db .Zone5-InitLevelTileMovementData       ;!
+    db .Zone6-InitLevelTileMovementData       ;!
+    db .Zone7-InitLevelTileMovementData       ;!
+    db .End-InitLevelTileMovementData         ;!
+                                              ;!
+InitOWEventPlayerData:                        ;!
+.Zone1:                                       ;!
+    db $00,$00,$00,$00,$00,$00,$00,$00        ;!\ initial events cleared
+    db $00,$00,$00,$00,$00,$00,$00            ;!/
+    db !Submap_YoshisIsland                   ;!\ initial players submap
+    db !Submap_YoshisIsland                   ;!/
+    dw 2                                      ;!\ initial players animation
+    dw 2                                      ;!/
+    dw !InitOWPosX,!InitOWPosY                ;!\ initial players position
+    dw !InitOWPosX,!InitOWPosY                ;!/
+    dw !InitOWPosX>>4,!InitOWPosY>>4          ;!\ initial players position / $10
+    dw !InitOWPosX>>4,!InitOWPosY>>4          ;!/
+    db 0,0,0,0                                ;! initial switch palaces
+.Zone2:                                       ;!
+    db $7E,$00,$00,$00,$00,$00,$00,$00        ;!\ initial events cleared
+    db $00,$00,$00,$00,$00,$00,$00            ;!/
+    db !Submap_Main                           ;!\ initial players submap
+    db !Submap_Main                           ;!/
+    dw 2                                      ;!\ initial players animation
+    dw 2                                      ;!/
+    dw $58,$118                               ;!\ initial players position
+    dw $58,$118                               ;!/
+    dw $58>>4,$118>>4                         ;!\ initial players position / $10
+    dw $58>>4,$118>>4                         ;!/
+    db 0,1,0,0                                ;! initial switch palaces
+.Zone3:                                       ;!
+    db $7F,$6F,$00,$00,$00,$80,$00,$00        ;!\ initial events cleared
+    db $00,$00,$00,$00,$00,$00,$00            ;!/
+    db !Submap_VanillaDome                    ;!\ initial players submap
+    db !Submap_VanillaDome                    ;!/
+    dw 2                                      ;!\ initial players animation
+    dw 2                                      ;!/
+    dw $58,$128                               ;!\ initial players position
+    dw $58,$128                               ;!/
+    dw $58>>4,$128>>4                         ;!\ initial players position / $10
+    dw $58>>4,$128>>4                         ;!/
+    db 1,1,0,0                                ;! initial switch palaces
+.Zone4:                                       ;!
+    db $7F,$6F,$05,$F8,$00,$C0,$00,$00        ;!\ initial events cleared
+    db $00,$00,$00,$00,$00,$00,$00            ;!/
+    db !Submap_Main                           ;!\ initial players submap
+    db !Submap_Main                           ;!/
+    dw 2                                      ;!\ initial players animation
+    dw 2                                      ;!/
+    dw $148,$58                               ;!\ initial players position
+    dw $148,$58                               ;!/
+    dw $148>>4,$58>>4                         ;!\ initial players position / $10
+    dw $148>>4,$58>>4                         ;!/
+    db 1,1,0,1                                ;! initial switch palaces
+.Zone5:                                       ;!
+    db $7F,$6F,$05,$F8,$0D,$C0,$00,$00        ;!\ initial events cleared
+    db $00,$00,$00,$00,$00,$00,$00            ;!/
+    db !Submap_ForestOfIllusion               ;!\ initial players submap
+    db !Submap_ForestOfIllusion               ;!/
+    dw 2                                      ;!\ initial players animation
+    dw 2                                      ;!/
+    dw $88,$178                               ;!\ initial players position
+    dw $88,$178                               ;!/
+    dw $88>>4,$178>>4                         ;!\ initial players position / $10
+    dw $88>>4,$178>>4                         ;!/
+    db 1,1,0,1                                ;! initial switch palaces
+.Zone6:                                       ;!
+    db $7F,$6F,$05,$F8,$0D,$ED,$01,$00        ;!\ initial events cleared
+    db $00,$00,$00,$00,$40,$00,$00            ;!/
+    db !Submap_Main                           ;!\ initial players submap
+    db !Submap_Main                           ;!/
+    dw 2                                      ;!\ initial players animation
+    dw 2                                      ;!/
+    dw $188,$168                              ;!\ initial players position
+    dw $188,$168                              ;!/
+    dw $188>>4,$168>>4                        ;!\ initial players position / $10
+    dw $188>>4,$168>>4                        ;!/
+    db 1,1,1,1                                ;! initial switch palaces
+.Zone7:                                       ;!
+    db $7F,$6F,$05,$F8,$0D,$ED,$01,$00        ;!\ initial events cleared
+    db $02,$7C,$00,$00,$70,$00,$00            ;!/
+    db !Submap_Main                           ;!\ initial players submap
+    db !Submap_Main                           ;!/
+    dw 2                                      ;!\ initial players animation
+    dw 2                                      ;!/
+    dw $E8,$178                               ;!\ initial players position
+    dw $E8,$178                               ;!/
+    dw $E8>>4,$178>>4                         ;!\ initial players position / $10
+    dw $E8>>4,$178>>4                         ;!/
+    db 1,1,1,1                                ;! initial switch palaces
+.End:                                         ;!
+                                              ;!
+#InitOWEventPlayerDataIndices:                ;!
+    dw .Zone2-InitOWEventPlayerData-1         ;!
+    dw .Zone3-InitOWEventPlayerData-1         ;!
+    dw .Zone4-InitOWEventPlayerData-1         ;!
+    dw .Zone5-InitOWEventPlayerData-1         ;!
+    dw .Zone6-InitOWEventPlayerData-1         ;!
+    dw .Zone7-InitOWEventPlayerData-1         ;!
+    dw .End-InitOWEventPlayerData-1           ;!
+                                              ;!
+InitSaveData:                                 ;!
+    LDX.B #!SaveFileSize-2                    ;!\
+  - STZ.W SaveDataBuffer-1,X                  ;!| Initialize all values to zero
+    DEX                                       ;!|
+    BNE -                                     ;!/
+                                              ;!
+    LDX.W SelectedStartingZone                ;!\
+    LDA.W InitLevelTileMoveIndices+1,X        ;!| Unlock movement directions on certain level tiles
+    STA.B _0                                  ;!| Up to the current zone
+    LDA.W InitLevelTileMoveIndices            ;!|
+    TAX                                       ;!|
+  - LDY.W InitLevelTileMovementData,X         ;!|
+    LDA.W InitLevelTileMovementData+1,X       ;!|
+    STA.W SaveDataBuffer,Y                    ;!|
+    INX #2                                    ;!|
+    CPX.B _0                                  ;!|
+    BNE -                                     ;!/
+                                              ;!
+    REP #$30                                  ;!\ AXY->16
+    LDA.W SelectedStartingZone                ;!|
+    ASL A                                     ;!| Initialize overworld event table
+    TAX                                       ;!| And player overworld data
+    LDY.W InitOWEventPlayerDataIndices,X      ;!|
+    LDX.W #41-1                               ;!|
+  - LDA.W InitOWEventPlayerData,Y             ;!|
+    STA.W SaveDataBufferEvents,X              ;!|
+    DEY                                       ;!|
+    DEX                                       ;!|
+    BPL -                                     ;!/
+                                              ;!
+    SEP #$30                                  ;! AXY->8
+    RTS                                       ;!
+ endif                                        ;/===============================================
 
 KeepGameModeActive:   LDA.B #$01
 CODE_009F2B:          STA.W KeepModeActive
@@ -4134,13 +4261,13 @@ GM0CLoadOverworld:    JSR TurnOffIO
                       LDY.W ShowContinueEnd
                       BEQ CODE_00A11B
                    if ver_is_console(!_VER)                     ;\================= J, U, E0, & E1 ==============
-                      JSR CODE_00A195                           ;!
+                      JSR CopyFromSaveBuffer                    ;!
                       LDA.W ExitsCompleted                      ;!
                       BNE +                                     ;!
                       JSR FadeOutBackToTitle                    ;!
                       JMP CODE_0093F4                           ;!
                                                                 ;!
-                    + JSL CODE_04DAAD                           ;!
+                    + JSL DecompressOverworldL2                 ;!
                       REP #$20                                  ;! A->16
                       LDA.W #$318C                              ;!
                       STA.W BackgroundColor                     ;!
@@ -4203,7 +4330,7 @@ CODE_00A11B:          LDY.B #$02
                       JSR EnableWindowHDMA
                       JMP CODE_0093F4
 
-CODE_00A195:          REP #$10                                  ; XY->16
+CopyFromSaveBuffer:   REP #$10                                  ; XY->16
                       LDX.W #$008C
                     - LDA.W SaveDataBuffer,X
                       STA.W OWLevelTileSettings,X

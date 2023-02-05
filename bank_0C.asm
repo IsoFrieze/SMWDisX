@@ -4540,7 +4540,7 @@ C7Message8Stripe:     db $53,$44,$00,$1B,$03,$39,$48,$39        ;!
                       db $FF                                    ;!
                    endif                                        ;/ ENDIF
 
-CODE_0CC94E:          LDA.W Layer2ScrollType
+CODE_0CC94E:          LDA.W CutsceneTextTimer
                    if ver_is_arcade(!_VER)                      ;\======================= SS ====================
                       BNE SSCODE_0CC95B                         ;!
                       LDA.W EnterLevelAuto                      ;!
@@ -4552,20 +4552,20 @@ CODE_0CC94E:          LDA.W Layer2ScrollType
 SSCODE_0CC95B:        LDA.B byetudlrHold                        ;!
                       ORA.B axlr0000Hold                        ;!
                       BEQ CODE_0CC953                           ;!
-                      LDA.W Layer2ScrollType                    ;!
+                      LDA.W CutsceneTextTimer                   ;!
                       AND.B #$E0                                ;!
                       BNE +                                     ;!
                       LDA.B #$01                                ;!
-                      STA.W Layer2ScrollType                    ;!
+                      STA.W CutsceneTextTimer                   ;!
                       BRA CODE_0CC953                           ;!
 													            ;!
                     + INC A                                     ;!
-                      STA.W Layer2ScrollType                    ;!
+                      STA.W CutsceneTextTimer                   ;!
                    else                                         ;<================ J, U, E0, & E1 ===============
                       BEQ CODE_0CC97D                           ;!
                    endif                                        ;/===============================================
-CODE_0CC953:          DEC.W Layer2ScrollType
-                      LDA.W Layer2ScrollType
+CODE_0CC953:          DEC.W CutsceneTextTimer
+                      LDA.W CutsceneTextTimer
                       AND.B #$1F
                       BNE CODE_0CC97D
                       LDA.W CutsceneID
@@ -4576,7 +4576,7 @@ CODE_0CC953:          DEC.W Layer2ScrollType
                       ASL A                                     ;!
                    endif                                        ;/===============================================
                       STA.B _0
-                      LDA.W Layer2ScrollType
+                      LDA.W CutsceneTextTimer
                       AND.B #con($60,$E0,$E0,$E0,$E0)
                       LSR A
                       LSR A
@@ -5380,7 +5380,7 @@ CODE_0CCFD3:          DEC.W Layer2ScrollCmd
                       BPL +
                       INC.W Layer1ScrollType
                     + BRL CODE_0CCF90
-CODE_0CCFDE:          LDA.W Layer2ScrollType
+CODE_0CCFDE:          LDA.W CutsceneTextTimer
                       ORA.W Layer2ScrollYSpeed+1
                       BNE +
                    if ver_is_console(!_VER)                     ;\=============== J, U, E0, & E1 ================
@@ -5399,7 +5399,7 @@ CODE_0CCFEE:          STZ.W Layer1ScrollType
                       STA.W GameMode
                     + RTS
 
-CODE_0CCFF7:          LDA.W Layer2ScrollType
+CODE_0CCFF7:          LDA.W CutsceneTextTimer
                       BEQ Return0CD002
                       INC.W Layer1ScrollType
                       BRL CODE_0CCFDE
@@ -6077,7 +6077,7 @@ Return0CD5C5:         RTS
 
 CODE_0CD5C6:          INC.W Layer1ScrollType
 CODE_0CD5C9:          LDA.B #con($80,$FF,$FF,$FF,$FF)
-                      STA.W Layer2ScrollType
+                      STA.W CutsceneTextTimer
                       LDA.B #con($D0,$D0,$01,$A8,$A8)
                       STA.W Layer2ScrollYSpeed+1
                       LDA.B #!BGM_CUTSCENEFULL
