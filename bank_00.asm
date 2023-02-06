@@ -4057,7 +4057,7 @@ InitSaveData:                                 ;!
     RTS                                       ;!
  endif                                        ;/===============================================
 
-KeepGameModeActive:   LDA.B #$01
+KeepGameModeActive:   LDA.B #1
 CODE_009F2B:          STA.W KeepModeActive
                       RTS
 

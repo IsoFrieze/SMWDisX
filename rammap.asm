@@ -23,37 +23,44 @@ _D: skip 1
 _E: skip 1
 _F: skip 1
 
+; === $7E0010 ===
+; 1 byte
 ; non-zero during game loop
 ; set to zero after game loop
 ; must be non-zero to start game loop
 ; set to non-zero at end of V-blank
-; 1 byte
 LagFlag: skip 1
 
+; === $7E0011 ===
+; 1 byte
 ; the ID of the currently queued IRQ
 ; for areas that use multiple IRQs, this value distinguishes them
-; 1 byte
 IRQType: skip 1
 
+; === $7E0012 ===
+; 1 byte
 ; stripe image ID to draw
 ; index into a list of pointers to stripe images to draw
 ; must be divisible by 3 or it will draw garbage
 ; if this value is zero, the address points to the stripe image ram buffer
-; 1 byte
 StripeImage: skip 1
 
+; === $7E0013 ===
+; 1 byte
 ; frame counter
 ; increments for every frame of execution
 ; not incremented during lag frames
-; 1 byte
 TrueFrame: skip 1
 
+; === $7E0014 ===
+; 1 byte
 ; frame counter
 ; increments for every frame of execution when gameplay is not paused or frozen
 ; not incremented during lag frames
-; 1 byte
 EffFrame: skip 1
 
+; === $7E0015 ===
+; 1 byte
 ; controller data for the currently active player
 ; byetudlr
 ; |||||||+ set if right on the dpad was pressed this frame
@@ -64,9 +71,10 @@ EffFrame: skip 1
 ; ||+----- set if the select button was pressed this frame
 ; |+------ set if the Y button was pressed this frame
 ; +------- set if the A or B button were pressed this frame
-; 1 byte
 byetudlrHold: skip 1
 
+; === $7E0016 ===
+; 1 byte
 ; controller data for the currently active player
 ; byetudlr
 ; |||||||+ set if right on the dpad is held this frame
@@ -79,6 +87,8 @@ byetudlrHold: skip 1
 ; +------- set if the B button is held this frame
 byetudlrFrame: skip 1
 
+; === $7E0017 ===
+; 1 byte
 ; controller data for the currently active player
 ; axlr0000
 ; ||||++++ always 0
@@ -86,9 +96,10 @@ byetudlrFrame: skip 1
 ; ||+----- set if the L button was pressed this frame
 ; |+------ set if the X button was pressed this frame
 ; +------- set if the A button was pressed this frame
-; 1 byte
 axlr0000Hold: skip 1
 
+; === $7E0018 ===
+; 1 byte
 ; controller data for the currently active player
 ; axlr0000
 ; ||||++++ always 0
@@ -96,137 +107,165 @@ axlr0000Hold: skip 1
 ; ||+----- set if the L button is held this frame
 ; |+------ set if the X button is held this frame
 ; +------- set if the A button is held this frame
-; 1 byte
 axlr0000Frame: skip 1
 
-; the player's current powerup status
-; 0: skip
+; === $7E0019 ===
 ; 1 byte
+; the player's current powerup status
 Powerup: skip 1
+; Valid values
+!Powerup_Small = 0
+!Powerup_Big = 1
+!Powerup_Cape = 2
+!Powerup_Flower = 3
 
+; === $7E001A ===
+; 2 bytes
 ; the horizontal scroll value for background layer 1
 ; value buffer for PPU register $210D, BG1HOFS
-; 2 bytes
 Layer1XPos: skip 2
 
+; === $7E001C ===
+; 2 bytes
 ; the vertical scroll value for background layer 1
 ; value buffer for PPU register $210E, BG1VOFS
-; 2 bytes
 Layer1YPos: skip 2
 
+; === $7E001E ===
+; 2 bytes
 ; the horizontal scroll value for background layer 2
 ; value buffer for PPU register $210F, BG2HOFS
-; 2 bytes
 Layer2XPos: skip 2
 
+; === $7E0020 ===
+; 2 bytes
 ; the vertical scroll value for background layer 2
 ; value buffer for PPU register $2110, BG2VOFS
-; 2 bytes
 Layer2YPos: skip 2
 
+; === $7E0022 ===
+; 2 bytes
 ; the horizontal scroll value for background layer 3
 ; value buffer for PPU register $2111, BG3HOFS
-; 2 bytes
 Layer3XPos: skip 2
 
+; === $7E0024 ===
+; 2 bytes
 ; the vertical scroll value for background layer 3
 ; value buffer for PPU register $2112, BG3VOFS
-; 2 bytes
 Layer3YPos: skip 2
 
+; === $7E0026 ===
+; 2 bytes
 ; the horizontal difference between the two interactive layers
 ; the difference between layer 1 and layer 2 or 3 depending on the level mode
-; 2 bytes
 Layer23XRelPos: skip 2
 
+; === $7E0028 ===
+; 2 bytes
 ; the vertical difference between the two interactive layers
 ; the difference between layer 1 and layer 2 or 3 depending on the level mode
-; 2 bytes
 Layer23YRelPos: skip 2
 
+; === $7E002A ===
+; 2 bytes
 ; the horizontal co-ordinate of the mode 7 fixed point
 ; the value stored here is #$0080 more than the PPU register
 ; value buffer for PPU register $211F, M7X
-; 2 bytes
 Mode7CenterX: skip 2
 
+; === $7E002C ===
+; 2 bytes
 ; the vertical co-ordinate of the mode 7 fixed point
 ; the value stored here is #$0080 more than the PPU register
 ; value buffer for PPU register $2120, M7Y
-; 2 bytes
 Mode7CenterY: skip 2
 
+; === $7E002E ===
+; 2 bytes
 ; the value of the A parameter for the mode 7 transformation matrix
 ; value buffer for PPU register $211B, M7A
-; 2 bytes
 Mode7ParamA: skip 2
 
+; === $7E0030 ===
+; 2 bytes
 ; the value of the B parameter for the mode 7 transformation matrix
 ; value buffer for PPU register $211C, M7B
-; 2 bytes
 Mode7ParamB: skip 2
 
+; === $7E0032 ===
+; 2 bytes
 ; the value of the C parameter for the mode 7 transformation matrix
 ; value buffer for PPU register $211D, M7C
-; 2 bytes
 Mode7ParamC: skip 2
 
+; === $7E0034 ===
+; 2 bytes
 ; the value of the D parameter for the mode 7 transformation matrix
 ; value buffer for PPU register $211E, M7D
-; 2 bytes
 Mode7ParamD: skip 2
 
+; === $7E0036 ===
+; 2 bytes
 ; the value of an angle, where #$0200 marks a complete circle
 ; used in calculation of mode 7 parameters, and in brown swinging platforms
-; 2 bytes
 Mode7Angle: skip 2
 
+; === $7E0038 ===
+; 1 byte
 ; the value of horizontal scaling, where #$20 marks the identity
 ; used in calculation of mode 7 parameters
 ; lower values result in higher scaling and vis-versa
-; 1 byte
 Mode7XScale: skip 1
 
+; === $7E0039 ===
+; 1 byte
 ; the value of vertical scaling, where #$20 marks the identity
 ; used in calculation of mode 7 parameters
 ; lower values result in higher scaling and vis-versa
-; 1 byte
 Mode7YScale: skip 1
 
+; === $7E003A ===
+; 2 bytes
 ; the horizontal scroll value for the mode 7 background layer
 ; value buffer for PPU register $210D, BG1HOFS
-; 2 bytes
 Mode7XPos: skip 2
 
+; === $7E003C ===
+; 2 bytes
 ; the vertical scroll value for the mode 7 background layer
 ; value buffer for PPU register $210E, BG1VOFS
-; 2 bytes
 Mode7YPos: skip 2
 
+; === $7E003E ===
+; 1 byte
 ; the background mode and layer character size settings
 ; value buffer for PPU register $2105, BGMODE
 ; 4321pmmm
 ; |||||+++ the background mode (0-7)
 ; ||||+--- set if background layer 3 has high priority
 ; ++++---- set if background layer 1/2/3/4 has 16x16 characters, else 8x8
-; 1 byte
 MainBGMode: skip 1
 
+; === $7E003F ===
+; 1 byte
 ; index of the OBJ that should take highest priority
 ; value buffer for PPU register $2102, OAMADDL
 ; highest bit of $2103, OAMADDH, is set automatically
-; 1 byte
 OAMAddress: skip 1
 
+; === $7E0040 ===
+; 1 byte
 ; color math settings
 ; value buffer for PPU register $2131, CGADSUB
 ; shbo4321
 ; ||++++++ set if background layer 1/2/3/4/OBJ/back color should participate in color math
 ; |+------ set if color math result should be halved (e.g. average)
 ; +------- set if subtract subscreens, else add
-; 1 byte
 ColorSettings: skip 1
 
+; === $7E0041 ===
+; 1 byte
 ; window selection settings for background layers 1 and 2
 ; value buffer for PPU register $2123, W12SEL
 ; 2i1i2i1i
@@ -238,9 +277,10 @@ ColorSettings: skip 1
 ; ||+----- background layer 2, enable bit for window 1
 ; |+------ background layer 2, in/out bit for window 2
 ; +------- background layer 2, enable bit for window 2
-; 1 byte
 Layer12Window: skip 1
 
+; === $7E0042 ===
+; 1 byte
 ; window selection settings for background layers 3 and 4
 ; value buffer for PPU register $2124, W34SEL
 ; 2i1i2i1i
@@ -252,9 +292,10 @@ Layer12Window: skip 1
 ; ||+----- background layer 4, enable bit for window 1
 ; |+------ background layer 4, in/out bit for window 2
 ; +------- background layer 4, enable bit for window 2
-; 1 byte
 Layer34Window: skip 1
 
+; === $7E0043 ===
+; 1 byte
 ; window selection settings for OBJ layer and color window
 ; value buffer for PPU register $2125, WOBJSEL
 ; 2i1i2i1i
@@ -266,9 +307,10 @@ Layer34Window: skip 1
 ; ||+----- color window, enable bit for window 1
 ; |+------ color window, in/out bit for window 2
 ; +------- color window, enable bit for window 2
-; 1 byte
 OBJCWWindow: skip 1
 
+; === $7E0044 ===
+; 1 byte
 ; color math enable and selection switch
 ; value buffer for PPU register $2130, CGSWSEL
 ; mmss--fd
@@ -276,7 +318,6 @@ OBJCWWindow: skip 1
 ; ||||  +- set for color math between subscreens, clear for fixed color math
 ; ||++---- color window sub screen (00 = on, 01 = inside, 10 = outside, 11 = off)
 ; ++------ color window main screen (00 = on, 01 = inside, 10 = outside, 11 = off)
-; 1 byte
 ColorAddition: skip 1
 
 Layer1TileUp: skip 2
