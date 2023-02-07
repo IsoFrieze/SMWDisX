@@ -72,6 +72,15 @@ EffFrame: skip 1
 ; |+------ set if the Y button was pressed this frame
 ; +------- set if the A or B button were pressed this frame
 byetudlrHold: skip 1
+; Valid values
+!ButB = %10000000
+!ButY = %01000000
+!ButSelect = %00100000
+!ButStart = %00010000
+!DpadUp = %000001000
+!DpadDown = %000000100
+!DpadLeft = %000000010
+!DpadRight = %00000001
 
 ; === $7E0016 ===
 ; 1 byte
@@ -86,6 +95,15 @@ byetudlrHold: skip 1
 ; |+------ set if the Y button is held this frame
 ; +------- set if the B button is held this frame
 byetudlrFrame: skip 1
+; Valid values
+!ButB = %10000000
+!ButY = %01000000
+!ButSelect = %00100000
+!ButStart = %00010000
+!DpadUp = %000001000
+!DpadDown = %000000100
+!DpadLeft = %000000010
+!DpadRight = %00000001
 
 ; === $7E0017 ===
 ; 1 byte
@@ -97,6 +115,11 @@ byetudlrFrame: skip 1
 ; |+------ set if the X button was pressed this frame
 ; +------- set if the A button was pressed this frame
 axlr0000Hold: skip 1
+; Valid values
+!ButA = %10000000
+!ButX = %01000000
+!ButL = %00100000
+!ButR = %00010000
 
 ; === $7E0018 ===
 ; 1 byte
@@ -108,6 +131,11 @@ axlr0000Hold: skip 1
 ; |+------ set if the X button is held this frame
 ; +------- set if the A button is held this frame
 axlr0000Frame: skip 1
+; Valid values
+!ButA = %10000000
+!ButX = %01000000
+!ButL = %00100000
+!ButR = %00010000
 
 ; === $7E0019 ===
 ; 1 byte
@@ -1388,10 +1416,21 @@ SampleTable:
 ORG $000000
 
 VRam_M7Tilemap:
-VRam_L1L2Tiles: skip 8192
+VRam_L1Tiles: 
+VRam_L2Tiles:
+VRam_GFX_FG1: skip 2048
+VRam_GFX_FG2: skip 2048
+VRam_GFX_BG1: skip 2048
+VRam_GFX_FG3: skip 2048
 VRam_L1Tilemap: skip 4096
 VRam_L2Tilemap: skip 4096
 VRam_L3Tiles: skip 1536
 VRam_CreditsLetters: skip 2560
-VRam_L3Tilemap: skip 4096
+VRam_L3Tilemap: skip 2048
+VRam_L1Mode7Tilemap: skip 2048
 VRam_OBJTiles:
+VRam_GFX_SP1: skip 2048
+VRam_GFX_SP2: skip 2048
+VRam_L1Mode7Tiles:
+VRam_GFX_SP3: skip 2048
+VRam_GFX_SP4:

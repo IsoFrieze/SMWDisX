@@ -32,16 +32,6 @@
 ; number of tiles vertically the bottom half of a horizontal level uses
 !BGHeightInTiles = 22
 
-; DMA channels
-!Ch0 = %00000001
-!Ch1 = %00000010
-!Ch2 = %00000100
-!Ch3 = %00001000
-!Ch4 = %00010000
-!Ch5 = %00100000
-!Ch6 = %01000000
-!Ch7 = %10000000
-
 ; ==== SMW Property Constants ====
 
 ; --- General Game ---
@@ -166,6 +156,7 @@
 ; special translevel numbers
 !IntroCutsceneLevel = $C5
 !TitleScreenLevel = $C7
+!YoshisHouse = $28
 
 ; level tile ID to not show MARIO START !
 !LevelTileNoStart = $56
