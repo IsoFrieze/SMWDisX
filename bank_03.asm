@@ -890,13 +890,13 @@ CODE_0387CD:          CPY.B #$00                                ; \ If time unti
                       LDA.B _E
                       CMP.B #$D8
                       BPL MegaMoleContact
-                      LDA.B PlayerYSpeed
+                      LDA.B PlayerYSpeed+1
                       BMI Return03882A
                       LDA.B #$01                                ; \ Set "on sprite" flag
                       STA.W StandOnSolidSprite                  ; /
                       LDA.B #$06                                ; \ Set riding Mega Mole
                       STA.W SpriteMisc154C,X                    ; /
-                      STZ.B PlayerYSpeed                        ; Y speed = 0
+                      STZ.B PlayerYSpeed+1                      ; Y speed = 0
                       LDA.B #$D6                                ; \
                       LDY.W PlayerRidingYoshi                   ; | Mario's y position += C6 or D6 depending if on yoshi
                       BEQ +                                     ; |
@@ -1434,7 +1434,7 @@ CarrotTopLift:        JSR CarrotTopLiftGfx
                       JSL GetSpriteClippingA
                       JSL CheckForContact
                       BCC Return038CE3
-                      LDA.B PlayerYSpeed
+                      LDA.B PlayerYSpeed+1
                       BMI Return038CE3
                       LDA.B PlayerXPosNext
                       SEC
@@ -1478,7 +1478,7 @@ CarrotTopLift:        JSR CarrotTopLiftGfx
                       PLP
                       ADC.B #$00
                       STA.B PlayerYPosNext+1
-                      STZ.B PlayerYSpeed
+                      STZ.B PlayerYSpeed+1
                       LDA.B #$01
                       STA.W StandOnSolidSprite
                       LDY.B #$00
@@ -2429,7 +2429,7 @@ CODE_039488:          JSL MarioSprInteract
                       LDA.B PlayerXPosNext+1
                       ADC.W DATA_039486,Y
                       STA.B PlayerXPosNext+1
-                      STZ.B PlayerXSpeed
+                      STZ.B PlayerXSpeed+1
 Return0394B0:         RTS
 
 
@@ -2541,7 +2541,7 @@ RexInAir:             LDA.W SpriteMisc1FE2,X                    ; \ If time to s
                       BNE NoRexContact                          ; /    ... goto NO_CONTACT
                       LDA.B #$08                                ; \ Rex invincibility timer = $08
                       STA.W SpriteMisc154C,X                    ; /
-                      LDA.B PlayerYSpeed                        ; \  If mario's y speed < 10 ...
+                      LDA.B PlayerYSpeed+1                      ; \  If mario's y speed < 10 ...
                       CMP.B #$10                                ; |   ... Rex will hurt mario
                       BMI RexWins                               ; /
                       JSR RexPoints                             ; Give mario points
@@ -3147,21 +3147,21 @@ CODE_039910:          LDA.W SpriteStatus,X
                       BMI HitReznor                             ; /
                       CMP.B #$F2                                ; \ See if mario hit side of the platform
                       BMI HitPlatSide                           ; |
-                      LDA.B PlayerYSpeed                        ; |
+                      LDA.B PlayerYSpeed+1                      ; |
                       BPL HitPlatSide                           ; /
                       LDA.B #$29                                ; ??Something about boosting mario on platform??
                       STA.W SpriteTweakerB,X
                       LDA.B #$0F                                ; \ Time to bounce platform = 0F
                       STA.W SpriteMisc1564,X                    ; /
                       LDA.B #$10                                ; \ Set mario's y speed to rebound down off platform
-                      STA.B PlayerYSpeed                        ; /
+                      STA.B PlayerYSpeed+1                      ; /
                       LDA.B #!SFX_BONK                          ; \
                       STA.W SPCIO0                              ; / Play sound effect
                       BRA DrawReznor
 
 HitPlatSide:          JSR SubHorzPosBnk3                        ; \ Set mario to bounce back
                       LDA.W ReboundSpeedX,Y                     ; | (hit side of platform?)
-                      STA.B PlayerXSpeed                        ; |
+                      STA.B PlayerXSpeed+1                      ; |
                       BRA DrawReznor                            ; /
 
 HitReznor:            JSL HurtMario                             ; Hurt Mario
@@ -5349,7 +5349,7 @@ PrincessPeach:        LDA.B SpriteXPosLow,X
                       LDA.B #$02
                       STA.W OAMTileSize+$40,Y
 CODE_03AD18:          STZ.B SpriteXSpeed,X                      ; Sprite X Speed = 0
-                      STZ.B PlayerXSpeed
+                      STZ.B PlayerXSpeed+1
                       LDA.B #$04
                       STA.W SpriteMisc1602,X
                       LDA.B SpriteTableC2,X
@@ -5464,7 +5464,7 @@ CODE_03ADFF:          LDA.W DATA_03ADD9,Y
                       STA.B SpriteXSpeed,X
                       EOR.B #$FF
                       INC A
-                      STA.B PlayerXSpeed
+                      STA.B PlayerXSpeed+1
                       TYA
                       STA.W SpriteMisc157C,X
                       STA.B PlayerDirection
@@ -5793,7 +5793,7 @@ CODE_03B078:          LDA.B Mode7XScale
                       JSL MarioSprInteract
                       BCC CODE_03B0BD
                       JSR CODE_03B0D6
-                      STZ.B PlayerYSpeed
+                      STZ.B PlayerYSpeed+1
                       JSR SubHorzPosBnk3
                       LDA.W BrSwingCenterXPos+1
                       ORA.W BrSwingYDist
@@ -5802,7 +5802,7 @@ CODE_03B078:          LDA.B Mode7XScale
                       BRA +
 
 CODE_03B0B3:          LDA.W DATA_03B074,Y
-                    + STA.B PlayerXSpeed
+                    + STA.B PlayerXSpeed+1
                       LDA.B #!SFX_BONK                          ; \ Play sound effect
                       STA.W SPCIO0                              ; /
 CODE_03B0BD:          INC.W SpriteTweakerB,X
@@ -7148,7 +7148,7 @@ InvisMushroom:        JSR GetDrawInfoBnk3
                       SBC.B #$00                                ; |
                       STA.W SpriteYPosHigh,X                    ; /
 PopupMushroom:        LDA.B #$00                                ; \ Sprite direction = dirction of Mario's X speed
-                      LDY.B PlayerXSpeed                        ; |
+                      LDY.B PlayerXSpeed+1                      ; |
                       BPL +                                     ; |
                       INC A                                     ; |
                     + STA.W SpriteMisc157C,X                    ; /
@@ -8391,7 +8391,7 @@ CODE_03CE89:          LDA.W SpriteMisc1540,X
 
 CODE_03CEA7:          JSL MarioSprInteract
                       BCC Return03CEF1
-                      LDA.B PlayerYSpeed
+                      LDA.B PlayerYSpeed+1
                       CMP.B #$10
                       BMI CODE_03CEED
                       JSL DisplayContactGfx

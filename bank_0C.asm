@@ -1492,9 +1492,9 @@ CODE_0C9EB1:          REP #$30                                  ; AXY->16
                       TAX
                       LDY.W #$0000
                       SEP #$20                                  ; A->8
-                      LDA.B Layer1DataPtr+1
+                      LDA.B StaffRollLinePos+1
                       STA.L DynamicStripeImage,X
-                      LDA.B Layer1DataPtr
+                      LDA.B StaffRollLinePos
                       STA.L DynamicStripeImage+1,X
                       INX
                       INX
@@ -1508,14 +1508,14 @@ CODE_0C9EB1:          REP #$30                                  ; AXY->16
                       DEX
                       TXA
                       STA.L DynStripeImgSize
-                      LDA.B Layer1DataPtr+2
+                      LDA.B StaffRollCurLine
                       AND.W #$00FF
                       ASL A
                       TAY
                       LDA.W DATA_0C9D18,Y
                       TAY
                       SEP #$20                                  ; A->8
-                      INC.B Layer1DataPtr+2
+                      INC.B StaffRollCurLine
                       LDA.W DATA_0C95C7,Y
                       CMP.B #$FF
                       BEQ CODE_0C9F43
@@ -1526,9 +1526,9 @@ CODE_0C9EB1:          REP #$30                                  ; AXY->16
                       STZ.B _1
                       INY
                       INY
-                      LDA.B Layer1DataPtr+1
+                      LDA.B StaffRollLinePos+1
                       STA.L DynamicStripeImage,X
-                      LDA.B Layer1DataPtr
+                      LDA.B StaffRollLinePos
                       CLC
                       ADC.B _2
                       STA.L DynamicStripeImage+1,X
@@ -1556,15 +1556,15 @@ CODE_0C9EB1:          REP #$30                                  ; AXY->16
                       STA.L DynStripeImgSize
 CODE_0C9F43:          REP #$20                                  ; A->16
                       SEP #$10                                  ; XY->8
-                      LDA.B Layer1DataPtr
+                      LDA.B StaffRollLinePos
                       CLC
                       ADC.W #$0020
-                      STA.B Layer1DataPtr
+                      STA.B StaffRollLinePos
                       AND.W #$03FF
                       BNE +
-                      LDA.B Layer1DataPtr
+                      LDA.B StaffRollLinePos
                       EOR.W #$0C00
-                      STA.B Layer1DataPtr
+                      STA.B StaffRollLinePos
                     + RTS
 
 
@@ -1640,7 +1640,7 @@ CODE_0C9FEA:          REP #$20                                  ; A->16
                       LDA.B #$01
                       STA.B Powerup
                       LDA.B #$08
-                      STA.W PlayerXSpeed
+                      STA.W PlayerXSpeed+1
                       JSR CODE_0CA75A
                       LDA.B #$52
                       STA.B SpriteXPosLow
@@ -1914,7 +1914,7 @@ CODE_0CA24F:          LDA.B #$F8
                       LDA.B #$01
                       STA.B Powerup
                       LDA.B #$08
-                      STA.W PlayerXSpeed
+                      STA.W PlayerXSpeed+1
                       JSR CODE_0CA75A
                       LDA.W CreditsSprXPosLow
                       CLC
@@ -6348,7 +6348,7 @@ CODE_0CD812:          LDY.B Powerup
                       LDY.B PlayerXPosNext
                       CPY.B #$40
                       BCS CODE_0CD858
-                      LDY.B PlayerXSpeed
+                      LDY.B PlayerXSpeed+1
                       BNE CODE_0CD858
                       LDA.B #$10
                       STA.W PickUpItemTimer
@@ -6357,7 +6357,7 @@ CODE_0CD83D:          LDA.B #$05
                       CMP.B PlayerXPosNext
                       BCC +
                       STA.B PlayerXPosNext
-                      LDA.B PlayerXSpeed
+                      LDA.B PlayerXSpeed+1
                       BMI +
 CODE_0CD849:          INC.W Layer2ScrollXSpeed
                     + INC.W Layer2ScrollXSpeed+1

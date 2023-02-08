@@ -572,7 +572,7 @@ CODE_0485A7:          REP #$20                                  ; A->16
                       STA.B PlayerYPosNext                      ; /
                       SEP #$20                                  ; A->8
                       LDA.B #$08
-                      STA.W PlayerXSpeed
+                      STA.W PlayerXSpeed+1
                       PHB
                       LDA.B #$00
                       PHA

@@ -842,7 +842,7 @@ CODE_028752:          LDA.B _4
                       BNE +                                     ; |
                       INC.W PlayerScore+2,X                     ; /
                     + LDA.B #$D0                                ; Deflect Mario downward
-                      STA.B PlayerYSpeed                        ; /
+                      STA.B PlayerYSpeed+1                      ; /
                       LDA.B #$00                                ; for shatter routine?
                       JSL ShatterBlock                          ; Actually break the block
                       JSR SprBlkInteract                        ; Handle sprite/block interaction
@@ -2016,11 +2016,11 @@ BounceBlockSpr:       JSR BounceSprGfx
                       LDA.W DATA_0290D6,Y
                       CMP.B #$80
                       BEQ +
-                      STA.B PlayerYSpeed
+                      STA.B PlayerYSpeed+1
                     + LDA.W DATA_0290DA,Y
                       CMP.B #$80
                       BEQ CODE_02910B
-                      STA.B PlayerXSpeed
+                      STA.B PlayerXSpeed+1
 CODE_02910B:          JSR CODE_02B526
                       JSR CODE_02B51A
                       LDA.W BounceSpriteFlags,X
@@ -2056,7 +2056,7 @@ CODE_02910B:          JSR CODE_02B526
                       LDA.B #$01
                       STA.W StandOnSolidSprite
                       STA.W NoteBlockActive
-                      STZ.B PlayerYSpeed
+                      STZ.B PlayerYSpeed+1
 CODE_02915E:          LDA.W BounceSpriteTimer,X
                       BNE Return02919C
                       LDA.W BounceSpriteFlags,X
@@ -2064,7 +2064,7 @@ CODE_02915E:          LDA.W BounceSpriteTimer,X
                       CMP.B #$03
                       BNE +
                       LDA.B #$A0
-                      STA.B PlayerYSpeed
+                      STA.B PlayerYSpeed+1
                       LDA.B PlayerYPosNext
                       SEC
                       SBC.B #$02
@@ -4439,8 +4439,8 @@ CODE_02A473:          PHX
                       STZ.W PlayerRidingYoshi
                       STZ.W CarryYoshiThruLvls
                       LDA.B #$C0
-                      STA.B PlayerYSpeed
-                      STZ.B PlayerXSpeed
+                      STA.B PlayerYSpeed+1
+                      STZ.B PlayerXSpeed+1
                       LDY.W SpriteMisc157C-1,X
                       LDA.W DATA_02A4B3,Y
                       STA.B SpriteXSpeed-1,X
@@ -8822,7 +8822,7 @@ CODE_02C7F6:          LDA.B #!SFX_ENEMYHURT                     ; \ Play sound e
                       STZ.W SpriteMisc1570,X
                       JSR CODE_02D4FA
                       LDA.W DATA_02C79B,Y
-                      STA.B PlayerXSpeed
+                      STA.B PlayerXSpeed+1
 Return02C80F:         RTS
 
 CODE_02C810:          LDA.W PlayerRidingYoshi
@@ -9269,7 +9269,7 @@ WingedCageMain:       LDA.B SpriteLock                          ; \ If sprites n
                       STA.B _3                                  ; /
                       REP #$20                                  ; A->16
                       LDA.B _0
-                      LDY.B PlayerXSpeed
+                      LDY.B PlayerXSpeed+1
                       DEY
                       BPL ADDR_02CC6C
                       CLC
@@ -9278,7 +9278,7 @@ WingedCageMain:       LDA.B SpriteLock                          ; \ If sprites n
                       BCC +
                       STA.B PlayerXPosNext
                       LDY.B #$00                                ; \ Mario's X speed = 0
-                      STY.B PlayerXSpeed                        ; /
+                      STY.B PlayerXSpeed+1                      ; /
                       BRA +
 
 ADDR_02CC6C:          CLC
@@ -9289,16 +9289,16 @@ ADDR_02CC6C:          CLC
                       ADC.W #$0091
                       STA.B PlayerXPosNext
                       LDY.B #$00
-                      STY.B PlayerXSpeed
+                      STY.B PlayerXSpeed+1
                     + LDA.B _2
-                      LDY.B PlayerYSpeed
+                      LDY.B PlayerYSpeed+1
                       BPL ADDR_02CC93
                       CLC
                       ADC.W #$0020
                       CMP.B PlayerYPosNext
                       BCC +
                       LDY.B #$00
-                      STY.B PlayerYSpeed
+                      STY.B PlayerYSpeed+1
                       BRA +
 
 ADDR_02CC93:          CLC
@@ -9309,7 +9309,7 @@ ADDR_02CC93:          CLC
                       ADC.W #$0061
                       STA.B PlayerYPosNext
                       LDY.B #$00
-                      STY.B PlayerYSpeed
+                      STY.B PlayerYSpeed+1
                       LDY.B #$01
                       STY.W StandOnSolidSprite
                       STY.W StandingOnCage
@@ -9461,7 +9461,7 @@ PeaBouncerMain:       JSR SubOffscreen0Bnk2
                       STZ.W SpriteMisc1534,X
                       LDY.W SpriteMisc151C,X
                       LDA.W DATA_02CDFF,Y
-                      STA.B PlayerYSpeed
+                      STA.B PlayerYSpeed+1
                       LDA.B #!SFX_SPRING                        ; \ Play sound effect
                       STA.W SPCIO3                              ; /
                     + LDA.W SpriteMisc1528,X
@@ -9664,7 +9664,7 @@ CODE_02CF52:          LDA.B PlayerAnimation
                       ADC.B #$08
                       CMP.B _F
                       BCS Return02CFFD
-                      LDA.B PlayerYSpeed
+                      LDA.B PlayerYSpeed+1
                       BMI Return02CFFD
                       LDA.B #$1F
                       PHX
@@ -9699,10 +9699,10 @@ CODE_02CF52:          LDA.B PlayerAnimation
                       STA.W SpriteMisc1534,X
                       LDY.B SpriteTableC2,X
                       LDA.W DATA_02CE07,Y
-                      STA.B PlayerYSpeed
+                      STA.B PlayerYSpeed+1
                     + RTS
 
-CODE_02CFEB:          STZ.B PlayerXSpeed
+CODE_02CFEB:          STZ.B PlayerXSpeed+1
                       LDY.B _2
                       LDA.W PeaBouncerPhysics,Y
                       STA.W SpriteMisc151C,X
@@ -10037,9 +10037,9 @@ CODE_02D25F:          LDY.B #$F8
                       INC.B SpriteYSpeed,X
                     + DEC.B SpriteYSpeed,X
 CODE_02D27F:          LDA.B SpriteXSpeed,X
-                      STA.B PlayerXSpeed
+                      STA.B PlayerXSpeed+1
                       LDA.B SpriteYSpeed,X
-                      STA.B PlayerYSpeed
+                      STA.B PlayerYSpeed+1
                       RTL
 
 UpdateXPosNoGrvty:    TXA                                       ; \ Adjust index so we use X values rather than Y
@@ -10368,10 +10368,10 @@ CODE_02D49C:          LDA.B #$00
                       JSL HurtMario
                       RTS
 
-                    + STZ.B PlayerYSpeed
+                    + STZ.B PlayerYSpeed+1
                       LDA.B SpriteYSpeed,X
                       BMI +
-                      STA.B PlayerYSpeed
+                      STA.B PlayerYSpeed+1
                     + RTS
 
 CODE_02D4E5:          PHP
@@ -10379,7 +10379,7 @@ CODE_02D4E5:          PHP
                       PLP
                       BPL +
                       LDA.B #$F8
-                    + STA.B PlayerXSpeed
+                    + STA.B PlayerXSpeed+1
 CODE_02D4EF:          SEP #$20                                  ; A->8
                       RTS
 
@@ -10904,8 +10904,8 @@ CODE_02D904:          LDA.B SpriteLock
                       JSL SprSprInteract
                       JSL MarioSprInteract
                       BCC Return02D9A0
-                      STZ.B PlayerYSpeed
-                      STZ.B PlayerXSpeed
+                      STZ.B PlayerYSpeed+1
+                      STZ.B PlayerXSpeed+1
 CODE_02D96B:          LDA.W SpriteMisc1534,X
                       CMP.B #$07
                       BCC Return02D977
@@ -13041,7 +13041,7 @@ WarpBlocksMain:       PHB
 
 CODE_02EADA:          JSL MarioSprInteract
                       BCC +
-                      STZ.B PlayerXSpeed
+                      STZ.B PlayerXSpeed+1
                       LDA.B SpriteXPosLow,X
                       CLC
                       ADC.B #$0A
@@ -13434,7 +13434,7 @@ CODE_02EE21:          LDA.W SpriteStatus,Y
                       STA.B SpriteYSpeed,X
                     + JSL MarioSprInteract
                       BCC Return02EEA8
-                      LDA.B PlayerYSpeed
+                      LDA.B PlayerYSpeed+1
                       BMI Return02EEA8
                       LDA.B #$0C
                       STA.W SkullRaftSpeed
@@ -13958,7 +13958,7 @@ CODE_02F22B:          LDA.W OAMTileXPos+$104,Y
                       STA.W SpriteMisc154C,X
                       LDA.W SpriteStompCounter
                       BNE CODE_02F26B
-                      LDA.B PlayerYSpeed
+                      LDA.B PlayerYSpeed+1
                       CMP.B #$08
                       BMI CODE_02F296
 CODE_02F26B:          LDA.B #!SFX_KICK                          ; \ Play sound effect

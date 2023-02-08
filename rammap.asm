@@ -348,86 +348,627 @@ OBJCWWindow: skip 1
 ; ++------ color window main screen (00 = on, 01 = inside, 10 = outside, 11 = off)
 ColorAddition: skip 1
 
+; === $7E0045 ===
+; 2 bytes
+; In horizontal levels:
+;     the X coordinate (in 16x16 tiles) of the
+;     left edge of currently loaded Layer 1 tilemap data
+; In vertical levels:
+;     the Y coordinate (in 16x16 tiles) of the
+;     top edge of currently loaded Layer 1 tilemap data
 Layer1TileUp: skip 2
+
+; === $7E0047 ===
+; 2 bytes
+; In horizontal levels:
+;     the X coordinate (in 16x16 tiles) of the
+;     right edge of currently loaded Layer 1 tilemap data
+; In vertical levels:
+;     the Y coordinate (in 16x16 tiles) of the
+;     bottom edge of currently loaded Layer 1 tilemap data
 Layer1TileDown: skip 2
+
+; === $7E0049 ===
+; 2 bytes
+; In horizontal levels:
+;     the X coordinate (in 16x16 tiles) of the
+;     left edge of currently loaded Layer 2 tilemap data
+; In vertical levels:
+;     the Y coordinate (in 16x16 tiles) of the
+;     top edge of currently loaded Layer 2 tilemap data
 Layer2TileUp: skip 2
+
+; === $7E004B ===
+; 2 bytes
+; In horizontal levels:
+;     the X coordinate (in 16x16 tiles) of the
+;     right edge of currently loaded Layer 2 tilemap data
+; In vertical levels:
+;     the Y coordinate (in 16x16 tiles) of the
+;     bottom edge of currently loaded Layer 2 tilemap data
 Layer2TileDown: skip 2
+
+; === $7E004D ===
+; 2 bytes
+; In horizontal levels:
+;     the X coordinate of Layer 1 when a column of tiles
+;     was last uploaded to VRAM via scrolling left
+; In vertical levels:
+;     the Y coordinate of Layer 1 when a column of tiles
+;     was last uploaded to VRAM via scrolling up
 Layer1PrevTileUp: skip 2
+
+; === $7E004F ===
+; 2 bytes
+; In horizontal levels:
+;     the X coordinate of Layer 1 when a column of tiles
+;     was last uploaded to VRAM via scrolling right
+; In vertical levels:
+;     the Y coordinate of Layer 1 when a column of tiles
+;     was last uploaded to VRAM via scrolling down
 Layer1PrevTileDown: skip 2
+
+; === $7E0051 ===
+; 2 bytes
+; In horizontal levels:
+;     the X coordinate of Layer 2 when a column of tiles
+;     was last uploaded to VRAM via scrolling left
+; In vertical levels:
+;     the Y coordinate of Layer 2 when a column of tiles
+;     was last uploaded to VRAM via scrolling up
 Layer2PrevTileUp: skip 2
+
+; === $7E0053 ===
+; 2 bytes
+; In horizontal levels:
+;     the X coordinate of Layer 2 when a column of tiles
+;     was last uploaded to VRAM via scrolling right
+; In vertical levels:
+;     the Y coordinate of Layer 2 when a column of tiles
+;     was last uploaded to VRAM via scrolling down
 Layer2PrevTileDown: skip 2
+
+; === $7E0055 ===
+; 1 byte
+; Which direction Layer 1 has scrolled
+; used for handling camera behavior and spawning sprites
 Layer1ScrollDir: skip 1
+; Valid values
+!ScrollDir_LeftUp = 0
+!ScrollDir_Loading = 1
+!ScrollDir_RightDown = 2
+
+; === $7E0056 ===
+; 1 byte
+; Which direction Layer 2 has scrolled
+; used for handling camera behavior
 Layer2ScrollDir: skip 1
+; Valid values
+!ScrollDir_LeftUp = 0
+!ScrollDir_RightDown = 2
+
+; === $7E0057 ===
+; 1 byte
+; Position of a 16x16 tile within a screen
+; Used during level loading
 LevelLoadPos: skip 1
-; $7E0058 unused
-skip 1
+
+; === $7E0058 ===
+; 1 byte
+; unused
+WRAM_0058: skip 1
+
+; === $7E0059 ===
+; 1 byte
+; Size or extended type of the currently loading object
 LvlLoadObjSize: skip 1
+
+; === $7E005A ===
+; 1 byte
+; Object number of the currently loading object
 LvlLoadObjNo: skip 1
+
+; === $7E005B ===
+; 1 byte
+; Level type properties
+; id----21
+; ||    |+ Layer 1 is vertical
+; ||    +- Layer 2 is vertical
+; |+------ set to disable interaction with Layer 1
+; +------- set to enable interaction with Layer 2
 ScreenMode: skip 1
-; $7E005C unused
-skip 1
+; Valid values
+!ScrMode_Layer1Vert = %01
+!ScrMode_Layer2Vert = %10
+!ScrMode_DisableL1Int = %01000000
+!ScrMode_EnableL2Int = %10000000
+
+; === $7E005C ===
+; 1 byte
+; unused
+WRAM_005C: skip 1
+
+; === $7E005D ===
+; 1 byte
+; Number of screens in a level
+; Set to -1 during Ludwig and Reznor battles, which represents 1.5
 LevelScrLength: skip 1
+
+; === $7E005E ===
+; 1 byte
+; In horizontal levels: the last screen of the level (stop scrolling right)
 LastScreenHoriz: skip 1
+
+; === $7E005F ===
+; 1 byte
+; In vertical levels: the last screen of the level (stop scrolling down)
 LastScreenVert: skip 1
-; $7E0060-$7E0063 unused
-skip 4
+
+; === $7E0060 ===
+; 4 bytes
+; unused
+WRAM_0060: skip 4
+
+; === $7E0064 ===
+; 1 byte
+; Default properties for all objects
+; yxppccct
+; |||||||+ 9th bit of tile number
+; ||||+++- palette
+; ||++---- object priority
+; |+------ x flip
+; +------- y flip
 SpriteProperties: skip 1
-Layer1DataPtr: skip 3
+; Valid values
+!OBJ_Priority0 = %000000
+!OBJ_Priority1 = %010000
+!OBJ_Priority2 = %100000
+!OBJ_Priority3 = %110000
+!OBJ_XFlip = %01000000
+!OBJ_YFlip = %10000000
+
+; === $7E0065 ===
+; 3 bytes
+; pointer to Layer 1 level data
+Layer1DataPtr:
+
+; === $7E0065 ===
+; 2 bytes
+; position of the currently loading line of staff roll text
+StaffRollLinePos: skip 2
+
+; === $7E0067 ===
+; 1 byte
+; current line of the staff roll being drawn
+StaffRollCurLine: skip 1
+
+; === $7E0068 ===
+; 3 bytes
+; pointer to Layer 2 level data
 Layer2DataPtr: skip 3
+
+; === $7E006B ===
+; 3 bytes
+; pointer to Layer 1 Map16 data
 Map16LowPtr: skip 3
+
+; === $7E006E ===
+; 3 bytes
+; pointer to Layer 2 Map16 data
 Map16HighPtr: skip 3
+
+; === $7E0071 ===
+; 1 byte
+; Current player animation that blocks player input
 PlayerAnimation: skip 1
+; Valid values
+!PlayerAni_Default = 0
+!PlayerAni_IFrames = 1
+!PlayerAni_Growing = 2
+!PlayerAni_GetCape = 3
+!PlayerAni_GetFire = 4
+!PlayerAni_EnterHPipe = 5
+!PlayerAni_EnterVPipe = 6
+!PlayerAni_CannonPipe = 7
+!PlayerAni_YoshiHeaven = 8
+!PlayerAni_Death = 9
+!PlayerAni_EnterCastle = 10
+!PlayerAni_Frozen = 11
+!PlayerAni_CastleCutscene = 12
+!PlayerAni_Door = 13
+
+; === $7E0072 ===
+; 1 byte
+; set if player is not on the ground
 PlayerInAir: skip 1
+; Valid values
+!PlayerAir_Jump = 11 ; normal jump or swimming in water level
+!PlayerAir_Takeoff = 12 ; pspeed jump
+!PlayerAir_Falling = 36 ; descending or swimming in non-water level
+
+; === $7E0073 ===
+; 1 byte
+; set if player is ducking
 PlayerIsDucking: skip 1
+; Valid values
+!PlayerDuck_Duck = 4
+
+; === $7E0074 ===
+; 1 byte
+; set if player is climbing
+; n--shbtc
+; |  ||||+ center collision
+; |  |||+- top collision
+; |  ||+-- bottom collision
+; |  |+--- top horizontal collision
+; |  +---- bottom horizontal collision
+; +------- can climb diagonally (net vs vine)
 PlayerIsClimbing: skip 1
+; Valid values
+!PlayerClimb_Center = %00001
+!PlayerClimb_Top = %00010
+!PlayerClimb_Bottom = %00100
+!PlayerClimb_SideTop = %01000
+!PlayerClimb_SideBottom = %10000
+!PlayerClimb_Diagonally = %10000000
+
+; === $7E0075 ===
+; 1 byte
+; set if player is in water
 PlayerInWater: skip 1
+
+; === $7E0076 ===
+; 1 byte
+; direction player is facing
 PlayerDirection: skip 1
+; Valid values
+!PlayerDir_Left = 0
+!PlayerDir_Right = 1
+
+; === $7E0077 ===
+; 1 byte
+; flags for player collision with blocks
+; s--cudlr
+; |  ||||+ collision on right side
+; |  |||+- collision on left side
+; |  ||+-- collision on bottom
+; |  |+--- collision on top
+; |  +---- collision inside
+; +------- collision with edge of screen
 PlayerBlockedDir: skip 1
+; Valid values
+!PlayerBlock_Right = %00001
+!PlayerBlock_Left = %00010
+!PlayerBlock_Bottom = %00100
+!PlayerBlock_Top = %01000
+!PlayerBlock_Inside = %10000
+!PlayerBlock_Screen = %10000000
+
+; === $7E0078 ===
+; 1 byte
+; bitfield to hide certain tiles that make up the player
+; sabcxylu
+; |||||||+ upper half of body
+; ||||||+- lower half of body
+; ||||++-- various extra smaller tiles
+; |||+---- cape tile
+; |++----- various other cape tiles
+; +------- don't decrement star timer (used with brown swinging platforms)
 PlayerHiddenTiles: skip 1
-; $7E0079 unused
-skip 1
-PlayerXPosSpx: skip 1
-PlayerXSpeed: skip 1
-PlayerYPosSpx: skip 1
-PlayerYSpeed: skip 1
+; Valid values
+!PlayerHide_None = %00000000
+!PlayerHide_Body = %00000011
+!PlayerHide_Extra = %00001100
+!PlayerHide_Cape = %00010000
+!PlayerHide_CapeX1 = %00100000
+!PlayerHide_CapeX2 = %01000000
+!PlayerHide_All = %01111111
+!PlayerHide_PauseStar = %10000000
+
+; === $7E0079 ===
+; 1 byte
+WRAM_0079: skip 1
+
+; === $7E007A ===
+; 2 bytes
+; 4.12 fixed point player horizontal speed (pixels per frame)
+; while all 16 bits are used for acceleration, only the
+; upper 8 bits are used for position calculation
+PlayerXSpeed: skip 2
+
+; === $7E007C ===
+; 2 bytes
+; 4.12 fixed point player vertical speed (pixels per frame)
+; while all 16 bits are used for acceleration, only the
+; upper 8 bits are used for position calculation
+PlayerYSpeed: skip 2
+
+; === $7E007E ===
+; 2 bytes
+; player horizontal position relative to the screen boundary
 PlayerXPosScrRel: skip 2
+
+; === $7E0080 ===
+; 2 bytes
+; player horizontal position relative to the screen boundary
 PlayerYPosScrRel: skip 2
+
+; === $7E0082 ===
+; 3 bytes
+; pointer to various slope data
+; changes with the level tileset
 SlopesPtr: skip 3
+
+; === $7E0085 ===
+; 1 byte
+; set if the level is a completely underwater level
 LevelIsWater: skip 1
+
+; === $7E0086 ===
+; 1 byte
+; set if the level is slippery
 LevelIsSlippery: skip 1
-; $7E0087 unused
-skip 1
-PipeTimer: skip 1
-PlayerPipeAction: skip 1
+
+; === $7E0087 ===
+; 1 byte
+; unused
+WRAM_0087: skip 1
+
+; === $7E0088 ===
+; 1 byte
+; timer that controls how long the animation is
+; for entering/exiting a pipe
+PipeTimer:
+
+; === $7E0088 ===
+; 1 byte
+; index into no yoshi intro auto input
+NoYoshiInputIndex:
+
+; === $7E0088 ===
+; 1 byte
+; timer for castle cutscene auto input (how long each input lasts)
+CutsceneInputTimer: skip 1
+
+; === $7E0089 ===
+; 1 byte
+; which pipe animation to display
+PlayerPipeAction:
+; Valid values
+!PlayerPipe_EnterRight = 0
+!PlayerPipe_EnterLeft = 1
+!PlayerPipe_EnterDown = 2
+!PlayerPipe_EnterUp = 3
+!PlayerPipe_ExitLeft = 4
+!PlayerPipe_ExitRight = 5
+!PlayerPipe_ExitUp = 6
+!PlayerPipe_ExitDown = 7
+
+; === $7E0089 ===
+; 1 byte
+; timer for no yoshi intro auto input (how long each input lasts)
+NoYoshiInputTimer: skip 1
+
+; === $7E008A ===
+; 1 byte
+; temporary location for player Y speed
+; used when calculating player speed when running on a wall
 TempPlayerYSpeed:
+
+; === $7E008A ===
+; 2 bytes
+; running sum for calculating the checksum of save files
 PartialChecksum:
+
+; === $7E008A ===
+; 1 byte
+; number of options in the current menu
 MaxMenuOptions:
+
+; === $7E008A ===
+; 3 bytes
+; pointer to the current position within compressed graphics data
 GraphicsCompPtr:
+
+; === $7E008A ===
+; 1 byte
+; which player interaction points are in water
+; ---shbtc
+;    ||||+ center collision
+;    |||+- top collision
+;    ||+-- bottom collision
+;    |+--- top horizontal collision
+;    +---- bottom horizontal collision
 InteractionPtsInWater: skip 1
+
+; === $7E008B ===
+; 1 byte
+; which player interaction points are on a climbable tile
+; ---shbtc
+;    ||||+ center collision
+;    |||+- top collision
+;    ||+-- bottom collision
+;    |+--- top horizontal collision
+;    +---- bottom horizontal collision
 InteractionPtsClimbable: skip 1
+
+; === $7E008C ===
+; 1 byte
+; which side of a block the current player interaction point is touching
 InteractionPtDirection: skip 1
-GraphicsUncompPtr: skip 3
+
+; === $7E008D ===
+; 3 bytes
+; pointer to the current position within decompressed graphics data
+GraphicsUncompPtr:
+
+; === $7E008D ===
+; 1 byte
+; temporary copy of PlayerIsOnGround
+; ------21
+;       |+ set if player standing on Layer 1
+;       +- set if player standing on Layer 2
+TempPlayerGround: skip 1
+
+; === $7E008E ===
+; 1 byte
+; temporary copy of ScreenMode
+; Level type properties
+; id----21
+; ||    |+ Layer 1 is vertical
+; ||    +- Layer 2 is vertical
+; |+------ set to disable interaction with Layer 1
+; +------- set to enable interaction with Layer 2
+TempScreenMode: skip 1
+
+; === $7E008F ===
+; 1 byte
+; temporary copy of PlayerInAir
+TempPlayerAir:
+
+; === $7E008F ===
+; 1 byte
+; index into castle cutscene auto input
+CutsceneInputIndex: skip 1
+
+; === $7E0090 ===
+; 1 byte
+; vertical position of the player within a block
+; relative to the player's feet
 PlayerYPosInBlock: skip 1
+
+; === $7E0091 ===
+; 1 byte
+; vertical position of the player's interaction point within a block
 PlayerBlockMoveY: skip 1
+
+; === $7E0092 ===
+; 1 byte
+; horizontal position of the player within a block
+; relative to the center of the player
 PlayerXPosInBlock: skip 1
+
+; === $7E0093 ===
+; 1 byte
+; which side of a tile the player is currently within
 PlayerBlockXSide: skip 1
+
+; === $7E0094 ===
+; 2 bytes
+; horizontal position of the player within the level
+; forward calculation for the next frame
 PlayerXPosNext: skip 2
+
+; === $7E0096 ===
+; 2 bytes
+; vertical position of the player within the level
+; forward calculation for the next frame
 PlayerYPosNext: skip 2
+
+; === $7E0098 ===
+; 2 bytes
+; vertical position of the currently processing player interaction point
 TouchBlockYPos: skip 2
+
+; === $7E009A ===
+; 2 bytes
+; horizontal position of the currently processing player interaction point
 TouchBlockXPos: skip 2
+
+; === $7E009C ===
+; 1 byte
+; a Map16 tile to draw to the screen
 Map16TileGenerate: skip 1
+; Valid values
+!Map16Gen_CollectEmpty = 1 ; sets item memory
+!Map16Gen_Empty = 2
+!Map16Gen_Vine = 3
+!Map16Gen_Bush = 4
+!Map16Gen_TurningBlock = 5
+!Map16Gen_Coin = 6
+!Map16Gen_MushStalk = 7
+!Map16Gen_MoleHole = 8
+!Map16Gen_SolidEmpty = 9
+!Map16Gen_TurnMulticoin = 10
+!Map16Gen_QMulticoin = 11
+!Map16Gen_TurnBlock = 12
+!Map16Gen_UsedBlock = 13
+!Map16Gen_NoteBlock = 14
+!Map16Gen_NoteUnused = 15
+!Map16Gen_NoteAllSides = 16
+!Map16Gen_TurnBounce = 17
+!Map16Gen_Roulette = 18
+!Map16Gen_OnOff = 19
+!Map16Gen_PipeLeft = 20
+!Map16Gen_PipeRight = 21
+!Map16Gen_CollectUsed = 22 ; sets item memory
+!Map16Gen_CollectCorrect = 23 ; sets item memory
+!Map16Gen_CollectDragon = 24 ; sets item memory
+!Map16Gen_NetDoorEmpty = 25
+!Map16Gen_NetDoorClosed = 26
+!Map16Gen_FlatSwitch = 27
+
+; === $7E009D ===
+; 1 byte
+; locks most animations and movements when set
 SpriteLock: skip 1
+
+; === $7E009E ===
+; 12 bytes
+; sprite ID table
 SpriteNumber: skip 12
+
+; === $7E00AA ===
+; 12 bytes
+; sprite vertical speed table
 SpriteYSpeed: skip 12
+
+; === $7E00B6 ===
+; 12 bytes
+; sprite horizontal speed table
 SpriteXSpeed: skip 12
+
+; === $7E00C2 ===
+; 12 bytes
+; various sprite properties table
 SpriteTableC2: skip 12
+
+; === $7E00CE ===
+; 3 bytes
+; pointer to the level's sprite data
 SpriteDataPtr: skip 3
+
+; === $7E00D1 ===
+; 2 bytes
+; horizontal position of the player within the level
 PlayerXPosNow: skip 2
+
+; === $7E00D3 ===
+; 2 bytes
+; vertical position of the player within the level
 PlayerYPosNow: skip 2
+
+; === $7E00D5 ===
+; 3 bytes
+; pointer to the segment data of currently processing Wiggler
 WigglerSegmentPtr: skip 3
+
+; === $7E00D8 ===
+; 12 bytes
+; sprite vertical position table
+; lower 8 bits
 SpriteYPosLow: skip 12
+
+; === $7E00E4 ===
+; 12 bytes
+; sprite horizontal position table
+; lower 8 bits
 SpriteXPosLow: skip 12
-; $7E00F0-$7E00FF unused
+
+; === $7E00F0 ===
+; 16 bytes
+; unused
+WRAM_00F0:
 
 ORG $000100
 
@@ -620,10 +1161,9 @@ Layer3ScrollType: skip 1
 DrumrollTimer: skip 1
 IntroMarchYPosSpx: skip 2
 OverworldProcess: skip 1
-PlayerXSpeedFPSpx: skip 1
+PlayerXPosSpx: skip 1
 PlayerWalkingPose: skip 1
-; 7E13DC unused
-skip 1
+PlayerYPosSpx: skip 1 ; unused
 PlayerTurningPose: skip 1
 PlayerOverworldPose: skip 1
 PlayerCapePose: skip 1
@@ -1272,12 +1812,12 @@ Map16TilesHigh: skip 14336
 
 ORG $700000
 
-SaveData: skip 140
+SaveData: skip !SaveFileSize-3
 SaveDataExitCount: skip 1
 SaveDataChecksum: skip 2
-SaveDataFile2: skip 143
-SaveDataFile3: skip 143
-SaveDataBackup: skip 429
+SaveDataFile2: skip !SaveFileSize
+SaveDataFile3: skip !SaveFileSize
+SaveDataBackup: skip 3*!SaveFileSize
 ; 70035A - 7007FF unused
 
 
