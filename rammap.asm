@@ -77,9 +77,9 @@ byetudlrHold: skip 1
 !ButY = %01000000
 !ButSelect = %00100000
 !ButStart = %00010000
-!DpadUp = %000001000
-!DpadDown = %000000100
-!DpadLeft = %000000010
+!DpadUp = %00001000
+!DpadDown = %00000100
+!DpadLeft = %00000010
 !DpadRight = %00000001
 
 ; === $7E0016 ===
@@ -100,9 +100,9 @@ byetudlrFrame: skip 1
 !ButY = %01000000
 !ButSelect = %00100000
 !ButStart = %00010000
-!DpadUp = %000001000
-!DpadDown = %000000100
-!DpadLeft = %000000010
+!DpadUp = %00001000
+!DpadDown = %00000100
+!DpadLeft = %00000010
 !DpadRight = %00000001
 
 ; === $7E0017 ===
@@ -973,71 +973,376 @@ WRAM_00F0:
 ORG $000100
 
 StackPage:
+
+; === $7E0100 ===
+; 1 byte
+; the current game mode
 GameMode: skip 1
+; Valid values
+!GameMode_LoadPresents = 0
+!GameMode_Presents = 1
+!GameMode_FadeToTitleScreen = 2
+!GameMode_LoadTitleScreen = 3
+!GameMode_PrepareTitleScreen = 4
+!GameMode_FadeInTitleScreen = 5
+!GameMode_SpotlightTitleScreen = 6
+!GameMode_TitleScreen = 7
+!GameMode_FileSelect = 8
+!GameMode_FileDelete = 9
+!GameMode_PlayerSelect = 10
+!GameMode_FadeToOverworld = 11
+!GameMode_LoadOverworld = 12
+!GameMode_FadeInOverworld = 13
+!GameMode_Overworld = 14
+!GameMode_FadeToLevel = 15
+!GameMode_FadeLevelBlack = 16
+!GameMode_LoadLevel = 17
+!GameMode_PrepareLevel = 18
+!GameMode_FadeInLevel = 19
+!GameMode_Level = 20
+!GameMode_FadeToGameOver = 21
+!GameMode_LoadGameOver = 22
+!GameMode_GameOver = 23
+!GameMode_FadeToCutscene = 24
+!GameMode_LoadCutscene = 25
+!GameMode_FadeInCutscene = 26
+!GameMode_Cutscene = 27
+!GameMode_FadeToThankYou = 28
+!GameMode_LoadThankYou = 29
+!GameMode_FadeInThankYou = 30
+!GameMode_ThankYou = 31
+!GameMode_FadeToEnemyList = 32
+!GameMode_LoadEnemyList = 33
+!GameMode_FadeInEnemyList = 34
+!GameMode_EnemyList = 35
+!GameMode_FadeToTheEnd = 36
+!GameMode_LoadTheEnd = 37
+!GameMode_FadeInTheEnd = 38
+!GameMode_TheEnd = 39
+
+; === $7E0101 ===
+; 4 bytes
+; the four currently loaded sprite graphics files loaded in VRAM
 SpriteGFXFile: skip 4
+
+; === $7E0105 ===
+; 4 bytes
+; the four currently loaded sprite graphics files loaded in VRAM
 BackgroundGFXFile: skip 4
+
+; === $7E0109 ===
+; 1 byte
+; translevel number to load in lieu of the overworld
 OverworldOverride: skip 1
-SaveFile: skip 1
-; $7E010B - $7E010F unused
-skip 5
+
+; === $7E010A ===
+; 1 byte
+; the current save file to save to
+SaveFile: skip 6
+
+; === $7E0110 ===
+; 2 bytes
+; timer used for the size of the letterboxing during the credits
+; (only used in PAL v1.1)
 CreditsLetterbox: skip 1
 
 ; $7E0112 - $7E01FF used as stack
 
 ORG $0001FF
+
+; === $7E01FF ===
+; variable size
+; stack starts here and grows down
+; ~240 bytes available before Bad Things(TM) happen
 StackStart: skip 1
 
+; === $7E0200 ===
+; 512 bytes
+; a work RAM buffer of Object Attribute Memory (OAM)
+; table 1: object position, tile, and attributes
 OAMMirror:
+
+; === $7E0200 ===
+; 128 objects
+; the lower 8 bits of the object's X position on the screen
 OAMTileXPos: skip 1
+
+; === $7E0201 ===
+; 128 objects
+; the 8 bits of the object's Y position on the screen
+; $E0 is just off the bottom of the screen
 OAMTileYPos: skip 1
+
+; === $7E0202 ===
+; 128 objects
+; the lower 8 bits of the tile number that the object uses
 OAMTileNo: skip 1
+
+; === $7E0203 ===
+; 128 objects
+; various properties of the object
+; yxppccct
+; |||||||+ the higher 1 bit of the tile number the object uses
+; ||||+++- the palette that the object uses
+; ||++---- the priority that this object has against backgrounds
+; |+------ the object is flipped horizontally
+; +------- the object is flipped vertically
 OAMTileAttr: skip 1
 
 ORG $000400
 
+; === $7E0400 ===
+; 32 bytes
+; a work RAM buffer of Object Attribute Memory (OAM)
+; table 2: object high X position & size
 OAMTileBitSize: skip 32
+
+; === $7E0400 ===
+; 128 bytes
+; expanded table of object attributes for OAM table 2
+; one byte per object
+; ------sx
+;       |+ the higher 1 bit of the object's X position on the screen
+;       +- the size of the object (big or small)
 OAMTileSize: skip 128
+
+; === $7E04A0 ===
+; 480 bytes
+; window left and right positions for each line
+; 2 bytes per line
+; last 32 lines are seldom used outside of the PAL release
 WindowTable:
+
+; === $7E04A0 ===
+; 10 bytes
+; HDMA table for background layer 1 position during the
+; enemy names credits scenes
+; first two entries are for the top half
+; (split in two because it can be large)
+; last entry for bottom half
 CreditsL1HDMATable: skip 10
+
+; === $7E04AA ===
+; 10 bytes
+; HDMA table for background layer 2 position during the
+; enemy names credits scenes
+; first two entries are for the top half
+; (split in two because it can be large)
+; last entry for bottom half
 CreditsL2HDMATable: skip 10
+
+; === $7E04B4 ===
+; 10 bytes
+; HDMA table for background layer 3 position during the
+; enemy names credits scenes
+; first two entries are for the top half
+; (split in two because it can be large)
+; last entry for bottom half
 CreditsL3HDMATable: skip 460
+
+; === $7E0680 ===
+; 1 byte
+; which palette table to use
 PaletteIndexTable: skip 1
+; Valid values
+!PaletteTableUse_Dynamic = 0
+!PaletteTableUse_Copy = 3
+!PaletteTableUse_Main = 6
+
+; === $7E0681 ===
+; 1 byte
+; the current size of the dynamic palette upload table
 DynPaletteIndex: skip 1
-DynPaletteTable:
 
-ORG $000701
+; === $7E0682 ===
+; 127 bytes
+; list of entries of colors to upload to CGRAM
+; each entry has a 2 byte header
+; header byte 1 = number of bytes to upload in this entry
+; header byte 2 = CGRAM word address to upload this entry
+; data = the colors to upload
+DynPaletteTable: skip 127
 
+; === $7E0701 ===
+; 2 bytes
+; the fixed color, commonly used for the background
+; value buffer for PPU register $2132, COLDATA
 BackgroundColor: skip 2
+
+; === $7E0703 ===
+; 512 bytes
+; a work RAM buffer of the entirety of CGRAM
 MainPalette: skip 512
+
+; === $7E0903 ===
+; 2 bytes
+; copy of the background color
+; used during level end palette fade in and out
 CopyBGColor: skip 2
+
+; === $7E0905 ===
+; 496 bytes
+; a copy of almost all of CGRAM, missing the last 8 colors
+; used during level end palette fade in and out
+; as well as overworld event tile fading animation
 CopyPalette: skip 496
+
+; === $7E0AF5 ===
+; 1 byte
+; mostly unused
+; cleared after a boss is beaten
 Empty0AF5: skip 1
-GfxDecompOWAni: skip 7
-CreditsSprTimer: skip 8
+
+; === $7E0AF6 ===
+; 352 bytes
+; graphics buffer for animated tiles on the overworld
+GfxDecompOWAni:
+
+; === $7E0AF6 ===
+; 256 bytes
+; tilemap for Iggy and Larry's rotating platform
+IggyLarryPlatInteract:
+
+; === $7E0AF6 ===
+; 15 bytes
+; timer for sprites during credits and castle cutscenes
+CreditsSprTimer: skip 15
+
+; === $7E0B05 ===
+; 15 bytes
+; Y speed for sprites during credits and castle cutscenes
+; upper 8 bits of 4.12 fixed point in pixels per frame
 CreditsSprYSpeed: skip 15
+
+; === $7E0B14 ===
+; 15 bytes
+; X speed for sprites during credits and castle cutscenes
+; upper 8 bits of 4.12 fixed point in pixels per frame
 CreditsSprXSpeed: skip 15
-CreditsSprYPosSpx: skip 15
-CreditsSprXPosSpx: skip 15
+
+; === $7E0B23 ===
+; 15 bytes
+; Y speed fractional part for sprites during credits and castle cutscenes
+; lower 8 bits of 4.12 fixed point in pixels per frame
+CreditsSprYSubSpd: skip 15
+
+; === $7E0B32 ===
+; 15 bytes
+; X speed fractional part for sprites during credits and castle cutscenes
+; lower 8 bits of 4.12 fixed point in pixels per frame
+CreditsSprXSubSpd: skip 15
+
+; === $7E0B41 ===
+; 15 bytes
+; low byte of Y position for sprites during credits and castle cutscenes
 CreditsSprYPosLow: skip 15
+
+; === $7E0B50 ===
+; 15 bytes
+; low byte of X position for sprites during credits and castle cutscenes
 CreditsSprXPosLow: skip 15
+
+; === $7E0B5F ===
+; 15 bytes
+; high byte of Y position for sprites during credits and castle cutscenes
 CreditsSprYPosHigh: skip 15
+
+; === $7E0B6E ===
+; 15 bytes
+; high byte of X position for sprites during credits and castle cutscenes
 CreditsSprXPosHigh: skip 15
+
+; === $7E0B7D ===
+; 15 bytes
+; vertical acceleration for sprites during credits and castle cutscenes
 CastleCutExSprAccel: skip 15
+
+; === $7E0B8C ===
+; 15 bytes
+; flag to denote slot taken for sprites during credits and castle cutscenes
 CastleCutExSprSlot: skip 106
+
+; === $7E0BF6 ===
+; 384 bytes
+; graphics buffer for OBJ tiles $4A-$4F & $5A-$5F
+; includes small pieces of Mario, springboard, sliding Koopa, et al
 GfxDecompSP1: skip 384
+
+; === $7E0D76 ===
+; 2 bytes
+; source address of the first of three
+; animated 16x16 tiles uploaded this frame
 Gfx33SrcAddrA: skip 2
+
+; === $7E0D78 ===
+; 2 bytes
+; source address of the second of three
+; animated 16x16 tiles uploaded this frame
 Gfx33SrcAddrB: skip 2
+
+; === $7E0D7A ===
+; 2 bytes
+; source address of the third of three
+; animated 16x16 tiles uploaded this frame
 Gfx33SrcAddrC: skip 2
+
+; === $7E0D7C ===
+; 2 bytes
+; destination VRAM address of the first of three
+; animated 16x16 tiles uploaded this frame
 Gfx33DestAddrA: skip 2
+
+; === $7E0D7E ===
+; 2 bytes
+; destination VRAM address of the second of three
+; animated 16x16 tiles uploaded this frame
 Gfx33DestAddrB: skip 2
+
+; === $7E0D80 ===
+; 2 bytes
+; destination VRAM address of the third of three
+; animated 16x16 tiles uploaded this frame
 Gfx33DestAddrC: skip 2
+
+; === $7E0D82 ===
+; 2 bytes
+; pointer to the player's palette (bank is $00)
 PlayerPalletePtr: skip 2
+
+; === $7E0D84 ===
+; 1 byte
+; number of 8x8 tiles that make up the player
 PlayerGfxTileCount: skip 1
+
+; === $7E0D85 ===
+; 20 bytes
+; 10 pointers to graphics that make up various parts of
+; Mario, Yoshi, cape, and Podoboo
 DynGfxTilePtr: skip 20
+
+; === $7E0D99 ===
+; 2 bytes
+; pointer to graphics that make up parts of Mario (OBJ tile $7F)
 DynGfxTile7FPtr: skip 2
+
+; === $7E0D9A ===
+; 1 byte
+; flag to determine which NMI and IRQ code to run for various game modes
 IRQNMICommand: skip 1
-; 7E0D9C unused
-skip 1
+; Valid values
+!IRQNMI_Standard = 0
+!IRQNMI_Cutscenes = 1
+!IRQNMI_Overworld = 2
+!IRQNMI_IggyLarry = %10000000
+!IRQNMI_ReznorMortonRoy = %11000000
+!IRQNMI_Bowser = %11000001
+
+; === $7E0D9C ===
+; 1 byte
+; unused
+WRAM_0D9C: skip 1
+
+
 ThroughMain: skip 1
 ThroughSub: skip 1
 HDMAEnable: skip 1
@@ -1352,11 +1657,28 @@ skip 1
 BluePSwitchTimer: skip 1
 SilverPSwitchTimer: skip 1
 OnOffSwitch: skip 1
-BrSwingCenterXPos: skip 2
-BrSwingCenterYPos: skip 2
-BrSwingXDist: skip 2
-BrSwingYDist: skip 2
-BrSwingPlatXPos: skip 2
+LakituCloudTempXPos:
+IggyLarryRotCenterX:
+BrSwingCenterXPos:
+BowserWaitTimer: skip 1
+BowserAttackTimer: skip 1
+LakituCloudTempYPos:
+IggyLarryRotCenterY:
+BrSwingCenterYPos:
+BowserFlyawayCounter: skip 1
+ClownCarTeardropPos: skip 1
+IggyLarryPlatIntXPos:
+BrSwingXDist:
+BowserMusicIndex: skip 1
+BowserHurtState: skip 1
+IggyLarryPlatIntYPos:
+BrSwingYDist:
+BowserSteelieTimer: skip 1
+BowserFireXPos: skip 1
+IggyLarryTempXPos:
+BrSwingPlatXPos:
+BowserAttackType: skip 2
+IggyLarryTempYPos:
 BrSwingPlatYPos: skip 2
 BrSwingRadiusX: skip 2
 ; 7E14BE unused

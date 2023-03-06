@@ -1682,8 +1682,8 @@ CODE_0CA051:          PHB
                       PHK
                       PLB
                       LDX.B #$0E
-                    - STZ.W CreditsSprYPosSpx,X
-                      STZ.W CreditsSprXPosSpx,X
+                    - STZ.W CreditsSprYSubSpd,X
+                      STZ.W CreditsSprXSubSpd,X
                       DEX
                       BPL -
                       LDX.B #$0D
@@ -1697,7 +1697,7 @@ CODE_0CA051:          PHB
                       LDA.W DATA_0CA3C2,Y
                       STA.W CreditsSprYSpeed,X
                       LDA.B #$01
-                      STA.W GfxDecompOWAni,X
+                      STA.W CreditsSprTimer,X
                       DEY
                       DEX
                       CPX.B #$06
@@ -2090,9 +2090,9 @@ CODE_0CA3C9:          PHB
                       STA.W CreditsSprXPosLow
                       LDA.B #$01
                       STA.W CreditsSprXPosHigh
-                      STZ.W CreditsSprXPosSpx
-                      STZ.W CreditsSprXPosSpx+1
-                      STZ.W CreditsSprXPosSpx+7
+                      STZ.W CreditsSprXSubSpd
+                      STZ.W CreditsSprXSubSpd+1
+                      STZ.W CreditsSprXSubSpd+7
                       LDA.B #$06
                       STA.W Layer1ScrollXPosUpd
                       STZ.W Layer1ScrollXPosUpd+1
@@ -2118,7 +2118,7 @@ CODE_0CA3C9:          PHB
                       LDA.W DATA_0CA3C2,Y
                       STA.W CreditsSprYSpeed,X
                       LDA.B #$01
-                      STA.W GfxDecompOWAni,X
+                      STA.W CreditsSprTimer,X
                       STA.W CreditsSprXPosHigh,X
                       DEY
                       DEX
@@ -2269,7 +2269,7 @@ CODE_0CA53A:          LDA.B #$98
                       LDA.B #$C0
                       STA.W CreditsSprYSpeed+7,X
                       LDA.B #$04
-                      STA.W CreditsSprTimer,X                   ;0\A560;
+                      STA.W CreditsSprTimer+7,X                 ;0\A560;
                       LDA.W CreditsSprYPosLow+7,X
                       STA.W CreditsSprYPosLow+3
                       STA.W CreditsSprYPosLow+4
@@ -2484,8 +2484,8 @@ CODE_0CA721:          LDA.W CreditsSprYSpeed,X
                       ASL A
                       ASL A
                       CLC
-                      ADC.W CreditsSprYPosSpx,X
-                      STA.W CreditsSprYPosSpx,X
+                      ADC.W CreditsSprYSubSpd,X
+                      STA.W CreditsSprYSubSpd,X
                       PHP
                       LDA.W CreditsSprYSpeed,X
                       LSR A
@@ -2648,17 +2648,17 @@ CODE_0CA8A0:          SEP #$30                                  ; AXY->8
 CODE_0CA8A3:          LDX.B #$0D
 CODE_0CA8A5:          LDA.W CreditsSprYSpeed,X
                       CLC
-                      ADC.W GfxDecompOWAni,X
+                      ADC.W CreditsSprTimer,X
                       STA.W CreditsSprYSpeed,X
                       JSR CODE_0CA721
                       LDA.W CreditsSprYPosLow,X
                       CMP.B _E
                       BCC +
-                      STZ.W CreditsSprYPosSpx,X
+                      STZ.W CreditsSprYSubSpd,X
                       LDA.B #$F6
                       STA.W CreditsSprYSpeed,X
                       LDA.B #$01
-                      STA.W GfxDecompOWAni,X
+                      STA.W CreditsSprTimer,X
                       LDA.B _E
                       STA.W CreditsSprYPosLow,X
                     + DEX
@@ -5768,8 +5768,8 @@ CODE_0CD33A:          LDA.W CreditsSprYSpeed,X
                       ASL A
                       ASL A
                       CLC
-                      ADC.W CreditsSprYPosSpx,X
-                      STA.W CreditsSprYPosSpx,X
+                      ADC.W CreditsSprYSubSpd,X
+                      STA.W CreditsSprYSubSpd,X
                       PHP
                       LDA.W CreditsSprYSpeed,X
                       LSR A
@@ -5798,12 +5798,12 @@ CODE_0CD368:          PHX
                       PLX
                       RTS
 
-CODE_0CD373:          STZ.W CreditsSprYPosSpx
-                      STZ.W CreditsSprXPosSpx
-                      STZ.W CreditsSprYPosSpx+1
-                      STZ.W CreditsSprXPosSpx+1
-                      STZ.W CreditsSprXPosSpx+2
-                      STZ.W CreditsSprXPosSpx+2
+CODE_0CD373:          STZ.W CreditsSprYSubSpd
+                      STZ.W CreditsSprXSubSpd
+                      STZ.W CreditsSprYSubSpd+1
+                      STZ.W CreditsSprXSubSpd+1
+                      STZ.W CreditsSprXSubSpd+2
+                      STZ.W CreditsSprXSubSpd+2
                       RTS
 
 

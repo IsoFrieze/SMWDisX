@@ -774,7 +774,7 @@ CODE_0586F1:          PHP
                       JSR CODE_05877E
                       SEP #$20                                  ; A->8
                       LDA.B ScreenMode
-                      AND.B #$01
+                      AND.B #!ScrMode_Layer1Vert
                       BNE CODE_058713
                       REP #$20                                  ; A->16
                       LDA.B Layer1ScrollDir
@@ -805,7 +805,7 @@ CODE_058724:          STA.B Layer1PrevTileUp,X
 
                     + SEP #$20                                  ; A->8
                       LDA.B ScreenMode
-                      AND.B #$02
+                      AND.B #!ScrMode_Layer2Vert
                       BNE CODE_058753
                       REP #$20                                  ; A->16
                       LDA.B Layer2ScrollDir
@@ -841,7 +841,7 @@ MAP16AppTable:        db $B0,$8A,$E0,$84,$F0,$8A,$30,$8B
 CODE_05877E:          PHP
                       SEP #$20                                  ; A->8
                       LDA.B ScreenMode
-                      AND.B #$01
+                      AND.B #!ScrMode_Layer1Vert
                       BNE CODE_0587CB
                       REP #$20                                  ; A->16
                       LDA.B Layer1XPos                          ; Load "Xpos of Screen Boundary"
@@ -898,7 +898,7 @@ CODE_0587CB:          REP #$20                                  ; A->16
                       STA.B Layer1TileDown
 CODE_0587E1:          SEP #$20                                  ; A->8
                       LDA.B ScreenMode                          ; Load the vertical level flag
-                      AND.B #$02                                ; \if bit 1 is set, process based on that
+                      AND.B #!ScrMode_Layer2Vert                ; \if bit 1 is set, process based on that
                       BNE +                                     ; /
                       REP #$20                                  ; A->16, Not a vertical level
                       LDA.B Layer2XPos                          ; \Y = L2XPos * 16
@@ -5544,18 +5544,19 @@ CODE_05C654:          INX
                       JMP CODE_05C328
 
 ADDR_05C659:          LDA.W Layer2ScrollBits
-                      BEQ +
+                      BEQ ++
                       DEC.W Layer2ScrollBits
-                      CMP.W #$B020
-                      ASL.W CapeFloatTimer
-                      AND.W #$D001
-                      PHP
+                      CMP.B #$20
+                      BCS +
+                      LDA.B EffFrame
+                      AND.B #$01
+                      BNE +
                       LDA.W NextLayer1YPos
-                      EOR.W #$8D01
-                      STZ.B EffFrame
-                      RTS
+                      EOR.B #$01
+                      STA.W NextLayer1YPos
+                    + RTS
 
-                    + STZ.B Layer2ScrollDir
+                   ++ STZ.B Layer2ScrollDir
                       REP #$20                                  ; A->16
                       LDA.W Layer2ScrollYSpeed
                       CMP.W #$FFC0
@@ -5620,11 +5621,11 @@ ADDR_05C6EC:          LDX.B #$06
                       XBA
                       LDA.W NextLayer1XPos
                       REP #$20                                  ; A->16
-                      LDY.B #$82
+                      LDY.B #!ScrMode_EnableL2Int|!ScrMode_Layer2Vert
                       CMP.W #$0000
                       BPL +
                       LDA.W #$0000
-                      LDY.B #$02
+                      LDY.B #!ScrMode_Layer2Vert
                     + STA.W NextLayer2XPos
                       STA.B Layer2XPos
                       STY.B ScreenMode
@@ -6702,7 +6703,7 @@ CODE_05D7A8:          JSR CODE_05DBAC
 
                     + LDX.B PlayerXPosNext+1
                       LDA.B ScreenMode
-                      AND.B #$01
+                      AND.B #!ScrMode_Layer1Vert
                       BEQ +
                       LDX.B PlayerYPosNext+1
                     + LDA.W ExitTableLow,X
@@ -6941,7 +6942,7 @@ CODE_05D8B7:          REP #$30                                  ; AXY->16
                       LDA.W DATA_05F600,Y
                       STA.B _1
                     + LDA.B ScreenMode
-                      AND.B #$01
+                      AND.B #!ScrMode_Layer1Vert
                       BEQ +
                       LDY.W #$0000
                       LDA.B [Layer1DataPtr],Y
@@ -6982,7 +6983,7 @@ CODE_05D8B7:          REP #$30                                  ; AXY->16
                       AND.B #$1F
                       STA.B _1
                       LDA.B ScreenMode
-                      AND.B #$01
+                      AND.B #!ScrMode_Layer1Vert
                       BNE +
                       LDA.B _1
                       STA.B PlayerXPosNext+1
@@ -7198,7 +7199,7 @@ CODE_05DBAC:          LDY.B #$00
                       LDY.B #$01
                     + LDX.B PlayerXPosNext+1
                       LDA.B ScreenMode
-                      AND.B #$01
+                      AND.B #!ScrMode_Layer1Vert
                       BEQ +
                       LDX.B PlayerYPosNext+1
                     + LDA.W DATA_05DBA9,Y

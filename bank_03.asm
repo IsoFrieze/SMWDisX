@@ -4211,7 +4211,7 @@ CODE_03A279:          LDA.B Mode7XScale
                       LDA.B #$C8
                       STA.B Mode7CenterY
                       JSL CODE_03DEDF
-                      LDA.W BrSwingXDist+1
+                      LDA.W BowserHurtState
                       BEQ +
                       JSR CODE_03AF59
                     + LDA.W SpriteMisc1564,X
@@ -4242,12 +4242,12 @@ CODE_03A279:          LDA.B Mode7XScale
                       BCS +
                       STZ.B SpriteProperties
                     + JSR CODE_03A661
-                      LDA.W BrSwingCenterXPos
+                      LDA.W BowserWaitTimer
                       BEQ +
                       LDA.B TrueFrame
                       AND.B #$03
                       BNE +
-                      DEC.W BrSwingCenterXPos
+                      DEC.W BowserWaitTimer
                     + LDA.B TrueFrame
                       AND.B #$7F
                       BNE +
@@ -4399,7 +4399,7 @@ CODE_03A482:          DEC A
                       LDA.B #$07
                       STA.W SpriteMisc151C,X
                       LDA.B #$78
-                      STA.W BrSwingCenterXPos
+                      STA.W BowserWaitTimer
                     + RTS
 
 
@@ -4465,26 +4465,26 @@ CODE_03A4ED:          LDA.B TrueFrame
                       STA.W SpriteMisc157C,X
                     + RTS
 
-CODE_03A4FD:          LDA.W BrSwingCenterXPos
+CODE_03A4FD:          LDA.W BowserWaitTimer
                       BNE Return03A52C
                       LDA.W SpriteMisc151C,X
                       CMP.B #$08
                       BNE CODE_03A51A
-                      INC.W BrSwingPlatXPos
-                      LDA.W BrSwingPlatXPos
+                      INC.W BowserAttackType
+                      LDA.W BowserAttackType
                       CMP.B #$03
                       BEQ CODE_03A51A
                       LDA.B #$FF
-                      STA.W BrSwingYDist
+                      STA.W BowserSteelieTimer
                       BRA Return03A52C
 
-CODE_03A51A:          STZ.W BrSwingPlatXPos
+CODE_03A51A:          STZ.W BowserAttackType
                       LDA.W SpriteStatus
                       BEQ CODE_03A527
                       LDA.W SpriteStatus+1
                       BNE Return03A52C
 CODE_03A527:          LDA.B #$FF
-                      STA.W BrSwingCenterXPos+1
+                      STA.W BowserAttackTimer
 Return03A52C:         RTS
 
 
@@ -4505,12 +4505,12 @@ DATA_03A56D:          db $00,$00,$00,$00,$00,$00,$00,$00
                       db $00,$00,$00,$00,$00,$00,$00,$00
                       db $00,$00,$00,$00,$00,$00,$00,$00
 
-CODE_03A5AD:          LDA.W BrSwingCenterXPos+1
+CODE_03A5AD:          LDA.W BowserAttackTimer
                       BEQ CODE_03A5D8
-                      DEC.W BrSwingCenterXPos+1
+                      DEC.W BowserAttackTimer
                       BNE +
                       LDA.B #$54
-                      STA.W BrSwingCenterXPos
+                      STA.W BowserWaitTimer
                       RTS
 
                     + LSR A
@@ -4518,7 +4518,7 @@ CODE_03A5AD:          LDA.W BrSwingCenterXPos+1
                       TAY
                       LDA.W DATA_03A52D,Y
                       STA.W SpriteMisc1570,X
-                      LDA.W BrSwingCenterXPos+1
+                      LDA.W BowserAttackTimer
                       CMP.B #$80
                       BNE +
                       JSR CODE_03B019
@@ -4528,9 +4528,9 @@ CODE_03A5AD:          LDA.W BrSwingCenterXPos+1
                       PLA
                       RTS
 
-CODE_03A5D8:          LDA.W BrSwingYDist
+CODE_03A5D8:          LDA.W BowserSteelieTimer
                       BEQ Return03A60D
-                      DEC.W BrSwingYDist
+                      DEC.W BowserSteelieTimer
                       BEQ CODE_03A60E
                       LSR A
                       LSR A
@@ -4545,7 +4545,7 @@ CODE_03A5D8:          LDA.W BrSwingYDist
                       STZ.B Mode7Angle
                       INC.B Mode7Angle+1
                       STZ.B SpriteProperties
-                    + LDA.W BrSwingYDist
+                    + LDA.W BowserSteelieTimer
                       CMP.B #$80
                       BNE +
                       LDA.B #!SFX_KAPOW                         ; \ Play sound effect
@@ -4556,11 +4556,11 @@ CODE_03A5D8:          LDA.W BrSwingYDist
 Return03A60D:         RTS
 
 CODE_03A60E:          LDA.B #$60
-                      LDY.W BrSwingPlatXPos
+                      LDY.W BowserAttackType
                       CPY.B #$02
                       BEQ +
                       LDA.B #$20
-                    + STA.W BrSwingCenterXPos
+                    + STA.W BowserWaitTimer
                       RTS
 
 CODE_03A61D:          LDA.B #$08
@@ -4592,14 +4592,14 @@ DATA_03A64D:          db $00,$00,$00,$00,$FC,$F8,$F4,$F0
                       db $F4,$F8,$FC,$00,$04,$08,$0C,$10
                       db $0C,$08,$04,$00
 
-CODE_03A661:          LDA.W BrSwingXDist+1
+CODE_03A661:          LDA.W BowserHurtState
                       BEQ Return03A6BF
-                      STZ.W BrSwingCenterXPos+1
-                      STZ.W BrSwingYDist
-                      DEC.W BrSwingXDist+1
+                      STZ.W BowserAttackTimer
+                      STZ.W BowserSteelieTimer
+                      DEC.W BowserHurtState
                       BNE CODE_03A691
                       LDA.B #$50
-                      STA.W BrSwingCenterXPos
+                      STA.W BowserWaitTimer
                       DEC.W SpriteMisc187B,X
                       BNE CODE_03A691
                       LDA.W SpriteMisc151C,X
@@ -4614,7 +4614,7 @@ CODE_03A661:          LDA.W BrSwingXDist+1
 CODE_03A691:          PLY
                       PLY
                       PHA
-                      LDA.W BrSwingXDist+1
+                      LDA.W BowserHurtState
                       LSR A
                       LSR A
                       TAY
@@ -4683,7 +4683,7 @@ CODE_03A6F8:          LDA.W SpriteMisc1540,X
                       STZ.B SpriteYSpeed,X                      ; Sprite Y Speed = 0
                       STZ.W SpriteMisc1528,X
                       STZ.W SpriteMisc1534,X
-                      STZ.W BrSwingCenterYPos
+                      STZ.W BowserFlyawayCounter
                       RTS
 
 
@@ -4731,7 +4731,7 @@ CODE_03A731:          LDY.W SpriteMisc1528,X
                       CMP.W DATA_03A727,Y
                       BNE +
                       INC.W SpriteMisc1534,X
-                    + LDY.W BrSwingCenterYPos
+                    + LDY.W BowserFlyawayCounter
                       CPY.B #$02
                       BEQ CODE_03A794
                       LDA.B TrueFrame
@@ -4744,17 +4744,17 @@ CODE_03A731:          LDY.W SpriteMisc1528,X
                       STA.B Mode7YScale
                       CMP.W DATA_03A72D,Y
                       BNE +
-                      INC.W BrSwingCenterYPos
+                      INC.W BowserFlyawayCounter
                     + LDA.W SpriteXPosHigh,X
                       CMP.B #$FE
                       BNE +
 CODE_03A794:          LDA.B #$03
                       STA.W SpriteMisc151C,X
                       LDA.B #$80
-                      STA.W BrSwingCenterXPos
+                      STA.W BowserWaitTimer
                       JSL GetRand
                       AND.B #$F0
-                      STA.W BrSwingYDist+1
+                      STA.W BowserFireXPos
                       LDA.B #!BGM_BOWSERINTERLUDE2
                       STA.W SPCIO2                              ; / Change music
                     + RTS
@@ -4766,7 +4766,7 @@ CODE_03A7AD:          LDA.B #$60
                       STA.W SpriteXPosHigh,X
                       LDA.B #$60
                       STA.B SpriteXPosLow,X
-                      LDA.W BrSwingCenterXPos
+                      LDA.W BowserWaitTimer
                       BNE +
                       LDA.B #!BGM_BOWSERZOOMIN
                       STA.W SPCIO2                              ; / Change music
@@ -4802,12 +4802,12 @@ CODE_03A7F6:          LDA.B #!SFX_FIRESPIT                      ; \ Play sound e
                       STA.W SpriteStatus,Y                      ; /
                       LDA.B #$33
                       STA.W SpriteNumber,Y
-                      LDA.W BrSwingYDist+1
+                      LDA.W BowserFireXPos
                       PHA
                       STA.W SpriteXPosLow,Y
                       CLC
                       ADC.B #$20
-                      STA.W BrSwingYDist+1
+                      STA.W BowserFireXPos
                       LDA.B #$00
                       STA.W SpriteXPosHigh,Y
                       LDA.B #$00
@@ -4878,7 +4878,7 @@ CODE_03A86E:          CMP.B #$A0
                       CMP.B #$3F
                       BNE +
                       PHA
-                      LDY.W BrSwingXDist
+                      LDY.W BowserMusicIndex
                       LDA.W BowserSoundMusic-7,Y
                       STA.W SPCIO2                              ; / Change music
                       PLA
@@ -4890,13 +4890,13 @@ CODE_03A86E:          CMP.B #$A0
                       STA.W SpriteMisc1570,X
                       RTS
 
-CODE_03A89D:          LDA.W BrSwingXDist
+CODE_03A89D:          LDA.W BowserMusicIndex
                       INC A
                       STA.W SpriteMisc151C,X
                       STZ.B SpriteXSpeed,X                      ; Sprite X Speed = 0
                       STZ.B SpriteYSpeed,X                      ; Sprite Y Speed = 0
                       LDA.B #$80
-                      STA.W BrSwingCenterXPos
+                      STA.W BowserWaitTimer
                       RTS
 
 CODE_03A8AE:          CMP.B #$E8
@@ -5660,8 +5660,8 @@ CODE_03AF59:          JSR GetDrawInfoBnk3
                       INY
                       DEX
                       BPL -
-                      LDA.W BrSwingCenterYPos+1
-                      INC.W BrSwingCenterYPos+1
+                      LDA.W ClownCarTeardropPos
+                      INC.W ClownCarTeardropPos
                       LSR A
                       LSR A
                       LSR A
@@ -5795,8 +5795,8 @@ CODE_03B078:          LDA.B Mode7XScale
                       JSR CODE_03B0D6
                       STZ.B PlayerYSpeed+1
                       JSR SubHorzPosBnk3
-                      LDA.W BrSwingCenterXPos+1
-                      ORA.W BrSwingYDist
+                      LDA.W BowserAttackTimer
+                      ORA.W BowserSteelieTimer
                       BEQ CODE_03B0B3
                       LDA.W DATA_03B076,Y
                       BRA +
@@ -5843,13 +5843,13 @@ CODE_03B0F3:          PHX
                       JSL GetSpriteClippingA
                       JSL CheckForContact
                       BCC Return03B160
-                      LDA.W BrSwingXDist+1
+                      LDA.W BowserHurtState
                       BNE Return03B160
                       LDA.B #$4C
-                      STA.W BrSwingXDist+1
-                      STZ.W BrSwingCenterYPos+1
+                      STA.W BowserHurtState
+                      STZ.W ClownCarTeardropPos
                       LDA.W SpriteMisc151C,X
-                      STA.W BrSwingXDist
+                      STA.W BowserMusicIndex
                       LDA.B #!SFX_ENEMYHURT                     ; \ Play sound effect
                       STA.W SPCIO3                              ; /
                       LDA.W SpriteMisc151C,X
@@ -6679,7 +6679,7 @@ SubOffscreen0Bnk3:    STZ.B _3                                  ; /
                     + JSR IsSprOffScreenBnk3                    ; \ if sprite is not off screen, return
                       BEQ Return03B8C2                          ; /
                       LDA.B ScreenMode                          ; \  vertical level
-                      AND.B #$01                                ; |
+                      AND.B #!ScrMode_Layer1Vert                ; |
                       BNE VerticalLevelBnk3                     ; /
                       LDA.B SpriteYPosLow,X                     ; \
                       CLC                                       ; |
@@ -9029,7 +9029,7 @@ CODE_03D99A:          STA.B _3
                       LDA.B #$10
                       STA.B _4
                     - LDA.B [_5],Y
-                      STA.W GfxDecompOWAni,Y
+                      STA.W IggyLarryPlatInteract,Y
                       ASL A
                       ASL A
                       ORA.B _3

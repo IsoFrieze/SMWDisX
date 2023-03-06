@@ -844,7 +844,7 @@ InitM7BossOAM:                                ; Subroutine to initialize OAM in 
     JSL OAMResetRoutine+302                   ;/
     RTS                                       ;
 
-ExecutePtr:                                   ; Routine to jump to a 16-bit address in a table. Basically JSR (addr,x). A contains the index to jump to.
+ExecutePtr:                                   ; Routine to jump to a 16-bit address in a table. Basically JSR (addr,a). A contains the index to jump to.
     STY.B _3                                  ; "Push" Y
     PLY
     STY.B _0
@@ -861,7 +861,7 @@ ExecutePtr:                                   ; Routine to jump to a 16-bit addr
     LDY.B _3                                  ; "Pull" Y
     JML.W [_0]
 
-ExecutePtrLong:                               ; Routine to jump to a 24-bit address in a table. Basically JSL (long,x).
+ExecutePtrLong:                               ; Routine to jump to a 24-bit address in a table. Basically JSL (long,a).
     STY.B _5
     PLY
     STY.B _2
@@ -962,7 +962,7 @@ UploadOneMap16Strip:                          ; DMA routine to upload one row/co
     JMP UploadL2Map16Strip                    ;/
  
   + LDA.B ScreenMode                          ;\ Need to update Layer 1.
-    AND.B #%00000001                          ;| Jump down if in a vertical level.
+    AND.B #!ScrMode_Layer1Vert                ;| Jump down if in a vertical level.
     BEQ UploadOneL1Column                     ;|
     JMP UploadOneL1Row                        ;/
 
@@ -1095,7 +1095,7 @@ UploadL2Map16Strip:                           ; Done with Layer 1.
     JMP FinishUploadMap16Strip                ; Else, return.
 
   + LDA.B ScreenMode                          ;\ Need to update Layer 2.
-    AND.B #%00000010                          ;| Jump down if in a vertical level.
+    AND.B #!ScrMode_Layer2Vert                ;| Jump down if in a vertical level.
     BEQ UploadOneL2Column                     ;|
     JMP UploadOneL2Row                        ;/
 
@@ -1861,7 +1861,7 @@ DrawSmallBonusStars:                          ; Routine to load the small bonus 
     RTS
 
 DrawReserveItem:                              ; Subroutine to draw the reserve item to the item box.
-    LDY.B #%11100000
+    LDY.B #!IRQNMI_ReznorMortonRoy|%00100000
     BIT.W IRQNMICommand
     BVC +
     LDY.B #0
@@ -2398,7 +2398,7 @@ LoadCastleCutscene:                           ; Loading castle cutscene.
   - STZ.B Layer1XPos,X
     DEX
     BPL -
-    LDA.B #$20
+    LDA.B #!OBJ_Priority2
     STA.B SpriteProperties
     JSR CODE_00A635
     STZ.B PlayerDirection
@@ -4206,7 +4206,7 @@ CODE_00A04A:          LDY.W #$0058
                       CPX.W #$1B00
                       BCC CODE_00A04A
                       SEP #$30                                  ; AXY->8
-                      LDA.B #$80
+                      LDA.B #!ScrMode_EnableL2Int
                       TSB.B ScreenMode
                       RTS
 
@@ -5847,7 +5847,7 @@ CODE_00AF4E:          LDA.W #$0007
                       STA.W BackgroundColor
                       SEP #$30                                  ; AXY->8
                       STZ.W CopyPalette+$100
-                      LDA.B #$03
+                      LDA.B #!PaletteTableUse_Copy
                       STA.W PaletteIndexTable
 Return00AFA2:         RTS
 
@@ -5940,7 +5940,7 @@ CODE_00B00F:          LDY.W #$0008
 
 CODE_00B03E:          JSR CODE_00AF35
                       LDA.W PaletteIndexTable
-                      CMP.B #$03
+                      CMP.B #!PaletteTableUse_Copy
                       BNE Return00B090
                       LDA.B #$00
                       STA.B _2
@@ -8537,11 +8537,11 @@ CODE_00CCE0:          LDA.W IRQNMICommand
                       REP #$20                                  ; A->16
                       LDA.B PlayerXPosNext
                       STA.W KeyholeXPos
-                      STA.W BrSwingXDist
+                      STA.W IggyLarryPlatIntXPos
                       LDA.B PlayerYPosNext
                       AND.W #$FFF0
                       STA.W KeyholeYPos
-                      STA.W BrSwingYDist
+                      STA.W IggyLarryPlatIntYPos
                       JSR CODE_00F9C9
                       BRA +
 
@@ -11130,7 +11130,7 @@ CODE_00E938:          LDA.W PlayerIsOnGround
                       STA.B TempPlayerAir
                       LDA.B ScreenMode
                       BPL +
-                      AND.B #$82
+                      AND.B #!ScrMode_EnableL2Int|!ScrMode_Layer2Vert
                       STA.B TempScreenMode
                       LDA.B #$01
                       STA.W LayerProcessing
@@ -11157,7 +11157,7 @@ CODE_00E938:          LDA.W PlayerIsOnGround
                       SEP #$20                                  ; A->8
                     + ASL.W PlayerIsOnGround
                       LDA.B ScreenMode
-                      AND.B #$41
+                      AND.B #!ScrMode_DisableL1Int|!ScrMode_Layer1Vert
                       STA.B TempScreenMode
                       ASL A
                       BMI CODE_00E98C
@@ -13155,13 +13155,13 @@ CODE_00F94E:          LDY.B #$00
                     + LDA.B PlayerInAir
                       BEQ +
                       REP #$20                                  ; A->16
-                      LDA.W BrSwingPlatXPos
+                      LDA.W IggyLarryTempXPos
                       AND.W #$00FF
-                      STA.W BrSwingXDist
+                      STA.W IggyLarryPlatIntXPos
                       STA.W KeyholeXPos
-                      LDA.W BrSwingPlatYPos
+                      LDA.W IggyLarryTempYPos
                       AND.W #$00F0
-                      STA.W BrSwingYDist
+                      STA.W IggyLarryPlatIntYPos
                       STA.W KeyholeYPos
                       JSR CODE_00F9C9
                     + LDA.B Mode7Angle
@@ -13188,11 +13188,11 @@ CODE_00F9A8:          REP #$20                                  ; A->16
                       LDA.B PlayerXPosNext
                       CLC
                       ADC.W #$0008
-                      STA.W BrSwingXDist
+                      STA.W IggyLarryPlatIntXPos
                       LDA.B PlayerYPosNext
                       CLC
                       ADC.W #$0020
-                      STA.W BrSwingYDist
+                      STA.W IggyLarryPlatIntYPos
 CODE_00F9BC:          SEP #$20                                  ; A->8
                       PHB
                       LDA.B #$01
@@ -13211,12 +13211,12 @@ CODE_00F9C9:          LDA.B Mode7Angle
                       REP #$20                                  ; A->16
                       PLA
                       STA.B Mode7Angle
-                      LDA.W BrSwingPlatXPos
+                      LDA.W IggyLarryTempXPos
                       AND.W #$00FF
                       SEC
                       SBC.W #$0008
                       STA.B PlayerXPosNext
-                      LDA.W BrSwingPlatYPos
+                      LDA.W IggyLarryTempYPos
                       AND.W #$00FF
                       SEC
                       SBC.W #$0020

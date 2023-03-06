@@ -5308,7 +5308,7 @@ CODE_04DB9D:          LDA.W PlayerTurnOW
                       LDA.B #$01
                       STA.W MainPalette+1
                       STZ.W MainPalette+$100
-                      LDA.B #$06
+                      LDA.B #!PaletteTableUse_Main
                       STA.W PaletteIndexTable
                       INC.W OWSubmapSwapProcess
                       RTS
@@ -5362,7 +5362,7 @@ CODE_04DC09:          SEP #$30                                  ; AXY->8
                       STA.W SpriteTileset
                       LDA.B #$07
                       STA.W LevelModeSetting
-                      LDA.B #$03
+                      LDA.B #!ScrMode_Layer1Vert|!ScrMode_Layer2Vert
                       STA.B ScreenMode
                       REP #$10                                  ; XY->16
                       LDX.W #$0000
@@ -6440,7 +6440,7 @@ CODE_04EA8B:          REP #$20                                  ; A->16
                       STA.W CopyPalette+$72
                       SEP #$20                                  ; A->8
                       STZ.W CopyPalette+$E4
-                      LDA.B #$03
+                      LDA.B #!PaletteTableUse_Copy
                       STA.W PaletteIndexTable
                       RTS
 

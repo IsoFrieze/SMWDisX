@@ -187,48 +187,6 @@
 !PAni_CastleDestroy = 12
 !PAni_EnterDoor = 13
 
-; -- Values for GameMode --
-!GameMode_LoadPresents = 0
-!GameMode_Presents = 1
-!GameMode_FadeToTitleScreen = 2
-!GameMode_LoadTitleScreen = 3
-!GameMode_PrepareTitleScreen = 4
-!GameMode_FadeInTitleScreen = 5
-!GameMode_SpotlightTitleScreen = 6
-!GameMode_TitleScreen = 7
-!GameMode_FileSelect = 8
-!GameMode_FileDelete = 9
-!GameMode_PlayerSelect = 10
-!GameMode_FadeToOverworld = 11
-!GameMode_LoadOverworld = 12
-!GameMode_FadeInOverworld = 13
-!GameMode_Overworld = 14
-!GameMode_FadeToLevel = 15
-!GameMode_FadeLevelBlack = 16
-!GameMode_LoadLevel = 17
-!GameMode_PrepareLevel = 18
-!GameMode_FadeInLevel = 19
-!GameMode_Level = 20
-!GameMode_FadeToGameOver = 21
-!GameMode_LoadGameOver = 22
-!GameMode_GameOver = 23
-!GameMode_FadeToCutscene = 24
-!GameMode_LoadCutscene = 25
-!GameMode_FadeInCutscene = 26
-!GameMode_Cutscene = 27
-!GameMode_FadeToThankYou = 28
-!GameMode_LoadThankYou = 29
-!GameMode_FadeInThankYou = 30
-!GameMode_ThankYou = 31
-!GameMode_FadeToEnemyList = 32
-!GameMode_LoadEnemyList = 33
-!GameMode_FadeInEnemyList = 34
-!GameMode_EnemyList = 35
-!GameMode_FadeToTheEnd = 36
-!GameMode_LoadTheEnd = 37
-!GameMode_FadeInTheEnd = 38
-!GameMode_TheEnd = 39
-
 ; -- Values for CutsceneID --
 !Cutscene_Iggy = 1
 !Cutscene_Morton = 2
@@ -293,14 +251,6 @@
 !ObjTileset_CreditsParade = 25
 !ObjTileset_ReznorIggyLarry = -1
 !ObjTileset_RoyMortonLudwig = -2
-
-; -- Values for IRQNMICommand --
-!IRQNMI_Standard = 0
-!IRQNMI_Cutscenes = 1
-!IRQNMI_Overworld = 2
-!IRQNMI_IggyLarry = %10000000
-!IRQNMI_ReznorMortonRoy = %11000000
-!IRQNMI_Bowser = %11000001
 
 ; -- Values for ActiveBoss --
 !ActiveBoss_Morton = 0

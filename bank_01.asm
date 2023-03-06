@@ -1899,7 +1899,7 @@ ClassicPiranhas:      LDA.W SpriteMisc1594,X                    ; \ Don't draw t
                       PHA                                       ; | for the graphics routine
                       LDA.W SpriteOnYoshiTongue,X               ; |
                       BNE +                                     ; |
-                      LDA.B #$10                                ; |
+                      LDA.B #!OBJ_Priority1                     ; |
                       STA.B SpriteProperties                    ; /
                     + JSR SubSprGfx1                            ; Draw the sprite
                       LDY.W SpriteOAMIndex,X                    ; \ Modify the palette and page of the stem
@@ -2691,7 +2691,7 @@ HandleSprStunned:     LDA.B SpriteNumber,X                      ; \ Branch if no
                       BEQ CODE_01956A
 CODE_019546:          LDA.B SpriteProperties                    ; \ Temporarily set $64 = #$10...
                       PHA                                       ; |
-                      LDA.B #$10                                ; |
+                      LDA.B #!OBJ_Priority1                     ; |
                       STA.B SpriteProperties                    ; |
                       JSR SubSprGfx2Entry1                      ; | ...and call gfx routine
                       PLA                                       ; |
@@ -3420,7 +3420,7 @@ CODE_019B44:          LDA.W SpriteOBJAttribute,X                ; \ Set to flip 
                       PHA                                       ; |
                       LDY.W SpriteBehindScene,X                 ; |
                       BEQ +                                     ; |
-                      LDA.B #$10                                ; | temorarily set layer priority for gfx routine
+                      LDA.B #!OBJ_Priority1                     ; | temorarily set layer priority for gfx routine
                     + STA.B SpriteProperties                    ; |
                       JSR SubSprGfx1                            ; | Draw sprite
                       PLA                                       ; |
@@ -3438,7 +3438,7 @@ CODE_019B64:          LDA.B #$00
                       PHA                                       ; |
                       LDY.W SpriteBehindScene,X                 ; |
                       BEQ +                                     ; |
-                      LDA.B #$10                                ; | temorarily set layer priority for gfx routine
+                      LDA.B #!OBJ_Priority1                     ; | temorarily set layer priority for gfx routine
                     + STA.B SpriteProperties                    ; |
                       LDA.B _0
                       JSR SubSprGfx2Entry0                      ; | Draw sprite
@@ -3604,7 +3604,7 @@ CODE_019DA9:          LDA.B _0
                       LDA.B #$00
                       ORA.W SpriteOBJAttribute,X
                       BCS +
-                      ORA.B #$40
+                      ORA.B #!OBJ_XFlip
                     + ORA.B SpriteProperties
                       STA.W OAMTileAttr+$100,Y
                       STA.W OAMTileAttr+$104,Y
@@ -3799,7 +3799,7 @@ SubSprGfx2Entry1:     STZ.B _4
                       LDA.B #$00
                       ORA.W SpriteOBJAttribute,X
                       BCS +
-                      EOR.B #$40
+                      EOR.B #!OBJ_XFlip
                     + ORA.B _4
                       ORA.B SpriteProperties
                       STA.W OAMTileAttr+$100,Y
@@ -3842,7 +3842,7 @@ CODE_019F83:          STZ.W SpriteOAMIndex,X
                       PHA
                       LDA.W YoshiInPipeSetting
                       BEQ +
-                      LDA.B #$10
+                      LDA.B #!OBJ_Priority1
                       STA.B SpriteProperties
                     + JSR CODE_01A187
                       PLA
@@ -5461,7 +5461,7 @@ SubOffscreen0Bnk1:    STZ.B _3                                  ; /
                     + JSR IsSprOffScreen                        ; \ if sprite is not off screen, return
                       BEQ Return01ACA4                          ; /
                       LDA.B ScreenMode                          ; \  vertical level
-                      AND.B #$01                                ; |
+                      AND.B #!ScrMode_Layer1Vert                ; |
                       BNE VerticalLevel                         ; /
                       LDA.B SpriteYPosLow,X                     ; \
                       CLC                                       ; |
@@ -7282,7 +7282,7 @@ CODE_01BA53:          LDA.W SpriteMisc157C,X
                       STA.W SpriteMisc1602,X
                       LDA.W SpriteBehindScene,X
                       BEQ +
-                      LDA.B #$10
+                      LDA.B #!OBJ_Priority1
                       STA.B SpriteProperties
                     + JSR SubSprGfx1
                       PLA
@@ -7835,7 +7835,7 @@ CODE_01BE96:          LSR A
                       LSR A
                       LDA.B #$00
                       BCS +
-                      ORA.B #$40
+                      ORA.B #!OBJ_XFlip
                     + ORA.B SpriteProperties
                       ORA.W SpriteOBJAttribute,X
                       STA.W OAMTileAttr+$108,Y
@@ -8161,7 +8161,7 @@ GrowingVine:          LDA.B SpriteProperties
                       LDA.W SpriteMisc1540,X
                       CMP.B #$20
                       BCC +
-                      LDA.B #$10
+                      LDA.B #!OBJ_Priority1
                       STA.B SpriteProperties
                     + JSR SubSprGfx2Entry1
                       LDY.W SpriteOAMIndex,X                    ; Y = Index into sprite OAM
@@ -8225,7 +8225,7 @@ BalloonKeyFlyObjs:    LDA.W SpriteStatus,X
                       BEQ +
                       LDA.B SpriteProperties
                       PHA
-                      LDA.B #$10
+                      LDA.B #!OBJ_Priority1
                       STA.B SpriteProperties
                       JSR CODE_01C61A
                       PLA
@@ -8428,7 +8428,7 @@ CODE_01C38F:          LDA.W SpriteMisc1540,X
                       JSR CODE_019140
                       LDA.W SpriteMisc1528,X
                       BNE +
-                      LDA.B #$10
+                      LDA.B #!OBJ_Priority1
                       STA.B SpriteProperties
                     + LDA.B SpriteLock                          ; \ Branch if sprites locked
                       BNE CODE_01C3AB                           ; /
@@ -8549,7 +8549,7 @@ CODE_01C48D:          LDA.W SpriteMisc1540,X
                       BNE CODE_01C4A1
 CODE_01C49C:          LDA.W SpriteBehindScene,X
                       BEQ +
-CODE_01C4A1:          LDA.B #$10
+CODE_01C4A1:          LDA.B #!OBJ_Priority1
                       STA.B SpriteProperties
                     + JSR CODE_01C61A
 CODE_01C4A8:          PLA
@@ -8811,7 +8811,7 @@ PowerUpGfxRt:         CMP.B #$76                                ; \ Setup flashi
                       LSR A                                     ; |
                       LDA.B #$00                                ; |
                       BCS +                                     ; |
-                      ORA.B #$40                                ; /
+                      ORA.B #!OBJ_XFlip                         ; /
                     + ORA.B SpriteProperties                    ; \ Add in level priority information
                       ORA.W SpriteOBJAttribute,X                ; | Add in palette/gfx page
                       EOR.B _A                                  ; | Adjust palette for star
@@ -9558,23 +9558,23 @@ DoNothing:            NOP                                       ; \ Do nothing a
                       NOP                                       ; |
                       RTS                                       ; /
 
-CODE_01CC9D:          LDA.W BrSwingXDist+1
-                      ORA.W BrSwingYDist+1
+CODE_01CC9D:          LDA.W IggyLarryPlatIntXPos+1
+                      ORA.W IggyLarryPlatIntYPos+1
                       BNE +
                       JSR CODE_01CCC7
                       JSR CODE_01CB20
                       JSR CODE_01CB53
-                      LDA.W BrSwingPlatYPos
+                      LDA.W IggyLarryTempYPos
                       AND.B #$F0
                       STA.B _0
-                      LDA.W BrSwingPlatXPos
+                      LDA.W IggyLarryTempXPos
                       LSR A
                       LSR A
                       LSR A
                       LSR A
                       ORA.B _0
                       TAY
-                      LDA.W GfxDecompOWAni,Y
+                      LDA.W IggyLarryPlatInteract,Y
                       CMP.B #$15
                       RTL
 
@@ -9583,16 +9583,16 @@ CODE_01CC9D:          LDA.W BrSwingXDist+1
 
 CODE_01CCC7:          REP #$20                                  ; A->16
                       LDA.B Mode7CenterX
-                      STA.W BrSwingCenterXPos
+                      STA.W IggyLarryRotCenterX
                       LDA.B Mode7CenterY
-                      STA.W BrSwingCenterYPos
-                      LDA.W BrSwingXDist
+                      STA.W IggyLarryRotCenterY
+                      LDA.W IggyLarryPlatIntXPos
                       SEC
-                      SBC.W BrSwingCenterXPos
+                      SBC.W IggyLarryRotCenterX
                       STA.W BrSwingRadiusX
-                      LDA.W BrSwingYDist
+                      LDA.W IggyLarryPlatIntYPos
                       SEC
-                      SBC.W BrSwingCenterYPos
+                      SBC.W IggyLarryRotCenterY
                       STA.W BrSwingRadiusY
                       SEP #$20                                  ; A->8
                       RTS
@@ -11156,7 +11156,7 @@ CODE_01D94D:          LDA.B _0
                       ORA.B _6
                       PHA
                       LDA.B ScreenMode
-                      AND.B #$01
+                      AND.B #!ScrMode_Layer1Vert
                       BEQ CODE_01D977
                       PLA
                       LDX.B _1
@@ -12386,7 +12386,7 @@ CODE_01E3EF:          LDA.B SpriteProperties
                       PHA
                       LDA.W SpriteMisc1540,X
                       BEQ +
-                      LDA.B #$10
+                      LDA.B #!OBJ_Priority1
                       STA.B SpriteProperties
                     + JSR SubSprGfx2Entry1
                       PLA
@@ -12788,7 +12788,7 @@ SmushedGfxRt:         JSR GetDrawInfoBnk1
                       LDA.B SpriteProperties                    ; \ Store the first tile's properties
                       ORA.W SpriteOBJAttribute,X                ; |
                       STA.W OAMTileAttr+$100,Y                  ; /
-                      ORA.B #$40                                ; \ Horizontally flip the second tile and store it
+                      ORA.B #!OBJ_XFlip                         ; \ Horizontally flip the second tile and store it
                       STA.W OAMTileAttr+$104,Y                  ; /
                       TYA                                       ; \ Y = index to size table
                       LSR A                                     ; |
@@ -12979,9 +12979,9 @@ LakituCloudGfx:       JSR GetDrawInfoBnk1
                       ORA.B #$04
                       STA.B _F
                       LDA.B _0
-                      STA.W BrSwingCenterXPos
+                      STA.W LakituCloudTempXPos
                       LDA.B _1
-                      STA.W BrSwingCenterYPos
+                      STA.W LakituCloudTempYPos
                       LDA.B EffFrame
                       LSR A
                       LSR A
@@ -12997,11 +12997,11 @@ CODE_01E901:          LDA.B _3
                       TAX
                       %LorW_X(LDA,DATA_01E76F)
                       CLC
-                      ADC.W BrSwingCenterXPos
+                      ADC.W LakituCloudTempXPos
                       STA.W OAMTileXPos+$100,Y
                       %LorW_X(LDA,DATA_01E77F)
                       CLC
-                      ADC.W BrSwingCenterYPos
+                      ADC.W LakituCloudTempYPos
                       STA.W OAMTileYPos+$100,Y
                       LDX.W CurSpriteProcess                    ; X = Sprite index
                       LDA.B #$60
@@ -13035,11 +13035,11 @@ CODE_01E901:          LDA.B _3
                       JSR FinishOAMWriteRt
                       LDA.W SpriteOffscreenX,X
                       BNE Return01E984
-                      LDA.W BrSwingCenterXPos
+                      LDA.W LakituCloudTempXPos
                       CLC
                       ADC.B #$04
                       STA.W OAMTileXPos+8
-                      LDA.W BrSwingCenterYPos
+                      LDA.W LakituCloudTempYPos
                       CLC
                       ADC.B #$07
                       STA.W OAMTileYPos+8
@@ -13324,7 +13324,7 @@ CODE_01EB97:          LDA.B SpriteProperties
                       BEQ CODE_01EBAD
                       LDA.W DrawYoshiInPipe
                       BNE +
-                      LDA.B #$10
+                      LDA.B #!OBJ_Priority1
                       STA.B SpriteProperties
 CODE_01EBAD:          JSR HandleOffYoshi
                     + PLA
@@ -14394,7 +14394,7 @@ CODE_01F47E:          LDA.B _1
                       LSR A
                       LDA.B #$09
                       BCS +
-                      ORA.B #$40
+                      ORA.B #!OBJ_XFlip
                     + ORA.B SpriteProperties
                       STA.W OAMTileAttr,Y
                       PHY
@@ -15246,9 +15246,9 @@ CODE_01FB36:          JSL LoadTweakerBytes
                       STA.W SpriteMisc163E,X
                       JSL KillMostSprites                       ; Kill all sprites
                     + LDA.B SpriteXPosLow,X
-                      STA.W BrSwingPlatXPos
+                      STA.W IggyLarryTempXPos
                       LDA.B SpriteYPosLow,X
-                      STA.W BrSwingPlatYPos
+                      STA.W IggyLarryTempYPos
                       JMP CODE_01FC0E
 
 CODE_01FB7B:          JSR SubSprXPosNoGrvty
@@ -15382,16 +15382,16 @@ CODE_01FC62:          LDA.B PlayerAnimation
                       BCC CODE_01FC77
                       CMP.B #$D8
                       BCC +
-CODE_01FC77:          LDA.W BrSwingPlatXPos
+CODE_01FC77:          LDA.W IggyLarryTempXPos
                       STA.B SpriteXPosLow,X
-                      LDA.W BrSwingPlatYPos
+                      LDA.W IggyLarryTempYPos
                       STA.B SpriteYPosLow,X
                       INC.W SpriteMisc160E,X
-                    + LDA.W BrSwingPlatXPos
+                    + LDA.W IggyLarryTempXPos
                       SEC
                       SBC.B #$08
                       STA.B _0
-                      LDA.W BrSwingPlatYPos
+                      LDA.W IggyLarryTempYPos
                       CLC
                       ADC.B #$60
                       STA.B _1
@@ -15430,11 +15430,11 @@ CODE_01FC77:          LDA.W BrSwingPlatXPos
                       PHA
                       LDA.B SpriteYPosLow,X
                       PHA
-                      LDA.W BrSwingPlatXPos
+                      LDA.W IggyLarryTempXPos
                       SEC
                       SBC.B #$08
                       STA.B SpriteXPosLow,X
-                      LDA.W BrSwingPlatYPos
+                      LDA.W IggyLarryTempYPos
                       SEC
                       SBC.B #$10
                       STA.B SpriteYPosLow,X
@@ -15489,17 +15489,17 @@ CODE_01FD0C:          STY.W SpriteInterIndex
 CODE_01FD50:          LDA.B SpriteXPosLow,X
                       CLC
                       ADC.B #$08
-                      STA.W BrSwingXDist
+                      STA.W IggyLarryPlatIntXPos
                       LDA.W SpriteXPosHigh,X
                       ADC.B #$00
-                      STA.W BrSwingXDist+1
+                      STA.W IggyLarryPlatIntXPos+1
                       LDA.B SpriteYPosLow,X
                       CLC
                       ADC.B #$2F
-                      STA.W BrSwingYDist
+                      STA.W IggyLarryPlatIntYPos
                       LDA.W SpriteYPosHigh,X
                       ADC.B #$00
-                      STA.W BrSwingYDist+1
+                      STA.W IggyLarryPlatIntYPos+1
                       REP #$20                                  ; A->16
                       LDA.B Mode7Angle
                       EOR.W #$01FF
@@ -15545,14 +15545,14 @@ GenerateBall:         LDA.B #!SFX_SPIT                          ; \ Play sound e
                       LDA.W SpriteMisc157C,X                    ; \ Ball's direction = Iggy'direction
                       STA.W SpriteMisc157C,Y                    ; /
                       TAX                                       ; X = Ball's direction
-                      LDA.W BrSwingPlatXPos                     ; \ Set Ball X position
+                      LDA.W IggyLarryTempXPos                    ; \ Set Ball X position
                       SEC                                       ; |
                       SBC.B #$08                                ; |
                       ADC.W BallPositionDispX,X                 ; |
                       STA.W SpriteXPosLow,Y                     ; |
                       LDA.B #$00                                ; |
                       STA.W SpriteXPosHigh,Y                    ; /
-                      LDA.W BrSwingPlatYPos                     ; \ Set Ball Y position
+                      LDA.W IggyLarryTempYPos                   ; \ Set Ball Y position
                       SEC                                       ; |
                       SBC.B #$18                                ; |
                       STA.W SpriteYPosLow,Y                     ; |
@@ -15623,14 +15623,14 @@ CODE_01FEDE:          PHX
                       CLC
                       ADC.B #$30
                       TAX
-                    + LDA.W BrSwingPlatXPos
+                    + LDA.W IggyLarryTempXPos
                       SEC
                       SBC.B #$08
                       CLC
                       ADC.W DATA_01FDF3,X
                       STA.W OAMTileXPos+$100,Y
                       PLX
-                      LDA.W BrSwingPlatYPos
+                      LDA.W IggyLarryTempYPos
                       CLC
                       ADC.B #$60
                       CLC
@@ -15689,11 +15689,11 @@ CODE_01FF5B:          PHX
                       LDA.W DATA_01FEB7,Y
                       STA.B _D
                       LDY.B #$70
-                      LDA.W BrSwingPlatXPos
+                      LDA.W IggyLarryTempXPos
                       SEC
                       SBC.B #$08
                       STA.W OAMTileXPos+$100,Y
-                      LDA.W BrSwingPlatYPos
+                      LDA.W IggyLarryTempYPos
                       CLC
                       ADC.B #$60
                       STA.W OAMTileYPos+$100,Y
@@ -15719,17 +15719,17 @@ CODE_01FF5B:          PHX
 CODE_01FF98:          LDA.B SpriteXPosLow,X                     ; \ $14B4,$14B5 = Sprite X position + #$08
                       CLC                                       ; |
                       ADC.B #$08                                ; |
-                      STA.W BrSwingXDist                        ; |
+                      STA.W IggyLarryPlatIntXPos                ; |
                       LDA.W SpriteXPosHigh,X                    ; |
                       ADC.B #$00                                ; |
-                      STA.W BrSwingXDist+1                      ; /
+                      STA.W IggyLarryPlatIntXPos+1              ; /
                       LDA.B SpriteYPosLow,X                     ; \ $14B6,$14B7 = Sprite Y position + #$0F
                       CLC                                       ; |
                       ADC.B #$0F                                ; |
-                      STA.W BrSwingYDist                        ; |
+                      STA.W IggyLarryPlatIntYPos                ; |
                       LDA.W SpriteYPosHigh,X                    ; |
                       ADC.B #$00                                ; |
-                      STA.W BrSwingYDist+1                      ; /
+                      STA.W IggyLarryPlatIntYPos+1              ; /
                       PHX
                       JSL CODE_01CC9D
                       PLX

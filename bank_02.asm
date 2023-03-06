@@ -4555,17 +4555,17 @@ CODE_02A56E:          STZ.B _F
 CODE_02A592:          LDA.W ExtSpriteXPosLow,X
                       CLC
                       ADC.B #$04
-                      STA.W BrSwingXDist
+                      STA.W IggyLarryPlatIntXPos
                       LDA.W ExtSpriteXPosHigh,X
                       ADC.B #$00
-                      STA.W BrSwingXDist+1
+                      STA.W IggyLarryPlatIntXPos+1
                       LDA.W ExtSpriteYPosLow,X
                       CLC
                       ADC.B #$08
-                      STA.W BrSwingYDist
+                      STA.W IggyLarryPlatIntYPos
                       LDA.W ExtSpriteYPosHigh,X
                       ADC.B #$00
-                      STA.W BrSwingYDist+1
+                      STA.W IggyLarryPlatIntYPos+1
                       JSL CODE_01CC9D
                       LDX.W CurSpriteProcess                    ; X = Sprite index
                       RTS
@@ -9735,7 +9735,7 @@ SubOffscreen0Bnk2:    STZ.B _3                                  ; /
                     + JSR IsSprOffScreenBnk2                    ; \ if sprite is not off screen, return
                       BEQ Return02D090                          ; /
                       LDA.B ScreenMode                          ; \  vertical level
-                      AND.B #$01                                ; |
+                      AND.B #!ScrMode_Layer1Vert                ; |
                       BNE VerticalLevelBnk2                     ; /
                       LDA.B _3
                       CMP.B #$04
@@ -15501,7 +15501,7 @@ DATA_02FEC9:          db $30,$C0
 DATA_02FECB:          db $01,$FF
 
                       LDA.B ScreenMode                          ; \ Unreachable
-                      AND.B #$01
+                      AND.B #!ScrMode_Layer1Vert
                       BNE ADDR_02FF1E
                       LDA.W ClusterSpriteYPosLow,X
                       CLC
