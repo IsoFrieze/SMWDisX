@@ -13,19 +13,19 @@ You'll need the assembler, Asar v1.61 (you can find it [here](https://www.smwcen
 On Linux, steps are the same but use asar instead of asar.exe and PATCH.sh instead of PATCH.bat.
 
 # Status
-All 5 versions assemble and play exactly like they should. The only difference at the moment is the SS version's checksum is inverted. Every ROM has a spot for a 16-bit checksum and the checksum's complement. The SS version has the main checksum and the complement switched, so I don't know how to deal with that since Asar deals with the checksum on its own.
+All 5 versions assemble and play exactly like they should!
 
 # Contribution
 Anyone can contribute as long as they follow the format rules below. This isn't like a personal project or anything. Just make sure every commit that the ROM will properly assemble.
 
 # Credits
 - mikeyk for the original disassembly this one was based off of from 2013.
-- @loveemu for the origianl disassembly of the SPC700 sound engine code.
+- @loveemu for the original disassembly of the SPC700 sound engine code.
 - @kaizoman666 for most of the comments.
 - @IsoFrieze for
     - reformatting the original disassembly into an assemblable project via Asar.
     - creating labels and descriptions for RAM addresses.
-    - documentation on all verions other than the U version, and including their differences in the project.
+    - documentation on all versions other than the U version, and including their differences in the project.
     - pulling data like graphics, palettes, and level data out of the text files and into binary files.
     - extracting constants and magic numbers from code and turning them into assembler variables.
 - All contributors, which can be found on the GitHub page for this repo.
