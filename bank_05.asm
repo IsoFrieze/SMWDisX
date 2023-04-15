@@ -4381,67 +4381,67 @@ DATA_05BA39:
     dw AnimatedTiles+$1680                    ; Used block
 
 CODE_05BB39:
-    PHB
+    PHB                                       ; AXY->8
     PHK
     PLB
-    LDA.B EffFrame
-    AND.B #$07
-    STA.B _0
-    ASL A
-    ADC.B _0
-    TAY
-    ASL A
-    TAX
+    LDA.B EffFrame                            ;\
+    AND.B #$07                                ;| Calculate the index of the first one of four 8x8 tiles in a 16x16 tile:
+    STA.B _0                                  ;| GFX_TILE_IDX = (EffFrame & 0b111) + ((EffFrame & 0b111) << 1), which is equivalent to:
+    ASL A                                     ;| GFX_TILE_IDX = (EffFrame & 0b111) * 3
+    ADC.B _0                                  ;/
+    TAY                                       ;\ Y = GFX_TILE_IDX
+    ASL A                                     ;| 
+    TAX                                       ;/ X = GFX_TILE_IDX * 2; index of VRAM address at $05B93B, $05B93D, and $05B93F
     REP #$20                                  ; A->16
-    LDA.B EffFrame
-    AND.W #$0018
-    LSR A
-    LSR A
-    STA.B _0
-    LDA.W DATA_05B93B,X
-    STA.W Gfx33DestAddrC
-    LDA.W DATA_05B93D,X
-    STA.W Gfx33DestAddrB
-    LDA.W DATA_05B93F,X
-    STA.W Gfx33DestAddrA
-    LDX.B #$04
+    LDA.B EffFrame                            ;\
+    AND.W #$0018                              ;| TILE_DATA_INDEX_PART = (EffFrame & 0b00011000) >> 2
+    LSR A                                     ;| Extract bits 3 and 4 from EffFrame, and move them to bits 1 and 2: 0b000AB000 -> 0b00000AB0
+    LSR A                                     ;| 
+    STA.B _0                                  ;/ 
+    LDA.W DATA_05B93B,X                       ;\ 
+    STA.W Gfx33DestAddrC                      ;| 
+    LDA.W DATA_05B93D,X                       ;| Write the 3 VRAM addresses of animated tiles' GFX into Gfx33DestAddr{A,B,C},
+    STA.W Gfx33DestAddrB                      ;| using X as an index to the pointer tables at $05B93B, $05B93D, and $05B93F.
+    LDA.W DATA_05B93F,X                       ;| 
+    STA.W Gfx33DestAddrA                      ;/ 
+    LDX.B #$04                                ; Initialise LOOP_COUNTER = 4
 CODE_05BB67:
-    PHY
-    PHX
+    PHY                                       ;\ Start loop, backup X and Y.
+    PHX                                       ;/
     SEP #$20                                  ; A->8
-    TYA
-    LDX.W DATA_05B96B,Y
-    BEQ CODE_05BB88
-    DEX
-    BNE CODE_05BB81
-    LDX.W DATA_05B97D,Y
-    LDY.W BluePSwitchTimer,X
-    BEQ CODE_05BB88
-    CLC
-    ADC.B #$26
-    BRA CODE_05BB88
+    TYA                                       ; A = GFX_TILE_IDX
+    LDX.W DATA_05B96B,Y                       ; X holds the value that determines how the current tile should behave.
+    BEQ CODE_05BB88                           ; X == 0: the tile does not change based on any of the following conditions.
+    DEX                                       ;\ X == 2: the tile changes depending on FG/BG tileset number.
+    BNE CODE_05BB81                           ;/ 
+    LDX.W DATA_05B97D,Y                       ; X == 1: tile changes depending on the two P-Switch timers and ON/OFF switch state.
+    LDY.W BluePSwitchTimer,X                  ;\ If a P-Switch timer or ON/OFF Switch state is 0, handle the tile's default look,
+    BEQ CODE_05BB88                           ;/ that is when it's unaffected by P-Switch timer or ON/OFF Switch.
+    CLC                                       ;\ A = GFX_TILE_IDX + 0x26
+    ADC.B #$26                                ;/ 
+    BRA CODE_05BB88                           ; Handle the look of the tile.
 
 CODE_05BB81:
-    LDY.W ObjectTileset
-    CLC
-    ADC.W DATA_05B98B,Y
+    LDY.W ObjectTileset                       ; Load the current object tileset.
+    CLC                                       ;\ Determine which group of animated tiles to use for current FG/BG tileset,
+    ADC.W DATA_05B98B,Y                       ;/ as defined in the table at $05B98B.
 CODE_05BB88:
     REP #$30                                  ; AXY->16
-    AND.W #$00FF
-    ASL A
-    ASL A
-    ASL A
-    ORA.B _0
-    TAY
-    LDA.W AnimatedTileData,Y
+    AND.W #$00FF                              ;\ 
+    ASL A                                     ;| 
+    ASL A                                     ;| Calculate the index to AnimatedTileData:
+    ASL A                                     ;| A = ((GFX_TILE_IDX & 0xFF) << 3) | TILE_DATA_INDEX_PART
+    ORA.B _0                                  ;| 
+    TAY                                       ;/
+    LDA.W AnimatedTileData,Y                  ; Get VRAM address of the tile's current animation frame GFX.
     SEP #$10                                  ; XY->8
-    PLX
-    STA.W Gfx33SrcAddrA,X
-    PLY
-    INY
-    DEX
-    DEX
-    BPL CODE_05BB67
+    PLX                                       ; X = LOOP_COUNTER
+    STA.W Gfx33SrcAddrA,X                     ; Write that address to Gfx33SrcAddrA.
+    PLY                                       ;\ Increment GFX_TILE_IDX.
+    INY                                       ;/ 
+    DEX                                       ;\ Subtract 2 from LOOP_COUNTER.
+    DEX                                       ;/ 
+    BPL CODE_05BB67                           ; Go back to the beginning of the loop if the LOOP_COUNTER is not negative.
     SEP #$20                                  ; A->8
     PLB
     RTL
