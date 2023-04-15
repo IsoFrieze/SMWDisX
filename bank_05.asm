@@ -1718,53 +1718,53 @@ CODE_058D7A:
     %insert_empty($1E7,$1E7,$1E7,$1E7,$1C2)
 
 Layer3Ptr:
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_059087
-    dl DATA_059549
-    dl DATA_059294
-    dl DATA_059AE0
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_059087
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_05A221
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_059087
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_0595DE
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_059087
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_059087
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_059087
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_059A17
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_059087
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_059087
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_059087
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_0595DE
-    dl DATA_059549
-    dl DATA_059549
-    dl DATA_05A221
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Cage
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Crusher
+    dl Tilemap_L3Windows
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Cage
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Rocks
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Cage
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Clouds
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Cage
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Cage
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Cage
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Fish
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Cage
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Cage
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Cage
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Clouds
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Tide
+    dl Tilemap_L3Rocks
 
-DATA_059087:
+Tilemap_L3Cage:
     db $58,$06,$00,$03,$87,$39,$88,$39
     db $58,$12,$00,$03,$87,$39,$88,$39
     db $58,$26,$00,$03,$97,$39,$98,$39
@@ -1832,7 +1832,7 @@ DATA_059087:
     db $92,$3D,$92,$7D,$92,$3D,$92,$7D
     db $81,$FD,$80,$FD,$FF
 
-DATA_059294:
+Tilemap_L3Crusher:
     db $50,$A8,$00,$1F,$99,$3D,$9A,$3D
     db $A1,$AD,$B2,$2D,$B3,$2D,$B4,$2D
     db $A5,$AD,$B6,$2D,$B7,$2D,$B8,$2D
@@ -1921,7 +1921,7 @@ DATA_059294:
     db $F2,$2D,$DE,$2D,$DF,$2D,$F1,$2D
     db $F2,$2D,$DD,$6D,$FF
 
-DATA_059549:
+Tilemap_L3Tide:
     db $58,$00,$00,$3F,$7D,$39,$7E,$39
     db $7D,$39,$7E,$39,$7D,$39,$7E,$39
     db $7D,$39,$7E,$39,$7D,$39,$7E,$39
@@ -1942,7 +1942,7 @@ DATA_059549:
     db $7E,$39,$7D,$39,$7E,$39,$5C,$20
     db $47,$7E,$8E,$39,$FF
 
-DATA_0595DE:
+Tilemap_L3Clouds:
     db $53,$A0,$00,$03,$FF,$60,$9E,$61
     db $53,$B8,$00,$01,$9E,$21,$53,$B9
     db $40,$0C,$FF,$20,$53,$C0,$00,$03
@@ -2080,7 +2080,7 @@ DATA_0595DE:
     db $FF,$20,$FF,$20,$FF,$60,$9E,$E1
     db $FF
 
-DATA_059A17:
+Tilemap_L3Fish:
     db $51,$67,$00,$01,$9F,$39,$51,$93
     db $00,$01,$9F,$29,$51,$D1,$00,$01
     db $9F,$39,$52,$5A,$00,$01,$9F,$39
@@ -2108,7 +2108,7 @@ DATA_059A17:
     db $9F,$29,$5D,$DD,$00,$01,$9F,$39
     db $FF
 
-DATA_059AE0:
+Tilemap_L3Windows:
     db $58,$03,$00,$03,$80,$01,$81,$01
     db $58,$07,$00,$03,$80,$01,$81,$01
     db $58,$0F,$00,$07,$80,$01,$81,$01
@@ -2343,7 +2343,7 @@ DATA_059AE0:
     db $5E,$E9,$00,$03,$80,$01,$81,$01
     db $FF
 
-DATA_05A221:
+Tilemap_L3Rocks:
     db $53,$DA,$00,$05,$F9,$11,$FA,$11
     db $FB,$11,$53,$FA,$00,$05,$FC,$11
     db $FD,$11,$FE,$11,$58,$3C,$00,$01

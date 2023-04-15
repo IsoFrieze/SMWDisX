@@ -4093,10 +4093,10 @@ CODE_009F4C:
 NextGameModeMosaic:
     INC.W GameMode                            ; Go to next game mode
     LDA.W MosaicDirection                     ;\ Reverse direction of mosaic
-    EOR.B #$01                                ;|
+    EOR.B #1                                  ;|
     STA.W MosaicDirection                     ;/
-  + LDA.B #$03                                ;\ Apply the mosaic
-    ORA.W MosaicSize                          ;|
+  + LDA.B #%00000011                          ;\ Apply the mosaic
+    ORA.W MosaicSize                          ;| to BG1 and BG2 only
     STA.W HW_MOSAIC                           ;/
 
 Return009F6E:
@@ -4114,36 +4114,36 @@ CODE_009F77:
 GM28FadeInTheEnd:                             ; Game Mode 28
     DEC.W KeepModeActive                      ; same as TransitionFade but it takes 8 frames
     BPL Return009F6E                          ; per increase in brightness level
-    LDA.B #$08
+    LDA.B #8
     JSR CODE_009F2B
     BRA CODE_009F77
 
-Layer3TilemapSettings:
-    db $01,$02,$C0
-    db $01,$80,$81
-    db $01,$02,$C0
-    db $01,$02,$81
-    db $01,$02,$80
-    db $01,$02,$81
-    db $01,$02,$81
-    db $01,$02,$C0
-    db $01,$02,$C0
-    db $01,$02,$81
-    db $01,$02,$80
-    db $01,$02,$80
-    db $01,$02,$80
-    db $01,$02,$81
-    db $01,$02,$81
-    db $01,$02,$80
+Layer3TilemapSettings:                        ; Layer 3 settings. Three setting values per Layer 1 tileset.
+    db !Tide_UpAndDown,!Tide_Stationary,$C0
+    db !Tide_UpAndDown,$80,$81
+    db !Tide_UpAndDown,!Tide_Stationary,$C0
+    db !Tide_UpAndDown,!Tide_Stationary,$81
+    db !Tide_UpAndDown,!Tide_Stationary,$80
+    db !Tide_UpAndDown,!Tide_Stationary,$81
+    db !Tide_UpAndDown,!Tide_Stationary,$81
+    db !Tide_UpAndDown,!Tide_Stationary,$C0
+    db !Tide_UpAndDown,!Tide_Stationary,$C0
+    db !Tide_UpAndDown,!Tide_Stationary,$81
+    db !Tide_UpAndDown,!Tide_Stationary,$80
+    db !Tide_UpAndDown,!Tide_Stationary,$80
+    db !Tide_UpAndDown,!Tide_Stationary,$80
+    db !Tide_UpAndDown,!Tide_Stationary,$81
+    db !Tide_UpAndDown,!Tide_Stationary,$81
+    db !Tide_UpAndDown,!Tide_Stationary,$80   ; unreachable tileset
 
-CODE_009FB8:
-    LDA.W ObjectTileset                       ; \
-    ASL A                                     ; |Get (Tileset*3), store in $00
-    CLC                                       ; |
-    ADC.W ObjectTileset                       ; |
-    STA.B _0                                  ; /
-    LDA.W Layer3Setting
-    BEQ CODE_00A012
+CODE_009FB8:                                  ;The main Layer 3 handling routine for levels.
+    LDA.W ObjectTileset                       ;\
+    ASL A                                     ;| Get (Tileset*3), store in $00
+    CLC                                       ;|
+    ADC.W ObjectTileset                       ;|
+    STA.B _0                                  ;/
+    LDA.W Layer3Setting                       ;\ Branch if the level does not have Layer 3.
+    BEQ CODE_00A012                           ;/
     DEC A
     CLC
     ADC.B _0
@@ -4154,10 +4154,10 @@ CODE_009FB8:
     LSR A
     PHP
     JSR CODE_00A045
-    LDA.B #$70
+    LDA.B #$70                                ; Starting Y position of the high/low Layer 3 tide.
     PLP
     BEQ +
-    LDA.B #$40
+    LDA.B #$40                                ; Y position of the normal Layer 3 tide.
   + STA.B Layer3YPos
     STZ.B Layer3YPos+1
     JSL CODE_05BC72
@@ -4167,10 +4167,10 @@ CODE_009FEA:
     ASL A
     BMI CODE_00A012
     BEQ CODE_00A007
-    LDA.W ObjectTileset
-    CMP.B #$01
-    BEQ CODE_009FFA
-    CMP.B #$03
+    LDA.W ObjectTileset                       ;\ Tilesets for which the tileset-specific Layer 3 background will not autoscroll
+    CMP.B #!ObjTileset_Castle1                ;|
+    BEQ CODE_009FFA                           ;|
+    CMP.B #!ObjTileset_Underground1           ;/
     BNE CODE_00A01F
 CODE_009FFA:
     REP #$20                                  ; A->16
@@ -4182,7 +4182,7 @@ CODE_009FFA:
     BRA CODE_00A017
 
 CODE_00A007:
-    LDX.B #$07
+    LDX.B #7
   - LDA.W BigCrusherColors,X
     STA.W MainPalette+$18,X
     DEX
@@ -4194,7 +4194,7 @@ CODE_00A017:
     STA.B Layer3YPos
     STZ.B Layer3YPos+1
 CODE_00A01B:
-    LDA.B #$04
+    LDA.B #%00000100
     TRB.B ColorSettings
 CODE_00A01F:
     LDA.W Layer3Setting
