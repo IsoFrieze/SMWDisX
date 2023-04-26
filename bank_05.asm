@@ -239,38 +239,39 @@ CODE_058188:
     PLP
     RTS
 
-
+; Bitmask for which blocks use tileset-specific mappings (73-FF, 107-111, 153-16E)
+; Note that 1C4-1C7 and 1EC-1EF are also tileset-specific in tilesets 0 and 7
 DATA_0581BB:
-    db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-    db $FF,$FF,$FF,$FF,$FF,$FF,$E0,$00
-    db $00,$00,$00,$00,$00,$00,$00,$00
-    db $00,$00,$00,$00,$00,$00,$00,$00
-    db $FE,$00,$7F,$FF,$FF,$FF,$FF,$FF
-    db $FF,$FF,$E0,$00,$00,$03,$FF,$FF
-    db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-    db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+    db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF        ; 0-3F
+    db $FF,$FF,$FF,$FF,$FF,$FF,$E0,$00        ; 40-7F
+    db $00,$00,$00,$00,$00,$00,$00,$00        ; 80-BF
+    db $00,$00,$00,$00,$00,$00,$00,$00        ; C0-FF
+    db $FE,$00,$7F,$FF,$FF,$FF,$FF,$FF        ; 100-13F
+    db $FF,$FF,$E0,$00,$00,$03,$FF,$FF        ; 140-17F
+    db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF        ; 180-1BF
+    db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF        ; 1C0-1FF
 
-CODE_0581FB:
+CODE_0581FB:                                  ; This loads map16 data.
     SEP #$30                                  ; AXY->8
     LDA.W ObjectTileset                       ; \
     ASL A                                     ; |Store tileset*2 in X
     TAX                                       ; /
-    LDA.B #DATA_0581BB>>16                    ; \Store x05 in $0F
+    LDA.B #DATA_0581BB>>16                    ; \Set up bitmask data bank
     STA.B _F                                  ; /
-    LDA.B #DATA_00E55E>>16                    ; \Store x00 in $84
+    LDA.B #DATA_00E55E>>16                    ; \Set up slope data bank
     STA.B SlopesPtr+2                         ; /
-    LDA.B #$C4                                ; \Store xC4 in $1430
-    STA.W SolidTileStart                      ; /
-    LDA.B #$CA                                ; \Store xCA in $1431
+    LDA.B #$C4                                ; \Set up tiles C4-CA (upside-down slopes) to be solid for sprites
+    STA.W SolidTileStart                      ; |
+    LDA.B #$CA                                ; |
     STA.W SolidTileEnd                        ; /
     REP #$20                                  ; A->16
-    LDA.W #DATA_00E55E                        ; \Store xE55E in $82-$83
+    LDA.W #DATA_00E55E                        ; \Set up slope data pointer
     STA.B SlopesPtr                           ; /
-    LDA.L TilesetMAP16Loc,X                   ; \Store address to MAP16 data in $00-$01
+    LDA.L TilesetMAP16Loc,X                   ; \Store address to tileset-specific map16 data in $00-$01
     STA.B _0                                  ; /
     LDA.W #Map16Common                        ; \Store x8000 in $02-$03
     STA.B _2                                  ; /
-    LDA.W #DATA_0581BB                        ; \Store x81BB in $0D-$0E
+    LDA.W #DATA_0581BB                        ; \Set up slope data pointer
     STA.B _D                                  ; /
     STZ.B _4                                  ; \
     STZ.B _9                                  ; |Store x00 in $04, $09 and $0B
@@ -280,14 +281,14 @@ CODE_0581FB:
     TYX                                       ; /
 CODE_058237:
     SEP #$20                                  ; A->8
-    LDA.B [_D],Y
+    LDA.B [_D],Y                              ; Load current byte from bitmask
     STA.B _C
 CODE_05823D:
-    ASL.B _C
-    BCC +
+    ASL.B _C                                  ; Load current bit from bitmask into carry
+    BCC +                                     ;
     REP #$20                                  ; A->16
-    LDA.B _2
-    STA.W Map16Pointers,X
+    LDA.B _2                                  ; If bit is unset:
+    STA.W Map16Pointers,X                     ; Write pointer from global map16
     LDA.B _2
     CLC
     ADC.W #$0008
@@ -295,8 +296,8 @@ CODE_05823D:
     JMP CODE_058262
 
   + REP #$20                                  ; A->16
-    LDA.B _0
-    STA.W Map16Pointers,X
+    LDA.B _0                                  ; If bit is set:
+    STA.W Map16Pointers,X                     ; Write pointer from tileset-specific map16
     LDA.B _0
     CLC
     ADC.W #$0008
@@ -309,26 +310,26 @@ CODE_058262:
     INC.B _B
     LDA.B _B
     CMP.B #$08
-    BNE CODE_05823D
+    BNE CODE_05823D                           ; Keep processing current byte
     STZ.B _B
     INY
     CPY.W #$0040
-    BNE CODE_058237
+    BNE CODE_058237                           ; Keep processing bitmask
     LDA.W ObjectTileset
     BEQ CODE_058281
     CMP.B #$07
     BNE CODE_0582C5
-CODE_058281:
-    LDA.B #$FF
+CODE_058281:                                  ; If tileset is 0 or 7, add diagonal pipe tiles
+    LDA.B #$FF                                ; Remove the upside-down tiles
     STA.W SolidTileStart
     STA.W SolidTileEnd
     REP #$30                                  ; AXY->16
-    LDA.W #DATA_00E5C8
+    LDA.W #DATA_00E5C8                        ; Use the other set of slopes
     STA.B SlopesPtr
     LDA.W #$01C4
     ASL A
-    TAY
-    LDA.W #$8A70
+    TAY                                       ; Y = 1C4*2
+    LDA.W #$8A70                              ; Add 4 blocks from this address to blocks 1C4-1C7
     STA.B _0
     LDX.W #$0003
   - LDA.B _0
@@ -342,7 +343,7 @@ CODE_058281:
     BPL -
     LDA.W #$01EC
     ASL A
-    TAY
+    TAY                                       ; Same thing here but with 1EC-1EF
     LDX.W #$0003
   - LDA.B _0
     STA.W Map16Pointers,Y

@@ -2552,7 +2552,7 @@ CODE_019211:
     LDA.W Map16TileNumber
     CMP.B #$6E
     BCC CODE_01925B
-    JSL CODE_00F04D
+    JSL IsWaterSlope
     LDA.W Map16TileNumber
     BCC CODE_01925B
     BCS CODE_01923A
@@ -2962,7 +2962,7 @@ CODE_019523:
     STA.W Map16TileNumber
     INC.B _7
     LDA.B [_5]
-    JSL CODE_00F545
+    JSL RemapBlocks
     LDY.B _F
     CMP.B #$00
     RTS
