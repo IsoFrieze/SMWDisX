@@ -1049,7 +1049,61 @@ Map16BGTiles:
     %insert_empty($60,$60,$60,$60,$60)
 
 CODE_0DA100:
-    SEP #$30                                  ; AXY->8
+; $0CF8DF   | Top-right of main overworld begins.
+; $0CF9DF   | Bottom-left of main overworld begins.
+; $0CFADF   | Bottom-right of main overworld begins.
+; Note: last tile layers into next set.
+; $0CFBDE   | Yoshi's Island and top half of Vanilla Dome begins.
+; $0CFCDE   | Valley of Bowser and top half of Special World begins.
+; $0CFDDE   | Bottom half of Vanilla Dome and Forest of Illusion begins.
+; $0CFEDE   | Bottom half of Special World and Star World begins.
+; Tilemap data for Map16 tiles 000-072.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 100-106.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 111-152.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 16E-1C3.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 1C4-1C7. Not used in GFX headers 0 or 7 (which use $0D8A70).
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 1C8-1EB.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 1EC-1EF. Not used in GFX headers 0 or 7 (which use $0D8A90).
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 1F0-1FF.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 1C4-1C7, in GFX headers 0 and 7 (others use $0D8890).
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 1EC-1EF, in GFX headers 0 and 7 (others use $0D89D0).
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for the different colors of Map16 tiles 133-13F (the pipes), excluding the default (green).
+; Silver
+; (screen % 4 = 0)
+; Yellow
+; (screen % 4 = 2)
+; Blue
+; (screen % 4 = 3)
+; Tilemap data for Map16 tiles 073-0FF, in tileset 0 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 107-110, in tileset 0 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 153-16D, in tileset 0 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+    SEP #$30                                  ; AXY->8; Tilemap data for the background Map16 tiles (tiles 8000-81FF in LM).
     JSR CODE_0DA106
     RTL
 
@@ -1317,7 +1371,274 @@ CODE_0DA106:
     dl CODE_0DA6D1
 
 CODE_0DA40F:
-    SEP #$30                                  ; AXY->8
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Routine to generate an extended object.
+; $0DA100   |\
+; $0DA102   || Wrapper for the below.
+; $0DA105   |/
+; $0DA106   |
+; $0DA108   |\
+; $0DA10A   || Jump to the appropriate routine for the object ID.
+; $0DA10B   |/
+; Extended object pointers.
+; 00 - Screen exit
+; 01 - Screen jump
+; 02 - Unused
+; 03 - Unused
+; 04 - Unused
+; 05 - Unused
+; 06 - Unused
+; 07 - Unused
+; 08 - Unused
+; 09 - Unused
+; 0A - Unused
+; 0B - Unused
+; 0C - Unused
+; 0D - Unused
+; 0E - Unused
+; 0F - Unused
+; 10 - Small door
+; 11 - Invisible 1up question block
+; 12 - Invisible noteblock
+; 13 - Top-left corner edge tile 1
+; 14 - Top-right corner edge tile 1
+; 15 - Small invisible P-Switch door
+; 16 - Invisible P-Switch question block
+; 17 - Green star block
+; 18 - 3-Up moon
+; 19 - Invisible 1up checkpoint #1
+; 1A - Invisible 1up checkpoint #2
+; 1B - Invisible 1up checkpoint #3
+; 1C - Invisible 1up checkpoint #4
+; 1D - Red berry
+; 1E - Pink berry
+; 1F - Green berry
+; 20 - Always turning block
+; 21 - Bottom right of midway point (unused)
+; 22 - Bottom right of midway point (unused)
+; 23 - Noteblock (flower/feather/star)
+; 24 - ON/OFF block
+; 25 - Direction coins ? block
+; 26 - Noteblock
+; 27 - Noteblock, bounce on all sides
+; 28 - Turnblock (Flower)
+; 29 - Turnblock (Feather)
+; 2A - Turnblock (Star)
+; 2B - Turnblock (Star 2/1up/Vine)
+; 2C - Turnblock (Multiple coins)
+; 2D - Turnblock (Coin)
+; 2E - Turnblock (Nothing)
+; 2F - Turnblock (POW)
+; 30 - ? block (Flower)
+; 31 - ? block (Feather)
+; 32 - ? block (Star)
+; 33 - ? block (Star 2)
+; 34 - ? block (Multiple coins)
+; 35 - ? block (Key/Wings/Balloon/Shell)
+; 36 - ? block (Yoshi)
+; 37 - ? block (Shell)
+; 38 - ? block (Shell)
+; 39 - Turnblock, unbreakable (Feather)
+; 3A - Top left corner edge tile 2
+; 3B - Top right corner edge tile 2
+; 3C - Top left corner edge tile 3
+; 3D - Top right corner edge tile 3
+; 3E - Top left corner edge tile 4
+; 3F - Top right corner edge tile 4
+; 40 - Transculent block
+; 41 - Yoshi Coin
+; 42 - Top left slope
+; 43 - Top right slope
+; 44 - Purple triangle, left
+; 45 - Purple triangle, right
+; 46 - Midway point tape
+; 47 - Door
+; 48 - Invisible POW door
+; 49 - Ghost house exit
+; 4A - Climbing net door
+; 4B - Conveyor end tile 1
+; 4C - Conveyor end tile 2
+; 4D - Line guide, top left 1/4 large circle
+; 4E - Line guide, top right 1/4 large circle
+; 4F - Line guide, bottom left 1/4 large circle
+; 50 - Line guide, bottom right 1/4 large circle
+; 51 - Line guide, top left 1/4 small circle
+; 52 - Line guide, top right 1/4 small circle
+; 53 - Line guide, bottom left 1/4 small circle
+; 54 - Line guide, bottom right 1/4 small circle
+; 55 - Line guide end, for horizontal line
+; 56 - Line guide end, for vertical line
+; 57 - Switch palace bottom right corner tile
+; 58 - Switch palace bottom left corner tile
+; 59 - Switch palace top right corner tile
+; 5A - Switch palace top left corner tile
+; 5B - Bit of brick background tile 1
+; 5C - Bit of brick background tile 2
+; 5D - Bit of brick background tile 3
+; 5E - Bit of brick background tile 4
+; 5F - Large background area
+; 60 - Lava/mud top right corner edge
+; 61 - Ghost house clock
+; 62 - Ghost house top left to bottom right beam 1
+; 63 - Ghost house top right to bottom left beam 1
+; 64 - Ghost house cobweb, top right
+; 65 - Ghost house cobweb, top left
+; 66 - Ghost house top right to bottom left beam 2
+; 67 - Ghost house top left to bottom right beam 2
+; 68 - Cloud fringe, bottom and right edge
+; 69 - Cloud fringe, bottom and left edge
+; 6A - Cloud fringe, bottom right
+; 6B - Cloud fringe, bottom left
+; 6C - Cloud fringe on white, bottom and right edge
+; 6D - Cloud fringe on white, bottom and left edge
+; 6E - Cloud fringe on white, bottom right
+; 6F - Cloud fringe on white, bottom left
+; 70 - Bit of canvass 1
+; 71 - Canvass 1
+; 72 - Canvass 2
+; 73 - Canvass 3
+; 74 - Canvass 4
+; 75 - Canvass tile 1
+; 76 - Canvass tile 2
+; 77 - Canvass tile 3
+; 78 - Canvass tile 4
+; 79 - Canvass tile 5
+; 7A - Canvass tile 6
+; 7B - Canvass tile 7
+; 7C - Bit of canvas 2
+; 7D - Bit of canvas 3
+; 7E - Bit of canvas 4
+; 7F - Torpedo launcher
+; 80 - Ghost house entrance
+; 81 - Water weed
+; 82 - Big bush 1
+; 83 - Big bush 2
+; 84 - Castle entrance
+; 85 - Yoshi's house
+; 86 - Arrow sign
+; 87 - Green switch palace block
+; 88 - Tree branch, left
+; 89 - Tree branch, right
+; 8A - Green switch
+; 8B - Yellow switch
+; 8C - Blue switch
+; 8D - Red switch
+; 8E - Yellow switch palace block
+; 8F - Ghost house window
+; 90 - Boss door
+; 91 - Steep left slope (vertical)
+; 92 - Steep right slope (vertical)
+; 93 - Normal left slope (vertical)
+; 94 - Normal right slope (vertical)
+; 95 - Very steep left slope (vertical)
+; 96 - Very steep right slope (vertical)
+; 97 - Switch palace right and bottom edge tile
+; 98 - Unused
+; 99 - Unused
+; 9A - Unused
+; 9B - Unused
+; 9C - Unused
+; 9D - Unused
+; 9E - Unused
+; 9F - Unused
+; A0 - Unused
+; A1 - Unused
+; A2 - Unused
+; A3 - Unused
+; A4 - Unused
+; A5 - Unused
+; A6 - Unused
+; A7 - Unused
+; A8 - Unused
+; A9 - Unused
+; AA - Unused
+; AB - Unused
+; AC - Unused
+; AD - Unused
+; AE - Unused
+; AF - Unused
+; B0 - Unused
+; B1 - Unused
+; B2 - Unused
+; B3 - Unused
+; B4 - Unused
+; B5 - Unused
+; B6 - Unused
+; B7 - Unused
+; B8 - Unused
+; B9 - Unused
+; BA - Unused
+; BB - Unused
+; BC - Unused
+; BD - Unused
+; BE - Unused
+; BF - Unused
+; C0 - Unused
+; C1 - Unused
+; C2 - Unused
+; C3 - Unused
+; C4 - Unused
+; C5 - Unused
+; C6 - Unused
+; C7 - Unused
+; C8 - Unused
+; C9 - Unused
+; CA - Unused
+; CB - Unused
+; CC - Unused
+; CD - Unused
+; CE - Unused
+; CF - Unused
+; D0 - Unused
+; D1 - Unused
+; D2 - Unused
+; D3 - Unused
+; D4 - Unused
+; D5 - Unused
+; D6 - Unused
+; D7 - Unused
+; D8 - Unused
+; D9 - Unused
+; DA - Unused
+; DB - Unused
+; DC - Unused
+; DD - Unused
+; DE - Unused
+; DF - Unused
+; E0 - Unused
+; E1 - Unused
+; E2 - Unused
+; E3 - Unused
+; E4 - Unused
+; E5 - Unused
+; E6 - Unused
+; E7 - Unused
+; E8 - Unused
+; E9 - Unused
+; EA - Unused
+; EB - Unused
+; EC - Unused
+; ED - Unused
+; EE - Unused
+; EF - Unused
+; F0 - Unused
+; F1 - Unused
+; F2 - Unused
+; F3 - Unused
+; F4 - Unused
+; F5 - Unused
+; F6 - Unused
+; F7 - Unused
+; F8 - Unused
+; F9 - Unused
+; FA - Unused
+; FB - Unused
+; FC - Unused
+; FD - Unused
+; FE - Unused
+; FF - Unused
+    SEP #$30                                  ; AXY->8; Routine to generate a standard object.
     JSR CODE_0DA415
     RTL
 
@@ -1343,7 +1664,22 @@ CODE_0DA415:
     dl CODE_0DD990
 
 CODE_0DA44B:
-    SEP #$30                                  ; AXY->8
+; Pointers to the standard object routines for each GFX setting.
+; 00 - Normal 1
+; 01 - Castle 1
+; 02 - Rope 1
+; 03 - Underground 1
+; 04 - Switch Palace 1
+; 05 - Ghost House 1
+; 06 - Rope 2
+; 07 - Normal 2
+; 08 - Rope 3
+; 09 - Underground 2
+; 0A - Switch Palace 2
+; 0B - Castle 2
+; 0C - Cloud/Forest
+; 0D - Ghost House 2
+    SEP #$30                                  ; AXY->8; 0E - Underground 3
     LDX.B LvlLoadObjNo
     DEX
     TXA
@@ -1414,27 +1750,91 @@ CODE_0DA44B:
     dl CODE_0DB5B7
 
 CODE_0DA512:
-    LDY.B #$00
-    LDA.B [Layer1DataPtr],Y
+; Standard object pointers (GFX settings 0, 7, C); aka T:0.
+; 01 - Water tiles 1, dark blue
+; 02 - Invisible coin blocks
+; 03 - Invisible noteblocks
+; 04 - Invisible POW coins
+; 05 - Coins
+; 06 - Walk-through dirt
+; 07 - Water tiles 2, variable color
+; 08 - Noteblocks
+; 09 - Turnblocks
+; 0A - Coin ? blocks
+; 0B - Throw blocks
+; 0C - Munchers
+; 0D - Gray cement blocks
+; 0E - Brown "used" blocks
+; 0F - Vertical pipe
+; 10 - Horizontal pipe
+; 11 - Bullet bill shooter
+; 12 - Slope
+; 13 - Ledge edge / Vine
+; 14 - Ledge
+; 15 - Midway point / Goal point
+; 16 - Purple coins
+; 17 - Rope / Clouds
+; 18 - Amimated water
+; 19 - Normal water
+; 1A - Animated lava/mud
+; 1B - Net (top)
+; 1C - Donut bridge
+; 1D - Net (bottom)
+; 1E - Net (left/right)
+; 1F - Skinny vertical pipe/bone/log
+; 20 - Skinny horizontal pipe/bone/log
+; 21 - Wide-scale ledge
+; 22 - Unused (used internally by LM for direct map16 page 0)
+; 23 - Unused (used internally by LM for direct map16 page 1)
+; 24 - Unused (used internally by LM for the deprecated FG/BG/SP graphics system)
+; 25 - Unused (used internally by LM for the deprecated AN2 graphics system)
+; 26 - Unused (used internally by LM for bypassing music)
+; 27 - Unused (used internally by LM for direct map16 objects on pages 00-3F)
+; 28 - Unused (used internally by LM for bypassing the time limit)
+; 29 - Unused (used internally by LM for direct map16 objects on pages 40-7F)
+; 2A - Unused (reserved for future use by LM)
+; 2B - Unused (reserved for future use by LM)
+; 2C - Unused (reserved for future use by LM)
+; 2D - Unused (reserved for 5-byte user-defined objects)
+; 2E - Tileset specific: Unused
+; 2F - Tileset specific: Unused
+; 30 - Tileset specific: Ice blue vertical pipe
+; 31 - Tileset specific: Ice blue turn tiles
+; 32 - Tileset specific: Blue switch blocks
+; 33 - Tileset specific: Forest tree top
+; 34 - Tileset specific: Forest ledge edge
+; 35 - Tileset specific: Forest ledge
+; 36 - Tileset specific: Large tree trunk
+; 37 - Tileset specific: Small tree trunk
+; 38 - Tileset specific: Red switch blocks
+; 39 - Tileset specific: Right facing diagonal pipe
+; 3A - Tileset specific: Left facing diagonal ledge
+; 3B - Tileset specific: Right facing diganonal ledge
+; 3C - Tileset specific: Arch ledge
+; 3D - Tileset specific: Top cloud fringe
+; 3E - Tileset specific: Left/right cloud fringe
+; 3F - Tileset specific: Bush
+    LDY.B #$00                                ; Create a screen exit.
+    LDA.B [Layer1DataPtr],Y                   ; Store destination level to RAM.
     STA.B LvlLoadObjNo
     INY
     TYA
     CLC
     ADC.B Layer1DataPtr
-    STA.B Layer1DataPtr
+    STA.B Layer1DataPtr                       ; Increase object pointer.
     LDA.B Layer1DataPtr+1
     ADC.B #$00
     STA.B Layer1DataPtr+1
     LDA.B _A
     AND.B #$1F
-    TAX
+    TAX                                       ; Store destination level to the exit table.
     LDA.B LvlLoadObjNo
     STA.W ExitTableLow,X
     LDA.B _B
-    AND.B #$01
+    AND.B #$01                                ; Store high bit of destination level to the exit table (unused).
     STA.W ExitTableHigh,X
     LDA.B _B
-    LSR A
+    LSR A                                     ; Set secondary exit flag for the level if applicable.
     STA.W UseSecondaryExit
     RTS
 
@@ -1456,56 +1856,57 @@ DATA_0DA548:
     db $2C,$25,$2D
 
 CODE_0DA57B:
-    TXA
-    SEC
+; Low byte of the Map16 tiles for extended objects 10-40 (8th byte is unused; object 17 uses the last byte instead)
+    TXA                                       ; Routine to load the Map16 for extended objects 10-40.
+    SEC                                       ; Localize object numbers to 00. Note: object 17 (green star block) uses #$32 instead.
     SBC.B #$10
 CODE_0DA57F:
     STA.B _0
     CPX.B #$18
-    BCC CODE_0DA5B1
-    CPX.B #$1D
+    BCC CODE_0DA5B1                           ; If not objects 18-1C, branch.
+    CPX.B #$1D                                ; (3-up, 1up checkpoints)
     BCS CODE_0DA5B1
     LDA.W TranslevelNo
     LSR A
     LSR A
     LSR A
-    TAY
+    TAY                                       ; Get index to the 1up checkpoint/3up moon tables.
     LDA.W TranslevelNo
     AND.B #$07
     TAX
     LDA.B _0
-    CMP.B #$08
+    CMP.B #$08                                ; If it's one of the 1up checkpoints, branch.
     BNE CODE_0DA5A7
     LDA.W MoonCollected,Y
-    AND.L DATA_0DA8A6,X
+    AND.L DATA_0DA8A6,X                       ; If the 3-up moon has already been gotten for this level, return. Else, branch and continue.
     BEQ CODE_0DA5B1
     BRA Return0DA5B0
 
 CODE_0DA5A7:
     LDA.W Checkpoint1upCollected,Y
-    AND.L DATA_0DA8A6,X
+    AND.L DATA_0DA8A6,X                       ; If the 1up checkpoints have already been passed for the level, return. Else, branch and continue.
     BEQ CODE_0DA5B1
 Return0DA5B0:
     RTS
 
 CODE_0DA5B1:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; 1up checkpoint / 3-up moon hasn't been obtained yet, so actually make the object.
     JSR StzTo6ePointer
     LDX.B _0
-    CPX.B #$13
+    CPX.B #$13                                ; Set the high Map16 byte for objects 17 and 23-40, clear for all others.
     BMI +
     JSR Sta1To6ePointer
-  + LDA.L DATA_0DA548,X
+  + LDA.L DATA_0DA548,X                       ; $0C: Map16 tile to load.
     STA.B _C
     CPX.B #$01
     BEQ CODE_0DA5F0
     CPX.B #$07
-    BEQ CODE_0DA5F0
-    CPX.B #$32
+    BEQ CODE_0DA5F0                           ; Branch if set to spawn a 1up under certain conditions.
+    CPX.B #$32                                ; (invisible 1up block, green star block, Yoshi ? block)
     BEQ CODE_0DA5F0
     CPX.B #$26
     BEQ CODE_0DA5F0
-    CPX.B #$1B
+    CPX.B #$1B                                ; If not the turnblock with Star 2/1up/Vine, branch.
     BNE CODE_0DA648
     TYA
     AND.B #$0F
@@ -1513,7 +1914,7 @@ CODE_0DA5B1:
     BEQ CODE_0DA5F0
     CMP.B #$04
     BEQ CODE_0DA5F0
-    CMP.B #$07
+    CMP.B #$07                                ; If the turnblock with Star 2/1up/Vine is not in a position that satisfies x%3=1, branch.
     BEQ CODE_0DA5F0
     CMP.B #$0A
     BEQ CODE_0DA5F0
@@ -1526,8 +1927,8 @@ CODE_0DA5F0:
     PHA
     LDX.W ItemMemorySetting
     LDA.B #ItemMemoryTable
-    CLC
-    ADC.L DATA_0DA8AE,X
+    CLC                                       ; If the item memory bit is set, make a brown block instead.
+    ADC.L DATA_0DA8AE,X                       ; Note: a far more optimized version of the get-bit portion is available here: https://smwc.me/1477689
     STA.B _8
     LDA.B #ItemMemoryTable>>8
     ADC.L DATA_0DA8B1,X
@@ -1562,18 +1963,19 @@ CODE_0DA5F0:
     LDA.B _F
     BEQ CODE_0DA648
     CPX.B #$07
-    BEQ +
+    BEQ +                                     ; Create the brown block if necessary.
     JSR Sta1To6ePointer
     LDA.B #$32
     STA.B _C
 CODE_0DA648:
-    LDA.B _C
+    LDA.B _C                                  ; Store the block's Map16 number to the Map16 data.
     STA.B [Map16LowPtr],Y
   + RTS
 
 CODE_0DA64D:
-    LDA.B #$32
-    JMP CODE_0DA57F
+; Routine for extended object 17, the green star block.
+    LDA.B #$32                                ; Use a Map16 index of 32.
+    JMP CODE_0DA57F                           ; Create the block.
 
 
 DATA_0DA652:
@@ -1601,7 +2003,7 @@ DATA_0DA671:
     db $B4,$B5
 
 CODE_0DA673:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; Extended object 44/45 - Purple Triangle
     TXA
     SEC
     SBC.B #$44
@@ -1616,31 +2018,31 @@ CODE_0DA673:
     RTS
 
 CODE_0DA68E:
-    LDX.W TranslevelNo
+    LDX.W TranslevelNo                        ; Extended object 46 - Midway point tape
     %WorL_X(LDA,OWLevelTileSettings)
-    AND.B #$40
+    AND.B #$40                                ; Return if the midpoint has already been obtained.
     BNE +
     LDA.W MidwayFlag
     BNE +
     LDY.B LevelLoadPos
     DEY
     JSR StzTo6ePointer
-    LDA.B #$35
+    LDA.B #$35                                ; Tile to use for the left tile of the midpoint tape.
     JSR CODE_0DA95B
     JSR StzTo6ePointer
-    LDA.B #$38
+    LDA.B #$38                                ; Tile to use for the right tile of the midpoint tape.
     STA.B [Map16LowPtr],Y
   + RTS
 
 CODE_0DA6B1:
-    LDA.B Map16LowPtr
+    LDA.B Map16LowPtr                         ; Subroutine to get the 16-bit index to Map16 data in $04/$05.
     STA.B _4
     LDA.B Map16LowPtr+1
     STA.B _5
     RTS
 
 CODE_0DA6BA:
-    LDA.B _4
+    LDA.B _4                                  ; Subroutine to transfer the 16-bit Map16 pointer back from $04/$05.
     STA.B Map16LowPtr
     STA.B Map16HighPtr
     LDA.B _5
@@ -1658,16 +2060,18 @@ DATA_0DA6CF:
     db $20,$28
 
 CODE_0DA6D1:
-    LDY.B LevelLoadPos
+; Tile numbers for the top of doors.
+; Tile numbers for the bottom of doors.
+    LDY.B LevelLoadPos                        ; Object creation routine for doors (and also the unused objects).
     TXA
     SEC
-    SBC.B #$47
+    SBC.B #$47                                ; Store top tile number.
     TAX
     JSR StzTo6ePointer
     LDA.L DATA_0DA6CD,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
-    JSR StzTo6ePointer
+    JSR StzTo6ePointer                        ; Store bottom tile number.
     LDA.L DATA_0DA6CF,X
     STA.B [Map16LowPtr],Y
     RTS
@@ -1688,7 +2092,7 @@ CODE_0DA71B:
     LDA.B #$04
     STA.B _1
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DA72A:
     LDA.B _0
     STA.B _2
@@ -1698,7 +2102,7 @@ CODE_0DA72A:
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEC.B _1
     BPL CODE_0DA72A
@@ -1717,7 +2121,7 @@ CODE_0DA760:
     LDA.B #$03
     STA.B _1
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DA76F:
     LDA.B _0
     STA.B _2
@@ -1727,7 +2131,7 @@ CODE_0DA76F:
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEC.B _1
     BPL CODE_0DA76F
@@ -1762,7 +2166,7 @@ DATA_0DA7B1:
 CODE_0DA7C1:
     LDY.B LevelLoadPos
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DA7C8:
     LDA.B #$03
     STA.B _2
@@ -1771,7 +2175,7 @@ CODE_0DA7C8:
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     CPX.B #$10
     BNE CODE_0DA7C8
@@ -1784,7 +2188,7 @@ DATA_0DA7E3:
 CODE_0DA7E7:
     LDY.B LevelLoadPos
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
   - JSR StzTo6ePointer
     LDA.L DATA_0DA7E3,X
     JSR CODE_0DA95B
@@ -1792,7 +2196,7 @@ CODE_0DA7E7:
     TXA
     AND.B #$01
     BNE -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     CPX.B #$04
     BNE -
@@ -1911,23 +2315,28 @@ DATA_0DA8B4:
     db $1E,$24,$2E,$2F,$30,$32,$65
 
 CODE_0DA8C3:
-    LDY.B LevelLoadPos
+; AND table used by various objects.
+; Map16 tile numbers (low) for standard objects 01-0E and 31:0.
+; Objects 01-07, written on page 0 (0xx).
+; Objects 08-0E, written on page 1 (1xx).
+; Object 31:0, written on page 1 (1xx).
+    LDY.B LevelLoadPos                        ; Object creation routine for standard objects 01-0E. Also for tileset-specific object 31:0.
     LDA.B LvlLoadObjSize
-    AND.B #$0F
-    STA.B _0
+    AND.B #$0F                                ; $00 = width
+    STA.B _0                                  ; $02 = width (decrementing)
     STA.B _2
     LDA.B LvlLoadObjSize
     LSR A
-    LSR A
+    LSR A                                     ; $01 = height
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DA8D8:
-    CPX.B #$04
-    BNE CODE_0DA92E
-    TXA
-    PHA
+    CPX.B #$04                                ; Tile write loop.
+    BNE CODE_0DA92E                           ; For object 5 (coins) only:
+    TXA                                       ; Check whether the item memory bit is set for this tile.
+    PHA                                       ; If so, don't write the coin, and skip to the next.
     TYA
     PHA
     LDX.W ItemMemorySetting
@@ -1974,75 +2383,76 @@ CODE_0DA92E:
     LDA.L DATA_0DA8B4,X
     STA.B _C
     JSR StzTo6ePointer
-    CPX.B #$07
-    BMI +
-    JSR Sta1To6ePointer
+    CPX.B #$07                                ; Write appropriate tile to the Map16 and move pointer right.
+    BMI +                                     ; For object 7 and below, write from page 0 (0xx).
+    JSR Sta1To6ePointer                       ; For object 8 and above, write from page 1 (1xx).
   + LDA.B _C
     JSR CODE_0DA95B
 CODE_0DA943:
     DEC.B _2
-    LDA.B _2
+    LDA.B _2                                  ; Loop for all tiles in the row.
     BPL CODE_0DA8D8
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
-    LDA.B _0
+    LDA.B _0                                  ; Reset counter for width.
     STA.B _2
     DEC.B _1
-    BMI +
+    BMI +                                     ; Loop for all rows.
     JMP CODE_0DA8D8
 
   + RTS
 
 CODE_0DA95B:
-    STA.B [Map16LowPtr],Y
+    STA.B [Map16LowPtr],Y                     ; Routine to place the Map16 tile from A and then...
 CODE_0DA95D:
-    INY
+; Move the Map16 pointer one tile right.
+    INY                                       ; Move to next tile.
     TYA
-    AND.B #$0F
+    AND.B #$0F                                ; Return if not at horizontal boundary.
     BNE +
     LDA.B Map16LowPtr
     CLC
     ADC.B #$B0
     STA.B Map16LowPtr
-    STA.B Map16HighPtr
+    STA.B Map16HighPtr                        ; Move to next horizontal Map16 block.
     LDA.B Map16LowPtr+1
     ADC.B #$01
     STA.B Map16LowPtr+1
     STA.B Map16HighPtr+1
-    INC.W LevelLoadObjectTile
+    INC.W LevelLoadObjectTile                 ; Increase screen number.
     LDA.B LevelLoadPos
-    AND.B #$F0
+    AND.B #$F0                                ; Load new index to Y.
     TAY
   + RTS
 
 CODE_0DA97D:
-    LDA.B LevelLoadPos
-    CLC
+    LDA.B LevelLoadPos                        ; Move the Map16 pointer one tile down.
+    CLC                                       ; Move to next row.
     ADC.B #$10
     STA.B LevelLoadPos
-    TAY
+    TAY                                       ; Return if not at vertical boundary.
     BCC +
 CODE_0DA987:
     LDA.B Map16LowPtr+1
     ADC.B #$00
-    STA.B Map16LowPtr+1
+    STA.B Map16LowPtr+1                       ; Move to next vertical Map16 block.
     STA.B Map16HighPtr+1
     STA.B _5
   + RTS
 
 CODE_0DA992:
-    LDA.B LevelLoadPos
-    CLC
+    LDA.B LevelLoadPos                        ; Move the Map16 pointer one tile down and left.
+    CLC                                       ; Move down and left one tile.
     ADC.B #$0F
     TAY
-    BCC +
+    BCC +                                     ; If at horizontal boundary, move to next vertical block.
     JSR CODE_0DA987
   + TYA
     AND.B #$0F
     CMP.B #$0F
     BNE CODE_0DA9B1
-    TYA
-    CLC
+    TYA                                       ; If at a vertical screen boundary, move to the next row
+    CLC                                       ; and then to the previous vertical block or screen if necessary.
     ADC.B #$10
     TAY
     BCC +
@@ -2053,18 +2463,18 @@ CODE_0DA9B1:
     RTS
 
 CODE_0DA9B4:
-    LDA.B LevelLoadPos
-    CLC
+    LDA.B LevelLoadPos                        ; Move the Map16 pointer one tile down and right.
+    CLC                                       ; Move down and right one tile.
     ADC.B #$11
     TAY
-    BCC +
+    BCC +                                     ; If at a horizontal boundary, move to next vertical block.
     JSR CODE_0DA987
   + TYA
     AND.B #$0F
     CMP.B #$01
     BPL CODE_0DA9D3
-    TYA
-    SEC
+    TYA                                       ; If at a vertical screen boundary, move to the next row
+    SEC                                       ; and then to the next vertical block or screen if necessary.
     SBC.B #$10
     TAY
     BCS +
@@ -2075,7 +2485,7 @@ CODE_0DA9D3:
     RTS
 
 CODE_0DA9D6:
-    LDA.B Map16LowPtr
+    LDA.B Map16LowPtr                         ; Move the Map16 pointer one screen back.
     SEC
     SBC.B #$B0
     STA.B Map16LowPtr
@@ -2090,7 +2500,7 @@ CODE_0DA9D6:
     RTS
 
 CODE_0DA9EF:
-    LDA.B Map16LowPtr
+    LDA.B Map16LowPtr                         ; Move the Map16 pointer one screen forward.
     CLC
     ADC.B #$B0
     STA.B Map16LowPtr
@@ -2105,12 +2515,12 @@ CODE_0DA9EF:
     RTS
 
 Sta1To6ePointer:
-    LDA.B #$01
+    LDA.B #$01                                ; Set tile's high Map16 byte to #$01.
     STA.B [Map16HighPtr],Y
     RTS
 
 StzTo6ePointer:
-    LDA.B #$00
+    LDA.B #$00                                ; Set tile's high Map16 byte to #$00.
     STA.B [Map16HighPtr],Y
     RTS
 
@@ -2128,63 +2538,80 @@ DATA_0DAA21:
     db $00,$00,$3A,$34,$38
 
 CODE_0DAA26:
-    LDY.B LevelLoadPos
+; Tiles for the left side of the top of the vertical pipes.
+; Top, top-exit, double-ended, unused, unused
+; Tiles for the right side of the top of the vertical pipes.
+; Top, top-exit, double-ended, unused, unused
+; Tiles for the left side of the bottom of the vertical pipes.
+; Unused, unused, double-ended, bottom, bottom-exit
+; Tiles for the right side of the bottom of the vertical pipes.
+; Unused, unused, double-ended, bottom, bottom-exit
+; Vertical pipe types:
+; 00 - End on top
+; 01 - ...with exit enabled
+; 02 - Double-ended
+; 03 - End on bottom
+; 04 - ...with exit enabled
+; 05 - No end
+    LDY.B LevelLoadPos                        ; Standard object 0F - Vertical pipe
     LDA.B LvlLoadObjSize
     LSR A
-    LSR A
+    LSR A                                     ; $00 = height
     LSR A
     LSR A
     STA.B _0
     LDA.B LvlLoadObjSize
-    AND.B #$0F
+    AND.B #$0F                                ; X = type
     TAX
-    JSR CODE_0DA6B1
-    CPX.B #$03
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
+    CPX.B #$03                                ; Branch if the pipe doesn't have a top end (03+).
     BPL CODE_0DAA52
     JSR Sta1To6ePointer
     LDA.L DATA_0DAA12,X
-    JSR CODE_0DA95B
+    JSR CODE_0DA95B                           ; Write the top of the pipe.
     JSR Sta1To6ePointer
     LDA.L DATA_0DAA17,X
     STA.B [Map16LowPtr],Y
     JMP CODE_0DAA77
 
 CODE_0DAA52:
-    CPX.B #$05
+; Tile loop for the middle of the vertical pipe.
+    CPX.B #$05                                ; Branch if the pipe is not the no-ended one (which uses different tiles for some reason).
     BNE CODE_0DAA68
     JSR Sta1To6ePointer
-    LDA.B #$68
+    LDA.B #$68                                ; Left tile for the no-ended vertical pipe (168).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$69
+    LDA.B #$69                                ; Right tile for the no-ended vertical pipe (169).
     STA.B [Map16LowPtr],Y
     JMP CODE_0DAA77
 
 CODE_0DAA68:
-    JSR Sta1To6ePointer
-    LDA.B #$35
+    JSR Sta1To6ePointer                       ; Not the no-ended vertical pipe.
+    LDA.B #$35                                ; Left tile for the middle of the vertical pipe (135).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$36
+    LDA.B #$36                                ; Right tile for the middle of the vertical pipe (136).
     STA.B [Map16LowPtr],Y
 CODE_0DAA77:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     CPX.B #$05
-    BEQ CODE_0DAA85
+    BEQ CODE_0DAA85                           ; Branch if the tile has a bottom end (02-04).
     CPX.B #$02
     BPL CODE_0DAA8C
 CODE_0DAA85:
     DEC.B _0
-    BPL CODE_0DAA52
+    BPL CODE_0DAA52                           ; Loop for all rows, and return if at the end.
     JMP Return0DAAA3
 
 CODE_0DAA8C:
-    DEC.B _0
+; Pipe has a bottom end.
+    DEC.B _0                                  ; Loop back if not at the last row yet.
     BNE CODE_0DAA68
     JSR Sta1To6ePointer
     LDA.L DATA_0DAA1C,X
-    JSR CODE_0DA95B
+    JSR CODE_0DA95B                           ; Write the bottom of the pipe.
     JSR Sta1To6ePointer
     LDA.L DATA_0DAA21,X
     STA.B [Map16LowPtr],Y
@@ -2198,89 +2625,100 @@ DATA_0DAAAC:
     db $3D,$3E,$3D,$3E,$3D,$3E,$3D,$3E
 
 CODE_0DAAB4:
-    LDY.B LevelLoadPos
+; Tiles for the ends of the horizontal pipes. Two tiles (top, bottom) per type.
+; Left, left-exit
+; Right, right-exit
+; Tiles for the middle of the horizontal pipes. Two tiles (top, bottom) per type.
+; Left, left-exit
+; Right, right-exit
+; Horizontal pipe types:
+; 00 - End on left
+; 01 - ...with exit enabled
+; 02 - End on right
+; 03 - ...with exit enabled
+    LDY.B LevelLoadPos                        ; Standard object 10: Horizontal pipe
     LDA.B LvlLoadObjSize
-    AND.B #$0F
-    STA.B _0
+    AND.B #$0F                                ; $00 = width
+    STA.B _0                                  ; $01 = width (decrementing)
     STA.B _1
     LDA.B LvlLoadObjSize
     AND.B #$F0
-    LSR A
+    LSR A                                     ; X = type, x2.
     LSR A
     LSR A
     TAX
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DAAC9:
-    CPX.B #$04
+    CPX.B #$04                                ; Tile loop.
     BPL CODE_0DAADA
-    JSR Sta1To6ePointer
-    LDA.L DATA_0DAAA4,X
+    JSR Sta1To6ePointer                       ; If type is 0/1 (end on left),
+    LDA.L DATA_0DAAA4,X                       ; write the left end of the pipe.
     JSR CODE_0DA95B
     JMP CODE_0DAAE4
 
 CODE_0DAADA:
     JSR Sta1To6ePointer
-    LDA.L DATA_0DAAAC,X
+    LDA.L DATA_0DAAAC,X                       ; Else, write the middle of the pipe.
     JSR CODE_0DA95B
 CODE_0DAAE4:
     CPX.B #$04
     BPL CODE_0DAAEF
     DEC.B _1
-    BPL CODE_0DAADA
-    JMP CODE_0DAAFC
+    BPL CODE_0DAADA                           ; Loop for all of the middle tiles.
+    JMP CODE_0DAAFC                           ; If type is 2/3 (end on right), end one tile early to...
 
 CODE_0DAAEF:
     DEC.B _1
     BNE CODE_0DAAC9
     JSR Sta1To6ePointer
-    LDA.L DATA_0DAAA4,X
+    LDA.L DATA_0DAAA4,X                       ; ...write the right end of the pipe.
     STA.B [Map16LowPtr],Y
 CODE_0DAAFC:
     LDA.B _0
     STA.B _1
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     INX
-    TXA
+    TXA                                       ; Loop for the second row of the pipe.
     AND.B #$01
     BNE CODE_0DAAC9
     RTS
 
 CODE_0DAB0D:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; Standard object 11: Bullet bill shooter
     LDA.B LvlLoadObjSize
     LSR A
-    LSR A
+    LSR A                                     ; X = height
     LSR A
     LSR A
     TAX
     JSR Sta1To6ePointer
-    LDA.B #$41
+    LDA.B #$41                                ; Tile for the top of the bullet bill shooter (141).
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
-    DEX
+    DEX                                       ; Move one tile down, and return if at the end of the object.
     BMI Return0DAB3D
     JSR Sta1To6ePointer
-    LDA.B #$42
+    LDA.B #$42                                ; Second tile for the top of the bullet bill shooter (142).
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
-    DEX
+    DEX                                       ; Move one tile down, and return if at the end of the object.
     BMI Return0DAB3D
   - JSR Sta1To6ePointer
-    LDA.B #$43
+    LDA.B #$43                                ; Tile for the shaft fo the bullet bill shooter (143).
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR CODE_0DA97D                           ; Loop for all the tiles of the shaft.
     DEX
     BPL -
 Return0DAB3D:
     RTS
 
 CODE_0DAB3E:
-    LDA.B LvlLoadObjSize
+    LDA.B LvlLoadObjSize                      ; Standard object 12 - Slope
     AND.B #$0F
 CODE_0DAB42:
-    CMP.B #$0A
-    BMI +
+    CMP.B #$0A                                ; If the lower nibble of the settings byte is more than 10, subtract 10.
+    BMI +                                     ; ...As far as I know, this should never happen, but hey, you do you Nintendo.
     SEC
     SBC.B #$0A
     JMP CODE_0DAB42
@@ -2299,55 +2737,66 @@ CODE_0DAB42:
     dl CODE_0DAFEA
 
 CODE_0DAB6E:
-    LDY.B LevelLoadPos
-    LDA.B #$01
+; 00 - Normal left
+; 01 - Steep left
+; 02 - Gradual left
+; 03 - Normal right
+; 04 - Steep right
+; 05 - Gradual right
+; 06 - Normal left (upside down)
+; 07 - Normal right (upside down)
+; 08 - Steep left (upside down)
+; 09 - Steep right (upside down)
+    LDY.B LevelLoadPos                        ; Slope 00 - Normal left
+    LDA.B #$01                                ; $02 = width of current row (starts at 2 tiles).
     STA.B _2
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; $00 = height (+1)
     LSR A
     STA.B _0
     INC.B _0
 CODE_0DAB83:
     LDX.B _2
     JSR Sta1To6ePointer
-    LDA.B #$96
+    LDA.B #$96                                ; Top tile A (196).
     JSR CODE_0DABFD
     JSR Sta1To6ePointer
-    LDA.B #$9B
+    LDA.B #$9B                                ; Top tile B (19B).
     JSR CODE_0DABFD
     DEX
-    DEX
+    DEX                                       ; Branch if at the end of this row.
     BMI CODE_0DABB8
 CODE_0DAB99:
     JSR Sta1To6ePointer
-    LDA.B #$DE
+    LDA.B #$DE                                ; Corner tile A (1DE).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$E6
+    LDA.B #$E6                                ; Corner tile B (1E6).
     JSR CODE_0DA95B
     DEX
     JMP CODE_0DABB5
 
-  - JSR StzTo6ePointer
-    LDA.B #$3F
+  - JSR StzTo6ePointer                        ; Dirt loop.
+    LDA.B #$3F                                ; Dirt tile to fill the rest of the slope with (03F).
     JSR CODE_0DA95B
 CODE_0DABB5:
-    DEX
+    DEX                                       ; Fill the remaining tiles in the row with dirt.
     BPL -
 CODE_0DABB8:
-    JSR CODE_0DA6BA
+; At end of row.
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
+    INC.B _2                                  ; Increase width for next row.
     INC.B _2
-    INC.B _2
-    DEC.B _0
+    DEC.B _0                                  ; Branch if at the last row.
     BEQ CODE_0DABEC
-    BPL +
+    BPL +                                     ; Return if done with the last row.
     JMP Return0DABF6
 
-  + LDA.B LevelLoadPos
+  + LDA.B LevelLoadPos                        ; Not at the last row of the slope yet.
     CLC
     ADC.B #$0E
     TAY
@@ -2355,7 +2804,7 @@ CODE_0DABB8:
     JSR CODE_0DA987
   + TYA
     AND.B #$0F
-    CMP.B #$0E
+    CMP.B #$0E                                ; Move one row down and two tiles left.
     BMI CODE_0DABE7
     TYA
     CLC
@@ -2365,14 +2814,14 @@ CODE_0DABB8:
     JSR CODE_0DA987
   + JSR CODE_0DA9D6
 CODE_0DABE7:
-    STY.B LevelLoadPos
+    STY.B LevelLoadPos                        ; Continue to next row of the slope.
     JMP CODE_0DAB83
 
 CODE_0DABEC:
-    LDX.B _2
+    LDX.B _2                                  ; On the last row.
+    DEX                                       ; Undo the increase in width (so last two rows have the same width).
     DEX
-    DEX
-    JSR CODE_0DA97D
+    JSR CODE_0DA97D                           ; Draw the next row, starting with the corner tile (skip the top of the slope).
     JMP CODE_0DAB99
 
 Return0DABF6:
@@ -2386,13 +2835,17 @@ DATA_0DABFA:
     db $01,$03,$04
 
 CODE_0DABFD:
-    STA.B _C
+; Tiles for which slopes switch to their alternate versions (dirt behind, water behind)
+; 3F = dirt, 01 = water top, 03 = water bottom (note high byte isn't specified; any page will work)
+; Offsets for the slope tile variations from their base tile.
+; Ordered dirt, water top, water bottom
+    STA.B _C                                  ; Object subroutine for slopes to handle its alternate versions (dirt/water behind).
     TXA
     PHA
     LDX.B #$02
     LDA.B [Map16LowPtr],Y
 CODE_0DAC05:
-    CMP.L DATA_0DABF7,X
+    CMP.L DATA_0DABF7,X                       ; Check the tile the slope is being placed over, and if it's dirt/water...
     BEQ CODE_0DAC11
     DEX
     BPL CODE_0DAC05
@@ -2400,55 +2853,56 @@ CODE_0DAC05:
 
 CODE_0DAC11:
     LDA.B _C
-    CLC
+    CLC                                       ; ...offset the tile number accordingly.
     ADC.L DATA_0DABFA,X
     STA.B _C
 CODE_0DAC1A:
     PLA
     TAX
-    LDA.B _C
+    LDA.B _C                                  ; Add the tile and move right.
     JMP CODE_0DA95B
 
 CODE_0DAC21:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; Slope 02 - Steep left
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; $00 = height (+1)
     LSR A
     STA.B _0
     INC.B _0
-    LDA.B #$00
+    LDA.B #$00                                ; $02 = width of current row (starts at 1 tile)
     STA.B _2
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DAC34:
-    LDX.B _2
+    LDX.B _2                                  ; Tile loop.
     JSR Sta1To6ePointer
-    LDA.B #$AA
+    LDA.B #$AA                                ; Top tile (1AA).
     JSR CODE_0DABFD
 CODE_0DAC3E:
-    DEX
+    DEX                                       ; Branch if at the end of the row (i.e. this was the top row).
     BMI CODE_0DAC57
     JSR Sta1To6ePointer
-    LDA.B #$E2
+    LDA.B #$E2                                ; Corner tile (1E2).
     JSR CODE_0DA95B
     JMP CODE_0DAC54
 
-  - JSR StzTo6ePointer
-    LDA.B #$3F
+  - JSR StzTo6ePointer                        ; Dirt loop.
+    LDA.B #$3F                                ; Dirt tile to fill the rest of the slope with (03F).
     JSR CODE_0DA95B
 CODE_0DAC54:
-    DEX
+    DEX                                       ; Fill the remainder of the row with dirt.
     BPL -
 CODE_0DAC57:
-    JSR CODE_0DA6BA
-    INC.B _2
-    DEC.B _0
+; At end of row.
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
+    INC.B _2                                  ; Increase width of next row.
+    DEC.B _0                                  ; Branch if at the last row.
     BEQ CODE_0DAC89
-    BPL +
+    BPL +                                     ; Return if done with the last row.
     JMP Return0DAC91
 
-  + LDA.B LevelLoadPos
+  + LDA.B LevelLoadPos                        ; Not at last row.
     CLC
     ADC.B #$0F
     TAY
@@ -2456,7 +2910,7 @@ CODE_0DAC57:
     JSR CODE_0DA987
   + TYA
     AND.B #$0F
-    CMP.B #$0F
+    CMP.B #$0F                                ; Move one tile down and left.
     BNE CODE_0DAC84
     TYA
     CLC
@@ -2466,92 +2920,93 @@ CODE_0DAC57:
     JSR CODE_0DA987
   + JSR CODE_0DA9D6
 CODE_0DAC84:
-    STY.B LevelLoadPos
+    STY.B LevelLoadPos                        ; Continue to next row of the slope.
     JMP CODE_0DAC34
 
 CODE_0DAC89:
-    LDX.B _2
-    JSR CODE_0DA97D
+    LDX.B _2                                  ; At last row.
+    JSR CODE_0DA97D                           ; Draw the next row, starting with the corner tile (skip the top of the slope).
     JMP CODE_0DAC3E
 
 Return0DAC91:
     RTS
 
 CODE_0DAC92:
-    LDY.B LevelLoadPos
-    LDA.B #$03
+    LDY.B LevelLoadPos                        ; Slope 03 - Gradual left
+    LDA.B #$03                                ; $02 = width of current row (starts at 4 tiles)
     STA.B _2
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; $00 = height (+1)
     LSR A
     STA.B _0
     INC.B _0
 CODE_0DACA7:
-    LDX.B _2
+    LDX.B _2                                  ; Tile loop.
     JSR Sta1To6ePointer
-    LDA.B #$6E
+    LDA.B #$6E                                ; Top tile A (16E).
     JSR CODE_0DABFD
     JSR Sta1To6ePointer
-    LDA.B #$73
+    LDA.B #$73                                ; Top tile B (173).
     JSR CODE_0DABFD
     JSR Sta1To6ePointer
-    LDA.B #$78
+    LDA.B #$78                                ; Top tile C (178).
     JSR CODE_0DABFD
     JSR Sta1To6ePointer
-    LDA.B #$7D
+    LDA.B #$7D                                ; Top tile D (17D).
     JSR CODE_0DABFD
     DEX
     DEX
-    DEX
+    DEX                                       ; Branch if at end of row (i.e. this was the top row).
     DEX
     BMI CODE_0DAD00
 CODE_0DACCF:
     JSR Sta1To6ePointer
-    LDA.B #$D8
+    LDA.B #$D8                                ; Corner tile A (1D8).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$DA
+    LDA.B #$DA                                ; Corner tile B (1DA).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$E6
+    LDA.B #$E6                                ; Corner tile C (1E6).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$E6
+    LDA.B #$E6                                ; Corner tile D (1E6).
     JSR CODE_0DA95B
     DEX
     DEX
     DEX
     JMP CODE_0DACFD
 
-  - JSR StzTo6ePointer
-    LDA.B #$3F
+  - JSR StzTo6ePointer                        ; Dirt loop.
+    LDA.B #$3F                                ; Dirt tile to fill the rest of the slope with (03F).
     JSR CODE_0DA95B
 CODE_0DACFD:
-    DEX
+    DEX                                       ; Fill the remainder of the row with dirt.
     BPL -
 CODE_0DAD00:
-    JSR CODE_0DA6BA
+; Done with row.
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B _2
-    CLC
+    CLC                                       ; Increase width of next row.
     ADC.B #$04
     STA.B _2
-    DEC.B _0
+    DEC.B _0                                  ; Branch if at the last row.
     BEQ CODE_0DAD37
-    BPL +
+    BPL +                                     ; Return if done with the last row.
     JMP Return0DAD43
 
-  + LDA.B LevelLoadPos
+  + LDA.B LevelLoadPos                        ; Not at last row.
     CLC
     ADC.B #$0C
     TAY
     BCC +
     JSR CODE_0DA987
   + TYA
-    AND.B #$0F
+    AND.B #$0F                                ; Move one tile down and four tiles left.
     CMP.B #$0C
     BMI CODE_0DAD32
     TYA
@@ -2562,66 +3017,66 @@ CODE_0DAD00:
     JSR CODE_0DA987
   + JSR CODE_0DA9D6
 CODE_0DAD32:
-    STY.B LevelLoadPos
+    STY.B LevelLoadPos                        ; Continue to next row of the slope.
     JMP CODE_0DACA7
 
 CODE_0DAD37:
-    LDX.B _2
+    LDX.B _2                                  ; At last row.
+    DEX
+    DEX                                       ; Undo the increase in width (so last two rows have the same width).
     DEX
     DEX
-    DEX
-    DEX
-    JSR CODE_0DA97D
+    JSR CODE_0DA97D                           ; Draw the next row, starting with the corner tile (skip the top of the slope).
     JMP CODE_0DACCF
 
 Return0DAD43:
     RTS
 
 CODE_0DAD44:
-    LDY.B LevelLoadPos
-    LDX.B #$01
+    LDY.B LevelLoadPos                        ; Slope 03 - Normal right
+    LDX.B #$01                                ; $02 = width of current row (starts at 2 tiles)
     STX.B _2
     STX.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; $00 = height (+1)
     LSR A
     STA.B _0
     INC.B _0
     JMP CODE_0DAD7F
 
-  - JSR StzTo6ePointer
-    LDA.B #$3F
+  - JSR StzTo6ePointer                        ; Row loop.
+    LDA.B #$3F                                ; Dirt tile to fill the head of the slope with (03F).
     JSR CODE_0DA95B
-    DEX
+    DEX                                       ; Fill dirt until 4 tiles from the end of the row.
 CODE_0DAD65:
     CPX.B #$03
     BNE -
     JSR Sta1To6ePointer
-    LDA.B #$E6
+    LDA.B #$E6                                ; Corner tile A (1E6).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$E0
+    LDA.B #$E0                                ; Corner tile B (1E0).
     JSR CODE_0DA95B
     DEX
     DEX
-    LDA.B _0
+    LDA.B _0                                  ; Return if at last row.
     BEQ Return0DAD9F
 CODE_0DAD7F:
-    JSR Sta1To6ePointer
-    LDA.B #$A0
+    JSR Sta1To6ePointer                       ; Entry point for the row loop.
+    LDA.B #$A0                                ; Top tile A (1A0).
     JSR CODE_0DABFD
     JSR Sta1To6ePointer
-    LDA.B #$A5
+    LDA.B #$A5                                ; Top tile B (1A5).
     JSR CODE_0DABFD
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
-    INC.B _2
+    INC.B _2                                  ; Increase width of next row by 2.
     INC.B _2
     LDX.B _2
-    DEC.B _0
+    DEC.B _0                                  ; Loop for all remaining rows.
     BPL +
 Return0DAD9F:
     RTS
@@ -2629,106 +3084,107 @@ Return0DAD9F:
   + JMP CODE_0DAD65
 
 CODE_0DADA3:
-    LDY.B LevelLoadPos
-    LDX.B #$00
+    LDY.B LevelLoadPos                        ; Slope 04 - Steep right
+    LDX.B #$00                                ; $02 = width of current row (starts at 1 tile)
     STX.B _2
     STX.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; $00 = height (+1)
     LSR A
     STA.B _0
     INC.B _0
     JMP CODE_0DADD0
 
-  - JSR StzTo6ePointer
-    LDA.B #$3F
+  - JSR StzTo6ePointer                        ; Row loop.
+    LDA.B #$3F                                ; Dirt tile to fill the head of the slope with (03F).
     JSR CODE_0DA95B
-    DEX
+    DEX                                       ; Fill dirt until 2 tiles from the end of the row.
 CODE_0DADC4:
     CPX.B #$01
     BNE -
     JSR Sta1To6ePointer
-    LDA.B #$E4
+    LDA.B #$E4                                ; Corner tile.
     JSR CODE_0DA95B
 CODE_0DADD0:
-    LDA.B _0
+; Entry point for the row loop.
+    LDA.B _0                                  ; Return if at last row.
     BEQ Return0DADEA
     JSR Sta1To6ePointer
-    LDA.B #$AF
+    LDA.B #$AF                                ; Top tile.
     JSR CODE_0DABFD
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
-    INC.B _2
+    INC.B _2                                  ; Increase width of next row.
     LDX.B _2
-    DEC.B _0
+    DEC.B _0                                  ; Loop if not at the last row (slope is only one row tall).
     BPL CODE_0DADC4
 Return0DADEA:
     RTS
 
 CODE_0DADEB:
-    LDY.B LevelLoadPos
-    LDX.B #$03
+    LDY.B LevelLoadPos                        ; Slope 05 - Gradual right
+    LDX.B #$03                                ; $02 = width of current row (starts at 4 tiles)
     STX.B _2
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; $00 = height (+1)
     LSR A
     STA.B _0
     INC.B _0
     JMP CODE_0DAE36
 
 
-  - JSR StzTo6ePointer
-    LDA.B #$3F
+  - JSR StzTo6ePointer                        ; Row loop.
+    LDA.B #$3F                                ; Dirt tile to fill the head of the slope with (03F).
     JSR CODE_0DA95B
-    DEX
+    DEX                                       ; Fill dirt until 8 tiles from the end of the row.
 CODE_0DAE0A:
     CPX.B #$07
     BNE -
     JSR Sta1To6ePointer
-    LDA.B #$E6
+    LDA.B #$E6                                ; Corner tile A (1E6).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$E6
+    LDA.B #$E6                                ; Corner tile B (1E6).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$DB
+    LDA.B #$DB                                ; Corner tile C (1DB).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$DC
+    LDA.B #$DC                                ; Corner tile D (1DC).
     JSR CODE_0DA95B
     DEX
     DEX
     DEX
     DEX
-    LDA.B _0
+    LDA.B _0                                  ; Return if at the last row.
     BEQ Return0DAE69
 CODE_0DAE36:
-    JSR Sta1To6ePointer
-    LDA.B #$82
+    JSR Sta1To6ePointer                       ; Entry point for the row loop.
+    LDA.B #$82                                ; Top tile A (182).
     JSR CODE_0DABFD
     JSR Sta1To6ePointer
-    LDA.B #$87
+    LDA.B #$87                                ; Top tile B (187).
     JSR CODE_0DABFD
     JSR Sta1To6ePointer
-    LDA.B #$8C
+    LDA.B #$8C                                ; Top tile C (18C).
     JSR CODE_0DABFD
     JSR Sta1To6ePointer
-    LDA.B #$91
+    LDA.B #$91                                ; Top tile D (191).
     JSR CODE_0DABFD
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDA.B _2
-    CLC
+    CLC                                       ; Increase width of next row by 4.
     ADC.B #$04
     STA.B _2
     LDX.B _2
-    DEC.B _0
+    DEC.B _0                                  ; Loop if not at the last row (slope is only one row tall).
     BPL +
 Return0DAE69:
     RTS
@@ -2736,59 +3192,60 @@ Return0DAE69:
   + JMP CODE_0DAE0A
 
 CODE_0DAE6D:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; Slope 06 - Normal left (upside-down)
     LDA.B LvlLoadObjSize
     LSR A
-    LSR A
+    LSR A                                     ; $00 = height
     LSR A
     LSR A
     STA.B _0
     ASL A
-    STA.B _2
+    STA.B _2                                  ; $02 = width
     DEC.B _2
-    LDA.B #$00
+    LDA.B #$00                                ; $01 = counter for current row
     STA.B _1
     LDX.B _2
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     JMP CODE_0DAE9E
 
 CODE_0DAE88:
-    LDX.B _2
+    LDX.B _2                                  ; Row loop.
     JSR Sta1To6ePointer
-    LDA.B #$C6
+    LDA.B #$C6                                ; Corner tile A (1C6).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$C7
+    LDA.B #$C7                                ; Corner tile B (1C7).
     JSR CODE_0DA95B
     DEX
     DEX
     BMI CODE_0DAEBD
 CODE_0DAE9E:
-    JSR Sta1To6ePointer
-    LDA.B #$EE
+    JSR Sta1To6ePointer                       ; Entry point for the row loop.
+    LDA.B #$EE                                ; Top tile A (1EE).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$F0
+    LDA.B #$F0                                ; Top tile B (1F0).
     JSR CODE_0DA95B
     DEX
     JMP CODE_0DAEBA
 
-  - JSR Sta1To6ePointer
-    LDA.B #$65
+  - JSR Sta1To6ePointer                       ; Dirt loop.
+    LDA.B #$65                                ; Dirt tile to fill the end of the slope with (03F).
     JSR CODE_0DA95B
 CODE_0DAEBA:
     DEX
     BPL -
 CODE_0DAEBD:
-    JSR CODE_0DA6BA
-    LDA.B _1
+; Done with row.
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
+    LDA.B _1                                  ; Branch if not on the top row (to increase width of the next row).
     BNE +
     INC.B _1
-    JSR CODE_0DA97D
+    JSR CODE_0DA97D                           ; Move row down and don't adjust position.
     JMP CODE_0DAEF2
 
-  + LDA.B _2
-    SEC
+  + LDA.B _2                                  ; Not at last row.
+    SEC                                       ; Decrease width of next row by 2.
     SBC.B #$02
     STA.B _2
     LDA.B LevelLoadPos
@@ -2798,7 +3255,7 @@ CODE_0DAEBD:
     BCC +
     JSR CODE_0DA987
   + TYA
-    AND.B #$0F
+    AND.B #$0F                                ; Move one tile down and two tiles right.
     CMP.B #$02
     BPL CODE_0DAEF2
     TYA
@@ -2811,110 +3268,110 @@ CODE_0DAEBD:
 CODE_0DAEF2:
     STY.B LevelLoadPos
     DEC.B _0
-    BMI +
+    BMI +                                     ; Loop for all rows.
     JMP CODE_0DAE88
 
   + RTS
 
 CODE_0DAEFC:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; Slope 07 - Normal right (upside-down)
     LDA.B LvlLoadObjSize
     LSR A
-    LSR A
+    LSR A                                     ; $00 = height
     LSR A
     LSR A
     STA.B _0
     ASL A
-    STA.B _2
+    STA.B _2                                  ; $02 = width
     INC.B _2
-    LDA.B #$00
+    LDA.B #$00                                ; $01 = counter for current row
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B _2
     JMP CODE_0DAF20
 
-  - JSR Sta1To6ePointer
-    LDA.B #$65
+  - JSR Sta1To6ePointer                       ; Dirt loop
+    LDA.B #$65                                ; Dirt tile to fill the head of the slope with (03F).
     JSR CODE_0DA95B
     DEX
 CODE_0DAF20:
     CPX.B #$04
     BPL -
     CPX.B #$02
-    BMI CODE_0DAF3C
+    BMI CODE_0DAF3C                           ; If two tiles from the end of the row, write the corner tiles.
     JSR Sta1To6ePointer
-    LDA.B #$F0
+    LDA.B #$F0                                ; Corner tile A (1F0).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$EF
+    LDA.B #$EF                                ; Corner tile B (1EF).
     JSR CODE_0DA95B
     LDA.B _1
-    BEQ +
+    BEQ +                                     ; If not at the end of the top row, write the slope tiles.
 CODE_0DAF3C:
     JSR Sta1To6ePointer
-    LDA.B #$C8
+    LDA.B #$C8                                ; Top tile A (1C8).
     JSR CODE_0DA95B
     JSR Sta1To6ePointer
-    LDA.B #$C9
+    LDA.B #$C9                                ; Top tile B (1C9).
     JSR CODE_0DA95B
-  + JSR CODE_0DA6BA
+  + JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B _2
-    SEC
+    SEC                                       ; Decrease width of next row by 2.
     SBC.B #$02
     STA.B _2
     TAX
     INC.B _1
     JSR CODE_0DA97D
-    DEC.B _0
+    DEC.B _0                                  ; Loop for all rows.
     BPL CODE_0DAF20
     RTS
 
 CODE_0DAF61:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; Slope 08 - Steep left (upside-down)
     LDA.B LvlLoadObjSize
     LSR A
-    LSR A
+    LSR A                                     ; $00 = height
     LSR A
     LSR A
     STA.B _0
-    STA.B _2
+    STA.B _2                                  ; $02 = width
     DEC.B _2
-    LDA.B #$00
+    LDA.B #$00                                ; $01 = counter for current row
     STA.B _1
     LDX.B _2
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     JMP CODE_0DAF88
 
 CODE_0DAF7B:
-    LDX.B _2
+    LDX.B _2                                  ; Row loop.
     JSR Sta1To6ePointer
-    LDA.B #$C4
+    LDA.B #$C4                                ; Top tile (1C4).
     JSR CODE_0DA95B
-    DEX
+    DEX                                       ; If on the last row, skip writing the corner tile and dirt.
     BMI CODE_0DAF9E
 CODE_0DAF88:
-    JSR Sta1To6ePointer
-    LDA.B #$EC
+    JSR Sta1To6ePointer                       ; Entry point for the loop.
+    LDA.B #$EC                                ; Write tile 1EC (corner).
     JSR CODE_0DA95B
     JMP CODE_0DAF9B
 
-  - JSR Sta1To6ePointer
-    LDA.B #$65
+  - JSR Sta1To6ePointer                       ; Dirt loop.
+    LDA.B #$65                                ; Dirt tile to fill the end of the slope with (165).
     JSR CODE_0DA95B
 CODE_0DAF9B:
     DEX
     BPL -
 CODE_0DAF9E:
-    JSR CODE_0DA6BA
-    LDA.B _1
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
+    LDA.B _1                                  ; Branch if not on the first row (need to adjust starting position).
     BNE +
     INC.B _1
-    LDX.B _2
+    LDX.B _2                                  ; Else if on the top row, just move to the next row.
     JSR CODE_0DA97D
     JMP CODE_0DAFD5
 
-  + LDA.B _2
-    SEC
+  + LDA.B _2                                  ; Not on the top row.
+    SEC                                       ; Decrease width of next row.
     SBC.B #$01
     STA.B _2
     LDA.B LevelLoadPos
@@ -2926,7 +3383,7 @@ CODE_0DAF9E:
   + TYA
     AND.B #$0F
     CMP.B #$01
-    BPL CODE_0DAFD5
+    BPL CODE_0DAFD5                           ; Move down one tile, and right one tile.
     TYA
     SEC
     SBC.B #$10
@@ -2937,13 +3394,13 @@ CODE_0DAF9E:
 CODE_0DAFD5:
     STY.B LevelLoadPos
     DEC.B _0
-    BMI +
+    BMI +                                     ; Loop for all rows.
     JMP CODE_0DAF7B
 
   + RTS
 
 CODE_0DAFDF:
-    LDA.B Map16LowPtr+1
+    LDA.B Map16LowPtr+1                       ; Subroutine to move to the previous Map16 block.
     SBC.B #$00
     STA.B Map16LowPtr+1
     STA.B Map16HighPtr+1
@@ -2951,44 +3408,44 @@ CODE_0DAFDF:
     RTS
 
 CODE_0DAFEA:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; Slope 09 - Steep right (upside-down)
     LDA.B LvlLoadObjSize
     LSR A
-    LSR A
-    LSR A
+    LSR A                                     ; $00 = height of slope
+    LSR A                                     ; $02 = width of slope
     LSR A
     STA.B _0
     STA.B _2
-    LDA.B #$00
+    LDA.B #$00                                ; $01 = counter for current row
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B _2
     JMP CODE_0DB00B
 
-  - JSR Sta1To6ePointer
-    LDA.B #$65
+  - JSR Sta1To6ePointer                       ; Row loop.
+    LDA.B #$65                                ; Dirt tile to fill the head of the slope with (165).
     JSR CODE_0DA95B
     DEX
 CODE_0DB00B:
     CPX.B #$02
     BPL -
     CPX.B #$01
-    BMI CODE_0DB01F
+    BMI CODE_0DB01F                           ; If one tile before the end, write the corner tile.
     JSR Sta1To6ePointer
-    LDA.B #$ED
+    LDA.B #$ED                                ; Corner tile (1ED)
     JSR CODE_0DA95B
     LDA.B _1
     BEQ +
 CODE_0DB01F:
-    JSR Sta1To6ePointer
-    LDA.B #$C5
+    JSR Sta1To6ePointer                       ; If not at the end of the top row, write the slope tile.
+    LDA.B #$C5                                ; Top tile (1C5)
     JSR CODE_0DA95B
-  + JSR CODE_0DA6BA
+  + JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDX.B _2
-    DEX
+    DEX                                       ; Decrease width of next row by 1.
     STX.B _2
     INC.B _1
-    JSR CODE_0DA97D
+    JSR CODE_0DA97D                           ; Loop for all rows.
     DEC.B _0
     BPL CODE_0DB00B
     RTS
@@ -3011,7 +3468,7 @@ DATA_0DB066:
     db $FF,$FF,$FF,$E2,$E2,$E4,$E4
 
 CODE_0DB075:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; Standard object 13 - Ledge edge / Vine
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -3169,29 +3626,31 @@ Return0DB1C7:
     RTS
 
 CODE_0DB1C8:
-    LDA.B LvlLoadObjSize
+; Standard object 21 - Wide-scale ledge
+    LDA.B LvlLoadObjSize                      ; Width = full settings byte
     STA.B _0
     TAX
-    LDA.B #$02
+    LDA.B #$02                                ; Height = 3 tiles
     STA.B _2
     JMP CODE_0DB1E3
 
 CODE_0DB1D4:
-    LDA.B LvlLoadObjSize
-    AND.B #$0F
+    LDA.B LvlLoadObjSize                      ; Standard object 14 - Ledge
+    AND.B #$0F                                ; Width = lower nibble of settings byte
     STA.B _0
     TAX
     LDA.B LvlLoadObjSize
     LSR A
-    LSR A
+    LSR A                                     ; Height = upper nibble of settings byte
     LSR A
     LSR A
     STA.B _2
 CODE_0DB1E3:
-    JSR CODE_0DA6B1
+; Wide-scale ledge shares code beyond here.
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDY.B LevelLoadPos
   - JSR Sta1To6ePointer
-    LDA.B #$00
+    LDA.B #$00                                ; Write the top row of the ledge (tile 100).
     JSR CODE_0DA95B
     DEX
     CPX.B #$FF
@@ -3200,15 +3659,15 @@ CODE_0DB1E3:
 
   - JSR StzTo6ePointer
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR CODE_0DA95B                           ; Write the next row of the ledge (tile 03F).
     DEX
     CPX.B #$FF
     BNE -
 CODE_0DB205:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B _0
-    DEC.B _2
+    DEC.B _2                                  ; Repeat for all remaining rows.
     BPL -
     RTS
 
@@ -3232,7 +3691,7 @@ DATA_0DB221:
     db $3B,$25,$3E
 
 CODE_0DB224:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; Standard object 15 - Midway point
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B _2
@@ -3243,7 +3702,7 @@ CODE_0DB224:
     LSR A
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B #$00
 CODE_0DB23B:
     LDA.L DATA_0DB212,X
@@ -3297,7 +3756,7 @@ CODE_0DB28F:
   + JSR StzTo6ePointer
     LDA.B _3
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B LevelLoadPos
     CLC
     ADC.B #$01
@@ -3320,11 +3779,11 @@ Return0DB2C9:
     RTS
 
 CODE_0DB2CA:
-    LDA.W TranslevelNo
+    LDA.W TranslevelNo                        ; Extended Object 41 - Yoshi Coin MAIN
     LSR A
     LSR A
     LSR A
-    TAY
+    TAY                                       ; Return if five Yoshi Coins have already been collected in the level.
     LDA.W TranslevelNo
     AND.B #$07
     TAX
@@ -3333,8 +3792,8 @@ CODE_0DB2CA:
     BNE Return0DB2C9
     LDX.W ItemMemorySetting
     LDA.B #ItemMemoryTable
-    CLC
-    ADC.L DATA_0DA8AE,X
+    CLC                                       ; Check whether the item memory bit is set for this tile.
+    ADC.L DATA_0DA8AE,X                       ; If so, don't load the coin.
     STA.B _8
     LDA.B #ItemMemoryTable>>8
     ADC.L DATA_0DA8B1,X
@@ -3365,11 +3824,11 @@ CODE_0DB2CA:
     BNE +
     LDY.B LevelLoadPos
     JSR StzTo6ePointer
-    LDA.B #$2D
+    LDA.B #$2D                                ; Tile to use for the top tile of the Yoshi coin.
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
     JSR StzTo6ePointer
-    LDA.B #$2E
+    LDA.B #$2E                                ; Tile to use for the bottom tile of the Yoshi coin.
     STA.B [Map16LowPtr],Y
   + RTS
 
@@ -3385,7 +3844,7 @@ ADDR_0DB336:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 ADDR_0DB34A:
     TYA
     PHA
@@ -3439,7 +3898,7 @@ ADDR_0DB34A:
 ADDR_0DB3A8:
     DEX
     BPL ADDR_0DB34A
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B _0
     DEC.B _1
@@ -3478,39 +3937,41 @@ DATA_0DB3DF:
     db $02,$03,$05,$0B
 
 CODE_0DB3E3:
-    LDY.B LevelLoadPos
+; Low byte of the tile numbers for the top row of objects 18-1B.
+; Low byte of the tile numbers for the other rows of objects 18-1B.
+    LDY.B LevelLoadPos                        ; Object creation routine for water, lava, and the top of nets.
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B _0
-    STA.B _2
-    LDA.B LvlLoadObjSize
-    LSR A
+    STA.B _2                                  ; $00 = Object width
+    LDA.B LvlLoadObjSize                      ; $01 = Object height
+    LSR A                                     ; $02 = Object width mirror
     LSR A
     LSR A
     LSR A
     STA.B _1
     TXA
-    SEC
+    SEC                                       ; X is object ID, minus #$18.
     SBC.B #$17
     TAX
-    JSR CODE_0DA6B1
-  - JSR StzTo6ePointer
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
+  - JSR StzTo6ePointer                        ; Loop for the top row of tiles.
     LDA.L DATA_0DB3DB,X
-    JSR CODE_0DA95B
+    JSR CODE_0DA95B                           ; Store Map16 tile, and loop for all tiles in the row.
     DEC.B _2
     BPL -
     JMP CODE_0DB41C
 
-  - JSR StzTo6ePointer
+  - JSR StzTo6ePointer                        ; Loop for the other rows.
     LDA.L DATA_0DB3DF,X
-    JSR CODE_0DA95B
+    JSR CODE_0DA95B                           ; Store Map16 tile, and loop for all tiles in the row.
     DEC.B _2
     BPL -
 CODE_0DB41C:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDA.B _0
-    STA.B _2
+    STA.B _2                                  ; Loop for all the rows.
     DEC.B _1
     BPL -
     RTS
@@ -3525,7 +3986,7 @@ CODE_0DB42D:
     AND.B #$0F
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B #$00
 CODE_0DB43C:
     JSR StzTo6ePointer
@@ -3536,7 +3997,7 @@ CODE_0DB43C:
     JSR CODE_0DA95B
     DEC.B _1
     BPL CODE_0DB43C
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDA.B _0
     STA.B _1
@@ -3557,7 +4018,7 @@ CODE_0DB461:
     AND.B #$0F
     STA.B _1
     TAX
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B _0
     BEQ CODE_0DB490
   - JSR StzTo6ePointer
@@ -3565,7 +4026,7 @@ CODE_0DB461:
     JSR CODE_0DA95B
     DEX
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B _1
     DEC.B _0
@@ -3724,8 +4185,8 @@ ADDR_0DB571:
     RTS
 
 CODE_0DB583:
-    LDX.B #$01
-    BNE +
+    LDX.B #$01                                ; Extended object 8E - Yellow switch palace block
+    BNE +                                     ; Equivalent to a BRA.
 
 DATA_0DB587:
     db $6A,$6B
@@ -3734,17 +4195,19 @@ DATA_0DB589:
     db $6A,$6B
 
 CODE_0DB58B:
-    LDX.B #$00
-  + LDY.B LevelLoadPos
-    LDA.W SwitchBlockFlags,X
+; Map16 tile to generate for the green/yellow blocks when the switch is on (high byte = 01).
+; Map16 tile to generate for the green/yellow blocks when the switch is off (high byte = 00).
+    LDX.B #$00                                ; Extended object 87 - Green switch palace block
+  + LDY.B LevelLoadPos                        ; Yellow switch block joins here with X = 1.
+    LDA.W SwitchBlockFlags,X                  ; Branch if the corresponding switch palace has been activated.
     BNE +
     JSR StzTo6ePointer
-    LDA.L DATA_0DB589,X
+    LDA.L DATA_0DB589,X                       ; Generate the outline tile.
     STA.B [Map16LowPtr],Y
     RTS
 
-  + JSR Sta1To6ePointer
-    LDA.L DATA_0DB587,X
+  + JSR Sta1To6ePointer                       ; Switch palace has been hit.
+    LDA.L DATA_0DB587,X                       ; Generate the solid tile.
     STA.B [Map16LowPtr],Y
     RTS
 
@@ -3804,7 +4267,7 @@ CODE_0DB604:
     LDA.B #$03
     STA.B _3
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDY.B LevelLoadPos
     LDA.B _0
     STA.B _2
@@ -3874,7 +4337,7 @@ CODE_0DB6A3:
     JSR CODE_0DA95B
 CODE_0DB6B2:
     INX
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEC.B _3
     BMI +
@@ -3965,7 +4428,7 @@ CODE_0DB73F:
     LDA.B #$01
     STA.B _1
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DB752:
     LDA.B _1
     STA.B _2
@@ -3975,7 +4438,7 @@ CODE_0DB752:
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down and left.
     JSR CODE_0DA992
     INC.B _1
     INC.B _1
@@ -3993,7 +4456,7 @@ CODE_0DB779:
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down and left.
     JSR CODE_0DA992
     CPX.B #$10
     BNE +
@@ -4024,7 +4487,7 @@ CODE_0DB7AA:
     STA.B _3
     LDX.B #$01
     STX.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     JSR Sta1To6ePointer
     LDA.B #$AA
     JSR CODE_0DABFD
@@ -4053,7 +4516,7 @@ CODE_0DB7F2:
     LDA.B #$A6
     JSR CODE_0DB84E
 CODE_0DB7FD:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down and left.
     JSR CODE_0DA992
     INC.B _1
     INC.B _1
@@ -4062,7 +4525,7 @@ CODE_0DB7FD:
     BPL CODE_0DB7D6
     JSR CODE_0DA95D
     STY.B LevelLoadPos
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     DEX
     STX.B _1
     JSR Sta1To6ePointer
@@ -4085,7 +4548,7 @@ CODE_0DB836:
     JSR StzTo6ePointer
     LDA.B #$A6
     JSR CODE_0DB84E
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down and right.
     JSR CODE_0DA9B4
     LDX.B _1
     DEC.B _3
@@ -4119,7 +4582,7 @@ CODE_0DB863:
     STA.B _3
     LDX.B #$01
     STX.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     %LorW(LDA,StzTo6ePointer)
     LDA.B #$AF
     JSR CODE_0DB84E
@@ -4148,7 +4611,7 @@ CODE_0DB8A2:
     LDA.B #$AF
     JSR CODE_0DABFD
 CODE_0DB8B7:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down and left.
     JSR CODE_0DA992
     INC.B _1
     INC.B _1
@@ -4189,7 +4652,7 @@ CODE_0DB8FE:
     LDA.B #$AC
     JSR CODE_0DB84E
 CODE_0DB909:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down and left.
     JSR CODE_0DA992
     LDX.B _1
     DEC.B _3
@@ -4197,8 +4660,8 @@ CODE_0DB909:
     RTS
 
 CODE_0DB916:
-    LDX.B #$00
-    BEQ +
+    LDX.B #$00                                ; Tileset-specific object 32/33/34/39 - Blue switch blocks
+    BEQ +                                     ; Equivalent to a BRA.
 
 DATA_0DB91A:
     db $6C,$6D
@@ -4207,37 +4670,39 @@ DATA_0DB91C:
     db $6C,$6D
 
 CODE_0DB91E:
-    LDX.B #$01
-  + LDY.B LevelLoadPos
+; Map16 tile numbers for the blue/red switch blocks when the switch is off (high byte = 00)
+; Map16 tile numbers for the blue/red switch blocks when the switch is on (high byte = 01)
+    LDX.B #$01                                ; Tileset-specific object 34/35/38/3A - Red switch blocks
+  + LDY.B LevelLoadPos                        ; Blue switch blocks join here with X = 0.
     LDA.B LvlLoadObjSize
-    AND.B #$0F
+    AND.B #$0F                                ; $00 = object width
     STA.B _0
     LDA.B LvlLoadObjSize
     LSR A
-    LSR A
+    LSR A                                     ; $01 = object height
     LSR A
     LSR A
     STA.B _1
 CODE_0DB930:
     LDA.B _0
     STA.B _2
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DB937:
     JSR StzTo6ePointer
     LDA.L DATA_0DB91A,X
     STA.B _F
-    LDA.W SwitchBlockFlags+2,X
+    LDA.W SwitchBlockFlags+2,X                ; Generate a tile corresponding to whether the respective switch palace is hit.
     BEQ +
     JSR Sta1To6ePointer
     LDA.L DATA_0DB91C,X
     STA.B _F
   + LDA.B _F
-    JSR CODE_0DA95B
+    JSR CODE_0DA95B                           ; Loop for the rest of the horizontal width of tiles.
     DEC.B _2
     BPL CODE_0DB937
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
-    DEC.B _1
+    DEC.B _1                                  ; Loop for the rest of the vertical height of tiles.
     BPL CODE_0DB930
     RTS
 
@@ -4249,7 +4714,7 @@ DATA_0DB964:
     db $BE,$C0
 
 CODE_0DB966:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; Tileset-specific object 37 - Small tree trunk
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
@@ -4310,10 +4775,10 @@ CODE_0DB9C0:
     LSR A
     STA.B _0
 CODE_0DB9CA:
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B #$B9
     JSR CODE_0DB9F6
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEC.B _0
     BMI Return0DB9F5
@@ -4323,7 +4788,7 @@ CODE_0DB9CA:
     JSR StzTo6ePointer
     LDA.B #$BC
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEC.B _0
     BPL CODE_0DB9CA
@@ -4355,7 +4820,7 @@ CODE_0DBA0A:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
   - JSR Sta1To6ePointer
     LDA.B #$0E
     JSR CODE_0DA95B
@@ -4369,7 +4834,7 @@ CODE_0DBA0A:
     DEX
     BPL -
 CODE_0DBA37:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B _0
     DEC.B _1
@@ -4438,7 +4903,7 @@ CODE_0DBAE0:
     STA.B _1
     LDA.B #$0F
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DBAF2:
     LDA.B _0
     STA.B _2
@@ -4447,7 +4912,7 @@ CODE_0DBAF2:
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B _E
     CLC
     ADC.B #$10
@@ -4478,7 +4943,7 @@ CODE_0DBB2C:
     LSR A
     LSR A
     TAX
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     JSR Sta1To6ePointer
     LDA.B #$61
     JSR CODE_0DA95B
@@ -4494,14 +4959,14 @@ CODE_0DBB2C:
     LDA.B #$64
     STA.B [Map16LowPtr],Y
 CODE_0DBB59:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEX
     BPL -
     RTS
 
 CODE_0DBB63:
-    LDX.B #$0E
+    LDX.B #$0E                                ; Tileset-specific object 31:0 (ice blue turn tiles)
     JMP CODE_0DA8C3
 
     %insert_empty($97,$98,$98,$98,$98)
@@ -4691,7 +5156,16 @@ endif                                         ;/================================
     db $27,$1C,$37,$1C,$27,$5C,$37,$5C
 
 CODE_0DC190:
-    SEP #$30                                  ; AXY->8
+; Unused.
+; Tilemap data for Map16 tiles 073-0FF, in tileset 1 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 107-110, in tileset 1 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 153-16D, in tileset 1 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+    SEP #$30                                  ; AXY->8; Ordered UL, BL, UR, BR.
     LDX.B LvlLoadObjNo
     DEX
     TXA
@@ -4765,8 +5239,70 @@ DATA_0DC257:
     db $07,$08
 
 CODE_0DC259:
-    LDY.B LevelLoadPos
-    LDA.B LvlLoadObjSize
+    LDY.B LevelLoadPos                        ; Standard object pointers (GFX setting 1); aka T:1.
+; 01 - Water tiles 1, dark blue
+; 02 - Invisible coin blocks
+; 03 - Invisible noteblocks
+; 04 - Invisible POW coins
+; 05 - Coins
+; 06 - Walk-through dirt
+; 07 - Water tiles 2, variable color
+; 08 - Noteblocks
+; 09 - Turnblocks
+; 0A - Coin ? blocks
+; 0B - Throw blocks
+; 0C - Munchers
+; 0D - Gray cement blocks
+; 0E - Brown "used" blocks
+; 0F - Vertical pipe
+; 10 - Horizontal pipe
+; 11 - Bullet bill shooter
+; 12 - Slope
+; 13 - Ledge edge / Vine
+; 14 - Ledge
+; 15 - Midway point / Goal point
+; 16 - Purple coins
+; 17 - Rope / Clouds
+; 18 - Amimated water
+; 19 - Normal water
+; 1A - Animated lava/mud
+; 1B - Net (top)
+; 1C - Donut bridge
+; 1D - Net (bottom)
+; 1E - Net (left/right)
+; 1F - Skinny vertical pipe/bone/log
+; 20 - Skinny horizontal pipe/bone/log
+; 21 - Wide-scale ledge
+; 22 - Unused (used internally by LM for direct map16 page 0)
+; 23 - Unused (used internally by LM for direct map16 page 1)
+; 24 - Unused (used internally by LM for the deprecated FG/BG/SP graphics system)
+; 25 - Unused (used internally by LM for the deprecated AN2 graphics system)
+; 26 - Unused (used internally by LM for bypassing music)
+; 27 - Unused (used internally by LM for direct map16 objects on pages 00-3F)
+; 28 - Unused (used internally by LM for bypassing the time limit)
+; 29 - Unused (used internally by LM for direct map16 objects on pages 40-7F)
+; 2A - Unused (reserved for future use by LM)
+; 2B - Unused (reserved for future use by LM)
+; 2C - Unused (reserved for future use by LM)
+; 2D - Unused (reserved for 5-byte user defined objects)
+; 2E - Tileset specific: Unused
+; 2F - Tileset specific: Unused
+; 30 - Tileset specific: Unused
+; 31 - Tileset specific: Unused
+; 32 - Tileset specific: Unused
+; 33 - Tileset specific: Unused
+; 34 - Tileset specific: Double-ended pipe
+; 35 - Tileset specific: Rock wall BG
+; 36 - Tileset specific: Large spike
+; 37 - Tileset specific: Horizontal line guide
+; 38 - Tileset specific: Vertical line guide
+; 39 - Tileset specific: Blue switch blocks
+; 3A - Tileset specific: Red switch blocks
+; 3B - Tileset specific: Ledge
+; 3C - Tileset specific: Stone block wall
+; 3D - Tileset specific: Conveyors
+; 3E - Tileset specific: Horizontal down-facing spikes
+    LDA.B LvlLoadObjSize                      ; 3F - Tileset specific: Vertical down-facing spikes.
     SEC
     SBC.B #$4B
     TAX
@@ -4824,7 +5360,7 @@ DATA_0DC318:
     db $98,$99,$9A,$9B,$9C,$9C
 
 CODE_0DC31E:
-    LDY.B LevelLoadPos
+    LDY.B LevelLoadPos                        ; Extended object 90 - Big boss door
     LDX.B #$00
     LDA.B #$01
     STA.B _0
@@ -4864,7 +5400,7 @@ CODE_0DC358:
     LDA.B LvlLoadObjSize
     AND.B #$03
     TAX
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -4893,7 +5429,7 @@ CODE_0DC397:
     DEC.B _3
     BPL -
 CODE_0DC39B:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     INC.B _2
     DEC.B _0
     BEQ CODE_0DC3CD
@@ -4937,7 +5473,7 @@ CODE_0DC3D8:
     LDA.B LvlLoadObjSize
     AND.B #$03
     TAX
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -4964,7 +5500,7 @@ CODE_0DC40D:
     JSR Sta1To6ePointer
     LDA.L DATA_0DC350,X
     JSR CODE_0DA95B
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     INC.B _2
     LDA.B _2
@@ -5040,7 +5576,7 @@ CODE_0DC478:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B #$00
 CODE_0DC48D:
     LDA.B _0
@@ -5059,7 +5595,7 @@ CODE_0DC4A8:
     JSR Sta1To6ePointer
     LDA.L DATA_0DC475,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B #$01
     DEC.B _1
@@ -5108,7 +5644,7 @@ CODE_0DC4EF:
     LSR A
     LSR A
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     CPX.B #$00
     BEQ CODE_0DC51E
     JSR CODE_0DA95D
@@ -5118,7 +5654,7 @@ CODE_0DC4EF:
     JSR StzTo6ePointer
     LDA.B #$88
     JSR CODE_0DA95B
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
 CODE_0DC51E:
     JSR StzTo6ePointer
@@ -5133,7 +5669,7 @@ CODE_0DC51E:
     JSR StzTo6ePointer
     LDA.B #$8A
     JSR CODE_0DA95B
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEC.B _0
     BMI CODE_0DC572
@@ -5149,7 +5685,7 @@ CODE_0DC51E:
     JSR StzTo6ePointer
     LDA.B #$8C
     JSR CODE_0DA95B
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEC.B _0
     BPL CODE_0DC51E
@@ -5176,7 +5712,7 @@ CODE_0DC58A:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DC59D:
     LDX.B _0
   - JSR StzTo6ePointer
@@ -5187,7 +5723,7 @@ CODE_0DC59D:
     JSR CODE_0DA95B
     DEX
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B _0
   - JSR StzTo6ePointer
@@ -5198,24 +5734,25 @@ CODE_0DC59D:
     JSR CODE_0DA95B
     DEX
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEC.B _1
     BPL CODE_0DC59D
     RTS
 
 CODE_0DC5D8:
-    LDY.B LevelLoadPos
+; Object 34 - Tileset specific: Double-ended pipe
+    LDY.B LevelLoadPos                        ; Load position.
     LDA.B LvlLoadObjSize
     LSR A
-    LSR A
+    LSR A                                     ; $00 = height.
     LSR A
     LSR A
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     JSR Sta1To6ePointer
     LDA.B #$33
-    JSR CODE_0DA95B
+    JSR CODE_0DA95B                           ; Add top row.
     JSR Sta1To6ePointer
     LDA.B #$34
     STA.B [Map16LowPtr],Y
@@ -5223,18 +5760,18 @@ CODE_0DC5D8:
 
   - JSR StzTo6ePointer
     LDA.B #$9D
-    JSR CODE_0DA95B
+    JSR CODE_0DA95B                           ; Add middle row(s).
     JSR StzTo6ePointer
     LDA.B #$9E
     STA.B [Map16LowPtr],Y
 CODE_0DC606:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
-    DEC.B _0
+    DEC.B _0                                  ; Loop to add a middle row if not at the bottom.
     BNE -
     JSR Sta1To6ePointer
     LDA.B #$33
-    JSR CODE_0DA95B
+    JSR CODE_0DA95B                           ; Add bottom row.
     JSR Sta1To6ePointer
     LDA.B #$34
     STA.B [Map16LowPtr],Y
@@ -5423,7 +5960,16 @@ Map16Tileset2:
     db $27,$1C,$37,$1C,$27,$5C,$37,$5C
 
 CODE_0DCD90:
-    SEP #$30                                  ; AXY->8
+; Unused.
+; Tilemap data for Map16 tiles 073-0FF, in tileset 2 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 107-110, in tileset 2 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 107-110, in tileset 2 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+    SEP #$30                                  ; AXY->8; Ordered UL, BL, UR, BR.
     LDX.B LvlLoadObjNo
     DEX
     TXA
@@ -5498,14 +6044,76 @@ DATA_0DCE57:
     db $82,$25,$80,$81,$25,$83,$84,$85
 
 CODE_0DCE67:
-    LDY.B LevelLoadPos
-    LDA.B LvlLoadObjSize
+    LDY.B LevelLoadPos                        ; Standard object pointers (GFX settings 2, 6, 8); aka T:2.
+; 01 - Water tiles 1, dark blue
+; 02 - Invisible coin blocks
+; 03 - Invisible noteblocks
+; 04 - Invisible POW coins
+; 05 - Coins
+; 06 - Walk-through dirt
+; 07 - Water tiles 2, variable color
+; 08 - Noteblocks
+; 09 - Turnblocks
+; 0A - Coin ? blocks
+; 0B - Throw blocks
+; 0C - Munchers
+; 0D - Gray cement blocks
+; 0E - Brown "used" blocks
+; 0F - Vertical pipe
+; 10 - Horizontal pipe
+; 11 - Bullet bill shooter
+; 12 - Slope
+; 13 - Ledge edge / Vine
+; 14 - Ledge
+; 15 - Midway point / Goal point
+; 16 - Purple coins
+; 17 - Rope / Clouds
+; 18 - Amimated water
+; 19 - Normal water
+; 1A - Animated lava/mud
+; 1B - Net (top)
+; 1C - Donut bridge
+; 1D - Net (bottom)
+; 1E - Net (left/right)
+; 1F - Skinny vertical pipe/bone/log
+; 20 - Skinny horizontal pipe/bone/log
+; 21 - Wide-scale ledge
+; 22 - Unused (used internally by LM for direct map16 page 0)
+; 23 - Unused (used internally by LM for direct map16 page 1)
+; 24 - Unused (used internally by LM for the deprecated FG/BG/SP graphics system)
+; 25 - Unused (used internally by LM for the deprecated AN2 graphics system)
+; 26 - Unused (used internally by LM for bypassing music)
+; 27 - Unused (used internally by LM for direct map16 objects on pages 00-3F)
+; 28 - Unused (used internally by LM for bypassing the time limit)
+; 29 - Unused (used internally by LM for direct map16 objects on pages 40-7F)
+; 2A - Unused (reserved for future use by LM)
+; 2B - Unused (reserved for future use by LM)
+; 2C - Unused (reserved for future use by LM)
+; 2D - Unused (reserved for 5-byte user defined objects)
+; 2E - Tileset specific: Unused
+; 2F - Tileset specific: Unused
+; 30 - Tileset specific: Unused
+; 31 - Tileset specific: Unused
+; 32 - Tileset specific: Log bridge
+; 33 - Tileset specific: Blue switch blocks
+; 34 - Tileset specific: Red switch blocks
+; 35 - Tileset specific: Plant on column (radishes)
+; 36 - Tileset specific: Horizontal conveyor
+; 37 - Tileset specific: Diagonal conveyor
+; 38 - Tileset specific: Horizontal line guide
+; 39 - Tileset specific: Vertical line guide / Vertical column
+; 3A - Tileset specific: Slope line guide / ON/OFF line guide
+; 3B - Tileset specific: Very steep line guides
+; 3C - Tileset specific: Mushroom ledge
+; 3D - Tileset specific: Mushroom column
+; 3E - Tileset specific: Horizontal log
+    LDA.B LvlLoadObjSize                      ; 3F - Tileset specific: Vertical log
     SEC
     SBC.B #$4D
     ASL A
     ASL A
     TAX
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
   - JSR StzTo6ePointer
     LDA.L DATA_0DCE57,X
     JSR CODE_0DA95B
@@ -5513,7 +6121,7 @@ CODE_0DCE67:
     TXA
     AND.B #$01
     BNE -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     TXA
     AND.B #$03
@@ -5670,7 +6278,7 @@ CODE_0DCF6E:
     LSR A
     LSR A
     TAX
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DCF7A:
     JSR StzTo6ePointer
     LDA.B #$8C
@@ -5678,7 +6286,7 @@ CODE_0DCF7A:
     JSR StzTo6ePointer
     LDA.B #$8D
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B LevelLoadPos
     CLC
     ADC.B #$0E
@@ -5750,7 +6358,7 @@ ADDR_0DCFF0:
     LSR A
     LSR A
     TAX
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 ADDR_0DCFFC:
     JSR StzTo6ePointer
     LDA.B #$8E
@@ -5758,7 +6366,7 @@ ADDR_0DCFFC:
     JSR StzTo6ePointer
     LDA.B #$8F
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B LevelLoadPos
     CLC
     ADC.B #$10
@@ -5960,7 +6568,7 @@ CODE_0DD145:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DD158:
     LDX.B _0
     JSR StzTo6ePointer
@@ -5976,7 +6584,7 @@ CODE_0DD167:
     JSR StzTo6ePointer
     LDA.B #$75
     JSR CODE_0DA95B
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDX.B _0
     JSR CODE_0DA97D
     DEC.B _1
@@ -6048,7 +6656,7 @@ CODE_0DD1D9:
     LSR A
     LSR A
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     JSR StzTo6ePointer
     LDA.L DATA_0DD1CB,X
     JSR CODE_0DA95B
@@ -6059,7 +6667,7 @@ CODE_0DD1D9:
     BPL +
     JMP Return0DD24B
 
-  + JSR CODE_0DA6BA
+  + JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     JSR Sta1To6ePointer
     LDA.B #$5F
@@ -6069,7 +6677,7 @@ CODE_0DD1D9:
     STA.B [Map16LowPtr],Y
     DEC.B _0
     BMI Return0DD24B
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B #$00
 CODE_0DD226:
@@ -6081,7 +6689,7 @@ CODE_0DD226:
     LDA.L DATA_0DD1D3,X
     STA.B [Map16LowPtr],Y
     INX
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     CPX.B #$06
     BNE +
@@ -6101,7 +6709,7 @@ CODE_0DD24E:
     AND.B #$0F
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B #$00
 CODE_0DD25D:
     JSR StzTo6ePointer
@@ -6112,7 +6720,7 @@ CODE_0DD25D:
     JSR CODE_0DA95B
     DEC.B _1
     BPL CODE_0DD25D
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDA.B _0
     STA.B _1
@@ -6305,7 +6913,16 @@ Map16Tileset3:
     db $37,$1C,$27,$5C,$37,$5C
 
 CODE_0DD990:
-    SEP #$30                                  ; AXY->8
+; Unused.
+; Tilemap data for Map16 tiles 073-0FF, in tileset 3 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 107-110, in tileset 3 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 153-16D, in tileset 3 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+    SEP #$30                                  ; AXY->8; Ordered UL, BL, UR, BR.
     LDX.B LvlLoadObjNo
     DEX
     TXA
@@ -6376,7 +6993,70 @@ CODE_0DD990:
     dl CODE_0DDD5C
 
 CODE_0DDA57:
-    LDY.B LevelLoadPos
+; Standard object pointers (GFX settings 3, 9, A, B, E); aka T:3.
+; 01 - Water tiles 1, dark blue
+; 02 - Invisible coin blocks
+; 03 - Invisible noteblocks
+; 04 - Invisible POW coins
+; 05 - Coins
+; 06 - Walk-through dirt
+; 07 - Water tiles 2, variable color
+; 08 - Noteblocks
+; 09 - Turnblocks
+; 0A - Coin ? blocks
+; 0B - Throw blocks
+; 0C - Munchers
+; 0D - Gray cement blocks
+; 0E - Brown "used" blocks
+; 0F - Vertical pipe
+; 10 - Horizontal pipe
+; 11 - Bullet bill shooter
+; 12 - Slope
+; 13 - Ledge edge / Vine
+; 14 - Ledge
+; 15 - Midway point / Goal point
+; 16 - Purple coins
+; 17 - Rope / Clouds
+; 18 - Amimated water
+; 19 - Normal water
+; 1A - Animated lava/mud
+; 1B - Net (top)
+; 1C - Donut bridge
+; 1D - Net (bottom)
+; 1E - Net (left/right)
+; 1F - Skinny vertical pipe/bone/log
+; 20 - Skinny horizontal pipe/bone/log
+; 21 - Wide-scale ledge
+; 22 - Unused (used internally by LM for direct map16 page 0)
+; 23 - Unused (used internally by LM for direct map16 page 1)
+; 24 - Unused (used internally by LM for the deprecated FG/BG/SP graphics system)
+; 25 - Unused (used internally by LM for the deprecated AN2 graphics system)
+; 26 - Unused (used internally by LM for bypassing music)
+; 27 - Unused (used internally by LM for direct map16 objects on pages 00-3F)
+; 28 - Unused (used internally by LM for bypassing the time limit)
+; 29 - Unused (used internally by LM for direct map16 objects on pages 40-7F)
+; 2A - Unused (reserved for future use by LM)
+; 2B - Unused (reserved for future use by LM)
+; 2C - Unused (reserved for future use by LM)
+; 2D - Unused (reserved for 5-byte user defined objects)
+; 2E - Tileset specific: Unused
+; 2F - Tileset specific: Unused
+; 30 - Tileset specific: Unused
+; 31 - Tileset specific: Unused
+; 32 - Tileset specific: Unused
+; 33 - Tileset specific: Unused
+; 34 - Tileset specific: Blue switch blocks
+; 35 - Tileset specific: Red switch blocks
+; 36 - Tileset specific: Four-sided edge ground square
+; 37 - Tileset specific: Bowser's Castle canvasses
+; 38 - Tileset specific: Right-facing mud/lava
+; 39 - Tileset specific: Mud/lava slope
+; 3A - Tileset specific: Mud/lava with top
+; 3B - Tileset specific: Mud/lava tiles
+; 3C - Tileset specific: Very steep slope
+; 3D - Tileset specific: Upside-down ledge
+; 3E - Tileset specific: Upside-down ledge edge
+    LDY.B LevelLoadPos                        ; 3F - Tileset specific: Solid dirt
     JSR Sta1To6ePointer
     LDA.B #$FE
     STA.B [Map16LowPtr],Y
@@ -6426,7 +7106,7 @@ DATA_0DDA9E:
 CODE_0DDAA2:
     LDY.B LevelLoadPos
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
   - JSR Sta1To6ePointer
     LDA.L DATA_0DDA9E,X
     JSR CODE_0DA95B
@@ -6434,7 +7114,7 @@ CODE_0DDAA2:
     TXA
     AND.B #$01
     BNE -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     CPX.B #$04
     BNE -
@@ -6486,7 +7166,7 @@ CODE_0DDB06:
     LDA.B #$01
     STA.B _2
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -6522,7 +7202,7 @@ CODE_0DDB4D:
     DEX
     BPL -
 CODE_0DDB50:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     INC.B _2
     INC.B _2
     DEC.B _0
@@ -6566,7 +7246,7 @@ CODE_0DDB8F:
     LDA.B #$00
     STA.B _2
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -6594,7 +7274,7 @@ CODE_0DDBC4:
     DEX
     BPL -
 CODE_0DDBC7:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     INC.B _2
     DEC.B _0
     BEQ CODE_0DDBF9
@@ -6635,7 +7315,7 @@ ADDR_0DDC02:
     LDX.B #$01
     STX.B _2
     STX.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -6669,7 +7349,7 @@ ADDR_0DDC3D:
     JSR Sta1To6ePointer
     LDA.B #$D5
     JSR CODE_0DA95B
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     INC.B _2
     INC.B _2
@@ -6686,7 +7366,7 @@ CODE_0DDC61:
     LDX.B #$00
     STX.B _2
     STX.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -6712,7 +7392,7 @@ CODE_0DDC8E:
     JSR Sta1To6ePointer
     LDA.B #$D7
     JSR CODE_0DA95B
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     INC.B _2
     LDX.B _2
@@ -6732,7 +7412,7 @@ CODE_0DDCA9:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     TXA
     LDX.B _0
     SEC
@@ -6752,7 +7432,7 @@ CODE_0DDCD2:
     DEX
     BPL CODE_0DDCD2
 CODE_0DDCDD:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B _0
     DEC.B _1
@@ -6770,7 +7450,7 @@ CODE_0DDCEA:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B _0
     BEQ CODE_0DDD18
 CODE_0DDD01:
@@ -6780,7 +7460,7 @@ CODE_0DDD01:
     JSR CODE_0DA95B
     DEX
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEC.B _0
     BNE CODE_0DDD01
@@ -6836,7 +7516,7 @@ CODE_0DDD5C:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DDD6F:
     LDX.B _1
   - JSR Sta1To6ePointer
@@ -6844,7 +7524,7 @@ CODE_0DDD6F:
     JSR CODE_0DA95B
     DEX
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEC.B _0
     BPL CODE_0DDD6F
@@ -6872,7 +7552,7 @@ CODE_0DDD99:
     ADC.B #$02
     STA.B _1
 CODE_0DDDA7:
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B _1
     JSR Sta1To6ePointer
     LDA.B #$CA
@@ -6930,7 +7610,7 @@ CODE_0DDDF3:
 CODE_0DDE09:
     DEX
     BPL CODE_0DDDF3
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B LevelLoadPos
     CLC
     ADC.B #$1F
@@ -6968,7 +7648,7 @@ CODE_0DDE3C:
     ADC.B #$02
     STA.B _1
 CODE_0DDE4A:
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B _1
     JSR Sta1To6ePointer
     LDA.B #$CC
@@ -7026,7 +7706,7 @@ CODE_0DDE96:
 CODE_0DDEAC:
     DEX
     BPL CODE_0DDE96
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B LevelLoadPos
     CLC
     ADC.B #$20
@@ -7108,7 +7788,7 @@ CODE_0DDF3A:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B LvlLoadObjSize
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDY.B #$50
     STY.B LevelLoadPos
     LDA.B #$0F
@@ -7122,7 +7802,7 @@ CODE_0DDF4F:
     JSR CODE_0DA95B
     DEX
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B LevelLoadPos
     CLC
     ADC.B #$40
@@ -7160,7 +7840,7 @@ CODE_0DDF80:
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
   - JSR StzTo6ePointer
     LDA.L DATA_0DDEDC,X
@@ -7185,7 +7865,7 @@ CODE_0DDF80:
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B #$02
     STA.B _2
     JSR CODE_0DA97D
@@ -7265,7 +7945,7 @@ CODE_0DE0AE:
     TAX
     LDA.L DATA_0DE0AA,X
     TAX
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B #$02
     STA.B _1
     LDA.B #$03
@@ -7276,7 +7956,7 @@ CODE_0DE0AE:
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
 CODE_0DE0DB:
     LDA.B #$02
@@ -7287,7 +7967,7 @@ CODE_0DE0DB:
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     DEC.B _1
     BPL CODE_0DE0DB
@@ -7302,7 +7982,7 @@ CODE_0DE0DB:
     JSR Sta1To6ePointer
     LDA.B #$5F
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B #$02
     STA.B _2
     JSR CODE_0DA97D
@@ -7335,7 +8015,7 @@ CODE_0DE135:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B #$00
 CODE_0DE14A:
     LDA.B _0
@@ -7354,7 +8034,7 @@ CODE_0DE165:
     JSR Sta1To6ePointer
     LDA.L DATA_0DE132,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B #$01
     DEC.B _1
@@ -7550,7 +8230,25 @@ Map16Tileset4:
     db $B5,$09
 
 CODE_0DE890:
-    SEP #$30                                  ; AXY->8
+; Unused, currently.
+; $0DE190   | Used by LM to access the secondary exit tables, for the exit expansion.
+; ($05F800)
+; ($05FA00)
+; ($05FC00)
+; $0DE1B0   | Used by LM for extended object 02 (5-byte screen exit).
+; Used by LM for extended object 01 (screen jump).
+; Used by LM for extended object 03 (vertical screen jump).
+; Subroutine added by Lunar Magic for clearing $8A/$8B.
+; Unused...?
+; Tilemap data for Map16 tiles 073-0FF, in tileset 4 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 107-110, in tileset 4 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+; Ordered UL, BL, UR, BR.
+; Tilemap data for Map16 tiles 153-16D, in tileset 4 only.
+; 8 bytes per 16x16, with 2 bytes per 8x8 (TTTTTTTT YXPCCCTT format).
+    SEP #$30                                  ; AXY->8; Ordered UL, BL, UR, BR.
     LDX.B LvlLoadObjNo
     DEX
     TXA
@@ -7624,8 +8322,71 @@ DATA_0DE957:
     db $73,$74,$75,$76,$93,$94,$95,$96
 
 CODE_0DE95F:
-    LDY.B LevelLoadPos
-    LDA.B LvlLoadObjSize
+    LDY.B LevelLoadPos                        ; Standard object pointers (GFX settings 4, 5, D); aka T:4.
+; 01 - Water tiles 1, dark blue
+; 02 - Invisible coin blocks
+; 03 - Invisible noteblocks
+; 03 - Invisible noteblocks
+; 04 - Invisible POW coins
+; 05 - Coins
+; 06 - Walk-through dirt
+; 07 - Water tiles 2, variable color
+; 08 - Noteblocks
+; 09 - Turnblocks
+; 0A - Coin ? blocks
+; 0B - Throw blocks
+; 0C - Munchers
+; 0D - Gray cement blocks
+; 0E - Brown "used" blocks
+; 0F - Vertical pipe
+; 10 - Horizontal pipe
+; 11 - Bullet bill shooter
+; 12 - Slope
+; 13 - Ledge edge / Vine
+; 14 - Ledge
+; 15 - Midway point / Goal point
+; 16 - Purple coins
+; 17 - Rope / Clouds
+; 18 - Amimated water
+; 19 - Normal water
+; 1A - Animated lava/mud
+; 1B - Net (top)
+; 1C - Donut bridge
+; 1D - Net (bottom)
+; 1E - Net (left/right)
+; 1F - Skinny vertical pipe/bone/log
+; 20 - Skinny horizontal pipe/bone/log
+; 21 - Wide-scale ledge
+; 22 - Unused (used internally by LM for direct map16 page 0)
+; 23 - Unused (used internally by LM for direct map16 page 1)
+; 24 - Unused (used internally by LM for the deprecated FG/BG/SP graphics system)
+; 25 - Unused (used internally by LM for the deprecated AN2 graphics system)
+; 26 - Unused (used internally by LM for bypassing music)
+; 27 - Unused (used internally by LM for direct map16 objects on pages 00-3F)
+; 28 - Unused (used internally by LM for bypassing the time limit)
+; 29 - Unused (used internally by LM for direct map16 objects on pages 40-7F)
+; 2A - Unused (reserved for future use by LM)
+; 2B - Unused (reserved for future use by LM)
+; 2C - Unused (reserved for future use by LM)
+; 2D - Unused (reserved for 5-byte user defined objects)
+; 2E - Tileset specific: Thin horizontal upward spikes
+; 2F - Tileset specific: Log background
+; 30 - Tileset specific: Grass ledge 1
+; 31 - Tileset specific: Wooden crate
+; 32 - Tileset specific: Grass ledge 2
+; 33 - Tileset specific: Ghost house cloud
+; 34 - Tileset specific: Wood ledge on column
+; 35 - Tileset specific: Gray bricks background
+; 36 - Tileset specific: Wooden blocks
+; 37 - Tileset specific: Horizontal log background, hand rail
+; 38 - Tileset specific: Wood ledge without column
+; 39 - Tileset specific: Vertical log background
+; 3A - Tileset specific: Solid brick edges, thin vertical spikes
+; 3B - Tileset specific: Wood ledge (switch palace)
+; 3C - Tileset specific: Upside down ledge (switch palace)
+; 3D - Tileset specific: Ledge (switch palace)
+; 3E - Tileset specific: Right facing edge (switch palace)
+    LDA.B LvlLoadObjSize                      ; 3F - Tileset specific: Left facing edge (switch palace)
     SEC
     SBC.B #$57
     TAX
@@ -7674,14 +8435,14 @@ CODE_0DE9AA:
     LDA.B #$02
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
   - JSR StzTo6ePointer
     LDA.L DATA_0DE98F,X
     JSR CODE_0DA95B
     INX
     DEC.B _0
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDA.B #$02
     STA.B _0
@@ -7706,14 +8467,14 @@ CODE_0DE9F5:
     LDA.B #$01
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
   - JSR StzTo6ePointer
     LDA.L DATA_0DE9E1,X
     JSR CODE_0DA95B
     INX
     DEC.B _0
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDA.B #$01
     STA.B _0
@@ -7741,14 +8502,14 @@ ADDR_0DEA3E:
     LDA.B #$03
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
   - JSR StzTo6ePointer
     LDA.L DATA_0DEA1E,X
     JSR CODE_0DA95B
     INX
     DEC.B _0
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDA.B #$03
     STA.B _0
@@ -7899,10 +8660,15 @@ DATA_0DEC7E:
     db $F4,$F5,$F6,$F7,$F8,$F9,$FA,$FB
 
 CODE_0DEC8E:
-    LDY.B LevelLoadPos
+; Switch palace switch tiles.
+; Green
+; Yellow
+; Blue
+; Red
+    LDY.B LevelLoadPos                        ; Extended objects 8A-8D: Switch palace switches
     LDA.B LvlLoadObjSize
     SEC
-    SBC.B #$8A
+    SBC.B #$8A                                ; Return without creating the object if the switch has already been pressed.
     TAX
     %WorL_X(LDA,SwitchBlockFlags)
     BNE Return0DECC0
@@ -7929,7 +8695,7 @@ Return0DECC0:
     RTS
 
 CODE_0DECC1:
-    LDX.B #$08
+    LDX.B #$08                                ; Extended object 8F: Ghost House window
     JMP CODE_0DE9F5
 
 
@@ -7937,7 +8703,7 @@ DATA_0DECC6:
     db $92,$5E,$82
 
 CODE_0DECC9:
-    TXA
+    TXA                                       ; Tileset-specific objects 35/36: Wooden blocks, gray bricks background
     SEC
     SBC.B #$34
     TAX
@@ -7953,7 +8719,7 @@ CODE_0DECCE:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DECE3:
     JSR StzTo6ePointer
     CPX.B #$01
@@ -7964,7 +8730,7 @@ CODE_0DECE3:
     DEC.B _2
     LDA.B _2
     BPL CODE_0DECE3
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDA.B _0
     STA.B _2
@@ -8114,7 +8880,7 @@ CODE_0DEDDB:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B _0
     LDA.B _1
     BEQ CODE_0DEE0B
@@ -8123,7 +8889,7 @@ CODE_0DEDDB:
     JSR CODE_0DA95B
     DEX
     BPL -
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B _0
     DEC.B _1
@@ -8147,7 +8913,7 @@ CODE_0DEE17:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B _0
   - JSR Sta1To6ePointer
     LDA.B #$5D
@@ -8162,7 +8928,7 @@ CODE_0DEE17:
     DEX
     BPL -
 CODE_0DEE45:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B _0
     DEC.B _1
@@ -8180,7 +8946,7 @@ CODE_0DEE52:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DEE65:
     LDX.B _0
     BEQ CODE_0DEE74
@@ -8193,7 +8959,7 @@ CODE_0DEE74:
     JSR Sta1To6ePointer
     LDA.B #$55
     JSR CODE_0DA95B
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B _0
     DEC.B _1
@@ -8211,7 +8977,7 @@ CODE_0DEE89:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
 CODE_0DEE9C:
     JSR Sta1To6ePointer
     LDA.B #$5C
@@ -8224,7 +8990,7 @@ CODE_0DEE9C:
     DEX
     BPL -
 CODE_0DEEB3:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
     JSR CODE_0DA97D
     LDX.B _0
     DEC.B _1
@@ -8247,9 +9013,9 @@ CODE_0DEEC0:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     JSR CODE_0DED4A
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B LevelLoadPos
     CLC
     ADC.B #$01
@@ -8268,7 +9034,7 @@ CODE_0DEEC0:
     BCC CODE_0DEEFD
     JSR CODE_0DA987
 CODE_0DEEFD:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDX.B _1
     JSR StzTo6ePointer
     LDA.B #$78
@@ -8291,7 +9057,7 @@ CODE_0DEF0F:
     STA.B Map16HighPtr+1
   + DEX
     BNE CODE_0DEF0A
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B LevelLoadPos
     CLC
     ADC.B #$04
@@ -8343,7 +9109,7 @@ CODE_0DEF67:
     LSR A
     STA.B _1
     LDX.B _0
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
   - JSR Sta1To6ePointer
     LDA.B #$0E
     JSR CODE_0DA95B
@@ -8352,7 +9118,7 @@ CODE_0DEF67:
 CODE_0DEF87:
     DEC.B _1
     BMI Return0DEFA1
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     JSR CODE_0DA97D
     LDX.B _0
   - JSR StzTo6ePointer
@@ -8386,7 +9152,7 @@ CODE_0DEFA8:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDA.B _0
     STA.B _2
     JSR Sta1To6ePointer
@@ -8416,7 +9182,7 @@ CODE_0DEFDE:
     LDA.L DATA_0DEFA6,X
     STA.B [Map16LowPtr],Y
 CODE_0DEFFE:
-    JSR CODE_0DA6BA
+    JSR CODE_0DA6BA                           ; Update Map16 pointer.
     LDA.B _0
     STA.B _2
     TXA
@@ -8449,7 +9215,7 @@ CODE_0DF02B:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR CODE_0DA6B1                           ; Get Map16 data pointer in $04/$05.
     LDX.B _0
   - JSR Sta1To6ePointer
     LDA.B #$0F
@@ -8466,8 +9232,102 @@ CODE_0DF04E:
     DEX
     BPL -
 CODE_0DF05B:
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR CODE_0DA6BA                           ; Update Map16 pointer and move one row down.
+; Used by Lunar Magic for new object routines.
+; $0DF300   | Enemy credits names stripe data: Scene 1 (grassland - forest)
+; FISHIN'LAKITU
+; PARA-BOMB
+; PARA-GOOMBA
+; LAKITU
+; SPINY
+; WIGGLER
+; BOB-OMB
+; $0DF42D   | Enemy credits names stripe data: Scene 2 (grassland - clouds)
+; AMAZING FLYIN'
+; HAMMER BROTHER
+; SUPER KOOPA
+; CHARGIN'
+; CHUCK
+; JUMPING
+; PIRHANA PLANT
+; VOLCANO
+; LOTUS
+; Enemy credits names stripe data: Scene 3 (grassland - mountains)
+; SUMO BROTHER
+; MONTY MOLE
+; POKEY
+; BULLET BILL
+; Enemy credits names stripe data: Scene 4 (grassland - dark)
+; REX
+; MEGA MOLE
+; BANZAI BILL
+; Enemy credits names stripe data: Scene 5 (grassland - hills)
+; DINO-RHINO
+; DINO-TORCH
+; KOOPAS
+; Enemy credits names stripe data: Scene 6 (underground)
+; SPIKE TOP
+; SWOOPERS
+; BUZZY BEETLE
+; BLARGG
+; Enemy credits names stripe data: Scene 7 (water)
+; BLURPS
+; URCHIN
+; PORCU-PUFFER
+; TORPEDO TED
+; RIP VAN FISH
+; Enemy credits names stripe data: Scene 8 (ghost house)
+; "BOO" BUDDIES
+; FISHIN'BOO
+; THE BIG "BOO"
+; EERIES
+; Enemy credits names stripe data: Scene 9 (castle)
+; LIL SPARKY
+; BONY BEETLE
+; DRY BONES
+; THWOMP
+; THWIMP
+; HOTHEAD
+; Enemy credits names stripe data: Scene 10 (castle - water)
+; GRINDER
+; BALL'N'CHAIN
+; FISHBONE
+; Enemy credits names stripe data: Scene 11 (Reznor)
+; REZNOR
+; Enemy credits names stripe data: Scene 12 (mechakoopas)
+; MECHAKOOPAS
+; Enemy credits names stripe data: Scene 13 (Koopa Kids)
+; MORTON
+; KOOPA JR.
+; ROY
+; KOOPA
+; BOWSER
+; LEMMY
+; KOOPA
+; WENDY
+; O.KOOPA
+; IGGY
+; KOOPA
+; LARRY
+; KOOPA
+; LUDWIG
+; VON KOOPA
+; Enemy credits names stripe data: Scene 1, special world passed
+; Enemy credits names stripe data: Scene 2, special world passed
+; PUMPKIN
+; Enemy credits names stripe data: Scene 3, special world passed
+; PIDGIT
+; Enemy credits names stripe data: Scene 4, special world passed
+; Enemy credits names stripe data: Scene 5, special world passed
+; MASK KOOPAS
+; Enemy credits names stripe data: Scene 6, special world passed
+; Enemy credits names stripe data: Scene 7, special world passed
+; Enemy credits names stripe data: Scene 8, special world passed
+; Enemy credits names stripe data: Scene 9, special world passed
+; Enemy credits names stripe data: Scene 10, special world passed
+; Enemy credits names stripe data: Scene 11, special world passed
+; Enemy credits names stripe data: Scene 12, special world passed
+    JSR CODE_0DA97D                           ; Enemy credits names stripe data: Scene 13, special world passed
     DEC.B _1
     BPL CODE_0DF04E
     RTS

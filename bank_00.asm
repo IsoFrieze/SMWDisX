@@ -4182,16 +4182,16 @@ CODE_009FFA:
     BRA CODE_00A017
 
 CODE_00A007:
-    LDX.B #7
-  - LDA.W BigCrusherColors,X
+    LDX.B #7                                  ; Handle crusher.
+  - LDA.W BigCrusherColors,X                  ; Upload the Layer 3 crusher palette.
     STA.W MainPalette+$18,X
     DEX
     BPL -
 CODE_00A012:
-    INC.W Layer3ScrollType
+    INC.W Layer3ScrollType                    ; Level does not have Layer 3.
     LDA.B #$D0
 CODE_00A017:
-    STA.B Layer3YPos
+    STA.B Layer3YPos                          ; Set initial Y position of Layer 3.
     STZ.B Layer3YPos+1
 CODE_00A01B:
     LDA.B #%00000100
@@ -4217,24 +4217,24 @@ CODE_00A01F:
   + RTS
 
 CODE_00A045:
-    REP #$30                                  ; AXY->16
+    REP #$30                                  ; AXY->16; Interaction routine for the tides.
     LDX.W #$0100
 CODE_00A04A:
     LDY.W #$0058
-    LDA.W #$0000
+    LDA.W #$0000                              ; Tile that the tides act like (water).
   - STA.L OWLayer1VramBuffer-$100,X
     INX
-    INX
+    INX                                       ; Fill row with water.
     DEY
     BNE -
     TXA
     CLC
-    ADC.W #$0100
+    ADC.W #$0100                              ; Repeat for all applicable rows.
     TAX
     CPX.W #$1B00
     BCC CODE_00A04A
     SEP #$30                                  ; AXY->8
-    LDA.B #!ScrMode_EnableL2Int
+    LDA.B #!ScrMode_EnableL2Int               ; Enable collision with layer 3.
     TSB.B ScreenMode
     RTS
 
@@ -4248,57 +4248,61 @@ DATA_00A079:
     dw $FFD8,$0080,$0128
 
 GM0CLoadOverworld:
-    JSR TurnOffIO
+; 16-bit X-coordinates for each of the submaps. The main map is handled elsewhere.
+; 16-bit Y-coordinates for each of the submaps. The main map is handled elsewhere.
+    JSR TurnOffIO                             ; Game Mode 0C - Load Overworld
     LDA.W EnteringStarWarp
-    BEQ +
+    BEQ +                                     ; If warping via a pipe/star, store the destination positions to Mario's position.
     JSL CODE_04853B
-  + JSR Clear_1A_13D3
-    LDA.W OverworldOverride
+  + JSR Clear_1A_13D3                         ; Clean out a large chunk of RAM.
+    LDA.W OverworldOverride                   ; Branch if overworld loading isn't being overridden by a level (for e.g. intro).
     BEQ +
-    LDA.B #con($B0,$B0,$B0,$90,$90)
+    LDA.B #con($B0,$B0,$B0,$90,$90)           ; How many frames (divided by 4) to wait before the intro message can be skipped.
     STA.W VariousPromptTimer
     STZ.W OWPlayerSubmap
-    LDA.B #$F0
+    LDA.B #$F0                                ; Set the mosaic size.
     STA.W MosaicSize
-    LDA.B #$10
+    LDA.B #$10                                ; Switch to game mode 10 - Fade to Level (black)
     STA.W GameMode
-    JMP Mode04Finish
+    JMP Mode04Finish                          ; Re-enable NMI and auto-joypad read.
 
-  + JSR ClearOutLayer3
-    JSR UploadMusicBank1
-    JSR SetUpScreen
-    STZ.W MusicBackup
+; Loading the overworld.
+  + JSR ClearOutLayer3                        ; Clean out Layer 3.
+    JSR UploadMusicBank1                      ; Upload the overworld music bank.
+    JSR SetUpScreen                           ; Set up various registers (screen mode, CGADDSUB, windows...).
+    STZ.W MusicBackup                         ; Clear the music register backup.
     LDX.W PlayerTurnLvl
     LDA.W PlayerLives
 if ver_is_console(!_VER)                      ;\================ J, U, E0, & E1 ===============
-    BPL +                                     ;!
+    BPL +                                     ;!; Preserve the current player's lives. If 0, prepare the swap lives window.
     INC.W OverworldPromptProcess              ;!
 endif                                         ;/===============================================
   + STA.W SavedPlayerLives,X
-    LDA.B Powerup
+    LDA.B Powerup                             ; Preserve the current player's powerup.
     STA.W SavedPlayerPowerup,X
-    LDA.W PlayerCoins
+    LDA.W PlayerCoins                         ; Preserve the current player's coin count.
     STA.W SavedPlayerCoins,X
     LDA.W CarryYoshiThruLvls
     BEQ +
-    LDA.W YoshiColor
+    LDA.W YoshiColor                          ; Preserve the current player's Yoshi.
   + STA.W SavedPlayerYoshi,X
-    LDA.W PlayerItembox
+    LDA.W PlayerItembox                       ; Preserve the current player's item box item.
     STA.W SavedPlayerItembox,X
-    LDA.B #$03
+    LDA.B #$03                                ; Set color math settings (add subscreen, direct color mode)
     STA.B ColorAddition
-    LDA.B #$30
-    LDX.B #$15
-    LDY.W ShowContinueEnd
+    LDA.B #$30                                ; Overworld CGADSUB setting.
+    LDX.B #$15                                ; Overworld main screen designation.
+    LDY.W ShowContinueEnd                     ; Branch if not set to show the continue/end screen.
     BEQ CODE_00A11B
 if ver_is_console(!_VER)                      ;\================= J, U, E0, & E1 ==============
-    JSR CopyFromSaveBuffer                    ;!
-    LDA.W ExitsCompleted                      ;!
+    JSR CopyFromSaveBuffer                    ;!; Transfer the SRAM buffer to RAM.
+    LDA.W ExitsCompleted                      ;!; Branch if there is at least one event beaten.
     BNE +                                     ;!
     JSR FadeOutBackToTitle                    ;!
     JMP CODE_0093F4                           ;!
                                               ;!
-  + JSL DecompressOverworldL2                 ;!
+; Game over screen is being shown.
+  + JSL DecompressOverworldL2                 ;!; Decompress the overworld Layer 2 data and upload to RAM.
     REP #$20                                  ;! A->16
     LDA.W #$318C                              ;!
     STA.W BackgroundColor                     ;!
@@ -4314,39 +4318,39 @@ else                                          ;<======================== SS ====
     JMP CODE_0093F4                           ;!
 endif                                         ;/===============================================
 CODE_00A11B:
-    LDY.B #$02
+    LDY.B #$02                                ; Overworld subscreen designation.
     JSR ScreenSettings
-    STX.W HW_TMW
+    STX.W HW_TMW                              ; Set up CGADSUB, main/sub screen designation, and windowing.
     STY.W HW_TSW
-    JSL CODE_04DC09
+    JSL CODE_04DC09                           ; Upload the overworld Layer 1 tilemap.
     LDX.W PlayerTurnLvl
     LDA.W OWPlayerSubmap,X
     ASL A
     TAX
     REP #$20                                  ; A->16
-    LDA.W DATA_00A06B,X
+    LDA.W DATA_00A06B,X                       ; Move the camera the the appropriate spot for the submap.
     STA.B Layer1XPos
     STA.B Layer2XPos
     LDA.W DATA_00A079,X
     STA.B Layer1YPos
     STA.B Layer2YPos
     SEP #$20                                  ; A->8
-    JSR UploadSpriteGFX
-    LDY.B #$14
+    JSR UploadSpriteGFX                       ; Upload GFX files.
+    LDY.B #$14                                ; Decompress GFX14 to RAM.
     JSL PrepareGraphicsFile
-    JSR CODE_00AD25
+    JSR CODE_00AD25                           ; Upload overworld palettes to CGRAM.
     JSR CODE_00922F
     LDA.B #$06                                ; \ Load overworld border
     STA.B StripeImage                         ; |
-    JSR LoadScrnImage                         ; /
+    JSR LoadScrnImage                         ; /; Upload the overworld border and life counter.
     JSL CODE_05DBF2
     JSR LoadScrnImage
-    JSL CODE_048D91
-    JSL CODE_04D6E9
+    JSL CODE_048D91                           ; Initialize the level name/sprites of the overworld border, animated tiles, music, and player poses.
+    JSL CODE_04D6E9                           ; Upload Layer 1 to VRAM.
     LDA.B #$F0
     STA.B OAMAddress
-    JSR ConsolidateOAM
-    JSR LoadScrnImage
+    JSR ConsolidateOAM                        ; Prep OAM for upload.
+    JSR LoadScrnImage                         ; Upload tilemap data from $12.
     STZ.W OverworldProcess
     JSR KeepGameModeActive
     LDA.B #!IRQNMI_Overworld
@@ -4363,35 +4367,36 @@ CODE_00A11B:
     JMP CODE_0093F4
 
 CopyFromSaveBuffer:
-    REP #$10                                  ; XY->16
-    LDX.W #$008C
+    REP #$10                                  ; XY->16; Subroutine to transfer the SRAM buffer to RAM.
+    LDX.W #$008C                              ; Transfer to $1EA2-$1F2E.
   - LDA.W SaveDataBuffer,X
-    STA.W OWLevelTileSettings,X
+    STA.W OWLevelTileSettings,X               ; Perform the transfer.
     DEX
     BPL -
     SEP #$10                                  ; XY->8
     RTS
 
 Clear_1A_13D3:
-    REP #$10                                  ; XY->16
+    REP #$10                                  ; XY->16; Clear RAM addresses $1A-$D7 and $13D3-$1BA1 (on overworld / cutscene load).
     SEP #$20                                  ; A->8
     LDX.W #$00BD                              ; \
-  - STZ.B Layer1XPos,X                        ; |Clear RAM addresses $1A-$D7
+  - STZ.B Layer1XPos,X                        ; |Clear RAM addresses $1A-$D7; Clear out $1A-$D7.
     DEX                                       ; |
     BPL -                                     ; /
     LDX.W #$07CE                              ; \
-  - STZ.W PauseTimer,X                        ; |Clear RAM addresses $13D3-$1BA1
+  - STZ.W PauseTimer,X                        ; |Clear RAM addresses $13D3-$1BA1; Clear out $13D3-$1BA1.
     DEX                                       ; |
     BPL -                                     ; /
     SEP #$10                                  ; XY->8
     RTS
 
 GM0EOverworld:
-    JSR DetermineJoypadInput
-    INC.B EffFrame                            ; Increase alternate frame counter
-    JSL OAMResetRoutine
-    JSL GameMode_0E_Prim                      ; (Bank 4.asm)
-    JMP ConsolidateOAM
+; Game Mode 0E - Overworld
+    JSR DetermineJoypadInput                  ; Get the current controller port to accept data from.
+    INC.B EffFrame                            ; Increase alternate frame counter; Increment the effective frame counter.
+    JSL OAMResetRoutine                       ; Clear OAM.
+    JSL GameMode_0E_Prim                      ; (Bank 4.asm); Run primary routine.
+    JMP ConsolidateOAM                        ; Prep OAM for upload.
 
 
 GrndShakeDispYLo:
@@ -4403,12 +4408,15 @@ GrndShakeDispYHi:
     db $12,$22,$12,$02
 
 GM14Level:
-    LDA.W MessageBoxTrigger
+; Offsets for the screen shake effect (lo). LM merges with the below into 16-bit values.
+; Offsets for the screen shake effect (hi).
+; Game Mode 14 - Level
+    LDA.W MessageBoxTrigger                   ; Branch if not showing a message box.
     BEQ +
-    JSL CODE_05B10C
+    JSL CODE_05B10C                           ; Handle the message box.
     RTS
 
-  + LDA.W BonusGameActivate
+  + LDA.W BonusGameActivate                   ; Not showing a message box.
     BEQ +
     LDA.W BonusFinishTimer
     BEQ +
@@ -4435,77 +4443,79 @@ GM14Level:
 
 CODE_00A21B:
     LDA.B byetudlrFrame
-    AND.B #$10
+    AND.B #$10                                ; Button to press to pause the game (start)
     BEQ CODE_00A242
     LDA.W EndLevelTimer
     BNE CODE_00A242
     LDA.B PlayerAnimation
     CMP.B #$09
     BCS CODE_00A242
-    LDA.B #$3C
+    LDA.B #$3C                                ; Number of frames to wait before registering the start button again.
     STA.W PauseTimer
     LDY.B #!SFX_UNPAUSE
     LDA.W PauseFlag
-    EOR.B #$01
+    EOR.B #$01                                ; Invert the pause flag.
     STA.W PauseFlag
-    BEQ +
+    BEQ +                                     ; Play the appropriate SFX for pausing/unpausing.
     LDY.B #!SFX_PAUSE
   + STY.W SPCIO0
 CODE_00A242:
-    LDA.W PauseFlag
+    LDA.W PauseFlag                           ; Branch if the game is not paused.
     BEQ CODE_00A28A
-    BRA CODE_00A25B
+    BRA CODE_00A25B                           ; [change to BRA #$00 to enable frame advance/slomo]
 
-    BIT.W byetudlrP2Frame                     ; \ Unreachable
-    BVS ADDR_00A259                           ; | Debug: Slow motion
-    LDA.W byetudlrP2Hold                      ; |
-    BPL CODE_00A25B                           ; |
+    BIT.W byetudlrP2Frame                     ; \ Unreachable; DEBUG: Frame advance / Slow down.
+    BVS ADDR_00A259                           ; | Debug: Slow motion; Using controller 2:
+    LDA.W byetudlrP2Hold                      ; |; Tap Y to advance one frame.
+    BPL CODE_00A25B                           ; |; Hold B to run at 1/16th speed.
     LDA.B TrueFrame                           ; |
-    AND.B #$0F                                ; |
+    AND.B #$0F                                ; |; Speed of slow-motion.
     BNE CODE_00A25B                           ; |
 ADDR_00A259:
     BRA CODE_00A28A                           ; /
 
 CODE_00A25B:
 if ver_is_console(!_VER)                      ;\================== J, U, E0, & E1 =============
-    LDA.B byetudlrHold                        ;!
+    LDA.B byetudlrHold                        ;!; Code to handle exiting the level by Start+Select.
     AND.B #$20                                ;!
-    BEQ Return00A289                          ;!
-    LDY.W TranslevelNo                        ;!
-    LDA.W OWLevelTileSettings,Y               ;!
-    BPL Return00A289                          ;!
+    BEQ Return00A289                          ;!; Return if:
+    LDY.W TranslevelNo                        ;!; Select not pressed
+    LDA.W OWLevelTileSettings,Y               ;!; Level not already beaten
+    BPL Return00A289                          ;!; Level is being beaten (?)
     LDA.W OWLevelExitMode                     ;!
     BEQ CODE_00A270                           ;!
     BPL Return00A289                          ;!
 CODE_00A270:                                  ;!
     LDA.B #$80                                ;!
-    BRA CODE_00A27E                           ;!
+    BRA CODE_00A27E                           ;!; [change to BRA #$00 to activate the normal/secret exit with start+select (+A)]
                                               ;!
-    LDA.B #$01                                ;! \ Unreachable
+    LDA.B #$01                                ;! \ Unreachable; DEBUG: beat level with start+select.
     BIT.B byetudlrHold                        ;! | Debug: Beat level with Start+Select
-    BPL +                                     ;! |
-    INC A                                     ;! /
+    BPL +                                     ;! |; Start + select: Normal exit
+    INC A                                     ;! /; Start + select + A: Secret exit.
   + STA.W MidwayFlag                          ;!
 CODE_00A27E:                                  ;!
-    STA.W OWLevelExitMode                     ;!
-    INC.W CreditsScreenNumber                 ;!
-    LDA.B #$0B                                ;!
+    STA.W OWLevelExitMode                     ;!; Fade to overworld. Value in A determines what exit to take.
+    INC.W CreditsScreenNumber                 ;!; Indicate event should activate on overworld load.
+    LDA.B #$0B                                ;!; Change game mode to 0B (fade to black).
     STA.W GameMode                            ;!
 endif                                         ;/===============================================
 Return00A289:
     RTS
 
 CODE_00A28A:
-    LDA.W IRQNMICommand
+; Game is not paused.
+    LDA.W IRQNMICommand                       ; Branch if not in a Mode 7 rooms.
     BPL +
     JSR CODE_00987D
     JMP CODE_00A2A9
 
-  + JSL OAMResetRoutine
+; Not a Mode 7 room.
+  + JSL OAMResetRoutine                       ; Clear out OAM.
     JSL UpdateScreenPosition
-    JSL ProcScreenScrollCmds
+    JSL ProcScreenScrollCmds                  ; Handle scrolling the layers.
     JSL CODE_0586F1
-    JSL CODE_05BB39
+    JSL CODE_05BB39                           ; Handle tile animation.
 CODE_00A2A9:
     LDA.B Layer1YPos
     PHA
@@ -4516,8 +4526,8 @@ CODE_00A2A9:
     LDA.W ScreenShakeTimer                    ; \ If shake ground timer is set
     BEQ +                                     ; |
     DEC.W ScreenShakeTimer                    ; | Decrement timer
-    AND.B #$03                                ; |
-    TAY                                       ; |
+    AND.B #$03                                ; |; Handle shaking the screen.
+    TAY                                       ; |; [LM modifies this routine to use 16-bit instead of 8-bit]
     LDA.W GrndShakeDispYLo,Y                  ; |
     STA.W ScreenShakeYOffset                  ; | $1888-$1889 = Amount to shift level
     CLC                                       ; |
@@ -4527,20 +4537,20 @@ CODE_00A2A9:
     STA.W ScreenShakeYOffset+1                ; |
     ADC.B Layer1YPos+1                        ; |
     STA.B Layer1YPos+1                        ; /
-  + JSR UpdateStatusBar
-    JSL DrawMarioAndYoshi
-    JSR AdvancePlayerPosition
-    JSR CODE_00C47E
-    JSL CODE_01808C
-    JSL CODE_028AB1
+  + JSR UpdateStatusBar                       ; Update the status bar.
+    JSL DrawMarioAndYoshi                     ; Draw Mario/Yoshi.
+    JSR AdvancePlayerPosition                 ; Update Mario's position mirrors ($D1/$D3).
+    JSR CODE_00C47E                           ; Handle various gameplay-related routines (Mario-object interaction, level end, P-switches, etc).
+    JSL CODE_01808C                           ; Run standard and cluster sprite routines.
+    JSL CODE_028AB1                           ; Run routines for various other sprite types, as well as handle loading new sprites.
     PLA
     STA.B Layer1YPos+1
     PLA
     STA.B Layer1YPos
-    JMP ConsolidateOAM
+    JMP ConsolidateOAM                        ; Prep OAM for upload.
 
 AdvancePlayerPosition:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Routine to update Mario's position mirrors.
     LDA.B PlayerXPosNext
     STA.B PlayerXPosNow
     LDA.B PlayerYPosNext
@@ -4549,55 +4559,55 @@ AdvancePlayerPosition:
     RTS
 
 MarioGFXDMA:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Routine that handles the graphics DMA for the player/Yoshi/Podoboo tiles, as well as the player's palette.
     LDX.B #$04                                ; We're using DMA channel 2
-    LDY.W PlayerGfxTileCount
+    LDY.W PlayerGfxTileCount                  ; If the Nintendo Presents is currently loaded, skip the DMA to load the palette.
     BEQ +
     LDY.B #$86                                ; \ Set Address for CG-RAM Write to x86
     STY.W HW_CGADD                            ; /
-    LDA.W #$2200
+    LDA.W #$2200                              ; Upload to CGRAM.
     STA.W HW_DMAPARAM+$20
     LDA.W PlayerPalletePtr                    ; \ Get location of palette from $0D82-$0D83
-    STA.W HW_DMAADDR+$20                      ; /
-    LDY.B #$00                                ; \ Palette is stored in bank x00
+    STA.W HW_DMAADDR+$20                      ; /; Store the palette source to the registers.
+    LDY.B #$00                                ; \ Palette is stored in bank x00; $00B2C8 (M), $00B2DC (L), $00B2F0 (FM), $00B304 (FL).
     STY.W HW_DMAADDR+$22                      ; /
-    LDA.W #$0014                              ; \ x14 bytes will be transferred
+    LDA.W #$0014                              ; \ x14 bytes will be transferred; Number of colors (x2) in Mario/Luigi's palettes.
     STA.W HW_DMACNT+$20                       ; /
-    STX.W HW_MDMAEN                           ; Transfer the colors
-  + LDY.B #$80                                ; \ Set VRAM Address Increment Value to x80
+    STX.W HW_MDMAEN                           ; Transfer the colors; Enable DMA on channel 2.
+  + LDY.B #$80                                ; \ Set VRAM Address Increment Value to x80; Address increment mode.
     STY.W HW_VMAINC                           ; /
-    LDA.W #$1801
+    LDA.W #$1801                              ; Set transfer method.
     STA.W HW_DMAPARAM+$20
-    LDA.W #$67F0
+    LDA.W #$67F0                              ; Write to tile x7F in SP1.
     STA.W HW_VMADD
     LDA.W DynGfxTile7FPtr
-    STA.W HW_DMAADDR+$20
+    STA.W HW_DMAADDR+$20                      ; Upload the misc cape tile.
     LDY.B #$7E                                ; \ Set bank to x7E
     STY.W HW_DMAADDR+$22                      ; /
-    LDA.W #$0020                              ; \ x20 bytes will be transferred
+    LDA.W #$0020                              ; \ x20 bytes will be transferred; Write x20 bytes (1 tile)
     STA.W HW_DMACNT+$20                       ; /
-    STX.W HW_MDMAEN                           ; Transfer
-    LDA.W #$6000                              ; \ Set Address for VRAM Read/Write to x6000
+    STX.W HW_MDMAEN                           ; Transfer; Enable DMA on channel 2.
+    LDA.W #$6000                              ; \ Set Address for VRAM Read/Write to x6000; Write the next set of tiles to the first row of SP1.
     STA.W HW_VMADD                            ; /
     LDX.B #$00
-  - LDA.W DynGfxTilePtr,X                     ; \ Get address of graphics to copy
+  - LDA.W DynGfxTilePtr,X                     ; \ Get address of graphics to copy; Upload the top halves of the player/Yoshi/Podoboo tiles.
     STA.W HW_DMAADDR+$20                      ; /
-    LDA.W #$0040                              ; \ x40 bytes will be transferred
+    LDA.W #$0040                              ; \ x40 bytes will be transferred; Upload x40 bytes (2 tiles)
     STA.W HW_DMACNT+$20                       ; /
-    LDY.B #$04                                ; \ Transfer
+    LDY.B #$04                                ; \ Transfer; Enable DMA on channel on channel 2.
     STY.W HW_MDMAEN                           ; /
     INX                                       ; \ Move to next address
     INX                                       ; /
     CPX.W PlayerGfxTileCount                  ; \ Repeat last segment while X<$0D84
     BCC -                                     ; /
-    LDA.W #$6100                              ; \ Set Address for VRAM Read/Write to x6100
+    LDA.W #$6100                              ; \ Set Address for VRAM Read/Write to x6100; Write the next set of tiles to the second row of SP1.
     STA.W HW_VMADD                            ; /
     LDX.B #$00
-  - LDA.W DynGfxTilePtr+$0A,X                 ; \ Get address of graphics to copy
+  - LDA.W DynGfxTilePtr+$0A,X                 ; \ Get address of graphics to copy; Upload the bottom halves of the player/Yoshi/Podoboo tiles.
     STA.W HW_DMAADDR+$20                      ; /
-    LDA.W #$0040                              ; \ x40 bytes will be transferred
+    LDA.W #$0040                              ; \ x40 bytes will be transferred; Upload x40 bytes (2 tiles)
     STA.W HW_DMACNT+$20                       ; /
-    LDY.B #$04                                ; \ Transfer
+    LDY.B #$04                                ; \ Transfer; Enable DMA on channel on channel 2.
     STY.W HW_MDMAEN                           ; /
     INX                                       ; \ Move to next address
     INX                                       ; /
@@ -4607,7 +4617,7 @@ MarioGFXDMA:
     RTS
 
 CODE_00A390:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Routine for DMAing animated tiles?
     LDY.B #$80
     STY.W HW_VMAINC
     LDA.W #$1801
@@ -4677,29 +4687,30 @@ CODE_00A41E:
     RTS
 
 CODE_00A436:
-    LDA.W MarioStartFlag
+; Routine to restore tiles 4A-4F and 5A-5F after the MARIO START! message, using data from $0BF6.
+    LDA.W MarioStartFlag                      ; Return if not restoring the above tiles.
     BEQ +
     STZ.W MarioStartFlag
     REP #$20                                  ; A->16
     LDY.B #$80
     STY.W HW_VMAINC
-    LDA.W #$64A0
+    LDA.W #$64A0                              ; Prepare DMA to VRAM address $64A0 (tiles 4A-4F in SP1).
     STA.W HW_VMADD
     LDA.W #$1801
     STA.W HW_DMAPARAM+$20
     LDA.W #$0BF6
-    STA.W HW_DMAADDR+$20
+    STA.W HW_DMAADDR+$20                      ; Set source address to $0BF6.
     LDY.B #$00
     STY.W HW_DMAADDR+$22
-    LDA.W #$00C0
+    LDA.W #$00C0                              ; Set size to 0xC0 bytes.
     STA.W HW_DMACNT+$20
     LDX.B #$04
     STX.W HW_MDMAEN
-    LDA.W #$65A0
+    LDA.W #$65A0                              ; Prepare DMA to VRAM address $65A0 (tiles 5A-5F in SP1).
     STA.W HW_VMADD
-    LDA.W #$0CB6
+    LDA.W #$0CB6                              ; Set source address to $0CB6.
     STA.W HW_DMAADDR+$20
-    LDA.W #$00C0
+    LDA.W #$00C0                              ; Set size to 0xC0 bytes.
     STA.W HW_DMACNT+$20
     STX.W HW_MDMAEN
     SEP #$20                                  ; A->8
@@ -4712,44 +4723,45 @@ DATA_00A47F:
     dl MainPalette
 
 CODE_00A488:
-    LDY.W PaletteIndexTable
+; Pointers to the different palette mirrors in RAM.
+    LDY.W PaletteIndexTable                   ; Routine to upload the palette to CGRAM.
     LDX.W DATA_00A47F+2,Y
-    STX.B _2
-    STZ.B _1
+    STX.B _2                                  ; Store base pointer... or at least, only the bank byte of it.
+    STZ.B _1                                  ; (the low/high bytes are received from Y)
     STZ.B _0
-    STZ.B _4
+    STZ.B _4                                  ; Clear $04 for no reason?
     LDA.W DATA_00A47F+1,Y
     XBA
-    LDA.W DATA_00A47F,Y
+    LDA.W DATA_00A47F,Y                       ; Load the low and high bytes into Y.
     REP #$10                                  ; XY->16
     TAY
 CODE_00A4A0:
-    LDA.B [_0],Y
-    BEQ CODE_00A4CF
+    LDA.B [_0],Y                              ; Branch if the first color has a low byte of 00.
+    BEQ CODE_00A4CF                           ; Otherwise, use it as the number of colors to force-upload.
     STX.W HW_DMAADDR+$22
     STA.W HW_DMACNT+$20
     STA.B _3
     STZ.W HW_DMACNT+$21
     INY
-    LDA.B [_0],Y
+    LDA.B [_0],Y                              ; Use the high byte of the first color as the starting color to upload to.
     STA.W HW_CGADD
     REP #$20                                  ; A->16
-    LDA.W #$2200
+    LDA.W #$2200                              ; Set data to upload to $2122 (CGRAM).
     STA.W HW_DMAPARAM+$20
     INY
-    TYA
+    TYA                                       ; Set source address.
     STA.W HW_DMAADDR+$20
     CLC
     ADC.B _3
     TAY
     SEP #$20                                  ; A->8
-    LDA.B #$04
+    LDA.B #$04                                ; Enable DMA.
     STA.W HW_MDMAEN
-    BRA CODE_00A4A0
+    BRA CODE_00A4A0                           ; If Y points to another set of colors to upload, repeat this process (else continue below).
 
 CODE_00A4CF:
-    SEP #$10                                  ; XY->8
-    JSR CODE_00AE47
+    SEP #$10                                  ; XY->8; Not forcing a palette upload.
+    JSR CODE_00AE47                           ; Upload back area color.
     LDA.W PaletteIndexTable
     BNE +
     STZ.W DynPaletteIndex
@@ -4758,29 +4770,29 @@ CODE_00A4CF:
   - RTS
 
 CODE_00A4E3:
-    REP #$10                                  ; XY->16
+    REP #$10                                  ; XY->16; DMA to upload animated overworld tiles from $0AF6, as well as the palette when switching overworld submaps.
     LDA.B #$80
     STA.W HW_VMAINC
-    LDY.W #$0750
+    LDY.W #$0750                              ; Prepare DMA to VRAM address $0750 (tile 75 in FG1).
     STY.W HW_VMADD
     LDY.W #$1801
     STY.W HW_DMAPARAM+$20
     LDY.W #GfxDecompOWAni
-    STY.W HW_DMAADDR+$20
+    STY.W HW_DMAADDR+$20                      ; Set source to $0AF6.
     STZ.W HW_DMAADDR+$22
-    LDY.W #$0160
+    LDY.W #$0160                              ; Set size to 0x160 bytes (16 tiles).
     STY.W HW_DMACNT+$20
     LDA.B #$04
     STA.W HW_MDMAEN
     SEP #$10                                  ; XY->8
     LDA.W OverworldProcess
-    CMP.B #$0A
+    CMP.B #$0A                                ; If not switching overworld submaps, also upload animated colors.
     BEQ -
-    LDA.B #$6D
+    LDA.B #$6D                                ; Overworld animated color A (6D).
     JSR CODE_00A41C
     LDA.B #$10
     STA.B _0
-    LDA.B #$7D
+    LDA.B #$7D                                ; Overworld animated color B (7D).
     JMP CODE_00A41E
 
 
@@ -4790,7 +4802,7 @@ DATA_00A525:
     db $00,$08,$10,$18
 
 CODE_00A529:
-    LDA.B #$80
+    LDA.B #$80                                ; Routine when switching overworld submaps to upload Layer 1 and palette data?
     STA.W HW_VMAINC
     STZ.W HW_VMADD
     LDA.B #$30
@@ -4852,44 +4864,46 @@ CODE_00A594:
     RTL
 
 GM12PrepLevel:
-    JSR ClearOutLayer3                        ; gah, stupid keyboard >_<
-    JSR NoButtons
+; Game Mode 12 - Prepare Level (also used in loading title screen, YH in credits)
+    JSR ClearOutLayer3                        ; gah, stupid keyboard >_<; Clean out Layer 3.
+    JSR NoButtons                             ; Disable input.
     STZ.W UploadMarioStart
-    JSR SetUpScreen
-    JSR UploadStaticBar
-    JSL CODE_05809E                           ; ->here
-    LDA.W IRQNMICommand
+    JSR SetUpScreen                           ; Set up various registers (screen mode, CGADDSUB, windows...).
+    JSR UploadStaticBar                       ; Upload the base status bar to VRAM.
+    JSL CODE_05809E                           ; ->here; Upload Map16 data to VRAM.
+    LDA.W IRQNMICommand                       ; Branch if loading a normal (non-Mode 7) level.
     BPL CODE_00A5B9
     JSR CODE_0097BC                           ; Working on this routine
     BRA +
 
 CODE_00A5B9:
-    JSR UploadSpriteGFX
-    JSR LoadPalette
-    JSL CODE_05BE8A
-    JSR CODE_009FB8
-    JSR CODE_00A5F9
-    JSR DisableHDMA
-    JSR CODE_009860
-  + JSR CODE_00922F
-    JSR KeepGameModeActive
-    JSR UpdateStatusBar
+; Not a Mode 7 level.
+    JSR UploadSpriteGFX                       ; Upload GFX files.
+    JSR LoadPalette                           ; Load palette.
+    JSL CODE_05BE8A                           ; Initialize Layer 3 settings.
+    JSR CODE_009FB8                           ; Load Layer 3.
+    JSR CODE_00A5F9                           ; Initialize animated tiles.
+    JSR DisableHDMA                           ; Disable HDMA.
+    JSR CODE_009860                           ; Draw Mario/Yoshi, process his object interaction, run sprite routines, and clear OAM.
+  + JSR CODE_00922F                           ; Upload palettes to CGRAM.
+    JSR KeepGameModeActive                    ; Keep mode active for a frame before any fadeouts.
+    JSR UpdateStatusBar                       ; Update status bar.
     REP #$30                                  ; AXY->16
     PHB
     LDX.W #MainPalette
     LDY.W #CopyPalette
     LDA.W #$01EF
-    MVN $00,$00
+    MVN $00,$00                               ; Move palette data from $00903 to $00701.
     PLB
     LDX.W BackgroundColor
     STX.W CopyBGColor
     SEP #$30                                  ; AXY->8
-    JSR CODE_00919B
-    JSR ConsolidateOAM
-    JMP CODE_0093F4
+    JSR CODE_00919B                           ; Prepare the No-Yoshi entrance (if applicable) and green star block count.
+    JSR ConsolidateOAM                        ; Prep OAM for upload.
+    JMP CODE_0093F4                           ; Increase game mode by 1, reenable interrupts, and return.
 
 CODE_00A5F9:
-    LDA.B #$E7
+    LDA.B #$E7                                ; Subroutine to handle animated 8x8 tiles.
     TRB.B EffFrame
   - JSL CODE_05BB39
     JSR CODE_00A390
@@ -4911,7 +4925,13 @@ DATA_00A625:
     db $40,$00,$00,$00,$00,$02,$00,$00
 
 CODE_00A635:
-    LDA.W BluePSwitchTimer                    ; If blue pow...
+; Directions of Mario when exiting from pipes. Indexed by $89 from $00A609.
+; Amount of time to add to each pipe transition when riding Yoshi. Indexed by $89.
+; Data on each of the tileset settings.
+; Format: yy-- --cd
+; yy = Which No-Yoshi sprite data to load. 00 = ghost house; 01 = rope; 10 = castle
+; Setting c or d will make yellow/green ! blocks normal solid tiles.
+    LDA.W BluePSwitchTimer                    ; If blue pow...; Routine on level load to initialize RAM and prepare Mario's entrance action.
     ORA.W SilverPSwitchTimer                  ; ...or silver pow...
     ORA.W DirectCoinTimer
     BNE CODE_00A64A
@@ -4937,11 +4957,11 @@ CODE_00A660:
     BEQ +
     STA.W DidPlayBonusGame
   + LDX.B #$23
-  - STZ.B Map16HighPtr+2,X
+  - STZ.B Map16HighPtr+2,X                    ; Clear RAM addresses $71-$93 (on level load).
     DEX
     BNE -
     LDX.B #$37
-  - STZ.W OverworldProcess,X
+  - STZ.W OverworldProcess,X                  ; Clear RAM addresses $13DA-$1410 (on level load).
     DEX
     BNE -
     ASL.W UnusedStarCounter
@@ -4985,13 +5005,13 @@ CODE_00A6CC:
     BEQ +
     INC.W VerticalScrollEnabled
   + LDA.W LevelEntranceType
-    BEQ CODE_00A6E0
+    BEQ CODE_00A6E0                           ; Branch if not actions 0/5.
     CMP.B #$05
-    BNE CODE_00A716
+    BNE CODE_00A716                           ; For 05, make the level slippery.
     ROR.B LevelIsSlippery
 CODE_00A6E0:
-    STY.B PlayerDirection
-    LDA.B #$24
+    STY.B PlayerDirection                     ; Mario Action 00, 05 - Normal level entrance
+    LDA.B #$24                                ; Immediately 'fall' upon entering the level.
     STA.B PlayerInAir
     STZ.B SpriteLock
     LDA.W KeyholeTimer
@@ -4999,20 +5019,20 @@ CODE_00A6E0:
     LDA.W MusicBackup
     ORA.B #$7F
     STA.W MusicBackup
-    LDA.B PlayerXPosNext
+    LDA.B PlayerXPosNext                      ; If exiting by keyhole, reload music bank?...
     ORA.B #$04
     STA.W KeyholeXPos
     LDA.B PlayerYPosNext
     CLC
     ADC.B #$10
     STA.W KeyholeYPos
-  + LDA.W YoshiHeavenFlag
+  + LDA.W YoshiHeavenFlag                     ; Return if not entering via Yoshi Wings.
     BEQ +
-    LDA.B #$08                                ; \ Animation = Rise off screen,
+    LDA.B #$08                                ; \ Animation = Rise off screen,; Set Mario into the wings animation state (flying upwards).
     STA.B PlayerAnimation                     ; / for Yoshi Wing bonus stage
-    LDA.B #$A0
+    LDA.B #$A0                                ; Initial Y position in the Yoshi Wings levels.
     STA.B PlayerYPosNext
-    LDA.B #$90                                ; \ Set upward speed, #$90
+    LDA.B #$90                                ; \ Set upward speed, #$90; Initial Y speed in the Yoshi Wings levels.
     STA.B PlayerYSpeed+1                      ; /
   + RTS
 
@@ -5020,7 +5040,7 @@ CODE_00A716:
     CMP.B #$06
     BCC CODE_00A740
     BNE CODE_00A734
-    STY.B PlayerDirection
+    STY.B PlayerDirection                     ; Mario Action 06 - Shooting from diagonal pipe
     STY.W PlayerCapePose
     LDA.B #$FF
     STA.W YoshiInPipeSetting
@@ -5033,42 +5053,43 @@ CODE_00A716:
     BRA CODE_00A6C7
 
 CODE_00A734:
-    STY.B LevelIsWater
+; Mario Action 07 - Vertical pipe downwards (water)
+    STY.B LevelIsWater                        ; Set as a water level.
     LDA.W SkipMidwayCastleIntro
-    ORA.W KeyholeTimer
+    ORA.W KeyholeTimer                        ; Unused?
     BNE CODE_00A6E0
     LDA.B #$04
 CODE_00A740:
     CLC
-    ADC.B #$03
+    ADC.B #$03                                ; Store the direction of Mario's pipe exit animation.
     STA.B PlayerPipeAction
     TAY
     LSR A
-    DEC A
+    DEC A                                     ; Deterimine the direction Yoshi should face when exiting.
     STA.W YoshiInPipeSetting
-    LDA.W DATA_00A60D-4,Y
+    LDA.W DATA_00A60D-4,Y                     ; Determine Mario's direction.
     STA.B PlayerDirection
     LDX.B #$05
     CPY.B #$06
     BCC CODE_00A768
-    LDA.B #$08
+    LDA.B #$08                                ; How far Mario's position should be offset when exiting a vertical pipe.
     TSB.B PlayerXPosNext
     LDX.B #$06
     CPY.B #$07
-    LDY.B #$1E
+    LDY.B #$1E                                ; How fast Mario exits an upward pipe.
     BCC +
-    LDY.B #$0F
+    LDY.B #$0F                                ; How fast Mario exits a downward pipe, when small.
     LDA.B Powerup
     BEQ +
 CODE_00A768:
-    LDY.B #$1C                                ; \ Set downward speed, #$1C
+    LDY.B #$1C                                ; \ Set downward speed, #$1C; How fast Mario exits a downward pipe, when with a powerup.
   + STY.B PlayerYSpeed+1                      ; /
     JSR CODE_00A6C7
-    LDA.W PlayerRidingYoshi
+    LDA.W PlayerRidingYoshi                   ; If not riding Yoshi, return.
     BEQ +
     LDX.B PlayerPipeAction
     LDA.B PipeTimer
-    CLC
+    CLC                                       ; Add time to pipe entrances when riding Yoshi.
     ADC.W DATA_00A61D,X
     STA.B PipeTimer
     TXA
@@ -5087,37 +5108,37 @@ CODE_00A768:
   + RTS
 
 CODE_00A796:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Subroutine to set Layer 2's initial scroll position, as well as the screen scroll region.
     LDY.W VertLayer2Setting
     BEQ CODE_00A7B9
     DEY
     BNE CODE_00A7A7
     LDA.B Layer2YPos
     SEC
-    SBC.B Layer1YPos
-    BRA CODE_00A7B6
+    SBC.B Layer1YPos                          ; If vertical scrolling is enabled for Layer 2,
+    BRA CODE_00A7B6                           ; get the base offset of Layer 2 from Layer 1's position, as set at level load.
 
 CODE_00A7A7:
-    LDA.B Layer1YPos
+    LDA.B Layer1YPos                          ; Calculated based on the Layer 2 vertical scroll setting from the initial FG/BG positions:
+    LSR A                                     ; Constant: $20 - $1C
+    DEY                                       ; Variable: $20 - ($1C / 2)
+    BEQ +                                     ; Slow:     $20 - ($1C / 8)
     LSR A
-    DEY
-    BEQ +
-    LSR A
-    LSR A
-  + EOR.W #$FFFF
+    LSR A                                     ; Note the difference between the slow setting here and its actual scroll rate (which is 1/32).
+  + EOR.W #$FFFF                              ; That's why you can end up with garbage tiles at the top of the level when using it.
     INC A
     CLC
     ADC.B Layer2YPos
 CODE_00A7B6:
     STA.W BackgroundVertOffset
 CODE_00A7B9:
-    LDA.W #$0080
+    LDA.W #$0080                              ; Initial screen scroll position when Mario spawns into the level.
     STA.W CameraMoveTrigger
     SEP #$20                                  ; A->8
     RTS
 
 CODE_00A7C2:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Subroutine to DMA the graphics for MARIO START! / LUIGI START! / TIME UP! / GAME OVER / BONUS GAME.
     LDX.B #$80
     STX.W HW_VMAINC
     LDA.W #$6000
@@ -5157,12 +5178,12 @@ CODE_00A7C2:
     RTS
 
 CODE_00A82D:
-    LDY.B #$0F
-    JSL PrepareGraphicsFile
+    LDY.B #$0F                                ; GFX file loaded for the "MARIO START!", "GAME OVER", and "TIME UP!" text.
+    JSL PrepareGraphicsFile                   ; Decompress file to RAM.
     LDA.W BonusGameActivate
     REP #$30                                  ; AXY->16
     BEQ +
-    LDA.B _0
+    LDA.B _0                                  ; If loading the bonus game message, shift text pointer two tiles right.
     CLC
     ADC.W #$0030
     STA.B _0
@@ -5189,7 +5210,7 @@ CODE_00A845:
     CPX.W #$0300
     BCC CODE_00A845
     SEP #$30                                  ; AXY->8
-    LDY.B #$00
+    LDY.B #$00                                ; Decompress GFX00 to RAM.
     JSL PrepareGraphicsFile
     REP #$30                                  ; AXY->16
     LDA.W #$B3F0
@@ -5285,21 +5306,75 @@ OBJECTGFXLIST:
     db $19,$17,$1B,$18
 
 CODE_00A993:
-    STZ.W HW_VMADD                            ; \
+; Sprite GFX lists.
+; 00 - Forest
+; 01 - Castle
+; 02 - Mushroom
+; 03 - Underground
+; 04 - Water
+; 05 - Pokey
+; 06 - Underground 2
+; 07 - Ghost House
+; 08 - Banzai Bill
+; 09 - Yoshi's House
+; 0A - Dino-Rhino
+; 0B - Switch Palace
+; 0C - Mecha-Koopa
+; 0D - Wendy/Lemmy
+; 0E - Ninji
+; 0F - Unused
+; 10 - Unused?
+; 11 - Overworld
+; 12 - Morton/Roy/Ludwig
+; 13 - Iggy/Larry/Reznor
+; 14 - Castle destruction
+; 15 - Credits, staff roll
+; 16 - Credits, Yoshi's House
+; 17 - Credits, enemy credits
+; 18 - Bowser
+; 19 - Credits, THE END
+; FG/BG GFX lists.
+; 00 - Normal 1
+; 01 - Castle 1
+; 02 - Rope 1
+; 03 - Underground 1
+; 04 - Switch Palace 1
+; 05 - Ghost House 1
+; 06 - Rope 2
+; 07 - Normal 2
+; 08 - Rope 3
+; 09 - Underground 2
+; 0A - Switch Palace 2
+; 0B - Castle 2
+; 0C - Cloud/Forest
+; 0D - Ghost House 2
+; 0E - Underground 3
+; 0F - Unused
+; 10 - Unused?
+; 11 - Main Map             ;\
+; 12 - Yoshi's Island       ;|
+; 13 - Vanilla Dome         ;|
+; 14 - Forest of Illusion   ;| Note: not reloaded between submaps!
+; 15 - Valley of Bowser     ;|
+; 16 - Special World        ;|
+; 17 - Star World           ;/
+; 18 - Castle destruction
+; 19 - Credits, staff roll
+    STZ.W HW_VMADD                            ; \; Routine to upload Layer 3 pages 28-2B.
     LDA.B #$40                                ; |Set "Address for VRAM Read/Write" to x4000
     STA.W HW_VMADD+1                          ; /
     LDA.B #$03
     STA.B _F
-    LDA.B #$28
+    LDA.B #$28                                ; Starting file (GFX28).
     STA.B _E
 CODE_00A9A3:
     LDA.B _E
-    TAY
+    TAY                                       ; Decompress current file to RAM.
     JSL PrepareGraphicsFile
     REP #$30                                  ; AXY->16
     LDX.W #$03FF
     LDY.W #$0000
-  - LDA.B [_0],Y
+  - LDA.B [_0],Y                              ; Transfer file from RAM to VRAM.
     STA.W HW_VMDATA
     INY
     INY
@@ -5307,12 +5382,12 @@ CODE_00A9A3:
     BPL -
     SEP #$30                                  ; AXY->8
     INC.B _E
-    DEC.B _F
+    DEC.B _F                                  ; Loop for all four files.
     BPL CODE_00A9A3
     STZ.W HW_VMADD                            ; \
     LDA.B #$60                                ; |Set "Address for VRAM Read/Write" to x6000
     STA.W HW_VMADD+1                          ; /
-    LDY.B #$00
+    LDY.B #$00                                ; Upload GFX00?
     JSR UploadGFXFile
     RTS
 
@@ -5323,7 +5398,9 @@ DATA_00A9D6:
     db $18,$10,$08,$00
 
 UploadSpriteGFX:
-    LDA.B #$80                                ; Decompression as well?
+; Sprite GFX file VRAM upload locations (high byte only).
+; FG/BG GFX file VRAM upload locations (high byte only).
+    LDA.B #$80                                ; Decompression as well?; Upload the level's GFX files. This part specifically does sprite GFX.
     STA.W HW_VMAINC                           ; VRAM transfer control port
     LDX.B #$03
     LDA.W SpriteTileset                       ; $192B = current sprite GFX list index
@@ -5362,7 +5439,7 @@ GFXTransferLoop:
     ASL A                                     ; one, I'm guessing this does
     ASL A                                     ; object/BG GFX.
     TAY                                       ; 4A -> Y
-  - LDA.W OBJECTGFXLIST,Y                     ; FG/BG GFX table
+  - LDA.W OBJECTGFXLIST,Y                     ; FG/BG GFX table; Upload the FG/BG GFX files.
     STA.B _4,X
     INY
     DEX
@@ -5379,7 +5456,7 @@ CODE_00AA35:
     CMP.B _4,X                                ; exists in the slot in VRAM - if so,
     BEQ +                                     ; don't bother uploading it again.
     JSR UploadGFXFile                         ; Upload the GFX file
-  + DEC.B _F                                  ; Next GFX file
+  + DEC.B _F                                  ; Next GFX file; Continue to next GFX file.
     BPL CODE_00AA35
     LDX.B #$03
   - LDA.B _4,X
@@ -5399,11 +5476,12 @@ SetallFGBG80:
     RTS
 
 UploadGFXFile:
-    JSL PrepareGraphicsFile
-    CPY.B #$01
+; Routine to upload a 3bpp/4bpp GFX file to VRAM. File number in Y, store VRAM location before calling.
+    JSL PrepareGraphicsFile                   ; Decompress file to RAM.
+    CPY.B #$01                                ; GFX file to load Special World graphical changes into.
     BNE +
     LDA.W OWLevelTileSettings+$49
-    BPL +                                     ; handle the post-special world graphics and koopa color swap.
+    BPL +                                     ; handle the post-special world graphics and koopa color swap.; If loading GFX01, replace with the special world graphics if applicable.
     LDY.B #$31
     JSL PrepareGraphicsFile
     LDY.B #$01
@@ -5412,7 +5490,7 @@ UploadGFXFile:
     LDX.W ObjectTileset                       ; LDX Tileset
     CPX.B #$11                                ; CPX #$11
     BCC CODE_00AA90                           ; If Tileset < #$11 skip to lower area
-    CPY.B #$08                                ; if Y = #$08 skip to JSR
+    CPY.B #$08                                ; if Y = #$08 skip to JSR; If not loading GFX08 (overworld Layer 1 tiles) or GFX1E (Yoshi's House/Switch Palace), branch.
     BEQ JumpTo_____
 CODE_00AA90:
     CPY.B #$1E                                ; If Y = #$1E then
@@ -5421,39 +5499,39 @@ CODE_00AA90:
 JumpTo_____:
     JMP FilterSomeRAM
 
-  + STA.B _A
+  + STA.B _A                                  ; $0A = 0x0000
     LDA.W #$FFFF
     CPY.B #$01
     BEQ +
-    CPY.B #$17
-    BEQ +
+    CPY.B #$17                                ; Do special handling for GFX01 (standard sprites) and GFX17 (bush, goal, etc. FG),
+    BEQ +                                     ; in order to handle berries using the second half of the palette.
     LDA.W #$0000
   + STA.W GfxBppConvertFlag
     LDY.B #$7F
 CODE_00AAAE:
     LDA.W GfxBppConvertFlag
-    BEQ CODE_00AACD
-    CPY.B #$7E
+    BEQ CODE_00AACD                           ; Extra work for 3BPP -> 4BPP conversion in GFX01/17, to handle berries.
+    CPY.B #$7E                                ; First two tiles in file use second half of the palette.
     BCC CODE_00AABE
 CODE_00AAB7:
-    LDA.W #$FF00
+    LDA.W #$FF00                              ; Set to use the second half of the palette.
     STA.B _A
-    BNE CODE_00AACD
+    BNE CODE_00AACD                           ; Equivalent to a BRA.
 CODE_00AABE:
     CPY.B #$6E
-    BCC CODE_00AAC8
+    BCC CODE_00AAC8                           ; First two tiles in second row use second half of the palette.
     CPY.B #$70
     BCS CODE_00AAC8
     BCC CODE_00AAB7
 CODE_00AAC8:
-    LDA.W #$0000
+    LDA.W #$0000                              ; Everyone else uses the first half of the palette.
     STA.B _A
 CODE_00AACD:
     LDX.B #$07
   - LDA.B [_0]
     STA.W HW_VMDATA
-    XBA
-    ORA.B [_0]
+    XBA                                       ; Upload 16 bytes to VRAM.
+    ORA.B [_0]                                ; This handles the first two bitplanes.
     STA.W GfxBppConvertBuffer,X
     INC.B _0
     INC.B _0
@@ -5463,16 +5541,16 @@ CODE_00AACD:
   - LDA.B [_0]
     AND.W #$00FF
     STA.B _C
-    LDA.B [_0]
-    XBA
-    ORA.W GfxBppConvertBuffer,X
-    AND.B _A
+    LDA.B [_0]                                ; Upload 8 more bytes to VRAM. This handles bitplanes 2/3.
+    XBA                                       ; The business with $0C/$0A is for handling the berry palettes;
+    ORA.W GfxBppConvertBuffer,X               ; $0C is 0xFF00 only for the berry tiles, 0x0000 otherwise.
+    AND.B _A                                  ; When 0xFF00, it essentially masks to only non-zero (non-transparent) pixels.
     ORA.B _C
     STA.W HW_VMDATA
     INC.B _0
     DEX
     BPL -
-    DEY
+    DEY                                       ; Continue looping for all tiles in the file.
     BPL CODE_00AAAE
     SEP #$20                                  ; A->8
     RTS
@@ -5513,18 +5591,18 @@ Upload____ToVRAM:
     RTS
 
 CODE_00AB42:
-    LDY.B #$27
-    JSL PrepareGraphicsFile
+    LDY.B #$27                                ; GFX file loaded for Mode 7 objects.
+    JSL PrepareGraphicsFile                   ; Decompress file to RAM.
     REP #$10                                  ; XY->16
-    LDY.W #$0000
-    LDX.W #$03FF
+    LDY.W #$0000                              ; 3bpp->8bpp conversion loop. Extracts bits in sets of 3
+    LDX.W #$03FF                              ; from the decompressed data, then uploads them to VRAM.
   - LDA.B [_0],Y
     STA.B _F
+    JSR CODE_00ABC4                           ; Read first byte.
+    LDA.B _4                                  ; Write the highest 3 bits to VRAM,
+    STA.W HW_VMDATA+1                         ; then the next 3 bits.
     JSR CODE_00ABC4
-    LDA.B _4
-    STA.W HW_VMDATA+1
-    JSR CODE_00ABC4
-    LDA.B _4
+    LDA.B _4                                  ; Preserve the remaining 2 bits in $04 for use below.
     STA.W HW_VMDATA+1
     STZ.B _4
     ROL.B _F
@@ -5534,11 +5612,11 @@ CODE_00AB42:
     INY
     LDA.B [_0],Y
     STA.B _F
-    ROL.B _F
-    ROL.B _4
-    LDA.B _4
+    ROL.B _F                                  ; Read second byte.
+    ROL.B _4                                  ; Combine highest bit with the two from above, then write to VRAM.
+    LDA.B _4                                  ; Write next 3 bits, then next 3 bits after that.
     STA.W HW_VMDATA+1
-    JSR CODE_00ABC4
+    JSR CODE_00ABC4                           ; Preserve the remaining single bit in $04 for use below.
     LDA.B _4
     STA.W HW_VMDATA+1
     JSR CODE_00ABC4
@@ -5550,9 +5628,9 @@ CODE_00AB42:
     INY
     LDA.B [_0],Y
     STA.B _F
-    ROL.B _F
-    ROL.B _4
-    ROL.B _F
+    ROL.B _F                                  ; Read third byte.
+    ROL.B _4                                  ; Combine highest two bits from the one above, then write to VRAM.
+    ROL.B _F                                  ; Write next 3 bits, then final 3 bits.
     ROL.B _4
     LDA.B _4
     STA.W HW_VMDATA+1
@@ -5563,7 +5641,7 @@ CODE_00AB42:
     LDA.B _4
     STA.W HW_VMDATA+1
     INY
-    DEX
+    DEX                                       ; Loop for all remaining bytes.
     BPL -
     LDX.W #$2000
   - STZ.W HW_VMDATA+1
@@ -5573,7 +5651,7 @@ CODE_00AB42:
     RTS
 
 CODE_00ABC4:
-    STZ.B _4
+    STZ.B _4                                  ; Subroutine used above which 3 bits from $0F into $04.
     ROL.B _F
     ROL.B _4
     ROL.B _F
@@ -5593,40 +5671,41 @@ DATA_00ABDF:
     dw $00E0,$0118,$0150
 
 LoadPalette:
-    REP #$30                                  ; AXY->16
-    LDA.W #$7FDD                              ; \
+; Table of palette pointers (minus #$B732) for each overworld, indexed by $00AD1E.
+    REP #$30                                  ; AXY->16; Routine to load level palettes.
+    LDA.W #$7FDD                              ; \; SNES value to use for color 1 of palettes 0-7 (white).
     STA.B _4                                  ; |Set color 1 in all object palettes to white
-    LDX.W #$0002                              ; |
+    LDX.W #$0002                              ; |; Column number to fill with the above color.
     JSR LoadCol8Pal                           ; /
-    LDA.W #$7FFF                              ; \
+    LDA.W #$7FFF                              ; \; SNES value to use for color 1 of palettes 8-F (white).
     STA.B _4                                  ; |Set color 1 in all sprite palettes to white
-    LDX.W #$0102                              ; |
+    LDX.W #$0102                              ; |; Column number to fill with the above color.
     JSR LoadCol8Pal                           ; /
-    LDA.W #StatusBarColors                    ; \
+    LDA.W #StatusBarColors                    ; \; Layer 3 palettes pointer ($00B170).
     STA.B _0                                  ; |
-    LDA.W #$0010                              ; |Load colors 8-16 in the first two object palettes from 00/B170
+    LDA.W #$0010                              ; |Load colors 8-16 in the first two object palettes from 00/B170; Layer 3 palettes starting index.
     STA.B _4                                  ; |(Layer 3 palettes)
-    LDA.W #$0007                              ; |
+    LDA.W #$0007                              ; |; Layer 3 palettes X-span, -1.
     STA.B _6                                  ; |
-    LDA.W #$0001                              ; |
+    LDA.W #$0001                              ; |; Layer 3 palettes Y-span, -1.
     STA.B _8                                  ; |
     JSR LoadColors                            ; /
-    LDA.W #StandardColors                     ; \
+    LDA.W #StandardColors                     ; \; Foreground/sprite palettes pointer ($00B250).
     STA.B _0                                  ; |
-    LDA.W #$0084                              ; |Load colors 2-7 in palettes 4-D from 00/B250
+    LDA.W #$0084                              ; |Load colors 2-7 in palettes 4-D from 00/B250; Foreground/sprite palettes starting index.
     STA.B _4                                  ; |(Object and sprite palettes)
-    LDA.W #$0005                              ; |
+    LDA.W #$0005                              ; |; Foreground/sprite palettes X-span, -1.
     STA.B _6                                  ; |
-    LDA.W #$0009                              ; |
+    LDA.W #$0009                              ; |; Foreground/sprite palettes Y-span, -1.
     STA.B _8                                  ; |
     JSR LoadColors                            ; /
     LDA.W BackAreaColor                       ; \
     AND.W #$000F                              ; |
     ASL A                                     ; |Load background color
     TAY                                       ; |
-    LDA.W BackAreaColors,Y                    ; |
+    LDA.W BackAreaColors,Y                    ; |; Back area colors pointer ($00B0A0).
     STA.W BackgroundColor                     ; /
-    LDA.W #ForegroundPalettes                 ; \Store base address in $00, ...
+    LDA.W #ForegroundPalettes                 ; \Store base address in $00, ...; Tileset specific FG palettes pointer ($00B190).
     STA.B _0                                  ; /
     LDA.W ForegroundPalette                   ; \...get current object palette, ...
     AND.W #$000F                              ; /
@@ -5636,14 +5715,14 @@ LoadPalette:
     CLC                                       ; |
     ADC.B _0                                  ; |...add it to the base address...
     STA.B _0                                  ; / ...and store it in $00
-    LDA.W #$0044                              ; \
+    LDA.W #$0044                              ; \; Tileset specific FG palettes starting index.
     STA.B _4                                  ; |
-    LDA.W #$0005                              ; |
+    LDA.W #$0005                              ; |; Tileset specific FG palettes X-span, -1.
     STA.B _6                                  ; |Load colors 2-7 in object palettes 2 and 3 from the address in $00
-    LDA.W #$0001                              ; |
+    LDA.W #$0001                              ; |; Tileset specific FG palettes Y-span, -1.
     STA.B _8                                  ; |
     JSR LoadColors                            ; /
-    LDA.W #SpriteColors                       ; \Store base address in $00, ...
+    LDA.W #SpriteColors                       ; \Store base address in $00, ...; Tileset specific sprite palettes pointer ($00B318).
     STA.B _0                                  ; /
     LDA.W SpritePalette                       ; \...get current sprite palette, ...
     AND.W #$000F                              ; /
@@ -5653,14 +5732,14 @@ LoadPalette:
     CLC                                       ; |
     ADC.B _0                                  ; |...add it to the base address...
     STA.B _0                                  ; / ...and store it in $00
-    LDA.W #$01C4                              ; \
+    LDA.W #$01C4                              ; \; Tileset specific sprite palettes starting index.
     STA.B _4                                  ; |
-    LDA.W #$0005                              ; |
+    LDA.W #$0005                              ; |; Tileset specific sprite palettes X-span, -1.
     STA.B _6                                  ; |Load colors 2-7 in sprite palettes 6 and 7 from the address in $00
-    LDA.W #$0001                              ; |
+    LDA.W #$0001                              ; |; Tileset specific sprite palettes Y-span, -1.
     STA.B _8                                  ; |
     JSR LoadColors                            ; /
-    LDA.W #BackgroundPalettes                 ; \Store bade address in $00, ...
+    LDA.W #BackgroundPalettes                 ; \Store bade address in $00, ...; Layer 2 BG palettes pointer ($0B0B0).
     STA.B _0                                  ; /
     LDA.W BackgroundPalette                   ; \...get current background palette, ...
     AND.W #$000F                              ; /
@@ -5670,36 +5749,36 @@ LoadPalette:
     CLC                                       ; |
     ADC.B _0                                  ; |...add it to the base address...
     STA.B _0                                  ; / ...and store it in $00
-    LDA.W #$0004                              ; \
+    LDA.W #$0004                              ; \; Layer 2 BG palettes starting index.
     STA.B _4                                  ; |
-    LDA.W #$0005                              ; |
+    LDA.W #$0005                              ; |; Layer 2 BG palettes X-span, -1.
     STA.B _6                                  ; |Load colors 2-7 in object palettes 0 and 1 from the address in $00
-    LDA.W #$0001                              ; |
+    LDA.W #$0001                              ; |; Layer 2 BG palettes Y-span, -1.
     STA.B _8                                  ; |
     JSR LoadColors                            ; /
-    LDA.W #BerryColors                        ; \
+    LDA.W #BerryColors                        ; \; Layer 1 berry palettes pointer ($00B674)
     STA.B _0                                  ; |
-    LDA.W #$0052                              ; |
+    LDA.W #$0052                              ; |; Layer 1 berry palettes starting index.
     STA.B _4                                  ; |
-    LDA.W #$0006                              ; |Load colors 9-F in object palettes 2-4 from 00/B674
+    LDA.W #$0006                              ; |Load colors 9-F in object palettes 2-4 from 00/B674; Layer 1 berry palettes X-span, -1.
     STA.B _6                                  ; |
-    LDA.W #$0002                              ; |
+    LDA.W #$0002                              ; |; Layer 1 berry palettes Y-span, -1.
     STA.B _8                                  ; |
     JSR LoadColors                            ; /
     LDA.W #BerryColors                        ; \
     STA.B _0                                  ; |
     LDA.W #$0132                              ; |
-    STA.B _4                                  ; |
+    STA.B _4                                  ; |; Berry palette duplicated to palette 9 for unknown reason...
     LDA.W #$0006                              ; |Load colors 9-F in sprite palettes 1-3 from 00/B674
     STA.B _6                                  ; |
     LDA.W #$0002                              ; |
     STA.B _8                                  ; |
     JSR LoadColors                            ; /
-    SEP #$30                                  ; AXY->8
+    SEP #$30                                  ; AXY->8; 8-bit A, X, Y
     RTS
 
 LoadCol8Pal:
-    LDY.W #$0007
+    LDY.W #$0007                              ; Subroutine to load a color to a set of 8 palettes. Used for color 1 (white) in 0-7 and 8-F.
   - LDA.B _4
     STA.W MainPalette,X
     TXA
@@ -5711,7 +5790,12 @@ LoadCol8Pal:
     RTS
 
 LoadColors:
-    LDX.B _4
+; Scratch RAM setup:
+; $00 - Palette pointer.
+; $04 - Starting index of the color.
+; $06 - X span of block to upload.
+; $08 - Y span of block to upload.
+    LDX.B _4                                  ; Routine to upload a palette to RAM.
     LDY.B _6
   - LDA.B (_0)
     STA.W MainPalette,X
@@ -5734,124 +5818,126 @@ DATA_00AD1E:
     db $01,$00,$03,$04,$03,$05,$02            ; Palette Indices for Overworld Maps
 
 CODE_00AD25:
-    REP #$30                                  ; AXY->16
-    LDY.W #OverworldColors
+; Palette IDs for each submap, as indices to $00ABDF.
+    REP #$30                                  ; AXY->16; Routine to load overworld palettes.
+    LDY.W #OverworldColors                    ; Overworld map Layer 2 palettes pointer ($00B3D8).
     LDA.W OWLevelTileSettings+$48
     BPL +
-    LDY.W #OWSpecialColors
+    LDY.W #OWSpecialColors                    ; Overworld map Layer 2 palettes pointer with special world ($00B732).
   + STY.B _0
     LDA.W ObjectTileset
     AND.W #$000F
     DEC A
     TAY
     LDA.W DATA_00AD1E,Y
-    AND.W #$00FF
+    AND.W #$00FF                              ; Get actual Layer 2 palette pointer.
     ASL A
     TAY
     LDA.W DATA_00ABDF,Y
     CLC
     ADC.B _0
     STA.B _0
-    LDA.W #$0082
+    LDA.W #$0082                              ; Overworld map Layer 2 palettes starting index.
     STA.B _4
-    LDA.W #$0006
+    LDA.W #$0006                              ; Overworld map Layer 2 palettes X-span, -1.
     STA.B _6
-    LDA.W #$0003
+    LDA.W #$0003                              ; Overworld map Layer 2 palettes Y-span, -1.
     STA.B _8
     JSR LoadColors
-    LDA.W #OWStdColors
+    LDA.W #OWStdColors                        ; Overworld map Layer 1 palettes pointer ($00B528).
     STA.B _0
-    LDA.W #$0052
+    LDA.W #$0052                              ; Overworld map Layer 1 palettes starting index.
     STA.B _4
-    LDA.W #$0006
+    LDA.W #$0006                              ; Overworld map Layer 1 palettes X-span, -1.
     STA.B _6
-    LDA.W #$0005
+    LDA.W #$0005                              ; Overworld map Layer 1 palettes Y-span, -1.
     STA.B _8
     JSR LoadColors
-    LDA.W #OWStdColors2
+    LDA.W #OWStdColors2                       ; Overworld map sprite palettes pointer ($00B57C).
     STA.B _0
-    LDA.W #$0102
+    LDA.W #$0102                              ; Overworld map sprite palettes starting index.
     STA.B _4
-    LDA.W #$0006
+    LDA.W #$0006                              ; Overworld map sprite palettes X-span, -1.
     STA.B _6
-    LDA.W #$0007
+    LDA.W #$0007                              ; Overworld map sprite palettes Y-span, -1.
     STA.B _8
     JSR LoadColors
-    LDA.W #OverworldHudColors
+    LDA.W #OverworldHudColors                 ; Overworld map Layer 3 palettes pointer ($00B5EC).
     STA.B _0
-    LDA.W #$0010
+    LDA.W #$0010                              ; Overworld map Layer 3 palettes starting index.
     STA.B _4
-    LDA.W #$0007
+    LDA.W #$0007                              ; Overworld map Layer 3 palettes X-span, -1.
     STA.B _6
-    LDA.W #$0001
+    LDA.W #$0001                              ; Overworld map Layer 3 palettes Y-span, -1.
     STA.B _8
     JSR LoadColors
     SEP #$30                                  ; AXY->8
     RTS
 
 CODE_00ADA6:
-    REP #$30                                  ; AXY->16
-    LDA.W #TitleScreenColors+$10
+    REP #$30                                  ; AXY->16; Routine to load title screen palettes.
+    LDA.W #TitleScreenColors+$10              ; Title screen palette 1 pointer ($00B63C)
     STA.B _0
-    LDA.W #$0010
+    LDA.W #$0010                              ; Title screen palette 1 starting index.
     STA.B _4
-    LDA.W #$0007
+    LDA.W #$0007                              ; Title screen palette 1 X-span, -1.
     STA.B _6
-    LDA.W #$0000
+    LDA.W #$0000                              ; Title screen palette 1 Y-span, -1.
     STA.B _8
     JSR LoadColors
-    LDA.W #TitleScreenColors
+    LDA.W #TitleScreenColors                  ; Title screen palette 0 pointer ($00B63C)
     STA.B _0
-    LDA.W #$0030
+    LDA.W #$0030                              ; Title screen palette 0 starting index.
     STA.B _4
-    LDA.W #$0007
+    LDA.W #$0007                              ; Title screen palette 0 X-span, -1.
     STA.B _6
-    LDA.W #$0000
+    LDA.W #$0000                              ; Title screen palette 0 Y-span, -1.
     STA.B _8
     JSR LoadColors
     SEP #$30                                  ; AXY->8
     RTS
 
 LoadIggyLarryPalette:
-    JSR LoadPalette
+    JSR LoadPalette                           ; Routine to load Iggy and Larry palettes.
     REP #$30                                  ; AXY->16
-    LDA.W #$0017
+    LDA.W #$0017                              ; Back area color (lava).
     STA.W BackgroundColor
-    LDA.W #StatusBarColors
+    LDA.W #StatusBarColors                    ; Layer 3 palettes pointer ($00B170).
     STA.B _0
-    LDA.W #$0010
+    LDA.W #$0010                              ; Layer 3 palettes starting index.
     STA.B _4
-    LDA.W #$0007
+    LDA.W #$0007                              ; Layer 3 palettes X-span, -1.
     STA.B _6
-    LDA.W #$0001
+    LDA.W #$0001                              ; Layer 3 palettes Y-span, -1.
     STA.B _8
     JSR LoadColors
-    LDA.W #IggyLarryPlatColors
+    LDA.W #IggyLarryPlatColors                ; Iggy/Larry platform palettes pointer ($00B65C).
     STA.B _0
-    LDA.W #$0000
+    LDA.W #$0000                              ; Iggy/Larry platform palettes starting index.
     STA.B _4
-    LDA.W #$0007
+    LDA.W #$0007                              ; Iggy/Larry platform palettes X-span, -1.
     STA.B _6
-    LDA.W #$0000
+    LDA.W #$0000                              ; Iggy/Larry platform palettes Y-span, -1.
     STA.B _8
     JSR LoadColors
     SEP #$30                                  ; AXY->8
     RTS
 
 CODE_00AE15:
-    LDA.B #$02
+; Routine to load Morton, Ludwig, Roy, Reznor, and Bowser palettes.
+    LDA.B #$02                                ; Mode 7 boss sprite palette setting (used for BG).
     STA.W SpritePalette
-    LDA.B #$07
+    LDA.B #$07                                ; Mode 7 boss FG palette setting (used for platforms/lava).
     STA.W ForegroundPalette
     JSR LoadPalette
     REP #$30                                  ; AXY->16
-    LDA.W #$0017
+    LDA.W #$0017                              ; Back area color (used for lava).
     STA.W BackgroundColor
-    LDA.W #OverworldHudColors+8
+    LDA.W #OverworldHudColors+8               ; Layer 3 (?) palettes pointer ($00B5F4).
     STA.B _0
-    LDA.W #$0018
+    LDA.W #$0018                              ; Layer 3 (?) palettes starting index.
     STA.B _4
-    LDA.W #$0003
+    LDA.W #$0003                              ; Layer 3 (?) palettes X-span, -1.
     STA.B _6
     STZ.B _8
     JSR LoadColors
@@ -5865,7 +5951,9 @@ DATA_00AE44:
     db $20,$40,$80
 
 CODE_00AE47:
-    LDX.B #$02
+; Bitwise indices to each color component.
+; ORA values for uploading color data to COLDATA ($2132).
+    LDX.B #$02                                ; Routine to upload the back area color to COLDATA.
 CODE_00AE49:
     REP #$20                                  ; A->16
     LDA.W BackgroundColor
@@ -5873,7 +5961,7 @@ CODE_00AE49:
 CODE_00AE51:
     DEY
     BMI CODE_00AE57
-    LSR A
+    LSR A                                     ; Get a particular component and upload it to the registers.
     BRA CODE_00AE51
 
 CODE_00AE57:
@@ -5881,7 +5969,7 @@ CODE_00AE57:
     AND.B #$1F
     ORA.W DATA_00AE44,X
     STA.W HW_COLDATA
-    DEX
+    DEX                                       ; Loop for all three components.
     BPL CODE_00AE49
     RTS
 
@@ -5920,7 +6008,14 @@ DATA_00AEF7:
     dw $0008,$0004,$0002,$0001
 
 CODE_00AF17:
-    LDY.W EndLevelTimer
+; SNES RGB component locations (-bbb bbgg gggr rrrr)
+; Fade to black table. Decreases a component by 1.
+; Fade to color table. Increases a component by 1.
+; Table of how much each component is allowed to fade relative to its brightness.
+; TODO: explain better some day
+; Table for the maximum values of a component to allow fading each frame.
+; TODO: explain better some day
+    LDY.W EndLevelTimer                       ; End level fade routine.
     LDA.B TrueFrame
     LSR A
     BCC +
@@ -5933,41 +6028,41 @@ CODE_00AF17:
     TRB.B ColorSettings
     LDA.B #$09
     STA.B MainBGMode
-    JSL CODE_05CBFF
+    JSL CODE_05CBFF                           ; Handle the end level walk.
 CODE_00AF35:
     LDA.B TrueFrame
-    AND.B #$03
+    AND.B #$03                                ; Fade every four frames.
     BNE Return00AFA2
     LDA.W ColorFadeTimer
-    CMP.B #$40
+    CMP.B #$40                                ; Return if fully faded.
     BCS Return00AFA2
-    JSR CODE_00AFA3
-    LDA.W #$01FE
+    JSR CODE_00AFA3                           ; Get fading information for the current frame.
+    LDA.W #$01FE                              ; #$FE is the number of colors to upload to CGRAM (times 2), #$01 is the first color.
     STA.W CopyPalette
-    LDX.W #$00EE
+    LDX.W #$00EE                              ; Color to start with, times 2 (77).
 CODE_00AF4E:
-    LDA.W #$0007
+    LDA.W #$0007                              ; Number of colors in each palette to fade (1-7).
     STA.B _0
   - LDA.W CopyPalette,X
     STA.B _2
-    LDA.W MainPalette,X
+    LDA.W MainPalette,X                       ; Get the faded color.
     JSR CODE_00AFC0
     LDA.B _4
     STA.W CopyPalette,X
     DEX
-    DEX
+    DEX                                       ; Decrement to previous color, and loop until the palette is faded.
     DEC.B _0
     BNE -
     TXA
     SEC
-    SBC.W #$0012
+    SBC.W #$0012                              ; Decrement to previous palette, and loop until all palettes are faded.
     TAX
     BPL CODE_00AF4E
     LDX.W #$0004
   - LDA.W CopyPalette+$1A,X
     STA.B _2
     LDA.W MainPalette+$1A,X
-    JSR CODE_00AFC0
+    JSR CODE_00AFC0                           ; Also fade colors D-F of palette 0.
     LDA.B _4
     STA.W CopyPalette+$1A,X
     DEX
@@ -5975,21 +6070,21 @@ CODE_00AF4E:
     BPL -
     LDA.W BackgroundColor
     STA.B _2
-    LDA.W CopyBGColor
+    LDA.W CopyBGColor                         ; Also fade the back area color.
     JSR CODE_00AFC0
     LDA.B _4
     STA.W BackgroundColor
     SEP #$30                                  ; AXY->8
     STZ.W CopyPalette+$100
-    LDA.B #!PaletteTableUse_Copy
+    LDA.B #!PaletteTableUse_Copy              ; Change palette upload table to $0905.
     STA.W PaletteIndexTable
 Return00AFA2:
     RTS
 
 CODE_00AFA3:
-    TAY
+    TAY                                       ; Get fade information.
     INC A
-    INC A
+    INC A                                     ; Increment fade timer.
     STA.W ColorFadeTimer
     TYA
     LSR A
@@ -6007,33 +6102,43 @@ CODE_00AFA3:
     RTS
 
 CODE_00AFC0:
-    STA.B _A
+; Scratch RAM setup:
+; A   - original SNES RGB value
+; $02 - current SNES RGB value
+; $0C - 00 or 02, depending on which half of the timer you're in.
+; $0E -
+; Scratch RAM returns:
+; $04 - new SNES RGB value
+; $06 - Base R component, divided by 2 (0rrr rr00)
+; $08 - Base G component, divided by 2 (0ggg gg00)
+; $0A - Base B component, divided by 2 (0bbb bb00)
+    STA.B _A                                  ; Subroutine to fade a color.
     AND.W #$001F
     ASL A
     ASL A
     STA.B _6
-    LDA.B _A
-    AND.W #$03E0
-    LSR A
-    LSR A
+    LDA.B _A                                  ; Get the components of the color.
+    AND.W #$03E0                              ; $06 = R
+    LSR A                                     ; $08 = G
+    LSR A                                     ; $0A = B
     LSR A
     STA.B _8
     LDA.B _B
     AND.W #$007C
     STA.B _A
     STZ.B _4
-    LDY.W #$0004
+    LDY.W #$0004                              ; Get the new color.
 CODE_00AFDF:
     PHY
     LDA.W _6,Y
     ORA.B _C
-    TAY
-    LDA.W DATA_00AE77,Y
-    PLY
+    TAY                                       ; Skip fading if the component is not able to fade this frame.
+    LDA.W DATA_00AE77,Y                       ; This is to make color fading relative to the original color,
+    PLY                                       ; rather than fading them to black individually as with color math.
     AND.B _E
     BEQ +
     LDA.W DATA_00AE6B,Y
-    BIT.W EndLevelTimer
+    BIT.W EndLevelTimer                       ; Decide fade to black or fade to color.
     BPL +
     LDA.W DATA_00AE71,Y
   + CLC
@@ -6041,7 +6146,7 @@ CODE_00AFDF:
     AND.W DATA_00AE65,Y
     TSB.B _4
     DEY
-    DEY
+    DEY                                       ; Loop for all components.
     BPL CODE_00AFDF
     RTS
 
@@ -6081,7 +6186,7 @@ CODE_00B00F:
 CODE_00B03E:
     JSR CODE_00AF35
     LDA.W PaletteIndexTable
-    CMP.B #!PaletteTableUse_Copy
+    CMP.B #!PaletteTableUse_Copy              ; Return if loading palette from $0905 (i.e. fading colors).
     BNE Return00B090
     LDA.B #$00
     STA.B _2
@@ -6244,31 +6349,117 @@ OWSpecialColors:
     %incpal("col/ow/FoI_special.pal")
     %incpal("col/ow/special_special.pal")
 
-    dl GFX33&$7FFFFF
-    dl GFX32&$7FFFFF
+    dl GFX33
+    dl GFX32
 
 CODE_00B888:
-    REP #$10                                  ; XY->16
+; The entirety of SMW's palette data.
+; $00B0A0: Back area colors.
+; $00B0B0: BG palette 0 (colors 02-07 and 12-17)
+; $00B0C8: BG palette 1
+; $00B0E0: BG palette 2
+; $00B0F8: BG palette 3
+; $00B110: BG palette 4
+; $00B128: BG palette 5
+; $00B140: BG palette 6
+; $00B158: BG palette 7
+; $00B170: Colors 08-0F (Layer 3)
+; $00B180: Colors 18-1F (Layer 3)
+; $00B190: FG palette 0 (colors 22-27, 32-37)
+; $00B1A8: FG palette 1
+; $00B1C0: FG palette 2
+; $00B1D8: FG palette 3
+; $00B1F0: FG palette 4
+; $00B208: FG palette 5
+; $00B220: FG palette 6
+; $00B238: FG palette 7
+; $00B250: Level colors 42-47
+; $00B25C: Level colors 52-57
+; $00B268: Level colors 62-67
+; $00B274: Level colors 72-77
+; $00B280: Level colors 82-87. Last two colors are overwritten by Mario; only available during the Nintendo Presents.
+; $00B28C: Level colors 92-97
+; $00B298: Level colors A2-A7. Also used by Ludwig, for palette 0.
+; $00B2A4: Level colors B2-B7. Also used by Roy, for palette 0.
+; $00B2B0: Level colors C2-C7
+; $00B2BC: Level colors D2-D7. Also used by Morton, for palette 0.
+; $00B2C8: Mario palette (palette 8, colors 6-F).
+; $00B2DC: Luigi palette.
+; $00B2F0: Fire Mario palette.
+; $00B304: Fire Luigi palette.
+; $00B318: Sprite palette 0 (colors E2-E7, F2-F7).
+; $00B330: Sprite palette 1
+; $00B348: Sprite palette 2
+; $00B360: Sprite palette 3
+; $00B378: Sprite palette 4. Also used for Morton and Roy in the credits.
+; $00B390: Sprite palette 5
+; $00B3A8: Sprite palette 6
+; $00B3C0: Sprite palette 7. Also used in palette 8/9 for Bowser and Ludwig in the credits.
+; $00B3D8: Yoshi's Island palettes 4-7, colors 1-7.
+; $00B410: Main map palettes 4-7, colors 1-7.
+; $00B448: Star World palettes 4-7, colors 1-7.
+; $00B480: Vanilla Dome / Valley of Bowser palettes 4-7, colors 1-7.
+; $00B4B8: Forest of Illusion palettes 4-7, colors 1-7.
+; $00B4F0: Special World palettes 4-7, colors 1-7.
+; $00B528: Overworld colors 29-2F
+; $00B536: Overworld colors 39-3F
+; $00B544: Overworld colors 49-4F
+; $00B552: Colors 59-5F. Always uploaded, but only used on the overworld.
+; $00B560: Colors 69-6F. Always uploaded, but only used on the overworld.
+; $00B56E: Colors 79-7F. Always uploaded, but only used on the overworld.
+; $00B57C: Overworld colors 81-87. Last two colors are overwritten by Mario.
+; $00B58A: Overworld colors 91-97
+; $00B598: Overworld colors A1-A7
+; $00B5A6: Overworld colors B1-B7
+; $00B5B4: Overworld colors C1-C7
+; $00B5C2: Overworld colors D1-D7
+; $00B5D0: Overworld colors E1-E7
+; $00B5DE: Overworld colors F1-F7. Also used for the game's lightning effects.
+; $00B5EC: Overworld colors 08-0F. $00B5F4 is also loaded for Mode 7 bosses for some reason (except Iggy/Larry).
+; $00B5FC: Overworld colors 18-1F.
+; $00B60C: Palette animation for color 64 (Yoshi coin) and color 6D (yellow level tile)
+; $00B61C: Palette animation for color 7D (red level tile)
+; $00B62C: Title screen colors 19-1F
+; $00B63C: Title screen colors 09-0F
+; $00B64C: ?
+; $00B65C: Palette for Iggy/Larry's platform.
+; $00B66C: Colors 0C-0F (Layer 3 crushers)
+; $00B674: Level colors 29-2F and 99-9F (berries)
+; $00B682: Level colors 39-3F and A9-AF (berries)
+; $00B690: Level colors 49-4F and B9-BF (berries)
+; $00B69E: Bowser palettes; used for his fade effect.
+; Animates colors 02-07.
+; $00B70E: "The End" colors D2-D7. Used by Luigi.
+; $00B71A: "The End" colors D2-D7. Used by Mario.
+; $00B726: "The End" colors D2-D7. Used by Peach.
+; $00B732: Yoshi's Island [special] palettes 4-7, colors 1-7.
+; $00B76A: Main map [special] palettes 4-7, colors 1-7.
+; $00B7A2: Star World [special] palettes 4-7, colors 1-7.
+; $00B7DA: Vanilla Dome / Valley of Bowser [special] palettes 4-7, colors 1-7.
+; $00B812: Forest of Illusion [special] palettes 4-7, colors 1-7.
+; $00B84A: Special World [special] palettes 4-7, colors 1-7.
+; $00B882: ?
+    REP #$10                                  ; XY->16; Routine to decompress GFX33 and GFX32.
     LDY.W #GFX33                              ; \
-    STY.B GraphicsCompPtr                     ; |Store the address 08/BFC0 at $8A-$8C
-    LDA.B #GFX33>>16&$7F                      ; |
+    STY.B GraphicsCompPtr                     ; |Store the address 08/BFC0 at $8A-$8C; $8A = $08BFC0 (GFX33)
+    LDA.B #GFX33>>16                          ; |
     STA.B GraphicsCompPtr+2                   ; /
     LDY.W #MarioGraphics                      ; \
-    STY.B _0                                  ; |Store the address 7E/2000 at $00-$02
+    STY.B _0                                  ; |Store the address 7E/2000 at $00-$02; $00 = $7E2000
     LDA.B #MarioGraphics>>16&$7F              ; |
     STA.B _2                                  ; /
-    JSR CODE_00B8DE
+    JSR CODE_00B8DE                           ; Decompress GFX33 to $7E2000.
     LDA.B #MarioGraphics>>16&$7F              ; \
     STA.B GraphicsUncompPtr+2                 ; |
-    REP #$30                                  ; |AXY->16, Store the address 7E/ACFE at $8D-$8F
+    REP #$30                                  ; |AXY->16, Store the address 7E/ACFE at $8D-$8F; $8D = $7EACFE (end of $7E7D00)
     LDA.W #MarioGraphics+$8CFE                ; |
     STA.B GraphicsUncompPtr                   ; /
     LDX.W #$23FF
 CODE_00B8AD:
     LDY.W #$0008
   - LDA.L MarioGraphics,X
-    AND.W #$00FF
-    STA.B [GraphicsUncompPtr]
+    AND.W #$00FF                              ; Copy the data from $7E2000 to $7E7D00,
+    STA.B [GraphicsUncompPtr]                 ; and convert from 3bpp to 4bpp in the process.
     DEX
     DEC.B GraphicsUncompPtr
     DEC.B GraphicsUncompPtr
@@ -6288,54 +6479,58 @@ CODE_00B8C4:
     BRA CODE_00B8AD
 
 CODE_00B8D7:
-    LDA.W #$8000
+; Done decompressing GFX33, now for GFX32.
+    LDA.W #$8000                              ; $8A = $088000 (GFX32).
     STA.B GraphicsCompPtr
     SEP #$20                                  ; A->8
 CODE_00B8DE:
-    REP #$10                                  ; XY->16
-    LDY.W #$0000                              ; \
+; Subroutine to decompress LC_LZ2 data from the pointer in $8A to the destination in $00.
+    REP #$10                                  ; XY->16; See SMWiki's page for details: http://old.smwiki.net/wiki/LC_LZ2
+    LDY.W #$0000                              ; \; Note: $8A is modified, $00 is not.
 CODE_00B8E3:
     JSR ReadByte                              ; |
     CMP.B #$FF                                ; |If the next byte is xFF, return.
-    BNE +                                     ; |Compressed graphics files ends with xFF IIRC
+    BNE +                                     ; |Compressed graphics files ends with xFF IIRC; Return if end sentinel is reached.
     SEP #$10                                  ; | XY->8
     RTS                                       ; /
 
-  + STA.B GraphicsUncompPtr+2
+  + STA.B GraphicsUncompPtr+2                 ; End not reached.
     AND.B #$E0
-    CMP.B #$E0
+    CMP.B #$E0                                ; Branch if the command is "long length".
     BEQ CODE_00B8FF
     PHA
     LDA.B GraphicsUncompPtr+2
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Standard length command: use lower 5 bits as length.
     AND.W #$001F
     BRA +
 
 CODE_00B8FF:
-    LDA.B GraphicsUncompPtr+2
+    LDA.B GraphicsUncompPtr+2                 ; "Long length" (2-byte) command.
     ASL A
-    ASL A
+    ASL A                                     ; Get the actual command.
     ASL A
     AND.B #$E0
     PHA
     LDA.B GraphicsUncompPtr+2
-    AND.B #$03
+    AND.B #$03                                ; Get full 10-bit length.
     XBA
     JSR ReadByte
     REP #$20                                  ; A->16
-  + INC A
+; Continuing.
+  + INC A                                     ; Preserve length in $8D.
     STA.B GraphicsUncompPtr
     SEP #$20                                  ; A->8
-    PLA
-    BEQ CODE_00B930
-    BMI CODE_00B966
-    ASL A
-    BPL CODE_00B93F
-    ASL A
+    PLA                                       ; Branch to appropriate command.
+    BEQ CODE_00B930                           ; 000 - $00B930 (direct copy)
+    BMI CODE_00B966                           ; 1xx - $00B966 (copy memory)
+    ASL A                                     ; 001 - $00B93F (byte fill)
+    BPL CODE_00B93F                           ; 010 - $00B94C (word fill)
+    ASL A                                     ; 011 - continue (increasing fill)
     BPL CODE_00B94C
     JSR ReadByte
     LDX.B GraphicsUncompPtr
-  - STA.B [_0],Y
+; Increasing fill:
+  - STA.B [_0],Y                              ; Repeat a byte L+1 times, increasing the byte each time.
     INC A
     INY
     DEX
@@ -6343,9 +6538,9 @@ CODE_00B8FF:
     JMP CODE_00B8E3
 
 CODE_00B930:
-    JSR ReadByte
+    JSR ReadByte                              ; Direct copy (000).
     STA.B [_0],Y
-    INY
+    INY                                       ; Read and write bytes directly for L+1 bytes.
     LDX.B GraphicsUncompPtr
     DEX
     STX.B GraphicsUncompPtr
@@ -6353,22 +6548,22 @@ CODE_00B930:
     BRA CODE_00B8E3
 
 CODE_00B93F:
-    JSR ReadByte
+    JSR ReadByte                              ; Byte fill (001).
     LDX.B GraphicsUncompPtr
-  - STA.B [_0],Y
+  - STA.B [_0],Y                              ; Repeat one byte L+1 times.
     INY
     DEX
     BNE -
     BRA CODE_00B8E3
 
 CODE_00B94C:
-    JSR ReadByte
+    JSR ReadByte                              ; Word fill (010).
     XBA
     JSR ReadByte
     LDX.B GraphicsUncompPtr
 CODE_00B955:
     XBA
-    STA.B [_0],Y
+    STA.B [_0],Y                              ; Repeat two bytes (L+1)/2 times.
     INY
     DEX
     BEQ CODE_00B963
@@ -6378,10 +6573,10 @@ CODE_00B955:
     DEX
     BNE CODE_00B955
 CODE_00B963:
-    JMP CODE_00B8E3
+    JMP CODE_00B8E3                           ; Command is finished, go get next one.
 
 CODE_00B966:
-    JSR ReadByte
+    JSR ReadByte                              ; Copy memory (1xx).
     XBA
     JSR ReadByte
 if ver_has_rev_gfx(!_VER)                     ;\==================== J & E1 ===================
@@ -6390,8 +6585,8 @@ endif                                         ;/================================
     TAX
   - PHY
     TXY
-    LDA.B [_0],Y
-    TYX
+    LDA.B [_0],Y                              ; Copies L+1 already-written bytes from another area in memory.
+    TYX                                       ; The two bytes immediately after the command contain the address to copy.
     PLY
     STA.B [_0],Y
     INY
@@ -6403,11 +6598,11 @@ endif                                         ;/================================
     JMP CODE_00B8E3
 
 ReadByte:
-    LDA.B [GraphicsCompPtr]                   ; Read the byte
+    LDA.B [GraphicsCompPtr]                   ; Read the byte; Subroutine to load a byte of compressed graphics data to A.
     LDX.B GraphicsCompPtr                     ; \ Go to next byte
     INX                                       ; |
     BNE +                                     ; |   \
-    LDX.W #$8000                              ; |    |Handle bank crossing
+    LDX.W #$8000                              ; |    |Handle bank crossing; Increment pointer, and cross a bank if necessary.
     INC.B GraphicsCompPtr+2                   ; |   /
   + STX.B GraphicsCompPtr                     ; /
     RTS
@@ -6517,75 +6712,91 @@ GFXFilesHigh:
     db GFX31>>8
 
 GFXFilesBank:
-    db GFX00>>16&$7F
-    db GFX01>>16&$7F
-    db GFX02>>16&$7F
-    db GFX03>>16&$7F
-    db GFX04>>16&$7F
-    db GFX05>>16&$7F
-    db GFX06>>16&$7F
-    db GFX07>>16&$7F
-    db GFX08>>16&$7F
-    db GFX09>>16&$7F
-    db GFX0A>>16&$7F
-    db GFX0B>>16&$7F
-    db GFX0C>>16&$7F
-    db GFX0D>>16&$7F
-    db GFX0E>>16&$7F
-    db GFX0F>>16&$7F
-    db GFX10>>16&$7F
-    db GFX11>>16&$7F
-    db GFX12>>16&$7F
-    db GFX13>>16&$7F
-    db GFX14>>16&$7F
-    db GFX15>>16&$7F
-    db GFX16>>16&$7F
-    db GFX17>>16&$7F
-    db GFX18>>16&$7F
-    db GFX19>>16&$7F
-    db GFX1A>>16&$7F
-    db GFX1B>>16&$7F
-    db GFX1C>>16&$7F
-    db GFX1D>>16&$7F
-    db GFX1E>>16&$7F
-    db GFX1F>>16&$7F
-    db GFX20>>16&$7F
-    db GFX21>>16&$7F
-    db GFX22>>16&$7F
-    db GFX23>>16&$7F
-    db GFX24>>16&$7F
-    db GFX25>>16&$7F
-    db GFX26>>16&$7F
-    db GFX27>>16&$7F
-    db GFX28>>16&$7F
-    db GFX29>>16&$7F
-    db GFX2A>>16&$7F
-    db GFX2B>>16&$7F
-    db GFX2C>>16&$7F
-    db GFX2D>>16&$7F
-    db GFX2E>>16&$7F
-    db GFX2F>>16&$7F
-    db GFX30>>16&$7F
-    db GFX31>>16&$7F
+    db GFX00>>16
+    db GFX01>>16
+    db GFX02>>16
+    db GFX03>>16
+    db GFX04>>16
+    db GFX05>>16
+    db GFX06>>16
+    db GFX07>>16
+    db GFX08>>16
+    db GFX09>>16
+    db GFX0A>>16
+    db GFX0B>>16
+    db GFX0C>>16
+    db GFX0D>>16
+    db GFX0E>>16
+    db GFX0F>>16
+    db GFX10>>16
+    db GFX11>>16
+    db GFX12>>16
+    db GFX13>>16
+    db GFX14>>16
+    db GFX15>>16
+    db GFX16>>16
+    db GFX17>>16
+    db GFX18>>16
+    db GFX19>>16
+    db GFX1A>>16
+    db GFX1B>>16
+    db GFX1C>>16
+    db GFX1D>>16
+    db GFX1E>>16
+    db GFX1F>>16
+    db GFX20>>16
+    db GFX21>>16
+    db GFX22>>16
+    db GFX23>>16
+    db GFX24>>16
+    db GFX25>>16
+    db GFX26>>16
+    db GFX27>>16
+    db GFX28>>16
+    db GFX29>>16
+    db GFX2A>>16
+    db GFX2B>>16
+    db GFX2C>>16
+    db GFX2D>>16
+    db GFX2E>>16
+    db GFX2F>>16
+    db GFX30>>16
+    db GFX31>>16
 
 PrepareGraphicsFile:
-    PHB
+; GFX file pointers, low byte.
+; 00-07
+; 08-0F
+; 10-17
+; 18-1F
+; 20-27
+; 28-2F
+; 30-31
+; GFX file pointers, high byte.
+; GFX file pointers, long byte.
+; Scratch RAM returns:
+; $00 - 24-bit pointer to the GFX file decompression buffer ($7EAD00).
+; $8A - 24-bit pointer to the compressed GFX file.
+; Scratch RAM usage:
+; Y   - GFX file to get.
+; Routine to decompress a file to RAM. Also stores the pointer to RAM in $00.
+    PHB                                       ; Note: this routine does not handle the 3bpp->4bpp conversion.
     PHY
     PHK
     PLB
     LDA.W GFXFilesLow,Y
     STA.B GraphicsCompPtr
-    LDA.W GFXFilesHigh,Y
+    LDA.W GFXFilesHigh,Y                      ; Get compressed graphics pointer.
     STA.B GraphicsCompPtr+1
     LDA.W GFXFilesBank,Y
     STA.B GraphicsCompPtr+2
     LDA.B #$00
     STA.B _0
-    LDA.B #$AD
-    STA.B _1
+    LDA.B #$AD                                ; Make a pointer to the GFX file decompression buffer.
+    STA.B _1                                  ; ($7EAD00)
     LDA.B #$7E
     STA.B _2
-    JSR CODE_00B8DE
+    JSR CODE_00B8DE                           ; Decompress file.
     PLY
     PLB
     RTL
@@ -7140,22 +7351,365 @@ LoadBlkTable2:
     dw Ptrs00BE68
 
 GenerateTile:
-    PHP
+; Low bytes of Map16 pointers in horizontal levels. Indexed by screen number; each screen is x1B0 bytes.
+; Continued from above, alternatively used for Layer 2.
+; Low bytes of Map16 pointers in vertical levels. Indexed by screen number; each screen is x200 bytes (meaning these are pointless...).
+; Continued from above, alternatively used for Layer 2.
+; High bytes of Map16 pointers in horizontal levels. Indexed by screen number; each screen is x1B0 bytes.
+; Continued from above, alternatively used for Layer 2.
+; High bytes of Map16 pointers in vertical levels. Indexed by screen number; each screen is x200 bytes.
+; Continued from above, alternatively used for Layer 2.
+; Low Map16 block data pointers ($6B) for a horizontal Layer 1. Indexed by screen number.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; 0E
+; 0F
+; Continued from above, alternatively used for Layer 2.
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; 1E
+; 1F
+; Low Map16 block data pointers ($6B) for an unused Layer 1 layout. Indexed by screen number.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; Continued from above, alternatively used for Layer 2.
+; 0E
+; 0F
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; Low Map16 block data pointers ($6B) for an unused Layer 1 layout. Indexed by screen number.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; 0E
+; 0F
+; Continued from above, alternatively used for Layer 2.
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; Low Map16 block data pointers ($6B) for a vertical Layer 1. Indexed by screen number.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; Continued from above, alternatively used for Layer 2.
+; 0E
+; 0F
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; High Map16 block data pointers ($6E) for a horizontal Layer 1. Indexed by screen number.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; 0E
+; 0F
+; Continued from above, alternatively used for Layer 2.
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; 1E
+; 1F
+; High Map16 block data pointers ($6E) for an unused Layer 1. Indexed by screen number.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; Continued from above, alternatively used for Layer 2.
+; 0E
+; 0F
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; High Map16 block data pointers ($6E) for an unused Layer 1. Indexed by screen number.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; 0E
+; 0F
+; Continued from above, alternatively used for Layer 2.
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; High Map16 block data pointers ($6E) for a vertical Layer 1. Indexed by screen number.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; Continued from above, alternatively used for Layer 2.
+; 0E
+; 0F
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; Pointers to the low Map16 block data pointers for Layer 1. Indexed by level mode.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; 0E
+; 0F
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; 1E
+; 1F
+; Pointers to the low Map16 block data pointers for Layer 2. Indexed by level mode.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; 0E
+; 0F
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; 1E
+; 1F
+; Pointers to the high Map16 block data pointers for Layer 1. Indexed by level mode.
+; Pointers to the high Map16 block data pointers for Layer 2. Indexed by level mode.
+; Pointers to the low Map16 data block pointer tables for processing Layer 1 vs Layer 2.
+; Yes, that means these are pointers to pointers to pointers.
+; Pointers to the high Map16 data block pointer tables for processing Layer 1 vs Layer 2.
+; RAM setup:
+; $98   - 16-bit Y position of the tile.
+; $9A   - 16-bit X position of the tile.
+; $1933 - Layer to spawn the tile on (00 = layer 1, 01 = layer 2)
+; Scratch RAM usage:
+; $06   - Index to VRAM (16-bit)
+; $08   - Layer X position (16-bit), sort of?
+; $0A   - Layer Y position (16-bit), sort of?
+    PHP                                       ; Map16 generation routine. Use $9C as the block to spawn.
     REP #$30                                  ; AXY->16
     PHX
     LDA.B Map16TileGenerate
     AND.W #$00FF
-    BNE +
+    BNE +                                     ; Return if not generating a new tile.
 ADDR_00BEBB:
     JMP CODE_00BFB9
 
   + LDA.B TouchBlockXPos
-    STA.B _C
-    LDA.B TouchBlockYPos
+    STA.B _C                                  ; $0C = tile X position
+    LDA.B TouchBlockYPos                      ; $0E = tile Y position
     STA.B _E
     LDA.W #$0000
     SEP #$20                                  ; A->8
-    LDA.B ScreenMode
+    LDA.B ScreenMode                          ; Return if the block would generate outside of the level.
     STA.B _9
     LDA.W LayerProcessing
     BEQ +
@@ -7165,7 +7719,7 @@ ADDR_00BEBB:
     AND.B #$01
     BEQ +
     LDA.B TouchBlockXPos+1
-    STA.B _0
+    STA.B _0                                  ; Swap the block's X and Y positions if in a vertical level.
     LDA.B TouchBlockYPos+1
     STA.B TouchBlockXPos+1
     LDA.B _0
@@ -7175,8 +7729,8 @@ ADDR_00BEBB:
     BCS ADDR_00BEBB
     LDA.W LayerProcessing
     ASL A
-    TAX
-    LDA.L LoadBlkPtrs,X                       ; Set low byte of pointer
+    TAX                                       ; Get Map16 data pointer to the screen the tile is on.
+    LDA.L LoadBlkPtrs,X                       ; Set low byte of pointer; (specific tile indexing is handled later on)
     STA.B Layer1DataPtr
     LDA.L LoadBlkPtrs+1,X                     ; Set middle byte of pointer
     STA.B Layer1DataPtr+1
@@ -7209,7 +7763,7 @@ ADDR_00BEBB:
     STA.B Map16HighPtr+2
     LDA.B _9
     AND.B #$01
-    BEQ +
+    BEQ +                                     ; $06 = Actual VRAM position to upload to (16-bit)
     LDA.B TouchBlockYPos+1
     LSR A
     LDA.B TouchBlockXPos+1
@@ -7253,11 +7807,11 @@ CODE_00BF46:
     REP #$20                                  ; A->16
     LDA.B _9
     AND.W #$0001
-    BNE CODE_00BF9B
-    LDA.B Layer1XPos
-    SEC
-    SBC.W #$0080
-    TAX
+    BNE CODE_00BF9B                           ; $08 = Layer X position.
+    LDA.B Layer1XPos                          ; $0A = Layer Y position.
+    SEC                                       ; x80 is subtracted from one of these two addresses depending on level orientation and layer.
+    SBC.W #$0080                              ; Horizontal Layer 1 subtacts from X, vertical from Y.
+    TAX                                       ; Opposite for Layer 2.
     LDY.B Layer1YPos
     LDA.W LayerProcessing
     BEQ CODE_00BFB2
@@ -7284,7 +7838,7 @@ CODE_00BF9B:
 CODE_00BFB2:
     STX.B _8
     STY.B _A
-    JSR CODE_00BFBC
+    JSR CODE_00BFBC                           ; Run block-specific routines.
 CODE_00BFB9:
     PLX
     PLP
@@ -7335,10 +7889,40 @@ DATA_00C005:
     db $80,$40,$20,$10,$08,$04,$02,$01
 
 CODE_00C00D:
-    REP #$30                                  ; AXY->16
+; Pointers for the different Map16 tile generatable by $00BEB0.
+; (025) Empty, sets memory bit
+; (025) Empty
+; (006) Vine
+; (049) Solid bush
+; (048) Turning turnblock
+; (02B) Coin
+; (0A2) Mushroom stalk
+; (0C6) Mole hole
+; (152) Invisible solid block
+; (11B) Multiple coin turnblock
+; (123) Multiple coin ? block
+; (11E) Turnblock
+; (132) Used block
+; (113) Noteblock
+; (115) Noteblock
+; (116) 4-way noteblock
+; (12B) Side-bounce turnblock
+; (12C) Translucent block
+; (112) On/off switch
+; (168) Left side of pipe
+; (169) Right side of pipe
+; (132) Used block, sets memory bit
+; (15E) "Correct" block, sets memory bit
+; (025) Empty, include tile below, sets memory bit (Yoshi coins)
+; (---) 4x4 empty net frame (VRAM only)
+; (---) 4x4 net door (VRAM only)
+; (-25) 2x2 invisible block, does not set high bytes (switch palace switch)
+; Indexes to each item memory table.
+; AND values used for setting item memory bits.
+    REP #$30                                  ; AXY->16; Subroutine to set an item memory bit.
     LDA.B TouchBlockXPos
-    AND.W #$FF00
-    LSR A
+    AND.W #$FF00                              ; Get index for the block to the item memory tables.
+    LSR A                                     ; Note: far more optimized version available here: https://smwc.me/1477689
     LSR A
     LSR A
     LSR A
@@ -7365,7 +7949,7 @@ CODE_00C00D:
   + LDA.W ItemMemorySetting
     AND.W #$000F
     ASL A
-    TAX
+    TAX                                       ; Add the index to the current item memory table.
     LDA.L DATA_00BFFF,X
     CLC
     ADC.B _4
@@ -7376,7 +7960,7 @@ CODE_00C00D:
     LSR A
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; Set the item memory bit for the column.
     TAX
     SEP #$20                                  ; A->8
     LDA.W ItemMemoryTable,Y
@@ -7391,7 +7975,9 @@ TileToGeneratePg0:
     db $C6
 
 CODE_00C074:
-    JSR CODE_00C00D
+; Tiles for $00BEB0 to generate from page 0. First byte is unused.
+; Subroutine to generate a tile from Map16 page 0.
+    JSR CODE_00C00D                           ; Set  item memory bit.
 CODE_00C077:
     REP #$30                                  ; AXY->16
     LDA.B TouchBlockYPos
@@ -7411,14 +7997,14 @@ CODE_00C077:
     SEP #$20                                  ; A->8
     LDA.B [Map16HighPtr],Y                    ; \ Reset #$01 bit
     AND.B #$FE                                ; |
-    STA.B [Map16HighPtr],Y                    ; /
+    STA.B [Map16HighPtr],Y                    ; /; Write tile to Map16 data.
     LDA.L TileToGeneratePg0,X                 ; \ Store tile
     STA.B [Map16LowPtr],Y                     ; /
     REP #$20                                  ; A->16
     AND.W #$00FF
     ASL A
     TAY
-    JMP CODE_00C0FB
+    JMP CODE_00C0FB                           ; Upload tile to VRAM.
 
 
     db $80,$40,$20,$10,$08,$04,$02,$01
@@ -7427,9 +8013,16 @@ TileToGeneratePg1:
     db $2B,$2C,$12,$68,$69,$32,$5E
 
 CODE_00C0C1:
-    JSR CODE_00C00D
+; AND table. Possibly unused?
+; Tiles for $00BEB0 to generate from page 1.
+; Scratch RAM setup on entry:
+; $08/$0A = layer X/Y position
+; $0C/$0E = tile X/Y position
+; $06     = 16-bit VRAM position
+; Subroutine to generate a tile from Map16 page 1.
+    JSR CODE_00C00D                           ; Set item memory bit.
 CODE_00C0C4:
-    REP #$30                                  ; AXY->16
+    REP #$30                                  ; AXY->16; Alternate entry that doesn't set the item memory bit.
     LDA.B TouchBlockYPos
     AND.W #$01F0
     STA.B _4
@@ -7449,7 +8042,7 @@ CODE_00C0C4:
     SEP #$20                                  ; A->8
     LDA.B [Map16HighPtr],Y                    ; \ Set #$01 bit
     ORA.B #$01                                ; |
-    STA.B [Map16HighPtr],Y                    ; /
+    STA.B [Map16HighPtr],Y                    ; /; Write tile to the Map16 data.
     LDA.L TileToGeneratePg1,X                 ; \ Store tile
     STA.B [Map16LowPtr],Y                     ; /
     REP #$20                                  ; A->16
@@ -7458,7 +8051,7 @@ CODE_00C0C4:
     ASL A
     TAY
 CODE_00C0FB:
-    LDA.B ScreenMode
+    LDA.B ScreenMode                          ; Upload the tile's actual graphics to VRAM.
     STA.B _0
     LDA.W LayerProcessing
     BEQ +
@@ -7516,7 +8109,7 @@ CODE_00C13E:
     STA.L DynamicStripeImage+$10,X
     LDA.B #$0D
     STA.B _6
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; [hijacked by LM for a jump to $06F5D0]
     LDA.W Map16Pointers,Y
     STA.B _4
     LDY.W #$0000
@@ -7542,7 +8135,8 @@ Return00C1AB:
     RTS
 
 CODE_00C1AC:
-    JSR CODE_00C00D
+; Erase tile and tile below, set item memory bit (Yoshi coin)
+    JSR CODE_00C00D                           ; Set item memory bit.
     REP #$30                                  ; AXY->16
     LDA.B TouchBlockYPos
     AND.W #$01F0
@@ -7556,15 +8150,15 @@ CODE_00C1AC:
     ORA.B _4
     TAY
     SEP #$20                                  ; A->8
-    LDA.B #$25
+    LDA.B #$25                                ; Erase tile at the block's position.
     STA.B [Map16LowPtr],Y
     REP #$20                                  ; A->16
     TYA
     CLC
-    ADC.W #$0010
+    ADC.W #$0010                              ; How many tiles to add to the Yoshi coin's position for its lower tile (1 row).
     TAY
     SEP #$20                                  ; A->8
-    LDA.B #$25
+    LDA.B #$25                                ; Erase tile one block below.
     STA.B [Map16LowPtr],Y
     REP #$20                                  ; A->16
     AND.W #$00FF
@@ -7616,7 +8210,7 @@ CODE_00C222:
     STA.L DynamicStripeImage+1,X
     INC A
     STA.L DynamicStripeImage+$0D,X
-    LDA.B #$80
+    LDA.B #$80                                ; Upload position to VRAM.
     STA.L DynamicStripeImage+2,X
     STA.L DynamicStripeImage+$0E,X
     LDA.B #$07
@@ -7626,7 +8220,7 @@ CODE_00C222:
     STA.L DynamicStripeImage+$18,X
     LDA.B #$0D
     STA.B _6
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; [hijacked by LM for a jump to $06F5D0]
     LDA.W Map16Pointers,Y
     STA.B _4
     LDY.W #$0000
@@ -7639,7 +8233,7 @@ CODE_00C222:
     STA.L DynamicStripeImage+$10,X
     STA.L DynamicStripeImage+$14,X
     INY
-    INY
+    INY                                       ; Upload image to VRAM.
     LDA.B [_4],Y
     STA.L DynamicStripeImage+6,X
     STA.L DynamicStripeImage+$0A,X
@@ -7650,7 +8244,7 @@ CODE_00C222:
     STA.L DynamicStripeImage+$16,X
     TXA
     CLC
-    ADC.W #$0018
+    ADC.W #$0018                              ; Update stripe upload index.
     STA.L DynStripeImgSize
     RTS
 
@@ -7681,10 +8275,15 @@ DATA_00C32E:
     dl DATA_00C2E6
 
 CODE_00C334:
-    INC.B _7
+; Tilemaps to write to VRAM for the gate object. Two bytes per 8x8; tile number, then YXPCCCTT.
+; $00C29E - Empty
+; $00C2E6 - Filled
+; Pointers to the above tables, low byte. Indexed by which object is being spawned.
+; Pointers to the above tables, high/long bytes. Indexed by which object is being spawned.
+    INC.B _7                                  ; 4x4 empty space/gate, only updates VRAM (net door).
     LDA.B _7
     CLC
-    ADC.B #$20
+    ADC.B #$20                                ; Shift VRAM pointer one 8x8 right and down.
     STA.B _7
     LDA.B _6
     ADC.B #$00
@@ -7694,7 +8293,7 @@ CODE_00C334:
     SBC.B #$19
     STA.B _0
     ASL A
-    CLC
+    CLC                                       ; $00 = ??
     ADC.B _0
     TAX
     LDA.L DATA_00C32E+2,X
@@ -7757,7 +8356,7 @@ CODE_00C39F:
     RTS
 
 CODE_00C3D1:
-    REP #$30                                  ; AXY->16
+    REP #$30                                  ; AXY->16; 2x2 invisible block, low bytes only (switch palace switch)
     LDA.B TouchBlockYPos
     AND.W #$01F0
     STA.B _4
@@ -7836,18 +8435,19 @@ DATA_00C478:
     db $30,$33,$33,$30,$01,$00
 
 CODE_00C47E:
-    STZ.B PlayerHiddenTiles
+    STZ.B PlayerHiddenTiles                   ; Routine to handle various gameplay-related processes (Mario-object interaction, level end, P-switches, etc).
     LDA.W UnusedStarCounter
-    BPL +
+    BPL +                                     ; Handle the (unused) star ability from level end.
     JSL CODE_01C580
     STZ.W UnusedStarCounter
-  + LDY.W KeyholeTimer
+; Keyhole routine.
+  + LDY.W KeyholeTimer                        ; Branch if keyhole not active.
     BEQ CODE_00C4BA
-    STY.W PlayerIsFrozen
-    STY.B SpriteLock
+    STY.W PlayerIsFrozen                      ; Freeze player.
+    STY.B SpriteLock                          ; Freeze sprites.
     LDX.W KeyholeDirection
     LDA.W SpotlightSize
-    CMP.W DATA_00C470,X
+    CMP.W DATA_00C470,X                       ; Branch if not at max keyhole scaling.
     BNE CODE_00C4BC
     DEY
     BNE CODE_00C4B7
@@ -7857,16 +8457,16 @@ CODE_00C47E:
     BCC +
     JSR CODE_00FCEC
     LDA.B #$02
-    LDY.B #$0B
+    LDY.B #$0B                                ; Activate secret exit and fade to overworld.
     JSR CODE_00C9FE
     LDY.B #$00
 CODE_00C4B7:
     STY.W KeyholeTimer
 CODE_00C4BA:
-    BRA +
+    BRA +                                     ; Keyhole is not active.
 
 CODE_00C4BC:
-    CLC
+    CLC                                       ; Not done scaling keyhole.
     ADC.W DATA_00C474,X
     STA.W SpotlightSize
     LDA.B #$22
@@ -7895,11 +8495,12 @@ CODE_00C4BC:
     ADC.B #$10
     STA.B _1
     JSR CODE_00CA88
-  + LDA.W PlayerIsFrozen
-    BEQ +
+  + LDA.W PlayerIsFrozen                      ; Code reconvenes here.
+    BEQ +                                     ; If the player is frozen in place, skip everything to return.
     JMP CODE_00C58F
 
-  + LDA.B SpriteLock                          ; \ Branch if sprites locked
+; Player is not frozen.
+  + LDA.B SpriteLock                          ; \ Branch if sprites locked; Branch if sprites frozen.
     BNE CODE_00C569                           ; /
     INC.B EffFrame
     LDX.B #$13
@@ -7931,25 +8532,25 @@ CODE_00C533:
   + LDA.W MusicBackup
     BMI +
     CPY.B #$01
-    BNE +
-    LDY.W DirectCoinTimer
+    BNE +                                     ; If a switch is close to running out, play a sound effect to indicate such.
+    LDY.W DirectCoinTimer                     ; If it does run out, then reset the music register.
     BNE +
     STA.W SPCIO2                              ; / Change music
   + CMP.B #$FF
     BEQ +
     CPY.B #con($1E,$1E,$1E,$18,$18)
     BNE +
-    LDA.B #!SFX_RUNNINGOUT                    ; \ Play sound effect
+    LDA.B #!SFX_RUNNINGOUT                    ; \ Play sound effect; SFX for the P-switch running out.
     STA.W SPCIO3                              ; /
   + LDX.B #$06
 CODE_00C55E:
-    LDA.W EmptyTimer14A8,X
+    LDA.W EmptyTimer14A8,X                    ; Decrement $14A8-$14AE, which includes the Blue/Silver P-switch timers.
     BEQ +
     DEC.W EmptyTimer14A8,X
   + DEX
     BNE CODE_00C55E
 CODE_00C569:
-    JSR ProcessPlayerAnimation
+    JSR ProcessPlayerAnimation                ; Process object interaction for Mario (and various animation states).
     LDA.B byetudlrFrame
     AND.B #$20
     BEQ CODE_00C58F
@@ -7958,10 +8559,10 @@ if ver_is_ntsc(!_VER)                         ;\================== J, U, & SS ==
     AND.B #$08                                ;!
     BRA CODE_00C585                           ;! Change to BEQ to reach debug routine below
                                               ;!
-    LDA.B Powerup                             ;! \ Unreachable
+    LDA.B Powerup                             ;! \ Unreachable; DEBUG: increment powerup status.
     INC A                                     ;! | Debug: Cycle through powerups
     CMP.B #$04                                ;! |
-    BCC +                                     ;! |
+    BCC +                                     ;! |; Press up + select to increment status.
     LDA.B #$00                                ;! |
   + STA.B Powerup                             ;! |
     BRA CODE_00C58F                           ;! /
@@ -7980,7 +8581,7 @@ Return00C592:
     RTS
 
 ProcessPlayerAnimation:          
-    LDA.B PlayerAnimation
+    LDA.B PlayerAnimation                     ; Mario animation state routine. Effectively processes object interaction for Mario.
     JSL ExecutePtr
 
     dw ResetAni                               ; 0 - Reset
@@ -7999,7 +8600,22 @@ ProcessPlayerAnimation:
     dw Return00C592                           ; D - freeze forever
 
 UnknownAniB:
-    STZ.W PlayerOverworldPose
+; Mario animation pointers.
+; 00 - Normal
+; 01 - Flashing (damage)
+; 02 - Get mushroom
+; 03 - Get feather
+; 04 - Get fireflower
+; 05 - Enter horizontal pipe
+; 06 - Enter vertical pipe
+; 07 - Shoot diagonally (slanted pipe)
+; 08 - Shoot into the sky (Yoshi wings)
+; 09 - End level without activating events (death)
+; 0A - No-Yoshi entrance
+; 0B - Freeze player
+; 0C - Castle destruction
+; 0D - Enter door
+    STZ.W PlayerOverworldPose                 ; Mario state 0B - Freeze the player as if they've beaten a boss (?).
     STZ.W PlayerSlopePose
     LDA.W EndLevelTimer
     BEQ CODE_00C5CE
@@ -8010,12 +8626,12 @@ UnknownAniB:
     JMP CODE_00C95B
 
 CODE_00C5CE:
-    STZ.W HDMAEnable
+    STZ.W HDMAEnable                          ; Disable HDMA.
   + LDA.B #$01
     STA.W MessageBoxExpand
     LDA.B #$07
     STA.W LevelLoadObject
-    JSR NoButtons
+    JSR NoButtons                             ; Disable input.
     JMP CODE_00CD24
 
 
@@ -8130,130 +8746,150 @@ DATA_00C6E0:
     db DATA_00C6C1-DATA_00C5E8-2
 
 UnknownAniC:
-    JSR NoButtons
+; Format for commands in the below table are a bit weird.
+; If bit 4 is set, draws question marks above Mario (position and number drawn determined by $1445 and the routine at $0CD4A4).
+; If bit 5 of first byte is clear, the rest of the byte is read as input ($15/$16).
+; If bit 5 is set, then the first nibble is used as various specialized commands (see $00C789 onwards).
+; If #$2D, also plays the P-balloon sound (for Lemmy's).
+; If #$FF, indicates end of the data.
+; Castle destruction data. First byte is the command byte; second is how long to use it.
+; 00 - C1 Iggy (normal switch)
+; 10 - C2 Morton (castle stomp)
+; 50 - C5 Roy (broken switch)
+; 84 - C4 Ludwig (liftoff)
+; A0 - C3 Lemmy (hammer)
+; BC - C6 Wendy (wipe)
+; D8 - C7 Larry (toss)
+; Indexes to each destruction sequence above.
+; Scratch RAM usage:
+; $88 - Timer for each command.
+; $8F - Index to the input table above (within each sequence).
+; Mario state 0C - Castle destruction cutscene.
+    JSR NoButtons                             ; Disable input.
     STZ.W PlayerOverworldPose
-    JSR CODE_00DC2D
-    LDA.B PlayerYSpeed+1                      ; \ Branch if Mario has upward speed
+    JSR CODE_00DC2D                           ; Update player position.
+    LDA.B PlayerYSpeed+1                      ; \ Branch if Mario has upward speed; Branch if Mario moving upwards.
     BMI CODE_00C73F                           ; /
     LDA.B PlayerYPosNext
-    CMP.B #$58
+    CMP.B #$58                                ; Branch if Mario is on the ground.
     BCS CODE_00C739
     LDY.B PlayerXPosNext
-    CPY.B #$40
+    CPY.B #$40                                ; Branch if Mario is to the left of the detonation switch.
     BCC CODE_00C73F
-    CPY.B #$60
+    CPY.B #$60                                ; Branch if not to the right of the switch.
     BCC CODE_00C71C
     LDY.B Layer1YPos
     BEQ CODE_00C73F
-    CLC
+    CLC                                       ; Branch if hitting the top of the castle. (Morton)
     ADC.B Layer1YPos
     CMP.B #$1C
     BMI CODE_00C73F
     SEC
     SBC.B Layer1YPos
-    LDX.B #$D0
+    LDX.B #$D0                                ; Y speed to give Mario as he's bouncing off the top of the castle.
     LDY.B PlayerDirection
-    BEQ CODE_00C730
-    LDY.B #$00
+    BEQ CODE_00C730                           ; Skip down.
+    LDY.B #$00                                ; Clear X speed if facing right.
     BRA CODE_00C72E
 
 CODE_00C71C:
-    CMP.B #$4C
+; Hitting the detonation switch.
+    CMP.B #$4C                                ; Branch if not hitting the top of the switch.
     BCC CODE_00C73F
-    LDA.B #!SFX_CUTSCENEFUSE                  ; \ Play sound effect
+    LDA.B #!SFX_CUTSCENEFUSE                  ; \ Play sound effect; SFX for the fuse.
     STA.W SPCIO3                              ; /
     INC.W Layer1ScrollCmd
     LDA.B #$4C
-    LDY.B #$F4
-    LDX.B #$C0
+    LDY.B #$F4                                ; X speed to send Mario back with.
+    LDX.B #$C0                                ; Y speed to bounce Mario back off with.
 CODE_00C72E:
     STY.B PlayerXSpeed+1
 CODE_00C730:
     STX.B PlayerYSpeed+1
-    LDX.B #!SFX_BONK                          ; \ Play sound effect
+    LDX.B #!SFX_BONK                          ; \ Play sound effect; SFX for bouncing off something (switch, castle) in the castle destruction sequence.
     STX.W SPCIO0                              ; /
     BRA +
 
 CODE_00C739:
-    STZ.B PlayerInAir
+    STZ.B PlayerInAir                         ; Mario is on the ground.
     LDA.B #$58
   + STA.B PlayerYPosNext
 CODE_00C73F:
-    LDX.W CutsceneID
+    LDX.W CutsceneID                          ; Fetch command.
     LDA.B CutsceneInputIndex
-    CLC
+    CLC                                       ; Get index to current input.
     ADC.W DATA_00C6E0-1,X
     TAX
     LDA.B CutsceneInputTimer
-    BNE +
+    BNE +                                     ; Branch if not at the end of the current input.
     INC.B CutsceneInputIndex
-    INC.B CutsceneInputIndex
+    INC.B CutsceneInputIndex                  ; Move to next input.
     INX
     INX
-    LDA.W DATA_00C5E8+1,X
+    LDA.W DATA_00C5E8+1,X                     ; Set timer for next input.
     STA.B CutsceneInputTimer
     LDA.W DATA_00C5E8,X
-    CMP.B #$2D
+    CMP.B #$2D                                ; Handle sound effect for tossing the castle away (Lemmy).
     BNE +
-    LDA.B #!SFX_PBALLOON                      ; \ Play sound effect
+    LDA.B #!SFX_PBALLOON                      ; \ Play sound effect; SFX for tossing the castle.
     STA.W SPCIO0                              ; /
   + LDA.W DATA_00C5E8,X
-    CMP.B #$FF
-    BNE +
+    CMP.B #$FF                                ; Return if at the end of the data.
+    BNE +                                     ; (first byte = #$FF)
     JMP Return00C7F8
 
-  + PHA
+  + PHA                                       ; Run command.
     AND.B #$10
-    BEQ +
+    BEQ +                                     ; If bit 4 is set, draw a question mark above Mario's head.
     JSL CODE_0CD4A4
   + PLA
     TAY
     AND.B #$20
     BNE CODE_00C789
-    STY.B byetudlrHold
+    STY.B byetudlrHold                        ; If bit 5 is clear, take the next byte as input data.
     TYA
     AND.B #$BF
     STA.B byetudlrFrame
-    JSR CODE_00CD39
+    JSR CODE_00CD39                           ; Run input routines (?).
     BRA CODE_00C7F6
 
 CODE_00C789:
-    TYA
+    TYA                                       ; Not input.
     AND.B #$0F
-    CMP.B #$07
+    CMP.B #$07                                ; Branch if the first 4 bits are #$07 or more.
     BCS CODE_00C7E9
-    DEC A
+    DEC A                                     ; Branch if the first 4 bits was not #$00.
     BPL CODE_00C7A2
-    LDA.W PickUpItemTimer
-    BEQ CODE_00C79D
-    LDA.B #!SFX_CAPE                          ; \ Play sound effect
+    LDA.W PickUpItemTimer                     ; _0 - Play pick up SFX if crouching, and increase $143E (for Larry's, Morton's).
+    BEQ CODE_00C79D                           ; Play pick up sound effect if Mario is crouching.
+    LDA.B #!SFX_CAPE                          ; \ Play sound effect; SFX for picking up the castle.
     STA.W SPCIO0                              ; /
 CODE_00C79D:
     INC.W Layer1ScrollCmd
     BRA CODE_00C7F6
 
 CODE_00C7A2:
-    BNE CODE_00C7A9
+    BNE CODE_00C7A9                           ; _1 - Increase $1445.
     INC.W Layer2ScrollTimer
     BRA CODE_00C7F6
 
 CODE_00C7A9:
-    DEC A
+    DEC A                                     ; _2 - Play swim sound and increase $1446 (for the smoke cloud in Morton/Roy's).
     BNE CODE_00C7B6
-    LDA.B #!SFX_SWIM                          ; \ Play sound effect
+    LDA.B #!SFX_SWIM                          ; \ Play sound effect; SFX for the huff sound used in Morton/Roy's sequences.
     STA.W SPCIO0                              ; /
     INC.W Layer1ScrollXSpeed
     BRA CODE_00C7F6
 
 CODE_00C7B6:
-    DEC A
+    DEC A                                     ; _3 - Set $1445 to #$88 (for the hammer timer in Larry's).
     BNE CODE_00C7C0
     LDY.B #$88
     STY.W Layer2ScrollTimer
     BRA CODE_00C7F6
 
 CODE_00C7C0:
-    DEC A
+    DEC A                                     ; _4 - Set $1446 to #$38 and center Mario's X position (Wendy's).
     BNE CODE_00C7CE
     LDA.B #$38
     STA.W Layer1ScrollXSpeed
@@ -8262,27 +8898,28 @@ CODE_00C7C0:
     BRA CODE_00C7F6
 
 CODE_00C7CE:
-    DEC A
+    DEC A                                     ; _5 - Play small boom, push Mario back, and increase $143E twice (Morton's).
     BNE CODE_00C7DF
-    LDA.B #!SFX_KAPOW                         ; \ Play sound effect
+    LDA.B #!SFX_KAPOW                         ; \ Play sound effect; SFX for hitting the castle.
     STA.W SPCIO3                              ; /
-    LDA.B #con($D8,$D8,$D8,$D2,$D2)
+    LDA.B #con($D8,$D8,$D8,$D2,$D2)           ; X speed to push Mario back with.
     STA.B PlayerXSpeed+1
     INC.W Layer1ScrollCmd
     BRA CODE_00C79D
 
 CODE_00C7DF:
-    LDA.B #$20
+; _6 - Set Mario to pick up something (Larry's).
+    LDA.B #$20                                ; Set timer for the grab animation.
     STA.W PickUpItemTimer
     INC.W IsCarryingItem
     BRA CODE_00C7F6
 
 CODE_00C7E9:
-    TAY
-    LDA.W DATA_00C5E1-7,Y
+    TAY                                       ; _7-_F - Change player image, based on $00C5E1, and clear $148F.
+    LDA.W DATA_00C5E1-7,Y                     ; Change Mario's pose.
     STA.W PlayerPose
     STZ.W IsCarryingItem
-    JSR CODE_00D7E4
+    JSR CODE_00D7E4                           ; Handle flight (?).
 CODE_00C7F6:
     DEC.B CutsceneInputTimer
 Return00C7F8:
@@ -8293,8 +8930,12 @@ DATA_00C7F9:
     db $C0,$FF,$A0,$00
 
 YoshiWingsAni:
-    JSR NoButtons
-    LDA.B #$0B
+; Heights at which the player stops flying upward in the Yoshi Wings level.
+; flying up to the YW level
+; entering the YW level
+; Mario state 08 - Collected Yoshi Wings
+    JSR NoButtons                             ; Disable input.
+    LDA.B #$0B                                ; Indicate Mario as in the air, moving upwards.
     STA.B PlayerInAir
     JSR CODE_00D7E4
     LDA.B PlayerYSpeed+1                      ; \ Branch if Mario has downward speed
@@ -8349,50 +8990,56 @@ DATA_00C848:                                  ;!
 endif                                         ;/===============================================
 
 EnterCastleAni:
-    STZ.W SpinjumpFireball
+; Controller input data for the No-Yoshi entrances.
+; No Yoshi
+; With Yoshi
+    STZ.W SpinjumpFireball                    ; Mario state 0A - No-Yoshi entrance.
     LDX.W ObjectTileset
-    BIT.W DATA_00A625,X
+    BIT.W DATA_00A625,X                       ; Figure out which entrance to set up sprite data for.
     BMI CODE_00C889
     BVS ADDR_00C883
-    JSL CODE_02F57C
+; Setting up ghost house entrance.
+    JSL CODE_02F57C                           ; Draw the ghost house entrance sprite.
     BRA +
 
 ADDR_00C883:
-    JSL ADDR_02F58C
+; Setting up rope entrance.
+    JSL ADDR_02F58C                           ; Draw the no-Yoshi sign sprite.
     BRA +
 
 CODE_00C889:
-    JSL CODE_02F584
-  + LDX.B NoYoshiInputIndex
+; Setting up castle entrance.
+    JSL CODE_02F584                           ; Draw the castle door sprite.
+  + LDX.B NoYoshiInputIndex                   ; All entrances rejoin.
     LDA.B byetudlrFrame
-    ORA.B axlr0000Frame
-    JSR NoButtons
+    ORA.B axlr0000Frame                       ; Disable input;
+    JSR NoButtons                             ; if A/B are pressed, skip the intro.
     BMI CODE_00C8FB
     STZ.W PlayerOverworldPose
     DEC.B NoYoshiInputTimer
     BNE +
     INX
-    INX
+    INX                                       ; If at the end of the current input, set the timer for the next.
     STX.B NoYoshiInputIndex
     LDA.W DATA_00C848-1,X
     STA.B NoYoshiInputTimer
   + LDA.W DATA_00C848-2,X
-    CMP.B #$FF
+    CMP.B #$FF                                ; If byte is #$FF, at end of data.
     BEQ CODE_00C8FB
     AND.B #$DF
     STA.B byetudlrHold
-    CMP.W DATA_00C848-2,X
+    CMP.W DATA_00C848-2,X                     ; Input command.
     BEQ +
     LDY.B #$80
     STY.B axlr0000Frame
   + ASL A
-    BPL CODE_00C8D1
+    BPL CODE_00C8D1                           ; If command contained A, start entrance door timer.
     JSR NoButtons
-    LDY.B #$B0
+    LDY.B #$B0                                ; Time to wait for the castle door to open.
     LDX.W ObjectTileset
     BIT.W DATA_00A625,X
     BMI +
-    LDY.B #$7F
+    LDY.B #$7F                                ; Time to wait for the ghost house door to open.
   + STY.W NoYoshiIntroTimer
 CODE_00C8D1:
     JSR CODE_00DC2D
@@ -8430,15 +9077,16 @@ CODE_00C90A:
     RTS
 
 CODE_00C915:
-    JSR NoButtons
+; Mario animation routine during the goal walk.
+    JSR NoButtons                             ; Disable input.
     STZ.W PlayerInCloud
     STZ.W PlayerOverworldPose
     STZ.W PlayerSlopePose
     LDA.B ScreenMode
-    LSR A
+    LSR A                                     ; Branch if in a vertical level.
     BCS CODE_00C944
     LDA.W CutsceneID
-    ORA.W SwitchPalaceColor
+    ORA.W SwitchPalaceColor                   ; Branch if not ending the level via boss beaten or switch palace.
     BEQ CODE_00C96B
     LDA.B PlayerInAir
     BEQ +
@@ -8450,14 +9098,15 @@ CODE_00C915:
     CMP.B #$40
     BCC Return00C96A
 CODE_00C944:
-    JSL CODE_05CBFF
+    JSL CODE_05CBFF                           ; Goal sphere in a vertical level.
 CODE_00C948:
-    LDY.B #$01
+; Switch palace switch.
+    LDY.B #$01                                ; Freeze sprites.
     STY.B SpriteLock
     LDA.B TrueFrame
-    LSR A
-    BCC Return00C96A
-    DEC.W EndLevelTimer
+    LSR A                                     ; Return if:
+    BCC Return00C96A                          ; Not on an odd-numbered frame.
+    DEC.W EndLevelTimer                       ; Already ending the level (from e.g. goal tape)
 if ver_is_ntsc(!_VER)                         ;\=================== J, U, & SS ================
     BNE Return00C96A                          ;!
 else                                          ;<==================== E0 & E1 ==================
@@ -8465,21 +9114,22 @@ else                                          ;<==================== E0 & E1 ===
     CMP.B #$50                                ;!
     BCS Return00C96A                          ;!
 endif                                         ;/===============================================
-    LDA.W SwitchPalaceColor
+    LDA.W SwitchPalaceColor                   ; Branch if activating a switch palace.
     BNE +
 CODE_00C95B:
     LDY.B #$0B
-    LDA.B #$01
+    LDA.B #$01                                ; Activate the normal exit and fade to overworld.
     JMP CODE_00C9FE
 
-  + LDA.B #con($70,$A0,$A0,$6A,$6A)
+; Switch palace message being activated.
+  + LDA.B #con($70,$A0,$A0,$6A,$6A)           ; Number of frames to show the Switch Palace message for.
     STA.W VariousPromptTimer
-    INC.W MessageBoxTrigger
+    INC.W MessageBoxTrigger                   ; Display the Switch Palace message.
 Return00C96A:
     RTS
 
 CODE_00C96B:
-    JSR CODE_00AF17
+    JSR CODE_00AF17                           ; Ending level through goal tape/sphere in horizontal level.
     LDA.W ShowPeaceSign
     BNE CODE_00C9AF
     LDA.W EndLevelTimer
@@ -8513,34 +9163,35 @@ DATA_00C9A7:
     db $25,$07,$40,$0E,$20,$1A,$34,$32
 
 CODE_00C9AF:
-    JSR SetMarioPeaceImg
+; Translevel numbers that activate each castle cutscene. Last byte is Front Door; Back Door is at $00CA13.
+    JSR SetMarioPeaceImg                      ; Set Mario's image to the peace sign.
     LDA.W PlayerPeaceSign
-    BEQ CODE_00C9C2
+    BEQ CODE_00C9C2                           ; Return if waiting for the peace sign to finish.
     DEC.W PlayerPeaceSign
     BNE +
-    LDA.B #!BGM_SPOTLIGHT
+    LDA.B #!BGM_SPOTLIGHT                     ; Play the circle-zoom sound.
     STA.W SPCIO2                              ; / Change music
   + RTS
 
 CODE_00C9C2:
-    JSR CODE_00CA44
-    LDA.B #$01
+    JSR CODE_00CA44                           ; Decrease the circle-zoom effect's size.
+    LDA.B #$01                                ; Simulate holding right.
     STA.B byetudlrHold
     JSR CODE_00CD24
-    LDA.W SpotlightSize
+    LDA.W SpotlightSize                       ; Return if the circle isn't done scaling away.
     BNE Return00CA30
     LDA.W SecretGoalTape                      ; \ Branch if Goal Tape extra bits == #$02
     INC A                                     ; | (never happens)
-    CMP.B #$03                                ; |
-    BNE +                                     ; /
+    CMP.B #$03                                ; |; If the secret exit flag for the tape is set to 02 (unused),
+    BNE +                                     ; /; change submap to Yoshi's Island and activate the secret exit.
     LDA.B #$01                                ; \ Unreachable
     STA.W OWPlayerSubmap                      ; | Set submap to be Yoshi's Island
     LSR A                                     ; /
   + LDY.B #$0C
-    LDX.W BonusGameActivate
+    LDX.W BonusGameActivate                   ; Branch if the bonus game is not set to activate after the level.
     BEQ +
     LDX.B #$FF
-    STX.W BonusGameActivate
+    STX.W BonusGameActivate                   ; Prep the bonus game.
     LDX.B #$F0
     STX.W MosaicSize
     STZ.W EndLevelTimer
@@ -8549,21 +9200,21 @@ CODE_00C9C2:
   + STZ.W Brightness
     STZ.W MosaicDirection
 CODE_00C9FE:
-    STA.W OWLevelExitMode                     ; Store secret/normal exit info
-    LDA.W CutsceneID
+    STA.W OWLevelExitMode                     ; Store secret/normal exit info; Prepare level end; A contains exit, Y contains game mode to activate.
+    LDA.W CutsceneID                          ; Branch if not activating a boss cutscene.
     BEQ CODE_00CA25
     LDX.B #$08
     LDA.W TranslevelNo
-    CMP.B #$13
+    CMP.B #$13                                ; Level where defeating the boss activates the secret exit (Donut Secret House).
     BNE +
     INC.W OWLevelExitMode
-  + CMP.B #$31
+  + CMP.B #$31                                ; The second level that activates the credits cutscene (Back Door).
     BEQ CODE_00CA20
 CODE_00CA16:
     CMP.W DATA_00C9A7-1,X
     BEQ CODE_00CA20
-    DEX
-    BNE CODE_00CA16
+    DEX                                       ; Check whether the level activates a boss-beaten cutscene.
+    BNE CODE_00CA16                           ; If so, load game mode 18.
     BRA CODE_00CA25
 
 CODE_00CA20:
@@ -8571,17 +9222,17 @@ CODE_00CA20:
     LDY.B #$18
 CODE_00CA25:
     STY.W GameMode
-    INC.W CreditsScreenNumber
+    INC.W CreditsScreenNumber                 ; Indicate event should activate on overworld load.
 CODE_00CA2B:
-    LDA.B #$01
-    STA.W MidwayFlag
+    LDA.B #$01                                ; Set flag to activate events on the overworld.
+    STA.W MidwayFlag                          ; This particular spot is also used to set the midpoint flag.
 Return00CA30:
     RTS
 
 SetMarioPeaceImg:
-    LDA.B #$26                                ; \ Mario's image = Peace Sign, or
+    LDA.B #$26                                ; \ Mario's image = Peace Sign, or; Small subroutine to show Mario's peace pose at level end.
     LDY.W PlayerRidingYoshi                   ; |
-    BEQ +                                     ; |
+    BEQ +                                     ; |; Set Mario's pose to 0x26, or 0x14 when riding Yoshi.
     LDA.B #$14                                ; | Mario's image = Peace Sign on Yoshi
   + STA.W PlayerPose                          ; /
     RTS
@@ -8609,9 +9260,9 @@ CODE_00CA44:
     RTS
 
 CODE_00CA61:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Subtroutine to get the pointer to the title screen window data ($00CB12).
     LDA.W #DATA_00CB12                        ; \
-    STA.B _4                                  ; |Load xCB12 into $04 and $06
+    STA.B _4                                  ; |Load xCB12 into $04 and $06; Set 16-bit pointer to $00CB12.
     STA.B _6                                  ; /
     SEP #$20                                  ; A->8
     RTS
@@ -8751,7 +9402,7 @@ DATA_00CB93:
     db $11,$00
 
 CODE_00CC14:
-    PHY
+    PHY                                       ; Windowing data for the opening circle.
     LDA.B _1
     STA.W HW_WRDIV+1
     STZ.W HW_WRDIV
@@ -8798,21 +9449,21 @@ DATA_00CC5C:
 
 ResetAni:
 if ver_is_ntsc(!_VER)                         ;\=================== J, U, & SS ================
-    LDA.B axlr0000Hold                        ;!
+    LDA.B axlr0000Hold                        ;!; Normal Mario animation. Handles pretty much all Mario-related interaction with objects.
     AND.B #$20                                ;!
     BEQ +                                     ;!
     LDA.B axlr0000Frame                       ;!
     CMP.B #$80                                ;!
-    BNE +                                     ;!
+    BNE +                                     ;!; Handling the freeroam debug RAM address.
     INC.W DebugFreeRoam                       ;!
     LDA.W DebugFreeRoam                       ;!
     CMP.B #$03                                ;!
     BCC +                                     ;!
     STZ.W DebugFreeRoam                       ;!
   + LDA.W DebugFreeRoam                       ;!
-    BRA CODE_00CCBB                           ;! Change to BEQ to enable debug code below
+    BRA CODE_00CCBB                           ;! Change to BEQ to enable debug code below; [change BRA to BEQ to enable freeroam cheat]
                                               ;!
-    LSR A                                     ;! \ Unreachable
+    LSR A                                     ;! \ Unreachable; DEBUG: freeroam.
     BEQ ADDR_00CCB3                           ;! | Debug: Free roaming mode
     LDA.B #$FF                                ;! |
     STA.W IFrameTimer                         ;! |
@@ -8839,31 +9490,32 @@ ADDR_00CC9F:                                  ;! |
     RTS                                       ;! /
                                               ;!
 ADDR_00CCB3:                                  ;!
-    LDA.B #$70                                ;!
+    LDA.B #$70                                ;!; Freeroam: full P-speed.
     STA.W PlayerPMeter                        ;!
     STA.W TakeoffTimer                        ;!
 endif                                         ;/===============================================
 CODE_00CCBB:
-    LDA.W EndLevelTimer
-    BEQ +
+    LDA.W EndLevelTimer                       ; Debug code not enabled.
+    BEQ +                                     ; Jump up if doing the goal walk.
     JMP CODE_00C915
 
-  + JSR CODE_00CDDD
-    LDA.B SpriteLock                          ; \ Branch if sprites locked
+; Not at level end.
+  + JSR CODE_00CDDD                           ; Process L/R scrolling.
+    LDA.B SpriteLock                          ; \ Branch if sprites locked; Return if sprites frozen.
     BNE Return00CCDF                          ; /
     STZ.W CapeInteracts
     STZ.W PlayerOverworldPose
     LDA.W PlayerStunnedTimer                  ; \ If lock Mario timer is set...
     BEQ CODE_00CCE0                           ; |
-    DEC.W PlayerStunnedTimer                  ; | Decrease the timer
+    DEC.W PlayerStunnedTimer                  ; | Decrease the timer; Handle Mario being stunned.
     STZ.B PlayerXSpeed+1                      ; | X speed = 0
-    LDA.B #$0F                                ; | Mario's image = Going down tube
+    LDA.B #$0F                                ; | Mario's image = Going down tube; Animation frame for Mario when stunned.
     STA.W PlayerPose                          ; /
 Return00CCDF:
     RTS
 
 CODE_00CCE0:
-    LDA.W IRQNMICommand
+    LDA.W IRQNMICommand                       ; Mario isn't stunned.
     BPL CODE_00CD24
     LSR A
     BCS CODE_00CD24
@@ -8902,21 +9554,21 @@ CODE_00CD24:
     BEQ +
     STZ.B PlayerYSpeed+1                      ; Y speed = 0
   + JSR CODE_00DC2D
-    JSR CODE_00E92B
+    JSR CODE_00E92B                           ; Process object interaction for Mario.
 CODE_00CD36:
     JSR CODE_00F595
 CODE_00CD39:
     STZ.W PlayerTurningPose
-    LDY.W PBalloonInflating
+    LDY.W PBalloonInflating                   ; Branch if Mario has a P-balloon.
     BNE CODE_00CD95
     LDA.W PlayerClimbingRope
     BEQ +
     LDA.B #$1F
     STA.B InteractionPtsClimbable
-  + LDA.B PlayerIsClimbing
+  + LDA.B PlayerIsClimbing                    ; Branch if Mario is climbing.
     BNE CODE_00CD72
     LDA.W IsCarryingItem
-    ORA.W PlayerRidingYoshi
+    ORA.W PlayerRidingYoshi                   ; Don't allow climbing while holding an item.
     BNE CODE_00CD79
     LDA.B InteractionPtsClimbable
     AND.B #$1B
@@ -8939,27 +9591,27 @@ CODE_00CD72:
 
 CODE_00CD79:
     LDA.B PlayerInWater
-    BEQ CODE_00CD82
-    JSR CODE_00D988
+    BEQ CODE_00CD82                           ; If Mario is in water, run the swimming routine and
+    JSR CODE_00D988                           ; skip all the in-air routines.
     BRA CODE_00CD8F
 
 CODE_00CD82:
-    JSR CODE_00D5F2
-    JSR CODE_00D062
-    JSR CODE_00D7E4
+    JSR CODE_00D5F2                           ; Handle jumping.
+    JSR CODE_00D062                           ; Handle capespinning/throwing fireballs.
+    JSR CODE_00D7E4                           ; Handle flight.
 CODE_00CD8B:
-    JSL CODE_00CEB1
+    JSL CODE_00CEB1                           ; Animate Mario (and his cape).
 CODE_00CD8F:
-    LDY.W PlayerRidingYoshi
+    LDY.W PlayerRidingYoshi                   ; If riding Yoshi, branch to change his animation frame to an appropriate riding animation.
     BNE CODE_00CDAD
     RTS
 
 CODE_00CD95:
-    LDA.B #$42
+    LDA.B #$42                                ; Handling Mario's animation with a P-balloon.
     LDX.B Powerup
     BEQ +
     LDA.B #$43
-  + DEY
+  + DEY                                       ; Handle Mario's pose when he has a P-balloon (poses 43/42/0F).
     BEQ +
     STY.W PBalloonInflating
     LDA.B #$0F                                ; \ Mario's image = Going down tube
@@ -8971,14 +9623,17 @@ CODE_00CDA8:
     db $20,$21,$27,$28
 
 CODE_00CDAD:
-    LDX.W YoshiTongueTimer
+; Animations for Mario while riding Yoshi.
+; Order is normal, turning, spitting tongue A, spitting tongue B.
+    LDX.W YoshiTongueTimer                    ; Handling Mario's animation on Yoshi. Also handles the unused routine to shoot fireballs on Yoshi.
     BEQ +
     LDY.B #$03
     CPX.B #$0C
     BCS +
     LDY.B #$04
-  + LDA.W CODE_00CDA8,Y
-    DEY
+; Set Mario's pose on Yoshi, using the table above.
+  + LDA.W CODE_00CDA8,Y                       ; When sticking his tongue out, Y is either 3 or 4, for Mario's "punch" animation.
+    DEY                                       ; Otherwise, Y is set prior to calling this routine to 1 or 2 (based on $187A).
     BNE +
     LDY.B PlayerIsDucking
     BEQ +
@@ -8987,34 +9642,35 @@ CODE_00CDAD:
     LDA.W YoshiHasWingsEvt                    ; \ Check Yoshi wing ability address for #$01,
     CMP.B #$01                                ; / but this is an impossible value
     BNE Return00CDDC                          ; \ Unreachable/unused code
-    BIT.B byetudlrFrame                       ; | Lets Mario (any power) shoot fireballs while on Yoshi
+    BIT.B byetudlrFrame                       ; | Lets Mario (any power) shoot fireballs while on Yoshi; If enabled to do so and X/Y is pressed, shoot a fireball. (unused, normally)
     BVC Return00CDDC                          ; |
-    LDA.B #$08                                ; |
+    LDA.B #$08                                ; |; SFX for shooting a fireball on Yoshi.
     STA.W Empty18DB                           ; |
     JSR ShootFireball                         ; /
 Return00CDDC:
     RTS
 
 CODE_00CDDD:
-    LDA.W HorizLayer1Setting
+; Routine to handle L/R scrolling.
+    LDA.W HorizLayer1Setting                  ; Return if horizontal scrolling is disabled.
     BEQ Return00CDDC
     LDY.W CameraScrollDir
-    LDA.W CameraIsScrolling
+    LDA.W CameraIsScrolling                   ; If the screen is currently scrolling, freeze sprites and branch.
     STA.B SpriteLock
     BNE CODE_00CE4C
     LDA.W CameraProperMove
-    BEQ CODE_00CDF6
-    STZ.W CameraScrollDir
+    BEQ CODE_00CDF6                           ; If the screen is currently "correcting" its position, prevent scrolling and skip down.
+    STZ.W CameraScrollDir                     ; Else, continue below.
     BRA CODE_00CE48
 
 CODE_00CDF6:
-    LDA.B axlr0000Hold                        ; \ Branch if anything besides L/R being held
-    AND.B #$CF                                ; |
+    LDA.B axlr0000Hold                        ; \ Branch if anything besides L/R being held; Able to screen scroll; check for L/R.
+    AND.B #$CF                                ; |; Make sure no other buttons are pressed.
     ORA.B byetudlrHold                        ; |
-    BNE CODE_00CE49                           ; /
+    BNE CODE_00CE49                           ; /; [change from BNE to BRA to disable L/R scrolling]
     LDA.B axlr0000Hold                        ; \ Branch if L/R not being held
     AND.B #$30                                ; |
-    BEQ CODE_00CE49                           ; |
+    BEQ CODE_00CE49                           ; |; Make sure either L or R is pressed (and not neither/both).
     CMP.B #$30                                ; |
     BEQ CODE_00CE49                           ; /
     LSR A
@@ -9022,11 +9678,11 @@ CODE_00CDF6:
     LSR A
     INC.W CameraScrollTimer
     LDX.W CameraScrollTimer
-    CPX.B #$10
+    CPX.B #$10                                ; How many frames to wait before allowing the screen to scroll.
     BCC CODE_00CE4C
-    TAX
-    REP #$20                                  ; A->16
-    LDA.W CameraMoveTrigger
+    TAX                                       ; Branch if:
+    REP #$20                                  ; A->16; Still waiting for the screen to scroll
+    LDA.W CameraMoveTrigger                   ; Already scrolled all the way over
     CMP.W DATA_00F6CB,X
     SEP #$20                                  ; A->8
     BEQ CODE_00CE4C
@@ -9044,7 +9700,7 @@ CODE_00CDF6:
     CMP.B Layer1XPos
     SEP #$20                                  ; A->8
     BEQ +
-    LDY.B #!SFX_SCREENSCROLL                  ; \ Play sound effect
+    LDY.B #!SFX_SCREENSCROLL                  ; \ Play sound effect; SFX for screen scrolling.
     STY.W SPCIO3                              ; /
   + TXA
     STA.W CameraScrollDir
@@ -9059,9 +9715,9 @@ CODE_00CE4C:
     STA.W CameraScrollPlayerDir
     REP #$20                                  ; A->16
     LDA.W CameraMoveTrigger
-    CMP.W DATA_00F6CB,Y
+    CMP.W DATA_00F6CB,Y                       ; If scrolled all the way over, branch.
     BEQ CODE_00CE6D
-    CLC
+    CLC                                       ; Move screen position.
     ADC.W DATA_00F6BF,Y
     LDY.W CameraScrollPlayerDir
     CMP.W DATA_00F6B3,Y
@@ -9092,227 +9748,240 @@ DATA_00CEA9:
     db $02,$07,$06,$09,$02,$07,$06,$09
 
 CODE_00CEB1:
-    LDA.W CapeAniTimer                        ; Related to cape animation?
+; Animation frames when flying.
+; Animation frames when cape-sliding after landing from flight.
+; Indexed by the values from $13E1 divided by 2, plus Mario's direction.
+; Spinjump frame table. Alternates small-big, order left-back-right-front.
+; Directions for Mario during the spinjump/capespin animation. Same order as above.
+; Animation frames for Mario's cape while spinjumping/capespinning. Alternates rising/on-ground, falling.
+; Primary Mario animation routine. First part gets cape image (X = image, Y = timer), second gets Mario image.
+    LDA.W CapeAniTimer                        ; Related to cape animation?; Branch if capespinning, to not set the cape animation frame.
     BNE lbl14A2Not0
     LDX.W PlayerCapePose                      ; Cape image
-    LDA.B PlayerInAir                         ; If Mario isn't in air, branch to $CEDE
+    LDA.B PlayerInAir                         ; If Mario isn't in air, branch to $CEDE; Branch if Mario is on the ground.
     BEQ MarioAnimAir                          ; branch to $CEDE
-    LDY.B #$04
-    BIT.B PlayerYSpeed+1                      ; \ If Mario is falling (and thus not on ground)
+    LDY.B #$04                                ; Length of the cape animation timer when in the air.
+    BIT.B PlayerYSpeed+1                      ; \ If Mario is falling (and thus not on ground); Branch if Mario is falling.
     BPL CODE_00CECD                           ; / branch down
     CMP.B #$0C                                ; \ If making a "run jump",
-    BEQ CODE_00CEFD                           ; / branch to $CEFD
+    BEQ CODE_00CEFD                           ; / branch to $CEFD; Branch if Mario is shooting out of a pipe, jumping while running at max speed, or in water.
     LDA.B PlayerInWater                       ; \ If Mario is in water,
     BNE CODE_00CEFD                           ; |branch to $CEFD
-    BRA MrioNtInWtr                           ; / otherwise, branch to $CEE4
+    BRA MrioNtInWtr                           ; / otherwise, branch to $CEE4; Else, branch because Mario is not doing those (i.e. rising from a normal jump).
 
 CODE_00CECD:
-    INX                                       ; \
+    INX                                       ; \; Mario is falling.
     CPX.B #$05                                ; |if X >= #$04 and != #$FF then jump down <- counting the INX
     BCS CODE_00CED6                           ; /
     LDX.B #$05                                ; X = #$05
-    BRA CODE_00CF0A                           ; Branch to $CF04
+    BRA CODE_00CF0A                           ; Branch to $CF04; If Mario's cape is currently "down", switch it to frame 5.
 
 CODE_00CED6:
-    CPX.B #$0B                                ; \ If X is less than #$0B,
+    CPX.B #$0B                                ; \ If X is less than #$0B,; If Mario's cape is currently "up", switch it to frame 7.
     BCC CODE_00CF0A                           ; / branch to $CF0A
     LDX.B #$07                                ; X = #$07
     BRA CODE_00CF0A                           ; Mario is not in the air, branch to $CF0A
 
 MarioAnimAir:
-    LDA.B PlayerXSpeed+1                      ; \ If Mario X speed isn't 0,
+; Mario is on the ground.
+    LDA.B PlayerXSpeed+1                      ; \ If Mario X speed isn't 0,; Branch if Mario is moving.
     BNE CODE_00CEF0                           ; / branch to $CEF0
-    LDY.B #$08                                ; Otherwise Y = #$08
+    LDY.B #$08                                ; Otherwise Y = #$08; Slow down the cape's animation.
 MrioNtInWtr:
-    TXA                                       ; A = X = #13DF
+    TXA                                       ; A = X = #13DF; Mario is rising from a normal jump.
     BEQ CODE_00CF0A                           ; If $13DF (now A) = 0 branch to $CF04
-    DEX                                       ; \
-    CPX.B #$03                                ; |If X - 1 < #$03 Then Branch $CF04
-    BCC CODE_00CF0A                           ; /
+    DEX                                       ; \; If the cape is fully down (frame 0), don't change its animation frame.
+    CPX.B #$03                                ; |If X - 1 < #$03 Then Branch $CF04; If it's in frames 1-4, decrease its frame (i.e. lower it downwards).
+    BCC CODE_00CF0A                           ; /; If it's greater than 4, drop it down to frame 2 (i.e. it was pointed upwards before).
     LDX.B #$02                                ; X = #$02
     BRA CODE_00CF0A                           ; Branch to $CF04
 
 CODE_00CEF0:
-    BPL +                                     ; \
+    BPL +                                     ; \; Mario is moving on the ground.
     EOR.B #$FF                                ; |A = abs(A)
     INC A                                     ; |
-  + LSR A                                     ; \
+  + LSR A                                     ; \; Get animation speed for the cape based on how fast Mario is running.
     LSR A                                     ; |Divide a by 8
     LSR A                                     ; /
     TAY                                       ; Y = A
     LDA.W DATA_00DC7C,Y                       ; A = Mario animation speed? (I didn't know it was a table...)
     TAY                                       ; Load Y with this table
 CODE_00CEFD:
-    INX                                       ; \
-    CPX.B #$03                                ; |
-    BCS +                                     ; |If X is < #$02 and != #$FF <- counting the INX
-    LDX.B #$05                                ; |then X = #$05
-  + CPX.B #$07                                ; \
+    INX                                       ; \; Mario is shooting out of a pipe, jumping while running at max speed, or in water.
+    CPX.B #$03                                ; |; If the cape is in frames 1/2, bump its frame up to 5.
+    BCS +                                     ; |If X is < #$02 and != #$FF <- counting the INX; If it's in frames 7-A, drop it down to frame 3.
+    LDX.B #$05                                ; |then X = #$05; Else, just increase it.
+  + CPX.B #$07                                ; \; Altogether, this creates the cape's "flapping" motion.
     BCC CODE_00CF0A                           ; |If X is greater than or equal to #$07 then X = #$03
     LDX.B #$03                                ; |
 CODE_00CF0A:
     STX.W PlayerCapePose                      ; And X goes right back into $13DF (cape image) after being modified
     TYA                                       ; Now Y goes back into A
     LDY.B PlayerInWater                       ; \
-    BEQ +                                     ; |If mario is in water then A = 2A
+    BEQ +                                     ; |If mario is in water then A = 2A; Store the cape frame and animation timer.
     ASL A                                     ; |
   + STA.W CapeAniTimer                        ; A -> $14A2 (do we know this byte yet?) no.
 lbl14A2Not0:
-    LDA.W SpinJumpFlag                        ; A = Spin Jump Flag
-    ORA.W CapeSpinTimer
+    LDA.W SpinJumpFlag                        ; A = Spin Jump Flag; Mario is capespinning.
+    ORA.W CapeSpinTimer                       ; Branch if Mario is not spinning (spinjump, capespin).
     BEQ CODE_00CF4E                           ; If $140D OR $14A6 = 0 then branch to $CF4E
     STZ.B PlayerIsDucking                     ; 0 -> Ducking while jumping flag
     LDA.B EffFrame                            ; \
     AND.B #$06                                ; |X = Y = Alternate frame counter AND #$06
-    TAX                                       ; |
+    TAX                                       ; |; Animate the cape's spinning animation.
     TAY                                       ; /
     LDA.B PlayerInAir                         ; \ If on ground branch down
     BEQ +                                     ; /
     LDA.B PlayerYSpeed+1                      ; \ If Mario moving upwards branch down
-    BMI +                                     ; /
+    BMI +                                     ; /; Get the animation frame for the cape.
     INY                                       ; Y = Y + 1
   + LDA.W DATA_00CEA9,Y                       ; \ After loading from this table,
     STA.W PlayerCapePose                      ; / Store A in cape image
     LDA.B Powerup                             ; A = Mario's powerup status
     BEQ +                                     ; \
-    INX                                       ; |If not small, increase X
+    INX                                       ; |If not small, increase X; Set Mario's direction.
   + LDA.W DATA_00CEA1,X                       ; \ Load from another table
     STA.B PlayerDirection                     ; / store to Mario's Direction
     LDY.B Powerup                             ; \
-    CPY.B #$02                                ; |
+    CPY.B #$02                                ; |; If Mario has a feather, process capespin interaction.
     BNE +                                     ; |If Mario has cape, JSR
     JSR CODE_00D044                           ; |to possibly the graphics handler
   + LDA.W DATA_00CE99,X                       ; \ Load from a table again
     JMP CODE_00D01A                           ; / And jump
 
 CODE_00CF4E:
-    LDA.W PlayerSlopePose                     ; \ If $13ED is #$01 - #$7F then
-    BEQ CODE_00CF62                           ; |branch to $CF85
+; Mario is not capespinning (done with cape; time to handle Mario's actual animation frame).
+    LDA.W PlayerSlopePose                     ; \ If $13ED is #$01 - #$7F then; Branch A if not sliding.
+    BEQ CODE_00CF62                           ; |branch to $CF85; Branch B if sliding on a slope (not from flight) to store sliding animation frame and return.
     BPL CODE_00CF85                           ; |
     LDA.W SlopeType
     LSR A
     LSR A
-    ORA.B PlayerDirection
+    ORA.B PlayerDirection                     ; Flying: get appropriate flight frame for the slope Mario is on and store that, then return.
     TAY
     LDA.W DATA_00CE7F,Y
     BRA CODE_00CF85
 
 CODE_00CF62:
-    LDA.B #$3C                                ; \ Select Case $148F
-    LDY.W IsCarryingItem                      ; |Case 0:A = #$3C
+    LDA.B #$3C                                ; \ Select Case $148F; Not sliding.
+    LDY.W IsCarryingItem                      ; |Case 0:A = #$3C; Get ducking frame (1D or 3C, depending on whether or not Mario is holding an item).
     BEQ +                                     ; |Case Else: A = #$1D
     LDA.B #$1D                                ; |End Select
-  + LDY.B PlayerIsDucking                     ; \ If Ducking while jumping
+  + LDY.B PlayerIsDucking                     ; \ If Ducking while jumping; If Mario actually is ducking, branch to store the animation frame and return.
     BNE CODE_00CF85                           ; / Branch to $CF85
-    LDA.W ShootFireTimer                      ; \ If (Unknown) = 0
+    LDA.W ShootFireTimer                      ; \ If (Unknown) = 0; Branch if not shooting a fireball.
     BEQ CODE_00CF7E                           ; / Branch to $CF7E
     LDA.B #$3F                                ; A = #$3F
     LDY.B PlayerInAir                         ; \ If Mario isn't in air,
-    BEQ CODE_00CF85                           ; |branch to $CF85
+    BEQ CODE_00CF85                           ; |branch to $CF85; Show shooting frame (16 or 3F, depending on whether or not Mario is in water).
     LDA.B #$16                                ; |Otherwise, set A to #$16 and
     BRA CODE_00CF85                           ; / branch to $CF85
 
 CODE_00CF7E:
-    LDA.B #$0E                                ; A = #$0E
+    LDA.B #$0E                                ; A = #$0E; Not shooting a fireball.
     LDY.W KickingTimer                        ; \ If Time to show Mario's current pose is 00,
-    BEQ +                                     ; | Don't jump to $D01A
+    BEQ +                                     ; | Don't jump to $D01A; If kicking something, store animation frame 0E and return.
 CODE_00CF85:
     JMP CODE_00D01A                           ; |
 
-  + LDA.B #$1D                                ; A = #$1D
-    LDY.W PickUpItemTimer                     ; \ If $1499 != 0 then Jump to $D01A
+  + LDA.B #$1D                                ; A = #$1D; Not kicking something.
+    LDY.W PickUpItemTimer                     ; \ If $1499 != 0 then Jump to $D01A; If picking something up, store animation frame 1D and return.
     BNE CODE_00CF85                           ; /
     LDA.B #$0F                                ; A = #$0F
-    LDY.W FaceScreenTimer                     ; \ If $1499 != 0 then Jump to $D01A
+    LDY.W FaceScreenTimer                     ; \ If $1499 != 0 then Jump to $D01A; If facing the screen (turning/pipe), store animation frame 0F and return.
     BNE CODE_00CF85                           ; /
-    LDA.B #$00                                ; A = #$00
-    LDX.W PlayerInCloud                       ; X = $18C2 (Unknown)
+    LDA.B #$00                                ; A = #$00; Stationary animation frame.
+    LDX.W PlayerInCloud                       ; X = $18C2 (Unknown); Branch if in a Lakitu Cloud.
     BNE MarioAnimNoAbs1                       ; If X != 0 then branch down
-    LDA.B PlayerInAir                         ; \ If Mario is flying branch down
+    LDA.B PlayerInAir                         ; \ If Mario is flying branch down; Branch if on the ground.
     BEQ CODE_00CFB7                           ; /
-    LDY.W RunTakeoffTimer                     ; \ If $14A0 != 0 then
+    LDY.W RunTakeoffTimer                     ; \ If $14A0 != 0 then; Branch if Mario just jumped and running frames should still be shown for a bit.
     BNE CODE_00CFBC                           ; / Skip down
     LDY.W FlightPhase                         ; Spaghetticode(tm)
-    BEQ +
+    BEQ +                                     ; If flying, get appropriate flight animation frame.
     LDA.W CODE_00CE78,Y
   + LDY.W IsCarryingItem                      ; \ If Mario isn't holding something,
-    BEQ CODE_00D01A                           ; |branch to $D01A
-    LDA.B #$09                                ; |Otherwise, set A to #$09 and
+    BEQ CODE_00D01A                           ; |branch to $D01A; If carrying something, use frame 09 instead.
+    LDA.B #$09                                ; |Otherwise, set A to #$09 and; Either way, store and return.
     BRA CODE_00D01A                           ; / branch to $D01A
 
 CODE_00CFB7:
-    LDA.W PlayerTurningPose
+; Mario is on the ground.
+    LDA.W PlayerTurningPose                   ; If the player is supposed to "slide a bit" (very steep slope), just store frame 0 and return.
     BNE CODE_00D01A
 CODE_00CFBC:
-    LDA.B PlayerXSpeed+1                      ; \
-    BPL MarioAnimNoAbs1                       ; |
+    LDA.B PlayerXSpeed+1                      ; \; Mario just jumped but is still showing running frames.
+    BPL MarioAnimNoAbs1                       ; |; Get absolute value of Mario's X speed.
     EOR.B #$FF                                ; |Set A to absolute value of Mario's X speed
     INC A                                     ; |
 MarioAnimNoAbs1:
-    TAX                                       ; Copy A to X
+; In a Lakitu cloud.
+    TAX                                       ; Copy A to X; If not stationary, branch to get running animation frame.
     BNE CODE_00CFD4                           ; If Mario isn't standing still, branch to $CFD4
     XBA                                       ; "Push" A
     LDA.B byetudlrHold                        ; \
-    AND.B #$08                                ; |If player isn't pressing up,
+    AND.B #$08                                ; |If player isn't pressing up,; If up isn't pressed, branch.
     BEQ CODE_00D002                           ; |branch to $D002
-    LDA.B #$03                                ; |Otherwise, store x03 in $13DE and
+    LDA.B #$03                                ; |Otherwise, store x03 in $13DE and; Store "looking up" flag.
     STA.W PlayerOverworldPose                 ; |branch to $D002
     BRA CODE_00D002                           ; /
 
 CODE_00CFD4:
-    LDA.B LevelIsSlippery                     ; \ If level isn't slippery,
+; Not stationary.
+    LDA.B LevelIsSlippery                     ; \ If level isn't slippery,; Branch if not in a slippery level.
     BEQ CODE_00CFE3                           ; / branch to $CFE3
     LDA.B byetudlrHold
-    AND.B #$03
+    AND.B #$03                                ; Branch if not holding left/right, to not animate Mario's running (so he slides).
     BEQ CODE_00D003
-    LDA.B #$68
+    LDA.B #$68                                ; Increase base index for the running animation timer table.
     STA.W PlayerPoseLenTimer
 CODE_00CFE3:
     LDA.W PlayerWalkingPose                   ; A = $13DB
-    LDY.W PlayerAniTimer                      ; \ If Mario is hurt (flashing),
+    LDY.W PlayerAniTimer                      ; \ If Mario is hurt (flashing),; Branch if not time to update Mario's running pose.
     BNE CODE_00D003                           ; / branch to $D003
     DEC A                                     ; A = A - 1
-    BPL +                                     ; \If bit 7 is clear,
+    BPL +                                     ; \If bit 7 is clear,; Get new animation frame for Mario's running animation.
     LDY.B Powerup                             ; | Load amount of walking frames
     LDA.W NumWalkingFrames,Y                  ; | for current powerup
   + XBA                                       ; \ >>-This code puts together an index to a table further down-<<
     TXA                                       ; |-\ Above Line: "Push" frame amount
     LSR A                                     ; |  |A = X / 8
     LSR A                                     ; |  |
-    LSR A                                     ; |-/
+    LSR A                                     ; |-/; Store new timer for the running frame.
     ORA.W PlayerPoseLenTimer                  ; |ORA with $13E5
     TAY                                       ; |And store A to Y
     LDA.W DATA_00DC7C,Y                       ; |
     STA.W PlayerAniTimer                      ; /
 CODE_00D002:
-    XBA                                       ; \ Switch in frame amount and store it to $13DB
+    XBA                                       ; \ Switch in frame amount and store it to $13DB; Player is stationary (high A byte contains his animation frame).
 CODE_00D003:
-    STA.W PlayerWalkingPose                   ; /
+; Not time to get a new running frame.
+    STA.W PlayerWalkingPose                   ; /; Store running frame pose.
     CLC                                       ; \ Add walking animation type
     ADC.W PlayerOverworldPose                 ; / (Walking, running...)
-    LDY.W IsCarryingItem                      ; \
-    BEQ CODE_00D014                           ; |
-    CLC                                       ; |If Mario is carrying something, add #$07
-    ADC.B #$07                                ; |
-    BRA CODE_00D01A                           ; |
+    LDY.W IsCarryingItem                      ; \; Use animation frame:
+    BEQ CODE_00D014                           ; |; 0-2 if walking/running
+    CLC                                       ; |If Mario is carrying something, add #$07; 3 if looking up
+    ADC.B #$07                                ; |; 4-6 if sprinting
+    BRA CODE_00D01A                           ; |; 7-9 if carrying an item
 
 CODE_00D014:
-    CPX.B #con($2F,$2F,$2F,$3A,$3A)           ; \
+    CPX.B #con($2F,$2F,$2F,$3A,$3A)           ; \; A if carrying an item and looking up
     BCC CODE_00D01A                           ; |If X is greater than #$2F, add #$04
     ADC.B #$03                                ; / <-Carry is always set here, adding #$01 to (#$03 + A)
 CODE_00D01A:
-    LDY.W WallrunningType                     ; \ If Mario isn't rotated 45 degrees (triangle
+    LDY.W WallrunningType                     ; \ If Mario isn't rotated 45 degrees (triangle; Most of the frames branch to here to do the final store. Wallrunning can potentially override all.
     BEQ +                                     ; / block), branch to $D030
     TYA                                       ; \ Y AND #$01 -> Mario's Direction RAM Byte
     AND.B #$01                                ; |
     STA.B PlayerDirection                     ; /
-    LDA.B #$10                                ; \
+    LDA.B #$10                                ; \; If wallrunning, use frames 11-13.
     CPY.B #$06                                ; |If Y < 6 then
     BCC +                                     ; |    A = #13DB + $11
     LDA.W PlayerWalkingPose                   ; |Else
     CLC                                       ; |    A = #$10
     ADC.B #$11                                ; |End If
-  + STA.W PlayerPose                          ; Store in Current animation frame
+  + STA.W PlayerPose                          ; Store in Current animation frame; FINALLY, store that dang animation frame.
     RTL                                       ; And Finish
 
 
@@ -9322,7 +9991,14 @@ DATA_00D03C:
     db $10,$00,$10,$00,$02,$00,$02,$00
 
 CODE_00D044:
-    LDY.B #$01
+; Cape/net punch collision X offsets, 16-bit. (right, left)
+; Capespin
+; Net punch
+; Cape/net punch collision Y offsets, 16-bit. (right, left)
+; Capespin
+; Net punch
+; Subroutine to calculate capespin and net punch interaction.
+    LDY.B #$01                                ; Enable capespin interaction with sprites.
     STY.W CapeInteracts
     ASL A
     TAY
@@ -9330,7 +10006,7 @@ CODE_00D044:
     LDA.B PlayerXPosNext                      ; \
     CLC                                       ; |
     ADC.W DATA_00D034,Y                       ; |
-    STA.W CapeInteractionXPos                 ; |Set cape<->sprite collision coordinates
+    STA.W CapeInteractionXPos                 ; |Set cape<->sprite collision coordinates; Interact at Mario's position.
     LDA.B PlayerYPosNext                      ; |
     CLC                                       ; |
     ADC.W DATA_00D03C,Y                       ; |
@@ -9339,43 +10015,44 @@ CODE_00D044:
     RTS
 
 CODE_00D062:
-    LDA.B Powerup
-    CMP.B #$02
+    LDA.B Powerup                             ; Subroutine that handles capespinning.
+    CMP.B #$02                                ; Which powerup gives Mario the ability to capespin.
     BNE CODE_00D081
-    BIT.B byetudlrFrame
+    BIT.B byetudlrFrame                       ; Return if X/Y not pressed.
     BVC Return00D0AD
     LDA.B PlayerIsDucking
-    ORA.W PlayerRidingYoshi
+    ORA.W PlayerRidingYoshi                   ; Return if ducking, riding Yoshi, or spinjumping.
     ORA.W SpinJumpFlag
     BNE Return00D0AD
-    LDA.B #$12
+    LDA.B #$12                                ; How long the capespin lasts.
     STA.W CapeSpinTimer
-    LDA.B #!SFX_SPIN                          ; \ Play sound effect
+    LDA.B #!SFX_SPIN                          ; \ Play sound effect; SFX for capespinning.
     STA.W SPCIO3                              ; /
     RTS
 
 CODE_00D081:
-    CMP.B #$03
+; Subroutine that handles throwing fireballs.
+    CMP.B #$03                                ; Which powerup gives Mario the ability to throw fireballs.
     BNE Return00D0AD
     LDA.B PlayerIsDucking
-    ORA.W PlayerRidingYoshi
+    ORA.W PlayerRidingYoshi                   ; If Mario is ducking or riding Yoshi, return.
     BNE Return00D0AD
-    BIT.B byetudlrFrame
+    BIT.B byetudlrFrame                       ; If X or Y is pressed, branch to spawn a fireball.
     BVS CODE_00D0AA
-    LDA.W SpinJumpFlag
+    LDA.W SpinJumpFlag                        ; If Mario isn't spinjumping, return.
     BEQ Return00D0AD
     INC.W SpinjumpFireball
-    LDA.W SpinjumpFireball
+    LDA.W SpinjumpFireball                    ; Handle spinjump fireball timer, and if not time to spawn a fireball, return.
     AND.B #$0F
     BNE Return00D0AD
     TAY
     LDA.W SpinjumpFireball
     AND.B #$10
-    BEQ +
+    BEQ +                                     ; Flip player's horizontal direction every 16 frames.
     INY
   + STY.B PlayerDirection
 CODE_00D0AA:
-    JSR ShootFireball                         ; haha, I read this as "FEAR" at first
+    JSR ShootFireball                         ; haha, I read this as "FEAR" at first; Spawn a fireball.
 Return00D0AD:
     RTS
 
@@ -9383,21 +10060,21 @@ Return00D0AD:
     db $7C,$00,$80,$00,$00,$06,$00,$01
 
 MarioDeathAni:
-    STZ.B Powerup                             ; Set powerup to 0
+    STZ.B Powerup                             ; Set powerup to 0; Subroutine for the death animation.
     LDA.B #$3E                                ; \
     STA.W PlayerPose                          ; / Set Mario image to death image
     LDA.B TrueFrame                           ; \
     AND.B #$03                                ; |Decrease "Death fall timer" every four frames
     BNE +                                     ; |
     DEC.W PlayerAniTimer                      ; |
-  + LDA.W PlayerAniTimer                      ; \ If Death fall timer isn't #$00,
+  + LDA.W PlayerAniTimer                      ; \ If Death fall timer isn't #$00,; Check if it's time to fade to the overworld.
     BNE DeathNotDone                          ; / branch to $D108
     LDA.B #$80
     STA.W OWLevelExitMode
     LDA.W RemoveYoshiFlag
     BNE +
     STZ.W CarryYoshiThruLvls                  ; Set reserve item to 0
-  + DEC.W PlayerLives                         ; Decrease amount of lifes
+  + DEC.W PlayerLives                         ; Decrease amount of lifes; Decrease life counter, and branch if not at 0 lives yet.
     BPL DeathNotGameOver                      ; If not Game Over, branch to $D0E6
     LDA.B #!BGM_GAMEOVER
     STA.W SPCIO2                              ; / Change music
@@ -9405,9 +10082,9 @@ MarioDeathAni:
     BRA DeathShowMessage
 
 DeathNotGameOver:
-    LDY.B #$0B                                ; Set Y (game mode) to x0B (Fade to overworld)
+    LDY.B #$0B                                ; Set Y (game mode) to x0B (Fade to overworld); Routine to handle Mario dying when he still has lives remaining.
     LDA.W InGameTimerHundreds                 ; \
-    ORA.W InGameTimerTens                     ; |If time isn't zero,
+    ORA.W InGameTimerTens                     ; |If time isn't zero,; Check if Mario died to time.
     ORA.W InGameTimerOnes                     ; |branch to $D104
     BNE +                                     ; /
     LDX.B #$1D                                ; Set X (Death message) to x1D (Time Up)
@@ -9425,7 +10102,7 @@ DeathNotDone:
     CMP.B #$26                                ; \ If Death fall timer >= x26,
     BCS +                                     ; / return
     STZ.B PlayerXSpeed+1                      ; Set Mario X speed to 0
-    JSR CODE_00DC2D
+    JSR CODE_00DC2D                           ; Update Mario's X/Y position.
     JSR CODE_00D92E
     LDA.B TrueFrame                           ; \
     LSR A                                     ; |
@@ -9440,13 +10117,14 @@ GrowingAniImgs:
     db $46,$3D,$46,$3D
 
 PowerDownAni:
-    LDA.W PlayerAniTimer
+; Mario animation frames for powerup/powerdown.
+    LDA.W PlayerAniTimer                      ; Damage powerdown animation.
     BEQ CODE_00D140
     LSR A
     LSR A
 CODE_00D130:
     TAY
-    LDA.W GrowingAniImgs,Y                    ; \ Set Mario's image
+    LDA.W GrowingAniImgs,Y                    ; \ Set Mario's image; Get the image to use.
     STA.W PlayerPose                          ; /
 CODE_00D137:
     LDA.W PlayerAniTimer
@@ -9455,12 +10133,12 @@ CODE_00D137:
   + RTS
 
 CODE_00D140:
-    LDA.B #$7F
+    LDA.B #$7F                                ; How long to make Mario invincible after taking damage. Or growing from a cape?
     STA.W IFrameTimer
     BRA CODE_00D158
 
 MushroomAni:
-    LDA.W PlayerAniTimer
+    LDA.W PlayerAniTimer                      ; Mushroom powerup animation.
     BEQ CODE_00D156
     LSR A
     LSR A
@@ -9479,16 +10157,17 @@ CODE_00D158:
   - RTS
 
 CapeAni:
-    LDA.B #$7F
+; Cape powerup animation.
+    LDA.B #$7F                                ; Hide Mario.
     STA.B PlayerHiddenTiles
-    DEC.W PlayerAniTimer
+    DEC.W PlayerAniTimer                      ; Return if to time to end the animation.
     BNE -
     LDA.B Powerup
-    LSR A
+    LSR A                                     ; Unused? $19 will always be #$02 here.
     BEQ CODE_00D140
-    BNE CODE_00D158
+    BNE CODE_00D158                           ; Return Mario to a normal state.
 FlowerAni:
-    LDA.W PlayerSlopePose
+    LDA.W PlayerSlopePose                     ; Fireflower powerup animation.
     AND.B #$80
     ORA.W FlightPhase
     BEQ +
@@ -9515,10 +10194,12 @@ DATA_00D193:
     db $00,$63,$1C,$00
 
 DoorPipeAni:
-    JSR NoButtons
+    JSR NoButtons                             ; X speeds for entering pipes.
     STZ.W PlayerOverworldPose
     JSL CODE_00CEB1
-    JSL CODE_00CFBC
+; Spacer indexes for pipe X/Y speeds. Recommended not to edit.
+; Y speeds for entering pipes.
+    JSL CODE_00CFBC                           ; Animate Mario (and his cape).
     JSR CODE_00D1F4
     LDA.W PlayerRidingYoshi
     BEQ +
@@ -9595,7 +10276,7 @@ CODE_00D22A:
 CODE_00D22D:
     LDA.B #$40                                ; \ Set holding X/Y on controller
     STA.B byetudlrHold                        ; /
-    LDA.B #$02                                ; \ Set behind scenery flag
+    LDA.B #$02                                ; \ Set behind scenery flag; Set flag to send Mario behind layers and other sprites?
     STA.W PlayerBehindNet                     ; /
     LDA.B PlayerPipeAction
     CMP.B #$04
@@ -9615,7 +10296,7 @@ CODE_00D22D:
     LDA.B #!SFX_PIPE                          ; | ...play sound effect
     STA.W SPCIO0                              ; /
   + LDA.W PipeSpeed,Y                         ; \ Set X speed
-    STA.B PlayerXSpeed+1                      ; /
+    STA.B PlayerXSpeed+1                      ; /; Set Mario's X/Y speed depending on the pipe he's entering.
     LDA.W PipeSpeed+2,Y                       ; \ Set Y speed
     STA.B PlayerYSpeed+1                      ; /
     STZ.B PlayerInAir                         ; Mario flying = false
@@ -9634,7 +10315,8 @@ CODE_00D273:
     STA.W GameMode
     RTS
 
-    LDA.B PlayerYPosNext                      ; \ Unreachable
+; Unused code, probably meant for moving Mario as part of the pipe entering animation.
+    LDA.B PlayerYPosNext                      ; \ Unreachable; $88 seems to no longer be used the way this code intends it as, however.
     SEC                                       ; |
     SBC.B PlayerYPosNow                       ; |
     CLC                                       ; |
@@ -9643,8 +10325,8 @@ CODE_00D273:
     RTS                                       ; /
 
 PipeCannonAni:
-    JSR NoButtons
-    LDA.B #$02
+    JSR NoButtons                             ; Mario state 07 - Shot out of a diagonal pipe.
+    LDA.B #$02                                ; Set flag to send Mario behind layers and other sprites.
     STA.W PlayerBehindNet
     LDA.B #$0C
     STA.B PlayerInAir
@@ -9663,9 +10345,9 @@ CODE_00D2AA:
     STZ.W PlayerBehindNet
     STZ.W YoshiInPipeSetting
     STZ.B SpriteLock                          ; Set sprites not locked
-  + LDA.B #$40                                ; \ X speed = #$40
-    STA.B PlayerXSpeed+1                      ; /
-    LDA.B #$C0                                ; \ Y speed = #$C0
+  + LDA.B #$40                                ; \ X speed = #$40; X speed for Mario when shot out of a diagonal pipe.
+    STA.B PlayerXSpeed+1                      ; /; (NOTE: LM hijacks here)
+    LDA.B #$C0                                ; \ Y speed = #$C0; Y speed for Mario when shot out of a diagonal pipe.
     STA.B PlayerYSpeed+1                      ; /
     JMP CODE_00DC2D
 
@@ -9919,15 +10601,130 @@ DATA_00D5F0:
     db $1C,$0C
 
 CODE_00D5F2:
-    LDA.B PlayerInAir
-    BEQ +
+; Mario's jump speeds. Indexed by his X speed (divided by 8).
+; First byte in each row is a normal jump, second is a spinjump.
+; Decelerations for Mario when not giving any inputs or at max speed.
+; First two are standard speeds (right, left). The latter ones are when on slopes (in the order of $13E1).
+; For slopes, the two values are different.
+; One value is when moving faster than the slope's autoslide speed (so slow down).
+; The other is when moving slower than that (so speed up).
+; ("autoslide speed" refers to the values in $00D5C9)
+; Decelerations for Mario when not giving any inputs or at max speed, in slippery levels.
+; Same order as above.
+; Accelerations for Mario. Walk/run, for left then right.
+; 00 - Flat (and water)
+; 08 - Gradual left
+; 10 - Gradual right
+; 18 - Normal left
+; 20 - Normal right
+; 28 - Steep left
+; 30 - Steep right
+; 38 - Conveyor left, up
+; 40 - Conveyor left, down
+; 48 - Conveyor right, up
+; 50 - Conveyor right, down
+; 58 - Very steep left
+; 60 - Very steep right
+; 68 - Flying left (right = > + B)
+; 70 - Flying right (left = < + B)
+; 78 - Sliding - Gradual
+; 7C - Sliding - Normal
+; 80 - Sliding - Steep
+; 84 - Sliding - Conveyor left
+; 88 - Sliding - Conveyor right
+; 8C - Sliding - Very steep
+; 90 - Decelerating - Flat
+; 98 - Decelerating - Gradual left
+; A0 - Decelerating - Gradual right
+; A8 - Decelerating - Normal left
+; B0 - Decelerating - Normal right
+; B8 - Decelerating - Steep left
+; C0 - Decelerating - Steep right
+; C8 - Decelerating - Conveyor left, up
+; D0 - Decelerating - Conveyor left, down
+; D8 - Decelerating - Conveyor right, up
+; E0 - Decelerating - Conveyor right, down
+; E8 - Decelerating - Very steep left
+; F0 - Decelerating - Very steep right
+; Accerations in slippery levels while on the ground. Same order as above.
+; 00 - Flat (and water)
+; 08 - Gradual left
+; 10 - Gradual right
+; 18 - Normal left
+; 20 - Normal right
+; 28 - Steep left
+; 30 - Steep right
+; 38 - Conveyor left, up
+; 40 - Conveyor left, down
+; 48 - Conveyor right, up
+; 50 - Conveyor right, down
+; 58 - Very steep left
+; 60 - Very steep right
+; 68 - Unused (would be flying, but you're in air...)
+; 70 - Unused (would be flying, but you're in air...)
+; 78 - Sliding - Gradual
+; 7C - Sliding - Normal
+; 80 - Sliding - Steep
+; 84 - Sliding - Conveyor left
+; 88 - Sliding - Conveyor right
+; 8C - Sliding - Very steep
+; 90 - Decelerating - Flat
+; 98 - Decelerating - Gradual left
+; A0 - Decelerating - Gradual right
+; A8 - Decelerating - Normal left
+; B0 - Decelerating - Normal right
+; B8 - Decelerating - Steep left
+; C0 - Decelerating - Steep right
+; C8 - Decelerating - Conveyor left, up
+; D0 - Decelerating - Conveyor left, down
+; D8 - Decelerating - Conveyor right, up
+; E0 - Decelerating - Conveyor right, down
+; E8 - Decelerating - Very steep left
+; F0 - Decelerating - Very steep right
+; Side note about the below table:
+; "Fast run" is used when Mario is moving faster than #$23 (the value at $00D723) and either on the ground or being shot out of a pipe.
+; Maximum Mario X speeds. Each set is left/right in the order walk, run, fast run, sprint.
+; 00 - Flat
+; 08 - Gradual left
+; 10 - Gradual right
+; 18 - Normal left
+; 20 - Normal right
+; 28 - Steep left
+; 30 - Steep right
+; 38 - Conveyor left, up
+; 40 - Conveyor left, down
+; 48 - Conveyor right, up
+; 50 - Conveyor right, down
+; 58 - Very steep left
+; 60 - Very steep right
+; 68 - Flying left (right = > + B) - first set is no X/Y, second is with X/Y, rest unused
+; 70 - Flying right (left = < + B) - first set is no X/Y, second is with X/Y, rest unused
+; 78 - Water (ground, swimming, tide ground, tide swimming)
+; 80 - Water with item (ground, swimming, tide ground, tide swimming)
+; 88 - Sliding on each slope. In the same order as 08-60.
+; How fast Mario autoslides on various slope tiles, when not holding any buttons.
+; Flat
+; Gradual
+; Normal
+; Steep
+; Conveyor left
+; Conveyor right
+; Very steep
+; Unused (?)
+; Tides (swimming, on ground)
+; P-meter increment/decrement values.
+; 00 = no X/Y, 01 = X/Y, 02 = X/Y and faster than #$23.
+; Values for $13E1 when flying.
+; Initial spinump fireball timers?
+    LDA.B PlayerInAir                         ; Mario's jump/duck routine.
+    BEQ +                                     ; Skip the routine if Mario is in the air.
     JMP CODE_00D682
 
   + STZ.B PlayerIsDucking
     LDA.W PlayerSlopePose
     BNE +
     LDA.B byetudlrHold
-    AND.B #$04
+    AND.B #$04                                ; If not sliding and down is pressed, make him duck and disable capespin interaction.
     BEQ +
     STA.B PlayerIsDucking
     STZ.W CapeInteracts
@@ -9935,7 +10732,7 @@ CODE_00D5F2:
     CMP.B #$02
     BEQ CODE_00D61E
     LDA.B PlayerBlockedDir
-    AND.B #$08
+    AND.B #$08                                ; If Mario is on the ground and A or B are pressed, branch to make him jump.
     BNE CODE_00D61E
     LDA.B byetudlrFrame
     ORA.B axlr0000Frame
@@ -9951,42 +10748,43 @@ CODE_00D61E:
   + JMP CODE_00D764
 
 CODE_00D630:
-    LDA.B PlayerXSpeed+1
+    LDA.B PlayerXSpeed+1                      ; Mario is jumping.
     BPL +
     EOR.B #$FF
-    INC A
+    INC A                                     ; Get jump speed index, as X = (abs(x)/8)*2
   + LSR A
     LSR A
     AND.B #$FE
     TAX
     LDA.B axlr0000Frame
-    BPL CODE_00D65E
-    LDA.W IsCarryingItem
+    BPL CODE_00D65E                           ; Branch if normal jumping,
+    LDA.W IsCarryingItem                      ; or trying to spinjump while holding an item.
     BNE CODE_00D65E
-    INC A
+    INC A                                     ; Set spinjump flag.
     STA.W SpinJumpFlag
-    LDA.B #!SFX_SPIN                          ; \ Play sound effect
+    LDA.B #!SFX_SPIN                          ; \ Play sound effect; SFX for spinjumping.
     STA.W SPCIO3                              ; /
     LDY.B PlayerDirection
-    LDA.W DATA_00D5F0,Y
+    LDA.W DATA_00D5F0,Y                       ; Set spinjump fireball timer based on Mario's direction.
     STA.W SpinjumpFireball
-    LDA.W PlayerRidingYoshi
+    LDA.W PlayerRidingYoshi                   ; Branch if riding Yoshi.
     BNE CODE_00D682
     INX
     BRA +
 
 CODE_00D65E:
-    LDA.B #!SFX_JUMP                          ; \ Play sound effect
+; Normal jump.
+    LDA.B #!SFX_JUMP                          ; \ Play sound effect; SFX for jumping.
     STA.W SPCIO1                              ; /
-  + LDA.W DATA_00D2BD,X
+  + LDA.W DATA_00D2BD,X                       ; Get jump height using current speed (abs(x)/8)*2
     STA.B PlayerYSpeed+1
     LDA.B #$0B
     LDY.W PlayerPMeter
-    CPY.B #con($70,$70,$70,$40,$68)
+    CPY.B #con($70,$70,$70,$40,$68)           ; Check if Mario has a full P-meter.
     BCC CODE_00D67D
-    LDA.W TakeoffTimer
+    LDA.W TakeoffTimer                        ; Don't reset the takeoff timer if it's already set.
     BNE +
-    LDA.B #$50
+    LDA.B #$50                                ; Set the takeoff timer.
     STA.W TakeoffTimer
   + LDA.B #$0C
 CODE_00D67D:
@@ -10011,7 +10809,7 @@ CODE_00D692:
     LSR A
     TAY
     ADC.B #$76
-    TAX
+    TAX                                       ; Get a speed table indices based on the type of slope Mario is sliding on.
     TYA
     LSR A
     ADC.B #$87
@@ -10055,42 +10853,42 @@ CODE_00D6EA:
 CODE_00D6EC:
     STA.B _1
     ASL A
-    ASL A
+    ASL A                                     ; Start with an X index based on the slope value and Mario's direction.
     ORA.W SlopeType
     TAX
     LDA.B PlayerXSpeed+1
-    BEQ CODE_00D713
-    EOR.W MarioAccel_+1,X
-    BPL CODE_00D713
-    LDA.W SkidTurnTimer
+    BEQ CODE_00D713                           ; Branch if:
+    EOR.W MarioAccel_+1,X                     ; Stationary
+    BPL CODE_00D713                           ; Moving in the direction Mario is facing
+    LDA.W SkidTurnTimer                       ; Sliding from a very steep slope
     BNE CODE_00D713
     LDA.B LevelIsSlippery
     BNE +
-    LDA.B #$0D
+    LDA.B #$0D                                ; If not in a slippery level, show Mario's turn pose and generate dust.
     STA.W PlayerTurningPose
     JSR CODE_00FE4A
   + TXA
-    CLC
+    CLC                                       ; Increase X index by 90.
     ADC.B #$90
     TAX
 CODE_00D713:
     LDY.B #$00
-    BIT.B byetudlrHold
+    BIT.B byetudlrHold                        ; If X/Y is not held, Y is #$00.
     BVC CODE_00D737
     INX
     INX
     INY
     LDA.B PlayerXSpeed+1
     BPL +
-    EOR.B #$FF
+    EOR.B #$FF                                ; If Mario is moving slower than #$23, Y is #$01.
     INC A
-  + CMP.B #con($23,$23,$23,$2C,$2C)
+  + CMP.B #con($23,$23,$23,$2C,$2C)           ; X speed at which Mario's P-meter starts increasing.
     BMI CODE_00D737
     LDA.B PlayerInAir
     BNE CODE_00D732
     LDA.B #$10
     STA.W RunTakeoffTimer
-    BRA CODE_00D736
+    BRA CODE_00D736                           ; If Mario is on the ground or being shot out of a pipe, Y is #$02.
 
 CODE_00D732:
     CMP.B #$0C
@@ -10098,16 +10896,16 @@ CODE_00D732:
 CODE_00D736:
     INY
 CODE_00D737:
-    JSR CODE_00D96A
+    JSR CODE_00D96A                           ; Handle P-meter. If at max P-meter and Y is already #$02, increase Y to #$03.
     TYA
     ASL A
-    ORA.W SlopeType
+    ORA.W SlopeType                           ; Add slope values and Mario's direction to Y.
     ORA.B _1
     TAY
 CODE_00D742:
     LDA.B PlayerXSpeed+1
     SEC
-    SBC.W DATA_00D535,Y
+    SBC.W DATA_00D535,Y                       ; Branch if Mario is at the maximum X speed for the slope he's on.
     BEQ CODE_00D76B
     EOR.W DATA_00D535,Y
     BPL CODE_00D76B
@@ -10116,7 +10914,7 @@ CODE_00D742:
     LDY.B LevelIsSlippery
     BEQ +
     LDY.B PlayerInAir
-    BNE +
+    BNE +                                     ; Increase Mario's speed, accounting for slipperyness.
     LDA.W DATA_00D43D,X
   + CLC
     ADC.B PlayerXSpeed
@@ -10141,10 +10939,10 @@ CODE_00D772:
     INY
   + LDA.W EndLevelTimer
     ORA.B PlayerInAir
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Decelerate Mario.
     BNE CODE_00D78C
     LDA.W DATA_00D309,Y
-    BIT.B LevelIsWater
+    BIT.B LevelIsWater                        ; If in a slippery level, use a different set of deceleration values.
     BMI +
 CODE_00D78C:
     LDA.W DATA_00D2CD,Y
@@ -10153,7 +10951,7 @@ CODE_00D78C:
     STA.B PlayerXSpeed
     SEC
     SBC.W DATA_00D5C9,X
-    EOR.W DATA_00D2CD,Y
+    EOR.W DATA_00D2CD,Y                       ; Add slope auto-acceleration.
     BMI +
     LDA.W DATA_00D5C9,X
 CODE_00D7A0:
@@ -10210,7 +11008,26 @@ DATA_00D7D9:
     db $C8,$02,$01
 
 CODE_00D7E4:
-    LDY.W FlightPhase
+; Gravity (vertical acceleration).
+; 00 = no B, 01 = with B, 02 = with Yoshi wings
+; 03 = unused, 04 = air catch
+; 05-09 = cape dives/rises
+; Max falling speeds. Note: the actual max is this + gravity.
+; 00 = no B, 01 = with B, 02 = with Yoshi wings
+; These all seem unused.
+; Special cape and boost speeds.
+; 00 = hovering, 01 = takeoff boosts, 02 = Yoshi wings boosts
+; Rest unused?
+; Max cape diving speeds, based on phase ($1407).
+; First byte unused.
+; "Acceleration" dive phases for various conditions. Indicates the direction the angle is changing.
+; 0 = Pulling back. 1 = Diving. 2 = No input, increase angle. 3 = No input, reduce angle. 4 = X/Y released.
+; "Max" dive phases for various conditions.
+; Same order as above.
+; These values determine the size of the air catch for each dive phase, as the rise's Y speed cap.
+; As it happens, the max dive value (#$C8) is also used to indicate whether Mario should change flight phases quickly.
+; Based on Y speed divided by 8.
+    LDY.W FlightPhase                         ; Flight routine.
     BNE CODE_00D824
     LDA.B PlayerInAir
     BEQ CODE_00D811
@@ -10225,15 +11042,15 @@ CODE_00D7FF:
     STZ.W PlayerSlopePose
     LDX.B Powerup
     CPX.B #$02
-    BNE CODE_00D811
-    LDA.B PlayerYSpeed+1
-    BMI CODE_00D811
-    LDA.W TakeoffTimer
+    BNE CODE_00D811                           ; Skip down if:
+    LDA.B PlayerYSpeed+1                      ; Mario doesn't have a cape.
+    BMI CODE_00D811                           ; Mario is moving upwards.
+    LDA.W TakeoffTimer                        ; Takeoff timer is set.
     BNE +
 CODE_00D811:
     JMP CODE_00D8CD
 
-  + STZ.B PlayerIsDucking
+  + STZ.B PlayerIsDucking                     ; Mario has cape, is falling, and his takeoff meter is set (start flight).
     LDA.B #$0B
     STA.B PlayerInAir
     STZ.W MaxStageOfFlight
@@ -10246,78 +11063,78 @@ CODE_00D824:
     BCC +
     JSR CODE_00D94F
   + LDX.W NextFlightPhase
-    CPX.B #$04
+    CPX.B #$04                                ; X = 4 if X/Y aren't held (terminating flight).
     BEQ CODE_00D856
     LDX.B #$03
-    LDY.B PlayerYSpeed+1
+    LDY.B PlayerYSpeed+1                      ; X = 3 if moving upwards.
     BMI CODE_00D856
     LDA.B byetudlrHold
-    AND.B #$03
+    AND.B #$03                                ; Branch if L/R are being held.
     TAY
     BNE CODE_00D849
     LDA.W FlightPhase
-    CMP.B #$04
-    BCS CODE_00D856
+    CMP.B #$04                                ; X = 2 if no inputs are pressed and Mario should increase in angle.
+    BCS CODE_00D856                           ; X = 3 if no inputs are pressed and Mario should decrease in angle.
     DEX
     BRA CODE_00D856
 
 CODE_00D849:
     LSR A
     LDY.B PlayerDirection
-    BEQ +
-    EOR.B #$01
+    BEQ +                                     ; X = 1 if diving.
+    EOR.B #$01                                ; X = 0 if pulling back.
   + TAX
-    CPX.W NextFlightPhase
+    CPX.W NextFlightPhase                     ; Branch if not rising.
     BNE CODE_00D85B
 CODE_00D856:
-    LDA.W CapePumpTimer
+    LDA.W CapePumpTimer                       ; Don't change dive phase if not yet time to.
     BNE CODE_00D87E
 CODE_00D85B:
     BIT.B byetudlrHold
-    BVS +
+    BVS +                                     ; Force X = 4 if X/Y aren't being held.
     LDX.B #$04
   + LDA.W FlightPhase
-    CMP.W DATA_00D7D4,X
+    CMP.W DATA_00D7D4,X                       ; Branch if currently at the "max" dive phase for the conditions.
     BEQ CODE_00D87E
     CLC
-    ADC.W CapeSpeed,X
+    ADC.W CapeSpeed,X                         ; Adjust cape angle.
     STA.W FlightPhase
     LDA.B #$08
     LDY.W MaxStageOfFlight
-    CPY.B #$C8
-    BNE +
+    CPY.B #$C8                                ; Set time until the player advances a diving stage.
+    BNE +                                     ; If the player has big air, advance four times faster.
     LDA.B #$02
   + STA.W CapePumpTimer
 CODE_00D87E:
     STX.W NextFlightPhase
-    LDY.W FlightPhase
+    LDY.W FlightPhase                         ; Branch if not flying.
     BEQ CODE_00D8CD
 if ver_is_ntsc(!_VER)                         ;\=================== J, U, & SS ================
     LDA.B PlayerYSpeed+1                      ;!
     BPL CODE_00D892                           ;!
     CMP.B #$C8                                ;!
-    BCS +                                     ;!
+    BCS +                                     ;!; Limit max possible cape rising speed (from big air).
     LDA.B #$C8                                ;!
     BRA +                                     ;!
                                               ;!
 CODE_00D892:                                  ;!
     CMP.W DATA_00D7C8,Y                       ;!
-    BCC +                                     ;!
+    BCC +                                     ;!; Limit max cape dive speed.
     LDA.W DATA_00D7C8,Y                       ;!
   + PHA                                       ;!
     CPY.B #$01                                ;!
     BNE CODE_00D8C6                           ;!
-    LDX.W MaxStageOfFlight                    ;!
+    LDX.W MaxStageOfFlight                    ;!; Branch if no longer air catching.
     BEQ CODE_00D8C4                           ;!
-    LDA.B PlayerYSpeed+1                      ;!
+    LDA.B PlayerYSpeed+1                      ;!; Branch if moving upwards.
     BMI CODE_00D8AF                           ;!
-    LDA.B #!SFX_CAPE                          ;! \ Play sound effect
+    LDA.B #!SFX_CAPE                          ;! \ Play sound effect; SFX for smashing the ground.
     STA.W SPCIO0                              ;! /
     BRA +                                     ;!
                                               ;!
 CODE_00D8AF:                                  ;!
     CMP.W MaxStageOfFlight                    ;!
-    BCS +                                     ;!
+    BCS +                                     ;!; If Mario has reached the max rise speed for this stage, end the catch.
     STX.B PlayerYSpeed+1                      ;!
     STZ.W MaxStageOfFlight                    ;!
   + LDX.B PlayerDirection                     ;!
@@ -10387,38 +11204,39 @@ endif                                         ;/================================
     JMP CODE_00D948
 
 CODE_00D8CD:
-    LDA.B PlayerInAir                         ; \ Branch if not flying
+; Handle Yoshi flight.
+    LDA.B PlayerInAir                         ; \ Branch if not flying; If on the ground, skip all this.
     BEQ CODE_00D928                           ; /
     LDX.B #$00                                ; X = #$00
     LDA.W PlayerRidingYoshi                   ; \ Branch if not on Yoshi
     BEQ CODE_00D8E7                           ; /
-    LDA.W YoshiHasWingsEvt                    ; \ Branch if not winged Yoshi
+    LDA.W YoshiHasWingsEvt                    ; \ Branch if not winged Yoshi; If not riding a Yoshi with wings, branch.
     LSR A                                     ; |
     BEQ CODE_00D8E7                           ; /
     LDY.B #$02                                ; \ Branch if not Caped Mario
-    CPY.B Powerup                             ; |
+    CPY.B Powerup                             ; |; If Mario has cape, allow continuous flight by holding B.
     BEQ +                                     ; /
     INX                                       ; X= #$01
   + BRA CODE_00D8FF
 
 CODE_00D8E7:
-    LDA.B Powerup                             ; \ Branch if not Caped Mario
-    CMP.B #$02                                ; |
+    LDA.B Powerup                             ; \ Branch if not Caped Mario; Handle hovering/takeoff with the cape.
+    CMP.B #$02                                ; |; Skip down if Mario doesn't have a cape.
     BNE CODE_00D928                           ; /
     LDA.B PlayerInAir                         ; \ Branch if $72 != 0C
     CMP.B #$0C                                ; |
     BNE CODE_00D8FD                           ; /
     LDY.B #$01
-    CPY.W TakeoffTimer
+    CPY.W TakeoffTimer                        ; Handle the extra boosts from a filled takeoff meter.
     BCC CODE_00D8FF
     INC.W TakeoffTimer
 CODE_00D8FD:
     LDY.B #$00
 CODE_00D8FF:
     LDA.W CapeFloatTimer
-    BNE CODE_00D90D
-    LDA.B byetudlrHold,X
-    BPL CODE_00D924
+    BNE CODE_00D90D                           ; Set the initial hover timer if applicable.
+    LDA.B byetudlrHold,X                      ; Depending on whether Mario is on a winged Yoshi with a cape or not,
+    BPL CODE_00D924                           ; decide whether to hover based on first-frame A/B or held A/B.
     LDA.B #$10
     STA.W CapeFloatTimer
 CODE_00D90D:
@@ -10427,7 +11245,7 @@ CODE_00D90D:
     LDX.W DATA_00D7B9,Y
     BPL CODE_00D924
     CMP.W DATA_00D7B9,Y
-    BCC CODE_00D924
+    BCC CODE_00D924                           ; Limit maximum hovering/takeoff Y speed and return if at it.
 CODE_00D91B:
     LDA.W DATA_00D7B9,Y
     CMP.B PlayerYSpeed+1
@@ -10444,18 +11262,18 @@ CODE_00D92E:
     LDY.B #$00
 if ver_is_ntsc(!_VER)                         ;\================== J, U, & SS =================
   + LDA.B PlayerYSpeed+1                      ;! \ If Mario's Y speed is negative (up),
-    BMI CODE_00D948                           ;! / branch to $D948
-    CMP.W DATA_00D7AF,Y                       ;!
+    BMI CODE_00D948                           ;! / branch to $D948; If Mario starts falling faster than his maximum downwards speed,
+    CMP.W DATA_00D7AF,Y                       ;!; reset it back to the maximum downwards speed.
     BCC +                                     ;!
     LDA.W DATA_00D7AF,Y                       ;!
   + LDX.B PlayerInAir                         ;!
     BEQ CODE_00D948                           ;!
-    CPX.B #$0B                                ;!
+    CPX.B #$0B                                ;!; If Mario was previously jumping upwards, mark him as falling.
     BNE CODE_00D948                           ;!
     LDX.B #$24                                ;!
     STX.B PlayerInAir                         ;!
 CODE_00D948:                                  ;!
-    CLC                                       ;!
+    CLC                                       ;!; Add gravity to Mario's fall speed.
     ADC.W DATA_00D7A5,Y                       ;!
 else                                          ;<==================== E0 & E1 ==================
   + TYA                                       ;!
@@ -10494,7 +11312,7 @@ CODE_00D94F:
     LSR A
     TAY
     LDA.W DATA_00D7D9,Y
-    CMP.W MaxStageOfFlight
+    CMP.W MaxStageOfFlight                    ; Store the aircatch's speed.
     BPL +
     STA.W MaxStageOfFlight
   + RTS
@@ -10507,7 +11325,7 @@ CODE_00D96A:
     ADC.W DATA_00D5EB,Y
     BPL +
     LDA.B #$00
-  + CMP.B #con($70,$70,$70,$40,$68)
+  + CMP.B #con($70,$70,$70,$40,$68)           ; Handle the P-meter. If zero, reset; if non-zero, decrease; if greater than #$70, reset to #$70.
     BCC +
     INY
     LDA.B #con($70,$70,$70,$40,$68)
@@ -10522,12 +11340,14 @@ DATA_00D984:
     db $E8,$F8,$D0,$D0
 
 CODE_00D988:
-    STZ.W PlayerSlopePose
+; Maximum upwards swim speeds, indexed by up/down inputs.
+; 0 = no input, 1 = down held, 2 = up held, 3 = both held
+    STZ.W PlayerSlopePose                     ; Mario's swimming routine.
     STZ.B PlayerIsDucking
     STZ.W FlightPhase
     STZ.W SpinJumpFlag
     LDY.B PlayerYSpeed+1
-    LDA.W IsCarryingItem
+    LDA.W IsCarryingItem                      ; Branch if not holding an item.
     BEQ CODE_00D9EB
     LDA.B PlayerInAir
     BNE CODE_00D9AF
@@ -10562,16 +11382,16 @@ CODE_00D9B5:
   + TYA
     BMI CODE_00D9D7
     CMP.B #$10
-    BCC +
+    BCC +                                     ; Maximum downwards Y speed in water while carrying an item.
     LDA.B #$10
     BRA +
 
 CODE_00D9D7:
     CMP.B #$F0
-    BCS +
+    BCS +                                     ; Maximum upwards Y speed in water while carrying an item.
     LDA.B #$F0
   + STA.B PlayerYSpeed+1
-    LDY.B #$80
+    LDY.B #$80                                ; Base index to Mario's X speeds for water when holding an item.
     LDA.B byetudlrHold
     AND.B #$03
     BNE CODE_00DA48
@@ -10579,43 +11399,43 @@ CODE_00D9D7:
     BRA CODE_00DA46
 
 CODE_00D9EB:
-    LDA.B byetudlrFrame
-    ORA.B axlr0000Frame
-    BPL CODE_00DA0B
-    LDA.W PlayerCanJumpWater
+    LDA.B byetudlrFrame                       ; Mario is not holding an item.
+    ORA.B axlr0000Frame                       ; Branch if:
+    BPL CODE_00DA0B                           ; A/B not pressed
+    LDA.W PlayerCanJumpWater                  ; Mario is at the surface of the water.
     BNE CODE_00DA0B
     JSR CODE_00DAA9
     LDA.B PlayerInAir
     BNE +
-    LDA.B #$0B
+    LDA.B #$0B                                ; Handle Mario "jumping" off the ground in water.
     STA.B PlayerInAir
     STZ.W PlayerSlopePose
-    LDY.B #$F0
+    LDY.B #$F0                                ; Base Y speed to give Mario when swimming off the ground.
   + TYA
     SEC
-    SBC.B #$20
+    SBC.B #$20                                ; Boost Y speed that A/B gives Mario.
     TAY
 CODE_00DA0B:
     LDA.B EffFrame
     AND.B #$03
-    BNE +
+    BNE +                                     ; Apply "gravity" in water; every 4 frames add 2 to Y.
     INY
     INY
   + LDA.B byetudlrHold
     AND.B #$0C
-    LSR A
+    LSR A                                     ; Track whether up or down are being held.
     LSR A
     TAX
     TYA
     BMI CODE_00DA25
     CMP.B #$40
-    BCC +
+    BCC +                                     ; Maximum falling speeds while swimming.
     LDA.B #$40
     BRA +
 
 CODE_00DA25:
     CMP.W DATA_00D984,X
-    BCS +
+    BCS +                                     ; Restrict maximum rising speeds while swimming, based on whether up/down are held.
     LDA.W DATA_00D984,X
   + STA.B PlayerYSpeed+1
     LDA.B PlayerInAir
@@ -10632,27 +11452,27 @@ CODE_00DA40:
     AND.B #$03
     BEQ CODE_00DA69
 CODE_00DA46:
-    LDY.B #$78
+    LDY.B #$78                                ; Base index to Mario's X speeds for water when not holding an item.
 CODE_00DA48:
     STY.B _0
     AND.B #$01
-    STA.B PlayerDirection
+    STA.B PlayerDirection                     ; Modify speed index based on direction...
     PHA
     ASL A
     ASL A
     TAX
     PLA
     ORA.B _0
-    LDY.W Layer3TideSetting
+    LDY.W Layer3TideSetting                   ; ...whether Mario is in a level with tides...
     BEQ +
     CLC
     ADC.B #$04
   + TAY
-    LDA.B PlayerInAir
+    LDA.B PlayerInAir                         ; ... or if he's on the ground vs. floating.
     BEQ +
     INY
     INY
-  + JSR CODE_00D742
+  + JSR CODE_00D742                           ; Handle Mario's max X speed and acceleration.
     BRA CODE_00DA7C
 
 CODE_00DA69:
@@ -10668,7 +11488,7 @@ CODE_00DA69:
   + JSR CODE_00D772
 CODE_00DA7C:
     JSR CODE_00D062
-    JSL CODE_00CEB1
+    JSL CODE_00CEB1                           ; Animate Mario (and his cape).
     LDA.W CapeSpinTimer
     BNE Return00DA8C
     LDA.B PlayerInAir
@@ -10732,11 +11552,16 @@ DATA_00DAF1:
     db $45,$01,$45,$01,$08,$F8
 
 CODE_00DB17:
-    STZ.B PlayerInAir
+; Climbing X/Y speeds.
+; Every second byte is, oddly, used when climbing in water.
+; Y speeds to give when jumping off a vine/net.
+; Second byte is when in water.
+; Frames to use for Mario's net punch animation.
+    STZ.B PlayerInAir                         ; Routine to handle punching/turning a net door while Mario is climbing on a net
     STZ.B PlayerYSpeed+1
     STZ.W PlayerCapePose
     STZ.W SpinJumpFlag
-    LDY.W NetDoorTimer
+    LDY.W NetDoorTimer                        ; Branch if not already in the net door turn animation.
     BEQ CODE_00DB7D
     LDA.W NetDoorPlayerXOffset
     BPL +
@@ -10785,15 +11610,16 @@ CODE_00DB45:
     BRA CODE_00DB92
 
 CODE_00DB7D:
-    STZ.B PlayerXSpeed+1
+; Not already on a rotating net door.
+    STZ.B PlayerXSpeed+1                      ; Clear Mario's X speed.
     STZ.B PlayerXSpeed
     LDX.W PlayerBehindNet
-    LDA.W PunchNetTimer
+    LDA.W PunchNetTimer                       ; Branch if not punching.
     BEQ +
     TXA
+    INC A                                     ; Handle the punching animation while climbing on a net.
     INC A
-    INC A
-    JSR CODE_00D044
+    JSR CODE_00D044                           ; Process net punch interaction.
     LDA.W ClimbPunchingImgs,X
 CODE_00DB92:
     STA.W PlayerPose
@@ -10804,7 +11630,7 @@ CODE_00DB92:
     BPL CODE_00DBAC
     LDA.B #$0B
     STA.B PlayerInAir
-    LDA.W DATA_00DABB,Y
+    LDA.W DATA_00DABB,Y                       ; Set Y speed for jumping off a net.
     STA.B PlayerYSpeed+1
     LDA.B #!SFX_JUMP                          ; \ Play sound effect
     STA.W SPCIO1                              ; /
@@ -10814,7 +11640,7 @@ CODE_00DBAC:
     BVC +
     LDA.B PlayerIsClimbing
     BPL +
-    LDA.B #!SFX_BONK                          ; \ Play sound effect
+    LDA.B #!SFX_BONK                          ; \ Play sound effect; SFX played for punching a net.
     STA.W SPCIO0                              ; /
     STX.W NetDoorDirIndex
     LDA.B PlayerXPosNext                      ; Mario X
@@ -10846,7 +11672,7 @@ CODE_00DBE8:
     ASL A
     ORA.B PlayerInWater
     TAX
-    LDA.W DATA_00DAB7,X
+    LDA.W DATA_00DAB7,X                       ; Set climbing X speed.
     STA.B PlayerXSpeed+1
 CODE_00DBF2:
     LDA.B byetudlrHold                        ; \
@@ -10870,7 +11696,7 @@ CODE_00DC0B:
     LDA.B PlayerIsClimbing
     BMI +
     STZ.B PlayerXSpeed+1
-  + LDA.W DATA_00DAB7,Y
+  + LDA.W DATA_00DAB7,Y                       ; Set climbing Y speed.
     STA.B PlayerYSpeed+1
 CODE_00DC16:
     ORA.B PlayerXSpeed+1
@@ -10886,20 +11712,20 @@ CODE_00DC16:
   + RTS
 
 CODE_00DC2D:
-    LDA.B PlayerYSpeed+1                      ; \ Store Mario's Y speed in $8A
+    LDA.B PlayerYSpeed+1                      ; \ Store Mario's Y speed in $8A; Routine to update the player's X and Y positions based on their speed.
     STA.B TempPlayerYSpeed                    ; /
     LDA.W WallrunningType
     BEQ CODE_00DC40
     LSR A
     LDA.B PlayerXSpeed+1
-    BCC +
+    BCC +                                     ; If wall-running, temporarily convert X speed to Y speed.
     EOR.B #$FF
     INC A
   + STA.B PlayerYSpeed+1
 CODE_00DC40:
-    LDX.B #$00
+    LDX.B #$00                                ; Run for X position.
     JSR CODE_00DC4F
-    LDX.B #$02
+    LDX.B #$02                                ; Run for Y position.
     JSR CODE_00DC4F
     LDA.B TempPlayerYSpeed
     STA.B PlayerYSpeed+1
@@ -10907,7 +11733,7 @@ CODE_00DC40:
 
 if ver_is_ntsc(!_VER)                         ;\=================== J, U, & SS ================
 CODE_00DC4F:                                  ;!
-    LDA.B PlayerXSpeed+1,X                    ;!
+    LDA.B PlayerXSpeed+1,X                    ;!; Update Mario's position (X=0 for x, X=2 for y).
     ASL A                                     ;!
     ASL A                                     ;!
     ASL A                                     ;!
@@ -11274,31 +12100,111 @@ DATA_00E2B9:
     db $E0,$10,$10,$30
 
 DrawMarioAndYoshi:
-    PHB
+; Number of walking frames for each of Mario's powerups.
+; Animation timers for both Mario's run animation and his cape's fluttering animation.
+; Both use the absolute value of his speed, divided by 8, as a base index.
+; Mario animation adds $13E5 on top of it, which is either 00 in normal levels or 68 in slippery.
+; These 8 are for in slippery levels, still indexed by his speed divided by 8 (it overflows into the next table if you go fast enough).
+; Indices to $00DD32, indexed by $13E0 (his pose). ORA'd with Mario's direction.
+; If Mario is small ($19 = 00), then pose 0x29 will use pose 0x20's value instead.
+; Indexes to the position tables for Mario's tiles. Indexed by $00DCEC + Mario's direction.
+; 16-bit X offsets of Mario's tiles in various poses. 16-bit, indexed by $00DD32.
+; 8 bytes per entry: head, body, extra tile #1, extra tile #2.
+; This value is then added with the onscreen X position in $7E.
+; Cape positions, indexed by $00E21A.
+; 16-bit Y offsets of Mario's tiles in various poses, indexed by $00DD32.
+; 8 bytes per entry: head, body, extra tile #1, extra tile #2.
+; This value is then added with the onscreen Y position in $80.
+; Cape positions, indexed by $00E21A.
+; Base indices to the tables below to use for Mario, indexed by $19.
+; Extra tile index table for each of Mario's poses.
+; $00DF1A - Small
+; $00DF57 - Poses 3D-45
+; $00DF60 - Big
+; $00DF9D - Cape
+; Actual OAM tile numbers for Mario (despite its name, not necessarily 8x8). Each entry is 4 bytes long.
+; Byte 0 is Mario's dynamic head tile (always tile 0x00).
+; Byte 1 is Mario's dynamic body tile (always tile 0x02).
+; Byte 2 is the extra 8x8 tile #1 (scattered throughout SP1).
+; Byte 3 is the extra 8x8 tile #2 (scattered throughout SP1).
+; The high byte being set indicates the tile shouldn't be drawn.
+; Extra tile #1 in this entry (the balloon) is treated as 16x16.
+; Tile in SP1/SP2 to use as the cape's dynamic tile.
+; Tile in SP1/SP2 to use as the cape's misc dynamic tile.
+; Miscellaneous static cape tiles.
+; List of upper tiles for Mario. Bit 3 is page number; see https://media.smwcentral.net/Diagrams/PlayerTiles.png
+; Small
+; Poses 3D-45
+; Big
+; Cape
+; List of lower tiles for Mario. Bit 3 is page number; see https://media.smwcentral.net/Diagrams/PlayerTiles.png
+; Small
+; Poses 3D-45
+; Big
+; Cape
+; X-bit values for Mario's YXPPCCCT, indexed by his direction.
+; Indices to the below data, indexed by $13E0 in cape form.
+; Data on Mario's cape, indexed by values in $00E18E. Each entry is up to 5 bytes long.
+; 00        ;  Byte 0 - MSK - Which tiles to not draw, according to $78 (---- dluc). If bit 7 is set, tile #$7F is skipped, and the main cape tile uses a different OAM index for high priority.
+; 02        ;  Byte 1 - DYN - If less than #$04, used as an index to $00E23A/$00E266; else, it's a 16x16 tile number in GFX32. Uploaded to #$04 in SP1.
+; 04        ;  Byte 2 - POS - Index to $00E21A for the cape's position. Ignored if DYN is less than 04.
+; 06        ;  Byte 3 - Ex1 - 8x8 tile in GFX32 to upload to tile #$7F in SP1. Ignored if MSK has bit 1 (u) set.
+; 08        ;  Byte 4 - Ex2 - Index to $00DFDA to use for the cape's other static misc tile. Ignored if MSK has bit 2 (l) set.
+; 0A        ;
+; 0D        ; For a more visual table of this data, see here: https://loli.muncher.se/mariocape/
+; 10
+; 13
+; 16
+; 19
+; 1C
+; 1F
+; 22
+; 25
+; 28
+; 2B
+; 30
+; 35
+; 3A
+; 3F
+; 43
+; Position indices for the cape, to $00DD4E/$00DE32.
+; Tilemap for Mario's cape (16x16), uploaded to tile #$04 in SP1. Indexed by byte 1 of $00E1D4 (4 bytes per entry).
+; The four bytes are standing, crouching, riding Yoshi, and about to use Yoshi's tongue.
+; With the exception of the first entry though, all 4 bytes are always the same...
+; Offsets to $00E21A (the position index table) for Mario's cape. Indexed by byte 1 of $00E1D4 (4 bytes per entry).
+; The four bytes are standing, crouching, riding Yoshi, and about to use Yoshi's tongue.
+; 16-bit pointers to the palettes for the player.
+; Small M/L, Big M/L
+; Cape M/L, Fire M/L
+; OAM indices for Mario, indexed by $13F9.
+; OAM indices for Mario's extra 8x8 tile, indexed by $13F9.
+; Priority bits for Mario's YXPPCCCT, indexed by $13F9 minus 1.
+; Default usage: 1 = nets, 2 = pipes, and 3 = overworld (also after Bowser is killed)
+    PHB                                       ; Mario GFX routine, which also draws Yoshi and handles some other processes as well (e.g. star).
     PHK
     PLB
     LDA.B PlayerHiddenTiles
-    CMP.B #$FF
+    CMP.B #$FF                                ; Process Yoshi, unless Mario isn't being drawn.
     BEQ +
     JSL CODE_01EA70
-  + LDY.W CyclePaletteTimer
+  + LDY.W CyclePaletteTimer                   ; Branch if Mario is not currently flipping through palettes.
     BNE CODE_00E308
-    LDY.W InvinsibilityTimer                  ; \ Branch if Mario doesn't have star
+    LDY.W InvinsibilityTimer                  ; \ Branch if Mario doesn't have star; Branch if star power is not active.
     BEQ CODE_00E314                           ; /
     LDA.B PlayerHiddenTiles
     CMP.B #$FF
-    BEQ +
-    LDA.B EffFrame
+    BEQ +                                     ; Decrement the star power timer every 4 frames,
+    LDA.B EffFrame                            ; unless Mario isn't being drawn.
     AND.B #$03
     BNE +
     DEC.W InvinsibilityTimer                  ; Decrease star timer
   + LDA.B TrueFrame
-    CPY.B #con($1E,$1E,$1E,$18,$18)
-    BCC CODE_00E30A
+    CPY.B #con($1E,$1E,$1E,$18,$18)           ; Skip down to cycle palettes if star power is not close to finishing.
+    BCC CODE_00E30A                           ; Otherwise, continue below to restore the music.
     BNE CODE_00E30C
     LDA.W MusicBackup
     CMP.B #$FF
-    BEQ CODE_00E308
+    BEQ CODE_00E308                           ; Restore the music.
     AND.B #$7F
     STA.W MusicBackup
     TAX
@@ -11314,7 +12220,7 @@ CODE_00E30A:
     LSR A
     LSR A
 CODE_00E30C:
-    AND.B #$03
+    AND.B #$03                                ; Number of palettes to flash through when Mario has star power.
     INC A
     INC A
     INC A
@@ -11322,31 +12228,31 @@ CODE_00E30C:
     BRA +
 
 CODE_00E314:
-    LDA.B Powerup
-    ASL A
+    LDA.B Powerup                             ; Mario does not have star power.
+    ASL A                                     ; Get the current palette to use for the player.
     ORA.W PlayerTurnLvl
   + ASL A
     TAY
     REP #$20                                  ; A->16
-    LDA.W DATA_00E2A2,Y
+    LDA.W DATA_00E2A2,Y                       ; Store the palette pointer to use for the current player's palette.
     STA.W PlayerPalletePtr
     SEP #$20                                  ; A->8
     LDX.W PlayerPose
     LDA.B #$05
-    CMP.W WallrunningType
+    CMP.W WallrunningType                     ; Branch if Mario is not running sideways on a wall.
     BCS CODE_00E33E
     LDA.W WallrunningType
-    LDY.B Powerup
+    LDY.B Powerup                             ; Branch if Mario is small.
     BEQ CODE_00E33B
-    CPX.B #$13
+    CPX.B #$13                                ; If the player's pose is not #$13, branch.
     BNE +
 CODE_00E33B:
-    EOR.B #$01
-  + LSR A
+    EOR.B #$01                                ; Basically the whole point of this code is to determine whether
+  + LSR A                                     ; to shift Mario's X position within the screen one extra pixel.
 CODE_00E33E:
     REP #$20                                  ; A->16
     LDA.B PlayerXPosNext
-    SBC.B Layer1XPos
+    SBC.B Layer1XPos                          ; Store player X position relative to the screen.
     STA.B PlayerXPosScrRel
     LDA.W ScrShakePlayerYOffset
     AND.W #$00FF
@@ -11357,8 +12263,8 @@ CODE_00E33E:
     LDY.B #$01
     BCS +
     DEC A
-    DEY
-  + CPX.B #$0A
+    DEY                                       ; Store player Y position relative to the screen.
+  + CPX.B #$0A                                ; Adjust for screen shake, powerup, and walking frame.
     BCS +
     CPY.W PlayerWalkingPose
   + SBC.B Layer1YPos
@@ -11382,9 +12288,9 @@ CODE_00E33E:
     RTL
 
   + LDA.B #$C8
-    CPX.B #$43
-    BNE +
-    LDA.B #$E8
+    CPX.B #$43                                ; Set the size of Mario's tiles, 8x8 or 16x16 (hb12 c34-).
+    BNE +                                     ; (1/2 = extra tile #1/#2, c = cape, 3/4 = cape misc #1/#2)
+    LDA.B #$E8                                ; Balloon form sets Ex1 to be 16x16; in all others it's 8x8.
   + STA.B _4
     CPX.B #$29
     BNE +
@@ -11405,7 +12311,7 @@ CODE_00E33E:
     LDA.W TileExpansion_,Y
     STA.B _6
     LDA.W DATA_00E00C,Y
-    STA.B _A
+    STA.B _A                                  ; Preserve the top/bottom tiles (stored at $00F63A).
     LDA.W DATA_00E0CC,Y
     STA.B _B
     LDA.B SpriteProperties
@@ -11416,8 +12322,8 @@ CODE_00E33E:
     LDX.B PlayerDirection
     ORA.W MarioPalIndex,X
     STA.W OAMTileAttr+$100,Y
-    STA.W OAMTileAttr+$104,Y
-    STA.W OAMTileAttr+$10C,Y
+    STA.W OAMTileAttr+$104,Y                  ; Store Mario's YXPPCCCT to all necessary tiles.
+    STA.W OAMTileAttr+$10C,Y                  ; If set to go behind layers, use standard YXPPCCCT instead of Mario's normal.
     STA.W OAMTileAttr+$110,Y
     STA.W OAMTileAttr+$F8,Y
     STA.W OAMTileAttr+$FC,Y
@@ -11427,21 +12333,21 @@ CODE_00E33E:
     EOR.B #$40
   + STA.W OAMTileAttr+$108,Y
     JSR CODE_00E45D
-    JSR CODE_00E45D
+    JSR CODE_00E45D                           ; Draw main four tiles for Mario into OAM.
     JSR CODE_00E45D
     JSR CODE_00E45D
     LDA.B Powerup
-    CMP.B #$02
+    CMP.B #$02                                ; Powerup that shows the cape graphic. (all others skip the below code)
     BNE CODE_00E458
     PHY
-    LDA.B #$2C
+    LDA.B #$2C                                ; Base index to $00DFDA for the extra cape tiles.
     STA.B _6
     LDX.W PlayerPose
     LDA.W DATA_00E18E,X
     TAX
-    LDA.W DATA_00E1D7,X
+    LDA.W DATA_00E1D7,X                       ; Get dynamic cape tile to upload to tile #$7F.
     STA.B _D
-    LDA.W DATA_00E1D8,X
+    LDA.W DATA_00E1D8,X                       ; Get position index for the second static cape tile.
     STA.B _E
     LDA.W DATA_00E1D5,X
     STA.B _C
@@ -11452,8 +12358,8 @@ CODE_00E33E:
     ASL A
     ORA.B _C
     TAY
-    LDA.W DATA_00E23A,Y
-    STA.B _C
+    LDA.W DATA_00E23A,Y                       ; Handle the main cape tile, uploaded dynamically to #$04 in SP1.
+    STA.B _C                                  ; Gets the tile number and position offset.
     LDA.W DATA_00E266,Y
     BRA +
 
@@ -11464,35 +12370,36 @@ CODE_00E432:
     LDA.W DATA_00E21A,Y
     STA.B _5
     PLY
-    LDA.W DATA_00E1D4,X
+    LDA.W DATA_00E1D4,X                       ; Disable any extra cape tiles, if applicable.
     TSB.B PlayerHiddenTiles
     BMI +
-    JSR CODE_00E45D
-  + LDX.W PlayerBehindNet
-    LDY.W DATA_00E2B6,X
+    JSR CODE_00E45D                           ; Draw the main cape tile (04) and extra dynamic tile (7F).
+  + LDX.W PlayerBehindNet                     ; If tile 7F is skipped by the value from $00E1D4,
+    LDY.W DATA_00E2B6,X                       ; then the main tile is drawn with a different OAM index (for priority).
     JSR CODE_00E45D
     LDA.B _E
-    STA.B _6
+    STA.B _6                                  ; Draw the static cape tile.
     JSR CODE_00E45D
 CODE_00E458:
-    JSR CODE_00F636
+    JSR CODE_00F636                           ; Store the pointers to Mario's graphics for DMA upload later.
     PLB
     RTL
 
 CODE_00E45D:
-    LSR.B PlayerHiddenTiles
+; Subroutine to draw a tile for Mario into OAM, if applicable.
+    LSR.B PlayerHiddenTiles                   ; Y contains OAM index, $05 contains the X/Y index, $06 contains the tile index. All incremented by respective amounts after.
     BCS +
-    LDX.B _6
-    LDA.W Mario8x8Tiles,X
+    LDX.B _6                                  ; Store the tile number.
+    LDA.W Mario8x8Tiles,X                     ; Skip the rest if not set to be shown, or not being used.
     BMI +
     STA.W OAMTileNo+$100,Y
     LDX.B _5
     REP #$20                                  ; A->16
     LDA.B PlayerYPosScrRel
     CLC
-    ADC.W DATA_00DE32,X
+    ADC.W DATA_00DE32,X                       ; Store Y position for the tile.
     PHA
-    CLC
+    CLC                                       ; Skip the rest if veritcally offscreen.
     ADC.W #$0010
     CMP.W #$0100
     PLA
@@ -11504,8 +12411,8 @@ CODE_00E45D:
     CLC
     ADC.W DATA_00DD4E,X
     PHA
-    CLC
-    ADC.W #$0080
+    CLC                                       ; Store X position for the tile.
+    ADC.W #$0080                              ; Set high X bit for size later if horizontally offscreen.
     CMP.W #$0200
     PLA
     SEP #$20                                  ; A->8
@@ -11518,7 +12425,7 @@ CODE_00E45D:
     LSR A
     LSR A
     TAX
-    ASL.B _4
+    ASL.B _4                                  ; Set size.
     ROL A
     PLP
     ROL A
@@ -11528,9 +12435,9 @@ CODE_00E45D:
     INY
     INY
     INY
+    INC.B _5                                  ; Increase X/Y position index for the next tile.
     INC.B _5
-    INC.B _5
-    INC.B _6
+    INC.B _6                                  ; Increase tile index for the next tile.
     RTS
 
 
@@ -11721,7 +12628,124 @@ DATA_00E91F:
     db $FF,$FF,$01,$00
 
 CODE_00E92B:
-    JSR CODE_00EAA6
+; Values stored to $13E1 for each slope tile.
+; 00 - Gradual
+; 08 - Normal
+; 0C - Steep
+; 0E - Purple Triangle
+; 10 - Ledge-edge Very Steep (from object 13)
+; 12 - Upside-down Steep (unused)
+; 14 - Upside-down Normal (unused)
+; 18 - Conveyors
+; 1C - Very Steep
+; 20 - Flat Ground
+; Y speeds to give Mario when standing on a slope.
+; 00 - Gradual
+; 08 - Normal
+; 0C - Steep
+; 0E - Purple Triangle
+; 10 - Ledge-edge Very Steep (from object 13)
+; 12 - Upside-down Steep (unused)
+; 14 - Upside-down Normal (unused)
+; 18 - Conveyors
+; 1C - Very Steep
+; 20 - Flat Ground
+; Y speeds to give Mario when running up a slope.
+; 00 - Gradual
+; 08 - Normal
+; 0C - Steep
+; 0E - Purple Triangle
+; 10 - Ledge-edge Very Steep (from object 13)
+; 12 - Upside-down Steep (unused)
+; 14 - Upside-down Normal (unused)
+; 18 - Conveyors
+; 1C - Very Steep
+; 20 - Unused
+; Size of the "top" of a slope (the area that pushes Mario onto it).
+; 00 - Gradual
+; 08 - Normal
+; 0C - Steep
+; 0E - Purple Triangle
+; 10 - Ledge-edge Very Steep (from object 13)
+; 12 - Upside-down Steep (unused)
+; 14 - Upside-down Normal (unused)
+; 18 - Conveyors
+; 1C - Very Steep
+; 20 - Flat Ground (unused, probably)
+; Values to handle sprite interaction with the various slopes. Each value is the slope's "steepness".
+; 00 - Gradual
+; 08 - Normal
+; 0C - Steep
+; 0E - Purple Triangle
+; 10 - Ledge-edge Very Steep (from object 13)
+; 12 - Upside-down Steep
+; 14 - Upside-down Normal
+; 18 - Conveyors
+; 1C - Very Steep
+; 20 - Flat Ground
+; Indices to the above tables for slopes in any tileset except 0 and 7. (upside-down slopes)
+; Index to the table is the block number, from 16E to 1D7.
+; Indices to the above tables for slopes in tilesets 0 and 7. (diagonal pipes)
+; Index to the table is the block number, from 16E to 1D7.
+; How many pixels a sprite should move down from the nearest 16x16 tile. Indexed by $00E5C8/$00E55E * 10, plus the X position within the slope.
+; 000 - Gradual left
+; 040 - Gradual right
+; 080 - Normal left
+; 0A0 - Normal right
+; 0C0 - Steep left
+; 0D0 - Steep right
+; 0E0 - Purple triangle left
+; 0F0 - Purple triangle right
+; 100 - Very steep left, to edge (tile 1B6)
+; 110 - Very steep right, to edge (tile 1B7)
+; 120 - Upside-down steep left
+; 130 - Upside-down steep right
+; 140 - Upside-down normal left
+; 160 - Upside-down normal right
+; 180 - Left-up conveyor
+; 190 - Right-down conveyor
+; 1A0 - Right-up conveyor
+; 1B0 - Left-down conveyor
+; 1C0 - Very steep slope left
+; 1E0 - Very steep slope right
+; center,sideB,sideT, head,footL,footR
+; Mario interaction points, X positions. See http://bin.smwcentral.net/u/75/InteractionPoints.txt
+; 00 - Small, standing
+; 0C - Small, walking
+; 18 - Big, standing
+; 24 - Big, walking
+; 30 - Small, standing, on Yoshi
+; 3C - Small, walking, on Yoshi
+; 48 - Big, standing, on Yoshi
+; 54 - Big, walking, on Yoshi
+; 60 - Running up wall?
+; $00E89C   | Mario interaction points, Y positions.
+; 00 - Small, standing
+; 0C - Small, walking
+; 18 - Big, standing
+; 24 - Big, walking
+; 30 - Small, standing, on Yoshi
+; 3C - Small, walking, on Yoshi
+; 48 - Big, standing, on Yoshi
+; 54 - Big, walking, on Yoshi
+; 60 - Running up wall?
+; Defines the "edges" of blocks. Mario won't interact with blocks if touching them at these positions.
+; First = left side, second = right side.
+; X speeds that conveyors push Mario with.
+; Flat right
+; Flat left
+; Up right
+; Down right
+; Up left
+; Down left
+; Y speeds that conveyors push Mario with.
+; Flat right
+; Flat left
+; Up right
+; Down right
+; Up left
+; Down left
+    JSR CODE_00EAA6                           ; Routine to process object interaction for Mario.
     LDA.W PlayerDisableObjInt
     BEQ CODE_00E938
     JSR CODE_00EE1D
@@ -11734,7 +12758,7 @@ CODE_00E938:
     LDA.B PlayerInAir
     STA.B TempPlayerAir
     LDA.B ScreenMode
-    BPL +
+    BPL +                                     ; Branch if Layer 2 interaction is disabled.
     AND.B #!ScrMode_EnableL2Int|!ScrMode_Layer2Vert
     STA.B TempScreenMode
     LDA.B #$01
@@ -11748,7 +12772,7 @@ CODE_00E938:
     CLC
     ADC.B Layer23YRelPos
     STA.B PlayerYPosNext
-    SEP #$20                                  ; A->8
+    SEP #$20                                  ; A->8; Run Mario's object interaction for Layer 2.
     JSR CODE_00EADB
     REP #$20                                  ; A->16
     LDA.B PlayerXPosNext
@@ -11763,29 +12787,29 @@ CODE_00E938:
   + ASL.W PlayerIsOnGround
     LDA.B ScreenMode
     AND.B #!ScrMode_DisableL1Int|!ScrMode_Layer1Vert
-    STA.B TempScreenMode
+    STA.B TempScreenMode                      ; Branch if Layer 1 interaction is disabled.
     ASL A
     BMI CODE_00E98C
     STZ.W LayerProcessing
-    ASL.B TempPlayerGround
+    ASL.B TempPlayerGround                    ; Run Mario's object interaction for Layer 1.
     JSR CODE_00EADB
 CODE_00E98C:
-    LDA.W SideExitEnabled
+    LDA.W SideExitEnabled                     ; If side exits are not enabled, branch.
     BEQ CODE_00E9A1
     REP #$20                                  ; A->16
     LDA.B PlayerXPosScrRel
-    CMP.W #$00FA
-    SEP #$20                                  ; A->8
+    CMP.W #$00FA                              ; How far Mario needs to be on the right side of the screen to exit the level.
+    SEP #$20                                  ; A->8; (Greater than #$00FA is not recommended.)
     BCC CODE_00E9FB
     JSL SubSideExit
     RTS
 
 CODE_00E9A1:
     LDA.B PlayerXPosScrRel
-    CMP.B #$F0
+    CMP.B #$F0                                ; If Mario is too far into the right screen border, kill him.
     BCS CODE_00EA08
     LDA.B PlayerBlockedDir
-    AND.B #$03
+    AND.B #$03                                ; If Mario is blocked from the left or right, branch.
     BNE CODE_00E9FB
     REP #$20                                  ; A->16
     LDY.B #$00
@@ -11829,25 +12853,26 @@ CODE_00E9C8:
 CODE_00E9FB:
     LDA.B PlayerBlockedDir
     AND.B #$1C
-    CMP.B #$1C
+    CMP.B #$1C                                ; If Mario is not inside of a block or on a solid sprite, branch.
     BNE CODE_00EA0D
     LDA.W StandOnSolidSprite
     BNE CODE_00EA0D
 CODE_00EA08:
-    JSR CODE_00F629
-    BRA CODE_00EA32
+; Inside a block.
+    JSR CODE_00F629                           ; Kill Mario.
+    BRA CODE_00EA32                           ; Branch to continue.
 
 CODE_00EA0D:
-    LDA.B PlayerBlockedDir
+    LDA.B PlayerBlockedDir                    ; Not inside a block or on a sprite.
     AND.B #$03
     BEQ +
     AND.B #$02
     TAY
-    REP #$20                                  ; A->16
-    LDA.B PlayerXPosNext
+    REP #$20                                  ; A->16; If Mario is blocked on either the left or right,
+    LDA.B PlayerXPosNext                      ; push him out of the block (1 pixel left/right).
     CLC
-    ADC.W DATA_00E90D,Y
-    STA.B PlayerXPosNext
+    ADC.W DATA_00E90D,Y                       ; If he's touching the screen barrier in a room with horizontal scrolling,
+    STA.B PlayerXPosNext                      ; and moving towards the barrier, then clear his X speed.
     SEP #$20                                  ; A->8
     LDA.B PlayerBlockedDir
     BMI +
@@ -11859,73 +12884,75 @@ CODE_00EA0D:
 CODE_00EA32:
     STZ.B PlayerXSpeed+1
   + LDA.W PlayerBehindNet
-    CMP.B #$01
+    CMP.B #$01                                ; Something related to net gates?
     BNE +
     LDA.B InteractionPtsClimbable
     BNE +
     STZ.W PlayerBehindNet
   + STZ.W PlayerCanJumpWater
-    LDA.B LevelIsWater
+    LDA.B LevelIsWater                        ; If in a water level, branch down to always treat Mario as being in water.
     BNE CODE_00EA5E
-    LSR.B InteractionPtsInWater
+    LSR.B InteractionPtsInWater               ; Return Mario as out of water if ???
     BCC CODE_00EAA3
     LDA.B PlayerInWater
-    BNE CODE_00EA65
-    LDA.B PlayerYSpeed+1
+    BNE CODE_00EA65                           ; Branch to check if Mario can jump out of the water if
+    LDA.B PlayerYSpeed+1                      ; he's currently in water or is moving upwards.
     BMI CODE_00EA65
-    LSR.B InteractionPtsInWater
+    LSR.B InteractionPtsInWater               ; Return if ???
     BCC Return00EAA5
-    JSR CODE_00FDA5
-    STZ.B PlayerYSpeed+1
+    JSR CODE_00FDA5                           ; Spawn a splash sprite (entering water?)
+    STZ.B PlayerYSpeed+1                      ; Clear Mario's Y speed.
 CODE_00EA5E:
-    LDA.B #$01
+    LDA.B #$01                                ; Set Mario as being in water.
     STA.B PlayerInWater
 CODE_00EA62:
-    JMP CODE_00FD08
+    JMP CODE_00FD08                           ; Handle Mario's water bubbles.
 
 CODE_00EA65:
-    LSR.B InteractionPtsInWater
+; Mario is in water or moving upwards; check if he's jumping out of the water.
+    LSR.B InteractionPtsInWater               ; Return Mario as in water if ???
     BCS CODE_00EA5E
-    LDA.B PlayerInWater
+    LDA.B PlayerInWater                       ; Return if not in water at all.
     BEQ Return00EAA5
-    LDA.B #$FC
-    CMP.B PlayerYSpeed+1
+    LDA.B #$FC                                ; Y speed to give Mario when reaching the surface of the water.
+    CMP.B PlayerYSpeed+1                      ; Prevent Mario from flinging himself out of the water rather than jumping out.
     BMI +
     STA.B PlayerYSpeed+1
   + INC.W PlayerCanJumpWater
     LDA.B byetudlrHold
-    AND.B #$88
-    CMP.B #$88
+    AND.B #$88                                ; If A/B and up are not being pressed together,
+    CMP.B #$88                                ; branch to just spawn water bubbles and return.
     BNE CODE_00EA62
     LDA.B axlr0000Hold
     BPL +
-    LDA.W IsCarryingItem
+    LDA.W IsCarryingItem                      ; Check if spinjumping out of water.
     BNE +
-    INC A
+    INC A                                     ; Set spinjump flag.
     STA.W SpinJumpFlag
-    LDA.B #!SFX_SPIN                          ; \ Play sound effect
+    LDA.B #!SFX_SPIN                          ; \ Play sound effect; SFX for spinjumping out of water.
     STA.W SPCIO3                              ; /
   + LDA.B PlayerBlockedDir
-    AND.B #$08
+    AND.B #$08                                ; If hitting a ceiling, branch to just spawn water bubbles and return.
     BNE CODE_00EA62
-    JSR CODE_00FDA5
-    LDA.B #$0B
+    JSR CODE_00FDA5                           ; Spawn a splash sprite (jumping out of water).
+    LDA.B #$0B                                ; Set Mario as being in-air.
     STA.B PlayerInAir
-    LDA.B #$AA
+    LDA.B #$AA                                ; Y speed to give Mario when jumping out of water.
     STA.B PlayerYSpeed+1
 CODE_00EAA3:
-    STZ.B PlayerInWater
+    STZ.B PlayerInWater                       ; Clear water flag.
 Return00EAA5:
     RTS
 
 CODE_00EAA6:
-    STZ.W PlayerPoseLenTimer
-    STZ.B PlayerBlockedDir
-    STZ.W SlopeType
-    STZ.W CurrentSlope
-    STZ.B InteractionPtsInWater
-    STZ.B InteractionPtsClimbable
-    STZ.W Layer2Touched
+; Subroutine to clear various addresses used for Mario-object interaction.
+    STZ.W PlayerPoseLenTimer                  ; Slippery surface flag
+    STZ.B PlayerBlockedDir                    ; Player blocked status
+    STZ.W SlopeType                           ; Slope type (1)
+    STZ.W CurrentSlope                        ; Slope type (2)
+    STZ.B InteractionPtsInWater               ; Scratch RAM A
+    STZ.B InteractionPtsClimbable             ; Scratch RAM B
+    STZ.W Layer2Touched                       ; Touching Layer 2 flag
     RTS
 
 
@@ -11950,18 +12977,21 @@ DATA_00EAC1:
     db $B2,$B3
 
 CODE_00EADB:
-    LDA.B PlayerYPosNext
+; X speeds required to start a wallrun.
+; X speeds for jumping out of a wallrun.
+; Map16 tiles which are considered to be in water.
+    LDA.B PlayerYPosNext                      ; Mario-object interaction routine for a specific layer.
     AND.B #$0F
     STA.B PlayerYPosInBlock
     LDA.W WallrunningType
-    BNE +
+    BNE +                                     ; Jump down if not wall-running, to process normal block interaction.
     JMP CODE_00EB77
 
-  + AND.B #$01
+  + AND.B #$01                                ; Mario is wallrunning.
     TAY
     LDA.B PlayerXSpeed+1
-    SEC
-    SBC.W DATA_00EAB9,Y
+    SEC                                       ; Branch if still moving fast enough to wallrun.
+    SBC.W DATA_00EAB9,Y                       ; Else, we're gonna break that wallrun.
     EOR.W DATA_00EAB9,Y
     BMI CODE_00EB48
     LDA.B PlayerInAir
@@ -12000,8 +13030,8 @@ CODE_00EB22:
 
 CODE_00EB34:
     JSR CODE_00EFE8
-  + JSR CODE_00F44D
-    BNE CODE_00EB19
+  + JSR CODE_00F44D                           ; Run "WallBody" interaction point.
+    BNE CODE_00EB19                           ; Branch if touching a tile on page 0.
     LDA.B #$02
     TRB.W WallrunningType
     RTS
@@ -12011,7 +13041,7 @@ ADDR_00EB42:
     AND.B #$01
     TAY
 CODE_00EB48:
-    LDA.W DATA_00EABB,Y
+    LDA.W DATA_00EABB,Y                       ; Give X speed.
     STA.B PlayerXSpeed+1
     TYA
     ASL A
@@ -12029,9 +13059,9 @@ CODE_00EB48:
     ADC.B PlayerYPosNext
     STA.B PlayerYPosNext
     SEP #$20                                  ; A->8
-    LDA.B #$24
+    LDA.B #$24                                ; Indicate Mario is in air and falling.
     STA.B PlayerInAir
-    LDA.B #$E0
+    LDA.B #$E0                                ; Y speed to give when jumping out of a wall-run.
     STA.B PlayerYSpeed+1
 CODE_00EB73:
     STZ.W WallrunningType
@@ -12039,13 +13069,13 @@ Return00EB76:
     RTS
 
 CODE_00EB77:
-    LDX.B #$00
+    LDX.B #$00                                ; Block interaction routine.
     LDA.B Powerup
-    BEQ +
-    LDA.B PlayerIsDucking
-    BNE +
-    LDX.B #$18
-  + LDA.W PlayerRidingYoshi
+    BEQ +                                     ; Getting the interaction point base offset. Logic is as follows:
+    LDA.B PlayerIsDucking                     ; If small, use a base offset of 0x00. If big, use 0x18.
+    BNE +                                     ; If riding Yoshi, add 0x30.
+    LDX.B #$18                                ; If on the left side of a tile, add 0x0B.
+  + LDA.W PlayerRidingYoshi                   ; $93 contains the side Mario is on (0 = right, 1 = left).
     BEQ +
     TXA
     CLC
@@ -12067,107 +13097,114 @@ CODE_00EB77:
     INC.B PlayerBlockXSide
   + LDA.B PlayerYPosInBlock
     CLC
-    ADC.W DATA_00E8A4,X
+    ADC.W DATA_00E8A4,X                       ; $91 = Y position of Mario's head within the block.
     AND.B #$0F
     STA.B PlayerBlockMoveY
-    JSR CODE_00F44D
-    BEQ CODE_00EBDD
-    CPY.B #$11
+    JSR CODE_00F44D                           ; Run "BodyInside" interaction point.
+    BEQ CODE_00EBDD                           ; Branch if touching a tile on Page 0.
+    CPY.B #$11                                ; Skip this point for tiles 100-110 (ledges).
     BCC CODE_00EC24
-    CPY.B #$6E
-    BCC CODE_00EBC9
+    CPY.B #$6E                                ; Branch for tiles 111-16D (solid blocks).
+    BCC CODE_00EBC9                           ; The rest below are 16E-1FF (slopes + corners)
     TYA
-    JSL CODE_00F04D
+    JSL CODE_00F04D                           ; If not a slope in water, skip this point.
     BCC CODE_00EC24
     LDA.B #$01
     TSB.B InteractionPtsInWater
     BRA CODE_00EC24
 
 CODE_00EBC9:
-    INX
-    INX
+    INX                                       ; Center of Mario's body is inside a solid block (111-16D).
+    INX                                       ; Skip side interaction points.
     INX
     INX
     TYA
     LDY.B #$00
     CMP.B #$1E
     BEQ +
-    CMP.B #$52
-    BEQ +
-    LDY.B #$02
+    CMP.B #$52                                ; Set blocked bits for Mario.
+    BEQ +                                     ; Tiles 11E (turnblock) and 152 (invisible solid block)
+    LDY.B #$02                                ; for whatever reason do not set the "middle of a block" bit.
   + JMP CODE_00EC6F
 
 CODE_00EBDD:
-    CPY.B #$9C
+    CPY.B #$9C                                ; Center of Mario's body is touching a block on page 0.
     BNE CODE_00EBE8
     LDA.W ObjectTileset
     CMP.B #$01
     BEQ CODE_00EC06
 CODE_00EBE8:
-    CPY.B #$20
-    BEQ CODE_00EC01
-    CPY.B #$1F
-    BEQ CODE_00EBFD
-    LDA.W BluePSwitchTimer
-    BEQ CODE_00EC21
-    CPY.B #$28
+; Check if the tile is a door and can be entered.
+    CPY.B #$20                                ; Valid conditions are:
+    BEQ CODE_00EC01                           ; Tile 9C in the Castle 1 tileset (also don't require being centered)
+    CPY.B #$1F                                ; Tile 1F and small
+    BEQ CODE_00EBFD                           ; Tile 20
+    LDA.W BluePSwitchTimer                    ; Tile 27 and small with blue P-switch active
+    BEQ CODE_00EC21                           ; Tile 28 with blue P-switch active
+    CPY.B #$28                                ; All other tiles are skipped.
     BEQ CODE_00EC01
     CPY.B #$27
     BNE CODE_00EC21
 CODE_00EBFD:
-    LDA.B Powerup
+; In front of the top of a door.
+    LDA.B Powerup                             ; Skip if Mario is small.
     BNE CODE_00EC24
 CODE_00EC01:
-    JSR CODE_00F443
+; In front of an enterable door.
+    JSR CODE_00F443                           ; Skip if Mario is not centered on the tile.
     BCS CODE_00EC24
 CODE_00EC06:
-    LDA.B TempPlayerAir
+    LDA.B TempPlayerAir                       ; Skip if not on the ground.
     BNE CODE_00EC24
     LDA.B byetudlrFrame
-    AND.B #$08
+    AND.B #$08                                ; Button to enter door (up)
     BEQ CODE_00EC24
-    LDA.B #!SFX_DOOROPEN                      ; \ Play sound effect
+    LDA.B #!SFX_DOOROPEN                      ; \ Play sound effect; Door sound effect
     STA.W SPCIO3                              ; /
     JSR CODE_00D273
-    LDA.B #$0D
+    LDA.B #$0D                                ; Set as entering a door.
     STA.B PlayerAnimation
     JSR NoButtons
     BRA CODE_00EC24
 
 CODE_00EC21:
-    JSR CODE_00F28C
+; Not in front of a door.
+    JSR CODE_00F28C                           ; Handle Mario inside tiles other than doors.
 CODE_00EC24:
-    JSR CODE_00F44D
-    BEQ CODE_00EC35
+; Done with BodyInside. Note that this is skipped if the above ran for a solid tile (111-16D).
+    JSR CODE_00F44D                           ; Run "MarioSide" interaction point.
+    BEQ CODE_00EC35                           ; Branch if touching a tile on page 0.
     CPY.B #$11
     BCC CODE_00EC3A
-    CPY.B #$6E
-    BCS CODE_00EC3A
+    CPY.B #$6E                                ; If touching tiles 111-16E, branch, and also skip the next point (HeadInside).
+    BCS CODE_00EC3A                           ; Else, we're done here.
     INX
     INX
     BRA CODE_00EC4E
 
 CODE_00EC35:
-    LDA.B #$10
+; Mario's side is touching a tile on page 0.
+    LDA.B #$10                                ; Run page 0 interaction routines
     JSR CODE_00F2C9
 CODE_00EC3A:
-    JSR CODE_00F44D
-    BNE CODE_00EC46
-    LDA.B #$08
+; Done with MarioSide. Note that this is skipped if the above ran for a solid tile (111-16D).
+    JSR CODE_00F44D                           ; Run "HeadInside" interaction point.
+    BNE CODE_00EC46                           ; Branch if touching a tile on page 1.
+    LDA.B #$08                                ; Run page 0 interaction routines.
     JSR CODE_00F2C9
     BRA CODE_00EC8A
 
 CODE_00EC46:
-    CPY.B #$11
-    BCC CODE_00EC8A
+    CPY.B #$11                                ; Mario's head is inside a tile on page 1.
+    BCC CODE_00EC8A                           ; Skip this point if tile 100-110 or 16E-1FF.
     CPY.B #$6E
     BCS CODE_00EC8A
 CODE_00EC4E:
     LDA.B PlayerDirection
     CMP.B PlayerBlockXSide
-    BEQ +
-    JSR CODE_00F3C4
-    PHX
+    BEQ +                                     ; If facing the block Mario is touching,
+    JSR CODE_00F3C4                           ; check if it's a horizontal exit-enabled pipe
+    PHX                                       ; or a throwblock, and run interaction appropriately.
     JSR CODE_00F267
     LDY.W Map16TileNumber                     ; Current MAP16 tile number
     PLX
@@ -12176,49 +13213,52 @@ CODE_00EC4E:
     LDY.B PlayerBlockXSide
     LDA.B PlayerXPosNext
     AND.B #$0F
-    CMP.W DATA_00E911,Y
+    CMP.W DATA_00E911,Y                       ; If touching the side of a solid block, interact with it.
     BEQ CODE_00EC8A
 CODE_00EC6F:
     LDA.W NoteBlockActive
     BEQ CODE_00EC7B
-    LDA.W Map16TileNumber
+    LDA.W Map16TileNumber                     ; If inside a noteblock (when bouncing on it), don't block.
     CMP.B #$52
     BEQ CODE_00EC8A
 CODE_00EC7B:
-    LDA.W DATA_00E90A,Y
+    LDA.W DATA_00E90A,Y                       ; Set what side of the block is being touched horizontally.
     TSB.B PlayerBlockedDir
     AND.B #$03
     TAY
     LDA.W Map16TileNumber                     ; Current MAP16 tile number
-    JSL CODE_00F127
+    JSL CODE_00F127                           ; Run interaction code.
 CODE_00EC8A:
-    JSR CODE_00F44D
-    BNE CODE_00ECB1
-    LDA.B #$02
+; Done with HeadInside.
+    JSR CODE_00F44D                           ; Run "MarioBelow" interaction point.
+    BNE CODE_00ECB1                           ; Branch if touching a tile on page 1.
+    LDA.B #$02                                ; Run MarioBelow interaction with various tiles on page 0.
     JSR CODE_00F2C2
     LDY.B PlayerYSpeed+1
     BPL CODE_00ECA3
     LDA.W Map16TileNumber                     ; Current MAP16 tile number
     CMP.B #$21
-    BCC CODE_00ECA3
+    BCC CODE_00ECA3                           ; Skip interaction point if not tiles 021-024.
     CMP.B #$25
     BCC +
 CODE_00ECA3:
     JMP CODE_00ED4A
 
-  + SEC
+; Tiles 021-024 being hit by Mario's head.
+  + SEC                                       ; Localize index.
     SBC.B #$04
     LDY.B #$00
-    JSL CODE_00F17F
+    JSL CODE_00F17F                           ; Spawn a bounce sprite and the sprite inside.
     BRA CODE_00ED0D
 
 CODE_00ECB1:
-    CPY.B #$11
+; Tile on page 1 being hit by Mario's head.
+    CPY.B #$11                                ; Branch for 100-110 (ledges).
     BCC CODE_00ECA3
-    CPY.B #$6E
+    CPY.B #$6E                                ; Branch for 111-16D (solids).
     BCC CODE_00ECFA
-    CPY.B #$D8
-    BCC CODE_00ECDA
+    CPY.B #$D8                                ; Branch for 16E-1D7 (slopes).
+    BCC CODE_00ECDA                           ; The rest below are 1D8-1FF (non-solids).
     REP #$20                                  ; A->16
     LDA.B TouchBlockYPos
     CLC
@@ -12251,92 +13291,96 @@ CODE_00ECDA:
     TAY
     LDA.W DATA_00E632,Y
     SEP #$10                                  ; XY->8
-    BMI CODE_00ED0F
+    BMI CODE_00ED0F                           ; Skip down if the slope is upside down (or the inside of a very-steep slope).
 CODE_00ECF8:
     BRA CODE_00ED4A
 
 CODE_00ECFA:
-    LDA.B #$02
+; Mario's head is inside a solid tile (111-16D).
+    LDA.B #$02                                ; Handle interaction with the downwards-facing exit-enabled pipe.
     JSR CODE_00F3E9
     TYA
-    LDY.B #$00
+    LDY.B #$00                                ; Run solid block interaction.
     JSL CODE_00F127
     LDA.W Map16TileNumber                     ; Current MAP16 tile number
-    CMP.B #$1E                                ; \ If block is turn block, branch to $ED3B
+    CMP.B #$1E                                ; \ If block is turn block, branch to $ED3B; Skip to end if inside a turnblock.
     BEQ CODE_00ED3B                           ; /
 CODE_00ED0D:
     LDA.B #$F0
 CODE_00ED0F:
-    CLC
+    CLC                                       ; Skip to next interaction point if ??? (something related to Mario's head Y position?)
     ADC.B PlayerBlockMoveY
     BPL CODE_00ED4A
     CMP.B #$F9
-    BCS CODE_00ED28
+    BCS CODE_00ED28                           ; Branch to push Mario downwards if he's in the air or far enough below the top of the block.
     LDY.B PlayerInAir
     BNE CODE_00ED28
     LDA.B PlayerBlockedDir
-    AND.B #$FC
+    AND.B #$FC                                ; Set blocked bits for inside and above Mario, and clear bit for below him.
     ORA.B #$09
     STA.B PlayerBlockedDir
-    STZ.B PlayerXSpeed+1
+    STZ.B PlayerXSpeed+1                      ; Clear X speed.
     BRA CODE_00ED3B
 
 CODE_00ED28:
     LDY.B PlayerInAir
     BEQ +
     EOR.B #$FF
-    CLC
+    CLC                                       ; If not on the ground, push Mario downwards.
     ADC.B PlayerYPosNext
     STA.B PlayerYPosNext
     BCC +
     INC.B PlayerYPosNext+1
-  + LDA.B #$08
+  + LDA.B #$08                                ; Set blocked status bit for above Mario.
     TSB.B PlayerBlockedDir
 CODE_00ED3B:
     LDA.B PlayerYSpeed+1
     BPL CODE_00ED4A
     STZ.B PlayerYSpeed+1
-    LDA.W SPCIO0                              ; / Play sound effect
+    LDA.W SPCIO0                              ; / Play sound effect; If Mario's head hit the block while moving upwards, clear his Y speed and play a "hit" SFX.
     BNE CODE_00ED4A
     INC A                                     ; play bonk only if no other sound was queued
     STA.W SPCIO0                              ; / Play sound effect
 CODE_00ED4A:
-    JSR CODE_00F44D
-    BNE +
+; Done with MarioBelow.
+    JSR CODE_00F44D                           ; Run "MarioAbove" interaction point. This corresponds to whichever of Mario's feet is nearest the center of the block.
+    BNE +                                     ; Jump down if on page 0.
     JMP CODE_00EDDB
 
-  + CPY.B #$6E
+; Foot touching tile on page 1.
+  + CPY.B #$6E                                ; Branch if 16E+ (slopes/corners/lava).
     BCS +
-    LDA.B #$03
+    LDA.B #$03                                ; Handle interaction with the upwards-facing exit-enabled pipe.
     JSR CODE_00F3E9
-    JMP CODE_00EDF7
+    JMP CODE_00EDF7                           ; Skip next interaction point (right foot) and run the solid block routines.
 
-  + CPY.B #$D8
+; Tiles 16E-1FF.
+  + CPY.B #$D8                                ; Branch if touching 16E-1D7 (slopes).
     BCC CODE_00ED86
-    CPY.B #$FB
-    BCC +
+    CPY.B #$FB                                ; Jump up to kill Mario if touching 1FB-1FF (lava).
+    BCC +                                     ; If touching 1D8-1FB (corners), continue below.
     JMP CODE_00F629
 
-  + REP #$20                                  ; A->16
+  + REP #$20                                  ; A->16; Touching the top of a corner (1D8-1FB).
     LDA.B TouchBlockYPos
     SEC
-    SBC.W #$0010
+    SBC.W #$0010                              ; Get "acts like" setting for the block above the corner.
     STA.B TouchBlockYPos
     JSR CODE_00F461
     BEQ CODE_00EDE9
     CPY.B #$6E
     BCC CODE_00EDE9
-    CPY.B #$D8
+    CPY.B #$D8                                ; Change interaction to that tile if it's a slope.
     BCS CODE_00EDE9
     LDA.B PlayerYPosInBlock
     ADC.B #$10
     STA.B PlayerYPosInBlock
 CODE_00ED86:
-    LDA.W ObjectTileset
+    LDA.W ObjectTileset                       ; Touching the top of a slope.
     CMP.B #$03
     BEQ CODE_00ED91
-    CMP.B #$0E
-    BNE CODE_00ED95
+    CMP.B #$0E                                ; Branch for tile 1D2-1D7 if in tilesets 3/E.
+    BNE CODE_00ED95                           ; (i.e. lava slopes)
 CODE_00ED91:
     CPY.B #$D2
     BCS CODE_00EDE9
@@ -12356,8 +13400,8 @@ CODE_00ED95:
     SEP #$20                                  ; A->8
     ORA.B PlayerXPosInBlock
     PHX
-    REP #$10                                  ; XY->16
-    TAX
+    REP #$10                                  ; XY->16; Push Mario on top of the ledge/slope if in range of its "top".
+    TAX                                       ; If he's not in that range, branch down.
     LDA.B PlayerYPosInBlock
     SEC
     SBC.W DATA_00E632,X
@@ -12370,57 +13414,63 @@ CODE_00ED95:
     BCS CODE_00EDE9
     STA.B PlayerBlockMoveY
     STZ.B PlayerYPosInBlock
-    JSR CODE_00F005
-    CPY.B #$1C
+    JSR CODE_00F005                           ; Handle purple triangles.
+    CPY.B #$1C                                ; Branch if not "very steep" slopes.
     BCC +
-    LDA.B #$08
+    LDA.B #$08                                ; Slide Mario without showing sliding image.
     STA.W SkidTurnTimer
-    JMP CODE_00EED1
+    JMP CODE_00EED1                           ; Skip rest of slope handling.
 
-  + JSR CODE_00EFBC
+; On a slope that is not the very steep slope.
+  + JSR CODE_00EFBC                           ; Handle conveyor slopes.
     JMP CODE_00EE85
 
 CODE_00EDDB:
-    CPY.B #$05
+; MarioAbove for tile on page 0.
+    CPY.B #$05                                ; Branch if not tile 005 (lava).
     BNE CODE_00EDE4
-    JSR CODE_00F629
+    JSR CODE_00F629                           ; Kill Mario.
     BRA CODE_00EDE9
 
 CODE_00EDE4:
-    LDA.B #$04
+    LDA.B #$04                                ; Run MarioAbove interaction with various tiles on page 0.
     JSR CODE_00F2C2
 CODE_00EDE9:
-    JSR CODE_00F44D
-    BNE CODE_00EDF3
-    JSR CODE_00F309
+; Done with MarioAbove. Note that slopes skip halfway down this routine (to $00EED1).
+    JSR CODE_00F44D                           ; Run "TopCorner" interaction point. This handles the foot not covered by MarioAbove.
+    BNE CODE_00EDF3                           ; Branch if the tile is on page 1.
+    JSR CODE_00F309                           ; Handle interaction is page 0, and then branch.
     BRA CODE_00EE1D
 
 CODE_00EDF3:
-    CPY.B #$6E
+; On top of tile on page 1.
+    CPY.B #$6E                                ; Branch if not a tile that is solid on top (100-16D).
     BCS CODE_00EE1D
 CODE_00EDF7:
-    LDA.B PlayerYSpeed+1
+    LDA.B PlayerYSpeed+1                      ; Return if moving upwards (pass through top).
     BMI Return00EE39
     LDA.W ObjectTileset
     CMP.B #$03
     BEQ CODE_00EE06
     CMP.B #$0E
-    BNE CODE_00EE11
+    BNE CODE_00EE11                           ; Tiles 159-15B (tileset-specific lava) have a non-solid top
 CODE_00EE06:
-    LDY.W Map16TileNumber                     ; $ED3B
-    CPY.B #$59
+; in tilesets 03/0E (underground 1/3).
+    LDY.W Map16TileNumber                     ; $ED3B; Essentially, this makes Mario fall inside them.
+    CPY.B #$59                                ; In all other tilesets, they're just a solid block.
     BCC CODE_00EE11
     CPY.B #$5C
     BCC CODE_00EE1D
 CODE_00EE11:
     LDA.B PlayerYPosInBlock
     AND.B #$0F
-    STZ.B PlayerYPosInBlock
+    STZ.B PlayerYPosInBlock                   ; Branch if the player is on top of the block.
     CMP.B #$08
     STA.B PlayerBlockMoveY
     BCC CODE_00EE3A
 CODE_00EE1D:
-    LDA.W StandOnSolidSprite                  ; \ If Mario isn't on a sprite platform,
+; Player is not on top of this tile.
+    LDA.W StandOnSolidSprite                  ; \ If Mario isn't on a sprite platform,; Branch if not standing on top of a sprite.
     BEQ +                                     ; / branch to $EE2D
     LDA.B PlayerYSpeed+1                      ; \ If Mario is moving up,
     BMI +                                     ; / branch to $EE2D
@@ -12429,74 +13479,74 @@ CODE_00EE1D:
     JMP CODE_00EEE1
 
   + LDA.B PlayerBlockedDir                    ; \
-    AND.B #$04                                ; |If Mario is on an edge or in air,
+    AND.B #$04                                ; |If Mario is on an edge or in air,; Return if Mario is standing on something or has already been set as in midair.
     ORA.B PlayerInAir                         ; |branch to $EE39
     BNE Return00EE39                          ; /
 CODE_00EE35:
-    LDA.B #$24                                ; \ Set "In air" to x24 (falling)
+    LDA.B #$24                                ; \ Set "In air" to x24 (falling); Set Mario as being in midair and falling.
     STA.B PlayerInAir                         ; /
 Return00EE39:
     RTS
 
 CODE_00EE3A:
-    LDY.W Map16TileNumber                     ; Current MAP16 tile number
+    LDY.W Map16TileNumber                     ; Current MAP16 tile number; On top of a solid block/ledge.
     LDA.W ObjectTileset                       ; Tileset
     CMP.B #$02                                ; \ If tileset is "Rope 1",
     BEQ CODE_00EE48                           ; / branch to $EE48
-    CMP.B #$08                                ; \ If tileset isn't "Rope 3",
-    BNE CODE_00EE57                           ; / branch to $EE57
+    CMP.B #$08                                ; \ If tileset isn't "Rope 3",; Branch if:
+    BNE CODE_00EE57                           ; / branch to $EE57; Not in tileset 2/8 (rope 1/3).
 CODE_00EE48:
-    TYA                                       ; \
+    TYA                                       ; \; Not tiles 10C/10D (the rope conveyors).
     SEC                                       ; |If the current tile isn't Rope 3's "Conveyor rope",
     SBC.B #$0C                                ; |branch to $EE57
     CMP.B #$02                                ; |
     BCS CODE_00EE57                           ; /
     ASL A
     TAX
-    JSR CODE_00EFCD
+    JSR CODE_00EFCD                           ; Push Mario to the side.
     BRA CODE_00EE83
 
 CODE_00EE57:
-    JSR CODE_00F267
+    JSR CODE_00F267                           ; Run throwblock code, if applicable.
     LDY.B #$03
     LDA.W Map16TileNumber                     ; Current MAP16 tile number
-    CMP.B #$1E                                ; \ If block isn't "Turn block",
+    CMP.B #$1E                                ; \ If block isn't "Turn block",; Branch if not a turnblock.
     BNE CODE_00EE78                           ; / branch to $EE78
     LDX.B TempPlayerAir
     BEQ CODE_00EE83
-    LDX.B Powerup
+    LDX.B Powerup                             ; Branch if not in the air, small, or not spinjumping.
     BEQ CODE_00EE83
     LDX.W SpinJumpFlag
     BEQ CODE_00EE83
-    LDA.B #$21
+    LDA.B #$21                                ; Break the turnblock.
     JSL CODE_00F17F
     BRA CODE_00EE1D
 
 CODE_00EE78:
     CMP.B #$32                                ; \ If block isn't "Brown block",
-    BNE +                                     ; / branch to $EE7F
+    BNE +                                     ; / branch to $EE7F; If tile 132 (brown block), start the creating/eating sprite.
     STZ.W BlockSnakeActive
-  + JSL CODE_00F120
+  + JSL CODE_00F120                           ; Interact with the block.
 CODE_00EE83:
-    LDY.B #$20
+    LDY.B #$20                                ; Indicate that Mario is not on a slope.
 CODE_00EE85:
     LDA.B PlayerYSpeed+1                      ; \ If Mario isn't moving up,
     BPL CODE_00EE8F                           ; / branch to $EE8F
-    LDA.B TempPlayerGround
+    LDA.B TempPlayerGround                    ; Return if rising and not on the ground already (i.e. not interacting with the top of blocks).
     CMP.B #$02
     BCC Return00EE39
 CODE_00EE8F:
-    LDX.W SwitchPalacePressed
+    LDX.W SwitchPalacePressed                 ; Skip the rest of the interaction if not activating a switch palace switch.
     BEQ CODE_00EED1
     DEX
-    TXA
+    TXA                                       ; Branch if the top-left of the switch was touched.
     AND.B #$03
     BEQ CODE_00EEAA
-    CMP.B #$02
+    CMP.B #$02                                ; Skip the rest of the interaction if the bottom half of the switch was touched.
     BCS CODE_00EED1
     REP #$20                                  ; A->16
     LDA.B TouchBlockXPos
-    SEC
+    SEC                                       ; Move block position left one tile (to properly erase the switch).
     SBC.W #$0010
     STA.B TouchBlockXPos
     SEP #$20                                  ; A->8
@@ -12506,35 +13556,35 @@ CODE_00EEAA:
     LSR A
     TAX
     LDA.W SwitchBlockFlags,X                  ; \ If switch block is already active,
-    BNE CODE_00EED1                           ; / branch to $EED1
-    INC A                                     ; \ Activate switch block
+    BNE CODE_00EED1                           ; / branch to $EED1; Set the corresponding ! block flag (if not already set),
+    INC A                                     ; \ Activate switch block; and tell the game to prepare the OW switch blocks.
     STA.W SwitchBlockFlags,X                  ; /
     STA.W SwitchPalaceColor
     PHY
-    STX.W BigSwitchPressTimer
+    STX.W BigSwitchPressTimer                 ; Spawn a pressed switch palace switch.
     JSR FlatPalaceSwitch
     PLY
-    LDA.B #!BGM_LEVELCLEAR
+    LDA.B #!BGM_LEVELCLEAR                    ; SFX for the pressed switch music.
     STA.W SPCIO2                              ; / Change music
-    LDA.B #$FF                                ; \
+    LDA.B #$FF                                ; \; Set music flag for level being over.
     STA.W MusicBackup                         ; / Set music to xFF
-    LDA.B #$08
+    LDA.B #$08                                ; Set end level timer.
     STA.W EndLevelTimer
 CODE_00EED1:
-    INC.W PlayerIsOnGround
+    INC.W PlayerIsOnGround                    ; Slopes re-enter here.
     LDA.B PlayerYPosNext
     SEC
     SBC.B PlayerBlockMoveY
-    STA.B PlayerYPosNext
+    STA.B PlayerYPosNext                      ; Push Mario on top of the block.
     LDA.B PlayerYPosNext+1
     SBC.B PlayerYPosInBlock
     STA.B PlayerYPosNext+1
 CODE_00EEE1:
     LDA.W DATA_00E53D,Y
-    BNE CODE_00EEEF
+    BNE CODE_00EEEF                           ; Branch if not on a slope.
     LDX.W PlayerSlopePose
     BEQ CODE_00EF05
-    LDX.B PlayerXSpeed+1
+    LDX.B PlayerXSpeed+1                      ; If stationary, don't slide.
     BEQ CODE_00EF02
 CODE_00EEEF:
     STA.W CurrentSlope
@@ -12542,13 +13592,13 @@ CODE_00EEEF:
     AND.B #$04
     BEQ CODE_00EF05
     LDA.W IsCarryingItem
-    ORA.W PlayerSlopePose
+    ORA.W PlayerSlopePose                     ; If down is pressed and Mario is not carrying an item or flying, start sliding.
     BNE CODE_00EF05
     LDX.B #$1C
 CODE_00EF02:
     STX.W PlayerSlopePose
 CODE_00EF05:
-    LDX.W DATA_00E4B9,Y
+    LDX.W DATA_00E4B9,Y                       ; Store current slope value for Mario.
     STX.W SlopeType
     CPY.B #$1C
     BCS CODE_00EF38
@@ -12557,15 +13607,15 @@ CODE_00EF05:
     LDA.W DATA_00E53D,Y
     BEQ CODE_00EF31
     EOR.B PlayerXSpeed+1
-    BPL CODE_00EF31
-    STX.W PlayerPoseLenTimer
-    LDA.B PlayerXSpeed+1
+    BPL CODE_00EF31                           ; If not running fast enough up the slope (or not on a slope at all),
+    STX.W PlayerPoseLenTimer                  ; use standard ground Y speed.
+    LDA.B PlayerXSpeed+1                      ; Else, give a special upwards Y speed.
     BPL +
     EOR.B #$FF
     INC A
   + CMP.B #con($28,$28,$28,$34,$34)
     BCC CODE_00EF2F
-    LDA.W DATA_00E4FB,Y
+    LDA.W DATA_00E4FB,Y                       ; Set Mario's Y speed while running up the slope.
     BRA CODE_00EF60
 
 CODE_00EF2F:
@@ -12573,10 +13623,10 @@ CODE_00EF2F:
 CODE_00EF31:
     LDA.B PlayerYSpeed+1
     CMP.W DATA_00E4DA,Y
-    BCC +
+    BCC +                                     ; Get Y speed to give Mario while standing still on the ground. Accounts for slopes.
 CODE_00EF38:
     LDA.W DATA_00E4DA,Y
-  + LDX.B TempScreenMode
+  + LDX.B TempScreenMode                      ; Branch if collision with layer 2 is disabled.
     BPL CODE_00EF60
     INC.W Layer2Touched
     PHA
@@ -12585,7 +13635,7 @@ CODE_00EF38:
     AND.W #$FF00
     BPL +
     ORA.W #$00FF
-  + XBA
+  + XBA                                       ; Move Mario with layer 2.
     EOR.W #$FFFF
     INC A
     CLC
@@ -12593,36 +13643,36 @@ CODE_00EF38:
     STA.B PlayerXPosNext
     SEP #$20                                  ; A->8
     PLA
-    CLC
+    CLC                                       ; Adjust Mario's Y speed for layer 2.
     ADC.B #$28
 CODE_00EF60:
     STA.B PlayerYSpeed+1
     TAX
-    BPL +
+    BPL +                                     ; If Mario's Y speed is positive (i.e. running up a slope), increase the ground flag.
     INC.W PlayerIsOnGround
-  + STZ.W StandingOnCage
-    STZ.B PlayerInAir
-    STZ.B PlayerIsClimbing
-    STZ.W BouncingOnBoard
-    STZ.W SpinJumpFlag
-    LDA.B #$04
+  + STZ.W StandingOnCage                      ; Clear unused wing cage flag.
+    STZ.B PlayerInAir                         ; Clear "in-air" flag.
+    STZ.B PlayerIsClimbing                    ; Clear climbing flag.
+    STZ.W BouncingOnBoard                     ; Clear flag for having bounced off a springboard.
+    STZ.W SpinJumpFlag                        ; Clear spinjump flag.
+    LDA.B #$04                                ; Set blocked status for below Mario.
     TSB.B PlayerBlockedDir
-    LDY.W FlightPhase
+    LDY.W FlightPhase                         ; Branch if landing from cape flight.
     BNE CODE_00EF99
     LDA.W PlayerRidingYoshi
     BEQ +
     LDA.B TempPlayerAir
     BEQ +
-    LDA.W YoshiCanStomp                       ; \ If Yoshi has stomp ability,
+    LDA.W YoshiCanStomp                       ; \ If Yoshi has stomp ability,; Handle Yoshi stomping the ground, if applicable.
     BEQ +                                     ; |
     JSL YoshiStompRoutine                     ; | Run routine
-    LDA.B #!SFX_YOSHISTOMP                    ; | Play sound effect
+    LDA.B #!SFX_YOSHISTOMP                    ; | Play sound effect; SFX to play when Yoshi stomps the ground.
     STA.W SPCIO3                              ; /
-  + STZ.W SpriteStompCounter
+  + STZ.W SpriteStompCounter                  ; Clear enemy bounce counter.
     RTS
 
 CODE_00EF99:
-    STZ.W SpriteStompCounter
+    STZ.W SpriteStompCounter                  ; Mario is landing from cape flight.
     STZ.W FlightPhase
     CPY.B #$05
     BCS CallGroundPound
@@ -12642,9 +13692,9 @@ CallGroundPound:
   + RTS
 
 CODE_00EFBC:
-    LDX.W Map16TileNumber
+    LDX.W Map16TileNumber                     ; Conveyor slopes.
     CPX.B #$CE
-    BCC +
+    BCC +                                     ; Return if not tiles 1CE-1D1 (conveyors)
     CPX.B #$D2
     BCS +
     TXA
@@ -12653,14 +13703,14 @@ CODE_00EFBC:
     ASL A
     TAX
 CODE_00EFCD:
-    LDA.B TrueFrame
-    AND.B #$03
+    LDA.B TrueFrame                           ; Normal conveyors come in here too.
+    AND.B #$03                                ; Move Mario only every fourth frame.
     BNE +
     REP #$20                                  ; A->16
     LDA.B PlayerXPosNext
     CLC
     ADC.W DATA_00E913,X
-    STA.B PlayerXPosNext
+    STA.B PlayerXPosNext                      ; Shift Mario.
     LDA.B PlayerYPosNext
     CLC
     ADC.W DATA_00E91F,X
@@ -12669,7 +13719,7 @@ CODE_00EFCD:
   + RTS
 
 CODE_00EFE8:
-    JSR CODE_00F44D
+    JSR CODE_00F44D                           ; Run "WallSide" interaction point.
     BNE +
     JMP CODE_00F309
 
@@ -12687,52 +13737,52 @@ CODE_00EFE8:
   + RTS
 
 CODE_00F005:
-    TYA
+    TYA                                       ; Subroutine to handle the purple triangles.
     SEC
-    SBC.B #$0E
+    SBC.B #$0E                                ; Return if the tile is not one of the purple triangles.
     CMP.B #$02
     BCS Return00F04C
     EOR.B #$01
-    CMP.B PlayerDirection
+    CMP.B PlayerDirection                     ; Return if Mario isn't facing up the triangle.
     BNE Return00F04C
     TAX
     LSR A
     LDA.B PlayerXPosInBlock
     BCC +
-    EOR.B #$0F
+    EOR.B #$0F                                ; Return if not halfway up the triangle.
   + CMP.B #con($08,$08,$08,$09,$09)
     BCS Return00F04C
-    LDA.W PlayerRidingYoshi
+    LDA.W PlayerRidingYoshi                   ; Branch if not riding Yoshi.
     BEQ +
-    LDA.B #!SFX_SPRING
+    LDA.B #!SFX_SPRING                        ; SFX for bounce off a purple triangle.
     STA.W SPCIO3                              ; / Play sound effect
-    LDA.B #$80
+    LDA.B #$80                                ; Y speed to give Mario when bouncing off a purple triangle with Yoshi.
     STA.B PlayerYSpeed+1
     STA.W BouncingOnBoard
     PLA
     PLA
     JMP CODE_00EE35
 
-  + LDA.B PlayerXSpeed+1
+  + LDA.B PlayerXSpeed+1                      ; Running up a purple triangle while not on Yoshi.
     SEC
-    SBC.W DATA_00EAB9,X
+    SBC.W DATA_00EAB9,X                       ; Return if not running fast enough to start a wallrun.
     EOR.W DATA_00EAB9,X
     BMI Return00F04C
     LDA.W IsCarryingItem
-    ORA.B PlayerIsDucking
+    ORA.B PlayerIsDucking                     ; Return if holding an item or ducking.
     BNE Return00F04C
     INX
-    INX
+    INX                                       ; Start the wallrun.
     STX.W WallrunningType
 Return00F04C:
     RTS
 
 CODE_00F04D:
-    PHX
+    PHX                                       ; Subroutine to check whether a slope tile is in water or not. Returns carry clear if not.
     LDX.B #$19
 CODE_00F050:
     CMP.L DATA_00EAC1,X
-    BEQ CODE_00F05A
+    BEQ CODE_00F05A                           ; Check whether the tile one of the ones in water.
     DEX
     BPL CODE_00F050
     CLC
@@ -12782,19 +13832,38 @@ DATA_00F100:
     db $10,$07,$0A,$10,$07,$0A,$10,$07
 
 CODE_00F120:
-    XBA
-    LDA.W PlayerRidingYoshi
+; Bounce block animation table. See http://acmlm.kafuka.org/board/thread.php?id=5741
+; Block order is:
+; $00-$1C = 111-12D
+; $1D-$20 = 021-024
+; $21 = broken turnblock, $22 = green ! block, $23 = yellow ! block
+; Table of sprites to spawn out of certain Map16 blocks. See http://acmlm.kafuka.org/board/thread.php?id=5741
+; Same block order as above.
+; Table of which side the blocks will get "hit" by. ----btrl.
+; b = bottom, t = top, r = right, l = left
+; Same block order as above.
+; List of values to store to $9C for each block when restored back to normal.
+; Same block order as above.
+; Table of values for which side the current block is being touched from. ---btrl.
+; Values for the bonus game to determine whether the last block hit was the "third" block in a row.
+; Indexed by X position (mod 16). Note that this means the 4 values before and after the table may also be used.
+; Sprites for an unused block (flower/feather/star) and block 11A (star2/1up/vine).
+; Index is 000b xxxx, where b = which block, and xxxx = x position.
+; Each value is in the same format as $00F080.
+    XBA                                       ; Routine to run solid block interaction. This first part checks if it should hurt you.
+    LDA.W PlayerRidingYoshi                   ; Check if on Yoshi. If so, munchers/spikes don't hurt you.
     BNE CODE_00F15F
     XBA
 CODE_00F127:
-    CMP.B #$2F
+; Alternate entry to the solid block interaction routine that skips Yoshi's damage exception (for when touched from a side other than below).
+    CMP.B #$2F                                ; Check if the block is a muncher. If so, hurt Mario.
     BEQ CODE_00F154
     CMP.B #$59
     BCC CODE_00F144
     CMP.B #$5C
     BCS CODE_00F140
-    XBA
-    LDA.W ObjectTileset
+    XBA                                       ; Check if a spike (59-5C). If not, don't hurt Mario.
+    LDA.W ObjectTileset                       ; If the tileset is also 05 or 0D (Ghost House, therefore spikes), hurt Mario.
     CMP.B #$05
     BEQ CODE_00F154
     CMP.B #$0D
@@ -12806,7 +13875,7 @@ CODE_00F140:
 CODE_00F144:
     CMP.B #$66
     BCC CODE_00F160
-    CMP.B #$6A
+    CMP.B #$6A                                ; Check if Mario is touching spikes in a castle (including the smashers). If not, don't hurt Mario.
     BCS CODE_00F160
 CODE_00F14C:
     XBA
@@ -12816,17 +13885,17 @@ CODE_00F14C:
 CODE_00F154:
     PHB
     LDA.B #$01
-    PHA
+    PHA                                       ; Hurt Mario,
     PLB
     JSL HurtMario
     PLB
     RTL
 
 CODE_00F15F:
-    XBA
+    XBA                                       ; Not a block that hurts Mario; check if it's hittable.
 CODE_00F160:
     SEC
-    SBC.B #$11
+    SBC.B #$11                                ; If the tile is a block that contains something (111-12E), offset it to the bounce block tables and branch.
     CMP.B #$1D
     BCC CODE_00F17F
     XBA
@@ -12835,64 +13904,66 @@ CODE_00F160:
     LDA.L DATA_00A625,X
     PLX
     AND.B #$03
-    BEQ +
-    RTL
+    BEQ +                                     ; Return if:
+    RTL                                       ; in tileset T:4
 
-  + XBA
+; block is not a yellow/green ! block
+  + XBA                                       ; Else, offset into the bounce block tables as index x22.
     SBC.B #$59
     CMP.B #$02
     BCS Return00F1F8
     ADC.B #$22
 CODE_00F17F:
-    PHX
-    PHA
+; Subroutine for blocks that use bounce sprites and spawn something when hit. See usage below.
+    PHX                                       ; Y = direction touching block from (0 = bottom, 1 = left, 2 = right, 3 = top)
+    PHA                                       ; A = Block number, offset (Map16 111-12D, 021-024, 16A, 16B).
     TYX
     LDA.L DATA_00F0EC,X
-    PLX
+    PLX                                       ; If the block is not activated from this direction, return with carry clear.
     AND.L DATA_00F0A4,X
     BEQ CODE_00F1F6
-    STY.B _6
-    LDA.L DATA_00F0C8,X
+    STY.B _6                                  ; Store directions the block is activated from to $06.
+    LDA.L DATA_00F0C8,X                       ; Store what block the block will turn into when activated to $07.
     STA.B _7
-    LDA.L DATA_00F05C,X
+    LDA.L DATA_00F05C,X                       ; Store what sprite to use for the bounce animation to $04.
     STA.B _4
     LDA.L DATA_00F080,X
-    BPL CODE_00F1BA
+    BPL CODE_00F1BA                           ; Handle figuring out what sprite to give (stores to $05).
     CMP.B #$FF
     BNE CODE_00F1AE
     LDA.B #$05
-    LDY.W GreenStarBlockCoins
+    LDY.W GreenStarBlockCoins                 ; If #$FF was loaded, it's a green star block; give either a 1-up or coin depending on how many coins Mario has collected.
     BEQ CODE_00F1D0
     BRA CODE_00F1CE
 
 CODE_00F1AE:
     LSR A
     LDA.B TouchBlockXPos
-    ROR A
-    LSR A
-    LSR A
-    LSR A
+    ROR A                                     ; If 80 or 81 was loaded, get sprite to spawn corresponding to position and block number.
+    LSR A                                     ; Index is in the format 000b xxxx
+    LSR A                                     ; b = block type, xxxx = block x position
+    LSR A                                     ; (0 = flower/feather/star, 1 = star2/1up/vine)
     TAX
     LDA.L DATA_00F100,X
 CODE_00F1BA:
     LSR A
     BCC CODE_00F1D0
-    CMP.B #$03
+    CMP.B #$03                                ; If bit 0 is clear, spawn the sprite as normal.
     BEQ CODE_00F1C9
     LDY.B Powerup
-    BNE CODE_00F1D0
+    BNE CODE_00F1D0                           ; If it's set, either give a mushroom if Mario is small...
     LDA.B #$01
     BRA CODE_00F1D0
 
 CODE_00F1C9:
     LDY.W InvinsibilityTimer                  ; \ Branch if Mario has star
-    BNE CODE_00F1D0                           ; /
+    BNE CODE_00F1D0                           ; /; ...or, if it would spawn a star and Mario doesn't have star power, give a coin instead.
 CODE_00F1CE:
     LDA.B #$06
 CODE_00F1D0:
     STA.B _5
     CMP.B #$05
-    BNE +
+    BNE +                                     ; If spawning a 1-up, always turn into a brown "used" block and set the item memory bit for the block.
     LDA.B #$16
     STA.B _7
   + TAY
@@ -12901,7 +13972,7 @@ CODE_00F1D0:
     TRB.B TouchBlockYPos
     CPY.B #$06
     BNE CODE_00F1EC
-    LDY.W ObjectTileset
+    LDY.W ObjectTileset                       ; Branch if spawning a coin in the switch palace tileset.
     CPY.B #$04
     BEQ +
 CODE_00F1EC:
@@ -12909,7 +13980,7 @@ CODE_00F1EC:
     LDA.B #$02
     PHA
     PLB
-    JSL CODE_028752
+    JSL CODE_028752                           ; Spawn an item and bounce sprite.
     PLB
 CODE_00F1F6:
     PLX
@@ -12917,49 +13988,51 @@ CODE_00F1F6:
 Return00F1F8:
     RTL
 
-  + LDA.B TouchBlockYPos+1
+  + LDA.B TouchBlockYPos+1                    ; Subroutine to handle coinblocks in bonus rooms/switch palaces.
     LSR A
     LDA.B TouchBlockYPos
-    AND.B #$C0
+    AND.B #$C0                                ; Y = Y position of block (i.e. current row, 0-7)
     ROL A
     ROL A
     ROL A
     TAY
     LDA.B TouchBlockXPos
     LSR A
-    LSR A
+    LSR A                                     ; X = X position of block
     LSR A
     LSR A
     TAX
     LDA.W PBalloonInflating,Y
     ORA.L DATA_00F0EC,X
-    LDX.W PBalloonInflating,Y
-    STA.W PBalloonInflating,Y
-    CMP.B #$FF
-    BNE CODE_00F226
+    LDX.W PBalloonInflating,Y                 ; This whole bit is handling the coinblock row in a bonus game ($13F4 is the top row).
+    STA.W PBalloonInflating,Y                 ; Each block is assigned a special value, and each time a block is hit that value is bitwise-ORed to the row's value.
+    CMP.B #$FF                                ; If the row's value then becomes #$FF, continue below to give a 1-up.
+    BNE CODE_00F226                           ; Else, branch down to determine whether the block was correct or not based on the current frame.
     LDA.B #$05
     STA.B _5
 CODE_00F220:
-    LDA.B #$17
-    STA.B _7
+    LDA.B #$17                                ; "Correct" block.
+    STA.B _7                                  ; Turn into a "correct" block.
     BRA CODE_00F1EC
 
 CODE_00F226:
-    LDA.W DidPlayBonusGame
+    LDA.W DidPlayBonusGame                    ; If the bonus room has been entered before, always register "wrong".
     BNE CODE_00F236
     TXA
     BEQ +
-    LDA.B #$02
-  + EOR.B #$03
+    LDA.B #$02                                ; Decide whether to make the block correct or incorrect based on the frame.
+; Increase chance of getting correct when hitting the second block.
+  + EOR.B #$03                                ; (1/4 for the first block, 1/2 for the second)
     AND.B TrueFrame
     BNE CODE_00F220
 CODE_00F236:
-    LDA.B #!SFX_WRONG
+; "Wrong" block.
+    LDA.B #!SFX_WRONG                         ; SFX for hitting the wrong coin block.
     STA.W SPCIO3                              ; / Play sound effect
     PHY
     STZ.B _5
     PHB
-    LDA.B #$02                                ; \ Set data bank = $02
+    LDA.B #$02                                ; \ Set data bank = $02; Spawn a coin and bounce sprite.
     PHA                                       ; |
     PLB
     JSL CODE_028752
@@ -12982,20 +14055,20 @@ CODE_00F24E:
     JMP CODE_00F1F6
 
 CODE_00F267:
-    CPY.B #$2E
-    BNE Return00F28B
-    BIT.B byetudlrFrame
-    BVC Return00F28B
-    LDA.W IsCarryingItem
-    ORA.W PlayerRidingYoshi
+    CPY.B #$2E                                ; Routine to handle throwblocks.
+    BNE Return00F28B                          ; Return if:
+    BIT.B byetudlrFrame                       ; Not tile 12E (throwblock).
+    BVC Return00F28B                          ; X/Y not pressed.
+    LDA.W IsCarryingItem                      ; Already holding something.
+    ORA.W PlayerRidingYoshi                   ; Riding Yoshi.
     BNE Return00F28B
     LDA.B #$02
-    PHA
-    PLB
+    PHA                                       ; Spawn a throwblock.
+    PLB                                       ; If no empty sprite slots are available, don't let Mario pick up the block.
     JSL CODE_02862F
     BMI +
     LDA.B #$02                                ; \ Block to generate = #$02
-    STA.B Map16TileGenerate                   ; /
+    STA.B Map16TileGenerate                   ; /; Erase the tile.
     JSL GenerateTile
   + PHK
     PLB
@@ -13003,9 +14076,9 @@ Return00F28B:
     RTS
 
 CODE_00F28C:
-    TYA
+    TYA                                       ; Routine to handle the invisible 1-up checkpoints (also called when Mario's body is inside any page 0 tile other than a door).
     SEC
-    SBC.B #$6F
+    SBC.B #$6F                                ; Branch if not one of the four invisible 1-up checkpoints.
     CMP.B #$04
     BCS CODE_00F2C0
     CMP.W OneUpCheckpoints
@@ -13023,147 +14096,152 @@ CODE_00F2A8:
     CMP.B #$04
     BNE +
     PHX
-    JSL TriggerInivis1Up
+    JSL TriggerInivis1Up                      ; Spawn a 1up.
     JSR CODE_00F3B2
-    ORA.W Checkpoint1upCollected,Y
+    ORA.W Checkpoint1upCollected,Y            ; Set the bit for having collected the level's invisible 1up.
     STA.W Checkpoint1upCollected,Y
     PLX
   + RTS
 
 CODE_00F2C0:
-    LDA.B #$01
+; Inside a tile on page 0 other than a door or invisible 1-up checkpoint.
+    LDA.B #$01                                ; Note that the tile is currently specifically being processed from MarioBody.
 CODE_00F2C2:
-    CPY.B #$06
+; Interaction routine for various tiles on page 0. Y contains tile number, A contains flags for which interaction point is running (see $74).
+    CPY.B #$06                                ; If tile 006+, branch below.
     BCS CODE_00F2C9
-    TSB.B InteractionPtsInWater
+    TSB.B InteractionPtsInWater               ; For tiles 000-005 (water/lava), set $8A and return.
     RTS
 
 CODE_00F2C9:
-    CPY.B #$38
+; Not tiles 000-005.
+    CPY.B #$38                                ; Branch if not tile 038 (midpoint).
     BNE CODE_00F2EE
-    LDA.B #$02                                ; \ Block to generate = #$02
-    STA.B Map16TileGenerate                   ; /
+    LDA.B #$02                                ; \ Block to generate = #$02; Midpoint interaction.
+    STA.B Map16TileGenerate                   ; /; Turn into a blank tile.
     JSL GenerateTile
-    JSR CODE_00FD5A
+    JSR CODE_00FD5A                           ; Display a glitter effect.
     LDA.W DisableMidway
-    BEQ +
+    BEQ +                                     ; Set midpoint flag if applicable.
     JSR CODE_00CA2B
   + LDA.B Powerup
-    BNE +
+    BNE +                                     ; Make Mario big.
     LDA.B #$01
     STA.B Powerup
-  + LDA.B #!SFX_MIDWAY
+  + LDA.B #!SFX_MIDWAY                        ; SFX for hitting a midpoint.
     STA.W SPCIO0                              ; / Play sound effect
     RTS
 
 CODE_00F2EE:
-    CPY.B #$06
+    CPY.B #$06                                ; Not tiles 000-005 or 038.
     BEQ CODE_00F2FC
-    CPY.B #$07
+    CPY.B #$07                                ; Branch if not tiles 006-01C (vine/nets).
     BCC CODE_00F309
     CPY.B #$1D
     BCS CODE_00F309
-    ORA.B #$80
+    ORA.B #$80                                ; Mark that Mario is on a net (not a vine).
 CODE_00F2FC:
-    CMP.B #$01
-    BNE +
-    ORA.B #$18
+    CMP.B #$01                                ; Vine/net interaction.
+    BNE +                                     ; Preserve the interaction point flags.
+    ORA.B #$18                                ; If on a vine, set the side-body flag to prevent horizontal movement.
   + TSB.B InteractionPtsClimbable
-    LDA.B PlayerBlockXSide
+    LDA.B PlayerBlockXSide                    ; Preserve the side of the vine/net that Mario is on.
     STA.B InteractionPtDirection
     RTS
 
 CODE_00F309:
-    CPY.B #$2F
-    BCS CODE_00F311
+    CPY.B #$2F                                ; Not 000-01C or 038.
+    BCS CODE_00F311                           ; Branch if tiles 02A-02E (coins).
     CPY.B #$2A
     BCS CODE_00F32B
 CODE_00F311:
-    CPY.B #$6E
+    CPY.B #$6E                                ; Return if not 06E (moon).
     BNE Return00F376
-    LDA.B #$0F
+; Moon interaction.
+    LDA.B #$0F                                ; Give a 3up.
     JSL CODE_00F38A
     INC.W MoonCounter
     PHX
     JSR CODE_00F3B2
-    ORA.W MoonCollected,Y
+    ORA.W MoonCollected,Y                     ; Set the bit for having collected the level's 3up mooon.
     STA.W MoonCollected,Y
     PLX
-    BRA CODE_00F36B
+    BRA CODE_00F36B                           ; Erase the tile.
 
 CODE_00F32B:
-    BNE CODE_00F332                           ;YOSHI COIN HANDLER
-    LDA.W BluePSwitchTimer
+    BNE CODE_00F332                           ;YOSHI COIN HANDLER; Tiles 02A-02E (coins).
+    LDA.W BluePSwitchTimer                    ; Return if tile 02A without the blue P-switch active.
     BEQ Return00F376
 CODE_00F332:
     CPY.B #$2D
     BEQ CODE_00F33F
-    BCC CODE_00F367
-    LDA.B TouchBlockYPos
+    BCC CODE_00F367                           ; If not tile 02D/02E (Yoshi coin), branch.
+    LDA.B TouchBlockYPos                      ; If tile 02E (lower half), shift the position up a tile.
     SEC
     SBC.B #$10
     STA.B TouchBlockYPos
 CODE_00F33F:
-    JSL CODE_00F377
+    JSL CODE_00F377                           ; Register Yoshi coin and give points.
     INC.W DragonCoinsShown
     LDA.W DragonCoinsShown
     CMP.B #$05
-    BCC +
-    PHX
+    BCC +                                     ; If five coins are collected,
+    PHX                                       ; set the bit for all five Yoshi coins collected in the level.
     JSR CODE_00F3B2
     ORA.W AllDragonCoinsCollected,Y
     STA.W AllDragonCoinsCollected,Y
     PLX
-  + LDA.B #!SFX_DRAGONCOIN
+  + LDA.B #!SFX_DRAGONCOIN                    ; SFX for collecting a Yoshi coin.
     STA.W SPCIO0                              ; / Play sound effect
-    LDA.B #$01
+    LDA.B #$01                                ; Give Mario a coin.
     JSL CODE_05B330
-    LDY.B #$18
+    LDY.B #$18                                ; Generate two blank tiles.
     BRA +
 
 CODE_00F367:
-    JSL CODE_05B34A
+; Tiles 02A-02C.
+    JSL CODE_05B34A                           ; Give a coin.
 CODE_00F36B:
-    LDY.B #$01                                ; \ Block to generate = #$01
+    LDY.B #$01                                ; \ Block to generate = #$01; Generate a blank tile.
   + STY.B Map16TileGenerate                   ; /
-    JSL GenerateTile
+    JSL GenerateTile                          ; Turn into a specified tile and spawn glitter.
     JSR CODE_00FD5A
 Return00F376:
     RTS
 
 CODE_00F377:
-    LDA.W DragonCoinsCollected
+    LDA.W DragonCoinsCollected                ; Subroutine to give a Yoshi coin.
     INC.W DragonCoinsCollected
     CLC
     ADC.B #$09
-    CMP.B #$0D
+    CMP.B #$0D                                ; Increase coin counter and give appropriate number of points.
     BCC +
     LDA.B #$0D
   + BRA CODE_00F38A
 
 CODE_00F388:
-    LDA.B #$0D
+    LDA.B #$0D                                ; Subroutine to spawn a 1up score sprite at Mario's position.
 CODE_00F38A:
-    PHA
-    JSL CODE_02AD34
+    PHA                                       ; Subroutine to spawn a score sprite at Mario's position.
+    JSL CODE_02AD34                           ; Find a score sprite slot.
     PLA
     STA.W ScoreSpriteNumber,Y
     LDA.B PlayerXPosNext
     STA.W ScoreSpriteXPosLow,Y
-    LDA.B PlayerXPosNext+1
+    LDA.B PlayerXPosNext+1                    ; Spawn the score sprite at Mario's position.
     STA.W ScoreSpriteXPosHigh,Y
     LDA.B PlayerYPosNext
     STA.W ScoreSpriteYPosLow,Y
     LDA.B PlayerYPosNext+1
     STA.W ScoreSpriteYPosHigh,Y
-    LDA.B #$30
+    LDA.B #$30                                ; Number of frames to display the score sprite.
     STA.W ScoreSpriteTimer,Y
-    LDA.B #$00
+    LDA.B #$00                                ; Spawn in the foreground.
     STA.W ScoreSpriteLayer,Y
     RTL
 
 CODE_00F3B2:
-    LDA.W TranslevelNo
+    LDA.W TranslevelNo                        ; Subroutine to get the the bitwise index for any 12 byte level tables (e.g. Yoshi coins, 1ups, moons, etc).
     LSR A
     LSR A
     LSR A
@@ -13175,7 +14253,8 @@ CODE_00F3B2:
     RTS
 
 CODE_00F3C4:
-    CPY.B #$3F
+; Subroutine for handling interaction with exit-enabled horizontal pipes.
+    CPY.B #$3F                                ; Return if not tile 13F (exit-enabled horizontal pipe).
     BNE Return00F376
     LDY.B TempPlayerAir
     BEQ +
@@ -13203,10 +14282,13 @@ DATA_00F3E5:
     db $02,$01,$08,$04
 
 CODE_00F3E9:
-    XBA
+; Input that needs to be held to enter each pipe.
+; Right-facing, left-facing, down-facing, up-facing.
+; Subroutine for handling interaction with exit-enabled vertical pipes.
+    XBA                                       ; A contains the direction to check (0 = left, 1 = right, 2 = up, 3 = down).
     TYA
     SEC
-    SBC.B #$37
+    SBC.B #$37                                ; Return if not an exit-enabled vertical pipe.
     CMP.B #$02
     BCS Return00F442
     TAY
@@ -13240,13 +14322,13 @@ CODE_00F40A:
     LDA.B PlayerDirection
     EOR.B #$01
     STA.B PlayerDirection
-    LDA.B #$08
+    LDA.B #$08                                ; Face Mario towards the screen.
     STA.W FaceScreenTimer
   + INX
     STX.W YoshiInPipeSetting
     STY.B PlayerAnimation
     JSR NoButtons
-    LDA.B #!SFX_PIPE
+    LDA.B #!SFX_PIPE                          ; SFX for going down a pipe.
     STA.W SPCIO0                              ; / Play sound effect
 CODE_00F43E:
     PLX
@@ -13256,7 +14338,8 @@ Return00F442:
     RTS
 
 CODE_00F443:
-    LDA.B PlayerXPosNext
+; Subroutine to check if Mario is in the center of a block. Used for doors.
+    LDA.B PlayerXPosNext                      ; (not used for the boss doors, however)
     CLC
     ADC.B #$04
     AND.B #$0F
@@ -13264,36 +14347,38 @@ CODE_00F443:
     RTS
 
 CODE_00F44D:
-    INX
+    INX                                       ; Routine to fetch the block being interacted by a particular interaction point.
     INX
     REP #$20                                  ; A->16
     LDA.B PlayerXPosNext
-    CLC
-    ADC.W DATA_00E830,X
-    STA.B TouchBlockXPos
+    CLC                                       ; Locate the interaction point, storing to $98/$9A.
+    ADC.W DATA_00E830,X                       ; X contains the interaction point to check, times 2.
+    STA.B TouchBlockXPos                      ; (center, side body, side head, head, left foot, right foot)
     LDA.B PlayerYPosNext
     CLC
     ADC.W DATA_00E89C,X
     STA.B TouchBlockYPos
 CODE_00F461:
-    JSR CODE_00F465
+    JSR CODE_00F465                           ; Set up $1693 for the interaction point.
     RTS
 
 CODE_00F465:
-    SEP #$20                                  ; A->8
+; Subroutine to set up $1693 with the tile's acts-like setting.
+    SEP #$20                                  ; A->8; Returns not equal if on page 0 and equal if on page 1.
     STZ.W SwitchPalacePressed
     PHX
     LDA.B TempScreenMode
-    BPL +
+    BPL +                                     ; Jump down if Layer 2 has interaction.
     JMP CODE_00F4EC
 
-  + BNE CODE_00F4A6
+; Layer 2 does not have interaction.
+  + BNE CODE_00F4A6                           ; Branch if the level is vertical.
     REP #$20                                  ; A->16
     LDA.B TouchBlockYPos
     CMP.W #$01B0
     SEP #$20                                  ; A->8
     BCS CODE_00F4A0
-    AND.B #$F0
+    AND.B #$F0                                ; Return tile 025 if outside the level.
     STA.B _0
     LDX.B TouchBlockXPos+1
     CPX.B LevelScrLength
@@ -13303,7 +14388,7 @@ CODE_00F465:
     LSR A
     LSR A
     LSR A
-    ORA.B _0
+    ORA.B _0                                  ; Get the pointer to the block being touched.
     CLC
     ADC.L DATA_00BA60,X
     STA.B _0
@@ -13312,16 +14397,16 @@ CODE_00F465:
     BRA CODE_00F4CD
 
 CODE_00F4A0:
-    PLX
+    PLX                                       ; Return tile 025 (blank).
     LDY.B #$25
 CODE_00F4A3:
     LDA.B #$00
     RTS
 
 CODE_00F4A6:
-    LDA.B TouchBlockXPos+1
+    LDA.B TouchBlockXPos+1                    ; Vertical level without layer 2 interaction.
     CMP.B #$02
-    BCS CODE_00F4E7
+    BCS CODE_00F4E7                           ; Return tile 025 if outside the level.
     LDX.B TouchBlockYPos+1
     CPX.B LevelScrLength
     BCS CODE_00F4E7
@@ -13331,7 +14416,7 @@ CODE_00F4A6:
     LDA.B TouchBlockXPos
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; Get the pointer to the block being touched.
     LSR A
     ORA.B _0
     CLC
@@ -13342,11 +14427,11 @@ CODE_00F4A6:
 CODE_00F4CD:
     STA.B _1
     LDA.B #$7E
-    STA.B _2
+    STA.B _2                                  ; Store Map16 tile number.
     LDA.B [_0]
     STA.W Map16TileNumber
     INC.B _2
-    PLX
+    PLX                                       ; Store proper "acts like" setting for the tile.
     LDA.B [_0]
     JSL CODE_00F545
     LDY.W Map16TileNumber
@@ -13354,19 +14439,20 @@ CODE_00F4CD:
     RTS
 
 CODE_00F4E7:
-    PLX
+    PLX                                       ; Return tile 025 (blank).
     LDY.B #$25
     BRA CODE_00F4A3
 
 CODE_00F4EC:
-    ASL A
+; Layer 2 has interaction.
+    ASL A                                     ; Branch if Layer 2 is vertical.
     BNE CODE_00F51B
     REP #$20                                  ; A->16
     LDA.B TouchBlockYPos
     CMP.W #$01B0
     SEP #$20                                  ; A->8
     BCS CODE_00F4E7
-    AND.B #$F0
+    AND.B #$F0                                ; Return tile 025 if outside the level.
     STA.B _0
     LDX.B TouchBlockXPos+1
     CPX.B #$10
@@ -13376,7 +14462,7 @@ CODE_00F4EC:
     LSR A
     LSR A
     LSR A
-    ORA.B _0
+    ORA.B _0                                  ; Get the pointer to the block being touched.
     CLC
     ADC.L DATA_00BA70,X
     STA.B _0
@@ -13385,9 +14471,9 @@ CODE_00F4EC:
     BRA CODE_00F4CD
 
 CODE_00F51B:
-    LDA.B TouchBlockXPos+1
+    LDA.B TouchBlockXPos+1                    ; Vertical layer 2 with interaction.
     CMP.B #$02
-    BCS CODE_00F4E7
+    BCS CODE_00F4E7                           ; Return tile 025 if outside the level.
     LDX.B TouchBlockYPos+1
     CPX.B #$0E
     BCS CODE_00F4E7
@@ -13398,7 +14484,7 @@ CODE_00F51B:
     LSR A
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; Get the pointer to the block being touched.
     ORA.B _0
     CLC
     ADC.L DATA_00BA8E,X
@@ -13408,39 +14494,39 @@ CODE_00F51B:
     JMP CODE_00F4CD
 
 CODE_00F545:
-    TAY
+    TAY                                       ; Get proper "acts like" settings for a block, accounting for P-switches.
     BNE CODE_00F577
     LDY.W Map16TileNumber                     ; Load MAP16 tile number
-    CPY.B #$29                                ; \ If block isn't "Invisible POW ? block",
+    CPY.B #$29                                ; \ If block isn't "Invisible POW ? block",; If not tile 029 (the P-switch activated ? block), branch.
     BNE PSwitchNotInvQBlk                     ; / branch to PSwitchNotInvQBlk
     LDY.W BluePSwitchTimer
-    BEQ Return00F594
-    LDA.B #$24
+    BEQ Return00F594                          ; If the P-switch is not active, return.
+    LDA.B #$24                                ; Else, set the block to act like a coin block and return.
     STA.W Map16TileNumber
     RTL
 
 PSwitchNotInvQBlk:
-    CPY.B #$2B                                ; \ If block is "Coin",
+    CPY.B #$2B                                ; \ If block is "Coin",; Branch if tile 02B (normal coin).
     BEQ PSwitchCoinBrown                      ; / branch to PSwitchCoinBrown
     TYA
     SEC
-    SBC.B #$EC
+    SBC.B #$EC                                ; Branch if not tiles 0EC-0FB (switch palace switches).
     CMP.B #$10
     BCS CODE_00F592
-    INC A
+    INC A                                     ; Store value for the switch being pressed.
     STA.W SwitchPalacePressed
-    BRA CODE_00F571
+    BRA CODE_00F571                           ; Make it act solid.
 
 PSwitchCoinBrown:
-    LDY.W BluePSwitchTimer
+    LDY.W BluePSwitchTimer                    ; Return if the P-switch is not active (i.e. don't turn solid).
     BEQ Return00F594
 CODE_00F571:
-    LDA.B #$32
+    LDA.B #$32                                ; Act like tile 132 (brown block).
     STA.W Map16TileNumber
     RTL
 
 CODE_00F577:
-    LDY.W Map16TileNumber
+    LDY.W Map16TileNumber                     ; Block is on page 1.
     CPY.B #$32
     BNE CODE_00F584
     LDY.W BluePSwitchTimer
@@ -13448,10 +14534,10 @@ CODE_00F577:
     RTL
 
 CODE_00F584:
-    CPY.B #$2F
-    BNE Return00F594
-    LDY.W SilverPSwitchTimer
-    BEQ Return00F594
+    CPY.B #$2F                                ; Make it act like a coin if:
+    BNE Return00F594                          ; Tile 132 (brown block) and blue P-switch hit
+    LDY.W SilverPSwitchTimer                  ; Tile 12F (muncher) and silver P-switch hit
+    BEQ Return00F594                          ; Else, just return.
 CODE_00F58D:
     LDY.B #$2B
     STY.W Map16TileNumber
@@ -13461,76 +14547,80 @@ Return00F594:
     RTL
 
 CODE_00F595:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Handle falling off the bottom of the screen.
     LDA.W #$FF80
     CLC
-    ADC.B Layer1YPos
-    CMP.B PlayerYPosNext
+    ADC.B Layer1YPos                          ; If Mario tries going too far above/below the visible screen, freeze his position.
+    CMP.B PlayerYPosNext                      ; Think of this as the "vertical cap" for distance above the screen.
     BMI +
     STA.B PlayerYPosNext
   + SEP #$20                                  ; A->8
     LDA.B PlayerYPosScrRel+1
-    DEC A
-    BMI Return00F5B6
-    LDA.W YoshiHeavenFlag
+    DEC A                                     ; If Mario is above the screen, return.
+    BMI Return00F5B6                          ; If he's below the screen, either kill Mario, or
+    LDA.W YoshiHeavenFlag                     ; if he's in a Yoshi Wings game, activate the normal exit and fade to overworld.
     BEQ +
     JMP CODE_00C95B
 
-  + JSL CODE_00F60A
+; Fallen offscreen and not in Yoshi Wings.
+  + JSL CODE_00F60A                           ; Kill Mario.
 Return00F5B6:
     RTS
 
 HurtMario:
-    LDA.B PlayerAnimation                     ; \ Return if animation sequence activated
-    BNE Return00F628                          ; /
-    LDA.W IFrameTimer                         ; \ If flashing...
-    ORA.W InvinsibilityTimer                  ; | ...or have star...
-    ORA.W EndLevelTimer                       ; | ...or level ending...
+    LDA.B PlayerAnimation                     ; \ Return if animation sequence activated; Routine to hurt Mario.
+    BNE Return00F628                          ; /; Return if:
+    LDA.W IFrameTimer                         ; \ If flashing...; Mario isn't in a normal animation state
+    ORA.W InvinsibilityTimer                  ; | ...or have star...; Mario is invincible or has star power
+    ORA.W EndLevelTimer                       ; | ...or level ending...; In the middle of the goal walk
     BNE Return00F628                          ; / ...return
     STZ.W GameCloudCoinCount
     LDA.W WallrunningType
     BEQ +
     PHB
-    PHK
+    PHK                                       ; If wall-running, ???
     PLB
     JSR ADDR_00EB42
     PLB
-  + LDA.B Powerup                             ; \ If Mario is small, kill him
+  + LDA.B Powerup                             ; \ If Mario is small, kill him; Kill Mario if he doesn't have a powerup.
     BEQ KillMario                             ; /
     CMP.B #$02                                ; \ Branch if not Caped Mario
-    BNE PowerDown                             ; /
-    LDA.W FlightPhase                         ; \ Branch if not soaring
+    BNE PowerDown                             ; /; If Mario is flying, end flight instead of damaging.
+    LDA.W FlightPhase                         ; \ Branch if not soaring; Else, branch to damage.
     BEQ PowerDown                             ; /
-    LDY.B #!SFX_FLYHIT                        ; \ Break Mario out of soaring
+; Stop Mario's flight.
+    LDY.B #!SFX_FLYHIT                        ; \ Break Mario out of soaring; SFX for flight being canceled.
     STY.W SPCIO0                              ; | (Play sound effect)
     LDA.B #$01                                ; | (Set spin jump flag)
     STA.W SpinJumpFlag                        ; |
-    LDA.B #$30                                ; | (Set flashing timer)
+    LDA.B #$30                                ; | (Set flashing timer); How long Mario is invincible for after losing flight.
     STA.W IFrameTimer                         ; /
     BRA CODE_00F622
 
 PowerDown:
-    LDY.B #!SFX_PIPE                          ; \ Play sound effect
+; Activate power-down animation.
+    LDY.B #!SFX_PIPE                          ; \ Play sound effect; SFX for being damaged.
     STY.W SPCIO0                              ; /
-    JSL CODE_028008
-    LDA.B #$01                                ; \ Set power down animation
+    JSL CODE_028008                           ; Drop the powerup in the item box.
+    LDA.B #$01                                ; \ Set power down animation; Set to run power-down animation.
     STA.B PlayerAnimation                     ; /
-    STZ.B Powerup                             ; Mario status = Small
-    LDA.B #$2F
+    STZ.B Powerup                             ; Mario status = Small; Clear Mario's powerup.
+    LDA.B #$2F                                ; How long the powerdown animation lasts.
     BRA +
 
 KillMario:
-    LDA.B #$90                                ; \ Mario Y speed = #$90
+; Subroutine to kill Mario.
+    LDA.B #$90                                ; \ Mario Y speed = #$90; Speed at which Mario jumps upward.
     STA.B PlayerYSpeed+1                      ; /
 CODE_00F60A:
-    LDA.B #!BGM_DEATH                         ; \
+    LDA.B #!BGM_DEATH                         ; \; SFX for dying (death music)
     STA.W SPCIO2                              ; / Change music
     LDA.B #$FF
     STA.W MusicBackup
     LDA.B #$09                                ; \ Animation sequence = Kill Mario
     STA.B PlayerAnimation                     ; /
     STZ.W SpinJumpFlag                        ; Spin jump flag = 0
-    LDA.B #$30
+    LDA.B #$30                                ; How long the death animation lasts.
   + STA.W PlayerAniTimer                      ; Set hurt frame timer
     STA.B SpriteLock                          ; set lock sprite timer
 CODE_00F622:
@@ -13549,14 +14639,14 @@ NoButtons:
     RTS
 
 CODE_00F636:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Store pointers for Mario's graphical tiles.
     LDX.B #$00
     LDA.B _9
     ORA.W #$0800
     CMP.B _9
     BEQ +
     CLC
-  + AND.W #$F700
+  + AND.W #$F700                              ; Store the pointers to the graphics for Mario's head (body if small).
     ROR A
     LSR A
     ADC.W #$2000
@@ -13570,7 +14660,7 @@ CODE_00F636:
     CMP.B _A
     BEQ +
     CLC
-  + AND.W #$F700
+  + AND.W #$F700                              ; Store the pointers to the graphics for Mario's body (when big).
     ROR A
     LSR A
     ADC.W #$2000
@@ -13582,7 +14672,7 @@ CODE_00F636:
     AND.W #$FF00
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; Store the pointers to the graphics for Mario's cape.
     ADC.W #$2000
     STA.W DynGfxTilePtr+4
     CLC
@@ -13591,12 +14681,12 @@ CODE_00F636:
     LDA.B _C
     AND.W #$FF00
     LSR A
-    LSR A
+    LSR A                                     ; Store the pointer the misc tile of Mario's cape during flight.
     LSR A
     ADC.W #$2000
     STA.W DynGfxTile7FPtr
     SEP #$20                                  ; A->8
-    LDA.B #$0A
+    LDA.B #$0A                                ; Load #$0A tiles (Mario+Yoshi) in the DMA routine later.
     STA.W PlayerGfxTileCount
     RTS
 
@@ -13629,16 +14719,35 @@ DATA_00F6CF:
     db $01,$00,$FF,$FF
 
 UpdateScreenPosition:
-    PHB
+; Where to stop the screen relative to Mario when scrolling vertically.
+; First is scrolling up, second is down.
+; 16-bit EOR table used by the scroll codes.
+; How quickly to catch the screen up to Mario when scrolling vertically.
+; First is scrolling up, second is down.
+; This one is mostly unused. Used as the upwards scroll speed when below the lower limit at $00F6AD.
+; Vertical limits for scrolling.
+; Upper limit (i.e. top of level). First is are scrolling up, second is down.
+; Lower limit. Used for locking the screen with the "unless flying/climbing/etc." setting.
+; Standard scroll distances when moving right/left, indexed by $13FF.
+; Only the first two entries seem to actually be used.
+; Horizontal screen scroll speed. First is right, second is left, third is unused.
+; L/R scrolling.    [note: also used for deciding whether to catch the screen up to Mario]
+; Screen catching up to Mario.
+; L/R scroll distances.
+; First is right, second is left. Third unused?
+; Unused?
+; How far to shift the screen as it scrolls while catching up to Mario.
+; Basically, increasing these makes the screen catch up in "chunks"; I don't recommend it.
+    PHB                                       ; Routine to handle moving/scrolling the screen by way of Mario (not scroll sprites).
     PHK
     PLB
     REP #$20                                  ; A->16
     LDA.W CameraMoveTrigger
     SEC
-    SBC.W #$000C
+    SBC.W #$000C                              ; Distance Mario must be offset in the "scroll hotspot" for the screen to scroll left. NOTE: modified by LM to become a JSL!
     STA.W CameraLeftBuffer
     CLC
-    ADC.W #$0018
+    ADC.W #$0018                              ; Distance Mario must be offset from the above offset for the screen to scroll right.
     STA.W CameraRightBuffer
     LDA.W NextLayer1XPos
     STA.B Layer1XPos
@@ -13653,16 +14762,16 @@ UpdateScreenPosition:
     BCC +
     JMP CODE_00F75C
 
-  + LDA.W #$00C0
+  + LDA.W #$00C0                              ; Position at which the screen stops scrolling vertically in horizontal levels.
     JSR CODE_00F7F4
-    LDY.W HorizLayer1Setting
+    LDY.W HorizLayer1Setting                  ; Check if horizontal scrolling is enabled. If not, skip.
     BEQ CODE_00F75A
     LDY.B #$02
     LDA.B PlayerXPosNext
     SEC
     SBC.B Layer1XPos
     STA.B _0
-    CMP.W CameraMoveTrigger
+    CMP.W CameraMoveTrigger                   ; Figure out which direction to scroll the screen horizontally.
     BPL +
     LDY.B #$00
   + STY.B Layer1ScrollDir
@@ -13726,10 +14835,10 @@ CODE_00F75C:
 CODE_00F79D:
     LDY.W HorizLayer2Setting
     BEQ CODE_00F7AA
-    LDA.B Layer1XPos
-    DEY
-    BEQ +
-    LSR A
+    LDA.B Layer1XPos                          ; Layer 2 horizontal scroll rates:
+    DEY                                       ; None: Don't attach scrolling.
+    BEQ +                                     ; Constant: Scroll with Layer 1.
+    LSR A                                     ; Variable: Scroll at 1/2 the speed of Layer 1.
   + STA.B Layer2XPos
 CODE_00F7AA:
     LDY.W VertLayer2Setting
@@ -13737,11 +14846,11 @@ CODE_00F7AA:
     LDA.B Layer1YPos
     DEY
     BEQ +
-    LSR A
-    DEY
-    BEQ +
-    LSR A
-    LSR A
+    LSR A                                     ; Layer 2 vertical scroll rates:
+    DEY                                       ; None: Don't attach scrolling.
+    BEQ +                                     ; Constant: Scroll with Layer 1.
+    LSR A                                     ; Variable: Scroll at 1/2 the speed of Layer 1.
+    LSR A                                     ; Slow:     Scroll at 1/32 the speed of Layer 1.
     LSR A
     LSR A
   + CLC
@@ -13756,7 +14865,7 @@ CODE_00F7C2:
     LDA.B Layer1YPos
     SEC
     SBC.W NextLayer1YPos
-    STA.W Layer1DYPos
+    STA.W Layer1DYPos                         ; Update addresses for how far the layer has scrolled this frame.
     LDA.B Layer2XPos
     SEC
     SBC.W NextLayer2XPos
@@ -13774,17 +14883,18 @@ CODE_00F7C2:
     RTL
 
 CODE_00F7F4:
-    LDX.W VertLayer1Setting
+; Routine to handle what happens when vertical scrolling is enabled.
+    LDX.W VertLayer1Setting                   ; Check if vertical scrolling (any) is enabled. If not, return.
     BNE +
     RTS
 
   + STA.B _4
     LDY.B #$00
     LDA.B PlayerYPosNext
-    SEC
+    SEC                                       ; Decide whether to scroll the screen up or down.
     SBC.B Layer1YPos
     STA.B _0
-    CMP.W #$0070
+    CMP.W #$0070                              ; Where the "bottom" scroll line is; Mario must above this to scroll up, and below to scroll down.
     BMI +
     LDY.B #$02
   + STY.B Layer1ScrollDir
@@ -13794,37 +14904,38 @@ CODE_00F7F4:
     STA.B _2
     EOR.W DATA_00F6A3,Y
     BMI +
-    LDY.B #$02
-    STZ.B _2
-  + LDA.B _2
+    LDY.B #$02                                ; If the screen is scrolling down or has caught up to Mario,
+    STZ.B _2                                  ; clear the "scroll up" flag and branch.
+  + LDA.B _2                                  ; Else, continue below.
     BMI CODE_00F82A
     LDX.B #$00
     STX.W ScreenScrollAtWill
     BRA CODE_00F883
 
 CODE_00F82A:
-    SEP #$20                                  ; A->8
+; Screen needs to move upwards to catch up to Mario.
+    SEP #$20                                  ; A->8; Scroll the screen up if:
     LDA.W WallrunningType
     CMP.B #$06
     BCS +
     LDA.W YoshiHasWingsGfx                    ; \ If winged Yoshi...
-    LSR A                                     ; |
-    ORA.W TakeoffTimer
-    ORA.B PlayerIsClimbing                    ; | ...or climbing
-    ORA.W PBalloonInflating
-    ORA.W PlayerInCloud
-    ORA.W BouncingOnBoard
+    LSR A                                     ; |; Wall-running
+    ORA.W TakeoffTimer                        ; Jumping with a full P-meter (takeoff meter set)
+    ORA.B PlayerIsClimbing                    ; | ...or climbing; Climbing a net
+    ORA.W PBalloonInflating                   ; Inflated from a P-balloon
+    ORA.W PlayerInCloud                       ; Riding a Lakitu cloud
+    ORA.W BouncingOnBoard                     ; Bouncing off a spring/purple triangle
   + TAX
     REP #$20                                  ; A->16
     BNE CODE_00F869
     LDX.W PlayerRidingYoshi
     BEQ CODE_00F856
-    LDX.W YoshiHasWingsEvt                    ; \ Branch if 141E >= #$02
+    LDX.W YoshiHasWingsEvt                    ; \ Branch if 141E >= #$02; Riding Yoshi while he has wings
     CPX.B #$02                                ; |
     BCS CODE_00F869                           ; /
 CODE_00F856:
     LDX.B PlayerInWater
-    BEQ CODE_00F85E
+    BEQ CODE_00F85E                           ; Swimming upwards in water
     LDX.B PlayerInAir
     BNE CODE_00F869
 CODE_00F85E:
@@ -13834,14 +14945,14 @@ CODE_00F85E:
     LDX.W VerticalScrollEnabled
     BNE CODE_00F875
 CODE_00F869:
-    STX.W VerticalScrollEnabled
-    LDX.W VerticalScrollEnabled
+    STX.W VerticalScrollEnabled               ; On the ground, the screen hasn't caught up to him, and he is not at the "screen lock" height.
+    LDX.W VerticalScrollEnabled               ; (only if level has "no vertical scroll unless flying/etc.")
     BNE CODE_00F881
-    LDY.B #$04
+    LDY.B #$04                                ; [LM hijacks on this line, to determine whether the screen is locked]
     BRA CODE_00F881
 
 CODE_00F875:
-    LDX.W ScreenScrollAtWill
+    LDX.W ScreenScrollAtWill                  ; If none of the above conditions are met, return without scrolling.
     BNE CODE_00F881
     LDX.B PlayerInAir
     BNE Return00F8AA
@@ -13849,13 +14960,13 @@ CODE_00F875:
 CODE_00F881:
     LDA.B _2
 CODE_00F883:
-    SEC
+    SEC                                       ; Screen is scrolling down.
     SBC.W DATA_00F6A7,Y
     EOR.W DATA_00F6A7,Y
     ASL A
     LDA.B _2
-    BCS +
-    LDA.W DATA_00F6A7,Y
+    BCS +                                     ; Scroll the screen vertically.
+    LDA.W DATA_00F6A7,Y                       ; And prevent the screen from scrolling above the top of the level.
   + CLC
     ADC.B Layer1YPos
     CMP.W DATA_00F6AD,Y
@@ -13871,13 +14982,14 @@ Return00F8AA:
     RTS
 
 CODE_00F8AB:
-    LDY.W CameraIsScrolling
+; Subroutine to handle horizontally scrolling the screen as Mario walks.
+    LDY.W CameraIsScrolling                   ; Return if the screen is scrolling from L/R.
     BNE Return00F8DE
     SEP #$20                                  ; A->8
     LDX.W CameraScrollPlayerDir
     REP #$20                                  ; A->16
     LDY.B #$08
-    LDA.W CameraMoveTrigger
+    LDA.W CameraMoveTrigger                   ; If scrolling right, Y=8. Else, Y=A.
     CMP.W DATA_00F6B3,X
     BPL +
     LDY.B #$0A
@@ -13885,8 +14997,8 @@ CODE_00F8AB:
     EOR.B _2
     BPL Return00F8DE
     LDA.W DATA_00F6BF,X
-    EOR.B _2
-    BPL Return00F8DE
+    EOR.B _2                                  ; Return if Mario isn't moving in the direction the screen should scroll.
+    BPL Return00F8DE                          ; Else, scroll it over.
     LDA.B _2
     CLC
     ADC.W DATA_00F6CF,Y
@@ -13909,7 +15021,9 @@ BossCeilingHeights:
     dw !ReznorCeilingHeight
 
 CODE_00F8F2:
-    JSR CODE_00EAA6
+; Slope steepness for Iggy/Larry's platform at various angles (mod 16).
+; Misc. values for each of the boss rooms specified by $13FC.
+    JSR CODE_00EAA6                           ; Mort  Roy   Ludw  Bwsr  Rez
     BIT.W IRQNMICommand
     BVC CODE_00F94E
     JSR CODE_00E92B
@@ -13956,24 +15070,26 @@ Return00F94D:
     RTS
 
 CODE_00F94E:
-    LDY.B #$00
+    LDY.B #$00                                ; Routine to handle proper interaction with the platform and lava in Iggy/Larry's room.
     LDA.B PlayerYSpeed+1
     BPL +
     JMP CODE_00F997
 
-  + JSR CODE_00F9A8
+; Skip platform interaction if Mario is moving upwards,
+  + JSR CODE_00F9A8                           ; or is not touching the platform and was not on the platform the previous frame.
     BCS +
     JSR CODE_00EE1D
     JMP CODE_00F997
 
-  + LDA.B PlayerInAir
+; Mario is touching Iggy/Larry's platform.
+  + LDA.B PlayerInAir                         ; Branch if Mario is on the ground (platform interaction has already been processed).
     BEQ +
     REP #$20                                  ; A->16
     LDA.W IggyLarryTempXPos
     AND.W #$00FF
     STA.W IggyLarryPlatIntXPos
     STA.W KeyholeXPos
-    LDA.W IggyLarryTempYPos
+    LDA.W IggyLarryTempYPos                   ; Process Mario's interaction with the platform.
     AND.W #$00F0
     STA.W IggyLarryPlatIntYPos
     STA.W KeyholeYPos
@@ -13983,7 +15099,7 @@ CODE_00F94E:
     ADC.B #$48
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; Handle sliding based on the angle of the platform.
     LSR A
     TAX
     LDY.W DATA_00F8DF,X
@@ -13993,18 +15109,18 @@ CODE_00F94E:
 CODE_00F997:
     REP #$20                                  ; A->16
     LDA.B PlayerYPosScrRel
-    CMP.W #$00AE
-    SEP #$20                                  ; A->8
+    CMP.W #$00AE                              ; Y position of the lava in Iggy/Lemmy's room.
+    SEP #$20                                  ; A->8; Kill Mario if he hits the lava.
     BMI +
     JSR CODE_00F629
   + JMP CODE_00E98C
 
 CODE_00F9A8:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Subroutine for the above to get Mario's position on Iggy/Larry's platform.
     LDA.B PlayerXPosNext
     CLC
     ADC.W #$0008
-    STA.W IggyLarryPlatIntXPos
+    STA.W IggyLarryPlatIntXPos                ; Get his position.
     LDA.B PlayerYPosNext
     CLC
     ADC.W #$0020
@@ -14013,30 +15129,30 @@ CODE_00F9BC:
     SEP #$20                                  ; A->8
     PHB
     LDA.B #$01
-    PHA
+    PHA                                       ; Get actual X/Y position on Iggy/Larry's platform.
     PLB
     JSL CODE_01CC9D
     PLB
     RTS
 
 CODE_00F9C9:
-    LDA.B Mode7Angle
+    LDA.B Mode7Angle                          ; Subroutine to handle Mario's interaction with Iggy/Larry's platform.
     PHA
     EOR.W #$FFFF
     INC A
-    STA.B Mode7Angle
+    STA.B Mode7Angle                          ; Check for interaction with the platform.
     JSR CODE_00F9BC
     REP #$20                                  ; A->16
     PLA
     STA.B Mode7Angle
     LDA.W IggyLarryTempXPos
     AND.W #$00FF
-    SEC
+    SEC                                       ; Center Mario's X position on the platform (?).
     SBC.W #$0008
     STA.B PlayerXPosNext
     LDA.W IggyLarryTempYPos
     AND.W #$00FF
-    SEC
+    SEC                                       ; Shift Mario on top of the platform.
     SBC.W #$0020
     STA.B PlayerYPosNext
     SEP #$20                                  ; A->8
@@ -14044,42 +15160,52 @@ CODE_00F9C9:
 
     %insert_empty($1B,$1B,$1B,$4D,$4D)
 
-    LDX.B #$0B                                ; \ Unreachable
+    LDX.B #$0B                                ; \ Unreachable; Unused routine to clear out the sprite table.
   - STZ.W SpriteStatus,X                      ; | Clear out sprite status table
     DEX                                       ; |
     BPL -                                     ; |
     RTL                                       ; /
 
 CODE_00FA19:
-    LDY.B #DATA_00E632
+; Scratch RAM setup:
+; A   - Tile number
+; $0A - Block clipping X position, low (from $9A).
+; $0C - Block clipping Y position, low (from $98).
+; Scratch RAM returns:
+; Y   - Index to $00E632 to get the pixel shift distance.
+; $00 - Clipping Y position, centered onto the block.
+; $01 - Basic slope index to the shift table.
+; $05 - 24-bit pointer to $00E632.
+; $08 - Slope steepness value (from $82).
+    LDY.B #DATA_00E632                        ; Subroutine to get the offset of a sprite/fireball from the nearest block, for interacting with slopes.
     STY.B _5
-    LDY.B #DATA_00E632>>8
+    LDY.B #DATA_00E632>>8                     ; Point $05 to $00E632.
     STY.B _6
     LDY.B #DATA_00E632>>16
     STY.B _7
     SEC
     SBC.B #$6E
-    TAY
+    TAY                                       ; Store the slope's steepness value to $08.
     LDA.B [SlopesPtr],Y
     STA.B _8
     ASL A
     ASL A
     ASL A
-    ASL A
+    ASL A                                     ; Get the index to the slope offset table into Y.
     STA.B _1
     BCC +
     INC.B _6
   + LDA.B _C
-    AND.B #$0F
+    AND.B #$0F                                ; Set Y clipping for the slope.
     STA.B _0
     LDA.B _A
-    AND.B #$0F
+    AND.B #$0F                                ; Get X position, plus the current touched position within the block.
     ORA.B _1
     TAY
     RTL
 
 FlatPalaceSwitch:
-    LDA.B #$20                                ; \ Set "Time to shake ground" to x20
+    LDA.B #$20                                ; \ Set "Time to shake ground" to x20; Time to shake the ground when hitting the Switch Palace switch.
     STA.W ScreenShakeTimer                    ; /
     LDY.B #$02                                ; \
     LDA.B #$60                                ; |Set sprite x02 to x60 (Flat palace switch)
@@ -14108,21 +15234,21 @@ FlatPalaceSwitch:
     RTS
 
 TriggerGoalTape:
-    STZ.W PBalloonInflating
-    STZ.W PBalloonTimer
-    STZ.W SpriteRespawnTimer                  ; Don't respawn sprites
+    STZ.W PBalloonInflating                   ; Routine to handle triggering a goal tape.
+    STZ.W PBalloonTimer                       ; Stop certain processes:
+    STZ.W SpriteRespawnTimer                  ; Don't respawn sprites; P-balloon, generators, silver coin counter
 if ver_is_english(!_VER)                      ;\================ U, SS, E0, & E1 ==============
     STZ.W CurrentGenerator                    ;!
 endif                                         ;/===============================================
     STZ.W SilverCoinsCollected
-    LDY.B #$0B                                ; Loop over sprites:
+    LDY.B #$0B                                ; Loop over sprites:; Sprite handling loop.
 LvlEndSprLoopStrt:
     LDA.W SpriteStatus,Y                      ; \ If sprite status < 8,
-    CMP.B #$08                                ; | skip the current sprite
+    CMP.B #$08                                ; | skip the current sprite; Skip sprite if already dead/dying.
     BCC LvlEndNextSprite                      ; /
     CMP.B #$0B                                ; \ If Mario carries a sprite past the goal,
     BNE CODE_00FAA3                           ; |
-    PHX                                       ; |
+    PHX                                       ; |; If being carried, use the handler for it instead.
     JSR LvlEndPowerUp                         ; | he gets a powerup
     PLX                                       ; |
     BRA LvlEndNextSprite                      ; /
@@ -14133,12 +15259,12 @@ CODE_00FAA3:
     BEQ CODE_00FAB2                           ; /
     LDA.W SpriteOffscreenX,Y                  ; \ If sprite on screen...
     ORA.W SpriteOffscreenVert,Y               ; |
-    BNE CODE_00FAC5                           ; |
+    BNE CODE_00FAC5                           ; |; If the sprite is either a goal tape or onscreen,
 CODE_00FAB2:
-    LDA.W SpriteTweakerE,Y                    ; | ...and "don't turn into coin" not set,
+    LDA.W SpriteTweakerE,Y                    ; | ...and "don't turn into coin" not set,; and doesn't have $1686 bit 5 set, then turn the sprite into the goal tape coin.
     AND.B #$20                                ; |
     BNE CODE_00FAC5                           ; |
-    LDA.B #$10                                ; | Set coin animation timer = #$10
+    LDA.B #$10                                ; | Set coin animation timer = #$10; How many frames until the coin is collected.
     STA.W SpriteMisc1540,Y                    ; |
     LDA.B #$06                                ; | Sprite status = Level end, turn to coins
     STA.W SpriteStatus,Y                      ; |
@@ -14147,7 +15273,7 @@ CODE_00FAB2:
 CODE_00FAC5:
     LDA.W SpriteTweakerF,Y                    ; \ If "don't erase" not set,
     AND.B #$02                                ; |
-    BNE LvlEndNextSprite                      ; |
+    BNE LvlEndNextSprite                      ; |; Erase all applicable sprites.
     LDA.B #$00                                ; | Erase sprite
     STA.W SpriteStatus,Y                      ; /
 LvlEndNextSprite:
@@ -14155,7 +15281,7 @@ LvlEndNextSprite:
     BPL LvlEndSprLoopStrt                     ; /
     LDY.B #$07                                ; \
     LDA.B #$00                                ; | Clear out all extended sprites
-  - STA.W ExtSpriteNumber,Y                   ; |
+  - STA.W ExtSpriteNumber,Y                   ; |; Clear extended sprite slots.
     DEY                                       ; |
     BPL -                                     ; /
     RTL
@@ -14171,24 +15297,32 @@ DATA_00FAFB:
     db $FF,$74,$75,$76,$77
 
 LvlEndPowerUp:
-    LDX.B Powerup                             ; X = Mario's power up status
+; Table of sprites to give Mario for carrying an item past the goal tape.
+; Shell, throwblock, Goomba, Bob-omb, Mechakoopa, P-balloon, or anything else
+; Springboard, P-switch
+; Key
+; Baby Yoshi
+; See comments below for individual row indices.
+; Table of item box item sprite numbers. Blank, mushroom, fireflower, star, cape.
+    LDX.B Powerup                             ; X = Mario's power up status; Routine to determine what sprite Mario will be given for crossing the goal point with an item. ~
     LDA.W InvinsibilityTimer                  ; \ If Mario has star, X = #$04.  However this never happens as $1490 is cleared earlier
-    BEQ +                                     ; | Otherwise Mario could get a star from carrying a sprite past the goal.
-    LDX.B #$04                                ; / Unreachable instruction
-  + LDA.W PlayerRidingYoshi                   ; \ If Mario on Yoshi, X = #$05
+    BEQ +                                     ; | Otherwise Mario could get a star from carrying a sprite past the goal.; X is powerup status (0-3).
+    LDX.B #$04                                ; / Unreachable instruction; If Mario has star power, X is 4. Unused because star power gets cleared at $01C0FE.
+; If Mario is on Yoshi, X is 5. Partially unused since you have to glitch for it.
+  + LDA.W PlayerRidingYoshi                   ; \ If Mario on Yoshi, X = #$05; X = 6 seems to be unused.
     BEQ +                                     ; |
     LDX.B #$05                                ; /
-  + LDA.W SpriteNumber,Y                      ; \ If Spring Board, X += #$07
-    CMP.B #$2F                                ; |
+  + LDA.W SpriteNumber,Y                      ; \ If Spring Board, X += #$07; Is Mario holding a...
+    CMP.B #$2F                                ; |; ...springboard? Add 7 to X.
     BEQ CODE_00FB2D                           ; /
-    CMP.B #$3E                                ; \ If P Switch, X += #$07
+    CMP.B #$3E                                ; \ If P Switch, X += #$07; ...P-switch? Add 7 to X.
     BEQ CODE_00FB2D                           ; /
-    CMP.B #$80                                ; \ If Key, X += #$0E
+    CMP.B #$80                                ; \ If Key, X += #$0E; ...key? Add 14 to X.
     BEQ ADDR_00FB28                           ; /
-    CMP.B #$2D                                ; \ If Baby Yoshi, X += #$15
-    BNE +                                     ; /
+    CMP.B #$2D                                ; \ If Baby Yoshi, X += #$15; ...anything but baby Yoshi? Leave as-is.
+    BNE +                                     ; /; (e.g. shell, throwblock, goomba, etc.)
     TXA
-    CLC
+    CLC                                       ; ...baby Yoshi? add 21 to X.
     ADC.B #$07
     TAX
 ADDR_00FB28:
@@ -14202,38 +15336,38 @@ CODE_00FB2D:
     ADC.B #$07
     TAX
   + LDA.L DATA_00FADF,X
-    LDX.W PlayerItembox
-    CMP.L DATA_00FAFB,X
+    LDX.W PlayerItembox                       ; Pick sprite to spawn.
+    CMP.L DATA_00FAFB,X                       ; If Mario already has it in the item box, spawn a 1up instead.
     BNE +
     LDA.B #$78
   + STZ.B _F
     CMP.B #$E0
     BCC +
-    PHA
-    AND.B #$0F
-    STA.B _F
+    PHA                                       ; If E0-FF was loaded, store lower 4 bits to $0F.
+    AND.B #$0F                                ; These 4 bits are used to affect the score sprite from 1ups;
+    STA.B _F                                  ; 0 = 1up, 1 = 2up, 2 = 3up, 4 = 5up, 6+ = glitched.
     PLA
     CMP.B #$F0
+    LDA.B #$78                                ; If E0-EF, spawn a 1up.
+    BCS +                                     ; If F0-FF... also spawn a 1up, I guess.
     LDA.B #$78
-    BCS +
-    LDA.B #$78
-  + STA.W SpriteNumber,Y
+  + STA.W SpriteNumber,Y                      ; Store sprite number.
     CMP.B #$76
-    BNE +
+    BNE +                                     ; If it's a star, increase this (unused) counter.
     INC.W UnusedStarCounter
   + TYX
-    JSL InitSpriteTables
-    LDA.B _F
+    JSL InitSpriteTables                      ; Check for a sprite slot.
+    LDA.B _F                                  ; Store $0F to $1594. As mentioned, this affects the 1up score sprite value.
     STA.W SpriteMisc1594,Y
-    LDA.B #$0C                                ; \ Sprite status = Goal tape power up
+    LDA.B #$0C                                ; \ Sprite status = Goal tape power up; Spawn the sprite.
     STA.W SpriteStatus,Y                      ; /
-    LDA.B #$D0
+    LDA.B #$D0                                ; Sprite Y speed on spawn.
     STA.W SpriteYSpeed,Y
-    LDA.B #$05
+    LDA.B #$05                                ; Sprite X speed on spawn.
     STA.W SpriteXSpeed,Y
-    LDA.B #$20
+    LDA.B #$20                                ; Wait time until Mario can collect it.
     STA.W SpriteMisc154C,Y
-    LDA.B #!SFX_ITEMGOAL
+    LDA.B #!SFX_ITEMGOAL                      ; "Goal item" SFX
     STA.W SPCIO0                              ; / Play sound effect
     LDX.B #$03
 CODE_00FB84:
@@ -14259,7 +15393,10 @@ LvlEndSmokeTiles:
     db $66,$64,$62,$60,$E8,$EA,$EC,$EA
 
 LvlEndSprCoins:
-    PHB
+; Unused. Corresponds to the beta coin sprites (see: https://tcrf.net/images/e/e2/SMWObjectsEarly.png )
+; Misc RAM usage:
+; $1540 - Timer for how long the coin has the form of a cloud before actually hopping into the air.
+    PHB                                       ; Routine to handle sprites turned into a coin at level end (sprite status 6).
     PHK
     PLB
     JSR LvlEndSprCoinsRt
@@ -14305,7 +15442,7 @@ CODE_00FBF0:
     LDA.B SpriteYSpeed,X
     CMP.B #$20
     BMI CODE_00FC1E
-    JSL CODE_05B34A
+    JSL CODE_05B34A                           ; Give Mario a coin.
     LDA.W SilverCoinsCollected
     CMP.B #$0D
     BCC +
@@ -14320,13 +15457,13 @@ CODE_00FC1E:
     JSL CoinSprGfx
     RTS
 
-    LDY.B #$0B                                ; \ Unreachable instructions
+    LDY.B #$0B                                ; \ Unreachable instructions; Unused code to make a running Yoshi at the left edge of the screen.
 ADDR_00FC25:
     LDA.W SpriteStatus,Y                      ; / Status = Carried
     CMP.B #$08
     BNE ADDR_00FC73
     LDA.W SpriteNumber,Y
-    CMP.B #$35
+    CMP.B #$35                                ; Find a living Yoshi, make him green, and remove wings.
     BNE ADDR_00FC73
     LDA.B #$01
     STA.W CarryYoshiThruLvls
@@ -14335,14 +15472,14 @@ ADDR_00FC25:
     AND.B #$F1
     ORA.B #$0A
     STA.W SpriteOBJAttribute,Y
-    LDA.W PlayerRidingYoshi
+    LDA.W PlayerRidingYoshi                   ; Return if the Yoshi is being riden.
     BNE +
     LDA.B Layer1XPos
     SEC
     SBC.B #$10
     STA.W SpriteXPosLow,Y
-    LDA.B Layer1XPos+1
-    SBC.B #$00
+    LDA.B Layer1XPos+1                        ; Position him just left of the screen,
+    SBC.B #$00                                ; at Mario's Y position.
     STA.W SpriteXPosHigh,Y
     LDA.B PlayerYPosNext
     STA.W SpriteYPosLow,Y
@@ -14350,7 +15487,7 @@ ADDR_00FC25:
     STA.W SpriteYPosHigh,Y
     LDA.B #$03
     STA.W SpriteTableC2,Y
-    LDA.B #$00
+    LDA.B #$00                                ; Spawn him running rightward.
     STA.W SpriteMisc157C,Y
     LDA.B #$10
     STA.W SpriteXSpeed,Y
@@ -14363,18 +15500,19 @@ ADDR_00FC73:
     RTL
 
 CODE_00FC7A:
-    LDA.B #!SFX_YOSHIDRUMON
+; Routine to spawn Mario on Yoshi after going to a new room.
+    LDA.B #!SFX_YOSHIDRUMON                   ; SFX to turn on Yoshi drums on level entrance.
     STA.W SPCIO1                              ; / Play sound effect
     LDX.B #$00
-    LDA.W DisableBonusSprite
+    LDA.W DisableBonusSprite                  ; Use slot 0 if in Bonus Game (?).
     BNE +
     LDX.B #$05
-    LDA.W SpriteMemorySetting
+    LDA.W SpriteMemorySetting                 ; Use slot 5 if sprite memory setting is 0A (for Wiggler?).
     CMP.B #$0A
     BEQ +
     JSL FindFreeSprSlot                       ; \ X = First free sprite slot, #$03 if none free
-    TYX                                       ; |
-    BPL +                                     ; |
+    TYX                                       ; |; Find an empty slot.
+    BPL +                                     ; |; Use slot 3 if no slots available.
     LDX.B #$03                                ; /
   + LDA.B #$08                                ; \ Status = Normal
     STA.W SpriteStatus,X                      ; /
@@ -14384,7 +15522,7 @@ CODE_00FC7A:
     STA.B SpriteXPosLow,X                     ; |
     LDA.B PlayerXPosNext+1                    ; |
     STA.W SpriteXPosHigh,X                    ; /
-    LDA.B PlayerYPosNext                      ; \ Yoshi's Y position = Mario Y position - #$10
+    LDA.B PlayerYPosNext                      ; \ Yoshi's Y position = Mario Y position - #$10; Spawn a Yoshi in the slot at Mario's position.
     SEC                                       ; | Mario Y position = Mario Y position - #$10
     SBC.B #$10                                ; |
     STA.B PlayerYPosNext                      ; |
@@ -14394,9 +15532,9 @@ CODE_00FC7A:
     STA.B PlayerYPosNext+1                    ; |
     STA.W SpriteYPosHigh,X                    ; /
     JSL InitSpriteTables                      ; Reset sprite tables
-    LDA.B #$04
+    LDA.B #$04                                ; Prevent showing a water splash on spawn.
     STA.W SpriteMisc1FE2,X
-    LDA.W YoshiColor                          ; \ Set Yoshi palette
+    LDA.W YoshiColor                          ; \ Set Yoshi palette; Store the palette of the current player's Yoshi to the YXPPCCCT.
     STA.W SpriteOBJAttribute,X                ; /
     LDA.W YoshiHeavenFlag
     BEQ +
@@ -14432,19 +15570,19 @@ CODE_00FCF5:
     RTL
 
 CODE_00FD08:
-    LDY.B #$3F
+    LDY.B #$3F                                ; Subroutine to handle Mario's water bubbles.
     LDA.B byetudlrHold
-    AND.B #$83
+    AND.B #$83                                ; Return if sprites frozen, or not a frame to spawn.
     BNE +
-    LDY.B #$7F
-  + TYA
+    LDY.B #$7F                                ; Bubbles spawn every 0x80 frames normally,
+  + TYA                                       ; or every 0x40 frames with A/B/left/right held.
     AND.B EffFrame
     ORA.B SpriteLock
     BNE Return00FD23
     LDX.B #$07                                ; \ Find a free extended sprite slot
 CODE_00FD1B:
     LDA.W ExtSpriteNumber,X                   ; |
-    BEQ CODE_00FD26                           ; |
+    BEQ CODE_00FD26                           ; |; Find an empty extended sprite slot, and return if none found.
     DEX                                       ; |
     BPL CODE_00FD1B                           ; |
 Return00FD23:
@@ -14455,34 +15593,36 @@ DATA_00FD24:
     db $02,$0A
 
 CODE_00FD26:
-    LDA.B #$12                                ; \ Extended sprite = Water buble
+; X offsets for Mario's water bubble based on the direction he's facing.
+; Extended sprite slot found.
+    LDA.B #$12                                ; \ Extended sprite = Water buble; Extended sprite that Mario "breathes" in water (bubble).
     STA.W ExtSpriteNumber,X                   ; /
     LDY.B PlayerDirection
     LDA.B PlayerXPosNext
     CLC
-    ADC.W DATA_00FD24,Y
+    ADC.W DATA_00FD24,Y                       ; Set spawn X position based on the direction Mario is fasing.
     STA.W ExtSpriteXPosLow,X
     LDA.B PlayerXPosNext+1
     ADC.B #$00
     STA.W ExtSpriteXPosHigh,X
     LDA.B Powerup
     BEQ CODE_00FD47
-    LDA.B #$04
+    LDA.B #$04                                ; Y offset for the bubble when big.
     LDY.B PlayerIsDucking
     BEQ +
 CODE_00FD47:
-    LDA.B #$0C
+    LDA.B #$0C                                ; Y offset for the bubble when small or ducking.
   + CLC
     ADC.B PlayerYPosNext
     STA.W ExtSpriteYPosLow,X
     LDA.B PlayerYPosNext+1
     ADC.B #$00
     STA.W ExtSpriteYPosHigh,X
-    STZ.W ExtSpriteMisc176F,X
+    STZ.W ExtSpriteMisc176F,X                 ; Unused? Possibly this is supposed to be $1765 instead.
     RTS
 
 CODE_00FD5A:
-    LDA.B PlayerXPosScrRel+1
+    LDA.B PlayerXPosScrRel+1                  ; Coin glitter routine.
     ORA.B PlayerYPosScrRel+1
     BNE Return00FD6A
     LDY.B #$03
@@ -14527,12 +15667,16 @@ DATA_00FDA1:
     db $00,$FF,$00,$00
 
 CODE_00FDA5:
-    LDA.B PlayerInAir
+; Low bytes of the Y offset for water splash sprites when jumping out of water.
+; Ordered [small, big, small+Yoshi, big+Yoshi]
+; High bytes of the Y offset for water splash sprites when jumping out of water.
+    LDA.B PlayerInAir                         ; Routine to spawn a splash sprite when Mario enters or jumps out of water.
     BEQ CODE_00FDB3
     LDY.B #$0B
 CODE_00FDAB:
-    LDA.W MinExtSpriteNumber,Y
-    BEQ CODE_00FDB4
+; Find an empty minor extended sprite slot. Use slot 0 if none found.
+    LDA.W MinExtSpriteNumber,Y                ; Curiously, if 'on the ground', the game doesn't set Y correctly?
+    BEQ CODE_00FDB4                           ; Not sure if it's even possible to run this routine with that.
     DEY
     BPL CODE_00FDAB
 CODE_00FDB3:
@@ -14542,8 +15686,9 @@ CODE_00FDB4:
     LDX.B #$00
     LDA.B Powerup
     BEQ +
-    INX
-  + LDA.W PlayerRidingYoshi
+    INX                                       ; Get X value; start with 0, and:
+; Add 1 if big
+  + LDA.W PlayerRidingYoshi                   ; Add 2 if riding Yoshi
     BEQ +
     INX
     INX
@@ -14552,7 +15697,7 @@ CODE_00FDB4:
     ADC.W DATA_00FD9D,X
     PHP
     AND.B #$F0
-    CLC
+    CLC                                       ; Set Y position of the splash at the surface of the water.
     ADC.B #$03
     STA.W MinExtSpriteYPosLow,Y
     LDA.B PlayerYPosNext+1
@@ -14562,28 +15707,28 @@ CODE_00FDB4:
     STA.W MinExtSpriteYPosHigh,Y
     PLX
     LDA.B PlayerXPosNext
-    STA.W MinExtSpriteXPosLow,Y
+    STA.W MinExtSpriteXPosLow,Y               ; Set X position at Mario.
     LDA.B PlayerXPosNext+1
     STA.W MinExtSpriteXPosHigh,Y
-    LDA.B #$07
+    LDA.B #$07                                ; Set sprite ID as the water splash.
     STA.W MinExtSpriteNumber,Y
-    LDA.B #$00
+    LDA.B #$00                                ; Clear splash timer.
     STA.W MinExtSpriteTimer,Y
-    LDA.B PlayerYSpeed+1
+    LDA.B PlayerYSpeed+1                      ; Return if Mario is rising (i.e. continue if Mario is entering the water).
     BMI Return00FE0D
-    STZ.B PlayerYSpeed+1
+    STZ.B PlayerYSpeed+1                      ; Clear Mario's Y speed.
     LDY.B PlayerInAir
-    BEQ +
+    BEQ +                                     ; If entering from the air, clear his X speed too.
     STZ.B PlayerXSpeed+1
-  + LDY.B #$03
-    LDA.B Powerup
+  + LDY.B #$03                                ; Mario just entered water. Spawn a bunch of water bubbles.
+    LDA.B Powerup                             ; Spawn up to 4 bubbles if Mario is big, and only 3 if small.
     BNE CODE_00FE05
     DEY
 CODE_00FE05:
     LDA.W ExtSpriteNumber,Y
-    BEQ CODE_00FE16
+    BEQ CODE_00FE16                           ; Find an empty extended sprite slot.
 CODE_00FE0A:
-    DEY
+    DEY                                       ; If found, branch to the below routine to spawn a water bubble.
     BPL CODE_00FE05
 Return00FE0D:
     RTS
@@ -14596,11 +15741,14 @@ DATA_00FE12:
     db $00,$04,$0A,$07
 
 CODE_00FE16:
-    LDA.B #$12                                ; \ Extended sprite = Water bubble
+; Y offsets for the water bubble spawned when Mario enters water. Indexed by sprite slot.
+; X offsets for the water bubble spawned when Mario enters water. Indexed by sprite slot.
+; Subroutine of the above water-splash routine to spawn a water bubble when Mario enters water.
+    LDA.B #$12                                ; \ Extended sprite = Water bubble; Set sprite ID as water bubble.
     STA.W ExtSpriteNumber,Y                   ; /
     TYA
     ASL A
-    ASL A
+    ASL A                                     ; Set initial movement timer based on the slot?
     ASL A
     ADC.B #$F7
     STA.W ExtSpriteMisc1765,Y
@@ -14609,19 +15757,19 @@ CODE_00FE16:
     STA.W ExtSpriteYPosLow,Y
     LDA.B PlayerYPosNext+1
     ADC.B #$00
-    STA.W ExtSpriteYPosHigh,Y
+    STA.W ExtSpriteYPosHigh,Y                 ; Spawn offset from Mario's position based on the slot.
     LDA.B PlayerXPosNext
     ADC.W DATA_00FE12,Y
     STA.W ExtSpriteXPosLow,Y
     LDA.B PlayerXPosNext+1
     ADC.B #$00
     STA.W ExtSpriteXPosHigh,Y
-    LDA.B #$00
+    LDA.B #$00                                ; Unused?
     STA.W ExtSpriteMisc176F,Y
-    JMP CODE_00FE0A
+    JMP CODE_00FE0A                           ; Loop for however many bubbles are left.
 
 CODE_00FE4A:
-    LDA.B TrueFrame
+    LDA.B TrueFrame                           ; Routine to show dust clouds when turning.
     AND.B #$03
     ORA.B PlayerInAir
     ORA.B PlayerXPosScrRel+1
@@ -14678,60 +15826,73 @@ DATA_00FEA2:
     db $08,$08,$0C,$0C,$14,$14
 
 ShootFireball:
-    LDX.B #$09                                ; \ Find a free fireball slot (08-09)
+; Initial fireball X speeds.
+; X offsets (lo) for spawning Mario's fireballs (L/R each).
+; Normal
+; On Yoshi
+; On Yoshi and ducking
+; X offsets (hi) for spawning Mario's fireballs (L/R each).
+; Normal
+; On Yoshi
+; On Yoshi and ducking
+; Y offsets for spawning Mario's fireballs.
+; Normal
+; On Yoshi
+; On Yoshi and ducking
+    LDX.B #$09                                ; \ Find a free fireball slot (08-09); Subroutine to spawn a fireball for Mario.
 CODE_00FEAA:
-    LDA.W ExtSpriteNumber,X                   ; |
+    LDA.W ExtSpriteNumber,X                   ; |; Find an empty extended sprite slot, among slots 8 and 9.
     BEQ CODE_00FEB5                           ; |
     DEX                                       ; |
-    CPX.B #$07                                ; |
+    CPX.B #$07                                ; |; Decrease this value to increase the number of fireballs Mario can shoot.
     BNE CODE_00FEAA                           ; |
     RTS                                       ; / Return if no free slots
 
 CODE_00FEB5:
-    LDA.B #!SFX_FIREBALL
+    LDA.B #!SFX_FIREBALL                      ; SFX for shooting a fireball.
     STA.W SPCIO3                              ; / Play sound effect
-    LDA.B #$0A
+    LDA.B #$0A                                ; How long Mario shows the "shot fireball" pose.
     STA.W ShootFireTimer
-    LDA.B #$05                                ; \ Extended sprite = Mario fireball
+    LDA.B #$05                                ; \ Extended sprite = Mario fireball; Extended sprite for the fireball.
     STA.W ExtSpriteNumber,X                   ; /
-    LDA.B #$30
+    LDA.B #$30                                ; Initial fireball Y speed.
     STA.W ExtSpriteYSpeed,X
     LDY.B PlayerDirection
-    LDA.W DATA_00FE94,Y
+    LDA.W DATA_00FE94,Y                       ; Set initial fireball X speed.
     STA.W ExtSpriteXSpeed,X
     LDA.W PlayerRidingYoshi
     BEQ +
-    INY
-    INY
+    INY                                       ; If on Yoshi, increase index to 2/3.
+    INY                                       ; If also ducking, increase index to 4/5.
     LDA.W PlayerDuckingOnYoshi
-    BEQ +
+    BEQ +                                     ; Note that these values normally aren't used since you can't shoot fireballs on Yoshi (see $00D087 for doing so).
     INY
     INY
   + LDA.B PlayerXPosNext
     CLC
     ADC.W DATA_00FE96,Y
-    STA.W ExtSpriteXPosLow,X
+    STA.W ExtSpriteXPosLow,X                  ; Set X position.
     LDA.B PlayerXPosNext+1
     ADC.W DATA_00FE9C,Y
     STA.W ExtSpriteXPosHigh,X
     LDA.B PlayerYPosNext
     CLC
     ADC.W DATA_00FEA2,Y
-    STA.W ExtSpriteYPosLow,X
+    STA.W ExtSpriteYPosLow,X                  ; Set Y position.
     LDA.B PlayerYPosNext+1
     ADC.B #$00
     STA.W ExtSpriteYPosHigh,X
-    LDA.W PlayerBehindNet
+    LDA.W PlayerBehindNet                     ; Put on the same layer as Mario.
     STA.W ExtSpritePriority,X
     RTS
 
 ADDR_00FF07:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Routine to move Mario with the flying cage sprite when he's on the floor of it.
     LDA.W Layer1DYPos
     AND.W #$FF00
     BPL +
     ORA.W #$00FF
-  + XBA
+  + XBA                                       ; Move Mario horizontally with the platform.
     CLC
     ADC.B PlayerXPosNext
     STA.B PlayerXPosNext
@@ -14739,7 +15900,7 @@ ADDR_00FF07:
     AND.W #$FF00
     BPL +
     ORA.W #$00FF
-  + XBA
+  + XBA                                       ; Move Mario vertically with the platform.
     EOR.W #$FFFF
     INC A
     CLC
@@ -14749,7 +15910,7 @@ ADDR_00FF07:
     RTL
 
 ADDR_00FF32:
-    LDA.W SpriteXPosHigh,X
+    LDA.W SpriteXPosHigh,X                    ; Routine to store the flying cage sprite's position to the Layer 3 position addresses.
     XBA
     LDA.B SpriteXPosLow,X
     REP #$20                                  ; A->16
@@ -14776,8 +15937,8 @@ ADDR_00FF32:
     RTL
 
 CODE_00FF61:
-    LDA.W SpriteXPosHigh,X
-    XBA
+    LDA.W SpriteXPosHigh,X                    ; Routine to store the Layer 3 Smash sprite's position to the Layer 3 position addresses.
+    XBA                                       ; Emulation IRQ and BRK vector
     LDA.B SpriteXPosLow,X
     REP #$20                                  ; A->16
     CMP.W #$FF00

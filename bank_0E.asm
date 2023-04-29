@@ -8,7 +8,7 @@ SPC700Engine:
     base SPCEngine
 
 APU_Start:
-    CLRP
+    CLRP                                      ; SPC upload data. $0EAED6 = Music bank 2 (level music)
     MOV X,#$CF
     MOV SP,X                                  ; set SP to (01)cf;
     MOV A,#$00
@@ -1947,7 +1947,7 @@ EchoFilters:
     db $7F,$00,$00,$00,$00,$00,$00,$00
 
 GetPitch:
-    MOV Y,#$00                                ; get pitch from note number in A (with octave correction) to YA;to YA
+    MOV Y,#$00                                ; get pitch from note number in A (with octave correction) to YA;to YA; More undocumented SPC data.
     ASL A
     MOV X,#$18
     DIV YA,X

@@ -22,7 +22,7 @@ DATA_048006:
     dw $B8A0,$B8B8,$B8D0,$B8E8
 
 CODE_048086:
-    REP #$30                                  ; AXY->16
+    REP #$30                                  ; AXY->16; Routine to handle animating the water on the overworld.
     STZ.B _3
     STZ.B _5
   - LDX.B _3
@@ -210,29 +210,32 @@ DATA_048231:
     db $01,$01,$03,$03,$03,$07,$07,$07
 
 GameMode_0E_Prim:
-    PHB
+; Max ranges for overworld scrolling when start is pressed.
+; Null, left, right, both
+; Null, down, up, both
+    PHB                                       ; Game mode 0E (overworld) primary routine.
     PHK
     PLB
     LDX.B #$01                                ; \ If player 1 pushes select...
 CODE_048246:
     LDA.W byetudlrP1Frame,X                   ; |
     AND.B #$20                                ; | ...disabled by BRA
-    BRA CODE_048261                           ; / Change to BEQ to enable debug code below
+    BRA CODE_048261                           ; / Change to BEQ to enable debug code below; [DEBUG: change BRA to BNE to cycle the Yoshi colors with select on the overworld]
 
     LDA.W SavedPlayerYoshi,X                  ; \ Unreachable
     INC A                                     ; | Debug: Change Yoshi color
     INC A                                     ; |
     CMP.B #$04                                ; |
     BCS +                                     ; |
-    LDA.B #$04                                ; |
-  + CMP.B #$0B                                ; |
+    LDA.B #$04                                ; |; Unused debug code.
+  + CMP.B #$0B                                ; |; Would cycle Yoshi's palette when select is pressed on the overworld.
     BCC +                                     ; |
     LDA.B #$00                                ; |
   + STA.W SavedPlayerYoshi,X                  ; /
 CODE_048261:
     DEX
     BPL CODE_048246
-    JSR CODE_0485A7
+    JSR CODE_0485A7                           ; Draw the overworld border.
     JSR OW_Tile_Animation
     LDA.W SwitchPalaceColor                   ; \ If "! blocks flying away color" is 0,
     BEQ +                                     ; / don't play the animation
@@ -525,21 +528,28 @@ DATA_0484D3:
     db $78,$00,$D8,$01,$D8,$01
 
 CODE_048509:
-    LDY.W PlayerTurnLvl                       ; \ Get current player's submap
+; Star warp/pipe source X-position (low byte) and submap (high byte).
+; For index information: http://pastebin.com/QvrbBPqg
+; Star warp/pipe source Y-position.
+; High bytes are unused.
+; Star warp/pipe destination X position.
+; High byte includes submap, shifted left one bit.
+; Star warp/pipe destination Y position.
+    LDY.W PlayerTurnLvl                       ; \ Get current player's submap; Star/pipe tile validation routine. Returns negative if not found.
     LDA.W OWPlayerSubmap,Y                    ; /
-    STA.B _1                                  ; Store it in $01
+    STA.B _1                                  ; Store it in $01; $01 = current player submap.
     STZ.B _0                                  ; Store x00 in $00
     REP #$20                                  ; A->16
     LDX.W PlayerTurnOW                        ; Set X to Current character*4
-    LDY.B #$34                                ; Set Y to x34
+    LDY.B #$34                                ; Set Y to x34; Number of stars/pipes to index, times 2.
 CODE_04851A:
     LDA.W DATA_048431,Y
     EOR.B _0
     CMP.W #$0200
     BCS CODE_048531
     CMP.W OWPlayerXPosPtr,X
-    BNE CODE_048531
-    LDA.W OWPlayerYPosPtr,X
+    BNE CODE_048531                           ; Check star/pipe position.
+    LDA.W OWPlayerYPosPtr,X                   ; If not the same as Mario's, move on to the next index.
     CMP.W DATA_048467,Y
     BEQ CODE_048535
 CODE_048531:
@@ -547,12 +557,12 @@ CODE_048531:
     DEY
     BPL CODE_04851A
 CODE_048535:
-    STY.W StarWarpIndex                       ; Store Y in "Warp destination"
+    STY.W StarWarpIndex                       ; Store Y in "Warp destination"; Store warp pointer.
     SEP #$20                                  ; A->8
     RTS
 
 CODE_04853B:
-    PHB
+    PHB                                       ; Code for storing destinations from warping via a star/pipe.
     PHK
     PLB
     REP #$20                                  ; A->16
@@ -562,7 +572,7 @@ CODE_04853B:
     PHA
     AND.W #$01FF
     STA.W OWPlayerXPos,X
-    LSR A
+    LSR A                                     ; Update destination X position.
     LSR A
     LSR A
     LSR A
@@ -570,13 +580,13 @@ CODE_04853B:
     LDA.W DATA_0484D3,Y
     STA.W OWPlayerYPos,X
     LSR A
-    LSR A
+    LSR A                                     ; Update destination Y position.
     LSR A
     LSR A
     STA.W OWPlayerYPosPtr,X
     PLA
     LSR A
-    XBA
+    XBA                                       ; Update destination submap.
     AND.W #$000F
     STA.W CurrentSubmap
     REP #$10                                  ; XY->16
@@ -586,7 +596,7 @@ CODE_04853B:
     RTL
 
 CODE_048576:
-    LDA.W OverworldProcess
+    LDA.W OverworldProcess                    ; Routine to handle various overworld processes.
     JSL ExecutePtrLong
 
     dl CODE_048EF1
@@ -604,29 +614,44 @@ CODE_048576:
     dl CODE_0498C6
 
 DrawOWBoarder_:
-    JSR CODE_04862E
+; Pointers to various overworld processes.
+; 00 - Fading submaps (via pipe/level), switch palace block animations.
+; 01 - Activate overworld events.
+; 02 - Level has been beaten and events have been run; prepare save prompt.
+; 03 - Standing still on a level tile.
+; 04 - Player is moving in a certain direction.
+; 05 - About to settle on a level tile.
+; 06 -   Fading out to 07.
+; 07 - Switching between Mario and Luigi.
+; 08 -   Fading in from 07.
+; 09 -   Follows up 08, returns to 03.
+; 0A - Switching between two submaps (via path tile).
+; 0B - Activate star warp.
+; 0C - Player intro march (first time OW entrance).
+; Subroutine to draw sprites to the overworld border.
+    JSR CODE_04862E                           ; Draw the overworld Mario?
 CODE_0485A7:
     REP #$20                                  ; A->16
-    LDA.W #$001E                              ; \ Mario X postion = #$001E
+    LDA.W #$001E                              ; \ Mario X postion = #$001E; X position of Mario on the overworld border.
     CLC                                       ; | (On overworld boarder)
     ADC.B Layer1XPos                          ; |
     STA.B PlayerXPosNext                      ; /
-    LDA.W #$0006                              ; \ Mario Y postion = #$0006
+    LDA.W #$0006                              ; \ Mario Y postion = #$0006; Y position of Mario on the overworld border.
     CLC                                       ; | (On overworld boarder)
     ADC.B Layer1YPos                          ; |
     STA.B PlayerYPosNext                      ; /
     SEP #$20                                  ; A->8
-    LDA.B #$08
+    LDA.B #$08                                ; "X speed" that Mario walks with on the overworld border.
     STA.W PlayerXSpeed+1
     PHB
     LDA.B #$00
     PHA
-    PLB
+    PLB                                       ; Animate Mario (and his cape).
     JSL CODE_00CEB1
     PLB
-    LDA.B #$03
+    LDA.B #$03                                ; Set flag to send Mario behind most other sprites?
     STA.W PlayerBehindNet
-    JSL DrawMarioAndYoshi
+    JSL DrawMarioAndYoshi                     ; Draw Mario/Yoshi.
     LDA.B #$06
     STA.W PlayerGfxTileCount
     LDA.W PlayerAniTimer
@@ -635,9 +660,9 @@ CODE_0485A7:
   + LDA.W CapeAniTimer
     BEQ +
     DEC.W CapeAniTimer
-  + LDA.B #$18
+  + LDA.B #$18                                ; X position of the first row of the BG behind Mario's overworld sprite.
     STA.B _0
-    LDA.B #$07
+    LDA.B #$07                                ; Y position of the first row of the BG behind Mario's overworld sprite.
     STA.B _1
     LDY.B #$00
     TYX
@@ -645,7 +670,7 @@ CODE_0485F3:
     LDA.B _0
     STA.W OAMTileXPos,X
     CLC
-    ADC.B #$08
+    ADC.B #$08                                ; Draw the border BG behind the player sprite of Mario on the overworld.
     STA.B _0
     LDA.B _1
     STA.W OAMTileYPos,X
@@ -662,9 +687,9 @@ CODE_0485F3:
     TYA
     AND.B #$03
     BNE +
-    LDA.B #$18
+    LDA.B #$18                                ; X position of rows 2+ of the the BG behind Mario's overworld sprite.
     STA.B _0
-    LDA.B _1
+    LDA.B _1                                  ; Loop to the next row of the BG.
     CLC
     ADC.B #$08
     STA.B _1
@@ -677,57 +702,57 @@ CODE_0485F3:
     RTS
 
 CODE_04862E:
-    REP #$30                                  ; AXY->16
-    LDX.W PlayerTurnOW                        ; X = player x 4
+    REP #$30                                  ; AXY->16; Subroutine to ??? (draw overworld player sprites?)
+    LDX.W PlayerTurnOW                        ; X = player x 4; Get onscreen X/Y position to place the current player at.
     LDA.W OWPlayerXPos,X                      ; A = player X-pos on OW
     SEC
-    SBC.B Layer1XPos                          ; A = X-pos on screen
-    CMP.W #$0100
+    SBC.B Layer1XPos                          ; A = X-pos on screen; $00 = 16-bit onscreen X position of current player
+    CMP.W #$0100                              ; $08 = 16-bit onscreen X position of current player (copy)
     BCS CODE_04864D                           ; \ if < #$0100
-    STA.B _0                                  ; | $00 = X-pos on screen
+    STA.B _0                                  ; | $00 = X-pos on screen; If horizontally offscreen, set onscreen Y position to F0.
     STA.B _8                                  ; | $08 = X-pos on screen
     LDA.W OWPlayerYPos,X                      ; | A = player Y-pos on OW
     SEC                                       ; |
-    SBC.B Layer1YPos                          ; | A = Y-pos on screen
-    CMP.W #$0100                              ; |
+    SBC.B Layer1YPos                          ; | A = Y-pos on screen; $02 = 16-bit onscreen Y position of current player
+    CMP.W #$0100                              ; |; $0A = 16-bit onscreen Y position of current player (copy)
     BCC +                                     ; /
 CODE_04864D:
-    LDA.W #$00F0                              ; \
+    LDA.W #$00F0                              ; \; If vertically offscreen, set onscreen Y position to F0.
   + STA.B _2                                  ; | $02 = Y-pos on screen
     STA.B _A                                  ; / $0A = Y-pos on screen
     TXA                                       ; A = player x 4
-    EOR.W #$0004                              ; A = other player x 4
+    EOR.W #$0004                              ; A = other player x 4; Get onscreen X/Y position to place the other player at.
     TAX                                       ; X = other player x 4
     LDA.W OWPlayerXPos,X                      ; \
     SEC                                       ; | (same as above, but for luigi)
-    SBC.B Layer1XPos                          ; |
-    CMP.W #$0100                              ; |
+    SBC.B Layer1XPos                          ; |; $04 = 16-bit onscreen X position of other player
+    CMP.W #$0100                              ; |; $0C = 16-bit onscreen X position of other player (copy)
     BCS CODE_048673                           ; |
-    STA.B _4                                  ; | $04 = X-pos on screen
+    STA.B _4                                  ; | $04 = X-pos on screen; If horizontally offscreen, set onscreen Y position to F0.
     STA.B _C                                  ; | $0C = X-pos on screen
     LDA.W OWPlayerYPos,X                      ; |
     SEC                                       ; |
-    SBC.B Layer1YPos                          ; |
-    CMP.W #$0100                              ; |
+    SBC.B Layer1YPos                          ; |; $06 = 16-bit onscreen Y position of other player
+    CMP.W #$0100                              ; |; $0E = 16-bit onscreen Y position of other player (copy)
     BCC +                                     ; |
 CODE_048673:
-    LDA.W #$00F0                              ; |
+    LDA.W #$00F0                              ; |; If vertically offscreen, set onscreen Y position to F0.
   + STA.B _6                                  ; | $06 = Y-pos on screen
     STA.B _E                                  ; / $0E = Y-pos on screen
     SEP #$30                                  ; AXY->8
     LDA.B _0
     SEC
-    SBC.B #$08                                ; subtract 8 from 1P X-pos
-    STA.B _0                                  ; $00 = 1P X-pos on screen
-    LDA.B _2
+    SBC.B #$08                                ; subtract 8 from 1P X-pos; Offset the X/Y position of the current player.
+    STA.B _0                                  ; $00 = 1P X-pos on screen; $00 = 8-bit onscreen X position to draw current player at
+    LDA.B _2                                  ; $01 = 8-bit onscreen Y position to draw current player at
     SEC
     SBC.B #$09                                ; subtract 9 from 1P Y-pos
     STA.B _1                                  ; $01 = 1P Y-pos on screen
     LDA.B _4
     SEC
-    SBC.B #$08                                ; subtract 8 from 2P X-pos
-    STA.B _2                                  ; $02 = 2P X-pos on screen
-    LDA.B _6
+    SBC.B #$08                                ; subtract 8 from 2P X-pos; Offset the X/Y position of the other player.
+    STA.B _2                                  ; $02 = 2P X-pos on screen; $02 = 8-bit onscreen X position to draw other player at
+    LDA.B _6                                  ; $03 = 8-bit onscreen Y position to draw other player at
     SEC
     SBC.B #$09                                ; subtract 9 from 2P Y-pos
     STA.B _3                                  ; $03 = 2P Y-pos on screen
@@ -742,8 +767,8 @@ CODE_048673:
     LDA.W PlayerTurnOW                        ; A = player x 4
     LSR A                                     ; A = player x 2
     TAY                                       ; Y = player x 2
-    LDA.W OWPlayerAnimation,Y                 ; A = player OW animation type
-    CMP.B #$12
+    LDA.W OWPlayerAnimation,Y                 ; A = player OW animation type; If the current player is performing any animation out of water (i.e. on land),
+    CMP.B #$12                                ; offset his position.
     BEQ CODE_0486C5                           ; skip if enter level in water animation
     CMP.B #$07
     BCC CODE_0486BC                           ; don't skip if moving on land
@@ -752,20 +777,20 @@ CODE_048673:
 CODE_0486BC:
     LDA.B GraphicsCompPtr+1
     SEC
-    SBC.B #$05                                ; subtract 5 from Y-pos if on land
+    SBC.B #$05                                ; subtract 5 from Y-pos if on land; Offset of the current player's Y position on land (change with $048734).
     STA.B GraphicsCompPtr+1                   ; $8B = 1P Y-pos on screen
     STA.B _7                                  ; $07 = 1P Y-pos on screen
 CODE_0486C5:
     REP #$30                                  ; AXY->16
     LDA.W PlayerTurnOW                        ; A = player x 4
     XBA                                       ; A = player x #$400
-    LSR A                                     ; A = player x #$200
+    LSR A                                     ; A = player x #$200; Draw the current player's halo, if applicable.
     STA.B _4                                  ; $04 = player x #$200
     LDX.W #$0000                              ; X = #$0000
     JSR CODE_048789                           ; draw halo if out of lives
     LDA.W PlayerTurnOW                        ; A = player x 4
     LSR A                                     ; A = player x 2
-    TAY                                       ; Y = player x 2
+    TAY                                       ; Y = player x 2; Draw the current player's overworld sprite.
     LDX.W #$0000                              ; X = #$0000
     JSR CODE_04894F
     SEP #$30                                  ; AXY->8
@@ -799,14 +824,14 @@ CODE_0486C5:
     LDA.W OWPlayerAnimation,Y                 ; A = other player OW animation type
     CMP.B #$12
     BEQ CODE_048739                           ; skip if enter level in water animation
-    CMP.B #$07
-    BCC CODE_048730                           ; don't skip if moving on land
+    CMP.B #$07                                ; If the other player is performing any animation out of water (i.e. on land),
+    BCC CODE_048730                           ; don't skip if moving on land; offset his position.
     CMP.B #$0F
     BCC CODE_048739                           ; skip if moving in water
 CODE_048730:
     LDA.B GraphicsCompPtr+1
     SEC
-    SBC.B #$05                                ; subtract 5 from Y-pos if on land
+    SBC.B #$05                                ; subtract 5 from Y-pos if on land; Offset of the other player's Y position on land (change with $0486C0).
     STA.B GraphicsCompPtr+1                   ; $8B = 2P Y-pos on screen
     STA.B _7                                  ; $07 = 2P Y-pos on screen
 CODE_048739:
@@ -822,12 +847,12 @@ CODE_048739:
     BCS CODE_048786                           ; skip if 2P is offscreen in the Y direction
     LDA.B _4                                  ; A = player x #$200
     EOR.W #$0200                              ; A = other player x #$200
-    STA.B _4                                  ; $04 = other player x #$200
+    STA.B _4                                  ; $04 = other player x #$200; Draw the other player's halo, if applicable.
     LDX.W #$0020                              ; X = #$0020
     JSR CODE_048789                           ; draw halo if out of lives
     LDA.W PlayerTurnOW                        ; A = player x 4
     LSR A                                     ; A = player x 2
-    EOR.W #$0002                              ; A = other player x 2
+    EOR.W #$0002                              ; A = other player x 2; Draw the other player's overworld sprite.
     TAY                                       ; Y = other player x 2
     LDX.W #$0020                              ; X = #$0020
     JSR CODE_04894F
@@ -835,7 +860,7 @@ CODE_048739:
     STZ.W OAMTileSize+$2F                     ; \
     STZ.W OAMTileSize+$30                     ; | make OAM tiles 8x8
     STZ.W OAMTileSize+$31                     ; |
-    STZ.W OAMTileSize+$32                     ; |
+    STZ.W OAMTileSize+$32                     ; |; Set the sprite tile sizes to 8x8.
     STZ.W OAMTileSize+$33                     ; |
     STZ.W OAMTileSize+$34                     ; |
     STZ.W OAMTileSize+$35                     ; |
@@ -845,7 +870,7 @@ CODE_048786:
     RTS
 
 CODE_048789:
-    LDA.B GraphicsCompPtr                     ; A = Y-pos on screen | X-pos on screen
+    LDA.B GraphicsCompPtr                     ; A = Y-pos on screen | X-pos on screen; Subroutine to handle drawing the player's halo, if applicable.
     PHA
     PHX                                       ; X = player x #$20
     LDA.B _4                                  ; A = player x #$200
@@ -853,26 +878,26 @@ CODE_048789:
     LSR A                                     ; A = player
     TAX                                       ; X = player
     LDA.W SavedPlayerLives-1,X                ; A = player lives | junk
-    PLX                                       ; X = player x #$20
+    PLX                                       ; X = player x #$20; Return if the player is not out of lives.
     AND.W #$FF00                              ; A = player lives | #$00
     BPL +                                     ; skip if player lives positive
     SEP #$20                                  ; A->8
     LDA.B GraphicsCompPtr
-    STA.W OAMTileXPos+$B4,X                   ; OAM X-pos of 1st halo tile
+    STA.W OAMTileXPos+$B4,X                   ; OAM X-pos of 1st halo tile; Draw Mario's halo.
     CLC
     ADC.B #$08
     STA.W OAMTileXPos+$B8,X                   ; OAM X-pos of 2nd halo tile
     LDA.B GraphicsCompPtr+1
     CLC
-    ADC.B #$F9
+    ADC.B #$F9                                ; Y offset of the halo from Mario's position.
     STA.W OAMTileYPos+$B4,X                   ; OAM Y-pos of 1st halo tile
     STA.W OAMTileYPos+$B8,X                   ; OAM Y-pos of 2nd halo tile
-    LDA.B #$7C
+    LDA.B #$7C                                ; Tile to use for Mario's halo on the OW.
     STA.W OAMTileNo+$B4,X                     ; OAM tile number of 1st halo tile
     STA.W OAMTileNo+$B8,X                     ; OAM tile number of 2nd halo tile
-    LDA.B #$20
+    LDA.B #$20                                ; Halo (left half) YXPPCCCT properties.
     STA.W OAMTileAttr+$B4,X                   ; OAM yxppccct of 1st halo tile
-    LDA.B #$60
+    LDA.B #$60                                ; Halo (right half) YXPPCCCT properties.
     STA.W OAMTileAttr+$B8,X                   ; OAM yxppccct of 2nd halo tile
     REP #$20                                  ; A->16
   + PLA                                       ; A = Y-pos on screen | X-pos on screen
@@ -933,19 +958,37 @@ OWWarpIndex:
     db $20,$60,$00,$40
 
 CODE_04894F:
-    SEP #$30                                  ; AXY->8
+; Tilemap for the Mario's overworld sprite animations. Two bytes per tile: tile, YXPPCCCT.
+; $0487CB: Upwards
+; $0487EB: Downwards
+; $04880B: Leftwards
+; $04882B: Rightwards
+; $04884B: Upwards (water)
+; $04886B: Downwards (water)
+; $04888B: Leftwards (water)
+; $0488AB: Rightwards (water)
+; $0488CB: Entering level
+; $0488EB: Entering level (water)
+; $04890B: Climbing (tile 41)
+; $04892B: Climbing
+; Indices to the above table for each of Mario's 4 directions.
+; Enter with:
+; $04 = 16-bit additional tile (low) + YXPPCCCT (high) value to add to each tile, for handling Luigi's palette.
+; $8A = 8-bit onscreen X position
+; $8B = 8-bit onscreen Y position
+    SEP #$30                                  ; AXY->8; Routine to draw Mario's overworld sprite.
     PHY                                       ; Y = player x 2
     TYA                                       ; A = player x 2
     LSR A                                     ; A = player
     TAY                                       ; Y = player
-    LDA.W SavedPlayerYoshi,Y                  ; A = player's yoshi color
+    LDA.W SavedPlayerYoshi,Y                  ; A = player's yoshi color; If not riding Yoshi, branch.
     BEQ +                                     ; branch if no yoshi
     STA.B _E                                  ; $0E = player's yoshi color
     STZ.B _F                                  ; $0F = #$00
     PLY                                       ; Y = player x 2
     JMP CODE_048CE6                           ; jump
 
-  + PLY                                       ; Y = player x 2
+  + PLY                                       ; Y = player x 2; Subroutine to draw Mario on the overworld when he's not riding Yoshi.
     REP #$30                                  ; AXY->16
     LDA.W OWPlayerAnimation,Y                 ; A = player OW animation type
     ASL A
@@ -979,7 +1022,7 @@ CODE_04898B:
     BNE CODE_0489A7                           ; skip if not on star warp
     LDA.B TrueFrame                           ; A = frame counter
     AND.W #$000C                              ; A = 0000 ff00 (f = frame counter bits)
-    LSR A
+    LSR A                                     ; Animate the spin for the star warps.
     LSR A                                     ; A = 2 LSB of frame counter / 4
     TAY                                       ; Y = 2 LSB of frame counter / 4
     LDA.W OWWarpIndex,Y                       ; A = index to use when using a star warp (overrides that complicated thing)
@@ -987,10 +1030,10 @@ CODE_04898B:
     TAY                                       ; Y = index into tilemap table
 CODE_0489A7:
     REP #$20                                  ; A->16
-    LDA.B GraphicsCompPtr                     ; A = Y-pos on screen | X-pos on screen
+    LDA.B GraphicsCompPtr                     ; A = Y-pos on screen | X-pos on screen; Set X/Y position for the tile.
     STA.W OAMTileXPos+$9C,X                   ; OAM y-pos and x-pos for tile
     LDA.W OWPlayerTiles,Y                     ; get tile | yxppccct
-    CLC
+    CLC                                       ; Set tile/YXPPCCCT to use for the overworld Mario/Luigi.
     ADC.B _4                                  ; add player x #$200 (increment palette of tile by 1)
     STA.W OAMTileNo+$9C,X                     ; OAM tile and yxppccct for tile
     SEP #$20                                  ; A->8
@@ -1001,7 +1044,7 @@ CODE_0489A7:
     INY
     INY                                       ; increment index to tilemap table
     LDA.B GraphicsCompPtr
-    CLC
+    CLC                                       ; Move to next tile.
     ADC.B #$08                                ; \
     STA.B GraphicsCompPtr                     ; | update X and Y position of tile
     DEC.B GraphicsCompPtr+2                   ; | (zig zag pattern)
@@ -1011,7 +1054,7 @@ CODE_0489A7:
     LDA.B _6                                  ; |
     STA.B GraphicsCompPtr                     ; |
     LDA.B GraphicsCompPtr+1                   ; |
-    CLC                                       ; |
+    CLC                                       ; |; Move down a row.
     ADC.B #$08                                ; |
     STA.B GraphicsCompPtr+1                   ; /
   + LDA.B GraphicsCompPtr+2
@@ -1122,7 +1165,47 @@ DATA_048CDE:
     db $00,$00,$00,$02,$00,$04,$00,$06
 
 CODE_048CE6:
-    LDA.B #$07
+; Tilemap for Mario's overworld sprite animations, when on Yoshi. Even lines are Mario, odd lines are Yoshi.
+; $0489DE: Upwards
+; $0489FE: Downwards
+; $048A1E: Leftwards
+; $048A3E: Rightwards
+; $048A5E: Upwards (water)
+; $048A7E: Downwards (water)
+; $048A9E: Leftwards (water)
+; $048ABE: Rightwards (water)
+; $048ADE: Entering level
+; $048AFE: Entering level (water)
+; $048B1E: Climbing (tile 41)
+; $048B3E: Climbing
+; X position offsets for Mario during each of the above animations. 16 bytes per animation, 2 bytes per frame.
+; $048B5E: Upwards
+; $048B6E: Downwards
+; $048B7E: Leftwards
+; $048B8E: Rightwards
+; $048B9E: Upwards (water)
+; $048BAE: Downwards (water)
+; $048BBE: Leftwards (water)
+; $048BCE: Rightwards (water)
+; $048BDE: Entering level
+; $048BEE: Entering level (water)
+; $048BFE: Climbing (tile 41)
+; $048C0E: Climbing
+; Y position offsets for Mario during each of the above animations. 16 bytes per animation, 2 bytes per frame.
+; $048B5E: Upwards
+; $048B6E: Downwards
+; $048B7E: Leftwards
+; $048B8E: Rightwards
+; $048B9E: Upwards (water)
+; $048BAE: Downwards (water)
+; $048BBE: Leftwards (water)
+; $048BCE: Rightwards (water)
+; $048BDE: Entering level
+; $048BEE: Entering level (water)
+; $048BFE: Climbing (tile 41)
+; $048C0E: Climbing
+; Subroutine to draw the overworld Mario sprite when he's riding Yoshi.
+    LDA.B #$07                                ; Run the routine 8 times.
     STA.B GraphicsCompPtr+2                   ; $8C = #$07
     REP #$30                                  ; AXY->16
     LDA.W OWPlayerAnimation,Y
@@ -1140,7 +1223,7 @@ CODE_048CE6:
     CPX.W #$0000
     BNE CODE_048D1B                           ; skip if not 1P
     LDA.W OverworldProcess
-    CMP.W #$000B
+    CMP.W #$000B                              ; If running an overworld process other than the star warp, branch.
     BNE CODE_048D1B                           ; skip if not star warp
     LDA.B TrueFrame
     AND.W #$000C
@@ -1158,21 +1241,21 @@ CODE_048D1B:
     TAY                                       ; Y = index into tilemap table / 2
     SEP #$20                                  ; A->8
     LDA.W DATA_048B5E,Y                       ; X offset table for riding yoshi sprites
-    CLC
+    CLC                                       ; Store the X position for Mario's sprite to OAM, with the animation offset.
     ADC.B GraphicsCompPtr
     STA.W OAMTileXPos+$9C,X                   ; OAM X-position
     LDA.W DATA_048C1E,Y                       ; Y offset table for riding yoshi sprites
-    CLC
+    CLC                                       ; Store the Y position for Mario's sprite to OAM, with the animation offset.
     ADC.B GraphicsCompPtr+1
     STA.W OAMTileYPos+$9C,X                   ; OAM Y-position
     PLY
     REP #$20                                  ; A->16
     LDA.W DATA_0489DE,Y
-    CMP.W #$FFFF
+    CMP.W #$FFFF                              ; If an #$FFFF value is pulled as the animation tile (only in the upwards (water) pose), don't draw the bottom of Yoshi.
     BEQ CODE_048D67
     PHA
     AND.W #$0F00
-    CMP.W #$0200
+    CMP.W #$0200                              ; Branch if the animation is a Mario tile rather than a Yoshi tile.
     BNE CODE_048D5E
     STY.B _8
     LDA.B _E
@@ -1192,13 +1275,13 @@ CODE_048D5E:
     ADC.B _4
     PHA
   + PLA
-    STA.W OAMTileNo+$9C,X
+    STA.W OAMTileNo+$9C,X                     ; Store the tile and YXPPCCCT to OAM.
 CODE_048D67:
     SEP #$20                                  ; A->8
     INX
     INX
     INX
-    INX
+    INX                                       ; Move to the next tile.
     INY
     INY
     DEC.B GraphicsCompPtr+2
@@ -1221,17 +1304,19 @@ OverworldMusic:
     db !BGM_STARWORLD
 
 CODE_048D91:
-    PHB
+; Levels which should don't have the music cut out after beating their boss.
+; Music for the different overworld submaps after exiting a level. Should mirror $04DBC8.
+    PHB                                       ; Routine to prepare various things on overworld load (music, sprites/level name on border, animated tiles, player pose).
     PHK
     PLB
     STZ.W SwapOverworldMusic
-    LDA.B #$0F
+    LDA.B #$0F                                ; Unused...?
     STA.W Layer1ScrollXPosUpd
     LDX.B #$02
     LDA.W OWPlayerAnimation
     CMP.B #$12
     BEQ CODE_048DA9
-    AND.B #$08
+    AND.B #$08                                ; Get initial pose for Mario on the overworld.
     BEQ +
 CODE_048DA9:
     LDX.B #$0A
@@ -1240,29 +1325,29 @@ CODE_048DA9:
     LDA.W OWPlayerAnimation+2
     CMP.B #$12
     BEQ CODE_048DBB
-    AND.B #$08
+    AND.B #$08                                ; Get initial pose for Luigi on the overworld.
     BEQ +
 CODE_048DBB:
     LDX.B #$0A
   + STX.W OWPlayerAnimation+2
     SEP #$10                                  ; XY->8
-    JSR CODE_048E55
+    JSR CODE_048E55                           ; Initialize the level name and sprites on the overworld border, and animated tiles.
     REP #$30                                  ; AXY->16
     LDA.W OWLevelExitMode-1
     AND.W #$FF00
     BEQ CODE_048DDF
-    BMI CODE_048DDF
-    LDA.W TranslevelNo
+    BMI CODE_048DDF                           ; If level 018 (Sunken Ghost Ship) was just beaten,
+    LDA.W TranslevelNo                        ; don't clear the cutscene flag for whatever reason.
     AND.W #$00FF
     CMP.W #$0018
     BNE CODE_048DDF
     BRL CODE_048E34
 CODE_048DDF:
     LDA.W CutsceneID
-    AND.W #$00FF
+    AND.W #$00FF                              ; If a boss wasn't beaten, branch.
     BEQ CODE_048E38
     LDA.W CutsceneID
-    AND.W #$FF00
+    AND.W #$FF00                              ; Clear the cutscene flag.
     STA.W CutsceneID
 if ver_is_english(!_VER)                      ;\================ U, SS, E0, & E1 ==============
     SEP #$10                                  ;! XY->8
@@ -1278,7 +1363,7 @@ if ver_is_english(!_VER)                      ;\================ U, SS, E0, & E1
     LSR A                                     ;!
     LSR A                                     ;!
     LSR A                                     ;!
-    STA.B _2                                  ;!
+    STA.B _2                                  ;!; Check whether level has already been beaten. If so, always load the overworld music.
     TXA                                       ;!
     LSR A                                     ;!
     LSR A                                     ;!
@@ -1297,8 +1382,8 @@ endif                                         ;/================================
 CODE_048E25:
     LDA.W TranslevelNo
     AND.W #$00FF
-    CMP.W DATA_048D74,Y
-    BEQ CODE_048E38
+    CMP.W DATA_048D74,Y                       ; Check whether the overworld music should be loaded for this level.
+    BEQ CODE_048E38                           ; [change BEQ to BRA to prevent the overworld music from cutting out]
     DEY
     DEY
     BPL CODE_048E25
@@ -1310,7 +1395,7 @@ CODE_048E38:
     SEP #$30                                  ; AXY->8
     LDX.W PlayerTurnLvl
     LDA.W OWPlayerSubmap,X
-    TAX
+    TAX                                       ; Load overworld music for the current submap.
     LDA.W OverworldMusic,X
     STA.W SPCIO2                              ; / Change music
   + PLB
@@ -1324,14 +1409,14 @@ DATA_048E4F:
     db $C8,$01,$00,$00,$D8,$01
 
 CODE_048E55:
-    REP #$30                                  ; AXY->16
+    REP #$30                                  ; AXY->16; Subroutine to handle uploading the overworld border and animated tiles.
     LDA.W PlayerTurnLvl
     AND.W #$00FF
     ASL A
     ASL A
     STA.W PlayerTurnOW
     LDX.W PlayerTurnOW
-    LDA.W OWPlayerXPosPtr,X
+    LDA.W OWPlayerXPosPtr,X                   ; Get the index to the tile the current player is on (stored in $04).
     STA.B _0
     LDA.W OWPlayerYPosPtr,X
     STA.B _2
@@ -1344,7 +1429,7 @@ CODE_048E55:
     LDX.B _4
     LDA.L OWLayer1Translevel,X
     AND.W #$00FF
-    ASL A
+    ASL A                                     ; Write the name of the level Mario is on to the border.
     TAX
     LDA.W LevelNames,X
     STA.B _0
@@ -1352,13 +1437,13 @@ CODE_048E55:
     LDX.B _4
     BMI +
     CPX.W #$0800
-    BCS +
+    BCS +                                     ; Store tile number the player is on.
     LDA.L Map16TilesLow,X
     AND.W #$00FF
     STA.W OverworldLayer1Tile
   + SEP #$30                                  ; AXY->8
-    LDX.W EnterLevelAuto
-    BEQ CODE_048EE1
+    LDX.W EnterLevelAuto                      ; Skip down to just draw the border if Mario isn't being forced into a level by a Koopa Kid.
+    BEQ CODE_048EE1                           ; (unused, so basically always branch)
     BPL ADDR_048ED9
     TXA
     AND.B #$7F
@@ -1390,22 +1475,23 @@ ADDR_048ED9:
     BMI CODE_048EE1
     STZ.W OWSpriteNumber,X
 CODE_048EE1:
-    REP #$30                                  ; AXY->16
-    JSR OWMoveScroll
+    REP #$30                                  ; AXY->16; Not being forced into the level by a Koopa Kid.
+    JSR OWMoveScroll                          ; ???
     SEP #$30                                  ; AXY->8
-    JSR DrawOWBoarder_
-    JSR CODE_048086
-    JMP OW_Tile_Animation
+    JSR DrawOWBoarder_                        ; Draw the overworld border.
+    JSR CODE_048086                           ; Handle water animation.
+    JMP OW_Tile_Animation                     ; Handle other overworld tile animation.
 
 CODE_048EF1:
-    LDA.B #$08
+; Overworld process 00 - Overworld done loading, fade in.
+    LDA.B #$08                                ; Keep the game mode active for 8 frames.
     STA.W KeepModeActive
     LDA.W OWPlayerSubmap
     CMP.B #$01
     BNE CODE_048F13
     LDA.W OWPlayerXPos
     CMP.B #$68
-    BNE CODE_048F13
+    BNE CODE_048F13                           ; If Mario is on on Yoshi's House (at specific position: YI - 68,8E), skip to the intro march.
     LDA.W OWPlayerYPos
     CMP.B #$8E
     BNE CODE_048F13
@@ -1422,8 +1508,8 @@ CODE_048F13:
     LSR A
     STA.B _0
     LDA.W OWPlayerYPos,X
-    LSR A
-    LSR A
+    LSR A                                     ; Get the index to the tile that the current player is standing on.
+    LSR A                                     ; Stores to $04.
     LSR A
     LSR A
     STA.B _2
@@ -1434,36 +1520,36 @@ CODE_048F13:
     JSR OW_TilePos_Calc
     REP #$10                                  ; XY->16
     SEP #$20                                  ; A->8
-    LDA.W MidwayFlag
-    BEQ CODE_048F56
+    LDA.W MidwayFlag                          ; Skip the below code if the midway point hasn't been obtained or the level was beaten with no event (already beaten before).
+    BEQ CODE_048F56                           ; Branch further if the level was actually beaten.
     LDA.W OWLevelExitMode
-    BEQ CODE_048F56
+    BEQ CODE_048F56                           ; Essentially, the below only runs when Mario dies or start+selects after getting midpoint.
     BPL CODE_048F5F
     REP #$20                                  ; A->16
     LDX.B _4
     LDA.L OWLayer1Translevel,X
     AND.W #$00FF
-    TAX
+    TAX                                       ; Set the midway point flag for the level in RAM.
     LDA.W OWLevelTileSettings,X
     ORA.W #$0040
     STA.W OWLevelTileSettings,X
 CODE_048F56:
-    SEP #$20                                  ; A->8
-    LDA.B #$05
+    SEP #$20                                  ; A->8; Mario exited a level without activating events.
+    LDA.B #$05                                ; Move to process 05: about to settle on a level tile.
     STA.W OverworldProcess
     BRA CODE_048F7A
 
 CODE_048F5F:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Level is beaten.
     LDX.B _4
     LDA.L OWLayer1Translevel,X
     AND.W #$00FF
-    TAX
+    TAX                                       ; Set the "level beaten" flag and clear the midpoint flag for the level in RAM.
     LDA.W OWLevelTileSettings,X
     ORA.W #$0080
     AND.W #$FFBF
     STA.W OWLevelTileSettings,X
-    INC.W OverworldProcess
+    INC.W OverworldProcess                    ; Move to process 01: activating overworld events.
 CODE_048F7A:
     REP #$30                                  ; AXY->16
     JMP OWMoveScroll
@@ -1473,11 +1559,12 @@ DATA_048F7F:
     db $58,$59,$5D,$63,$77,$79,$7E,$80
 
 CODE_048F87:
-    JSR CODE_049903
+; List of level tiles that activate save prompts.
+    JSR CODE_049903                           ; Overworld process 02 - "Prepare" a saveprompt after a level is completed.
 if ver_is_console(!_VER)                      ;\================= J, U, E0, & E1 ==============
     LDX.B #$07                                ;!
 CODE_048F8C:                                  ;!
-    LDA.W OverworldLayer1Tile                 ;!
+    LDA.W OverworldLayer1Tile                 ;!; If not one of the level tiles that loads a save, don't save.
     CMP.W DATA_048F7F,X                       ;!
     BNE CODE_049000                           ;!
     LDX.B #$2C                                ;!
@@ -1522,7 +1609,7 @@ endif                                         ;/================================
     RTS
 
   + INC.W ShowSavePrompt
-    JSR CODE_049037
+    JSR CODE_049037                           ; Prepare the SRAM buffer for saving, if applicable.
     LDA.B #$02
     STA.W KeepModeActive
     LDA.B #$04
@@ -1569,15 +1656,15 @@ CODE_049003:
     RTS
 
 CODE_049037:
-    PHX
+    PHX                                       ; Subroutine to prepare the SRAM buffer for save prompts.
     PHY
     PHP
     SEP #$30                                  ; AXY->8
-    LDA.W ShowSavePrompt
+    LDA.W ShowSavePrompt                      ; Return if the "show save prompt" flag is clear.
     BEQ CODE_049054
 if ver_is_console(!_VER)                      ;\================= J, U, E0, & E1 ==============
     LDX.B #$5F                                ;!
-  - LDA.W OWLevelTileSettings,X               ;!
+  - LDA.W OWLevelTileSettings,X               ;!; Transfer RAM to the SRAM buffer.
     STA.W SaveDataBuffer,X                    ;!
     DEX                                       ;!
     BPL -                                     ;!
@@ -1717,17 +1804,60 @@ DATA_049118:
     db $08,$00,$04,$00,$02,$00,$01,$00
 
 CODE_049120:
-    STZ.W PlayerSwitching
-    LDY.W EnterLevelAuto
+; Increment/decrement table for various things.
+; Number of bits (-1) to shift in the level exit direction table for each exit. 0 = no shifts.
+; Note that the last two values here are, effectively, unused.
+; Directions to send the player after beating a level.
+; 00 = up, 02 = down, 04 = left, 06 = right.
+; List of no-auto-move levels.
+; List of levels that have hardcoded paths. #$FF indicates CI2's pipe.
+; DP1  <-> DP2
+; CI3  <-> CF
+; FoI2 <-> FoI4
+; CI2  <-> Pipe
+; FD   <-> Star
+; 16-bit X position of the pipe Chocolate Island 2's hardcoded path.
+; 16-bit Y position of the pipe Chocolate Island 2's hardcoded path.
+; List of Layer 1 tiles located along each hardcoded path.
+; 00 : DP2  -> DP1
+; 06 : DP1  -> DP2
+; 0C : CI3  -> CF
+; 10 : CF   -> CI3
+; 14 : FoI4 -> FoI2
+; 1A : FoI2 -> FoI4
+; 20 : CI2  -> Pipe
+; 2F : Pipe -> CI2
+; 3E : Star -> FD
+; 41 : FD   -> Star
+; Directions Mario's sprite will face for each Layer 1 tile in the hardcoded path. The first value is also the direction Mario has to press to move.
+; 00 : DP2  -> DP1
+; 06 : DP1  -> DP2
+; 0C : CI3  -> CF
+; 10 : CF   -> CI3
+; 14 : FoI4 -> FoI2
+; 1A : FoI2 -> FoI4
+; 20 : CI2  -> Pipe
+; 2F : Pipe -> CI2
+; 3E : Star -> FD
+; 41 : FD   -> Star
+; Hardcoded path starting offset for the above two tables, corresponding to the list at $049078.
+; DP1  <-> DP2
+; CI3  <-> CF
+; FoI2 <-> FoI4
+; CI2  <-> Pipe
+; FD   <-> Star
+; Unused AND table?
+    STZ.W PlayerSwitching                     ; Overworld process 03 - Standing still on a level tile. Handles levels/pipes/stars/etc.
+    LDY.W EnterLevelAuto                      ; Branch if Mario is being forced into a level tile by a Koopa Kid (unused).
     BMI OWPU_NotOnPipe
     LDA.W OWLevelExitMode
-    BMI CODE_049132
+    BMI CODE_049132                           ; If an event is activating, skip down.
     BEQ CODE_049132
     BRL CODE_0491E9
 CODE_049132:
     LDA.B byetudlrFrame
     AND.B #$20
-    BRA +                                     ; Change to BEQ to enable below debug code
+    BRA +                                     ; Change to BEQ to enable below debug code; [DEBUG: Change BRA to BEQ to warp to Star Road if select is pressed on Yoshi's House.]
 
     LDA.W OverworldLayer1Tile                 ; \ Unreachable
     BEQ CODE_049165                           ; | Debug: Warp to star road from Yoshi's house
@@ -1735,54 +1865,55 @@ CODE_049132:
     BEQ CODE_049165                           ; /
 if ver_is_english(!_VER)                      ;\=============== U, SS, E0, & E1 ===============
   + LDA.B axlr0000Hold                        ;! \
-    AND.B #$30                                ;! |If L and R aren't pressed,
+    AND.B #$30                                ;! |If L and R aren't pressed,; Button input to allow Mario to re-enter a castle (L+R).
     CMP.B #$30                                ;! |branch to OWPU_NoLR
     BNE +                                     ;! /
     LDA.W OverworldLayer1Tile                 ;! \
-    CMP.B #$81                                ;! |If Mario is standing on Destroyed Castle,
+    CMP.B #$81                                ;! |If Mario is standing on Destroyed Castle,; If Mario is on a destroyed castle tile, branch.
     BEQ OWPU_EnterLevel                       ;! / branch to OWPU_EnterLevel
 endif                                         ;/===============================================
   + LDA.B byetudlrFrame                       ; \
     ORA.B axlr0000Frame                       ; |If A, B, X or Y are pressed,
-    AND.B #$C0                                ; |branch to OWPU_ABXY
+    AND.B #$C0                                ; |branch to OWPU_ABXY; If the player isn't inputing A, B, X, or Y, skip all this code.
     BNE OWPU_ABXY                             ; |Otherwise,
     BRL CODE_0491E9                           ; / branch to $91E9
 OWPU_ABXY:
-    STZ.W SwapOverworldMusic
+    STZ.W SwapOverworldMusic                  ; A/B/X/Y pressed; decide what to do.
     LDA.W OverworldLayer1Tile                 ; \
-    CMP.B #$5F                                ; |If not standing on a star tile,
+    CMP.B #$5F                                ; |If not standing on a star tile,; If Mario is not on a star warp, branch.
     BNE OWPU_NotOnStar                        ; / branch to OWPU_NotOnStar
 CODE_049165:
     JSR CODE_048509
     BNE OWPU_IsOnPipeRTS
-    STZ.W StarWarpLaunchSpeed                 ; Set "Fly away" speed to 0
+    STZ.W StarWarpLaunchSpeed                 ; Set "Fly away" speed to 0; If Mario is on a valid star warp, warp him.
     STZ.W StarWarpLaunchTimer                 ; Set "Stay on ground" timer to 0 (31 = Fly away)
-    LDA.B #!SFX_FEATHER                       ; \ Star Road sound effect
+    LDA.B #!SFX_FEATHER                       ; \ Star Road sound effect; SFX for the Star Road warps.
     STA.W SPCIO0                              ; /
-    LDA.B #$0B                                ; \ Activate star warp
+    LDA.B #$0B                                ; \ Activate star warp; Engage star warp.
     STA.W OverworldProcess                    ; /
     JMP CODE_049E52
 
 OWPU_NotOnStar:
-    LDA.W OverworldLayer1Tile                 ; \
+    LDA.W OverworldLayer1Tile                 ; \; Mario is not using a star.
     CMP.B #$82                                ; |If standing on Pipe#1 (unused),
-    BEQ OWPU_IsOnPipe                         ; / branch to OWPU_IsOnPipe
+    BEQ OWPU_IsOnPipe                         ; / branch to OWPU_IsOnPipe; If Mario is not on a pipe tile, branch.
     CMP.B #$5B                                ; \ If not standing on Pipe#2,
     BNE OWPU_NotOnPipe                        ; / branch to OWPU_NotOnPipe
 OWPU_IsOnPipe:
     JSR CODE_048509
     BNE OWPU_IsOnPipeRTS
 CODE_04918D:
-    INC.W EnteringStarWarp
+    INC.W EnteringStarWarp                    ; If Mario is on a valid pipe, warp him.
     STZ.W OWLevelExitMode                     ; Set auto-walk to 0
-    LDA.B #$0B                                ; \ Fade to overworld
+    LDA.B #$0B                                ; \ Fade to overworld; Fade the overworld.
     STA.W GameMode                            ; /
 OWPU_IsOnPipeRTS:
     RTS
 
 OWPU_NotOnPipe:
-    CMP.B #$81                                ; \
-    BEQ CODE_0491E9                           ; |If standing on a tile >= (?) Destroyed Castle,
+; Mario is not using a pipe either.
+    CMP.B #$81                                ; \; Hijacked by Lunar Magic; goes to $03BA50.
+    BEQ CODE_0491E9                           ; |If standing on a tile >= (?) Destroyed Castle,; Branch if not a standard level tile.
     BCS CODE_0491E9                           ; / branch to $91E9
 OWPU_EnterLevel:
     LDA.W PlayerTurnOW                        ; \
@@ -1790,34 +1921,34 @@ OWPU_EnterLevel:
     AND.B #$02                                ; |change Luigi's animation in the following lines
     TAX                                       ; /
     LDY.B #$10                                ; \
-    LDA.W OWPlayerAnimation,X                 ; |
-    AND.B #$08                                ; |If Mario isn't swimming, use "raise hand" animation
+    LDA.W OWPlayerAnimation,X                 ; |; Set "entering level" animation frame.
+    AND.B #$08                                ; |If Mario isn't swimming, use "raise hand" animation; If swimming, use #$12. Else, #$10.
     BEQ +                                     ; |Otherwise, use "raise hand, swimming" animation
     LDY.B #$12                                ; |
   + TYA                                       ; |
     STA.W OWPlayerAnimation,X                 ; /
     LDX.W PlayerTurnLvl                       ; Get current character
-    LDA.W SavedPlayerCoins,X                  ; \ Get character's coins
+    LDA.W SavedPlayerCoins,X                  ; \ Get character's coins; Set current player's coin count.
     STA.W PlayerCoins                         ; /
-    LDA.W SavedPlayerLives,X                  ; \ Get character's lives
+    LDA.W SavedPlayerLives,X                  ; \ Get character's lives; Set current player's lives.
     STA.W PlayerLives                         ; /
-    LDA.W SavedPlayerPowerup,X                ; \ Get character's powerup
+    LDA.W SavedPlayerPowerup,X                ; \ Get character's powerup; Set current player's powerup.
     STA.B Powerup                             ; /
     LDA.W SavedPlayerYoshi,X                  ; \
-    STA.W CarryYoshiThruLvls                  ; |Get character's Yoshi color
+    STA.W CarryYoshiThruLvls                  ; |Get character's Yoshi color; Set current player's Yoshi color.
     STA.W YoshiColor                          ; |
     STA.W PlayerRidingYoshi                   ; /
-    LDA.W SavedPlayerItembox,X                ; \ Get character's reserved item
+    LDA.W SavedPlayerItembox,X                ; \ Get character's reserved item; Set current player's item box item.
     STA.W PlayerItembox                       ; /
-    LDA.B #$02                                ; \ Related to fade speed
+    LDA.B #$02                                ; \ Related to fade speed; Delay fadeout 2 frames.
     STA.W KeepModeActive                      ; /
-    LDA.B #!BGM_FADEOUT                       ; \ Music fade out
+    LDA.B #!BGM_FADEOUT                       ; \ Music fade out; Fade the music.
     STA.W SPCIO2                              ; /
     INC.W GameMode                            ; Fade to level
     RTS
 
 CODE_0491E9:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Player is not on a level tile or A/B/X/Y haven't been pressed on one.
     LDX.W PlayerTurnOW                        ; Get current character * 4
     LDA.W OWPlayerXPos,X                      ; Get character's X coordinate
     LSR A                                     ; \
@@ -1827,7 +1958,7 @@ CODE_0491E9:
     STA.B _0                                  ; \ Store in $00 and $1F1F,x
     STA.W OWPlayerXPosPtr,X                   ; /
     LDA.W OWPlayerYPos,X                      ; Get character's Y coordinate
-    LSR A                                     ; \
+    LSR A                                     ; \; Get the tile the player is on.
     LSR A                                     ; |Divide Y coordinate by 16
     LSR A                                     ; |
     LSR A                                     ; /
@@ -1839,7 +1970,7 @@ CODE_0491E9:
     TAX                                       ; /
     JSR OW_TilePos_Calc                       ; Calculate current tile pos
     SEP #$20                                  ; A->8
-    LDX.W OWLevelExitMode                     ; \ If auto-walk=0,
+    LDX.W OWLevelExitMode                     ; \ If auto-walk=0,; Branch if the level wasn't beaten with a normal/secret exit.
     BEQ OWPU_NotAutoWalk                      ; / branch to OWPU_NotAutoWalk
     DEX
     LDA.W DATA_049060,X
@@ -1855,7 +1986,7 @@ CODE_04922A:
     BNE CODE_04923B
     LDA.W #$0005
     STA.W OverworldProcess
-    JSR CODE_049037
+    JSR CODE_049037                           ; Prepare the SRAM buffer for saving, if applicable.
     BRL CODE_049411
 CODE_04923B:
     DEY
@@ -1877,18 +2008,18 @@ CODE_04924E:
     JMP CODE_0492BC
 
 OWPU_NotAutoWalk:
-    SEP #$30                                  ; AXY->8
+    SEP #$30                                  ; AXY->8; Handle walking to another level.
     STZ.W OWLevelExitMode                     ; Set auto-walk to 0
     LDA.B byetudlrFrame                       ; \
-    AND.B #$0F                                ; |If no dir button is pressed (one frame),
+    AND.B #$0F                                ; |If no dir button is pressed (one frame),; Branch if no directional input.
     BEQ CODE_04926E                           ; / branch to $926E
     LDX.W OverworldLayer1Tile                 ; \
-    CPX.B #$82                                ; |If standing on Pipe#2,
+    CPX.B #$82                                ; |If standing on Pipe#2,; Enable moving in any direction by default for pipes.
     BEQ CODE_0492AD                           ; |branch to $92AD
     BRA CODE_04928C                           ; / Otherwise, branch to $928C
 
 CODE_04926E:
-    DEC.W Layer1ScrollXPosUpd                 ; \ Decrease "Face walking dir" timer
+    DEC.W Layer1ScrollXPosUpd                 ; \ Decrease "Face walking dir" timer; No directional inputs pressed.
     BPL +                                     ; / If >= 0, branch to $9287
     STZ.W Layer1ScrollXPosUpd                 ; Set "Face walking dir" timer to 0
     LDA.W PlayerTurnOW                        ; \
@@ -1903,10 +2034,10 @@ CODE_04926E:
     JMP OWMoveScroll
 
 CODE_04928C:
-    REP #$30                                  ; AXY->16
+    REP #$30                                  ; AXY->16; Directional input pressed, check if this direction is enabled.
     AND.W #$00FF
     NOP
-    NOP
+    NOP                                       ; [change to JMP $92AF to enable walking on unrevealed paths]
     NOP
     PHA
     STZ.B _6
@@ -1914,14 +2045,14 @@ CODE_04928C:
     LDA.L OWLayer1Translevel,X
     AND.W #$00FF
     TAX
-    PLA
+    PLA                                       ; Skip if the direction is not enabled.
     AND.W OWLevelTileSettings,X
     AND.W #$000F
     BNE CODE_0492AD
     JMP CODE_049411
 
 CODE_0492AD:
-    REP #$30                                  ; AXY->16
+    REP #$30                                  ; AXY->16; Movement is enabled in the direction pressed.
     AND.W #$00FF
     LDY.W #$0006
 CODE_0492B5:
@@ -2134,13 +2265,17 @@ DATA_04944E:
     db $01,$00,$00,$01,$00,$01,$00
 
 CODE_04945D:
-    LDA.W PlayerSwitching
+; Speed of Mario on the overworld. First byte is walking, second is climbing.
+; Max range for overworld scrolling when walking. Two bytes per direction; left, top.
+; Max range for overworld scrolling when walking. Two bytes per direction; right, bottom.
+; Overworld process 04 - Player is moving in a certain direction.
+    LDA.W PlayerSwitching                     ; Branch if not currently switching between Mario/Luigi.
     BEQ +
-    LDA.B #$08
+    LDA.B #$08                                ; Switch to process 0x08: fading in from switching players.
     STA.W OverworldProcess
     RTS
 
-  + REP #$30                                  ; AXY->16
+  + REP #$30                                  ; AXY->16; Not switching players.
     LDA.W PlayerTurnOW
     CLC
     ADC.W #$0002
@@ -2148,10 +2283,10 @@ CODE_04945D:
     LDX.W #$0002
 CODE_049475:
     LDA.W OverworldDestXPos,Y
-    SEC
-    SBC.W OWPlayerXPos,Y
-    STA.B _0,X
-    BPL +
+    SEC                                       ; $00 = X displacement from previous frame
+    SBC.W OWPlayerXPos,Y                      ; $02 = Y displacement from previous frame
+    STA.B _0,X                                ; $04 = Absolute X displacement from previous frame
+    BPL +                                     ; $06 = Absolute Y displacement from previous frame
     EOR.W #$FFFF
     INC A
   + STA.B _4,X
@@ -2165,10 +2300,10 @@ CODE_049475:
     STA.B _A
     LDA.B _6
     STA.B _C
-    CMP.B _4
-    BCC +
+    CMP.B _4                                  ; $0A = copy of whichever $04/$06 is greater
+    BCC +                                     ; $0C = copy of whichever $04/$06 is smaller
     STA.B _A
-    LDA.B _4
+    LDA.B _4                                  ; $08 = #$FFFF if $04 is greater, #$0001 if smaller.
     STA.B _C
     LDY.W #$0001
   + STY.B _8
@@ -2187,17 +2322,17 @@ CODE_049475:
     NOP
     NOP
     NOP
-    REP #$20                                  ; A->16
-    LDA.W HW_RDMPY
-    STA.W HW_WRDIV
-    SEP #$20                                  ; A->8
+    REP #$20                                  ; A->16; If Mario's speed is non-zero:
+    LDA.W HW_RDMPY                            ; > Multiply base walking speed by 0x10
+    STA.W HW_WRDIV                            ; > Multiply that by the smaller displacement ($0C)
+    SEP #$20                                  ; A->8; > Divide that by the greater displacement ($0A)
     LDA.B _A
-    STA.W HW_WRDIV+2
+    STA.W HW_WRDIV+2                          ; $0E = the result.
     NOP
-    NOP
-    NOP
-    NOP
-    NOP
+    NOP                                       ; Essentially, you have either:
+    NOP                                       ; base * (X/Y)
+    NOP                                       ; base * (Y/X)
+    NOP                                       ; Where the fraction X/Y or Y/X is less than 1.
     NOP
     REP #$20                                  ; A->16
     LDA.W HW_RDDIV
@@ -2206,7 +2341,7 @@ CODE_049475:
     LDX.W OverworldClimbing
     LDA.W DATA_049414,X
     AND.W #$00FF
-    ASL A
+    ASL A                                     ; $0A = base speed times 0x10.
     ASL A
     ASL A
     ASL A
@@ -2222,7 +2357,7 @@ CODE_0494F8:
     LDA.B _E
   + BIT.B _0,X
     BPL +
-    EOR.W #$FFFF
+    EOR.W #$FFFF                              ; Store the player's X and Y speed.
     INC A
   + STA.W OWPlayerSpeed,X
     LDA.B _8
@@ -2256,14 +2391,14 @@ CODE_0494F8:
     STZ.B _0
     LDX.B _4
     LDA.L OWLayer1Translevel,X
-    AND.W #$00FF
+    AND.W #$00FF                              ; Get translevel number for current tile into X.
     ASL A
     TAX
-    LDA.W LevelNames,X
+    LDA.W LevelNames,X                        ; Get offsets for the level name of the tile Mario is standing on.
     STA.B _0
-    JSR CODE_049D07
+    JSR CODE_049D07                           ; Write level name.
     INC.W OverworldProcess
-    JSR CODE_049037
+    JSR CODE_049037                           ; Prepare the SRAM buffer for saving, if applicable.
     JMP OWMoveScroll
 
   + LDA.W OverworldLayer1Tile
@@ -2292,11 +2427,11 @@ CODE_049582:
     LDA.W OWPlayerYPosPtr,X
     STA.B _2
     LDX.W #$0000
-    CPY.W #$0004
+    CPY.W #$0004                              ; Index to up/down or left/right frames.
     BCS +
     LDX.W #$0002
   + LDA.B _0,X
-    CLC
+    CLC                                       ; Increase/decrease X position by 1.
     ADC.W DATA_049058,Y
     STA.B _0,X
     LDA.W PlayerTurnOW
@@ -2386,44 +2521,44 @@ CODE_049648:
 
   + CMP.W #$0080
     BEQ CODE_049663
-    CMP.W #$006A
+    CMP.W #$006A                              ; Branch if not a water tile.
     BCC CODE_049676
     CMP.W #$006E
     BCS CODE_049676
 CODE_049663:
-    LDA.W PlayerTurnOW
+    LDA.W PlayerTurnOW                        ; On a water tile.
     LSR A
     AND.W #$0002
-    TAX
+    TAX                                       ; Set Mario's animation frame to be in water.
     LDA.W OWPlayerAnimation,X
     ORA.W #$0008
     STA.W OWPlayerAnimation,X
     BRA +
 
 CODE_049676:
-    LDA.W PlayerTurnOW
+    LDA.W PlayerTurnOW                        ; Not on a water tile.
     LSR A
     AND.W #$0002
-    TAX
+    TAX                                       ; Set Mario's animation frame to be on land.
     LDA.W OWPlayerAnimation,X
     AND.W #$00F7
     STA.W OWPlayerAnimation,X
-  + LDA.W #$0001
+  + LDA.W #$0001                              ; Overworld tile routine resumes.
     STA.W Layer1ScrollTimer
     LDA.W OverworldLayer1Tile
     CMP.W #$005F
+    BEQ +                                     ; Don't play the "step on level" sound effect for:
+    CMP.W #$005B                              ; 5F (star warp)
+    BEQ +                                     ; 5B (pipe)
+    CMP.W #$0082                              ; 82 (pipe)
     BEQ +
-    CMP.W #$005B
-    BEQ +
-    CMP.W #$0082
-    BEQ +
-    LDA.W #!SFX_BEEP
+    LDA.W #!SFX_BEEP                          ; SFX for stepping onto a level tile.
     STA.W SPCIO3                              ; / Play sound effect
   + NOP
     NOP
     NOP
     LDA.W OverworldLayer1Tile
-    AND.W #$00FF
+    AND.W #$00FF                              ; Skip down if walking onto a pipe.
     CMP.W #$0082
     BEQ +
     PHY
@@ -2437,7 +2572,7 @@ CODE_049676:
     AND.W #$00FF
     TAX
     LDA.W DATA_04941E,Y
-    ORA.W OWLevelTileSettings,X
+    ORA.W OWLevelTileSettings,X               ; Enable the path direction for the current tile.
     STA.W OWLevelTileSettings,X
     PLY
   + LDA.W PlayerTurnOW
@@ -2663,7 +2798,14 @@ OWCancelMoveScroll:
     RTS
 
 OW_TilePos_Calc:
-    LDA.B _0                                  ; Get overworld X pos/16 (X)
+; Scratch RAM setup:
+; $00 = 16-bit X position to check, as a sprite position divided by 16.
+; $02 = 16-bit Y position to check, as a sprite position divided by 16.
+; X   = Player number (0 or 1)
+; A   = Must be 16-bit
+; Returns:
+; $04 = Index to the tile in the RAM tables (16-bit).
+    LDA.B _0                                  ; Get overworld X pos/16 (X); Routine to get the tile at a specified location.
     AND.W #$000F                              ; \
     STA.B _4                                  ; |
     LDA.B _0                                  ; |
@@ -2700,7 +2842,7 @@ Return0498C5:
     RTS
 
 CODE_0498C6:
-    STZ.W OWPlayerAnimation
+    STZ.W OWPlayerAnimation                   ; Overworld process 0C - Marching into Yoshi's House.
     LDA.B #$80
     CLC
     ADC.W IntroMarchYPosSpx
@@ -2775,7 +2917,7 @@ CODE_049949:
     AND.W #$00FF
     TAX
     LDA.W DATA_04941E,Y
-    ORA.W OWLevelTileSettings,X
+    ORA.W OWLevelTileSettings,X               ; Enable the path direction for the current level tile.
     STA.W OWLevelTileSettings,X
     SEP #$30                                  ; AXY->8
     RTS
@@ -2833,7 +2975,40 @@ DATA_049A0E:
     db $80,$00,$F0,$00,$28,$01
 
 CODE_049A24:
-    REP #$20                                  ; A->16
+; OW exit path location table (where Mario enters). 5 bytes per exit: y-pos, x-pos, section.
+; From YSP
+; From DP1
+; From YI1
+; From C1
+; From C2
+; From VD1
+; From VoB1
+; From SGS
+; From C4
+; From FoI1
+; From FF
+; From FSA
+; From C5
+; From FoI3
+; OW exit path destination table (where Mario exits). 5 bytes per exit: y-pos, x-pos, section.
+; To YI1
+; To C1
+; To YSP
+; To DP1
+; To VD1
+; To C2
+; To SGS
+; To VoB1
+; To FoI1
+; To C4
+; To FSA
+; To FF
+; To FoI3
+; To C5
+; OW exit path tile table (at where Mario exits), for the actual tile.
+; 2 bytes per exit. First is Y position, second is X;
+; Both are generally the above table's values divided by 16.
+    REP #$20                                  ; A->16; If Mario is coming from below, though, it's bumped down one (e.g. #$0150 -> #$14).
     LDA.W PlayerTurnOW
     LSR A
     LSR A
@@ -3168,83 +3343,145 @@ CODE_049D7F:                                  ;!
     RTS                                       ;!
 else                                          ;<================= U, SS, E0 & E1 ==============
 CODE_049D07:                                  ;!
-    LDA.L DynStripeImgSize                    ;!
+; $049AC5   | Level name table. Setting the high bit goes to the next line.
+; 0000 - YOSHI'S
+; 0008 - STAR
+; 000D - #1 IGGY'S
+; 0017 - #2 MORTON'S
+; 0023 - #3 LEMMY'S
+; 002E - #4 LUDWIG'S
+; 003A - #5 ROY'S
+; 0043 - #6 WENDY'S
+; 004E - #7 LARRY'S
+; 0059 - DONUT
+; 005F - GREEN
+; 0065 - TOP SECRET AREA
+; 0075 - VANILLA
+; 007D - YELLOW
+; 0083 - RED
+; 0087 - BLUE
+; 008C - BUTTER BRIDGE
+; 009A - CHEESE BRIDGE
+; 00A8 - SODA LAKE
+; 00B2 - COOKIE MOUNTAIN
+; 00C2 - FOREST
+; 00C9 - CHOCOLATE
+; 00D3 - CHOCO-GHOST HOUSE
+; 00E5 - SUNKEN GHOST SHIP
+; 00F7 - VALLEY
+; 00FE - BACK DOOR
+; 0108 - FRONT DOOR
+; 0113 - GNARLY
+; 011A - TUBULAR
+; 0122 - WAY COOL
+; 012B - HOUSE
+; 0131 - ISLAND
+; 0138 - SWITCH PALACE
+; 0146 - CASTLE
+; 014D - PLAINS
+; 0154 - GHOST HOUSE
+; 0160 - SECRET
+; 0167 - DOME
+; 016C - FORTRESS
+; 0175 - OF ILLUSION
+; 0180 - OF BOWSER
+; 018A - ROAD
+; 018F - WORLD
+; 0195 - AWESOME
+; 019D - 1
+; 019E - 2
+; 019F - 3
+; 01A0 - 4
+; 01A1 - 5
+; 01A2 - PALACE
+; 01A8 - AREA
+; 01AC - GROOVY
+; 01B2 - MONDO
+; 01B7 - OUTRAGEOUS
+; 01C1 - FUNKY
+; 01C6 - HOUSE
+; 01CB - [blank; skip index]
+; vel name string offsets 1.
+; vel name string offsets 2.
+; vel name string offsets 3.
+    LDA.L DynStripeImgSize                    ;!; Load stripe image index for level names. $00 contains level offset.
     TAX                                       ;!
     CLC                                       ;!
-    ADC.W #$0026                              ;!
+    ADC.W #$0026                              ;!; Length of level name string.
     STA.B _2                                  ;!
     CLC                                       ;!
     ADC.W #$0004                              ;!
-    STA.L DynStripeImgSize                    ;!
+    STA.L DynStripeImgSize                    ;!; Increase index by #$30.
     LDA.W #$2500                              ;!
-    STA.L DynamicStripeImage+2,X              ;!
-    LDA.W #$8B50                              ;!
+    STA.L DynamicStripeImage+2,X              ;!; Upload first three bytes of the header.
+    LDA.W #$8B50                              ;!; (50 8B 25)
     STA.L DynamicStripeImage,X                ;!
     LDA.B _1                                  ;!
     AND.W #$007F                              ;!
-    ASL A                                     ;!
+    ASL A                                     ;!; Get string offset A.
     TAY                                       ;!
     LDA.W DATA_049C91,Y                       ;!
     TAY                                       ;!
     SEP #$20                                  ;! A->8
     LDA.W LevelNameStrings,Y                  ;!
-    BMI +                                     ;!
-    JSR CODE_049D7F                           ;!
+    BMI +                                     ;!; Load first part.
+    JSR CODE_049D7F                           ;!; If the high byte is set, skip it.
   + REP #$20                                  ;! A->16
     LDA.B _0                                  ;!
     AND.W #$00F0                              ;!
     LSR A                                     ;!
-    LSR A                                     ;!
+    LSR A                                     ;!; Get string offset B.
     LSR A                                     ;!
     TAY                                       ;!
     LDA.W DATA_049CCF,Y                       ;!
     TAY                                       ;!
     SEP #$20                                  ;! A->8
     LDA.W LevelNameStrings,Y                  ;!
-    CMP.B #$9F                                ;!
-    BEQ +                                     ;!
+    CMP.B #$9F                                ;!; Load second part.
+    BEQ +                                     ;!; If it's not equal to 9F, add to string.
     JSR CODE_049D7F                           ;!
   + REP #$20                                  ;! A->16
     LDA.B _0                                  ;!
     AND.W #$000F                              ;!
-    ASL A                                     ;!
+    ASL A                                     ;!; Get string offset C.
     TAY                                       ;!
     LDA.W DATA_049CED,Y                       ;!
     TAY                                       ;!
     SEP #$20                                  ;! A->8
-    JSR CODE_049D7F                           ;!
+    JSR CODE_049D7F                           ;!; Add to string.
 CODE_049D6A:                                  ;!
     CPX.B _2                                  ;!
     BCS CODE_049D76                           ;!
-    LDY.W #$01CB                              ;!
+    LDY.W #$01CB                              ;!; Fill in the rest of the string with empty tiles.
     JSR CODE_049D7F                           ;!
     BRA CODE_049D6A                           ;!
                                               ;!
 CODE_049D76:                                  ;!
-    LDA.B #$FF                                ;!
+; Reach end of string.
+    LDA.B #$FF                                ;!; Write the end sentinel.
     STA.L DynamicStripeImage+4,X              ;!
     REP #$20                                  ;! A->16
     RTS                                       ;!
                                               ;!
 CODE_049D7F:                                  ;!
-    LDA.W LevelNameStrings,Y                  ;!
+    LDA.W LevelNameStrings,Y                  ;!; Routine to append text to the level name.
     PHP                                       ;!
-    CPX.B _2                                  ;!
+    CPX.B _2                                  ;!; Branch if at end of string.
     BCS +                                     ;!
-    AND.B #$7F                                ;!
+    AND.B #$7F                                ;!; Clear high bit and store to stripe image.
     STA.L DynamicStripeImage+4,X              ;!
-    LDA.B #$39                                ;!
+    LDA.B #$39                                ;!; YXPCCCTT properties.
     STA.L DynamicStripeImage+5,X              ;!
-    INX                                       ;!
+    INX                                       ;!; Go to next tile.
     INX                                       ;!
   + INY                                       ;!
-    PLP                                       ;!
+    PLP                                       ;!; Loop to next byte until the high bit is set.
     BPL CODE_049D7F                           ;!
     RTS                                       ;!
 endif                                         ;/===============================================
 
 CODE_049D9A:
-    LDA.W IsTwoPlayerGame
+    LDA.W IsTwoPlayerGame                     ; Overworld process 05 - About to settle on a level tile.
     BEQ CODE_049DAF
     LDA.W PlayerTurnLvl
     EOR.B #$01
@@ -3254,7 +3491,7 @@ CODE_049D9A:
     LDA.W OWLevelExitMode
     BNE +
 CODE_049DAF:
-    LDA.B #$03
+    LDA.B #$03                                ; Stop Mario on the level tile.
     STA.W OverworldProcess
     STZ.W OWLevelExitMode
     REP #$30                                  ; AXY->16
@@ -3280,7 +3517,7 @@ CODE_049DD1:
     STA.W PlayerLives
     LDA.W SavedPlayerPowerup,X
     STA.B Powerup
-    LDA.W SavedPlayerYoshi,X
+    LDA.W SavedPlayerYoshi,X                  ; Allow keeping the current player's Yoshi between levels.
     STA.W CarryYoshiThruLvls
     STA.W YoshiColor
     STA.W PlayerRidingYoshi
@@ -3288,7 +3525,7 @@ CODE_049DD1:
     STA.W PlayerItembox
     JSL CODE_05DBF2
     REP #$20                                  ; A->16
-    JSR CODE_048E55
+    JSR CODE_048E55                           ; Initialize the level name and sprites on the overworld border, and animated tiles.
     SEP #$20                                  ; A->8
     LDX.W PlayerTurnLvl
     LDA.W OWPlayerSubmap,X
@@ -3302,68 +3539,71 @@ CODE_049DD1:
     RTS
 
 CODE_049E22:
-    DEC.W KeepModeActive
-    BPL +
+    DEC.W KeepModeActive                      ; Overworld process 06/08 - Fading in/out from process 07 (player swap).
+    BPL +                                     ; Fade one tick every 3 frames.
     LDA.B #$02
     STA.W KeepModeActive
     LDX.W MosaicDirection
     LDA.W Brightness
     CLC
-    ADC.L BrightnessRate,X
+    ADC.L BrightnessRate,X                    ; Fade the screen, and return if not fully faded yet.
     STA.W Brightness
     CMP.L BrightnessLimits,X
     BNE +
-    INC.W OverworldProcess
+    INC.W OverworldProcess                    ; Advance to process 07/09.
     LDA.W MosaicDirection
-    EOR.B #$01
+    EOR.B #$01                                ; Invert next direction of fade.
     STA.W MosaicDirection
   + RTS
 
 CODE_049E4C:
-    LDA.B #$03
+; Overworld process 09 - Finished with process 08, return to process 03.
+    LDA.B #$03                                ; Stop Mario on a level tile.
     STA.W OverworldProcess
     RTS
 
 CODE_049E52:
-    LDA.W StarWarpLaunchSpeed
+; Overworld process 0B - Activate star warp.
+    LDA.W StarWarpLaunchSpeed                 ; Branch if already flying upwards.
     BNE CODE_049E63
     INC.W StarWarpLaunchTimer
-    LDA.W StarWarpLaunchTimer
+    LDA.W StarWarpLaunchTimer                 ; Branch if not done spinning on the ground yet.
     CMP.B #$31
     BNE CODE_049E93
-    BRA CODE_049E69
+    BRA CODE_049E69                           ; Branch when time to start flying upwards.
 
 CODE_049E63:
-    LDA.B TrueFrame
-    AND.B #$07
+    LDA.B TrueFrame                           ; Flying upwards.
+    AND.B #$07                                ; How often to accelerate Mario.
     BNE +
 CODE_049E69:
-    INC.W StarWarpLaunchSpeed
+    INC.W StarWarpLaunchSpeed                 ; Done spinning on the ground, about to fly upwards.
     LDA.W StarWarpLaunchSpeed
-    CMP.B #$05
+    CMP.B #$05                                ; Accelerate Mario upwards.
     BNE +
-    LDA.B #$04
+    LDA.B #$04                                ; Maximum upwards Y speed when using a star warp.
     STA.W StarWarpLaunchSpeed
   + REP #$20                                  ; A->16
     LDA.W StarWarpLaunchSpeed
     AND.W #$00FF
     STA.B _0
-    LDX.W PlayerTurnOW
+    LDX.W PlayerTurnOW                        ; Move Mario upwards.
     LDA.W OWPlayerYPos,X
     SEC
     SBC.B _0
     STA.W OWPlayerYPos,X
     SEC
-    SBC.B Layer1YPos
+    SBC.B Layer1YPos                          ; Branch if offscreen, to switch submaps.
     BMI +
 CODE_049E93:
     SEP #$20                                  ; A->8
     RTS
 
-  + SEP #$20                                  ; A->8
-    JMP CODE_04918D
+  + SEP #$20                                  ; A->8; Time to switch submaps.
+    JMP CODE_04918D                           ; Switch the submap.
 
-    LDY.B #$00                                ; \ Unreachable
+; Unused routine to do hex->dec conversion for a two-digit number.
+    LDY.B #$00                                ; \ Unreachable; Returns the 10s digit in Y, and 1s digit in A.
 ADDR_049E9D:
     CMP.B #$0A                                ; | While A >= #$0A...
     BCC Return049EA6                          ; |
@@ -5163,7 +5403,37 @@ DATA_04D678:
     db $00
 
 CODE_04D6E9:
-    REP #$30                                  ; AXY->16
+; Path movement data. Two bytes per tile.
+; First byte is X distance to move. Second is Y.
+; Distance is relative to moving right/down.
+; Whether each path tile is horizontal (01 00) or vertical (00 01).
+; Mario poses while walking on each tile.
+; 00 = vertical, 04 = horizontal (walking)
+; 08 = vertical, 0C = horizontal (swimming)
+; 10 = Entering level
+; 14 = Climbing
+; $04A0FC   | How to put each level name together. Format -aaaaaaa bbbbcccc
+; These values are then used as indexes:
+; a = $049C91
+; b = $049CCF
+; c = $049CED
+; Which are then indices to $049AC5.
+; Unused.
+; Layer 3 overworld border tile data.
+; It's literally just a whole bunch of single-tile lines.
+; except this one, the 'x' for the lives
+; Overworld Layer 2 tilemap data (tile numbers), compressed in LC_RLE2 format.
+; Submaps begin.
+; Overworld Layer 2 YXPCCCTT data, compressed in LC_RLE2 format.
+; Path directions after beating a level. Indexed by translevel.
+; Format is nnss----
+; 00 = up, 01 = down, 10 = left, 11 = right
+; SMW actually has some functionality for the remaining bits to be used as a 3rd/4th exit, too.
+; If 03/04 are stored to $0DD5, then they'll be used instead (giving a new format as aabbccdd).
+; Note that Lunar Magic completely scraps this table, though.
+; The directions are instead stored in LC_LZ2 format alongside the translevel numbers at (read1($04D808)<<16)|read2($04D803).
+; These values are unreachable normally.
+    REP #$30                                  ; AXY->16; Routine to upload the layer 1 tilemap to the overworld?
     STZ.B Layer1YPos
     LDA.W #$FFFF
     STA.B Layer1PrevTileUp
@@ -5183,10 +5453,10 @@ CODE_04D6E9:
     LDA.W #$0200
     STA.B Layer1YPos
 CODE_04D714:
-    JSL CODE_05881A
-    JSL UploadOneMap16Strip
+    JSL CODE_05881A                           ; Get VRAM data for one row/column of Map16.
+    JSL UploadOneMap16Strip                   ; Upload VRAM data to Layer 1.
     REP #$30                                  ; AXY->16
-    INC.B Layer1TileDown
+    INC.B Layer1TileDown                      ; Upload the overworld tilemap?
     LDA.B Layer1YPos
     CLC
     ADC.W #$0010
@@ -5225,7 +5495,7 @@ CODE_04D714:
     RTL
 
 CODE_04D770:
-    STA.L Map16TilesHigh,X
+    STA.L Map16TilesHigh,X                    ; Routine to clear out the high Map16 data table.
     STA.L Map16TilesHigh+$1B0,X
     STA.L Map16TilesHigh+$360,X
     STA.L Map16TilesHigh+$510,X
@@ -5261,32 +5531,32 @@ CODE_04D770:
     RTS
 
 CODE_04D7F2:
-    REP #$30                                  ; AXY->16
+    REP #$30                                  ; AXY->16; Routine to upload overworld level settings and cleared event tiles.
     LDA.W #$0000
     SEP #$20                                  ; A->8
     LDA.B #OWLayer1Translevel
     STA.B _D
-    LDA.B #OWLayer1Translevel>>8
-    STA.B _E
+    LDA.B #OWLayer1Translevel>>8              ; $0D = $7ED000
+    STA.B _E                                  ; Overworld translevel numbers.
     LDA.B #OWLayer1Translevel>>16
     STA.B _F
     LDA.B #OWLayer2Directions
     STA.B _A
-    LDA.B #OWLayer2Directions>>8
-    STA.B _B
+    LDA.B #OWLayer2Directions>>8              ; $0A = $7ED800
+    STA.B _B                                  ; Overworld path direction settings.
     LDA.B #OWLayer2Directions>>16
     STA.B _C
     LDA.B #Map16TilesLow
     STA.B _4
-    LDA.B #Map16TilesLow>>8
-    STA.B _5
+    LDA.B #Map16TilesLow>>8                   ; $04 = $7EC800
+    STA.B _5                                  ; Overworld Layer 1 tilemap.
     LDA.B #Map16TilesLow>>16
     STA.B _6
     LDY.W #$0001
     STY.B _0
     LDY.W #$07FF
     LDA.B #$00
-  - STA.B [_A],Y
+  - STA.B [_A],Y                              ; Clear all translevel numbers and path directions.
     STA.B [_D],Y
     DEY
     BPL -
@@ -5295,23 +5565,23 @@ CODE_04D7F2:
 CODE_04D832:
     LDA.B [_4],Y
     CMP.B #$56
-    BCC +
+    BCC +                                     ; Skip if the tile is not a level tile (56-80).
     CMP.B #$81
     BCS +
-    LDA.B _0
+    LDA.B _0                                  ; Store translevel number.
     STA.B [_D],Y
     TAX
-    LDA.L DATA_04D678,X
+    LDA.L DATA_04D678,X                       ; Store path settings.
     STA.B [_A],Y
     INC.B _0
   + INY
-    CPY.W #$0800
+    CPY.W #$0800                              ; If not finished uploading, loop.
     BNE CODE_04D832
     STZ.B _F
-  - JSR CODE_04DA49
+  - JSR CODE_04DA49                           ; Update Layer 1 tiles for cleared events.
     INC.B _F
     LDA.B _F
-    CMP.B #$6F
+    CMP.B #$6F                                ; Check if finished loading the tiles for every event.
     BNE -
     RTS
 
@@ -5385,7 +5655,40 @@ DATA_04DA33:
     db $79,$63,$7C,$7E,$80,$23
 
 CODE_04DA49:
-    REP #$30                                  ; AXY->16
+; Table of locations (quadrant format) for Layer 1 events tiles. Indexed by event.
+; 00-03
+; 04-07
+; 08-0B
+; 0C-0F
+; 10-13
+; 14-17
+; 18-1B
+; 1C-1F
+; 20-23
+; 24-27
+; 28-2B
+; 2C-2F
+; 30-33
+; 34-37
+; 38-3B
+; 3C-3F
+; 40-43
+; 44-47
+; 48-4B
+; 4C-4F
+; 50-53
+; 54-57
+; 58-5B
+; 5C-5F
+; 60-63
+; 64-67
+; 68-6B
+; 6C-6F
+; Table of VRAM upload locations for each Layer 1 event.
+; Indexed by event, two bytes per event.
+; List of invisible Layer 1 level tiles.
+; List of visible Layer 1 tiles to replace the above tiles with.
+    REP #$30                                  ; AXY->16; Routine to upload Layer 1 events that have already been cleared.
     LDA.B _F
     AND.W #$00F8
     LSR A
@@ -5397,48 +5700,49 @@ CODE_04DA49:
     TAX
     SEP #$20                                  ; A->8
     LDA.W OWEventsActivated,Y
-    AND.L DATA_04E44B,X
+    AND.L DATA_04E44B,X                       ; Make sure that the event has already been run.
     BEQ Return04DAAC
     REP #$20                                  ; A->16
-    LDA.W #$C800
+    LDA.W #$C800                              ; Store address of overworld data pointer ($7EC800).
     STA.B _4
     LDA.B _F
     AND.W #$00FF
     ASL A
     TAX
-    LDA.L DATA_04D85D,X
+    LDA.L DATA_04D85D,X                       ; Get the location of the Layer 1 tile revealed by this event.
     TAY
     LDX.W #$0015
     SEP #$20                                  ; A->8
-    LDA.B #$7E
+    LDA.B #$7E                                ; Store bank byte of overworld data pointer.
     STA.B _6
     LDA.B [_4],Y
 CODE_04DA83:
-    CMP.L DATA_04DA1D,X
+    CMP.L DATA_04DA1D,X                       ; Find the invisible version of the tile, if it has one.
     BEQ CODE_04DA8F
     DEX
     BPL CODE_04DA83
     JMP CODE_04DA9D
 
 CODE_04DA8F:
-    LDA.L DATA_04DA33,X
+; Invisible tile found.
+    LDA.L DATA_04DA33,X                       ; Make tile visible.
     STA.B [_4],Y
     CPX.W #$0015
-    BNE CODE_04DA9D
-    INY
+    BNE CODE_04DA9D                           ; If tile 54, update tile next to it as well?
+    INY                                       ; Some kind of unused feature, apparently. Lunar Magic disables it.
     STA.B [_4],Y
 CODE_04DA9D:
-    LDA.B _F
+    LDA.B _F                                  ; Update destroyed tiles.
     JSR CODE_04E677
     SEP #$10                                  ; XY->8
-    STZ.W OverworldEventProcess
+    STZ.W OverworldEventProcess               ; Done with event, so set to return to the event check routine.
     LDA.B _F
-    JSR CODE_04E9F1
+    JSR CODE_04E9F1                           ; Update offscreen events.
 Return04DAAC:
     RTS
 
 DecompressOverworldL2:
-    PHP
+    PHP                                       ; Routine (JSL) to load Layer 2 event data on the overworld.
     JSR CODE_04DC6A
     PLP
     RTL
@@ -5450,7 +5754,7 @@ DATA_04DAB3:
     dw $2000
 
 CODE_04DABA:
-    SEP #$20                                  ; A->8
+    SEP #$20                                  ; A->8; Routine to decompress LC_RLE2 data.
     REP #$10                                  ; XY->16
     LDA.B [_0],Y
     STA.B _3
@@ -5459,7 +5763,7 @@ CODE_04DABA:
   - INY
     LDA.B [_0],Y
     STA.L OWLayer2Tilemap,X
-    INX
+    INX                                       ; Direct copy command.
     INX
     DEC.B _3
     BPL -
@@ -5471,19 +5775,19 @@ CODE_04DAD6:
     STA.B _3
     INY
     LDA.B [_0],Y
-  - STA.L OWLayer2Tilemap,X
+  - STA.L OWLayer2Tilemap,X                   ; RLE command.
     INX
     INX
     DEC.B _3
     BPL -
 CODE_04DAE9:
     INY
-    CPX.B _E
+    CPX.B _E                                  ; If not at the end of the defined data, loop back.
     BCC CODE_04DABA
     RTS
 
 CODE_04DAEF:
-    SEP #$30                                  ; AXY->8
+    SEP #$30                                  ; AXY->8; Overworld process 0A - Switching submaps (via exit path or changing players).
     LDA.W OWSubmapSwapProcess
     JSL ExecutePtr
 
@@ -5509,7 +5813,14 @@ DATA_04DB14:
     db $00,$00,$00,$54
 
 CODE_04DB18:
-    REP #$20                                  ; A->16
+; Pointers to different processes in switching overworlds.
+; Load windowing HDMA.
+; Update Layer 1 on the overworld.
+; Uploaded over the course of 4 frames.
+; Load palette.
+; End windowing HDMA.
+; End submap switching; update music and return to process 04 (player is moving in a certain direction).
+    REP #$20                                  ; A->16; Routine to handle the windowing fade when switching submaps.
     LDX.W OWTransitionFlag
     LDA.W OWTransitionXCalc
     CLC
@@ -5575,7 +5886,7 @@ CODE_04DB95:
     RTS
 
 CODE_04DB9D:
-    LDA.W PlayerTurnOW
+    LDA.W PlayerTurnOW                        ; Update the overworld palettes.
     LSR A
     LSR A
     TAX
@@ -5605,26 +5916,27 @@ OverworldMusic2:
     db !BGM_STARWORLD
 
 CODE_04DBCF:
-    STZ.W OWSubmapSwapProcess
-    LDA.B #$04
+; Overworld music to pick after switching overworlds. Should mirror $048D8A.
+    STZ.W OWSubmapSwapProcess                 ; Finish switching overworlds; update music and return to process 04.
+    LDA.B #$04                                ; Move on to next overworld phase.
     STA.W OverworldProcess
     LDA.W PlayerTurnOW
     LSR A
     LSR A
     TAY
-    LDA.W IsTwoPlayerGame
+    LDA.W IsTwoPlayerGame                     ; Check for two-player game. If not, skip.
     BEQ CODE_04DBF3
-    LDA.W SwapOverworldMusic
+    LDA.W SwapOverworldMusic                  ; Make sure music needs to be changed.
     BNE CODE_04DBF3
     TYA
     EOR.B #$01
     TAX
     LDA.W OWPlayerSubmap,Y
-    CMP.W OWPlayerSubmap,X
+    CMP.W OWPlayerSubmap,X                    ; Return if both players are in the same submap.
     BEQ +
 CODE_04DBF3:
     LDA.W OWPlayerSubmap,Y
-    TAX
+    TAX                                       ; Load submap music.
     LDA.L OverworldMusic2,X
     STA.W SPCIO2                              ; / Change music
     STZ.W SwapOverworldMusic
@@ -5635,16 +5947,17 @@ DATA_04DC02:
     db $11,$12,$13,$14,$15,$16,$17
 
 CODE_04DC09:
-    SEP #$30                                  ; AXY->8
+; Overworld GFX headers.
+    SEP #$30                                  ; AXY->8; Routine to upload the Layer 1 tilemap for the overworld to RAM.
     LDA.W PlayerTurnOW
     LSR A
     LSR A
     TAX
     LDA.W OWPlayerSubmap,X
     TAX
-    LDA.L DATA_04DC02,X
+    LDA.L DATA_04DC02,X                       ; Set Layer 1/2 GFX list.
     STA.W ObjectTileset
-    LDA.B #$11
+    LDA.B #$11                                ; Set sprite GFX list.
     STA.W SpriteTileset
     LDA.B #$07
     STA.W LevelModeSetting
@@ -5672,21 +5985,21 @@ CODE_04DC09:
     BNE -
     PHB
     LDA.W #$07FF
-    LDX.W #OWL1TileData
+    LDX.W #OWL1TileData                       ; Upload x800 bytes from $0CF7DF to $7EC800.
     LDY.W #Map16TilesLow
     MVN $7E,$0C
     PLB
-    JSR CODE_04D7F2
+    JSR CODE_04D7F2                           ; Load level settings and beaten event tiles.
     SEP #$30                                  ; AXY->8
     RTL
 
 CODE_04DC6A:
-    SEP #$30                                  ; AXY->8
-    JSR CODE_04DD40
+    SEP #$30                                  ; AXY->8; Routine to decompress and update Layer 2 events on the overworld.
+    JSR CODE_04DD40                           ; Decompress Layer 2's event data tilemap.
     REP #$20                                  ; A->16
     LDA.W #OWTileNumbers
     STA.B _0
-    SEP #$30                                  ; AXY->8
+    SEP #$30                                  ; AXY->8; Point to $04A533.
     LDA.B #OWTileNumbers>>16
     STA.B _2
     REP #$10                                  ; XY->16
@@ -5694,20 +6007,20 @@ CODE_04DC6A:
     STY.B _E
     LDY.W #$0000
     TYX
-    JSR CODE_04DABA
+    JSR CODE_04DABA                           ; Decompress the Layer 2 tilemap (tile numbers).
     REP #$20                                  ; A->16
-    LDA.W #OWTilemap
+    LDA.W #OWTilemap                          ; Change pointer to $04C02B.
     STA.B _0
     SEP #$20                                  ; A->8
     LDX.W #$0001
     LDY.W #$0000
-    JSR CODE_04DABA
+    JSR CODE_04DABA                           ; Decompress the Layer 2 tilemap (YXPCCCTT).
     SEP #$30                                  ; AXY->8
     LDA.B #$00
     STA.B _F
   - JSR CODE_04E453
     INC.B _F
-    LDA.B _F
+    LDA.B _F                                  ; Load all currently activated events to the overworld map.
     CMP.B #$6F
     BNE -
     RTS
@@ -5716,7 +6029,8 @@ CODE_04DC6A:
     db $80,$40,$20,$10,$08,$04,$02,$01
 
 CODE_04DCB6:
-    PHP
+; AND table.
+    PHP                                       ; Routine to update the overworld's Layer 1 after switching maps.
     REP #$10                                  ; XY->16
     SEP #$20                                  ; A->8
     LDX.W #OWL1CharData
@@ -5749,7 +6063,7 @@ CODE_04DCE8:
     LDA.L Map16TilesHigh,X
     STA.B _3
     LDA.B _2
-    ASL A
+    ASL A                                     ; [hijacked by LM for a jump to $06F5E4]
     ASL A
     ASL A
     TAY
@@ -5793,8 +6107,8 @@ CODE_04DD40:
     SEP #$20                                  ; A->8
     LDY.W #OWEventTileProp
     STY.B _2
-    LDA.B #OWEventTileProp>>16
-    STA.B _4
+    LDA.B #OWEventTileProp>>16                ; Decompress the Layer 2 event tilemap YXPCCCTT
+    STA.B _4                                  ; from $0C8D00 to $7F0000.
     LDX.W #$0000
     TXY
     JSR CODE_04DD57
@@ -5802,13 +6116,13 @@ CODE_04DD40:
     RTS
 
 CODE_04DD57:
-    SEP #$20                                  ; A->8
+    SEP #$20                                  ; A->8; Routine to decompress LC_RLE1 data. Specifically used to decompress the Layer 2 event tilemap's YXPCCCTT properties.
     LDA.B [_2],Y
     INY
     STA.B _5
     AND.B #$80
     BNE CODE_04DD71
-  - LDA.B [_2],Y
+  - LDA.B [_2],Y                              ; Upload data to RAM.
     STA.L OWEventTilemap,X
     INY
     INX
@@ -6063,7 +6377,14 @@ DATA_04E44B:
     db $80,$40,$20,$10,$08,$04,$02,$01
 
 CODE_04E453:
-    SEP #$30                                  ; AXY->8
+; Overworld Layer 2 event data tilemap. Four bytes per tile.
+; The first two bytes are the source offset (from $0C8000)
+; and the next two are the destination (to $7F4000).
+; Tile number indicates size; #$000-#$8FF are 6x6, #$900+ are 2x2.
+; Event 'dividers', as indices to the above table.
+; The number of tiles in each event is [next index] - [index].
+; AND table for event numbers.
+    SEP #$30                                  ; AXY->8; Routine to upload Layer 2 events that have already been cleared.
     LDA.B _F
     AND.B #$07
     TAX
@@ -6073,25 +6394,25 @@ CODE_04E453:
     LSR A
     TAY
     LDA.W OWEventsActivated,Y
-    AND.L DATA_04E44B,X
+    AND.L DATA_04E44B,X                       ; If current event hasn't been activated, return.
     BNE +
     RTS
 
-  + LDA.B _F
+  + LDA.B _F                                  ; Routine to load all of an event's Layer 2 tiles to the overworld.
     ASL A
     TAX
     REP #$20                                  ; A->16
-    LDA.L DATA_04E359,X
+    LDA.L DATA_04E359,X                       ; Get offset to start on (for $04DD8D).
     STA.W EventTileIndex
-    LDA.L DATA_04E35B,X
+    LDA.L DATA_04E35B,X                       ; Get offset to end on.
     STA.W EventLength
-    CMP.W EventTileIndex
+    CMP.W EventTileIndex                      ; If both offsets are already equal, end (no event).
     BEQ CODE_04E493
   - JSR CODE_04E496
     REP #$20                                  ; A->16
-    INC.W EventTileIndex
+    INC.W EventTileIndex                      ; Increase offset.
     LDA.W EventTileIndex
-    CMP.W EventLength
+    CMP.W EventLength                         ; Check if at end of event. If not, loop.
     BNE -
 CODE_04E493:
     SEP #$30                                  ; AXY->8
@@ -6103,22 +6424,22 @@ CODE_04E496:
     ASL A
     ASL A
     TAX
-    LDA.L DATA_04DD8D,X
+    LDA.L DATA_04DD8D,X                       ; Get offset to $0C8000 in Y.
     TAY
     LDA.L DATA_04DD8F,X
     STA.B _4
 CODE_04E4A9:
-    SEP #$20                                  ; A->8
+    SEP #$20                                  ; A->8; Subroutine to load a Layer 2 event tile to the Layer 2 tilemap. Does not update VRAM.
     LDA.B #$7F
     STA.B _8
     LDA.B #$0C
-    STA.B _B
-    REP #$20                                  ; A->16
+    STA.B _B                                  ; $06 = $7F0000 (for the YXPCCCTT properties)
+    REP #$20                                  ; A->16; $09 = $0C8000 (for the tile number)
     LDA.W #$0000
     STA.B _6
     LDA.W #$8000
     STA.B _9
-    CPY.W #$0900
+    CPY.W #$0900                              ; If the tile is 6x6, go to its upload routine.
     BCC +
     JSR CODE_04E4D0
     JMP CODE_04E4CD
@@ -6129,7 +6450,7 @@ CODE_04E4CD:
     RTS
 
 CODE_04E4D0:
-    LDA.W #$0001
+    LDA.W #$0001                              ; 2x2 event tile upload routine.
     STA.B _0
 CODE_04E4D5:
     LDX.B _4
@@ -6137,10 +6458,10 @@ CODE_04E4D5:
     STA.B _C
 CODE_04E4DC:
     SEP #$20                                  ; A->8
-    LDA.B [_9],Y
+    LDA.B [_9],Y                              ; Upload tile data from $0C8000 to the map.
     STA.L OWLayer2Tilemap,X
     INX
-    LDA.B [_6],Y
+    LDA.B [_6],Y                              ; Load tile properties from $7F0000 to the map.
     STA.L OWLayer2Tilemap,X
     INY
     INX
@@ -6173,7 +6494,7 @@ CODE_04E4DC:
     RTS
 
 CODE_04E520:
-    LDA.W #$0005
+    LDA.W #$0005                              ; 6x6 event tile upload routine.
     STA.B _0
 CODE_04E525:
     LDX.B _4
@@ -6181,10 +6502,10 @@ CODE_04E525:
     STA.B _C
 CODE_04E52C:
     SEP #$20                                  ; A->8
-    LDA.B [_9],Y
+    LDA.B [_9],Y                              ; Upload tile data from $0C8000 to the map.
     STA.L OWLayer2Tilemap,X
     INX
-    LDA.B [_6],Y
+    LDA.B [_6],Y                              ; Load tile properties from $7F0000 to the map.
     STA.L OWLayer2Tilemap,X
     INY
     INX
@@ -6217,7 +6538,7 @@ CODE_04E52C:
     RTS
 
 CODE_04E570:
-    LDA.W OverworldEventProcess
+    LDA.W OverworldEventProcess               ; Overworld process 02 - Activate overworld events
     JSL ExecutePtr
 
     dw CODE_04E5EE
@@ -6255,85 +6576,105 @@ DATA_04E5E6:
     db $58,$59,$5D,$63,$77,$79,$7E,$80
 
 CODE_04E5EE:
-    LDA.W OWLevelExitMode
+; Pointers to locations that run events.
+; 00 = check if event needs to run
+; 01 = show castle/p-switch poof
+; 02 = set up event index counters
+; 03 = get layer 2 event tile
+; 04 = animate the fade in for layer 2 tile
+; 05 = get layer 1 event tile
+; 06 = animate the fade in for layer 1 tile
+; 07 = end of event, mark event as run
+; VRAM locations for each destruction event's tiles. Two bytes per event.
+; Format is the same as the stripe header (0010YXyy yyyxxxxx).
+; "Before destruction" Layer 1 tiles.
+; "After destruction" Layer 1 tiles (upper). First three bytes unused.
+; "After destruction" Layer 1 tiles (lower).
+; Locations of levels with destruction events, quadrant format.
+; Events that activate a switch/fortress/castle destruction.
+; Note that Nintendo actually messed this up, and the next table is also used.
+; Lunar Magic moves the table elsewhere though, so you don't have to worry about it.
+; Overworld tiles that trigger a save prompt even after activating its event.
+    LDA.W OWLevelExitMode                     ; Routine that prepares events to run on overworld load.
     CMP.B #$02
     BNE +
     INC.W OverworldEvent
-  + LDA.W CreditsScreenNumber
+  + LDA.W CreditsScreenNumber                 ; If no event should be activated, skip past activation.
     BEQ CODE_04E61A
     LDA.W OverworldEvent
-    CMP.B #$FF
+    CMP.B #$FF                                ; Make sure an event is supposed to run.
     BEQ CODE_04E61A
     LDA.W OverworldEvent
     AND.B #$07
     TAX
     LDA.W OverworldEvent
     LSR A
-    LSR A
-    LSR A
+    LSR A                                     ; Check if event was already run.
+    LSR A                                     ; If not, branch to prep the overworld destruction events.
     TAY
     LDA.W OWEventsActivated,Y
     AND.L DATA_04E44B,X
     BEQ CODE_04E640
 CODE_04E61A:
-    LDX.B #$07
+    LDX.B #$07                                ; Not activating an event.
 CODE_04E61C:
     LDA.W DATA_04E5E6,X
-    CMP.W OverworldLayer1Tile
+    CMP.W OverworldLayer1Tile                 ; Check if the level should force the save routine.
     BNE +
-    INC.W OverworldProcess
-    LDA.B #$E0
+    INC.W OverworldProcess                    ; Move to next overworld process.
+    LDA.B #$E0                                ; Run save prompt without moving the player.
     STA.W OWLevelExitMode
-    LDA.B #$0F
+    LDA.B #$0F                                ; Don't allow game mode to update.
     STA.W KeepModeActive
     RTS
 
   + DEX
     BPL CODE_04E61C
-    LDA.B #$05
+    LDA.B #$05                                ; Resume normal overworld processing.
     STA.W OverworldProcess
-    LDA.B #$80
+    LDA.B #$80                                ; Exit the level without beating it.
     STA.W OWLevelExitMode
     RTS
 
 CODE_04E640:
-    INC.W OverworldEventProcess
-    LDA.W OverworldEvent
+; Castle/Fort/Switch destruction routine.
+    INC.W OverworldEventProcess               ; Move on to next event process after this.
+    LDA.W OverworldEvent                      ; Update destroyed tiles.
     JSR CODE_04E677
     TYA
     ASL A
     ASL A
     ASL A
-    ASL A
+    ASL A                                     ; Store explosion sprite location.
     STA.W OverworldEventXPos
     TYA
     AND.B #$F0
     STA.W OverworldEventYPos
-    LDA.B #$28
+    LDA.B #$28                                ; Set explosion timer.
     STA.W OverworldEventSize
     LDA.W TranslevelNo
-    CMP.B #$18
+    CMP.B #$18                                ; Check if beating Sunken Ghost Ship. If so, shake screen.
     BNE +
-    LDA.B #$FF
+    LDA.B #$FF                                ; Time to shake the screen after Sunken Ghost Ship.
     STA.W OverworldEarthquake
   + LDA.W OverworldEventProcess
     CMP.B #$02
     BEQ +
-    LDA.B #!SFX_CASTLECRUSH
+    LDA.B #!SFX_CASTLECRUSH                   ; SFX for the castle destruction.
     STA.W SPCIO3                              ; / Play sound effect
   + SEP #$30                                  ; AXY->8
     RTS
 
 CODE_04E677:
-    SEP #$30                                  ; AXY->8
+    SEP #$30                                  ; AXY->8; Routine to upload destroyed tiles to the Layer 1 data table during overworld load.
     LDX.B #$17
 CODE_04E67B:
-    CMP.L DATA_04E5D6,X
+    CMP.L DATA_04E5D6,X                       ; Check if this is an event that activates a destruction animation.
     BEQ CODE_04E68A
     DEX
     BPL CODE_04E67B
 CODE_04E684:
-    LDA.B #$02
+    LDA.B #$02                                ; If not, end destruction routine.
     STA.W OverworldEventProcess
     RTS
 
@@ -6351,33 +6692,33 @@ CODE_04E68A:
     TAY
     SEP #$20                                  ; A->8
     LDX.W #$0004
-    LDA.B [_A],Y
+    LDA.B [_A],Y                              ; Find which kind of tile you're actually destroying.
 CODE_04E6A7:
-    CMP.L DATA_04E5A7,X
+    CMP.L DATA_04E5A7,X                       ; If it's not actually in the list, end the routine.
     BEQ CODE_04E6B3
     DEX
     BPL CODE_04E6A7
     JMP CODE_04E684
 
 CODE_04E6B3:
-    TXA
+    TXA                                       ; Tile found; destroy it.
     STA.W StructureCrushTile
-    CPX.W #$0003
+    CPX.W #$0003                              ; Which destructions are two tiles high (castle).
     BMI +
-    LDA.L DATA_04E5AC,X
+    LDA.L DATA_04E5AC,X                       ; Update the top of the castle.
     STA.B [_A],Y
     REP #$20                                  ; A->16
     TYA
-    CLC
+    CLC                                       ; Move to next row.
     ADC.W #$0010
     TAY
   + SEP #$20                                  ; A->8
-    LDA.L DATA_04E5B1,X
+    LDA.L DATA_04E5B1,X                       ; Update the destroyed tile.
     STA.B [_A],Y
     RTS
 
 CODE_04E6D3:
-    INC.W OverworldEventProcess
+    INC.W OverworldEventProcess               ; Routine to set up event index counters.
     LDA.W OverworldEvent
     ASL A
     TAX
@@ -6760,7 +7101,36 @@ CODE_04EA5A:
     JMP CODE_04E9F9
 
 CODE_04EA62:
-    STZ.W ColorFadeTimer
+; Routine to get a Layer 2 event overworld tile.
+; Fade-in routine?
+; Store tile to load.
+; Store Y position of on-screen of appearing event tiles.
+; Store X position of on-screen of appearing event tiles.
+; Check event tile size.
+; Tile reveal SFX.
+; Upload fade-in to VRAM for 2x2 tiles?
+; Upload fade-in to VRAM for 6x6 tiles?
+; Events that correspond to offscreen event tiles.
+; Table of whether the tile is a Layer 1 (00) or Layer 2 (01) event.
+; Offscreen event tile location. Quadrant format for Layer 1.
+; Offscreen event tile numbers.
+; For Layer 2:
+; 6x6 = ($24 * tileNum)
+; 2x2 = ($04 * tileNum) + $0900
+; Routine to update offscreen Layer 1 events after beating a level.
+; Check whether to activate an offscreen Layer 2 event tile.
+; If no event is being run, return.
+; Event is finished drawing, so move on to next overworld process.
+; Set event.
+; Increase event counter.
+; Clear "activate events" flag.
+; Get tile number.
+; Get location of tile.
+; Check if it's a Layer 2 or Layer 1 tile.
+; Upload to the Layer 2 tilemap.
+; Routine to upload an off-screen Layer 1 tile.
+; Store tile.
+    STZ.W ColorFadeTimer                      ; Routine to fade in an overworld path.
     STZ.W ColorFadeDir
     LDX.B #$6F
   - LDA.W MainPalette,X
@@ -6794,10 +7164,10 @@ CODE_04EA8B:
     RTS
 
 CODE_04EAA4:
-    LDA.W ColorFadeTimer
-    CMP.B #$40
+    LDA.W ColorFadeTimer                      ; Fade in tile routine.
+    CMP.B #$40                                ; Check if finished fading.
     BCC CODE_04EAC9
-    INC.W OverworldEventProcess
+    INC.W OverworldEventProcess               ; Finish process.
     JSR CODE_04EE30
     JSR CODE_04E496
     REP #$20                                  ; A->16
@@ -6866,7 +7236,7 @@ CODE_04EAE7:
     LDY.B #$08
     LDX.W PlayerTurnLvl
     LDA.W OWPlayerSubmap,X
-    CMP.B #$03
+    CMP.B #$03                                ; Submap that reveals its tiles at a lower rate (Forest of Illusion by default)
     BNE +
     LDY.B #$01
   + STY.B GraphicsCompPtr
@@ -6909,28 +7279,29 @@ DATA_04EBE1:
     db $28,$28
 
 CODE_04EBEB:
-    DEC.W OverworldEventSize
+; Routine to animate Layer 1 appear animations.
+    DEC.W OverworldEventSize                  ; Branch if the timer isn't done yet.
     BPL +
-    INC.W OverworldEventProcess
+    INC.W OverworldEventProcess               ; Zero $1B86 if time up.
     RTS
 
-  + LDA.W OverworldEventSize
+  + LDA.W OverworldEventSize                  ; Still revealing the tile.
     LDY.W OverworldEventProcess
-    CPY.B #$01
+    CPY.B #$01                                ; If showing a Castle/P-switch "explosion", skip.
     BEQ CODE_04EC17
-    CMP.B #$10
+    CMP.B #$10                                ; Check if time to make tile visible.
     BNE +
     PHA
-    JSR CODE_04ED83
+    JSR CODE_04ED83                           ; Reveal a Layer 1 tile.
     PLA
   + LSR A
     LSR A
     TAX
-    LDA.W DATA_04EBDA,X
+    LDA.W DATA_04EBDA,X                       ; Flash animation.
     STA.B _2
-    JSR CODE_04EC67
+    JSR CODE_04EC67                           ; ???
     LDX.B #$28
-    JMP CODE_04EC2E
+    JMP CODE_04EC2E                           ; ???
 
 CODE_04EC17:
     CMP.B #$18
@@ -6987,49 +7358,49 @@ CODE_04EC67:
     RTS
 
 CODE_04EC78:
-    LDA.B #$7E
+    LDA.B #$7E                                ; Update Layer 1 event tile routine.
     STA.B _F
     REP #$30                                  ; AXY->16
     LDA.W #$C800
     STA.B _D
     LDA.W OverworldEvent
     AND.W #$00FF
-    ASL A
+    ASL A                                     ; Get tile location in Y.
     TAX
     LDA.L DATA_04D85D,X
     TAY
     LDX.W #$0015
     SEP #$20                                  ; A->8
-    LDA.B [_D],Y
+    LDA.B [_D],Y                              ; Get the kind of Layer 1 tile you're overwriting.
 CODE_04EC97:
     CMP.L DATA_04DA1D,X
-    BEQ CODE_04ECA8
+    BEQ CODE_04ECA8                           ; Loop until you find the tile type.
     DEX
     BPL CODE_04EC97
     SEP #$10                                  ; XY->8
-    LDA.B #$07
+    LDA.B #$07                                ; End event if it's not in the list.
     STA.W OverworldEventProcess
     RTS
 
 CODE_04ECA8:
     SEP #$30                                  ; AXY->8
-    LDA.B #!SFX_COIN
+    LDA.B #!SFX_COIN                          ; SFX for an OW tile appearing.
     STA.W SPCIO3                              ; / Play sound effect
-    INC.W OverworldEventProcess
+    INC.W OverworldEventProcess               ; Set flag to animate fade-in on next pass.
     LDA.W OverworldEvent
     AND.B #$FF
     ASL A
     TAX
-    LDA.L DATA_04D85D,X
+    LDA.L DATA_04D85D,X                       ; Get X position on-screen of the appearing event sprite tiles.
     ASL A
     ASL A
     ASL A
     ASL A
     STA.W OverworldEventXPos
     LDA.L DATA_04D85D,X
-    AND.B #$F0
+    AND.B #$F0                                ; Get X position on-screen of the appearing event sprite tiles.
     STA.W OverworldEventYPos
-    LDA.B #$1C
+    LDA.B #$1C                                ; Timer for level appearing.
     STA.W OverworldEventSize
     RTS
 
@@ -7059,14 +7430,15 @@ DATA_04ECD3:
     db $A8,$11,$B8,$11,$A9,$11,$B9,$11
 
 CODE_04ED83:
-    LDA.B #Map16TilesLow>>16
+; VRAM data for reveals. 8 bytes per tile (?)
+    LDA.B #Map16TilesLow>>16                  ; Reveal Layer 1 tile routine.
     STA.B _F
     REP #$30                                  ; AXY->16
     LDA.W #Map16TilesLow
     STA.B _D
     LDA.W OverworldEvent
     AND.W #$00FF
-    ASL A
+    ASL A                                     ; Get location in Y.
     TAX
     LDA.L DATA_04D85D,X
     TAY
@@ -7074,13 +7446,13 @@ CODE_04ED83:
     SEP #$20                                  ; A->8
     LDA.B [_D],Y
 CODE_04EDA2:
-    CMP.L DATA_04DA1D,X
+    CMP.L DATA_04DA1D,X                       ; Search the Layer 1 tile you're overwriting (the invisible tile).
     BEQ CODE_04EDAB
     DEX
     BNE CODE_04EDA2
 CODE_04EDAB:
     REP #$30                                  ; AXY->16
-    STX.B _E
+    STX.B _E                                  ; $0E contains the tile index.
     LDA.W OverworldEvent
     AND.W #$00FF
     ASL A
@@ -7093,23 +7465,23 @@ CODE_04EDAB:
     LDX.B _E
     SEP #$20                                  ; A->8
     LDA.L DATA_04DA33,X
-    PLX
+    PLX                                       ; Make the tile visible on the map.
     STA.L Map16TilesLow,X
     LDA.B #DATA_04ECD3>>16
     STA.B _C
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; $0A = pointer to $04ECD3 (VRAM data for tile reveals)
     LDA.W #DATA_04ECD3
     STA.B _A
     LDA.B _E
     ASL A
-    ASL A
+    ASL A                                     ; Get index to reveal data in Y.
     ASL A
     TAY
     LDA.L DynStripeImgSize
     TAX
 CODE_04EDE6:
     LDA.B _0
-    STA.L DynamicStripeImage,X
+    STA.L DynamicStripeImage,X                ; Upload tile to VRAM.
     CLC
     ADC.W #$2000
     STA.L DynamicStripeImage+8,X
@@ -7185,12 +7557,15 @@ DATA_04EE7A:
     db $8A,$15,$9A,$15,$8B,$15,$9B,$15
 
 CODE_04EEAA:
-    SEP #$30                                  ; AXY->8
+; VRAM upload data for the Layer 1 overworld tiles after destruction.
+; This table contains the tile data in stripe format. $04E587 contains locations.
+; Each row is a different tile, in the order of $13D0. The last row is the castle base.
+    SEP #$30                                  ; AXY->8; Routine to update destroyed tiles to VRAM.
     LDA.B #Map16TilesLow>>16
     STA.B _F
     LDA.B #DATA_04EE7A>>16
-    STA.B _C
-    REP #$30                                  ; AXY->16
+    STA.B _C                                  ; $0A = $04EE7A
+    REP #$30                                  ; AXY->16; $0D = $7EC800
     LDA.W #Map16TilesLow
     STA.B _D
     LDA.W #DATA_04EE7A
@@ -7199,12 +7574,12 @@ CODE_04EEAA:
     AND.W #$00FF
     ASL A
     TAX
-    LDA.L DATA_04E587,X
+    LDA.L DATA_04E587,X                       ; Get VRAM location to write the tile.
     STA.B _0
     LDA.L DynStripeImgSize
     TAX
     LDA.W StructureCrushTile
-    AND.W #$00FF
+    AND.W #$00FF                              ; Check tile to upload. If not a castle top, skip first part.
     CMP.W #$0003
     BMI +
     ASL A
@@ -7212,12 +7587,12 @@ CODE_04EEAA:
     ASL A
     TAY
     LDA.B _0
-    STA.L DynamicStripeImage,X
+    STA.L DynamicStripeImage,X                ; Upload castle top to VRAM.
     CLC
     ADC.W #$2000
     STA.L DynamicStripeImage+8,X
     XBA
-    CLC
+    CLC                                       ; Move to location to next row, for the next tile.
     ADC.W #$0020
     XBA
     STA.B _0
@@ -7243,7 +7618,7 @@ CODE_04EEAA:
     ADC.W #$0010
     TAX
   + LDA.W StructureCrushTile
-    AND.W #$00FF
+    AND.W #$00FF                              ; Branch if destroying a castle/fort.
     CMP.W #$0002
     BPL CODE_04EF38
     ASL A
@@ -7264,42 +7639,44 @@ DATA_04F288:
     db $D0,$D8,$D8,$00,$00,$28,$28,$30
 
 CODE_04F290:
-    LDY.W KeyholeYPos+1
-    CPY.B #$0C
+; Initial X speeds for the OW ! blocks.
+; Initial Y speeds for the OW ! blocks.
+    LDY.W KeyholeYPos+1                       ; Routine for pressing an overworld switch palace switch.
+    CPY.B #$0C                                ; How many frames (divided by 10) until the switch palace actually gets destroyed.
     BCC +
-    STZ.W SwitchPalaceColor
+    STZ.W SwitchPalaceColor                   ; End the ! block spawn routine.
     RTS
 
-  + LDA.W KeyholeXPos+1
+  + LDA.W KeyholeXPos+1                       ; Branch if not spawning a ! block set.
     BNE CODE_04F314
-    CPY.B #$08
+    CPY.B #$08                                ; Number of times the ! blocks are spawned. Note that this is overridden by the frame counter.
     BCS CODE_04F30C
-    LDA.B #!SFX_SWITCHBLOCK
+    LDA.B #!SFX_SWITCHBLOCK                   ; Sound played by the ! blocks spawning.
     STA.W SPCIO3                              ; / Play sound effect
-    LDA.B #$07
+    LDA.B #$07                                ; How many ! blocks are spawned at once, minus 1.
     STA.B _0
     LDX.W KeyholeXPos
-  - LDY.W PlayerTurnOW
+  - LDY.W PlayerTurnOW                        ; Overworld switch block spawn loop.
     LDA.W OWPlayerXPos,Y
-    STA.L SwitchAniXPosLow,X
+    STA.L SwitchAniXPosLow,X                  ; Set initial X position (at Mario).
     LDA.W OWPlayerXPos+1,Y
     STA.L SwitchAniXPosHigh,X
     LDA.W OWPlayerYPos,Y
-    STA.L SwitchAniYPosLow,X
+    STA.L SwitchAniYPosLow,X                  ; Set initial Y position (at Mario).
     LDA.W OWPlayerYPos+1,Y
     STA.L SwitchAniYPosHigh,X
     LDA.B #$00
-    STA.L SwitchAniZPosLow,X
+    STA.L SwitchAniZPosLow,X                  ; Set initial Z position (at 0).
     STA.L SwitchAniZPosHigh,X
     LDY.B _0
     LDA.W DATA_04F280,Y
-    STA.L SwitchAniXSpeed,X
+    STA.L SwitchAniXSpeed,X                   ; Set initial X/Y speed.
     LDA.W DATA_04F288,Y
     STA.L SwitchAniYSpeed,X
-    LDA.B #$D0
+    LDA.B #$D0                                ; Initial Z speed.
     STA.L SwitchAniZSpeed,X
     INX
-    DEC.B _0
+    DEC.B _0                                  ; Loop for all switch blocks.
     BPL -
     CPX.B #$28
     BCC CODE_04F309
@@ -7307,26 +7684,27 @@ CODE_04F290:
     CLC
     ADC.B #$20
     CMP.B #$A0
-    BCC +
+    BCC +                                     ; Update the base sprite slot index and OAM index for the next set.
     LDA.B #$00
   + STA.W KeyholeYPos
     LDX.B #$00
 CODE_04F309:
     STX.W KeyholeXPos
 CODE_04F30C:
-    LDA.B #$10
+    LDA.B #$10                                ; How long to wait between each set of ! blocks.
     STA.W KeyholeXPos+1
-    INC.W KeyholeYPos+1
+    INC.W KeyholeYPos+1                       ; Increment count for number of sets spawned.
 CODE_04F314:
-    DEC.W KeyholeXPos+1
-    LDA.W KeyholeYPos
+; Not spawning a ! block set.
+    DEC.W KeyholeXPos+1                       ; Decrement counter until the next set.
+    LDA.W KeyholeYPos                         ; $0F = OAM index.
     STA.B _F
     LDX.B #$00
 CODE_04F31E:
     PHX
     LDY.B #$00
-    JSR CODE_04F39C
-    JSR CODE_04F397
+    JSR CODE_04F39C                           ; Update X/Y position.
+    JSR CODE_04F397                           ; Also gets onscreen X position in $00, and onscreen Y position in $02?
     JSR CODE_04F397
     PLX
     LDA.L SwitchAniZSpeed,X
@@ -7350,33 +7728,33 @@ CODE_04F31E:
     BNE +
     LDY.B _F
     XBA
-    STA.W OAMTileYPos+$140,Y
+    STA.W OAMTileYPos+$140,Y                  ; Set X and Y position of th block.
     LDA.B _0
     STA.W OAMTileXPos+$140,Y
-    LDA.B #$E6
+    LDA.B #$E6                                ; Tile to use for the overworld switch palace blocks.
     STA.W OAMTileNo+$140,Y
     LDA.W SwitchPalaceColor
     DEC A
-    ASL A
+    ASL A                                     ; Set YXPPCCCT for the blocks.
     ORA.B #$30
     STA.W OAMTileAttr+$140,Y
     TYA
     LSR A
-    LSR A
+    LSR A                                     ; Set size as 16x16.
     TAY
     LDA.B #$02
     STA.W OAMTileSize+$50,Y
-  + LDA.B _F
+  + LDA.B _F                                  ; Block is offscreen; skip.
     CLC
     ADC.B #$04
-    CMP.B #$A0
+    CMP.B #$A0                                ; Increment OAM index for next block.
     BCC +
     LDA.B #$00
   + STA.B _F
     INX
     CPX.W KeyholeXPos
     BCC CODE_04F31E
-    LDA.W KeyholeYPos+1
+    LDA.W KeyholeYPos+1                       ; Loop for all spawned blocks.
     CMP.B #$05
     BCC Return04F396
     CPX.B #$28
@@ -7385,12 +7763,14 @@ Return04F396:
     RTS
 
 CODE_04F397:
-    TXA
+; Routine to update an overworld switch palace block's X position.
+    TXA                                       ; Also gets onscreen $1A,y in $00,y. Y is incremented by 2 afterwards.
     CLC
     ADC.B #$28
     TAX
 CODE_04F39C:
-    PHY
+; Routine to update an overworld switch palace block's Y position.
+    PHY                                       ; Also gets onscreen $1A,y in $00,y. Y is incremented by 2 afterwards.
     LDA.L SwitchAniXSpeed,X
     ASL A
     ASL A
@@ -7443,11 +7823,20 @@ CODE_04F3E5:
     dw CODE_04F415
 
 CODE_04F3FA:
-    JSL ProcSaveMenu
+; Pointers to different parts of the overworld continue/save prompt.
+; 01 - Initialize game over / continue screen (if two player, load swap screen)
+; 02 - Open swap screen
+; 03 - Exchange lives between players screen
+; 04 - Close swap screen
+; 05 - Initialize save prompt
+; 06 - Open save prompt
+; 07 - Save prompt
+; 08 - Close save prompt
+    JSL ProcSaveMenu                          ; Routine to handle the save prompt.
     RTS
 
 CODE_04F3FF:
-    LDA.B #!SFX_MESSAGE
+    LDA.B #!SFX_MESSAGE                       ; Routine to initialize some overworld menus (swap lives/save/game over/continue)
     STA.W SPCIO3                              ; / Play sound effect
     INC.W OverworldPromptProcess
 CODE_04F407:
@@ -7469,7 +7858,7 @@ else                                          ;<================ U, SS, E0, & E1
 endif                                         ;/===============================================
 
 CODE_04F415:
-    LDX.B #$00
+    LDX.B #$00                                ; Routine to expand/shrink an overworld menu.
     LDA.W SavedPlayerLives
     CMP.W SavedPlayerLives+1
     BPL +
@@ -7592,21 +7981,34 @@ DATA_04F50F:
     db $7E,$B8,$7D,$F8
 
 CODE_04F513:
-    LDA.W byetudlrP1Frame
-    ORA.W byetudlrP2Frame
+; Stripe image to remove various menus (e.g. save, life swap).
+; Erase line 1
+; Erase line 2
+; Erase
+; Life exchange stripe image.
+; $04F4B6: MARIO
+; $04F4C4: LUIGI
+; $04F4D2: x00 (Mario's lives)
+; $04F4DC: x00 (Luigi's lives)
+; $04F4E2: Blank (for erasing arrow)
+; $04F4EA: Blank (for erasing arrow)
+; $04F4F2: Halo for Mario, if he's in game over.
+; $04F4FA: Halo for Luigi, if he's in game over.
+    LDA.W byetudlrP1Frame                     ; Routine to handle the life exchange message box.
+    ORA.W byetudlrP2Frame                     ; If neither player is pressing start, branch.
     AND.B #$10
     BEQ +
     LDX.W PlayerTurnLvl
-    LDA.W SavedPlayerLives,X
+    LDA.W SavedPlayerLives,X                  ; Update the current player's lives.
     STA.W PlayerLives
-    JSL CloseOverworldPrompt
+    JSL CloseOverworldPrompt                  ; Close the menu.
     RTS
 
-  + LDA.W byetudlrP1Frame
-    AND.B #$C0
+  + LDA.W byetudlrP1Frame                     ; Not closing the life exchange.
+    AND.B #$C0                                ; Branch A if Player 1 has pressed B/Y.
     BNE CODE_04F53B
     LDA.W byetudlrP2Frame
-    AND.B #$C0
+    AND.B #$C0                                ; Branch B if Player 2 has pressed B/Y.
     BEQ CODE_04F56C
     EOR.B #$C0
 CODE_04F53B:
@@ -7735,27 +8137,32 @@ DATA_04F672:
     db $01,$40,$80
 
 CODE_04F675:
-    PHB
+; Overworld sprite data. Five bytes per sprite: sprite number, x-pos, y-pos.
+; Only read once, on title screen load.
+; X position offsets for the overworld ghosts from their main map counterparts.
+; Y position offsets for the overworld ghosts from their main map counterparts.
+; Initial timers for the overworld ghosts (to make sure they don't overlap each other).
+    PHB                                       ; Routine to initialize overworld sprites during titlescreen load.
     PHK
     PLB
     LDX.B #$0C
     LDY.B #$4B
 CODE_04F67C:
-    LDA.W OverworldSprites-$0F,Y
+    LDA.W OverworldSprites-$0F,Y              ; Store sprite number.
     STA.W OWSpriteNumber+3,X
     CMP.B #$01
     BEQ ADDR_04F68A
     CMP.B #$02
     BNE +
 ADDR_04F68A:
-    LDA.B #$40
+    LDA.B #$40                                ; Distance to raise the Lakitu and Blue Bird sprites off the ground.
     STA.W OWSpriteZPosLow+3,X
   + LDA.W OverworldSprites-$0E,Y
-    STA.W OWSpriteXPosLow+3,X
+    STA.W OWSpriteXPosLow+3,X                 ; Store X spawn position.
     LDA.W OverworldSprites-$0D,Y
     STA.W OWSpriteXPosHigh+3,X
     LDA.W OverworldSprites-$0C,Y
-    STA.W OWSpriteYPosLow+3,X
+    STA.W OWSpriteYPosLow+3,X                 ; Store Y spawn position.
     LDA.W OverworldSprites-$0B,Y
     STA.W OWSpriteYPosHigh+3,X
     TYA
@@ -7766,16 +8173,16 @@ ADDR_04F68A:
     BPL CODE_04F67C
     LDX.B #$0D
 CODE_04F6B1:
-    STZ.W OWSpriteMisc0E25,X
+    STZ.W OWSpriteMisc0E25,X                  ; Loop to handle initializing the three overworld ghost sprites (slots 0D-0F).
     LDA.W DATA_04FD22
-    DEC A
+    DEC A                                     ; Super roundabout way of storing 0 to the Z speed, apparently?
     STA.W OWSpriteZSpeed,X
     LDA.W DATA_04F672-$0D,X
   - PHA
-    STX.W SaveFileDelete
+    STX.W SaveFileDelete                      ; Run the routine for each ghost.
     JSR CODE_04F853
     PLA
-    DEC A
+    DEC A                                     ; If a boo's timer is not 0, keep running the routine (to offset their initial positions from each other).
     BNE -
     INX
     CPX.B #$10
@@ -7798,44 +8205,47 @@ DATA_04F700:
     db $07,$05,$06,$07,$04,$06,$07,$05
 
 CODE_04F708:
-    LDA.B #$F7
-    JSR CODE_04F882
+; Possible lengths of time between each lightning flash.
+; Possible starting brightnesses for the overworld lightning flash effect.
+; Routine to animate the lightning flash on the overworld, as well as a few additional routines.
+    LDA.B #$F7                                ; Submaps to disable lightning effect in. Bitwise (myvfbSs-).
+    JSR CODE_04F882                           ; Branch if not active on this submap.
     BNE CODE_04F76E
-    LDY.W LightningFlashIndex
+    LDY.W LightningFlashIndex                 ; Branch if already flashing.
     BNE CODE_04F73B
     LDA.B TrueFrame
     LSR A
-    BCC CODE_04F76E
+    BCC CODE_04F76E                           ; Branch if not time to flash lightning.
     DEC.W LightningWaitTimer
     BNE CODE_04F76E
     TAY
     LDA.W CODE_04F708,Y
     AND.B #$07
-    TAX
+    TAX                                       ; Store a "random" amount of time to wait until the next flash, and initial intensity of the current flash.
     LDA.W DATA_04F6F8,X
     STA.W LightningWaitTimer
     LDY.W DATA_04F700,X
     STY.W LightningFlashIndex
-    LDA.B #$08
+    LDA.B #$08                                ; Set initial timer for the palette fade.
     STA.W LightningTimer
-    LDA.B #!SFX_THUNDER
+    LDA.B #!SFX_THUNDER                       ; SFX for VoB thunder effect.
     STA.W SPCIO3                              ; / Play sound effect
 CODE_04F73B:
     DEC.W LightningTimer
     BPL +
     DEC.W LightningFlashIndex
-    LDA.B #$04
+    LDA.B #$04                                ; Length of lightning flash.
     STA.W LightningTimer
   + TYA
-    ASL A
+    ASL A                                     ; Send the palette data.
     TAY
     LDX.W DynPaletteIndex
-    LDA.B #$02
+    LDA.B #$02                                ; Upload two bytes (one color).
     STA.W DynPaletteTable,X
-    LDA.B #$47
+    LDA.B #$47                                ; Which color is animated by the flash. Changing to 00 will make all transparency flash.
     STA.W DynPaletteTable+1,X
     LDA.W MainPalette+$50,Y
-    STA.W DynPaletteTable+2,X
+    STA.W DynPaletteTable+2,X                 ; Transfer color 28 + Y (i.e. colors 28 through 2F).
     LDA.W MainPalette+$51,Y
     STA.W DynPaletteTable+3,X
     STZ.W DynPaletteTable+4,X
@@ -7846,7 +8256,7 @@ CODE_04F73B:
 CODE_04F76E:
     LDX.B #$02
 CODE_04F770:
-    LDA.W OWSpriteNumber,X
+    LDA.W OWSpriteNumber,X                    ; Spawn the overworld clouds into slots 00-02.
     BNE +
     LDA.B #$05
     STA.W OWSpriteNumber,X
@@ -7921,7 +8331,7 @@ CODE_04F801:
     CPX.B #$0D
     BCS +
     LDA.W OWSpriteMisc0E25,X
-    BEQ +
+    BEQ +                                     ; If not an overworld ghost, decrement $0E25.
     DEC.W OWSpriteMisc0E25,X
   + CPX.B #$05
     BCC CODE_04F819
@@ -7953,7 +8363,11 @@ DATA_04F843:
     db $C8,$CC,$A0,$A4,$D8,$DC,$E0,$E4
 
 CODE_04F853:
-    JSR CODE_04F87C
+; Table of which submaps each sprite shouldn't process.
+; Indexed by sprite number, from $04F828. Each byte is bitwise (myvfbSs).
+; Timer offsets for each overworld sprite slot.
+; OAM indices for overworld sprite slot.
+    JSR CODE_04F87C                           ; Check whether the sprite should be processed on the current submap.
     BNE Return04F828
     LDA.W OWSpriteNumber,X
     JSL ExecutePtr
@@ -7974,13 +8388,26 @@ DATA_04F875:
     db $80,$40,$20,$10,$08,$04,$02
 
 CODE_04F87C:
-    LDY.W OWSpriteNumber,X
-    LDA.W Return04F828,Y
+; Overworld sprite MAIN pointers.
+; 00 - Empty slot
+; 01 - Lakitu
+; 02 - Blue bird
+; 03 - Fish (x3)
+; 04 - Piranha plant
+; 05 - Moving cloud
+; 06 - Koopa kid (x3)
+; 07 - Smoke (x2)
+; 08 - Bowser sign
+; 09 - Bowser
+; 0A - Ghost (x2)
+; Routine to determine whether to process an overworld sprite. Also partially used for the lightning effect.
+    LDY.W OWSpriteNumber,X                    ; Returns #$00 if a sprite should be processed, else #$01.
+    LDA.W Return04F828,Y                      ; Load which submaps to process the sprite on.
 CODE_04F882:
     STA.B _0
     LDY.W OverworldProcess
     CPY.B #$0A
-    BNE CODE_04F892
+    BNE CODE_04F892                           ; Branch to return false if Mario is switching between submaps.
     LDY.W OWSubmapSwapProcess
     CPY.B #$01
     BNE CODE_04F8A3
@@ -7991,7 +8418,7 @@ CODE_04F892:
     TAY
     LDA.W OWPlayerSubmap,Y
     TAY
-    LDA.W DATA_04F875,Y
+    LDA.W DATA_04F875,Y                       ; Return true if the sprite should be processed on this submap.
     AND.B _0
     BEQ +
 CODE_04F8A3:
@@ -8017,7 +8444,7 @@ DATA_04F8CA:
     db $10,$F0
 
 ADDR_04F8CC:
-    JSR CODE_04FE90
+    JSR CODE_04FE90                           ; Overworld Lakitu MAIN
     CLC
     JSR ADDR_04FE00
     JSR CODE_04FE62
@@ -8210,18 +8637,23 @@ DATA_04FA3A:
     db $73,$72,$63,$62
 
 CODE_04FA3E:
-    LDA.W OWSpriteMisc0DF5,X
+; X position (lo) for the three overworld fish.
+; X position (hi) for the three overworld fish.
+; Y position (lo) for the three overworld fish.
+; Y position (hi) for the three overworld fish.
+; Overworld fish MAIN.
+    LDA.W OWSpriteMisc0DF5,X                  ; Branch if already jumping.
     BNE CODE_04FA83
     LDA.W OverworldLayer1Tile
     SEC
-    SBC.B #$4E
+    SBC.B #$4E                                ; If not touching one of the fish paths ($4E-$50), return.
     CMP.B #$03
     BCS Return04FA82
     TAY
     LDA.W DATA_04FA2E,Y
     STA.W OWSpriteXPosLow,X
     LDA.W DATA_04FA31,Y
-    STA.W OWSpriteXPosHigh,X
+    STA.W OWSpriteXPosHigh,X                  ; Set spawn position for the fish.
     LDA.W DATA_04FA34,Y
     STA.W OWSpriteYPosLow,X
     LDA.W DATA_04FA37,Y
@@ -8301,7 +8733,7 @@ CODE_04FAED:
     JMP CODE_04FB0A
 
 ADDR_04FAF1:
-    JSR ADDR_04FED7
+    JSR ADDR_04FED7                           ; Overworld pirhanna plant MAIN.
     JSR CODE_04FE62                           ; NOP this and the sprite doesn't appear
     JSR CODE_04FE5B                           ; NOP this and the sprite stops animating.
     LDY.B #$2A                                ;Tile for pirahna plant, #1
@@ -8315,23 +8747,23 @@ CODE_04FB06:
     SEC
     LDY.W DATA_04F843,X
 CODE_04FB0A:
-    STA.W OAMTileNo+$40,Y                     ;Tilemap
-    XBA
+    STA.W OAMTileNo+$40,Y                     ;Tilemap; Used as a generic overworld sprite GFX routine. $00 = xpos, $02 = ypos, A = tile/props, carry = size.
+    XBA                                       ; Store tile number and YXPPCCCT.
     STA.W OAMTileAttr+$40,Y                   ;Property
-    LDA.B _1
+    LDA.B _1                                  ; Return if horizontally offscreen.
     BNE +
-    LDA.B _0
+    LDA.B _0                                  ; Store X position.
     STA.W OAMTileXPos+$40,Y                   ;X Position
-    LDA.B _3
+    LDA.B _3                                  ; Return if vertically offscreen.
     BNE +
     PHP
-    LDA.B _2
+    LDA.B _2                                  ; Store Y position.
     STA.W OAMTileYPos+$40,Y                   ;Y Position
     TYA
     LSR A
     LSR A
     PLP
-    PHY
+    PHY                                       ; Store tile size.
     TAY
     ROL A
     ASL A
@@ -8345,12 +8777,13 @@ CODE_04FB0A:
   + RTS
 
 CODE_04FB37:
-    LDA.B #$02                                ;\Overworld Sprite X Speed
+; Overworld cloud MAIN
+    LDA.B #$02                                ;\Overworld Sprite X Speed; X speed of the cloud.
     STA.W OWSpriteXSpeed,X                    ;/
-    LDA.B #$FF                                ;\Overworld Sprite Y Speed
+    LDA.B #$FF                                ;\Overworld Sprite Y Speed; Y speed of the cloud.
     STA.W OWSpriteYSpeed,X                    ;/
-    JSR CODE_04FE90                           ;Move the overworld cloud
-    JSR CODE_04FE62
+    JSR CODE_04FE90                           ;Move the overworld cloud; Update X/Y positions.
+    JSR CODE_04FE62                           ; Get draw info.
     REP #$20                                  ; A->16
     LDA.B _0
     CLC
@@ -8358,24 +8791,24 @@ CODE_04FB37:
     CMP.W #$0140
     BCS +
     LDA.B _2
-    CLC
+    CLC                                       ; If offscreen, erase.
     ADC.W #$0080
     CMP.W #$01A0
   + SEP #$20                                  ; A->8
     BCC +
     STZ.W OWSpriteNumber,X
-  + LDA.B #$32
+  + LDA.B #$32                                ; YXPPCCCT for the first tile.
     JSR CODE_04FB77
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Draw 2 16x16 tiles.
     LDA.B _0
     CLC
-    ADC.W #$0010
+    ADC.W #$0010                              ; Offset of second tile from first.
     STA.B _0
     SEP #$20                                  ; A->8
-    LDA.B #$72
+    LDA.B #$72                                ; YXPPCCCT for the second tile.
 CODE_04FB77:
     XBA
-    LDA.B #$44
+    LDA.B #$44                                ; Tile number for both tiles.
 CODE_04FB7A:
     SEC
 CODE_04FB7B:
@@ -8408,17 +8841,23 @@ DATA_04FB95:
     db $02,$0F,$00
 
 CODE_04FB98:
-    LDA.W OWSpriteMisc0DF5,X
+; AND table used by the overworld Koopa Kid.
+; X positions (lo) for the overworld Koopa Kid sprites.
+; X positions (hi) for the overworld Koopa Kid sprites.
+; Y positions (lo) for the overworld Koopa Kid sprites.
+; Y positions (hi) for the overworld Koopa Kid sprites.
+; Unused subroutine to handle the overworld Koopa Kids forcing Mario into a level.
+    LDA.W OWSpriteMisc0DF5,X                  ; Branch if already active.
     BNE ADDR_04FBD8
     LDA.W OverworldLayer1Tile
     SEC
-    SBC.B #$49
+    SBC.B #$49                                ; Return if Mario isn't on one of tiles 49-4B.
     CMP.B #$03
     BCS Return04FB84
     TAY
     STA.W KoopaKidTile
     LDA.W KoopaKidActive
-    AND.W DATA_04FB85,Y
+    AND.W DATA_04FB85,Y                       ; Return if set to not trigger.
     BNE Return04FB84
     LDA.W DATA_04FB88,Y
     STA.W OWSpriteXPosLow,X
@@ -8485,32 +8924,38 @@ DATA_04FC36:
     db $FA,$F9,$F9,$F8,$F7,$F7,$F6,$F5
 
 CODE_04FC46:
-    LDA.W PlayerTurnOW
+; X positions of the two Yoshi's House smoke sprites. Main map, submaps.
+; Y positions of the two Yoshi's House smoke sprites. Main map, submaps.
+; X position offsets for the Yoshi's House smoke animation.
+; Y position offsets for the Yoshi's House smoke animation.
+; Overworld smoke misc RAM:
+; $0DF5 - Index to position offsets.
+    LDA.W PlayerTurnOW                        ; Overworld smoke MAIN.
     LSR A
     LSR A
     TAY
     LDA.W OWPlayerSubmap,Y
-    ASL A
+    ASL A                                     ; Use current submap as an index.
     TAY
     LDA.W DATA_04FC1E,Y
     STA.W OWSpriteXPosLow,X
     LDA.W DATA_04FC1F,Y
-    STA.W OWSpriteXPosHigh,X
+    STA.W OWSpriteXPosHigh,X                  ; Set the sprite's position.
     LDA.W DATA_04FC22,Y
     STA.W OWSpriteYPosLow,X
     LDA.W DATA_04FC23,Y
     STA.W OWSpriteYPosHigh,X
     LDA.B TrueFrame
-    AND.B #$0F
+    AND.B #$0F                                ; How many frames it is before the smoke puffs move.
     BNE CODE_04FC7C
     LDA.W OWSpriteMisc0DF5,X
     INC A
-    CMP.B #$0C
+    CMP.B #$0C                                ; How many frames are in the smoke puff animation (index to $04FC36)
     BCC +
     LDA.B #$00
   + STA.W OWSpriteMisc0DF5,X
 CODE_04FC7C:
-    LDA.B #$03
+    LDA.B #$03                                ; Number of smoke puffs to draw at a time.
     STA.B _4
     LDA.B TrueFrame
     STA.B _6
@@ -8522,11 +8967,11 @@ CODE_04FC8D:
     PHY
     PHX
     LDX.W SaveFileDelete
-    JSR CODE_04FE62
+    JSR CODE_04FE62                           ; Get relative X and Y positions in to $00 and $02.
     PLX
     LDA.B _7
     CLC
-    ADC.W DATA_04FC36,X
+    ADC.W DATA_04FC36,X                       ; Add Y position offset.
     CLC
     ADC.B _2
     STA.B _2
@@ -8534,7 +8979,7 @@ CODE_04FC8D:
     DEC.B _3
   + LDA.B _0
     CLC
-    ADC.W DATA_04FC26,X
+    ADC.W DATA_04FC26,X                       ; Add X position offset.
     STA.B _0
     BCC +
     INC.B _1
@@ -8546,18 +8991,18 @@ CODE_04FC8D:
     TAX
     BCC +
     LDA.B _7
-    SBC.B #$0C
+    SBC.B #$0C                                ; Distance between the current smoke puff and the next.
     STA.B _7
-  + LDA.B #$30
+  + LDA.B #$30                                ; YXPPCCCT properties for the Yoshi's House smoke.
     XBA
-    LDY.B #$28
+    LDY.B #$28                                ; First tile to use for the Yoshi's House smoke (big puffs).
     LDA.B _6
     CLC
     ADC.B #$0A
     STA.B _6
     AND.B #$20
     BEQ +
-    LDY.B #$5F
+    LDY.B #$5F                                ; Second tile to use for the Yoshi's House smoke (small puffs).
   + TYA
     PLY
     JSR CODE_04FAED
@@ -8569,7 +9014,7 @@ CODE_04FC8D:
 
                                               ;Bowser's sign code starts here.
 CODE_04FCE1:
-    JSR CODE_04FE62
+    JSR CODE_04FE62                           ; Overworld Bowser sign MAIN.
     LDA.B #$04                                ;\How many tiles to show up for Bowser's sign
     STA.B _4                                  ;/
     LDA.B #$6F
@@ -8605,15 +9050,21 @@ DATA_04FD22:
     db $01,$FF
 
 CODE_04FD24:
-    JSR CODE_04FE90
+; Turn timer table for overworld ghosts. Indexed from $04FD06.
+; Various speed modifiers for the overworld Bowser and ghosts.
+; One byte for left, one for right: Bowser x,y; ghost x,y,z
+; Various speed limits for the overworld Bowser and ghosts.
+; One byte for left, one for right: Bowser x,y; ghost x,y,z
+; Starting Z speeds for the overworld Boos. Only the first byte is actually used, for whatever reason.
+    JSR CODE_04FE90                           ; Overworld Bowser MAIN.
     JSR CODE_04FE62
     JSR CODE_04FE62
-    LDA.B #$00
+    LDA.B #$00                                ; YXPPCCCT for the overworld Bowser sprite when facing left.
     LDY.W OWSpriteXSpeed,X
     BMI +
-    LDA.B #$40
+    LDA.B #$40                                ; YXPPCCCT for the overworld Bowser sprite when facing right.
   + XBA
-    LDA.B #$68
+    LDA.B #$68                                ; Tile to use for the overworld Bowser.
     JSR CODE_04FB06
     INC.W OWSpriteMisc0E15,X
     LDA.W OWSpriteMisc0E15,X
@@ -8622,38 +9073,39 @@ CODE_04FD24:
     LDA.W OWSpriteMisc0E05,X
     ORA.B #$02
     TAY
-    TXA
+    TXA                                       ; Update Y speed.
     ADC.B #$10
     TAX
     JSR CODE_04FD55
-    LDY.W OWSpriteMisc0DF5,X
+    LDY.W OWSpriteMisc0DF5,X                  ; Update X speed.
 CODE_04FD55:
-    LDA.W OWSpriteXSpeed,X
-    CLC
+    LDA.W OWSpriteXSpeed,X                    ; Subroutine to handle X/Y/Z speeds for the overworld Bowser and ghosts.
+    CLC                                       ; Update respective speed.
     ADC.W DATA_04FD10,Y
     STA.W OWSpriteXSpeed,X
     CMP.W DATA_04FD1A,Y
     BNE CODE_04FD68
-    TYA
+    TYA                                       ; If at limit, invert direction.
     EOR.B #$01
     TAY
 CODE_04FD68:
     TYA
-    STA.W OWSpriteMisc0DF5,X
+    STA.W OWSpriteMisc0DF5,X                  ; Update direction of movement.
     LDX.W SaveFileDelete
 Return04FD6F:
     RTS
 
 CODE_04FD70:
-    JSR CODE_04FE90
-    JSR CODE_04FE62
+; Overworld ghost MAIN.
+    JSR CODE_04FE90                           ; Update position.
+    JSR CODE_04FE62                           ; GetDrawInfo (X = $00, Y = $02).
     JSR CODE_04FE62
     LDY.W PlayerTurnLvl
-    LDA.W OWPlayerSubmap,Y
+    LDA.W OWPlayerSubmap,Y                    ; If on the main map, don't offset the sprites.
     BEQ CODE_04FDA5
-    CPX.B #$0F
+    CPX.B #$0F                                ; Sprite slot for FoI's ghost.
     BNE +
-    LDA.W OWEventsActivated+5
+    LDA.W OWEventsActivated+5                 ; Conditions that reveal FoI's ghost (events 2B and 2E).
     AND.B #$12
     BNE +
     STX.B _3
@@ -8662,45 +9114,45 @@ CODE_04FD70:
     TAY
     REP #$20                                  ; A->16
     LDA.B _0
-    CLC
+    CLC                                       ; Add ghost's X-position offset from its main map counterpart.
     ADC.W ExtraOWGhostXPos-$1A,Y
     STA.B _0
     LDA.B _2
-    CLC
+    CLC                                       ; Add ghost's Y-position offset from its main map counterpart.
     ADC.W ExtraOWGhostYPos-$1A,Y
     STA.B _2
     SEP #$20                                  ; A->8
 CODE_04FDA5:
-    LDA.B #$34
-    LDY.W OWSpriteXSpeed,X
+    LDA.B #$34                                ; YXPPCCCT for the overworld ghost when facing left.
+    LDY.W OWSpriteXSpeed,X                    ; Draw the ghost.
     BMI +
-    LDA.B #$44
+    LDA.B #$44                                ; YXPPCCCT for the overworld ghost when facing right.
   + XBA
-    LDA.B #$60
+    LDA.B #$60                                ; Tile to use for the overworld ghost.
     JSR CODE_04FB06
     LDA.W OWSpriteMisc0E25,X
     STA.B _0
-    INC.W OWSpriteMisc0E25,X
+    INC.W OWSpriteMisc0E25,X                  ; Increase movement timer.
     TXA
     CLC
-    ADC.B #$20
+    ADC.B #$20                                ; Update Z speed.
     TAX
     LDA.B #$08
     JSR CODE_04FDD2
     TXA
     CLC
-    ADC.B #$10
+    ADC.B #$10                                ; Update Y speed.
     TAX
     LDA.B #$06
     JSR CODE_04FDD2
-    LDA.B #$04
+    LDA.B #$04                                ; Update X speed.
 CODE_04FDD2:
     ORA.W OWSpriteMisc0DF5,X
     TAY
     LDA.W DATA_04FD0A-4,Y
-    AND.B _0
+    AND.B _0                                  ; If time to, branch to update direction and return.
     BNE CODE_04FD68
-    JMP CODE_04FD55
+    JMP CODE_04FD55                           ; Else, just update its speed.
 
 
 DATA_04FDE0:
@@ -8770,37 +9222,38 @@ CODE_04FE5B:
     RTS
 
 CODE_04FE62:
-    TXA
+; Routine to store relative overworld sprite positions into $00 and $02.
+    TXA                                       ; Basically GetDrawInfo for overworld sprites.
     CLC
     ADC.B #$10
     TAX
-    LDY.B #$02
+    LDY.B #$02                                ; Run for Y position.
     JSR CODE_04FE7D
     LDX.W SaveFileDelete
     LDA.B _2
     SEC
-    SBC.W OWSpriteZPosLow,X
+    SBC.W OWSpriteZPosLow,X                   ; Factor in Z position to the relative Y position.
     STA.B _2
     BCS +
     DEC.B _3
-  + LDY.B #$00
+  + LDY.B #$00                                ; Run for X position.
 CODE_04FE7D:
     LDA.W OWSpriteXPosHigh,X
     XBA
     LDA.W OWSpriteXPosLow,X
     REP #$20                                  ; A->16
-    SEC
-    SBC.W Layer1XPos,Y
+    SEC                                       ; $00 = X position onscreen
+    SBC.W Layer1XPos,Y                        ; $02 = Y position onscreen
     STA.W _0,Y
     SEP #$20                                  ; A->8
     RTS
 
 CODE_04FE90:
-    TXA                                       ;Transfer X to A
+    TXA                                       ;Transfer X to A; Routine to update overworld sprite low positions.
     CLC                                       ;Clear Carry Flag
     ADC.B #$20                                ;Add #$20 to A
     TAX                                       ;Transfer A to X
-    JSR CODE_04FEAB
+    JSR CODE_04FEAB                           ; Run for Z position.
     LDA.W OWSpriteXPosLow,X                   ;Load OW Sprite XPos Low
     BPL +                                     ;If it is => 80
     STZ.W OWSpriteXPosLow,X                   ;Store 00 OW Sprite Xpos Low
@@ -8808,13 +9261,13 @@ CODE_04FE90:
     SEC                                       ;Set Carry Flag...
     SBC.B #$10                                ;...for substraction
     TAX                                       ;Transfer A to X
-    JSR CODE_04FEAB
-    LDX.W SaveFileDelete
+    JSR CODE_04FEAB                           ; Run for Y position.
+    LDX.W SaveFileDelete                      ; Run for X position.
 CODE_04FEAB:
     LDA.W OWSpriteXSpeed,X                    ;Load OW Sprite X Speed
     ASL A                                     ;Multiply it by 2
     ASL A                                     ;4...
-    ASL A                                     ;8...
+    ASL A                                     ;8...; Update fraction bits.
     ASL A                                     ;16...
     CLC                                       ;Clear Carry Flag
     ADC.W OWSpriteXPosSpx,X
@@ -8832,7 +9285,7 @@ CODE_04FEAB:
     DEY
   + ADC.W OWSpriteXPosLow,X
     STA.W OWSpriteXPosLow,X
-    TYA
+    TYA                                       ; Update sprite position.
     ADC.W OWSpriteXPosHigh,X
     STA.W OWSpriteXPosHigh,X
     RTS

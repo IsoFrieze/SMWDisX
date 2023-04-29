@@ -632,7 +632,14 @@ EraseAllStripe:
     db $5F,$FE,$FA,$08,$FF
 
 CODE_0C938D:
-    PHB                                       ; Wrapper
+; FE00
+; FF00
+; Layer 2 event tilemap (tile numbers). Uncompressed.
+; First 0x900 bytes are 6x6 blocks, last 0x400 bytes are 2x2s.
+; The YXPCCCTT for each tile is retrieved from RAM at $7F0000.
+; Layer 2 event tilemap (yxpccctt). Compressed with LC_RLE1.
+; Same format as above table when uncompressed.
+    PHB                                       ; Wrapper; Primary wrapper for Game Mode 1B (staff roll only).
     PHK
     PLB
     SEP #$30                                  ; AXY->8
@@ -642,16 +649,16 @@ CODE_0C938D:
     RTL
 
 CODE_0C939A:
-    PHB                                       ; Wrapper
+    PHB                                       ; Wrapper; Primary wrapper for Game Mode 1F (Yoshi's House).
     PHK
     PLB
-    JSR CODE_0CA0E3
-    JSR CODE_0CA1D4
+    JSR CODE_0CA0E3                           ; Run general routine for the scene.
+    JSR CODE_0CA1D4                           ; Run routines for the different parts of the scene.
     PLB
     RTL
 
 CODE_0C93A5:
-    PHB                                       ; Wrapper
+    PHB                                       ; Wrapper; Primary wrapper for Game Mode 25 (enemy roll).
     PHK
     PLB
     JSR CODE_0CAEAD
@@ -659,14 +666,14 @@ CODE_0C93A5:
     RTL
 
 CODE_0C93AD:
-    PHB
+    PHB                                       ; Main routine for game mode 21 (fade to enemy roll, currently at black screen)
     PHK
     PLB
-    DEC.W Layer3ScrollYSpeed+1
+    DEC.W Layer3ScrollYSpeed+1                ; Decrease timer and return if not zero yet.
     BNE +
-    LDA.B #$23
+    LDA.B #$23                                ; Switch to game mode 23 (fade to enemy roll, black 2)
     STA.W GameMode
-    LDA.B #$FF
+    LDA.B #$FF                                ; Initialize counter for current enemy set.
     STA.W CreditsScreenNumber
   + PLB
     RTL
@@ -691,7 +698,9 @@ DATA_0C93CF:
     dw $FEFF
 
 CODE_0C93DD:
-    REP #$30                                  ; AXY->16
+; Pointers to each of the credits backgrounds. All in bank $0C.
+; AND values for each of the BG Map16 8x8 tiles. Used to clear out the "t" bit in the YXPPCCCT settings.
+    REP #$30                                  ; AXY->16; Routine to load the staff roll background for credits?
     STZ.W LevelLoadObject
 CODE_0C93E2:
     LDA.W LevelLoadObject
@@ -710,12 +719,12 @@ CODE_0C93E2:
     LDY.W #$0001
   + LDX.W #$0000
     TYA
-  - STA.L Layer2TilemapHigh,X
+  - STA.L Layer2TilemapHigh,X                 ; Clear out layer 2 tilemap.
     STA.L Layer2TilemapHigh+$200,X
     INX
     CPX.W #$0200
     BNE -
-    LDA.B #$0C
+    LDA.B #$0C                                ; Set bank byte to #$0C.
     STA.B Layer2DataPtr+2
     LDX.W #$B900
     STX.B _D
@@ -730,15 +739,15 @@ CODE_0C93E2:
     STA.B Layer1DataPtr
     SEP #$30                                  ; AXY->8
     STZ.B Layer1DataPtr+2
-    STZ.W LevelLoadObject
+    STZ.W LevelLoadObject                     ; Do DMA for uploading the first credits background.
     JSL CODE_0C9567
     JSR CODE_0CA051
-    LDA.B #!BGM_STAFFCREDITS
+    LDA.B #!BGM_STAFFCREDITS                  ; Music for the staff roll part of the credits.
     STA.W SPCIO2                              ; / Change music
     RTL
 
 CODE_0C944C:
-    REP #$30                                  ; AXY->16
+    REP #$30                                  ; AXY->16; Subroutine to?
     LDY.W #$0000
     STY.B _3
     STY.B _5
@@ -804,25 +813,25 @@ CODE_0C9492:
     RTS
 
 CODE_0C94C0:
-    SEP #$20                                  ; A->8
+    SEP #$20                                  ; A->8; Routine to load the credits BGs into RAM at $7F4000?
     REP #$10                                  ; XY->16
     LDX.W #$B900
-    STX.B Map16LowPtr
+    STX.B Map16LowPtr                         ; $6B = $7EB900 (Layer 2 tilemap, low byte)
     LDA.B #$7E
     STA.B Map16LowPtr+2
     STA.B Map16HighPtr+2
-    LDX.W #$BD00
+    LDX.W #$BD00                              ; $6E = $7EBD00 (Layer 2 tilemap, high byte)
     STX.B Map16HighPtr
-    LDA.B #$0D
+    LDA.B #$0D                                ; $6A = ??? Bank $0D?
     STA.B Layer2DataPtr+2
-    LDY.W #$00F0
+    LDY.W #$00F0                              ; Empty tile to write, for clearing out data.
     STY.B _4
     LDA.W LevelLoadObject
     XBA
     AND.B #$00
     TAX
     STX.B _0
-    LDX.W #$007F
+    LDX.W #$007F                              ; Upload each tilemap to RAM?
     STX.B _8
 CODE_0C94EB:
     SEP #$20                                  ; A->8
@@ -895,49 +904,51 @@ DATA_0C9560:
     dw $0400
 
 CODE_0C9567:
-    SEP #$30                                  ; AXY->8
+; DMA settings for the credits backgrounds, first half.
+; DMA settings for the credits backgrounds, second half.
+    SEP #$30                                  ; AXY->8; DMA routine for updating backgrounds during the credits staff roll.
     PHB
     PHK
     PLB
-    LDA.B #$80
+    LDA.B #$80                                ; Increment word.
     STA.W HW_VMAINC
     LDA.B #$C0
-    STA.W HW_VMADD
+    STA.W HW_VMADD                            ; Write to VRAM address $30C0.
     LDA.B #$30
     STA.W HW_VMADD+1
     LDY.B #$06
-  - LDA.W DATA_0C9559,Y
+  - LDA.W DATA_0C9559,Y                       ; Upload controls, destination, and size.
     STA.W HW_DMAPARAM+$10,Y
     DEY
     BPL -
     LDA.W LevelLoadObject
     ASL A
-    ASL A
+    ASL A                                     ; Update background source to $7F4000 + ($800 * (BG number))
     ASL A
     ORA.W HW_DMAADDR+$11
     STA.W HW_DMAADDR+$11
     LDA.B #$02
     STA.W HW_MDMAEN
-    LDA.B #$80
+    LDA.B #$80                                ; Increment word.
     STA.W HW_VMAINC
     LDA.B #$C0
-    STA.W HW_VMADD
+    STA.W HW_VMADD                            ; Write to VRAM address $34C0.
     LDA.B #$34
     STA.W HW_VMADD+1
     LDY.B #$06
-  - LDA.W DATA_0C9560,Y
+  - LDA.W DATA_0C9560,Y                       ; Upload controls, destination, and size.
     STA.W HW_DMAPARAM+$10,Y
     DEY
     BPL -
     LDA.W LevelLoadObject
     ASL A
-    ASL A
+    ASL A                                     ; Update background source to $7F4000 + ($800 * (BG number))
     ASL A
     ORA.W HW_DMAADDR+$11
     STA.W HW_DMAADDR+$11
     LDA.B #$02
     STA.W HW_MDMAEN
-    STZ.W CreditsUpdateBG
+    STZ.W CreditsUpdateBG                     ; Indicate that the update is finished.
     PLB
     RTL
 
@@ -1513,20 +1524,85 @@ DATA_0C9EAC:
     db $40,$3E,$FC,$00,$FF
 
 CODE_0C9EB1:
-    REP #$30                                  ; AXY->16
+; Credits stripe image (staff roll).
+; Two bytes precede each line: x-pos, length. Rest are tile data.
+; $0C95C9 - EXECUTIVE PRODUCER
+; $0C95ED - (blank line, no preceding)
+; $0C95F0 - HIROSHI YAMAUCHI (upper)
+; $0C9612 - HIROSHI YAMAUCHI (lower)
+; $0C9634 - PRODUCER
+; $0C9646 - SHIGERU MIYAMOTO (upper)
+; $0C9668 - SHIGERU MIYAMOTO (lower)
+; $0C968A - MAIN DIRECTOR
+; $0C96A6 - TAKASHI TEZUKA (upper)
+; $0C96C4 - TAKASHI TEZUKA (lower)
+; $0C96E2 - MAP DIRECTOR
+; $0C96FC - HIDEQUI KONNO (upper)
+; $0C9718 - HIDEQUI KONNO (lower)
+; $0C9734 - AREA DIRECTOR
+; $0C9750 - KATSUYA EGUCHI (upper)
+; $0C976E - KATSUYA EGUCHI (lower)
+; $0C978C - PROGRAM DIRECTOR
+; $0C97AE - TOSHIHIKO NAKAGO (upper)
+; $0C97D0 - TOSHIHIKO NAKAGO (lower)
+; $0C97F2 - MARIO AND SYSTEM PROGRAMMER
+; $0C982A - TOSHIO IWAWAKI (upper)
+; $0C9848 - TOSHIO IWAWAKI (lower)
+; $0C9866 - OBJECT PROGRAMMER
+; $0C988A - KAZUAKI MORITA (upper)
+; $0C98A8 - KAZUAKI MORITA (lower)
+; $0C98C6 - BACKGROUND PROGRAMMER
+; $0C98F2 - SHIGEHIRO KASAMATSU (upper)
+; $0C991A - SHIGEHIRO KASAMATSU (lower)
+; $0C9942 - TATSUNORI TAKAKURA (upper)
+; $0C9968 - TATSUNORI TAKAKURA (lower)
+; $0C998E - MAP PROGRAMMER
+; $0C99AC - TATSUO NISHIYAMA (upper)
+; $0C99CE - TATSUO NISHIYAMA (lower)
+; $0C99F0 - AREA DATA INPUT
+; $0C9A10 - YOSHIHIRO NOMOTO (upper)
+; $0C9A32 - YOSHIHIRO NOMOTO (lower)
+; $0C9A54 - EIJI NOTO (upper)
+; $0C9A68 - EIJI NOTO (lower)
+; $0C9A7C - SATORU TAKAHATA (upper)
+; $0C9A9C - SATORU TAKAHATA (lower)
+; $0C9ABC - CHARACTER GRAPHIC DESIGNER
+; $0C9AF2 - SHIGEFUMI HINO (upper)
+; $0C9B10 - SHIGEFUMI HINO (lower)
+; $0C9B2E - SOUND COMPOSER
+; $0C9B4C - KOJI KONDO (upper)
+; $0C9B62 - KOJI KONDO (lower)
+; $0C9B78 - SPECIAL THANKS TO:
+; $0C9B9E - YOICHI KOTABE (upper)
+; $0C9BBA - YOICHI KOTABE (lower)
+; $0C9BD6 - YASUHIRO SAKAI (upper)
+; $0C9BF4 - YASUHIRO SAKAI (lower)
+; $0C9C12 - MIE YOSHIMURA (upper)
+; $0C9C2E - MIE YOSHIMURA (lower)
+; $0C9C4A - HIRONOBU KAKUI (upper)
+; $0C9C68 - HIRONOBU KAKUI (lower)
+; $0C9C86 - KEIZO KATO (upper)
+; $0C9C9C - KEIZO KATO (lower)
+; $0C9CB2 - TAKAO SHIMIZU (upper)
+; $0C9CCE - TAKAO SHIMIZU (lower)
+; $0C9CEA - DAYV BROOKS (upper)
+; $0C9D02 - DAYV BROOKS (lower)
+; Indices to the above table for each line, including preceding bytes. 0026 = blank
+; Stripe command to clear out the current line of text so it can be rewritten.
+    REP #$30                                  ; AXY->16; Routine to upload a single line of the credits to VRAM.
     LDA.L DynStripeImgSize
     TAX
     LDY.W #$0000
     SEP #$20                                  ; A->8
     LDA.B StaffRollLinePos+1
-    STA.L DynamicStripeImage,X
-    LDA.B StaffRollLinePos
+    STA.L DynamicStripeImage,X                ; Store current line number.
+    LDA.B StaffRollLinePos                    ; (aka first two stripe bytes, layer/ypos only)
     STA.L DynamicStripeImage+1,X
     INX
     INX
   - LDA.W DATA_0C9EAC,Y
     STA.L DynamicStripeImage,X
-    INX
+    INX                                       ; Clear out the entire line.
     INY
     CPY.W #$0005
     BNE -
@@ -1536,33 +1612,33 @@ CODE_0C9EB1:
     STA.L DynStripeImgSize
     LDA.B StaffRollCurLine
     AND.W #$00FF
-    ASL A
+    ASL A                                     ; Get index to the credits line to write.
     TAY
     LDA.W DATA_0C9D18,Y
     TAY
     SEP #$20                                  ; A->8
-    INC.B StaffRollCurLine
+    INC.B StaffRollCurLine                    ; Increase line index for next runthrough.
     LDA.W DATA_0C95C7,Y
-    CMP.B #$FF
+    CMP.B #$FF                                ; If #$FF is loaded, skip the line.
     BEQ CODE_0C9F43
     LDA.W DATA_0C95C7,Y
-    STA.B _2
+    STA.B _2                                  ; Store preceding bytes for each line.
     LDA.W DATA_0C95C7+1,Y
     STA.B _0
     STZ.B _1
     INY
     INY
-    LDA.B StaffRollLinePos+1
+    LDA.B StaffRollLinePos+1                  ; Store VRAM byte 1 (0101 YXyy)
     STA.L DynamicStripeImage,X
     LDA.B StaffRollLinePos
-    CLC
+    CLC                                       ; Store VRAM byte 2 (yyyxxxxx)
     ADC.B _2
     STA.L DynamicStripeImage+1,X
     INX
     INX
     LDA.B _1
-    STA.L DynamicStripeImage,X
-    LDA.B _0
+    STA.L DynamicStripeImage,X                ; Store VRAM bytes 3 and 4
+    LDA.B _0                                  ; (length)
     STA.L DynamicStripeImage+1,X
     INX
     INX
@@ -1571,20 +1647,20 @@ CODE_0C9EB1:
     STA.L DynamicStripeImage,X
     INX
     INX
-    INY
+    INY                                       ; Loop to upload a line of the credits to VRAM.
     INY
     DEC.B _0
     DEC.B _0
     BPL -
-    LDA.W #$00FF
+    LDA.W #$00FF                              ; End the line.
     STA.L DynamicStripeImage,X
-    TXA
+    TXA                                       ; Update the VRAM index.
     STA.L DynStripeImgSize
 CODE_0C9F43:
     REP #$20                                  ; A->16
     SEP #$10                                  ; XY->8
     LDA.B StaffRollLinePos
-    CLC
+    CLC                                       ; Move to next line.
     ADC.W #$0020
     STA.B StaffRollLinePos
     AND.W #$03FF
@@ -1600,9 +1676,9 @@ DATA_0C9F5C:
     db $C0,$03,$80,$04,$59,$05
 
 CODE_0C9F6A:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Positions during the credits to change the BG.
     LDX.B #$00
-    LDA.W #$FF80
+    LDA.W #$FF80                              ; Speed of the Layer 2 BG in the credits roll.
     STA.W Layer1ScrollXSpeed,X
     LDA.B Layer2XPos,X
     STA.B _0,X
@@ -1610,10 +1686,10 @@ CODE_0C9F6A:
     LDA.B _0,X
     STA.B Layer2XPos,X
     LDA.B Layer3YPos
-    CMP.W #$0559
+    CMP.W #$0559                              ; How long to wait before ending the credits.
     BCS +
     LDX.B #$02
-    LDA.W #con($0040,$0040,$0040,$004E,$004E)
+    LDA.W #con($0040,$0040,$0040,$004E,$004E) ; How fast the credits scroll upwards.
     STA.W Layer1ScrollXSpeed,X
     LDA.B Layer3YPos
     STA.B _0,X
@@ -1625,7 +1701,7 @@ CODE_0C9F6A:
     STA.B Layer3YPos
     LDA.B Layer3YPos
     AND.W #$0007
-    CMP.W #$0001
+    CMP.W #$0001                              ; Every 8 pixels, upload a new line of the staff roll.
     BNE +
     JSR CODE_0C9EB1
   + LDX.B #$0C
@@ -1665,43 +1741,44 @@ DATA_0C9FE7:
     db $00,$FF,$00
 
 CODE_0C9FEA:
-    REP #$20                                  ; A->16
-    LDA.W #$0038
+; Peach's Y positions on Yoshi during the staff roll, relative to #$85.
+    REP #$20                                  ; A->16; Subroutine to draw Mario, Yoshi, Peach, and the eggs in the staff roll.
+    LDA.W #$0038                              ; Mario's X position during the staff roll.
     STA.B PlayerXPosNext
-    LDA.W #$008F
+    LDA.W #$008F                              ; Mario's Y position during the staff roll.
     STA.B PlayerYPosNext
     SEP #$20                                  ; A->8
-    LDA.B #$01
+    LDA.B #$01                                ; Mario's powerup during the staff roll.
     STA.B Powerup
-    LDA.B #$08
+    LDA.B #$08                                ; Mario's "speed" during the staff roll.
     STA.W PlayerXSpeed+1
-    JSR CODE_0CA75A
-    LDA.B #$52
+    JSR CODE_0CA75A                           ; Draw Mario.
+    LDA.B #$52                                ; X position of Yoshi during the staff roll.
     STA.B SpriteXPosLow
     STZ.W SpriteXPosHigh
-    LDA.B #$8F
+    LDA.B #$8F                                ; Y position of Yoshi during the staff roll.
     STA.B SpriteYPosLow
     STZ.W SpriteYPosHigh
-    LDA.B #$A0
+    LDA.B #$A0                                ; OAM index of Yoshi in the staff roll.
     STA.W SpriteOAMIndex
-    JSR CODE_0CA778
+    JSR CODE_0CA778                           ; Draw Yoshi.
     LDX.W SpriteMisc1602
-    LDA.B #$51
+    LDA.B #$51                                ; X position of Peach during the staff roll.
     STA.B _0
     STZ.B _1
     LDA.W DATA_0C9FE7,X
     CLC
     ADC.B #$85
     STA.B _2
-    TXA
+    TXA                                       ; Draw Peach riding Yoshi.
     ASL A
     ASL A
     TAY
     LDX.B #$00
     JSR CODE_0CA821
-    LDA.B #$A0
+    LDA.B #$A0                                ; X position of the eggs during the staff roll.
     STA.B _E
-    JSR CODE_0CA8A3
+    JSR CODE_0CA8A3                           ; Draw the eggs.
     LDA.B #$10
     STA.B _2
     JSR CODE_0CA8DF
@@ -1763,10 +1840,12 @@ DATA_0CA0B9:
     db $77,$77
 
 CODE_0CA0E3:
-    LDA.B #$10
+; Tiles for the decorations in Yoshi's House during the credits.
+; YXPPCCCT for the decorations in Yoshi's House during the credits.
+    LDA.B #$10                                ; Routine for Yoshi's House during the credits.
     STA.B _0
     STA.B _2
-    LDA.B #$2F
+    LDA.B #$2F                                ; Y position of the decorations in Yoshi's House during the credits.
     STA.B _1
     LDX.B #$90
     LDY.B #$00
@@ -1816,8 +1895,8 @@ DATA_0CA136:
     db $60,$62,$64,$66,$6A,$6C,$6E,$0A
 
 CODE_0CA146:
-    REP #$20                                  ; A->16
-    LDA.W #$003F
+    REP #$20                                  ; A->16; "THANK YOU!" text tiles.
+    LDA.W #$003F                              ; Y position of the right half of the "THANK YOU!" text after it stops.
     STA.B _8
     STA.B _A
     STZ.B _0
@@ -1842,7 +1921,7 @@ CODE_0CA159:
     SBC.W #$0040
     STA.B _0
     STA.B _2
-    LDA.W #$003F
+    LDA.W #$003F                              ; Y position of the left half of the "THANK YOU!" text as it scrolls in and after it stops.
     STA.B _8
     STA.B _A
     SEP #$20                                  ; A->8
@@ -1851,7 +1930,7 @@ CODE_0CA183:
     BNE +
     LDA.W DATA_0CA136,Y
     STA.W OAMTileNo+$100,X
-    LDA.B #$35
+    LDA.B #$35                                ; YXPPCCCT for the "THANK YOU!" message in Yoshi's house.
     STA.W OAMTileAttr+$100,X
     LDA.B _0
     STA.W OAMTileXPos+$100,X
@@ -1894,7 +1973,7 @@ CODE_0CA183:
     RTS
 
 CODE_0CA1D4:
-    JSR CODE_0CAB1F
+    JSR CODE_0CAB1F                           ; Subroutines for each part of the Yoshi's House scene in the credits.
     LDA.W Layer1ScrollType
     JSL ExecutePtrLong
 
@@ -1905,9 +1984,16 @@ CODE_0CA1D4:
     dl CODE_0CA6B0
 
 CODE_0CA1ED:
-    JSR CODE_0CA315
+; Pointers to different parts of the Yoshi's House scene in the credits.
+; Player walks in.
+; Yoshis duck and watch the eggs.
+; Eggs shattering.
+; Yoshis get up and "THANK YOU" displays.
+; Yoshis start jumping and the screen fades out.
+; Routine for Mario/Peach walking into Yoshi's House during the credits.
+    JSR CODE_0CA315                           ; Draw the Yoshis?
     LDA.W MessageBoxTimer
-    BEQ CODE_0CA1F6
+    BEQ CODE_0CA1F6                           ; Return if the room is still fading in.
     RTS
 
 CODE_0CA1F6:
@@ -1920,16 +2006,16 @@ CODE_0CA1F6:
     CMP.B #$70
     BNE CODE_0CA24F
     STZ.W YoshiIsLoose
-    LDA.B #$0F                                ; \ Mario's image = Going Down Pipe
+    LDA.B #$0F                                ; \ Mario's image = Going Down Pipe; Pose Mario uses when he stops walking.
     STA.W PlayerPose                          ; /
     JSR CODE_0CA764
-    JSR CODE_0CA7B4
+    JSR CODE_0CA7B4                           ; Draw Mario.
     LDA.W Layer1ScrollType
     BNE +
     LDA.B SpriteXPosLow
     STA.B _0
-    LDA.B #$9F
-    STA.B _2
+    LDA.B #$9F                                ; If not done walking into the scene,
+    STA.B _2                                  ; draw the green Yoshi (not following Mario)?
     LDY.B #$00
     LDX.B #$B4
     LDA.B #$01
@@ -1947,43 +2033,43 @@ CODE_0CA1F6:
     STA.B _2
     LDA.B #$03
     ASL A
-    ASL A
+    ASL A                                     ; Draw Peach standing still.
     TAY
     LDX.B #$A4
     JSR CODE_0CA821
     BRL CODE_0CA2C3
 CODE_0CA24F:
-    LDA.B #$F8
+    LDA.B #$F8                                ; X speed Mario walks with in the Yoshi's House scene.
     STA.W CreditsSprXSpeed,X
     JSR CODE_0CA74F
     LDA.W CreditsSprXPosLow,X
-    STA.B PlayerXPosNext
+    STA.B PlayerXPosNext                      ; Update Mario's X position.
     LDA.W CreditsSprXPosHigh,X
     STA.B PlayerXPosNext+1
-    LDA.B #$01
+    LDA.B #$01                                ; Mario's powerup in the Yoshi's House scene.
     STA.B Powerup
-    LDA.B #$08
+    LDA.B #$08                                ; X speed Mario walks with (visually) in the Yoshi's House scene.
     STA.W PlayerXSpeed+1
-    JSR CODE_0CA75A
+    JSR CODE_0CA75A                           ; Draw Mario.
     LDA.W CreditsSprXPosLow
     CLC
     ADC.B #$30
-    STA.B SpriteXPosLow
+    STA.B SpriteXPosLow                       ; Store X position of Yoshi in the Yoshi's House scene.
     LDA.W CreditsSprXPosHigh
     ADC.B #$00
     STA.W SpriteXPosHigh
     LDA.B #$60
-    STA.B SpriteYPosLow
+    STA.B SpriteYPosLow                       ; Y position of Yoshi in the Yoshi's House scene (0160).
     LDA.B #$01
     STA.W SpriteYPosHigh
-    LDA.B #$30
+    LDA.B #$30                                ; OAM index of Yoshi in the Yoshi's House scene.
     STA.W SpriteOAMIndex
-    JSR CODE_0CA778
+    JSR CODE_0CA778                           ; Draw Yoshi.
     STZ.B _1
     LDA.W CreditsSprXPosLow
     CLC
     ADC.B #$10
-    STA.B _0
+    STA.B _0                                  ; Get X position of Peach in the Yoshi's House scene.
     LDA.W CreditsSprXPosHigh
     ADC.B #$00
     STA.B _1
@@ -1999,7 +2085,7 @@ CODE_0CA24F:
   + LDA.W Layer1ScrollXPosUpd+1
     CLC
     ADC.B #$03
-    ASL A
+    ASL A                                     ; Draw Peach walking.
     ASL A
     TAY
     LDX.B #$A4
@@ -2038,7 +2124,7 @@ CODE_0CA2FC:
     SEP #$20                                  ; A->8
     LDA.B #$AF
     STA.B _E
-    JSR CODE_0CA8A3
+    JSR CODE_0CA8A3                           ; Draw the Baby Yoshis.
     LDA.B #$88
     STA.B _2
     JSR CODE_0CA8DF
@@ -2052,7 +2138,7 @@ DATA_0CA311:
     db $00,$01,$01,$01
 
 CODE_0CA315:
-    LDX.B #$01
+    LDX.B #$01                                ; Routine to draw the Yoshis in Yoshi's House during the credits?
     LDA.W CreditsSprYSpeed,X
     CLC
     ADC.B #$01
@@ -2098,7 +2184,7 @@ CODE_0CA355:
     LDA.W DATA_0CA30D,Y
     CLC
     ADC.B #$07
-    ASL A
+    ASL A                                     ; Draw the red Yoshi cheering.
     ASL A
     TAY
     LDX.B #$D0
@@ -2112,7 +2198,7 @@ CODE_0CA355:
     LDA.W DATA_0CA30D,Y
     CLC
     ADC.B #$0A
-    ASL A
+    ASL A                                     ; Draw the yellow Yoshi cheering.
     ASL A
     TAY
     LDX.B #$F0
@@ -2145,7 +2231,7 @@ CODE_0CA3C9:
     PHB
     PHK
     PLB
-    LDA.B #$01
+    LDA.B #$01                                ; Draw other Yoshis.
     STA.W CreditsJumpingYoshi
     STZ.B PlayerDirection
     STZ.W Layer1ScrollType
@@ -2157,7 +2243,7 @@ CODE_0CA3C9:
     STZ.W CreditsSprXSubSpd+1
     STZ.W CreditsSprXSubSpd+7
     LDA.B #$06
-    STA.W Layer1ScrollXPosUpd
+    STA.W Layer1ScrollXPosUpd                 ; Set Peach walk animation timer.
     STZ.W Layer1ScrollXPosUpd+1
     STZ.W Layer3ScrollXSpeed
     LDA.B #$06
@@ -2169,7 +2255,7 @@ CODE_0CA3C9:
     LDA.B #con($E2,$E2,$E2,$E2,$FE)
     STA.W MessageBoxTimer
     STA.W LevelLoadObject
-    LDA.B #!BGM_CREDITSYOSHISHOUSE
+    LDA.B #!BGM_CREDITSYOSHISHOUSE            ; Music for the Yoshi's House portion of the credits.
     STA.W SPCIO2                              ; / Change music
     LDX.B #$0D
     LDY.B #$06
@@ -2195,7 +2281,7 @@ DATA_0CA439:
     db $00,$02,$02
 
 CODE_0CA43C:
-    LDA.W Layer3ScrollXSpeed
+    LDA.W Layer3ScrollXSpeed                  ; Routine for when the Yoshis duck and stare at the eggs during the credits.
     CMP.B #$08
     BCS CODE_0CA45C
     JSR CODE_0CA315
@@ -2233,7 +2319,7 @@ CODE_0CA478:
     AND.B #$03
     CLC
     ADC.B #$07
-    ASL A
+    ASL A                                     ; Draw the red Yoshi staring.
     ASL A
     TAY
     LDX.B #$D0
@@ -2247,7 +2333,7 @@ CODE_0CA478:
     AND.B #$03
     CLC
     ADC.B #$0A
-    ASL A
+    ASL A                                     ; Draw the yellow Yoshi staring.
     ASL A
     TAY
     LDX.B #$F0
@@ -2320,7 +2406,7 @@ DATA_0CA52B:
     db $10,$60,$20,$00,$30,$50,$40
 
 CODE_0CA532:
-    LDA.W Layer3ScrollXPosUpd
+    LDA.W Layer3ScrollXPosUpd                 ; Routine for the eggs shattering during the credits.
     BEQ CODE_0CA53A
     BRL CODE_0CA5CB
 CODE_0CA53A:
@@ -2380,7 +2466,7 @@ CODE_0CA5B6:
     LDA.B #$80
     STA.W CreditsSprXPosLow+2
     STZ.W CreditsSprXSpeed+2
-    LDA.B #!BGM_CREDITSTHANKYOU
+    LDA.B #!BGM_CREDITSTHANKYOU               ; SFX/music for the "THANK YOU!" message and enemy credits.
     STA.W SPCIO2                              ; / Change music
     INC.W Layer1ScrollType
     BRA +
@@ -2469,10 +2555,10 @@ Return0CA65A:
     RTS
 
 CODE_0CA65B:
-    LDX.B #$02
+    LDX.B #$02                                ; Routine for when the Yoshis stand up and the "THANK YOU" message displays during the credits.
     LDA.W CreditsSprXSpeed,X
     SEC
-    SBC.B #$04
+    SBC.B #$04                                ; Acceleration of the "THANK YOU!" text.
     STA.W CreditsSprXSpeed,X
     JSR CODE_0CA74F
     LDA.W CreditsSprXPosLow,X
@@ -2488,7 +2574,7 @@ CODE_0CA65B:
     STZ.B _1
     STZ.B _3
     STZ.B _5
-    LDA.B #$3F
+    LDA.B #$3F                                ; Y position of the right half of the "THANK YOU!" text as it scrolls in.
     STA.B _8
     STA.B _A
     LDY.B #$00
@@ -2508,18 +2594,18 @@ CODE_0CA65B:
     RTS
 
 CODE_0CA6B0:
-    JSR CODE_0CA146
+    JSR CODE_0CA146                           ; Routine for when the Yoshis start jumping and the screen fades out during the credits.
     JSR CODE_0CA315
     JSR CODE_0CA2FC
     LDA.B #$60
-    STA.B PlayerYPosNext
+    STA.B PlayerYPosNext                      ; Y position of Mario.
     LDA.B #$01
     STA.B PlayerYPosNext+1
-    STZ.W YoshiIsLoose
-    LDA.B #$26                                ; \ Mario's image = Peace Sign
+    STZ.W YoshiIsLoose                        ; Yoshi is NOT loose.
+    LDA.B #$26                                ; \ Mario's image = Peace Sign; Mario's pose after the Yoshis start jumping.
     STA.W PlayerPose                          ; /
     JSR CODE_0CA764
-    JSR CODE_0CA7B4
+    JSR CODE_0CA7B4                           ; Draw Mario.
     LDY.W Layer3ScrollXSpeed
     LDA.W DATA_0CA311,Y
     ASL A
@@ -2535,19 +2621,19 @@ CODE_0CA6B0:
     STZ.B _1
     LDA.W CreditsSprXPosLow
     CLC
-    ADC.B #$10
+    ADC.B #$10                                ; X offset of Peach from Mario after the eggs hatch.
     STA.B _0
     LDA.W CreditsSprXPosHigh
     ADC.B #$00
     STA.B _1
-    LDA.B #$9F
+    LDA.B #$9F                                ; Y position of Peach after the eggs hatch.
     STA.B _2
     LDA.B TrueFrame
     AND.B #$08
     LSR A
     LSR A
     LSR A
-    CLC
+    CLC                                       ; Draw Peach waving.
     ADC.B #$05
     ASL A
     ASL A
@@ -2557,13 +2643,13 @@ CODE_0CA6B0:
     DEC.W Layer3ScrollXPosUpd+1
     LDA.W Layer3ScrollXPosUpd+1
     BNE +
-    INC.W GameMode
+    INC.W GameMode                            ; Increase game mode (to 20, fade to staff roll).
     LDA.B #$40
     STA.W Layer3ScrollYSpeed+1
   + RTS
 
 CODE_0CA721:
-    LDA.W CreditsSprYSpeed,X
+    LDA.W CreditsSprYSpeed,X                  ; Subroutine to update the Y position of a sprite in the credits.
     ASL A
     ASL A
     ASL A
@@ -2591,7 +2677,7 @@ CODE_0CA721:
     RTS
 
 CODE_0CA74F:
-    PHX
+    PHX                                       ; Subroutine to update the X position of a sprite in the credits.
     TXA
     CLC
     ADC.B #$0F
@@ -2601,10 +2687,10 @@ CODE_0CA74F:
     RTS
 
 CODE_0CA75A:
-    PHB
+    PHB                                       ; Subroutine to draw Mario during the credits (staff roll/Yoshi's House).
     LDA.B #$00
     PHA
-    PLB
+    PLB                                       ; Animate Mario (and his cape).
     JSL CODE_00CEB1
     PLB
 CODE_0CA764:
@@ -2629,7 +2715,7 @@ CODE_0CA778:
     STA.W SpriteMisc1602
     LDA.B #$02
     STA.B SpriteTableC2
-    LDA.B #$01
+    LDA.B #$01                                ; Direction Yoshi faces in the credits.
     STA.W SpriteMisc157C
     LDA.W ScrollLayerIndex
     CLC
@@ -2642,10 +2728,10 @@ CODE_0CA778:
     CMP.B #$03
     BCC +
     STZ.W SpriteMisc1602
-  + LDA.B #$01
+  + LDA.B #$01                                ; [change to #$00 to make Yoshi invisible during the credits]
     STA.W YoshiIsLoose
 CODE_0CA7B4:
-    JSL DrawMarioAndYoshi
+    JSL DrawMarioAndYoshi                     ; Draw Mario/Yoshi.
     RTS
 
 
@@ -2674,12 +2760,33 @@ DATA_0CA7EE:
     db $34,$34,$34
 
 CODE_0CA821:
-    REP #$30                                  ; AXY->16
+; Tile numbers for various sprites in the credits.
+; $0CA7B9: Peach (riding A)
+; $0CA7BD: Peach (riding B)
+; $0CA7C1: Peach (riding C)
+; $0CA7C5: Peach (walking A)
+; $0CA7C9: Peach (walking B)
+; $0CA7CD: Peach (waving A)
+; $0CA7E1: Peach (waving B)
+; $0CA7E5: Red Yoshi cheering
+; $0CA7F1: Yellow Yoshi cheering
+; YXPPCCCT for various sprites in the credits.
+; $0CA7ED: Peach (riding A)
+; $0CA7F1: Peach (riding B)
+; $0CA7F5: Peach (riding C)
+; $0CA7F9: Peach (walking A)
+; $0CA7FD: Peach (walking B)
+; $0CA801: Peach (waving A)
+; $0CA805: Peach (waving B)
+; $0CA809: Red Yoshi cheering
+; $0CA815: Yellow Yoshi cheering
+; Subroutine to draw the Peach or the cheering Yoshis in the YH scene.
+    REP #$30                                  ; AXY->16; Input: X = OAM index, Y = index for which to draw
     TXA
     AND.W #$00FF
     TAX
     TYA
-    AND.W #$00FF
+    AND.W #$00FF                              ; Get proper OAM index.
     CMP.W #$0028
     BCC +
     TXA
@@ -2772,7 +2879,7 @@ DATA_0CA8D8:
     db $68,$26,$24,$6A,$28,$64,$26
 
 CODE_0CA8DF:
-    LDA.W Layer3ScrollYSpeed
+    LDA.W Layer3ScrollYSpeed                  ; YXPPCCCT properties for the Baby Yoshis in the credits.
     STA.B _E
     LDY.B #$0D
 CODE_0CA8E6:
@@ -2801,7 +2908,7 @@ CODE_0CA911:
     SEC
     SBC.B #$07
     TAY
-    LDA.B #$EA
+    LDA.B #$EA                                ; Tile used by the Baby Yoshis in the credits.
     STA.W OAMTileNo,X
     LDA.W DATA_0CA8D8,Y
     STA.W OAMTileAttr,X
@@ -2859,7 +2966,21 @@ DATA_0CA99A:
     db $00,$06,$0C,$12
 
 CODE_0CA99E:
-    TYA
+; In below tables:
+; First 6 bytes are Yoshi lowering/rising from the duck animation,
+; while the second 6 bytes are him fully lowered down.
+; Tiles used by the red and yellow Yoshis when they're watching the eggs hatch.
+; Red Yoshi
+; Yellow Yoshi
+; YXPPCCCT used by the red and yellow Yoshis when they're watching the eggs hatch.
+; Red Yoshi
+; Yellow Yoshi
+; X offsets of the tiles for the red and yellow Yoshis when they're watching the eggs hatch.
+; Red Yoshi
+; Yellow Yoshi
+; Y offsets of the tiles for the red and yellow Yoshis when they're watching the eggs hatch.
+; Red Yoshi
+    TYA                                       ; Yellow Yoshi
     LSR A
     LSR A
     TAY
@@ -2932,7 +3053,14 @@ DATA_0CAA12:
     db $36,$3A,$3A
 
 CODE_0CAA15:
-    PHY
+; Tiles used by the green and blue Yoshis in the credits.
+; Jumping, arms down
+; Jumping, arms up
+; Looking down
+; YXPPCCCT for the green and blue Yoshis in the credits.
+; Blue
+; Green
+    PHY                                       ; Subroutine to draw the green/blue Yoshis in the credits.
     LDA.B _E
     ASL A
     TAY
@@ -2993,7 +3121,8 @@ DATA_0CAA56:
     db $3F
 
 CODE_0CAADF:
-    PHB
+; Tilemap for "The End".
+    PHB                                       ; Routine to write the tilemap for the "THE END" screen.
     PHK
     PLB
     LDX.B #$00
@@ -3070,7 +3199,7 @@ CODE_0CAB3B:
     STX.W MessageBoxExpand
     CPY.B #$06
     BCC CODE_0CAB57
-    INC.W GameMode
+    INC.W GameMode                            ; Increase game mode (to 1C, load Yoshi's House).
     BRA CODE_0CAB6B
 
 CODE_0CAB57:
@@ -3095,7 +3224,7 @@ CODE_0CAB74:                                  ;!
     CPX.W MessageBoxTimer                     ;!
     BCC +                                     ;!
     LDA.W #$FF00                              ;!
-  + STA.W WindowTable,X                       ;!
+  + STA.W WindowTable,X                       ;!; Initialize HDMA table.
     STA.W WindowTable+$DE,Y                   ;!
     INX                                       ;!
     INX                                       ;!
@@ -3146,7 +3275,9 @@ DATA_0CABAB:
     db $03,$03,$07,$00,$01,$02,$00
 
 CODE_0CABB2:
-    SEP #$30                                  ; AXY->8
+; Index to the BG palettes from $B0B0 for the different scenes of the staff roll.
+; Back area colors for the different scenes of the staff roll. First value is unused.
+    SEP #$30                                  ; AXY->8; Pointers to $0CAB9C for the different scenes of the staff roll.
     LDA.B #$0C
     STA.W DynPaletteTable
     STA.W DynPaletteTable+$0E
@@ -3160,7 +3291,7 @@ CODE_0CABB2:
     TAY
     LDA.W DATA_0CABA4,Y
     AND.W #$000F
-    ASL A
+    ASL A                                     ; Load the back area color for the scene.
     TAX
     LDA.L BackAreaColors,X
     STA.W BackgroundColor
@@ -3182,7 +3313,7 @@ CODE_0CABB2:
 CODE_0CAC01:
     LDX.B _4
     LDY.W #$0005
-  - LDA.B [_0]
+  - LDA.B [_0]                                ; Upload the new palette for the scene.
     STA.W DynPaletteTable+2,X
     INC.B _0
     INC.B _0
@@ -3308,7 +3439,22 @@ DATA_0CAD72:
     dw DATA_0CAD52
 
 CODE_0CAD8C:
-    PHB
+; Level data (Layer 1) for the different scenes during the enemy list in the credits.
+; Scene 01
+; Scene 02
+; Scene 03
+; Scene 04
+; Scene 05
+; Scene 06
+; Scene 07
+; Scene 08
+; Scene 09
+; Scene 10
+; Scene 11
+; Scene 12
+; Scene 13
+; Indices to the above data for each scene.
+    PHB                                       ; Indices for the Layer 2 (background) data of each scene.
     PHK
     PLB
     INC.W CreditsScreenNumber
@@ -3360,14 +3506,16 @@ DATA_0CADDC:                                  ;!
 endif                                         ;/===============================================
 
 CODE_0CADF6:
-    PHB
+; Indices to the stripe image data for the special-world-passed enemy names in the credits.
+; Indexed by scene number.
+    PHB                                       ; Subroutine to set up one of the enemy credits scenes.
     PHK
     PLB
     LDA.W CreditsScreenNumber
     TAY
     ASL A
     TAX
-    CLC
+    CLC                                       ; Load the enemy names and black borders stripe image for the scene.
     ADC.W CreditsScreenNumber
     CLC
     ADC.B #OtherStripes-StripeImages+$0F
@@ -3376,8 +3524,8 @@ if ver_is_english(!_VER)                      ;\================ U, SS, E0, & E1
     PHY                                       ;!
     PHX                                       ;!
     JSL CODE_0084C8                           ;!
-    LDA.W OWLevelTileSettings+$49             ;!
-    BPL CODE_0CAE48                           ;!
+    LDA.W OWLevelTileSettings+$49             ;!; Branch if the special world is not passed.
+    BPL CODE_0CAE48                           ;!; (don't use special enemy names)
     LDA.W CreditsScreenNumber                 ;!
     ASL A                                     ;!
     TAY                                       ;!
@@ -3385,7 +3533,7 @@ if ver_is_english(!_VER)                      ;\================ U, SS, E0, & E1
     STA.W _0                                  ;!
     LDA.W DATA_0CADDC+1,Y                     ;!
     STA.W _1                                  ;!
-    LDA.B #$0D                                ;!
+    LDA.B #$0D                                ;!; Load the Special-World-Passed enemy names as needed.
     STA.W _2                                  ;!
     LDY.B #$00                                ;!
     LDA.L DynStripeImgSize                    ;!
@@ -3485,7 +3633,7 @@ CODE_0CAEAD:
 CODE_0CAEF8:
     LDA.W Layer3ScrollYSpeed+1
     BNE CODE_0CAF0C
-    INC.W GameMode
+    INC.W GameMode                            ; Increase game mode (to 26, fade to The End).
     LDA.W CreditsScreenNumber
     CMP.B #$0C
     BEQ CODE_0CAF0C
@@ -3724,43 +3872,62 @@ DATA_0CB5A2:
     db $FC,$04
 
 CODE_0CB5BC:
-    LDA.B #$00
+; For the below data:
+; Format is mostly raw sprite OAM data, but extra info is stored in the PP bits (replaced later).
+; The upper P bit (bit 5) becomes which "box" the sprite belongs to (0 = top, 1 = bottom).
+; The lower P bit (bit 4) becomes the sprite's size (0 = 8x8, 1 = 16x16).
+; Sprite OAM data for all of the enemy credits scenes.
+; 0000 - Scene 5 (dino rhinos)
+; 0045 - Scene 6 (underground)
+; 009E - Scene 9 (castle)
+; 00E7 - Scene 12 (mechakoopas)
+; 011C - Scene 2 (super koopas)
+; 01C1 - Scene 3 (pokey)
+; 0222 - Scene 4 (banzai bill)
+; 028B - Scene 7 (water)
+; 02FC - Scene 1 (lakitu, wiggler)
+; 0395 - Scene 8 (ghost house)
+; 042A - Scene 10 (water castle)
+; 0493 - Scene 11 (reznor)
+; 04FC - Scene 13 (koopa kids)
+; Base indices to the above table for each scene.
+    LDA.B #$00                                ; Routine to handle sprite tiles during the enemy credits.
     XBA
     LDY.B #$20
     LDA.W CreditsScreenNumber
-    CMP.B #$05
-    BNE +
-    LDY.B #$30
+    CMP.B #$05                                ; $00 = priority setting (the PP bits)
+    BNE +                                     ; In scene 05 (underground scene), use higher priority
+    LDY.B #$30                                ; to keep the skull raft above the lava.
   + STY.B _0
     ASL A
     REP #$10                                  ; XY->16
     TAY
     LDX.W DATA_0CB5A2,Y
     LDY.W #$007F
-    STY.B _1
+    STY.B _1                                  ; Set up OAM indices. Y for normal data, $01 for size (both decrementing).
     LDY.W #$01FC
 CODE_0CB5DB:
     PHY
     LDY.B Layer1XPos
     LDA.W DATA_0CAF14,X
-    AND.B #$20
-    BEQ +
-    LDY.W NextLayer1XPos
+    AND.B #$20                                ; $03 = which X position offset to use
+    BEQ +                                     ; ($1A = top box, $1462 = bottom box)
+    LDY.W NextLayer1XPos                      ; This is based on bit 5 (the upper P bit) of the sprite's YXPPCCCT.
   + STY.B _3
     PLY
     LDA.W DATA_0CAF11,X
-    CMP.B #$FF
+    CMP.B #$FF                                ; If at the end of the data, return.
     BEQ CODE_0CB633
     SEC
-    SBC.B _3
+    SBC.B _3                                  ; Store X position.
     STA.W OAMTileXPos,Y
     LDA.B #$00
     SBC.B _4
     AND.B #$01
     STA.B _4
     LDA.W DATA_0CAF14,X
-    AND.B #$10
-    LSR A
+    AND.B #$10                                ; Store size and high X bit in OAM.
+    LSR A                                     ; The size of the tile is based on bit 4 (the lower P bit) of the sprite's YXPPCCCT.
     LSR A
     LSR A
     ORA.B _4
@@ -3771,7 +3938,7 @@ CODE_0CB5DB:
     LDA.W DATA_0CAF12,X
     STA.W OAMTileYPos,Y
     LDA.W DATA_0CAF13,X
-    STA.W OAMTileNo,Y
+    STA.W OAMTileNo,Y                         ; Transfer Y position, tile, and YXPPCCCT otherwise as normal.
     LDA.W DATA_0CAF14,X
     AND.B #$CF
     ORA.B _0
@@ -3780,7 +3947,7 @@ CODE_0CB5DB:
     DEY
     DEY
     DEY
-    INX
+    INX                                       ; Decr/incr indices and loop until the end of the data is reached.
     INX
     INX
     INX
@@ -4804,7 +4971,16 @@ C7Message8Stripe:                             ;!
 endif                                         ;/ ENDIF
 
 CODE_0CC94E:
-    LDA.W CutsceneTextTimer
+; THE END stripe image.
+; Empty. Used by GPS for pointers to shared routines.
+; $0CBE85   | Castle destruction sequence 1 text.
+; Castle destruction sequence 2 text.
+; Castle destruction sequence 3 text.
+; Castle destruction sequence 4 text.
+; Castle destruction sequence 5 text.
+; Castle destruction sequence 6 text.
+; Castle destruction sequence 7 text.
+    LDA.W CutsceneTextTimer                   ; Get line of text to upload.
 if ver_is_arcade(!_VER)                       ;\======================= SS ====================
     BNE SSCODE_0CC95B                         ;!
     LDA.W EnterLevelAuto                      ;!
@@ -4830,7 +5006,7 @@ else                                          ;<================ J, U, E0, & E1 
     BEQ CODE_0CC97D                           ;!
 endif                                         ;/===============================================
 CODE_0CC953:
-    DEC.W CutsceneTextTimer
+    DEC.W CutsceneTextTimer                   ; Return if not showing text or waiting to upload a new line.
     LDA.W CutsceneTextTimer
     AND.B #$1F
     BNE CODE_0CC97D
@@ -4845,7 +5021,7 @@ endif                                         ;/================================
     LDA.W CutsceneTextTimer
     AND.B #con($60,$E0,$E0,$E0,$E0)
     LSR A
-    LSR A
+    LSR A                                     ; Get line to upload.
     LSR A
     LSR A
     LSR A
@@ -4861,19 +5037,19 @@ CODE_0CC97D:
     RTS
 
 CODE_0CC97E:
-    PHB
+    PHB                                       ; Wrapper for the castle destruction routines.
     PHK
     PLB
-    JSR CODE_0CC94E
-    JSR CODE_0CCA8F
-    JSR CODE_0CC98C
+    JSR CODE_0CC94E                           ; Prepare line of text to upload.
+    JSR CODE_0CCA8F                           ; Handle the Yoshi egg's THANK YOU bubble.
+    JSR CODE_0CC98C                           ; Run scene-specific routines.
     PLB
     RTL
 
 CODE_0CC98C:
-    LDA.B TrueFrame
+    LDA.B TrueFrame                           ; Destruction cutscene scene-specific routines.
     AND.B #$03
-    BNE +
+    BNE +                                     ; Decrease input delay timer every four frames.
     LDA.W Layer2ScrollYSpeed+1
     BEQ +
     DEC.W Layer2ScrollYSpeed+1
@@ -4891,8 +5067,17 @@ CODE_0CC98C:
     dw CODE_0CCA72
 
 CODE_0CC9B3:
-    JSR CODE_0CCB5B
-    JSR CODE_0CCACE
+; Castle destruction cutscene pointers.
+; 1 - Iggy
+; 2 - Morton
+; 3 - Lemmy
+; 4 - Ludwig
+; 5 - Roy
+; 6 - Wendy
+; 7 - Larry
+; Iggy castle destruction cutscene.
+    JSR CODE_0CCB5B                           ; Draw the detonation switch.
+    JSR CODE_0CCACE                           ; Handle the white flag.
     LDA.W Layer1ScrollType
     JSL ExecutePtr
 
@@ -4904,7 +5089,15 @@ CODE_0CC9B3:
     dw CODE_0CCFDE
 
 CODE_0CC9CC:
-    JSR CODE_0CCACE
+; Iggy cutscene routine pointers.
+; 0 - Handle switch and fuse.
+; 1 - Just before the "BOMB" starts.
+; 2 - "BOMB"
+; 3 - Just before the castle starts falling.
+; 4 - Castle falls.
+; 5 - Wait for ending input.
+; Morton castle destruction cutscene.
+    JSR CODE_0CCACE                           ; Handle the white flag.
     LDA.W Layer1ScrollType
     JSL ExecutePtr
 
@@ -4915,9 +5108,16 @@ CODE_0CC9CC:
     dw CODE_0CCFDE
 
 CODE_0CC9E0:
-    JSR CODE_0CCB5B
-    JSR CODE_0CCACE
-    JSR CODE_0CD4F8
+; Morton cutscene routine pointers.
+; 0 - Player walks in and starts hitting the castle.
+; 1 - Just before the castle starts falling (when the player lands on top).
+; 2 - Castle falls.
+; 3 - Player sighs.
+; 4 - Wait for ending input.
+; Roy castle destruction cutscene.
+    JSR CODE_0CCB5B                           ; Draw the detonation switch.
+    JSR CODE_0CCACE                           ; Handle the white flag.
+    JSR CODE_0CD4F8                           ; Handle the huff cloud at the end of the scene.
     LDA.W Layer1ScrollType
     JSL ExecutePtr
 
@@ -4933,13 +5133,26 @@ CODE_0CC9E0:
     dw CODE_0CCFDE
 
 CODE_0CCA04:
-    JSR CODE_0CCB5B
+; Roy cutscene routine pointers.
+; 0 - Handle switch and fuse.
+; 1 - Just before the fake explosion.
+; 2 - The fake explosion.
+; 3 - Waiting before the real explosion.
+; 4 - Just before the "BOMB" starts.
+; 5 - "BOMB"
+; 6 - Just before the castle starts falling.
+; 7 - Castle falls.
+; 8 - Waiting to show the huff cloud.
+; 9 - Wait for ending input.
+; Ludwig castle destruction cutscene.
+    JSR CODE_0CCB5B                           ; Draw the detonation switch.
     LDA.W Layer1ScrollType
-    BNE +
+    BNE +                                     ; Initialize counter for the question mark sprites.
     LDY.B #$04
     STY.W Layer2ScrollTimer
   + CMP.B #$07
-    BNE +
+; If the castle has hit the hill, draw the injury mark.
+    BNE +                                     ; Ludwig cutscene routine pointers.
     JSR CODE_0CCF49
   + LDA.W Layer1ScrollType
     JSL ExecutePtr
@@ -4954,13 +5167,22 @@ CODE_0CCA04:
     dw CODE_0CCFDE
 
 CODE_0CCA2F:
-    JSR CODE_0CD65B
-    JSR CODE_0CCACE
+; 0 - Handle switch and fuse.
+; 1 - Just before the "BOMB" starts.
+; 2 - "BOMB"
+; 3 - Castle about to launch.
+; 4 - Castle launches off.
+; 5 - Waiting to show the BG castle.
+; 6 - Castle falls toward hill.
+; 7 - Wait for ending input.
+; Lemmy castle destruction cutscene.
+    JSR CODE_0CD65B                           ; Handle the hammer.
+    JSR CODE_0CCACE                           ; Handle the white flag.
     LDA.W Layer1ScrollType
-    CMP.B #$03
+    CMP.B #$03                                ; If not in phase 3, handle generation of the hammer debris.
     BEQ +
     JSR CODE_0CD3A6
-  + JSR CODE_0CD3F4
+  + JSR CODE_0CD3F4                           ; Actually handle the debris.
     LDA.W Layer1ScrollType
     JSL ExecutePtr
 
@@ -4970,11 +5192,17 @@ CODE_0CCA2F:
     dw CODE_0CCFDE
 
 CODE_0CCA51:
-    JSR CODE_0CD6EC
+; Lemmy cutscene routine pointers.
+; 0 - Wait before sinking the castle.
+; 1 - Just before the castle starts falling.
+; 2 - Castle falls.
+; 3 - Wait for ending input.
+; Wendy castle destruction cutscene.
+    JSR CODE_0CD6EC                           ; Handle the broom.
     LDA.W Layer1ScrollTimer
     BEQ +
     LDX.B #$30
-    LDA.B #$B0
+    LDA.B #$B0                                ; If time to do so, draw the white flag.
     STA.B _0
     LDA.B #$68
     STA.W CreditsSprXPosLow+1
@@ -4986,7 +5214,10 @@ CODE_0CCA51:
     dw CODE_0CCFDE
 
 CODE_0CCA72:
-    LDA.W Layer1ScrollType
+; Wendy cutscene routine pointers.
+; 0 - Wait before showing text.
+; 1 - Wait for ending input.
+    LDA.W Layer1ScrollType                    ; Larry castle destruction cutscene.
     JSL ExecutePtr
 
     dw CODE_0CD0D2
@@ -5009,7 +5240,15 @@ DATA_0CCA86:
     db $08
 
 CODE_0CCA8F:
-    LDA.W Layer2ScrollXSpeed
+; Larry cutscene routine pointers.
+; 0 - Player picks up the castle.
+; 1 - Player throws castle off the screen.
+; 2 - Screen shakes as the castle hits the ground.
+; 3 - Wait before showing text.
+; 4 - Wait for ending input.
+; Data for the THANK YOU bubble. Order is X, Y, tile, YXPPCCCT (bit 4 is size).
+; Handler for the THANK YOU bubble.
+    LDA.W Layer2ScrollXSpeed                  ; Return if being carried.
     BEQ Return0CCACD
     LDY.B #$00
     TYX
@@ -5023,7 +5262,7 @@ CODE_0CCA8F:
     AND.B #$CF
     ORA.B #$20
     STA.W OAMTileAttr+$1E0,X
-    PHX
+    PHX                                       ; Set X/Y position, tile number, YXPPCCCT, and size for the sprite.
     TXA
     LSR A
     LSR A
@@ -5038,7 +5277,7 @@ CODE_0CCA8F:
     INX
     INX
     INX
-    INX
+    INX                                       ; Loop for three tiles.
     TXY
     CPY.B #$0C
     BNE -
@@ -5046,20 +5285,20 @@ Return0CCACD:
     RTS
 
 CODE_0CCACE:
-    LDA.W Layer1ScrollType
+    LDA.W Layer1ScrollType                    ; Routine to handle the white flag in castle cutscenes.
     BNE CODE_0CCADD
-    STZ.W Layer1ScrollTimer
-    LDA.B #$98
+    STZ.W Layer1ScrollTimer                   ; If in the first phase of the scene,
+    LDA.B #$98                                ; set flag's initial position and set to not show.
     STA.W CreditsSprXPosLow+1
     BRA Return0CCAFC
 
 CODE_0CCADD:
-    LDA.W Layer1ScrollTimer
+    LDA.W Layer1ScrollTimer                   ; Return if not showing the flag.
     BEQ Return0CCAFC
     LDA.W CreditsSprXPosLow+1
     CMP.B #$5C
     BCC +
-    LDX.B #$01
+    LDX.B #$01                                ; If not at highest position, give a Y speed of #$F0 and update position.
     LDA.B #$F0
     STA.W CreditsSprXSpeed,X
     JSR CODE_0CD368
@@ -5071,26 +5310,27 @@ Return0CCAFC:
     RTS
 
 CODE_0CCAFD:
-    LDA.B _0
-    STA.W OAMTileXPos+$180,X
+    LDA.B _0                                  ; Set up OAM for the white flag.
+    STA.W OAMTileXPos+$180,X                  ; Set X/Y position.
     LDA.W CreditsSprXPosLow+1
     STA.W OAMTileYPos+$180,X
     LDA.B #$E6
-    STA.W OAMTileNo+$180,X
+    STA.W OAMTileNo+$180,X                    ; Set tile number and YXPPCCCT.
     LDA.B #$21
     STA.W OAMTileAttr+$180,X
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Make 16x16.
     TAX
     LDA.B #$02
     STA.W OAMTileSize+$60,X
     RTS
 
 CODE_0CCB1C:
-    LDA.W Layer1ScrollCmd
+; Cutscene routine: Handle switch and fuse.
+    LDA.W Layer1ScrollCmd                     ; Branch if switch has been hit.
     BNE CODE_0CCB30
-    LDA.B #$60
+    LDA.B #$60                                ; Set initial X position for the spark.
     STA.W CreditsSprXPosLow
     LDA.B #$01
     STA.W Layer2ScrollCmd
@@ -5098,38 +5338,38 @@ CODE_0CCB1C:
     BRA CODE_0CCB55
 
 CODE_0CCB30:
-    LDX.B #$00
+    LDX.B #$00                                ; Switch has not been hit.
     LDY.B #$30
     LDA.W CutsceneID
     DEC A
-    BNE +
-    LDY.B #$18
+    BNE +                                     ; Set X speed for the spark.
+    LDY.B #$18                                ; Make half as fast in Iggy's scene.
   + TYA
     STA.W CreditsSprXSpeed,X
-    JSR CODE_0CD368
+    JSR CODE_0CD368                           ; Update spark's X position.
     DEC.W Layer2ScrollCmd
     BPL CODE_0CCB55
     LDA.B #$01
-    STA.W Layer2ScrollCmd
+    STA.W Layer2ScrollCmd                     ; Handle animation of the spark.
     LDA.W Layer1ScrollBits
     EOR.B #$01
     STA.W Layer1ScrollBits
 CODE_0CCB55:
-    JSR CODE_0CCBFA
-    BRL CODE_0CCB80
+    JSR CODE_0CCBFA                           ; Draw the castle door sprite.
+    BRL CODE_0CCB80                           ; Draw the fuse and spark.
 CODE_0CCB5B:
-    LDY.B #$E0
+    LDY.B #$E0                                ; Draw the detonation switch.
     LDA.W Layer1ScrollCmd
     BEQ +
-    LDY.B #$E2
+    LDY.B #$E2                                ; Set tile number and YXPPCCCT for the detonation switch.
   + STY.W OAMTileNo
     LDA.B #$39
     STA.W OAMTileAttr
     LDA.B #$50
-    STA.W OAMTileXPos
+    STA.W OAMTileXPos                         ; Set X/Y position.
     LDA.B #$67
     STA.W OAMTileYPos
-    LDA.B #$02
+    LDA.B #$02                                ; Make 16x16.
     STA.W OAMTileSize
     RTS
 
@@ -5138,10 +5378,11 @@ DATA_0CCB7C:
     db $86,$87,$96,$97
 
 CODE_0CCB80:
-    LDX.B #$60
+; Tile numbers for the sprite version of the castle door.
+    LDX.B #$60                                ; Draw the fuse.
     LDA.W Layer1ScrollCmd
     BEQ +
-    LDX.W CreditsSprXPosLow
+    LDX.W CreditsSprXPosLow                   ; Get position for the leftmost tile.
   + STX.B _0
     LDA.B #$67
     STA.B _1
@@ -5149,18 +5390,18 @@ CODE_0CCB80:
 CODE_0CCB92:
     LDA.B _0
     CMP.B #$B0
-    BCS +
+    BCS +                                     ; Set X/Y position. Don't draw past an X position of #$80.
     STA.W OAMTileXPos+$180,X
     LDA.B _1
     STA.W OAMTileYPos+$180,X
     LDA.B #$E4
-    STA.W OAMTileNo+$180,X
+    STA.W OAMTileNo+$180,X                    ; Set tile and YXPPCCCT.
     LDA.B #$3F
     STA.W OAMTileAttr+$180,X
     PHX
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Set as 16x16.
     TAX
     LDA.B #$02
     STA.W OAMTileSize+$60,X
@@ -5169,7 +5410,7 @@ CODE_0CCB92:
     CLC
     ADC.B #$10
     STA.B _0
-    INX
+    INX                                       ; Loop for 5 tiles.
     INX
     INX
     INX
@@ -5178,56 +5419,56 @@ CODE_0CCB92:
     LDA.W Layer1ScrollCmd
     BEQ Return0CCBF9
     LDA.W CreditsSprXPosLow
-    SEC
-    SBC.B #$08
-    CMP.B #$B0
+    SEC                                       ; If the switch hasn't been hit, return.
+    SBC.B #$08                                ; If it has and the spark is past #$B0, move to next cutscene phase.
+    CMP.B #$B0                                ; If the spark isn't past that, then draw it.
     BCC CODE_0CCBD8
     INC.W Layer1ScrollType
     BRA Return0CCBF9
 
 CODE_0CCBD8:
-    STA.W OAMTileXPos+$180,X
-    LDA.B #$6F
+    STA.W OAMTileXPos+$180,X                  ; Draw the spark.
+    LDA.B #$6F                                ; Set X/Y position.
     STA.W OAMTileYPos+$180,X
     LDY.B #$85
     LDA.W Layer1ScrollBits
     BEQ +
     LDY.B #$95
-  + TYA
+  + TYA                                       ; Set tile number and YXPPCCCT.
     STA.W OAMTileNo+$180,X
     LDA.B #$35
     STA.W OAMTileAttr+$180,X
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Set as 8x8.
     TAX
     STZ.W OAMTileSize+$60,X
 Return0CCBF9:
     RTS
 
 CODE_0CCBFA:
-    LDX.B #$04
+    LDX.B #$04                                ; Routine to draw the castle's door as a sprite. 90% of the time, this is useless.
 CODE_0CCBFC:
     LDA.B #$A8
-    STA.B _0
+    STA.B _0                                  ; X position.
     STA.B _2
-    LDA.B #$5F
+    LDA.B #$5F                                ; Y position.
     STA.B _1
 CODE_0CCC06:
     LDY.B #$00
 CODE_0CCC08:
-    LDA.B _0
+    LDA.B _0                                  ; Set X position.
     STA.W OAMTileXPos+$180,X
-    LDA.B _1
+    LDA.B _1                                  ; Set Y position.
     STA.W OAMTileYPos+$180,X
-    LDA.W DATA_0CCB7C,Y
+    LDA.W DATA_0CCB7C,Y                       ; Set tile number.
     STA.W OAMTileNo+$180,X
-    LDA.B #$2D
+    LDA.B #$2D                                ; Set YXPPCCCT.
     STA.W OAMTileAttr+$180,X
     PHX
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Make 16x16.
     TAX
     LDA.B #$02
     STA.W OAMTileSize+$60,X
@@ -5239,7 +5480,7 @@ CODE_0CCC08:
     STA.B _0
     TYA
     AND.B #$01
-    BNE +
+    BNE +                                     ; Draw the tiles in a 24x24 box.
     LDA.B _2
     STA.B _0
     LDA.B _1
@@ -5248,7 +5489,7 @@ CODE_0CCC08:
     STA.B _1
   + INX
     INX
-    INX
+    INX                                       ; Loop for 4 tiles.
     INX
     CPY.B #$04
     BNE CODE_0CCC08
@@ -5262,9 +5503,9 @@ DATA_0CCC4D:
     db $93,$73,$FF,$7F
 
 CODE_0CCC51:
-    LDA.B TrueFrame
+    LDA.B TrueFrame                           ; Cutscene routine: "BOMB"
     AND.B #$02
-    TAX
+    TAX                                       ; Animate the BG color.
     REP #$20                                  ; A->16
     LDA.W DATA_0CCC4D,X
     STA.W BackgroundColor
@@ -5275,7 +5516,7 @@ CODE_0CCC51:
     LDX.W CutsceneID
     LDA.L CutsceneBgColor-1,X
     ASL A
-    TAX
+    TAX                                       ; If the explosion is finished, restore BG color and move to next cutscene routine.
     REP #$20                                  ; A->16
     LDA.L BackAreaColors,X
     STA.W BackgroundColor
@@ -5287,14 +5528,14 @@ CODE_0CCC82:
     BPL +
     LDA.W Layer1ScrollBits
     INC A
-    AND.B #$03
+    AND.B #$03                                ; Handle timer for changing which frame to show.
     STA.W Layer1ScrollBits
     TAX
     LDA.W DATA_0CCC49,X
     STA.W Layer2ScrollCmd
-  + JSR CODE_0CCCB6
+  + JSR CODE_0CCCB6                           ; Draw the BOMB sprite.
 CODE_0CCC9A:
-    LDX.B #$1C
+    LDX.B #$1C                                ; Draw the castle door sprite.
     BRL CODE_0CCBFC
 
 DATA_0CCC9F:
@@ -5306,41 +5547,46 @@ DATA_0CCCB1:
     db $00,$06,$0C,$06,$0C
 
 CODE_0CCCB6:
-    LDA.W Layer1ScrollBits
+; Tile numbers for the BOMB text's frames.
+; Half-width (BB)
+; Full-size (BOMB)
+; Blank
+; Indexes to the above table.
+    LDA.W Layer1ScrollBits                    ; Draw the BOMB sprite.
     INC A
-    TAX
+    TAX                                       ; Get index to the current explosion frames's tiles.
     LDA.W DATA_0CCCB1,X
     STA.B _8
     LDY.B #$A0
     CPX.B #$00
     BNE +
     LDY.B #$A8
-  + STY.B _0
+  + STY.B _0                                  ; Get X/Y position to write at.
     STY.B _4
     LDA.B #$57
     STA.B _2
     LDX.B #$00
 CODE_0CCCD2:
     LDY.B _8
-    LDA.W DATA_0CCC9F,Y
+    LDA.W DATA_0CCC9F,Y                       ; Set tile number.
     BEQ CODE_0CCD02
     STA.W OAMTileNo+4,X
     LDY.B #$35
     LDA.W Layer1ScrollBits
     BMI +
     AND.B #$02
-    BEQ +
+    BEQ +                                     ; Set YXPPCCCT (yellow or red).
     LDY.B #$39
   + TYA
     STA.W OAMTileAttr+4,X
     LDA.B _0
-    STA.W OAMTileXPos+4,X
+    STA.W OAMTileXPos+4,X                     ; Set X/Y position.
     LDA.B _2
     STA.W OAMTileYPos+4,X
     PHX
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Set at 16x16.
     TAX
     LDA.B #$02
     STA.W OAMTileSize+1,X
@@ -5355,7 +5601,7 @@ CODE_0CCD02:
     INX
     INX
     INX
-    CPX.B #$0C
+    CPX.B #$0C                                ; Loop for 6 tiles.
     BNE +
     LDA.B _4
     STA.B _0
@@ -5368,10 +5614,10 @@ CODE_0CCD02:
     RTS
 
 CODE_0CCD23:
-    LDX.B #$00
+    LDX.B #$00                                ; Cutscene routine: sink castle
     LDA.B Layer1YPos
     CMP.B #$C0
-    BNE CODE_0CCD31
+    BNE CODE_0CCD31                           ; If at its lowest position, don't sink anymore and restore X position.
     STZ.B Layer1XPos
     STZ.B Layer1XPos+1
     BRA CODE_0CCD75
@@ -5382,40 +5628,40 @@ CODE_0CCD31:
     STA.W CreditsSprYPosHigh,X
     LDA.B #$F0
     STA.W CreditsSprYSpeed,X
-    JSR CODE_0CD33A
-    JSR CODE_0CD283
+    JSR CODE_0CD33A                           ; Treat the castle as a sprite and move it downwards,
+    JSR CODE_0CD283                           ; Also shake from side to side in the process.
     SEP #$20                                  ; A->8
     LDA.W CreditsSprYPosHigh,X
     STA.B Layer1YPos+1
     LDA.W CreditsSprYPosLow,X
     STA.B Layer1YPos
     CMP.B #$FD
-    BNE +
+    BNE +                                     ; Spawn the white flag when at Y = #$FD
     LDA.B #$01
     STA.W Layer1ScrollTimer
   + LDA.B Layer1YPos
-    CMP.B #$E8
+    CMP.B #$E8                                ; Start the cutscene music at Y = #$E8
     BNE +
     JSR CODE_0CD5C9
   + LDA.B Layer1YPos
-    CMP.B #$C0
-    BNE CODE_0CCD75
-    LDA.B #!SFX_RUMBLINGOFF
+    CMP.B #$C0                                ; Draw the castle remains at Y = #$C0,
+    BNE CODE_0CCD75                           ; and set the dust cloud to move downwards.
+    LDA.B #!SFX_RUMBLINGOFF                   ; SFX to turn off the castle sinking sound.
     STA.W SPCIO0                              ; / Play sound effect
     JSR CODE_0CD1D0
     LDA.B #$08
     STA.W CreditsSprYSpeed+1
 CODE_0CCD75:
-    LDX.B #$01
+    LDX.B #$01                                ; Handle the dust cloud.
     LDA.W CreditsSprYSpeed,X
     BPL CODE_0CCD85
     LDA.W CreditsSprYPosLow,X
     CMP.B #$68
     BCS CODE_0CCD91
-    BRA CODE_0CCD94
+    BRA CODE_0CCD94                           ; Update Y position for the cloud if not at its max/min height.
 
 CODE_0CCD85:
-    LDA.W CreditsSprYPosLow,X
+    LDA.W CreditsSprYPosLow,X                 ; If at the lowest height (moving down), advance to next cutscene phase.
     CMP.B #$78
     BNE CODE_0CCD91
     INC.W Layer1ScrollType
@@ -5425,17 +5671,17 @@ CODE_0CCD91:
     JSR CODE_0CD33A
 CODE_0CCD94:
     LDX.B #$00
-    LDA.B #$04
+    LDA.B #$04                                ; Unused?...
     STA.W CreditsSprXSpeed,X
     JSR CODE_0CD368
-  + BRL CODE_0CCE2A
+  + BRL CODE_0CCE2A                           ; Draw the dust cloud and castle door sprite.
 CODE_0CCDA1:
-    LDA.B TrueFrame
+    LDA.B TrueFrame                           ; Cutscene routine: castle flies away in Ludwig's.
     AND.B #$03
     BNE +
     LDA.W Layer1ScrollXSpeed+1
-    CLC
-    ADC.B #$02
+    CLC                                       ; Increase the castle's acceleration by 2 every 4 frames.
+    ADC.B #$02                                ; Also cap it, though it never goes that fast...
     STA.W Layer1ScrollXSpeed+1
     CMP.B #$80
     BCC +
@@ -5450,11 +5696,11 @@ CODE_0CCDA1:
     STA.W CreditsSprYSpeed,X
     JSR CODE_0CD33A
     LDA.W CreditsSprYPosLow,X
-    BEQ CODE_0CCDD7
-    CMP.B #$20
+    BEQ CODE_0CCDD7                           ; Update the castle's Y position
+    CMP.B #$20                                ; and shake it from side to side.
     BCS +
 CODE_0CCDD7:
-    JSR CODE_0CD283
+    JSR CODE_0CD283                           ; Once a little off the ground, also set the dust cloud to move downwards.
   + LDA.W CreditsSprYPosHigh,X
     STA.B Layer1YPos+1
     LDA.W CreditsSprYPosLow,X
@@ -5467,7 +5713,7 @@ CODE_0CCDD7:
   + LDA.W CreditsSprYPosLow,X
     BEQ CODE_0CCE02
     CMP.B #$A8
-    BCC CODE_0CCE02
+    BCC CODE_0CCE02                           ; Once fully offscreen, set timer for the BG rocket and increase cutscene phase.
     LDA.B #$7F
     STA.W Layer2ScrollCmd
     INC.W Layer1ScrollType
@@ -5481,7 +5727,7 @@ CODE_0CCE02:
     LDA.W CreditsSprYPosLow,X
     CMP.B #$68
     BCS CODE_0CCE1B
-    BRA CODE_0CCE1E
+    BRA CODE_0CCE1E                           ; Update Y position for the dust cloud if not at its max/min height.
 
 CODE_0CCE14:
     LDA.W CreditsSprYPosLow,X
@@ -5492,16 +5738,16 @@ CODE_0CCE1B:
 CODE_0CCE1E:
     LDA.B #$77
     SEC
-    SBC.W CreditsSprYPosLow
+    SBC.W CreditsSprYPosLow                   ; Draw the flame under the castle.
     STA.W CreditsSprYPosLow+2
     JSR CODE_0CCEAB
 CODE_0CCE2A:
-    JSR CODE_0CCE48
+    JSR CODE_0CCE48                           ; Draw the dust cloud.
     LDX.B #$14
     LDA.B #$A8
     STA.B _0
     STA.B _2
-    LDA.B #$5F
+    LDA.B #$5F                                ; Draw the castle door sprite.
     SEC
     SBC.W CreditsSprYPosLow
     STA.B _1
@@ -5511,18 +5757,19 @@ DATA_0CCE40:
     db $80,$81,$82,$83,$83,$82,$81,$80
 
 CODE_0CCE48:
-    DEC.W Layer2ScrollCmd
+; Tile numbers for the castle destruction dust cloud.
+    DEC.W Layer2ScrollCmd                     ; Draw the dust cloud.
     BPL +
     LDA.B #$05
-    STA.W Layer2ScrollCmd
+    STA.W Layer2ScrollCmd                     ; Switch frame if time to do so.
     LDA.W Layer1ScrollBits
     EOR.B #$01
     STA.W Layer1ScrollBits
-  + LDA.B #$98
+  + LDA.B #$98                                ; Get initial X position.
     STA.B _0
     LDY.B #$21
     LDA.W Layer1ScrollBits
-    BEQ +
+    BEQ +                                     ; Get YXPPCCCT.
     LDY.B #$61
   + STY.B _4
     LDA.W Layer1ScrollBits
@@ -5531,17 +5778,17 @@ CODE_0CCE48:
     TAY
     LDX.B #$00
   - LDA.B _0
-    STA.W OAMTileXPos+4,X
+    STA.W OAMTileXPos+4,X                     ; Set X/Y position.
     LDA.W CreditsSprYPosLow+1
     STA.W OAMTileYPos+4,X
     LDA.W DATA_0CCE40,Y
-    STA.W OAMTileNo+4,X
+    STA.W OAMTileNo+4,X                       ; Set tile number and YXPPCCCT.
     LDA.B _4
     STA.W OAMTileAttr+4,X
     PHX
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Set as 16x16.
     TAX
     LDA.B #$02
     STA.W OAMTileSize+1,X
@@ -5551,7 +5798,7 @@ CODE_0CCE48:
     ADC.B #$10
     STA.B _0
     INY
-    INX
+    INX                                       ; Loop for 4 tiles.
     INX
     INX
     INX
@@ -5567,22 +5814,24 @@ DATA_0CCEA7:
     db $25,$25,$65,$65
 
 CODE_0CCEAB:
-    LDX.B #$30
+; Tile numbers for the castle's rocket flame.
+; YXPPCCCT for the castle's rocket flame.
+    LDX.B #$30                                ; Draw the rocket's flame below the castle.
     LDA.B #$B0
-    STA.W OAMTileXPos,X
+    STA.W OAMTileXPos,X                       ; Set X/Y position.
     LDA.W CreditsSprYPosLow+2
     STA.W OAMTileYPos,X
     LDA.B TrueFrame
     AND.B #$06
     LSR A
-    TAY
+    TAY                                       ; Set tile number and YXPPCCCT.
     LDA.W DATA_0CCEA3,Y
     STA.W OAMTileNo,X
     LDA.W DATA_0CCEA7,Y
     STA.W OAMTileAttr,X
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Set as 16x16.
     TAX
     LDA.B #$02
     STA.W OAMTileSize,X
@@ -5596,48 +5845,52 @@ DATA_0CCEDB:
     db $03,$01,$07,$07,$07,$07,$07
 
 CODE_0CCEE2:
-    LDA.W Layer1ScrollBits
-    CMP.B #$02
+; Frame numbers for the small flame / crash cloud / injury mark.
+; Frame lengths for the small flame / crash cloud / injury mark.
+    LDA.W Layer1ScrollBits                    ; Cutscene routine: castle in BG falls toward hill.
+    CMP.B #$02                                ; Branch if hitting the hill.
     BCS CODE_0CCF0F
     LDA.B TrueFrame
     AND.B #$01
-    BEQ +
+    BEQ +                                     ; Switch animation frames every other frame.
     LDA.W Layer1ScrollBits
     EOR.B #$01
     STA.W Layer1ScrollBits
   + LDX.B #$02
-    JSR CODE_0CD33A
+    JSR CODE_0CD33A                           ; Update X/Y position.
     JSR CODE_0CD368
     LDA.W CreditsSprYPosLow+2
     CMP.B #$5C
     BCC CODE_0CCF0D
-    LDA.B #$02
-    STA.W Layer1ScrollBits
+    LDA.B #$02                                ; If low enough, change to hit the hill.
+    STA.W Layer1ScrollBits                    ; Else, skip down.
     BRA CODE_0CCF0F
 
 CODE_0CCF0D:
     BRA CODE_0CCF38
 
 CODE_0CCF0F:
-    DEC.W Layer2ScrollCmd
+; Hitting hill.
+    DEC.W Layer2ScrollCmd                     ; Branch if not updating frame.
     BPL CODE_0CCF38
     LDA.W Layer1ScrollXSpeed+1
     INC A
     STA.W Layer1ScrollXSpeed+1
-    TAX
+    TAX                                       ; Get frame number/lengths.
     LDA.W DATA_0CCED4,X
     STA.W Layer1ScrollBits
     LDA.W DATA_0CCEDB,X
     STA.W Layer2ScrollCmd
     CPX.B #$01
     BNE +
-    LDA.B #!SFX_SPINKILL
+    LDA.B #!SFX_SPINKILL                      ; SFX for hitting the hill.
     STA.W SPCIO0                              ; / Play sound effect
   + CPX.B #$06
-    BNE CODE_0CCF38
+    BNE CODE_0CCF38                           ; Once the injury mark is shown, increase cutscene routine pointer and prepare text.
     JSR CODE_0CD5C6
 CODE_0CCF38:
-    BRL CODE_0CCF49
+; Hasn't hit hill yet.
+    BRL CODE_0CCF49                           ; Draw the rocket flame/crash cloud/injury mark.
 
 DATA_0CCF3B:
     db $B7,$B8,$89,$99,$A9,$B9,$E8
@@ -5646,32 +5899,34 @@ DATA_0CCF42:
     db $25,$25,$23,$23,$23,$23,$23
 
 CODE_0CCF49:
-    LDY.W Layer1ScrollBits
-    CPY.B #$FF
+; Tile numbers for the small rocket flame, crash cloud, and injury mark.
+; YXPPCCCT for the small rocket flame, cloud and injury mark.
+    LDY.W Layer1ScrollBits                    ; Routine to draw rocket flame, crash cloud, and injury mark during Ludwig's scene.
+    CPY.B #$FF                                ; Don't draw if the frame is #$FF.
     BEQ +
     LDX.B #$04
     LDA.W CreditsSprXPosLow+2
-    STA.W OAMTileXPos,X
+    STA.W OAMTileXPos,X                       ; Draw at the X/Y position of rocket.
     LDA.W CreditsSprYPosLow+2
     STA.W OAMTileYPos,X
     LDA.W DATA_0CCF3B,Y
-    STA.W OAMTileNo,X
+    STA.W OAMTileNo,X                         ; Set tile number and YXPPCCCT.
     LDA.W DATA_0CCF42,Y
     STA.W OAMTileAttr,X
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Set as 8x8.
     TAX
     STZ.W OAMTileSize,X
   + RTS
 
 CODE_0CCF72:
-    DEC.W Layer2ScrollCmd
+    DEC.W Layer2ScrollCmd                     ; Cutscene routine: the fake explosion in Roy's.
     BPL CODE_0CCF8B
     LDA.B #$03
     STA.W Layer2ScrollCmd
     INC.W Layer1ScrollBits
-    LDA.W Layer1ScrollBits
+    LDA.W Layer1ScrollBits                    ; Run the cloud animation, and if at the end, move to next cutscene phase.
     CMP.B #$04
     BNE CODE_0CCF8B
     INC.W Layer1ScrollType
@@ -5684,7 +5939,7 @@ CODE_0CCF90:
     LDX.B #$08
     LDA.B #$A8
     STA.B _0
-    STA.B _2
+    STA.B _2                                  ; Draw the castle door sprite.
     LDA.B #$5F
     STA.B _1
     BRL CODE_0CCC06
@@ -5693,51 +5948,52 @@ DATA_0CCF9F:
     db $60,$62,$64,$66
 
 CODE_0CCFA3:
-    LDY.W Layer1ScrollBits
+; Tile numbers for the fake explosion's animation.
+    LDY.W Layer1ScrollBits                    ; Draw the fake explosion for Roy's scene.
     LDA.W DATA_0CCF9F,Y
     STA.W OAMTileNo,X
     LDY.B #$21
-    STA.W OAMTileAttr,X
+    STA.W OAMTileAttr,X                       ; Set X/Y position, tile number, and YXPPPCCCT.
     LDA.B #$AC
     STA.W OAMTileXPos,X
     LDA.B #$63
     STA.W OAMTileYPos,X
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Set as 16x16.
     TAX
     LDA.B #$02
     STA.W OAMTileSize,X
     RTS
 
 CODE_0CCFC5:
-    LDA.W Layer2ScrollTimer
+    LDA.W Layer2ScrollTimer                   ; Cutscene phase: waiting before the real explosion.
     CMP.B #$03
     BEQ CODE_0CCFD3
     LDA.B #$08
-    STA.W Layer2ScrollCmd
-    BRA +
+    STA.W Layer2ScrollCmd                     ; Wait for the last ? mark,
+    BRA +                                     ; then wait a few frames before advancing to the next cutscene phase.
 
 CODE_0CCFD3:
     DEC.W Layer2ScrollCmd
     BPL +
     INC.W Layer1ScrollType
-  + BRL CODE_0CCF90
+  + BRL CODE_0CCF90                           ; Draw the castle door sprite.
 CODE_0CCFDE:
-    LDA.W CutsceneTextTimer
+    LDA.W CutsceneTextTimer                   ; Castle routine: wait for ending input.
     ORA.W Layer2ScrollYSpeed+1
-    BNE +
+    BNE +                                     ; If:
 if ver_is_console(!_VER)                      ;\=============== J, U, E0, & E1 ================
-    LDA.B byetudlrFrame                       ;!
-    ORA.B axlr0000Frame                       ;!
-    AND.B #$C0                                ;!
+    LDA.B byetudlrFrame                       ;!; Text has finished displaying
+    ORA.B axlr0000Frame                       ;!; Wait timer for input has run out
+    AND.B #$C0                                ;!; A/B/X/Y has been pressed
 else                                          ;<====================== SS =====================
     DEC.W EnterLevelAuto                      ;!
     BEQ CODE_0CCFEE                           ;!
     LDA.B byetudlrFrame                       ;!
     ORA.B axlr0000Frame                       ;!
 endif                                         ;/===============================================
-    BEQ +
+    BEQ +                                     ; Then change game mode to load the overworld.
 CODE_0CCFEE:
     STZ.W Layer1ScrollType
     LDA.B #$0B
@@ -5745,49 +6001,49 @@ CODE_0CCFEE:
   + RTS
 
 CODE_0CCFF7:
-    LDA.W CutsceneTextTimer
-    BEQ Return0CD002
+    LDA.W CutsceneTextTimer                   ; Cutscene routine: waiting to show huff cloud.
+    BEQ Return0CD002                          ; Wait for the text to finish before showing Mario's huff cloud.
     INC.W Layer1ScrollType
     BRL CODE_0CCFDE
 Return0CD002:
     RTS
 
 CODE_0CD003:
-    LDA.W Layer1ScrollCmd
+    LDA.W Layer1ScrollCmd                     ; Cutscene routine: player walks in and starts hitting the castle.
     CMP.B #$01
-    BEQ CODE_0CD034
+    BEQ CODE_0CD034                           ; Branch to appropriate castle shaking routine.
     CMP.B #$02
     BEQ CODE_0CD019
     CMP.B #$03
     BEQ CODE_0CD03E
-    LDA.B #$10
+    LDA.B #$10                                ; 00 - Initialize the castle's shake timer.
     STA.W Layer2ScrollCmd
     BRA CODE_0CD046
 
 CODE_0CD019:
-    LDA.W Layer2ScrollCmd
-    AND.B #$F8
+    LDA.W Layer2ScrollCmd                     ; 02 - Player hits the castle (sideways).
+    AND.B #$F8                                ; Display a contact graphic next to Mario briefly.
     BEQ +
     JSR CODE_0CD069
-  + JSR CODE_0CD283
+  + JSR CODE_0CD283                           ; Shake Layer 1.
     DEC.W Layer2ScrollCmd
     BPL CODE_0CD046
-    STZ.W Layer1ScrollCmd
+    STZ.W Layer1ScrollCmd                     ; If done shaking, reset Layer 1's position.
     STZ.B Layer1XPos
     STZ.B Layer1XPos+1
     BRA CODE_0CD046
 
 CODE_0CD034:
-    LDA.B #$3F
-    STA.W Layer2ScrollCmd
+    LDA.B #$3F                                ; 01 - Wait to start sinking (init).
+    STA.W Layer2ScrollCmd                     ; Set timer until it sinks and change to phase 03.
     LDA.B #$03
     STA.W Layer1ScrollCmd
 CODE_0CD03E:
-    DEC.W Layer2ScrollCmd
-    BPL CODE_0CD046
+    DEC.W Layer2ScrollCmd                     ; 03 - Wait to start sinking (main).
+    BPL CODE_0CD046                           ; Move to next cutscene phase when the timer hits 00.
     INC.W Layer1ScrollType
 CODE_0CD046:
-    LDX.B #$A8
+    LDX.B #$A8                                ; Everything converges back together.
     LDA.B Layer1XPos
     BEQ CODE_0CD054
     BPL CODE_0CD052
@@ -5795,7 +6051,7 @@ CODE_0CD046:
     BRA CODE_0CD054
 
 CODE_0CD052:
-    LDX.B #$A7
+    LDX.B #$A7                                ; Draw the castle door sprite.
 CODE_0CD054:
     STX.B _0
     STX.B _2
@@ -5811,30 +6067,32 @@ DATA_0CD065:
     db $30,$30,$F0,$F0
 
 CODE_0CD069:
-    LDY.B #$00
+; Tile numbers for the contact graphic from hitting the castle.
+; YXPPCCCT for the contact graphic from hitting the castle.
+    LDY.B #$00                                ; Display a contact graphic next to Mario.
     LDX.B #$04
     LDA.B PlayerXPosNext
     CLC
     ADC.B #$10
     STA.B _0
-    STA.B _2
+    STA.B _2                                  ; Get X/Y position next to Mario.
     LDA.B PlayerYPosNext
     CLC
     ADC.B #$10
     STA.B _1
 CODE_0CD07D:
     LDA.B _0
-    STA.W OAMTileXPos,X
+    STA.W OAMTileXPos,X                       ; Set X/Y position.
     LDA.B _1
     STA.W OAMTileYPos,X
     LDA.W DATA_0CD061,Y
-    STA.W OAMTileNo,X
+    STA.W OAMTileNo,X                         ; Set tile/YXPPCCCT.
     LDA.W DATA_0CD065,Y
     STA.W OAMTileAttr,X
     PHX
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Set as 8x8.
     TAX
     STZ.W OAMTileSize,X
     PLX
@@ -5847,7 +6105,7 @@ CODE_0CD07D:
     BNE +
     LDA.B _2
     STA.B _0
-    LDA.B _1
+    LDA.B _1                                  ; Loop for 4 tiles.
     CLC
     ADC.B #$08
     STA.B _1
@@ -5860,20 +6118,20 @@ CODE_0CD07D:
     RTS
 
 CODE_0CD0BC:
-    LDA.W Layer1ScrollCmd
-    CMP.B #$01
+    LDA.W Layer1ScrollCmd                     ; Cutscene routine: wait before sinking the castle in Lemmy's.
+    CMP.B #$01                                ; Wait before moving to next cutscene routine.
     BNE +
     INC.W Layer1ScrollType
-  + BRL CODE_0CCF90
+  + BRL CODE_0CCF90                           ; Draw the castle door sprite.
 CODE_0CD0C9:
-    LDA.W Layer1ScrollCmd
-    BEQ +
+    LDA.W Layer1ScrollCmd                     ; Cutscene routine: wait before showing text in Wendy's.
+    BEQ +                                     ; Wait before moving to next cutscene routine and preparing the text display.
     JSR CODE_0CD5C6
   + RTS
 
 CODE_0CD0D2:
-    LDA.W Layer1ScrollCmd
-    CMP.B #$01
+    LDA.W Layer1ScrollCmd                     ; Cutscene routine: player picks up castle.
+    CMP.B #$01                                ; Return if Mario is not picking up the castle.
     BNE Return0CD107
     LDX.B #$00
     LDA.B Layer1YPos
@@ -5883,8 +6141,8 @@ CODE_0CD0D2:
     LDA.B #$08
     STA.W CreditsSprYSpeed,X
     JSR CODE_0CD33A
-    LDA.W CreditsSprYPosLow,X
-    BEQ CODE_0CD100
+    LDA.W CreditsSprYPosLow,X                 ; Update castle Y position.
+    BEQ CODE_0CD100                           ; If fully picked up, move to next cutscene routine.
     CMP.B #$09
     BCC CODE_0CD100
     INC.W Layer1ScrollType
@@ -5900,26 +6158,26 @@ Return0CD107:
     RTS
 
 CODE_0CD108:
-    LDA.W Layer1ScrollCmd
-    CMP.B #$02
+    LDA.W Layer1ScrollCmd                     ; Cutscene routine: player throws the castle.
+    CMP.B #$02                                ; Return if Mario is not kicking the castle.
     BNE Return0CD16E
     DEC.W Layer1ScrollXSpeed+1
     LDA.W Layer1ScrollXSpeed+1
-    BMI +
+    BMI +                                     ; Display a contact graphic briefly.
     CMP.B #$24
     BCC +
     JSR CODE_0CD069
   + LDA.W Layer1ScrollXSpeed+1
     CMP.B #$C8
-    BNE +
-    LDA.B #$40
+    BNE +                                     ; After enough time has passed, shake the screen
+    LDA.B #$40                                ; and advance to the next cutscene routine.
     STA.W Layer2ScrollCmd
-    LDA.B #!SFX_CUTSCENEBOMB
+    LDA.B #!SFX_CUTSCENEBOMB                  ; SFX for the castle crashing.
     STA.W SPCIO3                              ; / Play sound effect
     INC.W Layer1ScrollType
     RTS
 
-  + LDX.B #$00
+  + LDX.B #$00                                ; Castle is flying away.
     LDA.B Layer1YPos
     STA.W CreditsSprYPosLow,X
     LDA.B Layer1YPos+1
@@ -5930,7 +6188,7 @@ CODE_0CD108:
     STA.W CreditsSprXPosHigh,X
     LDA.W Layer1ScrollXSpeed+1
     STA.W CreditsSprYSpeed,X
-    LDA.B #$E8
+    LDA.B #$E8                                ; Update castle X/Y position.
     STA.W CreditsSprXSpeed,X
     JSR CODE_0CD33A
     JSR CODE_0CD368
@@ -5946,7 +6204,7 @@ Return0CD16E:
     RTS
 
 CODE_0CD16F:
-    LDA.B TrueFrame
+    LDA.B TrueFrame                           ; Cutscene routine: shake screen after the castle crashes.
     AND.B #$02
     BEQ CODE_0CD183
     REP #$20                                  ; A->16
@@ -5954,7 +6212,7 @@ CODE_0CD16F:
     SEC
     SBC.W #$0001
     STA.B Layer2YPos
-    SEP #$20                                  ; A->8
+    SEP #$20                                  ; A->8; Alternate increasing/decrease X/Y position.
     BRA +
 
 CODE_0CD183:
@@ -5966,14 +6224,14 @@ CODE_0CD183:
     SEP #$20                                  ; A->8
   + DEC.W Layer2ScrollCmd
     BPL +
-    STZ.B Layer2YPos
+    STZ.B Layer2YPos                          ; If finished, reset Layer 1's position and increase the cutscene pointer.
     STZ.B Layer2YPos+1
     INC.W Layer1ScrollType
   + RTS
 
 CODE_0CD19C:
-    LDA.W Layer1ScrollCmd
-    CMP.B #$03
+    LDA.W Layer1ScrollCmd                     ; Waiting before showing text in Larry's.
+    CMP.B #$03                                ; Wait before moving to next cutscene routine and preparing the text display.
     BNE +
     JSR CODE_0CD5C6
   + RTS
@@ -5988,18 +6246,19 @@ DATA_0CD1A7:
     db $FF
 
 CODE_0CD1D0:
-    LDY.B #$28
+; Stripe data for the castle remains.
+    LDY.B #$28                                ; Routine to draw the castle remains after the castle sinks.
     TYA
     CLC
     ADC.L DynStripeImgSize
     TAX
-  - LDA.W DATA_0CD1A7,Y
+  - LDA.W DATA_0CD1A7,Y                       ; Upload stripe data.
     STA.L DynamicStripeImage,X
     DEX
     DEY
     BPL -
     LDA.B #$28
-    CLC
+    CLC                                       ; Update stripe index.
     ADC.L DynStripeImgSize
     STA.L DynStripeImgSize
     RTS
@@ -6021,20 +6280,25 @@ DATA_0CD1FF:
     db $21,$98,$21,$B8,$21,$D8
 
 CODE_0CD22D:
-    LDA.L DynStripeImgSize
+; Base stripe image to erase a 16x16.
+; First two bytes of the stripe image data for each tile.
+; Column 1
+; Column 2
+; Column 3
+    LDA.L DynStripeImgSize                    ; Routine to erase a tile from the castle.
     STA.B _1
     LDY.B #$0C
     TYA
     CLC
     ADC.L DynStripeImgSize
     TAX
-  - LDA.W DATA_0CD1F0,Y
+  - LDA.W DATA_0CD1F0,Y                       ; Write the base stripe data.
     STA.L DynamicStripeImage,X
     DEX
     DEY
     BPL -
     LDA.B #$0C
-    CLC
+    CLC                                       ; Update stripe index.
     ADC.L DynStripeImgSize
     STA.L DynStripeImgSize
     LDA.B PlayerXPosNext
@@ -6042,7 +6306,7 @@ CODE_0CD22D:
     SBC.B #$A0
     STA.B _0
     LDA.W Layer1ScrollXSpeed
-    SEC
+    SEC                                       ; Get index to the actual tile being erased.
     SBC.B #$38
     LSR A
     LSR A
@@ -6052,18 +6316,18 @@ CODE_0CD22D:
     LDX.B _1
     REP #$20                                  ; A->16
     LDA.W DATA_0CD1FD,Y
-    STA.L DynamicStripeImage,X
+    STA.L DynamicStripeImage,X                ; Set the actual X/Y position to erase.
     LDA.W DATA_0CD1FF,Y
     STA.L DynamicStripeImage+6,X
     SEP #$20                                  ; A->8
     CPY.B #$1C
-    BNE +
+    BNE +                                     ; If at the middle-bottom block, set to display the white flag.
     LDA.B #$01
     STA.W Layer1ScrollTimer
   + RTS
 
 CODE_0CD283:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Routine to shake Layer 1 from side to side.
     LDA.B TrueFrame
     AND.W #$0001
     BEQ CODE_0CD290
@@ -6076,76 +6340,80 @@ CODE_0CD290:
     RTS
 
 CODE_0CD295:
-    LDA.B #!SFX_CUTSCENEBOMB
+; Cutscene routine: just before the "BOMB" appears.
+    LDA.B #!SFX_CUTSCENEBOMB                  ; SFX for the bomb exploding.
     STA.W SPCIO3                              ; / Play sound effect
-    LDA.B #$FF
+    LDA.B #$FF                                ; Set the BOMB text to display half-size at first.
     STA.W Layer1ScrollBits
-    LDA.B #$30
+    LDA.B #$30                                ; Set timer for showing the explosion.
     STA.W Layer2ScrollBits
     LDA.B #$01
     STA.W Layer2ScrollCmd
-    INC.W Layer1ScrollType
-    JSR CODE_0CCBFA
-    BRL CODE_0CCC51
+    INC.W Layer1ScrollType                    ; Move to next cutscene phase.
+    JSR CODE_0CCBFA                           ; Draw the castle door sprite.
+    BRL CODE_0CCC51                           ; Run "BOMB" routine.
 CODE_0CD2B2:
-    LDA.B #!SFX_RUMBLINGON
+; Cutscene routine: castle about to start falling.
+    LDA.B #!SFX_RUMBLINGON                    ; SFX for the castle sinking.
     STA.W SPCIO0                              ; / Play sound effect
-    JSR CODE_0CD31A
-    BRL CODE_0CCD23
+    JSR CODE_0CD31A                           ; Prepare dust cloud and castle for sinking.
+    BRL CODE_0CCD23                           ; Start falling.
 CODE_0CD2BD:
-    LDA.B #!SFX_FIRESPIT
+; Cutscene routine: castle about to start flying.
+    LDA.B #!SFX_FIRESPIT                      ; SFX for the flames starting.
     STA.W SPCIO3                              ; / Play sound effect
-    LDA.B #$77
+    LDA.B #$77                                ; Initialize Y position for the flames.
     STA.W CreditsSprYPosLow+2
     STZ.W Layer1ScrollXSpeed+1
-    JSR CODE_0CD31A
-    BRL CODE_0CCDA1
+    JSR CODE_0CD31A                           ; Prepare dust cloud and castle for flying.
+    BRL CODE_0CCDA1                           ; Start flying.
 CODE_0CD2D0:
-    LDA.B #$03
-    STA.W Layer2ScrollCmd
+    LDA.B #$03                                ; Cutscene routine: prepare fake explosion in Roy's scene
+    STA.W Layer2ScrollCmd                     ; Prepare animation.
     STZ.W Layer1ScrollBits
-    LDA.B #!SFX_CLAP
+    LDA.B #!SFX_CLAP                          ; SFX for the fake explosion.
     STA.W SPCIO3                              ; / Play sound effect
-    INC.W Layer1ScrollType
-    JSR CODE_0CCBFA
-    BRL CODE_0CCF72
+    INC.W Layer1ScrollType                    ; Move to next phase.
+    JSR CODE_0CCBFA                           ; Draw the castle door sprite.
+    BRL CODE_0CCF72                           ; Draw the fake explosion.
 CODE_0CD2E6:
-    DEC.W Layer2ScrollCmd
-    BMI +
+    DEC.W Layer2ScrollCmd                     ; Cutscene routine: waiting to show the BG castle.
+    BMI +                                     ; Wait to advance phase.
     RTS
 
-  + JSR CODE_0CD373
+; Prepare the BG castle.
+  + JSR CODE_0CD373                           ; (mostly useless)
     LDA.B #$0F
-    STA.W CreditsSprYPosLow+2
+    STA.W CreditsSprYPosLow+2                 ; Set initial Y position.
     STZ.W CreditsSprYPosHigh+2
     LDA.B #$90
-    STA.W CreditsSprXPosLow+2
+    STA.W CreditsSprXPosLow+2                 ; Set initial X position.
     STZ.W CreditsSprXPosHigh+2
     LDA.B #$08
-    STA.W CreditsSprYSpeed+2
+    STA.W CreditsSprYSpeed+2                  ; Set X/Y speed.
     LDA.B #$FF
     STA.W CreditsSprXSpeed+2
     LDA.B #$02
     STA.W Layer2ScrollCmd
     STZ.W Layer1ScrollBits
     STZ.W Layer1ScrollXSpeed+1
-    INC.W Layer1ScrollType
-    BRL CODE_0CCEE2
+    INC.W Layer1ScrollType                    ; Move to next castle cutscene phase.
+    BRL CODE_0CCEE2                           ; Run BG castle routine.
 CODE_0CD31A:
-    LDA.B #$77
+    LDA.B #$77                                ; Prepare to sink/fly castle.
     STA.W CreditsSprYPosLow+1
-    LDA.B #$5F
-    STA.W CreditsSprXPosLow
+    LDA.B #$5F                                ; Set initial Y position and speed for the castle dust cloud,
+    STA.W CreditsSprXPosLow                   ; and set the "castle"'s initial height.
     LDA.B #$F8
     STA.W CreditsSprYSpeed+1
     STZ.W Layer1ScrollBits
     LDA.B #$05
     STA.W Layer2ScrollCmd
-    INC.W Layer1ScrollType
-    JSR CODE_0CD373
-    BRL CODE_0CCBFA
+    INC.W Layer1ScrollType                    ; Move to next cutscene phase.
+    JSR CODE_0CD373                           ; (mostly useless)
+    BRL CODE_0CCBFA                           ; Draw the castle door sprite.
 CODE_0CD33A:
-    LDA.W CreditsSprYSpeed,X
+    LDA.W CreditsSprYSpeed,X                  ; Update X/Y position for a sprite in one of the cutscenes. Each table is 15 bytes.
     ASL A
     ASL A
     ASL A
@@ -6173,7 +6441,7 @@ CODE_0CD33A:
     RTS
 
 CODE_0CD368:
-    PHX
+    PHX                                       ; Routine to update X position for a sprite in the cutscenes.
     TXA
     CLC
     ADC.B #$0F
@@ -6183,12 +6451,12 @@ CODE_0CD368:
     RTS
 
 CODE_0CD373:
-    STZ.W CreditsSprYSubSpd
+    STZ.W CreditsSprYSubSpd                   ; Clear accumulating fraction bits for the first three sprite entries.
     STZ.W CreditsSprXSubSpd
     STZ.W CreditsSprYSubSpd+1
     STZ.W CreditsSprXSubSpd+1
     STZ.W CreditsSprXSubSpd+2
-    STZ.W CreditsSprXSubSpd+2
+    STZ.W CreditsSprXSubSpd+2                 ; (typo?)
     RTS
 
 
@@ -6200,29 +6468,31 @@ DATA_0CD396:
     db $F0,$18,$E0,$2A,$F8,$20,$FA,$18
 
 CODE_0CD3A6:
-    LDA.W Layer2ScrollTimer
+; Initial Y speeds for the debris.
+; Initial X speeds for the debris.
+    LDA.W Layer2ScrollTimer                   ; Set up data for the flying debris during Lemmy's scene.
     DEC A
     CMP.B #$E7
-    BCS Return0CD3F3
+    BCS Return0CD3F3                          ; Return if debris shouldn't be generated.
     LDA.B TrueFrame
     AND.B #$01
     BNE Return0CD3F3
     LDX.B #$0E
 CODE_0CD3B6:
-    LDA.W CastleCutExSprSlot,X
+    LDA.W CastleCutExSprSlot,X                ; Find an empty slot.
     BNE CODE_0CD3EE
-    LDA.B #$01
+    LDA.B #$01                                ; Mark slot as taken.
     STA.W CastleCutExSprSlot,X
-    LDA.B #$04
+    LDA.B #$04                                ; Set downwards acceleration.
     STA.W CastleCutExSprAccel,X
     LDA.W DATA_0CD386,X
-    STA.W CreditsSprYSpeed,X
+    STA.W CreditsSprYSpeed,X                  ; Set initial X/Y speed.
     LDA.W DATA_0CD396,X
     STA.W CreditsSprXSpeed,X
     LDA.B PlayerXPosNext
     CLC
     ADC.B #$18
-    STA.W CreditsSprXPosLow,X
+    STA.W CreditsSprXPosLow,X                 ; Spawn at Mario's position.
     LDA.B PlayerYPosNext
     CLC
     ADC.B #$20
@@ -6230,7 +6500,7 @@ CODE_0CD3B6:
     LDA.B TrueFrame
     AND.B #$02
     BNE Return0CD3F3
-    LDA.B #!SFX_SHATTER
+    LDA.B #!SFX_SHATTER                       ; SFX for smashing Lemmy's castle with the hammer.
     STA.W SPCIO3                              ; / Play sound effect
     BRA Return0CD3F3
 
@@ -6242,22 +6512,22 @@ Return0CD3F3:
     RTS
 
 CODE_0CD3F4:
-    LDX.B #$0E
+    LDX.B #$0E                                ; Routine for the debris in Lemmy's scene.
 CODE_0CD3F6:
-    LDA.W CastleCutExSprSlot,X
+    LDA.W CastleCutExSprSlot,X                ; Loop through all filled slots.
     BEQ CODE_0CD41B
     LDA.W CreditsSprYSpeed,X
     BMI CODE_0CD404
     CMP.B #$40
-    BCS +
+    BCS +                                     ; Accelerate downwards if not at max speed.
 CODE_0CD404:
     CLC
     ADC.W CastleCutExSprAccel,X
     STA.W CreditsSprYSpeed,X
-  + JSR CODE_0CD33A
+  + JSR CODE_0CD33A                           ; Update X/Y position.
     JSR CODE_0CD368
     LDA.W CreditsSprYPosLow,X
-    CMP.B #$80
+    CMP.B #$80                                ; Erase if offscreen.
     BCC CODE_0CD41B
     STZ.W CastleCutExSprSlot,X
 CODE_0CD41B:
@@ -6269,23 +6539,24 @@ CODE_0CD41B:
 DATA_0CD423:
     db $3C,$3D
 
-  + LDY.B #$0E
+; Tile numbers for the debris.
+  + LDY.B #$0E                                ; Update OAM for the debris.
     LDX.B #$14
 CODE_0CD429:
-    LDA.W CastleCutExSprSlot,Y
+    LDA.W CastleCutExSprSlot,Y                ; Loop through all filled and on-screen slots.
     BEQ +
     LDA.W CreditsSprXPosLow,Y
-    CMP.B #$50
+    CMP.B #$50                                ; Set X position, and return if offscreen.
     BCC +
     STA.W OAMTileXPos,X
-    LDA.W CreditsSprYPosLow,Y
+    LDA.W CreditsSprYPosLow,Y                 ; Set Y position.
     STA.W OAMTileYPos,X
     PHY
     LDA.B TrueFrame
     AND.B #$02
     LSR A
     TAY
-    LDA.W DATA_0CD423,Y
+    LDA.W DATA_0CD423,Y                       ; Set tile number and YXPPCCCT.
     STA.W OAMTileNo,X
     PLY
     LDA.B #$22
@@ -6293,7 +6564,7 @@ CODE_0CD429:
     PHX
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Set as 8x8.
     TAX
     STZ.W OAMTileSize,X
     PLX
@@ -6319,36 +6590,42 @@ DATA_0CD484:
     db $FF,$80,$80,$80,$00,$80,$80,$80
 
 CODE_0CD4A4:
-    PHB
+; Y position offsets of each question mark. Each row corresponds to a value in $1445.
+; The first four are used in Roy's sequence, while the latter are in Ludwig's.
+; X position offsets of each question mark. Each row corresponds to a value in $1445.
+; The first four are used in Roy's sequence, while the latter are in Ludwig's.
+; An 80 in this table means "don't draw";
+; this means you can have up to 4 question marks drawn at a time.
+    PHB                                       ; Question mark draw routine, for the Roy castle cutscene.
     PHK
     PLB
     LDX.B #$00
     LDA.B Powerup
-    BNE +
+    BNE +                                     ; Offset vertically based on Mario's powerup.
     LDX.B #$08
   + STX.B _2
-    LDX.B #$40
-    LDA.B #$02
+    LDX.B #$40                                ; Base OAM index.
+    LDA.B #$02                                ; Number of tiles to draw.
     STA.B _0
     LDA.W Layer2ScrollTimer
-    ASL A
+    ASL A                                     ; Get index to base broom data pointer.
     ASL A
     TAY
 CODE_0CD4BD:
     LDA.W DATA_0CD484,Y
-    CMP.B #$80
+    CMP.B #$80                                ; 80 = skip.
     BEQ +
     CLC
-    ADC.B PlayerXPosNext
+    ADC.B PlayerXPosNext                      ; Set X position, offset from Mario.
     STA.W OAMTileXPos,X
     LDA.W DATA_0CD464,Y
     CLC
-    ADC.B PlayerYPosNext
+    ADC.B PlayerYPosNext                      ; Set Y position, offset from Mario.
     CLC
     ADC.B _2
     STA.W OAMTileYPos,X
     LDA.B #$B6
-    STA.W OAMTileNo,X
+    STA.W OAMTileNo,X                         ; Set tile number and YXPPCCCT.
     LDA.B #$31
     STA.W OAMTileAttr,X
     PHX
@@ -6373,63 +6650,64 @@ DATA_0CD4F4:
     db $89,$99,$A9,$B9
 
 CODE_0CD4F8:
-    LDA.W Layer1ScrollXSpeed
-    BNE CODE_0CD502
+; Tile numbers for the huff clouds in Morton/Roy's scenes.
+    LDA.W Layer1ScrollXSpeed                  ; Routine to handle the huff cloud in Roy's scene.
+    BNE CODE_0CD502                           ; If not set to spawn the cloud, return.
     STZ.W CreditsSprYPosLow+2
     BRA Return0CD556
 
 CODE_0CD502:
     LDX.B #$02
     LDA.B #$FD
-    STA.W CreditsSprYSpeed,X
+    STA.W CreditsSprYSpeed,X                  ; Set Y speed and update position.
     JSR CODE_0CD33A
     LDA.W CreditsSprYPosLow,X
     EOR.B #$FF
     INC A
-    CMP.B #$0D
+    CMP.B #$0D                                ; If high enough, erase and return.
     BCC CODE_0CD51B
     STZ.W Layer1ScrollXSpeed
     BRA Return0CD556
 
 CODE_0CD51B:
     LDX.B #$00
-    LDA.B Powerup
+    LDA.B Powerup                             ; Set initial Y offset based on Mario's powerup.
     BNE +
     LDX.B #$08
   + STX.B _0
     LDX.B #$34
     LDA.B #$04
-    CLC
+    CLC                                       ; Set X position.
     ADC.B PlayerXPosNext
     STA.W OAMTileXPos,X
     LDA.W CreditsSprYPosLow+2
     CLC
-    ADC.B PlayerYPosNext
+    ADC.B PlayerYPosNext                      ; Set Y position.
     CLC
     ADC.B _0
     STA.W OAMTileYPos,X
     LDA.W CreditsSprYPosLow+2
     EOR.B #$FF
     INC A
-    LSR A
+    LSR A                                     ; Set tile number.
     LSR A
     TAY
     LDA.W DATA_0CD4F4,Y
     STA.W OAMTileNo,X
-    LDA.B #$33
+    LDA.B #$33                                ; Set YXPPCCCT.
     STA.W OAMTileAttr,X
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Set as 8x8.
     TAX
     STZ.W OAMTileSize,X
 Return0CD556:
     RTS
 
 CODE_0CD557:
-    LDA.W Layer1ScrollXSpeed
+    LDA.W Layer1ScrollXSpeed                  ; Cutscene routine: player sighs in Morton's scene.
     BNE CODE_0CD564
-    STZ.W CreditsSprYPosLow+3
+    STZ.W CreditsSprYPosLow+3                 ; If not drawing the huff, clear its position and return.
     STZ.W CreditsSprXPosLow+3
     BRA Return0CD5C5
 
@@ -6437,13 +6715,13 @@ CODE_0CD564:
     LDX.B #$03
     LDA.B #$06
     STA.W CreditsSprXSpeed,X
-    LDA.B #$01
+    LDA.B #$01                                ; Set X/Y speed and update position.
     STA.W CreditsSprYSpeed,X
     JSR CODE_0CD33A
     JSR CODE_0CD368
     LDA.W CreditsSprXPosLow,X
     CMP.B #$0D
-    BCC CODE_0CD585
+    BCC CODE_0CD585                           ; Once at the max X position, move to next cutscene phase and erase.
     STZ.W Layer1ScrollXSpeed
     INC.W Layer1ScrollType
     BRA Return0CD5C5
@@ -6452,7 +6730,7 @@ CODE_0CD585:
     LDX.B #$0F
     LDY.B #$0C
     LDA.B Powerup
-    BNE +
+    BNE +                                     ; Get X/Y offset.
     LDX.B #$13
   + STX.B _0
     STY.B _1
@@ -6462,7 +6740,7 @@ CODE_0CD585:
     ADC.B PlayerXPosNext
     CLC
     ADC.B _1
-    STA.W OAMTileXPos,X
+    STA.W OAMTileXPos,X                       ; Set X/Y position.
     LDA.W CreditsSprYPosLow+3
     CLC
     ADC.B PlayerYPosNext
@@ -6471,28 +6749,28 @@ CODE_0CD585:
     STA.W OAMTileYPos,X
     LDA.W CreditsSprXPosLow+3
     LSR A
-    LSR A
+    LSR A                                     ; Set tile number.
     TAY
     LDA.W DATA_0CD4F4,Y
     STA.W OAMTileNo,X
-    LDA.B #$33
+    LDA.B #$33                                ; Set YXPPCCCT.
     STA.W OAMTileAttr,X
     TXA
     LSR A
-    LSR A
+    LSR A                                     ; Set as 8x8.
     TAX
     STZ.W OAMTileSize,X
 Return0CD5C5:
     RTS
 
 CODE_0CD5C6:
-    INC.W Layer1ScrollType
+    INC.W Layer1ScrollType                    ; Prepare for text display.
 CODE_0CD5C9:
-    LDA.B #con($80,$FF,$FF,$FF,$FF)
+    LDA.B #con($80,$FF,$FF,$FF,$FF)           ; Set text generation timer.
     STA.W CutsceneTextTimer
-    LDA.B #con($D0,$D0,$01,$A8,$A8)
+    LDA.B #con($D0,$D0,$01,$A8,$A8)           ; How many frames (divided by 4) to wait after displaying the intro/castle text before input is registered.
     STA.W Layer2ScrollYSpeed+1
-    LDA.B #!BGM_CUTSCENEFULL
+    LDA.B #!BGM_CUTSCENEFULL                  ; SFX for the intro/castle destruction song.
     STA.W SPCIO2
     RTS
 
@@ -6525,10 +6803,15 @@ DATA_0CD635:
     db $0D,$08,$15,$10,$15,$10
 
 CODE_0CD65B:
-    LDA.W Layer2ScrollXSpeed
-    LSR A
+; Frames for Mario's hammering animation.
+; Tile numbers for the hammer. Bit 0 determines behind Mario (set) or in front (clear).
+; YXPPCCCT for the hammer.
+; X positions for the hammer. Even values are when small, odd are big.
+; Y positions for the hammer. Even values are when small, odd are big.
+    LDA.W Layer2ScrollXSpeed                  ; Routine to handle the hammer in Lemmy's scene.
+    LSR A                                     ; Return if not carrying the hammer.
     BEQ Return0CD6C3
-    LDA.W Layer2ScrollTimer
+    LDA.W Layer2ScrollTimer                   ; Branch if not swinging.
     BNE CODE_0CD66B
     LDX.W PlayerWalkingPose
     BRA CODE_0CD680
@@ -6538,7 +6821,7 @@ CODE_0CD66B:
     CMP.B #$F0
     BCC +
     LDA.B #$0F
-  + AND.B #$0F
+  + AND.B #$0F                                ; Set Mario's pose.
     CLC
     ADC.B #$03
     TAX
@@ -6548,13 +6831,13 @@ CODE_0CD680:
     LDY.B #$00
     LDA.W DATA_0CD5E9,X
     LSR A
-    BCC +
+    BCC +                                     ; Set tile number for the hammer.
     LDY.B #$30
   + ASL A
     STA.W OAMTileNo+$FC,Y
     LDA.B PlayerDirection
     LSR A
-    ROR A
+    ROR A                                     ; Set YXPPCCCT.
     LSR A
     EOR.W DATA_0CD5FC,X
     STA.W OAMTileAttr+$FC,Y
@@ -6566,7 +6849,7 @@ CODE_0CD680:
     INX
   + LDA.B PlayerYPosNext
     CLC
-    ADC.W DATA_0CD635,X
+    ADC.W DATA_0CD635,X                       ; Set X/Y position, based on Mario's powerup and direction.
     STA.W OAMTileYPos+$FC,Y
     LDA.W DATA_0CD60F,X
     LDX.B PlayerDirection
@@ -6578,7 +6861,7 @@ CODE_0CD680:
     STA.W OAMTileXPos+$FC,Y
     TYA
     LSR A
-    LSR A
+    LSR A                                     ; Set as 16x16.
     TAY
     LDA.B #$02
     STA.W OAMTileSize+$3F,Y
@@ -6611,29 +6894,39 @@ DATA_0CD6E5:
     db $68,$34,$B0,$00,$C0,$00,$C0
 
 CODE_0CD6EC:
-    LDA.W Layer2ScrollXSpeed
-    LSR A
+; Y offset for the diagonal broom during each frame of Mario's walk animation.
+; Even tiles are when small, odd are when big.
+; X offset for the diagonal broom during each frame of Mario's walk animation.
+; Even tiles are when small, odd are when big.
+; X offsets for the diagonal broom's tiles from the base.
+; Y offsets for the diagonal broom's tiles from the base.
+; Tile numbers for each of the broom tiles.
+; Speeds for each of the broom's movements.
+; Positions to move the broom up/down to.
+; X positions to check for while Mario is moving between tiles.
+    LDA.W Layer2ScrollXSpeed                  ; Handle the broom in Wendy's scene.
+    LSR A                                     ; Return if not carrying the broom.
     BEQ Return0CD751
     LDY.B #$04
     LDA.B #$02
-  - STA.W OAMTileSize+$50,Y
+  - STA.W OAMTileSize+$50,Y                   ; Set the size for all tiles to 16x16.
     DEY
     BPL -
-    LDA.W Layer1ScrollXSpeed
+    LDA.W Layer1ScrollXSpeed                  ; Branch if wiping the castle down.
     BNE CODE_0CD752
     LDA.W PlayerWalkingPose
     ASL A
     LDY.B Powerup
     BEQ +
     INC A
-  + TAY
+  + TAY                                       ; Get X/Y offsets from Mario.
     LDA.W DATA_0CD6C4,Y
     STA.B _0
     LDA.W DATA_0CD6CA,Y
     STA.B _1
     LDA.B PlayerDirection
     LSR A
-    ROR A
+    ROR A                                     ; Get X flip.
     LSR A
     EOR.B #$61
     STA.B _2
@@ -6648,19 +6941,19 @@ CODE_0CD720:
     ADC.W DATA_0CD6D0,X
     BIT.B _2
     BVC +
-    EOR.B #$FF
+    EOR.B #$FF                                ; Set X position.
     INC A
   + CLC
     ADC.B PlayerXPosNext
     STA.W OAMTileXPos+$140,Y
     LDA.B _1
     CLC
-    ADC.W DATA_0CD6D3,X
+    ADC.W DATA_0CD6D3,X                       ; Set Y position.
     CLC
     ADC.B PlayerYPosNext
     STA.W OAMTileYPos+$140,Y
     LDA.W DATA_0CD6D6,X
-    STA.W OAMTileNo+$140,Y
+    STA.W OAMTileNo+$140,Y                    ; Set tile number and YXPPCCCT.
     LDA.B _2
     STA.W OAMTileAttr+$140,Y
     DEX
@@ -6669,87 +6962,87 @@ Return0CD751:
     RTS
 
 CODE_0CD752:
-    AND.B #$07
-    BNE +
+    AND.B #$07                                ; Wiping down the castle.
+    BNE +                                     ; Every 8 pixels, erase a tile.
     JSR CODE_0CD22D
   + LDY.B #$25
     LDA.W Layer1ScrollXSpeed
     CMP.B #$4C
-    BCC +
+    BCC +                                     ; Set player image based on height of the broom.
     LDY.B #$38                                ; \ Mario's image = Ducking, back to camera
   + STY.W PlayerPose                          ; /
     LDY.B #$00
-    DEC A
+    DEC A                                     ; Draw the broom's head first.
     STA.B _0
     LDA.B #$AC
 CODE_0CD76E:
     STA.W OAMTileNo+$140,Y
     LDA.B #$21
     STA.W OAMTileAttr+$140,Y
-    LDA.B PlayerXPosNext
+    LDA.B PlayerXPosNext                      ; Set tile number, YXPPCCCT, and X/Y position for the tile.
     STA.W OAMTileXPos+$140,Y
     LDA.B _0
     STA.W OAMTileYPos+$140,Y
     CLC
     ADC.B #$10
     CMP.B #$68
-    BCC +
+    BCC +                                     ; Get Y position for the next tile. Limit lowest height.
     LDA.B #$68
   + STA.B _0
     INY
     INY
     INY
-    INY
+    INY                                       ; Loop for the broom's two handle tiles.
     LDA.B #$AE
     CPY.B #$14
     BCC CODE_0CD76E
     LDX.W Layer2ScrollTimer
-    LDA.W Layer1ScrollXSpeed
+    LDA.W Layer1ScrollXSpeed                  ; Branch if not time to change direction/move Mario.
     CMP.W DATA_0CD6E0,X
     BNE CODE_0CD7DE
     LDA.W Layer1ScrollYSpeed+1
-    BEQ +
+    BEQ +                                     ; Branch if done waiting to move, and decrease timer if not.
     DEC.W Layer1ScrollYSpeed+1
     RTS
 
-  + TXA
-    BEQ CODE_0CD7C9
-    LSR A
+  + TXA                                       ; Changing broom direction or moving Mario.
+    BEQ CODE_0CD7C9                           ; Branch to just increase phase if just started wiping,
+    LSR A                                     ; or in an odd movement phase (i.e. wiping down).
     BCS CODE_0CD7C9
     LDA.B TrueFrame
     AND.B #$04
-    BEQ +
+    BEQ +                                     ; Handle Mario's sidways shuffle animation.
     LDA.B #$39                                ; \ Mario's image = Standing, back to camera
     STA.W PlayerPose                          ; /
   + LDA.B PlayerXPosNext
-    CMP.W DATA_0CD6E5,X
+    CMP.W DATA_0CD6E5,X                       ; If Mario is on the required X position, increase broom phase.
     BEQ CODE_0CD7C9
     INC A
-    STA.B PlayerXPosNext
+    STA.B PlayerXPosNext                      ; Shift Mario a pixel to the right. If centered on a block, set wait timer.
     AND.B #$0F
     BEQ CODE_0CD7E5
     RTS
 
 CODE_0CD7C9:
-    INC.W Layer2ScrollTimer
-    CPX.B #$06
+    INC.W Layer2ScrollTimer                   ; Finished movement; move to next phase.
+    CPX.B #$06                                ; Increase broom phase. If at 07, return to diagonal frame.
     BCC +
     STZ.W Layer1ScrollXSpeed
     RTS
 
-  + TXA
-    LSR A
+  + TXA                                       ; Not at last phase.
+    LSR A                                     ; If starting to wipe down, play a sound effect.
     BCS +
-    LDA.B #!SFX_FLYHIT
+    LDA.B #!SFX_FLYHIT                        ; SFX for wiping down in Wendy's cutscene.
     STA.W SPCIO0                              ; / Play sound effect
   + RTS
 
 CODE_0CD7DE:
-    CLC
-    ADC.W DATA_0CD6D9,X
+    CLC                                       ; Just moving broom up/down.
+    ADC.W DATA_0CD6D9,X                       ; Shift accordingly.
     STA.W Layer1ScrollXSpeed
 CODE_0CD7E5:
-    LDA.B #$10
+    LDA.B #$10                                ; Initialize wait timer for when finished.
     STA.W Layer1ScrollYSpeed+1
     RTS
 
@@ -6815,8 +7108,25 @@ CODE_0CD858:
     LDA.W Layer2ScrollYSpeed
     STA.W OAMTileXPos+$180
     STZ.W OAMTileNo+$180
-    LDA.B #$21
-    STA.W OAMTileAttr+$180
+    LDA.B #$21                                ; Write the OAM data for the castle destruction Yoshi egg.
+; Tall hills BG tilemap (105).
+; Underwater BG tilemap (00A)
+; Hills/clouds BG tilemap (125).
+; Cloud BG tilemap (001).
+; Small hills BG tilemap (015).
+; Mountains/cloud BG tilemap (102).
+; Castle pillars BG tilemap (101).
+; Big hills BG tilemap (12B).
+; Bonus BG tilemap (014).
+; Stars BG tilemap (119).
+; Mountains BG tilemap (023).
+; Empty BG tilemap (0F7).
+; Cave BG tilemap (11A).
+; Bushes BG tilemap (106).
+; Ghost house BG tilemap (004).
+; Ghost ship BG tilemap (0F8).
+; Castle BG tilemap (007).
+    STA.W OAMTileAttr+$180                    ; Overworld Layer 1 tile data. Top-left of main overworld begins.
     LDA.B #$02
     STA.W OAMTileSize+$60
     RTS

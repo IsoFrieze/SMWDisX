@@ -635,7 +635,7 @@ DATA_07F1AA:
     db $25,$26,$27,$28,$29,$30,$40,$50
 
 CODE_07F1CA:
-    LDA.W SpriteMisc1540,X
+    LDA.W SpriteMisc1540,X                    ; Number of bonus stars (in decimal) to give Mario when he hits the goal tape at each Y position.
     STA.B _4
     STZ.B _2
     LDA.W SpriteMisc1594,X
@@ -718,16 +718,16 @@ DATA_07F24E:
     db $66,$66,$6E,$FF
 
 CODE_07F252:
-    PHX
+    PHX                                       ; Subroutine when a goal tape is hit, to give Mario appropriate bonus stars.
     LDA.W SpriteMisc1594,X
     LSR A
-    LSR A
+    LSR A                                     ; Get number of bonus stars to give Mario.
     TAX
     LDA.L DATA_07F1AA,X
     STA.W BonusStarsGained
     PLX
     CMP.B #$50
-    BNE +
+    BNE +                                     ; If giving 50 bonus stars, give Mario a 3up as well.
     LDA.B #$0A
     JSL GivePoints
   + RTL
@@ -931,7 +931,51 @@ Sprite190FVals:
     db $40
 
 ZeroSpriteTables:
-    STZ.W SpriteInLiquid,X
+; Tweaker byte 1: sSjJcccc
+; s = Disappear in cloud of smoke
+; S = Hop in/kick shells
+; j = Dies when jumped on
+; J = Can be jumped on (if 0, bounces off with spinjump)
+; cccc = Object clipping
+; Tweaker byte 2: Format: dscccccc
+; d = Falls straight down when killed
+; s = Use shell as death frame
+; cccccc = Sprite clipping
+; Tweaker byte 3: lwcfpppg
+; l = don't interact with layer 2
+; w = disable water interaction
+; c = disable cape killing
+; f = disable fireball killing
+; ppp = palette
+; g = use second graphics page
+; Tweaker byte 4: dpmksPiS
+; d = Don't use default interaction with player
+; p = Gives power-up when eaten by Yoshi
+; m = Process interaction with player every frame
+; k = Can't be kicked like a shell
+; s = Don't change into a shell when stunned
+; P = Process while off screen
+; i = Invincible to star/cape/fire/bouncing bricks
+; S = Don't disable clipping when killed with star
+; Tweaker byte 5: dnctswye
+; d = Don't interact with objects
+; n = Spawns a new sprite
+; c = Don't turn into a coin when goal passed
+; t = Don't change direction if touched
+; s = Don't interact with other sprites
+; w = Weird ground behavior
+; y = Stay in Yoshi's mouth
+; e = Inedible
+; Tweaker byte 6: wcdj5sDp
+; w = Don't get stuck in walls (carryable sprites)
+; c = Don't turn into a coin with silver POW
+; d = Death frame 2 tiles high
+; j = Can be jumped on with upward Y speed
+; 5 = Takes 5 fireballs to kill; one otherwise. Counted with $1528.
+; s = Can't be killed by sliding
+; D = Don't erase when goal passed
+; p = Make platform passable from below
+    STZ.W SpriteInLiquid,X                    ; Subroutine to reset all sprite tables for a sprite slot.
     STZ.W SpriteBehindScene,X
     STZ.B SpriteTableC2,X
     STZ.W SpriteMisc151C,X
@@ -970,7 +1014,7 @@ ZeroSpriteTables:
     RTL
 
 LoadSpriteTables:
-    PHY
+    PHY                                       ; Subroutine to reload tweaker bytes for a sprite slot.
     PHX
     LDA.B SpriteNumber,X
     TAX
@@ -983,28 +1027,28 @@ LoadSpriteTables:
     RTL
 
 LoadTweakerBytes:
-    PHY
+    PHY                                       ; Subroutine to load tweaker bytes for sprites.
     PHX
     TXY
     LDX.B SpriteNumber,Y
-    LDA.L Sprite1656Vals,X
+    LDA.L Sprite1656Vals,X                    ; Tweaker byte 1: sSjJcccc
     STA.W SpriteTweakerA,Y
-    LDA.L Sprite1662Vals,X
+    LDA.L Sprite1662Vals,X                    ; Tweaker byte 2: dscccccc
     STA.W SpriteTweakerB,Y
-    LDA.L Sprite166EVals,X
+    LDA.L Sprite166EVals,X                    ; Tweaker byte 3: lwcfpppg
     STA.W SpriteTweakerC,Y
-    LDA.L Sprite167AVals,X
+    LDA.L Sprite167AVals,X                    ; Tweaker byte 4: dpmksPiS
     STA.W SpriteTweakerD,Y
-    LDA.L Sprite1686Vals,X
+    LDA.L Sprite1686Vals,X                    ; Tweaker byte 5: dnctswye
     STA.W SpriteTweakerE,Y
-    LDA.L Sprite190FVals,X
+    LDA.L Sprite190FVals,X                    ; Tweaker byte 6: wcdj5sDp
     STA.W SpriteTweakerF,Y
     PLX
     PLY
     RTL
 
 InitSpriteTables:
-    JSL ZeroSpriteTables
+    JSL ZeroSpriteTables                      ; Subroutine to reload sprite tables.
     JSL LoadSpriteTables
     RTL
 
@@ -1302,7 +1346,14 @@ DATA_07FC37:
     db $F0,$F0,$10,$10
 
 CODE_07FC3B:
-    PHX
+; Trigonometry/sine/cosine value table, 16-bit.
+; Note that this only actually covers half a circle.
+; Line-guided sprite offset table. Format of each byte is YX. Uses below two tables for pointers, plus additional offset.
+; Low byte of pointer to line-guided sprite speed table above, indexed by the Map16 tile number (76-95).
+; High byte of pointer to line-guided sprite speed table above, indexed by the Map16 tile number (76-95).
+; X speeds for the four stars in the spin kill animation.
+; Y speeds for the four stars in the spin kill animation.
+    PHX                                       ; Routine to draw the graphics for the spinjump's stars.
     LDX.B #$03
   - JSL CODE_07FC47
     DEX
@@ -1320,7 +1371,7 @@ CODE_07FC49:
     RTL                                       ; / Return if no free slots
 
 CODE_07FC52:
-    LDA.B #$10                                ; \ Extended sprite = Spin jump stars
+    LDA.B #$10                                ; \ Extended sprite = Spin jump stars; Extended sprite number to use for the spinjump's stars.
     STA.W ExtSpriteNumber,Y                   ; /
     PHX
     LDX.W CurSpriteProcess                    ; X = Sprite index

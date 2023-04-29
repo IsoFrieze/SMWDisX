@@ -18,19 +18,21 @@ TilesetMAP16Loc:
     dw Map16Tileset3
 
 CODE_05801E:
-    PHP
+; Base pointers to tileset-specific Map16 tile graphics (in bank $0D).
+; Indexed by (gfx header) * 2.
+    PHP                                       ; Routine to load level data.
     SEP #$20                                  ; A->8
     REP #$10                                  ; XY->16
     LDX.W #$0000                              ; \
   - LDA.B #$25                                ; |
-    STA.L Layer2TilemapLow,X                  ; |Set all background tiles (lower bytes) to x25
+    STA.L Layer2TilemapLow,X                  ; |Set all background tiles (lower bytes) to x25; Clear out the BG Layer 2 tilemap.
     STA.L Layer2TilemapLow+$200,X             ; |
     INX                                       ; |
     CPX.W #$0200                              ; |
     BNE -                                     ; /
     STZ.W LevelLoadObject
     LDA.B Layer2DataPtr+2                     ; \
-    CMP.B #$FF                                ; |If the layer 2 data is a background,
+    CMP.B #$FF                                ; |If the layer 2 data is a background,; Branch if using an actual Layer 2, not a BG; don't repoint tilemap data.
     BNE CODE_058074                           ; / branch to $8074
     REP #$10                                  ; XY->16
     LDY.W #$0000                              ; \
@@ -38,36 +40,37 @@ CODE_05801E:
     CPX.W #DATA_0CE8FE                        ; |If Layer 2 pointer >= $E8FF,
     BCC +                                     ; |the background should use Map16 page x11 instead of x10
     LDY.W #$0001                              ; |
-  + LDX.W #$0000                              ; \
-    TYA                                       ; |
+; Set high bytes (page number) of BG tile numbers.
+  + LDX.W #$0000                              ; \; 0 if $0CE8EE or less.
+    TYA                                       ; |; 1 if $0CE8FE or higher.
   - STA.L Layer2TilemapHigh,X                 ; |Set the background's Map16 page
     STA.L Layer2TilemapHigh+$200,X            ; |(i.e. setting all high tile bytes to Y)
     INX                                       ; |
     CPX.W #$0200                              ; |
     BNE -                                     ; /
-    LDA.B #$0C                                ; \ Set highest Layer 2 address to x0C
+    LDA.B #$0C                                ; \ Set highest Layer 2 address to x0C; Set actual Layer 2 pointer long byte.
     STA.B Layer2DataPtr+2                     ; / (All backgrounds are stored in bank 0C)
     STZ.W Empty1932                           ; \ Set tileset to 0
     STZ.W ObjectTileset                       ; /
     LDX.W #$B900
-    STX.B _D
+    STX.B _D                                  ; Load the BG tilemap to $7EB900.
     REP #$20                                  ; A->16
     JSR CODE_058126
 CODE_058074:
-    SEP #$20                                  ; A->8
+    SEP #$20                                  ; A->8; Not a BG tilemap.
     LDX.W #$0000                              ; \
   - LDA.B #$00                                ; |
     JSR CODE_05833A                           ; |Clear level data
-    DEX                                       ; |
+    DEX                                       ; |; Fill the Map16 table with #$0025.
     LDA.B #$25                                ; |
     JSR CODE_0582C8                           ; |
     CPX.W #$0200                              ; |
     BNE -                                     ; /
     STZ.W LevelLoadObject
-    JSR LoadLevel                             ; Load the level
+    JSR LoadLevel                             ; Load the level; Load level data.
     SEP #$30                                  ; AXY->8
     LDA.W GameMode                            ; \
-    CMP.B #$22                                ; |
+    CMP.B #$22                                ; |; Load on-screen sprites from level data, unless in game mode 22+.
     BPL +                                     ; |If level mode is less than x22,
     JSL CODE_02A751                           ; |JSL to $02A751
   + PLP
@@ -75,7 +78,7 @@ CODE_058074:
 
 if ver_is_lores(!_VER)                        ;\================== J, U, SS, & E0 =============
 CODE_05809E:                                  ;!
-    PHP                                       ;!
+    PHP                                       ;!; Routine to load Map16 data to VRAM on level load.
     SEP #$20                                  ;! A->8
 else                                          ;<======================== E1 ===================
 EDATA_05809E:                                 ;!
@@ -98,22 +101,22 @@ endif                                         ;/================================
     STZ.W LevelLoadObject                     ; Zero a byte in the middle of the RAM table for the level header
     REP #$30                                  ; AXY->16
     LDA.W #$FFFF
-    STA.B Layer1PrevTileUp                    ; $4D to $50 = #$FF
+    STA.B Layer1PrevTileUp                    ; $4D to $50 = #$FF; Set Map16 update flags for both Layer 1 and 2.
     STA.B Layer1PrevTileDown
     JSR CODE_05877E                           ; -> here
     LDA.B Layer1TileUp
-    STA.B Layer1TileDown
+    STA.B Layer1TileDown                      ; Figure out which row/column of Map16 data to upload first.
     LDA.B Layer2TileUp
     STA.B Layer2TileDown
-    LDA.W #$0202
+    LDA.W #$0202                              ; Set scrolling as right/down.
     STA.B Layer1ScrollDir
 CODE_0580BD:
     REP #$30                                  ; AXY->16
-    JSL CODE_0588EC
-    JSL CODE_058955
-    JSL UploadOneMap16Strip
+    JSL CODE_0588EC                           ; Get VRAM data for one row/column of Layer 1 Map16 data.
+    JSL CODE_058955                           ; Get VRAM data for one row/column of Layer 2 Map16 data.
+    JSL UploadOneMap16Strip                   ; Upload VRAM data to the Layer 1/2 tilemap.
     REP #$30                                  ; AXY->16
-    INC.B Layer1TileDown
+    INC.B Layer1TileDown                      ; Increment row/column for next loop.
     INC.B Layer2TileDown
     SEP #$30                                  ; AXY->8
     LDA.B Layer1TileDown
@@ -126,7 +129,7 @@ CODE_0580BD:
     LDA.W #$0133
     ASL A
     TAY
-    LDA.W #$0007
+    LDA.W #$0007                              ; Change pipe colors each screen.
     STA.B _0
     LDA.L MAP16AppTable,X
   - STA.W Map16Pointers,Y
@@ -138,7 +141,7 @@ CODE_0580BD:
     BPL -
     SEP #$20                                  ; A->8
     INC.W LevelLoadObject
-    LDA.W LevelLoadObject
+    LDA.W LevelLoadObject                     ; Loop for all 20 rows/columns of Map16 data.
     CMP.B #$20
     BNE CODE_0580BD
     LDA.W ThroughMain
@@ -157,7 +160,7 @@ CODE_0580BD:
     RTL
 
 CODE_058126:
-    PHP
+    PHP                                       ; Upload BG Layer 2 data.
     REP #$30                                  ; AXY->16
     LDY.W #$0000
     STY.B _3
@@ -251,7 +254,10 @@ DATA_0581BB:
     db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 
 CODE_0581FB:
-    SEP #$30                                  ; AXY->8
+; Bitwise table for which tiles in a row are tileset-specific. Two bytes per row (in big endian!).
+; Page 0
+; Page 1
+    SEP #$30                                  ; AXY->8; Routine to prepare pointers for Map16 on level load ($82, $0FBE).
     LDA.W ObjectTileset                       ; \
     ASL A                                     ; |Store tileset*2 in X
     TAX                                       ; /
@@ -264,13 +270,13 @@ CODE_0581FB:
     LDA.B #$CA                                ; \Store xCA in $1431
     STA.W SolidTileEnd                        ; /
     REP #$20                                  ; A->16
-    LDA.W #DATA_00E55E                        ; \Store xE55E in $82-$83
+    LDA.W #DATA_00E55E                        ; \Store xE55E in $82-$83; Set the slope steepness pointer ($82) to $00E55E.
     STA.B SlopesPtr                           ; /
-    LDA.L TilesetMAP16Loc,X                   ; \Store address to MAP16 data in $00-$01
+    LDA.L TilesetMAP16Loc,X                   ; \Store address to MAP16 data in $00-$01; $00 = pointer to tileset-specific Map16 tilemaps (bank byte assumed $0D).
     STA.B _0                                  ; /
-    LDA.W #Map16Common                        ; \Store x8000 in $02-$03
+    LDA.W #Map16Common                        ; \Store x8000 in $02-$03; $02 = pointer to non-tileset-specific Map16 tilemaps ($0D8000).
     STA.B _2                                  ; /
-    LDA.W #DATA_0581BB                        ; \Store x81BB in $0D-$0E
+    LDA.W #DATA_0581BB                        ; \Store x81BB in $0D-$0E; $0D = pointer to $0581BB (bitwise table for whether a tile is tileset-specific or not).
     STA.B _D                                  ; /
     STZ.B _4                                  ; \
     STZ.B _9                                  ; |Store x00 in $04, $09 and $0B
@@ -279,35 +285,35 @@ CODE_0581FB:
     LDY.W #$0000                              ; \Set X and Y to x0000
     TYX                                       ; /
 CODE_058237:
-    SEP #$20                                  ; A->8
-    LDA.B [_D],Y
+    SEP #$20                                  ; A->8; Map16 GFX loop.
+    LDA.B [_D],Y                              ; Get bits for which tiles are tileset-specific in the current Map16 row.
     STA.B _C
 CODE_05823D:
-    ASL.B _C
+    ASL.B _C                                  ; Branch if this tile is tileset-specific.
     BCC +
     REP #$20                                  ; A->16
-    LDA.B _2
+    LDA.B _2                                  ; Store pointer to tile.
     STA.W Map16Pointers,X
     LDA.B _2
-    CLC
+    CLC                                       ; Increment non-tileset-specific Map16 pointer by one block..
     ADC.W #$0008
     STA.B _2
     JMP CODE_058262
 
-  + REP #$20                                  ; A->16
-    LDA.B _0
+  + REP #$20                                  ; A->16; Tileset-specific Map16 tiles.
+    LDA.B _0                                  ; Store pointer to tile.
     STA.W Map16Pointers,X
     LDA.B _0
-    CLC
+    CLC                                       ; Increment tileset-specific Map16 pointer by one block.
     ADC.W #$0008
     STA.B _0
 CODE_058262:
-    SEP #$20                                  ; A->8
+    SEP #$20                                  ; A->8; Both branches join back up.
     INX
     INX
     INC.B _9
     INC.B _B
-    LDA.B _B
+    LDA.B _B                                  ; Loop for all tiles 000-1FF.
     CMP.B #$08
     BNE CODE_05823D
     STZ.B _B
@@ -315,7 +321,7 @@ CODE_058262:
     CPY.W #$0040
     BNE CODE_058237
     LDA.W ObjectTileset
-    BEQ CODE_058281
+    BEQ CODE_058281                           ; Branch if not in tilesets 0 or 7 (Normal 1/2).
     CMP.B #$07
     BNE CODE_0582C5
 CODE_058281:
@@ -323,7 +329,7 @@ CODE_058281:
     STA.W SolidTileStart
     STA.W SolidTileEnd
     REP #$30                                  ; AXY->16
-    LDA.W #DATA_00E5C8
+    LDA.W #DATA_00E5C8                        ; Set the slope steepness pointer ($82) to $00E55E.
     STA.B SlopesPtr
     LDA.W #$01C4
     ASL A
@@ -331,7 +337,7 @@ CODE_058281:
     LDA.W #$8A70
     STA.B _0
     LDX.W #$0003
-  - LDA.B _0
+  - LDA.B _0                                  ; Change the pointer for tiles 1C4-1C7 to $0D8A70.
     STA.W Map16Pointers,Y
     CLC
     ADC.W #$0008
@@ -345,7 +351,7 @@ CODE_058281:
     TAY
     LDX.W #$0003
   - LDA.B _0
-    STA.W Map16Pointers,Y
+    STA.W Map16Pointers,Y                     ; Change the pointer for tiles 1EC-1EF to $0D8A90.
     CLC
     ADC.W #$0008
     STA.B _0
@@ -358,7 +364,7 @@ CODE_0582C5:
     RTS
 
 CODE_0582C8:
-    STA.L Map16TilesLow,X
+    STA.L Map16TilesLow,X                     ; Clear out the Map16 low byte table.
     STA.L Map16TilesLow+$200,X
     STA.L Map16TilesLow+$400,X
     STA.L Map16TilesLow+$600,X
@@ -390,7 +396,7 @@ CODE_0582C8:
     RTS
 
 CODE_05833A:
-    STA.L Map16TilesHigh,X
+    STA.L Map16TilesHigh,X                    ; Clear out the Map16 high byte table.
     STA.L Map16TilesHigh+$200,X
     STA.L Map16TilesHigh+$400,X
     STA.L Map16TilesHigh+$600,X
@@ -422,22 +428,22 @@ CODE_05833A:
     RTS
 
 LoadLevel:
-    PHP
+    PHP                                       ; Routine to load object data for a level.
     SEP #$30                                  ; AXY->8
     STZ.W LayerProcessing                     ; Layer number (0=Layer 1, 1=Layer 2)
-    JSR CODE_0584E3                           ; Loads level header
-    JSR CODE_0581FB
+    JSR CODE_0584E3                           ; Loads level header; Fetch data from the primary level header and level mode.
+    JSR CODE_0581FB                           ; Get Map16 tile tilemap pointers.
 LoadAgain:
     LDA.W LevelModeSetting                    ; Get current level mode
     CMP.B #$09                                ; \
-    BEQ LoadLevelDone                         ; |
-    CMP.B #$0B                                ; |If the current level is a boss level,
-    BEQ LoadLevelDone                         ; |don't load anything else.
+    BEQ LoadLevelDone                         ; |; End level loading if in level modes:
+    CMP.B #$0B                                ; |If the current level is a boss level,; 09, 0B, 10
+    BEQ LoadLevelDone                         ; |don't load anything else.; (i.e. a boss room)
     CMP.B #$10                                ; |
     BEQ LoadLevelDone                         ; /
     LDY.B #$00                                ; \
     LDA.B [Layer1DataPtr],Y                   ; |
-    CMP.B #$FF                                ; |If level isn't empty, load the level.
+    CMP.B #$FF                                ; |If level isn't empty, load the level.; If the level's object data is non-empty, load it.
     BEQ +                                     ; |
     JSR LoadLevelData                         ; /
   + SEP #$30                                  ; AXY->8
@@ -446,9 +452,9 @@ LoadAgain:
     CMP.B #$0A                                ; |
     BEQ LoadLevelDone                         ; |
     CMP.B #$0C                                ; |
-    BEQ LoadLevelDone                         ; |If the current level isn't a Layer 2 level,
-    CMP.B #$0D                                ; |branch to LoadLevelDone
-    BEQ LoadLevelDone                         ; |
+    BEQ LoadLevelDone                         ; |If the current level isn't a Layer 2 level,; End level loading if in level modes:
+    CMP.B #$0D                                ; |branch to LoadLevelDone; 00, 0A, 0C, 0D, 0E, 11, 1E
+    BEQ LoadLevelDone                         ; |; (i.e. the level does not have Layer 2)
     CMP.B #$0E                                ; |
     BEQ LoadLevelDone                         ; |
     CMP.B #$11                                ; |
@@ -456,23 +462,23 @@ LoadAgain:
     CMP.B #$1E                                ; |
     BEQ LoadLevelDone                         ; /
     INC.W LayerProcessing                     ; \Increase layer number and load into A
-    LDA.W LayerProcessing                     ; /
+    LDA.W LayerProcessing                     ; /; If Layer 2 has already been processed, end level load.
     CMP.B #$02                                ; \If it is x02, end. (Layer 1 and 2 are done)
     BEQ LoadLevelDone                         ; /
     LDA.B Layer2DataPtr                       ; \
     CLC                                       ; |
     ADC.B #$05                                ; |
-    STA.B Layer1DataPtr                       ; |Move address stored in $68-$6A to $65-$67.
-    LDA.B Layer2DataPtr+1                     ; |(Move Layer 2 address to "Level to load" address)
+    STA.B Layer1DataPtr                       ; |Move address stored in $68-$6A to $65-$67.; Offset the Layer 2 data pointer by 5 bytes.
+    LDA.B Layer2DataPtr+1                     ; |(Move Layer 2 address to "Level to load" address); (to skip the level header)
     ADC.B #$00                                ; |It also increases the address by 5 (to ignore Layer 2's header)
     STA.B Layer1DataPtr+1                     ; |
     LDA.B Layer2DataPtr+2                     ; |
     STA.B Layer1DataPtr+2                     ; /
     STZ.W LevelLoadObject
-    JMP LoadAgain
+    JMP LoadAgain                             ; Load the Layer 2 data.
 
 LoadLevelDone:
-    STZ.W LayerProcessing
+    STZ.W LayerProcessing                     ; Loading finished.
     PLP
     RTS
 
@@ -521,7 +527,17 @@ LevelMusicTable:
     db !BGM_BONUSGAME
 
 CODE_0584E3:
-    LDY.B #$00
+; Screen mode values for each level mode. ($5B)
+; Table of mainscreen designations (TM & TMW) for each level mode. ($0D9D)
+; Table of subscreen designations (TS & TSW) for each level mode. ($0D9E)
+; Table of CGADSUB settings for each level mode. ($40)
+; Table of fight mode values for each level mode. ($0D9B)
+; Table of the default YXPPCCCT setting for each level mode. ($64)
+; Only used for deciding whether layer priority works.
+; #$20 = it will, #$30 = it won't.
+; Timer settings for the level header.
+; Music settings for the level header.
+    LDY.B #$00                                ; Routine to store data from the level header and level mode to RAM.
     LDA.B [Layer1DataPtr],Y                   ; Get first byte
     TAX                                       ; \
     AND.B #$1F                                ; |Get amount of screens
@@ -536,20 +552,20 @@ CODE_0584E3:
     STA.W BackgroundPalette                   ; /
     INY                                       ; \Get second byte
     LDA.B [Layer1DataPtr],Y                   ; /
-    AND.B #$1F                                ; \Get level mode
+    AND.B #$1F                                ; \Get level mode; Store level mode.
     STA.W LevelModeSetting                    ; /
     TAX
     LDA.L LevXYPPCCCTtbl,X                    ; \Get XYPPCCCT settings from table
     STA.B SpriteProperties                    ; /
     LDA.L LevMainScrnTbl,X                    ; \Get main screen setting from table
-    STA.W ThroughMain                         ; /
+    STA.W ThroughMain                         ; /; Set main/sub screen designations.
     LDA.L LevSubScrnTbl,X                     ; \Get subscreen setting from table
     STA.W ThroughSub                          ; /
-    LDA.L LevCGADSUBtable,X                   ; \Get CGADSUB settings from table
+    LDA.L LevCGADSUBtable,X                   ; \Get CGADSUB settings from table; Set color math settings/
     STA.B ColorSettings                       ; /
-    LDA.L SpecialLevTable,X                   ; \Get special level setting from table
+    LDA.L SpecialLevTable,X                   ; \Get special level setting from table; Set special processing flags (for mode 7 rooms).
     STA.W IRQNMICommand                       ; /
-    LDA.L VerticalTable,X                     ; \Get vertical level setting from table
+    LDA.L VerticalTable,X                     ; \Get vertical level setting from table; Set vertical level settings and Layer 2 interaction.
     STA.B ScreenMode                          ; /
     LSR A                                     ; \
     LDA.B LevelScrLength                      ; |
@@ -562,7 +578,7 @@ CODE_0584E3:
     LDA.B [Layer1DataPtr],Y                   ; Reload second byte
     LSR A                                     ; \
     LSR A                                     ; |
-    LSR A                                     ; |Get BG color settings
+    LSR A                                     ; |Get BG color settings; Store back area color from header.
     LSR A                                     ; |
     LSR A                                     ; |
     STA.W BackAreaColor                       ; /
@@ -570,27 +586,27 @@ CODE_0584E3:
     LDA.B [Layer1DataPtr],Y                   ; /
     STA.B _0                                  ; "Push" third byte
     TAX                                       ; "Push" third byte
-    AND.B #$0F                                ; \Load sprite set
+    AND.B #$0F                                ; \Load sprite set; Store sprite GFX list from header.
     STA.W SpriteTileset                       ; /
     TXA                                       ; "Pull" third byte
     LSR A                                     ; \
     LSR A                                     ; |
-    LSR A                                     ; |
+    LSR A                                     ; |; Store level music to $0DDA from header.
     LSR A                                     ; |
     AND.B #$07                                ; |
     TAX                                       ; |Get music
     LDA.L LevelMusicTable,X                   ; |
     LDX.W MusicBackup                         ; | \
-    BPL +                                     ; |  |
+    BPL +                                     ; |  |; Keep bit 7 of $0DDA set if it already is.
     ORA.B #$80                                ; |  |Related to not restarting music if the new track
   + CMP.W MusicBackup                         ; |  |is the same as the old one?
-    BNE +                                     ; |  |
+    BNE +                                     ; |  |; If the current music matches the music to load, set bit 6.
     ORA.B #$40                                ; | /
   + STA.W MusicBackup                         ; /
     LDA.B _0                                  ; "Pull" third byte
     AND.B #$80                                ; \
     LSR A                                     ; |
-    LSR A                                     ; |
+    LSR A                                     ; |; Store Layer 3 priority from header.
     LSR A                                     ; |Get Layer 3 priority
     LSR A                                     ; |
     ORA.B #$01                                ; |
@@ -603,7 +619,7 @@ CODE_0584E3:
     LSR A                                     ; |
     LSR A                                     ; |
     LSR A                                     ; |
-    LSR A                                     ; |
+    LSR A                                     ; |; Store timer from header, if applicable.
     TAX                                       ; |Get time
     LDA.W SublevelCount                       ; |
     BNE +                                     ; |
@@ -612,22 +628,22 @@ CODE_0584E3:
     STZ.W InGameTimerTens                     ; |
     STZ.W InGameTimerOnes                     ; /
   + LDA.B _0                                  ; "Pull" fourth bit
-    AND.B #$07                                ; \Get FG color settings
+    AND.B #$07                                ; \Get FG color settings; Store FG palette setting from header.
     STA.W ForegroundPalette                   ; /
     LDA.B _0                                  ; "Pull" fourth bit (again)
     AND.B #$38                                ; \
-    LSR A                                     ; |
+    LSR A                                     ; |; Store BG palette setting from header.
     LSR A                                     ; |Get sprite palette
     LSR A                                     ; |
     STA.W SpritePalette                       ; /
     INY                                       ; \Get fifth byte
     LDA.B [Layer1DataPtr],Y                   ; /
-    AND.B #$0F                                ; \
-    STA.W ObjectTileset                       ; |Get tileset
+    AND.B #$0F                                ; \; Store FG/BG GFX header setting.
+    STA.W ObjectTileset                       ; |Get tileset; $1932 is set, but never used.
     STA.W Empty1932                           ; /
     LDA.B [Layer1DataPtr],Y                   ; Reload fifth byte
     AND.B #$C0                                ; \
-    ASL A                                     ; |
+    ASL A                                     ; |; Store item memory setting from header.
     ROL A                                     ; |Get item memory settings
     ROL A                                     ; |
     STA.W ItemMemorySetting                   ; /
@@ -636,7 +652,7 @@ CODE_0584E3:
     LSR A                                     ; |Get horizontal/vertical scroll
     LSR A                                     ; |
     LSR A                                     ; |
-    LSR A                                     ; |
+    LSR A                                     ; |; Store H-scroll/V-scroll settings from header.
     CMP.B #$03                                ; | \
     BNE +                                     ; |  |If scroll mode is x03, disable both
     STZ.W HorizLayer1Setting                  ; |  |vertical and horizontal scroll
@@ -645,16 +661,16 @@ CODE_0584E3:
     LDA.B Layer1DataPtr                       ; \
     CLC                                       ; |
     ADC.B #$05                                ; |
-    STA.B Layer1DataPtr                       ; |Make $65 point at the level data
+    STA.B Layer1DataPtr                       ; |Make $65 point at the level data; Point $65 to the actual level data.
     LDA.B Layer1DataPtr+1                     ; |(Level data comes right after the header)
     ADC.B #$00                                ; |
     STA.B Layer1DataPtr+1                     ; /
     RTS                                       ; We're done!
 
 CODE_0585D8:
-    LDA.B LvlLoadObjNo
+    LDA.B LvlLoadObjNo                        ; Subroutine to flip object X/Y positions in vertical levels.
     BNE CODE_0585E2
-    LDA.B LvlLoadObjSize
+    LDA.B LvlLoadObjSize                      ; Return if the object is a screen exit/jump.
     CMP.B #$02
     BCC +
 CODE_0585E2:
@@ -664,7 +680,7 @@ CODE_0585E2:
     LDA.B _B
     AND.B #$0F
     STA.B _1
-    LDA.B _A
+    LDA.B _A                                  ; Exchange the X and Y bits.
     AND.B #$F0
     ORA.B _1
     STA.B _A
@@ -675,21 +691,21 @@ CODE_0585E2:
   + RTS
 
 LoadLevelData:
-    SEP #$30                                  ; AXY->8
+    SEP #$30                                  ; AXY->8; Routine to load level data.
     LDY.B #$00                                ; \
     LDA.B [Layer1DataPtr],Y                   ; |
-    STA.B _A                                  ; |
-    INY                                       ; |
+    STA.B _A                                  ; |; $0A = object byte 1
+    INY                                       ; |; $0B = object byte 2
     LDA.B [Layer1DataPtr],Y                   ; |Read three bytes of level data
     STA.B _B                                  ; |Store them in $0A, $0B and $59
     INY                                       ; |
-    LDA.B [Layer1DataPtr],Y                   ; |
+    LDA.B [Layer1DataPtr],Y                   ; |; $59 - object byte 3 (settings/extobj. number)
     STA.B LvlLoadObjSize                      ; |
     INY                                       ; /
     TYA                                       ; \
     CLC                                       ; |
     ADC.B Layer1DataPtr                       ; |
-    STA.B Layer1DataPtr                       ; |Increase address by 3 (as 3 bytes were read)
+    STA.B Layer1DataPtr                       ; |Increase address by 3 (as 3 bytes were read); Increase object pointer.
     LDA.B Layer1DataPtr+1                     ; |
     ADC.B #$00                                ; |
     STA.B Layer1DataPtr+1                     ; /
@@ -698,7 +714,7 @@ LoadLevelData:
     LSR A                                     ; |
     LSR A                                     ; |
     LSR A                                     ; |
-    STA.B LvlLoadObjNo                        ; |Get block number, store in $5A
+    STA.B LvlLoadObjNo                        ; |Get block number, store in $5A; $5A = standard object number
     LDA.B _A                                  ; |
     AND.B #$60                                ; |
     LSR A                                     ; |
@@ -707,7 +723,7 @@ LoadLevelData:
     LDA.B ScreenMode                          ; A = vertical level setting
     LDY.W LayerProcessing                     ; \
     BEQ +                                     ; |If $1933=x00, divide A by 2
-    LSR A                                     ; /
+    LSR A                                     ; /; If the current layer being processed is vertical, exchange the X/Y positions.
   + AND.B #$01                                ; \
     BEQ +                                     ; |If lowest bit of A is set, jump to sub
     JSR CODE_0585D8                           ; /
@@ -716,7 +732,7 @@ LoadLevelData:
     ASL A                                     ; |
     ASL A                                     ; |
     ASL A                                     ; |Set upper half of $57 to Y pos
-    ASL A                                     ; |and lower half of $57 to X pos
+    ASL A                                     ; |and lower half of $57 to X pos; $57 = Position (YX format)
     STA.B LevelLoadPos                        ; |
     LDA.B _B                                  ; |
     AND.B #$0F                                ; |
@@ -734,12 +750,12 @@ LoadLevelData:
     LDA.W LevelModeSetting                    ; \
     AND.W #$001F                              ; |Set Y to Level Mode*2
     ASL A                                     ; |
-    TAY                                       ; /
-    SEP #$20                                  ; A->8
-    LDA.B #$00
-    STA.B _5
-    STA.B _8
-    LDA.B [_3],Y
+    TAY                                       ; /; Set up Map16 block pointers in $00-$08/$0D-$0F.
+    SEP #$20                                  ; A->8; $03 = 24-bit pointer to the pointers for lo map16 block pointers
+    LDA.B #$00                                ; $06 = 24-bit pointer to the pointers for hi map16 block pointers
+    STA.B _5                                  ; $00 = 24-bit pointer to the actual lo map16 block pointers
+    STA.B _8                                  ; $0D = 24-bit pointer to the actual hi map16 block pointers
+    LDA.B [_3],Y                              ; (yes, this is seriously how SMW does it)
     STA.B _0
     LDA.B [_6],Y
     STA.B _D
@@ -753,7 +769,7 @@ LoadLevelData:
     STA.B _F
     LDA.B _A                                  ; \
     AND.B #$80                                ; |
-    ASL A                                     ; |If New Page flag is set, increase $1928 by 1
+    ASL A                                     ; |If New Page flag is set, increase $1928 by 1; Increment screen pointer if "new screen" bit is set.
     ADC.W LevelLoadObject                     ; |(A = $1928)
     STA.W LevelLoadObject                     ; /
     STA.W LevelLoadObjectTile                 ; Store A in $1BA1
@@ -767,7 +783,7 @@ LoadLevelData:
     STA.B Map16HighPtr
     INY
     LDA.B [_0],Y
-    STA.B Map16LowPtr+1
+    STA.B Map16LowPtr+1                       ; Store Map16 block data pointers to load tiles to.
     LDA.B [_D],Y
     STA.B Map16HighPtr+1
     INY
@@ -777,12 +793,12 @@ LoadLevelData:
     STA.B Map16HighPtr+2
     LDA.B _A                                  ; \
     AND.B #$10                                ; |If high coordinate is set...
-    BEQ +                                     ; |(Lower half of horizontal level)
+    BEQ +                                     ; |(Lower half of horizontal level); If high Y bit is set, switch to the lower/right subscreen.
     INC.B Map16LowPtr+1                       ; |(Right half of vertical level)
     INC.B Map16HighPtr+1                      ; |...increase $6C and $6F
   + LDA.B LvlLoadObjNo                        ; \
     BNE +                                     ; |If block number is x00 (extended object),
-    JSR LevLoadExtObj                         ; |Jump to sub LevLoadExtObj
+    JSR LevLoadExtObj                         ; |Jump to sub LevLoadExtObj; If the first byte is 00, load an extended object. Else, load a standard object.
     JMP LevLoadContinue                       ; |                  (Why didn't they use BRA here?)
 
   + JSR LevLoadNrmObj                         ; |Jump to sub LevLoadNrmObj
@@ -790,90 +806,90 @@ LevLoadContinue:
     SEP #$20                                  ; A->8
     REP #$10                                  ; XY->16
     LDY.W #$0000                              ; \
-    LDA.B [Layer1DataPtr],Y                   ; |
-    CMP.B #$FF                                ; |If the next byte is xFF, return (loading is done).
+    LDA.B [Layer1DataPtr],Y                   ; |; If FF is loaded, end the level data.
+    CMP.B #$FF                                ; |If the next byte is xFF, return (loading is done).; Else, continue looping.
     BEQ +                                     ; |Otherwise, repeat this routine.
     JMP LoadLevelData                         ; |
 
   + RTS                                       ; /
 
 LevLoadExtObj:
-    SEP #$30                                  ; AXY->8
+    SEP #$30                                  ; AXY->8; Load an extended object.
     JSL CODE_0DA100
     RTS
 
 LevLoadNrmObj:
-    SEP #$30                                  ; AXY->8
+    SEP #$30                                  ; AXY->8; Load a standard object.
     JSL CODE_0DA40F
     RTS
 
 CODE_0586F1:
-    PHP
+    PHP                                       ; Routine to get VRAM data for the next row/column of Map16.
     REP #$30                                  ; AXY->16
-    JSR CODE_05877E
+    JSR CODE_05877E                           ; Get the next column/row of Map16 data.
     SEP #$20                                  ; A->8
     LDA.B ScreenMode
-    AND.B #!ScrMode_Layer1Vert
+    AND.B #!ScrMode_Layer1Vert                ; Branch if layer 1 is vertical.
     BNE CODE_058713
     REP #$20                                  ; A->16
     LDA.B Layer1ScrollDir
     AND.W #$00FF
     TAX
-    LDA.B Layer1XPos
-    AND.W #$FFF0
+    LDA.B Layer1XPos                          ; Branch if a VRAM update is necessary.
+    AND.W #$FFF0                              ; Jump down if not.
     CMP.B Layer1PrevTileUp,X
     BEQ +
     JMP CODE_058724
 
 CODE_058713:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Vertical Layer 1.
     LDA.B Layer1ScrollDir
     AND.W #$00FF
-    TAX
+    TAX                                       ; Branch down if a VRAM update is not necessary.
     LDA.B Layer1YPos
     AND.W #$FFF0
     CMP.B Layer1PrevTileUp,X
     BEQ +
 CODE_058724:
-    STA.B Layer1PrevTileUp,X
+    STA.B Layer1PrevTileUp,X                  ; Time to upload row/column of Map16 data to VRAM.
     TXA
     EOR.W #$0002
     TAX
     LDA.W #$FFFF
-    STA.B Layer1PrevTileUp,X
+    STA.B Layer1PrevTileUp,X                  ; Upload the row/column to VRAM.
     JSL CODE_05881A
     JMP CODE_058774
 
-  + SEP #$20                                  ; A->8
+  + SEP #$20                                  ; A->8; Update is not necessary on Layer 1; check Layer 2.
     LDA.B ScreenMode
-    AND.B #!ScrMode_Layer2Vert
+    AND.B #!ScrMode_Layer2Vert                ; Branch if layer 2 is vertical.
     BNE CODE_058753
     REP #$20                                  ; A->16
     LDA.B Layer2ScrollDir
     AND.W #$00FF
     TAX
-    LDA.B Layer2XPos
-    AND.W #$FFF0
+    LDA.B Layer2XPos                          ; Branch if a VRAM update is necessary.
+    AND.W #$FFF0                              ; Jump down if not.
     CMP.B Layer2PrevTileUp,X
     BEQ CODE_058774
     JMP CODE_058764
 
 CODE_058753:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Vertical Layer 2.
     LDA.B Layer2ScrollDir
     AND.W #$00FF
-    TAX
+    TAX                                       ; Branch down if a VRAM update is not necessary.
     LDA.B Layer2YPos
     AND.W #$FFF0
     CMP.B Layer2PrevTileUp,X
     BEQ CODE_058774
 CODE_058764:
-    STA.B Layer2PrevTileUp,X
+    STA.B Layer2PrevTileUp,X                  ; VRAM update is necessary; get relevant data.
     TXA
     EOR.W #$0002
     TAX
     LDA.W #$FFFF
-    STA.B Layer2PrevTileUp,X
+    STA.B Layer2PrevTileUp,X                  ; Get Map16 VRAM data for the row/column.
     JSL CODE_058883
 CODE_058774:
     PLP
@@ -884,24 +900,25 @@ MAP16AppTable:
     db $B0,$8A,$E0,$84,$F0,$8A,$30,$8B
 
 CODE_05877E:
-    PHP
+; Pointer values for each pipe color's Map16 data, for $0FBE.
+    PHP                                       ; Routine to get the index of the next row/column of Map16 data.
     SEP #$20                                  ; A->8
     LDA.B ScreenMode
-    AND.B #!ScrMode_Layer1Vert
+    AND.B #!ScrMode_Layer1Vert                ; Branch if in a vertical level.
     BNE CODE_0587CB
     REP #$20                                  ; A->16
     LDA.B Layer1XPos                          ; Load "Xpos of Screen Boundary"
     LSR A                                     ; \
     LSR A                                     ; |Multiply by 16
-    LSR A                                     ; |
-    LSR A                                     ; /
+    LSR A                                     ; |; Get next left-side column as:
+    LSR A                                     ; /; (X / 16) - 8
     TAY
     SEC                                       ; \
     SBC.W #$0008                              ; /Subtract 8
     STA.B Layer1TileUp                        ; Store to $45 (Seems to be Scratch RAM)
     TYA                                       ; Get back the multiplied XPos
-    CLC
-    ADC.W #$0017                              ; Add $17
+    CLC                                       ; Get next right-side column as:
+    ADC.W #$0017                              ; Add $17; (X / 16) + 17
     STA.B Layer1TileDown                      ; Store to $47 (Seems to be Scratch RAM)
     SEP #$30                                  ; AXY->8
     LDA.B Layer1ScrollDir                     ; \
@@ -914,8 +931,8 @@ CODE_05877E:
     AND.W #$0006                              ; AND to make it either 6, 4, 2, or 0.
     TAX
     LDA.W #$0133                              ; \LDY #$0266
-    ASL A                                     ; |
-    TAY                                       ; /
+    ASL A                                     ; |; Update the pipe's Map16 data pointers in $0FBE,
+    TAY                                       ; /; to handle different pipe colors per screen.
     LDA.W #$0007
     STA.B _0
     LDA.L MAP16AppTable,X
@@ -929,62 +946,63 @@ CODE_05877E:
     JMP CODE_0587E1
 
 CODE_0587CB:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Getting index to next Map16 row in a vertical Layer 1.
     LDA.B Layer1YPos
     LSR A
     LSR A
-    LSR A
-    LSR A
+    LSR A                                     ; Get next top-side row as:
+    LSR A                                     ; (X / 16) - 8
     TAY
     SEC
     SBC.W #$0008
     STA.B Layer1TileUp
     TYA
-    CLC
-    ADC.W #$0017
+    CLC                                       ; Get next bottom-side row as:
+    ADC.W #$0017                              ; (X / 16) + 17
     STA.B Layer1TileDown
 CODE_0587E1:
-    SEP #$20                                  ; A->8
+    SEP #$20                                  ; A->8; Done Layer 1, now do Layer 2.
     LDA.B ScreenMode                          ; Load the vertical level flag
-    AND.B #!ScrMode_Layer2Vert                ; \if bit 1 is set, process based on that
+    AND.B #!ScrMode_Layer2Vert                ; \if bit 1 is set, process based on that; Branch if Layer 2 is vertical.
     BNE +                                     ; /
     REP #$20                                  ; A->16, Not a vertical level
     LDA.B Layer2XPos                          ; \Y = L2XPos * 16
     LSR A                                     ; |
     LSR A                                     ; |
-    LSR A                                     ; |
-    LSR A                                     ; |
+    LSR A                                     ; |; Get next left-side row as:
+    LSR A                                     ; |; (X / 16) - 8
     TAY                                       ; /
     SEC
     SBC.W #$0008
     STA.B Layer2TileUp
     TYA
-    CLC
-    ADC.W #$0017
+    CLC                                       ; Get next right-side row as:
+    ADC.W #$0017                              ; (X / 16) + 17
     STA.B Layer2TileDown
     JMP CODE_058818
 
-  + REP #$20                                  ; \ A->16, A = Y = !4*16 (?)
+  + REP #$20                                  ; \ A->16, A = Y = !4*16 (?); Layer 2 is vertical.
     LDA.B Layer2YPos                          ; |
     LSR A                                     ; |
     LSR A                                     ; |
-    LSR A                                     ; |
-    LSR A                                     ; |
+    LSR A                                     ; |; Get next top-side row as:
+    LSR A                                     ; |; (X / 16) - 8
     TAY                                       ; /
     SEC                                       ; \
     SBC.W #$0008                              ; |Subtract x08 and store in $49
     STA.B Layer2TileUp                        ; /
     TYA                                       ; \
-    CLC                                       ; |"Undo", add x17 and store in $4B
-    ADC.W #$0017                              ; |
+    CLC                                       ; |"Undo", add x17 and store in $4B; Get next bottom-side row as:
+    ADC.W #$0017                              ; |; (X / 16) + 17
     STA.B Layer2TileDown                      ; /
 CODE_058818:
     PLP
     RTS
 
 CODE_05881A:
-    SEP #$30                                  ; AXY->8
-    LDA.W LevelModeSetting
+; Subroutine for jumping to the Layer 1 Map16-VRAM handlers.
+    SEP #$30                                  ; AXY->8; Specifically, these routines are used as the level scrolls and new rows/columns need to be loaded.
+    LDA.W LevelModeSetting                    ; Note that it does not upload the data, it just stores to $1CE8.
     JSL ExecutePtrLong
 
     dl CODE_0589CE
@@ -1021,8 +1039,42 @@ CODE_05881A:
     dl CODE_0589CE
 
 CODE_058883:
-    SEP #$30                                  ; AXY->8
-    LDA.W LevelModeSetting
+; Level mode pointers for getting Layer 1 Map16 data.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07 (also used for overworld load)
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; 0E
+; 0F
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; 1E
+; 1F
+; Subroutine for jumping to the Layer 2 Map16-VRAM handlers.
+    SEP #$30                                  ; AXY->8; Specifically, these routines are used as the level scrolls and new rows/columns need to be loaded.
+    LDA.W LevelModeSetting                    ; Note that it does not upload the data, it just stores to $1CE8.
     JSL ExecutePtrLong
 
     dl Return058C70
@@ -1059,9 +1111,43 @@ CODE_058883:
     dl CODE_058B8D
 
 CODE_0588EC:
-    SEP #$30                                  ; AXY->8
-    LDA.W LevelModeSetting
-    JSL ExecutePtrLong
+; Level mode pointers for getting Layer 2 Map16 data.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; 0E
+; 0F
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; 1E
+; 1F
+; Subroutine for jumping to the Layer 1 Map16-VRAM handlers.
+    SEP #$30                                  ; AXY->8; Specifically, these routines are used during level load to prepare the screen.
+    LDA.W LevelModeSetting                    ; It still only uploads one column at a time, though, so you'll need to call this 20 times.
+    JSL ExecutePtrLong                        ; Note that it does not upload the data, it just stores to $1CE8.
 
     dl CODE_0589CE
     dl CODE_0589CE
@@ -1097,9 +1183,43 @@ CODE_0588EC:
     dl CODE_0589CE
 
 CODE_058955:
-    SEP #$30                                  ; AXY->8
-    LDA.W LevelModeSetting
-    JSL ExecutePtrLong
+; Level mode pointers for getting Layer 1 Map16 data on level load.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; 0E
+; 0F
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; 1E
+; 1F
+; Subroutine for jumping to the Layer 2 Map16-VRAM handlers.
+    SEP #$30                                  ; AXY->8; Specifically, these routines are used during level load to prepare the screen.
+    LDA.W LevelModeSetting                    ; It still only uploads one column at a time, though, so you'll need to call this 20 times.
+    JSL ExecutePtrLong                        ; Note that it does not upload the data, it just stores to $1CE8.
 
     dl CODE_058D7A
     dl CODE_058B8D
@@ -1138,7 +1258,40 @@ CODE_058955:
     db $08,$00,$04,$00,$02,$00,$01,$00
 
 CODE_0589CE:
-    PHP
+; Level mode pointers for getting Layer 2 Map16 data on level load.
+; 00
+; 01
+; 02
+; 03
+; 04
+; 05
+; 06
+; 07
+; 08
+; 09
+; 0A
+; 0B
+; 0C
+; 0D
+; 0E
+; 0F
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 1A
+; 1B
+; 1C
+; 1D
+; 1E
+; 1F
+    PHP                                       ; Level mode routine to load Map16 data.
     REP #$30                                  ; AXY->16
     LDA.W LevelModeSetting
     AND.W #$00FF
@@ -1149,8 +1302,8 @@ CODE_0589CE:
     STA.B _A
     LDA.L Ptrs00BDA8+1,X
     STA.B _B
-    LDA.L Ptrs00BE28,X
-    STA.B _D
+    LDA.L Ptrs00BE28,X                        ; $0A = pointers to Map16 block low data pointers.
+    STA.B _D                                  ; $0D = pointers to Map16 block high data pointers.
     LDA.L Ptrs00BE28+1,X
     STA.B _E
     LDA.B #$00
@@ -1212,7 +1365,7 @@ CODE_0589CE:
     STA.B _1
     LDA.B _0
     ASL A
-    TAY
+    TAY                                       ; [hijacked by LM for a jump to $06F540]
     LDA.W Map16Pointers,Y
     STA.B _A
     LDY.W #$0000
@@ -1238,7 +1391,7 @@ CODE_0589CE:
     CLC
     ADC.W #$0010
     STA.B _8
-    CMP.W #$01B0
+    CMP.W #$01B0                              ; Height at which Map16 should stop updating.
     BCC -
     PLP
 Return058A9A:
@@ -1335,7 +1488,7 @@ CODE_058B35:
     STA.B _1
     LDA.B _0
     ASL A
-    TAY
+    TAY                                       ; [hijacked by LM for a jump to $06F540]
     LDA.W Map16Pointers,Y
     STA.B _A
     LDY.W #$0000
@@ -1385,8 +1538,8 @@ CODE_058B8D:
     SEP #$20                                  ; A->8
     LDY.W #$0000
     LDA.W ObjectTileset
-    CMP.B #$03
-    BNE +
+    CMP.B #$03                                ; Tileset that should use palettes 4-7 for Layer 2 in horizontal levels (Underground 1).
+    BNE +                                     ; (vertical variant at $058C84)
     LDY.W #$1000
   + STY.B _3
     LDA.L Ptrs00BDE8,X
@@ -1456,7 +1609,7 @@ CODE_058B8D:
     STA.B _1
     LDA.B _0
     ASL A
-    TAY
+    TAY                                       ; [hijacked by LM for a jump to $06F540]
     LDA.W Map16Pointers,Y
     STA.B _A
     LDY.W #$0000
@@ -1493,7 +1646,7 @@ Return058C70:
     RTL
 
 CODE_058C71:
-    PHP
+    PHP                                       ; Subroutine to prepare Map16 pointers for Layer 2 on level load, in vertical levels (modes 5-8).
     REP #$30                                  ; AXY->16
     LDA.W LevelModeSetting
     AND.W #$00FF
@@ -1502,8 +1655,8 @@ CODE_058C71:
     SEP #$20                                  ; A->8
     LDY.W #$0000
     LDA.W ObjectTileset
-    CMP.B #$03
-    BNE +
+    CMP.B #$03                                ; Tileset that should use palettes 4-7 for Layer 2 in vertical levels (Underground 1).
+    BNE +                                     ; (horizontal variant at $058BA0)
     LDY.W #$1000
   + STY.B _3
     LDA.L Ptrs00BDE8,X
@@ -1589,7 +1742,7 @@ CODE_058D1A:
     STA.B _1
     LDA.B _0
     ASL A
-    TAY
+    TAY                                       ; [hijacked by LM for a jump to $06F540]
     LDA.W Map16Pointers,Y
     STA.B _A
     LDY.W #$0000
@@ -1634,9 +1787,9 @@ CODE_058D1A:
     RTL
 
 CODE_058D7A:
-    PHP
+    PHP                                       ; Subroutine to prepare Map16 pointers for Layer 2 on level load, when it's a BG (modes 0/A/C/D/E/11/1E).
     SEP #$30                                  ; AXY->8
-    LDA.W LevelLoadObject
+    LDA.W LevelLoadObject                     ; 8D9100
     AND.B #$0F
     ASL A
     STA.W Layer2VramAddr+1
@@ -1653,7 +1806,7 @@ CODE_058D7A:
     LDA.W #$BD00
     STA.B Map16HighPtr
     LDA.W #Map16BGTiles
-    STA.B _A
+    STA.B _A                                  ; [hijacked by LM for a jump to $0EFD00, to get the BG Map16 page]
     LDA.W LevelLoadObject
     AND.W #$00F0
     BEQ +
@@ -3187,29 +3340,61 @@ DATA_05B10A:
     db $04,$FC
 
 CODE_05B10C:
-    PHB
+; Pointers to Layer 3 data.
+; VRAM positions for the different lines of the message boxes.
+; Which translevels have message boxes. High bit set means it uses message 2.
+; First four are switch palaces, and the last is Yoshi's House.
+; Indexes to the data for each message box in the below table.
+; These last two are Yoshi's House message 2 and Yoshi's thank you, respectively.
+; Message box tilemaps. Setting the high bit adds a new line.
+; 000 - Intro message (000-1)
+; 08D - All switch palace messages.
+; 109 - Yoshi's House message 1 (104-1)
+; 191 - Yoshi's thank you (000-2, at least in LM)
+; 20A - Yoshi's House message 2 (104-2)
+; 291 - Yoshi's Island 1 (105-1)
+; 30B - Yoshi's Island 1 (105-1)
+; 38F - Yoshi's Island 2 (106-1)
+; 41D - Yoshi's Island 2 (106-2)
+; 4A0 - Yoshi's Island 3 (103-2)
+; 0518 - Yoshi's Island 3 (103-1)
+; 5A4 - Yoshi's Island 4 (102-2)
+; 61D - Yoshi's Island 4 (102-2)
+; 6A6 - Iggy's Castle (101-1)
+; 730 - Iggy's Castle (101-2)
+; 7B2 - Donut Plains 1 (15-2)
+; 83C - Donut Plains 1 (15-1)
+; 8B7 - Donut Ghost House (4-1)
+; 911 - Donut Ghost House (4-2)
+; 99D - Donut Secret House (13-1)
+; A2C - Chocolate Island 2 (24-2)
+; A9E - Gnarly (12A-2)
+; How long it takes to show/hide the message box text. Should not be higher than their defaults.
+; Expanding/shrinking size of the message box window. Lower four bits must be 0.
+; Expanding/shrinking speed of the message box window.
+    PHB                                       ; Message box subroutine.
     PHK
     PLB
     LDX.W MessageBoxExpand
-    LDA.W MessageBoxTimer
+    LDA.W MessageBoxTimer                     ; Branch if not done expanding/shrinking.
     CMP.W DATA_05B108,X
     BNE CODE_05B191
-    TXA
+    TXA                                       ; Branch if expanding.
     BEQ CODE_05B132
     STZ.W MessageBoxTrigger
-    STZ.W MessageBoxExpand
+    STZ.W MessageBoxExpand                    ; Set flag to expand message box.
     STZ.B Layer12Window
-    STZ.B Layer34Window
+    STZ.B Layer34Window                       ; Zero all window mask settings.
     STZ.B OBJCWWindow
-    STZ.W HDMAEnable
+    STZ.W HDMAEnable                          ; Disable HDMA.
     LDA.B #$02
     STA.B ColorAddition
     BRA CODE_05B18E
 
 CODE_05B132:
-    LDA.W OverworldOverride
-    ORA.W SwitchPalaceColor
-    BEQ CODE_05B16E
+    LDA.W OverworldOverride                   ; Message box is expanding.
+    ORA.W SwitchPalaceColor                   ; Branch A if:
+    BEQ CODE_05B16E                           ; Not in the intro level and not reading a switch palace message.
 if ver_is_japanese(!_VER)                    ;\======================== J ====================
     LDA.B TrueFrame                           ;!
     AND.B #$03                                ;!
@@ -3225,14 +3410,14 @@ if ver_is_japanese(!_VER)                    ;\======================== J ======
     BRA +                                     ;!
 else                                          ;<================ U, SS, E0, & E1 ==============
 if ver_is_console(!_VER)                      ;!\================= U, E0, & E1 ================
-    LDA.W VariousPromptTimer                  ;!!
+    LDA.W VariousPromptTimer                  ;!!; Not able to dismiss the message yet.
     BEQ CODE_05B16E                           ;!!
     LDA.B TrueFrame                           ;!!
-    AND.B #$03                                ;!!
-    BNE CODE_05B18E                           ;!!
+    AND.B #$03                                ;!!; Decrease the message wait timer every 4th frame,
+    BNE CODE_05B18E                           ;!!; and if the timer did not just run out, branch B.
     DEC.W VariousPromptTimer                  ;!!
     BNE CODE_05B18E                           ;!!
-    LDA.W SwitchPalaceColor                   ;!!
+    LDA.W SwitchPalaceColor                   ;!!; Branch A again if not reading a switch palace message.
     BEQ CODE_05B16E                           ;!!
 else                                          ;!<======================= SS ===================
     LDA.B TrueFrame                           ;!!
@@ -3245,31 +3430,31 @@ else                                          ;!<======================= SS ====
 endif                                         ;!/==============================================
 CODE_05B14F:                                  ;!
     PLB                                       ;!
-    INC.W CreditsScreenNumber                 ;!
+    INC.W CreditsScreenNumber                 ;!; Indicate event should activate on overworld load.
     LDA.B #$01                                ;!
-    STA.W MidwayFlag                          ;!
+    STA.W MidwayFlag                          ;!; Activate the level's normal exit and fade to the overworld.
     BRA +                                     ;!
 CODE_05B15A:                                  ;!
-    PLB                                       ;!
+    PLB                                       ;!; Closing Display Message 1 sprite.
 endif                                         ;/===============================================
 CODE_05B15B:
-    LDA.B #$8E
-    STA.W OWPlayerYPos
+    LDA.B #$8E                                ; Initial Y position of Mario on the overworld after the intro level.
+    STA.W OWPlayerYPos                        ; [LMNOTE: Lunar Magic changes this line to EA EA EA]
 SubSideExit:
     STZ.W OverworldOverride
     LDA.B #$00
-  + STA.W OWLevelExitMode
+  + STA.W OWLevelExitMode                     ; Load the overworld.
     LDA.B #$0B
     STA.W GameMode
     RTL
 
 CODE_05B16E:
-    LDA.B byetudlrHold
+    LDA.B byetudlrHold                        ; Able to dismiss the message.
     AND.B #$F0
     BEQ CODE_05B18E
     EOR.B byetudlrFrame
     AND.B #$F0
-    BEQ +
+    BEQ +                                     ; Branch if no inputs whatsoever.
     LDA.B axlr0000Hold
     AND.B #$C0
     BEQ CODE_05B18E
@@ -3282,14 +3467,14 @@ if ver_is_arcade(!_VER)                       ;\====================== SS ======
 endif                                         ;/===============================================
 if ver_is_english(!_VER)                      ;\================= U, SS, E0, & E1 =============
   + LDA.W OverworldOverride                   ;!
-    BNE CODE_05B15A                           ;!
+    BNE CODE_05B15A                           ;!; Close message box. If in the intro level, branch to change Mario's overworld position.
 endif                                         ;/===============================================
   + INC.W MessageBoxExpand
 CODE_05B18E:
-    JMP CODE_05B299
+    JMP CODE_05B299                           ; No inputs; don't close message box.
 
 CODE_05B191:
-    CMP.W DATA_05B106,X
+    CMP.W DATA_05B106,X                       ; Not done expanding/shrinking the message box.
     BNE CODE_05B1A0
     TXA
     BEQ +
@@ -3299,34 +3484,34 @@ CODE_05B191:
 CODE_05B1A0:
     JMP CODE_05B250
 
-  + LDX.B #$16
+  + LDX.B #$16                                ; Number of messages in the game. [LM hijacks on this line, to $03BB90]
 CODE_05B1A5:
     LDY.B #$01
-    LDA.W DATA_05A590,X
+    LDA.W DATA_05A590,X                       ; Get which level's message to load and which message in it (1 or 2).
     BPL +
     INY
     AND.B #$7F
   + CPY.W MessageBoxTrigger
-    BNE CODE_05B1B9
+    BNE CODE_05B1B9                           ; Check if this message is the one actually being being activated.
     CMP.W TranslevelNo
     BEQ CODE_05B1BC
 CODE_05B1B9:
-    DEX
+    DEX                                       ; If not, loop and check the next message.
     BNE CODE_05B1A5
 CODE_05B1BC:
     LDY.W MessageBoxTrigger
-    CPY.B #$03
+    CPY.B #$03                                ; If the message being loaded is #$03, load Yoshi's message instead.
     BNE +
     LDX.B #$18
-  + CPX.B #$04
+  + CPX.B #$04                                ; If not a switch palace message, branch.
     BCS +
     INX
-    STX.W SwitchPalaceColor
+    STX.W SwitchPalaceColor                   ; Store the switch palace color (message number +1).
     DEX
-    JSR CODE_05B2EB
+    JSR CODE_05B2EB                           ; Load the switch palace's messsage sprites.
   + CPX.B #$16
-    BNE +
-    LDA.W PlayerRidingYoshi
+    BNE +                                     ; If in Yoshi's House and riding Yoshi, increase the message pointer.
+    LDA.W PlayerRidingYoshi                   ; [change BNE to BRA to disable the feature]
     BEQ +
     INX
   + TXA
@@ -3397,14 +3582,14 @@ CODE_05B1EF:                                  ;!
     LDY.B _0                                  ;!
 CODE_05B208:                                  ;!
     LDA.B #$1F                                ;!
-    BIT.W _3                                  ;!
+    BIT.W _3                                  ;!; If the bit 7 of the last character was set, skip the rest of the line.
     BMI +                                     ;!
     LDA.W MessageBoxes,Y                      ;!
-    STA.W _3                                  ;!
+    STA.W _3                                  ;!; Get the next character to write.
     AND.B #$7F                                ;!
     INY                                       ;!
   + STA.L DynamicStripeImage+4,X              ;!
-    LDA.B #$39                                ;!
+    LDA.B #$39                                ;!; Upload to VRAM.
     STA.L DynamicStripeImage+5,X              ;!
     INX                                       ;!
     INX                                       ;!
@@ -3497,7 +3682,16 @@ else                                          ;<================== U, E0, & E1 =
 endif                                         ;/===============================================
 
 CODE_05B2EB:
-    PHX
+; Tilemaps for the ! switch sprites in the switch palace messages. Tile first, YXPPCCCT second.
+; Yellow (dotted)
+; Yellow (solid)
+; Blue (dotted)
+; Blue (solid)
+; Red (dotted)
+; Red (solid)
+; Green (dotted)
+; Green (solid)
+    PHX                                       ; Routine to draw the switch palace message box's ! blocks.
     TXA
     ASL A
     ASL A
@@ -3540,30 +3734,31 @@ CODE_05B31B:
     RTS
 
 ADDR_05B329:
-    PHA
-    LDA.B #!SFX_COIN
+    PHA                                       ; Unused routine to give multiple coins to the player. Number of coins to give in A.
+    LDA.B #!SFX_COIN                          ; SFX for collecting a coin.
     STA.W SPCIO3                              ; / Play sound effect
     PLA
 CODE_05B330:
     STA.B _0
     CLC
-    ADC.W CoinAdder
+    ADC.W CoinAdder                           ; Give the player the number of coins stored in A.
     STA.W CoinAdder
     LDA.W GreenStarBlockCoins
     BEQ Return05B35A
     SEC
-    SBC.B _0
+    SBC.B _0                                  ; Update the green star block coin count if necessary.
     BPL +
     LDA.B #$00
   + STA.W GreenStarBlockCoins
     BRA Return05B35A
 
 CODE_05B34A:
-    INC.W CoinAdder
-    LDA.B #!SFX_COIN
+; Routine to give a single coin to the player.
+    INC.W CoinAdder                           ; Give the player a coin.
+    LDA.B #!SFX_COIN                          ; SFX for a coin.
     STA.W SPCIO3                              ; / Play sound effect
     LDA.W GreenStarBlockCoins
-    BEQ Return05B35A
+    BEQ Return05B35A                          ; Update the green star block coin count if necessary.
     DEC.W GreenStarBlockCoins
 Return05B35A:
     RTL
@@ -3572,16 +3767,16 @@ Return05B35A:
 DATA_05B35B:
     db $80,$40,$20,$10,$08,$04,$02,$01
 
-    TYA                                       ; \ Unreachable
+    TYA                                       ; \ Unreachable; Unused routine to check an overworld event flag. Load the event to check in Y.
     AND.B #$07
     PHA
     TYA
     LSR A
-    LSR A
+    LSR A                                     ; Get the byte index.
     LSR A
     TAX
     LDA.W OWEventsActivated,X
-    PLX
+    PLX                                       ; AND to get the bit.
     AND.L DATA_05B35B,X
     RTL                                       ; /
 
@@ -4381,13 +4576,110 @@ DATA_05BA39:
     dw AnimatedTiles+$1680                    ; Used block
 
 CODE_05BB39:
-    PHB                                       ; AXY->8
+; Title screen stripe image.
+; Left side, left vertical line
+; Left side, right vertical line
+; Right side, left vertical line
+; Right side, right vertical line
+; Bottom
+; Various lines of the SUPER MARIO WORLD text.
+; Copyright text.
+; Stripe image for the file erase dialogue.
+; Various blank tiles to clear out the menu.
+; MARIO A ...EMPTY ($05B722)
+; MARIO B ...EMPTY ($05B746)
+; MARIO C ...EMPTY ($05B76A)
+; ERASE [A] ($05B78E)
+; ERASE [B] ($05B79E)
+; ERASE [C] ($05B7AE)
+; END ($05B7BE)
+; Stripe image for the file select dialogue.
+; Various blank lines to clear out the menu.
+; MARIO A ...EMPTY ($05B7ED)
+; MARIO B ...EMPTY ($05B811)
+; MARIO C ...EMPTY ($05B835)
+; ERASE DATA ($05B859)
+; Stripe image for the player selection dialogue.
+; Various blank tiles to clear out the menu.
+; 1 PLAYER GAME ($05B88A)
+; 2 PLAYER GAME ($05B8A8)
+; Stripe image for the "Save?" menu.
+; CONTINUE AND SAVE ($05B8C7)
+; CONTINUE WITHOUT SAVE ($05B8ED)
+; Stripe image for the "Continue?" menu.
+; CONTINUE
+; END
+; Destination VRAM addresses for each animation. Indexed by ($14 % 8) * 3.
+; Table of animation types for each animation "set".
+; 00 = Constant
+; 01 = Two-state (triggered by P-switch or ON/OFF, i.e. $14AD, $14AE, or $14AF)
+; 02 = Tileset-specific ($1931)
+; The table is indexed by the animation set ($14 % 8) * 3,
+; so there are three animations per set with each set animating
+; on a different frame (for a total of 24 animations across 8 frames).
+; For each of the 8 animations set to 01 above, this determines which of the three triggers to use.
+; 0 = $14AD (blue), 1 = $14AE (silver), 2 = $14AF (on/off)
+; For the animations set to 02 above, a value from the below table is added to each of the indices, based on the current tileset.
+; Frame data for animated tiles. Values are 16-bit pointers to the source data in $7E7D00.
+; 00 - Animated ? Block
+; 01 - Animated Note Block
+; 02 - Turn Block
+; 03 - Animated Midway Pole
+; 04 - Animated Turn Block
+; 05 - Berry
+; 06 - Blank
+; 07 - Blank
+; 08 - Used Block
+; 09 - Animated Muncher
+; 0A - Blank
+; 0B - On/Off Line guide
+; 0C - ON Switch
+; 0D - Animated Coin
+; 0E - Animated Water
+; 0F - Animated Castle Lava
+; 10 - ? Block
+; 11 - ? Block
+; 12 - ? Block
+; 13 - Animated Water
+; 14 - Animated Castle Lava
+; 15 - Animated Castle Conveyor/Escalator
+; 16 - Animated Castle Conveyor/Escalator (reverse)
+; 17 - Animated Castle BG Candlelight
+; 18 - Animated Water
+; 19 - Animated Rope and Rope End
+; 1A - Animated Sloped Rope
+; 1B - Reverse Animated Sloped Rope
+; 1C - ? Block
+; 1D - Animated Cave BG Sparkles
+; 1E - Animated Sloped Cave Lava
+; 1F - More Animated Sloped Cave Lava
+; 20 - Animated Cave Lava
+; 21 - Animated Sloped Cave Lava (reverse)
+; 22 - ? Block
+; 23 - Animated Ghost House Light
+; 24 - Animated Seaweed
+; 25 - ? Block
+; 26 - ? Block
+; 27 - Animated Cave BG Sparkles
+; 28 - Animated Stars
+; 29 - ? Block
+; 2A - ? Block
+; 2B - ? Block
+; 2C - POW Door
+; 2D - Animated Coin
+; 2E - Animated Coin
+; 2F - Animated Coin
+; 30 - Animated ? Block
+; 31 - More On/Off Line guide
+; 32 - OFF Switch
+; 33 - Used Block
+    PHB                                       ; AXY->8; Routine that handles tile animation.
     PHK
     PLB
     LDA.B EffFrame                            ;\
     AND.B #$07                                ;| Calculate the index of the first one of four 8x8 tiles in a 16x16 tile:
     STA.B _0                                  ;| GFX_TILE_IDX = (EffFrame & 0b111) + ((EffFrame & 0b111) << 1), which is equivalent to:
-    ASL A                                     ;| GFX_TILE_IDX = (EffFrame & 0b111) * 3
+    ASL A                                     ;| GFX_TILE_IDX = (EffFrame & 0b111) * 3; Get index as ($14 % 7) * 6.
     ADC.B _0                                  ;/
     TAY                                       ;\ Y = GFX_TILE_IDX
     ASL A                                     ;| 
@@ -4400,7 +4692,7 @@ CODE_05BB39:
     STA.B _0                                  ;/ 
     LDA.W DATA_05B93B,X                       ;\ 
     STA.W Gfx33DestAddrC                      ;| 
-    LDA.W DATA_05B93D,X                       ;| Write the 3 VRAM addresses of animated tiles' GFX into Gfx33DestAddr{A,B,C},
+    LDA.W DATA_05B93D,X                       ;| Write the 3 VRAM addresses of animated tiles' GFX into Gfx33DestAddr{A,B,C},; Get 3 VRAM locations.
     STA.W Gfx33DestAddrB                      ;| using X as an index to the pointer tables at $05B93B, $05B93D, and $05B93F.
     LDA.W DATA_05B93F,X                       ;| 
     STA.W Gfx33DestAddrA                      ;/ 
@@ -4449,12 +4741,12 @@ CODE_05BB88:
     %insert_empty($48A,$5A,$84,$5A,$4A)
 
 ProcScreenScrollCmds:
-    PHB
+    PHB                                       ; Routine to run scroll sprites?
     PHK
     PLB
-    JSR CODE_05BC76
-    JSR CODE_05BCA5
-    JSR CODE_05BC4A
+    JSR CODE_05BC76                           ; Run scroll routines for Layer 1.
+    JSR CODE_05BCA5                           ; Run scroll routines for Layer 2.
+    JSR CODE_05BC4A                           ; Get Layer 2/3 interaction offsets.
     LDA.W NextLayer1XPos
     SEC
     SBC.B Layer1XPos
@@ -4489,7 +4781,7 @@ Return05BC49:
     RTS
 
 CODE_05BC4A:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Get Layer 2/3 interaction offset.
     LDY.W Layer3TideSetting
     BNE CODE_05BC5F
     LDA.W NextLayer2XPos
@@ -4497,10 +4789,11 @@ CODE_05BC4A:
     SBC.W NextLayer1XPos
     STA.B Layer23XRelPos
     LDA.W NextLayer2YPos
-    BRA +
+    BRA +                                     ; Set up $26 and $28.
 
 CODE_05BC5F:
-    LDA.B Layer3XPos
+; (Layer 2/3 offset from Layer 1,
+    LDA.B Layer3XPos                          ; for calculating insteraction)
     SEC
     SBC.W NextLayer1XPos
     STA.B Layer23XRelPos
@@ -4512,11 +4805,11 @@ CODE_05BC5F:
     RTS
 
 CODE_05BC72:
-    JSR CODE_05BC4A
+    JSR CODE_05BC4A                           ; JSL point for the above routine.
     RTL
 
 CODE_05BC76:
-    STZ.W ScrollLayerIndex
+    STZ.W ScrollLayerIndex                    ; Scroll sprite MAIN handler for Layer 1.
     LDA.W SpriteLock
     BNE Return05BC49
     LDA.W Layer1ScrollCmd
@@ -4540,7 +4833,23 @@ CODE_05BC76:
     dw Return05BC49                           ; 0E - Layer 2 sink/rise
 
 CODE_05BCA5:
-    LDA.B #$04
+; Scroll sprite pointers (for layer 1)
+; None
+; E8 - Special Autoscroll 1,2,3,4
+; E9 - Layer 2 smash 1,2,3
+; EA - Layer 2 scroll 1,2,3,4
+; EB - Unused
+; EC - Unused
+; ED - Layer 2 falls
+; EE - Unused
+; EF - Layer 2 scroll S/L
+; F0 - Unused
+; F1 - Unused
+; F2 - Layer 2 On/Off controlled
+; F3 - Autoscroll level (slow, medium, fast)
+; F4 - Fast BG scroll
+; F5 - Layer 2 sink/rise when touched
+    LDA.B #$04                                ; Scroll sprite MAIN handler for Layer 2.
     STA.W ScrollLayerIndex
     LDA.W Layer2ScrollCmd
     BEQ Return05BC49
@@ -4565,19 +4874,35 @@ CODE_05BCA5:
     dw CODE_05C81C
 
 CODE_05BCD6:
-    PHB
+; Scroll sprite pointers (for layer 2)
+; None
+; E8 - Special Autoscroll 1,2,3,4
+; E9 - Layer 2 smash 1,2,3
+; EA - Layer 2 scroll 1,2,3,4
+; EB - Unused
+; EC - Unused
+; ED - Layer 2 falls
+; EE - Unused
+; EF - Layer 2 scroll S/L
+; F0 - Unused
+; F1 - Unused
+; F2 - Layer 2 On/Off controlled
+; F3 - Autoscroll level (slow, medium, fast)
+; F4 - Fast BG scroll
+; F5 - Layer 2 sink/rise when touched
+    PHB                                       ; Scroll sprite INIT handler.
     PHK
     PLB
     STZ.W ScrollLayerIndex
-    JSR CODE_05BCE9
+    JSR CODE_05BCE9                           ; Run Layer 1 INIT.
     LDA.B #$04
     STA.W ScrollLayerIndex
-    JSR CODE_05BD0E
+    JSR CODE_05BD0E                           ; Run Layer 2 INIT.
     PLB
     RTL
 
 CODE_05BCE9:
-    LDA.W Layer1ScrollCmd
+    LDA.W Layer1ScrollCmd                     ; Scroll sprite INIT handler for Layer 1.
     JSL ExecutePtr
 
     dw CODE_05BD36                            ; 00 - Auto-Scroll, Unused?
@@ -4597,7 +4922,23 @@ CODE_05BCE9:
     dw CODE_05C036                            ; 0E - Layer 2 sink/rise
 
 CODE_05BD0E:
-    LDA.W Layer2ScrollCmd
+; Scroll sprite INIT pointers (for Layer 1)
+; None
+; E8 - Autoscroll 1,2,3,4
+; E9 - Layer 2 smash 1,2,3
+; EA - Layer 2 scroll 1,2,3,4
+; EB - Unused
+; EC - Unused
+; ED - Layer 2 falls
+; EE - Unused
+; EF - Layer 2 scroll S/L
+; F0 - Unused
+; F1 - Unused
+; F2 - Layer 2 On/Off controlled
+; F3 - Autoscroll level (slow, medium, fast)
+; F4 - Fast BG scroll
+; F5 - Layer 2 sink/rise
+    LDA.W Layer2ScrollCmd                     ; Scroll sprite INIT handler for Layer 2.
     BEQ Return05BD35
     JSL ExecutePtr
 
@@ -4618,23 +4959,39 @@ CODE_05BD0E:
     dw Return05BC49
 
 Return05BD35:
-    RTS
+; Scroll sprite INIT pointers (for Layer 2)
+; None
+; E8 - Autoscroll 1,2,3,4
+; E9 - Layer 2 smash 1,2,3
+; EA - Layer 2 scroll 1,2,3,4
+; EB - Unused
+; EC - Unused
+; ED - Layer 2 falls
+; EE - Unused
+; EF - Layer 2 scroll S/L
+; F0 - Unused
+; F1 - Unused
+; F2 - Layer 2 On/Off controlled
+; F3 - Autoscroll level (slow, medium, fast)
+; F4 - Fast BG scroll
+    RTS                                       ; F5 - Layer 2 sink/rise
 
 CODE_05BD36:
-    STZ.W HorizLayer1Setting
+; Scroll sprite E8 INIT, Layer 1: Autoscroll 1,2,3,4
+    STZ.W HorizLayer1Setting                  ; Disable horizontal scrolling
     LDA.W Layer1ScrollBits
     ASL A
     TAY
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Get initial scroll values based on Y-pos/extra info (-YYY YEE-).
     LDA.W DATA_05C9D1,Y
     STA.W Layer1ScrollCmd
     LDA.W DATA_05C9DB,Y
     STA.W Layer1ScrollBits
 CODE_05BD4C:
-    LDX.W ScrollLayerIndex
+    LDX.W ScrollLayerIndex                    ; Scroll sprite E8 INIT, Layer 2: Autoscroll 1,2,3,4
     REP #$20                                  ; A->16
     STZ.W Layer1ScrollXSpeed,X
-    STZ.W Layer1ScrollYSpeed,X
+    STZ.W Layer1ScrollYSpeed,X                ; Clear inital X/Y speeds and relevant valaues.
     STZ.W Layer1ScrollXPosUpd,X
     STZ.W Layer1ScrollYPosUpd,X
     SEP #$20                                  ; A->8
@@ -4652,7 +5009,7 @@ CODE_05BD4C:
     STA.W Layer1ScrollTimer,X
     RTS
 
-    LDA.W Layer1ScrollBits                    ; \ Unreachable
+    LDA.W Layer1ScrollBits                    ; \ Unreachable; Completely abandoned scroll sprite code?
     ASL A
     TAY
     REP #$20                                  ; A->16
@@ -4699,7 +5056,7 @@ CODE_05BDCF:
     RTS
 
 ADDR_05BDDD:
-    LDA.W Layer1ScrollBits
+    LDA.W Layer1ScrollBits                    ; Scroll sprite EB INIT, Layer 1: Unused.
     ASL A
     TAY
     REP #$20                                  ; A->16
@@ -4745,7 +5102,7 @@ ADDR_05BDF0:
     RTS
 
 ADDR_05BE3A:
-    LDA.W Layer1ScrollBits
+    LDA.W Layer1ScrollBits                    ; Scroll sprite F1 INIT, Layer 1: Unused.
     ASL A
     TAY
     REP #$20                                  ; A->16
@@ -4782,7 +5139,7 @@ ADDR_05BE4D:
     RTS
 
 CODE_05BE8A:
-    PHB
+    PHB                                       ; Subroutine to initialize Layer 3 settings.
     PHK
     PLB
     REP #$20                                  ; A->16
@@ -4888,47 +5245,48 @@ CODE_05BF20:
     JMP CODE_05BDCF
 
 CODE_05BF6A:
-    LDY.W Layer1ScrollBits
-    LDA.W DATA_05C94F,Y
+    LDY.W Layer1ScrollBits                    ; Layer 2 Smash INIT
+    LDA.W DATA_05C94F,Y                       ; Get initial movement index.
     STA.W Layer1ScrollBits
     LDA.W DATA_05C952,Y
     STA.W Layer2ScrollBits
     REP #$20                                  ; A->16
-    LDA.W #$0200
+    LDA.W #$0200                              ; Initialize various scroll sprite RAM addresses.
     JSR CODE_05BFD2
     LDA.W Layer1ScrollBits
     CLC
-    ADC.B #$0A
+    ADC.B #$0A                                ; Initialize this particular sprite, based on the Y position it was placed at.
     TAX
     LDY.B #$01
     JSR CODE_05C95B
     REP #$20                                  ; A->16
-    LDA.W NextLayer2YPos
+    LDA.W NextLayer2YPos                      ; Update Layer 2's position.
     STA.B Layer2YPos
-    JMP CODE_05C32B
+    JMP CODE_05C32B                           ; Return.
 
 ADDR_05BF97:
-    STZ.W HorizLayer1Setting
+    STZ.W HorizLayer1Setting                  ; Scroll sprite ED INIT: Layer 2 Falls
     REP #$20                                  ; A->16
     STZ.B Layer1XPos
-    STZ.W NextLayer1XPos
+    STZ.W NextLayer1XPos                      ; Reset Layer 1/2 X position.
     STZ.B Layer2XPos
     STZ.W NextLayer2XPos
-    LDA.W #$0600
+    LDA.W #$0600                              ; Set scroll command data.
     STA.W Layer1ScrollCmd
-    STZ.W Layer2ScrollYSpeed
+    STZ.W Layer2ScrollYSpeed                  ; Clear Layer 2 Y speed.
     STZ.W Layer2ScrollYPosUpd
     SEP #$20                                  ; A->8
-    LDA.B #$60
+    LDA.B #$60                                ; How long to wait before Layer 2 starts falling.
     STA.W Layer2ScrollBits
     RTS
 
 ADDR_05BFBA:
-    STZ.W HorizLayer1Setting
+; Unused scroll sprite EC INIT
+    STZ.W HorizLayer1Setting                  ; Disable horizontal scrolling.
     REP #$20                                  ; A->16
     STZ.B Layer2XPos
     STZ.W NextLayer2XPos
-    LDA.W #$03C0
+    LDA.W #$03C0                              ; Mess with Layer 2's position.
     STA.B Layer2YPos
     STA.W NextLayer2YPos
     STZ.W Layer1ScrollBits
@@ -4939,7 +5297,7 @@ CODE_05BFD5:
     STZ.W Layer1ScrollType
     STA.W Layer1ScrollCmd
     STZ.W Layer1ScrollXSpeed
-    STZ.W Layer1ScrollYSpeed
+    STZ.W Layer1ScrollYSpeed                  ; Initialize various scroll-sprite-related RAM addresses.
     STZ.W Layer1ScrollXPosUpd
     STZ.W Layer1ScrollYPosUpd
     STZ.W Layer2ScrollXSpeed
@@ -4963,18 +5321,25 @@ DATA_05C001:
     db $80,$00,$00,$01
 
 CODE_05C005:
-    STZ.W HorizLayer1Setting
+; Indices for the standard autoscroll sprite to the below table (honestly kinda redundant...)
+; Slow      ;  The two bytes are stored to $1440 and $1441 respectively.
+; Medium
+; Max X speeds for the standard autoscroll sprite.
+; Slow
+; Medium
+; Scroll sprite F3 INIT: autoscroll level (slow, medium, fast)
+    STZ.W HorizLayer1Setting                  ; Disable horizontal scroll.
     LDA.W Layer1ScrollBits
     ASL A
-    TAY
-    REP #$20                                  ; A->16
+    TAY                                       ; Get the index to the max X speed.
+    REP #$20                                  ; A->16; (although this is actually completely pointless)
     LDA.W DATA_05BFFD,Y
     STA.W Layer1ScrollBits
-    LDA.W #$000C
+    LDA.W #$000C                              ; Initialize all other scroll-sprite-related addresses.
     BRA CODE_05BFD2
 
 CODE_05C01A:
-    REP #$20                                  ; A->16
+    REP #$20                                  ; A->16; Scroll sprite F4 INIT - Fast BG scroll
     LDA.W #$0D00
     JSR CODE_05BFD2
 CODE_05C022:
@@ -4988,7 +5353,7 @@ CODE_05C022:
     RTS
 
 CODE_05C036:
-    LDY.W Layer1ScrollBits
+    LDY.W Layer1ScrollBits                    ; Scroll sprite F5 INIT - Layer 2 sink/rise
     LDA.W DATA_05C808,Y
     STA.W Layer1ScrollTimer
     LDA.W DATA_05C80B,Y
@@ -4998,11 +5363,11 @@ CODE_05C036:
     JMP CODE_05BFD5
 
 CODE_05C04D:
-    LDA.W ScrollLayerIndex
+    LDA.W ScrollLayerIndex                    ; Scroll sprite E8 MAIN: special autoscroll
     LSR A
     LSR A
     TAX
-    LDA.W Layer1ScrollTimer,X
+    LDA.W Layer1ScrollTimer,X                 ; If the scroll timer is 0, stop scrolling and return.
     BNE +
     LDX.W ScrollLayerIndex
     STZ.W Layer1ScrollXSpeed,X
@@ -5166,12 +5531,12 @@ CODE_05C165:
     TAX
     PLA
     LDY.B #$00
-    CMP.W Layer1ScrollXSpeed,X
+    CMP.W Layer1ScrollXSpeed,X                ; If the layer's X speed is 0, skip.
     BEQ CODE_05C18D
     BPL +
     LDY.B #$02
   + LDA.W Layer1ScrollXSpeed,X
-    CLC
+    CLC                                       ; Update X speed.
     ADC.W DATA_05CB5F,Y
     STA.W Layer1ScrollXSpeed,X
 CODE_05C18D:
@@ -5184,7 +5549,7 @@ CODE_05C18D:
     RTS
 
 CODE_05C198:
-    JSR CODE_05C04D
+    JSR CODE_05C04D                           ; Autoscroll MAIN (sprite E8, Layer 2).
     REP #$20                                  ; A->16
     LDA.W NextLayer2XPos
     STA.W NextLayer1XPos
@@ -5210,7 +5575,7 @@ CODE_05C198:
     LDA.W NextLayer1YPos,X
     EOR.W #$0001
     STA.W NextLayer1YPos,X
-  + JMP CODE_05C32B
+  + JMP CODE_05C32B                           ; Return.
 
 ADDR_05C1D4:
     REP #$30                                  ; AXY->16
@@ -5630,20 +5995,20 @@ CODE_05C4EC:
     RTS
 
 CODE_05C4F9:
-    LDA.W Layer1ScrollXPosUpd,X
+    LDA.W Layer1ScrollXPosUpd,X               ; Subroutine to calculate the position of a layer for the next frame.
     AND.W #$00FF
     CLC
     ADC.W Layer1ScrollXSpeed,X
     STA.W Layer1ScrollXPosUpd,X
     AND.W #$FF00
-    BPL +
+    BPL +                                     ; Add the layer's speed to its position.
     ORA.W #$00FF
   + XBA
     CLC
     ADC.W NextLayer1XPos,X
     STA.W NextLayer1XPos,X
     LDA.B _8
-    EOR.W #$FFFF
+    EOR.W #$FFFF                              ; Invert... something???
     INC A
     STA.B _8
     RTS
@@ -5803,39 +6168,41 @@ CODE_05C654:
     JMP CODE_05C328
 
 ADDR_05C659:
-    LDA.W Layer2ScrollBits
+; Scroll sprite ED MAIN: Layer 2 falls
+    LDA.W Layer2ScrollBits                    ; Branch if time to make Layer 2 sink.
     BEQ ++
     DEC.W Layer2ScrollBits
-    CMP.B #$20
+    CMP.B #$20                                ; 20 frames before it starts moving...
     BCS +
     LDA.B EffFrame
     AND.B #$01
-    BNE +
-    LDA.W NextLayer1YPos
+    BNE +                                     ; ...make the platform shake up and down.
+    LDA.W NextLayer1YPos                      ; (or try to; this apparently has no effect)
     EOR.B #$01
     STA.W NextLayer1YPos
   + RTS
 
- ++ STZ.B Layer2ScrollDir
+; Layer 2 is sinking.
+ ++ STZ.B Layer2ScrollDir                     ; Set Layer 2 scroll direction (up).
     REP #$20                                  ; A->16
     LDA.W Layer2ScrollYSpeed
-    CMP.W #$FFC0
+    CMP.W #$FFC0                              ; Max fall speed of Layer 2.
     BEQ +
-    DEC A
+    DEC A                                     ; If not at the max fall speed, increment by 1.
     STA.W Layer2ScrollYSpeed
   + LDA.W NextLayer2YPos
-    CMP.W #$0031
+    CMP.W #$0031                              ; If sunken too far, stop sinking.
     BPL +
     STZ.W Layer2ScrollYSpeed
   + BNE +
-    LDY.B #$20
+    LDY.B #$20                                ; If exactly at the cutoff point (0031), then wait 20 frames? Does nothing beside delay the above STZ.
     STY.W Layer2ScrollBits
-  + LDX.B #$06
+  + LDX.B #$06                                ; Calculate next Layer 2 position.
     JSR CODE_05C4F9
-    JMP CODE_05C32B
+    JMP CODE_05C32B                           ; Return.
 
 ADDR_05C69E:
-    LDA.B #$02
+    LDA.B #$02                                ; Scroll sprite EC MAIN: Unused
     STA.B Layer1ScrollDir
     STZ.B Layer2ScrollDir
     REP #$20                                  ; A->16
@@ -5892,7 +6259,7 @@ ADDR_05C6EC:
   + STA.W NextLayer2XPos
     STA.B Layer2XPos
     STY.B ScreenMode
-    JMP CODE_05C32B
+    JMP CODE_05C32B                           ; Return.
 
 
 DATA_05C71B:
@@ -5905,7 +6272,7 @@ DATA_05C723:
     db $FF,$FF,$01,$00
 
 CODE_05C727:
-    LDX.W OnOffSwitch
+    LDX.W OnOffSwitch                         ; ON/OFF layer 2 lower and higher limits.
     BEQ +
     LDX.B #$02
   + CPX.W Layer2ScrollType
@@ -5947,18 +6314,18 @@ CODE_05C770:
   + LDX.B #$06
     JSR CODE_05C4F9
 CODE_05C784:
-    JMP CODE_05C32B
+    JMP CODE_05C32B                           ; Return.
 
 CODE_05C787:
-    LDA.B #$02
-    STA.B Layer1ScrollDir
+    LDA.B #$02                                ; Scroll sprite F3 MAIN: autoscroll level (slow, medium, fast)
+    STA.B Layer1ScrollDir                     ; Indicate that Layer 1/2 are scrolling right.
     STA.B Layer2ScrollDir
     LDA.W ScrollLayerIndex
     LSR A
     LSR A
     TAX
     LDY.W Layer1ScrollBits,X
-    LDX.W ScrollLayerIndex
+    LDX.W ScrollLayerIndex                    ; If not scrolling at max speed, increase speed.
     REP #$20                                  ; A->16
     LDA.W Layer1ScrollXSpeed,X
     CMP.W DATA_05C001,Y
@@ -5968,24 +6335,24 @@ CODE_05C787:
     LDA.B LastScreenHoriz
     DEC A
     XBA
-    AND.W #$FF00
+    AND.W #$FF00                              ; Stop scrolling once at the last screen.
     CMP.W NextLayer1XPos,X
     BNE +
     STZ.W Layer1ScrollXSpeed,X
-  + JSR CODE_05C4F9
-    JMP CODE_05C32B
+  + JSR CODE_05C4F9                           ; Calculate next Layer 1 position and return.
+    JMP CODE_05C32B                           ; Return.
 
 CODE_05C7BC:
-    LDA.W BGFastScrollActive
+    LDA.W BGFastScrollActive                  ; Scroll sprite F4 MAIN: fast BG scroll
     BEQ CODE_05C7ED
 CODE_05C7C1:
     LDA.B #$02
     STA.B Layer2ScrollDir
     REP #$20                                  ; A->16
     LDA.W Layer2ScrollXSpeed
-    CMP.W #$0400
+    CMP.W #$0400                              ; Max speed of Layer 2 for the fast BG scroll.
     BEQ +
-    INC A
+    INC A                                     ; Accelerate Layer 2 by 1 each frame.
   + STA.W Layer2ScrollXSpeed
     LDX.B #$04
     JSR CODE_05C4F9
@@ -5998,7 +6365,7 @@ CODE_05C7C1:
     ADC.W NextLayer2XPos
     STA.W NextLayer2XPos
 CODE_05C7ED:
-    JMP CODE_05C32B
+    JMP CODE_05C32B                           ; Return.
 
 
 DATA_05C7F0:
@@ -6131,7 +6498,49 @@ DATA_05C952:
     db $05,$05,$05
 
 CODE_05C955:
-    LDX.W Layer1ScrollBits
+; "Start" X positions for the range of each smash effect.
+; Smash 1
+; Smash 2
+; Smash 3 (never leaves effect 1)
+; "End" X positions for the range of each smash effect.
+; Smash 1
+; Smash 2
+; Smash 3
+; each row of the below tables are ordered [phase 1], [phase 2], [phase 3],
+; and each phase moves [up] -> [slow down] -> [fast down] -> [up]
+; Y positions each movement to stop at.
+; Smash 1, up
+; Smash 2, up
+; Smash 3, up
+; Smash 1, slow down
+; Smash 2, slow down
+; Smash 3, slow down
+; Smash 1, fast down
+; Smash 2, fast down
+; Smash 3, fast down
+; Y speeds for each movement.
+; Smash 1, up
+; Smash 2, up
+; Smash 3, up
+; Smash 1, slow down
+; Smash 2, slow down
+; Smash 3, slow down
+; Smash 1, fast down
+; Smash 2, fast down
+; Smash 3, fast down
+; Timers to wait after each vertical movement.
+; Smash 1, up
+; Smash 2, up
+; Smash 3, up
+; Smash 1, slow down
+; Smash 2, slow down
+; Smash 3, slow down
+; Smash 1, fast down
+; Smash 2, fast down
+; Smash 3, fast down
+; Indices to $05C880 / $05C8A4 for each smash type.
+; Number of values per row in $05C880 / $05C8A4 for each smash type.
+    LDX.W Layer1ScrollBits                    ; Layer 2 Smash MAIN
     LDY.W Layer2ScrollBits
 CODE_05C95B:
     REP #$20                                  ; A->16
@@ -6143,8 +6552,8 @@ CODE_05C95D:
     BCS +
     TXA
     LSR A
-    AND.W #$00FE
-    STA.W Layer1ScrollType
+    AND.W #$00FE                              ; Figure out which movement phase to use based on the position of the screen.
+    STA.W Layer1ScrollType                    ; The value used comes from the index to $05C880, divided by 2.
     LDA.W #$00C1
     STA.W NextLayer2YPos
     STZ.W Layer1ScrollTimer
@@ -6154,38 +6563,39 @@ CODE_05C95D:
     BNE CODE_05C95D
     SEP #$20                                  ; A->8
     LDA.W Layer1ScrollTimer
-    BEQ +
-    DEC.W Layer1ScrollTimer
+    BEQ +                                     ; If the movement phase isn't being changed, return,
+    DEC.W Layer1ScrollTimer                   ; and decrement the phase timer.
     RTS
 
-  + LDA.W Layer1ScrollType
+  + LDA.W Layer1ScrollType                    ; New movement phase is starting.
     CLC
-    ADC.W Layer2ScrollType
-    TAY
+    ADC.W Layer2ScrollType                    ; Y = (current phase) + (current movement direction)
+    TAY                                       ; X = Y x2
     LSR A
     TAX
     REP #$20                                  ; A->16
     LDA.W NextLayer2YPos
     SEC
-    SBC.W DATA_05C8C8,Y
+    SBC.W DATA_05C8C8,Y                       ; Branch if past the maximum Y position for the current movement direction.
     EOR.W DATA_05C8FE,Y
     BPL +
-    LDA.W DATA_05C8FE,Y
+    LDA.W DATA_05C8FE,Y                       ; Else, update the layer's Y position.
     JMP CODE_05C875
 
-  + LDA.W DATA_05C8C8,Y
+; At max Y position for current movement; change movement direction.
+  + LDA.W DATA_05C8C8,Y                       ; Lock the layer onto its max position.
     STA.W NextLayer2YPos
     SEP #$20                                  ; A->8
-    LDA.W DATA_05C934,X
+    LDA.W DATA_05C934,X                       ; Set timer until next movement.
     STA.W Layer1ScrollTimer
     LDA.W Layer2ScrollType
     CLC
-    ADC.B #$12
+    ADC.B #$12                                ; If not ending the "fast down" movement, return.
     CMP.B #$36
     BCC +
-    LDA.B #!SFX_KAPOW
+    LDA.B #!SFX_KAPOW                         ; SFX for the Layer 2 Smash smashing.
     STA.W SPCIO3                              ; / Play sound effect
-    LDA.B #$20                                ; \ Set ground shake timer
+    LDA.B #$20                                ; \ Set ground shake timer; How long the screen shakes for after the Layer 2 Smash smashes.
     STA.W ScreenShakeTimer                    ; /
     LDA.B #$00
   + STA.W Layer2ScrollType
@@ -6362,7 +6772,20 @@ DATA_05CBF6:                                  ;!
 endif                                         ;/===============================================
 
 CODE_05CBFF:
-    PHB
+; Initial scroll info for each of the autoscroll sprites. Indexed as [0YYY YEE0].
+; Autoscroll 1
+; Autoscroll 2
+; Autoscroll 3
+; Autoscroll 4
+; Autoscroll 1-A
+; Autoscroll 2-A pulls from the first two bytes of the next table.
+; More initial scroll info for each of the autoscroll sprites. Indexed as [0YYY YEE0].
+; Autoscroll 1
+; Autoscroll 2
+; Autoscroll 3
+; Autoscroll 4
+; Autoscroll 1-A
+    PHB                                       ; Autoscroll 2-A pulls from the first two bytes of the next table.
     PHK                                       ; Wrapper
     PLB
     JSR CODE_05CC07
@@ -6394,11 +6817,18 @@ DATA_05CC61:
     db $40,$41,$42,$43,$44
 
 CODE_05CC66:
-    LDY.B #$00
+; Pointers to the routines for the level end march.
+; "MARIO COURSE CLEAR" stripe image data
+; $05CC1A: MARIO
+; $05CC28: COURSE CLEAR!
+; $05CC46: Time bonus. Blanks get filled in by numbers.
+; "LUIGI" (course clear) tiles
+    LDY.B #$00                                ; Loading "Course Clear" test.
     LDX.W PlayerTurnLvl
     LDA.W PlayerBonusStars,X
 CODE_05CC6E:
-    CMP.B #$0A
+; Give 1up if tens digit of the player's bonus stars
+    CMP.B #$0A                                ; and tens and ones digits of the timer are the same.
     BCC CODE_05CC77
     SBC.B #$0A
     INY
@@ -6410,7 +6840,8 @@ CODE_05CC77:
     CPY.W InGameTimerOnes
     BNE +
     INC.W GivePlayerLives
-  + LDA.B #$01
+; Begin loading "Course Clear!" scorecard.
+  + LDA.B #$01                                ; Set to scroll with Mario.
     STA.W Layer3ScrollType
     LDA.B #$08
     TSB.B MainBGMode
@@ -6422,7 +6853,7 @@ CODE_05CC77:
     CLC
     ADC.L DynStripeImgSize
     TAX
-  - LDA.W DATA_05CC16,Y
+  - LDA.W DATA_05CC16,Y                       ; Write the COURSE CLEAR stripe image.
     STA.L DynamicStripeImage,X
     DEX
     DEX
@@ -6435,12 +6866,12 @@ CODE_05CC77:
     LDA.W PlayerTurnLvl
     BEQ CODE_05CCC8
     LDY.W #$0000
-  - LDA.W DATA_05CC61,Y
+  - LDA.W DATA_05CC61,Y                       ; If playing as Luigi, replace Mario's name in the stripe data with his.
     STA.L DynamicStripeImage+4,X
     INX
     INX
     INY
-    CPY.W #$0005
+    CPY.W #$0005                              ; Number of tiles to use for LUIGI.
     BNE -
 CODE_05CCC8:
     LDY.W #$0002
@@ -6448,7 +6879,7 @@ CODE_05CCC8:
     CLC
     ADC.L DynStripeImgSize
     TAX
-  - LDA.W InGameTimerHundreds,Y
+  - LDA.W InGameTimerHundreds,Y               ; Write the timer into the stripe.
     STA.L DynamicStripeImage+$32,X
     DEY
     DEX
@@ -6459,7 +6890,7 @@ CODE_05CCC8:
 CODE_05CCE4:
     LDA.L DynamicStripeImage+$32,X
     AND.B #$0F
-    BNE CODE_05CCF9
+    BNE CODE_05CCF9                           ; Clear leading 0s.
     LDA.B #$FC
     STA.L DynamicStripeImage+$32,X
     INX
@@ -6468,20 +6899,20 @@ CODE_05CCE4:
     BNE CODE_05CCE4
 CODE_05CCF9:
     SEP #$10                                  ; XY->8
-    JSR CODE_05CE4C
+    JSR CODE_05CE4C                           ; Calculate the timer's score bonus (stored to $02).
     REP #$20                                  ; A->16
     STZ.B _0
-    LDA.B _2
+    LDA.B _2                                  ; Preserve the timer bonus for the score.
     STA.W ScoreIncrement
     LDX.B #$42
     LDY.B #$00
-    JSR CODE_05CDFD
+    JSR CODE_05CDFD                           ; Write the time bonus to the score card.
     LDX.B #$00
 CODE_05CD10:
     LDA.L DynamicStripeImage+$40,X
     AND.W #$000F
     BNE CODE_05CD26
-    LDA.W #$38FC
+    LDA.W #$38FC                              ; Blank out leading 0s in the time bonus.
     STA.L DynamicStripeImage+$40,X
     INX
     INX
@@ -6490,11 +6921,11 @@ CODE_05CD10:
 CODE_05CD26:
     SEP #$20                                  ; A->8
     INC.W OverworldProcess
-    LDA.B #$28
+    LDA.B #$28                                ; Time it takes before the bonus star counter appears in the scorecard.
     STA.W DisplayBonusStars
     LDA.B #$4A
     CLC
-    ADC.L DynStripeImgSize
+    ADC.L DynStripeImgSize                    ; Update stripe data pointer.
     INC A
     STA.L DynStripeImgSize
     SEP #$30                                  ; AXY->8
@@ -6517,16 +6948,32 @@ DATA_05CD63:
     db $C4,$B7,$C5
 
 CODE_05CD76:
-    LDA.W BonusStarsGained
-    BEQ CODE_05CDD5
-    DEC.W DisplayBonusStars
+; Bonus star countdown stripe image.
+; BONUS!_★
+; x__ (bottom half of numbers)
+; (top half of numbers)
+; Table of tiles for each of the bonus star digits. Alternates top, bottom.
+; 0
+; 1
+; 2
+; 3
+; 4
+; 5
+; 6
+; 7
+; 8
+; 9
+; Write the bonus star count to the score card, if applicable.
+    LDA.W BonusStarsGained                    ; Branch if the score/star counter hasn't started yet.
+    BEQ CODE_05CDD5                           ; [change BEQ to BRA to disable the bonus star counter]
+    DEC.W DisplayBonusStars                   ; Return if no more bonus stars left to add.
     BPL Return05CDE8
     LDY.B #$22
     TYA
     CLC
     ADC.L DynStripeImgSize
     TAX
-  - LDA.W DATA_05CD3F,Y
+  - LDA.W DATA_05CD3F,Y                       ; Write the base bonus star counter image.
     STA.L DynamicStripeImage,X
     DEX
     DEY
@@ -6536,7 +6983,7 @@ CODE_05CD76:
     LDA.W BonusStarsGained
     AND.B #$0F
     ASL A
-    TAY
+    TAY                                       ; Write the ones digit of the bonus stars.
     LDA.W DATA_05CD63,Y
     STA.L DynamicStripeImage+$18,X
     LDA.W DATA_05CD62,Y
@@ -6547,7 +6994,7 @@ CODE_05CD76:
     LSR A
     LSR A
     LSR A
-    BEQ +
+    BEQ +                                     ; Write the tens digit of the bonus stars, if non-zero.
     ASL A
     TAY
     LDA.W DATA_05CD63,Y
@@ -6560,12 +7007,12 @@ CODE_05CD76:
     INC A
     STA.L DynStripeImgSize
 CODE_05CDD5:
-    DEC.W DrumrollTimer
-    BPL Return05CDE8
-    LDA.W BonusStarsGained
+    DEC.W DrumrollTimer                       ; Wait for $13D6 to decrement to 0 before starting the score countdown.
+    BPL Return05CDE8                          ; [change BPL to BRA to freeze the counter]
+    LDA.W BonusStarsGained                    ; Tell the code above to start counting down the bonus stars, if applicable.
     STA.W DisplayBonusStars
     INC.W OverworldProcess
-    LDA.B #!SFX_DRUMROLLSTART
+    LDA.B #!SFX_DRUMROLLSTART                 ; SFX for the scorecard drumroll.
     STA.W SPCIO3                              ; / Play sound effect
 Return05CDE8:
     RTS
@@ -6580,8 +7027,14 @@ DATA_05CDEB:
     db $01,$00
 
 CODE_05CDFD:
-    LDA.L DynStripeImgSize,X
-    AND.W #$FF00
+; Isolators for each digit of the score, for decrementing that digit by 1.
+; 10000
+; 1000
+; 100
+; 10
+; 1
+    LDA.L DynStripeImgSize,X                  ; Write the time bonus to the score card. Essentially a very weird hex -> dec loop.
+    AND.W #$FF00                              ; Initialize the current digit's tile to 0.
     STA.L DynStripeImgSize,X
 CODE_05CE08:
     PHX
@@ -6589,16 +7042,16 @@ CODE_05CE08:
     LDA.B _2
     SEC
     %LorW_X(SBC,DATA_05CDEB)
-    STA.B _6
+    STA.B _6                                  ; Decrement the current digit by 1.
     LDA.B _0
     %LorW_X(SBC,DATA_05CDE9)
     STA.B _4
-    PLX
+    PLX                                       ; If digit was 0, continue to next digit.
     BCC CODE_05CE2F
     LDA.B _6
     STA.B _2
     LDA.B _4
-    STA.B _0
+    STA.B _0                                  ; If digit was non-zero, increment its tile and repeat.
     LDA.L DynStripeImgSize,X
     INC A
     STA.L DynStripeImgSize,X
@@ -6607,7 +7060,7 @@ CODE_05CE08:
 CODE_05CE2F:
     INX
     INX
-    INY
+    INY                                       ; Repeat for all 5 digits.
     INY
     INY
     INY
@@ -6623,7 +7076,13 @@ DATA_05CE42:
     db $50,$5A
 
 CODE_05CE4C:
-    REP #$20                                  ; A->16
+; Conversions for dec -> hex for the hundreds digit of the timer.
+; 000
+; 100
+; 200
+; 300
+; Conversions for dec -> hex for the tens digit of the timer.
+    REP #$20                                  ; A->16; Calculate the score to add for the timer on the course clear card. Returns in $02.
     LDA.W InGameTimerHundreds
     ASL A
     TAX
@@ -6631,7 +7090,7 @@ CODE_05CE4C:
     STA.B _0
     LDA.W InGameTimerTens
     TAX
-    LDA.W DATA_05CE42,X
+    LDA.W DATA_05CE42,X                       ; Convert the timer from dec to hex and store in $00.
     AND.W #$00FF
     CLC
     ADC.B _0
@@ -6644,19 +7103,19 @@ CODE_05CE4C:
     SEP #$20                                  ; A->8
     LDA.B _0
     STA.W HW_WRMPYA
-    LDA.B #$32
+    LDA.B #$32                                ; Multiplier for the time -> score conversion in the scorecard (use with $05CE91).
     STA.W HW_WRMPYB
     NOP
     NOP
     NOP
     NOP
     LDA.W HW_RDMPY
-    STA.B _2
+    STA.B _2                                  ; Multiply timer by 50 to get the corresponding score.
     LDA.W HW_RDMPY+1
     STA.B _3
     LDA.B _1
     STA.W HW_WRMPYA
-    LDA.B #$32
+    LDA.B #$32                                ; Multiplier for the time -> score conversion in the scorecard (use with $05CE79).
     STA.W HW_WRMPYB
     NOP
     NOP
@@ -6682,7 +7141,10 @@ DATA_05CEC6:
     db $01,$00,$0A,$00
 
 CODE_05CECA:
-    PHB
+; Base stripe image data for the decrementing score/bonus counters.
+; Score
+; Bonus (top)
+    PHB                                       ; Bonus (bottom)
     PHK
     PLB
     REP #$20                                  ; A->16
@@ -6739,7 +7201,7 @@ CODE_05CF36:
     LDX.B #$30
     STX.W DrumrollTimer
     INC.W OverworldProcess
-    LDX.B #!SFX_DRUMROLLEND
+    LDX.B #!SFX_DRUMROLLEND                   ; SFX for the drumroll finishing effect.
     STX.W SPCIO3                              ; / Play sound effect
   + LDY.B #$1E
     TYA
@@ -7077,28 +7539,52 @@ DATA_05D790:
     db $70,$70,$60,$70,$70,$70
 
 CODE_05D796:
-    PHB
+; Data for all Layer 1 overworld event tiles (the actual assembly of them).
+; Eight bytes per 16x16 tile. Two bytes per 8x8 (tile number, yxpccctt).
+; Uploaded at $04DC3A / $04DCBB.
+; Table of events activated by each translevel.
+; FF indicates no event.
+; Empty. Above table flows into this with LM's level expansion patch.
+; FG initial positions.
+; BG initial positions.
+; Vertical scroll settings for Layer 2.
+; Horizontal scroll settings for Layer 2.
+; Initial Mario Y positions for entrances.
+; Initial Mario Y subscreen positions.
+; Initial Mario X positions for entrances.
+; Initial Mario X subscreen positions.
+; The tileset each No Yoshi intro is used with.
+; The last byte is only used for the 5 associated levels at $05DA4A.
+; Pointers for the No Yoshi intros (layer 1).
+; Ghouse house entrance
+; Castle entrance 1
+; Sign entrance 1
+; Sign entrance 2
+; Sign entrance 3
+; Castle entrance 2
+; Pointers for the No Yoshi intros (layer 2).
+    PHB                                       ; Primary header loading subroutine. Also handles No Yoshi and CI2.
     PHK
     PLB
     SEP #$30                                  ; AXY->8
     STZ.W SkipMidwayCastleIntro
     LDA.W YoshiHeavenFlag
     BNE CODE_05D7A8
-    LDY.W BonusGameActivate
-    BEQ +
+    LDY.W BonusGameActivate                   ; Set up warping to either the Bonus Game room
+    BEQ +                                     ; or the Yoshi Wings room.
 CODE_05D7A8:
     JSR CODE_05DBAC
   + LDA.W SublevelCount
-    BNE +
+    BNE +                                     ; Jump further down if entering a level for the first time (i.e. not a sublevel).
     JMP CODE_05D83E
 
-  + LDX.B PlayerXPosNext+1
+  + LDX.B PlayerXPosNext+1                    ; Loading a sublevel.
     LDA.B ScreenMode
     AND.B #!ScrMode_Layer1Vert
     BEQ +
     LDX.B PlayerYPosNext+1
   + LDA.W ExitTableLow,X
-    STA.W LoadingLevelNumber
+    STA.W LoadingLevelNumber                  ; Get level number to load.
     STA.B _E
     LDA.W PlayerTurnOW
     LSR A
@@ -7108,7 +7594,7 @@ CODE_05D7A8:
     BEQ +
     LDA.B #$01
   + STA.B _F
-    LDA.W UseSecondaryExit
+    LDA.W UseSecondaryExit                    ; Branch if this is not a secondary exit.
     BEQ +
     REP #$30                                  ; AXY->16
     LDA.W #$0000
@@ -7162,24 +7648,24 @@ CODE_05D7A8:
   + JMP CODE_05D8B7
 
 CODE_05D83E:
-    STZ.B _F
+    STZ.B _F                                  ; Routine for loading a primary level.
     LDY.B #$00
-    LDA.W OverworldOverride
+    LDA.W OverworldOverride                   ; If already in the process of loading a level, skip this section.
     BNE CODE_05D8A2
     REP #$30                                  ; AXY->16
     STZ.B Layer1XPos                          ; Set "X position of screen boundary" to 0
     STZ.B Layer2XPos                          ; Set "Layer 2 X position" to 0
     LDX.W PlayerTurnOW
-    LDA.W OWPlayerXPosPtr,X
+    LDA.W OWPlayerXPosPtr,X                   ; Get location on the map, quadrant format.
     AND.W #$000F
-    STA.B _0
+    STA.B _0                                  ; $00 contains 00000000 0000xxxx...
     LDA.W OWPlayerYPosPtr,X
     AND.W #$000F
     ASL A
     ASL A
     ASL A
     ASL A
-    STA.B _2
+    STA.B _2                                  ; ...$02 contains 00000000 yyyy0000...
     LDA.W OWPlayerXPosPtr,X
     AND.W #$0010
     ASL A
@@ -7187,7 +7673,7 @@ CODE_05D83E:
     ASL A
     ASL A
     ORA.B _0
-    STA.B _0
+    STA.B _0                                  ; ...$00 now contains 0000000X 0000xxxx...
     LDA.W OWPlayerYPosPtr,X
     AND.W #$0010
     ASL A
@@ -7195,7 +7681,7 @@ CODE_05D83E:
     ASL A
     ASL A
     ASL A
-    ORA.B _2
+    ORA.B _2                                  ; ...and finally X contains 000000YX yyyyxxxx.
     ORA.B _0
     TAX
     LDA.W PlayerTurnOW                        ; \
@@ -7203,7 +7689,7 @@ CODE_05D83E:
     LSR A                                     ; |Set Y to current player
     LSR A                                     ; |
     TAY                                       ; /
-    LDA.W OWPlayerSubmap,Y                    ; \ Get current player's submap
+    LDA.W OWPlayerSubmap,Y                    ; \ Get current player's submap; If on submap, change that to 000001YX yyyyxxxx.
     AND.W #$000F                              ; /
     BEQ +                                     ; \
     TXA                                       ; |
@@ -7211,14 +7697,15 @@ CODE_05D83E:
     ADC.W #$0400                              ; |
     TAX                                       ; |
   + SEP #$20                                  ; A->8
-    LDA.L OWLayer1Translevel,X
+    LDA.L OWLayer1Translevel,X                ; Store level number of the tile Mario is currently on to translevel number.
     STA.W TranslevelNo                        ; Store overworld level number
 CODE_05D8A2:
     CMP.B #$25                                ; \
     BCC +                                     ; |
     SEC                                       ; |If A>= x25,
     SBC.B #$24                                ; |subtract x24
-  + STA.W LoadingLevelNumber
+; Store actual level number to $0E/$0F.
+  + STA.W LoadingLevelNumber                  ; $17BB is also set here, though never used.
     STA.B _E                                  ; Store A as lower level number byte
     LDA.W OWPlayerSubmap,Y                    ; \
     BEQ +                                     ; |Set higher level number byte to:
@@ -7228,39 +7715,39 @@ CODE_05D8B7:
     REP #$30                                  ; AXY->16
     LDA.B _E                                  ; \
     ASL A                                     ; |
-    CLC                                       ; |Multiply level number by 3 and store in Y
+    CLC                                       ; |Multiply level number by 3 and store in Y; Get index to level data pointer table (multiply by 3).
     ADC.B _E                                  ; |(Each L1/2 pointer table entry is 3 bytes long)
     TAY                                       ; /
     SEP #$20                                  ; A->8
     LDA.W Layer1Ptrs,Y                        ; \
     STA.B Layer1DataPtr                       ; |
-    LDA.W Layer1Ptrs+1,Y                      ; |Load Layer 1 pointer into $65-$67
+    LDA.W Layer1Ptrs+1,Y                      ; |Load Layer 1 pointer into $65-$67; Store Layer 1 data pointer to RAM.
     STA.B Layer1DataPtr+1                     ; |
     LDA.W Layer1Ptrs+2,Y                      ; |
     STA.B Layer1DataPtr+2                     ; /
     LDA.W Layer2Ptrs,Y                        ; \
     STA.B Layer2DataPtr                       ; |
-    LDA.W Layer2Ptrs+1,Y                      ; |Load Layer 2 pointer into $68-$6A
+    LDA.W Layer2Ptrs+1,Y                      ; |Load Layer 2 pointer into $68-$6A; Store Layer 2 data pointer to RAM.
     STA.B Layer2DataPtr+1                     ; |
     LDA.W Layer2Ptrs+2,Y                      ; |
     STA.B Layer2DataPtr+2                     ; /
     REP #$20                                  ; A->16
     LDA.B _E                                  ; \
-    ASL A                                     ; |Multiply level number by 2 and store in Y
+    ASL A                                     ; |Multiply level number by 2 and store in Y; Get index to sprite data pointer table (multiply by 2).
     TAY                                       ; / (Each sprite pointer table entry is 2 bytes long)
     LDA.W #$0000
     SEP #$20                                  ; A->8
     LDA.W Ptrs05EC00,Y                        ; \
     STA.B SpriteDataPtr                       ; |Store location of sprite level Y in $CE-$CF
-    LDA.W Ptrs05EC00+1,Y                      ; |
+    LDA.W Ptrs05EC00+1,Y                      ; |; Store sprite pointer to RAM.
     STA.B SpriteDataPtr+1                     ; /
-    LDA.B #$07                                ; \ Set highest byte to x07
+    LDA.B #$07                                ; \ Set highest byte to x07; [LM hijacks this line for a JSL to $0EF300]
     STA.B SpriteDataPtr+2                     ; / (All sprite data is stored in bank 07)
     LDA.B [SpriteDataPtr]                     ; \ Get first byte of sprite data (header)
-    AND.B #$3F                                ; |Get level's sprite memory
+    AND.B #$3F                                ; |Get level's sprite memory; Store sprite memory setting.
     STA.W SpriteMemorySetting                 ; / Store in $1692
     LDA.B [SpriteDataPtr]                     ; \ Get first byte of sprite data (header) again
-    AND.B #$C0                                ; |Get level's sprite buoyancy settings
+    AND.B #$C0                                ; |Get level's sprite buoyancy settings; Store sprite buoyancy settings.
     STA.W SpriteBuoyancy                      ; / Store in $190E
     REP #$10                                  ; XY->16
     SEP #$20                                  ; A->8
@@ -7269,104 +7756,104 @@ CODE_05D8B7:
     LSR A
     LSR A
     LSR A
-    LSR A
+    LSR A                                     ; Store horizontal and vertical scroll settings for Layer 2.
     TAX
     LDA.L DATA_05D720,X
     STA.W HorizLayer2Setting
     LDA.L DATA_05D710,X
     STA.W VertLayer2Setting
-    LDA.B #$01
+    LDA.B #$01                                ; Enable horizontal scrolling.
     STA.W HorizLayer1Setting
     LDA.W DATA_05F200,Y
     AND.B #$C0
     CLC
-    ASL A
+    ASL A                                     ; Store Layer 3 settings.
     ROL A
     ROL A
     STA.W Layer3Setting
-    STZ.B Layer1YPos+1
+    STZ.B Layer1YPos+1                        ; Zero Layer 1 and 2 high Y positions.
     STZ.B Layer2YPos+1
     LDA.W DATA_05F600,Y
-    AND.B #$80
+    AND.B #$80                                ; Store No Yoshi flag.
     STA.W DisableNoYoshiIntro
     LDA.W DATA_05F600,Y
     AND.B #$60
     LSR A
-    LSR A
+    LSR A                                     ; Store vertical level flags.
     LSR A
     LSR A
     LSR A
     STA.B ScreenMode
-    LDA.W UseSecondaryExit
+    LDA.W UseSecondaryExit                    ; Branch if this is a secondary exit.
     BNE +
     LDA.W DATA_05F000,Y
     AND.B #$0F
     TAX
-    LDA.L DATA_05D730,X
+    LDA.L DATA_05D730,X                       ; Store entrance Y position.
     STA.B PlayerYPosNext
     LDA.L DATA_05D740,X
     STA.B PlayerYPosNext+1
     LDA.W DATA_05F200,Y
     STA.B _2
     AND.B #$07
-    TAX
+    TAX                                       ; Store entrance X position.
     LDA.L DATA_05D750,X
     STA.B PlayerXPosNext
     LDA.L DATA_05D758,X
     STA.B PlayerXPosNext+1
     LDA.B _2
     AND.B #$38
-    LSR A
+    LSR A                                     ; Store Mario entrance action.
     LSR A
     LSR A
     STA.W LevelEntranceType
     LDA.W DATA_05F400,Y
     STA.B _2
-    AND.B #$03
+    AND.B #$03                                ; Store BG initial position.
     TAX
     LDA.L DATA_05D70C,X
     STA.B Layer2YPos
     LDA.B _2
     AND.B #$0C
     LSR A
-    LSR A
+    LSR A                                     ; Store FG initial position.
     TAX
     LDA.L DATA_05D708,X
     STA.B Layer1YPos
     LDA.W DATA_05F600,Y
     STA.B _1
   + LDA.B ScreenMode
-    AND.B #!ScrMode_Layer1Vert
+    AND.B #!ScrMode_Layer1Vert                ; Branch if not a vertical level.
     BEQ +
     LDY.W #$0000
-    LDA.B [Layer1DataPtr],Y
+    LDA.B [Layer1DataPtr],Y                   ; Store spawn screen number?
     AND.B #$1F
     STA.B PlayerYPosNext+1
-    INC A
+    INC A                                     ; Store level length (vertical level)
     STA.B LastScreenVert
-    LDA.B #$01
+    LDA.B #$01                                ; Enable vertical scrolling.
     STA.W VertLayer1Setting
-  + LDA.W SublevelCount
+  + LDA.W SublevelCount                       ; If not the first room of the level, end.
     BNE +
     LDA.B _2
     LSR A
-    LSR A
+    LSR A                                     ; Store midway screen.
     LSR A
     LSR A
     STA.W DisableMidway
-    STZ.W MidwayFlag
+    STZ.W MidwayFlag                          ; Reset midway point flag.
     LDY.W TranslevelNo
-    LDA.W DATA_05D608,Y
+    LDA.W DATA_05D608,Y                       ; Store the event the level activates.
     STA.W OverworldEvent
     SEP #$10                                  ; XY->8
     LDX.W TranslevelNo
-    LDA.W OWLevelTileSettings,X
-    AND.B #$40
+    LDA.W OWLevelTileSettings,X               ; Check if midway flag has been set.
+    AND.B #$40                                ; Branch if not.
     BEQ +
-    STA.W SkipMidwayCastleIntro
+    STA.W SkipMidwayCastleIntro               ; Override the No Yoshi entrance cutscene.
     LDA.B _2
     LSR A
-    LSR A
+    LSR A                                     ; Store Mario spawn screen position for midpoint.
     LSR A
     LSR A
     STA.B PlayerXPosNext+1
@@ -7374,38 +7861,38 @@ CODE_05D8B7:
 
   + REP #$10                                  ; XY->16
     LDA.B _1
-    AND.B #$1F
+    AND.B #$1F                                ; $01 = eeeee bits of $05F600
     STA.B _1
     LDA.B ScreenMode
-    AND.B #!ScrMode_Layer1Vert
+    AND.B #!ScrMode_Layer1Vert                ; Check if Layer 1 is horizontal.
     BNE +
-    LDA.B _1
+    LDA.B _1                                  ; If horizontal, store Mario's spawn screen number (X).
     STA.B PlayerXPosNext+1
     JMP CODE_05DA17
 
-  + LDA.B _1
+  + LDA.B _1                                  ; If vertical, store Mario's spawn screen number (Y).
     STA.B PlayerYPosNext+1
-    STA.B Layer1YPos+1
+    STA.B Layer1YPos+1                        ; Store Layer 1's Y position screen number.
     SEP #$10                                  ; XY->8
     LDY.W VertLayer2Setting
-    CPY.B #$03
+    CPY.B #$03                                ; If Layer 2's scroll speed isn't "slow", store its Y position screen number.
     BEQ +
     STA.B Layer2YPos+1
-  + LDA.B #$01
+  + LDA.B #$01                                ; Enable vertical scrolling (always on in vertical levels)
     STA.W VertLayer1Setting
 CODE_05DA17:
     SEP #$30                                  ; AXY->8
     LDA.W TranslevelNo
-    CMP.B #$52
-    BCC CODE_05DA24
-    LDX.B #$03
+    CMP.B #$52                                ; If translevel number is greater than 52,
+    BCC CODE_05DA24                           ; force the "No Yoshi Sign 2" intro regardless of tileset.
+    LDX.B #$03                                ; (...why? literally all those levels have the "disable" flag set anyway)
     BRA CODE_05DA38
 
 CODE_05DA24:
     LDX.B #$04
     LDY.B #$04
     LDA.B [Layer1DataPtr],Y
-    AND.B #$0F
+    AND.B #$0F                                ; If the level's tileset doesn't use a No Yoshi intro, skip over the load routine.
 CODE_05DA2C:
     CMP.L DATA_05D760,X
     BEQ CODE_05DA38
@@ -7415,28 +7902,28 @@ CODE_05DA2C:
 
 CODE_05DA38:
     LDA.W SublevelCount
-    BNE -
-    LDA.W ShowMarioStart
-    BNE -
-    LDA.W DisableNoYoshiIntro
+    BNE -                                     ; If not the first levelm
+    LDA.W ShowMarioStart                      ; Mario Start! is disabled,
+    BNE -                                     ; or the No Yoshi entrance is disabled,
+    LDA.W DisableNoYoshiIntro                 ; don't show the No Yoshi entrance.
     BNE -
     LDA.W TranslevelNo
     CMP.B #$31
     BEQ CODE_05DA5E
     CMP.B #$32
-    BEQ CODE_05DA5E
-    CMP.B #$34
-    BEQ CODE_05DA5E
+    BEQ CODE_05DA5E                           ; Five levels which will use the
+    CMP.B #$34                                ; dark-background castle intro if
+    BEQ CODE_05DA5E                           ; the level is set to tileset 1.
     CMP.B #$35
     BEQ CODE_05DA5E
     CMP.B #$40
     BNE +
 CODE_05DA5E:
     LDX.B #$05
-  + LDA.W SkipMidwayCastleIntro
+  + LDA.W SkipMidwayCastleIntro               ; Check if No Yoshi intro has been overriden by midpoint.
     BNE +
     LDA.L DATA_05D790,X
-    STA.B PlayerYPosNext
+    STA.B PlayerYPosNext                      ; Load the No Yoshi cutscene.
     LDA.B #$01
     STA.B PlayerYPosNext+1
     LDA.B #$30
@@ -7448,7 +7935,8 @@ CODE_05DA5E:
     STZ.W LevelEntranceType
     LDA.B #$EE
     STA.B SpriteDataPtr
-    LDA.B #$C3
+; Set sprite data pointer to $07C3EE (no sprites).
+    LDA.B #$C3                                ; Store tileset settings.
     STA.B SpriteDataPtr+1
     LDA.B #$07
     STA.B SpriteDataPtr+2
@@ -7486,11 +7974,11 @@ CODE_05DA5E:
     STA.W ObjectTileset
 CODE_05DAD7:
     LDA.W SublevelCount
-    BEQ +
+    BEQ +                                     ; If loading a bonus game or not the first room, skip.
     LDA.W BonusGameActivate
     BNE +
     LDA.W TranslevelNo
-    CMP.B #$24
+    CMP.B #$24                                ; If not loading the variable exit level (CI2), skip.
     BNE +
     JSR CODE_05DAEF
   + PLB
@@ -7498,12 +7986,12 @@ CODE_05DAD7:
     RTL
 
 CODE_05DAEF:
-    SEP #$30                                  ; AXY->8
+    SEP #$30                                  ; AXY->8; Routine that loads level data for the rooms of level 24 (Chocolate Island 2).
     LDY.B #$04
     LDA.B [Layer1DataPtr],Y
     AND.B #$C0
     CLC
-    ROL A
+    ROL A                                     ; Use the level's item memory setting as a pointer to which room Mario is in.
     ROL A
     ROL A
     JSL ExecutePtrLong
@@ -7546,50 +8034,68 @@ ChocIsld2Layer2:
     dw DATA_0CDF59
 
 CODE_05DB3E:
-    LDX.B #$00
+; Pointers to the different CI2 room codes.
+; Room 3 (item memory 0)
+; Room 1 (item memory 1)
+; Room 2 (item memory 2)
+; CI2 Layer 1 pointers.
+; 00 - Room 3, variant A (4 Yoshi coins)
+; 02 - Room 3, variant B (<4 Yoshi coins)
+; 04 - (unused)
+; 06 - Room 1, variant A (0-8 coins)
+; 08 - Room 1, variant B (9-20 coins)
+; 0A - Room 1, variant C (21+ coins)
+; 0C - Room 2, variant A (234- seconds)
+; 0E - Room 2, variant B (235-249 seconds)
+; 10 - Room 2, variant C (250+ seconds)
+; CI2 sprite pointers.
+; Pointer order is the same as above.
+; CI2 Layer 2 pointers. (yes, they're all the same)
+; Pointer order is the same as above.
+    LDX.B #$00                                ; Room based on Yoshi coins.
     LDA.W DragonCoinsShown
-    CMP.B #$04
+    CMP.B #$04                                ; Check number of Yoshi coins in the status bar.
     BEQ CODE_05DB49
-    LDX.B #$02
+    LDX.B #$02                                ; If not enough, load room 2.
 CODE_05DB49:
     REP #$20                                  ; A->16
-    LDA.L ChocIsld2Layer1,X
+    LDA.L ChocIsld2Layer1,X                   ; Store layer 1 data pointer.
     STA.B Layer1DataPtr
-    LDA.L ChocIsld2Sprites,X
+    LDA.L ChocIsld2Sprites,X                  ; Store sprite data pointer.
     STA.B SpriteDataPtr
-    LDA.L ChocIsld2Layer2,X
+    LDA.L ChocIsld2Layer2,X                   ; Store layer 2 data pointer.
     STA.B Layer2DataPtr
     SEP #$20                                  ; A->8
     LDA.B [SpriteDataPtr]
-    AND.B #$7F
+    AND.B #$7F                                ; Store sprite memory setting.
     STA.W SpriteMemorySetting
     LDA.B [SpriteDataPtr]
-    AND.B #$80
+    AND.B #$80                                ; Store sprite buoyancy.
     STA.W SpriteBuoyancy
     RTS
 
 CODE_05DB6E:
-    LDX.B #$0A
+    LDX.B #$0A                                ; Room based on coins.
     LDA.W GreenStarBlockCoins
-    CMP.B #$16
-    BPL +
-    LDX.B #$08
-    CMP.B #$0A
+    CMP.B #$16                                ; Check how many coins have been collected.
+    BPL +                                     ; 0-8 = room #$06
+    LDX.B #$08                                ; 9-20 = room #$08
+    CMP.B #$0A                                ; 21+ = room #$0A
     BPL +
     LDX.B #$06
   + JMP CODE_05DB49
 
 CODE_05DB82:
-    LDX.B #$0C
+    LDX.B #$0C                                ; Room based on time.
     LDA.W InGameTimerHundreds
     CMP.B #$02
     BMI CODE_05DBA6
     LDA.W InGameTimerTens
     CMP.B #$03
-    BMI CODE_05DBA6
-    BNE CODE_05DB9B
-    LDA.W InGameTimerOnes
-    CMP.B #$05
+    BMI CODE_05DBA6                           ; Check time remaining.
+    BNE CODE_05DB9B                           ; 250+ = room #$10
+    LDA.W InGameTimerOnes                     ; 235-249 = room #$0E
+    CMP.B #$05                                ; 234- = room #$0C
     BMI CODE_05DBA6
 CODE_05DB9B:
     LDX.B #$0E
@@ -7605,13 +8111,14 @@ DATA_05DBA9:
     db $00,$C8,$00
 
 CODE_05DBAC:
-    LDY.B #$00
+; Level numbers for bonus game and Yoshi wings.
+    LDY.B #$00                                ; Routine to handle warping Mario to either the bonus game or Yoshi Wings room.
     LDA.W YoshiHeavenFlag
     BEQ +
     LDY.B #$01
   + LDX.B PlayerXPosNext+1
-    LDA.B ScreenMode
-    AND.B #!ScrMode_Layer1Vert
+    LDA.B ScreenMode                          ; Change the warp destination to the appropriate room.
+    AND.B #!ScrMode_Layer1Vert                ; High byte is based on submap, as usual.
     BEQ +
     LDX.B PlayerYPosNext+1
   + LDA.W DATA_05DBA9,Y
@@ -7629,43 +8136,1621 @@ DATA_05DBC9:
     db $BC
 
 CODE_05DBF2:
-    PHB
+; Overworld life counter stripe data.
+; Not sure what these 32 bytes are. Unused?
+; They create "big numbers" like for the bonus stars.
+    PHB                                       ; Routine to draw life counter to the overworld.
     PHK
     PLB
     LDX.B #$08
-  - LDA.W DATA_05DBC9,X
+  - LDA.W DATA_05DBC9,X                       ; Write the base stripe image.
     STA.L DynamicStripeImage,X
     DEX
     BPL -
     LDX.B #$00
-    LDA.W PlayerTurnLvl
+    LDA.W PlayerTurnLvl                       ; Get which life counter to display based on current player number.
     BEQ +
     LDX.B #$01
   + LDA.W SavedPlayerLives,X
-    INC A
+    INC A                                     ; Convert life count to hex.
     JSR CODE_05DC3A
     CPX.B #$00
     BEQ +
     CLC
-    ADC.B #$22
+    ADC.B #$22                                ; If the tens digit is non-zero, add it to the stripe.
     STA.L DynamicStripeImage+6
     LDA.B #$39
     STA.L DynamicStripeImage+7
     TXA
   + CLC
     ADC.B #$22
-    STA.L DynamicStripeImage+4
+    STA.L DynamicStripeImage+4                ; Add the ones digit to the stripe.
     LDA.B #$39
     STA.L DynamicStripeImage+5
-    LDA.B #$08
+    LDA.B #$08                                ; Update the stripe index.
     STA.L DynStripeImgSize
     SEP #$20                                  ; A->8
     PLB
     RTL
 
 CODE_05DC3A:
-    LDX.B #$00
-CODE_05DC3C:
+; Hex-to-dec conversion routine. Identical one at $009045, used only for the OW life counter.
+    LDX.B #$00                                ; Returns ones digit in A, tens digit in X.
+; Empty data block, used by LM for various things.
+; $05DC46 - Unused.
+; $05DC50   | Used by LM for handling the secondary exit number from $192A.
+; Used by LM for fetching the additional bytes of the secondary exit data.
+; te 5 ($05FE00)
+; te 6 (dynamic)
+; te 7 (dynamic)
+; $05DCB0   | Used by LM for something relating to $1DEA.
+; Used by LM for handling the high bit of level numbers.
+; $05DD00   | Used by LM for handling the slippery and water flags on level load.
+; Flags are loaded from $192A, and cleared after storing
+; each to $85/$86 (leaving just the lower 6 bits).
+; $05DD1E - Unused.
+; $05DD30   | Used by LM for implementing the extra bytes of the secondary level header.
+; ($05DE00, $06DC00, $06DE00)
+; Jumped to at $05D97D.
+; Used by LM for its initial overworld level flags hijack.
+; Used by LM for the initial flags of each level ($1EA2).
+; If Lunar Magic's overworld level expansion hijack is applied, this table is scrapped.
+; It is instead moved to $03BE80, while this table appears to be left unused.
+; $05DE00 - Used by LM as an expanded secondary level header.
+; Format: LWPYX---
+; L = slippery flag
+; W = water flag
+; P = use X/Y position method 2
+; Y = bit 5 of Y position for method 2
+; X = bit 4 of X position for method 2
+; X/Y swap in vertical levels.
+; Layer 1 pointers.
+; Level 000
+; Level 001
+; Level 002
+; Level 003
+; Level 004
+; Level 005
+; Level 006
+; Level 007
+; Level 008
+; Level 009
+; Level 00A
+; Level 00B
+; Level 00C
+; Level 00D
+; Level 00E
+; Level 00F
+; Level 010
+; Level 011
+; Level 012
+; Level 013
+; Level 014
+; Level 015
+; Level 016
+; Level 017
+; Level 018
+; Level 019
+; Level 01A
+; Level 01B
+; Level 01C
+; Level 01D
+; Level 01E
+; Level 01F
+; Level 020
+; Level 021
+; Level 022
+; Level 023
+; Level 024
+; Level 025
+; Level 026
+; Level 027
+; Level 028
+; Level 029
+; Level 02A
+; Level 02B
+; Level 02C
+; Level 02D
+; Level 02E
+; Level 02F
+; Level 030
+; Level 031
+; Level 032
+; Level 033
+; Level 034
+; Level 035
+; Level 036
+; Level 037
+; Level 038
+; Level 039
+; Level 03A
+; Level 03B
+; Level 03C
+; Level 03D
+; Level 03E
+; Level 03F
+; Level 040
+; Level 041
+; Level 042
+; Level 043
+; Level 044
+; Level 045
+; Level 046
+; Level 047
+; Level 048
+; Level 049
+; Level 04A
+; Level 04B
+; Level 04C
+; Level 04D
+; Level 04E
+; Level 04F
+; Level 050
+; Level 051
+; Level 052
+; Level 053
+; Level 054
+; Level 055
+; Level 056
+; Level 057
+; Level 058
+; Level 059
+; Level 05A
+; Level 05B
+; Level 05C
+; Level 05D
+; Level 05E
+; Level 05F
+; Level 060
+; Level 061
+; Level 062
+; Level 063
+; Level 064
+; Level 065
+; Level 066
+; Level 067
+; Level 068
+; Level 069
+; Level 06A
+; Level 06B
+; Level 06C
+; Level 06D
+; Level 06E
+; Level 06F
+; Level 070
+; Level 071
+; Level 072
+; Level 073
+; Level 074
+; Level 075
+; Level 076
+; Level 077
+; Level 078
+; Level 079
+; Level 07A
+; Level 07B
+; Level 07C
+; Level 07D
+; Level 07E
+; Level 07F
+; Level 080
+; Level 081
+; Level 082
+; Level 083
+; Level 084
+; Level 085
+; Level 086
+; Level 087
+; Level 088
+; Level 089
+; Level 08A
+; Level 08B
+; Level 08C
+; Level 08D
+; Level 08E
+; Level 08F
+; Level 090
+; Level 091
+; Level 092
+; Level 093
+; Level 094
+; Level 095
+; Level 096
+; Level 097
+; Level 098
+; Level 099
+; Level 09A
+; Level 09B
+; Level 09C
+; Level 09D
+; Level 09E
+; Level 09F
+; Level 0A0
+; Level 0A1
+; Level 0A2
+; Level 0A3
+; Level 0A4
+; Level 0A5
+; Level 0A6
+; Level 0A7
+; Level 0A8
+; Level 0A9
+; Level 0AA
+; Level 0AB
+; Level 0AC
+; Level 0AD
+; Level 0AE
+; Level 0AF
+; Level 0B0
+; Level 0B1
+; Level 0B2
+; Level 0B3
+; Level 0B4
+; Level 0B5
+; Level 0B6
+; Level 0B7
+; Level 0B8
+; Level 0B9
+; Level 0BA
+; Level 0BB
+; Level 0BC
+; Level 0BD
+; Level 0BE
+; Level 0BF
+; Level 0C0
+; Level 0C1
+; Level 0C2
+; Level 0C3
+; Level 0C4
+; Level 0C5
+; Level 0C6
+; Level 0C7
+; Level 0C8
+; Level 0C9
+; Level 0CA
+; Level 0CB
+; Level 0CC (Roy)
+; Level 0CD
+; Level 0CE
+; Level 0CF
+; Level 0D0
+; Level 0D1
+; Level 0D2
+; Level 0D3
+; Level 0D4
+; Level 0D5 (Reznor)
+; Level 0D6
+; Level 0D7
+; Level 0D8
+; Level 0D9 (Ludwig)
+; Level 0DA
+; Level 0DB
+; Level 0DC
+; Level 0DD
+; Level 0DE
+; Level 0DF (Reznor)
+; Level 0E0
+; Level 0E1
+; Level 0E2 (Reznor)
+; Level 0E3
+; Level 0E4
+; Level 0E5 (Morton)
+; Level 0E6
+; Level 0E7
+; Level 0E8
+; Level 0E9
+; Level 0EA
+; Level 0EB
+; Level 0EC
+; Level 0ED
+; Level 0EE
+; Level 0EF
+; Level 0F0
+; Level 0F1
+; Level 0F2
+; Level 0F3
+; Level 0F4
+; Level 0F5
+; Level 0F6
+; Level 0F7
+; Level 0F8
+; Level 0F9
+; Level 0FA
+; Level 0FB
+; Level 0FC
+; Level 0FD
+; Level 0FE
+; Level 0FF
+; Level 100
+; Level 101
+; Level 102
+; Level 103
+; Level 104
+; Level 105
+; Level 106
+; Level 107
+; Level 108
+; Level 109
+; Level 10A
+; Level 10B
+; Level 10C
+; Level 10D
+; Level 10E
+; Level 10F
+; Level 110
+; Level 111
+; Level 112
+; Level 113
+; Level 114
+; Level 115
+; Level 116
+; Level 117
+; Level 118
+; Level 119
+; Level 11A
+; Level 11B
+; Level 11C
+; Level 11D
+; Level 11E
+; Level 11F
+; Level 120
+; Level 121
+; Level 122
+; Level 123
+; Level 124
+; Level 125
+; Level 126
+; Level 127
+; Level 128
+; Level 129
+; Level 12A
+; Level 12B
+; Level 12C
+; Level 12D
+; Level 12E
+; Level 12F
+; Level 130
+; Level 131
+; Level 132
+; Level 133
+; Level 134
+; Level 135
+; Level 136
+; Level 137
+; Level 138
+; Level 139
+; Level 13A
+; Level 13B
+; Level 13C
+; Level 13D
+; Level 13E
+; Level 13F
+; Level 140
+; Level 141
+; Level 142
+; Level 143
+; Level 144
+; Level 145
+; Level 146
+; Level 147
+; Level 148
+; Level 149
+; Level 14A
+; Level 14B
+; Level 14C
+; Level 14D
+; Level 14E
+; Level 14F
+; Level 150
+; Level 151
+; Level 152
+; Level 153
+; Level 154
+; Level 155
+; Level 156
+; Level 157
+; Level 158
+; Level 159
+; Level 15A
+; Level 15B
+; Level 15C
+; Level 15D
+; Level 15E
+; Level 15F
+; Level 160
+; Level 161
+; Level 162
+; Level 163
+; Level 164
+; Level 165
+; Level 166
+; Level 167
+; Level 168
+; Level 169
+; Level 16A
+; Level 16B
+; Level 16C
+; Level 16D
+; Level 16E
+; Level 16F
+; Level 170
+; Level 171
+; Level 172
+; Level 173
+; Level 174
+; Level 175
+; Level 176
+; Level 177
+; Level 178
+; Level 179
+; Level 17A
+; Level 17B
+; Level 17C
+; Level 17D
+; Level 17E
+; Level 17F
+; Level 180
+; Level 181
+; Level 182
+; Level 183
+; Level 184
+; Level 185
+; Level 186
+; Level 187
+; Level 188
+; Level 189
+; Level 18A
+; Level 18B
+; Level 18C
+; Level 18D
+; Level 18E
+; Level 18F
+; Level 190
+; Level 191
+; Level 192
+; Level 193
+; Level 194
+; Level 195
+; Level 196
+; Level 197
+; Level 198
+; Level 199
+; Level 19A
+; Level 19B
+; Level 19C
+; Level 19D
+; Level 19E
+; Level 19F
+; Level 1A0
+; Level 1A1
+; Level 1A2
+; Level 1A3
+; Level 1A4
+; Level 1A5
+; Level 1A6
+; Level 1A7
+; Level 1A8
+; Level 1A9
+; Level 1AA
+; Level 1AB
+; Level 1AC
+; Level 1AD
+; Level 1AE
+; Level 1AF
+; Level 1B0
+; Level 1B1
+; Level 1B2
+; Level 1B3
+; Level 1B4
+; Level 1B5
+; Level 1B6
+; Level 1B7
+; Level 1B8
+; Level 1B9
+; Level 1BA
+; Level 1BB
+; Level 1BC
+; Level 1BD
+; Level 1BE
+; Level 1BF
+; Level 1C0
+; Level 1C1
+; Level 1C2
+; Level 1C3
+; Level 1C4
+; Level 1C5
+; Level 1C6
+; Level 1C7 (Bowser)
+; Level 1C8
+; Level 1C9
+; Level 1CA
+; Level 1CB
+; Level 1CC
+; Level 1CD
+; Level 1CE
+; Level 1CF
+; Level 1D0
+; Level 1D1
+; Level 1D2
+; Level 1D3
+; Level 1D4
+; Level 1D5
+; Level 1D6
+; Level 1D7
+; Level 1D8
+; Level 1D9
+; Level 1DA
+; Level 1DB
+; Level 1DC
+; Level 1DD
+; Level 1DE (Reznor)
+; Level 1DF
+; Level 1E0
+; Level 1E1
+; Level 1E2
+; Level 1E3
+; Level 1E4
+; Level 1E5
+; Level 1E6
+; Level 1E7
+; Level 1E8
+; Level 1E9
+; Level 1EA
+; Level 1EB
+; Level 1EC
+; Level 1ED
+; Level 1EE
+; Level 1EF
+; Level 1F0
+; Level 1F1
+; Level 1F2
+; Level 1F3
+; Level 1F4
+; Level 1F5
+; Level 1F6
+; Level 1F7
+; Level 1F8
+; Level 1F9
+; Level 1FA
+; Level 1FB
+; Level 1FC
+; Level 1FD
+; Level 1FE
+; Level 1FF
+; Layer 2 pointers. All long bytes are actual Layer 2 levels.
+; Level 000
+; Level 001
+; Level 002
+; Level 003
+; Level 004
+; Level 005
+; Level 006
+; Level 007
+; Level 008
+; Level 009
+; Level 00A
+; Level 00B
+; Level 00C
+; Level 00D
+; Level 00E
+; Level 00F
+; Level 010
+; Level 011
+; Level 012
+; Level 013
+; Level 014
+; Level 015
+; Level 016
+; Level 017
+; Level 018
+; Level 019
+; Level 01A
+; Level 01B
+; Level 01C
+; Level 01D
+; Level 01E
+; Level 01F
+; Level 020
+; Level 021
+; Level 022
+; Level 023
+; Level 024
+; Level 025
+; Level 026
+; Level 027
+; Level 028
+; Level 029
+; Level 02A
+; Level 02B
+; Level 02C
+; Level 02D
+; Level 02E
+; Level 02F
+; Level 030
+; Level 031
+; Level 032
+; Level 033
+; Level 034
+; Level 035
+; Level 036
+; Level 037
+; Level 038
+; Level 039
+; Level 03A
+; Level 03B
+; Level 03C
+; Level 03D
+; Level 03E
+; Level 03F
+; Level 040
+; Level 041
+; Level 042
+; Level 043
+; Level 044
+; Level 045
+; Level 046
+; Level 047
+; Level 048
+; Level 049
+; Level 04A
+; Level 04B
+; Level 04C
+; Level 04D
+; Level 04E
+; Level 04F
+; Level 050
+; Level 051
+; Level 052
+; Level 053
+; Level 054
+; Level 055
+; Level 056
+; Level 057
+; Level 058
+; Level 059
+; Level 05A
+; Level 05B
+; Level 05C
+; Level 05D
+; Level 05E
+; Level 05F
+; Level 060
+; Level 061
+; Level 062
+; Level 063
+; Level 064
+; Level 065
+; Level 066
+; Level 067
+; Level 068
+; Level 069
+; Level 06A
+; Level 06B
+; Level 06C
+; Level 06D
+; Level 06E
+; Level 06F
+; Level 070
+; Level 071
+; Level 072
+; Level 073
+; Level 074
+; Level 075
+; Level 076
+; Level 077
+; Level 078
+; Level 079
+; Level 07A
+; Level 07B
+; Level 07C
+; Level 07D
+; Level 07E
+; Level 07F
+; Level 080
+; Level 081
+; Level 082
+; Level 083
+; Level 084
+; Level 085
+; Level 086
+; Level 087
+; Level 088
+; Level 089
+; Level 08A
+; Level 08B
+; Level 08C
+; Level 08D
+; Level 08E
+; Level 08F
+; Level 090
+; Level 091
+; Level 092
+; Level 093
+; Level 094
+; Level 095
+; Level 096
+; Level 097
+; Level 098
+; Level 099
+; Level 09A
+; Level 09B
+; Level 09C
+; Level 09D
+; Level 09E
+; Level 09F
+; Level 0A0
+; Level 0A1
+; Level 0A2
+; Level 0A3
+; Level 0A4
+; Level 0A5
+; Level 0A6
+; Level 0A7
+; Level 0A8
+; Level 0A9
+; Level 0AA
+; Level 0AB
+; Level 0AC
+; Level 0AD
+; Level 0AE
+; Level 0AF
+; Level 0B0
+; Level 0B1
+; Level 0B2
+; Level 0B3
+; Level 0B4
+; Level 0B5
+; Level 0B6
+; Level 0B7
+; Level 0B8
+; Level 0B9
+; Level 0BA
+; Level 0BB
+; Level 0BC
+; Level 0BD
+; Level 0BE
+; Level 0BF
+; Level 0C0
+; Level 0C1
+; Level 0C2
+; Level 0C3
+; Level 0C4
+; Level 0C5
+; Level 0C6
+; Level 0C7
+; Level 0C8
+; Level 0C9
+; Level 0CA
+; Level 0CB
+; Level 0CC
+; Level 0CD
+; Level 0CE
+; Level 0CF
+; Level 0D0
+; Level 0D1
+; Level 0D2
+; Level 0D3
+; Level 0D4
+; Level 0D5
+; Level 0D6
+; Level 0D7
+; Level 0D8
+; Level 0D9
+; Level 0DA
+; Level 0DB
+; Level 0DC
+; Level 0DD
+; Level 0DE
+; Level 0DF
+; Level 0E0
+; Level 0E1
+; Level 0E2
+; Level 0E3
+; Level 0E4
+; Level 0E5
+; Level 0E6
+; Level 0E7
+; Level 0E8
+; Level 0E9
+; Level 0EA
+; Level 0EB
+; Level 0EC
+; Level 0ED
+; Level 0EE
+; Level 0EF
+; Level 0F0
+; Level 0F1
+; Level 0F2
+; Level 0F3
+; Level 0F4
+; Level 0F5
+; Level 0F6
+; Level 0F7
+; Level 0F8
+; Level 0F9
+; Level 0FA
+; Level 0FB
+; Level 0FC
+; Level 0FD
+; Level 0FE
+; Level 0FF
+; Level 100
+; Level 101
+; Level 102
+; Level 103
+; Level 104
+; Level 105
+; Level 106
+; Level 107
+; Level 108
+; Level 109
+; Level 10A
+; Level 10B
+; Level 10C
+; Level 10D
+; Level 10E
+; Level 10F
+; Level 110
+; Level 111
+; Level 112
+; Level 113
+; Level 114
+; Level 115
+; Level 116
+; Level 117
+; Level 118
+; Level 119
+; Level 11A
+; Level 11B
+; Level 11C
+; Level 11D
+; Level 11E
+; Level 11F
+; Level 120
+; Level 121
+; Level 122
+; Level 123
+; Level 124
+; Level 125
+; Level 126
+; Level 127
+; Level 128
+; Level 129
+; Level 12A
+; Level 12B
+; Level 12C
+; Level 12D
+; Level 12E
+; Level 12F
+; Level 130
+; Level 131
+; Level 132
+; Level 133
+; Level 134
+; Level 135
+; Level 136
+; Level 137
+; Level 138
+; Level 139
+; Level 13A
+; Level 13B
+; Level 13C
+; Level 13D
+; Level 13E
+; Level 13F
+; Level 140
+; Level 141
+; Level 142
+; Level 143
+; Level 144
+; Level 145
+; Level 146
+; Level 147
+; Level 148
+; Level 149
+; Level 14A
+; Level 14B
+; Level 14C
+; Level 14D
+; Level 14E
+; Level 14F
+; Level 150
+; Level 151
+; Level 152
+; Level 153
+; Level 154
+; Level 155
+; Level 156
+; Level 157
+; Level 158
+; Level 159
+; Level 15A
+; Level 15B
+; Level 15C
+; Level 15D
+; Level 15E
+; Level 15F
+; Level 160
+; Level 161
+; Level 162
+; Level 163
+; Level 164
+; Level 165
+; Level 166
+; Level 167
+; Level 168
+; Level 169
+; Level 16A
+; Level 16B
+; Level 16C
+; Level 16D
+; Level 16E
+; Level 16F
+; Level 170
+; Level 171
+; Level 172
+; Level 173
+; Level 174
+; Level 175
+; Level 176
+; Level 177
+; Level 178
+; Level 179
+; Level 17A
+; Level 17B
+; Level 17C
+; Level 17D
+; Level 17E
+; Level 17F
+; Level 180
+; Level 181
+; Level 182
+; Level 183
+; Level 184
+; Level 185
+; Level 186
+; Level 187
+; Level 188
+; Level 189
+; Level 18A
+; Level 18B
+; Level 18C
+; Level 18D
+; Level 18E
+; Level 18F
+; Level 190
+; Level 191
+; Level 192
+; Level 193
+; Level 194
+; Level 195
+; Level 196
+; Level 197
+; Level 198
+; Level 199
+; Level 19A
+; Level 19B
+; Level 19C
+; Level 19D
+; Level 19E
+; Level 19F
+; Level 1A0
+; Level 1A1
+; Level 1A2
+; Level 1A3
+; Level 1A4
+; Level 1A5
+; Level 1A6
+; Level 1A7
+; Level 1A8
+; Level 1A9
+; Level 1AA
+; Level 1AB
+; Level 1AC
+; Level 1AD
+; Level 1AE
+; Level 1AF
+; Level 1B0
+; Level 1B1
+; Level 1B2
+; Level 1B3
+; Level 1B4
+; Level 1B5
+; Level 1B6
+; Level 1B7
+; Level 1B8
+; Level 1B9
+; Level 1BA
+; Level 1BB
+; Level 1BC
+; Level 1BD
+; Level 1BE
+; Level 1BF
+; Level 1C0
+; Level 1C1
+; Level 1C2
+; Level 1C3
+; Level 1C4
+; Level 1C5
+; Level 1C6
+; Level 1C7
+; Level 1C8
+; Level 1C9
+; Level 1CA
+; Level 1CB
+; Level 1CC
+; Level 1CD
+; Level 1CE
+; Level 1CF
+; Level 1D0
+; Level 1D1
+; Level 1D2
+; Level 1D3
+; Level 1D4
+; Level 1D5
+; Level 1D6
+; Level 1D7
+; Level 1D8
+; Level 1D9
+; Level 1DA
+; Level 1DB
+; Level 1DC
+; Level 1DD
+; Level 1DE
+; Level 1DF
+; Level 1E0
+; Level 1E1
+; Level 1E2
+; Level 1E3
+; Level 1E4
+; Level 1E5
+; Level 1E6
+; Level 1E7
+; Level 1E8
+; Level 1E9
+; Level 1EA
+; Level 1EB
+; Level 1EC
+; Level 1ED
+; Level 1EE
+; Level 1EF
+; Level 1F0
+; Level 1F1
+; Level 1F2
+; Level 1F3
+; Level 1F4
+; Level 1F5
+; Level 1F6
+; Level 1F7
+; Level 1F8
+; Level 1F9
+; Level 1FA
+; Level 1FB
+; Level 1FC
+; Level 1FD
+; Level 1FE
+; Level 1FF
+; Sprite data pointers.
+; Level 000
+; Level 001
+; Level 002
+; Level 003
+; Level 004
+; Level 005
+; Level 006
+; Level 007
+; Level 008
+; Level 009
+; Level 00A
+; Level 00B
+; Level 00C
+; Level 00D
+; Level 00E
+; Level 00F
+; Level 010
+; Level 011
+; Level 012
+; Level 013
+; Level 014
+; Level 015
+; Level 016
+; Level 017
+; Level 018
+; Level 019
+; Level 01A
+; Level 01B
+; Level 01C
+; Level 01D
+; Level 01E
+; Level 01F
+; Level 020
+; Level 021
+; Level 022
+; Level 023
+; Level 024
+; Level 025
+; Level 026
+; Level 027
+; Level 028
+; Level 029
+; Level 02A
+; Level 02B
+; Level 02C
+; Level 02D
+; Level 02E
+; Level 02F
+; Level 030
+; Level 031
+; Level 032
+; Level 033
+; Level 034
+; Level 035
+; Level 036
+; Level 037
+; Level 038
+; Level 039
+; Level 03A
+; Level 03B
+; Level 03C
+; Level 03D
+; Level 03E
+; Level 03F
+; Level 040
+; Level 041
+; Level 042
+; Level 043
+; Level 044
+; Level 045
+; Level 046
+; Level 047
+; Level 048
+; Level 049
+; Level 04A
+; Level 04B
+; Level 04C
+; Level 04D
+; Level 04E
+; Level 04F
+; Level 050
+; Level 051
+; Level 052
+; Level 053
+; Level 054
+; Level 055
+; Level 056
+; Level 057
+; Level 058
+; Level 059
+; Level 05A
+; Level 05B
+; Level 05C
+; Level 05D
+; Level 05E
+; Level 05F
+; Level 060
+; Level 061
+; Level 062
+; Level 063
+; Level 064
+; Level 065
+; Level 066
+; Level 067
+; Level 068
+; Level 069
+; Level 06A
+; Level 06B
+; Level 06C
+; Level 06D
+; Level 06E
+; Level 06F
+; Level 070
+; Level 071
+; Level 072
+; Level 073
+; Level 074
+; Level 075
+; Level 076
+; Level 077
+; Level 078
+; Level 079
+; Level 07A
+; Level 07B
+; Level 07C
+; Level 07D
+; Level 07E
+; Level 07F
+; Level 080
+; Level 081
+; Level 082
+; Level 083
+; Level 084
+; Level 085
+; Level 086
+; Level 087
+; Level 088
+; Level 089
+; Level 08A
+; Level 08B
+; Level 08C
+; Level 08D
+; Level 08E
+; Level 08F
+; Level 090
+; Level 091
+; Level 092
+; Level 093
+; Level 094
+; Level 095
+; Level 096
+; Level 097
+; Level 098
+; Level 099
+; Level 09A
+; Level 09B
+; Level 09C
+; Level 09D
+; Level 09E
+; Level 09F
+; Level 0A0
+; Level 0A1
+; Level 0A2
+; Level 0A3
+; Level 0A4
+; Level 0A5
+; Level 0A6
+; Level 0A7
+; Level 0A8
+; Level 0A9
+; Level 0AA
+; Level 0AB
+; Level 0AC
+; Level 0AD
+; Level 0AE
+; Level 0AF
+; Level 0B0
+; Level 0B1
+; Level 0B2
+; Level 0B3
+; Level 0B4
+; Level 0B5
+; Level 0B6
+; Level 0B7
+; Level 0B8
+; Level 0B9
+; Level 0BA
+; Level 0BB
+; Level 0BC
+; Level 0BD
+; Level 0BE
+; Level 0BF
+; Level 0C0
+; Level 0C1
+; Level 0C2
+; Level 0C3
+; Level 0C4
+; Level 0C5
+; Level 0C6
+; Level 0C7
+; Level 0C8
+; Level 0C9
+; Level 0CA
+; Level 0CB
+; Level 0CC
+; Level 0CD
+; Level 0CE
+; Level 0CF
+; Level 0D0
+; Level 0D1
+; Level 0D2
+; Level 0D3
+; Level 0D4
+; Level 0D5
+; Level 0D6
+; Level 0D7
+; Level 0D8
+; Level 0D9
+; Level 0DA
+; Level 0DB
+; Level 0DC
+; Level 0DD
+; Level 0DE
+; Level 0DF
+; Level 0E0
+; Level 0E1
+; Level 0E2
+; Level 0E3
+; Level 0E4
+; Level 0E5
+; Level 0E6
+; Level 0E7
+; Level 0E8
+; Level 0E9
+; Level 0EA
+; Level 0EB
+; Level 0EC
+; Level 0ED
+; Level 0EE
+; Level 0EF
+; Level 0F0
+; Level 0F1
+; Level 0F2
+; Level 0F3
+; Level 0F4
+; Level 0F5
+; Level 0F6
+; Level 0F7
+; Level 0F8
+; Level 0F9
+; Level 0FA
+; Level 0FB
+; Level 0FC
+; Level 0FD
+; Level 0FE
+; Level 0FF
+; Level 100
+; Level 101
+; Level 102
+; Level 103
+; Level 104
+; Level 105
+; Level 106
+; Level 107
+; Level 108
+; Level 109
+; Level 10A
+; Level 10B
+; Level 10C
+; Level 10D
+; Level 10E
+; Level 10F
+; Level 110
+; Level 111
+; Level 112
+; Level 113
+; Level 114
+; Level 115
+; Level 116
+; Level 117
+; Level 118
+; Level 119
+; Level 11A
+; Level 11B
+; Level 11C
+; Level 11D
+; Level 11E
+; Level 11F
+; Level 120
+; Level 121
+; Level 122
+; Level 123
+; Level 124
+; Level 125
+; Level 126
+; Level 127
+; Level 128
+; Level 129
+; Level 12A
+; Level 12B
+; Level 12C
+; Level 12D
+; Level 12E
+; Level 12F
+; Level 130
+; Level 131
+; Level 132
+; Level 133
+; Level 134
+; Level 135
+; Level 136
+; Level 137
+; Level 138
+; Level 139
+; Level 13A
+; Level 13B
+; Level 13C
+; Level 13D
+; Level 13E
+; Level 13F
+; Level 140
+; Level 141
+; Level 142
+; Level 143
+; Level 144
+; Level 145
+; Level 146
+; Level 147
+; Level 148
+; Level 149
+; Level 14A
+; Level 14B
+; Level 14C
+; Level 14D
+; Level 14E
+; Level 14F
+; Level 150
+; Level 151
+; Level 152
+; Level 153
+; Level 154
+; Level 155
+; Level 156
+; Level 157
+; Level 158
+; Level 159
+; Level 15A
+; Level 15B
+; Level 15C
+; Level 15D
+; Level 15E
+; Level 15F
+; Level 160
+; Level 161
+; Level 162
+; Level 163
+; Level 164
+; Level 165
+; Level 166
+; Level 167
+; Level 168
+; Level 169
+; Level 16A
+; Level 16B
+; Level 16C
+; Level 16D
+; Level 16E
+; Level 16F
+; Level 170
+; Level 171
+; Level 172
+; Level 173
+; Level 174
+; Level 175
+; Level 176
+; Level 177
+; Level 178
+; Level 179
+; Level 17A
+; Level 17B
+; Level 17C
+; Level 17D
+; Level 17E
+; Level 17F
+; Level 180
+; Level 181
+; Level 182
+; Level 183
+; Level 184
+; Level 185
+; Level 186
+; Level 187
+; Level 188
+; Level 189
+; Level 18A
+; Level 18B
+; Level 18C
+; Level 18D
+; Level 18E
+; Level 18F
+; Level 190
+; Level 191
+; Level 192
+; Level 193
+; Level 194
+; Level 195
+; Level 196
+; Level 197
+; Level 198
+; Level 199
+; Level 19A
+; Level 19B
+; Level 19C
+; Level 19D
+; Level 19E
+; Level 19F
+; Level 1A0
+; Level 1A1
+; Level 1A2
+; Level 1A3
+; Level 1A4
+; Level 1A5
+; Level 1A6
+; Level 1A7
+; Level 1A8
+; Level 1A9
+; Level 1AA
+; Level 1AB
+; Level 1AC
+; Level 1AD
+; Level 1AE
+; Level 1AF
+; Level 1B0
+; Level 1B1
+; Level 1B2
+; Level 1B3
+; Level 1B4
+; Level 1B5
+; Level 1B6
+; Level 1B7
+; Level 1B8
+; Level 1B9
+; Level 1BA
+; Level 1BB
+; Level 1BC
+; Level 1BD
+; Level 1BE
+; Level 1BF
+; Level 1C0
+; Level 1C1
+; Level 1C2
+; Level 1C3
+; Level 1C4
+; Level 1C5
+; Level 1C6
+; Level 1C7
+; Level 1C8
+; Level 1C9
+; Level 1CA
+; Level 1CB
+; Level 1CC
+; Level 1CD
+; Level 1CE
+; Level 1CF
+; Level 1D0
+; Level 1D1
+; Level 1D2
+; Level 1D3
+; Level 1D4
+; Level 1D5
+; Level 1D6
+; Level 1D7
+; Level 1D8
+; Level 1D9
+; Level 1DA
+; Level 1DB
+; Level 1DC
+; Level 1DD
+; Level 1DE
+; Level 1DF
+; Level 1E0
+; Level 1E1
+; Level 1E2
+; Level 1E3
+; Level 1E4
+; Level 1E5
+; Level 1E6
+; Level 1E7
+; Level 1E8
+; Level 1E9
+; Level 1EA
+; Level 1EB
+; Level 1EC
+; Level 1ED
+; Level 1EE
+; Level 1EF
+; Level 1F0
+; Level 1F1
+; Level 1F2
+; Level 1F3
+; Level 1F4
+; Level 1F5
+; Level 1F6
+; Level 1F7
+; Level 1F8
+; Level 1F9
+; Level 1FA
+; Level 1FB
+; Level 1FC
+; Level 1FD
+; Level 1FE
+; Level 1FF
+; Secondary level header first byte. SSSSYYYY
+; Secondary level header second byte. 33AAAXXX.
+; Secondary level header third byte. MMMMFFBB.
+; Secondary level header fourth byte. IUVEEEEE
+; Secondary exit data first byte. Low byte of destination.
+; Secondary exit data second byte. BBFFYYYY; BG, FG, Y positions.
+; Secondary exit data third byte. XXXSSSSS; X position, screen number.
+CODE_05DC3C:                                  ; Secondary exit data fourth byte. S---LAAA; slippery, high level byte, mario action.
     CMP.B #$0A
     BCC Return05DC45
     SBC.B #$0A

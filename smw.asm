@@ -2,8 +2,8 @@
 ; Super Mario World Disassembly X
 ;================================
 
+asar 1.90
 lorom
-math pri on
 incsrc "constants.asm"
 
 incsrc "macros.asm"

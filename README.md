@@ -3,7 +3,7 @@
 This disassembly will focus on code readability and the ability to assemble any of the four console releases of the original game (J, U, E 1.0, & E 1.1). It also assembles the Super System arcade version of the game.
 
 # How to Assemble
-You'll need the assembler, Asar v1.61 (you can find it [here](https://www.smwcentral.net/?p=section&s=tools)).
+You'll need the assembler, Asar v1.9 (you can find it [here](https://github.com/RPGHacker/asar)).
 1. Click the big green "Clone or download" button and select zip file.
 2. Unzip that somewhere, and stick asar.exe in the folder with PATCH.bat.
 3. Open smw.asm and change the variable !_VER to correspond to the version of the game you want to assemble.
@@ -48,6 +48,4 @@ I'm focusing on readability so its important that everything is nice and consist
 
 # Bugs
 The assembler Asar is an open source project still under development. Some bugs exist which require the disassembly to go against formatting protocol in order to assembly correctly. Here is a list of things I've run into to remind myself to go back and fix if the bugs are ever fixed:
-1. Turning `check bankcross off` will cause the pc to always act as FastROM. This causes labels to have $80 added to their bank.
-   - All references to labels in a non-bankcross-checked area will have the high bit set. See `GFXFilesBank` label in bank_00.asm.
-     - Temp fix: Mask away the high bit of the bank by using `&$7F`.
+1. None at the moment!
