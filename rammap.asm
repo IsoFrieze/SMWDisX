@@ -1502,7 +1502,15 @@ CameraScrollPlayerDir: skip 1
 CameraProperMove: skip 1
 CameraScrollTimer: skip 1
 NoteBlockActive: skip 1
+
+; === $7E1403 ===
+; 1 byte
+; which layer 3 tide setting is enabled
 Layer3TideSetting: skip 1
+; Valid values
+!Tide_UpAndDown = 1
+!Tide_Stationary = 2
+
 ScreenScrollAtWill: skip 1
 DrawYoshiInPipe: skip 1
 BouncingOnBoard: skip 1
