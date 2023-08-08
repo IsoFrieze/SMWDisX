@@ -2854,7 +2854,7 @@ CODE_02960D:
     STA.W Map16TileNumber
     INC.B _7
     LDA.B [_5]
-    JSL CODE_00F545
+    JSL RemapBlocks
     CMP.B #$00
     BEQ +
     LDA.B _F
@@ -5103,7 +5103,7 @@ CODE_02A6DB:
     STA.W Map16TileNumber
     INC.B _7
     LDA.B [_5]
-    JSL CODE_00F545
+    JSL RemapBlocks
     CMP.B #$00
     BEQ CODE_02A729
     LDA.W Map16TileNumber
