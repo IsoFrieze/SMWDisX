@@ -5972,34 +5972,41 @@ Return02AD4B:
     RTL
 
 
+; Tiles used for the score sprites (left half). First byte unused.
 PointTile1:
     db $00,$83,$83,$83,$83,$44,$54,$46
     db $47,$44,$54,$46,$47,$56,$29,$39
     db $38,$5E,$5E,$5E,$5E,$5E
 
+; Tiles used for the score sprites (right half). First byte unused.
 PointTile2:
     db $00,$44,$54,$46,$47,$45,$45,$45
     db $45,$55,$55,$55,$55,$57,$57,$57
     db $57,$4E,$44,$4F,$54,$5D
 
+; Low byte of the score each sprite gives (divided by 10).
 PointMultiplierLo:
     db $00,$01,$02,$04,$08,$0A,$14,$28
     db $50,$64,$C8,$90,$20,$00,$00,$00
     db $00
 
+; High byte of the score each sprite gives (divided by 10).
 PointMultiplierHi:
     db $00,$00,$00,$00,$00,$00,$00,$00
     db $00,$00,$00,$01,$03,$00,$00,$00
     db $00
 
+; Speeds for the score sprite to travel (aka number of frames to wait before moving 1 pixel)
+; Index is the high byte of the sprite's frame counter.
 PointSpeedY:
     db $03,$01,$00,$00
 
+; OAM indices for the six score sprites, except in Reznor/Morton/Roy's rooms.
 DATA_02AD9E:
     db $B0,$B8,$C0,$C8,$D0,$D8
 
 ScoreSprGfx:
-    BIT.W IRQNMICommand
+    BIT.W IRQNMICommand                       ; Routine to handle score sprites (including lives and coins).
     BVC CODE_02ADB8
     LDA.W IRQNMICommand
     CMP.B #$C1
@@ -6028,15 +6035,20 @@ CODE_02ADC9:
     STZ.W ScoreSpriteNumber,X
     RTS
 
-DATA_02ADD9:
-    db $01,$02,$03,$05,$05,$0A,$0F,$14
-    db $19
+; Number of lives to give (1up, 2-up, 3-up/moon, 5-up)
+ScoreSpriteLives:
+    db 1,2,3,5
+    
+; Number of coins to give (unused; 5, 10, 15, 20, and 25 coin sprites)
+ScoreSpriteCoins:
+    db 5,10,15,20,25
 
-DATA_02ADE2:
+; Attributes of 2-up and 3-up sprites. The unused 5-up/coin sprites continue past this.
+ScoreSpriteLifeAttributes:
     db $04,$06
 
-  + DEC.W ScoreSpriteTimer,X
-    CMP.B #$2A
+  + DEC.W ScoreSpriteTimer,X                  ; Main score sprite routine.
+    CMP.B #$2A                                ; Handle timer, and branch down if not time to actually give points yet.
     BNE CODE_02AE38
     LDY.W ScoreSpriteNumber,X
     CPY.B #$0D
@@ -6045,14 +6057,14 @@ DATA_02ADE2:
     BCC CODE_02AE03
     PHX
     PHY
-    LDA.W DATA_02ADE2-$16,Y                   ; Hey, this label might be wrong!
+    LDA.W ScoreSpriteCoins-17,Y               ; Add the coins to Mario's coin count.
     JSL ADDR_05B329
     PLY
     PLX
     BRA CODE_02AE12
 
 CODE_02AE03:
-    LDA.W DATA_02ADE2-$16,Y                   ; Hey, this label might be wrong!
+    LDA.W ScoreSpriteLives-13,Y               ; Giving lives.
     CLC
     ADC.W GivePlayerLives
     STA.W GivePlayerLives
@@ -6156,8 +6168,8 @@ CODE_02AE5B:
     CPY.B #$0E
     LDA.B #$08
     BCC +
-    LDA.W DATA_02ADD9-5,Y                     ; Hey, this label might be wrong!
-  + PLY
+    LDA.W ScoreSpriteLifeAttributes-14,Y      ; Hey, this label might be wrong!; Store the YXPPCCT.
+  + PLY                                       ; 2ups and 3ups get special palettes (and 5up+ get glitchy values).
     ORA.B #$30
     STA.W OAMTileAttr,Y
     STA.W OAMTileAttr+4,Y

@@ -1,3 +1,6 @@
+; everything relating to building levels
+incsrc "lvl/level_building_macros.asm"
+
 ; human-readable function names for version-exclusive code/data
 function ver_is_japanese(v) = equal(v,!__VER_J)
 function ver_is_english(v) = notequal(v,!__VER_J)
