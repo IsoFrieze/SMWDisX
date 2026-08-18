@@ -1,0 +1,8 @@
+%L_Header(0, $01, 0, $00, 0, 2, 2, 2, 2, 5, 1, 0, 12)
+%L_Pipe($001, $007, "vertical", "bottom", "closed", 14)
+%L_Pipe($00D, $007, "vertical", "bottom", "open", 14)
+%L_Ledge($000, $018, 16, 3)
+%L_CloudFringe($000, $017, "top", "long", "transparent", 16)
+%L_ItemPrizeBlock($008, $014, "yoshi")
+%L_ScreenExit($00, $C9, 1)
+%L_End()

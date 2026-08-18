@@ -1,0 +1,8 @@
+%L_Header(6, $01, 3, $0F, 0, 4, 9, 0, 0, 4, 0, 0, 5)
+%L_BackgroundCloud($001, $00C, 4)
+%L_BackgroundCloud($004, $00E, 3)
+%L_BackgroundCloud($000, $010, 2)
+%L_Bush($000, $014, "big", 1)
+%L_SpecialLedge($000, $019, "ghosthouse", 16, 2)
+%L_StructureFacade($006, $00B, "ghosthouse", "entrance")
+%L_End()

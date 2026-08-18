@@ -1,174 +1,174 @@
     ORG $078000
 
 GhostHouseEntrance:
-    incbin "lvl/obj/ghosthouseentrance.bin"
+    incsrc "lvl/obj/ghosthouseentrance.asm"
 EmptyLevel:
-    incbin "lvl/obj/empty.bin"
+    incsrc "lvl/obj/empty.asm"
 CastleEntrance1:
-    incbin "lvl/obj/castleentrancebright.bin"
+    incsrc "lvl/obj/castleentrancebright.asm"
 YHLevel104:
-    incbin "lvl/obj/104_YH.bin"
+    incsrc "lvl/obj/104_YH.asm"
 NoYoshiEntrance1:
-    incbin "lvl/obj/noyoshiintro1.bin"
+    incsrc "lvl/obj/noyoshiintro1.asm"
 UnusedGHExit2Level:
-    incbin "lvl/obj/unusedghexit2.bin"
+    incsrc "lvl/obj/unusedghexit2.asm"
 BushesBetaLevel:
-    incbin "lvl/obj/betabushes.bin"
+    incsrc "lvl/obj/betabushes.asm"
 CastleEntrance2:
-    incbin "lvl/obj/castleentrancedark.bin"
+    incsrc "lvl/obj/castleentrancedark.asm"
 NoYoshiEntrance2:
-    incbin "lvl/obj/noyoshiintro2.bin"
+    incsrc "lvl/obj/noyoshiintro2.asm"
 NoYoshiEntrance3:
-    incbin "lvl/obj/noyoshiintro3.bin"
+    incsrc "lvl/obj/noyoshiintro3.asm"
 SlopeTestLevel108:
-    incbin "lvl/obj/slopetest.bin"
+    incsrc "lvl/obj/slopetest.asm"
 
     %insert_empty($13,$13,$13,$13,$13)
 
 CI4Level01D:
-    incbin "lvl/obj/01D_CI4main.bin"
+    incsrc "lvl/obj/01D_CI4main.asm"
 CI4Sub1Level0EA:
-    incbin "lvl/obj/0EA_CI4sub.bin"
+    incsrc "lvl/obj/0EA_CI4sub.asm"
 CI5Level01C:
-    incbin "lvl/obj/01C_CI5main.bin"
+    incsrc "lvl/obj/01C_CI5main.asm"
 CI5Sub2Level0C0:
-    incbin "lvl/obj/0C0_CI5sub.bin"
+    incsrc "lvl/obj/0C0_CI5sub.asm"
 CI5Sub1Level0BD:
-    incbin "lvl/obj/0BD_CI5bonus.bin"
+    incsrc "lvl/obj/0BD_CI5bonus.asm"
 C6Level01A:
-    incbin "lvl/obj/01A_C6room1.bin"
+    incsrc "lvl/obj/01A_C6room1.asm"
 C6LvlL201A:
-    incbin "lvl/obj/01A_C6room1_l2.bin"
+    incsrc "lvl/obj/01A_C6room1_l2.asm"
 C6Sub1Level0D4:
-    incbin "lvl/obj/0D4_C6room2.bin"
+    incsrc "lvl/obj/0D4_C6room2.asm"
 C6Sub1LvlL20D4:
-    incbin "lvl/obj/0D4_C6room2_l2.bin"
+    incsrc "lvl/obj/0D4_C6room2_l2.asm"
 C6Sub2Level0D3:
-    incbin "lvl/obj/0D3_C6room3.bin"
+    incsrc "lvl/obj/0D3_C6room3.asm"
 SGSLevel018:
-    incbin "lvl/obj/018_SGSroom1.bin"
+    incsrc "lvl/obj/018_SGSroom1.asm"
 SGSSub1Level0F8:
-    incbin "lvl/obj/0F8_SGSroom2.bin"
+    incsrc "lvl/obj/0F8_SGSroom2.asm"
 SGSSub2Level0F7:
-    incbin "lvl/obj/0F7_SGSroom3.bin"
+    incsrc "lvl/obj/0F7_SGSroom3.asm"
 VoB1Level116:
-    incbin "lvl/obj/116_VoB1main.bin"
+    incsrc "lvl/obj/116_VoB1main.asm"
 VoB1Sub2Level1E5:
-    incbin "lvl/obj/1E5_VoB1end.bin"
+    incsrc "lvl/obj/1E5_VoB1end.asm"
 VoB1Sub1Level1E4:
-    incbin "lvl/obj/1E4_VoB1bonus.bin"
+    incsrc "lvl/obj/1E4_VoB1bonus.asm"
 VoB2Level115:
-    incbin "lvl/obj/115_VoBroom1.bin"
+    incsrc "lvl/obj/115_VoBroom1.asm"
 VoB2LvlL2115:
-    incbin "lvl/obj/115_VoBroom1_l2.bin"
+    incsrc "lvl/obj/115_VoBroom1_l2.asm"
 VoB2Sub1Level1E3:
-    incbin "lvl/obj/1E3_VoB2room2.bin"
+    incsrc "lvl/obj/1E3_VoB2room2.asm"
 VoB2Sub1LvlL21E3:
-    incbin "lvl/obj/1E3_VoB2room2_l2.bin"
+    incsrc "lvl/obj/1E3_VoB2room2_l2.asm"
 VoB2Sub2Level1E2:
-    incbin "lvl/obj/1E2_VoB2room3.bin"
+    incsrc "lvl/obj/1E2_VoB2room3.asm"
 VoB2Sub2LvlL21E2:
-    incbin "lvl/obj/1E2_VoB2room3_l2.bin"
+    incsrc "lvl/obj/1E2_VoB2room3_l2.asm"
 YoshiWingsLevel0C8:
-    incbin "lvl/obj/0C8_yoshiwingsdark.bin"
+    incsrc "lvl/obj/0C8_yoshiwingsdark.asm"
 VoBGHLevel114:
-    incbin "lvl/obj/114_VoBGHroom1.bin"
+    incsrc "lvl/obj/114_VoBGHroom1.asm"
 VoBGHSub1Level1DD:
-    incbin "lvl/obj/1DD_VoBGHroom2.bin"
+    incsrc "lvl/obj/1DD_VoBGHroom2.asm"
 VoBGHSub2Level1DB:
-    incbin "lvl/obj/1DB_VoBGHroom3.bin"
+    incsrc "lvl/obj/1DB_VoBGHroom3.asm"
 VoB3Level113:
-    incbin "lvl/obj/113_VoB3main.bin"
+    incsrc "lvl/obj/113_VoB3main.asm"
 VoB3Sub1Level1BB:
-    incbin "lvl/obj/1BB_VoB3bonus.bin"
+    incsrc "lvl/obj/1BB_VoB3bonus.asm"
 VoB4Level10F:
-    incbin "lvl/obj/10F_VoB4main.bin"
+    incsrc "lvl/obj/10F_VoB4main.asm"
 VoB4Sub1Level1BF:
-    incbin "lvl/obj/1BF_VoB4sub.bin"
+    incsrc "lvl/obj/1BF_VoB4sub.asm"
 C7Level110:
-    incbin "lvl/obj/110_C7room1.bin"
+    incsrc "lvl/obj/110_C7room1.asm"
 C7Sub1Level1FE:
-    incbin "lvl/obj/1FE_C7room2.bin"
+    incsrc "lvl/obj/1FE_C7room2.asm"
 VoBFLevel111:
-    incbin "lvl/obj/111_VoBFroom1.bin"
+    incsrc "lvl/obj/111_VoBFroom1.asm"
 VoBFLvlL2111:
-    incbin "lvl/obj/111_VoBFroom1_l2.bin"
+    incsrc "lvl/obj/111_VoBFroom1_l2.asm"
 
     %insert_empty($487,$487,$487,$487,$487)
 
 FDLevel10D:
-    incbin "lvl/obj/10D_FDmain.bin"
+    incsrc "lvl/obj/10D_FDmain.asm"
 FDSub1Level1D4:
-    incbin "lvl/obj/1D4_FDroom1.bin"
+    incsrc "lvl/obj/1D4_FDroom1.asm"
 FDSub2Level1D3:
-    incbin "lvl/obj/1D3_FDroom2.bin"
+    incsrc "lvl/obj/1D3_FDroom2.asm"
 FDSub3Level1D2:
-    incbin "lvl/obj/1D2_FDroom3.bin"
+    incsrc "lvl/obj/1D2_FDroom3.asm"
 FDSub4Level1D1:
-    incbin "lvl/obj/1D1_FDroom4.bin"
+    incsrc "lvl/obj/1D1_FDroom4.asm"
 FDSub9Level1D0:
-    incbin "lvl/obj/1D0_FDsub1.bin"
+    incsrc "lvl/obj/1D0_FDsub1.asm"
 FDSub5Level1CF:
-    incbin "lvl/obj/1CF_FDroom5.bin"
+    incsrc "lvl/obj/1CF_FDroom5.asm"
 FDSub5LvlL21CF:
-    incbin "lvl/obj/1CF_FDroom5_l2.bin"
+    incsrc "lvl/obj/1CF_FDroom5_l2.asm"
 FDSub6Level1CE:
-    incbin "lvl/obj/1CE_FDroom6.bin"
+    incsrc "lvl/obj/1CE_FDroom6.asm"
 FDSub6LvlL21CE:
-    incbin "lvl/obj/1CE_FDroom6_l2.bin"
+    incsrc "lvl/obj/1CE_FDroom6_l2.asm"
 FDSub7Level1CD:
-    incbin "lvl/obj/1CD_FDroom7.bin"
+    incsrc "lvl/obj/1CD_FDroom7.asm"
 FDSub8Level1CC:
-    incbin "lvl/obj/1CC_FDroom8.bin"
+    incsrc "lvl/obj/1CC_FDroom8.asm"
 FDSub10Level1BD:
-    incbin "lvl/obj/1BD_FDsub2.bin"
+    incsrc "lvl/obj/1BD_FDsub2.asm"
 BDLevel10E:
-    incbin "lvl/obj/10E_BD.bin"
+    incsrc "lvl/obj/10E_BD.asm"
 BowserLevel1C7:
-    incbin "lvl/obj/1C7_bowser.bin"
+    incsrc "lvl/obj/1C7_bowser.asm"
 SW1Level134:
-    incbin "lvl/obj/134_SW1main.bin"
+    incsrc "lvl/obj/134_SW1main.asm"
 SW1Sub1Level1D6:
-    incbin "lvl/obj/1D6_SW1end.bin"
+    incsrc "lvl/obj/1D6_SW1end.asm"
 SW2Level130:
-    incbin "lvl/obj/130_SW2main.bin"
+    incsrc "lvl/obj/130_SW2main.asm"
 SW2Sub1Level1D5:
-    incbin "lvl/obj/1D5_SW2end.bin"
+    incsrc "lvl/obj/1D5_SW2end.asm"
 SW3Level132:
-    incbin "lvl/obj/132_SW3.bin"
+    incsrc "lvl/obj/132_SW3.asm"
 SW4Level135:
-    incbin "lvl/obj/135_SW4.bin"
+    incsrc "lvl/obj/135_SW4.asm"
 SW5Level136:
-    incbin "lvl/obj/136_SW5.bin"
+    incsrc "lvl/obj/136_SW5.asm"
 GnarlyLevel12A:
-    incbin "lvl/obj/12A_SP1room1.bin"
+    incsrc "lvl/obj/12A_SP1room1.asm"
 GnarlySub1Level1C4:
-    incbin "lvl/obj/1C4_SP1room2.bin"
+    incsrc "lvl/obj/1C4_SP1room2.asm"
 TubularLevel12B:
-    incbin "lvl/obj/12B_SP2.bin"
+    incsrc "lvl/obj/12B_SP2.asm"
 WayCoolLevel12C:
-    incbin "lvl/obj/12C_SP3main.bin"
+    incsrc "lvl/obj/12C_SP3main.asm"
 WayCoolSub1Level1C9:
-    incbin "lvl/obj/1C9_SP3sub.bin"
+    incsrc "lvl/obj/1C9_SP3sub.asm"
 YoshiWingsLevel1C8:
-    incbin "lvl/obj/1C8_yoshiwingsbright.bin"
+    incsrc "lvl/obj/1C8_yoshiwingsbright.asm"
 AwesomeLevel12D:
-    incbin "lvl/obj/12D_SP4.bin"
+    incsrc "lvl/obj/12D_SP4.asm"
 GroovyLevel128:
-    incbin "lvl/obj/128_SP5.bin"
+    incsrc "lvl/obj/128_SP5.asm"
 MondoLevel127:
-    incbin "lvl/obj/127_SP6main.bin"
+    incsrc "lvl/obj/127_SP6main.asm"
 MondoSub2Level1E1:
-    incbin "lvl/obj/1E1_SP6end.bin"
+    incsrc "lvl/obj/1E1_SP6end.asm"
 MondoSub1Level1E0:
-    incbin "lvl/obj/1E0_SP6sub.bin"
+    incsrc "lvl/obj/1E0_SP6sub.asm"
 OutrageousLevel126:
-    incbin "lvl/obj/126_SP7.bin"
+    incsrc "lvl/obj/126_SP7.asm"
 FunkyLevel125:
 if ver_is_japanese(!_VER)                     ;\======================= J =====================
-    incbin "lvl/obj/125_SP8_J.bin"            ;!
+    incsrc "lvl/obj/125_SP8_J.asm"            ;!
 else                                          ;<=============== U, SS, E0, & E1 ===============
-    incbin "lvl/obj/125_SP8_U.bin"            ;!
+    incsrc "lvl/obj/125_SP8_U.asm"            ;!
 endif                                         ;/===============================================
 
     %insert_empty($E6,$DA,$DA,$DA,$DA)

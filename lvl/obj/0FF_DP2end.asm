@@ -1,0 +1,8 @@
+%L_Header(0, $02, 6, $00, 0, 0, 3, 2, 0, 0, 0, 0, 0)
+%L_LedgeEdge($000, $013, "solid", "right", "topinner", 5)
+%L_GoalPosts($00D, $00F, 10)
+%L_Ledge($001, $018, 16, 3)
+%L_LedgeBackground($000, $019, "open", 1, 2)
+%L_Pipe($001, $015, "vertical", "top", "closed", 3)
+%L_Ledge($011, $018, 15, 3)
+%L_End()

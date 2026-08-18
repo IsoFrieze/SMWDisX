@@ -1,0 +1,8 @@
+%L_Header(0, $02, 6, $00, 0, 2, 2, 2, 2, 1, 0, 0, 8)
+%L_Bridge($000, $012, "log", 6, 1)
+%L_Pipe($000, $011, "horizontal", "right", "closed", 2)
+%L_GoalPosts($00D, $00F, 10)
+%L_MushroomPlatform($00C, $018, 5)
+%L_MushroomSupport($00D, $019, 3, 2)
+%L_Bridge($011, $017, "log", 15, 1)
+%L_End()

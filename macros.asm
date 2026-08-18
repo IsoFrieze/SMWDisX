@@ -13,6 +13,12 @@ function ver_is_console(v) = notequal(v,!__VER_SS)
 function ver_has_rev_gfx(v) = or(equal(v,!__VER_J),equal(v,!__VER_E1))
 function ver_is_english_console(v) = nor(equal(v,!__VER_SS),equal(v,!__VER_J))
 
+; combine two nybbles into a byte
+function concat(a,b) = ((a&$F)<<4)|(b&$F)
+
+; a mod b
+function mod(a,b) = a-(b*floor(a/b))
+
 ; instruction address mode $byte if J, $word otherwise
 macro BorW(cmd, addr)
     if ver_is_japanese(!_VER)
@@ -69,9 +75,19 @@ macro insert_empty(j, u, ss, e0, e1)
     ; Since J and U versions are just plain $FF,
     ; this is faster than reading from a file
     if !_VER == !__VER_J
-        rep <j> : db $FF
+        !i = 0
+        while !i < <j>
+            db $FF
+            !i #= !i+1
+        endwhile
+        ;rep <j> : db $FF
     elseif !_VER == !__VER_U
-        rep <u> : db $FF
+        !i = 0
+        while !i < <u>
+            db $FF
+            !i #= !i+1
+        endwhile
+        ;rep <u> : db $FF
     else
         !n = con(<j>,<u>,<ss>,<e0>,<e1>)
         !i = 0
@@ -90,7 +106,7 @@ macro insert_empty(j, u, ss, e0, e1)
             
             db !b
             !i #= !i+1
-        endif
+        endwhile
     endif
 endmacro
 
@@ -128,7 +144,7 @@ macro incpal(file)
 		!b = readfile1("<file>", 3*!i+2)
 		dw ((!b&$F8)<<7)|((!g&$F8)<<2)|((!r&$F8)>>3)
 		!i #= !i+1
-	endif
+	endwhile
 endmacro
 
 ; select a constant value depending on the region

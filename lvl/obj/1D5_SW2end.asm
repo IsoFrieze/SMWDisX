@@ -1,0 +1,7 @@
+%L_Header(0, $02, 1, $00, 0, 0, 0, 2, 0, 0, 1, 0, 0)
+%L_Water($000, $019, "surface", "animated", 10, 2)
+%L_Pipe($001, $016, "vertical", "top", "closed", 5)
+%L_LedgeEdge($00A, $018, "solid", "left", "top", 3)
+%L_GoalPosts($00D, $00F, 10)
+%L_Ledge($00B, $018, 21, 3)
+%L_End()

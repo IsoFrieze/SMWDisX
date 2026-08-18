@@ -1,0 +1,6 @@
+%L_Header(6, $02, 5, $01, 0, 4, 9, 2, 4, 4, 0, 0, 5)
+%L_GoalPosts($00D, $00F, 10)
+%L_StructureFacade($000, $00B, "ghosthouse", "exit")
+%L_SpecialLedge($000, $018, "ghosthouse", 16, 3)
+%L_SpecialLedge($010, $018, "ghosthouse", 16, 3)
+%L_End()

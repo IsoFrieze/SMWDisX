@@ -1,0 +1,7 @@
+%L_Header(0, $02, 1, $00, 0, 0, 0, 2, 0, 0, 0, 0, 0)
+%L_GoalPosts($00D, $00F, 10)
+%L_Ledge($000, $018, 32, 3)
+%L_Pipe($000, $016, "horizontal", "right", "closed", 2)
+%L_Bush($012, $017, "small", 4)
+%L_Bush($01C, $017, "small", 3)
+%L_End()

@@ -1,0 +1,6 @@
+%L_Header(6, $02, 3, $00, 0, 1, 8, 3, 4, 2, 0, 0, 3)
+%L_GoalPosts($00D, $00F, 10)
+%L_Ledge($000, $018, 32, 3)
+%L_Pipe($001, $016, "vertical", "top", "closed", 2)
+%L_ArrowSign($009, $016)
+%L_End()

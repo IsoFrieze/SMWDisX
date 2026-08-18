@@ -1,0 +1,8 @@
+%L_Header(1, $01, 0, $00, 0, 0, 9, 0, 0, 0, 0, 0, 7)
+%L_Ledge($000, $018, 16, 3)
+%L_Bush($000, $014, "medium", 1)
+%L_Bush($009, $013, "big", 1)
+%L_Berry($002, $016, "green")
+%L_Berry($00B, $017, "red")
+%L_Berry($00D, $015, "pink")
+%L_End()

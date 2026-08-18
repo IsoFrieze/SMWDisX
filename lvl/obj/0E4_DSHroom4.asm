@@ -1,0 +1,6 @@
+%L_Header(6, $01, 5, $00, 0, 6, 7, 3, 5, 4, 0, 0, 5)
+%L_WoodenBlocks($000, $00B, 16, 1)
+%L_WoodenBrickWall($000, $00C, "right", 15)
+%L_WoodenBrickWall($00F, $00C, "left", 15)
+%L_ThrowBlocks($001, $017, 14, 3)
+%L_End()

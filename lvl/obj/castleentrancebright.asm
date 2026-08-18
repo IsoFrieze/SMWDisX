@@ -1,0 +1,5 @@
+%L_Header(1, $01, 2, $0E, 0, 3, 9, 0, 1, 3, 0, 0, 1)
+%L_Bush($000, $014, "big", 1)
+%L_SpecialLedge($000, $019, "castle", 16, 2)
+%L_StructureFacade($007, $00B, "castle", "entrance")
+%L_End()

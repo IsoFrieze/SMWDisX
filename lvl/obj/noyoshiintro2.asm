@@ -1,0 +1,6 @@
+%L_Header(1, $01, 2, $0E, 0, 2, 9, 0, 2, 1, 0, 0, 6)
+%L_MushroomPlatform($000, $018, 6)
+%L_MushroomPlatform($006, $018, 11)
+%L_MushroomSupport($001, $019, 4, 2)
+%L_MushroomSupport($007, $019, 10, 2)
+%L_End()
