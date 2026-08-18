@@ -165,11 +165,7 @@ MondoSub1Level1E0:
 OutrageousLevel126:
     incsrc "lvl/obj/126_SP7.asm"
 FunkyLevel125:
-if ver_is_japanese(!_VER)                     ;\======================= J =====================
-    incsrc "lvl/obj/125_SP8_J.asm"            ;!
-else                                          ;<=============== U, SS, E0, & E1 ===============
-    incsrc "lvl/obj/125_SP8_U.asm"            ;!
-endif                                         ;/===============================================
+    incsrc "lvl/obj/125_SP8.asm"
 
     %insert_empty($E6,$DA,$DA,$DA,$DA)
 

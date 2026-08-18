@@ -45,6 +45,9 @@
 %L_TurnBlocks($04C, $00F, 1, 7)
 %L_Coins($045, $014, 6, 1)
 %L_DragonCoin($048, $010)
+if ver_is_english(!_VER)                      ;\=============== U, SS, E0, & E1 ===============
+    %L_ItemTurnBlock($045, $00E, "feather")
+endif                                         ;/===============================================
 %L_UsedBlocks($04B, $00E, 2, 1)
 %L_Pipe($04B, $005, "vertical", "top", "closed", 9)
 %L_Ceiling($04F, $000, 15, 5)

@@ -35,8 +35,13 @@
 %L_WoodenPlatform($044, $018, 9, 3)
 %L_WoodenBrickWall($04F, $000, "left", 16)
 %L_WoodenBrickWall($04F, $010, "left", 11)
-%L_BrickBackground($050, $000, 16, 16)
-%L_BrickBackground($050, $010, 16, 11)
+if ver_is_japanese(!_VER)                     ;\======================= J =====================
+    %L_BrickBackground($050, $000, 10, 16)
+    %L_BrickBackground($050, $010, 10, 11)
+else                                          ;<=============== U, SS, E0, & E1 ===============
+    %L_BrickBackground($050, $000, 16, 16)
+    %L_BrickBackground($050, $010, 16, 11)
+endif                                         ;/===============================================
 %L_WoodenBrickWall($050, $000, "right", 16)
 %L_WoodenBrickWall($050, $010, "right", 11)
 %L_ScreenExit($04, $ED, 0)

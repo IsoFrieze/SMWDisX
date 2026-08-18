@@ -97,11 +97,7 @@ DP1Sub2Level0E3:
 DP2LvlL2009:
     incsrc "lvl/obj/009_DP2main_l2.asm"
 DP2Level009:
-if ver_is_japanese(!_VER)                     ;\======================= J =====================
-    incsrc "lvl/obj/009_DP2main_J.asm"        ;!
-else                                          ;<=============== U, SS, E0, & E1 ===============
-    incsrc "lvl/obj/009_DP2main_U.asm"        ;!
-endif                                         ;/===============================================
+    incsrc "lvl/obj/009_DP2main.asm"
 DP2Sub1Level0E9:
     incsrc "lvl/obj/0E9_DP2sub.asm"
 DGHLevel004:
@@ -138,17 +134,10 @@ DS1Level00A:
     incsrc "lvl/obj/00A_DS1main.asm"
 DS1Sub1Level0C2:
     incsrc "lvl/obj/0C2_DS1sub.asm"
-if ver_is_japanese(!_VER)                     ;\======================= J =====================
-DSHLevel013:                                  ;!
-    incsrc "lvl/obj/013_DSHroom1_J.asm"       ;!
-DSHSub1Level0ED:                              ;!
-    incsrc "lvl/obj/0ED_DSHroom2_J.asm"       ;!
-else                                          ;<=============== U, SS, E0, & E1 ===============
-DSHLevel013:                                  ;!
-    incsrc "lvl/obj/013_DSHroom1_U.asm"       ;!
-DSHSub1Level0ED:                              ;!
-    incsrc "lvl/obj/0ED_DSHroom2_U.asm"       ;!
-endif                                         ;/===============================================
+DSHLevel013:
+    incsrc "lvl/obj/013_DSHroom1.asm"
+DSHSub1Level0ED:
+    incsrc "lvl/obj/0ED_DSHroom2.asm"
 DSHSub2Level0F1:
     incsrc "lvl/obj/0F1_DSHroom3.asm"
 DSHSub4Level0E4:
@@ -161,11 +150,7 @@ DS2Sub1Level1C6:
     %insert_empty($4A,$47,$47,$47,$47)
 
 VD1Level11A:
-if ver_is_japanese(!_VER)                     ;\======================= J =====================
-    incsrc "lvl/obj/11A_VD1main_J.asm"        ;!
-else                                          ;<=============== U, SS, E0, & E1 ===============
-    incsrc "lvl/obj/11A_VD1main_U.asm"        ;!
-endif                                         ;/===============================================
+    incsrc "lvl/obj/11A_VD1main.asm"
 VD1Sub1Level1EF:
     incsrc "lvl/obj/1EF_VD1sub.asm"
 VD1Sub1LvlL21EF:
@@ -189,11 +174,7 @@ VD4Level119:
 VD4Sub1Level1F5:
     incsrc "lvl/obj/1F5_VD4sub.asm"
 C3Level11C:
-if ver_is_japanese(!_VER)                     ;\======================= J =====================
-    incsrc "lvl/obj/11C_C3room1_J.asm"        ;!
-else                                          ;<=============== U, SS, E0, & E1 ===============
-    incsrc "lvl/obj/11C_C3room1_U.asm"        ;!
-endif                                         ;/===============================================
+    incsrc "lvl/obj/11C_C3room1.asm"
 C3Sub1Level1F4:
     incsrc "lvl/obj/1F4_C3room2.asm"
 C3Sub2Level1F3:
@@ -316,11 +297,7 @@ CI2Sub8Level0CD:
 CI2Sub7Level6EC7E:
     incsrc "lvl/obj/0CD_CI2room4a.asm"
 CI3Level023:
-if ver_is_japanese(!_VER)                     ;\======================= J =====================
-    incsrc "lvl/obj/023_CI3main_J.asm"        ;!
-else                                          ;<=============== U, SS, E0, & E1 ===============
-    incsrc "lvl/obj/023_CI3main_U.asm"        ;!
-endif                                         ;/===============================================
+    incsrc "lvl/obj/023_CI3main.asm"
 CI3Sub1Level0D7:
     incsrc "lvl/obj/0D7_CI3sub.asm"
 CFLevel01B:

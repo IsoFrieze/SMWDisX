@@ -13,6 +13,9 @@
 %L_ItemPrizeBlock($00E, $012, "chainstar")
 %L_ItemPrizeBlock($00E, $012, "coins")
 %L_Slope($011, $015, "up", "normal", 1)
+if ver_is_english(!_VER)                      ;\=============== U, SS, E0, & E1 ===============
+    %L_SwitchBlocks($010, $012, "yellow", 1, 1)
+endif                                         ;/===============================================
 %L_Ledge($013, $015, 3, 6)
 %L_Slope($017, $013, "up", "steep", 2)
 %L_Ledge($018, $013, 7, 8)

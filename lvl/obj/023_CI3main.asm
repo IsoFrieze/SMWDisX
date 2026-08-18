@@ -78,6 +78,10 @@
 %L_MushroomSupport($12B, $00E, 5, 10)
 %L_MushroomPlatform($121, $018, 16)
 %L_MushroomSupport($122, $019, 14, 2)
+if ver_is_english(!_VER)                      ;\=============== U, SS, E0, & E1 ===============
+    %L_ArrowSign($126, $016)
+    %L_ArrowSign($129, $016)
+endif                                         ;/===============================================
 %L_MushroomPlatform($131, $00D, 15)
 %L_MushroomSupport($132, $00E, 13, 13)
 %L_GoalPosts($16D, $00F, 10)
