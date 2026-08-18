@@ -172,7 +172,7 @@ endif                                         ;/================================
 %L_Bush($183, $017, "small", 4)
 %L_Bush($18E, $017, "small", 4)
 if ver_is_japanese(!_VER)                     ;\======================= J =====================
-    %L_Coins($188, $00F, 1, 3) ; YOU ARE
+    %L_Coins($188, $00F, 1, 3)                ; YOU ARE
     %L_Coins($18A, $00F, 1, 3)
     %L_Coins($189, $012, 1, 3)
     %L_Coins($18D, $00F, 1, 1)
@@ -198,7 +198,7 @@ if ver_is_japanese(!_VER)                     ;\======================= J ======
     %L_Coins($1A1, $014, 2, 1)
     %L_Bush($1A2, $017, "small", 5)
 else                                          ;<=============== U, SS, E0, & E1 ===============
-    %L_Coins($180, $00F, 1, 3) ; YOU ARE A
+    %L_Coins($180, $00F, 1, 3)                ; YOU ARE A
     %L_Coins($182, $00F, 1, 3)
     %L_Coins($181, $012, 1, 3)
     %L_Coins($185, $00F, 1, 1)
@@ -228,7 +228,7 @@ else                                          ;<=============== U, SS, E0, & E1 
     %L_Coins($1A1, $00F, 1, 1)
     %L_Coins($1A1, $012, 1, 1)
 endif                                         ;/===============================================
-%L_Coins($1A8, $014, 3, 1) ; SUPER PLAYER !!
+%L_Coins($1A8, $014, 3, 1)                    ; SUPER PLAYER !!
 %L_Coins($1AA, $012, 1, 2)
 %L_Coins($1A9, $011, 1, 1)
 %L_Coins($1A8, $010, 1, 2)
