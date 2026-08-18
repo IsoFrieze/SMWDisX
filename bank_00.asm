@@ -6288,7 +6288,7 @@ CODE_00B8C4:
     BRA CODE_00B8AD
 
 CODE_00B8D7:
-    LDA.W #$8000
+    LDA.W #GFX32
     STA.B GraphicsCompPtr
     SEP #$20                                  ; A->8
 CODE_00B8DE:
@@ -11601,8 +11601,9 @@ DATA_00E5C8:
     db $1D,$1E,$1F,$18,$19,$1A,$1B,$08
     db $09,$0A,$0B,$0C,$0D
 
-DATA_00E632:
-    db $0F,$0F,$0F,$0F,$0E,$0E,$0E,$0E
+; chunks of 16 bytes represent data for a single slope ID
+SlopeHeights:
+    db $0F,$0F,$0F,$0F,$0E,$0E,$0E,$0E      ; 1:4 slope up
     db $0D,$0D,$0D,$0D,$0C,$0C,$0C,$0C
     db $0B,$0B,$0B,$0B,$0A,$0A,$0A,$0A
     db $09,$09,$09,$09,$08,$08,$08,$08
@@ -11610,7 +11611,7 @@ DATA_00E632:
     db $05,$05,$05,$05,$04,$04,$04,$04
     db $03,$03,$03,$03,$02,$02,$02,$02
     db $01,$01,$01,$01,$00,$00,$00,$00
-    db $00,$00,$00,$00,$01,$01,$01,$01
+    db $00,$00,$00,$00,$01,$01,$01,$01      ; 1:4 slope down
     db $02,$02,$02,$02,$03,$03,$03,$03
     db $04,$04,$04,$04,$05,$05,$05,$05
     db $06,$06,$06,$06,$07,$07,$07,$07
@@ -11618,56 +11619,56 @@ DATA_00E632:
     db $0A,$0A,$0A,$0A,$0B,$0B,$0B,$0B
     db $0C,$0C,$0C,$0C,$0D,$0D,$0D,$0D
     db $0E,$0E,$0E,$0E,$0F,$0F,$0F,$0F
-    db $0F,$0F,$0E,$0E,$0D,$0D,$0C,$0C
+    db $0F,$0F,$0E,$0E,$0D,$0D,$0C,$0C      ; 1:2 slope up
     db $0B,$0B,$0A,$0A,$09,$09,$08,$08
     db $07,$07,$06,$06,$05,$05,$04,$04
     db $03,$03,$02,$02,$01,$01,$00,$00
-    db $00,$00,$01,$01,$02,$02,$03,$03
+    db $00,$00,$01,$01,$02,$02,$03,$03      ; 1:2 slope down
     db $04,$04,$05,$05,$06,$06,$07,$07
     db $08,$08,$09,$09,$0A,$0A,$0B,$0B
     db $0C,$0C,$0D,$0D,$0E,$0E,$0F,$0F
-    db $0F,$0E,$0D,$0C,$0B,$0A,$09,$08
+    db $0F,$0E,$0D,$0C,$0B,$0A,$09,$08      ; 1:1 slope up
     db $07,$06,$05,$04,$03,$02,$01,$00
-    db $00,$01,$02,$03,$04,$05,$06,$07
+    db $00,$01,$02,$03,$04,$05,$06,$07      ; 1:1 slope down
     db $08,$09,$0A,$0B,$0C,$0D,$0E,$0F
-    db $0F,$0E,$0D,$0C,$0B,$0A,$09,$08
+    db $0F,$0E,$0D,$0C,$0B,$0A,$09,$08      ; 1:1 slope up (copy)
     db $07,$06,$05,$04,$03,$02,$01,$00
-    db $00,$01,$02,$03,$04,$05,$06,$07
+    db $00,$01,$02,$03,$04,$05,$06,$07      ; 1:1 slope down (copy)
     db $08,$09,$0A,$0B,$0C,$0D,$0E,$0F
-    db $08,$06,$04,$03,$02,$02,$01,$01
+    db $08,$06,$04,$03,$02,$02,$01,$01      ; 2:1 slope up (top half)
     db $00,$00,$00,$00,$00,$00,$00,$00
-    db $00,$00,$00,$00,$00,$00,$00,$00
+    db $00,$00,$00,$00,$00,$00,$00,$00      ; 2:1 slope down (top half)
     db $01,$01,$02,$02,$03,$04,$06,$08
-    db $FF,$FE,$FD,$FC,$FB,$FA,$F9,$F8
+    db $FF,$FE,$FD,$FC,$FB,$FA,$F9,$F8      ; 1:1 flipped slope down
     db $F7,$F6,$F5,$F4,$F3,$F2,$F1,$F0
-    db $F0,$F1,$F2,$F3,$F4,$F5,$F6,$F7
+    db $F0,$F1,$F2,$F3,$F4,$F5,$F6,$F7      ; 1:1 flipped slope up
     db $F8,$F9,$FA,$FB,$FC,$FD,$FE,$FF
-    db $FF,$FF,$FE,$FE,$FD,$FD,$FC,$FC
+    db $FF,$FF,$FE,$FE,$FD,$FD,$FC,$FC      ; 1:2 flipped slope down
     db $FB,$FB,$FA,$FA,$F9,$F9,$F8,$F8
     db $F7,$F7,$F6,$F6,$F5,$F5,$F4,$F4
     db $F3,$F3,$F2,$F2,$F1,$F1,$F0,$F0
-    db $F0,$F0,$F1,$F1,$F2,$F2,$F3,$F3
+    db $F0,$F0,$F1,$F1,$F2,$F2,$F3,$F3      ; 1:2 flipped slope up
     db $F4,$F4,$F5,$F5,$F6,$F6,$F7,$F7
     db $F8,$F8,$F9,$F9,$FA,$FA,$FB,$FB
     db $FC,$FC,$FD,$FD,$FE,$FE,$FF,$FF
-    db $0F,$0E,$0D,$0C,$0B,$0A,$09,$08
+    db $0F,$0E,$0D,$0C,$0B,$0A,$09,$08      ; 1:1 slope up (copy)
     db $07,$06,$05,$04,$03,$02,$01,$00
-    db $00,$01,$02,$03,$04,$05,$06,$07
+    db $00,$01,$02,$03,$04,$05,$06,$07      ; 1:1 slope down (copy)
     db $08,$09,$0A,$0B,$0C,$0D,$0E,$0F
-    db $00,$01,$02,$03,$04,$05,$06,$07
+    db $00,$01,$02,$03,$04,$05,$06,$07      ; 1:1 slope down (copy)
     db $08,$09,$0A,$0B,$0C,$0D,$0E,$0F
-    db $0F,$0E,$0D,$0C,$0B,$0A,$09,$08
+    db $0F,$0E,$0D,$0C,$0B,$0A,$09,$08      ; 1:1 slope up (copy)
     db $07,$06,$05,$04,$03,$02,$01,$00
-    db $10,$10,$10,$10,$10,$10,$10,$10
+    db $10,$10,$10,$10,$10,$10,$10,$10      ; 2:1 slope up (bottom half)
     db $0E,$0C,$0A,$08,$06,$04,$02,$00
-    db $0E,$0C,$0A,$08,$06,$04,$02,$00
+    db $0E,$0C,$0A,$08,$06,$04,$02,$00      ; ..unused?
     db $FE,$FC,$FA,$F8,$F6,$F4,$F2,$F0
-    db $00,$02,$04,$06,$08,$0A,$0C,$0E
+    db $00,$02,$04,$06,$08,$0A,$0C,$0E      ; 2:1 slope down (bottom half)
     db $10,$10,$10,$10,$10,$10,$10,$10
-    db $F0,$F2,$F4,$F6,$F8,$FA,$FC,$FE
+    db $F0,$F2,$F4,$F6,$F8,$FA,$FC,$FE      ; ..unused?
     db $00,$02,$04,$06,$08,$0A
 
-DATA_00E830:
+PlayerXHitboxPoints:
     db $0C,$0E,$08,$00,$0E,$00,$0E,$00
     db $08,$00,$05,$00,$0B,$00,$08,$00
     db $02,$00,$02,$00,$08,$00,$0B,$00
@@ -11683,7 +11684,7 @@ DATA_00E830:
     db $05,$00,$10,$00,$20,$00,$07,$00
     db $00,$00,$F0,$FF
 
-DATA_00E89C:
+PlayerYHitboxPoints:
     db $08,$00,$18,$00,$1A,$00,$16,$00
 DATA_00E8A4:
     db $10,$00,$20,$00,$20,$00,$18,$00
@@ -11749,7 +11750,7 @@ CODE_00E938:
     ADC.B Layer23YRelPos
     STA.B PlayerYPosNext
     SEP #$20                                  ; A->8
-    JSR CODE_00EADB
+    JSR DoPlayerCollision
     REP #$20                                  ; A->16
     LDA.B PlayerXPosNext
     SEC
@@ -11768,7 +11769,7 @@ CODE_00E938:
     BMI CODE_00E98C
     STZ.W LayerProcessing
     ASL.B TempPlayerGround
-    JSR CODE_00EADB
+    JSR DoPlayerCollision
 CODE_00E98C:
     LDA.W SideExitEnabled
     BEQ CODE_00E9A1
@@ -11949,15 +11950,15 @@ DATA_00EAC1:
     db $9E,$9F,$A3,$A4,$A8,$A9,$AD,$AE
     db $B2,$B3
 
-CODE_00EADB:
+DoPlayerCollision:                            ; Process collision
     LDA.B PlayerYPosNext
     AND.B #$0F
     STA.B PlayerYPosInBlock
     LDA.W WallrunningType
-    BNE +
-    JMP CODE_00EB77
-
-  + AND.B #$01
+    BNE WallrunCollision
+    JMP NormalCollision
+WallrunCollision:
+    AND.B #$01                                ; Wallrunning collision
     TAY
     LDA.B PlayerXSpeed+1
     SEC
@@ -12000,7 +12001,7 @@ CODE_00EB22:
 
 CODE_00EB34:
     JSR CODE_00EFE8
-  + JSR CODE_00F44D
+  + JSR GetBlockAtPlayer
     BNE CODE_00EB19
     LDA.B #$02
     TRB.W WallrunningType
@@ -12038,18 +12039,18 @@ CODE_00EB73:
 Return00EB76:
     RTS
 
-CODE_00EB77:
+NormalCollision:
     LDX.B #$00
     LDA.B Powerup
     BEQ +
     LDA.B PlayerIsDucking
     BNE +
-    LDX.B #$18
+    LDX.B #$18                                ; If player is big and not ducking, index = $18
   + LDA.W PlayerRidingYoshi
     BEQ +
     TXA
     CLC
-    ADC.B #$30
+    ADC.B #$30                                ; If player is on yoshi, index += $30
     TAX
   + LDA.B PlayerXPosNext
     AND.B #$0F
@@ -12060,176 +12061,174 @@ CODE_00EB77:
     STA.B PlayerXPosInBlock
     STZ.B PlayerBlockXSide
     CPY.B #$08
-    BCC +
+    BCC +                                     ; Check which side of the block the player is on
     TXA
-    ADC.B #$0B
+    ADC.B #$0B                                ; if on the right, index += $0B
     TAX
     INC.B PlayerBlockXSide
   + LDA.B PlayerYPosInBlock
     CLC
-    ADC.W DATA_00E8A4,X
+    ADC.W DATA_00E8A4,X                       ; Get the vertical interaction point position
     AND.B #$0F
     STA.B PlayerBlockMoveY
-    JSR CODE_00F44D
-    BEQ CODE_00EBDD
+    JSR GetBlockAtPlayer                      ; Interaction point 0 (Center)
+    BEQ CODE_00EBDD                           ; Handle page 0
     CPY.B #$11
-    BCC CODE_00EC24
+    BCC Normal_IP1                            ; Handle blocks 100-110
     CPY.B #$6E
-    BCC CODE_00EBC9
+    BCC CODE_00EBC9                           ; Handle blocks 111-16D
     TYA
-    JSL CODE_00F04D
-    BCC CODE_00EC24
-    LDA.B #$01
+    JSL IsWaterSlope                          ; Check if the slope is in water
+    BCC Normal_IP1
+    LDA.B #$01                                ; If yes, set the interaction point to be in water
     TSB.B InteractionPtsInWater
-    BRA CODE_00EC24
+    BRA Normal_IP1
 
 CODE_00EBC9:
-    INX
+    INX                                       ; Skip two interaction points?
     INX
     INX
     INX
     TYA
     LDY.B #$00
-    CMP.B #$1E
+    CMP.B #$1E                                ; Turn block?
     BEQ +
-    CMP.B #$52
+    CMP.B #$52                                ; Solid invisible tile?
     BEQ +
     LDY.B #$02
   + JMP CODE_00EC6F
 
 CODE_00EBDD:
-    CPY.B #$9C
+    CPY.B #$9C                                ; Castle door?
     BNE CODE_00EBE8
     LDA.W ObjectTileset
-    CMP.B #$01
+    CMP.B #$01                                ; In castle tileset?
     BEQ CODE_00EC06
 CODE_00EBE8:
-    CPY.B #$20
+    CPY.B #$20                                ; Door?
     BEQ CODE_00EC01
-    CPY.B #$1F
+    CPY.B #$1F                                ; Small-only door?
     BEQ CODE_00EBFD
-    LDA.W BluePSwitchTimer
+    LDA.W BluePSwitchTimer                    ; P-switch active?
     BEQ CODE_00EC21
-    CPY.B #$28
+    CPY.B #$28                                ; P-switch door?
     BEQ CODE_00EC01
-    CPY.B #$27
+    CPY.B #$27                                ; P-switch small only door?
     BNE CODE_00EC21
 CODE_00EBFD:
-    LDA.B Powerup
-    BNE CODE_00EC24
+    LDA.B Powerup                             ; Check if the player is small
+    BNE Normal_IP1
 CODE_00EC01:
-    JSR CODE_00F443
-    BCS CODE_00EC24
-CODE_00EC06:
+    JSR CheckDoorEnterable                    ; Check if player can enter a door
+    BCS Normal_IP1
+CODE_00EC06:                                  ; Handle enterable doors
     LDA.B TempPlayerAir
-    BNE CODE_00EC24
+    BNE Normal_IP1
     LDA.B byetudlrFrame
     AND.B #$08
-    BEQ CODE_00EC24
+    BEQ Normal_IP1
     LDA.B #!SFX_DOOROPEN                      ; \ Play sound effect
     STA.W SPCIO3                              ; /
     JSR CODE_00D273
     LDA.B #$0D
     STA.B PlayerAnimation
     JSR NoButtons
-    BRA CODE_00EC24
-
+    BRA Normal_IP1
 CODE_00EC21:
-    JSR CODE_00F28C
-CODE_00EC24:
-    JSR CODE_00F44D
-    BEQ CODE_00EC35
-    CPY.B #$11
-    BCC CODE_00EC3A
-    CPY.B #$6E
-    BCS CODE_00EC3A
-    INX
-    INX
-    BRA CODE_00EC4E
+    JSR RunPage0Blocks                        ; Check the rest of the blocks
 
+Normal_IP1:
+    JSR GetBlockAtPlayer                      ; Interaction point 1 (Side body)
+    BEQ CODE_00EC35                           ; Branch if page 0
+    CPY.B #$11
+    BCC Normal_IP2
+    CPY.B #$6E
+    BCS Normal_IP2
+    INX                                       ; If block is in 111..16E (solid):
+    INX                                       ; Skip interaction point 2?
+    BRA CODE_00EC4E
 CODE_00EC35:
     LDA.B #$10
-    JSR CODE_00F2C9
-CODE_00EC3A:
-    JSR CODE_00F44D
-    BNE CODE_00EC46
-    LDA.B #$08
-    JSR CODE_00F2C9
-    BRA CODE_00EC8A
+    JSR RunPage0Blocks_3
 
+Normal_IP2:
+    JSR GetBlockAtPlayer                      ; Interaction point 2 (Side head)
+    BNE CODE_00EC46                           ; Handle solid blocks
+    LDA.B #$08
+    JSR RunPage0Blocks_3
+    BRA Normal_IP3
 CODE_00EC46:
     CPY.B #$11
-    BCC CODE_00EC8A
+    BCC Normal_IP3
     CPY.B #$6E
-    BCS CODE_00EC8A
-CODE_00EC4E:
+    BCS Normal_IP3
+CODE_00EC4E:                                  ; Solid side blocks?
     LDA.B PlayerDirection
     CMP.B PlayerBlockXSide
-    BEQ +
-    JSR CODE_00F3C4
+    BEQ +                                     ; If on the left side, branch
+    JSR CODE_00F3C4                           ; TODO: what does this do?
     PHX
-    JSR CODE_00F267
-    LDY.W Map16TileNumber                     ; Current MAP16 tile number
+    JSR CODE_00F267                           ; TODO: what does this do?
+    LDY.W Map16TileNumber                     ; Not useful
     PLX
   + LDA.B #$03
-    STA.W PlayerPoseLenTimer
+    STA.W PlayerPoseLenTimer                  ; reset pose timer
     LDY.B PlayerBlockXSide
     LDA.B PlayerXPosNext
     AND.B #$0F
-    CMP.W DATA_00E911,Y
-    BEQ CODE_00EC8A
+    CMP.W DATA_00E911,Y                       ; $02 (left) or $0D (right)
+    BEQ Normal_IP3
 CODE_00EC6F:
-    LDA.W NoteBlockActive
+    LDA.W NoteBlockActive                     ; Check for whether a note block is active
     BEQ CODE_00EC7B
     LDA.W Map16TileNumber
-    CMP.B #$52
-    BEQ CODE_00EC8A
+    CMP.B #$52                                ; if it's the invisible solid block, skip
+    BEQ Normal_IP3
 CODE_00EC7B:
-    LDA.W DATA_00E90A,Y
-    TSB.B PlayerBlockedDir
+    LDA.W DATA_00E90A,Y                       ; Load the player blocked bitmask
+    TSB.B PlayerBlockedDir                    ; Set the bitmask
     AND.B #$03
     TAY
     LDA.W Map16TileNumber                     ; Current MAP16 tile number
-    JSL CODE_00F127
-CODE_00EC8A:
-    JSR CODE_00F44D
-    BNE CODE_00ECB1
+    JSL CODE_00F127                           ; Process block collision
+
+Normal_IP3:
+    JSR GetBlockAtPlayer                      ; Interaction point 3 (Head)
+    BNE CODE_00ECB1                           ; Do page 1 blocks
     LDA.B #$02
-    JSR CODE_00F2C2
+    JSR RunPage0Blocks_2
     LDY.B PlayerYSpeed+1
-    BPL CODE_00ECA3
+    BPL CODE_00ECA3                           ; If falling down, skip
     LDA.W Map16TileNumber                     ; Current MAP16 tile number
     CMP.B #$21
     BCC CODE_00ECA3
     CMP.B #$25
-    BCC +
+    BCC +                                     ; If blocks 21-25, handle them
 CODE_00ECA3:
-    JMP CODE_00ED4A
-
+    JMP Normal_IP4
   + SEC
     SBC.B #$04
     LDY.B #$00
-    JSL CODE_00F17F
+    JSL HandleFunctionalBlockByID
     BRA CODE_00ED0D
-
-CODE_00ECB1:
+CODE_00ECB1:                                  ; Handle solid blocks
     CPY.B #$11
-    BCC CODE_00ECA3
+    BCC CODE_00ECA3                           ; If 100-111, skip
     CPY.B #$6E
-    BCC CODE_00ECFA
+    BCC CODE_00ECFA                           ; If 111-16D, branch (solid)
     CPY.B #$D8
-    BCC CODE_00ECDA
+    BCC CODE_00ECDA                           ; If 16E-1D7, branch (slopes)
     REP #$20                                  ; A->16
     LDA.B TouchBlockYPos
     CLC
     ADC.W #$0010
     STA.B TouchBlockYPos
-    JSR CODE_00F461
+    JSR GetBlockAtTouchPos                    ; Check one block lower
     BEQ CODE_00ECF8
     CPY.B #$6E
-    BCC CODE_00ED4A
+    BCC Normal_IP4
     CPY.B #$D8
-    BCS CODE_00ED4A
+    BCS Normal_IP4
     LDA.B PlayerBlockMoveY
     SBC.B #$0F
     STA.B PlayerBlockMoveY
@@ -12239,7 +12238,7 @@ CODE_00ECDA:
     SBC.B #$6E
     TAY
     REP #$20                                  ; A->16
-    LDA.B [SlopesPtr],Y
+    LDA.B [SlopesPtr],Y                       ; load slope data
     AND.W #$00FF
     ASL A
     ASL A
@@ -12248,19 +12247,18 @@ CODE_00ECDA:
     SEP #$20                                  ; A->8
     ORA.B PlayerXPosInBlock
     REP #$10                                  ; XY->16
-    TAY
-    LDA.W DATA_00E632,Y
+    TAY                                       ; Y = SSSSXXXX
+    LDA.W SlopeHeights,Y                      ; S: slope type; X: intra-block position
     SEP #$10                                  ; XY->8
-    BMI CODE_00ED0F
+    BMI CODE_00ED0F                           ; If top bit set, branch
 CODE_00ECF8:
-    BRA CODE_00ED4A
-
+    BRA Normal_IP4                            ; Otherwise, skip
 CODE_00ECFA:
     LDA.B #$02
-    JSR CODE_00F3E9
+    JSR CODE_00F3E9                           ; Process pipe blocks
     TYA
     LDY.B #$00
-    JSL CODE_00F127
+    JSL CODE_00F127                           ; Process hurt/functional blocks
     LDA.W Map16TileNumber                     ; Current MAP16 tile number
     CMP.B #$1E                                ; \ If block is turn block, branch to $ED3B
     BEQ CODE_00ED3B                           ; /
@@ -12268,66 +12266,63 @@ CODE_00ED0D:
     LDA.B #$F0
 CODE_00ED0F:
     CLC
-    ADC.B PlayerBlockMoveY
-    BPL CODE_00ED4A
+    ADC.B PlayerBlockMoveY                    ; Add interaction point Y
+    BPL Normal_IP4                            ; If it's positive, skip (below the slope)
     CMP.B #$F9
     BCS CODE_00ED28
     LDY.B PlayerInAir
-    BNE CODE_00ED28
-    LDA.B PlayerBlockedDir
-    AND.B #$FC
-    ORA.B #$09
+    BNE CODE_00ED28                           ; If not in the air and too high into the ceiling:
+    LDA.B PlayerBlockedDir                    ; Eject player to the left
+    AND.B #$FC                                ; Unset left+right blocked
+    ORA.B #$09                                ; Set top+left blocked
     STA.B PlayerBlockedDir
     STZ.B PlayerXSpeed+1
     BRA CODE_00ED3B
-
 CODE_00ED28:
     LDY.B PlayerInAir
-    BEQ +
+    BEQ +                                     ; If on ground, skip
     EOR.B #$FF
     CLC
     ADC.B PlayerYPosNext
-    STA.B PlayerYPosNext
+    STA.B PlayerYPosNext                      ; Clip position to the slope
     BCC +
-    INC.B PlayerYPosNext+1
-  + LDA.B #$08
+    INC.B PlayerYPosNext+1                    ; Carry
+  + LDA.B #$08                                ; Set top blocked
     TSB.B PlayerBlockedDir
 CODE_00ED3B:
     LDA.B PlayerYSpeed+1
-    BPL CODE_00ED4A
+    BPL Normal_IP4
     STZ.B PlayerYSpeed+1
     LDA.W SPCIO0                              ; / Play sound effect
-    BNE CODE_00ED4A
+    BNE Normal_IP4
     INC A                                     ; play bonk only if no other sound was queued
     STA.W SPCIO0                              ; / Play sound effect
-CODE_00ED4A:
-    JSR CODE_00F44D
-    BNE +
-    JMP CODE_00EDDB
 
+Normal_IP4:
+    JSR GetBlockAtPlayer                      ; Interaction point 4 (Right foot)
+    BNE +
+    JMP CODE_00EDDB                           ; Handle page 0 blocks
   + CPY.B #$6E
     BCS +
-    LDA.B #$03
-    JSR CODE_00F3E9
-    JMP CODE_00EDF7
-
+    LDA.B #$03                                ; Process 100-16D (top-solid)
+    JSR CODE_00F3E9                           ; Handle pipe tiles
+    JMP CODE_00EDF7                           ; Proceed handling as IP 5
   + CPY.B #$D8
-    BCC CODE_00ED86
+    BCC CODE_00ED86                           ; Process 16E-1D8 (slopes)
     CPY.B #$FB
     BCC +
-    JMP CODE_00F629
-
-  + REP #$20                                  ; A->16
+    JMP CODE_00F629                           ; Process 1FB-1FF (lava, just kill the player)
+  + REP #$20                                  ; Process slope assists
     LDA.B TouchBlockYPos
     SEC
     SBC.W #$0010
-    STA.B TouchBlockYPos
-    JSR CODE_00F461
-    BEQ CODE_00EDE9
+    STA.B TouchBlockYPos                      ; Shift target block upwards
+    JSR GetBlockAtTouchPos
+    BEQ Normal_IP5                            ; Filter for slopes
     CPY.B #$6E
-    BCC CODE_00EDE9
+    BCC Normal_IP5
     CPY.B #$D8
-    BCS CODE_00EDE9
+    BCS Normal_IP5
     LDA.B PlayerYPosInBlock
     ADC.B #$10
     STA.B PlayerYPosInBlock
@@ -12337,9 +12332,9 @@ CODE_00ED86:
     BEQ CODE_00ED91
     CMP.B #$0E
     BNE CODE_00ED95
-CODE_00ED91:
-    CPY.B #$D2
-    BCS CODE_00EDE9
+CODE_00ED91:                                  ; If tileset is 3 or E:
+    CPY.B #$D2                                ; Filter out 1D2-1D7 (lava slopes)
+    BCS Normal_IP5
 CODE_00ED95:
     TYA
     SEC
@@ -12360,14 +12355,14 @@ CODE_00ED95:
     TAX
     LDA.B PlayerYPosInBlock
     SEC
-    SBC.W DATA_00E632,X
+    SBC.W SlopeHeights,X
     BPL +
     INC.W PlayerIsOnGround
   + SEP #$10                                  ; XY->8
     PLX
     PLY
     CMP.W DATA_00E51C,Y
-    BCS CODE_00EDE9
+    BCS Normal_IP5
     STA.B PlayerBlockMoveY
     STZ.B PlayerYPosInBlock
     JSR CODE_00F005
@@ -12376,25 +12371,22 @@ CODE_00ED95:
     LDA.B #$08
     STA.W SkidTurnTimer
     JMP CODE_00EED1
-
-  + JSR CODE_00EFBC
+  + JSR CODE_00EFBC                           ; Do sloped conveyors
     JMP CODE_00EE85
-
 CODE_00EDDB:
     CPY.B #$05
-    BNE CODE_00EDE4
-    JSR CODE_00F629
-    BRA CODE_00EDE9
-
+    BNE CODE_00EDE4                           ; If not block 5, run page 0 blocks
+    JSR CODE_00F629                           ; If block 5, kill player
+    BRA Normal_IP5
 CODE_00EDE4:
     LDA.B #$04
-    JSR CODE_00F2C2
-CODE_00EDE9:
-    JSR CODE_00F44D
-    BNE CODE_00EDF3
-    JSR CODE_00F309
-    BRA CODE_00EE1D
+    JSR RunPage0Blocks_2
 
+Normal_IP5:
+    JSR GetBlockAtPlayer                      ; Interaction point 5 (Left foot)
+    BNE CODE_00EDF3                           ; Do page 1 blocks
+    JSR RunPage0Blocks_4                      ; Do page 0 blocks
+    BRA CODE_00EE1D
 CODE_00EDF3:
     CPY.B #$6E
     BCS CODE_00EE1D
@@ -12407,17 +12399,17 @@ CODE_00EDF7:
     CMP.B #$0E
     BNE CODE_00EE11
 CODE_00EE06:
-    LDY.W Map16TileNumber                     ; $ED3B
+    LDY.W Map16TileNumber
     CPY.B #$59
     BCC CODE_00EE11
     CPY.B #$5C
     BCC CODE_00EE1D
-CODE_00EE11:
+CODE_00EE11:                                  ; Skip this for blocks 159-15B in tilesets 3/E
     LDA.B PlayerYPosInBlock
     AND.B #$0F
-    STZ.B PlayerYPosInBlock
+    STZ.B PlayerYPosInBlock                   ; Set intra-block position to 0
     CMP.B #$08
-    STA.B PlayerBlockMoveY
+    STA.B PlayerBlockMoveY                    ; Set Y position of interaction point (what does this do?)
     BCC CODE_00EE3A
 CODE_00EE1D:
     LDA.W StandOnSolidSprite                  ; \ If Mario isn't on a sprite platform,
@@ -12427,10 +12419,9 @@ CODE_00EE1D:
     STZ.B TempScreenMode
     LDY.B #$20
     JMP CODE_00EEE1
-
   + LDA.B PlayerBlockedDir                    ; \
-    AND.B #$04                                ; |If Mario is on an edge or in air,
-    ORA.B PlayerInAir                         ; |branch to $EE39
+    AND.B #$04                                ; | If Mario is on an edge or in air,
+    ORA.B PlayerInAir                         ; | return
     BNE Return00EE39                          ; /
 CODE_00EE35:
     LDA.B #$24                                ; \ Set "In air" to x24 (falling)
@@ -12469,7 +12460,7 @@ CODE_00EE57:
     LDX.W SpinJumpFlag
     BEQ CODE_00EE83
     LDA.B #$21
-    JSL CODE_00F17F
+    JSL HandleFunctionalBlockByID
     BRA CODE_00EE1D
 
 CODE_00EE78:
@@ -12669,9 +12660,9 @@ CODE_00EFCD:
   + RTS
 
 CODE_00EFE8:
-    JSR CODE_00F44D
+    JSR GetBlockAtPlayer
     BNE +
-    JMP CODE_00F309
+    JMP RunPage0Blocks_4
 
   + CPY.B #$11
     BCC +
@@ -12727,7 +12718,7 @@ CODE_00F005:
 Return00F04C:
     RTS
 
-CODE_00F04D:
+IsWaterSlope:
     PHX
     LDX.B #$19
 CODE_00F050:
@@ -12741,47 +12732,49 @@ CODE_00F05A:
     RTL
 
 
-DATA_00F05C:
+IntBlk_BounceSprite:
     db $01,$05,$01,$02,$01,$01,$00,$00
     db $00,$00,$00,$00,$00,$06,$02,$02
     db $02,$02,$02,$02,$02,$02,$02,$02
     db $02,$03,$03,$04,$02,$02,$02,$01
     db $01,$07,$11,$10
 
-DATA_00F080:
+IntBlk_Powerup:
     db $80,$00,$00,$1E,$00,$00,$05,$09
     db $06,$81,$0E,$0C,$14,$00,$05,$09
     db $06,$07,$0E,$0C,$16,$18,$1A,$1A
     db $00,$09,$00,$00,$FF,$0C,$0A,$00
     db $00,$00,$08,$02
 
-DATA_00F0A4:
+IntBlk_ActivationSides:
     db $0C,$08,$0C,$08,$0C,$0F,$08,$08
     db $08,$08,$08,$08,$08,$08,$08,$08
     db $08,$08,$08,$08,$08,$08,$08,$08
     db $08,$03,$03,$08,$08,$08,$08,$08
     db $08,$04,$08,$08
 
-DATA_00F0C8:
+IntBlk_BlockToGenerate:
     db $0E,$13,$0E,$0D,$0E,$10,$0D,$0D
     db $0D,$0D,$0A,$0D,$0D,$0C,$0D,$0D
     db $0D,$0D,$0B,$0D,$0D,$16,$0D,$0D
     db $0D,$11,$11,$12,$0D,$0D,$0D,$0E
     db $0F,$0C,$0D,$0D
 
-DATA_00F0EC:
-    db $08,$01,$02,$04,$ED,$F6,$00,$7D
-    db $BE,$00,$6F,$B7
+InteractionSideMask:
+    db $08,$01,$02,$04
 
-DATA_00F0F8:
-    db $40,$50,$00,$70,$80,$00,$A0,$B0
-DATA_00F100:
-    db $05,$09,$06,$05,$09,$06,$05,$09
+BonusRoomData:
+    db $ED,$F6,$00,$7D,$BE,$00,$6F,$B7        ; Bitmask: ? blocks _left_ in this row
+BonusRoomBlockPos:
+    db $40,$50,$00,$70,$80,$00,$A0,$B0        ; Position of block corresponding to the above bitmask
+
+IntBlk_PositionalPowerup:
+    db $05,$09,$06,$05,$09,$06,$05,$09        ; Note block (111)
     db $06,$05,$09,$06,$05,$09,$06,$05
-    db $07,$0A,$10,$07,$0A,$10,$07,$0A
+    db $07,$0A,$10,$07,$0A,$10,$07,$0A        ; Turn block (11A)
     db $10,$07,$0A,$10,$07,$0A,$10,$07
 
-CODE_00F120:
+CODE_00F120:                                  ; Handle hurting blocks - muncher, spike, etc.
     XBA
     LDA.W PlayerRidingYoshi
     BNE CODE_00F15F
@@ -12828,88 +12821,88 @@ CODE_00F160:
     SEC
     SBC.B #$11
     CMP.B #$1D
-    BCC CODE_00F17F
+    BCC HandleFunctionalBlockByID
     XBA
     PHX
     LDX.W ObjectTileset
     LDA.L DATA_00A625,X
     PLX
     AND.B #$03
-    BEQ +
+    BEQ +                                     ; Branch if tileset is not 4, 5, or 13
     RTL
 
   + XBA
-    SBC.B #$59
+    SBC.B #$59                                ; Process switch palace blocks (16A, 16B)
     CMP.B #$02
     BCS Return00F1F8
     ADC.B #$22
-CODE_00F17F:
+HandleFunctionalBlockByID:                    ; Handle functional blocks (111..12D, 21-24)
     PHX
-    PHA
-    TYX
-    LDA.L DATA_00F0EC,X
+    PHA                                       ; A is the block offset
+    TYX                                       ; Y is the interaction side
+    LDA.L InteractionSideMask,X               ; InteractionSideMask[side] & IntBlk_ActivationSides[block]
     PLX
-    AND.L DATA_00F0A4,X
-    BEQ CODE_00F1F6
-    STY.B _6
-    LDA.L DATA_00F0C8,X
+    AND.L IntBlk_ActivationSides,X
+    BEQ CODE_00F1F6                           ; If can't activate from this side, quit and clear carry
+    STY.B _6                                  ; _6 = interaction side
+    LDA.L IntBlk_BlockToGenerate,X            ; _7 = block to generate
     STA.B _7
-    LDA.L DATA_00F05C,X
+    LDA.L IntBlk_BounceSprite,X               ; _4 = bounce sprite to generate
     STA.B _4
-    LDA.L DATA_00F080,X
-    BPL CODE_00F1BA
+    LDA.L IntBlk_Powerup,X
+    BPL CODE_00F1BA                           ; If top bit clear, branch
     CMP.B #$FF
-    BNE CODE_00F1AE
-    LDA.B #$05
-    LDY.W GreenStarBlockCoins
-    BEQ CODE_00F1D0
-    BRA CODE_00F1CE
+    BNE CODE_00F1AE                           ; If not $FF, handle table lookup blocks
+    LDA.B #$05                                ; Handle green star block
+    LDY.W GreenStarBlockCoins                 ; Gives 1-up when this is zero
+    BEQ CODE_00F1D0                           ; Give 1-up
+    BRA CODE_00F1CE                           ; Give coin
 
-CODE_00F1AE:
-    LSR A
+CODE_00F1AE:                                  ; Handle powerup data $80-$FE
+    LSR A                                     ; Carry = bit 0
     LDA.B TouchBlockXPos
     ROR A
     LSR A
     LSR A
     LSR A
     TAX
-    LDA.L DATA_00F100,X
+    LDA.L IntBlk_PositionalPowerup,X          ; Index = 000Xxxxx (x = block pos, X = bit 1)
 CODE_00F1BA:
     LSR A
     BCC CODE_00F1D0
-    CMP.B #$03
-    BEQ CODE_00F1C9
+    CMP.B #$03                                ; Powerup = 7?
+    BEQ CODE_00F1C9                           ; This is a star 2
     LDY.B Powerup
     BNE CODE_00F1D0
-    LDA.B #$01
+    LDA.B #$01                                ; If player has powerup, set A to 1
     BRA CODE_00F1D0
 
 CODE_00F1C9:
-    LDY.W InvinsibilityTimer                  ; \ Branch if Mario has star
-    BNE CODE_00F1D0                           ; /
+    LDY.W InvinsibilityTimer                  ; Handle "Star continuation" block
+    BNE CODE_00F1D0
 CODE_00F1CE:
     LDA.B #$06
-CODE_00F1D0:
-    STA.B _5
+CODE_00F1D0:                                  ; A = powerup ID
+    STA.B _5                                  ; _5 = powerup ID
     CMP.B #$05
     BNE +
     LDA.B #$16
-    STA.B _7
+    STA.B _7                                  ; Generate block $16
   + TAY
-    LDA.B #$0F
-    TRB.B TouchBlockXPos
-    TRB.B TouchBlockYPos
-    CPY.B #$06
-    BNE CODE_00F1EC
+    LDA.B #$0F                                ; \
+    TRB.B TouchBlockXPos                      ; | Remove low bits of current block position
+    TRB.B TouchBlockYPos                      ; /
+    CPY.B #$06                                ; \
+    BNE CODE_00F1EC                           ; / Handle powerup 6
     LDY.W ObjectTileset
     CPY.B #$04
-    BEQ +
+    BEQ Handle1UpMinigameBlock
 CODE_00F1EC:
     PHB
     LDA.B #$02
     PHA
     PLB
-    JSL CODE_028752
+    JSL CODE_028752                           ; Bounce the block
     PLB
 CODE_00F1F6:
     PLX
@@ -12917,52 +12910,59 @@ CODE_00F1F6:
 Return00F1F8:
     RTL
 
-  + LDA.B TouchBlockYPos+1
+; Handles the 1-up minigame block.
+; The point of this theater is to give you 75% chance for the first block,
+; then a 25% for second and third. This state is kept in BonusRoomBlocks.
+; The data written to BonusRoomBlocks is a bitmask that keeps track of
+; which blocks are where, such that it can instantly replace the air with
+; used blocks.
+Handle1UpMinigameBlock:
+    LDA.B TouchBlockYPos+1
     LSR A
     LDA.B TouchBlockYPos
     AND.B #$C0
     ROL A
     ROL A
     ROL A
-    TAY
+    TAY                                       ; Y: index of BonusRoomBlocks
     LDA.B TouchBlockXPos
     LSR A
     LSR A
     LSR A
     LSR A
-    TAX
-    LDA.W PBalloonInflating,Y
-    ORA.L DATA_00F0EC,X
-    LDX.W PBalloonInflating,Y
-    STA.W PBalloonInflating,Y
+    TAX                                       ; X: block position
+    LDA.W BonusRoomBlocks-1,Y                 ; \ x = blocks[y]
+    ORA.L BonusRoomData-4,X                   ; | blocks[y] |= data[x]
+    LDX.W BonusRoomBlocks-1,Y                 ; | a = blocks[y]
+    STA.W BonusRoomBlocks-1,Y                 ; /
     CMP.B #$FF
-    BNE CODE_00F226
+    BNE CODE_00F226                           ; If blocks[y] is $FF, always correct
     LDA.B #$05
     STA.B _5
 CODE_00F220:
-    LDA.B #$17
+    LDA.B #$17                                ; Block to generate: O block
     STA.B _7
     BRA CODE_00F1EC
 
 CODE_00F226:
-    LDA.W DidPlayBonusGame
+    LDA.W DidPlayBonusGame                    ; If bonus game already played, always wrong
     BNE CODE_00F236
     TXA
     BEQ +
     LDA.B #$02
-  + EOR.B #$03
+  + EOR.B #$03                                ; 75% chance when 0, 25% chance otherwise
     AND.B TrueFrame
     BNE CODE_00F220
 CODE_00F236:
     LDA.B #!SFX_WRONG
     STA.W SPCIO3                              ; / Play sound effect
     PHY
-    STZ.B _5
+    STZ.B _5                                  ; No powerup
     PHB
     LDA.B #$02                                ; \ Set data bank = $02
     PHA                                       ; |
     PLB
-    JSL CODE_028752
+    JSL CODE_028752                           ; Bounce the block
     PLB
     PLY
     LDX.B #$07
@@ -12973,7 +12973,7 @@ CODE_00F24E:
     PHA
     LDA.B #$0D                                ; \ Block to generate = Used block
     STA.B Map16TileGenerate                   ; /
-    LDA.L DATA_00F0F8,X
+    LDA.L BonusRoomBlockPos,X
     STA.B TouchBlockXPos
     JSL GenerateTile
     PLA
@@ -13002,26 +13002,31 @@ CODE_00F267:
 Return00F28B:
     RTS
 
-CODE_00F28C:
+; RunPage0Blocks handles 1-up points and liquids.
+; RunPage0Blocks_2 handles liquids.
+; RunPage0Blocks_3 handles everything else on page 0, except switch palace
+; switches that are inexplicably handled in RemapBlocks.
+
+RunPage0Blocks:                               ; Check for 1up checkpoints
     TYA
     SEC
-    SBC.B #$6F
+    SBC.B #$6F                                ; 1-up point ID
     CMP.B #$04
-    BCS CODE_00F2C0
+    BCS CODE_00F2C0                           ; If not a point, branch
     CMP.W OneUpCheckpoints
-    BEQ CODE_00F2A8
+    BEQ CODE_00F2A8                           ; If it is the current point, increment it
     INC A
     CMP.W OneUpCheckpoints
-    BEQ +
+    BEQ +                                     ; If it is one greater than previous, return
     LDA.W OneUpCheckpoints
     CMP.B #$04
-    BCS +
-    LDA.B #$FF
+    BCS +                                     ; If 1-up points are done, return
+    LDA.B #$FF                                ; Otherwise, reset the current point (they were done out of order)
 CODE_00F2A8:
     INC A
     STA.W OneUpCheckpoints
     CMP.B #$04
-    BNE +
+    BNE +                                     ; If done with the points, spawn a 1up and set the flag
     PHX
     JSL TriggerInivis1Up
     JSR CODE_00F3B2
@@ -13032,17 +13037,17 @@ CODE_00F2A8:
 
 CODE_00F2C0:
     LDA.B #$01
-CODE_00F2C2:
-    CPY.B #$06
-    BCS CODE_00F2C9
+RunPage0Blocks_2:
+    CPY.B #$06                                ; Liquid? (0-5)
+    BCS RunPage0Blocks_3
     TSB.B InteractionPtsInWater
     RTS
 
-CODE_00F2C9:
-    CPY.B #$38
+RunPage0Blocks_3:
+    CPY.B #$38                                ; Midway tape?
     BNE CODE_00F2EE
-    LDA.B #$02                                ; \ Block to generate = #$02
-    STA.B Map16TileGenerate                   ; /
+    LDA.B #$02                                ; Remove the block, write the midway
+    STA.B Map16TileGenerate
     JSL GenerateTile
     JSR CODE_00FD5A
     LDA.W DisableMidway
@@ -13057,29 +13062,29 @@ CODE_00F2C9:
     RTS
 
 CODE_00F2EE:
-    CPY.B #$06
+    CPY.B #$06                                ; Vine?
     BEQ CODE_00F2FC
     CPY.B #$07
-    BCC CODE_00F309
+    BCC RunPage0Blocks_4
     CPY.B #$1D
-    BCS CODE_00F309
-    ORA.B #$80
+    BCS RunPage0Blocks_4
+    ORA.B #$80                                ; Handle nets (7-1C)
 CODE_00F2FC:
     CMP.B #$01
     BNE +
-    ORA.B #$18
+    ORA.B #$18                                ; A = parameter given to RunPage0Blocks_2
   + TSB.B InteractionPtsClimbable
     LDA.B PlayerBlockXSide
     STA.B InteractionPtDirection
     RTS
 
-CODE_00F309:
-    CPY.B #$2F
+RunPage0Blocks_4:
+    CPY.B #$2F                                ; Coins end
     BCS CODE_00F311
-    CPY.B #$2A
+    CPY.B #$2A                                ; Coins start
     BCS CODE_00F32B
 CODE_00F311:
-    CPY.B #$6E
+    CPY.B #$6E                                ; Moon
     BNE Return00F376
     LDA.B #$0F
     JSL CODE_00F38A
@@ -13092,19 +13097,19 @@ CODE_00F311:
     BRA CODE_00F36B
 
 CODE_00F32B:
-    BNE CODE_00F332                           ;YOSHI COIN HANDLER
+    BNE CODE_00F332                           ; Handle coins
     LDA.W BluePSwitchTimer
-    BEQ Return00F376
+    BEQ Return00F376                          ; If none of that, return
 CODE_00F332:
-    CPY.B #$2D
-    BEQ CODE_00F33F
-    BCC CODE_00F367
-    LDA.B TouchBlockYPos
-    SEC
-    SBC.B #$10
-    STA.B TouchBlockYPos
-CODE_00F33F:
-    JSL CODE_00F377
+    CPY.B #$2D                                ; Yoshi coin top
+    BEQ CODE_00F33F                           ; If yoshi coin top, branch
+    BCC CODE_00F367                           ; If regular coins, branch
+    LDA.B TouchBlockYPos                      ; Change the touched block coord
+    SEC                                       ; Bug: this is what actually prevents it from
+    SBC.B #$10                                ; working on a subscreen boundary, since it doesn't carry
+    STA.B TouchBlockYPos                      ; to the top byte of the position
+CODE_00F33F:                                  ; Yoshi coin handler
+    JSL CODE_00F377                           ; Give score for yoshi coins
     INC.W DragonCoinsShown
     LDA.W DragonCoinsShown
     CMP.B #$05
@@ -13115,21 +13120,23 @@ CODE_00F33F:
     STA.W AllDragonCoinsCollected,Y
     PLX
   + LDA.B #!SFX_DRAGONCOIN
-    STA.W SPCIO0                              ; / Play sound effect
+    STA.W SPCIO0                              ; Play sound effect
     LDA.B #$01
-    JSL CODE_05B330
-    LDY.B #$18
+    JSL CODE_05B330                           ; Increase coins by 1 (did dragon coins ever do more?)
+    LDY.B #$18                                ; Replace the coin with air (both blocks)
     BRA +
 
-CODE_00F367:
-    JSL CODE_05B34A
+CODE_00F367:                                  ; Regular coins
+    JSL CODE_05B34A                           ; Increase coins (why is this in bank 05?)
 CODE_00F36B:
-    LDY.B #$01                                ; \ Block to generate = #$01
-  + STY.B Map16TileGenerate                   ; /
+    LDY.B #$01                                ; Replace the coin with air
+  + STY.B Map16TileGenerate
     JSL GenerateTile
-    JSR CODE_00FD5A
+    JSR CODE_00FD5A                           ; I think this generates the sparkles
 Return00F376:
     RTS
+
+; End of RunPage0Blocks
 
 CODE_00F377:
     LDA.W DragonCoinsCollected
@@ -13206,12 +13213,12 @@ CODE_00F3E9:
     XBA
     TYA
     SEC
-    SBC.B #$37
+    SBC.B #$37                                ; Pipe tile ID
     CMP.B #$02
-    BCS Return00F442
+    BCS Return00F442                          ; If not pipe, leave
     TAY
     LDA.B PlayerXPosInBlock
-    SBC.W DATA_00F3E3,Y
+    SBC.W DATA_00F3E3,Y                       ; X offsets to check for
     CMP.B #$05
     BCS CODE_00F43F
     PHX
@@ -13255,7 +13262,7 @@ CODE_00F43F:
 Return00F442:
     RTS
 
-CODE_00F443:
+CheckDoorEnterable:
     LDA.B PlayerXPosNext
     CLC
     ADC.B #$04
@@ -13263,62 +13270,62 @@ CODE_00F443:
     CMP.B #$08
     RTS
 
-CODE_00F44D:
+GetBlockAtPlayer:                             ; X = position offset idx
     INX
     INX
     REP #$20                                  ; A->16
     LDA.B PlayerXPosNext
     CLC
-    ADC.W DATA_00E830,X
+    ADC.W PlayerXHitboxPoints,X
     STA.B TouchBlockXPos
     LDA.B PlayerYPosNext
     CLC
-    ADC.W DATA_00E89C,X
+    ADC.W PlayerYHitboxPoints,X
     STA.B TouchBlockYPos
-CODE_00F461:
-    JSR CODE_00F465
+GetBlockAtTouchPos:
+    JSR CODE_00F465                           ; Useless JSR
     RTS
 
 CODE_00F465:
     SEP #$20                                  ; A->8
-    STZ.W SwitchPalacePressed
+    STZ.W SwitchPalacePressed                 ; Reset the switch palace switch
     PHX
-    LDA.B TempScreenMode
+    LDA.B TempScreenMode                      ; Get level properties
     BPL +
-    JMP CODE_00F4EC
+    JMP CODE_00F4EC                           ; If collision with layer 2 is enabled, branch
 
-  + BNE CODE_00F4A6
+  + BNE CODE_00F4A6                           ; If vertical level or layer 1 collision disabled, branch
     REP #$20                                  ; A->16
     LDA.B TouchBlockYPos
     CMP.W #$01B0
     SEP #$20                                  ; A->8
-    BCS CODE_00F4A0
+    BCS CODE_00F4A0                           ; Branch if out of Y bounds
     AND.B #$F0
-    STA.B _0
-    LDX.B TouchBlockXPos+1
+    STA.B _0                                  ; Store Y block position into _0
+    LDX.B TouchBlockXPos+1                    ; X register = high X byte
     CPX.B LevelScrLength
-    BCS CODE_00F4A0
+    BCS CODE_00F4A0                           ; Branch if out of X bounds
     LDA.B TouchBlockXPos
     LSR A
     LSR A
     LSR A
     LSR A
-    ORA.B _0
+    ORA.B _0                                  ; A = block position as yyyyxxxx
     CLC
-    ADC.L DATA_00BA60,X
+    ADC.L DATA_00BA60,X                       ; Add to block data ptr (low byte)
     STA.B _0
     LDA.B TouchBlockYPos+1
-    ADC.L DATA_00BA9C,X
+    ADC.L DATA_00BA9C,X                       ; Add to block data ptr (high byte)
     BRA CODE_00F4CD
 
-CODE_00F4A0:
+CODE_00F4A0:                                  ; Out of bounds, collide with air
     PLX
     LDY.B #$25
 CODE_00F4A3:
     LDA.B #$00
     RTS
 
-CODE_00F4A6:
+CODE_00F4A6:                                  ; Same as above, but for vertical levels.
     LDA.B TouchBlockXPos+1
     CMP.B #$02
     BCS CODE_00F4E7
@@ -13339,37 +13346,37 @@ CODE_00F4A6:
     STA.B _0
     LDA.B TouchBlockXPos+1
     ADC.L DATA_00BABC,X
-CODE_00F4CD:
+CODE_00F4CD:                                  ; Sample the block buffer.
     STA.B _1
     LDA.B #$7E
     STA.B _2
     LDA.B [_0]
-    STA.W Map16TileNumber
+    STA.W Map16TileNumber                     ; Write the low byte to Map16TileNumber
     INC.B _2
     PLX
-    LDA.B [_0]
-    JSL CODE_00F545
-    LDY.W Map16TileNumber
-    CMP.B #$00
+    LDA.B [_0]                                ; A = high byte
+    JSL RemapBlocks                           ; Remap blocks (for p-switches, etc.)
+    LDY.W Map16TileNumber                     ; Y = low byte
+    CMP.B #$00                                ; C = high byte
     RTS
 
-CODE_00F4E7:
+CODE_00F4E7:                                  ; Duplicate of F4A0
     PLX
     LDY.B #$25
     BRA CODE_00F4A3
 
-CODE_00F4EC:
+CODE_00F4EC:                                  ; If collision with layer 2 is enabled:
     ASL A
-    BNE CODE_00F51B
+    BNE CODE_00F51B                           ; If vertical level, branch
     REP #$20                                  ; A->16
-    LDA.B TouchBlockYPos
+    LDA.B TouchBlockYPos                      ; Same thing as above, but for layer 2
     CMP.W #$01B0
     SEP #$20                                  ; A->8
     BCS CODE_00F4E7
     AND.B #$F0
     STA.B _0
     LDX.B TouchBlockXPos+1
-    CPX.B #$10
+    CPX.B #$10                                ; Except the screen count is always 10
     BCS CODE_00F4E7
     LDA.B TouchBlockXPos
     LSR A
@@ -13384,12 +13391,12 @@ CODE_00F4EC:
     ADC.L DATA_00BAAC,X
     BRA CODE_00F4CD
 
-CODE_00F51B:
+CODE_00F51B:                                  ; Same thing, vertical levels.
     LDA.B TouchBlockXPos+1
     CMP.B #$02
     BCS CODE_00F4E7
     LDX.B TouchBlockYPos+1
-    CPX.B #$0E
+    CPX.B #$0E                                ; 0E screens
     BCS CODE_00F4E7
     LDA.B TouchBlockYPos
     AND.B #$F0
@@ -13407,7 +13414,7 @@ CODE_00F51B:
     ADC.L DATA_00BACA,X
     JMP CODE_00F4CD
 
-CODE_00F545:
+RemapBlocks:                                  ; Remap blocks before processing them
     TAY
     BNE CODE_00F577
     LDY.W Map16TileNumber                     ; Load MAP16 tile number
@@ -13423,19 +13430,19 @@ PSwitchNotInvQBlk:
     CPY.B #$2B                                ; \ If block is "Coin",
     BEQ PSwitchCoinBrown                      ; / branch to PSwitchCoinBrown
     TYA
-    SEC
+    SEC                                       ; Check if this is a switch palace switch.
     SBC.B #$EC
     CMP.B #$10
     BCS CODE_00F592
     INC A
-    STA.W SwitchPalacePressed
+    STA.W SwitchPalacePressed                 ; Set the switch as pressed.
     BRA CODE_00F571
 
 PSwitchCoinBrown:
     LDY.W BluePSwitchTimer
     BEQ Return00F594
-CODE_00F571:
-    LDA.B #$32
+CODE_00F571:                                  ; Pretend it's a solid block.
+    LDA.B #$32                                ; Also, wait, they're pretending it's block $3232. Funny.
     STA.W Map16TileNumber
     RTL
 
@@ -14051,11 +14058,11 @@ CODE_00F9C9:
     RTL                                       ; /
 
 CODE_00FA19:
-    LDY.B #DATA_00E632
+    LDY.B #SlopeHeights
     STY.B _5
-    LDY.B #DATA_00E632>>8
+    LDY.B #SlopeHeights>>8
     STY.B _6
-    LDY.B #DATA_00E632>>16
+    LDY.B #SlopeHeights>>16
     STY.B _7
     SEC
     SBC.B #$6E
