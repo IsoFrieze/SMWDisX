@@ -4524,19 +4524,19 @@ CODE_05BC76:
     BEQ Return05BC49
     JSL ExecutePtr
 
-    dw CODE_05C04D                            ; 00 - Auto-Scroll, Unused?
-    dw CODE_05C04D                            ; 01 - Auto-Scroll
+    dw ProcSpecAutoScrollL1                   ; 00 - Auto-Scroll, Unused?
+    dw ProcSpecAutoScrollL1                   ; 01 - Auto-Scroll
     dw Return05BC49                           ; 02 - Layer 2 Smash
     dw Return05BC49                           ; 03 - Layer 2 Scroll
-    dw ADDR_05C283                            ; 04 - Unused
-    dw ADDR_05C69E                            ; 05 - Unused
+    dw ProcScroll04                           ; 04 - Unused
+    dw ProcScroll05                           ; 05 - Unused
     dw Return05BC49                           ; 06 - Layer 2 Falls
     dw Return05BFF5                           ; 07 - Unused
-    dw CODE_05C51F                            ; 08 - Layer 2 Scroll
+    dw ProcLayer2HScroll                      ; 08 - Layer 2 Scroll
     dw Return05BC49                           ; 09 - Unused
-    dw ADDR_05C32E                            ; 0A - Unused
-    dw CODE_05C727                            ; 0B - Layer 2 On/Off Switch controlled
-    dw CODE_05C787                            ; 0C - Auto-Scroll level
+    dw ProcScroll0A                           ; 0A - Unused
+    dw ProcLayer2OnOff                        ; 0B - Layer 2 On/Off Switch controlled
+    dw ProcAutoScroll                         ; 0C - Auto-Scroll level
     dw Return05BC49                           ; 0D - Fast BG scroll
     dw Return05BC49                           ; 0E - Layer 2 sink/rise
 
@@ -4549,21 +4549,21 @@ CODE_05BCA5:
     BNE Return05BC49
     JSL ExecutePtr
 
-    dw CODE_05C04D
-    dw CODE_05C198
-    dw CODE_05C955
-    dw CODE_05C5BB
-    dw ADDR_05C283
+    dw ProcSpecAutoScrollL1
+    dw ProcSpecAutoScrollL2
+    dw ProcLayer2Smash
+    dw ProcLayer2VScroll
+    dw ProcScroll04
     dw Return05BC49
-    dw ADDR_05C659
+    dw ProcLayer2Falls
     dw Return05BFF5
-    dw CODE_05C51F
-    dw CODE_05C7C1
-    dw ADDR_05C32E
-    dw CODE_05C727
-    dw CODE_05C787
-    dw CODE_05C7BC
-    dw CODE_05C81C
+    dw ProcLayer2HScroll
+    dw ProcScroll09
+    dw ProcScroll0A
+    dw ProcLayer2OnOff
+    dw ProcAutoScroll
+    dw ProcFastBGScroll
+    dw ProcLayer2Sink
 
 CODE_05BCD6:
     PHB
@@ -4581,38 +4581,38 @@ CODE_05BCE9:
     LDA.W Layer1ScrollCmd
     JSL ExecutePtr
 
-    dw CODE_05BD36                            ; 00 - Auto-Scroll, Unused?
-    dw CODE_05BD36                            ; 01 - Auto-Scroll
-    dw CODE_05BF6A                            ; 02 - Layer 2 Smash
-    dw CODE_05BF0A                            ; 03 - Layer 2 Scroll
-    dw ADDR_05BDDD                            ; 04 - Unused
-    dw ADDR_05BFBA                            ; 05 - Unused
-    dw ADDR_05BF97                            ; 06 - Layer 2 Falls
+    dw InitSpecialAutoScrollL1                ; 00 - Auto-Scroll, Unused?
+    dw InitSpecialAutoScrollL1                ; 01 - Auto-Scroll
+    dw InitLayer2Smash                        ; 02 - Layer 2 Smash
+    dw InitLayer2VScrollL1                    ; 03 - Layer 2 Scroll
+    dw InitScroll04L1                         ; 04 - Unused
+    dw InitScroll05                           ; 05 - Unused
+    dw InitLayer2Falls                        ; 06 - Layer 2 Falls
     dw Return05BD35                           ; 07 - Unused
-    dw CODE_05BEA6                            ; 08 - Layer 2 Scroll
+    dw InitLayer2HScrollL1                    ; 08 - Layer 2 Scroll
     dw Return05BC49                           ; 09 - Unused
-    dw ADDR_05BE3A                            ; 0A - Unused
-    dw CODE_05BFF6                            ; 0B - Layer 2 On/Off Switch controlled
-    dw CODE_05C005                            ; 0C - Auto-Scroll level
-    dw CODE_05C01A                            ; 0D - Fast BG scroll
-    dw CODE_05C036                            ; 0E - Layer 2 sink/rise
+    dw InitScroll0AL1                         ; 0A - Unused
+    dw InitLayer2OnOff                        ; 0B - Layer 2 On/Off Switch controlled
+    dw InitAutoScroll                         ; 0C - Auto-Scroll level
+    dw InitFastBGScroll                       ; 0D - Fast BG scroll
+    dw InitLayer2Sink                         ; 0E - Layer 2 sink/rise
 
 CODE_05BD0E:
     LDA.W Layer2ScrollCmd
     BEQ Return05BD35
     JSL ExecutePtr
 
-    dw CODE_05BD4C
-    dw CODE_05BD4C
+    dw InitSpecialAutoScrollL2
+    dw InitSpecialAutoScrollL2
     dw Return05BC49
-    dw CODE_05BF20
-    dw ADDR_05BDF0
+    dw InitLayer2VScrollL2
+    dw InitScroll04L2
     dw Return05BC49
     dw Return05BC49
     dw Return05BD35
-    dw CODE_05BEC6
-    dw CODE_05C022
-    dw ADDR_05BE4D
+    dw InitLayer2HScrollL2
+    dw InitScroll09
+    dw InitScroll0AL2
     dw Return05BC49
     dw Return05BC49
     dw Return05BC49
@@ -4621,7 +4621,7 @@ CODE_05BD0E:
 Return05BD35:
     RTS
 
-CODE_05BD36:
+InitSpecialAutoScrollL1:
     STZ.W HorizLayer1Setting
     LDA.W Layer1ScrollBits
     ASL A
@@ -4631,7 +4631,7 @@ CODE_05BD36:
     STA.W Layer1ScrollCmd
     LDA.W DATA_05C9DB,Y
     STA.W Layer1ScrollBits
-CODE_05BD4C:
+InitSpecialAutoScrollL2:
     LDX.W ScrollLayerIndex
     REP #$20                                  ; A->16
     STZ.W Layer1ScrollXSpeed,X
@@ -4699,7 +4699,7 @@ CODE_05BDCF:
     STA.W Layer1ScrollTimer,X
     RTS
 
-ADDR_05BDDD:
+InitScroll04L1:
     LDA.W Layer1ScrollBits
     ASL A
     TAY
@@ -4708,7 +4708,7 @@ ADDR_05BDDD:
     STA.W Layer1ScrollCmd
     LDA.W DATA_05CA0C,Y
     STA.W Layer1ScrollBits
-ADDR_05BDF0:
+InitScroll04L2:
     REP #$20                                  ; A->16
     LDY.W Layer1ScrollBits
     LDA.W ScrollLayerIndex
@@ -4745,7 +4745,7 @@ ADDR_05BDF0:
     SEP #$20                                  ; A->8
     RTS
 
-ADDR_05BE3A:
+InitScroll0AL1:
     LDA.W Layer1ScrollBits
     ASL A
     TAY
@@ -4754,7 +4754,7 @@ ADDR_05BE3A:
     STA.W Layer1ScrollCmd
     LDA.W DATA_05CA1E,Y
     STA.W Layer1ScrollBits
-ADDR_05BE4D:
+InitScroll0AL2:
     REP #$20                                  ; A->16
     LDY.W Layer1ScrollBits
     LDA.W ScrollLayerIndex
@@ -4798,7 +4798,7 @@ CODE_05BE8A:
     PLB
     RTL
 
-CODE_05BEA6:
+InitLayer2HScrollL1:
     STZ.W HorizLayer1Setting
     LDA.W Layer1ScrollBits
     ASL A
@@ -4812,7 +4812,7 @@ CODE_05BEA6:
     STZ.W NextLayer1XPos
     STZ.B Layer2XPos
     STZ.W NextLayer2XPos
-CODE_05BEC6:
+InitLayer2HScrollL2:
     REP #$20                                  ; A->16
     LDY.W Layer1ScrollBits
     LDA.W ScrollLayerIndex
@@ -4844,7 +4844,7 @@ CODE_05BEC6:
     STZ.W Layer1ScrollXPosUpd,X
     JMP CODE_05BDC9
 
-CODE_05BF0A:
+InitLayer2VScrollL1:
     STZ.W VertLayer2Setting
     LDA.W Layer1ScrollBits
     ASL A
@@ -4854,7 +4854,7 @@ CODE_05BF0A:
     STA.W Layer1ScrollCmd
     LDA.W DATA_05CA52,Y
     STA.W Layer1ScrollBits
-CODE_05BF20:
+InitLayer2VScrollL2:
     REP #$20                                  ; A->16
     LDY.W Layer1ScrollBits
     LDA.W ScrollLayerIndex
@@ -4888,7 +4888,7 @@ CODE_05BF20:
     STZ.W Layer1ScrollYSpeed,X
     JMP CODE_05BDCF
 
-CODE_05BF6A:
+InitLayer2Smash:
     LDY.W Layer1ScrollBits
     LDA.W DATA_05C94F,Y
     STA.W Layer1ScrollBits
@@ -4908,7 +4908,7 @@ CODE_05BF6A:
     STA.B Layer2YPos
     JMP CODE_05C32B
 
-ADDR_05BF97:
+InitLayer2Falls:
     STZ.W HorizLayer1Setting
     REP #$20                                  ; A->16
     STZ.B Layer1XPos
@@ -4924,7 +4924,7 @@ ADDR_05BF97:
     STA.W Layer2ScrollBits
     RTS
 
-ADDR_05BFBA:
+InitScroll05:
     STZ.W HorizLayer1Setting
     REP #$20                                  ; A->16
     STZ.B Layer2XPos
@@ -4951,7 +4951,7 @@ CODE_05BFD5:
 Return05BFF5:
     RTS
 
-CODE_05BFF6:
+InitLayer2OnOff:
     REP #$20                                  ; A->16
     LDA.W #$0B00
     BRA CODE_05BFD2
@@ -4963,7 +4963,7 @@ DATA_05BFFD:
 DATA_05C001:
     db $80,$00,$00,$01
 
-CODE_05C005:
+InitAutoScroll:
     STZ.W HorizLayer1Setting
     LDA.W Layer1ScrollBits
     ASL A
@@ -4974,11 +4974,11 @@ CODE_05C005:
     LDA.W #$000C
     BRA CODE_05BFD2
 
-CODE_05C01A:
+InitFastBGScroll:
     REP #$20                                  ; A->16
     LDA.W #$0D00
     JSR CODE_05BFD2
-CODE_05C022:
+InitScroll09:
     STZ.W HorizLayer2Setting
     REP #$20                                  ; A->16
     STZ.W Layer2ScrollXSpeed
@@ -4988,7 +4988,7 @@ CODE_05C022:
     SEP #$20                                  ; A->8
     RTS
 
-CODE_05C036:
+InitLayer2Sink:
     LDY.W Layer1ScrollBits
     LDA.W DATA_05C808,Y
     STA.W Layer1ScrollTimer
@@ -4998,7 +4998,7 @@ CODE_05C036:
     LDA.W #$0E00
     JMP CODE_05BFD5
 
-CODE_05C04D:
+ProcSpecAutoScrollL1:
     LDA.W ScrollLayerIndex
     LSR A
     LSR A
@@ -5111,7 +5111,7 @@ CODE_05C0D0:
     INC.W Layer1ScrollType,X
     SEP #$20                                  ; A->8
     DEC.W Layer1ScrollTimer,X
-    JMP CODE_05C04D
+    JMP ProcSpecAutoScrollL1
 
   + STA.B _A
     LDA.B _C
@@ -5184,8 +5184,8 @@ CODE_05C18D:
     SEP #$20                                  ; A->8
     RTS
 
-CODE_05C198:
-    JSR CODE_05C04D
+ProcSpecAutoScrollL2:
+    JSR ProcSpecAutoScrollL1
     REP #$20                                  ; A->16
     LDA.W NextLayer2XPos
     STA.W NextLayer1XPos
@@ -5297,7 +5297,7 @@ ADDR_05C24D:
 ADDR_05C280:
     JMP ADDR_05C31D
 
-ADDR_05C283:
+ProcScroll04:
     REP #$20                                  ; A->16
     LDY.W ScrollLayerIndex
     LDA.W Layer1ScrollXPosUpd,Y
@@ -5385,7 +5385,7 @@ CODE_05C32B:
     SEP #$20                                  ; A->8
     RTS
 
-ADDR_05C32E:
+ProcScroll0A:
     REP #$20                                  ; A->16
     LDY.W ScrollLayerIndex
     LDA.W Layer1ScrollYPosUpd,Y
@@ -5649,7 +5649,7 @@ CODE_05C4F9:
     STA.B _8
     RTS
 
-CODE_05C51F:
+ProcLayer2HScroll:
     REP #$30                                  ; AXY->16
     LDY.W ScrollLayerIndex
     REP #$30                                  ; AXY->16
@@ -5725,7 +5725,7 @@ CODE_05C585:
 CODE_05C5B8:
     JMP CODE_05C328
 
-CODE_05C5BB:
+ProcLayer2VScroll:
     REP #$30                                  ; AXY->16
     LDY.W ScrollLayerIndex
     REP #$30                                  ; AXY->16
@@ -5803,7 +5803,7 @@ CODE_05C654:
     INX
     JMP CODE_05C328
 
-ADDR_05C659:
+ProcLayer2Falls:
     LDA.W Layer2ScrollBits
     BEQ ++
     DEC.W Layer2ScrollBits
@@ -5835,7 +5835,7 @@ ADDR_05C659:
     JSR CODE_05C4F9
     JMP CODE_05C32B
 
-ADDR_05C69E:
+ProcScroll05:
     LDA.B #$02
     STA.B Layer1ScrollDir
     STZ.B Layer2ScrollDir
@@ -5905,7 +5905,7 @@ DATA_05C71F:
 DATA_05C723:
     db $FF,$FF,$01,$00
 
-CODE_05C727:
+ProcLayer2OnOff:
     LDX.W OnOffSwitch
     BEQ +
     LDX.B #$02
@@ -5950,7 +5950,7 @@ CODE_05C770:
 CODE_05C784:
     JMP CODE_05C32B
 
-CODE_05C787:
+ProcAutoScroll:
     LDA.B #$02
     STA.B Layer1ScrollDir
     STA.B Layer2ScrollDir
@@ -5976,10 +5976,10 @@ CODE_05C787:
   + JSR CODE_05C4F9
     JMP CODE_05C32B
 
-CODE_05C7BC:
+ProcFastBGScroll:
     LDA.W BGFastScrollActive
     BEQ CODE_05C7ED
-CODE_05C7C1:
+ProcScroll09:
     LDA.B #$02
     STA.B Layer2ScrollDir
     REP #$20                                  ; A->16
@@ -6032,7 +6032,7 @@ else                                          ;<===================== E0 & E1 ==
     dw $FFFE,$0002                            ;!
 endif                                         ;/===============================================
 
-CODE_05C81C:
+ProcLayer2Sink:
     REP #$20                                  ; A->16
     STZ.B _0
     LDY.W Layer2ScrollTimer
@@ -6131,7 +6131,7 @@ DATA_05C94F:
 DATA_05C952:
     db $05,$05,$05
 
-CODE_05C955:
+ProcLayer2Smash:
     LDX.W Layer1ScrollBits
     LDY.W Layer2ScrollBits
 CODE_05C95B:
