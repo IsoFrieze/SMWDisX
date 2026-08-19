@@ -1075,246 +1075,246 @@ CODE_0DA106:
     dl $000000
     dl $000000
     dl $000000
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA64D
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DA57B
-    dl CODE_0DB2CA
-    dl ADDR_0DA656
-    dl ADDR_0DA656
-    dl CODE_0DA673
-    dl CODE_0DA673
-    dl CODE_0DA68E
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DEABF
-    dl CODE_0DA7C1
-    dl CODE_0DC259
-    dl CODE_0DC259
-    dl CODE_0DCE67
-    dl CODE_0DCE67
-    dl CODE_0DCE67
-    dl CODE_0DCE67
-    dl CODE_0DCE94
-    dl CODE_0DCE94
-    dl CODE_0DCE94
-    dl CODE_0DCE94
-    dl CODE_0DCEC0
-    dl CODE_0DCEDA
-    dl CODE_0DE95F
-    dl CODE_0DE95F
-    dl CODE_0DE95F
-    dl CODE_0DE95F
-    dl CODE_0DE95F
-    dl CODE_0DE95F
-    dl CODE_0DE95F
-    dl CODE_0DE95F
-    dl ADDR_0DE971
-    dl CODE_0DDA57
-    dl CODE_0DE9AA
-    dl CODE_0DE9AA
-    dl CODE_0DE9AA
-    dl CODE_0DE9ED
-    dl CODE_0DE9ED
-    dl ADDR_0DEA3E
-    dl ADDR_0DEA3E
-    dl ADDR_0DB571
-    dl ADDR_0DB571
-    dl ADDR_0DB571
-    dl ADDR_0DB571
-    dl ADDR_0DB571
-    dl ADDR_0DB571
-    dl ADDR_0DB571
-    dl ADDR_0DB571
-    dl ADDR_0DCEA6
-    dl CODE_0DE0AE
-    dl CODE_0DE0AE
-    dl CODE_0DE0AE
-    dl CODE_0DE0AE
-    dl CODE_0DDA68
-    dl CODE_0DDA68
-    dl CODE_0DDA68
-    dl CODE_0DDA68
-    dl CODE_0DDA68
-    dl CODE_0DDA68
-    dl CODE_0DDA68
-    dl CODE_0DDA80
-    dl CODE_0DDA80
-    dl CODE_0DDA80
-    dl CODE_0DDAA2
-    dl CODE_0DEB6A
-    dl ADDR_0DEC68
-    dl CODE_0DA71B
-    dl CODE_0DA760
-    dl CODE_0DC2E9
-    dl CODE_0DEC33
-    dl CODE_0DA7E7
-    dl CODE_0DB58B
-    dl CODE_0DB6E3
-    dl CODE_0DB6E3
-    dl CODE_0DEC8E
-    dl CODE_0DEC8E
-    dl CODE_0DEC8E
-    dl CODE_0DEC8E
-    dl CODE_0DB583
-    dl CODE_0DECC1
-    dl CODE_0DC31E
-    dl CODE_0DA80D
-    dl CODE_0DA80D
-    dl CODE_0DA846
-    dl CODE_0DA846
-    dl CODE_0DA87D
-    dl CODE_0DA87D
-    dl CODE_0DEC5C
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
-    dl CODE_0DA6D1
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJGreenStarBlock
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJSingleTile
+    dl ExtOBJDragonCoin
+    dl ExtOBJGradSlopeCorner
+    dl ExtOBJGradSlopeCorner
+    dl ExtOBJPurpleTriangle
+    dl ExtOBJPurpleTriangle
+    dl ExtOBJMidwayTape
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJGhostHouseExit
+    dl ExtOBJClimbingNetDoor
+    dl ExtOBJEscalatorEnd
+    dl ExtOBJEscalatorEnd
+    dl ExtOBJGuideLineBigCircle
+    dl ExtOBJGuideLineBigCircle
+    dl ExtOBJGuideLineBigCircle
+    dl ExtOBJGuideLineBigCircle
+    dl ExtOBJGuideLineSmallCircle
+    dl ExtOBJGuideLineSmallCircle
+    dl ExtOBJGuideLineSmallCircle
+    dl ExtOBJGuideLineSmallCircle
+    dl ExtOBJGuideLineHorizEnd
+    dl ExtOBJGuideLineVertEnd
+    dl ExtOBJSingleTile2
+    dl ExtOBJSingleTile2
+    dl ExtOBJSingleTile2
+    dl ExtOBJSingleTile2
+    dl ExtOBJSingleTile2
+    dl ExtOBJSingleTile2
+    dl ExtOBJSingleTile2
+    dl ExtOBJSingleTile2
+    dl ExtOBJLargeBackgroundArea
+    dl ExtOBJCaveLavaInnerCorner
+    dl ExtOBJGhostHouseBGObject
+    dl ExtOBJGhostHouseBGObject
+    dl ExtOBJGhostHouseBGObject
+    dl ExtOBJCobweb
+    dl ExtOBJCobweb
+    dl ExtOBJDiagonalBeam
+    dl ExtOBJDiagonalBeam
+    dl ExtOBJCloudFringeTile
+    dl ExtOBJCloudFringeTile
+    dl ExtOBJCloudFringeTile
+    dl ExtOBJCloudFringeTile
+    dl ExtOBJCloudFringeTile
+    dl ExtOBJCloudFringeTile
+    dl ExtOBJCloudFringeTile
+    dl ExtOBJCloudFringeTile
+    dl ExtOBJCanvasTile2
+    dl ExtOBJCanvas
+    dl ExtOBJCanvas
+    dl ExtOBJCanvas
+    dl ExtOBJCanvas
+    dl ExtOBJCanvasTiles
+    dl ExtOBJCanvasTiles
+    dl ExtOBJCanvasTiles
+    dl ExtOBJCanvasTiles
+    dl ExtOBJCanvasTiles
+    dl ExtOBJCanvasTiles
+    dl ExtOBJCanvasTiles
+    dl ExtOBJCanvasPairs
+    dl ExtOBJCanvasPairs
+    dl ExtOBJCanvasPairs
+    dl ExtOBJTorpedoLauncher
+    dl ExtOBJGhostHouseEntrance
+    dl ExtOBJSeaweed
+    dl ExtOBJBigBush
+    dl ExtOBJMediumBush
+    dl ExtOBJCastleEntrance
+    dl ExtOBJYoshisHouse
+    dl ExtOBJArrowSign
+    dl ExtOBJGreenSwitchBlock
+    dl ExtOBJTreeBranch
+    dl ExtOBJTreeBranch
+    dl ExtOBJPalaceSwitch
+    dl ExtOBJPalaceSwitch
+    dl ExtOBJPalaceSwitch
+    dl ExtOBJPalaceSwitch
+    dl ExtOBJYellowSwitchBlock
+    dl ExtOBJGhostHouseWindow
+    dl ExtOBJBossDoor
+    dl ExtOBJSpecSlopeSteep
+    dl ExtOBJSpecSlopeSteep
+    dl ExtOBJSpecSlopeNormal
+    dl ExtOBJSpecSlopeNormal
+    dl ExtOBJSpecSlopeVerySteep
+    dl ExtOBJSpecSlopeVerySteep
+    dl ExtOBJPalaceOuterCorner
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
+    dl ExtOBJDoor
 
 CODE_0DA40F:
     SEP #$30                                  ; AXY->8
@@ -1326,92 +1326,92 @@ CODE_0DA415:
     LDA.W ObjectTileset
     JSL ExecutePtrLong
 
-    dl CODE_0DA44B
-    dl CODE_0DC190
-    dl CODE_0DCD90
-    dl CODE_0DD990
-    dl CODE_0DE890
-    dl CODE_0DE890
-    dl CODE_0DCD90
-    dl CODE_0DA44B
-    dl CODE_0DCD90
-    dl CODE_0DD990
-    dl CODE_0DD990
-    dl CODE_0DD990
-    dl CODE_0DA44B
-    dl CODE_0DE890
-    dl CODE_0DD990
+    dl OBJTSGrassForestCloud
+    dl OBJTSCastle
+    dl OBJTSRopeMushroom
+    dl OBJTSUnderground
+    dl OBJTSGhostHouseBonus
+    dl OBJTSGhostHouseBonus
+    dl OBJTSRopeMushroom
+    dl OBJTSGrassForestCloud
+    dl OBJTSRopeMushroom
+    dl OBJTSUnderground
+    dl OBJTSUnderground
+    dl OBJTSUnderground
+    dl OBJTSGrassForestCloud
+    dl OBJTSGhostHouseBonus
+    dl OBJTSUnderground
 
-CODE_0DA44B:
+OBJTSGrassForestCloud:
     SEP #$30                                  ; AXY->8
     LDX.B LvlLoadObjNo
     DEX
     TXA
     JSL ExecutePtrLong
 
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DAA26
-    dl CODE_0DAAB4
-    dl CODE_0DAB0D
-    dl CODE_0DAB3E
-    dl CODE_0DB075
-    dl CODE_0DB1D4
-    dl CODE_0DB224
-    dl ADDR_0DB336
-    dl CODE_0DB3BD
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB42D
-    dl CODE_0DB461
-    dl CODE_0DB49E
-    dl CODE_0DB51F
-    dl CODE_0DB547
-    dl CODE_0DB1C8
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DBB2C
-    dl CODE_0DBB63
-    dl CODE_0DB916
-    dl CODE_0DBADC
-    dl CODE_0DBA4C
-    dl CODE_0DBA0A
-    dl CODE_0DB9C0
-    dl CODE_0DB966
-    dl CODE_0DB91E
-    dl CODE_0DB73F
-    dl CODE_0DB7AA
-    dl CODE_0DB863
-    dl CODE_0DB604
-    dl CODE_0DB6C3
-    dl ADDR_0DB705
-    dl CODE_0DB5B7
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJVerticalPipes
+    dl OBJHorizontalPipes
+    dl OBJBulletCannon
+    dl OBJSlopes
+    dl OBJLedgeEdges
+    dl OBJLedge
+    dl OBJMidwayGoalPosts
+    dl OBJBlueCoins
+    dl OBJRopeClouds
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJDonutBridge
+    dl OBJRepTileWithBottom
+    dl OBJClimbingNetEdge
+    dl OBJVerticalSkinny
+    dl OBJHorizontalSkinny
+    dl OBJLongLedge
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJIcyPipe
+    dl OBJIcyTurnBlocks
+    dl OBJBlueSwitchBlocks
+    dl OBJForestCanopy
+    dl OBJForestLedgeEdges
+    dl OBJForestLedge
+    dl OBJBigTreeTrunk
+    dl OBJSmallTreeTrunk
+    dl OBJRedSwitchBlocks
+    dl OBJDiagonalPipe
+    dl OBJLeftDiagonalPlat
+    dl OBJRightDiagonalPlat
+    dl OBJArches
+    dl OBJHorizCloudFringe
+    dl OBJVertCloudFringe
+    dl OBJLongBushes
 
 CODE_0DA512:
     LDY.B #$00
@@ -1455,7 +1455,7 @@ DATA_0DA548:
     db $28,$2A,$DE,$E0,$E2,$E4,$EC,$ED
     db $2C,$25,$2D
 
-CODE_0DA57B:
+ExtOBJSingleTile:
     TXA
     SEC
     SBC.B #$10
@@ -1490,11 +1490,11 @@ Return0DA5B0:
 
 CODE_0DA5B1:
     LDY.B LevelLoadPos
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDX.B _0
     CPX.B #$13
     BMI +
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
   + LDA.L DATA_0DA548,X
     STA.B _C
     CPX.B #$01
@@ -1563,7 +1563,7 @@ CODE_0DA5F0:
     BEQ CODE_0DA648
     CPX.B #$07
     BEQ +
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$32
     STA.B _C
 CODE_0DA648:
@@ -1571,7 +1571,7 @@ CODE_0DA648:
     STA.B [Map16LowPtr],Y
   + RTS
 
-CODE_0DA64D:
+ExtOBJGreenStarBlock:
     LDA.B #$32
     JMP CODE_0DA57F
 
@@ -1582,25 +1582,25 @@ DATA_0DA652:
 DATA_0DA654:
     db $DA,$DC
 
-ADDR_0DA656:
+ExtOBJGradSlopeCorner:
     LDY.B LevelLoadPos
     TXA
     SEC
     SBC.B #$42
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DA652,X
     JSR CODE_0DA95B
     LDA.L DATA_0DA654,X
     STA.B [Map16LowPtr],Y
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     RTS
 
 
 DATA_0DA671:
     db $B4,$B5
 
-CODE_0DA673:
+ExtOBJPurpleTriangle:
     LDY.B LevelLoadPos
     TXA
     SEC
@@ -1608,14 +1608,14 @@ CODE_0DA673:
     TAX
     LDA.L DATA_0DA671,X
     STA.B [Map16LowPtr],Y
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     JSR CODE_0DA97D
     LDA.B #$EB
     STA.B [Map16LowPtr],Y
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     RTS
 
-CODE_0DA68E:
+ExtOBJMidwayTape:
     LDX.W TranslevelNo
     %WorL_X(LDA,OWLevelTileSettings)
     AND.B #$40
@@ -1624,10 +1624,10 @@ CODE_0DA68E:
     BNE +
     LDY.B LevelLoadPos
     DEY
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$35
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$38
     STA.B [Map16LowPtr],Y
   + RTS
@@ -1657,17 +1657,17 @@ DATA_0DA6CD:
 DATA_0DA6CF:
     db $20,$28
 
-CODE_0DA6D1:
+ExtOBJDoor:
     LDY.B LevelLoadPos
     TXA
     SEC
     SBC.B #$47
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DA6CD,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DA6CF,X
     STA.B [Map16LowPtr],Y
     RTS
@@ -1681,7 +1681,7 @@ DATA_0DA6EE:
     db $51,$4A,$60,$25,$5A,$49,$49,$49
     db $53,$4A,$4A,$4A,$63
 
-CODE_0DA71B:
+ExtOBJBigBush:
     LDY.B LevelLoadPos
     LDA.B #$08
     STA.B _0
@@ -1692,7 +1692,7 @@ CODE_0DA71B:
 CODE_0DA72A:
     LDA.B _0
     STA.B _2
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DA6EE,X
     JSR CODE_0DA78D
     INX
@@ -1710,7 +1710,7 @@ DATA_0DA748:
     db $49,$5F,$63,$25,$25,$57,$49,$52
     db $4A,$5D,$5A,$49,$49,$49,$4F,$60
 
-CODE_0DA760:
+ExtOBJMediumBush:
     LDY.B LevelLoadPos
     LDA.B #$05
     STA.B _0
@@ -1721,7 +1721,7 @@ CODE_0DA760:
 CODE_0DA76F:
     LDA.B _0
     STA.B _2
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DA748,X
     JSR CODE_0DA78D
     INX
@@ -1759,7 +1759,7 @@ DATA_0DA7B1:
     db $10,$11,$11,$12,$13,$0B,$0B,$15
     db $13,$0B,$0B,$15,$16,$17,$17,$18
 
-CODE_0DA7C1:
+ExtOBJClimbingNetDoor:
     LDY.B LevelLoadPos
     LDX.B #$00
     JSR CODE_0DA6B1
@@ -1781,11 +1781,11 @@ CODE_0DA7C8:
 DATA_0DA7E3:
     db $66,$67,$68,$69
 
-CODE_0DA7E7:
+ExtOBJArrowSign:
     LDY.B LevelLoadPos
     LDX.B #$00
     JSR CODE_0DA6B1
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DA7E3,X
     JSR CODE_0DA95B
     INX
@@ -1805,17 +1805,17 @@ DATA_0DA809:
 DATA_0DA80B:
     db $E2,$E4
 
-CODE_0DA80D:
+ExtOBJSpecSlopeSteep:
     LDY.B LevelLoadPos
     TXA
     SEC
     SBC.B #$91
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DA809,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA82A
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DA80B,X
     STA.B [Map16LowPtr],Y
     RTS
@@ -1847,23 +1847,23 @@ DATA_0DA842:
 DATA_0DA844:
     db $E6,$E0
 
-CODE_0DA846:
+ExtOBJSpecSlopeNormal:
     LDY.B LevelLoadPos
     TXA
     SEC
     SBC.B #$93
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DA83E,X
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DA840,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA82A
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DA842,X
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DA844,X
     STA.B [Map16LowPtr],Y
     RTS
@@ -1878,21 +1878,21 @@ DATA_0DA879:
 DATA_0DA87B:
     db $F1,$F2
 
-CODE_0DA87D:
+ExtOBJSpecSlopeVerySteep:
     LDY.B LevelLoadPos
     TXA
     SEC
     SBC.B #$95
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DA877,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA82A
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DA879,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA82A
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DA87B,X
     STA.B [Map16LowPtr],Y
     RTS
@@ -1910,7 +1910,7 @@ DATA_0DA8B4:
     db $02,$21,$23,$2A,$2B,$3F,$03,$13
     db $1E,$24,$2E,$2F,$30,$32,$65
 
-CODE_0DA8C3:
+OBJSingleRepTile:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -1973,10 +1973,10 @@ CODE_0DA8D8:
 CODE_0DA92E:
     LDA.L DATA_0DA8B4,X
     STA.B _C
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     CPX.B #$07
     BMI +
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
   + LDA.B _C
     JSR CODE_0DA95B
 CODE_0DA943:
@@ -2104,12 +2104,12 @@ CODE_0DA9EF:
     INC.W LevelLoadObjectTile
     RTS
 
-Sta1To6ePointer:
+OBJHighByte01:
     LDA.B #$01
     STA.B [Map16HighPtr],Y
     RTS
 
-StzTo6ePointer:
+OBJHighByte00:
     LDA.B #$00
     STA.B [Map16HighPtr],Y
     RTS
@@ -2127,7 +2127,7 @@ DATA_0DAA1C:
 DATA_0DAA21:
     db $00,$00,$3A,$34,$38
 
-CODE_0DAA26:
+OBJVerticalPipes:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -2141,10 +2141,10 @@ CODE_0DAA26:
     JSR CODE_0DA6B1
     CPX.B #$03
     BPL CODE_0DAA52
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DAA12,X
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DAA17,X
     STA.B [Map16LowPtr],Y
     JMP CODE_0DAA77
@@ -2152,19 +2152,19 @@ CODE_0DAA26:
 CODE_0DAA52:
     CPX.B #$05
     BNE CODE_0DAA68
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$68
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$69
     STA.B [Map16LowPtr],Y
     JMP CODE_0DAA77
 
 CODE_0DAA68:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$35
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$36
     STA.B [Map16LowPtr],Y
 CODE_0DAA77:
@@ -2182,10 +2182,10 @@ CODE_0DAA85:
 CODE_0DAA8C:
     DEC.B _0
     BNE CODE_0DAA68
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DAA1C,X
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DAA21,X
     STA.B [Map16LowPtr],Y
 Return0DAAA3:
@@ -2197,7 +2197,7 @@ DATA_0DAAA4:
 DATA_0DAAAC:
     db $3D,$3E,$3D,$3E,$3D,$3E,$3D,$3E
 
-CODE_0DAAB4:
+OBJHorizontalPipes:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -2213,13 +2213,13 @@ CODE_0DAAB4:
 CODE_0DAAC9:
     CPX.B #$04
     BPL CODE_0DAADA
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DAAA4,X
     JSR CODE_0DA95B
     JMP CODE_0DAAE4
 
 CODE_0DAADA:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DAAAC,X
     JSR CODE_0DA95B
 CODE_0DAAE4:
@@ -2232,7 +2232,7 @@ CODE_0DAAE4:
 CODE_0DAAEF:
     DEC.B _1
     BNE CODE_0DAAC9
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DAAA4,X
     STA.B [Map16LowPtr],Y
 CODE_0DAAFC:
@@ -2246,7 +2246,7 @@ CODE_0DAAFC:
     BNE CODE_0DAAC9
     RTS
 
-CODE_0DAB0D:
+OBJBulletCannon:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -2254,19 +2254,19 @@ CODE_0DAB0D:
     LSR A
     LSR A
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$41
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
     DEX
     BMI Return0DAB3D
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$42
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
     DEX
     BMI Return0DAB3D
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$43
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
@@ -2275,7 +2275,7 @@ CODE_0DAB0D:
 Return0DAB3D:
     RTS
 
-CODE_0DAB3E:
+OBJSlopes:
     LDA.B LvlLoadObjSize
     AND.B #$0F
 CODE_0DAB42:
@@ -2313,26 +2313,26 @@ CODE_0DAB6E:
     INC.B _0
 CODE_0DAB83:
     LDX.B _2
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$96
     JSR CODE_0DABFD
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$9B
     JSR CODE_0DABFD
     DEX
     DEX
     BMI CODE_0DABB8
 CODE_0DAB99:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$DE
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$E6
     JSR CODE_0DA95B
     DEX
     JMP CODE_0DABB5
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
 CODE_0DABB5:
@@ -2423,18 +2423,18 @@ CODE_0DAC21:
     JSR CODE_0DA6B1
 CODE_0DAC34:
     LDX.B _2
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$AA
     JSR CODE_0DABFD
 CODE_0DAC3E:
     DEX
     BMI CODE_0DAC57
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$E2
     JSR CODE_0DA95B
     JMP CODE_0DAC54
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
 CODE_0DAC54:
@@ -2492,16 +2492,16 @@ CODE_0DAC92:
     INC.B _0
 CODE_0DACA7:
     LDX.B _2
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$6E
     JSR CODE_0DABFD
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$73
     JSR CODE_0DABFD
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$78
     JSR CODE_0DABFD
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$7D
     JSR CODE_0DABFD
     DEX
@@ -2510,16 +2510,16 @@ CODE_0DACA7:
     DEX
     BMI CODE_0DAD00
 CODE_0DACCF:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$D8
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$DA
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$E6
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$E6
     JSR CODE_0DA95B
     DEX
@@ -2527,7 +2527,7 @@ CODE_0DACCF:
     DEX
     JMP CODE_0DACFD
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
 CODE_0DACFD:
@@ -2592,17 +2592,17 @@ CODE_0DAD44:
     INC.B _0
     JMP CODE_0DAD7F
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
     DEX
 CODE_0DAD65:
     CPX.B #$03
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$E6
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$E0
     JSR CODE_0DA95B
     DEX
@@ -2610,10 +2610,10 @@ CODE_0DAD65:
     LDA.B _0
     BEQ Return0DAD9F
 CODE_0DAD7F:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$A0
     JSR CODE_0DABFD
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$A5
     JSR CODE_0DABFD
     JSR CODE_0DA6BA
@@ -2643,20 +2643,20 @@ CODE_0DADA3:
     INC.B _0
     JMP CODE_0DADD0
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
     DEX
 CODE_0DADC4:
     CPX.B #$01
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$E4
     JSR CODE_0DA95B
 CODE_0DADD0:
     LDA.B _0
     BEQ Return0DADEA
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$AF
     JSR CODE_0DABFD
     JSR CODE_0DA6BA
@@ -2683,23 +2683,23 @@ CODE_0DADEB:
     JMP CODE_0DAE36
 
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
     DEX
 CODE_0DAE0A:
     CPX.B #$07
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$E6
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$E6
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$DB
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$DC
     JSR CODE_0DA95B
     DEX
@@ -2709,16 +2709,16 @@ CODE_0DAE0A:
     LDA.B _0
     BEQ Return0DAE69
 CODE_0DAE36:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$82
     JSR CODE_0DABFD
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$87
     JSR CODE_0DABFD
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$8C
     JSR CODE_0DABFD
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$91
     JSR CODE_0DABFD
     JSR CODE_0DA6BA
@@ -2754,26 +2754,26 @@ CODE_0DAE6D:
 
 CODE_0DAE88:
     LDX.B _2
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$C6
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$C7
     JSR CODE_0DA95B
     DEX
     DEX
     BMI CODE_0DAEBD
 CODE_0DAE9E:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$EE
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$F0
     JSR CODE_0DA95B
     DEX
     JMP CODE_0DAEBA
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$65
     JSR CODE_0DA95B
 CODE_0DAEBA:
@@ -2833,7 +2833,7 @@ CODE_0DAEFC:
     LDX.B _2
     JMP CODE_0DAF20
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$65
     JSR CODE_0DA95B
     DEX
@@ -2842,19 +2842,19 @@ CODE_0DAF20:
     BPL -
     CPX.B #$02
     BMI CODE_0DAF3C
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$F0
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$EF
     JSR CODE_0DA95B
     LDA.B _1
     BEQ +
 CODE_0DAF3C:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$C8
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$C9
     JSR CODE_0DA95B
   + JSR CODE_0DA6BA
@@ -2887,18 +2887,18 @@ CODE_0DAF61:
 
 CODE_0DAF7B:
     LDX.B _2
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$C4
     JSR CODE_0DA95B
     DEX
     BMI CODE_0DAF9E
 CODE_0DAF88:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$EC
     JSR CODE_0DA95B
     JMP CODE_0DAF9B
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$65
     JSR CODE_0DA95B
 CODE_0DAF9B:
@@ -2965,7 +2965,7 @@ CODE_0DAFEA:
     LDX.B _2
     JMP CODE_0DB00B
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$65
     JSR CODE_0DA95B
     DEX
@@ -2974,13 +2974,13 @@ CODE_0DB00B:
     BPL -
     CPX.B #$01
     BMI CODE_0DB01F
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$ED
     JSR CODE_0DA95B
     LDA.B _1
     BEQ +
 CODE_0DB01F:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$C5
     JSR CODE_0DA95B
   + JSR CODE_0DA6BA
@@ -3010,7 +3010,7 @@ DATA_0DB066:
     db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
     db $FF,$FF,$FF,$E2,$E2,$E4,$E4
 
-CODE_0DB075:
+OBJLedgeEdges:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -3021,17 +3021,17 @@ CODE_0DB075:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     CPX.B #$03
     BMI +
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
   + LDA.L DATA_0DB039,X
     JSR CODE_0DB114
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
     DEC.B _0
     BMI CODE_0DB0E2
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     CPX.B #$09
     BPL CODE_0DB0AD
     CPX.B #$07
@@ -3039,7 +3039,7 @@ CODE_0DB075:
     CPX.B #$03
     BMI +
 CODE_0DB0AD:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
   + LDA.L DATA_0DB048,X
     JSR CODE_0DB198
     STA.B [Map16LowPtr],Y
@@ -3047,7 +3047,7 @@ CODE_0DB0AD:
     DEC.B _0
     BMI CODE_0DB0E2
 CODE_0DB0C0:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     CPX.B #$09
     BPL CODE_0DB0CF
     CPX.B #$07
@@ -3055,7 +3055,7 @@ CODE_0DB0C0:
     CPX.B #$03
     BMI +
 CODE_0DB0CF:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
   + LDA.L DATA_0DB057,X
     JSR CODE_0DB198
     STA.B [Map16LowPtr],Y
@@ -3065,7 +3065,7 @@ CODE_0DB0CF:
 CODE_0DB0E2:
     CPX.B #$0B
     BMI +
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DB066,X
     STA.B [Map16LowPtr],Y
   + RTS
@@ -3118,7 +3118,7 @@ CODE_0DB14D:
     JMP CODE_0DB159
 
 CODE_0DB152:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DB102,X
 CODE_0DB159:
     LDX.B _B
@@ -3161,14 +3161,14 @@ CODE_0DB1B0:
     JMP CODE_0DB1C5
 
 CODE_0DB1BE:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DB17A,X
 CODE_0DB1C5:
     LDX.B _B
 Return0DB1C7:
     RTS
 
-CODE_0DB1C8:
+OBJLongLedge:
     LDA.B LvlLoadObjSize
     STA.B _0
     TAX
@@ -3176,7 +3176,7 @@ CODE_0DB1C8:
     STA.B _2
     JMP CODE_0DB1E3
 
-CODE_0DB1D4:
+OBJLedge:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B _0
@@ -3190,7 +3190,7 @@ CODE_0DB1D4:
 CODE_0DB1E3:
     JSR CODE_0DA6B1
     LDY.B LevelLoadPos
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$00
     JSR CODE_0DA95B
     DEX
@@ -3198,7 +3198,7 @@ CODE_0DB1E3:
     BNE -
     JMP CODE_0DB205
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
     DEX
@@ -3231,7 +3231,7 @@ DATA_0DB21E:
 DATA_0DB221:
     db $3B,$25,$3E
 
-CODE_0DB224:
+OBJMidwayGoalPosts:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -3252,7 +3252,7 @@ CODE_0DB23B:
     BEQ +
     LDA.L DATA_0DB21B,X
     STA.B _3
-  + JSR StzTo6ePointer
+  + JSR OBJHighByte00
     LDA.B _3
     STA.B [Map16LowPtr],Y
     TYA
@@ -3273,7 +3273,7 @@ CODE_0DB265:
     BEQ +
     LDA.L DATA_0DB21E,X
     STA.B _3
-  + JSR StzTo6ePointer
+  + JSR OBJHighByte00
     LDA.B _3
     STA.B [Map16LowPtr],Y
     TYA
@@ -3294,7 +3294,7 @@ CODE_0DB28F:
     BEQ +
     LDA.L DATA_0DB221,X
     STA.B _3
-  + JSR StzTo6ePointer
+  + JSR OBJHighByte00
     LDA.B _3
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA6BA
@@ -3319,7 +3319,7 @@ CODE_0DB28F:
 Return0DB2C9:
     RTS
 
-CODE_0DB2CA:
+ExtOBJDragonCoin:
     LDA.W TranslevelNo
     LSR A
     LSR A
@@ -3364,16 +3364,16 @@ CODE_0DB2CA:
     AND.L DATA_0DA8A6,X
     BNE +
     LDY.B LevelLoadPos
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$2D
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$2E
     STA.B [Map16LowPtr],Y
   + RTS
 
-ADDR_0DB336:
+OBJBlueCoins:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -3426,7 +3426,7 @@ ADDR_0DB34A:
     TAX
     PLA
     TAY
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$2C
     STA.B _C
     LDA.B _F
@@ -3452,7 +3452,7 @@ ADDR_0DB3A8:
 DATA_0DB3BB:
     db $05,$06
 
-CODE_0DB3BD:
+OBJRopeClouds:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -3463,7 +3463,7 @@ CODE_0DB3BD:
     LSR A
     LSR A
     TAX
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DB3BB,X
     JSR CODE_0DA95B
     DEC.B _0
@@ -3477,7 +3477,7 @@ DATA_0DB3DB:
 DATA_0DB3DF:
     db $02,$03,$05,$0B
 
-CODE_0DB3E3:
+OBJRepTileWithTop:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -3494,14 +3494,14 @@ CODE_0DB3E3:
     SBC.B #$17
     TAX
     JSR CODE_0DA6B1
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DB3DB,X
     JSR CODE_0DA95B
     DEC.B _2
     BPL -
     JMP CODE_0DB41C
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DB3DF,X
     JSR CODE_0DA95B
     DEC.B _2
@@ -3519,7 +3519,7 @@ CODE_0DB41C:
 DATA_0DB42B:
     db $26,$44
 
-CODE_0DB42D:
+OBJDonutBridge:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -3528,10 +3528,10 @@ CODE_0DB42D:
     JSR CODE_0DA6B1
     LDX.B #$00
 CODE_0DB43C:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     CPX.B #$00
     BEQ +
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
   + LDA.L DATA_0DB42B,X
     JSR CODE_0DA95B
     DEC.B _1
@@ -3545,7 +3545,7 @@ CODE_0DB43C:
     BNE CODE_0DB43C
     RTS
 
-CODE_0DB461:
+OBJRepTileWithBottom:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -3560,7 +3560,7 @@ CODE_0DB461:
     JSR CODE_0DA6B1
     LDA.B _0
     BEQ CODE_0DB490
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$0B
     JSR CODE_0DA95B
     DEX
@@ -3571,7 +3571,7 @@ CODE_0DB461:
     DEC.B _0
     BNE -
 CODE_0DB490:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$0E
     JSR CODE_0DA95B
     DEX
@@ -3582,7 +3582,7 @@ CODE_0DB490:
 DATA_0DB49C:
     db $0A,$0C
 
-CODE_0DB49E:
+OBJClimbingNetEdge:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -3598,7 +3598,7 @@ CODE_0DB49E:
     JMP CODE_0DB4C0
 
 CODE_0DB4B7:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB49C,X
     STA.B [Map16LowPtr],Y
 CODE_0DB4C0:
@@ -3633,7 +3633,7 @@ CODE_0DB4D9:
     LDA.L DATA_0DB4D7,X
 CODE_0DB4F0:
     STA.B _C
-  + JSR StzTo6ePointer
+  + JSR OBJHighByte00
     LDA.B _C
     STA.B [Map16LowPtr],Y
     RTS
@@ -3658,12 +3658,12 @@ CODE_0DB4FE:
     LDA.L DATA_0DB4FC,X
 CODE_0DB515:
     STA.B _C
-  + JSR StzTo6ePointer
+  + JSR OBJHighByte00
     LDA.B _C
     STA.B [Map16LowPtr],Y
     RTS
 
-CODE_0DB51F:
+OBJVerticalSkinny:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$F0
@@ -3672,38 +3672,38 @@ CODE_0DB51F:
     LSR A
     LSR A
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$53
     JMP CODE_0DB537
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$54
 CODE_0DB537:
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
     DEX
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$55
     STA.B [Map16LowPtr],Y
     RTS
 
-CODE_0DB547:
+OBJHorizontalSkinny:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$56
     JMP CODE_0DB55B
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$57
 CODE_0DB55B:
     JSR CODE_0DA95B
     DEX
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$58
     STA.B [Map16LowPtr],Y
     RTS
@@ -3712,18 +3712,18 @@ CODE_0DB55B:
 DATA_0DB569:
     db $91,$92,$96,$97,$9A,$9B,$9F,$A0
 
-ADDR_0DB571:
+ExtOBJCloudFringeTile:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
     SBC.B #$68
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB569,X
     STA.B [Map16LowPtr],Y
     RTS
 
-CODE_0DB583:
+ExtOBJYellowSwitchBlock:
     LDX.B #$01
     BNE +
 
@@ -3733,17 +3733,17 @@ DATA_0DB587:
 DATA_0DB589:
     db $6A,$6B
 
-CODE_0DB58B:
+ExtOBJGreenSwitchBlock:
     LDX.B #$00
   + LDY.B LevelLoadPos
     LDA.W SwitchBlockFlags,X
     BNE +
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB589,X
     STA.B [Map16LowPtr],Y
     RTS
 
-  + JSR Sta1To6ePointer
+  + JSR OBJHighByte01
     LDA.L DATA_0DB587,X
     STA.B [Map16LowPtr],Y
     RTS
@@ -3758,7 +3758,7 @@ DATA_0DB5AD:
 DATA_0DB5B2:
     db $79,$80,$87,$8E,$C3
 
-CODE_0DB5B7:
+OBJLongBushes:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -3769,17 +3769,17 @@ CODE_0DB5B7:
     LSR A
     LSR A
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB5A8,X
     JMP CODE_0DB5D7
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DB5AD,X
 CODE_0DB5D7:
     JSR CODE_0DA95B
     DEC.B _0
     BNE -
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB5B2,X
     STA.B [Map16LowPtr],Y
     RTS
@@ -3797,7 +3797,7 @@ DATA_0DB5EA:
     db $25,$84,$81,$81,$25,$84,$81,$25
     db $84,$81
 
-CODE_0DB604:
+OBJArches:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B _0
@@ -3810,7 +3810,7 @@ CODE_0DB604:
     STA.B _2
     LDA.B #$02
     STA.B _1
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DB5E8,X
     JSR CODE_0DA95B
     INX
@@ -3818,13 +3818,13 @@ CODE_0DB604:
     BPL -
     DEC.B _2
     BEQ CODE_0DB652
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DB5E8,X
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DB5E9,X
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DB5EA,X
     JSR CODE_0DA95B
     DEC.B _2
@@ -3834,7 +3834,7 @@ CODE_0DB652:
     CLC
     ADC.B #$03
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DB5E8,X
     JSR CODE_0DA95B
     JMP CODE_0DB6B2
@@ -3845,7 +3845,7 @@ CODE_0DB664:
     STA.B _2
     LDA.B #$02
     STA.B _1
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DB5E8,X
     JSR CODE_0DA95B
     INX
@@ -3853,13 +3853,13 @@ CODE_0DB664:
     BPL -
     DEC.B _2
     BEQ CODE_0DB6A3
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DB5E8,X
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB5E9,X
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB5EA,X
     JSR CODE_0DA95B
     DEC.B _2
@@ -3869,7 +3869,7 @@ CODE_0DB6A3:
     CLC
     ADC.B #$03
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB5E8,X
     JSR CODE_0DA95B
 CODE_0DB6B2:
@@ -3886,7 +3886,7 @@ CODE_0DB6B2:
 DATA_0DB6C1:
     db $93,$9C
 
-CODE_0DB6C3:
+OBJHorizCloudFringe:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -3897,7 +3897,7 @@ CODE_0DB6C3:
     LSR A
     LSR A
     TAX
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DB6C1,X
     JSR CODE_0DA95B
     DEC.B _0
@@ -3908,13 +3908,13 @@ CODE_0DB6C3:
 DATA_0DB6E1:
     db $C1,$C2
 
-CODE_0DB6E3:
+ExtOBJTreeBranch:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
     SBC.B #$88
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB6E1,X
     STA.B [Map16LowPtr],Y
     RTS
@@ -3925,7 +3925,7 @@ DATA_0DB6F5:
 DATA_0DB6FD:
     db $8F,$8F,$98,$98,$90,$90,$99,$99
 
-ADDR_0DB705:
+OBJVertCloudFringe:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -3936,11 +3936,11 @@ ADDR_0DB705:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB6F5,X
     JMP ADDR_0DB725
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DB6FD,X
 ADDR_0DB725:
     STA.B [Map16LowPtr],Y
@@ -3954,7 +3954,7 @@ DATA_0DB72F:
     db $C4,$C5,$C7,$EC,$ED,$C6,$C7,$EE
     db $59,$5A,$EF,$C7,$EE,$59,$5B,$5C
 
-CODE_0DB73F:
+OBJDiagonalPipe:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -3969,7 +3969,7 @@ CODE_0DB73F:
 CODE_0DB752:
     LDA.B _1
     STA.B _2
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DB72F,X
     JSR CODE_0DA95B
     INX
@@ -3987,7 +3987,7 @@ CODE_0DB752:
 CODE_0DB779:
     LDA.B _1
     STA.B _2
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DB72F,X
     JSR CODE_0DA95B
     INX
@@ -4005,12 +4005,12 @@ CODE_0DB779:
     BPL CODE_0DB779
 CODE_0DB79F:
     JSR CODE_0DA95D
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$EB
     STA.B [Map16LowPtr],Y
     RTS
 
-CODE_0DB7AA:
+OBJLeftDiagonalPlat:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -4025,31 +4025,31 @@ CODE_0DB7AA:
     LDX.B #$01
     STX.B _1
     JSR CODE_0DA6B1
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$AA
     JSR CODE_0DABFD
-    %LorW(LDA,StzTo6ePointer)                 ; wut
+    %LorW(LDA,OBJHighByte00)                 ; wut
     LDA.B #$A1
     JSR CODE_0DB84E
     JMP CODE_0DB7FD
 
 CODE_0DB7D6:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$AA
     JSR CODE_0DABFD
     DEX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$E2
     JSR CODE_0DA95B
     JMP CODE_0DB7F2
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
 CODE_0DB7F2:
     DEX
     BNE -
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$A6
     JSR CODE_0DB84E
 CODE_0DB7FD:
@@ -4065,24 +4065,24 @@ CODE_0DB7FD:
     JSR CODE_0DA6B1
     DEX
     STX.B _1
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$F7
     JSR CODE_0DABFD
     JMP CODE_0DB836
 
 CODE_0DB823:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$A3
     JSR CODE_0DB84E
     JMP CODE_0DB836
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
 CODE_0DB836:
     DEX
     BNE -
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$A6
     JSR CODE_0DB84E
     JSR CODE_0DA6BA
@@ -4105,7 +4105,7 @@ CODE_0DB85E:
     LDA.B _F
     JMP CODE_0DA95B
 
-CODE_0DB863:
+OBJRightDiagonalPlat:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -4120,31 +4120,31 @@ CODE_0DB863:
     LDX.B #$01
     STX.B _1
     JSR CODE_0DA6B1
-    %LorW(LDA,StzTo6ePointer)
+    %LorW(LDA,OBJHighByte00)
     LDA.B #$AF
     JSR CODE_0DB84E
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$AF
     JSR CODE_0DABFD
     JMP CODE_0DB8B7
 
 CODE_0DB88F:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$A9
     JSR CODE_0DB84E
     JMP CODE_0DB8A2
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
 CODE_0DB8A2:
     DEX
     CPX.B #$01
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$E4
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$AF
     JSR CODE_0DABFD
 CODE_0DB8B7:
@@ -4157,35 +4157,35 @@ CODE_0DB8B7:
     BPL CODE_0DB88F
     DEX
     STX.B _1
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$A9
     JSR CODE_0DB84E
     JMP CODE_0DB8DD
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
 CODE_0DB8DD:
     DEX
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$F9
     JSR CODE_0DB84E
     JMP CODE_0DB909
 
 CODE_0DB8EB:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$A9
     JSR CODE_0DB84E
     JMP CODE_0DB8FE
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
 CODE_0DB8FE:
     DEX
     BNE -
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$AC
     JSR CODE_0DB84E
 CODE_0DB909:
@@ -4196,7 +4196,7 @@ CODE_0DB909:
     BPL CODE_0DB8EB
     RTS
 
-CODE_0DB916:
+OBJBlueSwitchBlocks:
     LDX.B #$00
     BEQ +
 
@@ -4206,7 +4206,7 @@ DATA_0DB91A:
 DATA_0DB91C:
     db $6C,$6D
 
-CODE_0DB91E:
+OBJRedSwitchBlocks:
     LDX.B #$01
   + LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
@@ -4223,12 +4223,12 @@ CODE_0DB930:
     STA.B _2
     JSR CODE_0DA6B1
 CODE_0DB937:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB91A,X
     STA.B _F
     LDA.W SwitchBlockFlags+2,X
     BEQ +
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DB91C,X
     STA.B _F
   + LDA.B _F
@@ -4248,7 +4248,7 @@ DATA_0DB962:
 DATA_0DB964:
     db $BE,$C0
 
-CODE_0DB966:
+OBJSmallTreeTrunk:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -4260,13 +4260,13 @@ CODE_0DB966:
     LSR A
     STA.B _0
 CODE_0DB975:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB962,X
     JSR CODE_0DB997
     JSR CODE_0DA97D
     DEC.B _0
     BMI Return0DB996
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DB964,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
@@ -4293,7 +4293,7 @@ CODE_0DB9AE:
     LDA.B [Map16LowPtr],Y
     CMP.B #$0E
     BNE CODE_0DB9BB
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$0D
     STA.B _F
 CODE_0DB9BB:
@@ -4301,7 +4301,7 @@ CODE_0DB9BB:
     STA.B [Map16LowPtr],Y
     RTS
 
-CODE_0DB9C0:
+OBJBigTreeTrunk:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -4317,10 +4317,10 @@ CODE_0DB9CA:
     JSR CODE_0DA97D
     DEC.B _0
     BMI Return0DB9F5
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$BB
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$BC
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA6BA
@@ -4334,7 +4334,7 @@ CODE_0DB9F6:
     LDA.B [Map16LowPtr],Y
     CMP.B #$0E
     BNE +
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDX.B #$0B
   + TXA
     JSR CODE_0DA95B
@@ -4343,7 +4343,7 @@ CODE_0DB9F6:
     STA.B [Map16LowPtr],Y
     RTS
 
-CODE_0DBA0A:
+OBJForestLedge:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -4356,14 +4356,14 @@ CODE_0DBA0A:
     LSR A
     STA.B _1
     JSR CODE_0DA6B1
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$0E
     JSR CODE_0DA95B
     DEX
     BPL -
     JMP CODE_0DBA37
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$B8
     JSR CODE_0DA95B
     DEX
@@ -4383,7 +4383,7 @@ DATA_0DBA44:
 DATA_0DBA48:
     db $60,$5D,$C5,$C4
 
-CODE_0DBA4C:
+OBJForestLedgeEdges:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -4394,7 +4394,7 @@ CODE_0DBA4C:
     LSR A
     LSR A
     STA.B _0
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DBA44,X
     STA.B [Map16LowPtr],Y
     JMP CODE_0DBA74
@@ -4402,7 +4402,7 @@ CODE_0DBA4C:
 CODE_0DBA67:
     CPX.B #$02
     BPL +
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
   + LDA.L DATA_0DBA48,X
     STA.B [Map16LowPtr],Y
 CODE_0DBA74:
@@ -4426,7 +4426,7 @@ DATA_0DBA7C:
     db $25,$B1,$B6,$25,$25,$B1,$B6,$B1
     db $B6,$25,$25,$25,$25,$25,$25,$25
 
-CODE_0DBADC:
+OBJForestCanopy:
     LDA.B LvlLoadObjSize
     STA.B _F
 CODE_0DBAE0:
@@ -4470,7 +4470,7 @@ CODE_0DBAF2:
     BPL CODE_0DBAE0
     RTS
 
-CODE_0DBB2C:
+OBJIcyPipe:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -4479,18 +4479,18 @@ CODE_0DBB2C:
     LSR A
     TAX
     JSR CODE_0DA6B1
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$61
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$62
     STA.B [Map16LowPtr],Y
     JMP CODE_0DBB59
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$63
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$64
     STA.B [Map16LowPtr],Y
 CODE_0DBB59:
@@ -4500,9 +4500,9 @@ CODE_0DBB59:
     BPL -
     RTS
 
-CODE_0DBB63:
+OBJIcyTurnBlocks:
     LDX.B #$0E
-    JMP CODE_0DA8C3
+    JMP OBJSingleRepTile
 
     %insert_empty($97,$98,$98,$98,$98)
 
@@ -4690,87 +4690,87 @@ endif                                         ;/================================
     db $26,$1C,$36,$1C,$26,$5C,$36,$5C
     db $27,$1C,$37,$1C,$27,$5C,$37,$5C
 
-CODE_0DC190:
+OBJTSCastle:
     SEP #$30                                  ; AXY->8
     LDX.B LvlLoadObjNo
     DEX
     TXA
     JSL ExecutePtrLong
 
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DAA26
-    dl CODE_0DAAB4
-    dl CODE_0DAB0D
-    dl CODE_0DAB3E
-    dl CODE_0DB075
-    dl CODE_0DB1D4
-    dl CODE_0DB224
-    dl ADDR_0DB336
-    dl CODE_0DB3BD
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB42D
-    dl CODE_0DB461
-    dl CODE_0DB49E
-    dl CODE_0DB51F
-    dl CODE_0DB547
-    dl CODE_0DB1C8
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DC5D8
-    dl CODE_0DC58A
-    dl CODE_0DC4EF
-    dl CODE_0DCF12
-    dl CODE_0DCF33
-    dl CODE_0DB916
-    dl CODE_0DB91E
-    dl CODE_0DC4C9
-    dl CODE_0DC478
-    dl CODE_0DC341
-    dl CODE_0DC42E
-    dl CODE_0DC44F
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJVerticalPipes
+    dl OBJHorizontalPipes
+    dl OBJBulletCannon
+    dl OBJSlopes
+    dl OBJLedgeEdges
+    dl OBJLedge
+    dl OBJMidwayGoalPosts
+    dl OBJBlueCoins
+    dl OBJRopeClouds
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJDonutBridge
+    dl OBJRepTileWithBottom
+    dl OBJClimbingNetEdge
+    dl OBJVerticalSkinny
+    dl OBJHorizontalSkinny
+    dl OBJLongLedge
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJSpecialVertPipe
+    dl OBJRockBackground
+    dl OBJSpikedCrushers
+    dl OBJHorizGuideLine
+    dl OBJVertGuideLine
+    dl OBJBlueSwitchBlocks
+    dl OBJRedSwitchBlocks
+    dl OBJCastleGrass
+    dl OBJStoneBlock
+    dl OBJSlopedConveyors
+    dl OBJHorizontalSpikes
+    dl OBJVerticalSpikes
 
 DATA_0DC257:
     db $07,$08
 
-CODE_0DC259:
+ExtOBJEscalatorEnd:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
     SBC.B #$4B
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DC257,X
     STA.B [Map16LowPtr],Y
     RTS
@@ -4794,14 +4794,14 @@ DATA_0DC26B:
     db $83,$84,$84,$85,$7E,$25,$79,$7A
     db $7B,$83,$84,$84,$85,$80
 
-CODE_0DC2E9:
+ExtOBJCastleEntrance:
     LDY.B LevelLoadPos
     LDX.B #$00
 CODE_0DC2ED:
     LDA.B #$08
     STA.B _0
 CODE_0DC2F1:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DC26B,X
     CMP.B #$25
     BEQ +
@@ -4810,7 +4810,7 @@ CODE_0DC2F1:
     INX
     DEC.B _0
     BNE CODE_0DC2F1
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DC26B,X
     STA.B [Map16LowPtr],Y
     INX
@@ -4823,7 +4823,7 @@ CODE_0DC2F1:
 DATA_0DC318:
     db $98,$99,$9A,$9B,$9C,$9C
 
-CODE_0DC31E:
+ExtOBJBossDoor:
     LDY.B LevelLoadPos
     LDX.B #$00
     LDA.B #$01
@@ -4831,7 +4831,7 @@ CODE_0DC31E:
 CODE_0DC326:
     LDA.B _0
     STA.B _1
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DC318,X
     JSR CODE_0DA95B
     INX
@@ -4842,7 +4842,7 @@ CODE_0DC326:
     BNE CODE_0DC326
     RTS
 
-CODE_0DC341:
+OBJSlopedConveyors:
     LDA.B LvlLoadObjSize
     AND.B #$02
     LSR A
@@ -4875,18 +4875,18 @@ CODE_0DC358:
 CODE_0DC370:
     LDA.B _2
     STA.B _3
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DC350,X
     JSR CODE_0DA95B
 CODE_0DC37E:
     DEC.B _3
     BMI CODE_0DC39B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DC354,X
     JSR CODE_0DA95B
     JMP CODE_0DC397
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
 CODE_0DC397:
@@ -4947,7 +4947,7 @@ CODE_0DC3D8:
     INC.B _0
     JMP CODE_0DC40D
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$3F
     JSR CODE_0DA95B
     DEC.B _3
@@ -4955,13 +4955,13 @@ CODE_0DC3FD:
     LDA.B _3
     CMP.B #$01
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DC354,X
     JSR CODE_0DA95B
 CODE_0DC40D:
     LDA.B _0
     BEQ Return0DC42B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DC350,X
     JSR CODE_0DA95B
     JSR CODE_0DA6BA
@@ -4978,7 +4978,7 @@ Return0DC42B:
 DATA_0DC42C:
     db $5A,$59
 
-CODE_0DC42E:
+OBJHorizontalSpikes:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -4989,7 +4989,7 @@ CODE_0DC42E:
     LSR A
     LSR A
     TAX
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DC42C,X
     JSR CODE_0DA95B
     DEC.B _0
@@ -5000,7 +5000,7 @@ CODE_0DC42E:
 DATA_0DC44C:
     db $5B,$5C,$53
 
-CODE_0DC44F:
+OBJVerticalSpikes:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -5011,7 +5011,7 @@ CODE_0DC44F:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DC44C,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
@@ -5029,7 +5029,7 @@ DATA_0DC472:
 DATA_0DC475:
     db $5F,$62,$65
 
-CODE_0DC478:
+OBJStoneBlock:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -5045,18 +5045,18 @@ CODE_0DC478:
 CODE_0DC48D:
     LDA.B _0
     STA.B _2
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DC46F,X
     JSR CODE_0DA95B
     JMP CODE_0DC4A8
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DC472,X
     JSR CODE_0DA95B
 CODE_0DC4A8:
     DEC.B _2
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DC475,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA6BA
@@ -5071,7 +5071,7 @@ CODE_0DC4A8:
 Return0DC4C8:
     RTS
 
-CODE_0DC4C9:
+OBJCastleGrass:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -5080,7 +5080,7 @@ if ver_is_hires(!_VER)                        ;\======================= E1 =====
     JSR CODE_0DA6B1                           ;!
 endif                                         ;/===============================================
     LDX.B _0
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$09
     JSR CODE_0DA95B
     DEX
@@ -5090,14 +5090,14 @@ if ver_is_hires(!_VER)                        ;\======================= E1 =====
 endif                                         ;/===============================================
     JSR CODE_0DA97D
     LDX.B _0
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$86
     JSR CODE_0DA95B
     DEX
     BPL -
     RTS
 
-CODE_0DC4EF:
+OBJSpikedCrushers:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -5112,41 +5112,41 @@ CODE_0DC4EF:
     CPX.B #$00
     BEQ CODE_0DC51E
     JSR CODE_0DA95D
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$87
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$88
     JSR CODE_0DA95B
     JSR CODE_0DA6BA
     JSR CODE_0DA97D
 CODE_0DC51E:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$89
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$66
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$67
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$8A
     JSR CODE_0DA95B
     JSR CODE_0DA6BA
     JSR CODE_0DA97D
     DEC.B _0
     BMI CODE_0DC572
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$8B
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$68
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$69
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$8C
     JSR CODE_0DA95B
     JSR CODE_0DA6BA
@@ -5157,15 +5157,15 @@ CODE_0DC572:
     CPX.B #$00
     BNE +
     JSR CODE_0DA95D
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$8D
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$8E
     JSR CODE_0DA95B
   + RTS
 
-CODE_0DC58A:
+OBJRockBackground:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -5179,10 +5179,10 @@ CODE_0DC58A:
     JSR CODE_0DA6B1
 CODE_0DC59D:
     LDX.B _0
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$94
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$95
     JSR CODE_0DA95B
     DEX
@@ -5190,10 +5190,10 @@ CODE_0DC59D:
     JSR CODE_0DA6BA
     JSR CODE_0DA97D
     LDX.B _0
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$96
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$97
     JSR CODE_0DA95B
     DEX
@@ -5204,7 +5204,7 @@ CODE_0DC59D:
     BPL CODE_0DC59D
     RTS
 
-CODE_0DC5D8:
+OBJSpecialVertPipe:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -5213,18 +5213,18 @@ CODE_0DC5D8:
     LSR A
     STA.B _0
     JSR CODE_0DA6B1
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$33
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$34
     STA.B [Map16LowPtr],Y
     JMP CODE_0DC606
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$9D
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$9E
     STA.B [Map16LowPtr],Y
 CODE_0DC606:
@@ -5232,10 +5232,10 @@ CODE_0DC606:
     JSR CODE_0DA97D
     DEC.B _0
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$33
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$34
     STA.B [Map16LowPtr],Y
     RTS
@@ -5422,82 +5422,82 @@ Map16Tileset2:
     db $26,$1C,$36,$1C,$26,$5C,$36,$5C
     db $27,$1C,$37,$1C,$27,$5C,$37,$5C
 
-CODE_0DCD90:
+OBJTSRopeMushroom:
     SEP #$30                                  ; AXY->8
     LDX.B LvlLoadObjNo
     DEX
     TXA
     JSL ExecutePtrLong
 
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DAA26
-    dl CODE_0DAAB4
-    dl CODE_0DAB0D
-    dl CODE_0DAB3E
-    dl CODE_0DB075
-    dl CODE_0DB1D4
-    dl CODE_0DB224
-    dl ADDR_0DB336
-    dl CODE_0DB3BD
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB42D
-    dl CODE_0DB461
-    dl CODE_0DB49E
-    dl CODE_0DB51F
-    dl CODE_0DB547
-    dl CODE_0DB1C8
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DD24E
-    dl CODE_0DB916
-    dl CODE_0DB91E
-    dl CODE_0DD1D9
-    dl ADDR_0DCEF2
-    dl CODE_0DC341
-    dl CODE_0DCF12
-    dl CODE_0DCF33
-    dl CODE_0DCF53
-    dl ADDR_0DD070
-    dl CODE_0DD103
-    dl CODE_0DD145
-    dl ADDR_0DD182
-    dl ADDR_0DD1A5
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJVerticalPipes
+    dl OBJHorizontalPipes
+    dl OBJBulletCannon
+    dl OBJSlopes
+    dl OBJLedgeEdges
+    dl OBJLedge
+    dl OBJMidwayGoalPosts
+    dl OBJBlueCoins
+    dl OBJRopeClouds
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJDonutBridge
+    dl OBJRepTileWithBottom
+    dl OBJClimbingNetEdge
+    dl OBJVerticalSkinny
+    dl OBJHorizontalSkinny
+    dl OBJLongLedge
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJLogBridge
+    dl OBJBlueSwitchBlocks
+    dl OBJRedSwitchBlocks
+    dl OBJPlantPillar
+    dl OBJHorizConveyors
+    dl OBJSlopedConveyors
+    dl OBJHorizGuideLine
+    dl OBJVertGuideLine
+    dl OBJSlopedGuideLines
+    dl OBJSteepGuideLines
+    dl OBJMushroomLedge
+    dl OBJMushroomSupport
+    dl OBJHorizontalPost
+    dl OBJVerticalPost
 
 DATA_0DCE57:
     db $7A,$7B,$7C,$25,$7E,$7F,$25,$7D
     db $82,$25,$80,$81,$25,$83,$84,$85
 
-CODE_0DCE67:
+ExtOBJGuideLineBigCircle:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
@@ -5506,7 +5506,7 @@ CODE_0DCE67:
     ASL A
     TAX
     JSR CODE_0DA6B1
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DCE57,X
     JSR CODE_0DA95B
     INX
@@ -5524,27 +5524,27 @@ CODE_0DCE67:
 DATA_0DCE90:
     db $76,$77,$78,$79
 
-CODE_0DCE94:
+ExtOBJGuideLineSmallCircle:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
     SBC.B #$51
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DCE90,X
     STA.B [Map16LowPtr],Y
     RTS
 
-ADDR_0DCEA6:
+ExtOBJCanvasTile2:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
     SBC.B #$51
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$84
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$85
     STA.B [Map16LowPtr],Y
     RTS
@@ -5553,11 +5553,11 @@ ADDR_0DCEA6:
 DATA_0DCEBE:
     db $96,$97
 
-CODE_0DCEC0:
+ExtOBJGuideLineHorizEnd:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LDX.B #$00
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DCEBE,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
@@ -5570,11 +5570,11 @@ CODE_0DCEC0:
 DATA_0DCED8:
     db $98,$99
 
-CODE_0DCEDA:
+ExtOBJGuideLineVertEnd:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LDX.B #$00
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DCED8,X
     JSR CODE_0DA95B
     INX
@@ -5586,7 +5586,7 @@ CODE_0DCEDA:
 DATA_0DCEF0:
     db $0C,$0D
 
-ADDR_0DCEF2:
+OBJHorizConveyors:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -5597,7 +5597,7 @@ ADDR_0DCEF2:
     LSR A
     LSR A
     TAX
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DCEF0,X
     JSR CODE_0DA95B
     DEC.B _0
@@ -5608,7 +5608,7 @@ ADDR_0DCEF2:
 DATA_0DCF10:
     db $92,$93
 
-CODE_0DCF12:
+OBJHorizGuideLine:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -5619,7 +5619,7 @@ CODE_0DCF12:
     LSR A
     LSR A
     TAX
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DCF10,X
     JSR CODE_0DA95B
     DEC.B _0
@@ -5630,7 +5630,7 @@ CODE_0DCF12:
 DATA_0DCF30:
     db $90,$91,$A2
 
-CODE_0DCF33:
+OBJVertGuideLine:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -5641,7 +5641,7 @@ CODE_0DCF33:
     LSR A
     LSR A
     STA.B _0
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DCF30,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
@@ -5649,7 +5649,7 @@ CODE_0DCF33:
     BPL -
     RTS
 
-CODE_0DCF53:
+OBJSlopedGuideLines:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
@@ -5672,10 +5672,10 @@ CODE_0DCF6E:
     TAX
     JSR CODE_0DA6B1
 CODE_0DCF7A:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$8C
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$8D
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA6BA
@@ -5716,7 +5716,7 @@ CODE_0DCFB1:
     LSR A
     TAX
 CODE_0DCFC4:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B _0
     STA.B [Map16LowPtr],Y
     LDA.B LevelLoadPos
@@ -5752,10 +5752,10 @@ ADDR_0DCFF0:
     TAX
     JSR CODE_0DA6B1
 ADDR_0DCFFC:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$8E
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$8F
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA6BA
@@ -5797,7 +5797,7 @@ CODE_0DD034:
     LSR A
     TAX
 CODE_0DD047:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B _0
     STA.B [Map16LowPtr],Y
     LDA.B LevelLoadPos
@@ -5822,7 +5822,7 @@ CODE_0DD047:
     BPL CODE_0DD047
     RTS
 
-ADDR_0DD070:
+OBJSteepGuideLines:
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -5839,7 +5839,7 @@ ADDR_0DD080:
     AND.B #$0F
     TAX
 ADDR_0DD087:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$88
     STA.B [Map16LowPtr],Y
     TYA
@@ -5848,7 +5848,7 @@ ADDR_0DD087:
     TAY
     BCC +
     JSR CODE_0DA987
-  + JSR StzTo6ePointer
+  + JSR OBJHighByte00
     LDA.B #$8A
     STA.B [Map16LowPtr],Y
     TYA
@@ -5880,7 +5880,7 @@ ADDR_0DD0C3:
     AND.B #$0F
     TAX
 ADDR_0DD0CA:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$89
     STA.B [Map16LowPtr],Y
     TYA
@@ -5889,7 +5889,7 @@ ADDR_0DD0CA:
     TAY
     BCC +
     JSR CODE_0DA987
-  + JSR StzTo6ePointer
+  + JSR OBJHighByte00
     LDA.B #$8B
     STA.B [Map16LowPtr],Y
     TYA
@@ -5914,12 +5914,12 @@ ADDR_0DD0CA:
     BPL ADDR_0DD0CA
     RTS
 
-CODE_0DD103:
+OBJMushroomLedge:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B _0
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDX.B #$07
     LDA.B [Map16LowPtr],Y
     CMP.B #$73
@@ -5931,13 +5931,13 @@ CODE_0DD103:
     JSR CODE_0DA95B
     JMP CODE_0DD12B
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$08
     JSR CODE_0DA95B
 CODE_0DD12B:
     DEC.B _0
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDX.B #$09
     LDA.B [Map16LowPtr],Y
     CMP.B #$73
@@ -5949,7 +5949,7 @@ CODE_0DD12B:
     JSR CODE_0DA95B
     RTS
 
-CODE_0DD145:
+OBJMushroomSupport:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -5963,17 +5963,17 @@ CODE_0DD145:
     JSR CODE_0DA6B1
 CODE_0DD158:
     LDX.B _0
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$73
     JMP CODE_0DD167
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$74
 CODE_0DD167:
     JSR CODE_0DA95B
     DEX
     BNE -
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$75
     JSR CODE_0DA95B
     JSR CODE_0DA6BA
@@ -5983,27 +5983,27 @@ CODE_0DD167:
     BPL CODE_0DD158
     RTS
 
-ADDR_0DD182:
+OBJHorizontalPost:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$59
     JMP ADDR_0DD196
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$5A
 ADDR_0DD196:
     JSR CODE_0DA95B
     DEX
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$5B
     JSR CODE_0DA95B
     RTS
 
-ADDR_0DD1A5:
+OBJVerticalPost:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -6011,18 +6011,18 @@ ADDR_0DD1A5:
     LSR A
     LSR A
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$5C
     JMP ADDR_0DD1BB
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$5D
 ADDR_0DD1BB:
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
     DEX
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$5E
     STA.B [Map16LowPtr],Y
     RTS
@@ -6037,7 +6037,7 @@ DATA_0DD1CF:
 DATA_0DD1D3:
     db $61,$62,$63,$64,$65,$66
 
-CODE_0DD1D9:
+OBJPlantPillar:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -6049,10 +6049,10 @@ CODE_0DD1D9:
     LSR A
     STA.B _0
     JSR CODE_0DA6B1
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DD1CB,X
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DD1CF,X
     STA.B [Map16LowPtr],Y
     DEC.B _0
@@ -6061,10 +6061,10 @@ CODE_0DD1D9:
 
   + JSR CODE_0DA6BA
     JSR CODE_0DA97D
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$5F
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$60
     STA.B [Map16LowPtr],Y
     DEC.B _0
@@ -6073,11 +6073,11 @@ CODE_0DD1D9:
     JSR CODE_0DA97D
     LDX.B #$00
 CODE_0DD226:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DD1D3,X
     JSR CODE_0DA95B
     INX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DD1D3,X
     STA.B [Map16LowPtr],Y
     INX
@@ -6095,7 +6095,7 @@ Return0DD24B:
 DATA_0DD24C:
     db $A3,$0E
 
-CODE_0DD24E:
+OBJLogBridge:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -6104,10 +6104,10 @@ CODE_0DD24E:
     JSR CODE_0DA6B1
     LDX.B #$00
 CODE_0DD25D:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     CPX.B #$00
     BEQ +
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
   + LDA.L DATA_0DD24C,X
     JSR CODE_0DA95B
     DEC.B _1
@@ -6304,80 +6304,80 @@ Map16Tileset3:
     db $36,$1C,$26,$5C,$36,$5C,$27,$1C
     db $37,$1C,$27,$5C,$37,$5C
 
-CODE_0DD990:
+OBJTSUnderground:
     SEP #$30                                  ; AXY->8
     LDX.B LvlLoadObjNo
     DEX
     TXA
     JSL ExecutePtrLong
 
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DAA26
-    dl CODE_0DAAB4
-    dl CODE_0DAB0D
-    dl CODE_0DAB3E
-    dl CODE_0DB075
-    dl CODE_0DB1D4
-    dl CODE_0DB224
-    dl ADDR_0DB336
-    dl CODE_0DB3BD
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB42D
-    dl CODE_0DB461
-    dl CODE_0DB49E
-    dl CODE_0DB51F
-    dl CODE_0DB547
-    dl CODE_0DB1C8
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB916
-    dl CODE_0DB91E
-    dl CODE_0DE135
-    dl CODE_0DDF3A
-    dl CODE_0DDAC8
-    dl CODE_0DDAF2
-    dl CODE_0DDCA9
-    dl CODE_0DDCA9
-    dl CODE_0DDD87
-    dl CODE_0DDCEA
-    dl CODE_0DDD2E
-    dl CODE_0DDD5C
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJVerticalPipes
+    dl OBJHorizontalPipes
+    dl OBJBulletCannon
+    dl OBJSlopes
+    dl OBJLedgeEdges
+    dl OBJLedge
+    dl OBJMidwayGoalPosts
+    dl OBJBlueCoins
+    dl OBJRopeClouds
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJDonutBridge
+    dl OBJRepTileWithBottom
+    dl OBJClimbingNetEdge
+    dl OBJVerticalSkinny
+    dl OBJHorizontalSkinny
+    dl OBJLongLedge
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJBlueSwitchBlocks
+    dl OBJRedSwitchBlocks
+    dl OBJRectangleLedge
+    dl OBJCanvasGrid
+    dl OBJCaveLavaEdge
+    dl OBJCaveLavaSlopes
+    dl OBJCaveLava
+    dl OBJCaveLava
+    dl OBJSteepSlopes
+    dl OBJCeiling
+    dl OBJCeilingEdges
+    dl OBJSolidDirt
 
-CODE_0DDA57:
+ExtOBJCaveLavaInnerCorner:
     LDY.B LevelLoadPos
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$FE
     STA.B [Map16LowPtr],Y
     RTS
@@ -6386,13 +6386,13 @@ CODE_0DDA57:
 DATA_0DDA61:
     db $7D,$7E,$7F,$80,$81,$82,$83
 
-CODE_0DDA68:
+ExtOBJCanvasTiles:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
     SBC.B #$75
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DDA61,X
     STA.B [Map16LowPtr],Y
     RTS
@@ -6404,17 +6404,17 @@ DATA_0DDA7A:
 DATA_0DDA7D:
     db $84,$85,$86
 
-CODE_0DDA80:
+ExtOBJCanvasPairs:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
     SBC.B #$7C
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DDA7A,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DDA7D,X
     STA.B [Map16LowPtr],Y
     RTS
@@ -6423,11 +6423,11 @@ CODE_0DDA80:
 DATA_0DDA9E:
     db $66,$67,$68,$69
 
-CODE_0DDAA2:
+ExtOBJTorpedoLauncher:
     LDY.B LevelLoadPos
     LDX.B #$00
     JSR CODE_0DA6B1
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DDA9E,X
     JSR CODE_0DA95B
     INX
@@ -6447,7 +6447,7 @@ DATA_0DDAC4:
 DATA_0DDAC6:
     db $5B,$5B
 
-CODE_0DDAC8:
+OBJCaveLavaEdge:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -6458,11 +6458,11 @@ CODE_0DDAC8:
     LSR A
     LSR A
     STA.B _0
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DDAC4,X
     JMP CODE_0DDAE8
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DDAC6,X
 CODE_0DDAE8:
     STA.B [Map16LowPtr],Y
@@ -6471,7 +6471,7 @@ CODE_0DDAE8:
     BPL -
     RTS
 
-CODE_0DDAF2:
+OBJCaveLavaSlopes:
     LDA.B LvlLoadObjSize
     AND.B #$03
     JSL ExecutePtrLong
@@ -6496,26 +6496,26 @@ CODE_0DDB06:
     INC.B _0
 CODE_0DDB1B:
     LDX.B _2
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$D2
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$D3
     JSR CODE_0DA95B
     DEX
     DEX
     BMI CODE_0DDB50
 CODE_0DDB31:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$FB
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$FF
     JSR CODE_0DA95B
     DEX
     JMP CODE_0DDB4D
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$FF
     JSR CODE_0DA95B
 CODE_0DDB4D:
@@ -6576,18 +6576,18 @@ CODE_0DDB8F:
     INC.B _0
 CODE_0DDBA4:
     LDX.B _2
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$D6
     JSR CODE_0DA95B
 CODE_0DDBAE:
     DEX
     BMI CODE_0DDBC7
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$FD
     JSR CODE_0DA95B
     JMP CODE_0DDBC4
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$FF
     JSR CODE_0DA95B
 CODE_0DDBC4:
@@ -6645,17 +6645,17 @@ ADDR_0DDC02:
     INC.B _0
     JMP ADDR_0DDC3D
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$FF
     JSR CODE_0DA95B
     DEX
 ADDR_0DDC23:
     CPX.B #$03
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$FF
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$FC
     JSR CODE_0DA95B
     DEX
@@ -6663,10 +6663,10 @@ ADDR_0DDC23:
     LDA.B _0
     BEQ Return0DDC5D
 ADDR_0DDC3D:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$D4
     JSR CODE_0DA95B
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$D5
     JSR CODE_0DA95B
     JSR CODE_0DA6BA
@@ -6696,20 +6696,20 @@ CODE_0DDC61:
     INC.B _0
     JMP CODE_0DDC8E
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$FF
     JSR CODE_0DA95B
     DEX
 CODE_0DDC82:
     CPX.B #$01
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$FE
     JSR CODE_0DA95B
 CODE_0DDC8E:
     LDA.B _0
     BEQ Return0DDCA8
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$D7
     JSR CODE_0DA95B
     JSR CODE_0DA6BA
@@ -6721,7 +6721,7 @@ CODE_0DDC8E:
 Return0DDCA8:
     RTS
 
-CODE_0DDCA9:
+OBJCaveLava:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -6738,7 +6738,7 @@ CODE_0DDCA9:
     SEC
     SBC.B #$39
     BNE CODE_0DDCD2
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$59
     JSR CODE_0DA95B
     DEX
@@ -6746,7 +6746,7 @@ CODE_0DDCA9:
     JMP CODE_0DDCDD
 
 CODE_0DDCD2:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$FF
     JSR CODE_0DA95B
     DEX
@@ -6759,7 +6759,7 @@ CODE_0DDCDD:
     BPL CODE_0DDCD2
     RTS
 
-CODE_0DDCEA:
+OBJCeiling:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -6775,7 +6775,7 @@ CODE_0DDCEA:
     BEQ CODE_0DDD18
 CODE_0DDD01:
     LDX.B _1
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$65
     JSR CODE_0DA95B
     DEX
@@ -6786,7 +6786,7 @@ CODE_0DDD01:
     BNE CODE_0DDD01
 CODE_0DDD18:
     LDX.B _1
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$4E
     JSR CODE_0DA95B
     DEX
@@ -6800,7 +6800,7 @@ DATA_0DDD26:
 DATA_0DDD2A:
     db $4D,$50,$4F,$51
 
-CODE_0DDD2E:
+OBJCeilingEdges:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -6813,19 +6813,19 @@ CODE_0DDD2E:
     TAX
     LDA.B _0
     BEQ CODE_0DDD51
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DDD26,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
     DEC.B _0
     BNE -
 CODE_0DDD51:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DDD2A,X
     JSR CODE_0DA95B
     RTS
 
-CODE_0DDD5C:
+OBJSolidDirt:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -6839,7 +6839,7 @@ CODE_0DDD5C:
     JSR CODE_0DA6B1
 CODE_0DDD6F:
     LDX.B _1
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$65
     JSR CODE_0DA95B
     DEX
@@ -6850,7 +6850,7 @@ CODE_0DDD6F:
     BPL CODE_0DDD6F
     RTS
 
-CODE_0DDD87:
+OBJSteepSlopes:
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -6874,7 +6874,7 @@ CODE_0DDD99:
 CODE_0DDDA7:
     JSR CODE_0DA6B1
     LDX.B _1
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$CA
     STA.B [Map16LowPtr],Y
     TYA
@@ -6886,7 +6886,7 @@ CODE_0DDDA7:
     ADC.B #$00
     STA.B Map16LowPtr+1
     STA.B Map16HighPtr+1
-  + JSR Sta1To6ePointer
+  + JSR OBJHighByte01
     LDA.B #$CB
     STA.B [Map16LowPtr],Y
     TYA
@@ -6898,7 +6898,7 @@ CODE_0DDDA7:
     ADC.B #$00
     STA.B Map16LowPtr+1
     STA.B Map16HighPtr+1
-  + JSR Sta1To6ePointer
+  + JSR OBJHighByte01
     LDA.B #$F1
     STA.B [Map16LowPtr],Y
     TYA
@@ -6915,7 +6915,7 @@ CODE_0DDDA7:
     JMP CODE_0DDE09
 
 CODE_0DDDF3:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$3F
     STA.B [Map16LowPtr],Y
     TYA
@@ -6970,7 +6970,7 @@ CODE_0DDE3C:
 CODE_0DDE4A:
     JSR CODE_0DA6B1
     LDX.B _1
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$CC
     STA.B [Map16LowPtr],Y
     TYA
@@ -6982,7 +6982,7 @@ CODE_0DDE4A:
     ADC.B #$00
     STA.B Map16LowPtr+1
     STA.B Map16HighPtr+1
-  + JSR Sta1To6ePointer
+  + JSR OBJHighByte01
     LDA.B #$CD
     STA.B [Map16LowPtr],Y
     TYA
@@ -6994,7 +6994,7 @@ CODE_0DDE4A:
     ADC.B #$00
     STA.B Map16LowPtr+1
     STA.B Map16HighPtr+1
-  + JSR Sta1To6ePointer
+  + JSR OBJHighByte01
     LDA.B #$F2
     STA.B [Map16LowPtr],Y
     TYA
@@ -7011,7 +7011,7 @@ CODE_0DDE4A:
     JMP CODE_0DDEAC
 
 CODE_0DDE96:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$3F
     STA.B [Map16LowPtr],Y
     TYA
@@ -7104,7 +7104,7 @@ DATA_0DDF1A:
     dw Map16TilesHigh+$17A0
     dw Map16TilesHigh+$1950
 
-CODE_0DDF3A:
+OBJCanvasGrid:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B LvlLoadObjSize
@@ -7117,7 +7117,7 @@ CODE_0DDF3A:
     STA.B _1
 CODE_0DDF4F:
     LDX.B _0
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$61
     JSR CODE_0DA95B
     DEX
@@ -7154,7 +7154,7 @@ CODE_0DDF80:
     LDA.B #$03
     STA.B _2
     LDX.B #$00
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DDEDC,X
     JSR CODE_0DA95B
     INX
@@ -7162,13 +7162,13 @@ CODE_0DDF80:
     BPL -
     JSR CODE_0DA6BA
     JSR CODE_0DA97D
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DDEDC,X
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DDEDD,X
     JSR CODE_0DA95B
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DDEDE,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
@@ -7179,7 +7179,7 @@ CODE_0DDF80:
     INX
     LDA.B #$03
     STA.B _2
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DDEDC,X
     JSR CODE_0DA95B
     INX
@@ -7189,7 +7189,7 @@ CODE_0DDF80:
     LDA.B #$02
     STA.B _2
     JSR CODE_0DA97D
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DDEDC,X
     JSR CODE_0DA95B
     INX
@@ -7257,7 +7257,7 @@ DATA_0DE05E:
 DATA_0DE0AA:
     db $00,$13,$26,$39
 
-CODE_0DE0AE:
+ExtOBJCanvas:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
@@ -7270,7 +7270,7 @@ CODE_0DE0AE:
     STA.B _1
     LDA.B #$03
     STA.B _2
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DE05E,X
     JSR CODE_0DA95B
     INX
@@ -7281,7 +7281,7 @@ CODE_0DE0AE:
 CODE_0DE0DB:
     LDA.B #$02
     STA.B _2
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DE05E,X
     JSR CODE_0DA95B
     INX
@@ -7293,20 +7293,20 @@ CODE_0DE0DB:
     BPL CODE_0DE0DB
     LDA.B #$02
     STA.B _2
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DE05E,X
     JSR CODE_0DA95B
     INX
     DEC.B _2
     BPL -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$5F
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA6BA
     LDA.B #$02
     STA.B _2
     JSR CODE_0DA97D
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DE05E,X
     JSR CODE_0DA95B
     INX
@@ -7324,7 +7324,7 @@ DATA_0DE12F:
 DATA_0DE132:
     db $48,$51,$4F
 
-CODE_0DE135:
+OBJRectangleLedge:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -7340,18 +7340,18 @@ CODE_0DE135:
 CODE_0DE14A:
     LDA.B _0
     STA.B _2
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DE12C,X
     JSR CODE_0DA95B
     JMP CODE_0DE165
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DE12F,X
     JSR CODE_0DA95B
 CODE_0DE165:
     DEC.B _2
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DE132,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA6BA
@@ -7549,96 +7549,96 @@ Map16Tileset4:
     db $D1,$09,$F0,$09,$D1,$09,$BA,$09
     db $B5,$09
 
-CODE_0DE890:
+OBJTSGhostHouseBonus:
     SEP #$30                                  ; AXY->8
     LDX.B LvlLoadObjNo
     DEX
     TXA
     JSL ExecutePtrLong
 
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DA8C3
-    dl CODE_0DAA26
-    dl CODE_0DAAB4
-    dl CODE_0DAB0D
-    dl CODE_0DAB3E
-    dl CODE_0DB075
-    dl CODE_0DB1D4
-    dl CODE_0DB224
-    dl ADDR_0DB336
-    dl CODE_0DB3BD
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB42D
-    dl CODE_0DB461
-    dl CODE_0DB49E
-    dl CODE_0DB51F
-    dl CODE_0DB547
-    dl CODE_0DB1C8
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DB3E3
-    dl CODE_0DF06C
-    dl ADDR_0DF066
-    dl CODE_0DF02B
-    dl CODE_0DEFA8
-    dl CODE_0DEF67
-    dl CODE_0DEF45
-    dl CODE_0DEEC0
-    dl CODE_0DECC9
-    dl CODE_0DECC9
-    dl CODE_0DED12
-    dl CODE_0DED43
-    dl CODE_0DED6B
-    dl CODE_0DED99
-    dl CODE_0DEDB9
-    dl CODE_0DEDDB
-    dl CODE_0DEE17
-    dl CODE_0DEE52
-    dl CODE_0DEE89
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJSingleRepTile
+    dl OBJVerticalPipes
+    dl OBJHorizontalPipes
+    dl OBJBulletCannon
+    dl OBJSlopes
+    dl OBJLedgeEdges
+    dl OBJLedge
+    dl OBJMidwayGoalPosts
+    dl OBJBlueCoins
+    dl OBJRopeClouds
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJDonutBridge
+    dl OBJRepTileWithBottom
+    dl OBJClimbingNetEdge
+    dl OBJVerticalSkinny
+    dl OBJHorizontalSkinny
+    dl OBJLongLedge
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJRepTileWithTop
+    dl OBJHorizThinSpikes
+    dl OBJHorizLogBackground
+    dl OBJYoshiHouseGrass
+    dl OBJWoodenCrate
+    dl OBJGhostHouseGrass
+    dl OBJGhostHouseCloud
+    dl OBJWoodPlatWithSupport
+    dl OBJGhostHouseRepTiles
+    dl OBJGhostHouseRepTiles
+    dl OBJGhostHouseHoriz
+    dl OBJWoodPlatNoSupport
+    dl OBJVertLogBackground
+    dl OBJGhostHouseVertSolid
+    dl OBJBonusPlatform
+    dl OBJPalaceCeiling
+    dl OBJPalaceFloor
+    dl OBJPalaceLeftWall
+    dl OBJPalaceRightWall
 
 DATA_0DE957:
     db $73,$74,$75,$76,$93,$94,$95,$96
 
-CODE_0DE95F:
+ExtOBJSingleTile2:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
     SBC.B #$57
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DE957,X
     STA.B [Map16LowPtr],Y
     RTS
 
-ADDR_0DE971:
+ExtOBJLargeBackgroundArea:
     LDA.B #$03
     STA.B _0
     LDY.B #$00
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$77
     STA.B [Map16LowPtr],Y
     INY
@@ -7659,7 +7659,7 @@ DATA_0DE98F:
     db $25,$86,$25,$84,$85,$84,$85,$25
     db $85,$25,$25
 
-CODE_0DE9AA:
+ExtOBJGhostHouseBGObject:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
@@ -7675,7 +7675,7 @@ CODE_0DE9AA:
     STA.B _0
     STA.B _1
     JSR CODE_0DA6B1
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DE98F,X
     JSR CODE_0DA95B
     INX
@@ -7694,7 +7694,7 @@ DATA_0DE9E1:
     db $8C,$8D,$25,$8E,$90,$91,$8F,$25
     db $FC,$FD,$FE,$FF
 
-CODE_0DE9ED:
+ExtOBJCobweb:
     LDA.B LvlLoadObjSize
     SEC
     SBC.B #$64
@@ -7707,7 +7707,7 @@ CODE_0DE9F5:
     STA.B _0
     STA.B _1
     JSR CODE_0DA6B1
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DE9E1,X
     JSR CODE_0DA95B
     INX
@@ -7728,7 +7728,7 @@ DATA_0DEA1E:
     db $7E,$7F,$25,$25,$25,$80,$81,$25
     db $25,$25,$80,$81,$25,$25,$25,$80
 
-ADDR_0DEA3E:
+ExtOBJDiagonalBeam:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
@@ -7742,7 +7742,7 @@ ADDR_0DEA3E:
     STA.B _0
     STA.B _1
     JSR CODE_0DA6B1
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DEA1E,X
     JSR CODE_0DA95B
     INX
@@ -7769,13 +7769,13 @@ DATA_0DEA71:
     db $B4,$A4,$C1,$C2,$C6,$A5,$A5,$A4
     db $C1,$C2,$C6,$A7,$A8,$A4
 
-CODE_0DEABF:
+ExtOBJGhostHouseExit:
     LDY.B LevelLoadPos
     LDX.B #$00
 CODE_0DEAC3:
     LDA.B #$05
     STA.B _0
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DEA71,X
     JSR CODE_0DA95B
     INX
@@ -7807,19 +7807,19 @@ DATA_0DEADE:
     db $C4,$C4,$A4,$B4,$B4,$B4,$B4,$C1
     db $C2,$C3,$C5,$C5
 
-CODE_0DEB6A:
+ExtOBJGhostHouseEntrance:
     LDY.B LevelLoadPos
     LDX.B #$00
 CODE_0DEB6E:
     LDA.B #$09
     STA.B _0
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DEADE,X
     JSR CODE_0DA95B
     INX
     DEC.B _0
     BNE -
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DEADE,X
     STA.B [Map16LowPtr],Y
     INX
@@ -7851,19 +7851,19 @@ DATA_0DEB93:
     db $E5,$E5,$E6,$DD,$E5,$E5,$DD,$E5
     db $E5,$DD,$E5,$E7,$E8,$E9,$E5,$E5
 
-CODE_0DEC33:
+ExtOBJYoshisHouse:
     LDY.B LevelLoadPos
     LDX.B #$00
 CODE_0DEC37:
     LDA.B #$0F
     STA.B _0
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DEB93,X
     JSR CODE_0DA95B
     INX
     DEC.B _0
     BNE -
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DEB93,X
     STA.B [Map16LowPtr],Y
     INX
@@ -7872,19 +7872,19 @@ CODE_0DEC37:
     BNE CODE_0DEC37
     RTS
 
-CODE_0DEC5C:
+ExtOBJPalaceOuterCorner:
     LDY.B LevelLoadPos
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$10
     STA.B [Map16LowPtr],Y
     RTS
 
 ADDR_0DEC66:
     CMP.B #$CA
-ADDR_0DEC68:
+ExtOBJSeaweed:
     LDY.B LevelLoadPos
     LDX.B #$00
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L ADDR_0DEC66,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
@@ -7898,7 +7898,7 @@ DATA_0DEC7E:
     db $EC,$ED,$EE,$EF,$F0,$F1,$F2,$F3
     db $F4,$F5,$F6,$F7,$F8,$F9,$FA,$FB
 
-CODE_0DEC8E:
+ExtOBJPalaceSwitch:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     SEC
@@ -7916,7 +7916,7 @@ CODE_0DEC8E:
 CODE_0DECA6:
     LDA.B _0
     STA.B _2
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DEC7E,X
     JSR CODE_0DA95B
     INX
@@ -7928,7 +7928,7 @@ CODE_0DECA6:
 Return0DECC0:
     RTS
 
-CODE_0DECC1:
+ExtOBJGhostHouseWindow:
     LDX.B #$08
     JMP CODE_0DE9F5
 
@@ -7936,7 +7936,7 @@ CODE_0DECC1:
 DATA_0DECC6:
     db $92,$5E,$82
 
-CODE_0DECC9:
+OBJGhostHouseRepTiles:
     TXA
     SEC
     SBC.B #$34
@@ -7955,10 +7955,10 @@ CODE_0DECCE:
     STA.B _1
     JSR CODE_0DA6B1
 CODE_0DECE3:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     CPX.B #$01
     BNE +
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
   + LDA.L DATA_0DECC6,X
     JSR CODE_0DA95B
     DEC.B _2
@@ -7982,7 +7982,7 @@ DATA_0DED0C:
 DATA_0DED0F:
     db $82,$8B,$88
 
-CODE_0DED12:
+OBJGhostHouseHoriz:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -7993,38 +7993,38 @@ CODE_0DED12:
     LSR A
     LSR A
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DED09,X
     JMP CODE_0DED32
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DED0C,X
 CODE_0DED32:
     JSR CODE_0DA95B
     DEC.B _0
     BNE -
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DED0F,X
     STA.B [Map16LowPtr],Y
     RTS
 
-CODE_0DED43:
+OBJWoodPlatNoSupport:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
 CODE_0DED4A:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$0A
     JMP CODE_0DED57
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$0B
 CODE_0DED57:
     JSR CODE_0DA95B
     DEX
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$0C
     STA.B [Map16LowPtr],Y
     RTS
@@ -8036,7 +8036,7 @@ DATA_0DED65:
 DATA_0DED68:
     db $83,$79,$79
 
-CODE_0DED6B:
+OBJVertLogBackground:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     LSR A
@@ -8047,11 +8047,11 @@ CODE_0DED6B:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.L DATA_0DED65,X
     JMP CODE_0DED8B
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DED68,X
 CODE_0DED8B:
     STA.B [Map16LowPtr],Y
@@ -8064,7 +8064,7 @@ CODE_0DED8B:
 DATA_0DED95:
     db $5F,$60,$5A,$5B
 
-CODE_0DED99:
+OBJGhostHouseVertSolid:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
@@ -8075,7 +8075,7 @@ CODE_0DED99:
     LSR A
     LSR A
     STA.B _0
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DED95,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA97D
@@ -8083,27 +8083,27 @@ CODE_0DED99:
     BPL -
     RTS
 
-CODE_0DEDB9:
+OBJBonusPlatform:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$07
     JMP CODE_0DEDCD
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$08
 CODE_0DEDCD:
     JSR CODE_0DA95B
     DEX
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$09
     STA.B [Map16LowPtr],Y
     RTS
 
-CODE_0DEDDB:
+OBJPalaceCeiling:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -8118,7 +8118,7 @@ CODE_0DEDDB:
     LDX.B _0
     LDA.B _1
     BEQ CODE_0DEE0B
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$53
     JSR CODE_0DA95B
     DEX
@@ -8129,14 +8129,14 @@ CODE_0DEDDB:
     DEC.B _1
     BNE -
 CODE_0DEE0B:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$54
     JSR CODE_0DA95B
     DEX
     BPL CODE_0DEE0B
     RTS
 
-CODE_0DEE17:
+OBJPalaceFloor:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -8149,14 +8149,14 @@ CODE_0DEE17:
     STA.B _1
     JSR CODE_0DA6B1
     LDX.B _0
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$5D
     JSR CODE_0DA95B
     DEX
     BPL -
     JMP CODE_0DEE45
 
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$53
     JSR CODE_0DA95B
     DEX
@@ -8169,7 +8169,7 @@ CODE_0DEE45:
     BPL -
     RTS
 
-CODE_0DEE52:
+OBJPalaceLeftWall:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -8184,13 +8184,13 @@ CODE_0DEE52:
 CODE_0DEE65:
     LDX.B _0
     BEQ CODE_0DEE74
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$53
     JSR CODE_0DA95B
     DEX
     BNE -
 CODE_0DEE74:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$55
     JSR CODE_0DA95B
     JSR CODE_0DA6BA
@@ -8200,7 +8200,7 @@ CODE_0DEE74:
     BPL CODE_0DEE65
     RTS
 
-CODE_0DEE89:
+OBJPalaceRightWall:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -8213,12 +8213,12 @@ CODE_0DEE89:
     STA.B _1
     JSR CODE_0DA6B1
 CODE_0DEE9C:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$5C
     JSR CODE_0DA95B
     LDX.B _0
     BEQ CODE_0DEEB3
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$53
     JSR CODE_0DA95B
     DEX
@@ -8231,7 +8231,7 @@ CODE_0DEEB3:
     BPL CODE_0DEE9C
     RTS
 
-CODE_0DEEC0:
+OBJWoodPlatWithSupport:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -8270,12 +8270,12 @@ CODE_0DEEC0:
 CODE_0DEEFD:
     JSR CODE_0DA6BA
     LDX.B _1
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$78
     JMP CODE_0DEF0F
 
 CODE_0DEF0A:
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$79
 CODE_0DEF0F:
     STA.B [Map16LowPtr],Y
@@ -8311,27 +8311,27 @@ CODE_0DEF0F:
 
   + RTS
 
-CODE_0DEF45:
+OBJGhostHouseCloud:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$A0
     JMP CODE_0DEF59
 
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$A1
 CODE_0DEF59:
     JSR CODE_0DA95B
     DEX
     BNE -
-    JSR StzTo6ePointer
+    JSR OBJHighByte00
     LDA.B #$A2
     STA.B [Map16LowPtr],Y
     RTS
 
-CODE_0DEF67:
+OBJGhostHouseGrass:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -8344,7 +8344,7 @@ CODE_0DEF67:
     STA.B _1
     LDX.B _0
     JSR CODE_0DA6B1
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$0E
     JSR CODE_0DA95B
     DEX
@@ -8355,7 +8355,7 @@ CODE_0DEF87:
     JSR CODE_0DA6BA
     JSR CODE_0DA97D
     LDX.B _0
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$A3
     JSR CODE_0DA95B
     DEX
@@ -8375,7 +8375,7 @@ DATA_0DEFA4:
 DATA_0DEFA6:
     db $64,$6A
 
-CODE_0DEFA8:
+OBJWoodenCrate:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -8389,30 +8389,30 @@ CODE_0DEFA8:
     JSR CODE_0DA6B1
     LDA.B _0
     STA.B _2
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$61
     BNE +
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$0D
   + JSR CODE_0DA95B
     DEC.B _2
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$62
     STA.B [Map16LowPtr],Y
     LDX.B #$01
     JMP CODE_0DEFFE
 
 CODE_0DEFDE:
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DEFA2,X
     BNE +
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.L DATA_0DEFA4,X
   + JSR CODE_0DA95B
     DEC.B _2
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.L DATA_0DEFA6,X
     STA.B [Map16LowPtr],Y
 CODE_0DEFFE:
@@ -8425,20 +8425,20 @@ CODE_0DEFFE:
     JSR CODE_0DA97D
     DEC.B _1
     BNE CODE_0DEFDE
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$6B
     BNE +
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$6C
   + JSR CODE_0DA95B
     DEC.B _0
     BNE -
-    JSR Sta1To6ePointer
+    JSR OBJHighByte01
     LDA.B #$6D
     STA.B [Map16LowPtr],Y
     RTS
 
-CODE_0DF02B:
+OBJYoshiHouseGrass:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -8451,7 +8451,7 @@ CODE_0DF02B:
     STA.B _1
     JSR CODE_0DA6B1
     LDX.B _0
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.B #$0F
     JSR CODE_0DA95B
     DEX
@@ -8460,7 +8460,7 @@ CODE_0DF02B:
 
 CODE_0DF04E:
     LDX.B _0
-  - JSR StzTo6ePointer
+  - JSR OBJHighByte00
     LDA.B #$EA
     JSR CODE_0DA95B
     DEX
@@ -8472,7 +8472,7 @@ CODE_0DF05B:
     BPL CODE_0DF04E
     RTS
 
-ADDR_0DF066:
+OBJHorizLogBackground:
     LDX.B #$02
     JMP CODE_0DECCE
 
@@ -8480,7 +8480,7 @@ ADDR_0DF066:
 DATA_0DF06B:
     db $59
 
-CODE_0DF06C:
+OBJHorizThinSpikes:
     LDY.B LevelLoadPos
     LDA.B LvlLoadObjSize
     AND.B #$0F
@@ -8491,7 +8491,7 @@ CODE_0DF06C:
     LSR A
     LSR A
     TAX
-  - JSR Sta1To6ePointer
+  - JSR OBJHighByte01
     LDA.L DATA_0DF06B,X
     JSR CODE_0DA95B
     DEC.B _0
