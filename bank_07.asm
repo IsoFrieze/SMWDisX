@@ -252,11 +252,7 @@ YI4Sprites102:
 YI4Sub2Sprites1FF:
     incsrc "lvl/spr/1FF_YI4end.asm"
 YI4Sub1Sprites1BE:
-if ver_is_console(!_VER)                      ;\================ J, U, E0, & E1 ===============
-    incsrc "lvl/spr/1BE_YI4sub_U.asm"         ;!
-else                                          ;<====================== SS =====================
-    incsrc "lvl/spr/1BE_YI4sub_SS.asm"        ;!
-endif                                         ;/===============================================
+    incsrc "lvl/spr/1BE_YI4sub.asm"
 C1Sprites101:
     incsrc "lvl/spr/101_C1room1.asm"
 C1Sub1Sprites1FC:
@@ -464,11 +460,7 @@ SGSSprites018:
 SGSSub1Sprites0F8:
     incsrc "lvl/spr/0F8_SGSroom2.asm"
 SGSSub2Sprites0F7:
-if ver_is_japanese(!_VER)                     ;\======================= J =====================
-    incsrc "lvl/spr/0F7_SGSroom3_J.asm"       ;!
-else                                          ;<=============== U, SS, E0, & E1 ===============
-    incsrc "lvl/spr/0F7_SGSroom3_U.asm"       ;!
-endif                                         ;/===============================================
+    incsrc "lvl/spr/0F7_SGSroom3.asm"
 VoB1Sprites116:
     incsrc "lvl/spr/116_VoB1main.asm"
 VoB1Sub2Sprites1E5:

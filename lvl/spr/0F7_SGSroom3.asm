@@ -55,4 +55,9 @@
 %S_SpikeBall($150, $00C, "slow")
 %S_SpikeBall($15A, $011, "slow")
 %S_Orb($184, $016)
+if ver_is_english(!_VER)                      ;\=============== U, SS, E0, & E1 ===============
+    %S_1upMushroom($190, $002)
+    %S_1upMushroom($192, $01C)
+    %S_1upMushroom($192, $01D)
+endif                                         ;/===============================================
 %S_End()
