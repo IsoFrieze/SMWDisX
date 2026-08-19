@@ -1,0 +1,6 @@
+%S_Header(0, 0, 0, "horizontal")
+%S_Pokey($013, $012)
+%S_MessageBlock($01D, $015, 2)
+%S_Pokey($022, $013)
+%S_Pokey($032, $010)
+%S_End()

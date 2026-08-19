@@ -1,0 +1,7 @@
+%S_Header(0, 0, 14, "horizontal")
+%S_Thwimp($009, $00B)
+%S_Thwimp($010, $00B)
+%S_BallNChain($016, $012, "cw")
+%S_BallNChain($01C, $00C, "cw")
+%S_BallNChain($022, $006, "cw")
+%S_End()

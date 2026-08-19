@@ -1,0 +1,5 @@
+%S_Header(0, 0, 7, "horizontal")
+%S_BooCeiling($008, $000)
+%S_FlyingPrizeBlock($019, $015, "goingleft", "flower")
+%S_PSwitch($066, $012, "blue")
+%S_End()

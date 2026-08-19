@@ -1,0 +1,8 @@
+%S_Header(0, 0, 0, "horizontal")
+%S_Bird($004, $00E)
+%S_Bird($005, $00E)
+%S_Bird($006, $00E)
+%S_Bird($007, $00E)
+%S_SideExit($008, $007, "normal")
+%S_MessageBlock($008, $015, 1)
+%S_End()

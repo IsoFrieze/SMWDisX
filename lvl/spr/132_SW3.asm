@@ -1,0 +1,7 @@
+%S_Header(0, 0, 12, "horizontal")
+%S_YoshiEgg($006, $017, "yellow")
+%S_PSwitch($007, $017, "gray")
+%S_Lakitu($00A, $00E, "normal")
+%S_Keyhole($017, $005)
+%S_GoalTape($01E, $017, "normal")
+%S_End()

@@ -1,0 +1,6 @@
+%S_Header(0, 0, 0, "horizontal")
+%S_Chuck($015, $017, "puntin", "normal")
+%S_Keyhole($025, $006)
+%S_Key($028, $006)
+%S_Koopa($034, $017, "blue", "shell")
+%S_End()

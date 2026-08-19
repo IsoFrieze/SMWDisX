@@ -1,0 +1,6 @@
+%S_Header(1, 0, 18, "horizontal")
+%S_Podoboo($002, $000, "jumping")
+%S_Podoboo($007, $000, "jumping")
+%S_Podoboo($00D, $000, "jumping")
+%S_Koopaling($00C, $004, "larry")
+%S_End()

@@ -1,0 +1,8 @@
+%S_Header(0, 0, 0, "horizontal")
+%S_Generator($008, $000, "bullets4way")
+%S_MovingPlatform($015, $017, "checkered", "updown")
+%S_MovingPlatform($01C, $014, "checkered", "updown")
+%S_MovingPlatform($023, $018, "checkered", "updown")
+%S_MovingPlatform($02A, $015, "checkered", "updown")
+%S_MovingPlatform($035, $017, "checkered", "leftright")
+%S_End()

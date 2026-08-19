@@ -1,0 +1,6 @@
+%S_Header(0, 0, 0, "horizontal")
+%S_LilSparky($005, $011, "ccw")
+%S_LilSparky($008, $011, "cw")
+%S_Hothead($015, $011, "ccw")
+%S_Hothead($018, $011, "cw")
+%S_End()

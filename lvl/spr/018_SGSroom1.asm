@@ -1,0 +1,6 @@
+%S_Header(1, 0, 0, "horizontal")
+%S_Spawner($011, $00A, "bulletbill")
+%S_Spawner($016, $00C, "bulletbill")
+%S_Spawner($018, $005, "bulletbill")
+%S_Spawner($023, $00E, "bulletbill")
+%S_End()

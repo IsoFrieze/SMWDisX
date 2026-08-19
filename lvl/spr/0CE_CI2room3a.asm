@@ -1,0 +1,7 @@
+%S_Header(0, 0, 0, "horizontal")
+%S_Chuck($012, $017, "pitchin", "6balls")
+%S_Chuck($021, $015, "pitchin", "4balls")
+%S_Chuck($02B, $014, "pitchin", "5balls")
+%S_Key($033, $016)
+%S_Keyhole($03B, $012)
+%S_End()

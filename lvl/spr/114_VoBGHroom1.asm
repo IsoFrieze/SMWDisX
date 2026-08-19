@@ -1,0 +1,6 @@
+%S_Header(0, 0, 13, "horizontal")
+%S_BigGreenBubble($015, $012)
+%S_BigGreenBubble($01D, $013)
+%S_BigGreenBubble($028, $013)
+%S_BigGreenBubble($034, $012)
+%S_End()

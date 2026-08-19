@@ -1,0 +1,6 @@
+%S_Header(0, 0, 3, "horizontal")
+%S_FastBackground($008)
+%S_FloatingPlatform($006, $015, "orangebig")
+%S_Koopa($03A, $014, "green", "flyleft")
+%S_Koopa($045, $014, "green", "flyleft")
+%S_End()

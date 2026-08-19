@@ -1,0 +1,8 @@
+%S_Header(0, 0, 0, "horizontal")
+%S_FallingPlatform($012, $017)
+%S_FallingPlatform($017, $017)
+%S_HammerBroPlatform($017, $00F)
+%S_HammerBro($017, $00F)
+%S_FallingPlatform($01C, $017)
+%S_FallingPlatform($021, $017)
+%S_End()

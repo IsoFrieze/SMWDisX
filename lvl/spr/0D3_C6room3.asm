@@ -1,0 +1,5 @@
+%S_Header(0, 0, 14, "horizontal")
+%S_Podoboo($001, $010, "bouncing")
+%S_Koopaling($00C, $006, "wendy")
+%S_Podoboo($00E, $010, "bouncing")
+%S_End()

@@ -1,0 +1,7 @@
+%S_Header(0, 0, 15, "horizontal")
+%S_AutoScroll($008, "slow")
+%S_BackgroundFlames($000, $000)
+%S_Layer3Smash($012)
+%S_FlyingPrizeBlock($025, $015, "goingleft", "flower")
+%S_TurnBlockBridge($034, $018, "horizontal")
+%S_End()

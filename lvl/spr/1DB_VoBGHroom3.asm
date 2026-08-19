@@ -1,0 +1,8 @@
+%S_Header(0, 0, 0, "horizontal")
+%S_PSwitch($006, $017, "blue")
+%S_Boo($02C, $014)
+%S_Boo($036, $015)
+%S_Key($03A, $005)
+%S_Boo($03B, $013)
+%S_Keyhole($03F, $005)
+%S_End()

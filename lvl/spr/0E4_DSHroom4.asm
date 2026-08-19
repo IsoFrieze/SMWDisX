@@ -1,0 +1,5 @@
+%S_Header(0, 0, 9, "horizontal")
+%S_Boo($002, $00F)
+%S_BigBoo($00B, $00D, "boss")
+%S_Boo($00A, $00F)
+%S_End()

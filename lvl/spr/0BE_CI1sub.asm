@@ -1,0 +1,5 @@
+%S_Header(1, 0, 0, "horizontal")
+%S_Generator($004, $000, "dolphinsleft")
+%S_Porcupuffer($00E, $018)
+%S_Porcupuffer($021, $018)
+%S_End()

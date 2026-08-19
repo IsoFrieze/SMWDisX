@@ -1,0 +1,7 @@
+%S_Header(1, 0, 0, "horizontal")
+%S_DryBones($002, $005, "ledges")
+%S_Thwomp($012, $003)
+%S_Podoboo($016, $008, "jumping")
+%S_Thwomp($01C, $00B)
+%S_Thwomp($023, $00E)
+%S_End()

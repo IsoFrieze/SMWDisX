@@ -1,0 +1,8 @@
+%S_Header(0, 0, 0, "horizontal")
+%S_FlyingPrizeBlock($008, $00F, "leftright", "coin")
+%S_FlyingPrizeBlock($00C, $00E, "leftright", "coin")
+%S_FlyingPrizeBlock($013, $00F, "leftright", "1up")
+%S_FlyingPrizeBlock($014, $00D, "leftright", "coin")
+%S_FlyingPrizeBlock($018, $010, "leftright", "coin")
+%S_FlyingPrizeBlock($01C, $00E, "leftright", "coin")
+%S_End()

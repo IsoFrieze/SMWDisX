@@ -170,391 +170,391 @@ FunkyLevel125:
     %insert_empty($E6,$DA,$DA,$DA,$DA)
 
 CloudsBetaSprites:
-    incbin "lvl/spr/betaclouds.bin"
+    incsrc "lvl/spr/betaclouds.asm"
 MushroomBetaSprites:
-    incbin "lvl/spr/betamushrooms.bin"
+    incsrc "lvl/spr/betamushrooms.asm"
 BowserCopySprites:
-    incbin "lvl/spr/1C7_bowser.bin"
+    incsrc "lvl/spr/1C7_bowser.asm"
 MortonCopySprites:
-    incbin "lvl/spr/0E5_C2room4.bin"
+    incsrc "lvl/spr/0E5_C2room4.asm"
 RoyCopySprites:
-    incbin "lvl/spr/0CC_C5room2.bin"
+    incsrc "lvl/spr/0CC_C5room2.asm"
 LudwigCopySprites:
-    incbin "lvl/spr/0D9_C4room4.bin"
+    incsrc "lvl/spr/0D9_C4room4.asm"
 IggyCopySprites:
-    incbin "lvl/spr/1F6_C1room3.bin"
+    incsrc "lvl/spr/1F6_C1room3.asm"
 LarryCopySprites:
-    incbin "lvl/spr/1EB_C7room3.bin"
+    incsrc "lvl/spr/1EB_C7room3.asm"
 ReznorCopySprites:
-    incbin "lvl/spr/reznor.bin"
+    incsrc "lvl/spr/reznor.asm"
 LavaCaveBetaSprites:
-    incbin "lvl/spr/betalavacave.bin"
+    incsrc "lvl/spr/betalavacave.asm"
 TwinBlocksSprites:
-    incbin "lvl/spr/betatwinblocks.bin"
+    incsrc "lvl/spr/betatwinblocks.asm"
 WendyBetaSprites:
-    incbin "lvl/spr/betaC6room1.bin"
+    incsrc "lvl/spr/betaC6room1.asm"
 LemmyCopySprites:
-    incbin "lvl/spr/1F2_C3room4.bin"
+    incsrc "lvl/spr/1F2_C3room4.asm"
 WendyCopySprites:
-    incbin "lvl/spr/0D3_C6room3.bin"
+    incsrc "lvl/spr/0D3_C6room3.asm"
 EmptySprites:
-    incbin "lvl/spr/empty.bin"
+    incsrc "lvl/spr/empty.asm"
 SubNormalExitSprites:
-    incbin "lvl/spr/goaltapenormal.bin"
+    incsrc "lvl/spr/goaltapenormal.asm"
 GHNormalExitSprites:
-    incbin "lvl/spr/ghosthouseexitnormal.bin"
+    incsrc "lvl/spr/ghosthouseexitnormal.asm"
 UnusedGHExitSprites:
-    incbin "lvl/spr/unusedghexit1.bin"
+    incsrc "lvl/spr/unusedghexit1.asm"
 UnusedGHExit2Sprites:
-    incbin "lvl/spr/unusedghexit2.bin"
+    incsrc "lvl/spr/unusedghexit2.asm"
 BonusGameSprites:
-    incbin "lvl/spr/bonusgame.bin"
+    incsrc "lvl/spr/bonusgame.asm"
 SubSecretExitSprites:
-    incbin "lvl/spr/goaltapesecret.bin"
+    incsrc "lvl/spr/goaltapesecret.asm"
 ReznorSubSprites:
-    incbin "lvl/spr/reznor.bin"
+    incsrc "lvl/spr/reznor.asm"
 FDSprites10D:
-    incbin "lvl/spr/10D_FDmain.bin"
+    incsrc "lvl/spr/10D_FDmain.asm"
 TitleScrSprites0C7:
-    incbin "lvl/spr/0C7_titlescreen.bin"
+    incsrc "lvl/spr/0C7_titlescreen.asm"
 IntroSprites0C5:
-    incbin "lvl/spr/0C5_introcutscene.bin"
+    incsrc "lvl/spr/0C5_introcutscene.asm"
 YSPSprites014:
-    incbin "lvl/spr/014_YSProom1.bin"
+    incsrc "lvl/spr/014_YSProom1.asm"
 YSPSub1Sprites0CA:
-    incbin "lvl/spr/0CA_YSProom2.bin"
+    incsrc "lvl/spr/0CA_YSProom2.asm"
 RSPSprites11B:
-    incbin "lvl/spr/11B_RSProom1.bin"
+    incsrc "lvl/spr/11B_RSProom1.asm"
 RSPSub1Sprites1D8:
-    incbin "lvl/spr/1D8_RSProom2.bin"
+    incsrc "lvl/spr/1D8_RSProom2.asm"
 BSPSprites121:
-    incbin "lvl/spr/121_BSProom1.bin"
+    incsrc "lvl/spr/121_BSProom1.asm"
 BSPSub1Sprites1D7:
-    incbin "lvl/spr/1D7_BSProom2.bin"
+    incsrc "lvl/spr/1D7_BSProom2.asm"
 GSPSprites008:
-    incbin "lvl/spr/008_GSProom1.bin"
+    incsrc "lvl/spr/008_GSProom1.asm"
 GSPSub1Sprites0C9:
-    incbin "lvl/spr/0C9_GSProom2.bin"
+    incsrc "lvl/spr/0C9_GSProom2.asm"
 TSASprites003:
-    incbin "lvl/spr/003_TSA.bin"
+    incsrc "lvl/spr/003_TSA.asm"
 YI1Sprites105:
-    incbin "lvl/spr/105_YI1main.bin"
+    incsrc "lvl/spr/105_YI1main.asm"
 YI2Sprites106:
-    incbin "lvl/spr/106_YI2main.bin"
+    incsrc "lvl/spr/106_YI2main.asm"
 YI2Sub1Sprites1CA:
-    incbin "lvl/spr/1CA_YI2sub.bin"
+    incsrc "lvl/spr/1CA_YI2sub.asm"
 YI3Spirtes103:
-    incbin "lvl/spr/103_YI3main.bin"
+    incsrc "lvl/spr/103_YI3main.asm"
 YI3Sub1Sprites1FD:
-    incbin "lvl/spr/1FD_YI3sub.bin"
+    incsrc "lvl/spr/1FD_YI3sub.asm"
 YI4Sprites102:
-    incbin "lvl/spr/102_YI4main.bin"
+    incsrc "lvl/spr/102_YI4main.asm"
 YI4Sub2Sprites1FF:
-    incbin "lvl/spr/1FF_YI4end.bin"
+    incsrc "lvl/spr/1FF_YI4end.asm"
 YI4Sub1Sprites1BE:
 if ver_is_console(!_VER)                      ;\================ J, U, E0, & E1 ===============
-    incbin "lvl/spr/1BE_YI4sub_U.bin"         ;!
+    incsrc "lvl/spr/1BE_YI4sub_U.asm"         ;!
 else                                          ;<====================== SS =====================
-    incbin "lvl/spr/1BE_YI4sub_SS.bin"        ;!
+    incsrc "lvl/spr/1BE_YI4sub_SS.asm"        ;!
 endif                                         ;/===============================================
 C1Sprites101:
-    incbin "lvl/spr/101_C1room1.bin"
+    incsrc "lvl/spr/101_C1room1.asm"
 C1Sub1Sprites1FC:
-    incbin "lvl/spr/1FC_C1room2.bin"
+    incsrc "lvl/spr/1FC_C1room2.asm"
 C1Sub2Sprites1F6:
-    incbin "lvl/spr/1F6_C1room3.bin"
+    incsrc "lvl/spr/1F6_C1room3.asm"
 DP1Sprites015:
-    incbin "lvl/spr/015_DP1main.bin"
+    incsrc "lvl/spr/015_DP1main.asm"
 DP1Sub2Sprites0E3:
-    incbin "lvl/spr/0E3_DP1sub.bin"
+    incsrc "lvl/spr/0E3_DP1sub.asm"
 DP2Sprites009:
-    incbin "lvl/spr/009_DP2main.bin"
+    incsrc "lvl/spr/009_DP2main.asm"
 DP2Sub1Sprites0E9:
-    incbin "lvl/spr/0E9_DP2sub.bin"
+    incsrc "lvl/spr/0E9_DP2sub.asm"
 DGHSprites004:
-    incbin "lvl/spr/004_DGHroom1.bin"
+    incsrc "lvl/spr/004_DGHroom1.asm"
 DGHSub1Sprites0F9:
-    incbin "lvl/spr/0F9_DGHroom2.bin"
+    incsrc "lvl/spr/0F9_DGHroom2.asm"
 DGHSub2Sprites0FE:
-    incbin "lvl/spr/0FE_DGHroom3.bin"
+    incsrc "lvl/spr/0FE_DGHroom3.asm"
 DP3Sprites005:
-    incbin "lvl/spr/005_DP3main.bin"
+    incsrc "lvl/spr/005_DP3main.asm"
 DP4Sprites006:
-    incbin "lvl/spr/006_DP4main.bin"
+    incsrc "lvl/spr/006_DP4main.asm"
 DP4Sub1Sprites0D2:
-    incbin "lvl/spr/0D2_DP4sub2.bin"
+    incsrc "lvl/spr/0D2_DP4sub2.asm"
 DP4Sub1Sprites0C3:
-    incbin "lvl/spr/0C3_DP4sub1.bin"
+    incsrc "lvl/spr/0C3_DP4sub1.asm"
 C2Sprites007:
-    incbin "lvl/spr/007_C2room1.bin"
+    incsrc "lvl/spr/007_C2room1.asm"
 C2Sub2Sprites0E8:
-    incbin "lvl/spr/0E8_C2room2.bin"
+    incsrc "lvl/spr/0E8_C2room2.asm"
 C2Sub3Sprites0E7:
-    incbin "lvl/spr/0E7_C2room3.bin"
+    incsrc "lvl/spr/0E7_C2room3.asm"
 C2Sub4Sprites0E5:
-    incbin "lvl/spr/0E5_C2room4.bin"
+    incsrc "lvl/spr/0E5_C2room4.asm"
 DS1Sprites00A:
-    incbin "lvl/spr/00A_DS1main.bin"
+    incsrc "lvl/spr/00A_DS1main.asm"
 DS1Sub1Sprites0C2:
-    incbin "lvl/spr/0C2_DS1sub.bin"
+    incsrc "lvl/spr/0C2_DS1sub.asm"
 DSHSprites013:
-    incbin "lvl/spr/013_DSHroom1.bin"
+    incsrc "lvl/spr/013_DSHroom1.asm"
 DSHSub1Sprites0ED:
-    incbin "lvl/spr/0ED_DSHroom2.bin"
+    incsrc "lvl/spr/0ED_DSHroom2.asm"
 DSHSub2Sprites0F1:
-    incbin "lvl/spr/0F1_DSHroom3.bin"
+    incsrc "lvl/spr/0F1_DSHroom3.asm"
 DSHSub4Sprites0E4:
-    incbin "lvl/spr/0E4_DSHroom4.bin"
+    incsrc "lvl/spr/0E4_DSHroom4.asm"
 DS2Sprites10B:
-    incbin "lvl/spr/10B_DS2main.bin"
+    incsrc "lvl/spr/10B_DS2main.asm"
 DS2Sub1Sprites1C6:
-    incbin "lvl/spr/1C6_DS2sub.bin"
+    incsrc "lvl/spr/1C6_DS2sub.asm"
 VD1Sprites11A:
-    incbin "lvl/spr/11A_VD1main.bin"
+    incsrc "lvl/spr/11A_VD1main.asm"
 VD1Sub1Sprites1EF:
-    incbin "lvl/spr/1EF_VD1sub.bin"
+    incsrc "lvl/spr/1EF_VD1sub.asm"
 VD2Sprites118:
-    incbin "lvl/spr/118_VD2main.bin"
+    incsrc "lvl/spr/118_VD2main.asm"
 VD2Sub1Sprites1C3:
-    incbin "lvl/spr/1C3_VD2sub.bin"
+    incsrc "lvl/spr/1C3_VD2sub.asm"
 VGHSprites107:
-    incbin "lvl/spr/107_VGHroom1.bin"
+    incsrc "lvl/spr/107_VGHroom1.asm"
 VGHSub1Sprites1EA:
-    incbin "lvl/spr/1EA_VGHroom2.bin"
+    incsrc "lvl/spr/1EA_VGHroom2.asm"
 VD3Sprites10A:
-    incbin "lvl/spr/10A_VD3main.bin"
+    incsrc "lvl/spr/10A_VD3main.asm"
 VD3Sub2Sprites1C2:
-    incbin "lvl/spr/1C2_VD3sub.bin"
+    incsrc "lvl/spr/1C2_VD3sub.asm"
 VD4Sprites119:
-    incbin "lvl/spr/119_VD4main.bin"
+    incsrc "lvl/spr/119_VD4main.asm"
 VD4Sub1Sprites1F5:
-    incbin "lvl/spr/1F5_VD4sub.bin"
+    incsrc "lvl/spr/1F5_VD4sub.asm"
 C3Sprites11C:
-    incbin "lvl/spr/11C_C3room1.bin"
+    incsrc "lvl/spr/11C_C3room1.asm"
 C3Sub2Sprites1F3:
-    incbin "lvl/spr/1F3_C3room3.bin"
+    incsrc "lvl/spr/1F3_C3room3.asm"
 C3Sub3Sprites1F2:
-    incbin "lvl/spr/1F2_C3room4.bin"
+    incsrc "lvl/spr/1F2_C3room4.asm"
 VS1Sprites109:
-    incbin "lvl/spr/109_VS1main.bin"
+    incsrc "lvl/spr/109_VS1main.asm"
 VS1Sub1Sprites1F1:
-    incbin "lvl/spr/1F1_VS1end1.bin"
+    incsrc "lvl/spr/1F1_VS1end1.asm"
 VS1Sub2Sprites1F0:
-    incbin "lvl/spr/1F0_VS1end2.bin"
+    incsrc "lvl/spr/1F0_VS1end2.asm"
 VS2Sprites001:
-    incbin "lvl/spr/001_VS2main.bin"
+    incsrc "lvl/spr/001_VS2main.asm"
 VS2Sub1Sprites0D8:
-    incbin "lvl/spr/0D8_VS2sub.bin"
+    incsrc "lvl/spr/0D8_VS2sub.asm"
 VS3Sprites002:
-    incbin "lvl/spr/002_VS3main.bin"
+    incsrc "lvl/spr/002_VS3main.asm"
 VFSprites00B:
-    incbin "lvl/spr/00B_VFroom1.bin"
+    incsrc "lvl/spr/00B_VFroom1.asm"
 VFSub1Sprites0E0:
-    incbin "lvl/spr/0E0_VFroom2.bin"
+    incsrc "lvl/spr/0E0_VFroom2.asm"
 CBASprites00F:
-    incbin "lvl/spr/00F_CBAmain.bin"
+    incsrc "lvl/spr/00F_CBAmain.asm"
 CBASub1Sprites0BF:
-    incbin "lvl/spr/0BF_CBAsub.bin"
+    incsrc "lvl/spr/0BF_CBAsub.asm"
 CMSprites010:
-    incbin "lvl/spr/010_CMmain.bin"
+    incsrc "lvl/spr/010_CMmain.asm"
 CMSub1Sprites0C1:
-    incbin "lvl/spr/0C1_CMsub.bin"
+    incsrc "lvl/spr/0C1_CMsub.asm"
 C4Sprites00E:
-    incbin "lvl/spr/00E_C4room1.bin"
+    incsrc "lvl/spr/00E_C4room1.asm"
 C4Sub2Sprites0DC:
-    incbin "lvl/spr/0DC_C4room2.bin"
+    incsrc "lvl/spr/0DC_C4room2.asm"
 C4Sub3Sprites0DB:
-    incbin "lvl/spr/0DB_C4room3.bin"
+    incsrc "lvl/spr/0DB_C4room3.asm"
 C4Sub4Sprites0D9:
-    incbin "lvl/spr/0D9_C4room4.bin"
+    incsrc "lvl/spr/0D9_C4room4.asm"
 SLSprites011:
-    incbin "lvl/spr/011_SLmain.bin"
+    incsrc "lvl/spr/011_SLmain.asm"
 BB1Sprites00C:
-    incbin "lvl/spr/00C_BB1main.bin"
+    incsrc "lvl/spr/00C_BB1main.asm"
 BB2Sprites00D:
-    incbin "lvl/spr/00D_BB2main.bin"
+    incsrc "lvl/spr/00D_BB2main.asm"
 BB2Sub1Sprites0DD:
-    incbin "lvl/spr/0DD_BB2sub.bin"
+    incsrc "lvl/spr/0DD_BB2sub.asm"
 FoI1Sprites11E:
-    incbin "lvl/spr/11E_FoI1.bin"
+    incsrc "lvl/spr/11E_FoI1.asm"
 FoI2Sprites120:
-    incbin "lvl/spr/120_FoI2.bin"
+    incsrc "lvl/spr/120_FoI2.asm"
 FoI3Sprites123:
-    incbin "lvl/spr/123_FoI3main.bin"
+    incsrc "lvl/spr/123_FoI3main.asm"
 FoI3Sub2Sprites1F8:
-    incbin "lvl/spr/1F8_FoI3sub.bin"
+    incsrc "lvl/spr/1F8_FoI3sub.asm"
 C5Sprites020:
-    incbin "lvl/spr/020_C5room1.bin"
+    incsrc "lvl/spr/020_C5room1.asm"
 C5Sub1Sprites0CC:
-    incbin "lvl/spr/0CC_C5room2.bin"
+    incsrc "lvl/spr/0CC_C5room2.asm"
 FGHSprites11D:
-    incbin "lvl/spr/11D_FGHroom1.bin"
+    incsrc "lvl/spr/11D_FGHroom1.asm"
 FGHSub1Sprites1FA:
-    incbin "lvl/spr/1FA_FGHroom2.bin"
+    incsrc "lvl/spr/1FA_FGHroom2.asm"
 FoI4Sprites11F:
-    incbin "lvl/spr/11F_FoI4main.bin"
+    incsrc "lvl/spr/11F_FoI4main.asm"
 FoI4Sub2Sprites1DF:
-    incbin "lvl/spr/1DF_FoI4sub2.bin"
+    incsrc "lvl/spr/1DF_FoI4sub2.asm"
 FoI4Sub1Sprites1C1:
-    incbin "lvl/spr/1C1_FoI4sub1.bin"
+    incsrc "lvl/spr/1C1_FoI4sub1.asm"
 FSASprites122:
-    incbin "lvl/spr/122_FSA.bin"
+    incsrc "lvl/spr/122_FSA.asm"
 FFSprites01F:
-    incbin "lvl/spr/01F_FFroom1.bin"
+    incsrc "lvl/spr/01F_FFroom1.asm"
 FFSub1Sprites0D6:
-    incbin "lvl/spr/0D6_FFroom2.bin"
+    incsrc "lvl/spr/0D6_FFroom2.asm"
 CI1Sprites022:
-    incbin "lvl/spr/022_CI1main1.bin"
+    incsrc "lvl/spr/022_CI1main1.asm"
 CI1Sub2Sprites0BE:
-    incbin "lvl/spr/0BE_CI1sub.bin"
+    incsrc "lvl/spr/0BE_CI1sub.asm"
 CGHSprites021:
-    incbin "lvl/spr/021_CGHroom1.bin"
+    incsrc "lvl/spr/021_CGHroom1.asm"
 CGHSub1Sprites0FC:
-    incbin "lvl/spr/0FC_CGHroom2.bin"
+    incsrc "lvl/spr/0FC_CGHroom2.asm"
 CI2Sprites024:
-    incbin "lvl/spr/024_CI2room1.bin"
+    incsrc "lvl/spr/024_CI2room1.asm"
 CI2Sub3Sprites0CF:
-    incbin "lvl/spr/0CF_CI2room2c.bin"
+    incsrc "lvl/spr/0CF_CI2room2c.asm"
 CI2Sub2Sprites6E9FB:
-    incbin "lvl/spr/0CF_CI2room2b.bin"
+    incsrc "lvl/spr/0CF_CI2room2b.asm"
 CI2Sub1Sprites6EAB0:
-    incbin "lvl/spr/0CF_CI2room2a.bin"
+    incsrc "lvl/spr/0CF_CI2room2a.asm"
 CI2Sub4Sprites0CE:
-    incbin "lvl/spr/0CE_CI2room3c.bin"
+    incsrc "lvl/spr/0CE_CI2room3c.asm"
 CI2Sub5Sprites6EB72:
-    incbin "lvl/spr/0CE_CI2room3b.bin"
+    incsrc "lvl/spr/0CE_CI2room3b.asm"
 CI2Sub6SPrites6EBBE:
-    incbin "lvl/spr/0CE_CI2room3a.bin"
+    incsrc "lvl/spr/0CE_CI2room3a.asm"
 CI2Sub8Sprites0CD:
-    incbin "lvl/spr/0CD_CI2room4b.bin"
+    incsrc "lvl/spr/0CD_CI2room4b.asm"
 CI2Sub7Sprites6EC7E:
-    incbin "lvl/spr/0CD_CI2room4a.bin"
+    incsrc "lvl/spr/0CD_CI2room4a.asm"
 CI3Sprites023:
-    incbin "lvl/spr/023_CI3main.bin"
+    incsrc "lvl/spr/023_CI3main.asm"
 CI3Sub1Sprites0D7:
-    incbin "lvl/spr/0D7_CI3sub.bin"
+    incsrc "lvl/spr/0D7_CI3sub.asm"
 CFSprites01B:
-    incbin "lvl/spr/01B_CFroom1.bin"
+    incsrc "lvl/spr/01B_CFroom1.asm"
 CFSub1Sprites0EF:
-    incbin "lvl/spr/0EF_CFroom2.bin"
+    incsrc "lvl/spr/0EF_CFroom2.asm"
 CSSprites117:
-    incbin "lvl/spr/117_CSroom1.bin"
+    incsrc "lvl/spr/117_CSroom1.asm"
 CSSub2Sprites1ED:
-    incbin "lvl/spr/1ED_CSroom2.bin"
+    incsrc "lvl/spr/1ED_CSroom2.asm"
 CSSub3Sprites1EC:
-    incbin "lvl/spr/1EC_CSroom3.bin"
+    incsrc "lvl/spr/1EC_CSroom3.asm"
 CSSub1Sprites1C0:
-    incbin "lvl/spr/1C0_CSsub.bin"
+    incsrc "lvl/spr/1C0_CSsub.asm"
 CI4Sprites01D:
-    incbin "lvl/spr/01D_CI4main.bin"
+    incsrc "lvl/spr/01D_CI4main.asm"
 CI4Sub1Sprites0EA:
-    incbin "lvl/spr/0EA_CI4sub.bin"
+    incsrc "lvl/spr/0EA_CI4sub.asm"
 CI5Sprites01C:
-    incbin "lvl/spr/01C_CI5main.bin"
+    incsrc "lvl/spr/01C_CI5main.asm"
 CI5Sub2Sprites0C0:
-    incbin "lvl/spr/0C0_CI5sub.bin"
+    incsrc "lvl/spr/0C0_CI5sub.asm"
 C6Sprites01A:
-    incbin "lvl/spr/01A_C6room1.bin"
+    incsrc "lvl/spr/01A_C6room1.asm"
 C6Sub1Sprites0D4:
-    incbin "lvl/spr/0D4_C6room2.bin"
+    incsrc "lvl/spr/0D4_C6room2.asm"
 C6Sub2Sprites0D3:
-    incbin "lvl/spr/0D3_C6room3.bin"
+    incsrc "lvl/spr/0D3_C6room3.asm"
 SGSSprites018:
-    incbin "lvl/spr/018_SGSroom1.bin"
+    incsrc "lvl/spr/018_SGSroom1.asm"
 SGSSub1Sprites0F8:
-    incbin "lvl/spr/0F8_SGSroom2.bin"
+    incsrc "lvl/spr/0F8_SGSroom2.asm"
 SGSSub2Sprites0F7:
 if ver_is_japanese(!_VER)                     ;\======================= J =====================
-    incbin "lvl/spr/0F7_SGSroom3_J.bin"       ;!
+    incsrc "lvl/spr/0F7_SGSroom3_J.asm"       ;!
 else                                          ;<=============== U, SS, E0, & E1 ===============
-    incbin "lvl/spr/0F7_SGSroom3_U.bin"       ;!
+    incsrc "lvl/spr/0F7_SGSroom3_U.asm"       ;!
 endif                                         ;/===============================================
 VoB1Sprites116:
-    incbin "lvl/spr/116_VoB1main.bin"
+    incsrc "lvl/spr/116_VoB1main.asm"
 VoB1Sub2Sprites1E5:
-    incbin "lvl/spr/1E5_VoB1end.bin"
+    incsrc "lvl/spr/1E5_VoB1end.asm"
 VoB2Sprites115:
-    incbin "lvl/spr/115_VoB2room1.bin"
+    incsrc "lvl/spr/115_VoB2room1.asm"
 VoB2Sub1Sprites1E3:
-    incbin "lvl/spr/1E3_VoB2room2.bin"
+    incsrc "lvl/spr/1E3_VoB2room2.asm"
 VoB2Sub2Sprites1E2:
-    incbin "lvl/spr/1E2_VoB2room3.bin"
+    incsrc "lvl/spr/1E2_VoB2room3.asm"
 YoshiWingsSprites0C8:
-    incbin "lvl/spr/0C8_yoshiwingsdark.bin"
+    incsrc "lvl/spr/0C8_yoshiwingsdark.asm"
 VoBGHSprites114:
-    incbin "lvl/spr/114_VoBGHroom1.bin"
+    incsrc "lvl/spr/114_VoBGHroom1.asm"
 VoBGHSub1Sprites1DD:
-    incbin "lvl/spr/1DD_VoBGHroom2.bin"
+    incsrc "lvl/spr/1DD_VoBGHroom2.asm"
 VoBGHSub2Sprites1DB:
-    incbin "lvl/spr/1DB_VoBGHroom3.bin"
+    incsrc "lvl/spr/1DB_VoBGHroom3.asm"
 VoB3Sprites113:
-    incbin "lvl/spr/113_VoB3main.bin"
+    incsrc "lvl/spr/113_VoB3main.asm"
 VoB4Sprites10F:
-    incbin "lvl/spr/10F_VoB4main.bin"
+    incsrc "lvl/spr/10F_VoB4main.asm"
 VoB4Sub1Sprites1BF:
-    incbin "lvl/spr/1BF_VoB4sub.bin"
+    incsrc "lvl/spr/1BF_VoB4sub.asm"
 C7Sprites110:
-    incbin "lvl/spr/110_C7room1.bin"
+    incsrc "lvl/spr/110_C7room1.asm"
 C7Sub1Sprites1FE:
-    incbin "lvl/spr/1FE_C7room2.bin"
+    incsrc "lvl/spr/1FE_C7room2.asm"
 C7Sub2Sprites1EB:
-    incbin "lvl/spr/1EB_C7room3.bin"
+    incsrc "lvl/spr/1EB_C7room3.asm"
 VoBFSprites111:
-    incbin "lvl/spr/111_VoBFroom1.bin"
+    incsrc "lvl/spr/111_VoBFroom1.asm"
 FDSub1Sprites1D4:
-    incbin "lvl/spr/1D4_FDroom1.bin"
+    incsrc "lvl/spr/1D4_FDroom1.asm"
 FDSub2Sprites1D3:
-    incbin "lvl/spr/1D3_FDroom2.bin"
+    incsrc "lvl/spr/1D3_FDroom2.asm"
 FDSub3Sprites1D2:
-    incbin "lvl/spr/1D2_FDroom3.bin"
+    incsrc "lvl/spr/1D2_FDroom3.asm"
 FDSub4Sprites1D1:
-    incbin "lvl/spr/1D1_FDroom4.bin"
+    incsrc "lvl/spr/1D1_FDroom4.asm"
 FDSub5Sprites1CF:
-    incbin "lvl/spr/1CF_FDroom5.bin"
+    incsrc "lvl/spr/1CF_FDroom5.asm"
 FDSub6Sprites1CE:
-    incbin "lvl/spr/1CE_FDroom6.bin"
+    incsrc "lvl/spr/1CE_FDroom6.asm"
 FDSub7Sprites1CD:
-    incbin "lvl/spr/1CD_FDroom7.bin"
+    incsrc "lvl/spr/1CD_FDroom7.asm"
 FDSub8Sprites1CC:
-    incbin "lvl/spr/1CC_FDroom8.bin"
+    incsrc "lvl/spr/1CC_FDroom8.asm"
 BDSprites10E:
-    incbin "lvl/spr/10E_BD.bin"
+    incsrc "lvl/spr/10E_BD.asm"
 BowserSprites1C7:
-    incbin "lvl/spr/1C7_bowser.bin"
+    incsrc "lvl/spr/1C7_bowser.asm"
 SW1Sprites134:
-    incbin "lvl/spr/134_SW1main.bin"
+    incsrc "lvl/spr/134_SW1main.asm"
 SW2Sprites130:
-    incbin "lvl/spr/130_SW2main.bin"
+    incsrc "lvl/spr/130_SW2main.asm"
 SW3Sprites132:
-    incbin "lvl/spr/132_SW3.bin"
+    incsrc "lvl/spr/132_SW3.asm"
 SW4Sprites135:
-    incbin "lvl/spr/135_SW4.bin"
+    incsrc "lvl/spr/135_SW4.asm"
 SW5Sprites136:
-    incbin "lvl/spr/136_SW5.bin"
+    incsrc "lvl/spr/136_SW5.asm"
 GnarlySprites12A:
-    incbin "lvl/spr/12A_SP1room1.bin"
+    incsrc "lvl/spr/12A_SP1room1.asm"
 GnarlySub1Sprites1C4:
-    incbin "lvl/spr/1C4_SP1room2.bin"
+    incsrc "lvl/spr/1C4_SP1room2.asm"
 TubularSprites12B:
-    incbin "lvl/spr/12B_SP2.bin"
+    incsrc "lvl/spr/12B_SP2.asm"
 WayCoolSprites12C:
-    incbin "lvl/spr/12C_SP3main.bin"
+    incsrc "lvl/spr/12C_SP3main.asm"
 YoshiWingsSprites1C8:
-    incbin "lvl/spr/1C8_yoshiwingsbright.bin"
+    incsrc "lvl/spr/1C8_yoshiwingsbright.asm"
 AwesomeSprites12D:
-    incbin "lvl/spr/12D_SP4.bin"
+    incsrc "lvl/spr/12D_SP4.asm"
 GroovySprites128:
-    incbin "lvl/spr/128_SP5.bin"
+    incsrc "lvl/spr/128_SP5.asm"
 MondoSprites127:
-    incbin "lvl/spr/127_SP6main.bin"
+    incsrc "lvl/spr/127_SP6main.asm"
 OutrageousSprites126:
-    incbin "lvl/spr/126_SP7.bin"
+    incsrc "lvl/spr/126_SP7.asm"
 FunkySprites125:
-    incbin "lvl/spr/125_SP8.bin"
+    incsrc "lvl/spr/125_SP8.asm"
 YHSprites104:
-    incbin "lvl/spr/104_YH.bin"
+    incsrc "lvl/spr/104_YH.asm"
 TestLevelSprites:
-    incbin "lvl/spr/testlevel.bin"
+    incsrc "lvl/spr/testlevel.asm"
 
     %insert_empty($89A,$891,$894,$891,$891)
 

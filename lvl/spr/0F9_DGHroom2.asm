@@ -1,0 +1,6 @@
+%S_Header(0, 0, 0, "horizontal")
+%S_Boo($006, $00F)
+%S_Boo($00B, $018)
+%S_Boo($017, $00E)
+%S_Boo($01C, $015)
+%S_End()

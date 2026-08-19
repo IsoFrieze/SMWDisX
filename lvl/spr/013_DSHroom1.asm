@@ -1,0 +1,7 @@
+%S_Header(0, 0, 11, "horizontal")
+%S_BooRing($01A, $014, "cw")
+%S_Springboard($029, $00F)
+%S_Eerie($02A, $016, "straight")
+%S_PSwitch($02E, $017, "blue")
+%S_BigBoo($033, $014, "normal")
+%S_End()
