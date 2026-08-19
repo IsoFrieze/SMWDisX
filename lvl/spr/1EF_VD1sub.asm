@@ -11,5 +11,5 @@
 %S_BuzzyBeetle($03E, $010)
 %S_Blargg($03E, $019)
 %S_BuzzyBeetle($043, $012)
-%S_Koopa($04B, $012, "green", "bouncing")
+%S_Koopa($04B, $012, "green", "bouncinghigh")
 %S_End()

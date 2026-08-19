@@ -24,7 +24,7 @@
 %S_Koopa($08D, $014, "green", "shell")
 %S_Koopa($08E, $014, "blue", "shellless")
 %S_Koopa($092, $014, "yellow", "winged")
-%S_Koopa($095, $014, "green", "bouncing")
+%S_Koopa($095, $014, "green", "bouncinghigh")
 %S_Rex($09A, $014)
 %S_Rex($09C, $014)
 %S_Rex($09E, $014)

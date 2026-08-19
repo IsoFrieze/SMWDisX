@@ -2549,6 +2549,7 @@ endmacro
 
 ; insert a koopa sprite
 ; green and red non-winged koopas turn yellow and blue after special
+; green bouncing koopa height is dependent on y pos mod 2
 ;         x: x position within the level
 ;         y: y position within the level
 ;     color:
@@ -2560,7 +2561,8 @@ endmacro
 ;    "shellless": naked koopa
 ;       "normal": standard koopa
 ;      "flyleft": green koopa flies left only
-;      "boucing": green koopa that jumps
+;   "boucinglow": green koopa that jumps low
+;  "boucinghigh": green koopa that jumps high
 ; "flyleftright": red koopa that flies
 ;    "flyupdown": red koopa that flies
 ;       "winged": yellow koopa that walks
@@ -2575,7 +2577,15 @@ macro S_Koopa(x, y, color, type)
             %S_Sprite(<x>,<y>, 4, 0)
         elseif stringsequal("<type>","flyleft")
             %S_Sprite(<x>,<y>, 8, 0)
-        elseif stringsequal("<type>","bouncing")
+        elseif stringsequal("<type>","bouncinglow")
+            if notequal(<y>&1,1)
+                ; warn "Koopa will not match type, will be bouncinglow (was ",<type>,"), at ",pc
+            endif
+            %S_Sprite(<x>,<y>, 9, 0)
+        elseif stringsequal("<type>","bouncinghigh")
+            if notequal(<y>&1,0)
+                ; warn "Koopa will not match type, will be bouncinghigh (was ",<type>,"), at ",pc
+            endif
             %S_Sprite(<x>,<y>, 9, 0)
         elseif stringsequal("<type>","shell")
             %S_Sprite(<x>,<y>, 218, 0)
@@ -3775,9 +3785,9 @@ endmacro
 ;        "normal": just the side exit
 ;     "fireplace": also draws the fire in yoshi's house
 macro S_SideExit(x, y, type)
-    if and(equal(<x>&1,0),not(stringsequal("<type>","normal")))
+    if and(equal(<x>&1,1),not(stringsequal("<type>","normal")))
         ; warn "SideExit will not match type, will be normal (was ",<type>,"), at ",pc
-    elseif and(equal(<x>&1,1),not(stringsequal("<type>","fireplace")))
+    elseif and(equal(<x>&1,0),not(stringsequal("<type>","fireplace")))
         ; warn "SideExit will not match type, will be fireplace (was ",<type>,"), at ",pc
     endif
     if or(stringsequal("<type>","normal"),stringsequal("<type>","fireplace"))

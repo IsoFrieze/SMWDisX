@@ -3,6 +3,6 @@
 %S_Bird($005, $00E)
 %S_Bird($006, $00E)
 %S_Bird($007, $00E)
-%S_SideExit($008, $007, "normal")
+%S_SideExit($008, $007, "fireplace")
 %S_MessageBlock($008, $015, 1)
 %S_End()

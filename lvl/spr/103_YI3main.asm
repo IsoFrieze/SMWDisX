@@ -11,7 +11,7 @@
 %S_Koopa($06A, $008, "red", "normal")
 %S_BrownSwingingPlatform($06F, $009)
 %S_BrownSwingingPlatform($07B, $00D)
-%S_Koopa($09F, $017, "green", "bouncing")
+%S_Koopa($09F, $017, "green", "bouncinglow")
 %S_MessageBlock($0A2, $014, 1)
 %S_Koopa($0AC, $013, "red", "normal")
 %S_MovingPlatform($0B4, $010, "checkered", "updown")

@@ -20,5 +20,5 @@
 %S_WallSpring($00F, $05E, "right")
 %S_Koopa($01E, $055, "red", "normal")
 %S_Koopa($017, $066, "red", "normal")
-%S_Koopa($012, $068, "green", "bouncing")
+%S_Koopa($012, $068, "green", "bouncinghigh")
 %S_End()
