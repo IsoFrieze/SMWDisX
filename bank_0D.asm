@@ -1059,22 +1059,22 @@ CODE_0DA106:
     TAX
     JSL ExecutePtrLong
 
-    dl CODE_0DA512
-    dl CODE_0DA53D
-    dl $000000
-    dl $000000
-    dl $000000
-    dl $000000
-    dl $000000
-    dl $000000
-    dl $000000
-    dl $000000
-    dl $000000
-    dl $000000
-    dl $000000
-    dl $000000
-    dl $000000
-    dl $000000
+    dl ExtOBJScreenExit
+    dl ExtOBJScreenJump
+    dl 0
+    dl 0
+    dl 0
+    dl 0
+    dl 0
+    dl 0
+    dl 0
+    dl 0
+    dl 0
+    dl 0
+    dl 0
+    dl 0
+    dl 0
+    dl 0
     dl ExtOBJSingleTile
     dl ExtOBJSingleTile
     dl ExtOBJSingleTile
@@ -1413,7 +1413,7 @@ OBJTSGrassForestCloud:
     dl OBJVertCloudFringe
     dl OBJLongBushes
 
-CODE_0DA512:
+ExtOBJScreenExit:
     LDY.B #$00
     LDA.B [Layer1DataPtr],Y
     STA.B LvlLoadObjNo
@@ -1438,7 +1438,7 @@ CODE_0DA512:
     STA.W UseSecondaryExit
     RTS
 
-CODE_0DA53D:
+ExtOBJScreenJump:
     LDA.B _A
     AND.B #$1F
     STA.W LevelLoadObject
@@ -1446,7 +1446,7 @@ CODE_0DA53D:
     RTS
 
 
-DATA_0DA548:
+ExtObjSingleTileIDs:
     db $1F,$22,$24,$42,$43,$27,$29,$25
     db $6E,$6F,$70,$71,$72,$45,$46,$47
     db $48,$36,$37,$11,$12,$14,$15,$16
@@ -1455,71 +1455,90 @@ DATA_0DA548:
     db $28,$2A,$DE,$E0,$E2,$E4,$EC,$ED
     db $2C,$25,$2D
 
+; Build an extended object that is just a single tile
+; X = Extended object ID (LvlLoadObjSize)
+; _A = Level Object byte 1
+; _B = Level Object byte 2
+; LvlLoadObjSize = Level Object byte 3
 ExtOBJSingleTile:
-    TXA
-    SEC
-    SBC.B #$10
-CODE_0DA57F:
+    TXA 
+    SEC                                       ;\ First extended object has ID $10, so
+    SBC.B #$10                                ;/ subtract that off
+BuildExtObjSingleTile:
     STA.B _0
-    CPX.B #$18
-    BCC CODE_0DA5B1
-    CPX.B #$1D
-    BCS CODE_0DA5B1
+    CPX.B #$18                                ;\ Check item memory settings for
+    BCC BuildExtObjTileNoMemory               ;| objects with ID $18-$1C
+    CPX.B #$1D                                ;| (Moon and 1up checkpoints)
+    BCS BuildExtObjTileNoMemory               ;/
     LDA.W TranslevelNo
     LSR A
     LSR A
     LSR A
     TAY
     LDA.W TranslevelNo
-    AND.B #$07
+    AND.B #%00000111
     TAX
     LDA.B _0
     CMP.B #$08
-    BNE CODE_0DA5A7
-    LDA.W MoonCollected,Y
-    AND.L DATA_0DA8A6,X
-    BEQ CODE_0DA5B1
-    BRA Return0DA5B0
+    BNE BuildExtObjCheck1upStatus
 
-CODE_0DA5A7:
+; Building the moon object
+; Check the moon collected flags so that
+; it doesn't respawn ever
+    LDA.W MoonCollected,Y
+    AND.L BitmapBank0D,X
+    BEQ BuildExtObjTileNoMemory
+    BRA DenyBuildingExtObj
+
+; Building the 1up checkpoint objects
+; Check the checkpoint 1up collected flags so that
+; they don't respawn ever
+BuildExtObjCheck1upStatus:
     LDA.W Checkpoint1upCollected,Y
-    AND.L DATA_0DA8A6,X
-    BEQ CODE_0DA5B1
-Return0DA5B0:
+    AND.L BitmapBank0D,X
+    BEQ BuildExtObjTileNoMemory
+DenyBuildingExtObj:
     RTS
 
-CODE_0DA5B1:
+BuildExtObjTileNoMemory:
     LDY.B LevelLoadPos
     JSR OBJHighByte00
     LDX.B _0
-    CPX.B #$13
-    BMI +
-    JSR OBJHighByte01
-  + LDA.L DATA_0DA548,X
+    CPX.B #$13                                ;\ Extended objects with ID $23 or less
+    BMI +                                     ;| use tiles on page 0, everything else
+    JSR OBJHighByte01                         ;/ uses tiles on page 1
+  + LDA.L ExtObjSingleTileIDs,X
     STA.B _C
-    CPX.B #$01
-    BEQ CODE_0DA5F0
-    CPX.B #$07
-    BEQ CODE_0DA5F0
-    CPX.B #$32
-    BEQ CODE_0DA5F0
-    CPX.B #$26
-    BEQ CODE_0DA5F0
-    CPX.B #$1B
-    BNE CODE_0DA648
+    CPX.B #$01                                ; Invisible 1up prize block
+    BEQ BuildExtObjCheckItemMemory
+    CPX.B #$07                                ; green star block (not used)
+    BEQ BuildExtObjCheckItemMemory
+    CPX.B #$32                                ; backup green star block
+    BEQ BuildExtObjCheckItemMemory
+    CPX.B #$26                                ; yoshi prize block
+    BEQ BuildExtObjCheckItemMemory
+    CPX.B #$1B                                ; turn block with chainstar/1up/vine
+    BNE BuildExtObjFinish
     TYA
     AND.B #$0F
-    CMP.B #$01
-    BEQ CODE_0DA5F0
-    CMP.B #$04
-    BEQ CODE_0DA5F0
-    CMP.B #$07
-    BEQ CODE_0DA5F0
-    CMP.B #$0A
-    BEQ CODE_0DA5F0
-    CMP.B #$0D
-    BNE CODE_0DA648
-CODE_0DA5F0:
+    CMP.B #$01                                ;\ for the turn block with 1up,
+    BEQ BuildExtObjCheckItemMemory            ;| we need to check only for the
+    CMP.B #$04                                ;| blocks that have the 1up, not
+    BEQ BuildExtObjCheckItemMemory            ;| the chainstar or vine
+    CMP.B #$07                                ;| to do so, we look at the X
+    BEQ BuildExtObjCheckItemMemory            ;| position of the block, and it
+    CMP.B #$0A                                ;| will have a 1up at screen
+    BEQ BuildExtObjCheckItemMemory            ;| X positions of $1, $4, $7,
+    CMP.B #$0D                                ;| $A, and $D
+    BNE BuildExtObjFinish                     ;/
+
+
+; For blocks that can produce a 1up, check the item memory
+; to see if the block has already been hit
+; this way the player cannot farm lives by just
+; re-entering the room over and over again.
+; If it has been hit, build a brown block instead
+BuildExtObjCheckItemMemory:
     TXA
     PHA
     TYA
@@ -1527,10 +1546,10 @@ CODE_0DA5F0:
     LDX.W ItemMemorySetting
     LDA.B #ItemMemoryTable
     CLC
-    ADC.L DATA_0DA8AE,X
+    ADC.L ItemMemoryPageOffsetsLow,X
     STA.B _8
     LDA.B #ItemMemoryTable>>8
-    ADC.L DATA_0DA8B1,X
+    ADC.L ItemMemoryPageOffsetsHi,X
     STA.B _9
     LDA.W LevelLoadObjectTile
     ASL A
@@ -1553,93 +1572,111 @@ CODE_0DA5F0:
     TAX
     LDY.B _E
     LDA.B (_8),Y
-    AND.L DATA_0DA8A6,X
+    AND.L BitmapBank0D,X
     STA.B _F
     PLA
     TAY
     PLA
     TAX
     LDA.B _F
-    BEQ CODE_0DA648
-    CPX.B #$07
-    BEQ +
-    JSR OBJHighByte01
-    LDA.B #$32
-    STA.B _C
-CODE_0DA648:
+    BEQ BuildExtObjFinish                     ; branch if the block hasn't been hit already
+    CPX.B #$07                                ;\ if it has been hit, and it's the old green star block,
+    BEQ +                                     ;/ just don't build any tile (it's gone)
+    JSR OBJHighByte01                         ;\ for all other blocks though, if they have been hit,
+    LDA.B #$32                                ;| replace them with a brown used block
+    STA.B _C                                  ;/
+BuildExtObjFinish:
     LDA.B _C
     STA.B [Map16LowPtr],Y
   + RTS
 
+; Build the green star block extended object
+; This one is separate because it uses tiles on page 1
+; despite its ID being low enough to be grouped with the
+; extended objects that use page 0
+; There's old code for the star block using the standard
+; helper function, so this was likely a separate object at
+; some point
 ExtOBJGreenStarBlock:
     LDA.B #$32
-    JMP CODE_0DA57F
+    JMP BuildExtObjSingleTile
 
 
-DATA_0DA652:
+ExtObjGradSlopeTilesLeft:
     db $D8,$DB
-
-DATA_0DA654:
+ExtObjGradSlopeTilesRight:
     db $DA,$DC
 
+; Build a 2x1 object that consists of just the inner
+; portion of a gradual slope
 ExtOBJGradSlopeCorner:
     LDY.B LevelLoadPos
-    TXA
-    SEC
-    SBC.B #$42
-    TAX
-    JSR OBJHighByte01
-    LDA.L DATA_0DA652,X
-    JSR CODE_0DA95B
-    LDA.L DATA_0DA654,X
-    STA.B [Map16LowPtr],Y
-    JSR OBJHighByte01
+    TXA                                       ;\ The first slope object has ID $42
+    SEC                                       ;| so subtract it to get the slope index
+    SBC.B #$42                                ;|
+    TAX                                       ;/
+    JSR OBJHighByte01                         ;\ Build two tiles on page 1
+    LDA.L ExtObjGradSlopeTilesLeft,X          ;|
+    JSR WriteTileAndAdvRight                  ;|
+    LDA.L ExtObjGradSlopeTilesRight,X         ;|
+    STA.B [Map16LowPtr],Y                     ;|
+    JSR OBJHighByte01                         ;/
     RTS
 
 
-DATA_0DA671:
+ExtObjPurpleTriangleTiles:
     db $B4,$B5
 
+; Build a purple triangle object along with the
+; helper slope tile beneath it
 ExtOBJPurpleTriangle:
     LDY.B LevelLoadPos
-    TXA
-    SEC
-    SBC.B #$44
-    TAX
-    LDA.L DATA_0DA671,X
+    TXA                                       ;\ The first triangle object has ID $44
+    SEC                                       ;| so subtract it to get the object index
+    SBC.B #$44                                ;|
+    TAX                                       ;/
+    LDA.L ExtObjPurpleTriangleTiles,X
     STA.B [Map16LowPtr],Y
     JSR OBJHighByte01
-    JSR CODE_0DA97D
-    LDA.B #$EB
+    JSR AdvanceDownOneTile
+    LDA.B #$EB                                ; Helper slope tile
     STA.B [Map16LowPtr],Y
     JSR OBJHighByte01
     RTS
 
+; Build a midway tape object
+; Due to how it is built, it does not behave properly
+; if the object has an X position of 0 mod 16
 ExtOBJMidwayTape:
-    LDX.W TranslevelNo
-    %WorL_X(LDA,OWLevelTileSettings)
-    AND.B #$40
-    BNE +
-    LDA.W MidwayFlag
-    BNE +
-    LDY.B LevelLoadPos
-    DEY
+    LDX.W TranslevelNo                        ;\ Skip building this object if
+    %WorL_X(LDA,OWLevelTileSettings)          ;|
+    AND.B #$40                                ;|
+    BNE +                                     ;| the midway flag was set from the overworld
+    LDA.W MidwayFlag                          ;|
+    BNE +                                     ;/ the midway flag has been hit in this level already
+    LDY.B LevelLoadPos                        ;\ "Back up" one tile to place the left post with tape
+    DEY                                       ;/ This is bad but works 15/16 of the time
     JSR OBJHighByte00
-    LDA.B #$35
-    JSR CODE_0DA95B
+    LDA.B #$35                                ; Left midway post with bit of tape
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
-    LDA.B #$38
+    LDA.B #$38                                ; Midway tape tile
     STA.B [Map16LowPtr],Y
   + RTS
 
-CODE_0DA6B1:
+; Save the current pointer to level tile data
+; into _4 and _5
+SaveMap16Ptr:
     LDA.B Map16LowPtr
     STA.B _4
     LDA.B Map16LowPtr+1
     STA.B _5
     RTS
 
-CODE_0DA6BA:
+; Restore the pointer to level tile data
+; from _4 and _5 and reset the cursor to the
+; original position of the current object
+RestoreMap16Ptr:
     LDA.B _4
     STA.B Map16LowPtr
     STA.B Map16HighPtr
@@ -1651,128 +1688,141 @@ CODE_0DA6BA:
     RTS
 
 
-DATA_0DA6CD:
+ExtObjDoorTilesTop:
     db $1F,$27
-
-DATA_0DA6CF:
+ExtObjDoorTilesBottom:
     db $20,$28
 
+; Build a door object
 ExtOBJDoor:
     LDY.B LevelLoadPos
-    TXA
-    SEC
-    SBC.B #$47
-    TAX
+    TXA                                       ;\ The first door object has ID $47
+    SEC                                       ;| so subtract it to get the object index
+    SBC.B #$47                                ;|
+    TAX                                       ;/
     JSR OBJHighByte00
-    LDA.L DATA_0DA6CD,X
+    LDA.L ExtObjDoorTilesTop,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     JSR OBJHighByte00
-    LDA.L DATA_0DA6CF,X
+    LDA.L ExtObjDoorTilesBottom,X
     STA.B [Map16LowPtr],Y
     RTS
 
 
-DATA_0DA6EE:
-    db $25,$25,$25,$4B,$4D,$4E,$25,$25
-    db $25,$25,$25,$54,$49,$49,$5F,$63
-    db $25,$25,$25,$25,$57,$49,$49,$52
-    db $4A,$5D,$25,$25,$5A,$49,$49,$50
-    db $51,$4A,$60,$25,$5A,$49,$49,$49
-    db $53,$4A,$4A,$4A,$63
+ExtObjLargeBushTiles:
+    db $25,$25,$25,$4B,$4D,$4E,$25,$25,$25
+    db $25,$25,$54,$49,$49,$5F,$63,$25,$25
+    db $25,$25,$57,$49,$49,$52,$4A,$5D,$25
+    db $25,$5A,$49,$49,$50,$51,$4A,$60,$25
+    db $5A,$49,$49,$49,$53,$4A,$4A,$4A,$63
 
+; Build a large bush object
 ExtOBJBigBush:
     LDY.B LevelLoadPos
-    LDA.B #$08
+    LDA.B #$08                                ; width of bush is 9 tiles
     STA.B _0
-    LDA.B #$04
+    LDA.B #$04                                ; height of bush is 5 tiles
     STA.B _1
     LDX.B #$00
-    JSR CODE_0DA6B1
-CODE_0DA72A:
-    LDA.B _0
+    JSR SaveMap16Ptr
+    
+ -- LDA.B _0
     STA.B _2
+    
   - JSR OBJHighByte00
-    LDA.L DATA_0DA6EE,X
-    JSR CODE_0DA78D
+    LDA.L ExtObjLargeBushTiles,X
+    JSR ExtObjBuildBushTile
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _1
-    BPL CODE_0DA72A
+    BPL --
+    
     RTS
 
 
-DATA_0DA748:
-    db $25,$25,$4B,$4C,$25,$25,$25,$54
-    db $49,$5F,$63,$25,$25,$57,$49,$52
-    db $4A,$5D,$5A,$49,$49,$49,$4F,$60
+ExtObjMediumBushTiles:
+    db $25,$25,$4B,$4C,$25,$25
+    db $25,$54,$49,$5F,$63,$25
+    db $25,$57,$49,$52,$4A,$5D
+    db $5A,$49,$49,$49,$4F,$60
 
+; Build a medium bush object
 ExtOBJMediumBush:
     LDY.B LevelLoadPos
-    LDA.B #$05
+    LDA.B #$05                                ; width of bush is 6 tiles
     STA.B _0
-    LDA.B #$03
+    LDA.B #$03                                ; height of bush is 4 tiles
     STA.B _1
     LDX.B #$00
-    JSR CODE_0DA6B1
-CODE_0DA76F:
-    LDA.B _0
+    JSR SaveMap16Ptr
+    
+ -- LDA.B _0
     STA.B _2
+    
   - JSR OBJHighByte00
-    LDA.L DATA_0DA748,X
-    JSR CODE_0DA78D
+    LDA.L ExtObjMediumBushTiles,X
+    JSR ExtObjBuildBushTile
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _1
-    BPL CODE_0DA76F
+    BPL --
+    
     RTS
 
-CODE_0DA78D:
-    STA.B _F
-    CMP.B #$25
-    BNE +
-    JMP CODE_0DA95D
+; Build a bush tile, taking into account the tile
+; that already exists in the level at that position,
+; and using proper overlapping tiles when necessary
+ExtObjBuildBushTile:
+    STA.B _F                                  ; store the bush tile to write in _F
+    CMP.B #$25                                ;\ if it's an empty tile, skip it
+    BNE +                                     ;| (note that high byte is still set to 0
+    JMP AdvanceRightOneTile                   ;/ in the main bush routine)
 
-  + CMP.B #$49
-    BCC CODE_0DA7AC
-    CMP.B #$54
-    BCC CODE_0DA7AC
-    LDA.B [Map16LowPtr],Y
-    CMP.B #$25
-    BEQ CODE_0DA7AC
-    CMP.B #$49
-    BEQ +
-    INC.B _F
-  + INC.B _F
-CODE_0DA7AC:
-    LDA.B _F
-    JMP CODE_0DA95B
+  + CMP.B #$49                                ;\ If we're not building bush tiles, skip
+    BCC ++                                    ;/ (but we are so idk why this check is here)
+    CMP.B #$54                                ;\ Some bush tiles are not dependent on the
+    BCC ++                                    ;/ underlying level tile, skip them
+    LDA.B [Map16LowPtr],Y                     ;\ If the underlying tile is blank,
+    CMP.B #$25                                ;| we can ignore it
+    BEQ ++                                    ;/
+    CMP.B #$49                                ;\ If the underlying tile is a solid light green bush
+    BEQ +                                     ;| tile, add 1 to the index of the tile we are building
+    INC.B _F                                  ;| (adds light green background), otherwise, add 2 instead
+  + INC.B _F                                  ;/ (adds a dark green backgorund) (for compatible tiles)
+  
+ ++ LDA.B _F
+    JMP WriteTileAndAdvRight
 
 
 DATA_0DA7B1:
-    db $10,$11,$11,$12,$13,$0B,$0B,$15
-    db $13,$0B,$0B,$15,$16,$17,$17,$18
+    db $10,$11,$11,$12
+    db $13,$0B,$0B,$15
+    db $13,$0B,$0B,$15
+    db $16,$17,$17,$18
 
 ExtOBJClimbingNetDoor:
     LDY.B LevelLoadPos
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DA7C8:
     LDA.B #$03
     STA.B _2
   - LDA.L DATA_0DA7B1,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     CPX.B #$10
     BNE CODE_0DA7C8
     RTS
@@ -1784,16 +1834,16 @@ DATA_0DA7E3:
 ExtOBJArrowSign:
     LDY.B LevelLoadPos
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
   - JSR OBJHighByte00
     LDA.L DATA_0DA7E3,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     TXA
     AND.B #$01
     BNE -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     CPX.B #$04
     BNE -
     RTS
@@ -1855,14 +1905,14 @@ ExtOBJSpecSlopeNormal:
     TAX
     JSR OBJHighByte01
     LDA.L DATA_0DA83E,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.L DATA_0DA840,X
     STA.B [Map16LowPtr],Y
     JSR CODE_0DA82A
     JSR OBJHighByte01
     LDA.L DATA_0DA842,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.L DATA_0DA844,X
     STA.B [Map16LowPtr],Y
@@ -1898,12 +1948,12 @@ ExtOBJSpecSlopeVerySteep:
     RTS
 
 
-DATA_0DA8A6:
+BitmapBank0D:
     db $80,$40,$20,$10,$08,$04,$02,$01
-DATA_0DA8AE:
+    
+ItemMemoryPageOffsetsLow:
     db $00,$80,$00
-
-DATA_0DA8B1:
+ItemMemoryPageOffsetsHi:
     db $00,$00,$01
 
 DATA_0DA8B4:
@@ -1922,7 +1972,7 @@ OBJSingleRepTile:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DA8D8:
     CPX.B #$04
     BNE CODE_0DA92E
@@ -1933,10 +1983,10 @@ CODE_0DA8D8:
     LDX.W ItemMemorySetting
     LDA.B #ItemMemoryTable
     CLC
-    ADC.L DATA_0DA8AE,X
+    ADC.L ItemMemoryPageOffsetsLow,X
     STA.B _8
     LDA.B #ItemMemoryTable>>8
-    ADC.L DATA_0DA8B1,X
+    ADC.L ItemMemoryPageOffsetsHi,X
     STA.B _9
     LDA.W LevelLoadObjectTile
     ASL A
@@ -1959,7 +2009,7 @@ CODE_0DA8D8:
     TAX
     LDY.B _E
     LDA.B (_8),Y
-    AND.L DATA_0DA8A6,X
+    AND.L BitmapBank0D,X
     STA.B _F
     PLA
     TAY
@@ -1967,7 +2017,7 @@ CODE_0DA8D8:
     TAX
     LDA.B _F
     BEQ CODE_0DA92E
-    JSR CODE_0DA95D
+    JSR AdvanceRightOneTile
     JMP CODE_0DA943
 
 CODE_0DA92E:
@@ -1978,13 +2028,13 @@ CODE_0DA92E:
     BMI +
     JSR OBJHighByte01
   + LDA.B _C
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DA943:
     DEC.B _2
     LDA.B _2
     BPL CODE_0DA8D8
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDA.B _0
     STA.B _2
     DEC.B _1
@@ -1993,9 +2043,12 @@ CODE_0DA943:
 
   + RTS
 
-CODE_0DA95B:
+; Write A to the current level tile, and then
+; advance the cursor to the next tile, taking into
+; account screen boundaries
+WriteTileAndAdvRight:
     STA.B [Map16LowPtr],Y
-CODE_0DA95D:
+AdvanceRightOneTile:
     INY
     TYA
     AND.B #$0F
@@ -2015,7 +2068,7 @@ CODE_0DA95D:
     TAY
   + RTS
 
-CODE_0DA97D:
+AdvanceDownOneTile:
     LDA.B LevelLoadPos
     CLC
     ADC.B #$10
@@ -2138,12 +2191,12 @@ OBJVerticalPipes:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     TAX
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     CPX.B #$03
     BPL CODE_0DAA52
     JSR OBJHighByte01
     LDA.L DATA_0DAA12,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.L DATA_0DAA17,X
     STA.B [Map16LowPtr],Y
@@ -2154,7 +2207,7 @@ CODE_0DAA52:
     BNE CODE_0DAA68
     JSR OBJHighByte01
     LDA.B #$68
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$69
     STA.B [Map16LowPtr],Y
@@ -2163,13 +2216,13 @@ CODE_0DAA52:
 CODE_0DAA68:
     JSR OBJHighByte01
     LDA.B #$35
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$36
     STA.B [Map16LowPtr],Y
 CODE_0DAA77:
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     CPX.B #$05
     BEQ CODE_0DAA85
     CPX.B #$02
@@ -2184,7 +2237,7 @@ CODE_0DAA8C:
     BNE CODE_0DAA68
     JSR OBJHighByte01
     LDA.L DATA_0DAA1C,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.L DATA_0DAA21,X
     STA.B [Map16LowPtr],Y
@@ -2209,19 +2262,19 @@ OBJHorizontalPipes:
     LSR A
     LSR A
     TAX
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DAAC9:
     CPX.B #$04
     BPL CODE_0DAADA
     JSR OBJHighByte01
     LDA.L DATA_0DAAA4,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JMP CODE_0DAAE4
 
 CODE_0DAADA:
     JSR OBJHighByte01
     LDA.L DATA_0DAAAC,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DAAE4:
     CPX.B #$04
     BPL CODE_0DAAEF
@@ -2238,8 +2291,8 @@ CODE_0DAAEF:
 CODE_0DAAFC:
     LDA.B _0
     STA.B _1
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     INX
     TXA
     AND.B #$01
@@ -2257,19 +2310,19 @@ OBJBulletCannon:
     JSR OBJHighByte01
     LDA.B #$41
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEX
     BMI Return0DAB3D
     JSR OBJHighByte01
     LDA.B #$42
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEX
     BMI Return0DAB3D
   - JSR OBJHighByte01
     LDA.B #$43
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEX
     BPL -
 Return0DAB3D:
@@ -2303,7 +2356,7 @@ CODE_0DAB6E:
     LDA.B #$01
     STA.B _2
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -2325,21 +2378,21 @@ CODE_0DAB83:
 CODE_0DAB99:
     JSR OBJHighByte01
     LDA.B #$DE
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$E6
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     JMP CODE_0DABB5
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DABB5:
     DEX
     BPL -
 CODE_0DABB8:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     INC.B _2
     INC.B _2
     DEC.B _0
@@ -2372,7 +2425,7 @@ CODE_0DABEC:
     LDX.B _2
     DEX
     DEX
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     JMP CODE_0DAB99
 
 Return0DABF6:
@@ -2407,7 +2460,7 @@ CODE_0DAC1A:
     PLA
     TAX
     LDA.B _C
-    JMP CODE_0DA95B
+    JMP WriteTileAndAdvRight
 
 CODE_0DAC21:
     LDY.B LevelLoadPos
@@ -2420,7 +2473,7 @@ CODE_0DAC21:
     INC.B _0
     LDA.B #$00
     STA.B _2
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DAC34:
     LDX.B _2
     JSR OBJHighByte01
@@ -2431,17 +2484,17 @@ CODE_0DAC3E:
     BMI CODE_0DAC57
     JSR OBJHighByte01
     LDA.B #$E2
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JMP CODE_0DAC54
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DAC54:
     DEX
     BPL -
 CODE_0DAC57:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     INC.B _2
     DEC.B _0
     BEQ CODE_0DAC89
@@ -2471,7 +2524,7 @@ CODE_0DAC84:
 
 CODE_0DAC89:
     LDX.B _2
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     JMP CODE_0DAC3E
 
 Return0DAC91:
@@ -2482,7 +2535,7 @@ CODE_0DAC92:
     LDA.B #$03
     STA.B _2
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -2512,16 +2565,16 @@ CODE_0DACA7:
 CODE_0DACCF:
     JSR OBJHighByte01
     LDA.B #$D8
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$DA
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$E6
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$E6
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     DEX
     DEX
@@ -2529,12 +2582,12 @@ CODE_0DACCF:
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DACFD:
     DEX
     BPL -
 CODE_0DAD00:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B _2
     CLC
     ADC.B #$04
@@ -2571,7 +2624,7 @@ CODE_0DAD37:
     DEX
     DEX
     DEX
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     JMP CODE_0DACCF
 
 Return0DAD43:
@@ -2582,7 +2635,7 @@ CODE_0DAD44:
     LDX.B #$01
     STX.B _2
     STX.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -2594,17 +2647,17 @@ CODE_0DAD44:
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
 CODE_0DAD65:
     CPX.B #$03
     BNE -
     JSR OBJHighByte01
     LDA.B #$E6
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$E0
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     DEX
     LDA.B _0
@@ -2616,8 +2669,8 @@ CODE_0DAD7F:
     JSR OBJHighByte01
     LDA.B #$A5
     JSR CODE_0DABFD
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     INC.B _2
     INC.B _2
     LDX.B _2
@@ -2633,7 +2686,7 @@ CODE_0DADA3:
     LDX.B #$00
     STX.B _2
     STX.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -2645,22 +2698,22 @@ CODE_0DADA3:
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
 CODE_0DADC4:
     CPX.B #$01
     BNE -
     JSR OBJHighByte01
     LDA.B #$E4
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DADD0:
     LDA.B _0
     BEQ Return0DADEA
     JSR OBJHighByte01
     LDA.B #$AF
     JSR CODE_0DABFD
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     INC.B _2
     LDX.B _2
     DEC.B _0
@@ -2672,7 +2725,7 @@ CODE_0DADEB:
     LDY.B LevelLoadPos
     LDX.B #$03
     STX.B _2
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -2685,23 +2738,23 @@ CODE_0DADEB:
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
 CODE_0DAE0A:
     CPX.B #$07
     BNE -
     JSR OBJHighByte01
     LDA.B #$E6
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$E6
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$DB
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$DC
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     DEX
     DEX
@@ -2721,8 +2774,8 @@ CODE_0DAE36:
     JSR OBJHighByte01
     LDA.B #$91
     JSR CODE_0DABFD
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDA.B _2
     CLC
     ADC.B #$04
@@ -2749,42 +2802,42 @@ CODE_0DAE6D:
     LDA.B #$00
     STA.B _1
     LDX.B _2
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     JMP CODE_0DAE9E
 
 CODE_0DAE88:
     LDX.B _2
     JSR OBJHighByte01
     LDA.B #$C6
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$C7
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     DEX
     BMI CODE_0DAEBD
 CODE_0DAE9E:
     JSR OBJHighByte01
     LDA.B #$EE
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$F0
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     JMP CODE_0DAEBA
 
   - JSR OBJHighByte01
     LDA.B #$65
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DAEBA:
     DEX
     BPL -
 CODE_0DAEBD:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B _1
     BNE +
     INC.B _1
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     JMP CODE_0DAEF2
 
   + LDA.B _2
@@ -2829,13 +2882,13 @@ CODE_0DAEFC:
     INC.B _2
     LDA.B #$00
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B _2
     JMP CODE_0DAF20
 
   - JSR OBJHighByte01
     LDA.B #$65
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
 CODE_0DAF20:
     CPX.B #$04
@@ -2844,27 +2897,27 @@ CODE_0DAF20:
     BMI CODE_0DAF3C
     JSR OBJHighByte01
     LDA.B #$F0
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$EF
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     LDA.B _1
     BEQ +
 CODE_0DAF3C:
     JSR OBJHighByte01
     LDA.B #$C8
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$C9
-    JSR CODE_0DA95B
-  + JSR CODE_0DA6BA
+    JSR WriteTileAndAdvRight
+  + JSR RestoreMap16Ptr
     LDA.B _2
     SEC
     SBC.B #$02
     STA.B _2
     TAX
     INC.B _1
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL CODE_0DAF20
     RTS
@@ -2882,35 +2935,35 @@ CODE_0DAF61:
     LDA.B #$00
     STA.B _1
     LDX.B _2
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     JMP CODE_0DAF88
 
 CODE_0DAF7B:
     LDX.B _2
     JSR OBJHighByte01
     LDA.B #$C4
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BMI CODE_0DAF9E
 CODE_0DAF88:
     JSR OBJHighByte01
     LDA.B #$EC
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JMP CODE_0DAF9B
 
   - JSR OBJHighByte01
     LDA.B #$65
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DAF9B:
     DEX
     BPL -
 CODE_0DAF9E:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B _1
     BNE +
     INC.B _1
     LDX.B _2
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     JMP CODE_0DAFD5
 
   + LDA.B _2
@@ -2961,13 +3014,13 @@ CODE_0DAFEA:
     STA.B _2
     LDA.B #$00
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B _2
     JMP CODE_0DB00B
 
   - JSR OBJHighByte01
     LDA.B #$65
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
 CODE_0DB00B:
     CPX.B #$02
@@ -2976,19 +3029,19 @@ CODE_0DB00B:
     BMI CODE_0DB01F
     JSR OBJHighByte01
     LDA.B #$ED
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     LDA.B _1
     BEQ +
 CODE_0DB01F:
     JSR OBJHighByte01
     LDA.B #$C5
-    JSR CODE_0DA95B
-  + JSR CODE_0DA6BA
+    JSR WriteTileAndAdvRight
+  + JSR RestoreMap16Ptr
     LDX.B _2
     DEX
     STX.B _2
     INC.B _1
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL CODE_0DB00B
     RTS
@@ -3028,7 +3081,7 @@ OBJLedgeEdges:
   + LDA.L DATA_0DB039,X
     JSR CODE_0DB114
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BMI CODE_0DB0E2
     JSR OBJHighByte00
@@ -3043,7 +3096,7 @@ CODE_0DB0AD:
   + LDA.L DATA_0DB048,X
     JSR CODE_0DB198
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BMI CODE_0DB0E2
 CODE_0DB0C0:
@@ -3059,7 +3112,7 @@ CODE_0DB0CF:
   + LDA.L DATA_0DB057,X
     JSR CODE_0DB198
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL CODE_0DB0C0
 CODE_0DB0E2:
@@ -3188,11 +3241,11 @@ OBJLedge:
     LSR A
     STA.B _2
 CODE_0DB1E3:
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDY.B LevelLoadPos
   - JSR OBJHighByte01
     LDA.B #$00
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     CPX.B #$FF
     BNE -
@@ -3200,13 +3253,13 @@ CODE_0DB1E3:
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     CPX.B #$FF
     BNE -
 CODE_0DB205:
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B _0
     DEC.B _2
     BPL -
@@ -3243,7 +3296,7 @@ OBJMidwayGoalPosts:
     LSR A
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B #$00
 CODE_0DB23B:
     LDA.L DATA_0DB212,X
@@ -3297,7 +3350,7 @@ CODE_0DB28F:
   + JSR OBJHighByte00
     LDA.B _3
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B LevelLoadPos
     CLC
     ADC.B #$01
@@ -3329,15 +3382,15 @@ ExtOBJDragonCoin:
     AND.B #$07
     TAX
     LDA.W AllDragonCoinsCollected,Y
-    AND.L DATA_0DA8A6,X
+    AND.L BitmapBank0D,X
     BNE Return0DB2C9
     LDX.W ItemMemorySetting
     LDA.B #ItemMemoryTable
     CLC
-    ADC.L DATA_0DA8AE,X
+    ADC.L ItemMemoryPageOffsetsLow,X
     STA.B _8
     LDA.B #ItemMemoryTable>>8
-    ADC.L DATA_0DA8B1,X
+    ADC.L ItemMemoryPageOffsetsHi,X
     STA.B _9
     LDA.W LevelLoadObjectTile
     ASL A
@@ -3361,13 +3414,13 @@ ExtOBJDragonCoin:
     TAX
     LDY.B _E
     LDA.B (_8),Y
-    AND.L DATA_0DA8A6,X
+    AND.L BitmapBank0D,X
     BNE +
     LDY.B LevelLoadPos
     JSR OBJHighByte00
     LDA.B #$2D
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     JSR OBJHighByte00
     LDA.B #$2E
     STA.B [Map16LowPtr],Y
@@ -3385,7 +3438,7 @@ OBJBlueCoins:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 ADDR_0DB34A:
     TYA
     PHA
@@ -3394,10 +3447,10 @@ ADDR_0DB34A:
     LDX.W ItemMemorySetting
     LDA.B #ItemMemoryTable
     CLC
-    ADC.L DATA_0DA8AE,X
+    ADC.L ItemMemoryPageOffsetsLow,X
     STA.B _8
     LDA.B #ItemMemoryTable>>8
-    ADC.L DATA_0DA8B1,X
+    ADC.L ItemMemoryPageOffsetsHi,X
     STA.B _9
     LDA.W LevelLoadObjectTile
     ASL A
@@ -3420,7 +3473,7 @@ ADDR_0DB34A:
     TAX
     LDY.B _E
     LDA.B (_8),Y
-    AND.L DATA_0DA8A6,X
+    AND.L BitmapBank0D,X
     STA.B _F
     PLA
     TAX
@@ -3435,12 +3488,12 @@ ADDR_0DB34A:
     JMP ADDR_0DB3A8
 
   + LDA.B _C
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 ADDR_0DB3A8:
     DEX
     BPL ADDR_0DB34A
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B _0
     DEC.B _1
     BMI +
@@ -3465,7 +3518,7 @@ OBJRopeClouds:
     TAX
   - JSR OBJHighByte01
     LDA.L DATA_0DB3BB,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _0
     BPL -
     RTS
@@ -3493,22 +3546,22 @@ OBJRepTileWithTop:
     SEC
     SBC.B #$17
     TAX
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
   - JSR OBJHighByte00
     LDA.L DATA_0DB3DB,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _2
     BPL -
     JMP CODE_0DB41C
 
   - JSR OBJHighByte00
     LDA.L DATA_0DB3DF,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _2
     BPL -
 CODE_0DB41C:
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDA.B _0
     STA.B _2
     DEC.B _1
@@ -3525,7 +3578,7 @@ OBJDonutBridge:
     AND.B #$0F
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B #$00
 CODE_0DB43C:
     JSR OBJHighByte00
@@ -3533,11 +3586,11 @@ CODE_0DB43C:
     BEQ +
     JSR OBJHighByte01
   + LDA.L DATA_0DB42B,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _1
     BPL CODE_0DB43C
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDA.B _0
     STA.B _1
     INX
@@ -3557,23 +3610,23 @@ OBJRepTileWithBottom:
     AND.B #$0F
     STA.B _1
     TAX
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B _0
     BEQ CODE_0DB490
   - JSR OBJHighByte00
     LDA.B #$0B
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B _1
     DEC.B _0
     BNE -
 CODE_0DB490:
     JSR OBJHighByte00
     LDA.B #$0E
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL CODE_0DB490
     RTS
@@ -3680,7 +3733,7 @@ OBJVerticalSkinny:
     LDA.B #$54
 CODE_0DB537:
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEX
     BNE -
     JSR OBJHighByte01
@@ -3700,7 +3753,7 @@ OBJHorizontalSkinny:
   - JSR OBJHighByte01
     LDA.B #$57
 CODE_0DB55B:
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BNE -
     JSR OBJHighByte01
@@ -3776,7 +3829,7 @@ OBJLongBushes:
   - JSR OBJHighByte00
     LDA.L DATA_0DB5AD,X
 CODE_0DB5D7:
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _0
     BNE -
     JSR OBJHighByte00
@@ -3804,7 +3857,7 @@ OBJArches:
     LDA.B #$03
     STA.B _3
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDY.B LevelLoadPos
     LDA.B _0
     STA.B _2
@@ -3812,7 +3865,7 @@ OBJArches:
     STA.B _1
   - JSR OBJHighByte01
     LDA.L DATA_0DB5E8,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _1
     BPL -
@@ -3820,13 +3873,13 @@ OBJArches:
     BEQ CODE_0DB652
   - JSR OBJHighByte01
     LDA.L DATA_0DB5E8,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.L DATA_0DB5E9,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.L DATA_0DB5EA,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _2
     BNE -
 CODE_0DB652:
@@ -3836,7 +3889,7 @@ CODE_0DB652:
     TAX
     JSR OBJHighByte01
     LDA.L DATA_0DB5E8,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JMP CODE_0DB6B2
 
 CODE_0DB664:
@@ -3847,7 +3900,7 @@ CODE_0DB664:
     STA.B _1
   - JSR OBJHighByte00
     LDA.L DATA_0DB5E8,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _1
     BPL -
@@ -3855,13 +3908,13 @@ CODE_0DB664:
     BEQ CODE_0DB6A3
   - JSR OBJHighByte00
     LDA.L DATA_0DB5E8,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.L DATA_0DB5E9,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.L DATA_0DB5EA,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _2
     BNE -
 CODE_0DB6A3:
@@ -3871,11 +3924,11 @@ CODE_0DB6A3:
     TAX
     JSR OBJHighByte00
     LDA.L DATA_0DB5E8,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DB6B2:
     INX
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _3
     BMI +
     JMP CODE_0DB664
@@ -3899,7 +3952,7 @@ OBJHorizCloudFringe:
     TAX
   - JSR OBJHighByte00
     LDA.L DATA_0DB6C1,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _0
     BPL -
     RTS
@@ -3944,7 +3997,7 @@ OBJVertCloudFringe:
     LDA.L DATA_0DB6FD,X
 ADDR_0DB725:
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL -
     RTS
@@ -3965,17 +4018,17 @@ OBJDiagonalPipe:
     LDA.B #$01
     STA.B _1
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DB752:
     LDA.B _1
     STA.B _2
   - JSR OBJHighByte01
     LDA.L DATA_0DB72F,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     JSR CODE_0DA992
     INC.B _1
     INC.B _1
@@ -3989,11 +4042,11 @@ CODE_0DB779:
     STA.B _2
   - JSR OBJHighByte01
     LDA.L DATA_0DB72F,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     JSR CODE_0DA992
     CPX.B #$10
     BNE +
@@ -4004,7 +4057,7 @@ CODE_0DB779:
   + DEC.B _0
     BPL CODE_0DB779
 CODE_0DB79F:
-    JSR CODE_0DA95D
+    JSR AdvanceRightOneTile
     JSR OBJHighByte01
     LDA.B #$EB
     STA.B [Map16LowPtr],Y
@@ -4024,7 +4077,7 @@ OBJLeftDiagonalPlat:
     STA.B _3
     LDX.B #$01
     STX.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     JSR OBJHighByte01
     LDA.B #$AA
     JSR CODE_0DABFD
@@ -4040,12 +4093,12 @@ CODE_0DB7D6:
     DEX
     JSR OBJHighByte01
     LDA.B #$E2
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JMP CODE_0DB7F2
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DB7F2:
     DEX
     BNE -
@@ -4053,16 +4106,16 @@ CODE_0DB7F2:
     LDA.B #$A6
     JSR CODE_0DB84E
 CODE_0DB7FD:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     JSR CODE_0DA992
     INC.B _1
     INC.B _1
     LDX.B _1
     DEC.B _2
     BPL CODE_0DB7D6
-    JSR CODE_0DA95D
+    JSR AdvanceRightOneTile
     STY.B LevelLoadPos
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     DEX
     STX.B _1
     JSR OBJHighByte01
@@ -4078,14 +4131,14 @@ CODE_0DB823:
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DB836:
     DEX
     BNE -
     JSR OBJHighByte00
     LDA.B #$A6
     JSR CODE_0DB84E
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     JSR CODE_0DA9B4
     LDX.B _1
     DEC.B _3
@@ -4103,7 +4156,7 @@ CODE_0DB84E:
   + INC.B _F
 CODE_0DB85E:
     LDA.B _F
-    JMP CODE_0DA95B
+    JMP WriteTileAndAdvRight
 
 OBJRightDiagonalPlat:
     LDY.B LevelLoadPos
@@ -4119,7 +4172,7 @@ OBJRightDiagonalPlat:
     STA.B _3
     LDX.B #$01
     STX.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     %LorW(LDA,OBJHighByte00)
     LDA.B #$AF
     JSR CODE_0DB84E
@@ -4136,19 +4189,19 @@ CODE_0DB88F:
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DB8A2:
     DEX
     CPX.B #$01
     BNE -
     JSR OBJHighByte01
     LDA.B #$E4
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$AF
     JSR CODE_0DABFD
 CODE_0DB8B7:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     JSR CODE_0DA992
     INC.B _1
     INC.B _1
@@ -4164,7 +4217,7 @@ CODE_0DB8B7:
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DB8DD:
     DEX
     BNE -
@@ -4181,7 +4234,7 @@ CODE_0DB8EB:
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DB8FE:
     DEX
     BNE -
@@ -4189,7 +4242,7 @@ CODE_0DB8FE:
     LDA.B #$AC
     JSR CODE_0DB84E
 CODE_0DB909:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     JSR CODE_0DA992
     LDX.B _1
     DEC.B _3
@@ -4221,7 +4274,7 @@ OBJRedSwitchBlocks:
 CODE_0DB930:
     LDA.B _0
     STA.B _2
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DB937:
     JSR OBJHighByte00
     LDA.L DATA_0DB91A,X
@@ -4232,11 +4285,11 @@ CODE_0DB937:
     LDA.L DATA_0DB91C,X
     STA.B _F
   + LDA.B _F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _2
     BPL CODE_0DB937
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _1
     BPL CODE_0DB930
     RTS
@@ -4263,13 +4316,13 @@ CODE_0DB975:
     JSR OBJHighByte00
     LDA.L DATA_0DB962,X
     JSR CODE_0DB997
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BMI Return0DB996
     JSR OBJHighByte00
     LDA.L DATA_0DB964,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL CODE_0DB975
 Return0DB996:
@@ -4310,21 +4363,21 @@ OBJBigTreeTrunk:
     LSR A
     STA.B _0
 CODE_0DB9CA:
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B #$B9
     JSR CODE_0DB9F6
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _0
     BMI Return0DB9F5
     JSR OBJHighByte00
     LDA.B #$BB
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.B #$BC
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL CODE_0DB9CA
 Return0DB9F5:
@@ -4337,7 +4390,7 @@ CODE_0DB9F6:
     JSR OBJHighByte01
     LDX.B #$0B
   + TXA
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     TXA
     STA.B [Map16LowPtr],Y
@@ -4355,22 +4408,22 @@ OBJForestLedge:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
   - JSR OBJHighByte01
     LDA.B #$0E
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
     JMP CODE_0DBA37
 
   - JSR OBJHighByte00
     LDA.B #$B8
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
 CODE_0DBA37:
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B _0
     DEC.B _1
     BPL -
@@ -4406,7 +4459,7 @@ CODE_0DBA67:
   + LDA.L DATA_0DBA48,X
     STA.B [Map16LowPtr],Y
 CODE_0DBA74:
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL CODE_0DBA67
     RTS
@@ -4438,16 +4491,16 @@ CODE_0DBAE0:
     STA.B _1
     LDA.B #$0F
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DBAF2:
     LDA.B _0
     STA.B _2
   - LDA.L DATA_0DBA7C,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B _E
     CLC
     ADC.B #$10
@@ -4478,10 +4531,10 @@ OBJIcyPipe:
     LSR A
     LSR A
     TAX
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     JSR OBJHighByte01
     LDA.B #$61
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$62
     STA.B [Map16LowPtr],Y
@@ -4489,13 +4542,13 @@ OBJIcyPipe:
 
   - JSR OBJHighByte01
     LDA.B #$63
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$64
     STA.B [Map16LowPtr],Y
 CODE_0DBB59:
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEX
     BPL -
     RTS
@@ -4806,7 +4859,7 @@ CODE_0DC2F1:
     CMP.B #$25
     BEQ +
     STA.B [Map16LowPtr],Y
-  + JSR CODE_0DA95D
+  + JSR AdvanceRightOneTile
     INX
     DEC.B _0
     BNE CODE_0DC2F1
@@ -4814,7 +4867,7 @@ CODE_0DC2F1:
     LDA.L DATA_0DC26B,X
     STA.B [Map16LowPtr],Y
     INX
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     CPX.B #$7E
     BNE CODE_0DC2ED
     RTS
@@ -4833,11 +4886,11 @@ CODE_0DC326:
     STA.B _1
   - JSR OBJHighByte00
     LDA.L DATA_0DC318,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _1
     BPL -
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     CPX.B #$06
     BNE CODE_0DC326
     RTS
@@ -4864,7 +4917,7 @@ CODE_0DC358:
     LDA.B LvlLoadObjSize
     AND.B #$03
     TAX
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -4877,23 +4930,23 @@ CODE_0DC370:
     STA.B _3
     JSR OBJHighByte01
     LDA.L DATA_0DC350,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DC37E:
     DEC.B _3
     BMI CODE_0DC39B
     JSR OBJHighByte01
     LDA.L DATA_0DC354,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JMP CODE_0DC397
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DC397:
     DEC.B _3
     BPL -
 CODE_0DC39B:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     INC.B _2
     DEC.B _0
     BEQ CODE_0DC3CD
@@ -4924,7 +4977,7 @@ CODE_0DC3C8:
 CODE_0DC3CD:
     LDA.B _2
     STA.B _3
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     JMP CODE_0DC37E
 
 Return0DC3D7:
@@ -4937,7 +4990,7 @@ CODE_0DC3D8:
     LDA.B LvlLoadObjSize
     AND.B #$03
     TAX
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -4949,7 +5002,7 @@ CODE_0DC3D8:
 
   - JSR OBJHighByte00
     LDA.B #$3F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _3
 CODE_0DC3FD:
     LDA.B _3
@@ -4957,15 +5010,15 @@ CODE_0DC3FD:
     BNE -
     JSR OBJHighByte01
     LDA.L DATA_0DC354,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DC40D:
     LDA.B _0
     BEQ Return0DC42B
     JSR OBJHighByte01
     LDA.L DATA_0DC350,X
-    JSR CODE_0DA95B
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR WriteTileAndAdvRight
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     INC.B _2
     LDA.B _2
     STA.B _3
@@ -4991,7 +5044,7 @@ OBJHorizontalSpikes:
     TAX
   - JSR OBJHighByte01
     LDA.L DATA_0DC42C,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _0
     BPL -
     RTS
@@ -5014,7 +5067,7 @@ OBJVerticalSpikes:
   - JSR OBJHighByte01
     LDA.L DATA_0DC44C,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL -
     RTS
@@ -5040,27 +5093,27 @@ OBJStoneBlock:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B #$00
 CODE_0DC48D:
     LDA.B _0
     STA.B _2
     JSR OBJHighByte01
     LDA.L DATA_0DC46F,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JMP CODE_0DC4A8
 
   - JSR OBJHighByte01
     LDA.L DATA_0DC472,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DC4A8:
     DEC.B _2
     BNE -
     JSR OBJHighByte01
     LDA.L DATA_0DC475,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B #$01
     DEC.B _1
     BMI Return0DC4C8
@@ -5077,22 +5130,22 @@ OBJCastleGrass:
     AND.B #$0F
     STA.B _0
 if ver_is_hires(!_VER)                        ;\======================= E1 ====================
-    JSR CODE_0DA6B1                           ;!
+    JSR SaveMap16Ptr                           ;!
 endif                                         ;/===============================================
     LDX.B _0
   - JSR OBJHighByte01
     LDA.B #$09
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
 if ver_is_hires(!_VER)                        ;\======================= E1 ====================
-    JSR CODE_0DA6BA                           ;!
+    JSR RestoreMap16Ptr                           ;!
 endif                                         ;/===============================================
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     LDX.B _0
   - JSR OBJHighByte00
     LDA.B #$86
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
     RTS
@@ -5108,61 +5161,61 @@ OBJSpikedCrushers:
     LSR A
     LSR A
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     CPX.B #$00
     BEQ CODE_0DC51E
-    JSR CODE_0DA95D
+    JSR AdvanceRightOneTile
     JSR OBJHighByte00
     LDA.B #$87
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.B #$88
-    JSR CODE_0DA95B
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR WriteTileAndAdvRight
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
 CODE_0DC51E:
     JSR OBJHighByte00
     LDA.B #$89
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$66
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$67
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.B #$8A
-    JSR CODE_0DA95B
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR WriteTileAndAdvRight
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _0
     BMI CODE_0DC572
     JSR OBJHighByte00
     LDA.B #$8B
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$68
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$69
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.B #$8C
-    JSR CODE_0DA95B
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR WriteTileAndAdvRight
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL CODE_0DC51E
 CODE_0DC572:
     CPX.B #$00
     BNE +
-    JSR CODE_0DA95D
+    JSR AdvanceRightOneTile
     JSR OBJHighByte00
     LDA.B #$8D
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.B #$8E
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
   + RTS
 
 OBJRockBackground:
@@ -5176,30 +5229,30 @@ OBJRockBackground:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DC59D:
     LDX.B _0
   - JSR OBJHighByte00
     LDA.B #$94
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.B #$95
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B _0
   - JSR OBJHighByte00
     LDA.B #$96
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.B #$97
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _1
     BPL CODE_0DC59D
     RTS
@@ -5212,10 +5265,10 @@ OBJSpecialVertPipe:
     LSR A
     LSR A
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     JSR OBJHighByte01
     LDA.B #$33
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$34
     STA.B [Map16LowPtr],Y
@@ -5223,18 +5276,18 @@ OBJSpecialVertPipe:
 
   - JSR OBJHighByte00
     LDA.B #$9D
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.B #$9E
     STA.B [Map16LowPtr],Y
 CODE_0DC606:
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _0
     BNE -
     JSR OBJHighByte01
     LDA.B #$33
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$34
     STA.B [Map16LowPtr],Y
@@ -5505,16 +5558,16 @@ ExtOBJGuideLineBigCircle:
     ASL A
     ASL A
     TAX
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
   - JSR OBJHighByte00
     LDA.L DATA_0DCE57,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     TXA
     AND.B #$01
     BNE -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     TXA
     AND.B #$03
     BNE -
@@ -5543,7 +5596,7 @@ ExtOBJCanvasTile2:
     TAX
     JSR OBJHighByte00
     LDA.B #$84
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.B #$85
     STA.B [Map16LowPtr],Y
@@ -5560,7 +5613,7 @@ ExtOBJGuideLineHorizEnd:
   - JSR OBJHighByte00
     LDA.L DATA_0DCEBE,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     INX
     CPX.B #$02
     BNE -
@@ -5576,7 +5629,7 @@ ExtOBJGuideLineVertEnd:
     LDX.B #$00
   - JSR OBJHighByte00
     LDA.L DATA_0DCED8,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     CPX.B #$02
     BNE -
@@ -5599,7 +5652,7 @@ OBJHorizConveyors:
     TAX
   - JSR OBJHighByte01
     LDA.L DATA_0DCEF0,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _0
     BPL -
     RTS
@@ -5621,7 +5674,7 @@ OBJHorizGuideLine:
     TAX
   - JSR OBJHighByte00
     LDA.L DATA_0DCF10,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _0
     BPL -
     RTS
@@ -5644,7 +5697,7 @@ OBJVertGuideLine:
   - JSR OBJHighByte00
     LDA.L DATA_0DCF30,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL -
     RTS
@@ -5670,15 +5723,15 @@ CODE_0DCF6E:
     LSR A
     LSR A
     TAX
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DCF7A:
     JSR OBJHighByte00
     LDA.B #$8C
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.B #$8D
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B LevelLoadPos
     CLC
     ADC.B #$0E
@@ -5750,15 +5803,15 @@ ADDR_0DCFF0:
     LSR A
     LSR A
     TAX
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 ADDR_0DCFFC:
     JSR OBJHighByte00
     LDA.B #$8E
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.B #$8F
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B LevelLoadPos
     CLC
     ADC.B #$10
@@ -5928,12 +5981,12 @@ OBJMushroomLedge:
     BPL +
     LDX.B #$0A
   + TXA
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JMP CODE_0DD12B
 
   - JSR OBJHighByte01
     LDA.B #$08
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DD12B:
     DEC.B _0
     BNE -
@@ -5946,7 +5999,7 @@ CODE_0DD12B:
     BPL +
     LDX.B #$0B
   + TXA
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     RTS
 
 OBJMushroomSupport:
@@ -5960,7 +6013,7 @@ OBJMushroomSupport:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DD158:
     LDX.B _0
     JSR OBJHighByte00
@@ -5970,15 +6023,15 @@ CODE_0DD158:
   - JSR OBJHighByte00
     LDA.B #$74
 CODE_0DD167:
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BNE -
     JSR OBJHighByte00
     LDA.B #$75
-    JSR CODE_0DA95B
-    JSR CODE_0DA6BA
+    JSR WriteTileAndAdvRight
+    JSR RestoreMap16Ptr
     LDX.B _0
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _1
     BPL CODE_0DD158
     RTS
@@ -5995,12 +6048,12 @@ OBJHorizontalPost:
   - JSR OBJHighByte01
     LDA.B #$5A
 ADDR_0DD196:
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BNE -
     JSR OBJHighByte01
     LDA.B #$5B
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     RTS
 
 OBJVerticalPost:
@@ -6019,7 +6072,7 @@ OBJVerticalPost:
     LDA.B #$5D
 ADDR_0DD1BB:
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEX
     BNE -
     JSR OBJHighByte01
@@ -6048,10 +6101,10 @@ OBJPlantPillar:
     LSR A
     LSR A
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     JSR OBJHighByte00
     LDA.L DATA_0DD1CB,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.L DATA_0DD1CF,X
     STA.B [Map16LowPtr],Y
@@ -6059,30 +6112,30 @@ OBJPlantPillar:
     BPL +
     JMP Return0DD24B
 
-  + JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+  + JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     JSR OBJHighByte01
     LDA.B #$5F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$60
     STA.B [Map16LowPtr],Y
     DEC.B _0
     BMI Return0DD24B
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B #$00
 CODE_0DD226:
     JSR OBJHighByte01
     LDA.L DATA_0DD1D3,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     JSR OBJHighByte01
     LDA.L DATA_0DD1D3,X
     STA.B [Map16LowPtr],Y
     INX
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     CPX.B #$06
     BNE +
     LDX.B #$00
@@ -6101,7 +6154,7 @@ OBJLogBridge:
     AND.B #$0F
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B #$00
 CODE_0DD25D:
     JSR OBJHighByte00
@@ -6109,11 +6162,11 @@ CODE_0DD25D:
     BEQ +
     JSR OBJHighByte01
   + LDA.L DATA_0DD24C,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _1
     BPL CODE_0DD25D
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDA.B _0
     STA.B _1
     INX
@@ -6413,7 +6466,7 @@ ExtOBJCanvasPairs:
     JSR OBJHighByte00
     LDA.L DATA_0DDA7A,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     JSR OBJHighByte00
     LDA.L DATA_0DDA7D,X
     STA.B [Map16LowPtr],Y
@@ -6426,16 +6479,16 @@ DATA_0DDA9E:
 ExtOBJTorpedoLauncher:
     LDY.B LevelLoadPos
     LDX.B #$00
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
   - JSR OBJHighByte01
     LDA.L DATA_0DDA9E,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     TXA
     AND.B #$01
     BNE -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     CPX.B #$04
     BNE -
     RTS
@@ -6466,7 +6519,7 @@ OBJCaveLavaEdge:
     LDA.L DATA_0DDAC6,X
 CODE_0DDAE8:
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL -
     RTS
@@ -6486,7 +6539,7 @@ CODE_0DDB06:
     LDA.B #$01
     STA.B _2
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -6498,31 +6551,31 @@ CODE_0DDB1B:
     LDX.B _2
     JSR OBJHighByte01
     LDA.B #$D2
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$D3
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     DEX
     BMI CODE_0DDB50
 CODE_0DDB31:
     JSR OBJHighByte01
     LDA.B #$FB
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$FF
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     JMP CODE_0DDB4D
 
   - JSR OBJHighByte01
     LDA.B #$FF
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DDB4D:
     DEX
     BPL -
 CODE_0DDB50:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     INC.B _2
     INC.B _2
     DEC.B _0
@@ -6555,7 +6608,7 @@ CODE_0DDB84:
     LDX.B _2
     DEX
     DEX
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     JMP CODE_0DDB31
 
 Return0DDB8E:
@@ -6566,7 +6619,7 @@ CODE_0DDB8F:
     LDA.B #$00
     STA.B _2
     STA.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -6578,23 +6631,23 @@ CODE_0DDBA4:
     LDX.B _2
     JSR OBJHighByte01
     LDA.B #$D6
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DDBAE:
     DEX
     BMI CODE_0DDBC7
     JSR OBJHighByte01
     LDA.B #$FD
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JMP CODE_0DDBC4
 
   - JSR OBJHighByte01
     LDA.B #$FF
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DDBC4:
     DEX
     BPL -
 CODE_0DDBC7:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     INC.B _2
     DEC.B _0
     BEQ CODE_0DDBF9
@@ -6624,7 +6677,7 @@ CODE_0DDBF4:
 
 CODE_0DDBF9:
     LDX.B _2
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     JMP CODE_0DDBAE
 
 Return0DDC01:
@@ -6635,7 +6688,7 @@ ADDR_0DDC02:
     LDX.B #$01
     STX.B _2
     STX.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -6647,17 +6700,17 @@ ADDR_0DDC02:
 
   - JSR OBJHighByte01
     LDA.B #$FF
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
 ADDR_0DDC23:
     CPX.B #$03
     BNE -
     JSR OBJHighByte01
     LDA.B #$FF
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$FC
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     DEX
     LDA.B _0
@@ -6665,12 +6718,12 @@ ADDR_0DDC23:
 ADDR_0DDC3D:
     JSR OBJHighByte01
     LDA.B #$D4
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte01
     LDA.B #$D5
-    JSR CODE_0DA95B
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR WriteTileAndAdvRight
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     INC.B _2
     INC.B _2
     LDX.B _2
@@ -6686,7 +6739,7 @@ CODE_0DDC61:
     LDX.B #$00
     STX.B _2
     STX.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B LvlLoadObjSize
     LSR A
     LSR A
@@ -6698,22 +6751,22 @@ CODE_0DDC61:
 
   - JSR OBJHighByte01
     LDA.B #$FF
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
 CODE_0DDC82:
     CPX.B #$01
     BNE -
     JSR OBJHighByte01
     LDA.B #$FE
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DDC8E:
     LDA.B _0
     BEQ Return0DDCA8
     JSR OBJHighByte01
     LDA.B #$D7
-    JSR CODE_0DA95B
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR WriteTileAndAdvRight
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     INC.B _2
     LDX.B _2
     DEC.B _0
@@ -6732,7 +6785,7 @@ OBJCaveLava:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     TXA
     LDX.B _0
     SEC
@@ -6740,7 +6793,7 @@ OBJCaveLava:
     BNE CODE_0DDCD2
   - JSR OBJHighByte01
     LDA.B #$59
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
     JMP CODE_0DDCDD
@@ -6748,12 +6801,12 @@ OBJCaveLava:
 CODE_0DDCD2:
     JSR OBJHighByte01
     LDA.B #$FF
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL CODE_0DDCD2
 CODE_0DDCDD:
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B _0
     DEC.B _1
     BPL CODE_0DDCD2
@@ -6770,25 +6823,25 @@ OBJCeiling:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B _0
     BEQ CODE_0DDD18
 CODE_0DDD01:
     LDX.B _1
   - JSR OBJHighByte01
     LDA.B #$65
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _0
     BNE CODE_0DDD01
 CODE_0DDD18:
     LDX.B _1
   - JSR OBJHighByte01
     LDA.B #$4E
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
     RTS
@@ -6816,13 +6869,13 @@ OBJCeilingEdges:
   - JSR OBJHighByte01
     LDA.L DATA_0DDD26,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BNE -
 CODE_0DDD51:
     JSR OBJHighByte01
     LDA.L DATA_0DDD2A,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     RTS
 
 OBJSolidDirt:
@@ -6836,16 +6889,16 @@ OBJSolidDirt:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DDD6F:
     LDX.B _1
   - JSR OBJHighByte01
     LDA.B #$65
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL CODE_0DDD6F
     RTS
@@ -6872,7 +6925,7 @@ CODE_0DDD99:
     ADC.B #$02
     STA.B _1
 CODE_0DDDA7:
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B _1
     JSR OBJHighByte01
     LDA.B #$CA
@@ -6930,7 +6983,7 @@ CODE_0DDDF3:
 CODE_0DDE09:
     DEX
     BPL CODE_0DDDF3
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B LevelLoadPos
     CLC
     ADC.B #$1F
@@ -6968,7 +7021,7 @@ CODE_0DDE3C:
     ADC.B #$02
     STA.B _1
 CODE_0DDE4A:
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B _1
     JSR OBJHighByte01
     LDA.B #$CC
@@ -7026,7 +7079,7 @@ CODE_0DDE96:
 CODE_0DDEAC:
     DEX
     BPL CODE_0DDE96
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B LevelLoadPos
     CLC
     ADC.B #$20
@@ -7108,7 +7161,7 @@ OBJCanvasGrid:
     LDA.B LvlLoadObjSize
     AND.B #$0F
     STA.B LvlLoadObjSize
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDY.B #$50
     STY.B LevelLoadPos
     LDA.B #$0F
@@ -7119,10 +7172,10 @@ CODE_0DDF4F:
     LDX.B _0
   - JSR OBJHighByte01
     LDA.B #$61
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B LevelLoadPos
     CLC
     ADC.B #$40
@@ -7156,22 +7209,22 @@ CODE_0DDF80:
     LDX.B #$00
   - JSR OBJHighByte01
     LDA.L DATA_0DDEDC,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
   - JSR OBJHighByte00
     LDA.L DATA_0DDEDC,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.L DATA_0DDEDD,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JSR OBJHighByte00
     LDA.L DATA_0DDEDE,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _1
     BPL -
     INX
@@ -7181,17 +7234,17 @@ CODE_0DDF80:
     STA.B _2
   - JSR OBJHighByte01
     LDA.L DATA_0DDEDC,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B #$02
     STA.B _2
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
   - JSR OBJHighByte00
     LDA.L DATA_0DDEDC,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
@@ -7265,50 +7318,50 @@ ExtOBJCanvas:
     TAX
     LDA.L DATA_0DE0AA,X
     TAX
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B #$02
     STA.B _1
     LDA.B #$03
     STA.B _2
   - JSR OBJHighByte01
     LDA.L DATA_0DE05E,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
 CODE_0DE0DB:
     LDA.B #$02
     STA.B _2
   - JSR OBJHighByte00
     LDA.L DATA_0DE05E,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _1
     BPL CODE_0DE0DB
     LDA.B #$02
     STA.B _2
   - JSR OBJHighByte00
     LDA.L DATA_0DE05E,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
     JSR OBJHighByte01
     LDA.B #$5F
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B #$02
     STA.B _2
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
   - JSR OBJHighByte00
     LDA.L DATA_0DE05E,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
@@ -7335,27 +7388,27 @@ OBJRectangleLedge:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B #$00
 CODE_0DE14A:
     LDA.B _0
     STA.B _2
     JSR OBJHighByte01
     LDA.L DATA_0DE12C,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     JMP CODE_0DE165
 
   - JSR OBJHighByte01
     LDA.L DATA_0DE12F,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
 CODE_0DE165:
     DEC.B _2
     BNE -
     JSR OBJHighByte01
     LDA.L DATA_0DE132,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B #$01
     DEC.B _1
     BMI Return0DE185
@@ -7674,15 +7727,15 @@ ExtOBJGhostHouseBGObject:
     LDA.B #$02
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
   - JSR OBJHighByte00
     LDA.L DATA_0DE98F,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _0
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDA.B #$02
     STA.B _0
     DEC.B _1
@@ -7706,15 +7759,15 @@ CODE_0DE9F5:
     LDA.B #$01
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
   - JSR OBJHighByte00
     LDA.L DATA_0DE9E1,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _0
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDA.B #$01
     STA.B _0
     DEC.B _1
@@ -7741,15 +7794,15 @@ ExtOBJDiagonalBeam:
     LDA.B #$03
     STA.B _0
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
   - JSR OBJHighByte00
     LDA.L DATA_0DEA1E,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _0
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDA.B #$03
     STA.B _0
     DEC.B _1
@@ -7777,11 +7830,11 @@ CODE_0DEAC3:
     STA.B _0
   - JSR OBJHighByte00
     LDA.L DATA_0DEA71,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _0
     BPL -
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     CPX.B #$4E
     BNE CODE_0DEAC3
     RTS
@@ -7815,7 +7868,7 @@ CODE_0DEB6E:
     STA.B _0
   - JSR OBJHighByte00
     LDA.L DATA_0DEADE,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _0
     BNE -
@@ -7823,7 +7876,7 @@ CODE_0DEB6E:
     LDA.L DATA_0DEADE,X
     STA.B [Map16LowPtr],Y
     INX
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     CPX.B #$8C
     BNE CODE_0DEB6E
     RTS
@@ -7859,7 +7912,7 @@ CODE_0DEC37:
     STA.B _0
   - JSR OBJHighByte00
     LDA.L DATA_0DEB93,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _0
     BNE -
@@ -7867,7 +7920,7 @@ CODE_0DEC37:
     LDA.L DATA_0DEB93,X
     STA.B [Map16LowPtr],Y
     INX
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     CPX.B #$A0
     BNE CODE_0DEC37
     RTS
@@ -7887,7 +7940,7 @@ ExtOBJSeaweed:
   - JSR OBJHighByte00
     LDA.L ADDR_0DEC66,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     INX
     CPX.B #$02
     BNE -
@@ -7918,11 +7971,11 @@ CODE_0DECA6:
     STA.B _2
   - JSR OBJHighByte00
     LDA.L DATA_0DEC7E,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     INX
     DEC.B _2
     BPL -
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _1
     BPL CODE_0DECA6
 Return0DECC0:
@@ -7953,19 +8006,19 @@ CODE_0DECCE:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DECE3:
     JSR OBJHighByte00
     CPX.B #$01
     BNE +
     JSR OBJHighByte01
   + LDA.L DATA_0DECC6,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _2
     LDA.B _2
     BPL CODE_0DECE3
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDA.B _0
     STA.B _2
     DEC.B _1
@@ -8000,7 +8053,7 @@ OBJGhostHouseHoriz:
   - JSR OBJHighByte00
     LDA.L DATA_0DED0C,X
 CODE_0DED32:
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _0
     BNE -
     JSR OBJHighByte00
@@ -8021,7 +8074,7 @@ CODE_0DED4A:
   - JSR OBJHighByte01
     LDA.B #$0B
 CODE_0DED57:
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BNE -
     JSR OBJHighByte01
@@ -8055,7 +8108,7 @@ OBJVertLogBackground:
     LDA.L DATA_0DED68,X
 CODE_0DED8B:
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL -
     RTS
@@ -8078,7 +8131,7 @@ OBJGhostHouseVertSolid:
   - JSR OBJHighByte01
     LDA.L DATA_0DED95,X
     STA.B [Map16LowPtr],Y
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _0
     BPL -
     RTS
@@ -8095,7 +8148,7 @@ OBJBonusPlatform:
   - JSR OBJHighByte01
     LDA.B #$08
 CODE_0DEDCD:
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BNE -
     JSR OBJHighByte01
@@ -8114,24 +8167,24 @@ OBJPalaceCeiling:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B _0
     LDA.B _1
     BEQ CODE_0DEE0B
   - JSR OBJHighByte01
     LDA.B #$53
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B _0
     DEC.B _1
     BNE -
 CODE_0DEE0B:
     JSR OBJHighByte01
     LDA.B #$54
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL CODE_0DEE0B
     RTS
@@ -8147,23 +8200,23 @@ OBJPalaceFloor:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B _0
   - JSR OBJHighByte01
     LDA.B #$5D
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
     JMP CODE_0DEE45
 
   - JSR OBJHighByte01
     LDA.B #$53
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
 CODE_0DEE45:
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B _0
     DEC.B _1
     BPL -
@@ -8180,21 +8233,21 @@ OBJPalaceLeftWall:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DEE65:
     LDX.B _0
     BEQ CODE_0DEE74
   - JSR OBJHighByte01
     LDA.B #$53
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BNE -
 CODE_0DEE74:
     JSR OBJHighByte01
     LDA.B #$55
-    JSR CODE_0DA95B
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR WriteTileAndAdvRight
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B _0
     DEC.B _1
     BPL CODE_0DEE65
@@ -8211,21 +8264,21 @@ OBJPalaceRightWall:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
 CODE_0DEE9C:
     JSR OBJHighByte01
     LDA.B #$5C
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     LDX.B _0
     BEQ CODE_0DEEB3
   - JSR OBJHighByte01
     LDA.B #$53
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
 CODE_0DEEB3:
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B _0
     DEC.B _1
     BPL CODE_0DEE9C
@@ -8247,9 +8300,9 @@ OBJWoodPlatWithSupport:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     JSR CODE_0DED4A
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B LevelLoadPos
     CLC
     ADC.B #$01
@@ -8268,7 +8321,7 @@ OBJWoodPlatWithSupport:
     BCC CODE_0DEEFD
     JSR CODE_0DA987
 CODE_0DEEFD:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDX.B _1
     JSR OBJHighByte00
     LDA.B #$78
@@ -8291,7 +8344,7 @@ CODE_0DEF0F:
     STA.B Map16HighPtr+1
   + DEX
     BNE CODE_0DEF0A
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B LevelLoadPos
     CLC
     ADC.B #$04
@@ -8323,7 +8376,7 @@ OBJGhostHouseCloud:
   - JSR OBJHighByte00
     LDA.B #$A1
 CODE_0DEF59:
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BNE -
     JSR OBJHighByte00
@@ -8343,21 +8396,21 @@ OBJGhostHouseGrass:
     LSR A
     STA.B _1
     LDX.B _0
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
   - JSR OBJHighByte01
     LDA.B #$0E
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
 CODE_0DEF87:
     DEC.B _1
     BMI Return0DEFA1
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     LDX.B _0
   - JSR OBJHighByte00
     LDA.B #$A3
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
     JMP CODE_0DEF87
@@ -8386,7 +8439,7 @@ OBJWoodenCrate:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDA.B _0
     STA.B _2
     JSR OBJHighByte01
@@ -8394,7 +8447,7 @@ OBJWoodenCrate:
     BNE +
   - JSR OBJHighByte01
     LDA.B #$0D
-  + JSR CODE_0DA95B
+  + JSR WriteTileAndAdvRight
     DEC.B _2
     BNE -
     JSR OBJHighByte01
@@ -8409,20 +8462,20 @@ CODE_0DEFDE:
     BNE +
   - JSR OBJHighByte00
     LDA.L DATA_0DEFA4,X
-  + JSR CODE_0DA95B
+  + JSR WriteTileAndAdvRight
     DEC.B _2
     BNE -
     JSR OBJHighByte01
     LDA.L DATA_0DEFA6,X
     STA.B [Map16LowPtr],Y
 CODE_0DEFFE:
-    JSR CODE_0DA6BA
+    JSR RestoreMap16Ptr
     LDA.B _0
     STA.B _2
     TXA
     EOR.B #$01
     TAX
-    JSR CODE_0DA97D
+    JSR AdvanceDownOneTile
     DEC.B _1
     BNE CODE_0DEFDE
     JSR OBJHighByte01
@@ -8430,7 +8483,7 @@ CODE_0DEFFE:
     BNE +
   - JSR OBJHighByte01
     LDA.B #$6C
-  + JSR CODE_0DA95B
+  + JSR WriteTileAndAdvRight
     DEC.B _0
     BNE -
     JSR OBJHighByte01
@@ -8449,11 +8502,11 @@ OBJYoshiHouseGrass:
     LSR A
     LSR A
     STA.B _1
-    JSR CODE_0DA6B1
+    JSR SaveMap16Ptr
     LDX.B _0
   - JSR OBJHighByte01
     LDA.B #$0F
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
     JMP CODE_0DF05B
@@ -8462,12 +8515,12 @@ CODE_0DF04E:
     LDX.B _0
   - JSR OBJHighByte00
     LDA.B #$EA
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEX
     BPL -
 CODE_0DF05B:
-    JSR CODE_0DA6BA
-    JSR CODE_0DA97D
+    JSR RestoreMap16Ptr
+    JSR AdvanceDownOneTile
     DEC.B _1
     BPL CODE_0DF04E
     RTS
@@ -8493,7 +8546,7 @@ OBJHorizThinSpikes:
     TAX
   - JSR OBJHighByte01
     LDA.L DATA_0DF06B,X
-    JSR CODE_0DA95B
+    JSR WriteTileAndAdvRight
     DEC.B _0
     BPL -
     RTS
